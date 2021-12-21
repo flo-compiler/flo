@@ -1,0 +1,63 @@
+fnc calc_neighbors(grid: bool [][], row: num, col: num): num => {
+   neighbors = 0
+    for i = row - 1; i <= row + 1; i++ {
+        for j = col - 1; j <= col + 1; j++ {
+            if (i >= 0 and i < len(grid) and j >= 0 and j < len(grid[0])) {
+                if (i == row and j == col) continue
+                if (grid[i][j]) neighbors++
+            }
+        }
+    }
+    return neighbors
+}
+fnc update_grid(grid: bool [] []): bool [][] => {
+    new_grid = [[false]*len(grid)]*len(grid[0])
+    for i = 0; i < len(new_grid); i++ {
+        for j = 0; j < len(new_grid[i]); j++ {
+            neighbors = calc_neighbors(grid, i, j)
+            if  (neighbors < 2 or neighbors > 3) {
+                new_grid[i][j] = false
+            } else if neighbors == 3 {
+                new_grid[i][j] = true
+            } else {
+                new_grid[i][j] = grid[i][j]
+            }
+        }
+    }
+    return new_grid
+}
+
+fnc render_grid(grid: bool [] []): void => {
+    for i = 0; i < len(grid); i++ {
+        for j = 0; j < len(grid[i]); j++ {
+            if (grid[i][j]) {
+                print("#")
+            } else {
+                print(" ")
+            }
+        }
+        print("\n")
+    }
+}
+
+fnc gol(): void => {
+    cols = rows = 5 
+    grid = [[false]*cols]*rows
+    for i = 0; i < rows; i++ {
+        for j = 0; j < cols; j++ {
+            grid[i] = grid[i] + [false]
+        }
+    }
+    grid[1][3] = grid[2][3] = grid[3][3] = true
+    clrscr = fnc (): void => print("\n"*rows)
+    max = 5
+    i = 0
+    while i < max {
+        //render_grid(grid)
+        grid = update_grid(grid)
+        i++
+        // clrscr()
+    }
+}
+
+gol()

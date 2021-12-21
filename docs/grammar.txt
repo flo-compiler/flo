@@ -1,0 +1,136 @@
+
+
+stmts: ln* stmt (newlines stmt)*
+
+newlines: ln+
+
+block: newlines (lbrace stmts rbrace | stmt)
+
+stmt: import_stmt
+      |if_stmt
+      | for_stmt
+      | foreach_stmt
+      | while_stmt
+      | fnc_def_stmt
+      | change_flow_stmt
+      | expr
+      
+import_stmt: import (identifier_list from)? string
+
+if_stmt: if comp_expr block newlines (else (if_stmt | block)) *
+
+for_stmt: for (expr semicolumn comp_expr semicolumn expr) block 
+
+foreach_stmt: foreach  (identifier in expr) block
+
+while_stmt: while comp_exp block
+
+fnc_def_stmt: fnc identifier? lpar param_list rpar column composite_type arrow (block | expr)
+
+param_list: identifier (comma identifier)* 
+
+param_list: (identifier column composite_type (comma identifier column composite_type)* )?
+
+change_flow_stmt: return expr?
+                  | continue
+                  | break
+
+expr: comp_expr (("and" | "or") comp_expr)?
+
+comp_expr: exclamation_mark comp_expr 
+         | arith_expr (comp_op arith_expr)?
+
+arith_expr: arith_expr1 (( plus | minus ) arith_expr1)?
+
+arith_expr1: unary_expr ((times | div | mod | exp ) unary_expr)?
+
+
+unary_expr: (plus | minus ) unary_expr
+      | (plus_plus | minus_minus) identifier
+      | identifier_op_expr
+      | expr_value
+
+identifier_op_expr: identifier (
+         (plus_plus | minus_minus)
+       | (bin_op ?eq expr)
+       | (lpar expr_list rpar)
+       | (lbracket expr lbracket)*
+       | (column composite_type eq (fnc_def_stmt | expr))
+       )?
+
+expr_list: (expr (comma expr)*)?
+
+expr_value:   number
+            | string
+            | rbracket expr_list? lbracket
+            | lpar expr rpar
+
+composite_type:  type (lbracket rbracket)*
+
+type: "any"
+    | "num"
+    | "bool"
+    | "str"
+    | "void"
+
+
+## tokens
+lpar: "("
+rpar: ")"
+lbracket: "["
+rbracket: "]"
+lbrace: "{"
+rbrace: "}"
+plus: "+"
+minus: "-"
+eq: "="
+times: "*"
+div: "/"
+exp: "^"
+column: ":"
+mod: "%"
+question_mark: "?"
+exclamation_mark: "!"
+identifier: ([a-zA-Z]|_)[A-Za-z | 0-9 | _]*
+semicolumn: ";"
+comma: ","
+ln: "\n"
+number: /[0-9]+([0-9]*)+(.?)+([0-9]*)/
+string: /"(*?)"/
+      | /'(*?)'/
+plus_plus: "++"
+minus_minus: "--"
+
+
+
+## keywords 
+if: "if"
+else: "else"
+for: "for"
+while: "while"
+fnc: "fnc"
+import: "import"
+foreach: "foreach"
+in: "in"
+
+          
+
+comp_op: ">"
+       | "<"
+       | "=="
+       | ">="
+       | "<="
+       | "!="
+
+bin_op: plus
+      | minus
+      | times
+      | div
+      | mod
+      | exp
+
+access: "pub"
+      | "priv"
+
+
+
