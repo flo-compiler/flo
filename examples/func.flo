@@ -1,0 +1,16 @@
+doubleNum = fnc (a: num): num => a*2
+// this should print 10
+println(doubleNum(5))
+
+fnc tripleNum(a: num): num => a*3
+// this should print 15
+println(tripleNum(5))
+
+fnc testFunc(a: num): num => {
+    fnc innerFunc(b: num): num => {
+        return a + b
+    }
+    return innerFunc(5)
+}
+
+println(testFunc(5))

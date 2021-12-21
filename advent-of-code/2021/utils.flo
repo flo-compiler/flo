@@ -1,0 +1,12 @@
+fnc toDecimal(string:str):num => {
+    length = len(string)
+    base = 2
+    result = 0
+    for i = 0; i < length; i++ {
+        char = string[i]
+        if char == "1" {
+            result += base ^ (length - (i + 1))
+        }
+    }
+    return result
+}

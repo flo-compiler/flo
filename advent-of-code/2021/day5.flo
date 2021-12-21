@@ -1,0 +1,64 @@
+inputs = readFile("input5.txt")
+BOARD_SIZE = 10
+board: num [][] = [[0]*BOARD_SIZE]*BOARD_SIZE
+foreach line in split(inputs, "\n"){
+    coords = split(line, " -> ")
+    println(line)
+    coords_start = split(coords[0], ",")
+    coords_end = split(coords[1], ",")
+    x1 = toNum(coords_start[0])
+    y1 = toNum(coords_start[1])
+    x2 = toNum(coords_end[0])
+    y2 = toNum(coords_end[1])
+    incX = 1    
+    if (x1 == x2 and y1 != y2){ 
+        if (y1>y2){
+            tmp = y1
+            y1 = y2
+            y2 = tmp
+        }
+        for y1; y1 <= y2; y1++ {
+            board[y1][x1] = board[y1][x1] + 1
+        }
+    } else
+    if (x1 != x2 and y1 == y2){         
+        if (x1>x2){
+            tmp = x1
+            x1 = x2
+            x2 = tmp
+        }
+        for x1; x1 <= x2; x1++ {
+            board[y1][x1] =+ 1
+        }
+    } else 
+    if (x1 != x2 and y1 != y2){
+        incX = 1
+        incY = 1
+        if x1 > y1 
+        {
+            start = x1
+            end = x2
+        } else {
+            start = y1
+            end = y2
+        }
+        if x1 > x2 incX = -1
+        if y1 > y2 incY = -1
+        m1 = 0
+        for m1; (newX = start + (incX*m1)) <= end; m1++{
+            newY = y1 + (incY*m1)
+            board[newY][newX] = board[newY][newX] + 1
+        }
+    }
+}
+
+fnc calculateOverlap(board: num[][]): num => {
+    result = 0
+    foreach row in board {
+        foreach value in row {
+            if value > 1 result++
+        }
+    }
+    return result
+}
+println(calculateOverlap(board))

@@ -1,0 +1,24 @@
+inputs = readFile("input1.txt")
+measurements = split(inputs, "\n")
+/* part 1 */
+numOfIncreases = 0
+previous = toNum(measurements[0])
+for i = 1; i < len(measurements); i++ {
+    if (toNum(measurements[i]) >= previous) {
+        numOfIncreases++
+    }
+    previous = toNum(measurements[i])
+}
+println("part 1: "+numOfIncreases)
+/* part 2 */
+numOfIncreases = 0
+calculateSumOfThree = fnc (i:num): num => (toNum(measurements[i]) + toNum(measurements[i+1]) + toNum(measurements[i+2]))
+previousSum = calculateSumOfThree(0)
+for i = 1; i < len(measurements)-2; i++ {
+  currentSum = calculateSumOfThree(i)
+  if (currentSum > previousSum) {
+    numOfIncreases++
+  }
+  previousSum = currentSum
+}
+println("part 2: "+numOfIncreases)

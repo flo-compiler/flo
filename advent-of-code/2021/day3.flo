@@ -1,0 +1,71 @@
+import toDecimal from "utils.flo"
+inputs = readFile("input3.txt")
+list: str [] = split(inputs, "\n")
+numLines = len(list)
+lineLen = len(list[0])
+gama = ""
+episilon = ""
+for i = 0; i < lineLen; i++ {
+    zeros = 0
+    ones = 0
+    for j = 0; j < numLines; j++ {
+        if list[j][i] == "0" {
+            zeros++
+        } else {
+            ones++
+        }
+    }
+    if zeros > ones {
+        gama += "0"
+        episilon += "1"
+    } else {
+        gama += "1"
+        episilon += "0"
+    }
+}
+println("part 1: "+ toDecimal(gama) * toDecimal(episilon))
+
+/* part 2 */
+fnc find(index: num, search: str, list: str []): str [] => {
+    result: str [] = []
+    foreach item in list {
+        if item[index] == search {
+            result+=[item]
+        }
+    }
+    return result
+}
+maxes = list
+mins = list
+for i = 0; i < lineLen; i++ {
+    if len(maxes) > 1 {
+        zerosMax = 0
+        onesMax = 0
+        for j = 0; j < len(maxes); j++ {
+            if maxes[j][i] == "0" {
+                zerosMax++
+            } else {
+                onesMax++
+            }
+        }
+        searchMax = "1"
+        if zerosMax > onesMax searchMax = "0"
+        maxes = find(i, searchMax, maxes)
+    }
+    if len(mins) > 1 {
+        onesMin = 0
+        zerosMin = 0
+        for j = 0; j < len(mins); j++ {
+            if mins[j][i] == "0" {
+                zerosMin++
+            } else {
+                onesMin++
+            }
+        }
+        searchMin = "0"
+        if zerosMin > onesMin searchMin = "1"
+        mins = find(i, searchMin, mins)
+    }
+    if (len(maxes) == 1 and len(mins) == 1) break
+}
+println("part 2: "+toDecimal(mins[0])*toDecimal(maxes[0]))

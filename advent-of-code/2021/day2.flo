@@ -1,0 +1,20 @@
+import toNumber from "utils.flo"
+inputs = readFile("input2.txt")
+depth = 0
+horizontal = 0
+aim = 0
+lines = split(inputs, "\n")
+foreach line in lines {
+    commands = split(line, " ")
+    if commands[0] == "up" {
+        aim-=toNumber(commands[1])
+    } else if commands[0] == "down" {
+        aim+=toNumber(commands[1])
+    } else if commands[0] == "forward" {
+        n = toNumber(commands[1])
+        horizontal+=n
+        depth+=aim*n
+    }
+}
+println("part 1: "+aim*horizontal)
+println("part 2: "+depth*horizontal)

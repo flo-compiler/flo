@@ -1,0 +1,5 @@
+colors: str[] = ["red", "beige", "green", "blue", "yellow"]
+colors[0] = "violet"
+println(colors)
+modifiedColors = colors + ["grey"]
+println(modifiedColors)

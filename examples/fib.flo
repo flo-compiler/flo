@@ -1,0 +1,14 @@
+// One liner fibonnaci
+fib = fnc (n: num): num => if n > 1 return fib(n-1) + fib(n-2) else return 1
+
+// A dynamic programming approach (faster) 
+fnc fib_dyn(n: num): num => {
+	store: num [] = [1]*2
+	for i = len(store); i <= n; i++ {
+		store+=[store[i-1] + store[i-2]]
+	}
+	return store[n]
+}
+print("Enter a number to compute it's fibonnaci sum: \n")
+x = input()
+println(fib(x))
