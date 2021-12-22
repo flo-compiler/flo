@@ -36,7 +36,7 @@ Syntax ressembles typescript with a tint of python
 
 ## Run
 ```console
-$ ./src/shell.py
+$ ./src/flo.py
 ```
 ## Documentation and Examples
 [Draft of existing features](docs/concepts.md)
