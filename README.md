@@ -36,7 +36,7 @@ Syntax ressembles typescript with a tint of python
 
 ## Run
 ```console
-$ ./src/flo.py
+$ ./src/flo.py path_to_file_to_pen.flo
 ```
 ## Documentation and Examples
 [Draft of existing features](docs/concepts.md)
