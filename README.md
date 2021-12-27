@@ -4,34 +4,42 @@ An attempt to create my own programming language but in python.
 Syntax ressembles typescript with a tint of python
 
 ## Next Todo
-- <<, >>, |, &, and xor
-- +=, -= , *=, /=, &=, |=, ^=, %=, <<=, >>=, >>>= Operators
-- Complete Arrays and fix bugs.
-- Re-introduce a runtime errors
+- xor
+- and=, or=, <<=, >>=, xor= Operators
+- Fix bug with function return types, and definitions
+- Automatic return type induction for functions
+- Default paramaters for functions
+- Generic Types
+- 
+- OOP
 - Refactor
 
 ## Todo (No priority)
 - [x] Interpreter
 - [x] Comments
-- [ ] Constants
+- [x] Constants
 - [x] Statically typed variables
 - [x] Arithmetic operations
 - [x] Logical operations
 - [x] Turing complete
 - [x] Functions
-- [x] strings
-- [x] boolean
-- [x] arrays
-- [ ] maps
-- [x] conditionals
-- [x] for loop
-- [x] while loop
+- [x] Strings
+- [x] Boolean
+- [x] Arrays
+- [x] Dictionaries
+- [x] Conditionals
+- [x] For loop
+- [x] Foreach loop
+- [x] While loop
+- [ ] Error Handling
 - [ ] Compiler
 - [ ] Object oriented / user defined types
-- [ ] Operator overloading?
+- [ ] Generic Types
+- [ ] Operator overloading
 - [ ] JS style setters and getters
+- [ ] Make String and arrays iterable types 
 - [x] Modules / imports
-- [ ] Independence from python and use flo for development instead
+- [ ] Self-Hosting
 
 
 ## Run

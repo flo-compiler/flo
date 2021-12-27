@@ -1,6 +1,6 @@
 import string
 from enum import Enum
-from utils.range import Range
+from errors import Range
 
 LETTERS = string.ascii_letters
 DIGITS = '0123456789'
@@ -26,9 +26,9 @@ KEYWORDS = [
     'in',
     'class',
     'pub',
-    'priv'
+    'priv',
+    'as'
 ]
-
 class TokType(Enum):
     COL = ':'
     SEMICOL = ';'
@@ -62,6 +62,8 @@ class TokType(Enum):
     ARROW = '=>'
     EOF = 'EOF'
     NOT = '!'
+    SL = '<<'
+    SR = '>>'
     IDENTIFER = 'IDENTIFIER'
     KEYWORD = 'KEYWORD'
 

@@ -1,0 +1,63 @@
+inputs = readFile("input5.txt")
+BOARD_SIZE = 990
+fnc abs(n: num): num => if n > 0 return n else return -1*n
+map: {num} = {}
+foreach line in split(inputs, "\n"){
+    coords = split(line, " -> ")
+    coords_start = split(coords[0], ",") as num []
+    coords_end = split(coords[1], ",") as num []
+    x1 = coords_start[0]
+    y1 = coords_start[1]
+    x2 = coords_end[0]
+    y2 = coords_end[1]
+    // a dot
+    if x1 == x2 and y1 == y2 {
+        key = y1+","+x1
+        map[key] =  map[key] + 1
+    // vertical
+    } else if x1 == x2 { 
+        if (y1>y2){
+            tmp = y1
+            y1 = y2
+            y2 = tmp
+        }
+        for y1; y1 <= y2; y1++ {
+            key = y1+","+x1
+            map[key] =  map[key] + 1
+        }
+    // horizontal
+    } else if  y1 == y2 {
+        if (x1>x2){
+            tmp = x1
+            x1 = x2
+            x2 = tmp
+        }
+        for x1; x1 <= x2; x1++ {
+            key = y1+","+x1
+            map[key] =  map[key] + 1
+        }
+    // diagional: added for part 2
+    } else if abs(x1-x2) == abs(y1-y2){
+        incY = incX = 1
+        if x1 > x2 incX = -1
+        if y1 > y2 incY = -1
+        for x1; x1 != x2; x1+=incX {
+            key = y1+","+x1
+            map[key] =  map[key] + 1
+            y1+=incY
+        }
+        key = y2+","+x2
+        map[key] =  map[key] + 1
+    }
+}
+
+fnc calculateOverlap(map: {num}): num => {
+    result = 0
+    foreach key in map {
+        if map[key] > 1 result++
+    }
+    return result
+}
+pt2 = calculateOverlap(map)
+// println("part 1: "+pt1)
+println("part 2: "+pt2)

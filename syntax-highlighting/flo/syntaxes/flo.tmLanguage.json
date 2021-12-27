@@ -33,7 +33,7 @@
 		},
 		"control-keywords":{
 			"name": "keyword.control.flo",
-			"match": "\\b(if|else|for|while|break|continue|return|import|from|foreach|in)\\b"
+			"match": "\\b(if|else|for|while|break|continue|return|import|from|foreach|in|as)\\b"
 		},
 		"strings": {
 			"name": "string.quoted.double.flo",

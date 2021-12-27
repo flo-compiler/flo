@@ -1,6 +1,6 @@
 /* Hello world example; shows basic input and output */
 print("Give me a number: ")
-max = input()
+max = input() as num
 
 for i = 0; i < max; i++ {
     println("hello world!")

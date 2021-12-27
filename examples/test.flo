@@ -1,22 +1,7 @@
 
-//TODO: anonymous function calls doesn't work
-// TODO: anonymous array access doesn't work
-//TODO: bit wise operators 
-/*TODO: switch statements: 
-when expr {
-    is 1 =>
-        do this
-    is 2 =>
-        do this
-    otherwise =>
-        do this
-}
-*/
-//TODO: default parameters of functions
-/* I want to be able to chain/pipe function calls like this
-[a, b] |> testFnc |> println
-stdin.readln() |> stdout.write
-*/
+// TODO: bit wise operators 
+// TODO: default parameters of functions
+/* I want to be able to chain/pipe function calls like this */
 // a = b = c = 5
 // b = 4
 // a[3] = 5
@@ -27,14 +12,10 @@ stdin.readln() |> stdout.write
 // while --b != 0 {
 //     println(b)
 // }
-// loop from i=0 to ++c {
-
-// }
 /* I want to be able to do this: */
-// int: bool = 1 as bool
-
-test: num = 1
-test: bool = true
-print()
-print("test is ")
-print(test)
+fnc c(): void => print("hello")
+arr = [print, c]
+arr[1]("dd")
+println(arr)
+hello = (("12345" as str []) << "6")[4]
+//println(++3)

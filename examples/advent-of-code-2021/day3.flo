@@ -29,9 +29,7 @@ println("part 1: "+ toDecimal(gama) * toDecimal(episilon))
 fnc find(index: num, search: str, list: str []): str [] => {
     result: str [] = []
     foreach item in list {
-        if item[index] == search {
-            result+=[item]
-        }
+        if (item[index] == search) result << item
     }
     return result
 }
@@ -66,6 +64,6 @@ for i = 0; i < lineLen; i++ {
         if zerosMin > onesMin searchMin = "1"
         mins = find(i, searchMin, mins)
     }
-    if (len(maxes) == 1 and len(mins) == 1) break
+    if len(maxes) == 1 and len(mins) == 1 break
 }
 println("part 2: "+toDecimal(mins[0])*toDecimal(maxes[0]))

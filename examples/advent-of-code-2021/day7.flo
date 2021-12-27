@@ -1,0 +1,6 @@
+//import min, max, abs from '@flo/math'
+list: num [] = []
+foreach s in split(readFile("input7.txt"), ","){
+    list << (s as num)
+}
+print(list)

@@ -1,8 +1,14 @@
-doubleNum = fnc (a: num): num => a*2
+fnc doubleNum (a: num): num => a*2
 // this should print 10
 println(doubleNum(5))
 
 fnc tripleNum(a: num): num => a*3
+/* this is a bug... */
+fnc testFunc(): num => {
+    i = 9
+    if i == 5 return 1
+}
+print(testFunc())
 // this should print 15
 println(tripleNum(5))
 

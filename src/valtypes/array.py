@@ -1,20 +1,29 @@
-from typing import List
-from valtypes.boolean import Boolean
-from valtypes.valType import ValType
-from errors.rtError import RTError
-class Array(ValType):
-    def __init__(self, value:List[ValType]):
+from typing import List, Union
+from buildchain import checker
+from valtypes import Value, string, boolean, number
+from errors import RTError
+class Array(Value):
+    def __init__(self, value:List[Value]):
         super().__init__()
         self.value = value
         self.length = len(value)
-    def add(self, other):
+    def add(self, other: Value):
         if (type(other) == Array):
             return Array(self.value + other.value).set_ctx(self.context), None
         return self.illegalOp()
 
+    def l_sl(self, other: Value):
+        self.value.append(other)
+        self.length+=1
+        return self, None
+
+    def l_sr(self, other: Value):
+        self.value.pop(other.value)
+        self.length-=1
+        return self, None
+
     def mul(self, num):
-        from valtypes.number import Number
-        if(type(num) == Number):
+        if(type(num) == number.Number):
             if isinstance(self.value[0], Array):
                 arr = []
                 for _ in range(num.value):
@@ -23,28 +32,31 @@ class Array(ValType):
             return Array(self.value * num.value).set_ctx(self.context), None
         return self.illegalOp()
     
-    def comp_eq(self, other):
+    def comp_eq(self, other: Value):
         if(type(other) == Array):
-            return Boolean(int(self.value == other.value)).set_ctx(self.context), None
-        return Boolean(0), None
+            return boolean.Boolean(int(self.value == other.value)).set_ctx(self.context), None
+        return boolean.Boolean(0), None
         
-    def comp_neq(self, other):
+    def comp_neq(self, other: Value):
         if(type(other) == Array):
-            return Boolean(int(self.value != other.value)).set_ctx(self.context), None
-        return Boolean(0), None
+            return boolean.Boolean(int(self.value != other.value)).set_ctx(self.context), None
+        return boolean.Boolean(0), None
         
-    def getElement(self, index):
+    def getElement(self, index: Union[int, float]):
         index = int(index)
         if(index < 0 or index >= self.length):
             return None, RTError( self.range, f'Index out of range, index {index} on array of length {self.length}')
         return self.value[index], None
     
-    def setElement(self, index, value):
+    def setElement(self, index, value: Union[int, float]):
         index = int(index)
         if(index < 0 or index >= self.length):
             return None, RTError( self.range, f'Index out of range, index {index} on array of length {self.length}')
         self.value[index] = value
         return self, None
+
+    def is_in(self, value: Value):
+        return boolean.Boolean(value in self.value), None
 
     def copy(self):
         cp = [el.copy() for el in self.value]
@@ -52,6 +64,22 @@ class Array(ValType):
         cp.set_ctx(self.context)
         cp.set_range(self.range)
         return cp
+    def cast_to_type(self, type):
+        if isinstance(type, checker.arrayType):
+            rt = []
+            for el in self.value:
+                nel, error = el.cast_to_type(type.elementType)
+                if error: return None, error
+                rt.append(nel)
+            return Array(rt), None
+        elif type == checker.Types.STRING:
+            res = ""
+            for el in self.value:
+                nel, error = el.cast_to_type(type)
+                if error: return None, error
+                res+=nel.value
+            return string.String(res), None
+        return self.illegalOp()
         
     def __repr__(self):
         return f'{self.value}'

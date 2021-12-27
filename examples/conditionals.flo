@@ -1,0 +1,5 @@
+SIX = 6
+if SIX == 6 println("fine")
+SEVEN = 7
+// this is another bug to be fixed
+if true or false print("fine")

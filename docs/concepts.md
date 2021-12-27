@@ -3,10 +3,12 @@
 ```
 num
 str
+void
+bool
 break
 continue
 and
-bool
+as
 or
 xor
 fnc
@@ -17,8 +19,6 @@ for
 foreach
 while
 return
-null
-noob
 pub
 priv
 class
@@ -41,17 +41,30 @@ class
 <=
 
 ```
+## Bit-Wise operators
+```
+and
+or
+!
+>>
+<<
+xor
+```
 ## Types
 ```
-FIVE: const = 5 // constant
+FIVE = 5 // constant; can't be changed through code execution
 b: num = 5 // statically typed number
 hello: str = "hello world" // string
 hello: bool = true // boolean
-hello: noob = true // dynamic variable
 arr2: num[] = [1, 2, 3, 4, 5, ...] // as many elements as one wants
-arr2: num[5] = [1, 2, 3, 4, 5]
+arr2: num[5] = [1, 2, 3, 4, 5] // fixed length of 5
+dic: {num} = {"one": 1, "two": 2} // dictionary of numbers
+dic["three"] = 3 // assign
+print(5 in arr2) // prints true
+print("llo" in hello) // prints true
 arr1[0] = 0 // set value 0 to index 0 in array
-
+s1 = "red car" // infered type to be string
+s1 = 5 // error since previously defined type is string
 ```
 ## Conditionals 
 ### if, else
@@ -81,8 +94,8 @@ foreach elem in array {
 }
 ```
 ```
-// looping through a map
-foreach key, value in map {
+// looping through a dictionary
+foreach key in dict {
 
 }
 ```
@@ -102,6 +115,5 @@ fnc double(x: num): num => x*2
 fnc add(x: num, y: num): num => {
     return x+y
 }
-// assigning a new variable to an anonymous function
-double_sum = fnc (x: num, y: num): num => double(sum(x, y))
+fnc double_sum (x: num, y: num): num => double(sum(x, y))
 ```
