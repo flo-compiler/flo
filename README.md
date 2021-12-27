@@ -10,7 +10,6 @@ Syntax ressembles typescript with a tint of python
 - Automatic return type induction for functions
 - Default paramaters for functions
 - Generic Types
-- 
 - OOP
 - Refactor
 
@@ -44,7 +43,7 @@ Syntax ressembles typescript with a tint of python
 
 ## Run
 ```console
-$ ./src/flo.py path_to_file_to_pen.flo
+$ ./src/flo.py file_to_compile.flo
 ```
 ## Documentation and Examples
 [Draft of existing features](docs/concepts.md)
