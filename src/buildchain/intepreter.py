@@ -1,19 +1,19 @@
-from os import error
-from buildchain.BuildCache import BuildCache
-from errors.rtError import RTError
+import os
+from context import Context
+from errors import RTError
+from ast.tokens import TokType
+from ast.nodes import *
+from buildchain import BuildCache
+from buildchain import Visitor
+from valtypes import Value
 from valtypes.array import Array
+from valtypes.dict import Dict
 from valtypes.string import String
 from valtypes.number import Number
-from ast.nodes import *
-from ast.visitor import Visitor
-from buildchain.tokens import TokType
-from utils.range import Range
-from ast.nodes import *
-from valtypes.valType import ValType
-from stack.context import Context
+from valtypes.func import Func
 
 class RTResult:
-    def __init__(self, value: ValType=None, error: RTError=None):
+    def __init__(self, value: Value=None, error: RTError=None):
         self.value = value
         self.error = error
         self.reset()
@@ -70,16 +70,23 @@ class Intepreter(Visitor):
             result, error = left.comp_neq(right)
         elif node.op.type == TokType.GTE:
             result, error = left.comp_gte(right)
+        elif node.op.type == TokType.SL:
+            result, error = left.l_sl(right)
+        elif node.op.type == TokType.SR:
+            result, error = left.l_sr(right)
         elif node.op.isKeyword('and'):
             result, error = left.l_and(right)
         elif node.op.isKeyword('or'):
             result, error = left.l_or(right)
+        elif node.op.isKeyword('in'):
+            result, error = right.is_in(left)
         if error: return RTResult(None, RTError(node.range, error.msg))
         result.set_range(node.range)
         return RTResult(result, None)
         
     def visitUnaryNode(self, node: UnaryNode):
         result = self.visit(node.tok)
+        error = None
         if result.error: return result
         n = result.value
         if node.op.type == TokType.MINUS:
@@ -100,7 +107,16 @@ class Intepreter(Visitor):
         nValue, error = value.add(Number(incr))
         if error: return RTResult(None, error)
         nValue.set_range(node.range)
-        self.context.symbol_table.set(node.identifier.var_name.value, nValue)
+        if isinstance(node.identifier, VarAccessNode):
+            self.context.symbol_table.set(node.identifier.var_name.value, nValue)
+        elif isinstance(node.identifier, ArrayAccessNode):
+            result = self.visit(node.identifier.name)
+            if result.error: return result
+            value = result.value
+            result = self.visit(node.identifier.index)
+            if result.error: return result
+            index = result.value
+            value.setElement(index.value, nValue)
         return RTResult(nValue if node.ispre else value, None)
 
     def visitVarAccessNode(self, node: VarAccessNode):
@@ -177,7 +193,6 @@ class Intepreter(Visitor):
         return RTResult()
 
     def visitFncDefNode(self, node: FncDefNode):
-        from valtypes.func import Func
         fnc_name = node.var_name.value if node.var_name else None
         body = node.body
         args = [arg.value for (arg, _) in node.args]
@@ -188,7 +203,7 @@ class Intepreter(Visitor):
 
     def visitReturnNode(self, node: ReturnNode):
         result = RTResult()
-        result.func_return_value = ValType()
+        result.func_return_value = Value()
         if node.value:
             result = self.visit(node.value)
             if result.error: return result
@@ -223,9 +238,9 @@ class Intepreter(Visitor):
     def visitArrayNode(self, node:ArrayNode):
         elements = [] 
         for expr in node.elements:
-            elem = self.visit(expr)
-            if elem.error: return elem
-            elements.append(elem.value)
+            res = self.visit(expr)
+            if res.error: return res
+            elements.append(res.value.set_range(expr.range))
         return RTResult(Array(elements).set_range(node.range).set_ctx(self.context), None)
 
     def visitArrayAccessNode(self, node: ArrayAccessNode):
@@ -256,11 +271,35 @@ class Intepreter(Visitor):
     def visitImportNode(self, node: ImportNode):
         ast = BuildCache.module_asts.get(node.path.value)
         savedCtx = self.context
-        self.context = Context(node.path.value)
+        self.context = Context(os.path.join(os.path.dirname(self.context.display_name),node.path.value))
         self.context.symbol_table = self.originlSymbols
         self.visit(ast)
-        for identifier in node.ids:
-            val = self.context.symbol_table.get(identifier.value)
-            savedCtx.symbol_table.set(identifier.value, val)
+        if node.all:
+            savedCtx.symbol_table.symbols.update(self.context.symbol_table.symbols)
+        else:
+            for identifier in node.ids:
+                val = self.context.symbol_table.get(identifier.value)
+                savedCtx.symbol_table.set(identifier.value, val)
         self.context = savedCtx
         return RTResult(None, None)
+
+    def visitDictNode(self, node: DictNode):
+        val = {}
+        for (key, value) in node.values:
+            result = self.visit(key)
+            if result.error: return result
+            key = result.value
+            result = self.visit(value)
+            if result.error: return result
+            value = result.value
+            val[key.value] = value.set_range(value)
+        return RTResult(Dict(val).set_range(node.range), None)
+
+    def visitTypeCastNode(self, node: TypeCastNode):
+        result = self.visit(node.value)
+        if result.error: return result
+        value = result.value
+        rt, error = value.cast_to_type(node.type)
+        if error: return RTResult(None, error)
+        rt.set_range(node.range)
+        return RTResult(rt, None)

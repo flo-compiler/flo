@@ -1,8 +1,6 @@
-from errors.expectedCharError import ExpectedCharError
-from errors.illegalCharError import IllegalCharacterError
-from utils.position import Position
-from buildchain.tokens import Token, TokType, DIGITS, LETTERS, KEYWORDS
-from utils.range import Range
+from errors import Range, Position
+from errors import ExpectedCharError, IllegalCharacterError
+from ast.tokens import TokType, Token, LETTERS, KEYWORDS, DIGITS
 class Lexer():
     def __init__(self, fn, text):
         self.fn = fn
@@ -152,6 +150,9 @@ def make_lte(lexer: Lexer):
     if lexer.current_char == '=':
         lexer.advance()
         return Token(TokType.LEQ, Range(pos_start, lexer.pos))
+    elif lexer.current_char == '<':
+        lexer.advance()
+        return Token(TokType.SL, Range(pos_start, lexer.pos))
     return Token(TokType.LT, Range(pos_start))
 
 def make_gte(lexer: Lexer):
@@ -160,6 +161,9 @@ def make_gte(lexer: Lexer):
     if lexer.current_char == '=':
         lexer.advance()
         return Token(TokType.GTE, Range(pos_start, lexer.pos))
+    elif lexer.current_char == '>':
+        lexer.advance()
+        return Token(TokType.SR, Range(pos_start, lexer.pos))
     return Token(TokType.GT, Range(pos_start))
 
 def make_str(lexer: Lexer):

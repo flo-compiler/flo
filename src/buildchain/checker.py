@@ -1,68 +1,14 @@
-from enum import Enum
-from typing import List
-from buildchain.BuildCache import BuildCache
-from buildchain.tokens import TokType
-from stack.context import Context
-from errors.error import Error
-from errors.typeError import TypeError
-from stack.symbolTable import SymbolTable
-from ast.visitor import Visitor
-from buildchain.lexer import Lexer
-from buildchain.parser import Parser
 import os
+from typing import List
+from buildchain import BuildCache
+from buildchain import Visitor
+from context import Context, SymbolTable
+from errors import Error, TypeError, SyntaxError
+from ast.tokens import TokType
+from ast.lexer import Lexer
+from ast.parser import Parser
 from ast.nodes import *
-
-
-class fncType:
-    def __init__(self, returnType, argTypes):
-        self.returnType = returnType
-        self.argTypes = argTypes
-
-class arrayType:
-    def __init__(self, elementType):
-        self.elementType = elementType
-    def __eq__(self, o: object) -> bool:
-        if isinstance(o, arrayType):
-            return self.elementType == o.elementType
-        return False
-
-class objectType:
-    def __init__(self, fields):
-        self.fields = fields
-
-class Types(Enum):
-    NUMBER = 1
-    STRING = 2
-    BOOL = 3
-    NULL = 4
-    ANY = 5
-
-
-def typeToStr(type):
-    if type == Types.NUMBER:
-        return 'num'
-    elif type == Types.STRING:
-        return 'str'
-    elif type == Types.BOOL:
-        return 'bool'
-    elif type == Types.NULL:
-        return 'void'
-    elif isinstance(type, fncType):
-        return f'fnc:{typeToStr(type.returnType)}'
-    elif isinstance(type, arrayType):
-        return f'[{typeToStr(type.elementType)}]'
-    elif isinstance(type, objectType):
-        return 'object'
-
-def strToType(str):
-    if str == 'num':
-        return Types.NUMBER
-    elif str == 'str':
-        return Types.STRING
-    elif str == 'bool':
-        return Types.BOOL
-    elif str == 'void':
-        return Types.NULL
+from valtypes.checks import *
 
 class TypeChecker(Visitor):
     def __init__(self, context: Context):
@@ -85,7 +31,7 @@ class TypeChecker(Visitor):
         if error: return None, error
         right, error = self.visit(node.right_node)
         if error: return None, error
-        if node.op.type in (TokType.PLUS, TokType.MINUS, TokType.MULT, TokType.DIV, TokType.MOD, TokType.POW):
+        if node.op.type in (TokType.PLUS, TokType.MINUS, TokType.MULT, TokType.DIV, TokType.MOD, TokType.POW, TokType.SL, TokType.SR):
             if left == Types.NUMBER and right == left:
                 return Types.NUMBER, None
             elif left == Types.STRING and right == Types.STRING and node.op.type == TokType.PLUS:
@@ -94,6 +40,13 @@ class TypeChecker(Visitor):
                 return left, None
             elif (isinstance(left, arrayType) and left == right ) and node.op.type == TokType.PLUS:
                 return left, None
+            elif  node.op.type == TokType.SL or node.op.type == TokType.SR:
+                if right != Types.NUMBER and left == Types.NUMBER:
+                    return None, TypeError(node.right_node.range, f"Expected type '{typeToStr(Types.NUMBER)}' but got type '{typeToStr(right)}' on bit shift")
+                if isinstance(left, arrayType) and left.elementType != right:                    
+                    return None, TypeError(node.right_node.range, f"Expected type '{typeToStr(left.elementType)}' but got type '{typeToStr(right)}' on append")
+                if isinstance(left, arrayType) or left == Types.NUMBER:
+                    return left, None
             elif left == Types.NUMBER and right == Types.STRING or right == Types.NUMBER and left == Types.STRING and node.op.type in (TokType.PLUS, TokType.MULT):
                 return Types.STRING, None
         elif  node.op.type in (TokType.EEQ, TokType.NEQ, TokType.GT, TokType.LT, TokType.GTE, TokType.LTE, TokType.NEQ):
@@ -106,8 +59,17 @@ class TypeChecker(Visitor):
             elif left == Types.BOOL and right == Types.NUMBER or left == Types.BOOL and right == Types.NUMBER:
                 return Types.BOOL, None
         elif node.op.isKeyword('or') or node.op.isKeyword('and'):
-            if left == Types.BOOL and right == Types.NUMBER or left == Types.BOOL and right == Types.NUMBER or left == right and (left == Types.BOOL or right == Types.NUMBER):
+            if left == right == Types.NUMBER:
+                return Types.NUMBER, None
+            elif left == right == Types.BOOL:
                 return Types.BOOL, None
+        elif node.op.isKeyword('in'):
+            if isinstance(right, arrayType):
+                return Types.BOOL, None
+            elif right == Types.STRING:
+                return Types.BOOL, None
+            else:
+                return None, TypeError(node.right_node.range, f"Illegal operation in on type '{typeToStr(right)}' expected type 'str' or 'array'")
         return None, TypeError(node.range, f"Illegal operation {node.op} between types '{typeToStr(left)}' and '{typeToStr(right)}'")
         
     def visitUnaryNode(self, node: UnaryNode)->Tuple[Types, Error]:
@@ -115,22 +77,24 @@ class TypeChecker(Visitor):
         if error: return None, error
         if node.op.type == TokType.MINUS and type == Types.NUMBER:
             return Types.NUMBER, None
-        elif node.op.type == TokType.NOT and type == Types.BOOL or type == Types.NUMBER:
-            return Types.BOOL, None
+        elif node.op.type == TokType.NOT:
+            if type == Types.BOOL:
+                return Types.BOOL, None
+            elif type == Types.NUMBER:
+                return Types.NUMBER, None
         else:
             return type, None
 
     def visitIncrDecrNode(self, node: IncrDecrNode)->Tuple[Types, Error]:
+        action = "decrement" if node.id.type == TokType.MINUS_MINUS else "increment"
+        if not (isinstance(node.identifier, ArrayAccessNode) or isinstance(node.identifier, VarAccessNode)):
+            return None, SyntaxError(node.identifier.range, f"Variable is required for {action}")
         value, error = self.visit(node.identifier)
         if error: return None, error
         if value == Types.NUMBER:
             return Types.NUMBER, None
-        elif value == Types.STRING:
-            return Types.STRING, None
         else:
-            
-            incr = "decrement" if node.id.type == TokType.MINUS_MINUS else "increment"
-            return None, TypeError(node.range, f"Illegal {incr} operation on type '{typeToStr(value)}'")
+            return None, TypeError(node.range, f"Illegal {action} operation on type '{typeToStr(value)}'")
 
     def visitVarAccessNode(self, node: VarAccessNode)->Tuple[Types, Error]:
         var_name = node.var_name.value
@@ -156,6 +120,12 @@ class TypeChecker(Visitor):
 
     def visitVarAssignNode(self, node: VarAssignNode)->Tuple[Types, Error]:
         var_name = node.var_name.value
+        if var_name.isupper() and self.context.symbol_table.get(var_name)!= None:
+            return None, Error(
+                node.range,
+                None,
+                f"Cannot change value of the constant {var_name}"
+            )
         if var_name in self.reserved.keys():
             return None, Error(
                 node.var_name.range,
@@ -163,15 +133,11 @@ class TypeChecker(Visitor):
                 f"{var_name} is a reserved constant"
             )
         expected_type = node.val_type or self.context.symbol_table.get(var_name) or Types.NULL
-        if isinstance(node.value, FncDefNode):
-            self.presetNext = var_name
         type, error = self.visit(node.value)
         if type == Types.ANY and expected_type == Types.NULL:
             return None, TypeError(node.range, f"Type cannot be infered be sure to add a type on variable assignment")
         elif expected_type != Types.NULL and type == Types.ANY:
             type = expected_type
-            
-        self.presetNext = None
         if error: return None, error
         if type == expected_type or expected_type == Types.NULL:
             self.context.symbol_table.set(var_name, type)
@@ -213,11 +179,11 @@ class TypeChecker(Visitor):
     def visitForEachNode(self, node: ForEachNode):
         it, error = self.visit(node.iterator)
         if error: return None, error
-        if (not isinstance(it, arrayType)) and (it != Types.STRING):
-            return None, TypeError(node.iterator.range, f"Expected type of 'str' or array but got type '{typeToStr(it)}'")
+        if (not isinstance(it, arrayType)) and (it != Types.STRING) and (not isinstance(it, dictType)):
+            return None, TypeError(node.iterator.range, f"Expected type of 'str', dict or 'array' but got type '{typeToStr(it)}'")
         index = len(self.inLoop)
         self.inLoop.append(True)
-        type = Types.STRING if it == Types.STRING else it.elementType
+        type = Types.STRING if it == Types.STRING or isinstance(it, dictType) else it.elementType
         self.context.symbol_table.set(node.identifier.value, type)
         _, error = self.visit(node.stmt)
         if error: return None, error
@@ -231,14 +197,14 @@ class TypeChecker(Visitor):
         if not (cond_type == Types.NUMBER or cond_type == Types.BOOL):
             return None, TypeError(node.cond.range, f"Expected type 'num' or 'bool' but got type '{cond_type}'")
         index = len(self.inLoop)
-        self.inLoop.index(True)
+        self.inLoop.append(True)
         _, error = self.visit(node.stmt)
         self.inLoop.pop(index)
         if error: return None, error
         return Types.NULL, None
 
     def visitFncDefNode(self, node: FncDefNode)->Tuple[Types, Error]:
-        fnc_name = node.var_name.value if node.var_name else self.presetNext
+        fnc_name = node.var_name.value
         if fnc_name in self.reserved.keys():
             return None, Error(
                 node.var_name.range,
@@ -321,7 +287,7 @@ class TypeChecker(Visitor):
         if len(node.elements) == 0: return Types.ANY, None
         expected_type, error = self.visit(node.elements[0])
         if error: return None, error
-        for elem in node.elements:
+        for elem in node.elements[1:]:
             type, error = self.visit(elem)
             if error: return None, error
             if type != expected_type:
@@ -331,13 +297,17 @@ class TypeChecker(Visitor):
     def visitArrayAccessNode(self, node: ArrayAccessNode): 
         arr, error = self.visit(node.name)
         if error: return None, error
-        if not isinstance(arr, arrayType) and arr != Types.STRING:
+        isDict = False
+        if isinstance(arr, dictType): isDict = True  
+        elif not isinstance(arr, arrayType) and arr != Types.STRING:
             return None, TypeError(node.name.range, f"Expected array or string but got '{typeToStr(arr)}'")
         index, error = self.visit(node.index)
         if error: return None, error
-        if index != Types.NUMBER:
+        if index != Types.NUMBER and not isDict:
             return None, TypeError(node.index.range, f"Expected index to be of type 'num' but got '{typeToStr(index)}'")
-        if isinstance(arr, arrayType):
+        elif isDict and index != Types.STRING:
+            return None, TypeError(node.index.range, f"Expected key to be of type 'str' but got '{typeToStr(index)}'")
+        if isinstance(arr, arrayType) or isDict:
             return arr.elementType, None
         else:
             return Types.STRING, None
@@ -367,16 +337,71 @@ class TypeChecker(Visitor):
             savedCtx = self.context
             ctx = Context(path)
             ctx.symbol_table = SymbolTable()
-            ctx.symbol_table.symbols = self.reserved
+            ctx.symbol_table.symbols = self.reserved.copy()
             self.context = ctx
             _, error = self.visit(ast)
             if error: return None, error
-            for identifier in identifiers:
-                val = self.context.symbol_table.get(identifier.value)
-                if val != None:
-                    savedCtx.symbol_table.set(identifier.value, val)
-                else:
-                    return None, Error(identifier.range, "Error", f"Cannot find identifier {node.path.value} in module {path}")
+            if node.all:
+                savedCtx.symbol_table.symbols.update(self.context.symbol_table.symbols)
+            else:
+                for identifier in identifiers:
+                    val = self.context.symbol_table.get(identifier.value)
+                    if val != None:
+                        savedCtx.symbol_table.set(identifier.value, val)
+                    else:
+                        return None, Error(identifier.range, "Error", f"Cannot find identifier {identifier.value} in module {path}")
             self.context = savedCtx
         return Types.NULL, None
+    
+    def visitDictNode(self, node: DictNode):
+        if len(node.values) == 0: return Types.ANY, None
+        expectedType, error = self.visit(node.values[0][1])
+        if error: return None, error
+        for (key, value) in node.values:
+            ktype, error = self.visit(key)
+            if error: return None, error
+            if ktype != Types.STRING:
+                return None, TypeError(key.range, "Expected type of 'str'")
+            vtype, error = self.visit(value)
+            if error: return None, error
+            if vtype != expectedType:
+                return None, TypeError(value.range, f"Expected type of '{typeToStr(expectedType)}' because of type of first element")
+        return dictType(expectedType), None
+
+    def visitTypeCastNode(self, node: TypeCastNode):
+        val, error = self.visit(node.value)
+        if error: return None, error
+        if val == Types.STRING:
+            if node.type == Types.NUMBER:
+                return Types.NUMBER, None
+            elif node.type == Types.BOOL:
+                return Types.BOOL, None
+            elif isinstance(node.type, arrayType):
+                if node.type.elementType == Types.STRING:
+                    return node.type, None
+        elif val == Types.NUMBER:
+            if node.type == Types.STRING:
+                return Types.STRING, None
+            elif node.type == Types.BOOL:
+                return Types.BOOL, None
+        elif val == Types.BOOL:
+            if node.type == Types.NUMBER:
+                return Types.NUMBER, None
+        elif isinstance(val, arrayType):
+            if node.type == Types.STRING:
+                return Types.STRING, None
+            if isinstance(node.type, arrayType):
+                if node.type.elementType == Types.NUMBER and val.elementType == Types.STRING:
+                    return arrayType(Types.NUMBER), None
+                elif node.type.elementType == Types.BOOL and val.elementType == Types.STRING:
+                    return arrayType(Types.BOOL), None
+                elif node.type.elementType == Types.STRING and val.elementType == Types.NUMBER:
+                    return arrayType(Types.STRING), None
+                elif node.type.elementType == Types.NUMBER and val.elementType == Types.BOOL:
+                    return arrayType(Types.NUMBER), None
+                elif node.type.elementType == Types.BOOL and val.elementType == Types.NUMBER:
+                    return arrayType(Types.BOOL), None
+        return None, TypeError(node.range, f"Cannot cast {typeToStr(val)} to {typeToStr(node.type)}")
+                
+                
             

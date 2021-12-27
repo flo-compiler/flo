@@ -1,13 +1,12 @@
 #!/usr/bin/env python3
 import sys
-from buildchain.typechecker import TypeChecker, Types, arrayType, fncType
-from stack.symbolTable import SymbolTable
-from stack.context import Context
-from buildchain.lexer import Lexer
+from context import SymbolTable, Context
+from ast.lexer import Lexer
+from ast.parser import Parser
+from buildchain.checker import TypeChecker, Types, arrayType, fncType
+from buildchain.intepreter import Intepreter
 from valtypes.boolean import Boolean
 from valtypes.func import BuiltinFunc
-from buildchain.parser import Parser
-from buildchain.intepreter import Intepreter
 
 global_symbol_table = SymbolTable()
 global_symbol_table.set('true', Boolean(1))
@@ -19,7 +18,6 @@ global_symbol_table.set('input', BuiltinFunc.input)
 global_symbol_table.set('len', BuiltinFunc.len)
 global_symbol_table.set('split', BuiltinFunc.split)
 global_symbol_table.set('readFile', BuiltinFunc.readFile)
-global_symbol_table.set('toNum', BuiltinFunc.toNum)
 
 global_types_symbol_table = SymbolTable()
 global_types_symbol_table.set('true', Types.BOOL)
@@ -27,10 +25,9 @@ global_types_symbol_table.set('false', Types.BOOL)
 global_types_symbol_table.set('print', fncType(Types.NULL, [Types.ANY]))
 global_types_symbol_table.set('println', fncType(Types.NULL, [Types.ANY]))
 global_types_symbol_table.set('len', fncType(Types.NUMBER, [Types.ANY]))
-global_types_symbol_table.set('input', fncType(Types.NUMBER, []))
+global_types_symbol_table.set('input', fncType(Types.STRING, []))
 global_types_symbol_table.set('split', fncType(arrayType(Types.STRING), [Types.STRING, Types.STRING]))
 global_types_symbol_table.set('readFile', fncType(Types.STRING, [Types.STRING]))
-global_types_symbol_table.set('toNum', fncType(Types.NUMBER, [Types.STRING]))
 
 
 def main():    

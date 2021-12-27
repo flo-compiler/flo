@@ -1,7 +1,7 @@
-from typing import List, Tuple
-from ast.visitor import Visitor
-from buildchain.tokens import Token
-from utils.range import Range
+from typing import List, Tuple, Union
+from buildchain import Visitor
+from ast.tokens import Token
+from errors import Range
 
 class Node:
     def __init__(self, range: Range):
@@ -51,6 +51,13 @@ class ContinueNode(Node):
     def accept(self, visitor: Visitor):
         return visitor.visitContinueNode(self)
 
+class DictNode(Node):
+    def __init__(self, range: Range, values: List[Tuple[Node, Node]]):
+        self.range = range
+        self.values = values
+    def accept(self, visitor: Visitor):
+        return visitor.visitDictNode(self)
+
 class FncCallNode:
     def __init__(self, name: VarAccessNode, args:List[Node], range: Range):
         self.name = name
@@ -74,6 +81,13 @@ class TypeNode(Node):
     def accept(self, visitor: Visitor):
         return visitor.visitTypeNode(self)
 
+class TypeCastNode(Node):
+    def __init__(self, value, type, range: Range):
+        self.type = type
+        self.range = range
+        self.value = value
+    def accept(self, visitor: Visitor):
+        return visitor.visitTypeCastNode(self)
 
 class FncDefNode:
     def __init__(self, var_name: Token, args:List[Tuple[Token, TypeNode]], body: StmtsNode, range: Range, return_type: TypeNode=None):
@@ -117,7 +131,7 @@ class IfNode(Node):
 
 
 class IncrDecrNode(Node):
-    def __init__(self, id: Token, identifier: VarAccessNode, ispre: bool, range: Range):
+    def __init__(self, id: Token, identifier: Union[VarAccessNode, ArrayAccessNode], ispre: bool, range: Range):
         self.id = id
         self.identifier = identifier
         self.ispre = ispre
@@ -126,7 +140,8 @@ class IncrDecrNode(Node):
         return visitor.visitIncrDecrNode(self)
 
 class ImportNode(Node):
-    def __init__(self, ids: List[Token] , path: Token, range: Range):
+    def __init__(self, ids: List[Token], all: bool, path: Token, range: Range):
+        self.all = all
         self.ids = ids
         self.path = path
         self.range = range

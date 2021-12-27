@@ -7,7 +7,7 @@ newlines: ln+
 block: newlines (lbrace stmts rbrace | stmt)
 
 stmt: import_stmt
-      |if_stmt
+      | if_stmt
       | for_stmt
       | foreach_stmt
       | while_stmt
@@ -17,15 +17,15 @@ stmt: import_stmt
       
 import_stmt: import (identifier_list from)? string
 
-if_stmt: if comp_expr block newlines (else (if_stmt | block)) *
+if_stmt: if expr block newlines (else (if_stmt | block)) *
 
-for_stmt: for (expr semicolumn comp_expr semicolumn expr) block 
+for_stmt: for (expr semicolumn expr semicolumn expr) block 
 
-foreach_stmt: foreach  (identifier in expr) block
+foreach_stmt: foreach (identifier in expr) block
 
-while_stmt: while comp_exp block
+while_stmt: while expr block
 
-fnc_def_stmt: fnc identifier? lpar param_list rpar column composite_type arrow (block | expr)
+fnc_def_stmt: fnc identifier lpar param_list rpar column composite_type arrow (block | expr)
 
 param_list: identifier (comma identifier)* 
 
@@ -35,37 +35,37 @@ change_flow_stmt: return expr?
                   | continue
                   | break
 
-expr: comp_expr (("and" | "or") comp_expr)?
+expr: comp_expr (("and" | "or" | in | sl | sr) comp_expr)?
 
 comp_expr: exclamation_mark comp_expr 
          | arith_expr (comp_op arith_expr)?
 
-arith_expr: arith_expr1 (( plus | minus ) arith_expr1)?
+arith_expr: arith_expr1 (( plus | minus ) eq? arith_expr1)?
 
-arith_expr1: unary_expr ((times | div | mod | exp ) unary_expr)?
+arith_expr1: unary_expr ((times | div | mod | exp ) eq? unary_expr)?
 
 
 unary_expr: (plus | minus ) unary_expr
-      | (plus_plus | minus_minus) identifier
+      | (plus_plus | minus_minus) unary_expr
       | identifier_op_expr
-      | expr_value
 
-identifier_op_expr: identifier (
-         (plus_plus | minus_minus)
-       | (bin_op ?eq expr)
-       | (lpar expr_list rpar)
-       | (lbracket expr lbracket)*
-       | (column composite_type eq (fnc_def_stmt | expr))
+value_expr: identifier_value_op (
+       | (plus_plus | minus_minus)
+       | ((column composite_type)? eq (expr))
+       | "as" composite_type
        )?
 
 expr_list: (expr (comma expr)*)?
-
+expr_value_op: expr_value ((lbracket expr lbracket) | (lpar expr_list rpar))*
 expr_value:   number
+            | identifier
             | string
-            | rbracket expr_list? lbracket
+            | rbracket expr_list lbracket
+            | lbrace ((string col expr) (comma (string col expr))*)? rbrace
             | lpar expr rpar
 
 composite_type:  type (lbracket rbracket)*
+              |  lbrace type rbrace
 
 type: "any"
     | "num"
@@ -92,6 +92,8 @@ mod: "%"
 question_mark: "?"
 exclamation_mark: "!"
 identifier: ([a-zA-Z]|_)[A-Za-z | 0-9 | _]*
+sl: "<<"
+sr: ">>"
 semicolumn: ";"
 comma: ","
 ln: "\n"

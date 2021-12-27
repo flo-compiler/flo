@@ -1,29 +1,20 @@
-from valtypes.valType import ValType
+from valtypes import Value
 
 
-class Boolean(ValType):
+class Boolean(Value):
     def __init__(self, value):
         super().__init__()
         self.value = (0 if value == 0 else 1)
 
     def l_and(self, stri):
-        from valtypes.string import String
-        from valtypes.number import Number
         if (type(stri) == Boolean):
             return Boolean(self.value and stri.value).set_ctx(self.context), None
-        if (type(stri) == String):
-            return Boolean(self.value + len(stri.value)).set_ctx(self.context), None
-        elif (type(stri) == Number):
-            return Boolean(self.value + str(stri.value)).set_ctx(self.context), None
-        return self, None
+        return self.illegalOp()
 
     def l_or(self, num):
-        from valtypes.number import Number
         if(type(num) == Boolean):
-            return Boolean(self.value and num.value).set_ctx(self.context), None
-        if(type(num) == Number):
-            return Boolean(self.value * num.value).set_ctx(self.context), None
-        return self, None
+            return Boolean(self.value or num.value).set_ctx(self.context), None
+        return self.illegalOp()
 
 
     def l_not(self):
@@ -37,6 +28,18 @@ class Boolean(ValType):
     def isTrue(self):
         return self.value != 0
     
+    def cast_to_type(self, type):
+        from buildchain.checker import Types
+        from valtypes.number import Number
+        from valtypes.string import String
+        if type == Types.NUMBER:
+            return Number(self.value).set_ctx(self.context), None
+        elif type == Types.STRING:
+            return String(self.__repr__()).set_ctx(self.context), None
+        elif type == Types.BOOL:
+            return self, None
+        return self.illegalOp()
+
     def copy(self):
         cp = Boolean(self.value)
         cp.set_ctx(self.context)

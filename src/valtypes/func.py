@@ -1,13 +1,12 @@
 import os
-from stack.context import Context
-from stack.symbolTable import SymbolTable
+from context import Context, SymbolTable
 from valtypes.array import Array
 from valtypes.number import Number
 from valtypes.string import String
-from valtypes.valType import ValType
-from buildchain.intepreter import Intepreter
+from valtypes import Value
+from buildchain import intepreter
 
-class FuncType(ValType):
+class FuncType(Value):
     def __init__(self, name):
         super().__init__()
         self.name = name or 'anonymous'
@@ -35,7 +34,7 @@ class Func(FuncType):
 
     def execute(self, args):
         cont = self.create_ctx()
-        it = Intepreter(cont)
+        it = intepreter.Intepreter(cont)
         error = self.check_populate_args(self.args, args, cont)
         if error: return None, error
         result = it.visit(self.body)
@@ -84,19 +83,12 @@ class BuiltinFunc(FuncType):
 
     def exec_input(self, ctx: Context):
         val = input()
-        try:
-            if '.' in val:
-                val = float(val)
-            else:
-                val = int(val)
-            return Number(val), None
-        except:
-            return String(val), None
+        return String(val).set_ctx(self.context).set_range(self.range), None
     exec_input.args = []
 
     def exec_len(self, ctx: Context):
         val = ctx.symbol_table.get('value')
-        return Number(len(val.value)), None
+        return Number(len(val.value)).set_ctx(self.context).set_range(self.range), None
     exec_len.args = ["value"]
     
     def exec_split(self, ctx: Context):
@@ -106,20 +98,15 @@ class BuiltinFunc(FuncType):
         for i in range(len(list)):
             list[i] = String(list[i])
             list[i].set_range(val.range)
-        return Array(list), None
+        return Array(list).set_ctx(self.context).set_range(self.range), None
     exec_split.args = ["value", "seperator"]
 
     def exec_readFile(self, ctx: Context):
         fn = ctx.symbol_table.get('path')
         path = os.path.join(os.path.dirname(ctx.parent.display_name), fn.value)
         with open(path, "r", encoding='utf-8') as f:
-            return String(f.read()), None
+            return String(f.read()).set_ctx(self.context).set_range(self.range), None
     exec_readFile.args = ["path"]
-
-    def exec_toNum(self, ctx: Context):
-        fn = ctx.symbol_table.get('string')
-        return Number(int(fn.value)), None
-    exec_toNum.args = ["string"]
 
 BuiltinFunc.print = BuiltinFunc('print')
 BuiltinFunc.println = BuiltinFunc('println')
@@ -127,4 +114,3 @@ BuiltinFunc.input = BuiltinFunc('input')
 BuiltinFunc.len = BuiltinFunc('len')
 BuiltinFunc.split = BuiltinFunc('split')
 BuiltinFunc.readFile = BuiltinFunc('readFile')
-BuiltinFunc.toNum = BuiltinFunc('toNum')
