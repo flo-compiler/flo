@@ -1,7 +1,6 @@
-from errors import Range
-from errors import RTError
-from valtypes import Value, array, boolean, string
-from buildchain.checker import Types
+from src.errors import Range, RTError
+from src.valtypes import Value, array, boolean, string
+from src.buildchain.checker import Types
 
 
 

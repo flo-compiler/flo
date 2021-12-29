@@ -1,6 +1,6 @@
-from errors import Range, Position
-from errors import ExpectedCharError, IllegalCharacterError
-from ast.tokens import TokType, Token, LETTERS, KEYWORDS, DIGITS
+from src.errors import Range, Position
+from src.errors import ExpectedCharError, IllegalCharacterError
+from src.ast.tokens import TokType, Token, LETTERS, KEYWORDS, DIGITS
 class Lexer():
     def __init__(self, fn, text):
         self.fn = fn

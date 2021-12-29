@@ -1,16 +1,17 @@
 import os
-from context import Context
-from errors import RTError
-from ast.tokens import TokType
-from ast.nodes import *
-from buildchain import BuildCache
-from buildchain import Visitor
-from valtypes import Value
-from valtypes.array import Array
-from valtypes.dict import Dict
-from valtypes.string import String
-from valtypes.number import Number
-from valtypes.func import Func
+from src.context import Context
+from src.errors import RTError
+from src.ast.tokens import TokType
+from src.ast.nodes import *
+from src.buildchain import BuildCache
+from src.buildchain import Visitor
+from src.valtypes import Value
+from src.valtypes.array import Array
+from src.valtypes.dict import Dict
+from src.valtypes.string import String
+from src.valtypes.number import Number
+from src.valtypes.func import Func
+from src.utils import printError
 
 class RTResult:
     def __init__(self, value: Value=None, error: RTError=None):
@@ -32,6 +33,10 @@ class Intepreter(Visitor):
         self.originlSymbols = context.symbol_table.copy()
     def visit(self, node: Node)->RTResult:
         return super().visit(node)
+    def execute(self, node: Node):
+        res = self.visit(node)
+        if res.error: printError(res.error)
+        return res.value
         
     def visitNumNode(self, node: NumNode):
         return RTResult(Number(node.tok.value).set_ctx(self.context).set_range(node.range), None)
@@ -231,8 +236,7 @@ class Intepreter(Visitor):
             if result.error: return result
             res = result.value
             args.append(res)
-        result, error = fn.execute(args)
-        if error: return RTResult(None, error)
+        result = fn.execute(args)
         return RTResult(result, None)
     
     def visitArrayNode(self, node:ArrayNode):

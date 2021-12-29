@@ -1,6 +1,6 @@
 class BuildCache:
     module_asts = {}
-from context import Context
+from src.context import Context
 
 class Visitor:
     def __init__(self, context: Context):

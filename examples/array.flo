@@ -4,7 +4,7 @@ numbers: num [] = [1, 2, 4, 5, 6]
 ++numbers[1]
 println(colors)
 // I probably need a seperate append method
-colors - "grey"
+colors << "grey"
 //modifiedColors[2]++
 // Another bug to fix
 println(numbers as str [])

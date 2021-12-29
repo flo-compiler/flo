@@ -1,14 +1,14 @@
 import os
 from typing import List
-from buildchain import BuildCache
-from buildchain import Visitor
-from context import Context, SymbolTable
-from errors import Error, TypeError, SyntaxError
-from ast.tokens import TokType
-from ast.lexer import Lexer
-from ast.parser import Parser
-from ast.nodes import *
-from valtypes.checks import *
+from src.buildchain import BuildCache
+from src.buildchain import Visitor
+from src.context import Context, SymbolTable
+from src.errors import Error, TypeError, SyntaxError
+from src.ast.tokens import TokType
+from src.ast.lexer import Lexer
+from src.ast.parser import Parser
+from src.ast.nodes import *
+from src.valtypes.checks import *
 
 class TypeChecker(Visitor):
     def __init__(self, context: Context):

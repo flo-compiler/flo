@@ -1,8 +1,8 @@
 
-from errors import RTError
-from buildchain.checker import Types, arrayType
-from valtypes import Value, array, number
-from valtypes.boolean import Boolean
+from src.errors import RTError
+from src.buildchain.checker import Types, arrayType
+from src.valtypes import Value, array, number
+from src.valtypes.boolean import Boolean
 
 class String(Value):
     def __init__(self, value):

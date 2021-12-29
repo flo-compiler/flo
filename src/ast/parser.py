@@ -1,9 +1,9 @@
 from typing import List
-from ast.nodes import *
-from ast.tokens import TokType, Token
-from errors import SyntaxError
-from errors import Range
-from valtypes.checks import arrayType, dictType, strToType
+from src.ast.nodes import *
+from src.ast.tokens import TokType, Token
+from src.errors import SyntaxError
+from src.errors import Range
+from src.valtypes.checks import arrayType, dictType, strToType
 
 
 
