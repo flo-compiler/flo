@@ -1,4 +1,4 @@
-from valtypes import Value
+from src.valtypes import Value
 class SymbolTable:
     def __init__(self, parent = None):
         self.symbols  = {}

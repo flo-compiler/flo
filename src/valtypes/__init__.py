@@ -1,4 +1,4 @@
-from errors import RTError
+from src.errors import RTError
 class Value:
     def __init__(self):
         self.set_range()

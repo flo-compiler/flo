@@ -1,10 +1,11 @@
 import os
-from context import Context, SymbolTable
-from valtypes.array import Array
-from valtypes.number import Number
-from valtypes.string import String
-from valtypes import Value
-from buildchain import intepreter
+from src.utils import printError
+from src.context import Context, SymbolTable
+from src.valtypes.array import Array
+from src.valtypes.number import Number
+from src.valtypes.string import String
+from src.valtypes import Value
+from src.buildchain import intepreter
 
 class FuncType(Value):
     def __init__(self, name):
@@ -37,9 +38,7 @@ class Func(FuncType):
         it = intepreter.Intepreter(cont)
         error = self.check_populate_args(self.args, args, cont)
         if error: return None, error
-        result = it.visit(self.body)
-        if result.error: return None, result.error
-        return result.func_return_value if result.func_return_value != None else result.value, None
+        return it.execute(self.body)
 
     def copy(self):
         cp = Func(self.name, self.body, self.args)
@@ -57,8 +56,8 @@ class BuiltinFunc(FuncType):
         error = self.check_populate_args(method.args, args, cont)
         if error: return None, error
         val, error = method(cont)
-        if error: return error
-        return val, None
+        if error: printError(error)
+        return val
     
     def no_exec(self, ctx):
         raise Exception(f'No built-in function ${self.name}')

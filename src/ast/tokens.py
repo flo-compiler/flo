@@ -1,6 +1,6 @@
 import string
 from enum import Enum
-from errors import Range
+from src.errors import Range
 
 LETTERS = string.ascii_letters
 DIGITS = '0123456789'

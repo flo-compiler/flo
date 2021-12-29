@@ -1,7 +1,7 @@
 from typing import List, Tuple, Union
-from buildchain import Visitor
-from ast.tokens import Token
-from errors import Range
+from src.buildchain import Visitor
+from src.ast.tokens import Token
+from src.errors import Range
 
 class Node:
     def __init__(self, range: Range):

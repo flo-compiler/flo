@@ -18,4 +18,4 @@ arr = [print, c]
 arr[1]("dd")
 println(arr)
 hello = (("12345" as str []) << "6")[4]
-//println(++3)
+println(++3)

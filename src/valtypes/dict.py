@@ -1,8 +1,8 @@
-from valtypes.boolean import Boolean
-from valtypes.number import Number
-from valtypes import Value
+from src.valtypes.boolean import Boolean
+from src.valtypes.number import Number
+from src.valtypes import Value
 class Dict(Value):
-    def __init__(self, value: dict[str, Value]):
+    def __init__(self, value):
         super().__init__()
         self.value = value
 

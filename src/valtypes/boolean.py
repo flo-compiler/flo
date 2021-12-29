@@ -1,4 +1,4 @@
-from valtypes import Value
+from src.valtypes import Value
 
 
 class Boolean(Value):

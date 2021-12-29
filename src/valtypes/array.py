@@ -1,7 +1,7 @@
 from typing import List, Union
-from buildchain import checker
-from valtypes import Value, string, boolean, number
-from errors import RTError
+from src.buildchain import checker
+from src.valtypes import Value, string, boolean, number
+from src.errors import RTError
 class Array(Value):
     def __init__(self, value:List[Value]):
         super().__init__()
