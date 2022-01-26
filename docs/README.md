@@ -1,4 +1,5 @@
-# Drafted features
+# FLo Documentation
+- Basics
 ## keywords
 ```
 num
@@ -13,6 +14,7 @@ or
 xor
 fnc
 in
+is
 if
 else
 for
@@ -116,4 +118,8 @@ fnc add(x: num, y: num): num => {
     return x+y
 }
 fnc double_sum (x: num, y: num): num => double(sum(x, y))
+```
+## Type Operators
+```
+is
 ```

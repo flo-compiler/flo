@@ -1,21 +1,4 @@
-
-// TODO: bit wise operators 
-// TODO: default parameters of functions
-/* I want to be able to chain/pipe function calls like this */
-// a = b = c = 5
-// b = 4
-// a[3] = 5
-// for i=1; b; --b {
-//     if b == 2 break
-//     println(b)
-// }
-// while --b != 0 {
-//     println(b)
-// }
-/* I want to be able to do this: */
-fnc c(): void => print("hello")
-arr = [print, c]
-arr[1]("dd")
-println(arr)
-hello = (("12345" as str []) << "6")[4]
-println(++3)
+/*Test File for testing features I am currently working on*/
+if 1 {
+    print("ok")
+}

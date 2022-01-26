@@ -1,5 +1,5 @@
 fishes: num [] = []
-foreach st in split(readFile("input6.txt"), ",") fishes - st as num
+foreach st in split(readFile("input6.txt"), ",") fishes << (st as num)
 DAYS1 = 80
 DAYS2 = 256
 RESET = 6

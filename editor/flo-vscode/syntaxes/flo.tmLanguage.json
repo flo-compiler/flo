@@ -28,12 +28,12 @@
 		"keywords": {
 			"patterns": [{
 				"name": "keyword.other.flo",
-				"match": "\\b(and|or|num|bool|str|void|fnc|class|pub|priv)\\b"
+				"match": "\\b(and|or|xor|num|bool|str|void|fnc|class|pub|priv)\\b"
 			}]
 		},
 		"control-keywords":{
 			"name": "keyword.control.flo",
-			"match": "\\b(if|else|for|while|break|continue|return|import|from|foreach|in|as)\\b"
+			"match": "\\b(if|else|for|while|break|continue|return|import|from|foreach|in|as|is)\\b"
 		},
 		"strings": {
 			"name": "string.quoted.double.flo",

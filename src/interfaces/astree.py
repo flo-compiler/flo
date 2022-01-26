@@ -1,7 +1,62 @@
+from context import Context
 from typing import List, Tuple, Union
-from src.buildchain import Visitor
-from src.ast.tokens import Token
-from src.errors import Range
+from lexer import Token
+from errors import Range
+
+class Visitor:
+    def __init__(self, context: Context):
+        self.context = context
+
+    def visit(self, node):
+        return node.accept(self)
+
+    def visitNumNode(self, node): pass
+    
+    def visitStrNode(self, node): pass
+
+    def visitNumOpNode(self, node): pass
+        
+    def visitUnaryNode(self, node): pass
+    
+    def visitIncrDecrNode(self, node): pass
+
+    def visitVarAccessNode(self, node): pass
+
+    def visitStmtsNode(self, node): pass
+
+    def visitVarAssignNode(self, node): pass
+    
+    def visitIfNode(self, node): pass
+
+    def visitForNode(self, node): pass
+
+    def visitForEachNode(self, node): pass
+
+    def visitWhileNode(self, node): pass
+    
+    def visitFncDefNode(self, node): pass
+    
+    def visitReturnNode(self, node): pass
+
+    def visitContinueNode(self, node): pass
+
+    def visitBreakNode(self, node): pass
+
+    def visitFncCallNode(self, node): pass
+    
+    def visitTypeNode(self, node): pass
+
+    def visitArrayNode(self, node): pass
+
+    def visitArrayAccessNode(self, node): pass
+
+    def visitArrayAssignNode(self, node): pass
+
+    def visitDictNode(self, node): pass
+
+    def visitContinueNode(self, node): pass
+
+    def visitImportNode(self, node): pass
 
 class Node:
     def __init__(self, range: Range):
@@ -80,14 +135,6 @@ class TypeNode(Node):
         self.range = range
     def accept(self, visitor: Visitor):
         return visitor.visitTypeNode(self)
-
-class TypeCastNode(Node):
-    def __init__(self, value, type, range: Range):
-        self.type = type
-        self.range = range
-        self.value = value
-    def accept(self, visitor: Visitor):
-        return visitor.visitTypeCastNode(self)
 
 class FncDefNode:
     def __init__(self, var_name: Token, args:List[Tuple[Token, TypeNode]], body: StmtsNode, range: Range, return_type: TypeNode=None):
