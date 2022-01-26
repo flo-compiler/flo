@@ -1,7 +1,7 @@
 // This example converts an input to binary
 base = 2
 print("Enter a number to change to base: ")
-number = input()
+number = input() as num
 result = ""
 while number > 0 {
     mod = (number % base)

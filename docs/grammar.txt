@@ -35,7 +35,9 @@ change_flow_stmt: return expr?
                   | continue
                   | break
 
-expr: comp_expr (("and" | "or" | in | sl | sr) comp_expr)?
+expr: bit_expr (("as" | "is") composite_type)?
+
+bit_expr: comp_expr (("and" | "or" | xor | in | sl | sr) comp_expr)?
 
 comp_expr: exclamation_mark comp_expr 
          | arith_expr (comp_op arith_expr)?
@@ -65,7 +67,7 @@ expr_value:   number
             | lpar expr rpar
 
 composite_type:  type (lbracket rbracket)*
-              |  lbrace type rbrace
+              |  lbrace composite_type rbrace
 
 type: "any"
     | "num"
@@ -102,6 +104,7 @@ string: /"(*?)"/
       | /'(*?)'/
 plus_plus: "++"
 minus_minus: "--"
+xor: "xor"
 
 
 
