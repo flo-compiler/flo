@@ -112,14 +112,17 @@ class FloInt:
 
     def and_(self, builder: ir.IRBuilder, num):
         return FloInt(builder.and_(self.value, num.value))
+    
+    def not_(self, builder: ir.IRBuilder):
+        return FloInt(builder.not_(self.value))
 
     def xor(self, builder: ir.IRBuilder, num):
         return FloInt(builder.xor(self.value, num.value))
     
     def castTo(self, builder: ir.IRBuilder, type):
-        if isinstance(type, ir.DoubleType):
+        if type == FloFloat:
             return self.toFloat(builder)
-        elif isinstance(type, ir.IntType) and type.width == 1:
+        elif type == FloBool:
             return self.cmp(builder, "!=", FloInt.zero())
         else: 
             raise Exception(f"Unhandled type cast: int to {type}")
@@ -157,9 +160,10 @@ class FloFloat():
         return self
     
     def castTo(self, builder: ir.IRBuilder, type):
-        if isinstance(type, ir.IntType):
-            if type.width == 1: return self.cmp(builder, "!=", FloFloat.zero())
+        if type == FloInt:
             return self.toInt(builder)
+        elif type == FloBool:
+            return self.cmp(builder, "!=", FloFloat.zero())
         else: 
             raise Exception(f"Unhandled type cast: float to {type}")
     @staticmethod
@@ -214,6 +218,9 @@ class FloBool:
         if not isinstance(bool, FloBool): return FloBool.false()
 
         return FloBool(builder.icmp_signed(op, self.value, bool.value))
+    
+    def not_(self, builder: ir.IRBuilder):
+        return FloBool(builder.not_(self.value))
 
     @staticmethod
     def default_llvm_val():
