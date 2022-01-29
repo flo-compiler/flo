@@ -14,6 +14,23 @@ class BuildCache:
 
 
 class Analyzer(Visitor):
+    comparason_ops = (
+        TokType.EEQ,
+        TokType.NEQ,
+        TokType.GT,
+        TokType.LT,
+        TokType.GTE,
+        TokType.LTE,
+        TokType.NEQ,
+    )
+    arithmetic_ops_1 = (
+        TokType.PLUS,
+        TokType.MINUS,
+        TokType.MULT,
+        TokType.DIV,
+    )
+    arithmetic_ops_2 = (TokType.MOD, TokType.POW, TokType.SL, TokType.SR)
+
     def __init__(self, context: Context):
         self.context = context
         self.reserved = context.symbol_table.symbols.copy()
@@ -21,97 +38,114 @@ class Analyzer(Visitor):
         self.inLoop = [False]
         self.shoudlReturn = False
 
-    def visit(self, node: Node) -> Tuple[Types, Error]:
+    def visit(self, node: Node) -> Types:
         return super().visit(node)
 
-    def visitNumNode(self, _: NumNode) -> Tuple[Types, Error]:
-        return Types.NUMBER
+    def visitIntNode(self, _):
+        return Types.INT
 
-    def visitStrNode(self, _: StrNode) -> Tuple[Types, Error]:
+    def visitFloatNode(self, _: FloatNode):
+        return Types.FLOAT
+
+    def visitStrNode(self, _: StrNode):
         return Types.STRING
 
-    def visitNumOpNode(self, node: NumOpNode) -> Tuple[Types, Error]:
+    def cast(self, node: Node, type):
+        return NumOpNode(
+            node,
+            Token(TokType.KEYWORD, node.range, "as"),
+            TypeNode(type, node.range),
+            node.range,
+        )
+
+    def isNumeric(self, *types):
+        isNum = True
+        for type in types:
+            isNum = isNum and (type == Types.INT or type == Types.FLOAT)
+        return isNum
+
+    def visitNumOpNode(self, node: NumOpNode):
         left = self.visit(node.left_node)
         right = self.visit(node.right_node)
-        if node.op.type in (
-            TokType.PLUS,
-            TokType.MINUS,
-            TokType.MULT,
-            TokType.DIV,
-            TokType.MOD,
-            TokType.POW,
-            TokType.SL,
-            TokType.SR,
-        ):
-            if left == Types.NUMBER and right == left:
-                return Types.NUMBER
-            elif (
-                left == Types.STRING
-                and right == Types.STRING
+        if node.op.type in self.arithmetic_ops_1:
+            # IMPROVE: This if statement and the one beneath it are repetitive.
+            if left == Types.FLOAT and right == Types.INT:
+                node.right_node = self.cast(node.right_node, Types.FLOAT)
+                return Types.FLOAT
+            if left == Types.INT and right == Types.FLOAT:
+                node.left_node = self.cast(node.left_node, Types.FLOAT)
+                return Types.FLOAT
+            # Special case for division
+            if node.op.type == TokType.DIV:
+                if left == Types.INT:
+                    node.left_node = self.cast(node.left_node, Types.FLOAT)
+                if right == Types.INT:
+                    node.right_node = self.cast(node.right_node, Types.FLOAT)
+                return Types.FLOAT
+            # Checking for adding nums and concatenating
+            if (
+                (
+                    left == Types.STRING
+                    or self.isNumeric(left)
+                    or isinstance(left, arrayType)
+                )
+                and left == right
                 and node.op.type == TokType.PLUS
             ):
-                return Types.STRING
-            elif (
-                (isinstance(left, arrayType) and right == Types.NUMBER)
-                or (isinstance(right, arrayType) and left == Types.NUMBER)
-            ) and node.op.type == TokType.MULT:
                 return left
-            elif (
-                isinstance(left, arrayType) and left == right
-            ) and node.op.type == TokType.PLUS:
+            # All these ops are valid numeric ops
+            if self.isNumeric(left) and left == right: return left
+            # IMPROVE: This if statement and the one beneath it are repetitive.
+            if (
+                (left == Types.STRING or isinstance(left, arrayType))
+                and self.isNumeric(right)
+                and node.op.type == TokType.MULT
+            ):
+                if right == Types.FLOAT:
+                    node.right_node = self.cast(node.right_node, Types.INT)
                 return left
-            elif node.op.type == TokType.SL or node.op.type == TokType.SR:
-                if right != Types.NUMBER and left == Types.NUMBER:
+            if (
+                (right == Types.STRING or isinstance(right, arrayType))
+                and self.isNumeric(left)
+                and node.op.type == TokType.MULT
+            ):
+                if right == Types.FLOAT:
+                    node.left_node = self.cast(node.left_node, Types.INT)
+                return right
+
+        elif node.op.type in self.arithmetic_ops_2 or node.op.isKeyword("xor"):
+            if isinstance(left, arrayType) and (
+                node.op.type == TokType.SL or node.op.type == TokType.SL
+            ):
+                if (not self.isNumeric(right)) and node.op.type == TokType.SR:
                     TypeError(
                         node.right_node.range,
-                        f"Expected type '{typeToStr(Types.NUMBER)}' but got type '{typeToStr(right)}' on bit shift",
+                        f"Expected type '{typeToStr(Types.INT)}' or '{typeToStr(Types.FLOAT)}' but got type '{typeToStr(right)}' on bit shift",
                     ).throw()
-                if isinstance(left, arrayType) and left.elementType != right:
+                if left.elementType != right and node.op.type == TokType.SL:
                     TypeError(
                         node.right_node.range,
                         f"Expected type '{typeToStr(left.elementType)}' but got type '{typeToStr(right)}' on append",
                     ).throw()
-                if isinstance(left, arrayType) or left == Types.NUMBER:
-                    return left
-            elif (
-                left == Types.NUMBER
-                and right == Types.STRING
-                or right == Types.NUMBER
-                and left == Types.STRING
-                and node.op.type in (TokType.PLUS, TokType.MULT)
-            ):
-                return Types.STRING
-        elif node.op.type in (
-            TokType.EEQ,
-            TokType.NEQ,
-            TokType.GT,
-            TokType.LT,
-            TokType.GTE,
-            TokType.LTE,
-            TokType.NEQ,
-        ):
-            if left == right and left == Types.NUMBER or left == Types.BOOL:
+                return left if node.op.type == TokType.SL else left.elementType
+            # IMPROVE: Duplicate code with second if of or/and check
+            if self.isNumeric(left, right):
+                if left == Types.FLOAT:
+                    node.left_node = self.cast(node.left_node, Types.INT)
+                if right == Types.FLOAT:
+                    node.right_node = self.cast(node.right_node, Types.INT)
+                return Types.INT
+        elif node.op.type in Analyzer.comparason_ops or node.op.isKeyword("is"):
+            return Types.BOOL
+        elif node.op.isKeyword("or") or node.op.isKeyword("and"):
+            if left == right == Types.BOOL:
                 return Types.BOOL
-            elif left == right and left == Types.STRING and node.op.type == TokType.EEQ:
-                return Types.BOOL
-            elif left == right and left == Types.STRING and node.op.type == TokType.NEQ:
-                return Types.BOOL
-            elif (
-                left == Types.BOOL
-                and right == Types.NUMBER
-                or left == Types.BOOL
-                and right == Types.NUMBER
-            ):
-                return Types.BOOL
-        elif (
-            node.op.isKeyword("or")
-            or node.op.isKeyword("and")
-            or node.op.isKeyword("xor")
-        ):
-            if left == right == Types.NUMBER:
-                return Types.NUMBER
-            elif left == right == Types.BOOL:
-                return Types.BOOL
+            if self.isNumeric(left, right):
+                if left == Types.FLOAT:
+                    node.left_node = self.cast(node.left_node, Types.INT)
+                if right == Types.FLOAT:
+                    node.right_node = self.cast(node.right_node, Types.INT)
+                return Types.INT
         elif node.op.isKeyword("in"):
             if isinstance(right, arrayType) or right == Types.STRING:
                 return Types.BOOL
@@ -121,53 +155,69 @@ class Analyzer(Visitor):
                     f"Illegal operation in on type '{typeToStr(right)}' expected type 'str' or 'array'",
                 ).throw()
         elif node.op.isKeyword("as"):
-            return self.checkisCastable(left, right, node.range)
-        elif node.op.isKeyword("is"):
-            return Types.BOOL
+            if left == right:
+                node = node.left_node
+                return right
+            if self.isCastable(left, right):
+                return right
+            else:
+                TypeError(
+                    range, f"Cannot cast {typeToStr(left)} to {typeToStr(right)}"
+                ).throw()
         TypeError(
             node.range,
             f"Illegal operation {node.op} between types '{typeToStr(left)}' and '{typeToStr(right)}'",
         ).throw()
 
-    def visitUnaryNode(self, node: UnaryNode) -> Tuple[Types, Error]:
-        type = self.visit(node.tok)
-        if node.op.type == TokType.MINUS and type == Types.NUMBER:
-            return Types.NUMBER
-        elif node.op.type == TokType.NOT:
+    def visitUnaryNode(self, node: UnaryNode):
+        type = self.visit(node.value)
+        if type != Types.BOOL and (not self.isNumeric(type)):
+            TypeError(
+                node.value.range,
+                f"Expected type of '{typeToStr(Types.BOOL)}', '{typeToStr(Types.FLOAT)}' or '{typeToStr(Types.FLOAT)}' but got '{typeToStr(type)}'",
+            ).throw()
+        if node.op.type == TokType.MINUS and (not self.isNumeric(type)):
+            TypeError(
+                node.value.range,
+                f"Illegal negative {typeToStr(type)}",
+            ).throw()
+        if node.op.type == TokType.NOT:
             if type == Types.BOOL:
                 return Types.BOOL
-            elif type == Types.NUMBER:
-                return Types.NUMBER
+            else:
+                if type == Types.FLOAT:
+                    node.value = self.cast(node.value, Types.INT)
+                return Types.INT
         else:
             return type
 
-    def visitIncrDecrNode(self, node: IncrDecrNode) -> Tuple[Types, Error]:
+    def visitIncrDecrNode(self, node: IncrDecrNode):
         action = "decrement" if node.id.type == TokType.MINUS_MINUS else "increment"
         if not (
             isinstance(node.identifier, ArrayAccessNode)
             or isinstance(node.identifier, VarAccessNode)
         ):
             SyntaxError(
-                node.identifier.range, f"Variable is required for {action}"
+                node.identifier.range, f"Illegal {action} on non-identifier"
             ).throw()
-        value = self.visit(node.identifier)
-        if value == Types.NUMBER:
-            return Types.NUMBER
+        type = self.visit(node.identifier)
+        if self.isNumeric(type):
+            return type
         else:
             TypeError(
-                node.range, f"Illegal {action} operation on type '{typeToStr(value)}'"
+                node.range, f"Illegal {action} operation on type '{typeToStr(type)}'"
             ).throw()
 
-    def visitVarAccessNode(self, node: VarAccessNode) -> Tuple[Types, Error]:
+    def visitVarAccessNode(self, node: VarAccessNode):
         var_name = node.var_name.value
         value = self.context.symbol_table.get(var_name)
         if value == None:
             NameError(
                 node.var_name.range, node.var_name.range, f"'{var_name}' is not defined"
-            )
+            ).throw()
         return value
 
-    def visitStmtsNode(self, node: StmtsNode) -> Tuple[Types, Error]:
+    def visitStmtsNode(self, node: StmtsNode):
         rt = Types.VOID
         for expr in node.stmts:
             s = self.visit(expr)
@@ -178,7 +228,7 @@ class Analyzer(Visitor):
                 rt = e
         return rt
 
-    def visitVarAssignNode(self, node: VarAssignNode) -> Tuple[Types, Error]:
+    def visitVarAssignNode(self, node: VarAssignNode):
         var_name = node.var_name.value
         if var_name.isupper() and self.context.symbol_table.get(var_name) != None:
             TypeError(
@@ -214,32 +264,30 @@ class Analyzer(Visitor):
                 f"Assigning '{typeToStr(type)}' to type '{typeToStr(expected_type)}'",
             ).throw()
 
-    def visitIfNode(self, node: IfNode) -> Tuple[Types, Error]:
-        for cond, expr in node.cases:
-            cond_type = self.visit(cond)
-
-            if not (cond_type == Types.NUMBER or cond_type == Types.BOOL):
-                TypeError(
-                    cond.range,
-                    f"Expected type 'num' or 'bool' but got type '{typeToStr(cond_type)}'",
-                ).throw()
-            else:
-                self.shoudlReturn = False
-                _ = self.visit(expr)
-
-        if node.else_case:
-            _ = self.visit(node.else_case)
-
-        return _ if self.shoudlReturn else Types.VOID
-
-    def visitForNode(self, node: ForNode) -> Tuple[Types, Error]:
-        _ = self.visit(node.init)
-        cond_type = self.visit(node.cond)
-        if not (cond_type == Types.NUMBER or cond_type == Types.BOOL):
+    def condition_check(self, cond_node: Node):
+        cond_type = self.visit(cond_node)
+        if cond_type != Types.BOOL and (not self.isNumeric(cond_type)):
             TypeError(
-                node.cond.range,
-                f"Expected type 'num' or 'bool' but got type '{cond_type}'",
+                cond_node.range,
+                f"Expected type '{typeToStr(Types.BOOL)}', '{typeToStr(Types.INT)}' or '{typeToStr(Types.FLOAT)}' but got type '{typeToStr(cond_type)}'",
             ).throw()
+        if self.isNumeric(cond_type):
+            cond_node = self.cast(cond_node, Types.BOOL)
+        return cond_node
+
+    def visitIfNode(self, node: IfNode):
+        for cond, expr in node.cases:
+            cond = self.condition_check(cond)
+            self.shoudlReturn = False
+            returned_type = self.visit(expr)
+        if node.else_case:
+            returned_type = self.visit(node.else_case)
+        # WARNING: Might have to check this concdition all-through the code.
+        return returned_type if self.shoudlReturn else Types.VOID
+
+    def visitForNode(self, node: ForNode):
+        _ = self.visit(node.init)
+        node.cond = self.condition_check(node.cond)
         index = len(self.inLoop)
         self.inLoop.append(True)
         _ = self.visit(node.stmt)
@@ -271,33 +319,27 @@ class Analyzer(Visitor):
         self.inLoop.pop(index)
         return Types.VOID
 
-    def visitWhileNode(self, node: WhileNode) -> Tuple[Types, Error]:
-        cond_type = self.visit(node.cond)
-        if not (cond_type == Types.NUMBER or cond_type == Types.BOOL):
-            TypeError(
-                node.cond.range,
-                f"Expected type 'num' or 'bool' but got type '{cond_type}'",
-            ).throw()
+    def visitWhileNode(self, node: WhileNode):
+        node.cond = self.condition_check(node.cond)
         index = len(self.inLoop)
         self.inLoop.append(True)
         _ = self.visit(node.stmt)
         self.inLoop.pop(index)
         return Types.VOID
 
-    def visitFncDefNode(self, node: FncDefNode) -> Tuple[Types, Error]:
+    def visitFncDefNode(self, node: FncDefNode):
         fnc_name = node.var_name.value
         if fnc_name in self.reserved.keys():
             TypeError(
                 node.var_name.range,
                 node.var_name.range,
                 f"{fnc_name} is a reserved constant",
-            )
+            ).throw()
         if isinstance(self.context.symbol_table.get(fnc_name), fncType):
             NameError(
                 node.var_name.range,
-                node.var_name.range,
                 f"{fnc_name} is already defined",
-            )
+            ).throw()
         fnc_type = self.visit(node.return_type)
         if fnc_type == None:
             TypeError(
@@ -329,6 +371,12 @@ class Analyzer(Visitor):
         self.context.symbol_table.set(fnc_name, rtype)
         self.funcStack.append(fnc_type)
         bodyType = self.visit(node.body)
+        if (
+            not isinstance(node.body, StmtsNode)
+            and self.shoudlReturn == False
+            and bodyType != Types.VOID
+        ):
+            node.body = ReturnNode(node.body, node.body.range)
         self.funcStack.pop()
         self.context.symbol_table = savedTbl
         if bodyType != fnc_type:
@@ -340,7 +388,7 @@ class Analyzer(Visitor):
             self.context.symbol_table.set(fnc_name, rtype)
         return rtype
 
-    def visitReturnNode(self, node: ReturnNode) -> Tuple[Types, Error]:
+    def visitReturnNode(self, node: ReturnNode):
         self.shoudlReturn = True
         if len(self.funcStack) == 0:
             SyntaxError(node.range, "Illegal return outside a function").throw()
@@ -358,17 +406,17 @@ class Analyzer(Visitor):
         else:
             return Types.VOID
 
-    def visitContinueNode(self, node: ContinueNode) -> Tuple[Types, Error]:
+    def visitContinueNode(self, node: ContinueNode):
         if not self.inLoop[-1]:
             SyntaxError(node.range, "Illegal continue outside of a loop").throw()
         return Types.VOID
 
-    def visitBreakNode(self, node: BreakNode) -> Tuple[Types, Error]:
+    def visitBreakNode(self, node: BreakNode):
         if not self.inLoop[-1]:
             SyntaxError(node.range, "Illegal break outside of a loop").throw()
         return Types.VOID
 
-    def visitFncCallNode(self, node: FncCallNode) -> Tuple[Types, Error]:
+    def visitFncCallNode(self, node: FncCallNode):
         fn = self.visit(node.name)
         if not isinstance(fn, fncType):
             TypeError(
@@ -411,41 +459,41 @@ class Analyzer(Visitor):
         return arrayType(expected_type)
 
     def visitArrayAccessNode(self, node: ArrayAccessNode):
-        arr = self.visit(node.name)
-        isDict = False
-        if isinstance(arr, dictType):
-            isDict = True
-        elif not isinstance(arr, arrayType) and arr != Types.STRING:
-            TypeError(
-                node.name.range, f"Expected array or string but got '{typeToStr(arr)}'"
-            ).throw()
+        collection = self.visit(node.name)
         index = self.visit(node.index)
-        if index != Types.NUMBER and not isDict:
-            TypeError(
-                node.index.range,
-                f"Expected index to be of type 'num' but got '{typeToStr(index)}'",
-            ).throw()
-        elif isDict and index != Types.STRING:
-            TypeError(
-                node.index.range,
-                f"Expected key to be of type 'str' but got '{typeToStr(index)}'",
-            ).throw()
-        if isinstance(arr, arrayType) or isDict:
-            return arr.elementType
+        if isinstance(collection, dictType):
+            if index != Types.STRING:
+                TypeError(
+                    node.index.range,
+                    f"Expected key to be of type '{typeToStr(Types.STRING)}' but got '{typeToStr(index)}'",
+                ).throw()
+            return collection.elementType
+        elif isinstance(collection, arrayType) or collection == Types.STRING:
+            if not self.isNumeric(collection):
+                TypeError(
+                    node.index.range,
+                    f"Expected key to be of type '{typeToStr(Types.STRING)}' but got '{typeToStr(index)}'",
+                ).throw()
+            return (
+                Types.STRING if collection == Types.STRING else collection.elementType
+            )
         else:
-            return Types.STRING
+            TypeError(
+                node.name.range,
+                f"Expected array, dict or string but got '{typeToStr(collection)}'",
+            ).throw()
 
     def visitArrayAssignNode(self, node: ArrayAssignNode):
-        arr = self.visit(node.array)
+        arr: arrayType = self.visit(node.array)
         value = self.visit(node.value)
         if arr != value:
             TypeError(
                 node.range,
-                f"Expected assigned value to be of type '{typeToStr(arr)}' but got '{typeToStr(value)}'",
+                f"Expected assigned value to be of type '{typeToStr(arr.elementType)}' but got '{typeToStr(value)}'",
             ).throw()
         return arr
 
-    def visitImportNode(self, node: ImportNode) -> Tuple[Types, Error]:
+    def visitImportNode(self, node: ImportNode):
         module_path = path.join(
             path.dirname(self.context.display_name), node.path.value
         )
@@ -492,7 +540,9 @@ class Analyzer(Visitor):
             ktype = self.visit(key)
 
             if ktype != Types.STRING:
-                TypeError(key.range, "Expected type of 'str'").throw()
+                TypeError(
+                    key.range, f"Expected type of '{typeToStr(Types.STRING)}'"
+                ).throw()
             vtype = self.visit(value)
 
             if vtype != expectedType:
@@ -502,47 +552,6 @@ class Analyzer(Visitor):
                 ).throw()
         return dictType(expectedType)
 
-    def checkisCastable(self, left, right, range):
-        if left == Types.STRING:
-            if right == Types.NUMBER:
-                return Types.NUMBER
-            elif right == Types.BOOL:
-                return Types.BOOL
-            elif isinstance(right, arrayType):
-                if right.elementType == Types.STRING:
-                    return right
-        elif left == Types.NUMBER:
-            if right == Types.STRING:
-                return Types.STRING
-            elif right == Types.BOOL:
-                return Types.BOOL
-        elif left == Types.BOOL:
-            if right == Types.NUMBER:
-                return Types.NUMBER
-        elif isinstance(left, arrayType):
-            if right == Types.STRING:
-                return Types.STRING
-            if isinstance(right, arrayType):
-                if (
-                    right.elementType == Types.NUMBER
-                    and left.elementType == Types.STRING
-                ):
-                    return arrayType(Types.NUMBER)
-                elif (
-                    right.elementType == Types.BOOL and left.elementType == Types.STRING
-                ):
-                    return arrayType(Types.BOOL)
-                elif (
-                    right.elementType == Types.STRING
-                    and left.elementType == Types.NUMBER
-                ):
-                    return arrayType(Types.STRING)
-                elif (
-                    right.elementType == Types.NUMBER and left.elementType == Types.BOOL
-                ):
-                    return arrayType(Types.NUMBER)
-                elif (
-                    right.elementType == Types.BOOL and left.elementType == Types.NUMBER
-                ):
-                    return arrayType(Types.BOOL)
-        TypeError(range, f"Cannot cast {typeToStr(left)} to {typeToStr(right)}").throw()
+    # TODO: Look for types that are incompatible for casting.
+    def isCastable(self, current_type, target_type):
+        return True

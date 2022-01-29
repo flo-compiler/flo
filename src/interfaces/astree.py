@@ -10,7 +10,9 @@ class Visitor:
     def visit(self, node):
         return node.accept(self)
 
-    def visitNumNode(self, node): pass
+    def visitIntNode(self, node): pass
+
+    def visitFloatNode(self, node): pass
     
     def visitStrNode(self, node): pass
 
@@ -196,12 +198,19 @@ class ImportNode(Node):
         return visitor.visitImportNode(self)
 
 
-class NumNode(Node):
+class IntNode(Node):
     def __init__(self, tok: Token, range: Range):
         self.tok = tok
         self.range = range
     def accept(self, visitor: Visitor):
-        return visitor.visitNumNode(self)
+        return visitor.visitIntNode(self)
+
+class FloatNode(Node):
+    def __init__(self, tok: Token, range: Range):
+        self.tok = tok
+        self.range = range
+    def accept(self, visitor: Visitor):
+        return visitor.visitFloatNode(self)
 
 
 class NumOpNode(Node):
@@ -232,9 +241,9 @@ class StrNode(Node):
 
 
 class UnaryNode(Node):
-    def __init__(self, op: Token, tok: Node, range):
+    def __init__(self, op: Token, value: Node, range):
         self.op = op
-        self.tok = tok
+        self.value = value
         self.range = range
     def accept(self, visitor: Visitor):
         return visitor.visitUnaryNode(self)

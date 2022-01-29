@@ -1,6 +1,6 @@
 colors: str[] = ["red", "beige", "green", "blue", "yellow"]
 colors[0] = "violet"
-numbers: num [] = [1, 2, 4, 5, 6]
+numbers: int [] = [1, 2, 4, 5, 6]
 ++numbers[1]
 println(colors)
 // I probably need a seperate append method

@@ -1,3 +1,4 @@
+from ctypes.wintypes import FLOAT
 from enum import Enum
 
 
@@ -43,7 +44,8 @@ class objectType:
 
 
 class Types(Enum):
-    NUMBER = 1
+    INT = 0
+    FLOAT = 1
     STRING = 2
     BOOL = 3
     VOID = 4
@@ -51,8 +53,10 @@ class Types(Enum):
 
 
 def typeToStr(type):
-    if type == Types.NUMBER:
-        return "num"
+    if type == Types.INT:
+        return "int"
+    if type == Types.FLOAT:
+        return "float"
     elif type == Types.STRING:
         return "str"
     elif type == Types.BOOL:
@@ -70,8 +74,10 @@ def typeToStr(type):
 
 
 def strToType(str):
-    if str == "num":
-        return Types.NUMBER
+    if str == "int":
+        return Types.INT
+    if str == "float":
+        return Types.FLOAT
     elif str == "str":
         return Types.STRING
     elif str == "bool":

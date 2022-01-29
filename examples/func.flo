@@ -1,10 +1,10 @@
-fnc doubleNum (a: num): num => a*2
+fnc doubleNum (a: int): int => a*2
 // this should print 10
 println(doubleNum(5))
 
-fnc tripleNum(a: num): num => a*3
+fnc tripleNum(a: int): int => a*3
 /* this is a bug... */
-fnc testFunc(): num => {
+fnc testFunc(): int => {
     i = 9
     if i == 5 return 1
 }
@@ -12,11 +12,11 @@ print(testFunc())
 // this should print 15
 println(tripleNum(5))
 
-fnc testFunc(a: num): num => {
-    fnc innerFunc(b: num): num => {
+fnc testFunc(a: float): float => {
+    fnc innerFunc(b: float): float => {
         return a + b
     }
-    return innerFunc(5)
+    return innerFunc(5 as float)
 }
 
-println(testFunc(5))
+println(testFunc(5 as float))

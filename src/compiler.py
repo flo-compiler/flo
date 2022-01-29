@@ -2,7 +2,7 @@ import os
 from pathlib import Path
 import re
 from errors import CompileError
-from flotypes import FloNum, FloStr, FloRef, FloBool, floType
+from flotypes import FloInt, FloFloat, FloStr, FloRef, FloBool, FloVoid, floType
 from itypes import Types
 from lexer import TokType
 from interfaces.astree import *
@@ -17,41 +17,18 @@ llvm.initialize_native_target()
 llvm.initialize_native_asmprinter()
 formats = {}
 
-
-def ll_string(value: str):
-    encoded = value.encode(encoding="utf-8", errors="xmlcharrefreplace")
-    return ir.Constant(ir.ArrayType(ir.IntType(8), len(encoded)), bytearray(encoded))
-
-
-def create_global_format(m, fmt):
-    fmt_name = "fstr" + re.sub(r"[^a-zA-Z]+", "", fmt) + ("n" if "\n" in fmt else "")
-    if formats.get(fmt_name) != None:
-        return formats.get(fmt_name)
-    c_fmt = ll_string(fmt)
-    global_fmt = ir.GlobalVariable(m, c_fmt.type, name=fmt_name)
-    global_fmt.linkage = "internal"
-    global_fmt.global_constant = True
-    global_fmt.initializer = c_fmt
-    formats[fmt_name] = global_fmt
-    return global_fmt
-
-
 def get_fmt_from_type(var):
-    type = var.value.type
-    if isinstance(type, ir.IntType):
-        if type.width <= 32:
-            return "%i\0"
-        else:
-            return "%lld\0"
-    elif isinstance(type, ir.DoubleType):
-        return "%f\0"
-    elif isinstance(type, ir.ArrayType):
-        return "%s\0"
+    if isinstance(var, FloInt):
+        return "%ld"
+    elif isinstance(var, FloFloat):
+        return "%f"
+    elif isinstance(var, FloBool):
+        return "%i"
+    elif isinstance(var, FloStr):
+        return "%s"
 
 
 def fill_lang_constants(m: ir.Module, context: Context):
-    # print declaration
-    voidptr_ty = ir.IntType(8).as_pointer()
     cfn_ty = ir.FunctionType(
         ir.IntType(32), [], var_arg=True
     )  # creation of the printf function begins here and specifies the passing of a argument
@@ -65,16 +42,14 @@ def fill_lang_constants(m: ir.Module, context: Context):
         if isinstance(c_str.type, ir.ArrayType):
             c_str = main_builder.alloca(c_str_val.type)
             main_builder.store(c_str_val, c_str)
-        printf_fmt = create_global_format(m, fmt)
-        fmt_arg = main_builder.bitcast(printf_fmt, voidptr_ty)
-        return main_builder.call(printf, [fmt_arg, c_str])
+        printf_fmt = FloStr(m, fmt).value
+        return main_builder.call(printf, [printf_fmt, c_str])
 
     def call_scanf(_, main_builder: ir.IRBuilder):
-        scanf_fmt = create_global_format(m, "%d\0")
-        fmt_arg = main_builder.bitcast(scanf_fmt, voidptr_ty)
-        tmp = main_builder.alloca(ir.IntType(32))
-        main_builder.call(scanf, [fmt_arg, tmp])
-        return FloNum(main_builder.load(tmp))
+        scanf_fmt = FloStr(m, "%d").value
+        tmp = main_builder.alloca(FloInt.llvmtype)
+        main_builder.call(scanf, [scanf_fmt, tmp])
+        return FloInt(main_builder.load(tmp))
 
     context.symbol_table.set(
         "print",
@@ -85,7 +60,7 @@ def fill_lang_constants(m: ir.Module, context: Context):
     context.symbol_table.set(
         "println",
         lambda args, builder: call_printf(
-            [get_fmt_from_type(args[0]).replace("\0", "\n\0"), args[0].value], builder
+            [get_fmt_from_type(args[0])+"\n", args[0].value], builder
         ),
     )
     context.symbol_table.set("input", call_scanf)
@@ -120,13 +95,15 @@ class Compiler(Visitor):
         try:
             llvm_module = llvm.parse_assembly(str(self.module))
             llvm_module.verify()
-        except RuntimeError as e:
+        except RuntimeError as e: # TODO: Might need to fix this more.
             lines = e.args[0].split("\n")
-            trace = str(self.module).replace(
+            trace = str(self.module).split("\n")
+            lineNo = int(lines[1].split(":")[1])
+            trace[lineNo] = trace[lineNo-1].replace(
                 lines[2], colored("->" + lines[2], "red", attrs=["bold"])
             )
             CompileError(
-                colored(lines[0] + ";" + lines[1] + " at", "white", attrs=["bold"]) + "\n" + trace
+                colored(lines[0] + "; " + lines[1] + " at", "white", attrs=["bold"]) + "\n" + "\n".join(trace)
             ).throw()
         # Passes
         pass_manager_builder = llvm.create_pass_manager_builder()
@@ -155,11 +132,14 @@ class Compiler(Visitor):
                 cfn = CFUNCTYPE(c_int, c_int)(cfptr)
                 cfn(0)
 
-    def visitNumNode(self, node: NumNode):
-        return FloNum(node.tok.value)
+    def visitIntNode(self, node: IntNode):
+        return FloInt(node.tok.value)
+    
+    def visitFloatNode(self, node: FloatNode):
+        return FloFloat(node.tok.value)
 
     def visitStrNode(self, node: StrNode):
-        return FloStr(node.tok.value)
+        return FloStr(self.module, node.tok.value)
 
     def visitNumOpNode(self, node: NumOpNode):
         a = self.visit(node.left_node)
@@ -200,7 +180,9 @@ class Compiler(Visitor):
         elif node.op.isKeyword("in"):
             pass
         elif node.op.isKeyword("as"):
-            return a
+            return a.castTo(self.builder, b)
+        elif node.op.isKeyword("is"):
+            return FloBool(isinstance(a, b))
 
     def visitStmtsNode(self, node: StmtsNode):
         for stmt in node.stmts:
@@ -208,12 +190,16 @@ class Compiler(Visitor):
         return v
 
     def visitTypeNode(self, node: TypeNode):
-        if node.type == Types.NUMBER:
-            return ir.IntType(32)
+        if node.type == Types.INT:
+            return FloInt
+        if node.type == Types.FLOAT:
+            return FloFloat
         elif node.type == Types.STRING:
-            return ir.PointerType(ir.IntType(8))
+            return FloStr
+        elif node.type == Types.BOOL:
+            return FloBool
         elif node.type == Types.VOID:
-            return ir.VoidType()
+            return FloVoid
 
     def visitFncDefNode(self, node: FncDefNode):
         fn_name = node.var_name.value
@@ -224,7 +210,7 @@ class Compiler(Visitor):
             arg_names.append(arg_name.value)
             arg_types.append(self.visit(arg_type))
         fn = ir.Function(
-            self.module, ir.FunctionType(rtype, arg_types, node.var_name.value), fn_name
+            self.module, ir.FunctionType(rtype.llvmtype, map(lambda v: v.llvmtype, arg_types), node.var_name.value), fn_name
         )
         fn_entry_block = fn.append_basic_block(f"{fn_name}.entry")
         fn_builder = ir.IRBuilder(fn_entry_block)
@@ -233,39 +219,33 @@ class Compiler(Visitor):
             args_vals = []
             for arg in args:
                 args_vals.append(arg.value)
-            return floType(None, main_builder.call(fn, args_vals))
+            return floType(self.module, main_builder.call(fn, args_vals))
 
         self.context.symbol_table.set(fn_name, call)
         outer_symbol_table = self.context.symbol_table.copy()
         for i in range(len(arg_names)):
             self.context.symbol_table.set(
-                arg_names[i], floType(arg_types[i], fn.args[i])
+                arg_names[i], FloRef(fn_builder, floType(self.module, fn.args[i], arg_types[i]), arg_names[i])
             )
         outer_fn = self.function
         outer_builder = self.builder
         self.function = fn
         self.builder = fn_builder
-        val = self.visit(node.body)
+        returned = self.visit(node.body)
         self.context.symbol_table = outer_symbol_table
         self.function = outer_fn
         self.builder = outer_builder
         try:
-            if isinstance(rtype, ir.VoidType):
+            if rtype == FloVoid:
                 fn_builder.ret_void()
             else:
-                if val == None:
-                    val = FloNum.zero()
-                fn_builder.ret(val.value)
-        except:
-            pass
+                fn_builder.ret(returned or rtype.default_llvm_val())
+        except: pass
 
     def visitUnaryNode(self, node: UnaryNode):
-        value = self.visit(node.tok)
+        value = self.visit(node.value)
         if node.op.type == TokType.MINUS:
-            if isinstance(value.type, ir.IntType):
-                return self.builder.neg(value)
-            elif isinstance(value.type, ir.DoubleType):
-                return self.builder.fneg(value)
+            return value.neg()
         elif node.op.type == TokType.NOT:
             return self.builder.not_(value)
         else:
@@ -292,9 +272,6 @@ class Compiler(Visitor):
         def ifCodeGen(cases: List[Tuple[Node, Node]], else_case):
             (comp, do) = cases.pop(0)
             cond = self.visit(comp)
-            # If it's a number convert it to bool
-            if isinstance(cond, FloNum):
-                cond = cond.cmp(self.builder, "!=", FloNum.zero())
             end_here = len(cases) == 0
             # Guard
             if end_here and else_case == None:
@@ -363,23 +340,32 @@ class Compiler(Visitor):
     def visitContinueNode(self, _: ContinueNode):
         self.builder.branch(self.continue_block)
 
-    def visitForEachNode(self, node: ForEachNode):
-        pass
-
     def visitIncrDecrNode(self, node: IncrDecrNode):
-        pass
+        value = self.visit(node.identifier)
+        incr = FloInt.one().neg() if node.id.type == TokType.MINUS_MINUS else FloInt.one()
+        nValue = value.add(self.builder, incr)
+        if isinstance(node.identifier, VarAccessNode):
+            ref: FloRef = self.context.symbol_table.get(node.identifier.var_name.value)
+            ref.store(nValue)
+            self.context.symbol_table.set(node.identifier.var_name.value, ref)
+        elif isinstance(node.identifier, ArrayAccessNode):
+            raise Exception("Unimplemented!")
+        return nValue if node.ispre else value
+
+    def visitForEachNode(self, node: ForEachNode):
+        raise Exception("Unimplemented!")
 
     def visitArrayNode(self, node: ArrayNode):
-        pass
+        raise Exception("Unimplemented!")
 
     def visitArrayAccessNode(self, node: ArrayAccessNode):
-        pass
+        raise Exception("Unimplemented!")
 
     def visitArrayAssignNode(self, node: ArrayAssignNode):
-        pass
+        raise Exception("Unimplemented!")
 
     def visitDictNode(self, node):
-        pass
+        raise Exception("Unimplemented!")
 
     def visitImportNode(self, node):
-        pass
+        raise Exception("Unimplemented!")

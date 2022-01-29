@@ -12,42 +12,46 @@
 - [x] For loop
 - [x] Boolean
 - [x] Functions
+- [x] UTF-8 support
+- [x] Seperate num into int and floats
+- [x] String arguments
+- [x] Introduce the is keyword (type checking)
 
 # Hot work
-- [x] Unicode support
-- [ ] Seperate num into int and floats
-- [ ] String arguments/operations
+- [ ] Test all mathematical operations and comparason for all types and fix issues
+- [ ] String operations
 - [ ] Arrays
 - [ ] Dictionaries
 - [ ] Foreach loop / In Keyword
 - [ ] Type casting (as keyword)
-- [ ] Introduce the is keyword (type checking)
 - [ ] Introduce module import 
 - [ ] Compiler
   
 # Bugs
 - [ ] print(true)
 - [ ] x^y | y < 0
+- [ ] Fix bug with function return types, and definitions
   
 # Working on
 - [ ] for(;;)
 - [ ] and=, or=, <<=, >>=, xor= Operators
-- [ ] Introduce String Literals
-- [ ] Fix bug with function return types, and definitions
-- [ ] Bug Make sure I can compare anything to anything
+- [ ] Introduce String Template Literals
 - [ ] Infered return type induction for functions
 - [ ] Default paramaters for functions
+- [ ] Spread Operator (...)
+- [ ] Destructuring assignment in arrays/dicts
 - [ ] Refactor
 
 # Next
+- [ ] import renaming using as keyword
 - [ ] Object oriented / user defined types
 - [ ] Operator overloading
 - [ ] Generic Types
 - [ ] Error Handling
-- [ ] Make String and arrays iterable types
+- [ ] Make String and arrays iterable types using classes
 - [ ] Self-Hosting
 
 # Future Stuff
 - [ ] C modules support
-- [ ] Garbage collection
+- [ ] Garbage collection/ Better memory management.
 - [ ] Threads

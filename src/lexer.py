@@ -13,7 +13,8 @@ KEYWORDS = [
     "xor",
     "if",
     "else",
-    "num",
+    "int",
+    "float",
     "bool",
     "str",
     "void",
@@ -52,7 +53,8 @@ class TokType(Enum):
     RBRACE = "}"
     LBRACKET = "["
     RBRACKET = "]"
-    NUM = "number"
+    INT = "int"
+    FLOAT = "float"
     LN = "\n"
     STR = "string"
     POW = "^"
@@ -184,9 +186,9 @@ def makeNumber(lexer: Lexer):
         number += lexer.current_char
         lexer.advance()
     if isFloat:
-        return Token(TokType.NUM, Range(pos_start, lexer.pos), float(number))
+        return Token(TokType.FLOAT, Range(pos_start, lexer.pos), float(number))
     else:
-        return Token(TokType.NUM, Range(pos_start, lexer.pos), int(number))
+        return Token(TokType.INT, Range(pos_start, lexer.pos), int(number))
 
 
 def make_plus_plus(lexer: Lexer):
