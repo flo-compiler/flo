@@ -19,10 +19,7 @@ global_types_symbol_table.set('true', Types.BOOL)
 global_types_symbol_table.set('false', Types.BOOL)
 global_types_symbol_table.set('print', fncType(Types.VOID, [Types.ANY]))
 global_types_symbol_table.set('println', fncType(Types.VOID, [Types.ANY]))
-global_types_symbol_table.set('len', fncType(Types.NUMBER, [Types.ANY]))
-global_types_symbol_table.set('input', fncType(Types.STRING, []))
-global_types_symbol_table.set('split', fncType(arrayType(Types.STRING), [Types.STRING, Types.STRING]))
-global_types_symbol_table.set('readFile', fncType(Types.STRING, [Types.STRING]))
+global_types_symbol_table.set('input', fncType(Types.INT, []))
 
 
 def create_ctx(fn:str, type: int = 0)->Context:

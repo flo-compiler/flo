@@ -28,7 +28,7 @@
 		"keywords": {
 			"patterns": [{
 				"name": "keyword.other.flo",
-				"match": "\\b(and|or|xor|num|bool|str|void|fnc|class|pub|priv)\\b"
+				"match": "\\b(and|or|xor|num|bool|int|float|void|fnc|class|pub|priv)\\b"
 			}]
 		},
 		"control-keywords":{
@@ -76,8 +76,8 @@
 			"patterns": [
 				{
 					
-					"name":"variable.name.flo",
-					"match": "[_$[:alpha:]][_$[:alnum:]]*"
+					"name":"support.variable.flo",
+					"match": "(([a-zA-Z]|_)[A-Za-z | 0-9 | _]*)"
 				}
 			]
 		},

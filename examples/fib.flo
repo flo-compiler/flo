@@ -1,8 +1,8 @@
 // One liner fibonnaci
-fnc fib (n: num): num => if n > 1 return fib(n-1) + fib(n-2) else return 1
+fnc fib (n: int): int => if n > 1 return fib(n-1) + fib(n-2) else return 1
 
 // A faster approach
-fnc fib_dyn(n: num): num => {
+fnc fib_dyn(n: int): int => {
     previous_1 = previous_2 = value = 1
     for i = 2; i < n; i+=1 {
         previous_2 = previous_1 
@@ -12,5 +12,5 @@ fnc fib_dyn(n: num): num => {
     return value
 }
 print("Enter a number to compute it\'s fibonnaci sum: ")
-x = input() as num
-println(fib_dyn(x))
+x = input()
+println(fib(x))

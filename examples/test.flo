@@ -1,4 +1,6 @@
 /*Test File for testing features I am currently working on*/
-if 1 {
-    print("ok")
-}
+fnc test(): str => return "hello"
+print(test())
+a = 4
+println(a--)
+println(true <= "aaa")

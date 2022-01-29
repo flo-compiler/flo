@@ -388,9 +388,12 @@ class Parser:
 
     def expr_value(self):
         tok = self.current_tok
-        if tok.type == TokType.NUM:
+        if tok.type == TokType.INT:
             self.advance()
-            return NumNode(tok, tok.range)
+            return IntNode(tok, tok.range)
+        if tok.type == TokType.FLOAT:
+            self.advance()
+            return FloatNode(tok, tok.range)
         elif tok.type == TokType.STR:
             self.advance()
             return StrNode(tok, tok.range)
@@ -455,7 +458,7 @@ class Parser:
             return TypeNode(
                 dictType(node.type), Range.merge(start_range, self.current_tok.range)
             )
-        if self.current_tok.inKeywordList(("num", "bool", "str", "void")):
+        if self.current_tok.inKeywordList(("int", "float" , "bool", "str", "void")):
             type = strToType(self.current_tok.value)
             self.advance()
             while self.current_tok.type == TokType.LBRACKET:

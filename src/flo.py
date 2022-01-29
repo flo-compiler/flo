@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-from email.policy import default
 from genericpath import exists
 from optparse import OptionParser
 from compiler import Compiler
@@ -78,11 +77,11 @@ def compile(fn: str, options):
     # Generate AST
     parser = Parser(tokens)
     ast = parser.parse()
-    # Static Check
+    # Static Check and auto-casting
     context = create_ctx(fn, 0)
     analyzer = Analyzer(context)
     analyzer.visit(ast)
-    # Inteprete AST
+    # Code-gen/execution
     context = create_ctx(fn, 1)
     compiler = Compiler(context)
     result = compiler.compile(ast, options)

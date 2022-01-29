@@ -1,30 +1,8 @@
 # FLo Documentation
-- Basics
-## keywords
-```
-num
-str
-void
-bool
-break
-continue
-and
-as
-or
-xor
-fnc
-in
-is
-if
-else
-for
-foreach
-while
-return
-pub
-priv
-class
-```
+## Introduction
+Flo is a programming language designed to be general-purpose with a natural feel when used and fast when run. Like all other programming languages, it is a tool to help programmers to write fast and efficient computer instructions. Syntactically and semantically, it resembles a lot of modern interpreted high-level languages, and this vision will show in a lot of design decisions made in the language production.
+
+
 ## Mathematical operators
 ```
 +
@@ -55,19 +33,45 @@ xor
 ## Types
 ```
 FIVE = 5 // constant; can't be changed through code execution
+
 b: num = 5 // statically typed number
+
 hello: str = "hello world" // string
+
 hello: bool = true // boolean
+
 arr2: num[] = [1, 2, 3, 4, 5, ...] // as many elements as one wants
+
 arr2: num[5] = [1, 2, 3, 4, 5] // fixed length of 5
+
 dic: {num} = {"one": 1, "two": 2} // dictionary of numbers
+
 dic["three"] = 3 // assign
+
 print(5 in arr2) // prints true
+
 print("llo" in hello) // prints true
+
 arr1[0] = 0 // set value 0 to index 0 in array
+
 s1 = "red car" // infered type to be string
+
 s1 = 5 // error since previously defined type is string
 ```
+## Concatenation
+### String concatenation
+You can concatenate two or more strings by using `+`
+#### ex:
+```
+a: str = "hello"
+b: str = ", world"
+c: str = a+b
+print(c) // prints "hello, world"
+print(a+b+"!") // prints "hello, world!"
+```
+### Array concatenation
+You can concatenate two or more arrays of the **same type** by using `+`
+
 ## Conditionals 
 ### if, else
 ```
