@@ -136,6 +136,11 @@ class Analyzer(Visitor):
                     node.right_node = self.cast(node.right_node, Types.INT)
                 return Types.INT
         elif node.op.type in Analyzer.comparason_ops or node.op.isKeyword("is"):
+            if node.op.type in Analyzer.comparason_ops:
+                if left == Types.FLOAT and right == Types.INT:
+                    node.right_node = self.cast(node.right_node, Types.FLOAT)
+                if left == Types.INT and right == Types.FLOAT:
+                    node.left_node = self.cast(node.left_node, Types.FLOAT)
             return Types.BOOL
         elif node.op.isKeyword("or") or node.op.isKeyword("and"):
             if left == right == Types.BOOL:
@@ -276,8 +281,9 @@ class Analyzer(Visitor):
         return cond_node
 
     def visitIfNode(self, node: IfNode):
-        for cond, expr in node.cases:
-            cond = self.condition_check(cond)
+        for i in range(len(node.cases)):
+            cond, expr = node.cases[i]
+            node.cases[i] = (self.condition_check(cond), expr)
             self.shoudlReturn = False
             returned_type = self.visit(expr)
         if node.else_case:

@@ -247,7 +247,7 @@ class Compiler(Visitor):
         if node.op.type == TokType.MINUS:
             return value.neg()
         elif node.op.type == TokType.NOT:
-            return self.builder.not_(value)
+            return value.not_(self.builder)
         else:
             return value
 

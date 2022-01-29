@@ -1,6 +1,8 @@
 /*Test File for testing features I am currently working on*/
-fnc test(): str => return "hello"
-print(test())
-a = 4
-println(a--)
-println(true <= "aaa")
+pi: float = 3.415
+for i = 0; i < pi; i++ {
+    if !((i % 2) as bool) continue
+    println(i)
+}
+print(1>1.1)
+println(!(false))
