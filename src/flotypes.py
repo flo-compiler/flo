@@ -1,14 +1,22 @@
+from context import Context
 from llvmlite import ir
 
-def floType(module, value, Type=None):
+
+def floType(value, Type=None):
     if Type == None:
         llvm_type = value.type
         if isinstance(llvm_type, ir.IntType):
-            return FloBool(value) if llvm_type.width == 1 else FloInt(value)
+            return (
+                FloBool(value)
+                if llvm_type.width == FloBool.llvmtype.width
+                else FloInt(value)
+            )
         if isinstance(llvm_type, ir.DoubleType):
             return FloFloat(value)
-        elif isinstance(llvm_type, ir.PointerType) and isinstance(llvm_type.pointee, ir.IntType):
-            return FloStr(module, value)
+        elif isinstance(llvm_type, ir.PointerType) and isinstance(
+            llvm_type.pointee, ir.IntType
+        ):
+            return FloStr(value)
         elif isinstance(llvm_type, ir.VoidType):
             return FloVoid()
         else:
@@ -16,8 +24,10 @@ def floType(module, value, Type=None):
     else:
         return Type(value)
 
+
 class FloInt:
     llvmtype = ir.IntType(32)
+
     def __init__(self, value: int | ir.Constant):
         self.size = FloInt.llvmtype.width
         if isinstance(value, int):
@@ -33,6 +43,7 @@ class FloInt:
     @staticmethod
     def zero():
         return FloInt(ir.Constant(FloInt.llvmtype, 0))
+
     @staticmethod
     def default_llvm_val():
         return FloInt.zero().value
@@ -60,46 +71,42 @@ class FloInt:
         return FloInt(builder.urem(self.value, num.value))
 
     def cmp(self, builder: ir.IRBuilder, op, num):
-        if not isinstance(num, FloInt): return FloBool.false()
+        if not isinstance(num, FloInt):
+            return FloBool.false()
         return FloBool(builder.icmp_signed(op, self.value, num.value))
-    
+
     def neg(self):
         self.value = self.value.neg()
         return self
 
-    #TODO: Make it faster and Refactor to use FloInt if possible
     def pow(self, builder: ir.IRBuilder, num):
-        a = self.value
-        b = num.value
-        res = builder.alloca(FloInt.llvmtype, name="res")
-        builder.store(FloInt.one().value, res)
-        base = builder.alloca(FloInt.llvmtype, name="base")
-        builder.store(a, base)
-        exp = builder.alloca(FloInt.llvmtype, name="exp")
-        builder.store(b, exp)
+        res = FloRef(builder, FloInt.one(), "res")
+        base = FloRef(builder, self, "base")
+        exp = FloRef(builder, num, "exp")
         pow_entry_block = builder.append_basic_block(f"pow.entry{self.incr()}")
         builder.branch(pow_entry_block)
         builder.position_at_start(pow_entry_block)
-        exp_value = builder.load(exp)
+        exp_value: FloInt = exp.load()
         with builder.if_then(
-            builder.icmp_unsigned(
-                "!=", builder.and_(exp_value, FloInt.one().value), FloInt.zero().value
-            )
+            exp_value.and_(builder, FloInt.one()).castTo(builder, FloBool).value
         ):
-            base_value = builder.load(base)
-            res_value = builder.load(res)
-            builder.store(builder.mul(res_value, base_value), res)
-        exp_value = builder.load(exp)
-        builder.store(builder.lshr(exp_value, FloInt.one().value), exp)
-        exp_value = builder.load(exp)
+            base_value = base.load()
+            res_value = res.load()
+            res.store(res_value.mul(builder, base_value))
+        exp.store(exp_value.sr(builder, FloInt.one()))
+        exp_value = exp.load()
         pow_exit_block = builder.append_basic_block(f"pow.exit{self.i}")
-        with builder.if_then(builder.icmp_unsigned("==", exp_value, FloInt.zero().value)):
+        with builder.if_then(exp_value.cmp(builder, "==", FloInt.zero()).value):
             builder.branch(pow_exit_block)
-        base_value = builder.load(base)
-        builder.store(builder.mul(base_value, base_value), base)
+        base_value = base.load()
+        base.store(base_value.mul(builder, base_value))
         builder.branch(pow_entry_block)
         builder.position_at_start(pow_exit_block)
-        return FloInt(builder.load(res))
+        ret = res.load()
+        res.free()
+        exp.free()
+        base.free()
+        return ret
 
     def sl(self, builder: ir.IRBuilder, num):
         return FloInt(builder.shl(self.value, num.value))
@@ -112,23 +119,25 @@ class FloInt:
 
     def and_(self, builder: ir.IRBuilder, num):
         return FloInt(builder.and_(self.value, num.value))
-    
+
     def not_(self, builder: ir.IRBuilder):
         return FloInt(builder.not_(self.value))
 
     def xor(self, builder: ir.IRBuilder, num):
         return FloInt(builder.xor(self.value, num.value))
-    
+
     def castTo(self, builder: ir.IRBuilder, type):
         if type == FloFloat:
             return self.toFloat(builder)
         elif type == FloBool:
             return self.cmp(builder, "!=", FloInt.zero())
-        else: 
+        else:
             raise Exception(f"Unhandled type cast: int to {type}")
 
-class FloFloat():
+
+class FloFloat:
     llvmtype = ir.DoubleType()
+
     def __init__(self, value: float | ir.Constant):
         self.size = 64
         if isinstance(value, float):
@@ -138,7 +147,7 @@ class FloFloat():
 
     def toInt(self, builder: ir.IRBuilder):
         return FloInt(builder.fptosi(self.value, FloInt.llvmtype))
-    
+
     def add(self, builder: ir.IRBuilder, num):
         return FloFloat(builder.fadd(self.value, num.value))
 
@@ -152,23 +161,26 @@ class FloFloat():
         return FloFloat(builder.fdiv(self.value, num.value))
 
     def cmp(self, builder: ir.IRBuilder, op, num):
-        if not isinstance(num, FloFloat): return FloBool.false()
+        if not isinstance(num, FloFloat):
+            return FloBool.false()
         return FloBool(builder.fcmp_ordered(op, self.value, num.value))
-    
+
     def neg(self):
         self.value = self.value.fneg()
         return self
-    
+
     def castTo(self, builder: ir.IRBuilder, type):
         if type == FloInt:
             return self.toInt(builder)
         elif type == FloBool:
             return self.cmp(builder, "!=", FloFloat.zero())
-        else: 
+        else:
             raise Exception(f"Unhandled type cast: float to {type}")
+
     @staticmethod
     def zero():
         return FloFloat(0.0)
+
     @staticmethod
     def default_llvm_val():
         return FloFloat.zero().value
@@ -178,7 +190,8 @@ class FloStr:
     id = -1
     strs = {}
     llvmtype = ir.IntType(8).as_pointer()
-    def __init__(self, module, value):
+
+    def __init__(self, value):
         # Check for already defined strings
         if FloStr.strs.get(str(value), None) != None:
             self.value = FloStr.strs[str(value)].value
@@ -191,39 +204,50 @@ class FloStr:
                 ir.ArrayType(ir.IntType(8), len(encoded)), bytearray(encoded)
             )
             self.size = len(value)
-            str_ptr = ir.GlobalVariable(module, str_val.type, f"str{self.incr()}")
-            str_ptr.linkage = "internal"
+            str_ptr = ir.GlobalVariable(
+                Context.current_llvm_module, str_val.type, f"str.{self.incr()}"
+            )
+            str_ptr.linkage = "private"
             str_ptr.global_constant = True
+            str_ptr.unnamed_addr = True
             str_ptr.initializer = str_val
             self.value = str_ptr.bitcast(FloStr.llvmtype)
             FloStr.strs[value] = self
         else:
             self.value = value
 
+    def getElement(self, builder: ir.IRBuilder, index: FloInt):
+        i8 = builder.load(builder.gep(self.value, [index.value], True))
+        return FloChar(builder.zext(i8, FloChar.llvmtype))
+
     def incr(self):
         FloStr.id += 1
         return FloStr.id
+
     @staticmethod
-    def default_llvm_val(module):
-        return FloStr(module, "").value
-    
+    def default_llvm_val():
+        return FloStr("").value
+
+
 class FloBool:
+    llvmtype = ir.IntType(1)
+
     def __init__(self, value):
         if isinstance(value, bool):
-            self.value = ir.Constant(ir.IntType(1), int(value))
+            self.value = ir.Constant(FloBool.llvmtype, int(value))
         else:
             self.value = value
 
     def cmp(self, builder: ir.IRBuilder, op, bool):
-        if not isinstance(bool, FloBool): return FloBool.false()
-
+        if not isinstance(bool, FloBool):
+            return FloBool.false()
         return FloBool(builder.icmp_signed(op, self.value, bool.value))
-    
+
     def not_(self, builder: ir.IRBuilder):
         return FloBool(builder.not_(self.value))
 
     @staticmethod
-    def default_llvm_val():
+    def default_llvm_val(_):
         return FloBool.true().value
 
     @staticmethod
@@ -233,11 +257,18 @@ class FloBool:
     @staticmethod
     def false():
         return FloBool(False)
-    
-    
-    
+
+
+class FloChar:
+    llvmtype = ir.IntType(8)
+
+    def __init__(self, value):
+        self.value = value
+
 
 class FloRef:
+    c_free_fnc = None
+
     def __init__(self, builder: ir.IRBuilder, value, name: str):
         self.builder = builder
         self.addr = self.builder.alloca(value.value.type, None, name)
@@ -250,6 +281,18 @@ class FloRef:
         self.referee = value
         self.builder.store(value.value, self.addr)
         return value
+
+    def free(self):
+        free_arg_type = ir.PointerType(ir.IntType(8))
+        if FloRef.c_free_fnc == None:
+            cfn_ty = ir.FunctionType(FloVoid.llvmtype, [free_arg_type])
+            FloRef.c_free_fnc = ir.Function(
+                Context.current_llvm_module, cfn_ty, name="free"
+            )
+        self.builder.call(
+            FloRef.c_free_fnc, [self.builder.bitcast(self.addr, free_arg_type)]
+        )
+
 
 class FloVoid:
     llvmtype = ir.VoidType()

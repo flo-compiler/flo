@@ -1,6 +1,0 @@
-SIX = 6
-if SIX == 6 println("fine")
-SEVEN = 7
-if false or !!false print("fine")
-print(1)
-if 1 print(6)

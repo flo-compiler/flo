@@ -16,9 +16,9 @@
 - [x] Seperate num into int and floats
 - [x] String arguments
 - [x] Introduce the is keyword (type checking)
+- [x] String 
 
 # Hot work
-- [ ] Test all mathematical operations and comparason for all types and fix issues
 - [ ] String operations
 - [ ] Arrays
 - [ ] Dictionaries
@@ -28,8 +28,7 @@
 - [ ] Compiler
   
 # Bugs
-- [ ] print(true)
-- [ ] x^y | y < 0
+- [ ] ^ Operator
 - [ ] Fix bug with function return types, and definitions
   
 # Working on

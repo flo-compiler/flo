@@ -1,7 +1,7 @@
 from os import path
 from typing import List
 from context import Context, SymbolTable
-from errors import Error, TypeError, SyntaxError, NameError, IOError
+from errors import TypeError, SyntaxError, NameError, IOError
 from lexer import TokType
 from lexer import Lexer
 from parser import Parser
@@ -40,6 +40,9 @@ class Analyzer(Visitor):
 
     def visit(self, node: Node) -> Types:
         return super().visit(node)
+    
+    def analyze(self, entry_node: Node):
+        self.visit(entry_node)
 
     def visitIntNode(self, _):
         return Types.INT
@@ -218,7 +221,7 @@ class Analyzer(Visitor):
         value = self.context.symbol_table.get(var_name)
         if value == None:
             NameError(
-                node.var_name.range, node.var_name.range, f"'{var_name}' is not defined"
+                node.var_name.range, f"'{var_name}' is not defined"
             ).throw()
         return value
 
@@ -475,10 +478,10 @@ class Analyzer(Visitor):
                 ).throw()
             return collection.elementType
         elif isinstance(collection, arrayType) or collection == Types.STRING:
-            if not self.isNumeric(collection):
+            if not self.isNumeric(index):
                 TypeError(
                     node.index.range,
-                    f"Expected key to be of type '{typeToStr(Types.STRING)}' but got '{typeToStr(index)}'",
+                    f"Expected key to be of type '{typeToStr(Types.INT)}' but got '{typeToStr(index)}'",
                 ).throw()
             return (
                 Types.STRING if collection == Types.STRING else collection.elementType

@@ -1,3 +1,0 @@
-di: {num} = {"one": 1, "two": 2}
-di["three"] = 3
-foreach key in di print(key+", ")
