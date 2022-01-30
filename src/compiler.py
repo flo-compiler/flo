@@ -127,8 +127,12 @@ class Compiler(Visitor):
                 os.system(f"gcc {basename}.o -o {basename}")
         # Execute code
         if options.execute:
-            with llvm.create_mcjit_compiler(llvm_module, target_m) as engine:
+            # And an execution engine with an empty backing module
+            backing_mod = llvm.parse_assembly("")
+            with llvm.create_mcjit_compiler(backing_mod, target_m) as engine:
+                engine.add_module(llvm_module)
                 engine.finalize_object()
+                engine.run_static_constructors()
                 cfptr = engine.get_function_address("main")
                 cfn = CFUNCTYPE(c_int, c_int)(cfptr)
                 cfn(0)

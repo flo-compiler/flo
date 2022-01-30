@@ -1,5 +1,5 @@
 from context import Context
-from llvmlite import ir
+from llvmlite import ir, binding
 
 
 def floType(value, Type=None):
@@ -86,7 +86,7 @@ class FloInt:
         pow_entry_block = builder.append_basic_block(f"pow.entry{self.incr()}")
         builder.branch(pow_entry_block)
         builder.position_at_start(pow_entry_block)
-        exp_value: FloInt = exp.load()
+        exp_value = exp.load()
         with builder.if_then(
             exp_value.and_(builder, FloInt.one()).castTo(builder, FloBool).value
         ):
@@ -103,6 +103,7 @@ class FloInt:
         builder.branch(pow_entry_block)
         builder.position_at_start(pow_exit_block)
         ret = res.load()
+        #TODO: Figure out a way to do dynamic casting
         res.free()
         exp.free()
         base.free()
@@ -190,7 +191,7 @@ class FloStr:
     id = -1
     strs = {}
     llvmtype = ir.IntType(8).as_pointer()
-
+    str_asprintf_cfnc = None
     def __init__(self, value):
         # Check for already defined strings
         if FloStr.strs.get(str(value), None) != None:
@@ -219,6 +220,16 @@ class FloStr:
     def getElement(self, builder: ir.IRBuilder, index: FloInt):
         i8 = builder.load(builder.gep(self.value, [index.value], True))
         return FloChar(builder.zext(i8, FloChar.llvmtype))
+    
+    def add(self, builder: ir.IRBuilder, str):
+        if FloStr.str_asprintf_cfnc == None:
+            cfn_ty = ir.FunctionType(FloInt.llvmtype, [FloStr.llvmtype.as_pointer(), FloStr.llvmtype], var_arg=True)
+            FloStr.str_asprintf_cfnc = ir.Function(
+                Context.current_llvm_module, cfn_ty, name="asprintf"
+            )
+        resStr = builder.alloca(FloStr.llvmtype)
+        builder.call(FloStr.str_asprintf_cfnc, [resStr, FloStr("%s%s").value,  self.value, str.value])
+        return FloStr(builder.load(resStr))
 
     def incr(self):
         FloStr.id += 1
@@ -283,7 +294,7 @@ class FloRef:
         return value
 
     def free(self):
-        free_arg_type = ir.PointerType(ir.IntType(8))
+        free_arg_type = FloStr.llvmtype
         if FloRef.c_free_fnc == None:
             cfn_ty = ir.FunctionType(FloVoid.llvmtype, [free_arg_type])
             FloRef.c_free_fnc = ir.Function(

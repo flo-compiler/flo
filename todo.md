@@ -16,9 +16,10 @@
 - [x] Seperate num into int and floats
 - [x] String arguments
 - [x] Introduce the is keyword (type checking)
-- [x] String 
+- [x] Strings
 
 # Hot work
+- [ ] C-API's not in LLVM but in gcc when compiled to source
 - [ ] String operations
 - [ ] Arrays
 - [ ] Dictionaries
@@ -29,6 +30,7 @@
   
 # Bugs
 - [ ] ^ Operator
+- [ ] Size overflow in ints
 - [ ] Fix bug with function return types, and definitions
   
 # Working on
