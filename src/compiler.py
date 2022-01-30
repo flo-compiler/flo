@@ -1,8 +1,7 @@
 import os
 from pathlib import Path
-import re
 from errors import CompileError
-from flotypes import FloInt, FloFloat, FloStr, FloRef, FloBool, FloVoid, floType
+from flotypes import FloChar, FloInt, FloFloat, FloStr, FloRef, FloBool, FloVoid, floType
 from itypes import Types
 from lexer import TokType
 from interfaces.astree import *
@@ -15,17 +14,18 @@ from termcolor import colored
 llvm.initialize()
 llvm.initialize_native_target()
 llvm.initialize_native_asmprinter()
-formats = {}
 
 def get_fmt_from_type(var):
     if isinstance(var, FloInt):
-        return "%ld"
+        return "%i"
     elif isinstance(var, FloFloat):
         return "%f"
     elif isinstance(var, FloBool):
         return "%i"
     elif isinstance(var, FloStr):
         return "%s"
+    elif isinstance(var, FloChar):
+        return "%c"
 
 
 def fill_lang_constants(m: ir.Module, context: Context):
@@ -42,11 +42,11 @@ def fill_lang_constants(m: ir.Module, context: Context):
         if isinstance(c_str.type, ir.ArrayType):
             c_str = main_builder.alloca(c_str_val.type)
             main_builder.store(c_str_val, c_str)
-        printf_fmt = FloStr(m, fmt).value
+        printf_fmt = FloStr(fmt).value
         return main_builder.call(printf, [printf_fmt, c_str])
 
     def call_scanf(_, main_builder: ir.IRBuilder):
-        scanf_fmt = FloStr(m, "%d").value
+        scanf_fmt = FloStr("%d").value
         tmp = main_builder.alloca(FloInt.llvmtype)
         main_builder.call(scanf, [scanf_fmt, tmp])
         return FloInt(main_builder.load(tmp))
@@ -73,6 +73,7 @@ class Compiler(Visitor):
         super().__init__(context)
         self.context = context
         self.module = ir.Module(context.display_name)
+        Context.current_llvm_module = self.module
         fill_lang_constants(self.module, self.context)
         function = ir.Function(self.module, ir.FunctionType(ir.VoidType(), []), "main")
         main_entry_block = function.append_basic_block("entry")
@@ -139,7 +140,7 @@ class Compiler(Visitor):
         return FloFloat(node.tok.value)
 
     def visitStrNode(self, node: StrNode):
-        return FloStr(self.module, node.tok.value)
+        return FloStr(node.tok.value)
 
     def visitNumOpNode(self, node: NumOpNode):
         a = self.visit(node.left_node)
@@ -219,13 +220,13 @@ class Compiler(Visitor):
             args_vals = []
             for arg in args:
                 args_vals.append(arg.value)
-            return floType(self.module, main_builder.call(fn, args_vals))
+            return floType(main_builder.call(fn, args_vals))
 
         self.context.symbol_table.set(fn_name, call)
         outer_symbol_table = self.context.symbol_table.copy()
         for i in range(len(arg_names)):
             self.context.symbol_table.set(
-                arg_names[i], FloRef(fn_builder, floType(self.module, fn.args[i], arg_types[i]), arg_names[i])
+                arg_names[i], FloRef(fn_builder, floType(fn.args[i], arg_types[i]), arg_names[i])
             )
         outer_fn = self.function
         outer_builder = self.builder
@@ -254,13 +255,15 @@ class Compiler(Visitor):
     def visitVarAssignNode(self, node: VarAssignNode):
         var_name = node.var_name.value
         value = self.visit(node.value)
+        if isinstance(value, FloRef):
+            value = value.load()
         ref = self.context.symbol_table.get(var_name)
         if ref == None:
             ref = FloRef(self.builder, value, var_name)
         else:
             ref.store(value)
         self.context.symbol_table.set(var_name, ref)
-        return ref.load()
+        return ref
 
     def visitVarAccessNode(self, node: VarAccessNode):
         ref = self.context.symbol_table.get(node.var_name.value)
@@ -359,7 +362,9 @@ class Compiler(Visitor):
         raise Exception("Unimplemented!")
 
     def visitArrayAccessNode(self, node: ArrayAccessNode):
-        raise Exception("Unimplemented!")
+        value = self.visit(node.name)
+        index = self.visit(node.index)
+        return value.getElement(self.builder, index)
 
     def visitArrayAssignNode(self, node: ArrayAssignNode):
         raise Exception("Unimplemented!")

@@ -77,10 +77,10 @@ def compile(fn: str, options):
     # Generate AST
     parser = Parser(tokens)
     ast = parser.parse()
-    # Static Check and auto-casting
+    # Static Check and auto-casting by semantic analyzer
     context = create_ctx(fn, 0)
     analyzer = Analyzer(context)
-    analyzer.visit(ast)
+    analyzer.analyze(ast)
     # Code-gen/execution
     context = create_ctx(fn, 1)
     compiler = Compiler(context)
