@@ -15,33 +15,19 @@ llvm.initialize()
 llvm.initialize_native_target()
 llvm.initialize_native_asmprinter()
 
-def get_fmt_from_type(var):
-    if isinstance(var, FloInt):
-        return "%i"
-    elif isinstance(var, FloFloat):
-        return "%f"
-    elif isinstance(var, FloBool):
-        return "%i"
-    elif isinstance(var, FloStr):
-        return "%s"
-    elif isinstance(var, FloChar):
-        return "%c"
-
 
 def fill_lang_constants(m: ir.Module, context: Context):
     cfn_ty = ir.FunctionType(
         ir.IntType(32), [], var_arg=True
     )  # creation of the printf function begins here and specifies the passing of a argument
-    printf = ir.Function(m, cfn_ty, name="printf")
+    printf = None
     scanf = ir.Function(m, cfn_ty, name="scanf")
+    printf = ir.Function(m, cfn_ty, name="printf") 
 
     def call_printf(args, main_builder: ir.IRBuilder):
+        # if printf == None:
         fmt = args[0]
         c_str = args[1]
-        c_str_val = c_str
-        if isinstance(c_str.type, ir.ArrayType):
-            c_str = main_builder.alloca(c_str_val.type)
-            main_builder.store(c_str_val, c_str)
         printf_fmt = FloStr(fmt).value
         return main_builder.call(printf, [printf_fmt, c_str])
 
@@ -54,13 +40,13 @@ def fill_lang_constants(m: ir.Module, context: Context):
     context.symbol_table.set(
         "print",
         lambda args, builder: call_printf(
-            [get_fmt_from_type(args[0]), args[0].value], builder
+            [args[0].__class__.print_fmt, args[0].string_repr_(builder)], builder
         ),
     )
     context.symbol_table.set(
         "println",
         lambda args, builder: call_printf(
-            [get_fmt_from_type(args[0])+"\n", args[0].value], builder
+            [args[0].__class__.print_fmt+"\n", args[0].string_repr_(builder)], builder
         ),
     )
     context.symbol_table.set("input", call_scanf)
@@ -353,7 +339,7 @@ class Compiler(Visitor):
         nValue = value.add(self.builder, incr)
         if isinstance(node.identifier, VarAccessNode):
             ref: FloRef = self.context.symbol_table.get(node.identifier.var_name.value)
-            ref.store(nValue)
+            ref.store(ref.load().add(self.builder, incr))
             self.context.symbol_table.set(node.identifier.var_name.value, ref)
         elif isinstance(node.identifier, ArrayAccessNode):
             raise Exception("Unimplemented!")

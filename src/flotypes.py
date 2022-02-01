@@ -1,3 +1,4 @@
+from unittest import result
 from context import Context
 from llvmlite import ir, binding
 
@@ -27,7 +28,8 @@ def floType(value, Type=None):
 
 class FloInt:
     llvmtype = ir.IntType(32)
-
+    pow_fnc = None
+    print_fmt = "%li"
     def __init__(self, value: int | ir.Constant):
         self.size = FloInt.llvmtype.width
         if isinstance(value, int):
@@ -47,6 +49,9 @@ class FloInt:
     @staticmethod
     def default_llvm_val():
         return FloInt.zero().value
+    
+    def string_repr_(self, _):
+        return self.value
 
     def incr(self):
         self.i += 1
@@ -65,10 +70,10 @@ class FloInt:
         return FloInt(builder.mul(self.value, num.value))
 
     def div(self, builder: ir.IRBuilder, num):
-        return FloFloat(builder.fdiv(self.value, num.value))
+        return FloFloat(builder.sdiv(self.value, num.value))
 
     def mod(self, builder: ir.IRBuilder, num):
-        return FloInt(builder.urem(self.value, num.value))
+        return FloInt(builder.srem(self.value, num.value))
 
     def cmp(self, builder: ir.IRBuilder, op, num):
         if not isinstance(num, FloInt):
@@ -80,34 +85,8 @@ class FloInt:
         return self
 
     def pow(self, builder: ir.IRBuilder, num):
-        res = FloRef(builder, FloInt.one(), "res")
-        base = FloRef(builder, self, "base")
-        exp = FloRef(builder, num, "exp")
-        pow_entry_block = builder.append_basic_block(f"pow.entry{self.incr()}")
-        builder.branch(pow_entry_block)
-        builder.position_at_start(pow_entry_block)
-        exp_value = exp.load()
-        with builder.if_then(
-            exp_value.and_(builder, FloInt.one()).castTo(builder, FloBool).value
-        ):
-            base_value = base.load()
-            res_value = res.load()
-            res.store(res_value.mul(builder, base_value))
-        exp.store(exp_value.sr(builder, FloInt.one()))
-        exp_value = exp.load()
-        pow_exit_block = builder.append_basic_block(f"pow.exit{self.i}")
-        with builder.if_then(exp_value.cmp(builder, "==", FloInt.zero()).value):
-            builder.branch(pow_exit_block)
-        base_value = base.load()
-        base.store(base_value.mul(builder, base_value))
-        builder.branch(pow_entry_block)
-        builder.position_at_start(pow_exit_block)
-        ret = res.load()
-        #TODO: Figure out a way to do dynamic casting
-        res.free()
-        exp.free()
-        base.free()
-        return ret
+        fv = self.castTo(builder, FloFloat).pow(builder, num.castTo(builder, FloFloat))
+        return fv
 
     def sl(self, builder: ir.IRBuilder, num):
         return FloInt(builder.shl(self.value, num.value))
@@ -138,11 +117,12 @@ class FloInt:
 
 class FloFloat:
     llvmtype = ir.DoubleType()
-
+    pow_fnc = None
+    print_fmt = "%g"
     def __init__(self, value: float | ir.Constant):
         self.size = 64
         if isinstance(value, float):
-            self.value = ir.Constant(ir.DoubleType(), float(value))
+            self.value = ir.Constant(ir.DoubleType(), value)
         else:
             self.value = value
 
@@ -165,6 +145,50 @@ class FloFloat:
         if not isinstance(num, FloFloat):
             return FloBool.false()
         return FloBool(builder.fcmp_ordered(op, self.value, num.value))
+    
+    def mod(self, builder: ir.IRBuilder, num):
+        return FloFloat(builder.frem(self.value, num.value))
+    
+    # Binary exponentiation
+    @staticmethod
+    def create_pow_fnc():
+        fnc = ir.Function(Context.current_llvm_module, ir.FunctionType(FloFloat.llvmtype, [FloFloat.llvmtype, FloFloat.llvmtype]), "powf")
+        block = fnc.append_basic_block("powf.entry")
+        builder = ir.IRBuilder(block)
+        base = FloFloat(fnc.args[0])
+        exp = FloFloat(fnc.args[1])
+        result = FloFloat.one()
+        result_ref = FloRef(builder, result, "result")
+        exp_ref = FloRef(builder, exp, "exp")
+        start_loop = builder.append_basic_block("start_loop")
+        end_loop = builder.append_basic_block("end_loop")
+        builder.cbranch(exp.cmp(builder, "!=", FloFloat.zero()).value, start_loop, end_loop)
+        builder.position_at_start(start_loop)
+        result_ref.store(result.mul(builder, result))
+        result = result_ref.load()
+        with builder.if_then(exp.mod(builder, FloFloat(2.0)).cmp(builder, "!=", FloFloat.zero()).value):
+            with builder.if_else(exp.cmp(builder, ">", FloInt.zero()).value) as (then, else_):
+                with then:
+                    result_ref.store(base.mul(builder, result))
+                with else_:
+                    result_ref.store(result.div(builder, base))
+        exp_ref.store(exp.div(builder, FloFloat(2.0)))
+        exp = exp_ref.load()
+        result = result_ref.load()
+        builder.cbranch(exp.cmp(builder, "!=", FloFloat.zero()).value, start_loop, end_loop)
+        builder.position_at_start(end_loop)
+        builder.ret(result_ref.load().value)
+        return fnc
+    
+    
+    def string_repr_(self, _):
+        return self.value
+
+    def pow(self, builder, num):
+        if FloFloat.pow_fnc == None:
+            FloFloat.pow_fnc = FloFloat.create_pow_fnc()
+        v = builder.call(FloFloat.pow_fnc, [self.value, num.value])
+        return floType(v)
 
     def neg(self):
         self.value = self.value.fneg()
@@ -175,12 +199,16 @@ class FloFloat:
             return self.toInt(builder)
         elif type == FloBool:
             return self.cmp(builder, "!=", FloFloat.zero())
+        elif type == FloFloat: return self
         else:
             raise Exception(f"Unhandled type cast: float to {type}")
 
     @staticmethod
     def zero():
         return FloFloat(0.0)
+    @staticmethod
+    def one():
+        return FloFloat(1.0)
 
     @staticmethod
     def default_llvm_val():
@@ -191,7 +219,9 @@ class FloStr:
     id = -1
     strs = {}
     llvmtype = ir.IntType(8).as_pointer()
+    print_fmt = "%s"
     str_asprintf_cfnc = None
+
     def __init__(self, value):
         # Check for already defined strings
         if FloStr.strs.get(str(value), None) != None:
@@ -220,20 +250,30 @@ class FloStr:
     def getElement(self, builder: ir.IRBuilder, index: FloInt):
         i8 = builder.load(builder.gep(self.value, [index.value], True))
         return FloChar(builder.zext(i8, FloChar.llvmtype))
-    
+
     def add(self, builder: ir.IRBuilder, str):
         if FloStr.str_asprintf_cfnc == None:
-            cfn_ty = ir.FunctionType(FloInt.llvmtype, [FloStr.llvmtype.as_pointer(), FloStr.llvmtype], var_arg=True)
+            cfn_ty = ir.FunctionType(
+                FloInt.llvmtype,
+                [FloStr.llvmtype.as_pointer(), FloStr.llvmtype],
+                var_arg=True,
+            )
             FloStr.str_asprintf_cfnc = ir.Function(
                 Context.current_llvm_module, cfn_ty, name="asprintf"
             )
         resStr = builder.alloca(FloStr.llvmtype)
-        builder.call(FloStr.str_asprintf_cfnc, [resStr, FloStr("%s%s").value,  self.value, str.value])
+        builder.call(
+            FloStr.str_asprintf_cfnc,
+            [resStr, FloStr("%s%s").value, self.value, str.value],
+        )
         return FloStr(builder.load(resStr))
 
     def incr(self):
         FloStr.id += 1
         return FloStr.id
+    
+    def string_repr_(self, _):
+        return self.value
 
     @staticmethod
     def default_llvm_val():
@@ -242,7 +282,7 @@ class FloStr:
 
 class FloBool:
     llvmtype = ir.IntType(1)
-
+    print_fmt = "%s"
     def __init__(self, value):
         if isinstance(value, bool):
             self.value = ir.Constant(FloBool.llvmtype, int(value))
@@ -257,6 +297,15 @@ class FloBool:
     def not_(self, builder: ir.IRBuilder):
         return FloBool(builder.not_(self.value))
 
+    def or_(self, builder: ir.IRBuilder, bool):
+        return FloBool(builder.or_(self.value, bool.value))
+    
+    def and_(self, builder: ir.IRBuilder, bool):
+        return FloBool(builder.and_(self.value, bool.value))
+
+    def string_repr_(self, builder: ir.IRBuilder):
+        return builder.select(self.value, FloStr("true").value, FloStr("false").value)
+    
     @staticmethod
     def default_llvm_val(_):
         return FloBool.true().value
@@ -271,15 +320,16 @@ class FloBool:
 
 
 class FloChar:
+    print_fmt = "%c"
     llvmtype = ir.IntType(8)
 
     def __init__(self, value):
         self.value = value
+    def string_repr_(self, _):
+        return self.value
 
 
 class FloRef:
-    c_free_fnc = None
-
     def __init__(self, builder: ir.IRBuilder, value, name: str):
         self.builder = builder
         self.addr = self.builder.alloca(value.value.type, None, name)
@@ -292,17 +342,6 @@ class FloRef:
         self.referee = value
         self.builder.store(value.value, self.addr)
         return value
-
-    def free(self):
-        free_arg_type = FloStr.llvmtype
-        if FloRef.c_free_fnc == None:
-            cfn_ty = ir.FunctionType(FloVoid.llvmtype, [free_arg_type])
-            FloRef.c_free_fnc = ir.Function(
-                Context.current_llvm_module, cfn_ty, name="free"
-            )
-        self.builder.call(
-            FloRef.c_free_fnc, [self.builder.bitcast(self.addr, free_arg_type)]
-        )
 
 
 class FloVoid:

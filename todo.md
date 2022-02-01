@@ -12,28 +12,28 @@
 - [x] For loop
 - [x] Boolean
 - [x] Functions
-- [x] UTF-8 support
-- [x] Seperate num into int and floats
-- [x] String arguments
 - [x] Introduce the is keyword (type checking)
 - [x] Strings
+- [x] Type casting (as keyword)
+- [x] Compiler
 
-# Hot work
-- [ ] C-API's not in LLVM but in gcc when compiled to source
+# Working on
 - [ ] String operations
+    - Concatenation (Works only when compiled to executable by gcc)
 - [ ] Arrays
 - [ ] Dictionaries
 - [ ] Foreach loop / In Keyword
-- [ ] Type casting (as keyword)
 - [ ] Introduce module import 
-- [ ] Compiler
+
   
 # Bugs
-- [ ] ^ Operator
+- [x] ^ Operator
+ - Only works when compiler optimization is turned on.
+- [ ] C-API's not in LLVM but in gcc when compiled to source
 - [ ] Size overflow in ints
 - [ ] Fix bug with function return types, and definitions
   
-# Working on
+# Future 
 - [ ] for(;;)
 - [ ] and=, or=, <<=, >>=, xor= Operators
 - [ ] Introduce String Template Literals

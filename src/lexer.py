@@ -118,7 +118,7 @@ class Lexer:
         while single_line and self.current_char != "\n" and self.current_char != None:
             self.advance()
         close_comment = False
-        while double_line and not close_comment:
+        while double_line and not close_comment and self.current_char != None:
             self.advance()
             if self.current_char == "*":
                 self.advance()

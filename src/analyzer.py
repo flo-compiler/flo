@@ -28,8 +28,10 @@ class Analyzer(Visitor):
         TokType.MINUS,
         TokType.MULT,
         TokType.DIV,
+        TokType.POW,
+        TokType.MOD,
     )
-    arithmetic_ops_2 = (TokType.MOD, TokType.POW, TokType.SL, TokType.SR)
+    arithmetic_ops_2 = (TokType.SL, TokType.SR)
 
     def __init__(self, context: Context):
         self.context = context
@@ -79,7 +81,7 @@ class Analyzer(Visitor):
                 node.left_node = self.cast(node.left_node, Types.FLOAT)
                 return Types.FLOAT
             # Special case for division
-            if node.op.type == TokType.DIV:
+            if node.op.type == TokType.DIV or node.op.type == TokType.POW:
                 if left == Types.INT:
                     node.left_node = self.cast(node.left_node, Types.FLOAT)
                 if right == Types.INT:
