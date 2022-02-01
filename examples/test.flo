@@ -1,6 +1,2 @@
 /*Test File for testing features I am currently working on*/
-// res = 0
-// MAX = 333333333
-// for i = 0; i < MAX; i++ {
-//     res+= i^30 //pow(i, 30)
-// }
+print(true == true)

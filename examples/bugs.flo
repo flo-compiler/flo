@@ -1,5 +1,3 @@
 /** This file is for all bugs I find */
-print("🤦‍♂️ does not work"[0]) /** Emoji indexing */
-print("hello"+" World") /** Concat on execution engine doesn't work **/
-print(2^3) /** Free in pow function **/
-print(2^-3) /** support for -ve and floats in ^ operator **/
+println("🤦‍♂️ does not work"[0]) /** Emoji indexing */
+println("hello"+" World") /** Concat on execution engine doesn't work **/
