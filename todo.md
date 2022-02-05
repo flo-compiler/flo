@@ -21,14 +21,14 @@
 - [x] Arrays
   - Array concatenation + multiplication
   - Dynamic arrays
+- [x] String operations
+  - Concatenation (Works only when compiled to executable by gcc)
+  - multiplication
 - [ ] Dictionaries
 - [ ] Foreach loop / In Keyword
 
   
 # Bugs
-- [x] ^ Operator
-- [ ] String operations
-  - Concatenation (Works only when compiled to executable by gcc)
 - [ ] C-Library functions do not work in LLVM but do in gcc when compiled to source.
 - [ ] Size overflow in ints.
 - [ ] Fix bug with function return types, and definitions.
