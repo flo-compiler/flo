@@ -448,6 +448,7 @@ class Parser:
         SyntaxError(tok.range, f"Expected an expression value before '{tok}'").throw()
 
     def composite_type(self):
+        # TODO: Doesn't cover for array of dictionaries
         start_range = self.current_tok.range
         if self.current_tok.type == TokType.LBRACE:
             self.advance()

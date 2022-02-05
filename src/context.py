@@ -1,3 +1,4 @@
+from llvmlite import ir
 class SymbolTable:
     def __init__(self, parent=None):
         self.symbols = {}
@@ -22,7 +23,7 @@ class SymbolTable:
 
 
 class Context:
-    current_llvm_module = None
+    current_llvm_module: ir.Module = None
     def __init__(self, display_name, parent=None, parent_entry_pos=None):
         self.display_name = display_name
         self.parent = parent

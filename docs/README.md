@@ -71,6 +71,8 @@ print(a+b+"!") // prints "hello, world!"
 ```
 ### Array concatenation
 You can concatenate two or more arrays of the **same type** by using `+`
+```
+```
 
 ## Conditionals 
 ### if, else

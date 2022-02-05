@@ -1,2 +1,11 @@
 /*Test File for testing features I am currently working on*/
-print(true == true)
+// i: int [] = [1, 2, 4, 5]
+a = "abcd"
+b = "b"
+println(a+b)
+// i[3]+=5
+// string = "hello world"
+// println(i[4])
+// println(string[100])
+// a = 5
+// println(a)

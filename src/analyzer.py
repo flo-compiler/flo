@@ -500,7 +500,7 @@ class Analyzer(Visitor):
         if arr != value:
             TypeError(
                 node.range,
-                f"Expected assigned value to be of type '{typeToStr(arr.elementType)}' but got '{typeToStr(value)}'",
+                f"Expected assigned value to be of type '{typeToStr(arr)}' but got '{typeToStr(value)}'",
             ).throw()
         return arr
 
