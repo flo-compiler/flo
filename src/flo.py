@@ -6,7 +6,7 @@ from lexer import Lexer
 from parser import Parser
 from analyzer import Analyzer
 from errors import IOError
-from std import create_ctx
+from builtIns import create_ctx
 
 __version__ = "0.01@test"
 
@@ -18,7 +18,7 @@ def main():
     parser.add_option("-h", "--help", action="help", help="Show this help message.")
     parser.add_option(
         "-p",
-        "--print_asm",
+        "--print_llvm",
         dest="print",
         action="store_true",
         help="Print generated llvm assembly.",
@@ -71,7 +71,7 @@ def main():
 def compile(fn: str, options):
     f = open(fn, "r", encoding="utf-8")
     code = f.read()
-    # tokenize line
+    # Tokenize file
     lexer = Lexer(fn, code)
     tokens = lexer.tokenize()
     # Generate AST
