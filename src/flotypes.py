@@ -1,30 +1,24 @@
-from unittest import result
 from context import Context
-from llvmlite import ir, binding
+from llvmlite import ir
 
-
-def floType(value, Type=None):
-    if Type == None:
-        llvm_type = value.type
-        if isinstance(llvm_type, ir.IntType):
-            return (
-                FloBool(value)
-                if llvm_type.width == FloBool.llvmtype.width
-                else FloInt(value)
-            )
-        if isinstance(llvm_type, ir.DoubleType):
-            return FloFloat(value)
-        elif isinstance(llvm_type, ir.PointerType) and isinstance(
-            llvm_type.pointee, ir.IntType
-        ):
-            return FloStr(value)
-        elif isinstance(llvm_type, ir.VoidType):
-            return FloVoid()
-        else:
-            raise Exception(f"Type Not handled {type}")
+def llvmToFloType(value):
+    llvm_type = value.type
+    if isinstance(llvm_type, ir.IntType):
+        return (
+            FloBool(value)
+            if llvm_type.width == FloBool.llvmtype.width
+            else FloInt(value)
+        )
+    if isinstance(llvm_type, ir.DoubleType):
+        return FloFloat(value)
+    elif isinstance(llvm_type, ir.PointerType) and isinstance(
+        llvm_type.pointee, ir.IntType
+    ):
+        return FloStr(value)
+    elif isinstance(llvm_type, ir.VoidType):
+        return FloVoid()
     else:
-        return Type(value)
-
+        raise Exception(f"Type Not handled {type}")
 
 class FloInt:
     llvmtype = ir.IntType(32)
@@ -149,46 +143,14 @@ class FloFloat:
     def mod(self, builder: ir.IRBuilder, num):
         return FloFloat(builder.frem(self.value, num.value))
     
-    # Binary exponentiation
-    @staticmethod
-    def create_pow_fnc():
-        fnc = ir.Function(Context.current_llvm_module, ir.FunctionType(FloFloat.llvmtype, [FloFloat.llvmtype, FloFloat.llvmtype]), "powf")
-        block = fnc.append_basic_block("powf.entry")
-        builder = ir.IRBuilder(block)
-        base = FloFloat(fnc.args[0])
-        exp = FloFloat(fnc.args[1])
-        result = FloFloat.one()
-        result_ref = FloRef(builder, result, "result")
-        exp_ref = FloRef(builder, exp, "exp")
-        start_loop = builder.append_basic_block("start_loop")
-        end_loop = builder.append_basic_block("end_loop")
-        builder.cbranch(exp.cmp(builder, "!=", FloFloat.zero()).value, start_loop, end_loop)
-        builder.position_at_start(start_loop)
-        result_ref.store(result.mul(builder, result))
-        result = result_ref.load()
-        with builder.if_then(exp.mod(builder, FloFloat(2.0)).cmp(builder, "!=", FloFloat.zero()).value):
-            with builder.if_else(exp.cmp(builder, ">", FloInt.zero()).value) as (then, else_):
-                with then:
-                    result_ref.store(base.mul(builder, result))
-                with else_:
-                    result_ref.store(result.div(builder, base))
-        exp_ref.store(exp.div(builder, FloFloat(2.0)))
-        exp = exp_ref.load()
-        result = result_ref.load()
-        builder.cbranch(exp.cmp(builder, "!=", FloFloat.zero()).value, start_loop, end_loop)
-        builder.position_at_start(end_loop)
-        builder.ret(result_ref.load().value)
-        return fnc
-    
-    
     def string_repr_(self, _):
         return self.value
 
     def pow(self, builder, num):
         if FloFloat.pow_fnc == None:
-            FloFloat.pow_fnc = FloFloat.create_pow_fnc()
+            FloFloat.pow_fnc = Context.current_llvm_module.declare_intrinsic("llvm.pow", [FloFloat.llvmtype])
         v = builder.call(FloFloat.pow_fnc, [self.value, num.value])
-        return floType(v)
+        return FloFloat(v)
 
     def neg(self):
         self.value = self.value.fneg()
@@ -220,10 +182,11 @@ class FloStr:
     strs = {}
     llvmtype = ir.IntType(8).as_pointer()
     print_fmt = "%s"
-    str_asprintf_cfnc = None
+    asprintf = None
 
-    def __init__(self, value):
+    def __init__(self, value, size=0):
         # Check for already defined strings
+        self.size = size
         if FloStr.strs.get(str(value), None) != None:
             self.value = FloStr.strs[str(value)].value
             self.size = FloStr.strs[str(value)].size
@@ -248,22 +211,22 @@ class FloStr:
             self.value = value
 
     def getElement(self, builder: ir.IRBuilder, index: FloInt):
-        i8 = builder.load(builder.gep(self.value, [index.value], True))
-        return FloChar(builder.zext(i8, FloChar.llvmtype))
+        val = builder.load(builder.gep(self.value, [index.value], True))
+        ref = builder.alloca(ir.IntType(8))
+        builder.store(val, ref)
+        return FloStr(ref)
 
     def add(self, builder: ir.IRBuilder, str):
-        if FloStr.str_asprintf_cfnc == None:
+        if FloStr.asprintf == None:
             cfn_ty = ir.FunctionType(
                 FloInt.llvmtype,
                 [FloStr.llvmtype.as_pointer(), FloStr.llvmtype],
                 var_arg=True,
             )
-            FloStr.str_asprintf_cfnc = ir.Function(
-                Context.current_llvm_module, cfn_ty, name="asprintf"
-            )
+            FloStr.asprintf = Context.current_llvm_module.declare_intrinsic("asprintf", [], cfn_ty)
         resStr = builder.alloca(FloStr.llvmtype)
         builder.call(
-            FloStr.str_asprintf_cfnc,
+            FloStr.asprintf,
             [resStr, FloStr("%s%s").value, self.value, str.value],
         )
         return FloStr(builder.load(resStr))
@@ -318,17 +281,28 @@ class FloBool:
     def false():
         return FloBool(False)
 
+class FloArray:
+    concat_intr = None
+    def __init__(self, builder, elms):
+        if isinstance(elms, list):
+            arr_ty = ir.ArrayType(elms[0].llvmtype, len(elms))
+            val = ir.Constant(arr_ty, [elm.value for elm in elms])
+            ptr = builder.alloca(arr_ty)
+            builder.store(val, ptr)
+            self.value = builder.bitcast(ptr, elms[0].llvmtype.as_pointer())
+        else:
+            self.value = elms
 
-class FloChar:
-    print_fmt = "%c"
-    llvmtype = ir.IntType(8)
+    def getElement(self, builder: ir.IRBuilder, index):
+        ptr = builder.gep(self.value, [index.value], True)
+        return llvmToFloType(builder.load(ptr))
 
-    def __init__(self, value):
-        self.value = value
-    def string_repr_(self, _):
-        return self.value
+    def setElement(self, builder: ir.IRBuilder, index, value):
+        ptr = builder.gep(self.value, [index.value], True)
+        builder.store(value.value, ptr)
+        return value
 
-
+# TODO: Unecessary loads (re-load only when you have stored)
 class FloRef:
     def __init__(self, builder: ir.IRBuilder, value, name: str):
         self.builder = builder
@@ -336,7 +310,8 @@ class FloRef:
         self.store(value)
 
     def load(self):
-        return self.referee.__class__(self.builder.load(self.addr))
+        self.referee.value = self.builder.load(self.addr)
+        return self.referee
 
     def store(self, value):
         self.referee = value

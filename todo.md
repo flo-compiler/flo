@@ -18,29 +18,29 @@
 - [x] Compiler
 
 # Working on
-- [ ] String operations
-    - Concatenation (Works only when compiled to executable by gcc)
-- [ ] Arrays
+- [x] Arrays
+  - Array concatenation + multiplication
+  - Dynamic arrays
 - [ ] Dictionaries
 - [ ] Foreach loop / In Keyword
-- [ ] Introduce module import 
 
   
 # Bugs
 - [x] ^ Operator
- - Only works when compiler optimization is turned on.
-- [ ] C-API's not in LLVM but in gcc when compiled to source
-- [ ] Size overflow in ints
-- [ ] Fix bug with function return types, and definitions
+- [ ] String operations
+  - Concatenation (Works only when compiled to executable by gcc)
+- [ ] C-Library functions do not work in LLVM but do in gcc when compiled to source.
+- [ ] Size overflow in ints.
+- [ ] Fix bug with function return types, and definitions.
   
 # Future 
-- [ ] for(;;)
-- [ ] and=, or=, <<=, >>=, xor= Operators
 - [ ] Introduce String Template Literals
 - [ ] Infered return type induction for functions
 - [ ] Default paramaters for functions
 - [ ] Spread Operator (...)
+- [ ] Introduce mut in functions
 - [ ] Destructuring assignment in arrays/dicts
+- [ ] Introduce module import 
 - [ ] Refactor
 
 # Next
