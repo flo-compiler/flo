@@ -275,23 +275,19 @@ def make_str(lexer: Lexer):
     escape_next = False
     quote_char = lexer.current_char
     lexer.advance()
-    special_escapes = {"n": "\n", "t": "\t", "r": "\r", "b": "\b", "f": "\f", "0": "\0"}
     while lexer.current_char != None and (
         lexer.current_char != quote_char or escape_next
     ):
-        if escape_next == True:
-            str_val += special_escapes.get(lexer.current_char, lexer.current_char)
-            escape_next = False
+        if lexer.current_char == "\\":
+            escape_next = True
+            str_val += lexer.current_char
         else:
-            if lexer.current_char == "\\":
-                escape_next = True
-            else:
-                str_val += lexer.current_char
-                escape_next = False
+            str_val += lexer.current_char
+            escape_next = False
         lexer.advance()
     if lexer.current_char != quote_char:
         ExpectedCharError(
             Range(pos_start, lexer.pos), f"None matching '{quote_char}' in string"
         ).throw()
     lexer.advance()
-    return Token(TokType.STR, Range(pos_start, lexer.pos), str_val)
+    return Token(TokType.STR, Range(pos_start, lexer.pos), bytes(str_val, "utf-8").decode("unicode_escape"))

@@ -214,7 +214,7 @@ class FloStr:
         val = builder.load(builder.gep(self.value, [index.value], True))
         ref = builder.alloca(ir.IntType(8))
         builder.store(val, ref)
-        return FloStr(ref)
+        return FloStr(ref, 1)
 
     def add(self, builder: ir.IRBuilder, str):
         if FloStr.asprintf == None:
@@ -229,7 +229,7 @@ class FloStr:
             FloStr.asprintf,
             [resStr, FloStr("%s%s").value, self.value, str.value],
         )
-        return FloStr(builder.load(resStr))
+        return FloStr(builder.load(resStr), self.size+str.size)
 
     def incr(self):
         FloStr.id += 1
