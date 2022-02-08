@@ -1,9 +1,9 @@
-from ast import Constant
 import os
 from pathlib import Path
+from builtIns import new_ctx
 from errors import CompileError
 from flotypes import FloArray, FloInt, FloFloat, FloStr, FloRef, FloBool, FloVoid, llvmToFloType
-from itypes import Types
+from itypes import Types, arrayType
 from lexer import TokType
 from interfaces.astree import *
 from context import Context
@@ -17,52 +17,13 @@ llvm.initialize_native_target()
 llvm.initialize_native_asmprinter()
 
 
-def fill_lang_constants(m: ir.Module, context: Context):
-    cfn_ty = ir.FunctionType(
-        ir.IntType(32), [], var_arg=True
-    )
-    printf = None
-    scanf = m.declare_intrinsic("scanf", (), cfn_ty)
-    printf = m.declare_intrinsic("printf",(), cfn_ty) 
-
-    def call_printf(args, main_builder: ir.IRBuilder):
-        # if printf == None:
-        fmt = args[0]
-        c_str = args[1]
-        printf_fmt = FloStr(fmt).value
-        return main_builder.call(printf, [printf_fmt, c_str])
-
-    def call_scanf(_, main_builder: ir.IRBuilder):
-        scanf_fmt = FloStr("%d").value
-        tmp = main_builder.alloca(FloInt.llvmtype)
-        main_builder.call(scanf, [scanf_fmt, tmp])
-        return FloInt(main_builder.load(tmp))
-
-    context.symbol_table.set(
-        "print",
-        lambda args, builder: call_printf(
-            [args[0].__class__.print_fmt, args[0].string_repr_(builder)], builder
-        ),
-    )
-    context.symbol_table.set(
-        "println",
-        lambda args, builder: call_printf(
-            [args[0].__class__.print_fmt+"\n", args[0].string_repr_(builder)], builder
-        ),
-    )
-    context.symbol_table.set("input", call_scanf)
-    context.symbol_table.set("true", FloBool.true())
-    context.symbol_table.set("false", FloBool.false())
-
-
 class Compiler(Visitor):
-    def __init__(self, context: Context):
-        super().__init__(context)
-        self.context = context
-        self.module = ir.Module(context.display_name)
+    def __init__(self, display_name):
+        self.context = new_ctx(display_name)
+        self.module = Context.current_llvm_module
         Context.current_llvm_module = self.module
-        fill_lang_constants(self.module, self.context)
-        function = ir.Function(self.module, ir.FunctionType(ir.VoidType(), []), "main")
+        function = ir.Function(
+            self.module, ir.FunctionType(ir.VoidType(), []), "main")
         main_entry_block = function.append_basic_block("entry")
         builder = ir.IRBuilder(main_entry_block)
         self.function = function
@@ -83,7 +44,7 @@ class Compiler(Visitor):
         try:
             llvm_module = llvm.parse_assembly(str(self.module))
             llvm_module.verify()
-        except RuntimeError as e: # TODO: Might need to fix this more.
+        except RuntimeError as e:  # TODO: Might need to fix this more.
             lines = e.args[0].split("\n")
             trace = str(self.module).split("\n")
             lineNo = int(lines[1].split(":")[1])
@@ -91,7 +52,8 @@ class Compiler(Visitor):
                 lines[2], colored("->" + lines[2], "red", attrs=["bold"])
             )
             CompileError(
-                colored(lines[0] + "; " + lines[1] + " at", "white", attrs=["bold"]) + "\n" + "\n".join(trace)
+                colored(lines[0] + "; " + lines[1] + " at", "white",
+                        attrs=["bold"]) + "\n" + "\n".join(trace)
             ).throw()
         # Passes
         pass_manager_builder = llvm.create_pass_manager_builder()
@@ -126,7 +88,7 @@ class Compiler(Visitor):
 
     def visitIntNode(self, node: IntNode):
         return FloInt(node.tok.value)
-    
+
     def visitFloatNode(self, node: FloatNode):
         return FloFloat(node.tok.value)
 
@@ -182,16 +144,24 @@ class Compiler(Visitor):
         return v
 
     def visitTypeNode(self, node: TypeNode):
-        if node.type == Types.INT:
-            return FloInt
-        if node.type == Types.FLOAT:
-            return FloFloat
-        elif node.type == Types.STRING:
-            return FloStr
-        elif node.type == Types.BOOL:
-            return FloBool
-        elif node.type == Types.VOID:
-            return FloVoid
+        def itype_to_flo_type(type):
+            if type == Types.INT:
+                return FloInt
+            if type == Types.FLOAT:
+                return FloFloat
+            elif type == Types.STRING:
+                return FloStr
+            elif type == Types.BOOL:
+                return FloBool
+            elif type == Types.VOID:
+                return FloVoid
+            elif isinstance(node.type, arrayType):
+                type = FloArray
+                type.llvmtype = itype_to_flo_type(
+                    node.type.elementType).llvmtype.as_pointer()
+                return type
+
+        return itype_to_flo_type(node.type)
 
     def visitFncDefNode(self, node: FncDefNode):
         fn_name = node.var_name.value
@@ -202,7 +172,8 @@ class Compiler(Visitor):
             arg_names.append(arg_name.value)
             arg_types.append(self.visit(arg_type))
         fn = ir.Function(
-            self.module, ir.FunctionType(rtype.llvmtype, map(lambda v: v.llvmtype, arg_types), node.var_name.value), fn_name
+            self.module, ir.FunctionType(rtype.llvmtype, map(
+                lambda v: v.llvmtype, arg_types), node.var_name.value), fn_name
         )
         fn_entry_block = fn.append_basic_block(f"{fn_name}.entry")
         fn_builder = ir.IRBuilder(fn_entry_block)
@@ -216,9 +187,10 @@ class Compiler(Visitor):
         self.context.symbol_table.set(fn_name, call)
         outer_symbol_table = self.context.symbol_table.copy()
         for i in range(len(arg_names)):
+            arg_val = arg_types[i](fn.args[i]) if arg_types[i] != FloArray else arg_types[i](
+                fn_builder, fn.args[i])
             self.context.symbol_table.set(
-                arg_names[i], FloRef(fn_builder, arg_types[i](fn.args[i]), arg_names[i])
-            )
+                arg_names[i], FloRef(fn_builder, arg_val, arg_names[i]))
         outer_fn = self.function
         outer_builder = self.builder
         self.function = fn
@@ -232,7 +204,8 @@ class Compiler(Visitor):
                 fn_builder.ret_void()
             else:
                 fn_builder.ret(returned or rtype.default_llvm_val())
-        except: pass
+        except:
+            pass
 
     def visitUnaryNode(self, node: UnaryNode):
         value = self.visit(node.value)
@@ -284,7 +257,8 @@ class Compiler(Visitor):
 
     def visitForNode(self, node: ForNode):
         self.visit(node.init)
-        cond_for_block = self.builder.append_basic_block(f"for.cond{self.incr()}")
+        cond_for_block = self.builder.append_basic_block(
+            f"for.cond{self.incr()}")
         entry_for_block = self.builder.append_basic_block(f"for.body{self.i}")
         incr_for_block = self.builder.append_basic_block(f"for.incr{self.i}")
         end_for_block = self.builder.append_basic_block(f"for.end{self.i}")
@@ -303,8 +277,10 @@ class Compiler(Visitor):
         self.builder.position_at_start(end_for_block)
 
     def visitWhileNode(self, node: WhileNode):
-        while_entry_block = self.builder.append_basic_block(f"while.entry{self.incr()}")
-        while_exit_block = self.builder.append_basic_block(f"while.entry{self.i}")
+        while_entry_block = self.builder.append_basic_block(
+            f"while.entry{self.incr()}")
+        while_exit_block = self.builder.append_basic_block(
+            f"while.entry{self.i}")
         self.break_block = while_exit_block
         self.continue_block = while_entry_block
         cond = self.visit(node.cond)
@@ -337,7 +313,8 @@ class Compiler(Visitor):
         incr = FloInt.one().neg() if node.id.type == TokType.MINUS_MINUS else FloInt.one()
         nValue = value.add(self.builder, incr)
         if isinstance(node.identifier, VarAccessNode):
-            ref: FloRef = self.context.symbol_table.get(node.identifier.var_name.value)
+            ref: FloRef = self.context.symbol_table.get(
+                node.identifier.var_name.value)
             ref.store(ref.load().add(self.builder, incr))
             self.context.symbol_table.set(node.identifier.var_name.value, ref)
         elif isinstance(node.identifier, ArrayAccessNode):
@@ -355,9 +332,8 @@ class Compiler(Visitor):
             value = self.visit(node.name)
         else:
             ref = self.context.symbol_table.get(node.name.var_name.value)
-            value = ref.referee 
+            value = ref.referee
         return value.getElement(self.builder, index)
-
 
     def visitArrayNode(self, node: ArrayNode):
         return FloArray(self.builder, [self.visit(elm_node) for elm_node in node.elements])

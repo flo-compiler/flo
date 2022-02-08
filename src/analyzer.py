@@ -42,7 +42,7 @@ class Analyzer(Visitor):
 
     def visit(self, node: Node) -> Types:
         return super().visit(node)
-    
+
     def analyze(self, entry_node: Node):
         self.visit(entry_node)
 
@@ -86,7 +86,9 @@ class Analyzer(Visitor):
                     node.left_node = self.cast(node.left_node, Types.FLOAT)
                 if right == Types.INT:
                     node.right_node = self.cast(node.right_node, Types.FLOAT)
-                return Types.FLOAT
+                if self.isNumeric(left, right):
+                    return Types.FLOAT
+
             # Checking for adding nums and concatenating
             if (
                 (
@@ -99,24 +101,8 @@ class Analyzer(Visitor):
             ):
                 return left
             # All these ops are valid numeric ops
-            if self.isNumeric(left) and left == right: return left
-            # IMPROVE: This if statement and the one beneath it are repetitive.
-            if (
-                (left == Types.STRING or isinstance(left, arrayType))
-                and self.isNumeric(right)
-                and node.op.type == TokType.MULT
-            ):
-                if right == Types.FLOAT:
-                    node.right_node = self.cast(node.right_node, Types.INT)
+            if self.isNumeric(left) and left == right:
                 return left
-            if (
-                (right == Types.STRING or isinstance(right, arrayType))
-                and self.isNumeric(left)
-                and node.op.type == TokType.MULT
-            ):
-                if right == Types.FLOAT:
-                    node.left_node = self.cast(node.left_node, Types.INT)
-                return right
 
         elif node.op.type in self.arithmetic_ops_2 or node.op.isKeyword("xor"):
             if isinstance(left, arrayType) and (
@@ -222,21 +208,19 @@ class Analyzer(Visitor):
         var_name = node.var_name.value
         value = self.context.symbol_table.get(var_name)
         if value == None:
-            NameError(
-                node.var_name.range, f"'{var_name}' is not defined"
-            ).throw()
+            NameError(node.var_name.range,
+                      f"'{var_name}' is not defined").throw()
         return value
 
     def visitStmtsNode(self, node: StmtsNode):
-        rt = Types.VOID
+        rt_value = Types.VOID
         for expr in node.stmts:
             s = self.visit(expr)
             e = s
-
             if self.shoudlReturn:
                 self.shoudlReturn = False
-                rt = e
-        return rt
+                rt_value = e
+        return rt_value
 
     def visitVarAssignNode(self, node: VarAssignNode):
         var_name = node.var_name.value
@@ -256,7 +240,8 @@ class Analyzer(Visitor):
             expected_type = self.visit(node.val_type)
 
         else:
-            expected_type = self.context.symbol_table.get(var_name) or Types.VOID
+            expected_type = self.context.symbol_table.get(
+                var_name) or Types.VOID
         type = self.visit(node.value)
         if type == Types.ANY and expected_type == Types.VOID:
             TypeError(
@@ -297,13 +282,13 @@ class Analyzer(Visitor):
         return returned_type if self.shoudlReturn else Types.VOID
 
     def visitForNode(self, node: ForNode):
-        _ = self.visit(node.init)
+        self.visit(node.init)
         node.cond = self.condition_check(node.cond)
         index = len(self.inLoop)
         self.inLoop.append(True)
-        _ = self.visit(node.stmt)
+        self.visit(node.stmt)
         self.inLoop.pop(index)
-        _ = self.visit(node.incr_decr)
+        self.visit(node.incr_decr)
         return Types.VOID
 
     def visitForEachNode(self, node: ForEachNode):
@@ -325,7 +310,7 @@ class Analyzer(Visitor):
             else it.elementType
         )
         self.context.symbol_table.set(node.identifier.value, type)
-        _ = self.visit(node.stmt)
+        self.visit(node.stmt)
         self.context.symbol_table.set(node.identifier.value)
         self.inLoop.pop(index)
         return Types.VOID
@@ -334,7 +319,7 @@ class Analyzer(Visitor):
         node.cond = self.condition_check(node.cond)
         index = len(self.inLoop)
         self.inLoop.append(True)
-        _ = self.visit(node.stmt)
+        self.visit(node.stmt)
         self.inLoop.pop(index)
         return Types.VOID
 
@@ -402,7 +387,8 @@ class Analyzer(Visitor):
     def visitReturnNode(self, node: ReturnNode):
         self.shoudlReturn = True
         if len(self.funcStack) == 0:
-            SyntaxError(node.range, "Illegal return outside a function").throw()
+            SyntaxError(
+                node.range, "Illegal return outside a function").throw()
         if node.value:
             val = self.visit(node.value)
 
@@ -419,7 +405,8 @@ class Analyzer(Visitor):
 
     def visitContinueNode(self, node: ContinueNode):
         if not self.inLoop[-1]:
-            SyntaxError(node.range, "Illegal continue outside of a loop").throw()
+            SyntaxError(
+                node.range, "Illegal continue outside of a loop").throw()
         return Types.VOID
 
     def visitBreakNode(self, node: BreakNode):
@@ -527,9 +514,10 @@ class Analyzer(Visitor):
             ctx.symbol_table = SymbolTable()
             ctx.symbol_table.symbols = self.reserved.copy()
             self.context = ctx
-            _ = self.visit(ast)
+            self.visit(ast)
             if node.all:
-                savedCtx.symbol_table.symbols.update(self.context.symbol_table.symbols)
+                savedCtx.symbol_table.symbols.update(
+                    self.context.symbol_table.symbols)
             else:
                 for identifier in identifiers:
                     val = self.context.symbol_table.get(identifier.value)
