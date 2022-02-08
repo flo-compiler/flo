@@ -19,11 +19,9 @@
 
 # Working on
 - [x] Arrays
-  - Array concatenation + multiplication
+  - 2 dimensional arrays 
   - Dynamic arrays
 - [x] String operations
-  - Concatenation (Works only when compiled to executable by gcc)
-  - multiplication
 - [ ] Dictionaries
 - [ ] Foreach loop / In Keyword
 

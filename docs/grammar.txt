@@ -49,7 +49,7 @@ arith_expr1: unary_expr ((times | div | mod | exp ) eq? unary_expr)?
 
 unary_expr: (plus | minus ) unary_expr
       | (plus_plus | minus_minus) unary_expr
-      | identifier_op_expr
+      | value_expr
 
 value_expr: identifier_value_op (
        | (plus_plus | minus_minus)

@@ -287,7 +287,8 @@ def make_str(lexer: Lexer):
         lexer.advance()
     if lexer.current_char != quote_char:
         ExpectedCharError(
-            Range(pos_start, lexer.pos), f"None matching '{quote_char}' in string"
+            Range(
+                pos_start, lexer.pos), f"None matching '{quote_char}' in string"
         ).throw()
     lexer.advance()
     return Token(TokType.STR, Range(pos_start, lexer.pos), bytes(str_val, "utf-8").decode("unicode_escape"))

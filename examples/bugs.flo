@@ -1,3 +1,7 @@
 /** This file is for all bugs I find */
-println("🤦‍♂️ does not work"[0]) /** Emoji indexing */
-println("hello"+" World") /** Concat on execution engine doesn't work **/
+println("🤦‍♂️ does not work"[1]) /** Emoji indexing */
+/* array of bools */
+i: bool [] = [true, true, false, false]
+j = [false, true, false]
+/* 2D arrays */ 
+/* str concat of str arrays */

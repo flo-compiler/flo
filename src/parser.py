@@ -94,14 +94,16 @@ class Parser:
         elif self.current_tok.type == TokType.IDENTIFER:
             ids = self.identifier_list()
         if not self.current_tok.isKeyword("from"):
-            SyntaxError(self.current_tok.range, "Expected keyword 'from'").throw()
+            SyntaxError(self.current_tok.range,
+                        "Expected keyword 'from'").throw()
         self.advance()
         if self.current_tok.type != TokType.STR:
             SyntaxError(self.current_tok.range, "Expected a string").throw()
         path = self.current_tok
         self.advance()
         return ImportNode(
-            ids, importAll, path, Range.merge(range_start, self.current_tok.range)
+            ids, importAll, path, Range.merge(
+                range_start, self.current_tok.range)
         )
 
     def if_stmt(self) -> IfNode:
@@ -147,11 +149,13 @@ class Parser:
         range_start = self.current_tok.range
         self.advance()
         if self.current_tok.type != TokType.IDENTIFER:
-            SyntaxError(self.current_tok.range, "Expected an Identifier").throw()
+            SyntaxError(self.current_tok.range,
+                        "Expected an Identifier").throw()
         id = self.current_tok
         self.advance()
         if not self.current_tok.isKeyword("in"):
-            SyntaxError(self.current_tok.range, "Expected keyword 'in'").throw()
+            SyntaxError(self.current_tok.range,
+                        "Expected keyword 'in'").throw()
         self.advance()
         it = self.expr()
         stmts = self.block()
@@ -233,7 +237,8 @@ class Parser:
                 id = self.current_tok
                 self.advance()
                 if self.current_tok.type != TokType.COL:
-                    SyntaxError(id.range, "Expected ':' after identifier").throw()
+                    SyntaxError(
+                        id.range, "Expected ':' after identifier").throw()
                 self.advance()
                 type_id = self.composite_type()
 
@@ -252,7 +257,8 @@ class Parser:
                 expr = self.expr()
 
             range = (
-                range_start if expr is None else Range.merge(range_start, expr.range)
+                range_start if expr is None else Range.merge(
+                    range_start, expr.range)
             )
             return ReturnNode(expr, range)
         elif self.current_tok.isKeyword("continue"):
@@ -306,7 +312,8 @@ class Parser:
 
     def arith_expr1(self):
         return self.num_op(
-            self.unary_expr, (TokType.MULT, TokType.DIV, TokType.MOD, TokType.POW), True
+            self.unary_expr, (TokType.MULT, TokType.DIV,
+                              TokType.MOD, TokType.POW), True
         )
 
     def unary_expr(self):
@@ -325,27 +332,30 @@ class Parser:
 
     def value_expr(self):
         node = self.expr_value_op()
-        if isinstance(node, VarAccessNode):
-            id_type = None
-            if self.current_tok.type == TokType.COL:
-                self.advance()
-                id_type = self.composite_type()
+        if self.current_tok.type in (TokType.PLUS_PLUS, TokType.MINUS_MINUS):
+            tok = self.current_tok
+            self.advance()
+            return IncrDecrNode(
+                tok, node, False, Range.merge(
+                    tok.range, self.current_tok.range)
+            )
+        id_type = None
+        if self.current_tok.type == TokType.COL:
+            self.advance()
+            id_type = self.composite_type()
 
         if self.current_tok.type == TokType.EQ:
             self.advance()
             expr = self.expr()
             if isinstance(node, ArrayAccessNode):
                 return ArrayAssignNode(node, expr, Range.merge(node.range, expr.range))
-            else:
+            elif isinstance(node, VarAccessNode):
                 return VarAssignNode(
-                    node.var_name, expr, Range.merge(node.range, expr.range), id_type
+                    node.var_name, expr, Range.merge(
+                        node.range, expr.range), id_type
                 )
-        if self.current_tok.type in (TokType.PLUS_PLUS, TokType.MINUS_MINUS):
-            tok = self.current_tok
-            self.advance()
-            return IncrDecrNode(
-                tok, node, False, Range.merge(tok.range, self.current_tok.range)
-            )
+            else:
+                SyntaxError(node.range, "Expected an Identifier").throw()
         return node
 
     def expr_list(self):
@@ -372,7 +382,8 @@ class Parser:
                     SyntaxError(self.current_tok.range, "Expected ']'").throw()
                 end_range = self.current_tok.range
                 self.advance()
-                node = ArrayAccessNode(node, expr, Range.merge(node.range, end_range))
+                node = ArrayAccessNode(
+                    node, expr, Range.merge(node.range, end_range))
             elif self.current_tok.type == TokType.LPAR:
                 self.advance()
                 args = []
@@ -383,7 +394,8 @@ class Parser:
                     SyntaxError(self.current_tok.range, "Expected ')'").throw()
                 end_range = self.current_tok.range
                 self.advance()
-                node = FncCallNode(node, args, Range.merge(node.range, end_range))
+                node = FncCallNode(
+                    node, args, Range.merge(node.range, end_range))
         return node
 
     def expr_value(self):
@@ -436,7 +448,8 @@ class Parser:
                     k = self.expr()
 
                     if self.current_tok.type != TokType.COL:
-                        SyntaxError(self.current_tok.range, f"Expected ':'").throw()
+                        SyntaxError(self.current_tok.range,
+                                    f"Expected ':'").throw()
                     self.advance()
                     v = self.expr()
 
@@ -445,7 +458,8 @@ class Parser:
                 SyntaxError(self.current_tok.range, "Expected '}'").throw()
             self.advance()
             return DictNode(Range.merge(tok.range, self.current_tok.range), values)
-        SyntaxError(tok.range, f"Expected an expression value before '{tok}'").throw()
+        SyntaxError(
+            tok.range, f"Expected an expression value before '{tok}'").throw()
 
     def composite_type(self):
         # TODO: Doesn't cover for array of dictionaries
@@ -457,9 +471,10 @@ class Parser:
                 SyntaxError(self.current_tok.range, "Expected '}'").throw()
             self.advance()
             return TypeNode(
-                dictType(node.type), Range.merge(start_range, self.current_tok.range)
+                dictType(node.type), Range.merge(
+                    start_range, self.current_tok.range)
             )
-        if self.current_tok.inKeywordList(("int", "float" , "bool", "str", "void")):
+        if self.current_tok.inKeywordList(("int", "float", "bool", "str", "void")):
             type = strToType(self.current_tok.value)
             self.advance()
             while self.current_tok.type == TokType.LBRACKET:
@@ -470,7 +485,8 @@ class Parser:
                 self.advance()
             return TypeNode(type, Range.merge(start_range, self.current_tok.range))
         else:
-            SyntaxError(self.current_tok.range, "Expected type definition").throw()
+            SyntaxError(self.current_tok.range,
+                        "Expected type definition").throw()
 
     def num_op(self, func_a, toks, checkEq=False, func_b=None):
         tok = self.current_tok
@@ -497,7 +513,8 @@ class Parser:
             if checkEq:
                 if isinstance(left_node.left_node, VarAccessNode):
                     left_node = VarAssignNode(
-                        tok, left_node, Range.merge(tok.range, self.current_tok.range)
+                        tok, left_node, Range.merge(
+                            tok.range, self.current_tok.range)
                     )
                 elif isinstance(left_node.left_node, ArrayAccessNode):
                     left_node = ArrayAssignNode(

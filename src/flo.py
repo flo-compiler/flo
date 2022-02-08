@@ -15,7 +15,8 @@ def main():
     parser = OptionParser()
     parser.set_usage(" flo.py [options] [file.flo]")
     parser.remove_option("-h")
-    parser.add_option("-h", "--help", action="help", help="Show this help message.")
+    parser.add_option("-h", "--help", action="help",
+                      help="Show this help message.")
     parser.add_option(
         "-p",
         "--print_llvm",
@@ -78,12 +79,11 @@ def compile(fn: str, options):
     parser = Parser(tokens)
     ast = parser.parse()
     # Static Check and auto-casting by semantic analyzer
-    context = create_ctx(fn, 0)
+    context = create_ctx(fn)
     analyzer = Analyzer(context)
     analyzer.analyze(ast)
     # Code-gen/execution
-    context = create_ctx(fn, 1)
-    compiler = Compiler(context)
+    compiler = Compiler(fn)
     result = compiler.compile(ast, options)
     return result
 
