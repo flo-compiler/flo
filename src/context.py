@@ -27,8 +27,12 @@ class SymbolTable:
 class Context:
     current_llvm_module: ir.Module = None
 
-    def __init__(self, display_name, parent=None, parent_entry_pos=None):
+    def __init__(self, display_name,):
         self.display_name = display_name
-        self.parent = parent
-        self.parent_entry_pos = parent_entry_pos
         self.symbol_table = SymbolTable()
+    
+    def copy(self):
+        cp_ctx = Context(self.display_name)
+        cp_ctx.symbol_table = self.symbol_table.copy()
+        return cp_ctx
+        

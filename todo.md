@@ -21,7 +21,7 @@
 - [x] Arrays
   - 2 dimensional arrays 
   - Dynamic arrays
-- [x] String operations
+  - String arrays
 - [ ] Dictionaries
 - [ ] Foreach loop / In Keyword
 

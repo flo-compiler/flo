@@ -1,13 +1,20 @@
-/*Test File for testing features I am currently working on*/
-fnc print_array(arr: str [], n: int): void => {
-    print("[")
-    for i = 0; i < n; i++ {
-        print(arr[i])
-        if(i<n-1) print(", ")
-    }
-    println("]")
+/*Test File for testing features I am currently working on:*/
+// fnc print_array(arr: str [], n: int): void => {
+//     print("[")
+//     for i = 0; i < n; i++ {
+//         print(arr[i])
+//         if (i<n-1) print(", ")
+//     }
+//     println("]")
+// }
+// a: str [] = ["a"]
+// b: str [] = ['b', 'cass', 'd']
+// strs = a+b
+// print_array(b, 3)
+//
+a = "a"
+// a+="b"
+for i = 0; i < 10; i++ {
+    a+="b"
 }
-i: str [] = ["1", "2", "4", "5"]
-j = ["8", "9", "10"]
-k = i + j
-print(j[2])
+print(a)

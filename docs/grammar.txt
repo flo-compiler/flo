@@ -51,7 +51,7 @@ unary_expr: (plus | minus ) unary_expr
       | (plus_plus | minus_minus) unary_expr
       | value_expr
 
-value_expr: identifier_value_op (
+value_expr: expr_value_op (
        | (plus_plus | minus_minus)
        | ((column composite_type)? eq (expr))
        | "as" composite_type
@@ -66,7 +66,7 @@ expr_value:   number
             | lbrace ((string col expr) (comma (string col expr))*)? rbrace
             | lpar expr rpar
 
-composite_type:  type (lbracket rbracket)*
+composite_type:  type (lbracket expr rbracket)*
               |  lbrace composite_type rbrace
 
 type:
