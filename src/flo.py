@@ -6,7 +6,7 @@ from lexer import Lexer
 from parser import Parser
 from analyzer import Analyzer
 from errors import IOError
-from builtIns import create_ctx
+from builtIns import new_ctx
 
 __version__ = "0.01@test"
 
@@ -75,15 +75,16 @@ def compile(fn: str, options):
     # Tokenize file
     lexer = Lexer(fn, code)
     tokens = lexer.tokenize()
+    # Create Context
+    context = new_ctx(fn)
     # Generate AST
     parser = Parser(tokens)
     ast = parser.parse()
     # Static Check and auto-casting by semantic analyzer
-    context = create_ctx(fn)
     analyzer = Analyzer(context)
     analyzer.analyze(ast)
     # Code-gen/execution
-    compiler = Compiler(fn)
+    compiler = Compiler(context)
     result = compiler.compile(ast, options)
     return result
 

@@ -1,3 +1,4 @@
+import codecs
 from errors import Range, Position
 from errors import ExpectedCharError, IllegalCharacterError
 import string
@@ -291,4 +292,6 @@ def make_str(lexer: Lexer):
                 pos_start, lexer.pos), f"None matching '{quote_char}' in string"
         ).throw()
     lexer.advance()
-    return Token(TokType.STR, Range(pos_start, lexer.pos), bytes(str_val, "utf-8").decode("unicode_escape"))
+    # Unstable code since codes.escape_decode is not a public python function and may be deprecated in the next future
+    # Source from: https://stackoverflow.com/questions/4020539/process-escape-sequences-in-a-string-in-python
+    return Token(TokType.STR, Range(pos_start, lexer.pos), codecs.escape_decode(bytes(str_val, "utf-8"))[0].decode("utf-8"))

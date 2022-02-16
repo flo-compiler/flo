@@ -1,9 +1,11 @@
+from ast import List
 import builtIns
-from context import Context
-from llvmlite import ir
+from context import Context, SymbolTable
+from llvmlite import ir, binding
+target_data = binding.create_target_data("e S0")
 
 
-def llvmToFloType(value):
+def llvm_to_flotype(value):
     llvm_type = value.type
     if isinstance(llvm_type, ir.IntType):
         return (
@@ -13,7 +15,8 @@ def llvmToFloType(value):
         )
     if isinstance(llvm_type, ir.DoubleType):
         return FloFloat(value)
-    elif isinstance(llvm_type, ir.PointerType) and isinstance(
+
+    elif llvm_type.is_pointer and isinstance(
         llvm_type.pointee, ir.IntType
     ):
         return FloStr(value)
@@ -23,10 +26,26 @@ def llvmToFloType(value):
         raise Exception(f"Type Not handled {llvm_type}")
 
 
+def flotype_to_llvm(type):
+    return type.llvmtype
+
+
+def str_to_flotype(str):
+    if str == "int":
+        return FloInt
+    if str == "float":
+        return FloFloat
+    elif str == "str":
+        return FloStr
+    elif str == "bool":
+        return FloBool
+    elif str == "void":
+        return FloVoid
+
+
 class FloInt:
     llvmtype = ir.IntType(32)
     print_fmt = "%li"
-    bytes = 4
 
     def __init__(self, value: int | ir.Constant):
         self.size = FloInt.llvmtype.width
@@ -48,12 +67,8 @@ class FloInt:
     def default_llvm_val():
         return FloInt.zero().value
 
-    def string_repr_(self, _):
+    def print_val(self, _):
         return self.value
-
-    def incr(self):
-        self.i += 1
-        return self.i
 
     def toFloat(self, builder: ir.IRBuilder):
         return FloFloat(builder.sitofp(self.value, FloFloat.llvmtype))
@@ -113,14 +128,16 @@ class FloInt:
         else:
             raise Exception(f"Unhandled type cast: int to {type}")
 
+    @staticmethod
+    def str() -> str:
+        return "int"
+
 
 class FloFloat:
-    bytes = 8
     llvmtype = ir.DoubleType()
     print_fmt = "%g"
 
     def __init__(self, value: float | ir.Constant):
-        self.size = 64
         if isinstance(value, float):
             self.value = ir.Constant(ir.DoubleType(), value)
         else:
@@ -149,7 +166,7 @@ class FloFloat:
     def mod(self, builder: ir.IRBuilder, num):
         return FloFloat(builder.frem(self.value, num.value))
 
-    def string_repr_(self, _):
+    def print_val(self, _):
         return self.value
 
     def pow(self, builder, num):
@@ -183,80 +200,14 @@ class FloFloat:
     def default_llvm_val():
         return FloFloat.zero().value
 
-
-class FloStr:
-    id = -1
-    strs = {}
-    llvmtype = ir.IntType(8).as_pointer()
-    print_fmt = "%s"
-    bytes = 1
-
-    def __init__(self, value, size=0):
-        # Check for already defined strings
-        self.size = size
-        if FloStr.strs.get(str(value), None) != None:
-            self.value = FloStr.strs[str(value)].value
-            self.size = FloStr.strs[str(value)].size
-        elif isinstance(value, str):
-            encoded = (value + "\0").encode(
-                encoding="utf-8", errors="xmlcharrefreplace"
-            )
-            str_val = ir.Constant(
-                ir.ArrayType(ir.IntType(8), len(encoded)), bytearray(encoded)
-            )
-            self.size = len(value)
-            str_ptr = ir.GlobalVariable(
-                Context.current_llvm_module, str_val.type, f"str.{self.incr()}"
-            )
-            str_ptr.linkage = "private"
-            str_ptr.global_constant = True
-            str_ptr.unnamed_addr = True
-            str_ptr.initializer = str_val
-            self.value = str_ptr.bitcast(FloStr.llvmtype)
-            FloStr.strs[value] = self
-        else:
-            self.value = value
-
-    def getElement(self, builder: ir.IRBuilder, index: FloInt):
-        val = builder.load(builder.gep(self.value, [index.value], True))
-        char_ty = ir.IntType(8)
-        arr_ty = ir.ArrayType(char_ty, 2)
-        arr_ref = builder.alloca(arr_ty)
-        ref_1 = builder.gep(
-            arr_ref, [FloInt.zero().value, FloInt.zero().value])
-        builder.store(val, ref_1)
-        ref_2 = builder.gep(arr_ref, [FloInt.zero().value, FloInt.one().value])
-        builder.store(ir.Constant(char_ty, 0), ref_2)
-        return FloStr(ref_1, 1)
-
-    def add(self, builder: ir.IRBuilder, str):
-        arr_space = builder.alloca(ir.ArrayType(
-            ir.IntType(8), self.size + str.size + 1))
-        start_ptr = builder.gep(
-            arr_space, [FloInt.zero().value, FloInt.zero().value])
-        mid_ptr = builder.gep(start_ptr, [FloInt(self.size).value])
-        builder.call(builtIns.get_instrinsic("llvm.memcpy"), [
-                     start_ptr, self.value, FloInt(self.size).value, FloBool.false().value])
-        builder.call(builtIns.get_instrinsic("llvm.memcpy"), [
-                     mid_ptr, str.value, FloInt(str.size).value, FloBool.false().value])
-        return FloStr(start_ptr, self.size+str.size)
-
-    def incr(self):
-        FloStr.id += 1
-        return FloStr.id
-
-    def string_repr_(self, _):
-        return self.value
-
     @staticmethod
-    def default_llvm_val():
-        return FloStr("").value
+    def str() -> str:
+        return "float"
 
 
 class FloBool:
     llvmtype = ir.IntType(1)
     print_fmt = "%s"
-    bytes = 1/8
 
     def __init__(self, value):
         if isinstance(value, bool):
@@ -278,7 +229,7 @@ class FloBool:
     def and_(self, builder: ir.IRBuilder, bool):
         return FloBool(builder.and_(self.value, bool.value))
 
-    def string_repr_(self, builder: ir.IRBuilder):
+    def print_val(self, builder: ir.IRBuilder):
         return builder.select(self.value, FloStr("true").value, FloStr("false").value)
 
     @staticmethod
@@ -293,6 +244,87 @@ class FloBool:
     def false():
         return FloBool(False)
 
+    @staticmethod
+    def str() -> str:
+        return 'bool'
+
+class FloStr:
+    id = -1
+    strs = {}
+    llvmtype = ir.IntType(8).as_pointer()
+    print_fmt = "%s"
+
+    def __init__(self, value, builder:ir.IRBuilder = None):
+        # Check for already defined strings
+        self.len_ptr = None
+        if FloStr.strs.get(str(value), None) != None:
+            self.value = FloStr.strs[str(value)].value
+            self.len_ptr = FloStr.strs[str(value)].len_ptr
+        elif isinstance(value, str):
+            encoded = (value+'\0').encode(
+                encoding="utf-8", errors="xmlcharrefreplace"
+            )
+            byte_array = bytearray(encoded)
+            str_val = ir.Constant(
+                ir.ArrayType(ir.IntType(8), len(byte_array)), byte_array
+            )
+            str_ptr = ir.GlobalVariable(
+                Context.current_llvm_module, str_val.type, f"str.{self.incr()}"
+            )
+            self.len_ptr = FloRef(builder, FloInt(len(value)))
+            str_ptr.linkage = "private"
+            str_ptr.global_constant = True
+            str_ptr.unnamed_addr = True
+            str_ptr.initializer = str_val
+            self.value = str_ptr.bitcast(FloStr.llvmtype)
+            FloStr.strs[value] = self
+        else:
+            self.value = value
+
+    def getElement(self, builder: ir.IRBuilder, index: FloInt):
+        val = builder.load(builder.gep(self.value, [index.value], True))
+        char_ty = ir.IntType(8)
+        arr_ty = ir.ArrayType(char_ty, 2)
+        str_start_ptr = builder.gep(
+            builder.alloca(arr_ty), [FloInt.zero().value, FloInt.zero().value])
+        builder.store(val, str_start_ptr)
+        str_term_ptr = builder.gep(str_start_ptr, [FloInt.one().value])
+        builder.store(ir.Constant(char_ty, 0), str_term_ptr)
+        result_str = FloStr(str_start_ptr)
+        result_str.len_ptr = FloRef(builder, FloInt.one())
+        return result_str
+
+    def add(self, builder: ir.IRBuilder, str):
+        s1_length = self.len_ptr.load()
+        s2_length = str.len_ptr.load()
+        result_str_len = s1_length.add(builder, s2_length)
+        arr_space = builder.alloca(ir.IntType(8), result_str_len.add(builder, FloInt.one()).value)
+        false_val = FloBool.false().value
+        start_ptr = builder.gep(arr_space, [FloInt.zero().value])
+        mid_ptr = builder.gep(start_ptr, [s1_length.value])
+        builder.call(builtIns.get_instrinsic("llvm.memcpy"), [
+                     start_ptr, self.value, s1_length.value, false_val])
+        builder.call(builtIns.get_instrinsic("llvm.memcpy"), [
+                     mid_ptr, str.value, s2_length.add(builder, FloInt.one()).value, false_val])
+        result_str = FloStr(arr_space)
+        result_str.len_ptr = FloRef(builder, result_str_len)
+        return result_str
+
+    def incr(self):
+        FloStr.id += 1
+        return FloStr.id
+
+    def print_val(self, _):
+        return self.value
+
+    @staticmethod
+    def default_llvm_val():
+        return FloStr("").value
+
+    @staticmethod
+    def str() -> str:
+        return "str"
+
 
 class FloArray:
     def __init__(self, builder: ir.IRBuilder, elms, size=0):
@@ -300,41 +332,48 @@ class FloArray:
         if isinstance(elms, list):
             self.elm_type = elms[0].__class__
             self.size = len(elms)
+            
             self.type = ir.ArrayType(self.elm_type.llvmtype, self.size)
             arr_ptr = builder.alloca(self.type)
             for index in range(len(elms)):
                 ptr = builder.gep(
                     arr_ptr, [FloInt.zero().value, FloInt(index).value], True)
                 builder.store(elms[index].value, ptr)
-            self.value = builder.bitcast(arr_ptr, self.elm_type.llvmtype.as_pointer())
+            self.value = builder.bitcast(
+                arr_ptr, self.elm_type.llvmtype.as_pointer())
+        elif builder == None:
+            self.elm_type = elms
         else:
             self.value = elms
-            self.elm_type  = llvmToFloType(ir.Constant(elms.type.pointee, 0)).__class__
+            self.elm_type = llvm_to_flotype(
+                ir.Constant(elms.type.pointee, 0)).__class__
 
     def add(self, builder: ir.IRBuilder, arr):
-        res_array_size = self.size + arr.size
-        res_array_space = builder.alloca(ir.ArrayType(
-            self.elm_type.llvmtype, res_array_size))
         memcpy_func = builtIns.get_instrinsic("llvm.memcpy")
+        res_array_size = self.size + arr.size
+        res_array_space = builder.bitcast(builder.alloca(ir.ArrayType(
+            self.elm_type.llvmtype, res_array_size)),  self.elm_type.llvmtype.as_pointer())
+        arr1_pos_ptr = builder.gep(
+            res_array_space, [FloInt.zero().value])
+        arr2_pos_ptr = builder.gep(
+            res_array_space, [FloInt(self.size).value])
 
-        res_array_ptr = builder.bitcast(
-            res_array_space, memcpy_func.args[0].type)
         arr1_ptr = builder.bitcast(self.value, memcpy_func.args[0].type)
         arr2_ptr = builder.bitcast(arr.value, memcpy_func.args[0].type)
-        arr1_num_of_bytes = self.elm_type.bytes * self.size
-        arr2_num_of_bytes = self.elm_type.bytes * arr.size
-        zero = FloInt.zero().value
-        arr1_pos_ptr = builder.gep(
-            res_array_ptr, [zero])
-        arr2_pos_ptr = builder.gep(
-            res_array_ptr, [FloInt(arr1_num_of_bytes).value])
+        arr1_pos_ptr = builder.bitcast(arr1_pos_ptr, memcpy_func.args[0].type)
+        arr2_pos_ptr = builder.bitcast(arr2_pos_ptr, memcpy_func.args[0].type)
+        elem_size = self.elm_type.llvmtype.get_abi_size(target_data)
+        arr1_num_of_bytes = elem_size * self.size
+        arr2_num_of_bytes = elem_size * arr.size
+
         builder.call(memcpy_func, [arr1_pos_ptr, arr1_ptr, FloInt(
             arr1_num_of_bytes).value, FloBool.false().value])
         builder.call(memcpy_func, [arr2_pos_ptr, arr2_ptr, FloInt(
             arr2_num_of_bytes).value, FloBool.false().value])
-        res_array_space = builder.bitcast(res_array_space, self.elm_type.llvmtype.as_pointer())
+
         res_array = FloArray(builder, res_array_space, res_array_size)
         res_array.elm_type = self.elm_type
+        res_array.size = res_array_size
         return res_array
 
     def getElement(self, builder: ir.IRBuilder, index):
@@ -345,25 +384,95 @@ class FloArray:
         ptr = builder.gep(self.value, [index.value], True)
         builder.store(value.value, ptr)
         return value
+    # TODO: Inaccurate type str
+
+    def str(self) -> str:
+        return f"{self.elm_type.str()} {'[]'}"
+
+    def __eq__(self, __o: object) -> bool:
+        return isinstance(__o, FloArray) and self.elm_type == __o.elm_type
 
 # TODO: Unecessary loads (re-load only when you have stored)
 
-
 class FloRef:
-    def __init__(self, builder: ir.IRBuilder, value, name: str):
+    def __init__(self, builder: ir.IRBuilder, value, name=''):
         self.builder = builder
         self.addr = self.builder.alloca(value.value.type, None, name)
+        self.referee = None
         self.store(value)
 
     def load(self):
         self.referee.value = self.builder.load(self.addr)
         return self.referee
 
-    def store(self, value):
-        self.referee = value
-        self.builder.store(value.value, self.addr)
-        return value
+    @staticmethod
+    def refcpy(builder: ir.IRBuilder, ref1, ref2):
+        size = ref1.referee.value.type.get_abi_size(target_data)
+        mem_cpy_fn = builtIns.get_instrinsic("llvm.memcpy")
+        ref1_ptr = builder.bitcast(ref1.addr, mem_cpy_fn.args[0].type)
+        ref2_ptr = builder.bitcast(ref2.addr, mem_cpy_fn.args[1].type)
+        builder.call(mem_cpy_fn, [ref1_ptr, ref2_ptr, FloInt(size).value, FloBool.false().value])
 
+    def store(self, value):
+        self.builder.store(value.value, self.addr)
+        if self.referee != None and isinstance(self.referee, FloStr):
+            FloRef.refcpy(self.builder, self.referee.len_ptr, value.len_ptr)
+        self.referee = value
+        return self.referee
+
+
+class FloFunc:
+    def __init__(self, arg_types, return_type, name):
+        fncty = ir.FunctionType(flotype_to_llvm(return_type), [
+                                flotype_to_llvm(arg_ty) for arg_ty in arg_types])
+        self.return_type = return_type
+        self.arg_types = arg_types
+        self.value = ir.Function(Context.current_llvm_module, fncty, name)
+        fn_entry_block = self.value.append_basic_block()
+        self.builder = ir.IRBuilder(fn_entry_block)
+
+    def call(self, builder: ir.IRBuilder, args):
+        return llvm_to_flotype(builder.call(self.value, [arg.value for arg in args]))
+
+    def extend_symbol_table(self, symbol_table: SymbolTable, arg_names: List(str)):
+        for i in range(len(arg_names)):
+            arg_val = self.arg_types[i](self.value.args[i]) if self.arg_types[i] != FloArray else FloArray(
+                self.builder, self.value.args[i])
+            symbol_table.set(arg_names[i], FloRef(
+                self.builder, arg_val, arg_names[i]))
+            return symbol_table
+
+    def str(self) -> str:
+        return f"({self.arg_types[0]})=>{self.return_type}"
+
+
+class FloInlineFunc(FloFunc):
+    def __init__(self, call, arg_types, return_type):
+        self.arg_types = arg_types
+        self.return_type = return_type
+        self.call = call
+
+    def call(self, *kargs):
+        return self.call(*kargs)
 
 class FloVoid:
+    print_fmt = "%s"
     llvmtype = ir.VoidType()
+    value = ir.Constant(ir.IntType(8), 0xffff)
+
+    def print_val(self, _):
+        return FloStr("null").value
+
+    @staticmethod
+    def str(self) -> str:
+        "void"
+
+
+class FloDict:
+    def __init__(self, elementType):
+        self.elementType = elementType
+
+    def __eq__(self, o: object) -> bool:
+        if isinstance(o, FloDict):
+            return self.elementType == o.elementType
+        return False

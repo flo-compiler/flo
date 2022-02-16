@@ -1,9 +1,9 @@
 from typing import List
+from flotypes import FloArray, FloDict, str_to_flotype
 from interfaces.astree import *
 from lexer import TokType, Token
 from errors import SyntaxError
 from errors import Range
-from itypes import arrayType, dictType, strToType
 
 
 class Parser:
@@ -471,18 +471,22 @@ class Parser:
                 SyntaxError(self.current_tok.range, "Expected '}'").throw()
             self.advance()
             return TypeNode(
-                dictType(node.type), Range.merge(
+                FloDict(node.type), Range.merge(
                     start_range, self.current_tok.range)
             )
         if self.current_tok.inKeywordList(("int", "float", "bool", "str", "void")):
-            type = strToType(self.current_tok.value)
+            type = str_to_flotype(self.current_tok.value)
             self.advance()
             while self.current_tok.type == TokType.LBRACKET:
                 self.advance()
-                type = arrayType(type)
-                if self.current_tok.type != TokType.RBRACKET:
-                    SyntaxError(self.current_tok.range, "Expected ']'").throw()
-                self.advance()
+                type = FloArray(None, type)
+                if self.current_tok.type == TokType.RBRACKET:
+                    self.advance()
+                else:
+                    type.size = self.expr()
+                    if self.current_tok.type != TokType.RBRACKET:
+                        SyntaxError(self.current_tok.range, "Expected ']'").throw()
+                    self.advance()
             return TypeNode(type, Range.merge(start_range, self.current_tok.range))
         else:
             SyntaxError(self.current_tok.range,

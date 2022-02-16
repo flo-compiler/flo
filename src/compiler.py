@@ -1,14 +1,11 @@
 import os
 from pathlib import Path
-from builtIns import new_ctx
 from errors import CompileError
-from flotypes import FloArray, FloInt, FloFloat, FloStr, FloRef, FloBool, FloVoid, llvmToFloType
-from itypes import Types, arrayType
+from flotypes import FloArray, FloFunc, FloInt, FloFloat, FloStr, FloRef, FloBool, FloVoid
 from lexer import TokType
 from interfaces.astree import *
 from context import Context
 from ctypes import CFUNCTYPE, c_int
-from llvmlite import ir
 import llvmlite.binding as llvm
 from termcolor import colored
 
@@ -18,16 +15,11 @@ llvm.initialize_native_asmprinter()
 
 
 class Compiler(Visitor):
-    def __init__(self, display_name):
-        self.context = new_ctx(display_name)
+    def __init__(self, context: Context):
+        self.context = context
         self.module = Context.current_llvm_module
-        Context.current_llvm_module = self.module
-        function = ir.Function(
-            self.module, ir.FunctionType(ir.VoidType(), []), "main")
-        main_entry_block = function.append_basic_block("entry")
-        builder = ir.IRBuilder(main_entry_block)
-        self.function = function
-        self.builder = builder
+        self.function = FloFunc([], FloVoid(), "main")
+        self.builder = self.function.builder
         self.i = 0
 
     def incr(self):
@@ -44,7 +36,7 @@ class Compiler(Visitor):
         try:
             llvm_module = llvm.parse_assembly(str(self.module))
             llvm_module.verify()
-        except RuntimeError as e:  # TODO: Might need to fix this more.
+        except RuntimeError as e:
             lines = e.args[0].split("\n")
             trace = str(self.module).split("\n")
             lineNo = int(lines[1].split(":")[1])
@@ -73,7 +65,6 @@ class Compiler(Visitor):
             with open(f"{basename}.o", "wb") as object:
                 object.write(target_m.emit_object(llvm_module))
                 object.close()
-                os.system(f"gcc {basename}.o -o {basename}")
         # Execute code
         if options.execute:
             # And an execution engine with an empty backing module
@@ -93,7 +84,7 @@ class Compiler(Visitor):
         return FloFloat(node.tok.value)
 
     def visitStrNode(self, node: StrNode):
-        return FloStr(node.tok.value)
+        return FloStr(node.tok.value, self.builder)
 
     def visitNumOpNode(self, node: NumOpNode):
         a = self.visit(node.left_node)
@@ -144,24 +135,7 @@ class Compiler(Visitor):
         return v
 
     def visitTypeNode(self, node: TypeNode):
-        def itype_to_flo_type(type):
-            if type == Types.INT:
-                return FloInt
-            if type == Types.FLOAT:
-                return FloFloat
-            elif type == Types.STRING:
-                return FloStr
-            elif type == Types.BOOL:
-                return FloBool
-            elif type == Types.VOID:
-                return FloVoid
-            elif isinstance(node.type, arrayType):
-                type = FloArray
-                type.llvmtype = itype_to_flo_type(
-                    node.type.elementType).llvmtype.as_pointer()
-                return type
-
-        return itype_to_flo_type(node.type)
+        return node.type
 
     def visitFncDefNode(self, node: FncDefNode):
         fn_name = node.var_name.value
@@ -171,39 +145,20 @@ class Compiler(Visitor):
         for arg_name, arg_type in node.args:
             arg_names.append(arg_name.value)
             arg_types.append(self.visit(arg_type))
-        fn = ir.Function(
-            self.module, ir.FunctionType(rtype.llvmtype, map(
-                lambda v: v.llvmtype, arg_types), node.var_name.value), fn_name
-        )
-        fn_entry_block = fn.append_basic_block(f"{fn_name}.entry")
-        fn_builder = ir.IRBuilder(fn_entry_block)
-
-        def call(args, main_builder: ir.IRBuilder):
-            args_vals = []
-            for arg in args:
-                args_vals.append(arg.value)
-            return llvmToFloType(main_builder.call(fn, args_vals))
-
-        self.context.symbol_table.set(fn_name, call)
+        fn = FloFunc(arg_types, rtype, fn_name)
+        self.context.symbol_table.set(fn_name, fn)
         outer_symbol_table = self.context.symbol_table.copy()
-        for i in range(len(arg_names)):
-            arg_val = arg_types[i](fn.args[i]) if arg_types[i] != FloArray else arg_types[i](
-                fn_builder, fn.args[i])
-            self.context.symbol_table.set(
-                arg_names[i], FloRef(fn_builder, arg_val, arg_names[i]))
-        outer_fn = self.function
+        self.context.symbol_table = fn.extend_symbol_table(self.context.symbol_table, arg_names)
         outer_builder = self.builder
-        self.function = fn
-        self.builder = fn_builder
+        self.builder = fn.builder
         returned = self.visit(node.body)
         self.context.symbol_table = outer_symbol_table
-        self.function = outer_fn
         self.builder = outer_builder
         try:
             if rtype == FloVoid:
-                fn_builder.ret_void()
+                fn.builder.ret_void()
             else:
-                fn_builder.ret(returned or rtype.default_llvm_val())
+                fn.builder.ret(returned or rtype.default_llvm_val())
         except:
             pass
 
@@ -292,9 +247,9 @@ class Compiler(Visitor):
         self.builder.position_at_start(while_exit_block)
 
     def visitFncCallNode(self, node: FncCallNode):
-        call = self.visit(node.name)
+        fn = self.visit(node.name)
         args = [self.visit(arg) for arg in node.args]
-        return call(args, self.builder)
+        return fn.call(self.builder, args)
 
     def visitReturnNode(self, node: ReturnNode):
         if node.value == None:

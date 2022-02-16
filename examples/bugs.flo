@@ -1,7 +1,5 @@
 /** This file is for all bugs I find */
 println("🤦‍♂️ does not work"[1]) /** Emoji indexing */
-/* array of bools */
-i: bool [] = [true, true, false, false]
-j = [false, true, false]
+/* Concatenation of strings in a loop */
 /* 2D arrays */ 
-/* str concat of str arrays */
+/* concat of str arrays */
