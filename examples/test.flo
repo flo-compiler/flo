@@ -3,14 +3,11 @@ fnc print_array(arr: str [], n: int): void => {
     print("[")
     for i = 0; i < n; i++ {
         print(arr[i])
-        if (i<n-1) print(", ")
+        if i < n-1 print(", ")
     }
     println("]")
 }
 a: str [] = ["a"]
-b: str [] = ['b', 'cass', 'd']
-i = 0
-for i; i < 3; i++ {
-    b+=a
-}
-print_array(b, 4+i)
+b: str [] = ['b']
+c: str [] = ['c']
+print_array((a+a+b+b+c+c), 6)

@@ -1,10 +1,9 @@
 from typing import List
-from flotypes import FloArray, FloDict, str_to_flotype
+from flotypes import FloArray, FloDict, FloType
 from interfaces.astree import *
 from lexer import TokType, Token
 from errors import SyntaxError
 from errors import Range
-
 
 class Parser:
     def __init__(self, tokens: List[Token]):
@@ -431,51 +430,13 @@ class Parser:
             end_range = self.current_tok.range
             self.advance()
             return ArrayNode(list, Range.merge(tok.range, end_range))
-        elif tok.type == TokType.LBRACE:
-            self.advance()
-            values = []
-            if self.current_tok.type != TokType.RBRACE:
-                k = self.expr()
-
-                if self.current_tok.type != TokType.COL:
-                    SyntaxError(self.current_tok.range, "Expected '}'").throw()
-                self.advance()
-                v = self.expr()
-
-                values.append((k, v))
-                while self.current_tok.type == TokType.COMMA:
-                    self.advance()
-                    k = self.expr()
-
-                    if self.current_tok.type != TokType.COL:
-                        SyntaxError(self.current_tok.range,
-                                    f"Expected ':'").throw()
-                    self.advance()
-                    v = self.expr()
-
-                    values.append((k, v))
-            if self.current_tok.type != TokType.RBRACE:
-                SyntaxError(self.current_tok.range, "Expected '}'").throw()
-            self.advance()
-            return DictNode(Range.merge(tok.range, self.current_tok.range), values)
         SyntaxError(
             tok.range, f"Expected an expression value before '{tok}'").throw()
 
     def composite_type(self):
-        # TODO: Doesn't cover for array of dictionaries
         start_range = self.current_tok.range
-        if self.current_tok.type == TokType.LBRACE:
-            self.advance()
-            node = self.composite_type()
-            if self.current_tok.type != TokType.RBRACE:
-                SyntaxError(self.current_tok.range, "Expected '}'").throw()
-            self.advance()
-            return TypeNode(
-                FloDict(node.type), Range.merge(
-                    start_range, self.current_tok.range)
-            )
         if self.current_tok.inKeywordList(("int", "float", "bool", "str", "void")):
-            type = str_to_flotype(self.current_tok.value)
+            type = FloType.str_to_flotype(self.current_tok.value)
             self.advance()
             while self.current_tok.type == TokType.LBRACKET:
                 self.advance()
@@ -485,7 +446,8 @@ class Parser:
                 else:
                     type.size = self.expr()
                     if self.current_tok.type != TokType.RBRACKET:
-                        SyntaxError(self.current_tok.range, "Expected ']'").throw()
+                        SyntaxError(self.current_tok.range,
+                                    "Expected ']'").throw()
                     self.advance()
             return TypeNode(type, Range.merge(start_range, self.current_tok.range))
         else:

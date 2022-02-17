@@ -1,6 +1,5 @@
-import os
 from pathlib import Path
-from errors import CompileError
+from errors import CompileError, TypeError
 from flotypes import FloArray, FloFunc, FloInt, FloFloat, FloStr, FloRef, FloBool, FloVoid
 from lexer import TokType
 from interfaces.astree import *
@@ -125,7 +124,12 @@ class Compiler(Visitor):
         elif node.op.isKeyword("in"):
             pass
         elif node.op.isKeyword("as"):
-            return a.castTo(self.builder, b)
+            try:
+                return a.cast_to(self.builder, b)
+            except Exception as e:
+                TypeError(
+                    node.range, f"Cannot cast {a.str()} to {b.str()}"
+                ).throw()
         elif node.op.isKeyword("is"):
             return FloBool(isinstance(a, b))
 
@@ -278,7 +282,7 @@ class Compiler(Visitor):
         elif isinstance(node.identifier, ArrayAccessNode):
             index = self.visit(node.identifier.index)
             array = self.visit(node.identifier.name)
-            array.setElement(self.builder, index, nValue)
+            array.set_element(self.builder, index, nValue)
         return nValue if node.ispre else value
 
     def visitForEachNode(self, node: ForEachNode):
@@ -291,7 +295,7 @@ class Compiler(Visitor):
         else:
             ref = self.context.symbol_table.get(node.name.var_name.value)
             value = ref.load()
-        return value.getElement(self.builder, index)
+        return value.get_element(self.builder, index)
 
     def visitArrayNode(self, node: ArrayNode):
         return FloArray(self.builder, [self.visit(elm_node) for elm_node in node.elements])
@@ -300,10 +304,7 @@ class Compiler(Visitor):
         index = self.visit(node.array.index)
         array = self.visit(node.array.name)
         value = self.visit(node.value)
-        return array.setElement(self.builder, index, value)
-
-    def visitDictNode(self, node):
-        raise Exception("Unimplemented!")
+        return array.set_element(self.builder, index, value)
 
     def visitImportNode(self, node):
         raise Exception("Unimplemented!")

@@ -2,7 +2,7 @@ from os import path
 from typing import List
 from context import Context, SymbolTable
 from errors import TypeError, SyntaxError, NameError, IOError
-from flotypes import FloArray, FloBool, FloDict, FloFloat, FloInlineFunc, FloInt, FloStr, FloVoid
+from flotypes import FloArray, FloBool, FloFloat, FloInlineFunc, FloInt, FloStr, FloType, FloVoid
 from lexer import TokType
 from lexer import Lexer
 from parser import Parser
@@ -153,13 +153,8 @@ class Analyzer(Visitor):
         elif node.op.isKeyword("as"):
             if left == right:
                 node = node.left_node
-                return right
-            if self.isCastable(left, right):
-                return right
-            else:
-                TypeError(
-                    range, f"Cannot cast {left.str()} to {right.str()}"
-                ).throw()
+            return right
+
         TypeError(
             node.range,
             f"Illegal operation {node.op} between types '{left.str()}' and '{right.str()}'",
@@ -296,7 +291,6 @@ class Analyzer(Visitor):
         if (
             (not isinstance(it, FloArray))
             and (it != FloStr)
-            and (not isinstance(it, FloDict))
         ):
             TypeError(
                 node.iterator.range,
@@ -306,7 +300,7 @@ class Analyzer(Visitor):
         self.inLoop.append(True)
         type = (
             FloStr
-            if it == FloStr or isinstance(it, FloDict)
+            if it == FloStr
             else it.elm_type
         )
         self.context.symbol_table.set(node.identifier.value, type)
@@ -430,8 +424,8 @@ class Analyzer(Visitor):
 
             if (
                 argType != fn.arg_types[i]
-                and not fn.arg_types[i] == None
-                and not argType == None
+                and not fn.arg_types[i] == FloType
+                and not argType == FloType
             ):
                 TypeError(
                     node.args[i].range,
@@ -459,14 +453,7 @@ class Analyzer(Visitor):
     def visitArrayAccessNode(self, node: ArrayAccessNode):
         collection = self.visit(node.name)
         index = self.visit(node.index)
-        if isinstance(collection, FloDict):
-            if index != FloStr:
-                TypeError(
-                    node.index.range,
-                    f"Expected key to be of type '{FloStr.str()}' but got '{index.str()}'",
-                ).throw()
-            return collection.elm_type
-        elif isinstance(collection, FloArray) or collection == FloStr:
+        if isinstance(collection, FloArray) or collection == FloStr:
             if not self.isNumeric(index):
                 TypeError(
                     node.index.range,
@@ -531,26 +518,4 @@ class Analyzer(Visitor):
             self.context = savedCtx
         return FloVoid
 
-    def visitDictNode(self, node: DictNode):
-        if len(node.values) == 0:
-            return None
-        expectedType = self.visit(node.values[0][1])
-        for (key, value) in node.values:
-            ktype = self.visit(key)
-
-            if ktype != FloStr:
-                TypeError(
-                    key.range, f"Expected type of '{FloStr.str()}'"
-                ).throw()
-            vtype = self.visit(value)
-
-            if vtype != expectedType:
-                TypeError(
-                    value.range,
-                    f"Expected type of '{expectedType}' because of type of first element",
-                ).throw()
-        return FloDict(expectedType)
-
     # TODO: Look for types that are incompatible for casting.
-    def isCastable(self, current_type, target_type):
-        return True

@@ -30,9 +30,8 @@ class Context:
     def __init__(self, display_name,):
         self.display_name = display_name
         self.symbol_table = SymbolTable()
-    
+
     def copy(self):
         cp_ctx = Context(self.display_name)
         cp_ctx.symbol_table = self.symbol_table.copy()
         return cp_ctx
-        
