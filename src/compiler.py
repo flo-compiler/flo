@@ -39,12 +39,12 @@ class Compiler(Visitor):
         except RuntimeError as e:
             lines = e.args[0].split("\n")
             trace = str(self.module).split("\n")
-            lineNo = int(lines[1].split(":")[1])
+            lineNo = int(lines[1].split(":")[1]) if len(lines[1].split(":")) > 1 else 1
             trace[lineNo-1] = trace[lineNo-1].replace(
                 lines[2], colored("->" + lines[2], "red", attrs=["bold"])
             )
             CompileError(
-                colored(lines[0] + "; " + lines[1] + " at", "white",
+                colored(lines[0] + ";" + lines[1] + " at", "white",
                         attrs=["bold"]) + "\n" + "\n".join(trace)
             ).throw()
         # Passes
@@ -180,7 +180,7 @@ class Compiler(Visitor):
         else:
             ref.store(value)
         self.context.symbol_table.set(var_name, ref)
-        return ref.load()
+        return value
 
     def visitVarAccessNode(self, node: VarAccessNode):
         ref = self.context.symbol_table.get(node.var_name.value)
@@ -211,25 +211,28 @@ class Compiler(Visitor):
         ifCodeGen(node.cases, node.else_case)
 
     def visitForNode(self, node: ForNode):
+        for_entry_block = self.builder.append_basic_block(f"for.entry.{self.incr()}")
+        self.builder.branch(for_entry_block)
+        self.builder.position_at_start(for_entry_block)
         self.visit(node.init)
-        cond_for_block = self.builder.append_basic_block(
-            f"for.cond{self.incr()}")
-        entry_for_block = self.builder.append_basic_block(f"for.body{self.i}")
-        incr_for_block = self.builder.append_basic_block(f"for.incr{self.i}")
-        end_for_block = self.builder.append_basic_block(f"for.end{self.i}")
-        self.break_block = end_for_block
-        self.continue_block = incr_for_block
-        self.builder.branch(cond_for_block)
-        self.builder.position_at_start(cond_for_block)
+        for_cond_block = self.builder.append_basic_block(
+            f"for.cond{self.i}")
+        for_body_block = self.builder.append_basic_block(f"for.body{self.i}")
+        for_incr_block = self.builder.append_basic_block(f"for.incr{self.i}")
+        for_end_block = self.builder.append_basic_block(f"for.end{self.i}")
+        self.break_block = for_end_block
+        self.continue_block = for_incr_block
+        self.builder.branch(for_cond_block)
+        self.builder.position_at_start(for_cond_block)
         cond = self.visit(node.cond)
-        self.builder.cbranch(cond.value, entry_for_block, end_for_block)
-        self.builder.position_at_start(entry_for_block)
+        self.builder.cbranch(cond.value, for_body_block, for_end_block)
+        self.builder.position_at_start(for_body_block)
         self.visit(node.stmt)
-        self.builder.branch(incr_for_block)
-        self.builder.position_at_start(incr_for_block)
+        self.builder.branch(for_incr_block)
+        self.builder.position_at_start(for_incr_block)
         self.visit(node.incr_decr)
-        self.builder.branch(cond_for_block)
-        self.builder.position_at_start(end_for_block)
+        self.builder.branch(for_cond_block)
+        self.builder.position_at_start(for_end_block)
 
     def visitWhileNode(self, node: WhileNode):
         while_entry_block = self.builder.append_basic_block(
@@ -287,7 +290,7 @@ class Compiler(Visitor):
             value = self.visit(node.name)
         else:
             ref = self.context.symbol_table.get(node.name.var_name.value)
-            value = ref.referee
+            value = ref.load()
         return value.getElement(self.builder, index)
 
     def visitArrayNode(self, node: ArrayNode):
