@@ -261,10 +261,10 @@ class Analyzer(Visitor):
 
     def condition_check(self, cond_node: Node):
         cond_type = self.visit(cond_node)
-        if cond_type != FloBool and (not self.isNumeric(cond_type)):
+        if (cond_type.__class__ != FloBool and cond_type != FloBool) and (not self.isNumeric(cond_type)):
             TypeError(
                 cond_node.range,
-                f"Expected type '{FloBool}', '{FloInt.str()}' or '{FloFloat.str()}' but got type '{cond_type.str()}'",
+                f"Expected type '{FloBool.str()}', '{FloInt.str()}' or '{FloFloat.str()}' but got type '{cond_type.str()}'",
             ).throw()
         if self.isNumeric(cond_type):
             cond_node = self.cast(cond_node, FloBool)

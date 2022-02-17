@@ -1,4 +1,4 @@
-fnc fib_rec(n: int): int => if (n<3) return 3 else return fib_rec(n-1) + fib_rec(n-2)
+fnc fib_rec(n: int): int => if (n<3) return 1 else return fib_rec(n-1) + fib_rec(n-2)
 fnc fib(n: int): int => {
     last_num = 1
     slast_num = 1
@@ -12,4 +12,4 @@ fnc fib(n: int): int => {
 }
 print("Enter a number to compute it\'s fibonnaci sum: ")
 x = input()
-println(fib(x))
+println(fib_rec(x))

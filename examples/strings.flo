@@ -8,7 +8,20 @@ fnc white ():void => print("\033[037m")
 fnc reset ():void => print("\033[0m")
 
 white()
-print("My name is ")
+print("My")
+red()
+print(" Name is ")
 blue()
 println("Ståle 😀")
 reset()
+a = "a"
+NUM = 3
+for j = 0; j < NUM-1; j++{
+    a+=a[0]
+}
+b = a
+for i = 0; i < NUM; i++ {
+    b+="b"
+}
+println(a)
+println(b)

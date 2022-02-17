@@ -1,20 +1,16 @@
 /*Test File for testing features I am currently working on:*/
-// fnc print_array(arr: str [], n: int): void => {
-//     print("[")
-//     for i = 0; i < n; i++ {
-//         print(arr[i])
-//         if (i<n-1) print(", ")
-//     }
-//     println("]")
-// }
-// a: str [] = ["a"]
-// b: str [] = ['b', 'cass', 'd']
-// strs = a+b
-// print_array(b, 3)
-//
-a = "a"
-// a+="b"
-for i = 0; i < 10; i++ {
-    a+="b"
+fnc print_array(arr: str [], n: int): void => {
+    print("[")
+    for i = 0; i < n; i++ {
+        print(arr[i])
+        if (i<n-1) print(", ")
+    }
+    println("]")
 }
-print(a)
+a: str [] = ["a"]
+b: str [] = ['b', 'cass', 'd']
+i = 0
+for i; i < 3; i++ {
+    b+=a
+}
+print_array(b, 4+i)
