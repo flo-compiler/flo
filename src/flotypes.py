@@ -5,45 +5,54 @@ from llvmlite import ir, binding
 target_data = binding.create_target_data("e S0")
 
 
-def llvm_to_flotype(value):
-    llvm_type = value.type
-    if isinstance(llvm_type, ir.IntType):
-        return (
-            FloBool(value)
-            if llvm_type.width == FloBool.llvmtype.width
-            else FloInt(value)
-        )
-    if isinstance(llvm_type, ir.DoubleType):
-        return FloFloat(value)
+class FloType:
+    def cast_to():
+        raise Exception("undefined cast")
 
-    elif llvm_type == FloStr.llvmtype:
-        return FloStr(value)
-    elif isinstance(llvm_type, ir.VoidType):
-        return FloVoid()
-    else:
-        raise Exception(f"Type Not handled {llvm_type}")
+    @staticmethod
+    def str():
+        return "any"
+
+    @staticmethod
+    def llvm_to_flotype(value):
+        llvm_type = value.type
+        if isinstance(llvm_type, ir.IntType):
+            return (
+                FloBool(value)
+                if llvm_type.width == FloBool.llvmtype.width
+                else FloInt(value)
+            )
+        if isinstance(llvm_type, ir.DoubleType):
+            return FloFloat(value)
+
+        elif llvm_type == FloStr.llvmtype:
+            return FloStr(value)
+        elif isinstance(llvm_type, ir.VoidType):
+            return FloVoid()
+        else:
+            raise Exception(f"Type Not handled {llvm_type}")
+
+    @staticmethod
+    def flotype_to_llvm(type):
+        if isinstance(type, FloArray):
+            return type.elm_type.llvmtype.as_pointer()
+        return type.llvmtype
+
+    @staticmethod
+    def str_to_flotype(str):
+        if str == "int":
+            return FloInt
+        if str == "float":
+            return FloFloat
+        elif str == "str":
+            return FloStr
+        elif str == "bool":
+            return FloBool
+        elif str == "void":
+            return FloVoid
 
 
-def flotype_to_llvm(type):
-    if isinstance(type, FloArray):
-        return type.elm_type.llvmtype.as_pointer()
-    return type.llvmtype
-
-
-def str_to_flotype(str):
-    if str == "int":
-        return FloInt
-    if str == "float":
-        return FloFloat
-    elif str == "str":
-        return FloStr
-    elif str == "bool":
-        return FloBool
-    elif str == "void":
-        return FloVoid
-
-
-class FloInt:
+class FloInt(FloType):
     llvmtype = ir.IntType(32)
     print_fmt = "%li"
 
@@ -70,7 +79,7 @@ class FloInt:
     def print_val(self, _):
         return self.value
 
-    def toFloat(self, builder: ir.IRBuilder):
+    def to_float(self, builder: ir.IRBuilder):
         return FloFloat(builder.sitofp(self.value, FloFloat.llvmtype))
 
     def add(self, builder: ir.IRBuilder, num):
@@ -98,8 +107,8 @@ class FloInt:
         return self
 
     def pow(self, builder: ir.IRBuilder, num):
-        fv = self.castTo(builder, FloFloat).pow(
-            builder, num.castTo(builder, FloFloat))
+        fv = self.cast_to(builder, FloFloat).pow(
+            builder, num.cast_to(builder, FloFloat))
         return fv
 
     def sl(self, builder: ir.IRBuilder, num):
@@ -120,9 +129,9 @@ class FloInt:
     def xor(self, builder: ir.IRBuilder, num):
         return FloInt(builder.xor(self.value, num.value))
 
-    def castTo(self, builder: ir.IRBuilder, type):
+    def cast_to(self, builder: ir.IRBuilder, type):
         if type == FloFloat:
-            return self.toFloat(builder)
+            return self.to_float(builder)
         elif type == FloBool:
             return self.cmp(builder, "!=", FloInt.zero())
         else:
@@ -133,7 +142,7 @@ class FloInt:
         return "int"
 
 
-class FloFloat:
+class FloFloat(FloType):
     llvmtype = ir.DoubleType()
     print_fmt = "%g"
 
@@ -143,7 +152,7 @@ class FloFloat:
         else:
             self.value = value
 
-    def toInt(self, builder: ir.IRBuilder):
+    def to_int(self, builder: ir.IRBuilder):
         return FloInt(builder.fptosi(self.value, FloInt.llvmtype))
 
     def add(self, builder: ir.IRBuilder, num):
@@ -178,9 +187,9 @@ class FloFloat:
         self.value = self.value.fneg()
         return self
 
-    def castTo(self, builder: ir.IRBuilder, type):
+    def cast_to(self, builder: ir.IRBuilder, type):
         if type == FloInt:
-            return self.toInt(builder)
+            return self.to_int(builder)
         elif type == FloBool:
             return self.cmp(builder, "!=", FloFloat.zero())
         elif type == FloFloat:
@@ -205,7 +214,7 @@ class FloFloat:
         return "float"
 
 
-class FloBool:
+class FloBool(FloType):
     llvmtype = ir.IntType(1)
     print_fmt = "%s"
 
@@ -230,7 +239,13 @@ class FloBool:
         return FloBool(builder.and_(self.value, bool.value))
 
     def print_val(self, builder: ir.IRBuilder):
-        return builder.select(self.value, FloStr("true").value, FloStr("false").value)
+        return builder.select(self.value, FloStr.create_global_const("true"), FloStr.create_global_const("false"))
+
+    def cast_to(self, builder: ir.IRBuilder, type):
+        if type == FloInt:
+            return FloInt(self.value.zext(FloInt.llvmtype))
+        else:
+            raise Exception()
 
     @staticmethod
     def default_llvm_val(_):
@@ -253,7 +268,7 @@ str_t = ir.global_context.get_identified_type("struct.str")
 str_t.set_body(ir.IntType(8).as_pointer(), FloInt.llvmtype)
 
 
-class FloStr:
+class FloStr(FloType):
     id = -1
     strs = {}
     llvmtype = str_t.as_pointer()
@@ -261,7 +276,7 @@ class FloStr:
 
     def __init__(self, value, builder: ir.IRBuilder = None):
         # Check for already defined strings
-        self.len_ptr = None   
+        self.len_ptr = None
         if isinstance(value, str):
             if FloStr.strs.get(value, None) != None:
                 self.value = FloStr.strs[str(value)].value
@@ -307,13 +322,15 @@ class FloStr:
     def get_buffer_ptr(self, builder: ir.IRBuilder):
         buff_ptr_ptr = builder.gep(self.value, [FloInt.zero().value]*2, True)
         return builder.load(buff_ptr_ptr)
-    
+
     def get_length(self, builder: ir.IRBuilder):
-        len_ptr = builder.gep(self.value, [FloInt.zero().value, FloInt.one().value], True)
+        len_ptr = builder.gep(
+            self.value, [FloInt.zero().value, FloInt.one().value], True)
         return FloInt(builder.load(len_ptr))
 
-    def getElement(self, builder: ir.IRBuilder, index: FloInt):
-        val = builder.load(builder.gep(self.get_buffer_ptr(builder), [index.value]))
+    def get_element(self, builder: ir.IRBuilder, index: FloInt):
+        val = builder.load(builder.gep(
+            self.get_buffer_ptr(builder), [index.value]))
         char_ty = str_t.elements[0].pointee
         arr_ty = ir.ArrayType(char_ty, 2)
         str_start_ptr = builder.gep(
@@ -356,7 +373,7 @@ class FloStr:
         return "str"
 
 
-class FloArray:
+class FloArray(FloType):
     def __init__(self, builder: ir.IRBuilder, elms, size=0):
         self.size = size
         if isinstance(elms, list):
@@ -374,7 +391,7 @@ class FloArray:
             self.elm_type = elms
         else:
             self.value = elms
-            self.elm_type = llvm_to_flotype(
+            self.elm_type = FloType.llvm_to_flotype(
                 ir.Constant(elms.type.pointee, 0)).__class__
 
     def add(self, builder: ir.IRBuilder, arr):
@@ -405,11 +422,11 @@ class FloArray:
         res_array.size = res_array_size
         return res_array
 
-    def getElement(self, builder: ir.IRBuilder, index):
+    def get_element(self, builder: ir.IRBuilder, index):
         ptr = builder.gep(self.value, [index.value], True)
         return self.elm_type(builder.load(ptr))
 
-    def setElement(self, builder: ir.IRBuilder, index, value):
+    def set_element(self, builder: ir.IRBuilder, index, value):
         ptr = builder.gep(self.value, [index.value], True)
         builder.store(value.value, ptr)
         return value
@@ -450,10 +467,10 @@ class FloRef:
         #     FloRef.refcpy(self.builder, self.referee.len_ptr, value.len_ptr)
 
 
-class FloFunc:
+class FloFunc(FloType):
     def __init__(self, arg_types, return_type, name):
-        fncty = ir.FunctionType(flotype_to_llvm(return_type), [
-                                flotype_to_llvm(arg_ty) for arg_ty in arg_types])
+        fncty = ir.FunctionType(FloType.flotype_to_llvm(return_type), [
+                                FloType.flotype_to_llvm(arg_ty) for arg_ty in arg_types])
         self.return_type = return_type
         self.arg_types = arg_types
         self.value = ir.Function(Context.current_llvm_module, fncty, name)
@@ -461,7 +478,7 @@ class FloFunc:
         self.builder = ir.IRBuilder(fn_entry_block)
 
     def call(self, builder: ir.IRBuilder, args):
-        return llvm_to_flotype(builder.call(self.value, [arg.value for arg in args]))
+        return FloType.llvm_to_flotype(builder.call(self.value, [arg.value for arg in args]))
 
     def extend_symbol_table(self, symbol_table: SymbolTable, arg_names: List(str)):
         for i in range(len(arg_names)):
@@ -472,7 +489,7 @@ class FloFunc:
         return symbol_table
 
     def str(self) -> str:
-        return f"({self.arg_types[0]})=>{self.return_type}"
+        return f"({self.arg_types[0]})=>{self.return_type.str()}"
 
 
 class FloInlineFunc(FloFunc):
@@ -485,7 +502,7 @@ class FloInlineFunc(FloFunc):
         return self.call_method(*kargs)
 
 
-class FloVoid:
+class FloVoid(FloType):
     print_fmt = "%s"
     llvmtype = ir.VoidType()
 
@@ -493,11 +510,11 @@ class FloVoid:
         return FloStr("null").value
 
     @staticmethod
-    def str(self) -> str:
-        "void"
+    def str() -> str:
+        return "void"
 
 
-class FloDict:
+class FloDict(FloType):
     def __init__(self, elementType):
         self.elementType = elementType
 

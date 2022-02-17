@@ -55,8 +55,6 @@ class Visitor:
 
     def visitArrayAssignNode(self, node): pass
 
-    def visitDictNode(self, node): pass
-
     def visitContinueNode(self, node): pass
 
     def visitImportNode(self, node): pass
@@ -121,15 +119,6 @@ class ContinueNode(Node):
 
     def accept(self, visitor: Visitor):
         return visitor.visitContinueNode(self)
-
-
-class DictNode(Node):
-    def __init__(self, range: Range, values: List[Tuple[Node, Node]]):
-        self.range = range
-        self.values = values
-
-    def accept(self, visitor: Visitor):
-        return visitor.visitDictNode(self)
 
 
 class FncCallNode:

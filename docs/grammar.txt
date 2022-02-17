@@ -67,7 +67,6 @@ expr_value:   number
             | lpar expr rpar
 
 composite_type:  type (lbracket expr rbracket)*
-              |  lbrace composite_type rbrace
 
 type:
     | "float"

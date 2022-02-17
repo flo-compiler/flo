@@ -14,32 +14,34 @@
 - [x] Functions
 - [x] Introduce the is keyword (type checking)
 - [x] Strings
-- [x] Type casting (as keyword)
 - [x] Compiler
 
 # Working on
 - [x] Arrays
   - 2 dimensional arrays 
   - Dynamic arrays
-  - String arrays
-- [ ] Dictionaries
 - [ ] Foreach loop / In Keyword
-
+- [x] Type casting
+  - int -> str
+  - str -> int
+- Enums
   
 # Bugs
 - [ ] C-Library functions do not work in LLVM but do in gcc when compiled to source.
 - [ ] Size overflow in ints.
 - [ ] Fix bug with function return types, and definitions.
+- [ ] Functions don't have access to the global scope.
   
 # Future 
-- [ ] Introduce String Template Literals
-- [ ] Infered return type induction for functions
-- [ ] Default paramaters for functions
-- [ ] Spread Operator (...)
-- [ ] Introduce mut in functions
-- [ ] Destructuring assignment in arrays/dicts
-- [ ] Introduce module import 
-- [ ] Refactor
+- [ ] Introduce String Template Literals.
+- [ ] Infered return types for functions.
+- [ ] Default paramaters for functions.
+- [ ] Match expression.
+- [ ] Spread Operator (...).
+- [ ] Introduce mut in functions.
+- [ ] Destructuring assignment in arrays/dicts.
+- [ ] Introduce module import. 
+- [ ] Functions as first class.
 
 # Next
 - [ ] import renaming using as keyword
@@ -47,6 +49,7 @@
 - [ ] Operator overloading
 - [ ] Generic Types
 - [ ] Error Handling
+- [ ] Maps
 - [ ] Make String and arrays iterable types using classes
 - [ ] Self-Hosting
 

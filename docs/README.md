@@ -44,13 +44,7 @@ arr2: num[] = [1, 2, 3, 4, 5, ...] // as many elements as one wants
 
 arr2: num[5] = [1, 2, 3, 4, 5] // fixed length of 5
 
-dic: {num} = {"one": 1, "two": 2} // dictionary of numbers
-
 dic["three"] = 3 // assign
-
-print(5 in arr2) // prints true
-
-print("llo" in hello) // prints true
 
 arr1[0] = 0 // set value 0 to index 0 in array
 
@@ -101,12 +95,6 @@ foreach elem in array {
 
 }
 ```
-```
-// looping through a dictionary
-foreach key in dict {
-
-}
-```
 ### while
 ```
 while 1 {
@@ -126,6 +114,17 @@ fnc add(x: num, y: num): num => {
 fnc double_sum (x: num, y: num): num => double(sum(x, y))
 ```
 ## Type Operators
+### is
 ```
-is
+5 is int // true
+"hello" is str // true
+[4, 5] is int [] // true
+5 is bool // false
+```
+### in
+```
+array = [1, 2, 3, 4, 5]
+5 in array // prints true
+hello = "hello"
+"llo" in hello // prints true
 ```
