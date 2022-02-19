@@ -1,5 +1,5 @@
 res = 0
 for i = 0; i < 333333333; i+=1 {
-    res = i^30 as int//pow(i, 30)
+    res = i^30 //pow(i, 30)
 }
 println(res)

@@ -1,8 +1,18 @@
 from ast import List
+import contextlib
+import struct
 import builtIns as bi
 from context import Context, SymbolTable
 from llvmlite import ir, binding
 target_data = binding.create_target_data("e S0")
+
+
+@contextlib.contextmanager
+def define_or_call_method(name: str, this):
+    fnc = FloFunc([this], FloVoid, name)
+    FloFunc.defined_methods[name] = fnc
+    yield fnc.builder
+    fnc.call(this)
 
 
 class FloType:
@@ -288,7 +298,10 @@ class FloStr(FloType):
 
     @staticmethod
     def create_new_str_val(builder: ir.IRBuilder, buffer_val, str_len: FloInt):
-        struct_ptr = builder.alloca(str_t)
+        size = str_t.get_abi_size(target_data)
+        i8_struct_ptr = builder.call(
+            bi.get_instrinsic("malloc"), [FloInt(size).value])
+        struct_ptr = builder.bitcast(i8_struct_ptr, str_t.as_pointer())
         buffer_ptr = builder.gep(
             struct_ptr, [FloInt.zero().value]*2, True)
         len_ptr = builder.gep(
@@ -320,13 +333,12 @@ class FloStr(FloType):
 
     def add(self, builder: ir.IRBuilder, str):
         false = FloBool.false().value
-        char_ty = str_t.elements[0].pointee
         memcpy_fnc = bi.get_instrinsic("memcpy")
         str1_len = self.get_length(builder)
         str2_len = str.get_length(builder)
         new_str_len = str1_len.add(builder, str2_len)
-        new_str_buf = builder.alloca(
-            char_ty, new_str_len.add(builder, FloInt.one()).value)
+        new_str_buf = builder.call(bi.get_instrinsic("malloc"), [
+                                   new_str_len.add(builder, FloInt.one()).value])
         str1_buf_ptr = self.get_buffer_ptr(builder)
         str2_buf_ptr = str.get_buffer_ptr(builder)
         idx0 = builder.gep(new_str_buf, [FloInt.zero().value])
@@ -364,16 +376,16 @@ class FloArray(FloType):
         if isinstance(value, list):
             assert builder != None
             arr_len = len(value)
+            self.elm_type = value[0].__class__
             arr_size = size if size else arr_len*2
             arr_buff = self._create_array_buffer(builder, value, arr_size)
             self.value = self._create_array_struct(
                 builder, arr_buff, FloInt(arr_len), FloInt(arr_size))
-            self.elm_type = value[0].__class__
         else:
             self.value = value
 
     def get_len_ptr(self, builder: ir.IRBuilder):
-        return builder.gep(self.value, [FloInt(0).value, FloInt(1).value])
+        return builder.gep(self.value, [FloInt.zero().value, FloInt.one().value])
 
     def get_length(self, builder: ir.IRBuilder):
         len_ptr = self.get_len_ptr(builder)
@@ -391,7 +403,9 @@ class FloArray(FloType):
         return builder.bitcast(builder.load(array_buff_ptr), self.elm_type.llvmtype.as_pointer())
 
     def _create_array_struct(self, builder: ir.IRBuilder, arr_buff, arr_len: FloInt, arr_size: FloInt):
-        struct = builder.alloca(array_t)
+        struct_size = array_t.get_abi_size(target_data)
+        i8_struct = builder.call(bi.get_instrinsic("malloc"), [FloInt(struct_size).value])
+        struct = builder.bitcast(i8_struct, array_t.as_pointer())
         arr_buff_ptr = builder.gep(struct, [FloInt.zero().value]*2)
         arr_len_ptr = builder.gep(
             struct, [FloInt.zero().value, FloInt.one().value])
@@ -404,10 +418,8 @@ class FloArray(FloType):
         return struct
 
     def _create_array_buffer(self, builder: ir.IRBuilder, array_values, size):
-        elem_ty = array_values[0].llvmtype
-        num_elems = len(array_values)
-        array_buffer = builder.alloca(ir.ArrayType(elem_ty, size))
-        for index in range(num_elems):
+        array_buffer = builder.alloca(ir.ArrayType(self.elm_type.llvmtype, size))
+        for index in range(len(array_values)):
             ptr = builder.gep(
                 array_buffer, [FloInt.zero().value, FloInt(index).value], True)
             builder.store(array_values[index].value, ptr)
@@ -438,9 +450,10 @@ class FloArray(FloType):
         arr1_len = self.get_length(builder)
         arr2_len = arr.get_length(builder)
         new_arr_len = arr1_len.add(builder, arr2_len)
-
-        new_arr_buff = builder.alloca(
-            self.elm_type.llvmtype, new_arr_len.value)
+        
+        alloc_size = self.get_elem_ty_size().mul(builder, new_arr_len).value
+        i8_arr_buffer = builder.call(bi.get_instrinsic("malloc"), [alloc_size])
+        new_arr_buff = builder.bitcast(i8_arr_buffer, self.elm_type.llvmtype.as_pointer())
         arr1_pos_ptr = builder.gep(new_arr_buff, [FloInt.zero().value])
         arr1_pos_ptr = builder.bitcast(arr1_pos_ptr, memcpy_func.args[0].type)
         arr2_pos_ptr = builder.gep(new_arr_buff, [arr1_len.value])
@@ -465,6 +478,8 @@ class FloArray(FloType):
 
     def get_element(self, builder: ir.IRBuilder, index):
         ptr = builder.gep(self.get_buffer_ptr(builder), [index.value], True)
+        if isinstance(self.elm_type, FloArray):
+            return self.elm_type.new_array_with_val(builder.load(ptr))
         return self.elm_type(builder.load(ptr))
 
     def set_element(self, builder: ir.IRBuilder, index, value):
@@ -510,6 +525,8 @@ class FloRef:
 
 
 class FloFunc(FloType):
+    defined_methods = {}
+
     def __init__(self, arg_types, return_type, name):
         fncty = ir.FunctionType(FloType.flotype_to_llvm(return_type), [
                                 FloType.flotype_to_llvm(arg_ty) for arg_ty in arg_types])

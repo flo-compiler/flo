@@ -1,12 +1,11 @@
 /*Test File for testing features I am currently working on:*/
-fnc print_array(arr: str [], n: int): void => {
-    print("[")
-    for i = 0; i < n; i++ {
-        print(arr[i])
-        if i < n-1 print(", ")
-    }
-    println("]")
-}
-a: str [][] = []
-a << ['e', 'f']
-print_array(a[0], 2)
+// fnc negate_array(arr: int []): void=>{
+//     for i = 0; i < len(arr); i++ {
+//         arr[i]*=-1
+//     }
+// }
+// negate_array(a)
+// print(a[0])
+// fnc color(name: str): str => ("\033[036m" + name)
+// name = "test"
+// print(color(name))

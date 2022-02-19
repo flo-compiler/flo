@@ -60,7 +60,10 @@ def new_ctx(*args):
                                                                        [ft.FloStr.create_global_const(
                                                                            args[0].__class__.print_fmt + "\n"), args[0]]
                                                                        ), [ft.FloType], ft.FloVoid)
+    #TODO: Check for proper types
+    len_alias = ft.FloInlineFunc(lambda builder, args: args[0].get_length(builder), [ft.FloType], ft.FloInt)
     ctx.symbol_table.set("println", println_alias)
+    ctx.symbol_table.set('len', len_alias)
     ctx.symbol_table.set("input", ft.FloInlineFunc(call_scanf, [], ft.FloInt))
     ctx.symbol_table.set("true", ft.FloBool.true())
     ctx.symbol_table.set("false", ft.FloBool.false())

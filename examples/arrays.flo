@@ -1,13 +1,13 @@
 colors: str[] = ["red", "beige", "green", "blue", "yellow"]
-colors[0] = colors[0]+colors[1]
+colors[0] = colors[0]
 numbers: int [] = [1, 2, 4, 5, 6]
 ++numbers[1]
 println(numbers[1])
 print(colors[0])
 // println(colors[0] == "violet")
-// colors << "grey"
-// println(numbers as str [])
-// colors[3]+="-green"
+colors << "grey"
+colors[3]+="-green"
 // println(colors)
+// println(numbers as str [])
 // println("grey" in colors)
 // println(numbers)
