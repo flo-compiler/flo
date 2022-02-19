@@ -1,0 +1,42 @@
+// swap function
+fnc swap(array: int [], idx1: int, idx2: int): void => {
+    tmp = array[idx1]
+    array[idx1] = array[idx2]
+    array[idx2] = tmp
+    return
+} 
+fnc partition(start: int, end: int, array: int[]): int => {
+    pivot_index = start
+    pivot = array[pivot_index]
+     
+    while start < end {
+        while start < len(array) and array[start] <= pivot
+            start += 1
+        while array[end] > pivot
+            end -= 1
+        if start < end
+            swap(array, start, end)
+    } 
+    swap(array, end, pivot_index)
+    return end
+}
+            
+// The main function that implements QuickSort
+fnc quick_sort(start: int, end: int, array: int []): void => {
+    if start < end {
+        p = partition(start, end, array)
+        quick_sort(start, p - 1, array)
+        quick_sort(p + 1, end, array)
+    }
+}
+
+// Driver code
+array = [ 10, 7, 8, 9, 1, 5 ]
+quick_sort(0, len(array) - 1, array)
+// printing of arrays not supported yet.
+print("[")
+for i = 0; i < len(array); i++ {
+    print(array[i])
+    if i < len(array) -1 print(", ")
+}
+print("]")

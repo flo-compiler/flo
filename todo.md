@@ -23,7 +23,6 @@
 - [x] Type casting
   - int -> str
   - str -> int
-- [ ] Heap allocation
 - Enums
   
 # Bugs
