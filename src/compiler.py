@@ -298,7 +298,7 @@ class Compiler(Visitor):
         return value.get_element(self.builder, index)
 
     def visitArrayNode(self, node: ArrayNode):
-        return FloArray(self.builder, [self.visit(elm_node) for elm_node in node.elements])
+        return FloArray([self.visit(elm_node) for elm_node in node.elements], self.builder)
 
     def visitArrayAssignNode(self, node: ArrayAssignNode):
         index = self.visit(node.array.index)
