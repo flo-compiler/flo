@@ -7,7 +7,6 @@ fnc print_array(arr: str [], n: int): void => {
     }
     println("]")
 }
-a: str [] = ["a"]
-b: str [] = ['b']
-c: str [] = ['c']
-print_array((a+a+b+b+c+c), 6)
+a: str [][] = []
+a << ['e', 'f']
+print_array(a[0], 2)

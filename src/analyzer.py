@@ -448,7 +448,9 @@ class Analyzer(Visitor):
                     elem.range,
                     f"Expected array to be of type '{expected_type}' because of first element but got '{type}'",
                 ).throw()
-        return FloArray(None, expected_type)
+        arr =  FloArray(None)
+        arr.elm_type = expected_type
+        return arr
 
     def visitArrayAccessNode(self, node: ArrayAccessNode):
         collection = self.visit(node.name)

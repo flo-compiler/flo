@@ -1,5 +1,5 @@
 from typing import List
-from flotypes import FloArray, FloDict, FloType
+from flotypes import FloArray, FloType
 from interfaces.astree import *
 from lexer import TokType, Token
 from errors import SyntaxError
@@ -439,16 +439,23 @@ class Parser:
             type = FloType.str_to_flotype(self.current_tok.value)
             self.advance()
             while self.current_tok.type == TokType.LBRACKET:
+                size = None
                 self.advance()
-                type = FloArray(None, type)
                 if self.current_tok.type == TokType.RBRACKET:
                     self.advance()
                 else:
-                    type.size = self.expr()
+                    if self.current_tok.type != TokType.INT:
+                        SyntaxError(self.current_tok.range, "Expected an int").throw()
+                    size = self.current_tok.value
+                    self.advance()
                     if self.current_tok.type != TokType.RBRACKET:
                         SyntaxError(self.current_tok.range,
                                     "Expected ']'").throw()
                     self.advance()
+                
+                arr = FloArray(None, None, size)
+                arr.elm_type = type
+                type = arr
             return TypeNode(type, Range.merge(start_range, self.current_tok.range))
         else:
             SyntaxError(self.current_tok.range,

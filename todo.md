@@ -18,12 +18,12 @@
 
 # Working on
 - [x] Arrays
-  - 2 dimensional arrays 
-  - Dynamic arrays
+  - Fixed length arrays
 - [ ] Foreach loop / In Keyword
 - [x] Type casting
   - int -> str
   - str -> int
+- [ ] Heap allocation
 - Enums
   
 # Bugs
@@ -31,6 +31,8 @@
 - [ ] Size overflow in ints.
 - [ ] Fix bug with function return types, and definitions.
 - [ ] Functions don't have access to the global scope.
+- [ ] Dynamic resize/grow of array.
+- [ ] Empty array initialization
   
 # Future 
 - [ ] Introduce String Template Literals.

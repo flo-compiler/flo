@@ -6,19 +6,25 @@ import flotypes as ft
 
 def get_instrinsic(name):
     m = Context.current_llvm_module
-    cfn_ty = ir.FunctionType(ir.IntType(32), [], var_arg=True)
+    i8_ptr_ty = ir.IntType(8).as_pointer()
+    i32_ty = ir.IntType(32)
+    cfn_ty = ir.FunctionType(i32_ty, [], var_arg=True)
     if m.globals.get(name, None):
         return m.globals.get(name, None)
     if name == "printf":
         return m.declare_intrinsic("printf", (), cfn_ty)
     elif name == "scanf":
         return m.declare_intrinsic("scanf", (), cfn_ty)
-    elif name == "llvm.pow":
+    elif name == "pow":
         return m.declare_intrinsic("llvm.pow", [ir.DoubleType()])
-    elif name == "llvm.pow":
-        return m.declare_intrinsic("llvm.pow", [ir.DoubleType()])
-    elif name == "llvm.memcpy":
-        return m.declare_intrinsic("llvm.memcpy", [ft.str_t.elements[0], ft.str_t.elements[0], ft.FloInt.llvmtype])
+    elif name == "memcpy":
+        return m.declare_intrinsic("llvm.memcpy", [i8_ptr_ty, i8_ptr_ty, i32_ty])
+    elif name == "malloc":
+        return m.declare_intrinsic("malloc", (), ir.FunctionType(i8_ptr_ty, [i32_ty]))
+    elif name == "realloc":
+        return m.declare_intrinsic("realloc", (), ir.FunctionType(i8_ptr_ty, [i8_ptr_ty, i32_ty]))
+    elif name == "free":
+        return m.declare_intrinsic("free", (), ir.FunctionType(ir.VoidType(), [i8_ptr_ty]))
 
 
 def debug(builder, *args):
@@ -59,17 +65,3 @@ def new_ctx(*args):
     ctx.symbol_table.set("true", ft.FloBool.true())
     ctx.symbol_table.set("false", ft.FloBool.false())
     return ctx
-
-
-# global_types_symbol_table = SymbolTable()
-# global_types_symbol_table.set("true", Types.BOOL)
-# global_types_symbol_table.set("false", Types.BOOL)
-# global_types_symbol_table.set("print", fncType(Types.VOID, [Types.ANY]))
-# global_types_symbol_table.set("println", fncType(Types.VOID, [Types.ANY]))
-# global_types_symbol_table.set("input", fncType(Types.INT, []))
-
-
-# def create_ctx(fn: str, type: int = 0) -> Context:
-#     context = Context(fn or "<exec>")
-#     context.symbol_table = global_types_symbol_table
-#     return context
