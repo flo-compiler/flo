@@ -1,19 +1,33 @@
 from ast import List
 import contextlib
-import struct
 import builtIns as bi
 from context import Context, SymbolTable
 from llvmlite import ir, binding
 target_data = binding.create_target_data("e S0")
 
-
 @contextlib.contextmanager
-def define_or_call_method(name: str, this):
-    fnc = FloFunc([this], FloVoid, name)
-    FloFunc.defined_methods[name] = fnc
-    yield fnc.builder
-    fnc.call(this)
-
+def define_or_call_method(builder, name: str, args, rt_type):
+    c_builder = None
+    if FloFunc.defined_methods.get(name):
+        fnc: FloFunc = FloFunc.defined_methods.get(name)
+    else:
+        fnc = FloFunc(args, rt_type, name)
+        saved_vals = [arg.value for arg in args]
+        for i in range(len(args)):
+            args[i].value = fnc.value.args[i]
+        FloFunc.defined_methods[name] = fnc
+        c_builder = fnc.builder
+    def ret(rt_value):
+        if rt_type == FloVoid:
+            fnc.builder.ret_void()
+        else:
+            fnc.builder.ret(rt_value.value)
+        for i in range(len(saved_vals)):
+            args[i].value = saved_vals[i]
+    def call():
+        return fnc.call(builder, args)
+        
+    yield c_builder, ret, call
 
 class FloType:
     def cast_to():
@@ -40,6 +54,38 @@ class FloType:
         elif str == "void":
             return FloVoid
 
+class FloIterable(FloType):
+    @staticmethod
+    @contextlib.contextmanager
+    def foreach(self, builder: ir.IRBuilder, len=None):
+        entry = builder.append_basic_block('foreach.entry')
+        loop = builder.append_basic_block('foreach.loop')
+        builder.branch(entry)
+        builder.position_at_start(entry)
+        i_ref = FloRef(builder, FloInt.zero())
+        if len == None:
+           len = self.get_length(builder)
+        builder.branch(loop)
+        builder.position_at_start(loop)
+        index: FloInt = i_ref.load()
+        inr_index = index.add(builder, FloInt.one())
+        i_ref.store(inr_index)
+        cond = inr_index.cmp(builder, '<', len).value
+        exit = builder.append_basic_block('foreach.exit')
+        yield self.get_element(builder, index), index, loop, exit
+        builder.cbranch(cond, loop, exit)
+        builder.position_at_start(exit)
+
+class FloVoid(FloType):
+    print_fmt = "%s"
+    llvmtype = ir.VoidType()
+    def print_val(self, _):
+        return FloStr("null").value
+
+    @staticmethod
+    def str() -> str:
+        return "void"
+
 
 class FloInt(FloType):
     llvmtype = ir.IntType(32)
@@ -60,10 +106,6 @@ class FloInt(FloType):
     @staticmethod
     def zero():
         return FloInt(ir.Constant(FloInt.llvmtype, 0))
-
-    @staticmethod
-    def default_llvm_val():
-        return FloInt.zero().value
 
     def print_val(self, _):
         return self.value
@@ -194,10 +236,6 @@ class FloFloat(FloType):
         return FloFloat(1.0)
 
     @staticmethod
-    def default_llvm_val():
-        return FloFloat.zero().value
-
-    @staticmethod
     def str() -> str:
         return "float"
 
@@ -236,10 +274,6 @@ class FloBool(FloType):
             raise Exception()
 
     @staticmethod
-    def default_llvm_val(_):
-        return FloBool.true().value
-
-    @staticmethod
     def true():
         return FloBool(True)
 
@@ -251,12 +285,18 @@ class FloBool(FloType):
     def str() -> str:
         return 'bool'
 
+class FloMem(FloType):
+    llvmtype = ir.IntType(8).as_pointer()
+
+    def __init__(self, value):
+        self.value = value
+
 
 str_t = ir.global_context.get_identified_type("struct.str")
-str_t.set_body(ir.IntType(8).as_pointer(), FloInt.llvmtype)
+str_t.set_body(FloMem.llvmtype, FloInt.llvmtype)
 
 
-class FloStr(FloType):
+class FloStr(FloIterable):
     id = -1
     strs = {}
     llvmtype = str_t.as_pointer()
@@ -273,7 +313,7 @@ class FloStr(FloType):
                 assert builder != None
                 str_ptr = FloStr.create_global_const(value)
                 self.value = FloStr.create_new_str_val(
-                    builder, str_ptr, FloInt(len(value)))
+                    builder, FloMem(str_ptr), FloInt(len(value))).value
                 FloStr.strs[value] = self
         else:
             self.value = value
@@ -297,18 +337,21 @@ class FloStr(FloType):
         return str_ptr.bitcast(str_t.elements[0])
 
     @staticmethod
-    def create_new_str_val(builder: ir.IRBuilder, buffer_val, str_len: FloInt):
-        size = str_t.get_abi_size(target_data)
-        i8_struct_ptr = builder.call(
-            bi.get_instrinsic("malloc"), [FloInt(size).value])
-        struct_ptr = builder.bitcast(i8_struct_ptr, str_t.as_pointer())
-        buffer_ptr = builder.gep(
-            struct_ptr, [FloInt.zero().value]*2, True)
-        len_ptr = builder.gep(
-            struct_ptr, [FloInt.zero().value, FloInt.one().value], True)
-        builder.store(buffer_val, buffer_ptr)
-        builder.store(str_len.value, len_ptr)
-        return struct_ptr
+    def create_new_str_val(m_builder: ir.IRBuilder, buffer: FloMem, str_len: FloInt):
+        with define_or_call_method(m_builder, str_t.name+'.new', [buffer, str_len], FloStr) as (builder, ret, call):
+            if builder:
+                size = str_t.get_abi_size(target_data)
+                i8_struct_ptr = builder.call(
+                    bi.get_instrinsic("malloc"), [FloInt(size).value])
+                struct_ptr = builder.bitcast(i8_struct_ptr, str_t.as_pointer())
+                buffer_ptr = builder.gep(
+                    struct_ptr, [FloInt.zero().value]*2, True)
+                len_ptr = builder.gep(
+                    struct_ptr, [FloInt.zero().value, FloInt.one().value], True)
+                builder.store(buffer.value, buffer_ptr)
+                builder.store(str_len.value, len_ptr)
+                ret(FloStr(struct_ptr))
+            return call()
 
     def get_buffer_ptr(self, builder: ir.IRBuilder):
         buff_ptr_ptr = builder.gep(self.value, [FloInt.zero().value]*2, True)
@@ -329,24 +372,47 @@ class FloStr(FloType):
         builder.store(val, str_start_ptr)
         str_term_ptr = builder.gep(str_start_ptr, [FloInt.one().value])
         builder.store(ir.Constant(char_ty, 0), str_term_ptr)
-        return FloStr(FloStr.create_new_str_val(builder, str_start_ptr, FloInt.one()))
+        return FloStr.create_new_str_val(builder, FloMem(str_start_ptr), FloInt.one())
 
-    def add(self, builder: ir.IRBuilder, str):
-        false = FloBool.false().value
-        memcpy_fnc = bi.get_instrinsic("memcpy")
-        str1_len = self.get_length(builder)
-        str2_len = str.get_length(builder)
-        new_str_len = str1_len.add(builder, str2_len)
-        new_str_buf = builder.call(bi.get_instrinsic("malloc"), [
-                                   new_str_len.add(builder, FloInt.one()).value])
-        str1_buf_ptr = self.get_buffer_ptr(builder)
-        str2_buf_ptr = str.get_buffer_ptr(builder)
-        idx0 = builder.gep(new_str_buf, [FloInt.zero().value])
-        idx1 = builder.gep(idx0, [str1_len.value])
-        builder.call(memcpy_fnc, [idx0, str1_buf_ptr, str1_len.value, false])
-        builder.call(memcpy_fnc, [idx1, str2_buf_ptr, str2_len.add(
-            builder, FloInt.one()).value, false])
-        return FloStr(FloStr.create_new_str_val(builder, new_str_buf, new_str_len))
+    def add(self, m_builder: ir.IRBuilder, str):
+        with define_or_call_method(m_builder, str_t.name+'.concat', [self, str], FloStr) as (builder, ret, call):
+            if builder:
+                false = FloBool.false().value
+                memcpy_fnc = bi.get_instrinsic("memcpy")
+                str1_len = self.get_length(builder)
+                str2_len = str.get_length(builder)
+                new_str_len = str1_len.add(builder, str2_len)
+                new_str_buf = builder.call(bi.get_instrinsic("malloc"), [
+                                        new_str_len.add(builder, FloInt.one()).value])
+                str1_buf_ptr = self.get_buffer_ptr(builder)
+                str2_buf_ptr = str.get_buffer_ptr(builder)
+                idx0 = builder.gep(new_str_buf, [FloInt.zero().value])
+                idx1 = builder.gep(idx0, [str1_len.value])
+                builder.call(memcpy_fnc, [idx0, str1_buf_ptr, str1_len.value, false])
+                builder.call(memcpy_fnc, [idx1, str2_buf_ptr, str2_len.add(
+                    builder, FloInt.one()).value, false])
+                ret(FloStr.create_new_str_val(builder, FloMem(new_str_buf), new_str_len))
+            return call()
+    def cmp(self, builder: ir.IRBuilder, op, str1):
+        if not isinstance(str1, FloStr) or (op != '==' and op != '!='): return FloBool.false()
+        is_eq = self.is_eq(builder, str1)
+        if op == "!=":
+            return is_eq.not_(builder)
+        return is_eq
+
+    def is_eq(self, m_builder: ir.IRBuilder, str1):
+        with define_or_call_method(m_builder, str_t.name+'.eq', [self, str1 ], FloBool) as (builder, ret, call):
+            if builder:
+                str_len = self.get_length(builder)
+                cond = str_len.cmp(builder, '==', str1.get_length(builder))
+                with builder.if_then(cond.value):
+                    str_buf_1 = self.get_buffer_ptr(builder)
+                    str_buf_2 = str1.get_buffer_ptr(builder)
+                    v = builder.call(bi.get_instrinsic("memcmp"), [str_buf_1, str_buf_2, str_len.value])
+                    ret(FloInt(v).cmp(builder, '==', FloInt.zero()))
+                ret(FloBool.false())
+            return call()
+
 
     def incr():
         FloStr.id += 1
@@ -356,19 +422,15 @@ class FloStr(FloType):
         return self.get_buffer_ptr(builder)
 
     @staticmethod
-    def default_llvm_val():
-        return FloStr("").value
-
-    @staticmethod
     def str() -> str:
         return "str"
 
 
 array_t = ir.global_context.get_identified_type("struct.arr")
-array_t.set_body(ir.IntType(8).as_pointer(), FloInt.llvmtype, FloInt.llvmtype)
+array_t.set_body(FloMem.llvmtype, FloInt.llvmtype, FloInt.llvmtype)
 
 
-class FloArray(FloType):
+class FloArray(FloIterable):
     llvmtype = array_t.as_pointer()
 
     def __init__(self, value, builder: ir.IRBuilder = None, size=None):
@@ -378,9 +440,9 @@ class FloArray(FloType):
             arr_len = len(value)
             self.elm_type = value[0].__class__
             arr_size = size if size else arr_len*2
-            arr_buff = self._create_array_buffer(builder, value, arr_size)
+            arr_buff = self.create_array_buffer(builder, value, arr_size)
             self.value = self._create_array_struct(
-                builder, arr_buff, FloInt(arr_len), FloInt(arr_size))
+                builder, arr_buff, FloInt(arr_len), FloInt(arr_size)).value
         else:
             self.value = value
 
@@ -398,32 +460,46 @@ class FloArray(FloType):
         size_ptr = self.get_size_ptr(builder)
         return FloInt(builder.load(size_ptr))
 
-    def get_buffer_ptr(self, builder: ir.IRBuilder):
-        array_buff_ptr = builder.gep(self.value, [FloInt.zero().value]*2)
+    def get_array_buff_ptr(self, builder: ir.IRBuilder):
+        return builder.gep(self.value, [FloInt.zero().value]*2)
+
+    def get_array(self, builder: ir.IRBuilder):
+        array_buff_ptr = self.get_array_buff_ptr(builder)
         return builder.bitcast(builder.load(array_buff_ptr), self.elm_type.llvmtype.as_pointer())
 
-    def _create_array_struct(self, builder: ir.IRBuilder, arr_buff, arr_len: FloInt, arr_size: FloInt):
-        struct_size = array_t.get_abi_size(target_data)
-        i8_struct = builder.call(bi.get_instrinsic("malloc"), [FloInt(struct_size).value])
-        struct = builder.bitcast(i8_struct, array_t.as_pointer())
-        arr_buff_ptr = builder.gep(struct, [FloInt.zero().value]*2)
-        arr_len_ptr = builder.gep(
-            struct, [FloInt.zero().value, FloInt.one().value])
-        arr_size_ptr = builder.gep(
-            struct, [FloInt.zero().value, FloInt(2).value])
-        builder.store(arr_len.value, arr_len_ptr)
-        builder.store(arr_size.value, arr_size_ptr)
-        builder.store(builder.bitcast(
-            arr_buff, array_t.elements[0]), arr_buff_ptr)
-        return struct
+    def _create_array_struct(self, m_builder: ir.IRBuilder, arr_buff: FloMem, arr_len: FloInt, arr_size: FloInt):
+        with define_or_call_method(m_builder, array_t.name+".new", [arr_buff, arr_len, arr_size], self) as (builder, ret, call):
+            if builder:
+                struct_size = array_t.get_abi_size(target_data)
+                i8_struct = builder.call(bi.get_instrinsic(
+                    "malloc"), [FloInt(struct_size).value])
+                struct = builder.bitcast(i8_struct, array_t.as_pointer())
+                arr_buff_ptr = builder.gep(struct, [FloInt.zero().value]*2)
+                arr_len_ptr = builder.gep(
+                    struct, [FloInt.zero().value, FloInt.one().value])
+                arr_size_ptr = builder.gep(
+                    struct, [FloInt.zero().value, FloInt(2).value])
+                builder.store(arr_len.value, arr_len_ptr)
+                builder.store(arr_size.value, arr_size_ptr)
+                builder.store(arr_buff.value, arr_buff_ptr)
+                ret(FloArray(struct))
+            return call()
 
-    def _create_array_buffer(self, builder: ir.IRBuilder, array_values, size):
-        array_buffer = builder.alloca(ir.ArrayType(self.elm_type.llvmtype, size))
+    def create_array_buffer(self, builder: ir.IRBuilder, array_values, size):
+        array_buffer = builder.call(bi.get_instrinsic('malloc'), [self.get_elem_ty_size().mul(builder, FloInt(size)).value])
+        elm_ty_arr_buff = builder.bitcast(array_buffer, self.elm_type.llvmtype.as_pointer())
         for index in range(len(array_values)):
-            ptr = builder.gep(
-                array_buffer, [FloInt.zero().value, FloInt(index).value], True)
+            ptr = builder.gep(elm_ty_arr_buff, [FloInt(index).value], True)
             builder.store(array_values[index].value, ptr)
-        return array_buffer
+        return FloMem(array_buffer)
+    
+    def free_mem(self, builder: ir.IRBuilder):
+        free = bi.get_instrinsic("free")
+        i8_ptr_struct = builder.bitcast(self.value, free.args[0])
+        i8_buff_ptr = builder.load(self.get_array_buff_ptr(builder))
+        builder.call(free, [i8_buff_ptr])
+        builder.call(free, [i8_ptr_struct])
+        
 
     def new_array_with_val(self, value):
         array = FloArray(value)
@@ -439,75 +515,105 @@ class FloArray(FloType):
         elem_size = self.get_elem_ty_size()
         buff_ptr = builder.load(builder.gep(
             self.value, [FloInt.zero().value]*2))
-        builder.call(
+        array = builder.call(
             realloc, [buff_ptr, new_size.mul(builder, elem_size).value])
+        array_buff_ptr = self.get_array_buff_ptr(builder)
+        builder.store(array, array_buff_ptr)
         size_ptr = self.get_size_ptr(builder)
         builder.store(new_size.value, size_ptr)
 
-    def add(self, builder: ir.IRBuilder, arr):
-        memcpy_func = bi.get_instrinsic("memcpy")
-        false = FloBool.false().value
-        arr1_len = self.get_length(builder)
-        arr2_len = arr.get_length(builder)
-        new_arr_len = arr1_len.add(builder, arr2_len)
-        
-        alloc_size = self.get_elem_ty_size().mul(builder, new_arr_len).value
-        i8_arr_buffer = builder.call(bi.get_instrinsic("malloc"), [alloc_size])
-        new_arr_buff = builder.bitcast(i8_arr_buffer, self.elm_type.llvmtype.as_pointer())
-        arr1_pos_ptr = builder.gep(new_arr_buff, [FloInt.zero().value])
-        arr1_pos_ptr = builder.bitcast(arr1_pos_ptr, memcpy_func.args[0].type)
-        arr2_pos_ptr = builder.gep(new_arr_buff, [arr1_len.value])
-        arr2_pos_ptr = builder.bitcast(arr2_pos_ptr, memcpy_func.args[1].type)
+    def add(self, m_builder: ir.IRBuilder, arr):
+        with define_or_call_method(m_builder, array_t.name+'.concat', [self, arr], self) as (builder, ret, call):
+            if builder:
+                memcpy_func = bi.get_instrinsic("memcpy")
+                false = FloBool.false().value
+                arr1_len = self.get_length(builder)
+                arr2_len = arr.get_length(builder)
+                new_arr_len = arr1_len.add(builder, arr2_len)
 
-        arr1_ptr = builder.bitcast(self.get_buffer_ptr(
-            builder), memcpy_func.args[1].type)
-        arr2_ptr = builder.bitcast(arr.get_buffer_ptr(
-            builder), memcpy_func.args[1].type)
-        elem_size = self.get_elem_ty_size()
-        arr1_num_of_bytes = arr1_len.mul(builder, elem_size)
-        arr2_num_of_bytes = arr2_len.mul(builder, elem_size)
+                alloc_size = self.get_elem_ty_size().mul(builder, new_arr_len).value
+                i8_arr_buffer = builder.call(
+                    bi.get_instrinsic("malloc"), [alloc_size])
+                new_arr_buff = builder.bitcast(
+                    i8_arr_buffer, self.elm_type.llvmtype.as_pointer())
+                arr1_pos_ptr = builder.gep(new_arr_buff, [FloInt.zero().value])
+                arr1_pos_ptr = builder.bitcast(
+                    arr1_pos_ptr, memcpy_func.args[0].type)
+                arr2_pos_ptr = builder.gep(new_arr_buff, [arr1_len.value])
+                arr2_pos_ptr = builder.bitcast(
+                    arr2_pos_ptr, memcpy_func.args[1].type)
 
-        builder.call(memcpy_func, [arr1_pos_ptr,
-                     arr1_ptr, arr1_num_of_bytes.value, false])
-        builder.call(memcpy_func, [arr2_pos_ptr,
-                     arr2_ptr, arr2_num_of_bytes.value, false])
+                arr1_ptr = builder.bitcast(self.get_array(
+                    builder), memcpy_func.args[1].type)
+                arr2_ptr = builder.bitcast(arr.get_array(
+                    builder), memcpy_func.args[1].type)
+                elem_size = self.get_elem_ty_size()
+                arr1_num_of_bytes = arr1_len.mul(builder, elem_size)
+                arr2_num_of_bytes = arr2_len.mul(builder, elem_size)
 
-        new_arr_val = self._create_array_struct(
-            builder, new_arr_buff, new_arr_len, new_arr_len)
-        return self.new_array_with_val(new_arr_val)
+                builder.call(memcpy_func, [arr1_pos_ptr,
+                                        arr1_ptr, arr1_num_of_bytes.value, false])
+                builder.call(memcpy_func, [arr2_pos_ptr,
+                                        arr2_ptr, arr2_num_of_bytes.value, false])
+
+                new_arr_val = self._create_array_struct(
+                    builder, FloMem(i8_arr_buffer), new_arr_len, new_arr_len)
+                ret(new_arr_val)
+            return call()
 
     def get_element(self, builder: ir.IRBuilder, index):
-        ptr = builder.gep(self.get_buffer_ptr(builder), [index.value], True)
+        ptr = builder.gep(self.get_array(builder), [index.value], True)
         if isinstance(self.elm_type, FloArray):
             return self.elm_type.new_array_with_val(builder.load(ptr))
         return self.elm_type(builder.load(ptr))
 
     def set_element(self, builder: ir.IRBuilder, index, value):
-        ptr = builder.gep(self.get_buffer_ptr(builder), [index.value], True)
+        ptr = builder.gep(self.get_array(builder), [index.value], True)
         builder.store(value.value, ptr)
         return value
 
     def sl(self, builder: ir.IRBuilder, value):
         len_ptr = self.get_len_ptr(builder)
-        len = self.get_length(builder)
-        size = self.get_size(builder)
-        incremented_len = len.add(builder, FloInt.one())
-        with builder.if_then(incremented_len.cmp(builder, '>=', size).value):
+        old_len = self.get_length(builder)
+        current_size = self.get_size(builder)
+        with builder.if_then(old_len.cmp(builder, '==', current_size).value):
             self.grow(builder)
-        self.set_element(builder, len, value)
-        builder.store(incremented_len.value, len_ptr)
+        self.set_element(builder, old_len, value)
+        builder.store(old_len.add(builder, FloInt.one()).value, len_ptr)
         return value
-
-    # TODO: Inaccurate type str
 
     def str(self) -> str:
         return f"{self.elm_type.str()} {'[]'}"
 
+    def cmp(self, builder: ir.IRBuilder, op, arr):
+        if not isinstance(arr, FloArray) or (op != '==' and op != '!='): return FloBool.false()
+        is_eq = self.eq(builder, arr)
+        if op == '!=':
+            return is_eq.not_(builder)
+        else:
+            return is_eq
+
+    def eq(self, m_builder: ir.IRBuilder, arr):
+        if self.elm_type != arr.elm_type:
+            return FloBool.false()
+        elm_size = FloInt(self.elm_type.llvmtype.get_abi_size(target_data))
+        with define_or_call_method(m_builder, array_t.name+'.eq', [self, arr, elm_size], FloBool) as (builder, ret, call):
+            if builder:
+                len_ =  self.get_length(builder)
+                cond = len_.cmp(builder, '!=', arr.get_length(builder))
+                with builder.if_then(cond.value):
+                    ret(FloBool.false())
+                check_size = len_.mul(builder, FloInt(builder.function.args[2])).value
+                zero = FloInt.zero()
+                arr_buff1 = builder.load(builder.gep(builder.function.args[0], [zero.value]*2))
+                arr_buff2 = builder.load(builder.gep(builder.function.args[1], [zero.value]*2))
+                cmp_val = builder.call(bi.get_instrinsic("memcmp"), [arr_buff1, arr_buff2, check_size])
+                ret(FloInt(cmp_val).cmp(builder, '==', zero))
+            return call()
     def __eq__(self, __o: object) -> bool:
         return isinstance(__o, FloArray) and self.elm_type == __o.elm_type
 
 # TODO: Unecessary loads (re-load only when you have stored)
-
 
 class FloRef:
     def __init__(self, builder: ir.IRBuilder, value, name=''):
@@ -567,15 +673,3 @@ class FloInlineFunc(FloFunc):
 
     def call(self, *kargs):
         return self.call_method(*kargs)
-
-
-class FloVoid(FloType):
-    print_fmt = "%s"
-    llvmtype = ir.VoidType()
-
-    def print_val(self, _):
-        return FloStr("null").value
-
-    @staticmethod
-    def str() -> str:
-        return "void"

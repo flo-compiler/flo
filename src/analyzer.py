@@ -1,7 +1,7 @@
 from os import path
 from typing import List
 from context import Context, SymbolTable
-from errors import TypeError, SyntaxError, NameError, IOError
+from errors import GeneralError, TypeError, SyntaxError, NameError, IOError
 from flotypes import FloArray, FloBool, FloFloat, FloInlineFunc, FloInt, FloStr, FloType, FloVoid
 from lexer import TokType
 from lexer import Lexer
@@ -11,6 +11,75 @@ from interfaces.astree import *
 
 class BuildCache:
     module_asts = {}
+
+
+class Block:
+    @staticmethod
+    def loop():
+        return Block('loop')
+
+    @staticmethod
+    def fnc(ty):
+        return Block('function', ty)
+
+    @staticmethod
+    def stmt():
+        return Block('stmt')
+
+    @staticmethod
+    def if_():
+        return Block('if')
+
+    def else_():
+        return Block('else')
+
+    def __init__(self, name, rt_ty=None):
+        self.name = name
+        self.ty = rt_ty
+        self.always_returns = False
+        self.parent_blocks = []
+
+    def can_continue(self):
+        return self.is_in_block('loop')
+
+    def can_break(self):
+        return self.can_continue()
+
+    def is_in_block(self, name):
+        for (p_name, _, _) in self.parent_blocks:
+            if p_name == name: return True
+        return False
+
+    def get_parent_fnc_ty(self):
+        for (name, ty, _) in self.parent_blocks:
+            if name == 'function':
+                return ty
+            
+    
+    def can_return(self):
+        return self.is_in_block('function')
+
+    def can_return_value(self, value):
+        return value == self.get_parent_fnc_ty()
+    
+    def return_value(self, _):
+        if self.name == 'stmt':
+            self.always_returns = True
+        elif self.name == 'if' or self.name == 'else':
+            self.always_returns = self.always_returns and True
+        else:
+            self.always_returns = True
+
+    def append_block(self, block):
+        n_rt_state = block.always_returns if block.name == 'function' else self.always_returns
+        self.parent_blocks.append((self.name, self.ty, self.always_returns))
+        (self.name, self.ty, self.always_returns) = (block.name, block.ty, n_rt_state)
+
+    def pop_block(self):
+        popped = self.parent_blocks.pop()
+        (self.name, self.ty, _ ) = popped
+        if popped[0] != 'function':
+            self.always_returns = popped[2]
 
 
 class Analyzer(Visitor):
@@ -36,9 +105,7 @@ class Analyzer(Visitor):
     def __init__(self, context: Context):
         self.context = context.copy()
         self.reserved = context.symbol_table.symbols.copy()
-        self.funcStack: List[FloInlineFunc] = []
-        self.inLoop = [False]
-        self.shoudlReturn = False
+        self.current_block = Block.stmt()
 
     def visit(self, node: Node):
         return super().visit(node)
@@ -208,14 +275,16 @@ class Analyzer(Visitor):
         return value
 
     def visitStmtsNode(self, node: StmtsNode):
-        rt_value = FloVoid
+        self.current_block.append_block(Block.stmt())
+        i = 1
         for expr in node.stmts:
             s = self.visit(expr)
-            e = s
-            if self.shoudlReturn:
-                self.shoudlReturn = False
-                rt_value = e
-        return rt_value
+            if self.current_block.always_returns:
+                node.stmts = node.stmts[0:i]
+                break
+            i+=1
+        self.current_block.pop_block()
+        return s
 
     def visitVarAssignNode(self, node: VarAssignNode):
         var_name = node.var_name.value
@@ -267,26 +336,28 @@ class Analyzer(Visitor):
 
     def visitIfNode(self, node: IfNode):
         for i in range(len(node.cases)):
+            self.current_block.append_block(Block.if_())
             cond, expr = node.cases[i]
             node.cases[i] = (self.condition_check(cond), expr)
-            self.shoudlReturn = False
-            returned_type = self.visit(expr)
+            self.visit(expr)
+            self.current_block.pop_block()
         if node.else_case:
-            returned_type = self.visit(node.else_case)
-        # WARNING: Might have to check this concdition all-through the code.
-        return returned_type if self.shoudlReturn else FloVoid
+            self.current_block.append_block(Block.else_())
+            self.visit(node.else_case)
+            self.current_block.pop_block()
+        return FloVoid
 
     def visitForNode(self, node: ForNode):
+        self.current_block.append_block(Block.loop())
         self.visit(node.init)
         node.cond = self.condition_check(node.cond)
-        index = len(self.inLoop)
-        self.inLoop.append(True)
         self.visit(node.stmt)
-        self.inLoop.pop(index)
         self.visit(node.incr_decr)
+        self.current_block.pop_block()
         return FloVoid
 
     def visitForEachNode(self, node: ForEachNode):
+        self.current_block.append_block(Block.loop())
         it = self.visit(node.iterator)
         if (
             (not isinstance(it, FloArray))
@@ -296,8 +367,6 @@ class Analyzer(Visitor):
                 node.iterator.range,
                 f"Expected type of 'str', dict or 'array' but got type '{it.str()}'",
             ).throw()
-        index = len(self.inLoop)
-        self.inLoop.append(True)
         type = (
             FloStr
             if it == FloStr
@@ -305,16 +374,15 @@ class Analyzer(Visitor):
         )
         self.context.symbol_table.set(node.identifier.value, type)
         self.visit(node.stmt)
-        self.context.symbol_table.set(node.identifier.value)
-        self.inLoop.pop(index)
+        self.current_block.pop_block()
+        self.context.symbol_table.set(node.identifier.value, None)
         return FloVoid
 
     def visitWhileNode(self, node: WhileNode):
+        self.current_block.append_block(Block.loop())
         node.cond = self.condition_check(node.cond)
-        index = len(self.inLoop)
-        self.inLoop.append(True)
         self.visit(node.stmt)
-        self.inLoop.pop(index)
+        self.current_block.pop_block()
         return FloVoid
 
     def visitFncDefNode(self, node: FncDefNode):
@@ -331,10 +399,6 @@ class Analyzer(Visitor):
                 f"{fnc_name} is already defined",
             ).throw()
         fnc_type = self.visit(node.return_type)
-        if fnc_type == None:
-            TypeError(
-                node.var_name.range, f"No return type for function '{fnc_name}'"
-            ).throw()
         args = []
         count = {}
         savedTbl = self.context.symbol_table.copy()
@@ -359,54 +423,38 @@ class Analyzer(Visitor):
                 args.append(type)
         rtype = FloInlineFunc(None, args, fnc_type)
         self.context.symbol_table.set(fnc_name, rtype)
-        self.funcStack.append(fnc_type)
-        bodyType = self.visit(node.body)
-        if (
-            not isinstance(node.body, StmtsNode)
-            and self.shoudlReturn == False
-            and bodyType != FloVoid
-        ):
-            node.body = ReturnNode(node.body, node.body.range)
-        self.funcStack.pop()
+        self.current_block.append_block(Block.fnc(fnc_type))
+        if not isinstance(node.body, StmtsNode):
+            node.body = StmtsNode([ReturnNode(node.body, node.body.range)], node.body.range)
+        self.visit(node.body)
+        if not self.current_block.always_returns:
+            GeneralError(node.return_type.range, "Function missing ending return statment").throw()
+        self.current_block.pop_block()
         self.context.symbol_table = savedTbl
-        if bodyType != fnc_type:
-            TypeError(
-                node.range,
-                f"Expected return type of '{fnc_type.str()}' but got '{bodyType.str()}'",
-            ).throw()
         if fnc_name:
             self.context.symbol_table.set(fnc_name, rtype)
         return rtype
 
     def visitReturnNode(self, node: ReturnNode):
-        self.shoudlReturn = True
-        if len(self.funcStack) == 0:
-            SyntaxError(
-                node.range, "Illegal return outside a function").throw()
-        if node.value:
-            val = self.visit(node.value)
-
-            rt = self.funcStack[-1]
-            if rt == val:
-                return val
-            else:
-                TypeError(
+        if not self.current_block.can_return():
+            SyntaxError(node.range, "Illegal return outside a function").throw()
+        val =  self.visit(node.value) if node.value else FloVoid
+        if not self.current_block.can_return_value(val):
+            TypeError(
                     node.range,
-                    f"Expected return type of '{rt.str()}' but got '{val.str()}'",
+                    f"Expected return type of '{self.current_block.get_parent_fnc_ty().str()}' but got '{val.str()}'",
                 ).throw()
         else:
-            return FloVoid
+            self.current_block.return_value(val)
 
     def visitContinueNode(self, node: ContinueNode):
-        if not self.inLoop[-1]:
+        if not self.current_block.can_continue():
             SyntaxError(
                 node.range, "Illegal continue outside of a loop").throw()
-        return FloVoid
 
     def visitBreakNode(self, node: BreakNode):
-        if not self.inLoop[-1]:
+        if not self.current_block.can_break():
             SyntaxError(node.range, "Illegal break outside of a loop").throw()
-        return FloVoid
 
     def visitFncCallNode(self, node: FncCallNode):
         fn = self.visit(node.name)
@@ -448,7 +496,7 @@ class Analyzer(Visitor):
                     elem.range,
                     f"Expected array to be of type '{expected_type}' because of first element but got '{type}'",
                 ).throw()
-        arr =  FloArray(None)
+        arr = FloArray(None)
         arr.elm_type = expected_type
         return arr
 

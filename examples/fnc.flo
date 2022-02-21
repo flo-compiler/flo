@@ -1,0 +1,28 @@
+fnc doubleNum (a: int): int => a*2
+// this should print 10
+println(doubleNum(5))
+
+fnc tripleNum(a: int): int => a*3
+/* this is should fail... */
+fnc testFunc(): int => {
+    i = 9
+    if i == 5 return 1
+}
+// fnc testFunc1(a: int): int => {
+//     for i = 0; i < 3; i++ {
+//         if (i == 2) return 3
+//     }
+// }
+
+println(testFunc())
+// this should print 15
+println(tripleNum(5))
+
+fnc testFunc2(a: int): int => {
+    fnc innerFunc(b: int): int => {
+       return a + b
+    }
+    //return innerFunc(5)
+}
+
+println(testFunc2(5))

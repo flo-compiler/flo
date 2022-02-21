@@ -1,6 +1,6 @@
 from pathlib import Path
 from errors import CompileError, TypeError
-from flotypes import FloArray, FloFunc, FloInt, FloFloat, FloStr, FloRef, FloBool, FloVoid
+from flotypes import FloArray, FloFunc, FloInt, FloFloat, FloIterable, FloStr, FloRef, FloBool, FloVoid
 from lexer import TokType
 from interfaces.astree import *
 from context import Context
@@ -155,16 +155,9 @@ class Compiler(Visitor):
         self.context.symbol_table = fn.extend_symbol_table(self.context.symbol_table, arg_names)
         outer_builder = self.builder
         self.builder = fn.builder
-        returned = self.visit(node.body)
+        self.visit(node.body)
         self.context.symbol_table = outer_symbol_table
         self.builder = outer_builder
-        try:
-            if rtype == FloVoid:
-                fn.builder.ret_void()
-            else:
-                fn.builder.ret(returned or rtype.default_llvm_val())
-        except:
-            pass
 
     def visitUnaryNode(self, node: UnaryNode):
         value = self.visit(node.value)
@@ -262,6 +255,8 @@ class Compiler(Visitor):
         if node.value == None:
             return self.builder.ret_void()
         val = self.visit(node.value)
+        if isinstance(val, FloVoid):
+            return self.builder.ret_void()
         return self.builder.ret(val.value)
 
     def visitBreakNode(self, _: BreakNode):
@@ -286,7 +281,12 @@ class Compiler(Visitor):
         return nValue if node.ispre else value
 
     def visitForEachNode(self, node: ForEachNode):
-        raise Exception("Unimplemented!")
+        iterable: FloArray = self.visit(node.iterator)
+        with FloIterable.foreach(iterable, self.builder) as (item, index, continue_block, break_block):
+            self.continue_block = continue_block
+            self.break_block = break_block
+            self.context.symbol_table.set(node.identifier.value, item)
+            self.visit(node.stmt)
 
     def visitArrayAccessNode(self, node: ArrayAccessNode):
         index = self.visit(node.index)
