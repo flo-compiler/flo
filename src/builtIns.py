@@ -25,11 +25,13 @@ def get_instrinsic(name):
         return m.declare_intrinsic("realloc", (), ir.FunctionType(i8_ptr_ty, [i8_ptr_ty, i32_ty]))
     elif name == "free":
         return m.declare_intrinsic("free", (), ir.FunctionType(ir.VoidType(), [i8_ptr_ty]))
+    elif name == "memcmp":
+        return m.declare_intrinsic("memcmp", (), ir.FunctionType(i32_ty, [i8_ptr_ty, i8_ptr_ty, i32_ty]))
 
 
 def debug(builder, *args):
     arg_zero = ft.FloStr.create_global_const(
-        " ".join([arg.print_fmt for arg in args]))
+        " ".join([arg.print_fmt for arg in args])+ "\n") 
     call_printf(builder, [arg_zero]+list(args))
 
 
@@ -41,7 +43,7 @@ def call_printf(main_builder: ir.IRBuilder, args):
 
 
 def call_scanf(main_builder: ir.IRBuilder, _):
-    scanf_fmt = ft.FloStr.create_global_const("%d", main_builder)
+    scanf_fmt = ft.FloStr.create_global_const("%d")
     tmp = main_builder.alloca(ft.FloInt.llvmtype)
     main_builder.call(get_instrinsic("scanf"), [scanf_fmt, tmp])
     return ft.FloInt(main_builder.load(tmp))
@@ -60,6 +62,7 @@ def new_ctx(*args):
                                                                        [ft.FloStr.create_global_const(
                                                                            args[0].__class__.print_fmt + "\n"), args[0]]
                                                                        ), [ft.FloType], ft.FloVoid)
+    
     #TODO: Check for proper types
     len_alias = ft.FloInlineFunc(lambda builder, args: args[0].get_length(builder), [ft.FloType], ft.FloInt)
     ctx.symbol_table.set("println", println_alias)

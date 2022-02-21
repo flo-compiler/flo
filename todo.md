@@ -15,34 +15,36 @@
 - [x] Introduce the is keyword (type checking)
 - [x] Strings
 - [x] Compiler
+- [x] Foreach
 
 # Working on
+- Infinity and NaN, null
 - [x] Arrays
   - Fixed length arrays
-- [ ] Foreach loop / In Keyword
+- [ ] In Keyword
 - [x] Type casting
   - int -> str
   - str -> int
 - Enums
   
 # Bugs
-- [ ] C-Library functions do not work in LLVM but do in gcc when compiled to source.
 - [ ] Size overflow in ints.
-- [ ] Fix bug with function return types, and definitions.
-- [ ] Functions don't have access to the global scope.
-- [ ] Dynamic resize/grow of array.
 - [ ] Empty array initialization
   
 # Future 
+- [ ] Critical Functions mechanisms
+  - Functions don't have access to the global scope.
+  - Functions as arguments (Functions as first class)
+  - Anonymous Functions
+  - Default paramaters for functions
+  - Inline Functions
+  - var args for Functions
+  - Introduce mut keyword in functions.
 - [ ] Introduce String Template Literals.
-- [ ] Infered return types for functions.
-- [ ] Default paramaters for functions.
 - [ ] Match expression.
 - [ ] Spread Operator (...).
-- [ ] Introduce mut in functions.
-- [ ] Destructuring assignment in arrays/dicts.
+- [ ] Destructuring assignment in arrays/strings.
 - [ ] Introduce module import. 
-- [ ] Functions as first class.
 
 # Next
 - [ ] import renaming using as keyword
@@ -51,7 +53,6 @@
 - [ ] Generic Types
 - [ ] Error Handling
 - [ ] Maps
-- [ ] Make String and arrays iterable types using classes
 - [ ] Self-Hosting
 
 # Future Stuff
