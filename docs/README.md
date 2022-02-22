@@ -1,6 +1,6 @@
 # FLo Documentation
 ## Introduction
-Flo is a programming language designed to be general-purpose with a natural feel when used and fast when run. Like all other programming languages, it is a tool to help programmers to write fast and efficient computer instructions. Syntactically and semantically, it resembles a lot of modern interpreted high-level languages, and this vision will show in a lot of design decisions made in the language production.
+Flo is a programming language designed to be general-purpose, statically typed and compiled with a natural feel when used and fast when run. Like all other programming languages, it is a tool to help programmers to write fast and efficient computer instructions. Syntactically and semantically, it resembles a lot of modern interpreted high-level languages like python and typescript.
 
 
 ## Mathematical operators
@@ -34,22 +34,22 @@ xor
 ```
 FIVE = 5 // constant; can't be changed through code execution
 
-b: num = 5 // statically typed number
+b: int = 5 // statically typed int
 
 hello: str = "hello world" // string
 
 hello: bool = true // boolean
 
-arr2: num[] = [1, 2, 3, 4, 5, ...] // as many elements as one wants
+arr1: int[] = [1, 2, 3, 4, 5, ...] // as many elements as one wants
 
-arr2: num[5] = [1, 2, 3, 4, 5] // fixed length of 5
-
-dic["three"] = 3 // assign
+arr2: int[5] = [1, 2, 3, 4, 5] // fixed length of 5
 
 arr1[0] = 0 // set value 0 to index 0 in array
 
+/* You don't have to specify the type if you are assigning a value */
 s1 = "red car" // infered type to be string
 
+/* Variables previous bound to a type cannot be redefined (Static types) */
 s1 = 5 // error since previously defined type is string
 ```
 ## Concatenation
@@ -84,20 +84,29 @@ if  b > c {
 
 ### for
 ```
-for i: num = 0; i < 5; i++ {
-
+for i: int = 0; i < 5; i++ {
+    println(i)
 }
 ```
 ### foreach
 ```
 // looping though an array using values
+array = [1, 2, 3]
 foreach elem in array {
-
+    println(elem)
 }
+/* looping though each character in string.
+Flo Doesn't have a character type so each character is just a string of length 1.
+*/
+string = "abc"
+foreach char in string {
+    println(char)
+}
+
 ```
 ### while
 ```
-while 1 {
+while true {
  // do something
 }
 ```
@@ -105,13 +114,13 @@ while 1 {
 ## functions
 ```
 // function returns the value passed as parameter times 2
-fnc double(x: num): num => x*2
+fnc double(x: int): int => x*2
 
-// adds two numbers and returns their sum
-fnc add(x: num, y: num): num => {
+// adds two intbers and returns their sum
+fnc add(x: int, y: int): int => {
     return x+y
 }
-fnc double_sum (x: num, y: num): num => double(sum(x, y))
+fnc double_sum (x: int, y: int): int => double(sum(x, y))
 ```
 ## Type Operators
 ### is

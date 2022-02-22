@@ -28,15 +28,10 @@ fnc quick_sort(start: int, end: int, array: int []): void => {
         quick_sort(start, p - 1, array)
         quick_sort(p + 1, end, array)
     }
+    return
 }
 
 // Driver code
 array = [ 10, 7, 8, 9, 1, 5 ]
 quick_sort(0, len(array) - 1, array)
-// printing of arrays not supported yet.
-print("[")
-for i = 0; i < len(array); i++ {
-    print(array[i])
-    if i < len(array) -1 print(", ")
-}
-print("]")
+print(array)

@@ -19,11 +19,6 @@ class Compiler(Visitor):
         self.module = Context.current_llvm_module
         self.function = FloFunc([], FloVoid(), "main")
         self.builder = self.function.builder
-        self.i = 0
-
-    def incr(self):
-        self.i += 1
-        return self.i
 
     def visit(self, node: Node):
         return super().visit(node)
@@ -208,15 +203,15 @@ class Compiler(Visitor):
         ifCodeGen(node.cases, node.else_case)
 
     def visitForNode(self, node: ForNode):
-        for_entry_block = self.builder.append_basic_block(f"for.entry.{self.incr()}")
+        for_entry_block = self.builder.append_basic_block(f"for.entry")
         self.builder.branch(for_entry_block)
         self.builder.position_at_start(for_entry_block)
         self.visit(node.init)
         for_cond_block = self.builder.append_basic_block(
-            f"for.cond{self.i}")
-        for_body_block = self.builder.append_basic_block(f"for.body{self.i}")
-        for_incr_block = self.builder.append_basic_block(f"for.incr{self.i}")
-        for_end_block = self.builder.append_basic_block(f"for.end{self.i}")
+            f"for.cond")
+        for_body_block = self.builder.append_basic_block(f"for.body")
+        for_incr_block = self.builder.append_basic_block(f"for.incr")
+        for_end_block = self.builder.append_basic_block(f"for.end")
         self.break_block = for_end_block
         self.continue_block = for_incr_block
         self.builder.branch(for_cond_block)
@@ -233,9 +228,9 @@ class Compiler(Visitor):
 
     def visitWhileNode(self, node: WhileNode):
         while_entry_block = self.builder.append_basic_block(
-            f"while.entry{self.incr()}")
+            f"while.entry")
         while_exit_block = self.builder.append_basic_block(
-            f"while.entry{self.i}")
+            f"while.entry")
         self.break_block = while_exit_block
         self.continue_block = while_entry_block
         cond = self.visit(node.cond)

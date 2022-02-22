@@ -2,13 +2,15 @@
 // str1 = "aabbcc"
 // str2 = "aabbsc"
 // print(str1 != str2)
-fnc s (): int => {
-    a = 4*3
-    b = a+2
-    return b
-    c = 4*2
-    de = 5*7
-    return c
+a = 3
+if (a == 3){
+    print(3)
+} else if (a == 2){
+    print(2)
+} else if (a == 1) {
+    print(1)
+} else {
+    print("other")
 }
 // fnc color(name: str): str => ("\033[036m" + name)
 // name = "test"

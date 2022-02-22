@@ -29,17 +29,14 @@ def get_instrinsic(name):
         return m.declare_intrinsic("memcmp", (), ir.FunctionType(i32_ty, [i8_ptr_ty, i8_ptr_ty, i32_ty]))
 
 
-def debug(builder, *args):
-    arg_zero = ft.FloStr.create_global_const(
-        " ".join([arg.print_fmt for arg in args])+ "\n") 
-    call_printf(builder, [arg_zero]+list(args))
-
-
-def call_printf(main_builder: ir.IRBuilder, args):
-    printf_fmt = args[0]
-    c_strs = [arg.print_val(main_builder) for arg in args[1:]]
-    main_builder.call(get_instrinsic("printf"), [printf_fmt]+c_strs)
-    return ft.FloVoid()
+def call_printf(builder: ir.IRBuilder, *args):
+    c_args = []
+    for arg in args:
+        if isinstance(arg, str):
+            c_args.append(ft.FloStr.create_global_const(arg))
+        else:
+            c_args.append(arg)
+    builder.call(get_instrinsic("printf"), c_args)
 
 
 def call_scanf(main_builder: ir.IRBuilder, _):
@@ -53,18 +50,15 @@ def new_ctx(*args):
     ctx = Context(*args)
     Context.current_llvm_module = ir.Module(str(args[0]))
 
-    print_alias = ft.FloInlineFunc(lambda builder, args: call_printf(builder,
-                                                                     [ft.FloStr.create_global_const(
-                                                                         args[0].__class__.print_fmt), args[0]]
-                                                                     ), [ft.FloType], ft.FloVoid)
+    print_alias = ft.FloInlineFunc(lambda builder, args: args[0].print_val(builder), [
+                                   ft.FloType], ft.FloVoid)
     ctx.symbol_table.set("print", print_alias)
-    println_alias = ft.FloInlineFunc(lambda builder, args: call_printf(builder,
-                                                                       [ft.FloStr.create_global_const(
-                                                                           args[0].__class__.print_fmt + "\n"), args[0]]
-                                                                       ), [ft.FloType], ft.FloVoid)
-    
-    #TODO: Check for proper types
-    len_alias = ft.FloInlineFunc(lambda builder, args: args[0].get_length(builder), [ft.FloType], ft.FloInt)
+    println_alias = ft.FloInlineFunc(lambda builder, args: (
+        print_alias.call(builder, args), call_printf(builder, "\n")), [ft.FloType], ft.FloVoid)
+
+    # TODO: Check for proper types
+    len_alias = ft.FloInlineFunc(
+        lambda builder, args: args[0].get_length(builder), [ft.FloType], ft.FloInt)
     ctx.symbol_table.set("println", println_alias)
     ctx.symbol_table.set('len', len_alias)
     ctx.symbol_table.set("input", ft.FloInlineFunc(call_scanf, [], ft.FloInt))
