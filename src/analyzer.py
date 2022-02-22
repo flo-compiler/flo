@@ -335,9 +335,8 @@ class Analyzer(Visitor):
         return cond_node
 
     def visitIfNode(self, node: IfNode):
-        for i in range(len(node.cases)):
+        for i, (cond, expr) in enumerate(node.cases):
             self.current_block.append_block(Block.if_())
-            cond, expr = node.cases[i]
             node.cases[i] = (self.condition_check(cond), expr)
             self.visit(expr)
             self.current_block.pop_block()
@@ -428,7 +427,7 @@ class Analyzer(Visitor):
             node.body = StmtsNode([ReturnNode(node.body, node.body.range)], node.body.range)
         self.visit(node.body)
         if not self.current_block.always_returns:
-            GeneralError(node.return_type.range, "Function missing ending return statment").throw()
+            GeneralError(node.return_type.range, "Function missing ending return statement").throw()
         self.current_block.pop_block()
         self.context.symbol_table = savedTbl
         if fnc_name:
@@ -467,17 +466,16 @@ class Analyzer(Visitor):
                 node.range,
                 f"Expected {len(fn.arg_types)} arguments, but got {len(node.args)}",
             ).throw()
-        for i in range(len(node.args)):
-            argType = self.visit(node.args[i])
-
+        for node_arg, fn_arg_ty in zip(node.args, fn.arg_types):
+            passed_arg_ty = self.visit(node_arg)
             if (
-                argType != fn.arg_types[i]
-                and not fn.arg_types[i] == FloType
-                and not argType == FloType
+                passed_arg_ty != fn_arg_ty
+                and not fn_arg_ty == FloType
+                and not passed_arg_ty == FloType
             ):
                 TypeError(
-                    node.args[i].range,
-                    f"Expected type '{fn.arg_types[i].str()}' but got '{argType.str()}'",
+                    node_arg.range,
+                    f"Expected type '{fn_arg_ty.str()}' but got '{passed_arg_ty.str()}'",
                 ).throw()
         return fn.return_type
 
@@ -494,7 +492,7 @@ class Analyzer(Visitor):
             if type != expected_type:
                 TypeError(
                     elem.range,
-                    f"Expected array to be of type '{expected_type}' because of first element but got '{type}'",
+                    f"Expected array to be of type '{expected_type.str()}' because of first element but got '{type.str()}'",
                 ).throw()
         arr = FloArray(None)
         arr.elm_type = expected_type
