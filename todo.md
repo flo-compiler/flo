@@ -24,8 +24,8 @@
   - Fixed length arrays
 - [ ] In Keyword
 - [x] Type casting
-  - int -> str
-  - str -> int
+  - float -> str
+  - str -> float
 - [x] Inline Functions
   - Default paramaters for functions
 - Enums

@@ -6,6 +6,8 @@ from llvmlite import ir, binding
 target_data = binding.create_target_data("e S0")
 
 # print(ir.FunctionType(ir.VoidType(), [ir.FunctionType(ir.VoidType(),[ir.IntType(32)]).as_pointer()]))
+
+
 @contextlib.contextmanager
 def define_or_call_method(builder, name: str, args, rt_type):
     c_builder = None
@@ -170,8 +172,22 @@ class FloInt(FloType):
             return self.to_float(builder)
         elif type == FloBool:
             return self.cmp(builder, "!=", FloInt.zero())
+        elif type == FloStr:
+            malloc = bi.get_instrinsic("malloc")
+            sprintf = bi.get_instrinsic("sprintf")
+            log10 = bi.get_instrinsic("log10")
+            float_val = self.cast_to(builder, FloFloat)
+            str_len = FloFloat(builder.call(log10, [float_val.value]))
+            str_len = str_len.cast_to(builder, FloInt).add(builder, FloInt.one())
+            str_leni = str_len.add(builder, FloInt.one()).value
+            str_buff = builder.call(malloc, [str_leni])
+            fmt = FloStr.create_global_const("%d")
+            builder.call(sprintf, [str_buff, fmt, self.value])
+            str_buff = FloMem(str_buff)
+            str_struct = FloStr.create_new_str_val(builder, str_buff, str_len)
+            return str_struct
         else:
-            raise Exception(f"Unhandled type cast: int to {type}")
+            raise Exception(f"Unhandled type cast: int to {type.str()}")
 
     @staticmethod
     def str() -> str:
@@ -229,7 +245,7 @@ class FloFloat(FloType):
         elif type == FloFloat:
             return self
         else:
-            raise Exception(f"Unhandled type cast: float to {type}")
+            raise Exception(f"Unhandled type cast: float to {type.str()}")
 
     @staticmethod
     def zero():
@@ -277,7 +293,7 @@ class FloBool(FloType):
         if type == FloInt:
             return FloInt(self.value.zext(FloInt.llvmtype))
         else:
-            raise Exception()
+            raise Exception(f"Unhandled type cast: bool to {type.str()}")
 
     @staticmethod
     def true():
@@ -319,7 +335,7 @@ class FloStr(FloIterable):
             self.value = value
 
     @staticmethod
-    def create_global_const(value):
+    def create_global_const(value: str):
         if(FloStr.global_strings.get(value) != None):
             return FloStr.global_strings.get(value)
         encoded = (value+'\0').encode(
@@ -421,6 +437,12 @@ class FloStr(FloIterable):
                     ret(FloInt(v).cmp(builder, '==', FloInt.zero()))
                 ret(FloBool.false())
             return call()
+
+    def cast_to(self, builder: ir.IRBuilder, type):
+        if type == FloInt:
+            atoi = bi.get_instrinsic("atoi")
+            int_val = builder.call(atoi, [self.get_buffer_ptr(builder)])
+            return FloInt(int_val)
 
     def print_val(self, builder: ir.IRBuilder):
         bi.call_printf(builder, "%s", self.get_buffer_ptr(builder))
@@ -682,11 +704,13 @@ class FloFunc(FloType):
                 arg_val = arg_type(arg_value)
             symbol_table.set(arg_name, FloRef(self.builder, arg_val, arg_name))
         return symbol_table
+
     def ret(self, value, _):
         if value == None or value == FloVoid:
             return self.builder.ret_void()
         else:
             return self.builder.ret(value.value)
+
     def str(self) -> str:
         arg_list = ", ".join([arg.str() for arg in self.arg_types])
         return f"({arg_list})=>{self.return_type.str()}"
@@ -705,7 +729,7 @@ class FloInlineFunc(FloFunc):
     def call(self, *kargs):
         self.call_method(*kargs)
         return self.returned.load() if self.returned != FloVoid else self.returned
-    
+
     def ret(self, value, builder):
         if self.returned != FloVoid:
             if self.returned == None:

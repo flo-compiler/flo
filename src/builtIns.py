@@ -8,6 +8,7 @@ def get_instrinsic(name):
     m = Context.current_llvm_module
     i8_ptr_ty = ir.IntType(8).as_pointer()
     i32_ty = ir.IntType(32)
+    double_ty = ir.DoubleType()
     cfn_ty = ir.FunctionType(i32_ty, [], var_arg=True)
     if m.globals.get(name, None):
         return m.globals.get(name, None)
@@ -16,7 +17,9 @@ def get_instrinsic(name):
     elif name == "scanf":
         return m.declare_intrinsic("scanf", (), cfn_ty)
     elif name == "pow":
-        return m.declare_intrinsic("llvm.pow", [ir.DoubleType()])
+        return m.declare_intrinsic("llvm.pow", [double_ty])
+    elif name == "log10":
+        return m.declare_intrinsic("llvm.log10", [double_ty])
     elif name == "memcpy":
         return m.declare_intrinsic("llvm.memcpy", [i8_ptr_ty, i8_ptr_ty, i32_ty])
     elif name == "malloc":
@@ -27,6 +30,10 @@ def get_instrinsic(name):
         return m.declare_intrinsic("free", (), ir.FunctionType(ir.VoidType(), [i8_ptr_ty]))
     elif name == "memcmp":
         return m.declare_intrinsic("memcmp", (), ir.FunctionType(i32_ty, [i8_ptr_ty, i8_ptr_ty, i32_ty]))
+    elif name == "atoi":
+        return m.declare_intrinsic("atoi", (), ir.FunctionType(i32_ty, [i8_ptr_ty]))
+    elif name == "sprintf":
+        return m.declare_intrinsic("sprintf", (), ir.FunctionType(i32_ty, [i8_ptr_ty, i8_ptr_ty, i32_ty]))
 
 
 def call_printf(builder: ir.IRBuilder, *args):

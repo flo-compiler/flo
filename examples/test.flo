@@ -12,11 +12,14 @@
 // } else {
 //     print("other")
 // }
-CONSTANT = 3
-inline fnc divide_by_factor(n: int): float => {
-    n = n/CONSTANT
-}
-print(divide_by_factor(3))
+// CONSTANT = 3
+// inline fnc divide_by_factor(n: int): float => {
+//     n = n/CONSTANT
+// }
+// print(divide_by_factor(3))
+s = 111 as str
+s+="222"
+print(s)
 //[...a] = 1..5
 // fnc color(name: str): str => ("\033[036m" + name)
 // name = "test"
