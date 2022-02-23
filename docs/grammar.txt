@@ -25,11 +25,10 @@ foreach_stmt: foreach (identifier in expr) block
 
 while_stmt: while expr block
 
-fnc_def_stmt: inline? fnc identifier lpar param_list rpar column composite_type arrow (block | expr)
+fnc_def_stmt: inline? fnc identifier lpar arg_list rpar arrow expr rpar column composite_type block
 
-param_list: identifier (comma identifier)* 
 
-param_list: (identifier column composite_type (comma identifier column composite_type)* )?
+arg_list rpar arrow expr: (identifier column composite_type (comma identifier column composite_type)* )?
 
 change_flow_stmt: return expr?
                   | continue
@@ -54,7 +53,6 @@ unary_expr: (plus | minus ) unary_expr
 value_expr: expr_value_op (
        | (plus_plus | minus_minus)
        | ((column composite_type)? eq (expr))
-       | "as" composite_type
        )?
 
 expr_list: (expr (comma expr)*)?
@@ -64,10 +62,11 @@ expr_value:   number
             | string
             | rbracket expr_list lbracket
             | lbrace ((string col expr) (comma (string col expr))*)? rbrace
+            | lpar arg_list rpar arrow expr
             | lpar expr rpar
 
 composite_type:  type (lbracket expr rbracket)*
-            |    lpar (composite_type (comma composite_type)*)? arrow composite_type
+            |    lpar (composite_type (comma composite_type)*)? lpar arrow composite_type
 
 type:
     | "float"

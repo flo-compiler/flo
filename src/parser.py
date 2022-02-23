@@ -1,5 +1,5 @@
 from typing import List
-from flotypes import FloArray, FloType
+from flotypes import FloArray, FloInlineFunc, FloType
 from interfaces.astree import *
 from lexer import TokType, Token
 from errors import SyntaxError
@@ -185,7 +185,7 @@ class Parser:
         if self.current_tok.type != TokType.LPAR:
             SyntaxError(self.current_tok.range, "Expected '('").throw()
         self.advance()
-        args = self.param_list()
+        args = self.arg_list()
         if self.current_tok.type != TokType.RPAR:
             SyntaxError(self.current_tok.range, "Expected ')'").throw()
         self.advance()
@@ -195,9 +195,6 @@ class Parser:
             ).throw()
         self.advance()
         return_type = self.composite_type()
-        if self.current_tok.type != TokType.ARROW:
-            SyntaxError(self.current_tok.range, "Expected '=>'").throw()
-        self.advance()
         body = self.block()
         return FncDefNode(
             var_name,
@@ -224,7 +221,7 @@ class Parser:
                 self.advance()
         return args
 
-    def param_list(self):
+    def arg_list(self):
         args = []
         if self.current_tok.type == TokType.IDENTIFER:
             id = self.current_tok
@@ -442,7 +439,24 @@ class Parser:
 
     def composite_type(self):
         start_range = self.current_tok.range
-        if self.current_tok.inKeywordList(("int", "float", "bool", "str", "void")):
+        if self.current_tok.type == TokType.LPAR:
+            self.advance()
+            arg_types = []
+            if self.current_tok.type != TokType.RPAR:
+                arg_types.append(self.composite_type().type)
+                while(self.current_tok.type == TokType.COMMA):
+                    self.advance()
+                    arg_types.append(self.composite_type().type)
+                if self.current_tok.type != TokType.RPAR:
+                    SyntaxError(self.current_tok.range, "Expected ')'").throw()
+            self.advance()
+            if self.current_tok.type != TokType.ARROW:
+                SyntaxError(self.current_tok.range, "Expected '=>'").throw()
+            self.advance()
+            r_type = self.composite_type().type
+            type = FloInlineFunc(None, arg_types, r_type)
+            return TypeNode(type, Range.merge(start_range, self.current_tok.range))
+        elif self.current_tok.inKeywordList(("int", "float", "bool", "str", "void")):
             type = FloType.str_to_flotype(self.current_tok.value)
             self.advance()
             while self.current_tok.type == TokType.LBRACKET:

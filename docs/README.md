@@ -114,13 +114,13 @@ while true {
 ## functions
 ```
 // function returns the value passed as parameter times 2
-fnc double(x: int): int => x*2
+double = (x: int): int => x*2
 
 // adds two intbers and returns their sum
-fnc add(x: int, y: int): int => {
+fnc add(x: int, y: int): int {
     return x+y
 }
-fnc double_sum (x: int, y: int): int => double(sum(x, y))
+double_sum = (x: int, y: int): int => double(sum(x, y))
 ```
 ## Type Operators
 ### is

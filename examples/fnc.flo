@@ -1,29 +1,19 @@
-fnc doubleNum (a: int): int => a*2
-// this should print 10
-println(doubleNum(5))
+//s = (x: int) => 8*x
 
-fnc tripleNum(a: int): int => a*3
-/* this is should fail... */
-fnc testFunc(): int => {
-    i = 9
-    if i == 5 return 1
-    return 0
-}
-// fnc testFunc1(a: int): int => {
-//     for i = 0; i < 3; i++ {
-//         if (i == 2) return 3
-//     }
+// fnc add_ints(a: int = 4, b: int = 2): int {
+//     return a+b
 // }
-
-println(testFunc())
-// this should print 15
-println(tripleNum(5))
-
-fnc testFunc2(a: int): int => {
-    fnc innerFunc(b: int): int => {
-       return a + b
+fnc map(array: int [], func: (int) => int): int [] {
+    arr = [func(array[0])]
+    for i = 1; i < len(array); i++{
+        arr << func(array[i])
     }
-    return innerFunc(5)
+    return arr
 }
-
-println(testFunc2(5))
+fnc double(x: int): int {
+    return x*2
+}
+original =  [1, 2, 3, 4, 5]
+result = map(original, double)
+println(result)
+println(original)
