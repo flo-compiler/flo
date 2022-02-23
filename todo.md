@@ -16,30 +16,36 @@
 - [x] Strings
 - [x] Compiler
 - [x] Foreach
+- [x] Primitive Static reference counting. 
 
 # Working on
-- [ ] Range and Iters
+- [ ] Critical Functions mechanisms
+  - [x] Inline Functions
+  - [x] Functions as arguments (Functions as first class)
+  - lambda Functions
+  - Default paramaters for functions
+- [ ] Iters
+  - In Keyword
   - Destructuring assignment of Iters.
+  - Slices
+  - Tuples?
+  - Ranges
 - [x] Arrays
   - Fixed length arrays
-- [ ] In Keyword
 - [x] Type casting
   - float -> str
   - str -> float
-- [x] Inline Functions
-  - Default paramaters for functions
 - Enums
 - Match expression.
   
 # Bugs
 - [ ] Size overflow in ints.
 - [ ] Empty array initialization
+- [ ] Proper Checking of inline functions
 - [ ] Functions don't have access to the global scope.
   
 # Future 
 - [ ] Critical Functions mechanisms
-  - Functions as arguments (Functions as first class)
-  - Anonymous Functions
   - var args for Functions
   - Introduce mut keyword in functions.
 - [ ] Introduce String Template Literals.

@@ -34,6 +34,8 @@ def get_instrinsic(name):
         return m.declare_intrinsic("atoi", (), ir.FunctionType(i32_ty, [i8_ptr_ty]))
     elif name == "sprintf":
         return m.declare_intrinsic("sprintf", (), ir.FunctionType(i32_ty, [i8_ptr_ty, i8_ptr_ty, i32_ty]))
+    elif name == "strlen":
+        return m.declare_intrinsic("strlen", (), ir.FunctionType(i32_ty, [i8_ptr_ty]))
 
 
 def call_printf(builder: ir.IRBuilder, *args):
@@ -47,10 +49,12 @@ def call_printf(builder: ir.IRBuilder, *args):
 
 
 def call_scanf(main_builder: ir.IRBuilder, _):
-    scanf_fmt = ft.FloStr.create_global_const("%d")
-    tmp = main_builder.alloca(ft.FloInt.llvmtype)
-    main_builder.call(get_instrinsic("scanf"), [scanf_fmt, tmp])
-    return ft.FloInt(main_builder.load(tmp))
+    scanf_fmt = ft.FloStr.create_global_const("%[^\n]")
+    str_ptr = main_builder.alloca(ir.IntType(8))
+    main_builder.call(get_instrinsic("scanf"), [scanf_fmt, str_ptr])
+    str_buffer = ft.FloMem(str_ptr)
+    str_len = ft.FloInt(main_builder.call(get_instrinsic("strlen"), [str_ptr]))
+    return ft.FloStr.create_new_str_val(main_builder, str_buffer, str_len)
 
 
 def new_ctx(*args):
@@ -68,7 +72,7 @@ def new_ctx(*args):
         lambda builder, args: args[0].get_length(builder), [ft.FloType], ft.FloInt)
     ctx.symbol_table.set("println", println_alias)
     ctx.symbol_table.set('len', len_alias)
-    ctx.symbol_table.set("input", ft.FloInlineFunc(call_scanf, [], ft.FloInt))
+    ctx.symbol_table.set("input", ft.FloInlineFunc(call_scanf, [], ft.FloStr))
     ctx.symbol_table.set("true", ft.FloBool.true())
     ctx.symbol_table.set("false", ft.FloBool.false())
     return ctx

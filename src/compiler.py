@@ -146,6 +146,7 @@ class Compiler(Visitor):
             arg_types.append(self.visit(arg_type))
         outer_builder = self.builder
         outer_symbol_table = self.context.symbol_table.copy()
+        outer_ret = self.ret
         if not node.is_inline:
             fn = FloFunc(arg_types, rtype, fn_name)
             self.context.symbol_table.set(fn_name, fn)
@@ -155,12 +156,14 @@ class Compiler(Visitor):
             self.visit(node.body)
         else:
             def inline_call(builder, args):
+                self.ret = fn.ret
                 for arg_val, arg_name in zip(args, arg_names):
                     self.context.symbol_table.set(arg_name, arg_val)
                 self.builder = builder
                 self.visit(node.body)
+                self.ret = outer_ret
             fn = FloInlineFunc(inline_call, arg_types, rtype)
-            self.ret = fn.ret
+        self.ret = outer_ret
         self.context.symbol_table = outer_symbol_table
         self.context.symbol_table.set(fn_name, fn)
         self.builder = outer_builder

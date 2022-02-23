@@ -69,15 +69,17 @@ class Block:
         return value == self.fn_within.rtype
 
     def return_value(self, _):
-        if self.name == 'stmt':
+        if self.name == 'stmt' or self.name == 'else':
             self.always_returns = True
-        elif self.name == 'if' or self.name == 'else':
+        elif self.name == 'if':
             self.always_returns = self.always_returns and True
         else:
             self.always_returns = True
 
     def append_block(self, block):
-        new_rt_state = block.always_returns if block.name == 'function' else self.always_returns
+        new_rt_state = self.always_returns
+        if block.name == 'function':
+            new_rt_state = block.always_returns
         fn_state = block.fn_within or self.fn_within
         self.parent_blocks.append(
             (self.name, self.fn_within, self.always_returns))
@@ -448,14 +450,12 @@ class Analyzer(Visitor):
                 arg_names.append(arg_name)
                 arg_types.append(arg_type)
                 self.context.symbol_table.set(arg_name, arg_type)
-        fn_type = FloInlineFunc(None, arg_types, rt_type)
+        fn_type = FloInlineFunc(None, arg_types, rt_type, node.is_inline)
+        fn_type.is_inline = node.is_inline
         # Recursion only for non-inline function
         fn_descriptor = FncDescriptor(
             fnc_name, rt_type, arg_names, node.is_inline)
         self.current_block.append_block(Block.fnc(fn_descriptor))
-        if not isinstance(node.body, StmtsNode):
-            node.body = StmtsNode(
-                [ReturnNode(node.body, node.body.range)], node.body.range)
         self.visit(node.body)
         if not self.current_block.always_returns:
             GeneralError(node.return_type.range,
@@ -503,6 +503,9 @@ class Analyzer(Visitor):
             ).throw()
         for node_arg, fn_arg_ty in zip(node.args, fn.arg_types):
             passed_arg_ty = self.visit(node_arg)
+            if isinstance(passed_arg_ty, FloInlineFunc) and passed_arg_ty.is_inline:
+                GeneralError(
+                    node_arg.range, f"Functions cannot be passed as arguments: you can use the inline-function in any scope").throw()
             if (
                 passed_arg_ty != fn_arg_ty
                 and not fn_arg_ty == FloType
