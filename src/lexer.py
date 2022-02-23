@@ -34,6 +34,7 @@ KEYWORDS = [
     "priv",
     "as",
     "is",
+    "inline"
 ]
 
 

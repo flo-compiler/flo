@@ -74,7 +74,7 @@ class Parser:
             return self.foreach_stmt()
         elif tok.isKeyword("while"):
             return self.while_stmt()
-        elif tok.isKeyword("fnc"):
+        elif tok.inKeywordList(("fnc", "inline")):
             return self.fnc_def_stmt()
         elif tok.inKeywordList(("return", "continue", "break")):
             return self.change_flow_stmt()
@@ -169,6 +169,12 @@ class Parser:
         return WhileNode(cond, stmts, Range.merge(cond.range, stmts.range))
 
     def fnc_def_stmt(self):
+        is_inline = False
+        if self.current_tok.isKeyword("inline"):
+            is_inline = True
+            self.advance()
+        if not self.current_tok.isKeyword("fnc"):
+            SyntaxError(self.current_tok.range, "Expected Keyword 'fnc'").throw()
         self.advance()
         start_range = self.current_tok.range
         var_name = None
@@ -197,6 +203,7 @@ class Parser:
             var_name,
             args,
             body,
+            is_inline,
             Range.merge(start_range, self.current_tok.range),
             return_type,
         )

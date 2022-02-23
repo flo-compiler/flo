@@ -5,7 +5,7 @@ from context import Context, SymbolTable
 from llvmlite import ir, binding
 target_data = binding.create_target_data("e S0")
 
-
+# print(ir.FunctionType(ir.VoidType(), [ir.FunctionType(ir.VoidType(),[ir.IntType(32)]).as_pointer()]))
 @contextlib.contextmanager
 def define_or_call_method(builder, name: str, args, rt_type):
     c_builder = None
@@ -85,8 +85,8 @@ class FloIterable(FloType):
 class FloVoid(FloType):
     llvmtype = ir.VoidType()
 
-    def print_val(self, builder):
-        bi.call_printf(builder, "void")
+    def print_val(builder):
+        bi.call_printf(builder, "null")
 
     @staticmethod
     def str() -> str:
@@ -682,9 +682,14 @@ class FloFunc(FloType):
                 arg_val = arg_type(arg_value)
             symbol_table.set(arg_name, FloRef(self.builder, arg_val, arg_name))
         return symbol_table
-
+    def ret(self, value, _):
+        if value == None or value == FloVoid:
+            return self.builder.ret_void()
+        else:
+            return self.builder.ret(value.value)
     def str(self) -> str:
-        return f"({self.arg_types[0]})=>{self.return_type.str()}"
+        arg_list = ", ".join([arg.str() for arg in self.arg_types])
+        return f"({arg_list})=>{self.return_type.str()}"
 
 
 class FloInlineFunc(FloFunc):
@@ -692,6 +697,18 @@ class FloInlineFunc(FloFunc):
         self.arg_types = arg_types
         self.return_type = return_type
         self.call_method = call
+        if return_type == FloVoid:
+            self.returned = FloVoid
+        else:
+            self.returned = None
 
     def call(self, *kargs):
-        return self.call_method(*kargs)
+        self.call_method(*kargs)
+        return self.returned.load() if self.returned != FloVoid else self.returned
+    
+    def ret(self, value, builder):
+        if self.returned != FloVoid:
+            if self.returned == None:
+                self.returned = FloRef(builder, value)
+            else:
+                self.returned.store(value)

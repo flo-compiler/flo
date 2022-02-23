@@ -18,32 +18,32 @@
 - [x] Foreach
 
 # Working on
-- Infinity and NaN, null
+- [ ] Range and Iters
+  - Destructuring assignment of Iters.
 - [x] Arrays
   - Fixed length arrays
 - [ ] In Keyword
 - [x] Type casting
   - int -> str
   - str -> int
+- [x] Inline Functions
+  - Default paramaters for functions
 - Enums
+- Match expression.
   
 # Bugs
 - [ ] Size overflow in ints.
 - [ ] Empty array initialization
+- [ ] Functions don't have access to the global scope.
   
 # Future 
 - [ ] Critical Functions mechanisms
-  - Functions don't have access to the global scope.
   - Functions as arguments (Functions as first class)
   - Anonymous Functions
-  - Default paramaters for functions
-  - Inline Functions
   - var args for Functions
   - Introduce mut keyword in functions.
 - [ ] Introduce String Template Literals.
-- [ ] Match expression.
 - [ ] Spread Operator (...).
-- [ ] Destructuring assignment in arrays/strings.
 - [ ] Introduce module import. 
 
 # Next

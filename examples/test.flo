@@ -2,16 +2,22 @@
 // str1 = "aabbcc"
 // str2 = "aabbsc"
 // print(str1 != str2)
-a = 3
-if (a == 3){
-    print(3)
-} else if (a == 2){
-    print(2)
-} else if (a == 1) {
-    print(1)
-} else {
-    print("other")
+// a = 1
+// if (a == 3){
+//     print(3)
+// } else if (a == 2){
+//     print(2)
+// } else if (a == 1) {
+//     print(1)
+// } else {
+//     print("other")
+// }
+CONSTANT = 3
+inline fnc divide_by_factor(n: int): float => {
+    n = n/CONSTANT
 }
+print(divide_by_factor(3))
+//[...a] = 1..5
 // fnc color(name: str): str => ("\033[036m" + name)
 // name = "test"
 // print(color(name))
