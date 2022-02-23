@@ -1,6 +1,6 @@
 from pathlib import Path
 from errors import CompileError, TypeError
-from flotypes import FloArray, FloFunc, FloInt, FloFloat, FloIterable, FloStr, FloRef, FloBool, FloVoid
+from flotypes import FloArray, FloFunc, FloInlineFunc, FloInt, FloFloat, FloIterable, FloStr, FloRef, FloBool, FloVoid
 from lexer import TokType
 from interfaces.astree import *
 from context import Context
@@ -12,13 +12,13 @@ llvm.initialize()
 llvm.initialize_native_target()
 llvm.initialize_native_asmprinter()
 
-
 class Compiler(Visitor):
     def __init__(self, context: Context):
         self.context = context
         self.module = Context.current_llvm_module
-        self.function = FloFunc([], FloVoid(), "main")
-        self.builder = self.function.builder
+        self.fn =  FloFunc([], FloVoid(), "main")
+        self.ret = self.fn.ret
+        self.builder = self.fn.builder
 
     def visit(self, node: Node):
         return super().visit(node)
@@ -144,14 +144,25 @@ class Compiler(Visitor):
         for arg_name, arg_type in node.args:
             arg_names.append(arg_name.value)
             arg_types.append(self.visit(arg_type))
-        fn = FloFunc(arg_types, rtype, fn_name)
-        self.context.symbol_table.set(fn_name, fn)
-        outer_symbol_table = self.context.symbol_table.copy()
-        self.context.symbol_table = fn.extend_symbol_table(self.context.symbol_table, arg_names)
         outer_builder = self.builder
-        self.builder = fn.builder
-        self.visit(node.body)
+        outer_symbol_table = self.context.symbol_table.copy()
+        if not node.is_inline:
+            fn = FloFunc(arg_types, rtype, fn_name)
+            self.context.symbol_table.set(fn_name, fn)
+            self.context.symbol_table = fn.extend_symbol_table(self.context.symbol_table, arg_names)
+            self.builder = fn.builder
+            self.ret = fn.ret
+            self.visit(node.body)
+        else:
+            def inline_call(builder, args):
+                for arg_val, arg_name in zip(args, arg_names):
+                    self.context.symbol_table.set(arg_name, arg_val)
+                self.builder = builder
+                self.visit(node.body)
+            fn = FloInlineFunc(inline_call, arg_types, rtype)
+            self.ret = fn.ret
         self.context.symbol_table = outer_symbol_table
+        self.context.symbol_table.set(fn_name, fn)
         self.builder = outer_builder
 
     def visitUnaryNode(self, node: UnaryNode):
@@ -200,7 +211,7 @@ class Compiler(Visitor):
                     else:
                         ifCodeGen(cases, else_case)
 
-        ifCodeGen(node.cases, node.else_case)
+        ifCodeGen(node.cases.copy(), node.else_case)
 
     def visitForNode(self, node: ForNode):
         for_entry_block = self.builder.append_basic_block(f"for.entry")
@@ -248,11 +259,9 @@ class Compiler(Visitor):
 
     def visitReturnNode(self, node: ReturnNode):
         if node.value == None:
-            return self.builder.ret_void()
+            return self.ret(None)
         val = self.visit(node.value)
-        if isinstance(val, FloVoid):
-            return self.builder.ret_void()
-        return self.builder.ret(val.value)
+        return self.ret(val, self.builder)
 
     def visitBreakNode(self, _: BreakNode):
         self.builder.branch(self.break_block)

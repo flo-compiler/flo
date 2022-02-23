@@ -13,14 +13,22 @@ class BuildCache:
     module_asts = {}
 
 
+class FncDescriptor:
+    def __init__(self, name: str, rtype: FloType, arg_names: List[str], is_inline: bool):
+        self.name = name
+        self.rtype = rtype
+        self.arg_names = arg_names
+        self.is_inline = is_inline
+
+
 class Block:
     @staticmethod
     def loop():
         return Block('loop')
 
     @staticmethod
-    def fnc(ty):
-        return Block('function', ty)
+    def fnc(func: FncDescriptor):
+        return Block('function', func)
 
     @staticmethod
     def stmt():
@@ -33,9 +41,9 @@ class Block:
     def else_():
         return Block('else')
 
-    def __init__(self, name, rt_ty=None):
+    def __init__(self, name, fn: FncDescriptor = None):
         self.name = name
-        self.ty = rt_ty
+        self.fn_within = fn
         self.always_returns = False
         self.parent_blocks = []
 
@@ -47,21 +55,19 @@ class Block:
 
     def is_in_block(self, name):
         for (p_name, _, _) in self.parent_blocks:
-            if p_name == name: return True
+            if p_name == name:
+                return True
         return False
 
     def get_parent_fnc_ty(self):
-        for (name, ty, _) in self.parent_blocks:
-            if name == 'function':
-                return ty
-            
-    
+        return self.fn_within.rtype
+
     def can_return(self):
-        return self.is_in_block('function')
+        return self.fn_within != None
 
     def can_return_value(self, value):
-        return value == self.get_parent_fnc_ty()
-    
+        return value == self.fn_within.rtype
+
     def return_value(self, _):
         if self.name == 'stmt':
             self.always_returns = True
@@ -71,13 +77,19 @@ class Block:
             self.always_returns = True
 
     def append_block(self, block):
-        n_rt_state = block.always_returns if block.name == 'function' else self.always_returns
-        self.parent_blocks.append((self.name, self.ty, self.always_returns))
-        (self.name, self.ty, self.always_returns) = (block.name, block.ty, n_rt_state)
+        new_rt_state = block.always_returns if block.name == 'function' else self.always_returns
+        fn_state = block.fn_within or self.fn_within
+        self.parent_blocks.append(
+            (self.name, self.fn_within, self.always_returns))
+        (self.name, self.fn_within, self.always_returns) = (
+            block.name, fn_state, new_rt_state)
+
+    def in_inline_fnc(self):
+        return self.is_in_block("function") and self.fn_within.is_inline
 
     def pop_block(self):
         popped = self.parent_blocks.pop()
-        (self.name, self.ty, _ ) = popped
+        (self.name, self.fn_within, _) = popped
         if popped[0] != 'function':
             self.always_returns = popped[2]
 
@@ -282,13 +294,20 @@ class Analyzer(Visitor):
             if self.current_block.always_returns:
                 node.stmts = node.stmts[0:i]
                 break
-            i+=1
+            i += 1
         self.current_block.pop_block()
         return s
 
     def visitVarAssignNode(self, node: VarAssignNode):
         var_name = node.var_name.value
-        if var_name.isupper() and self.context.symbol_table.get(var_name) != None:
+        if self.current_block.in_inline_fnc() and var_name in self.current_block.fn_within.arg_names:
+            GeneralError(
+                node.range, f"Arguments are not mutable in inline function").throw()
+        var_value = self.context.symbol_table.get(var_name)
+        if self.current_block.in_inline_fnc() and var_value == None:
+            GeneralError(
+                node.range, f"Variable definition not permitted in inline function").throw()
+        if var_name.isupper() and var_value != None:
             TypeError(
                 node.var_name.range,
                 node.range,
@@ -356,6 +375,9 @@ class Analyzer(Visitor):
         return FloVoid
 
     def visitForEachNode(self, node: ForEachNode):
+        if self.current_block.in_inline_fnc():
+            GeneralError(node.identifier.range,
+                         f"foreach loop not permitted in inline function").throw()
         self.current_block.append_block(Block.loop())
         it = self.visit(node.iterator)
         if (
@@ -385,6 +407,9 @@ class Analyzer(Visitor):
         return FloVoid
 
     def visitFncDefNode(self, node: FncDefNode):
+        if self.current_block.in_inline_fnc():
+            GeneralError(
+                node.var_name.range, f"Function definition not permitted in inline function").throw()
         fnc_name = node.var_name.value
         if fnc_name in self.reserved.keys():
             TypeError(
@@ -397,52 +422,58 @@ class Analyzer(Visitor):
                 node.var_name.range,
                 f"{fnc_name} is already defined",
             ).throw()
-        fnc_type = self.visit(node.return_type)
-        args = []
-        count = {}
+        rt_type = self.visit(node.return_type)
+        arg_types = []
+        arg_names = []
         savedTbl = self.context.symbol_table.copy()
-        for arg, t in node.args:
-            type = self.visit(t)
-            if count.get(arg.value) != None:
+        if not node.is_inline:
+            self.context.symbol_table.symbols = self.reserved.copy()
+        for arg_name_tok, type_node in node.args:
+            arg_type = self.visit(type_node)
+            arg_name = arg_name_tok.value
+            if arg_name in arg_names:
                 NameError(
-                    arg.range,
-                    f"parameter '{arg.value}' defined twice in function parameters",
+                    arg_name.range,
+                    f"parameter '{arg_name}' defined twice in function parameters",
                 ).throw()
-            elif type == None:
+            elif arg_type == None:
                 TypeError(
-                    arg.range, f"parameter '{arg.value}' has an unknown type"
+                    arg_name.range, f"parameter '{arg_name}' has an unknown type"
                 ).throw()
-            elif arg.value == fnc_name:
+            elif arg_name == fnc_name:
                 NameError(
-                    arg.range, f"parameter '{arg.value}' has same name as function"
+                    arg_name.range, f"parameter '{arg_name}' has same name as function"
                 ).throw()
             else:
-                count[arg.value] = 1
-                self.context.symbol_table.set(arg.value, type)
-                args.append(type)
-        rtype = FloInlineFunc(None, args, fnc_type)
-        self.context.symbol_table.set(fnc_name, rtype)
-        self.current_block.append_block(Block.fnc(fnc_type))
+                arg_names.append(arg_name)
+                arg_types.append(arg_type)
+                self.context.symbol_table.set(arg_name, arg_type)
+        fn_type = FloInlineFunc(None, arg_types, rt_type)
+        # Recursion only for non-inline function
+        fn_descriptor = FncDescriptor(
+            fnc_name, rt_type, arg_names, node.is_inline)
+        self.current_block.append_block(Block.fnc(fn_descriptor))
         if not isinstance(node.body, StmtsNode):
-            node.body = StmtsNode([ReturnNode(node.body, node.body.range)], node.body.range)
+            node.body = StmtsNode(
+                [ReturnNode(node.body, node.body.range)], node.body.range)
         self.visit(node.body)
         if not self.current_block.always_returns:
-            GeneralError(node.return_type.range, "Function missing ending return statement").throw()
+            GeneralError(node.return_type.range,
+                         "Function missing ending return statement").throw()
         self.current_block.pop_block()
         self.context.symbol_table = savedTbl
-        if fnc_name:
-            self.context.symbol_table.set(fnc_name, rtype)
-        return rtype
+        self.context.symbol_table.set(fnc_name, fn_type)
 
     def visitReturnNode(self, node: ReturnNode):
         if not self.current_block.can_return():
-            SyntaxError(node.range, "Illegal return outside a function").throw()
-        val =  self.visit(node.value) if node.value else FloVoid
+            SyntaxError(
+                node.range, "Illegal return outside a function").throw()
+        val = self.visit(node.value) if node.value else FloVoid
         if not self.current_block.can_return_value(val):
             TypeError(
-                    node.range,
-                    f"Expected return type of '{self.current_block.get_parent_fnc_ty().str()}' but got '{val.str()}'",
-                ).throw()
+                node.range,
+                f"Expected return type of '{self.current_block.get_parent_fnc_ty().str()}' but got '{val.str()}'",
+            ).throw()
         else:
             self.current_block.return_value(val)
 
@@ -456,6 +487,10 @@ class Analyzer(Visitor):
             SyntaxError(node.range, "Illegal break outside of a loop").throw()
 
     def visitFncCallNode(self, node: FncCallNode):
+        if (self.current_block.in_inline_fnc() and
+                self.current_block.fn_within.name == node.name.var_name.value):
+            GeneralError(
+                node.range, "Recursive function call not permitted in inline function").throw()
         fn = self.visit(node.name)
         if not isinstance(fn, FloInlineFunc):
             TypeError(

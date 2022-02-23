@@ -150,11 +150,12 @@ class TypeNode(Node):
 
 
 class FncDefNode:
-    def __init__(self, var_name: Token, args: List[Tuple[Token, TypeNode]], body: StmtsNode, range: Range, return_type: TypeNode = None):
+    def __init__(self, var_name: Token, args: List[Tuple[Token, TypeNode]], body: StmtsNode, is_inline: bool, range: Range, return_type: TypeNode = None):
         self.var_name = var_name
         self.args = args
         self.body = body
         self.range = range
+        self.is_inline = is_inline
         self.return_type = return_type
 
     def accept(self, visitor: Visitor):
