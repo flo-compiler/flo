@@ -16,14 +16,16 @@
 - [x] Strings
 - [x] Compiler
 - [x] Foreach
-- [x] Primitive Static reference counting. 
+- [x] Primitive Static reference counting.
+- [x] Type casting
 
 # Working on
 - [ ] Critical Functions mechanisms
   - [x] Inline Functions
   - [x] Functions as arguments (Functions as first class)
-  - lambda Functions
   - Default paramaters for functions
+  - lambda Functions
+- Match expression.
 - [ ] Iters
   - In Keyword
   - Destructuring assignment of Iters.
@@ -32,11 +34,7 @@
   - Ranges
 - [x] Arrays
   - Fixed length arrays
-- [x] Type casting
-  - float -> str
-  - str -> float
 - Enums
-- Match expression.
   
 # Bugs
 - [ ] Size overflow in ints.

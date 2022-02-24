@@ -38,6 +38,7 @@ def define_or_call_method(builder, name: str, args, rt_type):
 
 class FloType:
     llvmtype = None
+    value: ir.Value
     def create_uuid(self) -> None:
         self.uuid = uuid.uuid1()
     def cast_to():
@@ -120,7 +121,7 @@ class FloInt(FloType):
         return FloInt(ir.Constant(FloInt.llvmtype, 0))
 
     def print_val(self, builder):
-        bi.call_printf(builder, "%li", self.value)
+        bi.call_printf(builder, "%d", self.value)
 
     def to_float(self, builder: ir.IRBuilder):
         return FloFloat(builder.sitofp(self.value, FloFloat.llvmtype))
@@ -249,6 +250,16 @@ class FloFloat(FloType):
             return self.to_int(builder)
         elif type == FloBool:
             return self.cmp(builder, "!=", FloFloat.zero())
+        elif type == FloStr:
+            malloc = bi.get_instrinsic("malloc")
+            sprintf = bi.get_instrinsic("sprintf")
+            strlen = bi.get_instrinsic("strlen")
+            str_buff = builder.call(malloc, [FloInt(1).value])
+            fmt = FloStr.create_global_const("%f")
+            builder.call(sprintf, [str_buff, fmt, self.value])
+            str_len = FloInt(builder.call(strlen, [str_buff]))
+            str_buff = FloMem(str_buff)
+            return FloStr.create_new_str_val(builder, str_buff, str_len)
         elif type == FloFloat:
             return self
         else:
@@ -452,6 +463,10 @@ class FloStr(FloIterable):
             atoi = bi.get_instrinsic("atoi")
             int_val = builder.call(atoi, [self.get_buffer_ptr(builder)])
             return FloInt(int_val)
+        elif type == FloFloat:
+            atod = bi.get_instrinsic('atof')
+            dbl_val = builder.call(atod, [self.get_buffer_ptr(builder)])
+            return FloFloat(dbl_val)
         else:
             raise Exception(f"Unhandled type cast: bool to {type.str()}")
 
@@ -775,6 +790,9 @@ class FloFunc(FloType):
     def str(self) -> str:
         arg_list = ", ".join([arg.str() for arg in self.arg_types])
         return f"({arg_list})=>{self.return_type.str()}"
+    
+    def print_val(self, builder: ir.IRBuilder) -> str:
+        bi.call_printf(builder, self.str())
 
     def __eq__(self, other):
         if isinstance(other, FloFunc) and len(self.arg_types) == len(other.arg_types):
