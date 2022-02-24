@@ -1,4 +1,4 @@
 /*Test File for testing features I am currently working on:*/
-a = [22]
-
-print(a)
+a = 3.1415926535 as str []
+a+=['9']
+println(a)

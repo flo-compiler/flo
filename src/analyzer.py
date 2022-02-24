@@ -505,7 +505,7 @@ class Analyzer(Visitor):
             passed_arg_ty = self.visit(node_arg)
             if isinstance(passed_arg_ty, FloInlineFunc) and passed_arg_ty.is_inline:
                 GeneralError(
-                    node_arg.range, f"Functions cannot be passed as arguments: you can use the inline-function in any scope").throw()
+                    node_arg.range, f"Inline functions cannot be passed as arguments: you can use the inline function in any scope").throw()
             if (
                 passed_arg_ty != fn_arg_ty
                 and not fn_arg_ty == FloType
