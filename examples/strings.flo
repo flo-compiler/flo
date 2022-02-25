@@ -1,11 +1,11 @@
-fnc red ():void => print("\033[91m")
-fnc green (): void => print("\033[032m")
-fnc yellow ():void => print("\033[033m")
-fnc blue ():void => print("\033[94m")
-fnc purple ():void => print("\033[035m")
-fnc cyan ():void => print("\033[036m")
-fnc white ():void => print("\033[037m")
-fnc reset ():void => print("\033[0m")
+fnc red ():void { return print("\033[91m") }
+fnc green (): void { return print("\033[032m") }
+fnc yellow ():void { return print("\033[033m") }
+fnc blue ():void { return print("\033[94m") }
+fnc purple ():void { return print("\033[035m") }
+fnc cyan ():void { return print("\033[036m") }
+fnc white ():void { return print("\033[037m") }
+fnc reset ():void { return print("\033[0m") }
 
 white()
 print("My")

@@ -1,3 +1,4 @@
+from email.policy import default
 from os import path
 from typing import List
 from context import Context, SymbolTable
@@ -46,6 +47,7 @@ class Block:
         self.fn_within = fn
         self.always_returns = False
         self.parent_blocks = []
+        self.last_if_always_returns = False
 
     def can_continue(self):
         return self.is_in_block('loop')
@@ -69,10 +71,11 @@ class Block:
         return value == self.fn_within.rtype
 
     def return_value(self, _):
-        if self.name == 'stmt' or self.name == 'else':
+        #print(self.is_in_block('else') and self.last_if_always_returns)
+        if self.name == 'stmt':
             self.always_returns = True
-        elif self.name == 'if':
-            self.always_returns = self.always_returns and True
+        if self.is_in_block('else') and self.last_if_always_returns:
+            self.always_returns = True
         else:
             self.always_returns = True
 
@@ -80,6 +83,8 @@ class Block:
         new_rt_state = self.always_returns
         if block.name == 'function':
             new_rt_state = block.always_returns
+        if block.name == 'if':
+            self.last_if_always_returns = False
         fn_state = block.fn_within or self.fn_within
         self.parent_blocks.append(
             (self.name, self.fn_within, self.always_returns))
@@ -90,10 +95,12 @@ class Block:
         return self.is_in_block("function") and self.fn_within.is_inline
 
     def pop_block(self):
-        popped = self.parent_blocks.pop()
-        (self.name, self.fn_within, _) = popped
-        if popped[0] != 'function':
-            self.always_returns = popped[2]
+        if self.is_in_block('if') and self.always_returns:
+            self.last_if_always_returns = True
+        new_state = self.parent_blocks.pop()
+        (self.name, self.fn_within, _) = new_state
+        if new_state[0] != 'function':
+            self.always_returns = new_state[2]
 
 
 class Analyzer(Visitor):
@@ -312,7 +319,6 @@ class Analyzer(Visitor):
         if var_name.isupper() and var_value != None:
             TypeError(
                 node.var_name.range,
-                node.range,
                 f"Cannot change value of the constant {var_name}",
             )
         if var_name in self.reserved.keys():
@@ -426,21 +432,28 @@ class Analyzer(Visitor):
             ).throw()
         rt_type = self.visit(node.return_type)
         arg_types = []
+        default_args = []
         arg_names = []
         savedTbl = self.context.symbol_table.copy()
         if not node.is_inline:
             self.context.symbol_table.symbols = self.reserved.copy()
-        for arg_name_tok, type_node in node.args:
-            arg_type = self.visit(type_node)
+        for arg_name_tok, type_node, default_value_node in node.args:
+            default_value = None
+            arg_type = None
+            if type_node:
+                arg_type = self.visit(type_node)
+            if default_value_node:
+                default_value = self.visit(default_value_node)
             arg_name = arg_name_tok.value
+            if arg_type and default_value:
+                if arg_type != default_value:
+                    TypeError(node.range, f"Type mismatch between {arg_type.str()} and ${default_value.str()}")
+            elif arg_type == None and default_value:
+                arg_type = default_value
             if arg_name in arg_names:
                 NameError(
                     arg_name.range,
                     f"parameter '{arg_name}' defined twice in function parameters",
-                ).throw()
-            elif arg_type == None:
-                TypeError(
-                    arg_name.range, f"parameter '{arg_name}' has an unknown type"
                 ).throw()
             elif arg_name == fnc_name:
                 NameError(
@@ -449,8 +462,9 @@ class Analyzer(Visitor):
             else:
                 arg_names.append(arg_name)
                 arg_types.append(arg_type)
+                default_args.append(default_value_node)
                 self.context.symbol_table.set(arg_name, arg_type)
-        fn_type = FloInlineFunc(None, arg_types, rt_type, node.is_inline)
+        fn_type = FloInlineFunc(None, arg_types, rt_type, node.is_inline, default_args)
         fn_type.is_inline = node.is_inline
         # Recursion only for non-inline function
         fn_descriptor = FncDescriptor(
@@ -496,6 +510,12 @@ class Analyzer(Visitor):
             TypeError(
                 node.range, f"{node.name.var_name.value} is not a function"
             ).throw()
+        # Replacing missing args with defaults
+        for i, _ in enumerate(fn.arg_types):
+            if i == len(node.args) and fn.defaults[i] !=None:
+                node.args.append(fn.defaults[i])
+            elif node.args[i] == None and fn.defaults[i] != None:
+                node.args[i] = fn.defaults[i]
         if len(fn.arg_types) != len(node.args):
             TypeError(
                 node.range,

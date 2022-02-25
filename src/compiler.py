@@ -12,12 +12,14 @@ llvm.initialize()
 llvm.initialize_native_target()
 llvm.initialize_native_asmprinter()
 
+
 class Compiler(Visitor):
     def __init__(self, context: Context):
         self.context = context
         self.module = Context.current_llvm_module
         self.fn =  FloFunc([], FloVoid(), "main")
         self.ret = self.fn.ret
+        self.context.symbol_table = self.fn.get_symbol_table([])
         self.builder = self.fn.builder
 
     def visit(self, node: Node):
@@ -25,7 +27,8 @@ class Compiler(Visitor):
 
     def compile(self, node: Node, options):
         self.visit(node)
-        self.builder.ret_void()
+        self.ret(FloVoid)
+        print("Remaining Symbols", FloRef.active_references.keys())
         # Check for any errors
         try:
             llvm_module = llvm.parse_assembly(str(self.module))
@@ -141,16 +144,16 @@ class Compiler(Visitor):
         rtype = self.visit(node.return_type)
         arg_types = []
         arg_names = []
-        for arg_name, arg_type in node.args:
+        for arg_name, arg_type, _ in node.args:
             arg_names.append(arg_name.value)
             arg_types.append(self.visit(arg_type))
         outer_builder = self.builder
-        outer_symbol_table = self.context.symbol_table.copy()
+        outer_symbol_table = self.context.symbol_table
         outer_ret = self.ret
         if not node.is_inline:
             fn = FloFunc(arg_types, rtype, fn_name)
             self.context.symbol_table.set(fn_name, fn)
-            self.context.symbol_table = fn.extend_symbol_table(self.context.symbol_table, arg_names)
+            self.context.symbol_table = fn.get_symbol_table(arg_names)
             self.builder = fn.builder
             self.ret = fn.ret
             self.visit(node.body)
@@ -262,7 +265,7 @@ class Compiler(Visitor):
 
     def visitReturnNode(self, node: ReturnNode):
         if node.value == None:
-            return self.ret(None)
+            return self.ret(FloVoid, self.builder)
         val = self.visit(node.value)
         return self.ret(val, self.builder)
 

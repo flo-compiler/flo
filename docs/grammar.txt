@@ -28,7 +28,9 @@ while_stmt: while expr block
 fnc_def_stmt: inline? fnc identifier lpar arg_list rpar arrow expr rpar column composite_type block
 
 
-arg_list rpar arrow expr: (identifier column composite_type (comma identifier column composite_type)* )?
+arg_list: (arg_item (comma arg_item)* )?
+arg_item: identifier ((column composite_type) 
+                     | ((column composite_type)? eq expr_value) 
 
 change_flow_stmt: return expr?
                   | continue

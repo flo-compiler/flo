@@ -1,8 +1,3 @@
-//s = (x: int) => 8*x
-
-// fnc add_ints(a: int = 4, b: int = 2): int {
-//     return a+b
-// }
 fnc map(array: int [], func: (int) => int): int [] {
     arr = [func(array[0])]
     for i = 1; i < len(array); i++{
@@ -10,10 +5,7 @@ fnc map(array: int [], func: (int) => int): int [] {
     }
     return arr
 }
-fnc double(x: int): int {
-    return x*2
-}
 original =  [1, 2, 3, 4, 5]
-result = map(original, double)
-println(result)
+doubled = map(original, (x: int)=>x*2)
+println(doubled)
 println(original)
