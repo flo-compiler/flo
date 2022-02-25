@@ -1,5 +1,5 @@
 
-from context import Context
+from context import Context, SymbolTable
 from llvmlite import ir
 import flotypes as ft
 
@@ -70,21 +70,20 @@ def println_caller(builder: ir.IRBuilder, args):
 def len_caller(builder: ir.IRBuilder, args):
     return args[0].get_length(builder)
 
+builtins_sym_tb = SymbolTable()
 
 def new_ctx(*args):
     ctx = Context(*args)
     Context.current_llvm_module = ir.Module(str(args[0]))
-
     print_alias = ft.FloInlineFunc(print_caller, [ft.FloType], ft.FloVoid)
-    ctx.symbol_table.set("print", print_alias)
+    builtins_sym_tb.set("print", print_alias)
     println_alias = ft.FloInlineFunc(println_caller, [ft.FloType], ft.FloVoid)
-
-    # TODO: Check for proper types
     len_alias = ft.FloInlineFunc(len_caller, [ft.FloType], ft.FloInt)
-    ctx.symbol_table.set("println", println_alias)
-    ctx.symbol_table.set('len', len_alias)
-    ctx.symbol_table.set("input", ft.FloInlineFunc(
+    builtins_sym_tb.set("println", println_alias)
+    builtins_sym_tb.set('len', len_alias)
+    builtins_sym_tb.set("input", ft.FloInlineFunc(
         input_caller, [], ft.FloStr))
-    ctx.symbol_table.set("true", ft.FloBool.true())
-    ctx.symbol_table.set("false", ft.FloBool.false())
+    builtins_sym_tb.set("true", ft.FloBool.true())
+    builtins_sym_tb.set("false", ft.FloBool.false())
+    ctx.symbol_table = builtins_sym_tb.copy()
     return ctx

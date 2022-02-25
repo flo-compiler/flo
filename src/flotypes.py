@@ -6,8 +6,6 @@ from context import Context, SymbolTable
 from llvmlite import ir, binding
 target_data = binding.create_target_data("e S0")
 
-# print(ir.FunctionType(ir.VoidType(), [ir.FunctionType(ir.VoidType(),[ir.IntType(32)]).as_pointer()]))
-
 
 @contextlib.contextmanager
 def define_or_call_method(builder, name: str, args, rt_type):
@@ -23,10 +21,7 @@ def define_or_call_method(builder, name: str, args, rt_type):
         c_builder = fnc.builder
 
     def ret(rt_value):
-        if rt_type == FloVoid:
-            fnc.builder.ret_void()
-        else:
-            fnc.builder.ret(rt_value.value)
+        fnc.ret(rt_value)
         for i, saved_value in enumerate(saved_vals):
             args[i].value = saved_value
 
@@ -39,8 +34,10 @@ def define_or_call_method(builder, name: str, args, rt_type):
 class FloType:
     llvmtype = None
     value: ir.Value
+
     def create_uuid(self) -> None:
         self.uuid = uuid.uuid1()
+
     def cast_to():
         raise Exception("undefined cast")
 
@@ -310,7 +307,9 @@ class FloBool(FloType):
 
     def cast_to(self, builder: ir.IRBuilder, type):
         if type == FloInt:
-            return FloInt(self.value.zext(FloInt.llvmtype))
+            return FloInt(builder.zext(self.value, FloInt.llvmtype))
+        elif type == FloFloat:
+            return self.cast_to(builder, FloInt).to_float(builder)
         else:
             raise Exception(f"Unhandled type cast: bool to {type.str()}")
 
@@ -472,7 +471,7 @@ class FloStr(FloIterable):
 
     def print_val(self, builder: ir.IRBuilder):
         bi.call_printf(builder, "%s", self.get_buffer_ptr(builder))
-    
+
     def free_mem(self, builder: ir.IRBuilder):
         free = bi.get_instrinsic("free")
         i8_ptr_struct = builder.bitcast(self.value, free.args[0].type)
@@ -696,12 +695,13 @@ class FloArray(FloIterable):
 
 
 class FloRef:
-    active_references:dict[str, int] = {}
+    active_references: dict[str, int] = {}
+
     def __init__(self, builder: ir.IRBuilder, value: FloType, name=''):
         self.builder = builder
         self.addr = self.builder.alloca(value.llvmtype, None, name)
         self.referee = value
-        self.increment_uuid()
+        FloRef.increment_uuid(self.referee)
         self.builder.store(value.value, self.addr)
 
     def load(self):
@@ -710,44 +710,49 @@ class FloRef:
 
     def store(self, value):
         if value.uuid != self.referee.uuid:
-            self.decrement_uuid()
+            FloRef.decrement_uuid(self.referee, self.builder)
         self.builder.store(value.value, self.addr)
-    
-    def increment_uuid(self):
-        if self.referee.value.type.is_pointer:
-            if FloRef.active_references.get(self.referee.uuid) == None:
-                FloRef.active_references[self.referee.uuid] = 1
+
+    @staticmethod
+    def increment_uuid(value):
+        if value.value.type.is_pointer and not isinstance(value, FloFunc):
+            if FloRef.active_references.get(value.uuid) == None:
+                FloRef.active_references[value.uuid] = 1
+                print('set %s new ref_count: %d ' % (
+                    value.uuid, FloRef.active_references[value.uuid]))
             else:
-                FloRef.active_references[self.referee.uuid]+=1
-            print('incrementing %s new ref_count: %d ' % (self.referee.uuid, FloRef.active_references[self.referee.uuid]))
-
-    def decrement_uuid(self):
-        if FloRef.active_references.get(self.referee.uuid) != None:
-            FloRef.active_references[self.referee.uuid]-=1
-            print('decrementing %s new ref_count %d: ' % (self.addr.name, FloRef.active_references[self.referee.uuid]))
-            if FloRef.active_references[self.referee.uuid] == 0:
-                self.clean_ref()
-    
-    def clean_ref(self):
-        if FloRef.active_references[self.referee.uuid] == 0:
-            print('cleaning up: %s' % self.addr.name)
-            self.referee.free_mem(self.builder)
-
+                FloRef.active_references[value.uuid] += 1
+                print('incrementing %s ref_count: %d ' % (
+                    value.uuid, FloRef.active_references[value.uuid]))
+    @staticmethod
+    def decrement_uuid(value: FloType, builder: ir.IRBuilder):
+        if FloRef.active_references.get(value.uuid) != None:
+            FloRef.active_references[value.uuid] -= 1
+            print('decrementing %s new ref_count %d: ' %
+                  (value.uuid, FloRef.active_references[value.uuid]))
+            if FloRef.active_references[value.uuid] == 0:
+                FloRef.clean_ref(value, builder)
+    @staticmethod
+    def clean_ref(value, builder: ir.IRBuilder):
+        print('cleaning up: %s' % value.uuid)
+        if FloRef.active_references.get(value.uuid):
+            value.free_mem(builder)
+            del FloRef.active_references[value.uuid]
 
 
 class FloFunc(FloType):
     defined_methods = {}
-
     def get_llvm_type(self):
         return ir.FunctionType(FloType.flotype_to_llvm(self.return_type), [
                                FloType.flotype_to_llvm(arg_ty) for arg_ty in self.arg_types])
-
     def __init__(self, arg_types=None, return_type=None, name=None):
+        self.sym_tbl = None
         self.create_uuid()
         if isinstance(arg_types, FloFunc):
             self.arg_types = arg_types.arg_types
             self.llvmtype = arg_types.llvmtype
             self.return_type = arg_types.return_type
+            self.sym_tbl = arg_types.sym_tbl
             self.value = return_type
         else:
             self.return_type = return_type
@@ -767,7 +772,9 @@ class FloFunc(FloType):
             return self.return_type()
         return self.return_type(rt_value)
 
-    def extend_symbol_table(self, symbol_table: SymbolTable, arg_names: List(str)):
+    def get_symbol_table(self, arg_names: List(str)):
+        self.arg_names = arg_names
+        self.sym_tbl = bi.builtins_sym_tb.copy()
         for arg_name, arg_type, arg_value in zip(arg_names, self.arg_types,  self.value.args):
             if isinstance(arg_type, FloArray):
                 arg_val = arg_type.new_array_with_val(arg_value)
@@ -775,13 +782,26 @@ class FloFunc(FloType):
                 arg_val = arg_type.new_fnc_with_val(arg_value)
             else:
                 arg_val = arg_type(arg_value)
-            symbol_table.set(arg_name, FloRef(self.builder, arg_val, arg_name))
-        return symbol_table
+            self.sym_tbl.set(arg_name, FloRef(self.builder, arg_val, arg_name))
+        return self.sym_tbl
 
     def new_fnc_with_val(self, val):
         return FloFunc(self, val)
 
-    def ret(self, value, _):
+    def free_local_allocs(self, exception):
+        if not self.sym_tbl: return
+        for key in self.sym_tbl.symbols.keys():
+            ref = self.sym_tbl.get(key)
+            # Check if Ref and not excepted.
+            if not isinstance(ref, FloRef): continue
+            if exception != FloVoid:
+                if ref.referee.uuid != exception.uuid: continue
+            if ref.addr.name in self.arg_names: continue
+            FloRef.clean_ref(ref.referee, self.builder)
+
+    def ret(self, value, b=None):
+        # Free Mem
+        self.free_local_allocs(value)
         if value == FloVoid:
             return self.builder.ret_void()
         else:
@@ -790,7 +810,7 @@ class FloFunc(FloType):
     def str(self) -> str:
         arg_list = ", ".join([arg.str() for arg in self.arg_types])
         return f"({arg_list})=>{self.return_type.str()}"
-    
+
     def print_val(self, builder: ir.IRBuilder) -> str:
         bi.call_printf(builder, self.str())
 
@@ -805,11 +825,13 @@ class FloFunc(FloType):
 
 
 class FloInlineFunc(FloFunc):
-    def __init__(self, call, arg_types, return_type, is_inline=True):
+    def __init__(self, call, arg_types, return_type, is_inline=True, defaults=[]):
         self.create_uuid()
         self.arg_types = arg_types
         self.return_type = return_type
         self.is_inline = is_inline
+        self.defaults = defaults
+        self.sym_tbl = None
         if call == None:
             fn_type = self.get_llvm_type()
             self.llvmtype = fn_type.as_pointer()
@@ -831,3 +853,7 @@ class FloInlineFunc(FloFunc):
                 self.returned = FloRef(builder, value)
             else:
                 self.returned.store(value)
+
+# class HeapManager:
+#     def alloc(size: FloInt): pass
+#     def free(ptr: ir.Value): pass

@@ -220,32 +220,35 @@ class Parser:
                 args.append(self.current_tok)
                 self.advance()
         return args
+    
+    def arg_item(self):
+        id = self.current_tok
+        default_val = None
+        self.advance()
+        if self.current_tok.type == TokType.EQ:
+            self.advance()
+            default_val = self.expr_value()
+            return (id, None, default_val)
+        if self.current_tok.type != TokType.COL:
+            SyntaxError(id.range, "Expected ':' or '=' after identifier").throw()
+        self.advance()
+        type_id = self.composite_type()
+        if self.current_tok.type == TokType.EQ:
+            self.advance()
+            default_val = self.expr_value()
+        return (id, type_id, default_val)
 
     def arg_list(self):
         args = []
         if self.current_tok.type == TokType.IDENTIFER:
-            id = self.current_tok
-            self.advance()
-            if self.current_tok.type != TokType.COL:
-                SyntaxError(id.range, "Expected ':' after identifier").throw()
-            self.advance()
-            type_id = self.composite_type()
-            args.append((id, type_id))
+            args.append(self.arg_item())
             while self.current_tok.type == TokType.COMMA:
                 self.advance()
                 if self.current_tok.type != TokType.IDENTIFER:
                     SyntaxError(
                         self.current_tok.range, "Expected an Identifier"
                     ).throw()
-                id = self.current_tok
-                self.advance()
-                if self.current_tok.type != TokType.COL:
-                    SyntaxError(
-                        id.range, "Expected ':' after identifier").throw()
-                self.advance()
-                type_id = self.composite_type()
-
-                args.append((id, type_id))
+                args.append(self.arg_item())
         return args
 
     def change_flow_stmt(self):

@@ -23,7 +23,7 @@
 - [ ] Critical Functions mechanisms
   - [x] Inline Functions
   - [x] Functions as arguments (Functions as first class)
-  - Default paramaters for functions
+  - [x] Default paramaters for functions
   - lambda Functions
 - Match expression.
 - [ ] Iters

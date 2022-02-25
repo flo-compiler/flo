@@ -1,4 +1,8 @@
 /*Test File for testing features I am currently working on:*/
-a = 3.1415926535 as str []
-a+=['9']
-println(a)
+// import * from "@flo/std"
+// s = (x: int) => 8*x
+
+fnc add_ints(a: int, b: int = 2): int {
+    return a+b
+}
+println(add_ints(56))
