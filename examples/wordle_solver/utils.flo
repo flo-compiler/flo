@@ -1,0 +1,17 @@
+fnc find(search: str, input: str): int {
+    for i = 0; i < len(input); i++{
+        if search[0] == input[i]{
+            x = len(search)
+            matches = true
+            while x > 1 {
+                if (search[x] != input[x+i]){
+                    matches = false
+                    break
+                }
+                x--
+            }
+            if matches return i
+        }
+    }
+    return -1
+}

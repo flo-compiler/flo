@@ -5,6 +5,7 @@ from lexer import TokType, Token
 from errors import SyntaxError
 from errors import Range
 
+
 class Parser:
     def __init__(self, tokens: List[Token]):
         self.tokens = tokens
@@ -28,28 +29,28 @@ class Parser:
             ).throw()
         return res
 
-    def skipNewLines(self) -> None:
+    def skip_new_lines(self) -> None:
         while self.current_tok.type == TokType.LN:
             self.advance()
 
     def stmts(self):
         stmts = []
         range_start = self.current_tok.range
-        self.skipNewLines()
+        self.skip_new_lines()
         stmt = self.stmt()
         stmts.append(stmt)
-        self.skipNewLines()
+        self.skip_new_lines()
         while (
             self.current_tok.type != TokType.RBRACE
             and self.current_tok.type != TokType.EOF
         ):
             stmt = self.stmt()
             stmts.append(stmt)
-            self.skipNewLines()
+            self.skip_new_lines()
         return StmtsNode(stmts, Range.merge(range_start, self.current_tok.range))
 
     def block(self):
-        self.skipNewLines()
+        self.skip_new_lines()
         if self.current_tok.type != TokType.LBRACE:
             return self.stmt()
         self.advance()
@@ -66,6 +67,8 @@ class Parser:
         tok = self.current_tok
         if tok.isKeyword("import"):
             return self.import_stmt()
+        if tok.isKeyword("const"):
+            return self.const_declaration()
         if tok.isKeyword("if"):
             return self.if_stmt()
         elif tok.isKeyword("for"):
@@ -74,7 +77,7 @@ class Parser:
             return self.foreach_stmt()
         elif tok.isKeyword("while"):
             return self.while_stmt()
-        elif tok.inKeywordList(("fnc", "inline")):
+        elif tok.isKeyword(("fnc")):
             return self.fnc_def_stmt()
         elif tok.inKeywordList(("return", "continue", "break")):
             return self.change_flow_stmt()
@@ -112,7 +115,7 @@ class Parser:
         else_case = None
         cond = self.expr()
         stmts = self.block()
-        self.skipNewLines()
+        self.skip_new_lines()
         cases.append((cond, stmts))
         if self.current_tok.isKeyword("else"):
             self.advance()
@@ -125,6 +128,18 @@ class Parser:
                 else_case = stmts
         range_end = (else_case or cases[len(cases) - 1][0]).range
         return IfNode(cases, else_case, Range.merge(range_start, range_end))
+
+    def const_declaration(self) -> ConstDeclarationNode:
+        self.advance()
+        range_start = self.current_tok.range
+        if self.current_tok.type != TokType.IDENTIFER:
+            SyntaxError(range_start, "Expected and identifier").throw()
+        assign_node = self.expr_value_op()
+        if not isinstance(assign_node, VarAssignNode):
+            self.advance()
+            SyntaxError(assign_node.range, "Expected an assignment expression").throw()
+        node_range = Range.merge(range_start, self.current_tok.range)
+        return ConstDeclarationNode(assign_node, node_range)
 
     def for_stmt(self) -> ForNode:
         self.advance()
@@ -169,15 +184,8 @@ class Parser:
         return WhileNode(cond, stmts, Range.merge(cond.range, stmts.range))
 
     def fnc_def_stmt(self):
-        is_inline = False
-        if self.current_tok.isKeyword("inline"):
-            is_inline = True
-            self.advance()
-        if not self.current_tok.isKeyword("fnc"):
-            SyntaxError(self.current_tok.range, "Expected Keyword 'fnc'").throw()
         self.advance()
         start_range = self.current_tok.range
-        var_name = None
         if self.current_tok.type != TokType.IDENTIFER:
             SyntaxError(self.current_tok.range, "Expected Identifier").throw()
         var_name = self.current_tok
@@ -185,22 +193,20 @@ class Parser:
         if self.current_tok.type != TokType.LPAR:
             SyntaxError(self.current_tok.range, "Expected '('").throw()
         self.advance()
-        args = self.arg_list()
+        args, is_var_arg = self.arg_list()
         if self.current_tok.type != TokType.RPAR:
             SyntaxError(self.current_tok.range, "Expected ')'").throw()
         self.advance()
-        if self.current_tok.type != TokType.COL:
-            SyntaxError(
-                self.current_tok.range, "Expected function type definition"
-            ).throw()
-        self.advance()
-        return_type = self.composite_type()
+        return_type = None
+        if self.current_tok.type == TokType.COL:
+            self.advance()
+            return_type = self.composite_type()
         body = self.block()
         return FncDefNode(
             var_name,
             args,
             body,
-            is_inline,
+            is_var_arg,
             Range.merge(start_range, self.current_tok.range),
             return_type,
         )
@@ -220,7 +226,7 @@ class Parser:
                 args.append(self.current_tok)
                 self.advance()
         return args
-    
+
     def arg_item(self):
         id = self.current_tok
         default_val = None
@@ -230,7 +236,8 @@ class Parser:
             default_val = self.expr_value()
             return (id, None, default_val)
         if self.current_tok.type != TokType.COL:
-            SyntaxError(id.range, "Expected ':' or '=' after identifier").throw()
+            SyntaxError(
+                id.range, "Expected ':' or '=' after identifier").throw()
         self.advance()
         type_id = self.composite_type()
         if self.current_tok.type == TokType.EQ:
@@ -240,16 +247,23 @@ class Parser:
 
     def arg_list(self):
         args = []
+        is_var_arg = False
+        if self.current_tok.type == TokType.DOT_DOT_DOT:
+            is_var_arg = True
+            self.advance()
         if self.current_tok.type == TokType.IDENTIFER:
             args.append(self.arg_item())
-            while self.current_tok.type == TokType.COMMA:
+            while self.current_tok.type == TokType.COMMA and not is_var_arg:
                 self.advance()
+                if self.current_tok.type == TokType.DOT_DOT_DOT:
+                    is_var_arg = True
+                    self.advance()
                 if self.current_tok.type != TokType.IDENTIFER:
                     SyntaxError(
                         self.current_tok.range, "Expected an Identifier"
                     ).throw()
                 args.append(self.arg_item())
-        return args
+        return args, is_var_arg
 
     def change_flow_stmt(self):
         range_start = self.current_tok.range
@@ -278,7 +292,6 @@ class Parser:
         return self.num_op(
             self.bit_expr,
             ((TokType.KEYWORD, "as"), (TokType.KEYWORD, "is")),
-            False,
             self.composite_type,
         )
 
@@ -314,12 +327,12 @@ class Parser:
         )
 
     def arith_expr(self):
-        return self.num_op(self.arith_expr1, (TokType.PLUS, TokType.MINUS), True)
+        return self.num_op(self.arith_expr1, (TokType.PLUS, TokType.MINUS))
 
     def arith_expr1(self):
         return self.num_op(
             self.unary_expr, (TokType.MULT, TokType.DIV,
-                              TokType.MOD, TokType.POW), True
+                              TokType.MOD, TokType.POW)
         )
 
     def unary_expr(self):
@@ -334,9 +347,9 @@ class Parser:
             return IncrDecrNode(
                 tok, f, True, Range.merge(tok.range, self.current_tok.range)
             )
-        return self.value_expr()
+        return self.unary_expr1()
 
-    def value_expr(self):
+    def unary_expr1(self):
         node = self.expr_value_op()
         if self.current_tok.type in (TokType.PLUS_PLUS, TokType.MINUS_MINUS):
             tok = self.current_tok
@@ -345,23 +358,6 @@ class Parser:
                 tok, node, False, Range.merge(
                     tok.range, self.current_tok.range)
             )
-        id_type = None
-        if self.current_tok.type == TokType.COL:
-            self.advance()
-            id_type = self.composite_type()
-
-        if self.current_tok.type == TokType.EQ:
-            self.advance()
-            expr = self.expr()
-            if isinstance(node, ArrayAccessNode):
-                return ArrayAssignNode(node, expr, Range.merge(node.range, expr.range))
-            elif isinstance(node, VarAccessNode):
-                return VarAssignNode(
-                    node.var_name, expr, Range.merge(
-                        node.range, expr.range), id_type
-                )
-            else:
-                SyntaxError(node.range, "Expected an Identifier").throw()
         return node
 
     def expr_list(self):
@@ -374,6 +370,25 @@ class Parser:
             args.append(expr)
         return args
 
+    def assign_part(self, node: Node):
+        var_type = None
+        if self.current_tok.type == TokType.COL:
+            if not isinstance(node, VarAccessNode):
+                SyntaxError(node.range, "Expected identifier").throw()
+            self.advance()
+            var_type = self.composite_type()
+        if self.current_tok.type != TokType.EQ:
+            SyntaxError(node.range, "Expected '='").throw()
+        self.advance()
+        value = self.expr()
+        node_range = Range.merge(node.range, self.current_tok.range)
+        if isinstance(node, VarAccessNode):
+            return VarAssignNode(node.var_name, value, var_type, node_range)
+        elif isinstance(node, ArrayAccessNode):
+            return ArrayAssignNode(node, value, node_range)
+        else:
+            SyntaxError(node.range, "Unexpected expression expected identifier or array").throw()
+
     def expr_value_op(self):
         node = self.expr_value()
         while (
@@ -383,13 +398,13 @@ class Parser:
             if self.current_tok.type == TokType.LBRACKET:
                 self.advance()
                 expr = self.expr()
-
                 if self.current_tok.type != TokType.RBRACKET:
                     SyntaxError(self.current_tok.range, "Expected ']'").throw()
                 end_range = self.current_tok.range
                 self.advance()
                 node = ArrayAccessNode(
                     node, expr, Range.merge(node.range, end_range))
+
             elif self.current_tok.type == TokType.LPAR:
                 self.advance()
                 args = []
@@ -402,6 +417,8 @@ class Parser:
                 self.advance()
                 node = FncCallNode(
                     node, args, Range.merge(node.range, end_range))
+        if self.current_tok.type == TokType.COL or self.current_tok.type == TokType.EQ:
+            return self.assign_part(node)
         return node
 
     def expr_value(self):
@@ -416,9 +433,8 @@ class Parser:
             self.advance()
             return StrNode(tok, tok.range)
         elif tok.type == TokType.IDENTIFER:
-            node = VarAccessNode(tok, tok.range)
             self.advance()
-            return node
+            return VarAccessNode(tok, tok.range)
         elif tok.type == TokType.LPAR:
             self.advance()
             exp = self.expr()
@@ -469,14 +485,15 @@ class Parser:
                     self.advance()
                 else:
                     if self.current_tok.type != TokType.INT:
-                        SyntaxError(self.current_tok.range, "Expected an int").throw()
+                        SyntaxError(self.current_tok.range,
+                                    "Expected an int").throw()
                     size = self.current_tok.value
                     self.advance()
                     if self.current_tok.type != TokType.RBRACKET:
                         SyntaxError(self.current_tok.range,
                                     "Expected ']'").throw()
                     self.advance()
-                
+
                 arr = FloArray(None, None, size)
                 arr.elm_type = type
                 type = arr
@@ -484,9 +501,9 @@ class Parser:
         else:
             SyntaxError(self.current_tok.range,
                         "Expected type definition").throw()
+    # TODO::>>>>
 
-    def num_op(self, func_a, toks, checkEq=False, func_b=None):
-        tok = self.current_tok
+    def num_op(self, func_a, toks, func_b=None):
         if func_b == None:
             func_b = func_a
         left_node = func_a()
@@ -496,27 +513,20 @@ class Parser:
         ):
             op_tok = self.current_tok
             self.advance()
-            if self.current_tok.type == TokType.EQ and checkEq:
-                self.advance()
+            if self.current_tok.type == TokType.EQ:
+                assign_node = self.assign_part(left_node)
+                node_range = Range.merge(left_node.range, assign_node.range)
+                num_op_node = NumOpNode(
+                    left_node, op_tok, assign_node.value, assign_node.value.range)
+                assign_node.value = num_op_node
+                assign_node.range = node_range
+                return assign_node
             else:
-                checkEq = False
-            right_node = func_b()
-            left_node = NumOpNode(
-                left_node,
-                op_tok,
-                right_node,
-                Range.merge(left_node.range, right_node.range),
-            )
-            if checkEq:
-                if isinstance(left_node.left_node, VarAccessNode):
-                    left_node = VarAssignNode(
-                        tok, left_node, Range.merge(
-                            tok.range, self.current_tok.range)
-                    )
-                elif isinstance(left_node.left_node, ArrayAccessNode):
-                    left_node = ArrayAssignNode(
-                        left_node.left_node,
-                        left_node,
-                        Range.merge(tok.range, self.current_tok.range),
-                    )
+                right_node = func_b()
+                left_node = NumOpNode(
+                    left_node,
+                    op_tok,
+                    right_node,
+                    Range.merge(left_node.range, right_node.range),
+                )
         return left_node

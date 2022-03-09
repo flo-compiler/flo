@@ -18,11 +18,11 @@ def main():
     parser.add_option("-h", "--help", action="help",
                       help="Show this help message.")
     parser.add_option(
-        "-p",
-        "--print_llvm",
-        dest="print",
+        "-l",
+        "--emit-llvm",
+        dest="emit",
         action="store_true",
-        help="Print generated llvm assembly.",
+        help="Emit generated llvm assembly.",
     )
     parser.add_option(
         "-o",
@@ -63,9 +63,10 @@ def main():
         return print(f"v{__version__}")
     if len(files) == 0 or not files[0]:
         IOError(None, "No input file specified.").throw()
-    [file1] = files
+    [file1, *_] = files
     if not exists(file1):
         IOError(None, f"No such file or directory: '{file1}'").throw()
+    options.args = files
     compile(file1, options)
 
 

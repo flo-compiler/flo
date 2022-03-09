@@ -12,6 +12,7 @@ KEYWORDS = [
     "and",
     "or",
     "xor",
+    "const",
     "if",
     "else",
     "int",
@@ -33,8 +34,7 @@ KEYWORDS = [
     "pub",
     "priv",
     "as",
-    "is",
-    "inline"
+    "is"
 ]
 
 
@@ -74,6 +74,9 @@ class TokType(Enum):
     NOT = "!"
     SL = "<<"
     SR = ">>"
+    DOT = "."
+    DOT_DOT = ".."
+    DOT_DOT_DOT = "..."
     IDENTIFER = "IDENTIFIER"
     KEYWORD = "KEYWORD"
 
@@ -154,6 +157,8 @@ class Lexer:
                 tokens.append(make_lte(self))
             elif self.current_char == TokType.GT.value:
                 tokens.append(make_gte(self))
+            elif self.current_char == TokType.DOT.value:
+                tokens.append(make_dots(self))
             elif self.current_char in TokType._value2member_map_:
                 tok = TokType._value2member_map_[self.current_char]
                 tokens.append(Token(tok, Range(self.pos)))
@@ -162,7 +167,7 @@ class Lexer:
             elif self.current_char in LETTERS:
                 tokens.append(make_identifier(self))
             elif self.current_char in DIGITS:
-                tokens.append(makeNumber(self))
+                tokens.append(make_number(self))
             elif self.current_char == '"' or self.current_char == "'":
                 tok = make_str(self)
                 tokens.append(tok)
@@ -175,7 +180,7 @@ class Lexer:
         return tokens
 
 
-def makeNumber(lexer: Lexer):
+def make_number(lexer: Lexer):
     DIGITS_DOT = DIGITS + "."
     number = ""
     pos_start = lexer.pos.copy()
@@ -270,6 +275,18 @@ def make_gte(lexer: Lexer):
         return Token(TokType.SR, Range(pos_start, lexer.pos))
     return Token(TokType.GT, Range(pos_start))
 
+def make_dots(lexer: Lexer):
+    pos_start = lexer.pos.copy()
+    token = TokType.DOT
+    lexer.advance()
+    if lexer.current_char == '.':
+        token = TokType.DOT_DOT
+        lexer.advance()
+        if lexer.current_char == '.':
+            token = TokType.DOT_DOT_DOT
+            lexer.advance()
+    end_pos = lexer.pos.copy()
+    return Token(token, Range(pos_start, end_pos))
 
 def make_str(lexer: Lexer):
     pos_start = lexer.pos.copy()

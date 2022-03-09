@@ -1,0 +1,19 @@
+fnc main() {
+    a = "1" as int
+    a++
+    println(a)
+    b = 1 as str
+    b+="2"
+    println(b)
+    c = "12.4455" as float
+    c*=2
+    println(c)
+    c = "3.402823466E90" as float
+    println(c)
+    a = "3.402823466E90" as int
+    println(a)
+    println(c > a)
+    PI = 3.1415
+    print(PI as int)
+    print((PI as str) + "92")
+}

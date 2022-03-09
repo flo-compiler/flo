@@ -27,6 +27,8 @@ class Visitor:
 
     def visitStmtsNode(self, node): pass
 
+    def visitConstDeclarationNode(self, node): pass
+
     def visitVarAssignNode(self, node): pass
 
     def visitIfNode(self, node): pass
@@ -113,6 +115,35 @@ class BreakNode(Node):
         return visitor.visitBreakNode(self)
 
 
+class TypeNode(Node):
+    def __init__(self, type, range: Range):
+        self.type = type
+        self.range = range
+
+    def accept(self, visitor: Visitor):
+        return visitor.visitTypeNode(self)
+
+
+class VarAssignNode(Node):
+    def __init__(self, var_name: Token, value: Node, type: TypeNode, range: Range):
+        self.var_name = var_name
+        self.type = type
+        self.value = value
+        self.range = range
+
+    def accept(self, visitor: Visitor):
+        return visitor.visitVarAssignNode(self)
+
+
+class ConstDeclarationNode(Node):
+    def __init__(self, declaration: VarAssignNode, range: Range):
+        self.declaration = declaration
+        self.range = range
+
+    def accept(self, visitor: Visitor):
+        return visitor.visitConstDeclarationNode(self)
+
+
 class ContinueNode(Node):
     def __init__(self, range: Range):
         self.range = range
@@ -140,22 +171,13 @@ class StmtsNode(Node):
         return visitor.visitStmtsNode(self)
 
 
-class TypeNode(Node):
-    def __init__(self, type, range: Range):
-        self.type = type
-        self.range = range
-
-    def accept(self, visitor: Visitor):
-        return visitor.visitTypeNode(self)
-
-
 class FncDefNode:
-    def __init__(self, var_name: Token, args: List[Tuple[Token, TypeNode]], body: StmtsNode, is_inline: bool, range: Range, return_type: TypeNode = None):
+    def __init__(self, var_name: Token, args: List[Tuple[Token, TypeNode]], body: StmtsNode, is_variadic: bool, range: Range, return_type: TypeNode = None):
         self.var_name = var_name
         self.args = args
         self.body = body
         self.range = range
-        self.is_inline = is_inline
+        self.is_variadic = is_variadic
         self.return_type = return_type
 
     def accept(self, visitor: Visitor):
@@ -272,17 +294,6 @@ class UnaryNode(Node):
 
     def accept(self, visitor: Visitor):
         return visitor.visitUnaryNode(self)
-
-
-class VarAssignNode(Node):
-    def __init__(self, var_name: Token, value: Node, range: Range, val_type: TypeNode = None):
-        self.var_name = var_name
-        self.value = value
-        self.range = range
-        self.val_type = val_type
-
-    def accept(self, visitor: Visitor):
-        return visitor.visitVarAssignNode(self)
 
 
 class WhileNode(Node):

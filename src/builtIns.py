@@ -1,14 +1,16 @@
 
+from pathlib import Path
 from context import Context, SymbolTable
-from llvmlite import ir
+from llvmlite import ir, binding
 import flotypes as ft
 
-
+i32_ty = ir.IntType(32)
+void_ty = ir.VoidType()
+double_ty = ir.DoubleType()
+byte_ty =ir.IntType(8)
+i8_ptr_ty = byte_ty.as_pointer()
 def get_instrinsic(name):
     m = Context.current_llvm_module
-    i8_ptr_ty = ir.IntType(8).as_pointer()
-    i32_ty = ir.IntType(32)
-    double_ty = ir.DoubleType()
     cfn_ty = ir.FunctionType(i32_ty, [], var_arg=True)
     if m.globals.get(name, None):
         return m.globals.get(name, None)
@@ -22,6 +24,10 @@ def get_instrinsic(name):
         return m.declare_intrinsic("llvm.log10", [double_ty])
     elif name == "memcpy":
         return m.declare_intrinsic("llvm.memcpy", [i8_ptr_ty, i8_ptr_ty, i32_ty])
+    elif name == "va_start":
+        return m.declare_intrinsic("llvm.va_start", (), ir.FunctionType(void_ty, [i8_ptr_ty]))
+    elif name == "va_end":
+        return m.declare_intrinsic("llvm.va_end", (), ir.FunctionType(void_ty, [i8_ptr_ty]))
     elif name == "malloc":
         return m.declare_intrinsic("malloc", (), ir.FunctionType(i8_ptr_ty, [i32_ty]))
     elif name == "realloc":
@@ -55,12 +61,15 @@ def input_caller(main_builder: ir.IRBuilder, _):
     str_ptr = main_builder.alloca(ir.IntType(8))
     main_builder.call(get_instrinsic("scanf"), [scanf_fmt, str_ptr])
     str_buffer = ft.FloMem(str_ptr)
-    str_len = ft.FloInt(main_builder.call(get_instrinsic("strlen"), [str_ptr]))
-    return ft.FloStr.create_new_str_val(main_builder, str_buffer, str_len)
+    return ft.FloStr(str_buffer)
 
 
 def print_caller(builder: ir.IRBuilder, args):
-    return args[0].print_val(builder)
+    for arg in args:
+        arg.print_val(builder)
+        if len(args) > 1:
+            call_printf(builder, " ")
+    return 
 
 
 def println_caller(builder: ir.IRBuilder, args):
@@ -71,13 +80,21 @@ def len_caller(builder: ir.IRBuilder, args):
     return args[0].get_length(builder)
 
 builtins_sym_tb = SymbolTable()
+binding.initialize()
+binding.initialize_native_target()
+binding.initialize_native_asmprinter()
+target_machine = binding.Target.from_default_triple().create_target_machine()
+target_data = target_machine.target_data
 
 def new_ctx(*args):
+    filename = Path(args[0]).name
     ctx = Context(*args)
-    Context.current_llvm_module = ir.Module(str(args[0]))
-    print_alias = ft.FloInlineFunc(print_caller, [ft.FloType], ft.FloVoid)
+    Context.current_llvm_module = ir.Module(name=filename)
+    Context.current_llvm_module.triple = binding.get_default_triple()
+    Context.current_llvm_module.data_layout = str(target_data)
+    print_alias = ft.FloInlineFunc(print_caller, [ft.FloType], ft.FloVoid, True)
     builtins_sym_tb.set("print", print_alias)
-    println_alias = ft.FloInlineFunc(println_caller, [ft.FloType], ft.FloVoid)
+    println_alias = ft.FloInlineFunc(println_caller, [ft.FloType], ft.FloVoid, True)
     len_alias = ft.FloInlineFunc(len_caller, [ft.FloType], ft.FloInt)
     builtins_sym_tb.set("println", println_alias)
     builtins_sym_tb.set('len', len_alias)
