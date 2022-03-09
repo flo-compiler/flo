@@ -16,15 +16,17 @@
 - [x] Strings
 - [x] Compiler
 - [x] Foreach
-- [x] Primitive Static reference counting.
 - [x] Type casting
 
 # Working on
+- [ ] Scope and memory management.
+- [ ] Enums
 - [ ] Critical Functions mechanisms
   - [x] Inline Functions
   - [x] Functions as arguments (Functions as first class)
-  - [x] Default paramaters for functions
-  - lambda Functions
+  - [x] Default arguments for functions
+  - [x] var args for Functions
+  - lambda Functions?
 - Match expression.
 - [ ] Iters
   - In Keyword
@@ -32,34 +34,33 @@
   - Slices
   - Tuples?
   - Ranges
+- [ ] Spread Operator (...).
+  - [x] Var Args
+  - [ ] Iterable Expansion/ Literals
+  - [ ] Apply replacement
+  - [ ] Fast Iterable Copy 
 - [x] Arrays
   - Fixed length arrays
-- Enums
+  - Array Pop.
   
 # Bugs
 - [ ] Size overflow in ints.
-- [ ] Empty array initialization
-- [ ] Proper Checking of inline functions
-- [ ] Functions don't have access to the global scope.
+- [ ] Constants boolean.
   
 # Future 
 - [ ] Critical Functions mechanisms
-  - var args for Functions
   - Introduce mut keyword in functions.
 - [ ] Introduce String Template Literals.
-- [ ] Spread Operator (...).
-- [ ] Introduce module import. 
 
 # Next
-- [ ] import renaming using as keyword
+- [ ] Introduce module import. 
 - [ ] Object oriented / user defined types
-- [ ] Operator overloading
-- [ ] Generic Types
+  - [ ] Operator overloading
+  - [ ] Generic Types
 - [ ] Error Handling
-- [ ] Maps
 - [ ] Self-Hosting
+
 
 # Future Stuff
 - [ ] C modules support
-- [ ] Garbage collection/ Better memory management.
 - [ ] Threads

@@ -1,35 +1,34 @@
 from pathlib import Path
 from errors import CompileError, TypeError
-from flotypes import FloArray, FloFunc, FloInlineFunc, FloInt, FloFloat, FloIterable, FloStr, FloRef, FloBool, FloVoid
+from flotypes import FloArray, FloConst, FloFunc, FloInt, FloFloat, FloIterable, FloMem, FloStr, FloRef, FloBool, FloVoid
 from lexer import TokType
 from interfaces.astree import *
 from context import Context
-from ctypes import CFUNCTYPE, c_int
-import llvmlite.binding as llvm
+from ctypes import CFUNCTYPE, POINTER, c_char_p, c_int
+from builtIns import target_machine
+from llvmlite import ir, binding as llvm
 from termcolor import colored
 
-llvm.initialize()
-llvm.initialize_native_target()
-llvm.initialize_native_asmprinter()
 
-
+saved_labels = []
+def save_labels(*args):
+    saved_labels.append(list(args))
+def pop_labels():
+    return saved_labels.pop()
 class Compiler(Visitor):
     def __init__(self, context: Context):
         self.context = context
         self.module = Context.current_llvm_module
-        self.fn =  FloFunc([], FloVoid(), "main")
-        self.ret = self.fn.ret
-        self.context.symbol_table = self.fn.get_symbol_table([])
-        self.builder = self.fn.builder
+        self.builder = None
+        self.ret = None
+        self.break_block = None
+        self.continue_block = None
 
     def visit(self, node: Node):
         return super().visit(node)
 
     def compile(self, node: Node, options):
         self.visit(node)
-        self.ret(FloVoid)
-        print("Remaining Symbols", FloRef.active_references.keys())
-        # Check for any errors
         try:
             llvm_module = llvm.parse_assembly(str(self.module))
             llvm_module.verify()
@@ -50,29 +49,33 @@ class Compiler(Visitor):
         pass_manager = llvm.create_module_pass_manager()
         pass_manager_builder.populate(pass_manager)
         pass_manager.run(llvm_module)
-        if options.print:
-            print(llvm_module)
+        basename = Path(self.context.display_name).stem
+        if options.emit:
+            with open(f"{basename}.ll", "w") as object:
+                object.write(str(llvm_module).replace("<string>", self.module.name))
+                object.close()
         # Write executable
-        target_m = llvm.Target.from_default_triple().create_target_machine(
-            codemodel="default"
-        )
         if not options.no_output:
-            basename = Path(self.context.display_name).stem
             basename = options.output_file.replace("<file>", basename)
             with open(f"{basename}.o", "wb") as object:
-                object.write(target_m.emit_object(llvm_module))
+                object.write(target_machine.emit_object(llvm_module))
                 object.close()
         # Execute code
         if options.execute:
             # And an execution engine with an empty backing module
+            if self.context.symbol_table.get("main") == None:
+                CompileError("No main method to execute").throw()
             backing_mod = llvm.parse_assembly("")
-            with llvm.create_mcjit_compiler(backing_mod, target_m) as engine:
+            with llvm.create_mcjit_compiler(backing_mod, target_machine) as engine:
                 engine.add_module(llvm_module)
                 engine.finalize_object()
                 engine.run_static_constructors()
                 cfptr = engine.get_function_address("main")
-                cfn = CFUNCTYPE(c_int, c_int)(cfptr)
-                cfn(0)
+                cfn = CFUNCTYPE(c_int, c_int, POINTER(c_char_p))(cfptr)
+                args = [bytes(arg, encoding='utf-8') for arg in options.args]
+                args_array = (c_char_p * (len(args)+1))()
+                args_array[:-1] = args
+                cfn(len(args), args_array)
 
     def visitIntNode(self, node: IntNode):
         return FloInt(node.tok.value)
@@ -81,7 +84,7 @@ class Compiler(Visitor):
         return FloFloat(node.tok.value)
 
     def visitStrNode(self, node: StrNode):
-        return FloStr(node.tok.value, self.builder)
+        return FloStr(node.tok.value)
 
     def visitNumOpNode(self, node: NumOpNode):
         a = self.visit(node.left_node)
@@ -148,24 +151,14 @@ class Compiler(Visitor):
             arg_names.append(arg_name.value)
             arg_types.append(self.visit(arg_type))
         outer_builder = self.builder
+        fn = FloFunc(arg_types, rtype, fn_name, node.is_variadic)
+        self.context.symbol_table.set(fn_name, fn)
         outer_symbol_table = self.context.symbol_table
         outer_ret = self.ret
-        if not node.is_inline:
-            fn = FloFunc(arg_types, rtype, fn_name)
-            self.context.symbol_table.set(fn_name, fn)
-            self.context.symbol_table = fn.get_symbol_table(arg_names)
-            self.builder = fn.builder
-            self.ret = fn.ret
-            self.visit(node.body)
-        else:
-            def inline_call(builder, args):
-                self.ret = fn.ret
-                for arg_val, arg_name in zip(args, arg_names):
-                    self.context.symbol_table.set(arg_name, arg_val)
-                self.builder = builder
-                self.visit(node.body)
-                self.ret = outer_ret
-            fn = FloInlineFunc(inline_call, arg_types, rtype)
+        self.context.symbol_table = fn.get_symbol_table(outer_symbol_table, arg_names)
+        self.builder = fn.builder
+        self.ret = fn.ret
+        self.visit(node.body)
         self.ret = outer_ret
         self.context.symbol_table = outer_symbol_table
         self.context.symbol_table.set(fn_name, fn)
@@ -179,6 +172,12 @@ class Compiler(Visitor):
             return value.not_(self.builder)
         else:
             return value
+    def visitConstDeclarationNode(self, node: ConstDeclarationNode):
+        declaration = node.declaration
+        var_name = declaration.var_name.value
+        value = self.visit(declaration.value)
+        const_val = FloConst.make_constant(self.builder, var_name, value)
+        self.context.symbol_table.set(var_name, const_val)
 
     def visitVarAssignNode(self, node: VarAssignNode):
         var_name = node.var_name.value
@@ -186,15 +185,17 @@ class Compiler(Visitor):
         ref = self.context.symbol_table.get(var_name)
         if ref == None:
             ref = FloRef(self.builder, value, var_name)
+            self.context.symbol_table.set(var_name, ref)
         else:
             ref.store(value)
-        self.context.symbol_table.set(var_name, ref)
         return value
 
     def visitVarAccessNode(self, node: VarAccessNode):
         ref = self.context.symbol_table.get(node.var_name.value)
         if isinstance(ref, FloRef):
             return ref.load()
+        elif isinstance(ref, FloConst):
+            return ref.load(self.builder)
         return ref
 
     def visitIfNode(self, node: IfNode):
@@ -229,6 +230,7 @@ class Compiler(Visitor):
         for_body_block = self.builder.append_basic_block(f"for.body")
         for_incr_block = self.builder.append_basic_block(f"for.incr")
         for_end_block = self.builder.append_basic_block(f"for.end")
+        save_labels(self.break_block, self.continue_block)
         self.break_block = for_end_block
         self.continue_block = for_incr_block
         self.builder.branch(for_cond_block)
@@ -241,6 +243,7 @@ class Compiler(Visitor):
         self.builder.position_at_start(for_incr_block)
         self.visit(node.incr_decr)
         self.builder.branch(for_cond_block)
+        [self.break_block, self.continue_block] = pop_labels()
         self.builder.position_at_start(for_end_block)
 
     def visitWhileNode(self, node: WhileNode):
@@ -248,6 +251,7 @@ class Compiler(Visitor):
             f"while.entry")
         while_exit_block = self.builder.append_basic_block(
             f"while.entry")
+        save_labels(self.break_block, self.continue_block)
         self.break_block = while_exit_block
         self.continue_block = while_entry_block
         cond = self.visit(node.cond)
@@ -256,6 +260,7 @@ class Compiler(Visitor):
         self.visit(node.stmt)
         cond = self.visit(node.cond)
         self.builder.cbranch(cond.value, while_entry_block, while_exit_block)
+        [self.break_block, self.continue_block] = pop_labels()
         self.builder.position_at_start(while_exit_block)
 
     def visitFncCallNode(self, node: FncCallNode):
@@ -293,10 +298,12 @@ class Compiler(Visitor):
     def visitForEachNode(self, node: ForEachNode):
         iterable: FloArray = self.visit(node.iterator)
         with FloIterable.foreach(iterable, self.builder) as (item, index, continue_block, break_block):
-            self.continue_block = continue_block
+            save_labels(self.break_block, self.continue_block)
             self.break_block = break_block
+            self.continue_block = continue_block
             self.context.symbol_table.set(node.identifier.value, item)
             self.visit(node.stmt)
+            [self.break_block, self.continue_block] = pop_labels()
 
     def visitArrayAccessNode(self, node: ArrayAccessNode):
         index = self.visit(node.index)
@@ -304,7 +311,7 @@ class Compiler(Visitor):
             value = self.visit(node.name)
         else:
             ref = self.context.symbol_table.get(node.name.var_name.value)
-            value = ref.load()
+            value = ref.load() if isinstance(ref, FloRef) else ref
         return value.get_element(self.builder, index)
 
     def visitArrayNode(self, node: ArrayNode):

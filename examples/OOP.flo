@@ -22,8 +22,10 @@ class Cloth extends NewStyle {
         return this.name
     }
 }
-cap: MyStyle = {color: "red", shape: Shapes.CIRCLE}
-new_jacket: Jacket = new Clock("Jacket", "grey", Shapes.SQURE)
-println(new_jacket.get_name())
-println(new_jacket.name)
-print(cap.color)
+fnc main(){
+    cap: MyStyle = {color: "red", shape: Shapes.CIRCLE}
+    new_jacket: Jacket = new Clock("Jacket", "grey", Shapes.SQURE)
+    println(new_jacket.get_name())
+    println(new_jacket.name)
+    print(cap.color)
+}

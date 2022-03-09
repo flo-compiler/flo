@@ -1,25 +1,16 @@
-from email.policy import default
-from os import path
 from typing import List
-from context import Context, SymbolTable
-from errors import GeneralError, TypeError, SyntaxError, NameError, IOError
+from context import Context
+from errors import GeneralError, TypeError, SyntaxError, NameError
 from flotypes import FloArray, FloBool, FloFloat, FloInlineFunc, FloInt, FloStr, FloType, FloVoid
 from lexer import TokType
-from lexer import Lexer
-from parser import Parser
 from interfaces.astree import *
 
 
-class BuildCache:
-    module_asts = {}
-
-
 class FncDescriptor:
-    def __init__(self, name: str, rtype: FloType, arg_names: List[str], is_inline: bool):
+    def __init__(self, name: str, rtype: FloType, arg_names: List[str]):
         self.name = name
         self.rtype = rtype
         self.arg_names = arg_names
-        self.is_inline = is_inline
 
 
 class Block:
@@ -71,7 +62,6 @@ class Block:
         return value == self.fn_within.rtype
 
     def return_value(self, _):
-        #print(self.is_in_block('else') and self.last_if_always_returns)
         if self.name == 'stmt':
             self.always_returns = True
         if self.is_in_block('else') and self.last_if_always_returns:
@@ -90,9 +80,6 @@ class Block:
             (self.name, self.fn_within, self.always_returns))
         (self.name, self.fn_within, self.always_returns) = (
             block.name, fn_state, new_rt_state)
-
-    def in_inline_fnc(self):
-        return self.is_in_block("function") and self.fn_within.is_inline
 
     def pop_block(self):
         if self.is_in_block('if') and self.always_returns:
@@ -126,6 +113,7 @@ class Analyzer(Visitor):
     def __init__(self, context: Context):
         self.context = context.copy()
         self.reserved = context.symbol_table.symbols.copy()
+        self.constants = []
         self.current_block = Block.stmt()
 
     def visit(self, node: Node):
@@ -194,7 +182,7 @@ class Analyzer(Visitor):
 
         elif node.op.type in self.arithmetic_ops_2 or node.op.isKeyword("xor"):
             if isinstance(left, FloArray) and (
-                node.op.type == TokType.SL or node.op.type == TokType.SL
+                node.op.type == TokType.SL or node.op.type == TokType.SR
             ):
                 if (not self.isNumeric(right)) and node.op.type == TokType.SR:
                     TypeError(
@@ -242,7 +230,6 @@ class Analyzer(Visitor):
             if left == right:
                 node = node.left_node
             return right
-
         TypeError(
             node.range,
             f"Illegal operation {node.op} between types '{left.str()}' and '{right.str()}'",
@@ -307,48 +294,47 @@ class Analyzer(Visitor):
         self.current_block.pop_block()
         return s
 
+    def visitConstDeclarationNode(self, node: ConstDeclarationNode):
+        declaration = node.declaration
+        var_name = declaration.var_name.value
+        value = declaration.value
+        if not (isinstance(value, StrNode) or isinstance(value, IntNode)
+                or isinstance(value, FloatNode)):
+            GeneralError(value.range, "Expected a constant").throw()
+        self.visit(declaration)
+        self.constants.append(var_name)
+
+    def declare_value(self, var_name: str, var_value, var_type: Node, range: Range):
+        if var_type:
+            expected_type = self.visit(var_type)
+            if var_value != expected_type:
+                TypeError(
+                    range, f"Expected type '{expected_type.str()}' but got type '{var_value.str()}'").throw()
+        else:
+            expected_type = var_value
+        self.context.symbol_table.set(var_name, expected_type)
+
     def visitVarAssignNode(self, node: VarAssignNode):
         var_name = node.var_name.value
-        if self.current_block.in_inline_fnc() and var_name in self.current_block.fn_within.arg_names:
-            GeneralError(
-                node.range, f"Arguments are not mutable in inline function").throw()
-        var_value = self.context.symbol_table.get(var_name)
-        if self.current_block.in_inline_fnc() and var_value == None:
-            GeneralError(
-                node.range, f"Variable definition not permitted in inline function").throw()
-        if var_name.isupper() and var_value != None:
+        if var_name in self.constants:
             TypeError(
                 node.var_name.range,
-                f"Cannot change value of the constant {var_name}",
-            )
+                f"changing constant's {var_name} value"
+            ).throw()
         if var_name in self.reserved.keys():
             TypeError(
                 node.var_name.range,
-                node.var_name.range,
                 f"{var_name} is a reserved constant",
-            )
-        if node.val_type:
-            expected_type = self.visit(node.val_type)
-
-        else:
-            expected_type = self.context.symbol_table.get(
-                var_name) or FloVoid
-        type = self.visit(node.value)
-        if type == None and expected_type == FloVoid:
+            ).throw()
+        defined_var_value = self.context.symbol_table.get(var_name)
+        var_value = self.visit(node.value)
+        if defined_var_value == None:
+            return self.declare_value(var_name, var_value, node.type, node.range)
+        if var_value != defined_var_value:
             TypeError(
                 node.range,
-                f"Type cannot be infered be sure to add a type on variable assignment",
-            ).throw()
-        elif expected_type != FloVoid and type == None:
-            type = expected_type
-        if type == expected_type or expected_type == FloVoid:
-            self.context.symbol_table.set(var_name, type)
-            return type
-        else:
-            TypeError(
-                node.range,
-                f"Assigning '{type.str()}' to type '{expected_type.str()}'",
-            ).throw()
+                f"Illegal assignment of type {var_value.str()} to {defined_var_value.str()}").throw()
+        return defined_var_value
 
     def condition_check(self, cond_node: Node):
         cond_type = self.visit(cond_node)
@@ -383,9 +369,6 @@ class Analyzer(Visitor):
         return FloVoid
 
     def visitForEachNode(self, node: ForEachNode):
-        if self.current_block.in_inline_fnc():
-            GeneralError(node.identifier.range,
-                         f"foreach loop not permitted in inline function").throw()
         self.current_block.append_block(Block.loop())
         it = self.visit(node.iterator)
         if (
@@ -394,13 +377,9 @@ class Analyzer(Visitor):
         ):
             TypeError(
                 node.iterator.range,
-                f"Expected type of 'str', dict or 'array' but got type '{it.str()}'",
+                f"Expected type of 'str' or 'array' but got type '{it.str()}'",
             ).throw()
-        type = (
-            FloStr
-            if it == FloStr
-            else it.elm_type
-        )
+        type = FloStr if it == FloStr else it.elm_type
         self.context.symbol_table.set(node.identifier.value, type)
         self.visit(node.stmt)
         self.current_block.pop_block()
@@ -415,9 +394,6 @@ class Analyzer(Visitor):
         return FloVoid
 
     def visitFncDefNode(self, node: FncDefNode):
-        if self.current_block.in_inline_fnc():
-            GeneralError(
-                node.var_name.range, f"Function definition not permitted in inline function").throw()
         fnc_name = node.var_name.value
         if fnc_name in self.reserved.keys():
             TypeError(
@@ -425,19 +401,22 @@ class Analyzer(Visitor):
                 node.var_name.range,
                 f"{fnc_name} is a reserved constant",
             ).throw()
-        if isinstance(self.context.symbol_table.get(fnc_name), FloInlineFunc):
+        if self.context.symbol_table.get(fnc_name) != None:
             NameError(
                 node.var_name.range,
                 f"{fnc_name} is already defined",
             ).throw()
-        rt_type = self.visit(node.return_type)
+        if node.return_type:
+            rt_type = self.visit(node.return_type)
+        else:
+            node.return_type = TypeNode(FloVoid, node.range)
+            rt_type = FloVoid
         arg_types = []
         default_args = []
         arg_names = []
         savedTbl = self.context.symbol_table.copy()
-        if not node.is_inline:
-            self.context.symbol_table.symbols = self.reserved.copy()
-        for arg_name_tok, type_node, default_value_node in node.args:
+        # TODO: Need for better functions
+        for i, (arg_name_tok, type_node, default_value_node) in enumerate(node.args):
             default_value = None
             arg_type = None
             if type_node:
@@ -447,9 +426,12 @@ class Analyzer(Visitor):
             arg_name = arg_name_tok.value
             if arg_type and default_value:
                 if arg_type != default_value:
-                    TypeError(node.range, f"Type mismatch between {arg_type.str()} and ${default_value.str()}")
+                    TypeError(
+                        node.range, f"Type mismatch between {arg_type.str()} and ${default_value.str()}")
             elif arg_type == None and default_value:
                 arg_type = default_value
+                node.args[i] = (arg_name_tok, TypeNode(
+                    default_value, node.args[i]), default_value_node)
             if arg_name in arg_names:
                 NameError(
                     arg_name.range,
@@ -464,19 +446,25 @@ class Analyzer(Visitor):
                 arg_types.append(arg_type)
                 default_args.append(default_value_node)
                 self.context.symbol_table.set(arg_name, arg_type)
-        fn_type = FloInlineFunc(None, arg_types, rt_type, node.is_inline, default_args)
-        fn_type.is_inline = node.is_inline
-        # Recursion only for non-inline function
-        fn_descriptor = FncDescriptor(
-            fnc_name, rt_type, arg_names, node.is_inline)
+        if node.is_variadic:
+            var_arr = FloArray(None)
+            var_arr.elm_type = arg_types[-1]
+            self.context.symbol_table.set(arg_names[-1], var_arr)
+        
+        fn_type = FloInlineFunc(None, arg_types, rt_type, node.is_variadic, default_args)
+        fn_descriptor = FncDescriptor(fnc_name, rt_type, arg_names)
         self.current_block.append_block(Block.fnc(fn_descriptor))
+        self.context.symbol_table.set(fnc_name, fn_type)
+        savedTbl.set(fnc_name, fn_type)
         self.visit(node.body)
         if not self.current_block.always_returns:
-            GeneralError(node.return_type.range,
-                         "Function missing ending return statement").throw()
+            if rt_type == FloVoid:
+                node.body.stmts.append(ReturnNode(None, node.range))
+            else:
+                GeneralError(node.return_type.range,
+                             "Function missing ending return statement").throw()
         self.current_block.pop_block()
         self.context.symbol_table = savedTbl
-        self.context.symbol_table.set(fnc_name, fn_type)
 
     def visitReturnNode(self, node: ReturnNode):
         if not self.current_block.can_return():
@@ -501,10 +489,6 @@ class Analyzer(Visitor):
             SyntaxError(node.range, "Illegal break outside of a loop").throw()
 
     def visitFncCallNode(self, node: FncCallNode):
-        if (self.current_block.in_inline_fnc() and
-                self.current_block.fn_within.name == node.name.var_name.value):
-            GeneralError(
-                node.range, "Recursive function call not permitted in inline function").throw()
         fn = self.visit(node.name)
         if not isinstance(fn, FloInlineFunc):
             TypeError(
@@ -512,20 +496,24 @@ class Analyzer(Visitor):
             ).throw()
         # Replacing missing args with defaults
         for i, _ in enumerate(fn.arg_types):
-            if i == len(node.args) and fn.defaults[i] !=None:
+            if i == len(node.args) and fn.defaults[i] != None:
                 node.args.append(fn.defaults[i])
+            elif i >= len(node.args):
+                break
             elif node.args[i] == None and fn.defaults[i] != None:
                 node.args[i] = fn.defaults[i]
-        if len(fn.arg_types) != len(node.args):
+        #TODO check for var_arg types
+        fn_args = fn.arg_types.copy()
+        if fn.var_args:
+              last_arg = fn_args.pop()
+              fn_args += [last_arg]*(len(node.args)-len(fn_args))
+        if len(node.args) != len(fn_args):
             TypeError(
                 node.range,
                 f"Expected {len(fn.arg_types)} arguments, but got {len(node.args)}",
             ).throw()
-        for node_arg, fn_arg_ty in zip(node.args, fn.arg_types):
+        for node_arg, fn_arg_ty in zip(node.args, fn_args):
             passed_arg_ty = self.visit(node_arg)
-            if isinstance(passed_arg_ty, FloInlineFunc) and passed_arg_ty.is_inline:
-                GeneralError(
-                    node_arg.range, f"Inline functions cannot be passed as arguments: you can use the inline function in any scope").throw()
             if (
                 passed_arg_ty != fn_arg_ty
                 and not fn_arg_ty == FloType
@@ -546,7 +534,6 @@ class Analyzer(Visitor):
         expected_type = self.visit(node.elements[0])
         for elem in node.elements[1:]:
             type = self.visit(elem)
-
             if type != expected_type:
                 TypeError(
                     elem.range,
@@ -583,45 +570,3 @@ class Analyzer(Visitor):
                 f"Expected assigned value to be of type '{arr.str()}' but got '{value.str()}'",
             ).throw()
         return arr
-
-    def visitImportNode(self, node: ImportNode):
-        module_path = path.join(
-            path.dirname(self.context.display_name), node.path.value
-        )
-        identifiers = node.ids
-        if not path.isfile(module_path):
-            IOError(
-                node.path.range, f"Could not find module named '{node.path.value}'"
-            ).throw()
-        with open(module_path, "r") as f:
-            code = f.read()
-            lexer = Lexer(module_path, code)
-            tokens = lexer.tokenize()
-
-            parser = Parser(tokens)
-            ast = parser.parse()
-
-            BuildCache.module_asts[node.path.value] = ast
-            savedCtx = self.context
-            ctx = Context(module_path)
-            ctx.symbol_table = SymbolTable()
-            ctx.symbol_table.symbols = self.reserved.copy()
-            self.context = ctx
-            self.visit(ast)
-            if node.all:
-                savedCtx.symbol_table.symbols.update(
-                    self.context.symbol_table.symbols)
-            else:
-                for identifier in identifiers:
-                    val = self.context.symbol_table.get(identifier.value)
-                    if val != None:
-                        savedCtx.symbol_table.set(identifier.value, val)
-                    else:
-                        TypeError(
-                            identifier.range,
-                            f"Cannot find identifier {identifier.value} in module {module_path}",
-                        ).throw()
-            self.context = savedCtx
-        return FloVoid
-
-    # TODO: Look for types that are incompatible for casting.

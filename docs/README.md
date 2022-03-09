@@ -32,8 +32,6 @@ xor
 ```
 ## Types
 ```
-FIVE = 5 // constant; can't be changed through code execution
-
 b: int = 5 // statically typed int
 
 hello: str = "hello world" // string
@@ -65,16 +63,18 @@ print(a+b+"!") // prints "hello, world!"
 ```
 ### Array concatenation
 You can concatenate two or more arrays of the **same type** by using `+`
+numbers1: int [] = [1, 2]
+numbers2: int [] = [3, 4]
+all_numbers = numbers1 + numbers2
+println(all_numbers) // prints [1, 2, 3, 4]
 ```
 ```
-
 ## Conditionals 
 ### if, else
 ```
 if a > b {
     // DO SOMETHING
-} else 
-if  b > c {
+} else if  b > c {
     // DO SOMETHING
 } else {
     // DO SOMETHING
@@ -129,6 +129,22 @@ double_sum = (x: int, y: int): int => double(sum(x, y))
 "hello" is str // true
 [4, 5] is int [] // true
 5 is bool // false
+```
+### as
+Used for type conversion.
+Possible conversions are:
+
+- string to int
+- string to float
+- float to string
+- int to string
+- int to float
+- float to int
+```
+3.4 as int // 3
+"5" as int // 5
+"3.5" as float // 3.5
+89 as int // "89"
 ```
 ### in
 ```

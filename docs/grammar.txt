@@ -7,6 +7,9 @@ newlines: ln+
 block: newlines (lbrace stmts rbrace | stmt)
 
 stmt: import_stmt
+      | const_declaration
+      | interface_declaration
+      | class_declaration
       | if_stmt
       | for_stmt
       | foreach_stmt
@@ -14,8 +17,11 @@ stmt: import_stmt
       | fnc_def_stmt
       | change_flow_stmt
       | expr
+
       
 import_stmt: import (identifier_list from)? string
+
+const_declaration: const identifier assign_part
 
 if_stmt: if expr block newlines (else (if_stmt | block)) *
 
@@ -25,10 +31,10 @@ foreach_stmt: foreach (identifier in expr) block
 
 while_stmt: while expr block
 
-fnc_def_stmt: inline? fnc identifier lpar arg_list rpar arrow expr rpar column composite_type block
+fnc_def_stmt: fnc identifier lpar arg_list rpar arrow expr rpar column composite_type block
 
+arg_list: (arg_item (comma arg_item)* (comma dot_dot_dot arg_item)?)?
 
-arg_list: (arg_item (comma arg_item)* )?
 arg_item: identifier ((column composite_type) 
                      | ((column composite_type)? eq expr_value) 
 
@@ -38,34 +44,31 @@ change_flow_stmt: return expr?
 
 expr: bit_expr (("as" | "is") composite_type)?
 
-bit_expr: comp_expr (("and" | "or" | xor | in | sl | sr) comp_expr)?
+bit_expr: comp_expr (("and" | "or" | xor | in | sl | sr) (comp_expr | assign_part))?
 
 comp_expr: exclamation_mark comp_expr 
          | arith_expr (comp_op arith_expr)?
 
-arith_expr: arith_expr1 (( plus | minus ) eq? arith_expr1)?
+arith_expr: arith_expr1 (( plus | minus ) (arith_expr1 | assign_part))?
 
-arith_expr1: unary_expr ((times | div | mod | exp ) eq? unary_expr)?
+arith_expr1: unary_expr ((times | div | mod | exp ) (unary_expr | assign_part))?
 
 
 unary_expr: (plus | minus ) unary_expr
       | (plus_plus | minus_minus) unary_expr
-      | value_expr
+      | unary_expr1
 
-value_expr: expr_value_op (
-       | (plus_plus | minus_minus)
-       | ((column composite_type)? eq (expr))
-       )?
+unary_expr1: expr_value_op  (plus_plus | minus_minus)?
 
 expr_list: (expr (comma expr)*)?
-expr_value_op: expr_value ((lbracket expr lbracket) | (lpar expr_list rpar))*
+expr_value_op: expr_value ((lbracket expr lbracket) | (lpar expr_list rpar))* assign_part?
 expr_value:   number
-            | identifier
             | string
-            | rbracket expr_list lbracket
-            | lbrace ((string col expr) (comma (string col expr))*)? rbrace
-            | lpar arg_list rpar arrow expr
+            | identifier
+            | rbracket expr lbracket
             | lpar expr rpar
+            
+assign_part: (column composite_type)? eq expr
 
 composite_type:  type (lbracket expr rbracket)*
             |    lpar (composite_type (comma composite_type)*)? lpar arrow composite_type
@@ -106,6 +109,9 @@ string: /"(*?)"/
       | /'(*?)'/
 plus_plus: "++"
 minus_minus: "--"
+dot: "."
+dot_dot: ".."
+dot_dot_dot: "..."
 xor: "xor"
 
 
@@ -119,8 +125,8 @@ fnc: "fnc"
 import: "import"
 foreach: "foreach"
 in: "in"
-inline: "inline"
-
+let: "let"
+const: "const"
           
 
 comp_op: ">"

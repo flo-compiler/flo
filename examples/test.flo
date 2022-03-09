@@ -1,8 +1,8 @@
 /*Test File for testing features I am currently working on:*/
 // import * from "@flo/std"
-// s = (x: int) => 8*x
-
-fnc add_ints(a: int, b: int = 2): int {
-    return a+b
+fnc test(...nums: str []){
+    print(nums)
 }
-println(add_ints(56))
+fnc main(...args: str){
+    print(args)
+}
