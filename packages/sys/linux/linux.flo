@@ -1,0 +1,59 @@
+/* IO */
+fnc open(pathname: byte*, flags: int): int
+fnc close(fd: int): int
+fnc read(fd: int, buff: byte*, size: int): int
+fnc access(pathname: byte*, mode: int): int
+fnc write(fd: int, buff: byte*, size: int): int
+fnc lseek(fd: int, offset: int, whence: int): int
+fnc lstat(pathname: byte*, stat_struct: byte*): int
+fnc unlink(pathname: byte*): int
+fnc rename(pathname: byte*, dest: byte*): int
+fnc fcntl(fd: int, cmd: int, arg: int): int
+/* IO consts */
+const O_RDONLY = 0
+const O_WRONLY = 1
+const O_RDWR = 2
+const O_CREAT = 100
+const R_OK = 4		/* Test for read permission.  */
+const W_OK = 2		/* Test for write permission.  */
+const X_OK = 1		/* Test for execute permission.  */
+const F_OK = 0      /* Test if file exists */
+const O_NONBLOCK = 2048
+
+const F_SETFL = 4
+const F_GETFL = 3
+/** SEEKS **/
+const SEEK_SET = 0 
+const SEEK_CUR = 1
+const SEEK_END = 2
+/* net */
+fnc socket(name: int, type: int, protocol: int): int
+fnc bind(sockfd: int, socketaddr_in: byte*, size: int): int
+fnc connect(sockfd: int, socketaddr_in: byte*, size: int): int
+fnc send(sockfd: int, buffer: byte*, size: int, flags: int): int
+fnc recv(sockfd: int, buffer: byte*, size: int, flags: int): int
+fnc listen(sockfd: int, backlog: int): int
+fnc accept(sockfd: int, socketaddr_in: byte*, size_ptr: int*): int
+/* net consts */
+/* Socket Framilies */
+const AF_UNSPEC = 0 /* Unspecified Family */
+const AF_INET = 2 /* IPV4*/
+const AF_IPX = 6 /* IPX/SPX */
+const AF_APPLETALK = 16 /* AppleTalk */
+const AF_NETBIOS = 17 /* NetBIOS */
+const AF_INET6 = 23 /* IPV6 */
+const AF_IRDA = 23 /* IrDA (Infrared) */
+const AF_BTH = 31 /* Bluetooth */
+/* Socket types */
+const SOCK_STREAM = 1 /* TCP & AF_INET or AF_INET6 */
+const SOCK_DGRAM = 2 /* UDP & AF_INET or AF_INET6 */
+const SOCK_RAW = 3 /* Header manipulation */
+const SOCK_RDM = 4 /* Reliable multicast programming */
+const SOCK_SEQPACKET = 5 /* Pseudo-stream packets */
+/* Program Syscalls */
+fnc _exit (code: int)
+/* time */
+fnc sleep(seconds: int): int
+fnc usleep(seconds: int): int
+/* Error*/
+fnc perror(char: byte*)

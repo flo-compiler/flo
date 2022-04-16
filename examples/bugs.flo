@@ -1,3 +1,0 @@
-/** This file is for all bugs I find */
-println("🤦‍♂️ does not work"[1]) /** Emoji indexing */
-/** **/

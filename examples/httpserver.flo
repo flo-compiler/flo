@@ -1,0 +1,14 @@
+import "@flo/core/core.flo"
+import "@flo/net/server.flo"
+const PORT = 8080
+fnc handler(request: Request, response: Response){
+    response.write("HTTP/1.1 OK\r\n")
+    response.write("Server: FloServer\r\n")
+    response.write("Content-Type: text/html\r\n")
+    response.write("Connection: Closed\r\n\r\n")
+    response.end("<h1>Hello From Flo Server</h1>")
+}
+fnc main(){
+    server = new Server(PORT)
+    server.listen(handler)
+}

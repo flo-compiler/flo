@@ -84,6 +84,7 @@ class TypeError(Error):
     def __init__(self, range: Range, message: str):
         super().__init__(range, "Type Error", message)
 
+
 class GeneralError(Error):
     def __init__(self, range: Range, message: str):
         super().__init__(range, "Error", message)

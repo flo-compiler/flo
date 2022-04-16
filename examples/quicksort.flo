@@ -1,27 +1,23 @@
 // swap function
-fnc swap(array: int [], idx1: int, idx2: int) {
-    tmp = array[idx1]
-    array[idx1] = array[idx2]
-    array[idx2] = tmp
-}
-
-fnc partition(start: int, end: int, array: int[]): int {
+import "@flo/core/core.flo"
+fnc partition(start: int, end: int, array: Array): int {
     pivot_index = start
     pivot = array[pivot_index]
     while start < end {
-        while start < len(array) and array[start] <= pivot
+        while start < array.length and array[start] <= pivot
             start += 1
         while array[end] > pivot
             end -= 1
+        
         if start < end
-            swap(array, start, end)
-    } 
-    swap(array, end, pivot_index)
+            array.swap(start, end)
+    }
+    array.swap(end, pivot_index)
     return end
 }
             
 // The main function that implements QuickSort
-fnc quick_sort(start: int, end: int, array: int []) {
+fnc quick_sort(start: int, end: int, array: Array) {
     if start < end {
         p = partition(start, end, array)
         quick_sort(start, p - 1, array)
@@ -31,7 +27,7 @@ fnc quick_sort(start: int, end: int, array: int []) {
 
 // Driver code
 fnc main() {
-    array = [ 10, 7, 8, 9, 1, 5 ]
-    quick_sort(0, len(array) - 1, array)
-    print(array)
+    array: Array = [10, 7, 8, 9, 1, 5]
+    quick_sort(0, array.length - 1, array)
+    println(array as string)
 }

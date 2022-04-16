@@ -1,8 +1,5 @@
-/*Test File for testing features I am currently working on:*/
-// import * from "@flo/std"
-fnc test(...nums: str []){
-    print(nums)
-}
-fnc main(...args: str){
-    print(args)
+import "@flo/core/core.flo"
+import "@flo/io/file.flo"
+fnc main() {
+    return
 }

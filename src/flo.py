@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 from genericpath import exists
 from optparse import OptionParser
 from compiler import Compiler
@@ -88,7 +88,6 @@ def compile(fn: str, options):
     compiler = Compiler(context)
     result = compiler.compile(ast, options)
     return result
-
 
 if __name__ == "__main__":
     main()

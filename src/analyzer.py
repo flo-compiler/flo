@@ -1,9 +1,12 @@
+from os import path
 from typing import List
 from context import Context
-from errors import GeneralError, TypeError, SyntaxError, NameError
-from flotypes import FloArray, FloBool, FloFloat, FloInlineFunc, FloInt, FloStr, FloType, FloVoid
-from lexer import TokType
-from interfaces.astree import *
+from errors import GeneralError, TypeError, SyntaxError, NameError, IOError
+from flotypes import FloArray, FloBool, FloByte, FloClass, FloFloat, FloFunc, FloInlineFunc, FloInt, FloObject, FloPointer, FloType, FloVoid
+from lexer import Lexer, TokType
+from astree import *
+from nodefinder import NodeFinder
+from parser import Parser
 
 
 class FncDescriptor:
@@ -17,6 +20,10 @@ class Block:
     @staticmethod
     def loop():
         return Block('loop')
+
+    @staticmethod
+    def class_():
+        return Block('class')
 
     @staticmethod
     def fnc(func: FncDescriptor):
@@ -114,6 +121,7 @@ class Analyzer(Visitor):
         self.context = context.copy()
         self.reserved = context.symbol_table.symbols.copy()
         self.constants = []
+        self.class_within = None
         self.current_block = Block.stmt()
 
     def visit(self, node: Node):
@@ -127,9 +135,19 @@ class Analyzer(Visitor):
 
     def visitFloatNode(self, _: FloatNode):
         return FloFloat
+    def visitCharNode(self, _: CharNode):
+        return FloByte
 
-    def visitStrNode(self, _: StrNode):
-        return FloStr
+    def visitStrNode(self, node: StrNode):
+        if node.is_cstring:
+            return FloPointer(None, FloByte)
+        else:
+            self.import_core_lib("string", "string.flo")
+            return FloObject(None, self.context.symbol_table.get("string"))
+
+    def import_core_lib(self, name, file):        
+        module_path = NodeFinder.get_abs_path(f"@flo/core/{file}", self.context.display_name)
+        self.import_from_module(module_path, [name])
 
     def cast(self, node: Node, type):
         return NumOpNode(
@@ -156,6 +174,14 @@ class Analyzer(Visitor):
             if left == FloInt and right == FloFloat:
                 node.left_node = self.cast(node.left_node, FloFloat)
                 return FloFloat
+            if node.op.type == TokType.PLUS and isinstance(left, FloObject):
+                add_method = left.referer.methods.get("__add__")
+                if add_method != None:
+                    add_arg = add_method.arg_types[0]
+                    if add_arg != right:
+                        TypeError(node.right_node.range, f"Expected type {add_arg.str()} but got {right.str()}").throw()
+                    return add_method.return_type
+            
             # Special case for division
             if node.op.type == TokType.DIV or node.op.type == TokType.POW:
                 if left == FloInt:
@@ -164,12 +190,13 @@ class Analyzer(Visitor):
                     node.right_node = self.cast(node.right_node, FloFloat)
                 if self.isNumeric(left, right):
                     return FloFloat
-
+            if isinstance(left, FloPointer) and right == FloInt:
+                return left
             # Checking for adding nums and concatenating
+            # TODO: __add__ on objects
             if (
                 (
-                    left == FloStr
-                    or self.isNumeric(left)
+                    self.isNumeric(left)
                     or isinstance(left, FloArray)
                 )
                 and left == right
@@ -219,13 +246,11 @@ class Analyzer(Visitor):
                     node.right_node = self.cast(node.right_node, FloInt)
                 return FloInt
         elif node.op.isKeyword("in"):
-            if isinstance(right, FloArray) or right == FloStr:
-                return FloBool
-            else:
-                TypeError(
-                    node.right_node.range,
-                    f"Illegal operation in on type '{right.str()}' expected type 'str' or 'array'",
-                ).throw()
+            #TODO: aa
+            TypeError(
+                node.right_node.range,
+                f"Illegal operation in on type '{right.str()}' expected type 'str' or 'array'",
+            ).throw()
         elif node.op.isKeyword("as"):
             if left == right:
                 node = node.left_node
@@ -237,6 +262,8 @@ class Analyzer(Visitor):
 
     def visitUnaryNode(self, node: UnaryNode):
         type = self.visit(node.value)
+        if node.op.type == TokType.AMP:
+            return FloPointer(None, type)
         if type != FloBool and (not self.isNumeric(type)):
             TypeError(
                 node.value.range,
@@ -262,12 +289,13 @@ class Analyzer(Visitor):
         if not (
             isinstance(node.identifier, ArrayAccessNode)
             or isinstance(node.identifier, VarAccessNode)
+            or isinstance(node.identifier, PropertyAccessNode)
         ):
             SyntaxError(
                 node.identifier.range, f"Illegal {action} on non-identifier"
             ).throw()
         type = self.visit(node.identifier)
-        if self.isNumeric(type):
+        if self.isNumeric(type) or isinstance(type, FloPointer):
             return type
         else:
             TypeError(
@@ -284,13 +312,11 @@ class Analyzer(Visitor):
 
     def visitStmtsNode(self, node: StmtsNode):
         self.current_block.append_block(Block.stmt())
-        i = 1
-        for expr in node.stmts:
+        for i, expr in enumerate(node.stmts):
             s = self.visit(expr)
             if self.current_block.always_returns:
-                node.stmts = node.stmts[0:i]
+                node.stmts = node.stmts[:i+1]
                 break
-            i += 1
         self.current_block.pop_block()
         return s
 
@@ -314,6 +340,18 @@ class Analyzer(Visitor):
             expected_type = var_value
         self.context.symbol_table.set(var_name, expected_type)
 
+    def set_str_type(self, node: StrNode, node_type: TypeNode):
+        if not node_type: return
+        var_type = self.visit(node_type)
+        if var_type == FloPointer(None, FloByte):
+            node.is_cstring = True
+
+    def set_array_type(self, node: ArrayNode, node_type: TypeNode):
+        if not node_type: return
+        var_type = self.visit(node_type)
+        if var_type.referer.name == 'Array':
+            node.is_const_array = False
+
     def visitVarAssignNode(self, node: VarAssignNode):
         var_name = node.var_name.value
         if var_name in self.constants:
@@ -327,7 +365,17 @@ class Analyzer(Visitor):
                 f"{var_name} is a reserved constant",
             ).throw()
         defined_var_value = self.context.symbol_table.get(var_name)
-        var_value = self.visit(node.value)
+        if node.value:
+            if isinstance(node.value, StrNode):
+                self.set_str_type(node.value, node.type)
+            if isinstance(node.value, ArrayNode):
+                self.set_array_type(node.value, node.type)
+            var_value = self.visit(node.value)
+        else:
+            var_value = self.visit(node.type)
+        if self.class_within != None and not self.current_block.can_return():
+            self.class_within.properties[var_name] = var_value
+            return var_value
         if defined_var_value == None:
             return self.declare_value(var_name, var_value, node.type, node.range)
         if var_value != defined_var_value:
@@ -338,6 +386,8 @@ class Analyzer(Visitor):
 
     def condition_check(self, cond_node: Node):
         cond_type = self.visit(cond_node)
+        if cond_type == None:
+            return cond_node
         if (cond_type.__class__ != FloBool and cond_type != FloBool) and (not self.isNumeric(cond_type)):
             TypeError(
                 cond_node.range,
@@ -373,13 +423,13 @@ class Analyzer(Visitor):
         it = self.visit(node.iterator)
         if (
             (not isinstance(it, FloArray))
-            and (it != FloStr)
+            #and (it != FloStr)
         ):
             TypeError(
                 node.iterator.range,
                 f"Expected type of 'str' or 'array' but got type '{it.str()}'",
             ).throw()
-        type = FloStr if it == FloStr else it.elm_type
+        type = it.elm_type
         self.context.symbol_table.set(node.identifier.value, type)
         self.visit(node.stmt)
         self.current_block.pop_block()
@@ -398,10 +448,9 @@ class Analyzer(Visitor):
         if fnc_name in self.reserved.keys():
             TypeError(
                 node.var_name.range,
-                node.var_name.range,
                 f"{fnc_name} is a reserved constant",
             ).throw()
-        if self.context.symbol_table.get(fnc_name) != None:
+        if self.context.symbol_table.get(fnc_name) != None and self.class_within == None:
             NameError(
                 node.var_name.range,
                 f"{fnc_name} is already defined",
@@ -434,7 +483,7 @@ class Analyzer(Visitor):
                     default_value, node.args[i]), default_value_node)
             if arg_name in arg_names:
                 NameError(
-                    arg_name.range,
+                    node.args[i][0].range,
                     f"parameter '{arg_name}' defined twice in function parameters",
                 ).throw()
             elif arg_name == fnc_name:
@@ -450,19 +499,28 @@ class Analyzer(Visitor):
             var_arr = FloArray(None)
             var_arr.elm_type = arg_types[-1]
             self.context.symbol_table.set(arg_names[-1], var_arr)
-        
-        fn_type = FloInlineFunc(None, arg_types, rt_type, node.is_variadic, default_args)
+        fn_type = FloInlineFunc(None, arg_types, rt_type,
+                                node.is_variadic, default_args)
+        # class stuff
+        if self.class_within != None:
+            self.context.symbol_table.set(
+                "this", FloObject(None, self.class_within))
+            self.class_within.methods[fnc_name] = fn_type
+            if fnc_name == "constructor":
+                self.class_within.constructor = fn_type
+        else:
+            self.context.symbol_table.set(fnc_name, fn_type)
+            savedTbl.set(fnc_name, fn_type)
         fn_descriptor = FncDescriptor(fnc_name, rt_type, arg_names)
         self.current_block.append_block(Block.fnc(fn_descriptor))
-        self.context.symbol_table.set(fnc_name, fn_type)
-        savedTbl.set(fnc_name, fn_type)
-        self.visit(node.body)
-        if not self.current_block.always_returns:
-            if rt_type == FloVoid:
-                node.body.stmts.append(ReturnNode(None, node.range))
-            else:
-                GeneralError(node.return_type.range,
-                             "Function missing ending return statement").throw()
+        if node.body:
+            self.visit(node.body)
+            if not self.current_block.always_returns:
+                if rt_type == FloVoid:
+                    node.body.stmts.append(ReturnNode(None, node.range))
+                else:
+                    GeneralError(node.return_type.range,
+                                 "Function missing ending return statement").throw()
         self.current_block.pop_block()
         self.context.symbol_table = savedTbl
 
@@ -494,25 +552,28 @@ class Analyzer(Visitor):
             TypeError(
                 node.range, f"{node.name.var_name.value} is not a function"
             ).throw()
+        return self.check_fnc_call(fn, node.args, node)
+
+    def check_fnc_call(self, fn, args, node):
         # Replacing missing args with defaults
         for i, _ in enumerate(fn.arg_types):
-            if i == len(node.args) and fn.defaults[i] != None:
-                node.args.append(fn.defaults[i])
-            elif i >= len(node.args):
+            if i == len(args) and fn.defaults[i] != None:
+                args.append(fn.defaults[i])
+            elif i >= len(args):
                 break
-            elif node.args[i] == None and fn.defaults[i] != None:
-                node.args[i] = fn.defaults[i]
-        #TODO check for var_arg types
+            elif args[i] == None and fn.defaults[i] != None:
+                args[i] = fn.defaults[i]
+        # TODO check for var_arg types
         fn_args = fn.arg_types.copy()
         if fn.var_args:
-              last_arg = fn_args.pop()
-              fn_args += [last_arg]*(len(node.args)-len(fn_args))
-        if len(node.args) != len(fn_args):
+            last_arg = fn_args.pop()
+            fn_args += [last_arg]*(len(args)-len(fn_args))
+        if len(args) != len(fn_args):
             TypeError(
                 node.range,
-                f"Expected {len(fn.arg_types)} arguments, but got {len(node.args)}",
+                f"Expected {len(fn.arg_types)} arguments, but got {len(args)}",
             ).throw()
-        for node_arg, fn_arg_ty in zip(node.args, fn_args):
+        for node_arg, fn_arg_ty in zip(args, fn_args):
             passed_arg_ty = self.visit(node_arg)
             if (
                 passed_arg_ty != fn_arg_ty
@@ -525,8 +586,37 @@ class Analyzer(Visitor):
                 ).throw()
         return fn.return_type
 
+    def get_object_class(self, node_type, node):
+        class_name = node_type.referer.value if isinstance(
+                    node_type.referer, Token) else node_type.referer.name
+        class_ = self.context.symbol_table.get(class_name)
+        if class_ == None:
+            if self.class_within == None or (class_name != self.class_within.name):
+                NameError(
+                    node.range, f"class {class_name} not defined").throw()
+            else:
+                class_ = self.class_within
+        return class_
+
+
     def visitTypeNode(self, node: TypeNode):
-        return node.type
+        node_type = node.type
+        if isinstance(node_type, FloObject):    
+            class_ = self.get_object_class(node_type, node)
+            node.type.referer = class_
+            node.type.llvmtype = class_.value.as_pointer()
+        if isinstance(node_type, FloPointer):
+            if isinstance(node_type.elm_type, FloObject):
+                class_ = self.get_object_class(node_type, node)
+                node.type.referer = class_
+                node.type.llvmtype = class_.value.as_pointer()
+        if isinstance(node_type, FloInlineFunc):
+            for i, arg in enumerate(node_type.arg_types):
+                if isinstance(arg, FloObject):
+                    class_ = self.get_object_class(arg, node)
+                    node.type.arg_types[i].referer = class_
+                    node.type.arg_types[i].llvmtype = class_.value.as_pointer()
+        return node_type
 
     def visitArrayNode(self, node: ArrayNode):
         if len(node.elements) == 0:
@@ -539,22 +629,44 @@ class Analyzer(Visitor):
                     elem.range,
                     f"Expected array to be of type '{expected_type.str()}' because of first element but got '{type.str()}'",
                 ).throw()
+        if not node.is_const_array:
+            self.import_core_lib("Array", "array.flo")
+            return FloObject(None, self.context.symbol_table.get('Array'))
         arr = FloArray(None)
         arr.elm_type = expected_type
         return arr
 
+
+    def check_subscribable(self, collection, index, node, set_value = None):
+        method_name = '__getitem__' if set_value == None else '__setitem__'
+        fnc: FloInlineFunc = collection.referer.methods.get(method_name)
+        if fnc == None:
+            TypeError(
+                node.name.range,
+                f"{collection.referer.name} object has no method {method_name}").throw()
+        if index != fnc.arg_types[0]:
+            TypeError(
+                node.index.range,
+                f"{collection.referer.name} object expects type {fnc.arg_types[0].str()} as index").throw()
+        if set_value:
+            if set_value != fnc.arg_types[1]:
+                TypeError(
+                node.index.range,
+                f"{collection.referer.name} object expects type {fnc.arg_types[1].str()} for index assignment").throw()
+        return fnc.return_type
+
     def visitArrayAccessNode(self, node: ArrayAccessNode):
         collection = self.visit(node.name)
         index = self.visit(node.index)
-        if isinstance(collection, FloArray) or collection == FloStr:
+        if isinstance(collection, FloArray) or isinstance(collection, FloPointer):
             if not self.isNumeric(index):
                 TypeError(
                     node.index.range,
                     f"Expected key to be of type '{FloInt.str()}' but got '{index.str()}'",
                 ).throw()
-            return (
-                FloStr if collection == FloStr else collection.elm_type
-            )
+            return collection.elm_type
+        elif isinstance(collection, FloObject):
+            return self.check_subscribable(collection, index, node)
         else:
             TypeError(
                 node.name.range,
@@ -564,9 +676,88 @@ class Analyzer(Visitor):
     def visitArrayAssignNode(self, node: ArrayAssignNode):
         arr: FloArray = self.visit(node.array)
         value = self.visit(node.value)
+        if isinstance(arr, FloObject):
+            index = self.visit(node.array.index)
+            obj = self.visit(node.array.name)
+            return self.check_subscribable(obj, index, node.array, value)
         if arr != value:
             TypeError(
                 node.range,
                 f"Expected assigned value to be of type '{arr.str()}' but got '{value.str()}'",
             ).throw()
         return arr
+
+    def visitClassDeclarationNode(self, node: ClassDeclarationNode):
+        self.current_block.append_block(Block.class_())
+        class_name = node.name.value
+        class_ob = FloClass(class_name)
+        self.context.symbol_table.set(class_name, class_ob)
+        self.class_within = class_ob
+        self.constants.append(class_name)
+        self.visit(node.body)
+        self.class_within = None
+        self.current_block.pop_block()
+
+    def visitPropertyAccessNode(self, node: PropertyAccessNode):
+        root: FloObject = self.visit(node.expr)
+        if not isinstance(root, FloObject):
+            TypeError(node.expr.range, "Expected an object").throw()
+        property_name = node.property.value
+        value = root.referer.properties.get(
+            property_name) or root.referer.methods.get(property_name)
+        if value == None:
+            GeneralError(node.property.range,
+                         f"{property_name} not defined on {root.referer.name} object").throw()
+        return value
+
+    def visitPropertyAssignNode(self, node: PropertyAssignNode):
+        self.visit(node.expr)
+        value = self.visit(node.value)
+        return value
+
+    def visitObjectCreateNode(self, node: ObjectCreateNode):
+        class_name = node.class_name.type.referer.value
+        class_o: FloClass = self.context.symbol_table.get(class_name)
+        if class_o == None:
+            NameError(node.class_name.range, f"{class_name} not defined").throw()
+        if class_o.constructor:
+            self.check_fnc_call(class_o.constructor, node.args, node)
+        return FloObject(None, class_o)
+
+    def visitImportNode(self, node: ImportNode):
+        relative_path = node.path.value
+        module_path = NodeFinder.get_abs_path(relative_path, self.context.display_name)
+        if not path.isfile(module_path):
+            IOError(node.path.range, f"File '{relative_path}' does not exist").throw()
+        names_to_find = [id.value for id in node.ids]
+        ranges = [id.range for id in node.ids]
+        self.import_from_module(module_path, names_to_find, ranges)
+        
+    def import_from_module(self, module_path, names, node_ranges=[]):
+        with open(module_path, "r") as file:
+            src_code = file.read()
+            lexer = Lexer(module_path, src_code)
+            tokens = lexer.tokenize()
+            parser = Parser(tokens)
+            ast = parser.parse()
+            if len(names) == 0:
+                saved_path = self.context.display_name
+                self.context.display_name = module_path
+                NodeFinder.cache(module_path, {"module": ast})
+                self.visit(ast)
+                self.context.display_name = saved_path
+                return
+            importer = NodeFinder(Context(module_path))
+            names_to_ignore = self.context.symbol_table.symbols.keys()
+            selected_nodes = importer.find(names, ast, names_to_ignore)
+            for name, range in zip(names, node_ranges):
+                if selected_nodes.get(name) == None and len(node_ranges) != 0 and self.context.symbol_table.get(name) == None:
+                    NameError(range, f"Cannot find identifier {name} in {module_path}").throw()
+            NodeFinder.cache(module_path, selected_nodes)
+            reversed = list(selected_nodes.values())
+            reversed.reverse()
+            for node in reversed:
+                self.visit(node)
+
+
+

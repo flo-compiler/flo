@@ -1,0 +1,61 @@
+import print, exit, string from "../core"
+import memset, malloc, free, inet_addr, socket, bind, perror, close, listen, connect from "../sys"
+fnc str_to_numintaddr(addr: string): int {
+    if addr == "" return 0
+    return inet_addr(addr.buffer)
+}
+fnc htons(x: int): int {
+    x1 = (x and 255) << 8
+    x2 = (x >> 8) and 255 
+    return x1 or x2
+}
+
+fnc malloc_sockaddr_in (sin_family: int, sin_port: int, sin_addr: int): byte*{
+    socket_addr_in = malloc(16)
+    memset(socket_addr_in, 0, 16)
+    tmp_sock_addr = socket_addr_in as int*
+    tmp_sock_addr[0] = (sin_port << 16) or (sin_family and 0xFFFF)
+    tmp_sock_addr[1] = sin_addr
+    return socket_addr_in
+}
+class Socket {
+    sockfd: int
+    domain: int
+    address: byte*
+    fnc constructor(domain: int, type: int, protocol: int){
+        sockfd = socket(domain, type, protocol)
+        if sockfd < 1 {
+            exit("Error: could not create TCP socket\n")
+        }
+        this.sockfd = sockfd
+        this.domain = domain
+    }
+    fnc bind(port: int, address: string = ""){
+        interface = str_to_numintaddr(address)
+        this.address = malloc_sockaddr_in(this.domain, htons(port), interface)
+        if bind(this.sockfd, this.address, 16) < 0 {
+            perror("Error" as byte*)
+            exit()
+        }
+    }
+    fnc connect(port: int, address: string){
+        interface = str_to_numintaddr(address)
+        this.address = malloc_sockaddr_in(this.domain, htons(port), interface)
+        if connect(this.sockfd, this.address, 16)< 0 {
+            perror("Error" as byte*)
+            exit()
+        }
+    }
+    fnc listen(backlog: int = 10){
+        if listen(this.sockfd, backlog) < 0 {
+            exit("Error: could not start listening\n")
+        }
+    }
+    fnc close(){
+        close(this.sockfd)
+    }
+    fnc destroy(){
+        this.close()
+        free(this.address)
+    }
+}

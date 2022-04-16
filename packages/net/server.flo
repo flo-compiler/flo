@@ -1,0 +1,43 @@
+import exit from "../core"
+import malloc, free, accept, read, AF_INET, SOCK_STREAM, perror from "../sys"
+import "./socket.flo"
+import "./response.flo"
+import "./request.flo"
+
+class Server {
+    socket: Socket
+    response: Response
+    request: Request
+    fnc constructor(port: int, address: string = ""){
+        this.socket = new Socket(AF_INET, SOCK_STREAM, 0)
+        this.socket.bind(port, address)
+        this.socket.listen()
+        this.response = new Response(-1)
+        this.request = new Request()
+    }
+    fnc accept_connection(){
+        cli = malloc(16)
+        cli_len = 4
+        connfd = accept(this.socket.sockfd, cli, &cli_len)
+        if connfd < 0 {
+            exit("Error Accepting connection")
+        }
+        free(cli)
+        size = read(connfd, this.request.raw_buffer, MAX_BUFFSIZE)
+        this.request.set_size(size)
+        this.response.set_connection(connfd)
+    }
+    fnc listen(handler: (Request, Response)=>void){
+        while 1 {
+            this.accept_connection()
+            handler(this.request, this.response)
+        }
+    }
+    fnc close(){
+        this.socket.close()
+    }
+    fnc destroy(){
+        this.socket.destroy()
+    }
+
+}

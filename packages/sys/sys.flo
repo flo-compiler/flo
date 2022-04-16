@@ -1,0 +1,11 @@
+/* system calls */
+import "./linux"
+/* c standart library functions:*/
+fnc malloc(size: int): byte*
+fnc realloc(ptr: byte*, size: int): byte*
+fnc free(ptr: byte*)
+fnc strlen(str: byte*): int
+fnc memcmp(str1: byte*, str2: byte*, n: int): int
+fnc memcpy(dest: byte*, src: byte*, n: int)
+fnc memset(dest: byte*, c: int, count: int)
+fnc inet_addr(addr: byte*): int

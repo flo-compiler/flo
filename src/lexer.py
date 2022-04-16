@@ -5,8 +5,11 @@ import string
 from enum import Enum
 from errors import Range
 
-LETTERS = string.ascii_letters
-DIGITS = "0123456789"
+LETTERS = string.ascii_letters+"_"
+BIN_DIGITS = "01"
+OCT_DIGITS = BIN_DIGITS+"234567"
+DEC_DIGITS = OCT_DIGITS+"89"
+HEX_DIGITS = DEC_DIGITS+"ABCDEFabcdef"
 
 KEYWORDS = [
     "and",
@@ -18,7 +21,7 @@ KEYWORDS = [
     "int",
     "float",
     "bool",
-    "str",
+    "byte",
     "void",
     "for",
     "while",
@@ -32,6 +35,7 @@ KEYWORDS = [
     "in",
     "class",
     "pub",
+    "new",
     "priv",
     "as",
     "is"
@@ -59,8 +63,10 @@ class TokType(Enum):
     FLOAT = "float"
     LN = "\n"
     STR = "string"
+    CHAR = "char"
     POW = "^"
     QUES = "?"
+    AMP = "&"
     EQ = "="
     EEQ = "=="
     NEQ = "!="
@@ -118,23 +124,26 @@ class Lexer:
             self.current_char = None
 
     def skip_comment(self):
-        single_line = True if self.current_char == "/" else False
-        double_line = True if self.current_char == "*" else False
-        while single_line and self.current_char != "\n" and self.current_char != None:
+        line_type = 1 if self.current_char == "/" else 2
+        while self.current_char != None:
             self.advance()
-        close_comment = False
-        while double_line and not close_comment and self.current_char != None:
-            self.advance()
-            if self.current_char == "*":
-                self.advance()
-                if self.current_char == "/":
-                    close_comment = True
-        self.advance()
+            if line_type == 1 and self.current_char == "\n":
+                break
+            elif line_type == 2:
+                break_outer = False
+                while self.current_char == "*":
+                    self.advance()
+                    if self.current_char == "/":
+                        self.advance()
+                        break_outer = True
+                        break
+                if break_outer:
+                    break
 
     def tokenize(self):
         tokens = []
         while self.current_char != None:
-            if self.current_char in " \t":
+            if self.current_char in " \t\n":
                 self.advance()
             elif self.current_char == "/":
                 self.advance()
@@ -166,9 +175,12 @@ class Lexer:
             # special cases so you need to make special characters
             elif self.current_char in LETTERS:
                 tokens.append(make_identifier(self))
-            elif self.current_char in DIGITS:
+            elif self.current_char in DEC_DIGITS:
                 tokens.append(make_number(self))
-            elif self.current_char == '"' or self.current_char == "'":
+            elif self.current_char == "'":
+                tok = make_char(self)
+                tokens.append(tok)
+            elif self.current_char == '"':
                 tok = make_str(self)
                 tokens.append(tok)
             else:
@@ -181,21 +193,36 @@ class Lexer:
 
 
 def make_number(lexer: Lexer):
-    DIGITS_DOT = DIGITS + "."
     number = ""
     pos_start = lexer.pos.copy()
-    isFloat = False
-    while lexer.current_char != None and lexer.current_char in DIGITS_DOT:
-        if lexer.current_char == ".":
-            if isFloat:
-                break
-            isFloat = True
+    is_float = False
+    base = 10
+    BASE_CHARSET = DEC_DIGITS + "."
+    if lexer.current_char == '0':
         number += lexer.current_char
         lexer.advance()
-    if isFloat:
+        if lexer.current_char == 'b':
+            base = 2
+            BASE_CHARSET = BIN_DIGITS
+        elif lexer.current_char == 'o':
+            base = 8
+            BASE_CHARSET = OCT_DIGITS
+        elif lexer.current_char == 'x':
+            base = 16
+            BASE_CHARSET = HEX_DIGITS
+        if base != 10:
+            lexer.advance()
+    while lexer.current_char != None and lexer.current_char in BASE_CHARSET:
+        if lexer.current_char == ".":
+            if is_float:
+                break
+            is_float = True
+        number += lexer.current_char
+        lexer.advance()
+    if is_float:
         return Token(TokType.FLOAT, Range(pos_start, lexer.pos), float(number))
     else:
-        return Token(TokType.INT, Range(pos_start, lexer.pos), int(number))
+        return Token(TokType.INT, Range(pos_start, lexer.pos), int(number, base=base))
 
 
 def make_plus_plus(lexer: Lexer):
@@ -219,7 +246,7 @@ def make_minus_minus(lexer: Lexer):
 
 
 def make_identifier(lexer: Lexer):
-    LETTERS_DIGITS = LETTERS + "_" + DIGITS
+    LETTERS_DIGITS = LETTERS + DEC_DIGITS
     id_string = ""
     pos_start = lexer.pos.copy()
     while lexer.current_char != None and lexer.current_char in LETTERS_DIGITS:
@@ -275,6 +302,7 @@ def make_gte(lexer: Lexer):
         return Token(TokType.SR, Range(pos_start, lexer.pos))
     return Token(TokType.GT, Range(pos_start))
 
+
 def make_dots(lexer: Lexer):
     pos_start = lexer.pos.copy()
     token = TokType.DOT
@@ -288,14 +316,49 @@ def make_dots(lexer: Lexer):
     end_pos = lexer.pos.copy()
     return Token(token, Range(pos_start, end_pos))
 
+
+def make_char(lexer: Lexer):
+    pos_start = lexer.pos.copy()
+    lexer.advance()
+    char_val = lexer.current_char
+    if char_val == "\\":
+        lexer.advance()
+        if lexer.current_char == "n":
+            char_val = "\n"
+        elif lexer.current_char == "b":
+            char_val = "\b"
+        elif lexer.current_char == "r":
+            char_val = "\r"
+        elif lexer.current_char == "v":
+            char_val = "\v"
+        elif lexer.current_char == "'":
+            char_val = "\'"
+        elif lexer.current_char == "\"":
+            char_val = "\""
+        elif lexer.current_char == "\\":
+            char_val = "\\"
+        elif lexer.current_char == "0":
+            char_val = "\0"
+        else:
+            IllegalCharacterError( Range(
+                pos_start, lexer.pos), f"No character '\{lexer.current_char}'").throw()
+    lexer.advance()
+    if lexer.current_char != "'":
+        ExpectedCharError(
+            Range(
+                pos_start, lexer.pos), f"No matching \"'\" in char"
+        ).throw()
+    lexer.advance()
+    return Token(TokType.CHAR, Range(pos_start, lexer.pos), ord(char_val))
+
+
 def make_str(lexer: Lexer):
     pos_start = lexer.pos.copy()
     str_val = ""
     escape_next = False
-    quote_char = lexer.current_char
     lexer.advance()
     while lexer.current_char != None and (
-        lexer.current_char != quote_char or escape_next
+        lexer.current_char != '"' or escape_next
     ):
         if lexer.current_char == "\\":
             escape_next = True
@@ -304,10 +367,10 @@ def make_str(lexer: Lexer):
             str_val += lexer.current_char
             escape_next = False
         lexer.advance()
-    if lexer.current_char != quote_char:
+    if lexer.current_char != '"':
         ExpectedCharError(
             Range(
-                pos_start, lexer.pos), f"None matching '{quote_char}' in string"
+                pos_start, lexer.pos), f"None matching '\"' in string"
         ).throw()
     lexer.advance()
     # Unstable code since codes.escape_decode is not a public python function and may be deprecated in the next future
