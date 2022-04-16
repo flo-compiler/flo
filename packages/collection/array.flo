@@ -1,0 +1,64 @@
+import string from "./string.flo"
+import realloc from "../sys/c_lib.flo"
+
+class Array{
+    buffer: int*
+    length: int
+    size: int
+    fnc constructor(length: int){
+        this.length = length
+        this.buffer = malloc(length) as int*
+        this.size = length
+    }
+    fnc resize(){
+        this.size = this.size //* sizeof(int)
+        this.buffer = realloc(this.buffer as byte*, this.size) as int*
+    }
+    fnc append(num: int){
+        if this.length >= this.size {
+            this.resize()
+        }
+        this.buffer[this.length] = num
+        this.length++
+    }
+    fnc swap(i1: int, i2: int){
+        if i1 >= 0 and i1 < this.length and i2 >= 0 and i2 < this.length {
+            tmp = this.buffer[i1]
+            this.buffer[i1] = this.buffer[i2]
+            this.buffer[i2] = tmp 
+        } 
+        // else {
+        //     println("Index out of range:", i1, i2)
+        // }
+    }
+    fnc __setitem__(index: int, value: int){
+        if index >= 0 and index < this.length {
+            this.buffer[index] = value
+        } 
+        // else {
+        //     println("Index out of range:", index)
+        // }
+    }
+    fnc __getitem__(index: int): int{
+        return this.buffer[index]
+    }
+    fnc find(search: int): int{
+        for i = 0; i < this.length; i++ {
+            if this[i] == search 
+                return i
+        }
+        return -1
+    }
+    fnc destroy(){
+        free(this.buffer as byte*)
+    }
+    fnc __as_string__(): string {
+        i = 0
+        res = "["
+        while i < this.length {
+            res+= (this[i] as string) + ", "
+            i++
+        }
+        return res+"]"
+    }
+}

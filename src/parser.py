@@ -1,6 +1,6 @@
 from typing import List
-from flotypes import FloArray, FloInlineFunc, FloType
-from interfaces.astree import *
+from flotypes import FloInlineFunc, FloObject, FloPointer, FloType
+from astree import *
 from lexer import TokType, Token
 from errors import SyntaxError
 from errors import Range
@@ -69,6 +69,8 @@ class Parser:
             return self.import_stmt()
         if tok.isKeyword("const"):
             return self.const_declaration()
+        if tok.isKeyword("class"):
+            return self.class_declaration()
         if tok.isKeyword("if"):
             return self.if_stmt()
         elif tok.isKeyword("for"):
@@ -88,23 +90,18 @@ class Parser:
         self.advance()
         ids = []
         path = ""
-        importAll = False
-        if self.current_tok.type == TokType.MULT:
-            ids = []
-            importAll = True
-            self.advance()
-        elif self.current_tok.type == TokType.IDENTIFER:
+        if self.current_tok.type == TokType.IDENTIFER:
             ids = self.identifier_list()
-        if not self.current_tok.isKeyword("from"):
-            SyntaxError(self.current_tok.range,
-                        "Expected keyword 'from'").throw()
-        self.advance()
+            if not self.current_tok.isKeyword("from"):
+                SyntaxError(self.current_tok.range,
+                            "Expected keyword 'from'").throw()
+            self.advance()
         if self.current_tok.type != TokType.STR:
             SyntaxError(self.current_tok.range, "Expected a string").throw()
         path = self.current_tok
         self.advance()
         return ImportNode(
-            ids, importAll, path, Range.merge(
+            ids, path, Range.merge(
                 range_start, self.current_tok.range)
         )
 
@@ -137,9 +134,21 @@ class Parser:
         assign_node = self.expr_value_op()
         if not isinstance(assign_node, VarAssignNode):
             self.advance()
-            SyntaxError(assign_node.range, "Expected an assignment expression").throw()
+            SyntaxError(assign_node.range,
+                        "Expected an assignment expression").throw()
         node_range = Range.merge(range_start, self.current_tok.range)
         return ConstDeclarationNode(assign_node, node_range)
+
+    def class_declaration(self) -> ClassDeclarationNode:
+        self.advance()
+        range_start = self.current_tok.range
+        if self.current_tok.type != TokType.IDENTIFER:
+            SyntaxError(range_start, "Expected and identifier").throw()
+        name = self.current_tok
+        self.advance()
+        body = self.block()
+        node_range = Range.merge(range_start, self.current_tok.range)
+        return ClassDeclarationNode(name, body, node_range)
 
     def for_stmt(self) -> ForNode:
         self.advance()
@@ -201,7 +210,9 @@ class Parser:
         if self.current_tok.type == TokType.COL:
             self.advance()
             return_type = self.composite_type()
-        body = self.block()
+        body = None
+        if self.current_tok.type == TokType.LBRACE:
+            body = self.block()
         return FncDefNode(
             var_name,
             args,
@@ -233,7 +244,7 @@ class Parser:
         self.advance()
         if self.current_tok.type == TokType.EQ:
             self.advance()
-            default_val = self.expr_value()
+            default_val = self.expr()
             return (id, None, default_val)
         if self.current_tok.type != TokType.COL:
             SyntaxError(
@@ -242,7 +253,7 @@ class Parser:
         type_id = self.composite_type()
         if self.current_tok.type == TokType.EQ:
             self.advance()
-            default_val = self.expr_value()
+            default_val = self.expr()
         return (id, type_id, default_val)
 
     def arg_list(self):
@@ -337,7 +348,7 @@ class Parser:
 
     def unary_expr(self):
         tok = self.current_tok
-        if tok.type in (TokType.PLUS, TokType.MINUS):
+        if tok.type in (TokType.PLUS, TokType.MINUS, TokType.AMP):
             self.advance()
             f = self.unary_expr()
             return UnaryNode(tok, f, Range.merge(tok.range, f.range))
@@ -351,7 +362,8 @@ class Parser:
 
     def unary_expr1(self):
         node = self.expr_value_op()
-        if self.current_tok.type in (TokType.PLUS_PLUS, TokType.MINUS_MINUS):
+        if self.current_tok.type in (TokType.PLUS_PLUS, TokType.MINUS_MINUS) and (isinstance(node, VarAccessNode)
+                                                                                  or isinstance(node, ArrayAccessNode) or isinstance(node, PropertyAccessNode)):
             tok = self.current_tok
             self.advance()
             return IncrDecrNode(
@@ -377,20 +389,28 @@ class Parser:
                 SyntaxError(node.range, "Expected identifier").throw()
             self.advance()
             var_type = self.composite_type()
-        if self.current_tok.type != TokType.EQ:
+        if self.current_tok.type != TokType.EQ and var_type == None:
             SyntaxError(node.range, "Expected '='").throw()
-        self.advance()
-        value = self.expr()
         node_range = Range.merge(node.range, self.current_tok.range)
+        value = None
+        if self.current_tok.type == TokType.EQ:
+            self.advance()
+            value = self.expr()
+            node_range = Range.merge(node.range, value.range)
         if isinstance(node, VarAccessNode):
             return VarAssignNode(node.var_name, value, var_type, node_range)
         elif isinstance(node, ArrayAccessNode):
             return ArrayAssignNode(node, value, node_range)
+        elif isinstance(node, PropertyAccessNode):
+            return PropertyAssignNode(node, value, node_range)
         else:
-            SyntaxError(node.range, "Unexpected expression expected identifier or array").throw()
+            SyntaxError(
+                node.range, "Unexpected expression expected identifier or array").throw()
 
     def expr_value_op(self):
         node = self.expr_value()
+        if self.current_tok.type == TokType.DOT:
+            node = self.property_access(node)
         while (
             self.current_tok.type == TokType.LBRACKET
             or self.current_tok.type == TokType.LPAR
@@ -429,6 +449,9 @@ class Parser:
         if tok.type == TokType.FLOAT:
             self.advance()
             return FloatNode(tok, tok.range)
+        if tok.type == TokType.CHAR:
+            self.advance()
+            return CharNode(tok, tok.range)
         elif tok.type == TokType.STR:
             self.advance()
             return StrNode(tok, tok.range)
@@ -453,8 +476,35 @@ class Parser:
             end_range = self.current_tok.range
             self.advance()
             return ArrayNode(list, Range.merge(tok.range, end_range))
+        elif tok.isKeyword("new"):
+            self.advance()
+            class_name = self.composite_type()
+            if self.current_tok.type != TokType.LPAR:
+                SyntaxError(self.current_tok.range, "Expected (").throw()
+            self.advance()
+            if self.current_tok.type == TokType.RPAR:
+                node_range = Range.merge(tok.range, self.current_tok.range)
+                self.advance()
+                return ObjectCreateNode(class_name, [], node_range)
+            args = self.expr_list()
+            if self.current_tok.type != TokType.RPAR:
+                SyntaxError(self.current_tok.range, "Expected )").throw()
+            self.advance()
+            node_range = Range.merge(tok.range, self.current_tok.range)
+            return ObjectCreateNode(class_name, args, node_range)
         SyntaxError(
             tok.range, f"Expected an expression value before '{tok}'").throw()
+
+    def property_access(self, expr):
+        while self.current_tok.type == TokType.DOT:
+            self.advance()
+            ident = self.current_tok
+            node_range = ident.range
+            expr = PropertyAccessNode(expr, ident, node_range)
+            if ident.type != TokType.IDENTIFER:
+                SyntaxError(node_range, "Expected an Identifier").throw()
+            self.advance()
+        return expr
 
     def composite_type(self):
         start_range = self.current_tok.range
@@ -475,9 +525,15 @@ class Parser:
             r_type = self.composite_type().type
             type = FloInlineFunc(None, arg_types, r_type)
             return TypeNode(type, Range.merge(start_range, self.current_tok.range))
-        elif self.current_tok.inKeywordList(("int", "float", "bool", "str", "void")):
-            type = FloType.str_to_flotype(self.current_tok.value)
+        elif self.current_tok.inKeywordList(("int", "float", "bool", "void", "byte")) or self.current_tok.type == TokType.IDENTIFER:
+            if self.current_tok.type == TokType.IDENTIFER:
+                type = FloObject(None, self.current_tok)
+            else:
+                type = FloType.str_to_flotype(self.current_tok.value)
             self.advance()
+            while self.current_tok.type == TokType.MULT:
+                self.advance()
+                type = FloPointer(None, type)
             while self.current_tok.type == TokType.LBRACKET:
                 size = None
                 self.advance()
@@ -494,9 +550,8 @@ class Parser:
                                     "Expected ']'").throw()
                     self.advance()
 
-                arr = FloArray(None, None, size)
-                arr.elm_type = type
-                type = arr
+                # arr = FloObject(None, Token())
+                # type = arr
             return TypeNode(type, Range.merge(start_range, self.current_tok.range))
         else:
             SyntaxError(self.current_tok.range,

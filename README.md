@@ -33,7 +33,5 @@ For more options
 ```
 python src/flo.py -h
 ```
-## Editor Support
-See [./editor](./editor) folder
 
 

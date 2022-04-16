@@ -23,6 +23,8 @@ import_stmt: import (identifier_list from)? string
 
 const_declaration: const identifier assign_part
 
+class_declaration: class block
+
 if_stmt: if expr block newlines (else (if_stmt | block)) *
 
 for_stmt: for (expr semicolumn expr semicolumn expr) block 
@@ -36,7 +38,7 @@ fnc_def_stmt: fnc identifier lpar arg_list rpar arrow expr rpar column composite
 arg_list: (arg_item (comma arg_item)* (comma dot_dot_dot arg_item)?)?
 
 arg_item: identifier ((column composite_type) 
-                     | ((column composite_type)? eq expr_value) 
+                     | ((column composite_type)? eq expr))
 
 change_flow_stmt: return expr?
                   | continue
@@ -54,23 +56,24 @@ arith_expr: arith_expr1 (( plus | minus ) (arith_expr1 | assign_part))?
 arith_expr1: unary_expr ((times | div | mod | exp ) (unary_expr | assign_part))?
 
 
-unary_expr: (plus | minus ) unary_expr
+unary_expr: (plus | minus | amp ) unary_expr
       | (plus_plus | minus_minus) unary_expr
       | unary_expr1
 
 unary_expr1: expr_value_op  (plus_plus | minus_minus)?
 
 expr_list: (expr (comma expr)*)?
-expr_value_op: expr_value ((lbracket expr lbracket) | (lpar expr_list rpar))* assign_part?
+expr_value_op: expr_value ((dot identifier) | (lbracket expr lbracket) | (lpar expr_list rpar))* assign_part?
 expr_value:   number
             | string
             | identifier
             | rbracket expr lbracket
-            | lpar expr rpar
-            
+            | lpar expr (property_acess) rpar
+
 assign_part: (column composite_type)? eq expr
 
 composite_type:  type (lbracket expr rbracket)*
+            |    type times
             |    lpar (composite_type (comma composite_type)*)? lpar arrow composite_type
 
 type:
@@ -79,6 +82,8 @@ type:
     | "bool"
     | "str"
     | "void"
+    | "char"
+    | identifier
 
 
 ## tokens
@@ -110,6 +115,7 @@ string: /"(*?)"/
 plus_plus: "++"
 minus_minus: "--"
 dot: "."
+amp: &
 dot_dot: ".."
 dot_dot_dot: "..."
 xor: "xor"
@@ -127,6 +133,7 @@ foreach: "foreach"
 in: "in"
 let: "let"
 const: "const"
+class: "class"
           
 
 comp_op: ">"

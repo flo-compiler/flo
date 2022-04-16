@@ -1,20 +1,29 @@
+import inspect
 from pathlib import Path
 from errors import CompileError, TypeError
-from flotypes import FloArray, FloConst, FloFunc, FloInt, FloFloat, FloIterable, FloMem, FloStr, FloRef, FloBool, FloVoid
+from flotypes import FloByte, FloArray, FloClass, FloConst, FloFunc, FloInlineFunc, FloInt, FloFloat, FloIterable, FloMem, FloMethod, FloObject, FloPointer, FloRef, FloBool, FloVoid
 from lexer import TokType
-from interfaces.astree import *
+from astree import *
 from context import Context
 from ctypes import CFUNCTYPE, POINTER, c_char_p, c_int
-from builtIns import target_machine
-from llvmlite import ir, binding as llvm
+from builtIns import target_machine, target_data
+from llvmlite import binding as llvm
 from termcolor import colored
+
+from nodefinder import NodeFinder
 
 
 saved_labels = []
+
+
 def save_labels(*args):
     saved_labels.append(list(args))
+
+
 def pop_labels():
     return saved_labels.pop()
+
+
 class Compiler(Visitor):
     def __init__(self, context: Context):
         self.context = context
@@ -23,26 +32,15 @@ class Compiler(Visitor):
         self.ret = None
         self.break_block = None
         self.continue_block = None
+        self.class_within = None
 
     def visit(self, node: Node):
         return super().visit(node)
 
     def compile(self, node: Node, options):
         self.visit(node)
-        try:
-            llvm_module = llvm.parse_assembly(str(self.module))
-            llvm_module.verify()
-        except RuntimeError as e:
-            lines = e.args[0].split("\n")
-            trace = str(self.module).split("\n")
-            lineNo = int(lines[1].split(":")[1]) if len(lines[1].split(":")) > 1 else 1
-            trace[lineNo-1] = trace[lineNo-1].replace(
-                lines[2], colored("->" + lines[2], "red", attrs=["bold"])
-            )
-            CompileError(
-                colored(lines[0] + ";" + lines[1] + " at", "white",
-                        attrs=["bold"]) + "\n" + "\n".join(trace)
-            ).throw()
+        llvm_module = llvm.parse_assembly(str(self.module))
+        llvm_module.verify()
         # Passes
         pass_manager_builder = llvm.create_pass_manager_builder()
         pass_manager_builder.opt_level = int(options.opt_level)
@@ -52,7 +50,8 @@ class Compiler(Visitor):
         basename = Path(self.context.display_name).stem
         if options.emit:
             with open(f"{basename}.ll", "w") as object:
-                object.write(str(llvm_module).replace("<string>", self.module.name))
+                object.write(str(llvm_module).replace(
+                    "<string>", self.module.name))
                 object.close()
         # Write executable
         if not options.no_output:
@@ -83,8 +82,28 @@ class Compiler(Visitor):
     def visitFloatNode(self, node: FloatNode):
         return FloFloat(node.tok.value)
 
+    def visitCharNode(self, node: CharNode):
+        return FloByte(node.tok.value)
+
     def visitStrNode(self, node: StrNode):
-        return FloStr(node.tok.value)
+        str_val = node.tok.value
+        if node.is_cstring:
+            return FloConst.create_global_str(str_val+"\0")
+        else:
+            self.import_core_lib('string', 'string.flo')
+            str_buff =  FloConst.create_global_str(str_val)
+            str_len = FloInt(len(str_val))
+            string_class =  self.context.symbol_table.get("string")
+            return string_class.constant_init(self.builder, [str_buff, str_len])
+
+    def import_core_lib(self, name, file):
+        if self.context.symbol_table.get(name) == None:
+            module_path = NodeFinder.get_abs_path(f"@flo/core/{file}", self.context.display_name)
+            nodes_found = NodeFinder.cached_modules.get(module_path)
+            nodes_to_visit = list(nodes_found.values())
+            nodes_to_visit.reverse()
+            for node_t in nodes_to_visit:
+                self.visit(node_t)
 
     def visitNumOpNode(self, node: NumOpNode):
         a = self.visit(node.left_node)
@@ -132,7 +151,10 @@ class Compiler(Visitor):
                     node.range, f"Cannot cast {a.str()} to {b.str()}"
                 ).throw()
         elif node.op.isKeyword("is"):
-            return FloBool(isinstance(a, b))
+            if inspect.isclass(b):
+                return FloBool(isinstance(a, b))
+            else:
+                return FloBool(a == b)
 
     def visitStmtsNode(self, node: StmtsNode):
         for stmt in node.stmts:
@@ -140,7 +162,12 @@ class Compiler(Visitor):
         return v
 
     def visitTypeNode(self, node: TypeNode):
-        return node.type
+        type_ = node.type
+        if isinstance(type_, FloObject):
+            type_.referer = self.context.symbol_table.get(type_.referer.name)
+        if isinstance(type_, FloInlineFunc):
+            type_.llvmtype = type_.get_llvm_type().as_pointer()
+        return type_
 
     def visitFncDefNode(self, node: FncDefNode):
         fn_name = node.var_name.value
@@ -151,27 +178,44 @@ class Compiler(Visitor):
             arg_names.append(arg_name.value)
             arg_types.append(self.visit(arg_type))
         outer_builder = self.builder
-        fn = FloFunc(arg_types, rtype, fn_name, node.is_variadic)
-        self.context.symbol_table.set(fn_name, fn)
+        if self.class_within == None:
+            if node.body:
+                fn = FloFunc(arg_types, rtype, fn_name, node.is_variadic)
+            else:
+                fn = FloFunc.declare(
+                    arg_types, rtype, fn_name, node.is_variadic)
+            self.context.symbol_table.set(fn_name, fn)
+        else:
+            self.class_within.process()
+            fn = FloMethod(arg_types, rtype, fn_name,
+                           node.is_variadic, self.class_within)
+            self.class_within.add_method(fn)
         outer_symbol_table = self.context.symbol_table
         outer_ret = self.ret
-        self.context.symbol_table = fn.get_symbol_table(outer_symbol_table, arg_names)
-        self.builder = fn.builder
         self.ret = fn.ret
-        self.visit(node.body)
+        if node.body:
+            self.context.symbol_table = fn.get_symbol_table(
+                outer_symbol_table, arg_names)
+            self.builder = fn.builder
+            self.visit(node.body)
         self.ret = outer_ret
         self.context.symbol_table = outer_symbol_table
-        self.context.symbol_table.set(fn_name, fn)
+        #self.context.symbol_table.set(fn_name, fn)
         self.builder = outer_builder
 
     def visitUnaryNode(self, node: UnaryNode):
+        if node.op.type == TokType.AMP:
+            var_name = node.value.var_name.value
+            var: FloRef = self.context.symbol_table.get(var_name)
+            return FloPointer(var.addr, var.referee)
         value = self.visit(node.value)
         if node.op.type == TokType.MINUS:
-            return value.neg()
+            return value.neg(self.builder)
         elif node.op.type == TokType.NOT:
             return value.not_(self.builder)
         else:
             return value
+
     def visitConstDeclarationNode(self, node: ConstDeclarationNode):
         declaration = node.declaration
         var_name = declaration.var_name.value
@@ -181,8 +225,17 @@ class Compiler(Visitor):
 
     def visitVarAssignNode(self, node: VarAssignNode):
         var_name = node.var_name.value
-        value = self.visit(node.value)
+        if node.value == None:
+            value = self.visit(node.type)
+        else:
+            value = self.visit(node.value)
         ref = self.context.symbol_table.get(var_name)
+        if not self.builder and self.class_within != None:
+            return self.class_within.add_property(var_name, value)
+        elif ref == None and self.class_within == None and node.type != None and node.value == None:
+            ref = FloRef.alloc(self.builder, value, var_name)
+            self.context.symbol_table.set(var_name, ref)
+            return
         if ref == None:
             ref = FloRef(self.builder, value, var_name)
             self.context.symbol_table.set(var_name, ref)
@@ -282,7 +335,7 @@ class Compiler(Visitor):
 
     def visitIncrDecrNode(self, node: IncrDecrNode):
         value = self.visit(node.identifier)
-        incr = FloInt.one().neg() if node.id.type == TokType.MINUS_MINUS else FloInt.one()
+        incr = FloInt.one().neg(self.builder) if node.id.type == TokType.MINUS_MINUS else FloInt.one()
         nValue = value.add(self.builder, incr)
         if isinstance(node.identifier, VarAccessNode):
             ref: FloRef = self.context.symbol_table.get(
@@ -307,21 +360,69 @@ class Compiler(Visitor):
 
     def visitArrayAccessNode(self, node: ArrayAccessNode):
         index = self.visit(node.index)
-        if not isinstance(node.name, VarAccessNode):
-            value = self.visit(node.name)
-        else:
-            ref = self.context.symbol_table.get(node.name.var_name.value)
-            value = ref.load() if isinstance(ref, FloRef) else ref
-        return value.get_element(self.builder, index)
+        value = self.visit(node.name)
+        if isinstance(value, FloObject):
+            return value.get_property(self.builder, '__getitem__').call(self.builder, [index])
+        if isinstance(value, FloPointer):
+            return value.get_element(self.builder, index)
 
     def visitArrayNode(self, node: ArrayNode):
-        return FloArray([self.visit(elm_node) for elm_node in node.elements], self.builder)
+        elems = [self.visit(elm_node) for elm_node in node.elements]
+        if node.is_const_array:
+            return FloArray(elems, self.builder)
+        else:
+            array_class: FloClass = self.context.symbol_table.get("Array")
+            length = FloInt(len(elems))
+            llvm_ty = array_class.value.elements[0]
+            pointer = FloArray.create_array_buffer(self.builder, llvm_ty.pointee, elems, length)
+            pointer = FloMem.bitcast(self.builder, pointer, llvm_ty)
+            size = FloInt(len(elems)*llvm_ty.pointee.get_abi_size(target_data))
+            return array_class.constant_init(self.builder, [pointer, length, size])
+
+    def visitClassDeclarationNode(self, node: ClassDeclarationNode):
+        # Consider nested classes
+        class_obj = FloClass(node.name.value)
+        self.class_within = class_obj
+        self.context.symbol_table.set(node.name.value, class_obj)
+        self.visit(node.body)
+        self.class_within = None
+
+    def visitPropertyAccessNode(self, node: PropertyAccessNode):
+        root = self.visit(node.expr)
+        return root.get_property(self.builder, node.property.value)
+
+    def visitPropertyAssignNode(self, node: PropertyAssignNode):
+        root = self.visit(node.expr.expr)
+        value = self.visit(node.value)
+        root.set_property(self.builder, node.expr.property.value, value)
+
+    def visitObjectCreateNode(self, node: ObjectCreateNode):
+        class_o: FloClass = self.context.symbol_table.get(
+            node.class_name.type.referer.value)
+        args = [self.visit(arg) for arg in node.args]
+        return class_o.new(self.builder, args)
 
     def visitArrayAssignNode(self, node: ArrayAssignNode):
         index = self.visit(node.array.index)
         array = self.visit(node.array.name)
         value = self.visit(node.value)
+        if isinstance(array, FloObject):
+            return array.get_property(self.builder, '__setitem__').call(self.builder, [index, value])
         return array.set_element(self.builder, index, value)
 
-    def visitImportNode(self, node):
-        raise Exception("Unimplemented!")
+    def visitImportNode(self, node: ImportNode):
+        module_path = NodeFinder.get_abs_path(
+            node.path.value, self.context.display_name)
+        nodes_to_import = NodeFinder.cached_modules.get(module_path)
+        nodes_to_visit = list(nodes_to_import.values())
+        keys = nodes_to_import.keys()
+        imported_module = len(keys) > 0 and list(keys)[0] == 'module'
+        nodes_to_visit.reverse()
+        saved_name = self.context.display_name
+        if imported_module:
+            self.context.display_name = module_path 
+        for node in nodes_to_visit:
+            self.visit(node)
+        if imported_module:
+            self.context.display_name = module_path 
+            self.context.display_name = saved_name

@@ -1,0 +1,82 @@
+import string from "../core/string.flo"
+import open, close, read, write, lseek, unlink, lstat, access, O_RDONLY, O_WRONLY, O_CREAT, SEEK_END, SEEK_SET, F_OK, R_OK, W_OK, X_OK, perror, malloc from "../sys"
+class File {
+    path: string
+    fnc constructor(path: string) {
+        this.path = path
+    }
+    fnc get_file_stat(): byte* {
+        stat_struct = malloc(144)
+        if lstat(this.path as byte*, stat_struct) < 0 {
+            perror("Error" as byte*)
+            exit()
+        }
+        return stat_struct
+    }
+    fnc get_file_size(): int {
+        stat_struct = this.get_file_stat() 
+        file_size_offset = (stat_struct + 48) as int*
+        size = file_size_offset[0]
+        free(stat_struct)
+        return size
+    }
+    fnc read(size: int): byte* {
+        fd = open(this.path as byte*, O_RDONLY)
+        if fd < 0 {
+            print("Error: could not open file\n")
+            exit()
+        }
+        file_contents = malloc(size)
+        if read(fd, file_contents, size) < 0 {
+            print("Error: could not read the file\n")
+            exit()
+        }
+        close(fd)
+        return file_contents
+    }
+    fnc write(buffer: byte*, size: int){
+        fd = open(this.path as byte*, O_CREAT or O_WRONLY)
+        if fd < 0 {
+            return print("Error: could not open file\n")
+            exit()
+        }
+        if write(fd, buffer, size) < 0 {
+            return print("Error: could not write the file\n")
+            exit()
+        }
+        close(fd)
+    }
+    fnc read_as_string(): string {
+        file_size = this.get_file_size()
+        return new string(this.read(file_size), file_size)
+    }
+    fnc write_as_string(data: string) {
+        this.write(data as byte*, data.length)
+    }
+    fnc exists(): bool {
+        return access(this.path as byte*, F_OK) >= 0
+    }
+    fnc is_readable(): bool {
+        return access(this.path as byte*, R_OK) >= 0
+    }
+    fnc is_writable(): bool {
+        return access(this.path as byte*, W_OK) >= 0
+    }
+    fnc is_executable(): bool {
+        return access(this.path as byte*, X_OK) >= 0
+    }
+    fnc is_dir(): bool {
+        stat_struct = this.get_file_stat()
+        st_mode_offset = (stat_struct + 24) as int*
+        is_dir = (st_mode_offset[0] and 0o0170000) == 0o0040000
+        free(stat_struct)
+        return is_dir
+    }
+    // fnc list(): string[] {
+    //     s = [""]
+    //     return s
+    // }
+    fnc delete(){
+        unlink(this.path as byte*)
+    }
+}

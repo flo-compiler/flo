@@ -1,0 +1,18 @@
+import free, malloc from "../sys"
+const MAX_BUFFSIZE = 12400
+class Request {
+    raw_buffer: byte*
+    buffer_size: int
+    fnc constructor(){
+        this.raw_buffer = malloc(MAX_BUFFSIZE)
+    }
+    fnc set_size(size: int = MAX_BUFFSIZE){
+        this.buffer_size = size
+    }
+    fnc to_string(): string{
+        return new string(this.raw_buffer, this.buffer_size)
+    }
+    fnc destroy(){
+        free(this.raw_buffer)
+    }
+}
