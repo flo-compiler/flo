@@ -1,5 +1,5 @@
 import "@flo/core"
-import read, fcntl, F_GETFL, F_SETFL, O_NONBLOCK, usleep from "@flo/sys/linux/lib.flo"
+import read, STDIN, fcntl, F_GETFL, F_SETFL, O_NONBLOCK from "@flo/sys"
 const WIDTH = 20
 const HEIGHT = 10
 /* Player Class */
@@ -10,13 +10,6 @@ class Point{
         this.x = x
         this.y = y
     }
-}
-fnc sin(num: int): int {
-    if num < -1 
-        return -1
-    else if num > 1
-        return 1
-    return num
 }
 class Player {
     position: Point
@@ -78,12 +71,12 @@ fnc clear_screen(){
 fnc main(){
     player = new Player(5, 5)
     key: byte = '0'
-    fcntl(stdin, F_SETFL, fcntl(stdin, F_GETFL, 0) or O_NONBLOCK)
+    fcntl(STDIN, F_SETFL, fcntl(STDIN, F_GETFL, 0) or O_NONBLOCK)
     print("\033[2J")
     while true {
         usleep(400000)
         display(player)
-        if read(stdin, &key, 1) == 1 {
+        if read(STDIN, &key, 1) == 1 {
             if key == 's' {
                 player.move_down()
             } else if key == 'w' {

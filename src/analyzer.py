@@ -1,12 +1,11 @@
-from os import path
+import collections
 from typing import List
 from context import Context
-from errors import GeneralError, TypeError, SyntaxError, NameError, IOError
-from flotypes import FloArray, FloBool, FloByte, FloClass, FloFloat, FloFunc, FloInlineFunc, FloInt, FloObject, FloPointer, FloType, FloVoid
-from lexer import Lexer, TokType
+from errors import GeneralError, TypeError, SyntaxError, NameError
+from flotypes import FloArray, FloBool, FloByte, FloClass, FloFloat, FloInlineFunc, FloInt, FloObject, FloPointer, FloType, FloVoid
+from lexer import TokType
 from astree import *
 from nodefinder import NodeFinder
-from parser import Parser
 
 
 class FncDescriptor:
@@ -118,10 +117,9 @@ class Analyzer(Visitor):
     arithmetic_ops_2 = (TokType.SL, TokType.SR)
 
     def __init__(self, context: Context):
-        self.context = context.copy()
-        self.reserved = context.symbol_table.symbols.copy()
-        self.constants = []
-        self.class_within = None
+        self.context = Context(context.display_name, context)
+        self.constants = context.get_symbols()
+        self.class_within: str = None
         self.current_block = Block.stmt()
 
     def visit(self, node: Node):
@@ -139,15 +137,7 @@ class Analyzer(Visitor):
         return FloByte
 
     def visitStrNode(self, node: StrNode):
-        if node.is_cstring:
-            return FloPointer(None, FloByte)
-        else:
-            self.import_core_lib("string", "string.flo")
-            return FloObject(None, self.context.symbol_table.get("string"))
-
-    def import_core_lib(self, name, file):        
-        module_path = NodeFinder.get_abs_path(f"@flo/core/{file}", self.context.display_name)
-        self.import_from_module(module_path, [name])
+        return FloObject(None, self.context.get("string"))
 
     def cast(self, node: Node, type):
         return NumOpNode(
@@ -304,7 +294,7 @@ class Analyzer(Visitor):
 
     def visitVarAccessNode(self, node: VarAccessNode):
         var_name = node.var_name.value
-        value = self.context.symbol_table.get(var_name)
+        value = self.context.get(var_name)
         if value == None:
             NameError(node.var_name.range,
                       f"'{var_name}' is not defined").throw()
@@ -312,6 +302,7 @@ class Analyzer(Visitor):
 
     def visitStmtsNode(self, node: StmtsNode):
         self.current_block.append_block(Block.stmt())
+        s = None
         for i, expr in enumerate(node.stmts):
             s = self.visit(expr)
             if self.current_block.always_returns:
@@ -338,18 +329,13 @@ class Analyzer(Visitor):
                     range, f"Expected type '{expected_type.str()}' but got type '{var_value.str()}'").throw()
         else:
             expected_type = var_value
-        self.context.symbol_table.set(var_name, expected_type)
+        self.context.set(var_name, expected_type)
 
-    def set_str_type(self, node: StrNode, node_type: TypeNode):
-        if not node_type: return
-        var_type = self.visit(node_type)
-        if var_type == FloPointer(None, FloByte):
-            node.is_cstring = True
 
     def set_array_type(self, node: ArrayNode, node_type: TypeNode):
         if not node_type: return
         var_type = self.visit(node_type)
-        if var_type.referer.name == 'Array':
+        if isinstance(var_type, FloObject) and var_type.referer.name == 'Array':
             node.is_const_array = False
 
     def visitVarAssignNode(self, node: VarAssignNode):
@@ -359,15 +345,8 @@ class Analyzer(Visitor):
                 node.var_name.range,
                 f"changing constant's {var_name} value"
             ).throw()
-        if var_name in self.reserved.keys():
-            TypeError(
-                node.var_name.range,
-                f"{var_name} is a reserved constant",
-            ).throw()
-        defined_var_value = self.context.symbol_table.get(var_name)
+        defined_var_value = self.context.get(var_name)
         if node.value:
-            if isinstance(node.value, StrNode):
-                self.set_str_type(node.value, node.type)
             if isinstance(node.value, ArrayNode):
                 self.set_array_type(node.value, node.type)
             var_value = self.visit(node.value)
@@ -430,10 +409,10 @@ class Analyzer(Visitor):
                 f"Expected type of 'str' or 'array' but got type '{it.str()}'",
             ).throw()
         type = it.elm_type
-        self.context.symbol_table.set(node.identifier.value, type)
+        self.context.set(node.identifier.value, type)
         self.visit(node.stmt)
         self.current_block.pop_block()
-        self.context.symbol_table.set(node.identifier.value, None)
+        self.context.set(node.identifier.value, None)
         return FloVoid
 
     def visitWhileNode(self, node: WhileNode):
@@ -445,12 +424,8 @@ class Analyzer(Visitor):
 
     def visitFncDefNode(self, node: FncDefNode):
         fnc_name = node.var_name.value
-        if fnc_name in self.reserved.keys():
-            TypeError(
-                node.var_name.range,
-                f"{fnc_name} is a reserved constant",
-            ).throw()
-        if self.context.symbol_table.get(fnc_name) != None and self.class_within == None:
+        if self.context.get(fnc_name) != None and self.class_within == None:
+            print(self.context.display_name)
             NameError(
                 node.var_name.range,
                 f"{fnc_name} is already defined",
@@ -463,7 +438,6 @@ class Analyzer(Visitor):
         arg_types = []
         default_args = []
         arg_names = []
-        savedTbl = self.context.symbol_table.copy()
         # TODO: Need for better functions
         for i, (arg_name_tok, type_node, default_value_node) in enumerate(node.args):
             default_value = None
@@ -494,23 +468,28 @@ class Analyzer(Visitor):
                 arg_names.append(arg_name)
                 arg_types.append(arg_type)
                 default_args.append(default_value_node)
-                self.context.symbol_table.set(arg_name, arg_type)
-        if node.is_variadic:
-            var_arr = FloArray(None)
-            var_arr.elm_type = arg_types[-1]
-            self.context.symbol_table.set(arg_names[-1], var_arr)
+        
         fn_type = FloInlineFunc(None, arg_types, rt_type,
                                 node.is_variadic, default_args)
         # class stuff
-        if self.class_within != None:
-            self.context.symbol_table.set(
+        if self.class_within == None:
+            self.context.set(fnc_name, fn_type)
+            self.context = self.context.create_child(fnc_name)
+        else:
+            self.context = self.context.create_child(fnc_name)
+            self.context.set(
                 "this", FloObject(None, self.class_within))
             self.class_within.methods[fnc_name] = fn_type
             if fnc_name == "constructor":
                 self.class_within.constructor = fn_type
-        else:
-            self.context.symbol_table.set(fnc_name, fn_type)
-            savedTbl.set(fnc_name, fn_type)
+        for arg_name, arg_type in zip(arg_names, arg_types):
+            self.context.set(arg_name, arg_type)
+
+        if node.is_variadic:
+            var_arr = FloArray(None)
+            var_arr.elm_type = arg_types[-1]
+            self.context.set(arg_names[-1], var_arr)
+
         fn_descriptor = FncDescriptor(fnc_name, rt_type, arg_names)
         self.current_block.append_block(Block.fnc(fn_descriptor))
         if node.body:
@@ -522,7 +501,7 @@ class Analyzer(Visitor):
                     GeneralError(node.return_type.range,
                                  "Function missing ending return statement").throw()
         self.current_block.pop_block()
-        self.context.symbol_table = savedTbl
+        self.context = self.context.parent
 
     def visitReturnNode(self, node: ReturnNode):
         if not self.current_block.can_return():
@@ -563,7 +542,7 @@ class Analyzer(Visitor):
                 break
             elif args[i] == None and fn.defaults[i] != None:
                 args[i] = fn.defaults[i]
-        # TODO check for var_arg types
+        # Checking for varargs and alignings
         fn_args = fn.arg_types.copy()
         if fn.var_args:
             last_arg = fn_args.pop()
@@ -589,7 +568,7 @@ class Analyzer(Visitor):
     def get_object_class(self, node_type, node):
         class_name = node_type.referer.value if isinstance(
                     node_type.referer, Token) else node_type.referer.name
-        class_ = self.context.symbol_table.get(class_name)
+        class_ = self.context.get(class_name)
         if class_ == None:
             if self.class_within == None or (class_name != self.class_within.name):
                 NameError(
@@ -630,14 +609,13 @@ class Analyzer(Visitor):
                     f"Expected array to be of type '{expected_type.str()}' because of first element but got '{type.str()}'",
                 ).throw()
         if not node.is_const_array:
-            self.import_core_lib("Array", "array.flo")
-            return FloObject(None, self.context.symbol_table.get('Array'))
+            return FloObject(None, self.context.get('Array'))
         arr = FloArray(None)
         arr.elm_type = expected_type
         return arr
 
 
-    def check_subscribable(self, collection, index, node, set_value = None):
+    def check_subscribable(self, collection, index, node: PropertyAccessNode, set_value = None):
         method_name = '__getitem__' if set_value == None else '__setitem__'
         fnc: FloInlineFunc = collection.referer.methods.get(method_name)
         if fnc == None:
@@ -691,7 +669,7 @@ class Analyzer(Visitor):
         self.current_block.append_block(Block.class_())
         class_name = node.name.value
         class_ob = FloClass(class_name)
-        self.context.symbol_table.set(class_name, class_ob)
+        self.context.set(class_name, class_ob)
         self.class_within = class_ob
         self.constants.append(class_name)
         self.visit(node.body)
@@ -717,7 +695,7 @@ class Analyzer(Visitor):
 
     def visitObjectCreateNode(self, node: ObjectCreateNode):
         class_name = node.class_name.type.referer.value
-        class_o: FloClass = self.context.symbol_table.get(class_name)
+        class_o: FloClass = self.context.get(class_name)
         if class_o == None:
             NameError(node.class_name.range, f"{class_name} not defined").throw()
         if class_o.constructor:
@@ -726,38 +704,14 @@ class Analyzer(Visitor):
 
     def visitImportNode(self, node: ImportNode):
         relative_path = node.path.value
-        module_path = NodeFinder.get_abs_path(relative_path, self.context.display_name)
-        if not path.isfile(module_path):
-            IOError(node.path.range, f"File '{relative_path}' does not exist").throw()
         names_to_find = [id.value for id in node.ids]
-        ranges = [id.range for id in node.ids]
-        self.import_from_module(module_path, names_to_find, ranges)
-        
-    def import_from_module(self, module_path, names, node_ranges=[]):
-        with open(module_path, "r") as file:
-            src_code = file.read()
-            lexer = Lexer(module_path, src_code)
-            tokens = lexer.tokenize()
-            parser = Parser(tokens)
-            ast = parser.parse()
-            if len(names) == 0:
-                saved_path = self.context.display_name
-                self.context.display_name = module_path
-                NodeFinder.cache(module_path, {"module": ast})
-                self.visit(ast)
-                self.context.display_name = saved_path
-                return
-            importer = NodeFinder(Context(module_path))
-            names_to_ignore = self.context.symbol_table.symbols.keys()
-            selected_nodes = importer.find(names, ast, names_to_ignore)
-            for name, range in zip(names, node_ranges):
-                if selected_nodes.get(name) == None and len(node_ranges) != 0 and self.context.symbol_table.get(name) == None:
-                    NameError(range, f"Cannot find identifier {name} in {module_path}").throw()
-            NodeFinder.cache(module_path, selected_nodes)
-            reversed = list(selected_nodes.values())
-            reversed.reverse()
-            for node in reversed:
-                self.visit(node)
+        importer = NodeFinder(Context(relative_path))
+        names_to_ignore = self.context.symbol_table.symbols.keys()
+        find_result = importer.find(names_to_find, list(names_to_ignore), node.range)
+        node.resolved_as = find_result.resolved
+        for node in find_result.resolved:
+            self.visit(node)
+
 
 
 

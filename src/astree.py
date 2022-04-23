@@ -157,6 +157,7 @@ class ClassDeclarationNode(Node):
     def __init__(self, name: Token, body: StmtsNode, range: Range):
         self.name = name
         self.body = body
+        self.range = range
     
     def accept(self, visitor: Visitor):
         return visitor.visitClassDeclarationNode(self)
@@ -205,7 +206,7 @@ class PropertyAssignNode(Node):
         return visitor.visitPropertyAssignNode(self)
 
 class FncDefNode(Node):
-    def __init__(self, var_name: Token, args: List[Tuple[Token, TypeNode]], body: StmtsNode, is_variadic: bool, range: Range, return_type: TypeNode = None):
+    def __init__(self, var_name: Token, args: List[Tuple[Token, TypeNode, Node]], body: StmtsNode, is_variadic: bool, range: Range, return_type: TypeNode = None):
         self.var_name = var_name
         self.args = args
         self.body = body
@@ -215,6 +216,9 @@ class FncDefNode(Node):
 
     def accept(self, visitor: Visitor):
         return visitor.visitFncDefNode(self)
+    
+    def __repr__(self) -> str:
+        return f"{self.var_name}()"
 
 
 class ForNode(Node):
@@ -266,6 +270,7 @@ class ImportNode(Node):
         self.ids = ids
         self.path = path
         self.range = range
+        self.resolved_as = None
 
     def accept(self, visitor: Visitor):
         return visitor.visitImportNode(self)
@@ -330,7 +335,6 @@ class StrNode(Node):
     def __init__(self, tok: Token, range: Range):
         self.tok = tok
         self.range = range
-        self.is_cstring = False
 
     def accept(self, visitor: Visitor):
         return visitor.visitStrNode(self)

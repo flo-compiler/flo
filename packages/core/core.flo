@@ -1,27 +1,26 @@
-import malloc, realloc, sleep, usleep, write, read, _exit from "../sys"
+import STDOUT, STDIN, STDERR, alloc, dealloc, usleep, write, read, _exit from "../sys"
 import "../collection"
-import "./string.flo"
-const stdin = 0
-const stdout = 1
-fnc print(str: string){
-    write(stdout, str as byte*, str.length)
+import "string"
+fnc print(message: string){
+    write(STDOUT, message as byte*, message.length)
 }
-fnc println(str: string){
-    print(str)
+fnc println(message: string){
+    print(message)
     print("\n")
 }
-
 fnc input(): string {
     size = -1
-    buffer = malloc(1)
+    buffer = alloc(1)
     while (buffer[size] != '\n'){
         buffer = realloc(buffer, (++size)+1)
-        read(stdin, buffer+size, 1)
+        read(STDIN, buffer+size, 1)
     }
-    buffer[size] = '\0'
     return new string(buffer, size)
 }
+fnc error(message: string){
+    write(STDERR, message as byte*, message.length)
+}
 fnc exit(message: string = "", code : int = 1){
-    print(message)
+    error(message)
     _exit(code)
 }

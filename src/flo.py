@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
 from genericpath import exists
 from optparse import OptionParser
+from utils import get_ast_from_file
 from compiler import Compiler
-from lexer import Lexer
-from parser import Parser
 from analyzer import Analyzer
 from errors import IOError
 from builtIns import new_ctx
@@ -71,16 +70,8 @@ def main():
 
 
 def compile(fn: str, options):
-    f = open(fn, "r", encoding="utf-8")
-    code = f.read()
-    # Tokenize file
-    lexer = Lexer(fn, code)
-    tokens = lexer.tokenize()
-    # Create Context
     context = new_ctx(fn)
-    # Generate AST
-    parser = Parser(tokens)
-    ast = parser.parse()
+    ast = get_ast_from_file(fn)
     # Static Check and auto-casting by semantic analyzer
     analyzer = Analyzer(context)
     analyzer.analyze(ast)

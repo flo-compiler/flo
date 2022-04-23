@@ -1,5 +1,4 @@
-// swap function
-import "@flo/core/core.flo"
+import "@flo/core"
 fnc partition(start: int, end: int, array: Array): int {
     pivot_index = start
     pivot = array[pivot_index]

@@ -1,11 +1,19 @@
-/* system calls */
-import "./linux"
+import "linux/syscalls"
+const STDIN = 0
+const STDOUT = 1
+const STDERR = 2
 /* c standart library functions:*/
 fnc malloc(size: int): byte*
-fnc realloc(ptr: byte*, size: int): byte*
 fnc free(ptr: byte*)
-fnc strlen(str: byte*): int
-fnc memcmp(str1: byte*, str2: byte*, n: int): int
-fnc memcpy(dest: byte*, src: byte*, n: int)
-fnc memset(dest: byte*, c: int, count: int)
+fnc realloc(ptr: byte*, size: int): byte*
+fnc memcmp(ptr1: byte*, ptr2: byte*, len: int): int
+fnc memcpy(ptr1: byte*, ptr2: byte*, len: int): int
+fnc memset(ptr1: byte*, c: int, len: int)
 fnc inet_addr(addr: byte*): int
+/* common self-defined sys library */
+fnc alloc(size: int): byte* {
+    return malloc(size)
+}
+fnc dealloc(ptr: byte*){
+    return free(ptr)
+}

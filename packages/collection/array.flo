@@ -1,17 +1,17 @@
-import string from "./string.flo"
-import realloc from "../sys/c_lib.flo"
+import alloc, dealloc, realloc from "../sys"
+import string from "../core/string.flo"
 
-class Array{
+class Array {
     buffer: int*
     length: int
     size: int
     fnc constructor(length: int){
         this.length = length
-        this.buffer = malloc(length) as int*
+        this.buffer = alloc(length) as int*
         this.size = length
     }
     fnc resize(){
-        this.size = this.size //* sizeof(int)
+        this.size = this.size*2 //* sizeof(int)
         this.buffer = realloc(this.buffer as byte*, this.size) as int*
     }
     fnc append(num: int){
@@ -50,15 +50,17 @@ class Array{
         return -1
     }
     fnc destroy(){
-        free(this.buffer as byte*)
+        dealloc(this.buffer as byte*)
     }
+    
     fnc __as_string__(): string {
         i = 0
         res = "["
-        while i < this.length {
-            res+= (this[i] as string) + ", "
+        last_index = this.length - 1
+        while i < last_index {
+            res+= (this.buffer[i] as string) + ", "
             i++
         }
-        return res+"]"
+        return res+(this.buffer[last_index] as string)+" ]"
     }
 }
