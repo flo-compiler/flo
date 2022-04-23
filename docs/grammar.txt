@@ -72,17 +72,18 @@ expr_value:   number
 
 assign_part: (column composite_type)? eq expr
 
-composite_type:  type (lbracket expr rbracket)*
-            |    type times
-            |    lpar (composite_type (comma composite_type)*)? lpar arrow composite_type
+fnc_type: lpar (composite_type (comma composite_type)*)? lpar arrow composite_type
 
-type:
+composite_type:  prim_type (lbracket expr rbracket)*
+            |    prim_type times*
+            |    fnc_type
+
+prim_type:
     | "float"
     | "int"
     | "bool"
-    | "str"
     | "void"
-    | "char"
+    | "byte"
     | identifier
 
 

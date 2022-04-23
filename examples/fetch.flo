@@ -1,5 +1,5 @@
 import "@flo/core"
-import "@flo/net/client.flo"
+import "@flo/net"
 fnc main(){
     request_body = "GET / HTTP/1.1 \r\n
     Host: google.com \r\n

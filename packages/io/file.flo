@@ -1,15 +1,14 @@
-import string from "../core/string.flo"
-import open, close, read, write, lseek, unlink, lstat, access, O_RDONLY, O_WRONLY, O_CREAT, SEEK_END, SEEK_SET, F_OK, R_OK, W_OK, X_OK, perror, malloc from "../sys"
+import string, exit from "../core"
+import open, close, read, write, lseek, unlink, lstat, access, O_RDONLY, O_WRONLY, O_CREAT, SEEK_END, SEEK_SET, F_OK, R_OK, W_OK, X_OK, alloc from "../sys"
 class File {
     path: string
     fnc constructor(path: string) {
         this.path = path
     }
     fnc get_file_stat(): byte* {
-        stat_struct = malloc(144)
-        if lstat(this.path as byte*, stat_struct) < 0 {
-            perror("Error" as byte*)
-            exit()
+        stat_struct = alloc(144)
+        if lstat(this.path.to_cstring(), stat_struct) < 0 {
+            exit("Could not open file\n")
         }
         return stat_struct
     }
@@ -21,28 +20,24 @@ class File {
         return size
     }
     fnc read(size: int): byte* {
-        fd = open(this.path as byte*, O_RDONLY)
+        fd = open(this.path.to_cstring(), O_RDONLY)
         if fd < 0 {
-            print("Error: could not open file\n")
-            exit()
+            exit("Error: could not open file\n")
         }
-        file_contents = malloc(size)
+        file_contents = alloc(size)
         if read(fd, file_contents, size) < 0 {
-            print("Error: could not read the file\n")
-            exit()
+            exit("Error: could not read the file\n")
         }
         close(fd)
         return file_contents
     }
     fnc write(buffer: byte*, size: int){
-        fd = open(this.path as byte*, O_CREAT or O_WRONLY)
+        fd = open(this.path.to_cstring(), O_CREAT or O_WRONLY)
         if fd < 0 {
-            return print("Error: could not open file\n")
-            exit()
+            exit("Error: could not open file\n")
         }
         if write(fd, buffer, size) < 0 {
-            return print("Error: could not write the file\n")
-            exit()
+            exit("Error: could not write the file\n")
         }
         close(fd)
     }
@@ -54,16 +49,16 @@ class File {
         this.write(data as byte*, data.length)
     }
     fnc exists(): bool {
-        return access(this.path as byte*, F_OK) >= 0
+        return access(this.path.to_cstring(), F_OK) >= 0
     }
     fnc is_readable(): bool {
-        return access(this.path as byte*, R_OK) >= 0
+        return access(this.path.to_cstring(), R_OK) >= 0
     }
     fnc is_writable(): bool {
-        return access(this.path as byte*, W_OK) >= 0
+        return access(this.path.to_cstring(), W_OK) >= 0
     }
     fnc is_executable(): bool {
-        return access(this.path as byte*, X_OK) >= 0
+        return access(this.path.to_cstring(), X_OK) >= 0
     }
     fnc is_dir(): bool {
         stat_struct = this.get_file_stat()

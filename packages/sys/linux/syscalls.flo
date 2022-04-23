@@ -55,5 +55,4 @@ fnc _exit (code: int)
 /* time */
 fnc sleep(seconds: int): int
 fnc usleep(seconds: int): int
-/* Error*/
-fnc perror(char: byte*)
+fnc getcwd(): byte*

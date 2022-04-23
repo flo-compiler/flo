@@ -1,1 +1,1 @@
-import "./array.flo"
+import "array"

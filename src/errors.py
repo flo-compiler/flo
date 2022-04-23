@@ -1,6 +1,5 @@
 from termcolor import colored
 
-
 class Position:
     def __init__(self, ind, line, col, fn, txt):
         self.ind = ind

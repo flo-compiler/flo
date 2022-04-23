@@ -1,24 +1,22 @@
-import memcmp, strlen, malloc, memcpy, free from "../sys"
+import memcmp, alloc, memcpy, dealloc from "../sys"
 class string {
     buffer: byte*
     length: int
-    fnc constructor(data: byte*, len: int = 0){
-        this.buffer = malloc(len)
+    fnc constructor(data: byte*, len: int){
+        this.buffer = alloc(len)
         this.buffer = data
-        if len == 0
-            len = strlen(data)
         this.length = len
     }
     fnc __add__(data: string): string {
         new_str_len = this.length + data.length
-        new_buffer = malloc(new_str_len)
+        new_buffer = alloc(new_str_len)
         memcpy(new_buffer, this.buffer, this.length)
         trailing_buffer = new_buffer+this.length
         memcpy(trailing_buffer, data.buffer, data.length+1)
         return new string(new_buffer, new_str_len)   
     }
     fnc __getitem__(index: int): string {
-        new_buffer = malloc(2)
+        new_buffer = alloc(2)
         new_buffer[0] = this.buffer[index]
         new_buffer[1] = (0 as byte)
         return new string(new_buffer, 2)
@@ -33,20 +31,25 @@ class string {
                 matches = true
                 while x > 0 {
                     if (search.buffer[x] != this.buffer[x+i]){
-                        matches = false
-                        break
+                        return -1
                     }
                     x--
                 }
                 if matches return i
             }
         }
-    return -1
+        return -1
     }
     fnc destroy(){
-        free(this.buffer)
+        dealloc(this.buffer)
     }
     fnc __as_byte_ptr__(): byte* {
         return this.buffer
+    }
+    fnc to_cstring(): byte* {
+        c_string = alloc(this.length+1)
+        memcpy(c_string, this.buffer, this.length)
+        c_string[this.length] = '\0'
+        return c_string
     }
 }

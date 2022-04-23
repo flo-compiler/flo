@@ -1,8 +1,8 @@
 import exit from "../core"
-import malloc, free, accept, read, AF_INET, SOCK_STREAM, perror from "../sys"
-import "./socket.flo"
-import "./response.flo"
-import "./request.flo"
+import alloc, free, accept, read, AF_INET, SOCK_STREAM from "../sys"
+import "socket"
+import "response"
+import "request"
 
 class Server {
     socket: Socket
@@ -16,7 +16,7 @@ class Server {
         this.request = new Request()
     }
     fnc accept_connection(){
-        cli = malloc(16)
+        cli = alloc(16)
         cli_len = 4
         connfd = accept(this.socket.sockfd, cli, &cli_len)
         if connfd < 0 {

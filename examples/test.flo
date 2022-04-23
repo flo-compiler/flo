@@ -1,5 +1,4 @@
-import "@flo/core/core.flo"
-import "@flo/io/file.flo"
+import "@flo/core"
 fnc main() {
-    return
+    println("hello world")
 }

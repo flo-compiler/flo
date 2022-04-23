@@ -1,8 +1,0 @@
-/* Protocols */
-const IPPROTO_ICMP = 1 /* ICMP; works with AF_UNSPEC, AF_INET, or AF_INET6 and SOCK_RAW */
-const IPPROTO_IGMP = 2 /* IGMP; works with AF_UNSPEC, AF_INET, or AF_INET6 and SOCK_RAW */
-const BTHPROTO_RFCOMM = 3 /* Bluetooth RFCOMM; works with AF_BTH and SOCK_STREAM */
-const IPPROTO_TCP = 6 /* TCP;  works with AF_INET, or AF_INET6 and SOCK_STREAM */
-const IPPROTO_UDP = 17 /* UDP;  works with AF_INET, or AF_INET6 and SOCK_DGRAM */
-const IPPROTO_ICMPV6 = 58 /* ICMP; works with AF_UNSPEC, AF_INET, or AF_INET6 and SOCK_RAW */
-const IPPROTO_RM = 113 /* PGM for reliable multicast;  works with AF_INET and SOCK_RDM */

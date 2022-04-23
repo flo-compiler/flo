@@ -1,5 +1,5 @@
 from typing import List
-from flotypes import FloInlineFunc, FloObject, FloPointer, FloType
+from flotypes import FloArray, FloInlineFunc, FloObject, FloPointer, FloType
 from astree import *
 from lexer import TokType, Token
 from errors import SyntaxError
@@ -506,56 +506,59 @@ class Parser:
             self.advance()
         return expr
 
+    def prim_type(self):
+        tok = self.current_tok
+        self.advance()
+        if tok.inKeywordList(("int", "float", "bool", "void", "byte")):
+            return FloType.str_to_flotype(tok.value)
+        elif tok.type == TokType.IDENTIFER:
+            return FloObject(None, tok)
+        else:
+            SyntaxError(tok.range, "Expected type definition").throw()
+
+    def fnc_type(self):
+        self.advance()
+        arg_types = []
+        if self.current_tok.type != TokType.RPAR:
+            arg_types.append(self.composite_type().type)
+            while(self.current_tok.type == TokType.COMMA):
+                self.advance()
+                arg_types.append(self.composite_type().type)
+            if self.current_tok.type != TokType.RPAR:
+                SyntaxError(self.current_tok.range, "Expected ')'").throw()
+        self.advance()
+        if self.current_tok.type != TokType.ARROW:
+            SyntaxError(self.current_tok.range, "Expected '=>'").throw()
+        self.advance()
+        r_type = self.composite_type().type
+        return FloInlineFunc(None, arg_types, r_type)
+
     def composite_type(self):
         start_range = self.current_tok.range
         if self.current_tok.type == TokType.LPAR:
-            self.advance()
-            arg_types = []
-            if self.current_tok.type != TokType.RPAR:
-                arg_types.append(self.composite_type().type)
-                while(self.current_tok.type == TokType.COMMA):
-                    self.advance()
-                    arg_types.append(self.composite_type().type)
-                if self.current_tok.type != TokType.RPAR:
-                    SyntaxError(self.current_tok.range, "Expected ')'").throw()
-            self.advance()
-            if self.current_tok.type != TokType.ARROW:
-                SyntaxError(self.current_tok.range, "Expected '=>'").throw()
-            self.advance()
-            r_type = self.composite_type().type
-            type = FloInlineFunc(None, arg_types, r_type)
+            type = self.fnc_type()
             return TypeNode(type, Range.merge(start_range, self.current_tok.range))
-        elif self.current_tok.inKeywordList(("int", "float", "bool", "void", "byte")) or self.current_tok.type == TokType.IDENTIFER:
-            if self.current_tok.type == TokType.IDENTIFER:
-                type = FloObject(None, self.current_tok)
-            else:
-                type = FloType.str_to_flotype(self.current_tok.value)
+        type = self.prim_type()
+        if self.current_tok.type == TokType.MULT:
             self.advance()
-            while self.current_tok.type == TokType.MULT:
+            type = FloPointer(None, type)
+        while self.current_tok.type == TokType.LBRACKET:
+            size = None
+            self.advance()
+            if self.current_tok.type != TokType.RBRACKET:
+                if self.current_tok.type != TokType.INT:
+                    SyntaxError(self.current_tok.range,
+                                "Expected an int").throw()
+                size = self.current_tok.value
                 self.advance()
-                type = FloPointer(None, type)
-            while self.current_tok.type == TokType.LBRACKET:
-                size = None
-                self.advance()
-                if self.current_tok.type == TokType.RBRACKET:
-                    self.advance()
-                else:
-                    if self.current_tok.type != TokType.INT:
-                        SyntaxError(self.current_tok.range,
-                                    "Expected an int").throw()
-                    size = self.current_tok.value
-                    self.advance()
-                    if self.current_tok.type != TokType.RBRACKET:
-                        SyntaxError(self.current_tok.range,
-                                    "Expected ']'").throw()
-                    self.advance()
-
-                # arr = FloObject(None, Token())
-                # type = arr
-            return TypeNode(type, Range.merge(start_range, self.current_tok.range))
-        else:
-            SyntaxError(self.current_tok.range,
-                        "Expected type definition").throw()
+                if self.current_tok.type != TokType.RBRACKET:
+                    SyntaxError(self.current_tok.range,
+                                "Expected ']'").throw()
+            self.advance()
+            elm_type = type
+            type = FloArray(None, size)
+            type.elm_type = elm_type
+        return TypeNode(type, Range.merge(start_range, self.current_tok.range))
     # TODO::>>>>
 
     def num_op(self, func_a, toks, func_b=None):
