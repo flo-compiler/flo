@@ -1,12 +1,18 @@
-import collections
+import sys
 from enum import Enum
 from os import path
 from typing import List
+
 from utils import get_ast_from_file
 from context import Context
 from flotypes import FloObject
 from astree import ArrayAssignNode, ClassDeclarationNode, ConstDeclarationNode, FncCallNode, FncDefNode, ForEachNode, ForNode, IfNode, ImportNode, NoOpNode, Node, NumOpNode, ObjectCreateNode, PropertyAssignNode, ReturnNode, StmtsNode, TypeNode, VarAccessNode, VarAssignNode, Visitor, WhileNode
 from errors import Range, NameError
+
+def resource_path(relative_path):
+     if hasattr(sys, '_MEIPASS'):
+         return path.join(sys._MEIPASS, relative_path)
+     return path.join(path.abspath("."), relative_path)
 
 class NodesFindResult:
     def __init__(self, resolved: List[Node], unresolved: List[str]):
@@ -32,7 +38,8 @@ class NodeFinder(Visitor):
     def get_abs_path(m_path, current_file):
         abs_path = ""
         if m_path[:5] == "@flo/":
-            abs_path = path.join(path.dirname(__file__), "..", "packages", m_path[5:])
+            stddir = resource_path('packages')
+            abs_path = path.join(stddir, m_path[5:])
         else:
             abs_path = path.join(path.dirname(current_file), m_path)
         if path.isdir(abs_path):

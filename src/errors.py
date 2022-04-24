@@ -1,5 +1,5 @@
 from termcolor import colored
-
+from os import _exit
 class Position:
     def __init__(self, ind, line, col, fn, txt):
         self.ind = ind
@@ -56,7 +56,7 @@ class Error:
 
     def throw(self):
         print(self.message())
-        exit(1)
+        _exit(1)
 
 
 class ExpectedCharError(Error):

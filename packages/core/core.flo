@@ -1,6 +1,6 @@
 import STDOUT, STDIN, STDERR, alloc, dealloc, usleep, write, read, _exit from "../sys"
-import "../collection"
 import "string"
+import "../collection"
 fnc print(message: string){
     write(STDOUT, message as byte*, message.length)
 }
