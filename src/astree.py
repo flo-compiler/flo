@@ -63,7 +63,7 @@ class Visitor:
 
     def visitArrayAssignNode(self, node): pass
 
-    def visitObjectCreateNode(self, node): pass
+    def visitNewMemNode(self, node): pass
 
     def visitContinueNode(self, node): pass
 
@@ -163,8 +163,9 @@ class ClassDeclarationNode(Node):
         return visitor.visitClassDeclarationNode(self)
 
 class ConstDeclarationNode(Node):
-    def __init__(self, declaration: VarAssignNode, range: Range):
-        self.declaration = declaration
+    def __init__(self, const_name: Token, value: Node, range: Range):
+        self.const_name = const_name
+        self.value = value
         self.range = range
 
     def accept(self, visitor: Visitor):
@@ -319,14 +320,14 @@ class ReturnNode(Node):
     def accept(self, visitor: Visitor):
         return visitor.visitReturnNode(self)
 
-class ObjectCreateNode(Node):
-    def __init__(self, class_name: TypeNode, args:List[Node] , range: Range):
-        self.class_name = class_name
+class NewMemNode(Node):
+    def __init__(self, type: TypeNode, args:List[Node] , range: Range):
+        self.type = type
         self.args = args
         self.range = range
 
     def accept(self, visitor: Visitor):
-        return visitor.visitObjectCreateNode(self)
+        return visitor.visitNewMemNode(self)
     
 
 

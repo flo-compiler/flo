@@ -43,4 +43,9 @@ class Context:
         self.symbol_table.delete(name)
     
     def get_symbols(self):
-        return list(self.symbol_table.symbols.keys())
+        symbols = []
+        current = self
+        while current != None:
+            symbols+=list(current.symbol_table.symbols.keys())
+            current = current.parent
+        return symbols

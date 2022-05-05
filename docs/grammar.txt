@@ -21,7 +21,7 @@ stmt: import_stmt
       
 import_stmt: import (identifier_list from)? string
 
-const_declaration: const identifier assign_part
+const_declaration: const identifier eq expr
 
 class_declaration: class block
 
@@ -69,6 +69,7 @@ expr_value:   number
             | identifier
             | rbracket expr lbracket
             | lpar expr (property_acess) rpar
+            | new_kw composite_type lpar expr_list? rpar 
 
 assign_part: (column composite_type)? eq expr
 
@@ -135,6 +136,7 @@ in: "in"
 let: "let"
 const: "const"
 class: "class"
+new_kw: "new"
           
 
 comp_op: ">"

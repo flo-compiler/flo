@@ -1,24 +1,24 @@
-import memcmp, alloc, memcpy, dealloc from "../sys"
+import memcmp, memcpy from "../sys"
 class string {
     buffer: byte*
     length: int
     fnc constructor(data: byte*, len: int){
-        this.buffer = alloc(len)
+        this.buffer = new byte(len)
         this.buffer = data
         this.length = len
     }
     fnc __add__(data: string): string {
         new_str_len = this.length + data.length
-        new_buffer = alloc(new_str_len)
+        new_buffer = new byte(new_str_len)
         memcpy(new_buffer, this.buffer, this.length)
         trailing_buffer = new_buffer+this.length
         memcpy(trailing_buffer, data.buffer, data.length+1)
         return new string(new_buffer, new_str_len)   
     }
     fnc __getitem__(index: int): string {
-        new_buffer = alloc(2)
+        new_buffer = new byte(2)
         new_buffer[0] = this.buffer[index]
-        new_buffer[1] = (0 as byte)
+        new_buffer[1] = '\0'
         return new string(new_buffer, 2)
     }
     fnc __eq__(other: string): bool {
@@ -40,14 +40,11 @@ class string {
         }
         return -1
     }
-    fnc destroy(){
-        dealloc(this.buffer)
-    }
     fnc __as_byte_ptr__(): byte* {
         return this.buffer
     }
     fnc to_cstring(): byte* {
-        c_string = alloc(this.length+1)
+        c_string = new byte(this.length+1)
         memcpy(c_string, this.buffer, this.length)
         c_string[this.length] = '\0'
         return c_string

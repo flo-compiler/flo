@@ -3,7 +3,7 @@ import contextlib
 import inspect
 import uuid
 import builtIns as bi
-from context import Context, SymbolTable
+from context import Context
 from llvmlite import ir, binding
 from typing import Union
 from lexer import Token
@@ -49,7 +49,6 @@ class FloType:
         else:
             return val_type.new(value)
 
-
 class FloIterable(FloType):
     @staticmethod
     @contextlib.contextmanager
@@ -88,29 +87,13 @@ class FloConst(FloType):
     # TODO be careful with arrays and strings
     str_constants = {}
 
-    def __init__(self, value, flotype) -> None:
-        assert isinstance(value, FloMem)
-        self.flotype = flotype
+    def __init__(self, value) -> None:
         self.value = value
 
-    def load(self, builder: ir.IRBuilder):
-        value = self.value.load_at_index(builder)
-        if isinstance(self.flotype, FloObject):
-            ptr_val = FloMem.salloc(builder, self.flotype.referer.value)
-            ptr_val.store_at_index(builder, FloType(value))
-            value = ptr_val
-        return FloType.to_flo_ty(self.flotype, value)
+    def load(self, visitor):
+        return visitor.visit(self.value)
 
     @staticmethod
-    def make_constant(builder: ir.IRBuilder, name: str, value: FloType) -> None:
-        initializer = value.value
-        const_val = ir.GlobalVariable(
-            Context.current_llvm_module, initializer.type, name)
-        const_val.initializer = initializer
-        const_val.global_constant = True
-        flotype = value if hasattr(value, 'new') else value.__class__
-        return FloConst(FloMem(const_val), flotype)
-
     def create_global_str(value: str):
         if(FloConst.str_constants.get(value) != None):
             str_ptr = FloConst.str_constants.get(value)
@@ -135,19 +118,13 @@ class FloConst(FloType):
         flo_ptr = FloPointer(FloMem(str_ptr), FloByte)
         return flo_ptr
 
-    def __eq__(self, other):
-        if isinstance(other, FloConst):
-            return self.flotype == other.flotype    
-        return self.flotype == other
-    def str(self):
-        return self.flotype.str()
-
 
 def is_string_object(type):
     return isinstance(type, FloObject) and type.referer.name == 'string'
 
 def create_string_object(builder, args):
-    return FloClass.classes.get("string").new(builder, args)
+    str_class =  FloClass.classes.get("string")
+    return FloObject(None, str_class).construct(builder, args)
 
 class FloInt(FloType):
     llvmtype = bi.i32_ty
@@ -240,7 +217,11 @@ class FloInt(FloType):
     @staticmethod
     def str() -> str:
         return "int"
-
+    
+    @staticmethod
+    def construct(builder: ir.IRBuilder, args):
+        mem = FloMem.halloc(builder, FloInt.llvmtype, args[0])
+        return FloPointer(mem, FloInt)
 
 class FloFloat(FloType):
     llvmtype = ir.DoubleType()
@@ -310,6 +291,11 @@ class FloFloat(FloType):
     @staticmethod
     def str() -> str:
         return "float"
+    
+    @staticmethod
+    def construct(builder: ir.IRBuilder, args):
+        mem = FloMem.halloc(builder, FloFloat.llvmtype, args[0])
+        return FloPointer(mem, FloFloat)
 
 
 class FloBool(FloType):
@@ -366,6 +352,11 @@ class FloBool(FloType):
     @staticmethod
     def str() -> str:
         return 'bool'
+    
+    @staticmethod
+    def construct(builder: ir.IRBuilder, args):
+        mem = FloMem.halloc(builder, FloBool.llvmtype, args[0])
+        return FloPointer(mem, FloBool)
 
 
 class FloByte:
@@ -396,6 +387,11 @@ class FloByte:
 
     def print_val(self, builder: ir.IRBuilder):
         bi.call_printf(builder, "%d", self.value)
+    
+    @staticmethod
+    def construct(builder: ir.IRBuilder, args):
+        mem = FloMem.halloc(builder, FloByte.llvmtype, args[0])
+        return FloPointer(mem, FloByte)
 
 
 class FloMem(FloType):
@@ -448,16 +444,20 @@ class FloMem(FloType):
         return new_mem
 
     @staticmethod
-    def halloc_size(builder: ir.IRBuilder, size: FloInt):
+    def halloc_size(builder: ir.IRBuilder, size: FloInt, name=''):
         malloc_fnc = bi.get_instrinsic("malloc")
-        mem_obj = FloMem(builder.call(malloc_fnc, [size.value]))
+        mem_obj = FloMem(builder.call(malloc_fnc, [size.value], name))
         FloMem.heap_allocations[mem_obj.uuid] = mem_obj
         return mem_obj
 
     @staticmethod
-    def halloc(builder: ir.IRBuilder, ir_type: ir.Type, name=''):
-        size = FloInt(ir_type.get_abi_size(bi.target_data))
-        mem_obj = FloMem.halloc_size(builder, size)
+    def halloc(builder: ir.IRBuilder, ir_type: ir.Type, size: FloInt = None, name=''):
+        abi_size = FloInt(ir_type.get_abi_size(bi.target_data))
+        if size:
+            size = size.mul(builder, abi_size)
+        else:
+            size = abi_size
+        mem_obj = FloMem.halloc_size(builder, size, name)
         mem_obj = FloMem.bitcast(builder, mem_obj, ir_type.as_pointer())
         return mem_obj
 
@@ -518,6 +518,10 @@ class FloPointer(FloType):
 
     def new(self, value: FloMem):
         return FloPointer(value, self.elm_type)
+    
+    def construct(self, builder: ir.IRBuilder, args):
+        mem = FloMem.halloc(builder, self.llvmtype, args[0])
+        return FloPointer(mem, self)
 
     def __eq__(self, __o: object) -> bool:
         return isinstance(__o, FloPointer) and self.elm_type == __o.elm_type
@@ -552,12 +556,26 @@ class FloArray:
             self.mem = values
         assert isinstance(self.mem, FloMem) or self.mem == None
 
+    def create_array_buffer(builder: ir.IRBuilder, elems):
+        mem = FloMem.halloc(builder, elems[0].llvmtype, FloInt(len(elems)))
+        for index, elem in enumerate(elems):
+            mem.store_at_index(builder, elem, FloInt(index))
+        return mem
 
     def new(self, value):
         # For Functions
         array = FloArray(value, self.len)
         array.elm_type = self.elm_type
+        array.llvmtype = self.llvmtype
         return array
+    
+    def construct(self, builder: ir.IRBuilder, args):
+        mem = FloMem.halloc(builder, self.llvmtype, args[0])
+        return FloPointer(mem, self)
+    
+    def allocate(self, builder: ir.IRBuilder):
+        self.llvmtype = ir.ArrayType(self.elm_type.llvmtype, self.len).as_pointer()
+        self.mem = FloMem.salloc(builder, self.llvmtype.pointee)
 
     @property
     def value(self):
@@ -577,6 +595,10 @@ class FloArray:
         self.mem.store_at_index(builder, value, FloInt(0), index)
         return value
 
+    def get_pointer_at_index(self, builder: ir.IRBuilder, index):
+        mem = self.mem.get_pointer_at_index(builder, FloInt(0), index)
+        return FloPointer(mem, self.elm_type)
+
     def str(self) -> str:
         return f"{self.elm_type.str()}{'[]'}"
 
@@ -585,28 +607,6 @@ class FloArray:
 
 
 is_64_bit = binding.targets.get_host_cpu_features()['64bit']
-
-
-class FloArgArray(FloArray):
-    def __init__(self, value, builder: ir.IRBuilder = None, size=None):
-        super().__init__(value, builder, size)
-        self.should_offset = None
-
-    def get_element(self, builder: ir.IRBuilder, index):
-        if self.should_offset == None:
-            self.should_offset = is_64_bit and self.elm_type.llvmtype.get_abi_size(
-                bi.target_data) < 8
-        if self.should_offset:
-            array_buff = self.mem.load_at_index(builder)
-            buff_ptr = FloMem.bitcast(builder, array_buff, ir.IntType(64).as_pointer())
-        else:
-            buff_ptr = self.mem
-        value = buff_ptr.load_at_index(builder, index)
-        if self.should_offset:
-            value = builder.trunc(value, self.elm_type.llvmtype)
-        if inspect.isclass(self.elm_type):
-            return self.elm_type(value)
-        return self.elm_type.new(value)
 
 
 class FloRef:
@@ -672,9 +672,6 @@ class FloFunc(FloType):
 
     def call(self, builder: ir.IRBuilder, args):
         passed_args = [arg.value for arg in args]
-        # if self.var_args:
-        #     passed_args.insert(
-        #         0, FloInt(len(passed_args)-len(self.value.args)+1).value)
         rt_value = builder.call(self.mem.value, passed_args)
         if self.return_type == FloVoid:
             return FloVoid
@@ -687,26 +684,6 @@ class FloFunc(FloType):
             arg_val = FloType.to_flo_ty(arg_type, arg_value)
             local_ctx.set(arg_name, FloRef(self.builder, arg_val, arg_name))
         return local_ctx
-        # va_name = None
-        # if self.var_args:
-        #     va_name = arg_names.pop()
-        # if va_name != None:
-        #     va_args_mem = FloMem.salloc(self.builder, va_list_t)
-        #     self.va_arg = FloMem.bitcast(
-        #         self.builder, va_args_mem, bi.byteptr_ty)
-        #     self.builder.call(bi.get_instrinsic(
-        #         "va_start"), [self.va_arg.value])
-        #     va_mem = va_args_mem.load_at_index(
-        #         self.builder, FloInt(0), FloInt(0))
-        #     if self.value.name == "main":
-        #         va_mem = FloMem.bitcast(
-        #             self.builder, va_mem, bi.byteptr_ty.as_pointer()).load_at_index(self.builder)
-        #     length = FloInt(self.value.args[0])
-        #     va_mem = FloArray.create_array_struct(
-        #         self.builder, va_mem, length, length)
-        #     va_list = FloArgArray(va_mem)
-        #     va_list.elm_type = self.var_arg_ty
-        #     self.sym_tbl.set(va_name, va_list)
 
     def new(self, val):
         new_fnc = FloFunc(self.arg_types, self.return_type, None)
@@ -771,23 +748,11 @@ class FloClass(FloType):
             self.value.set_body(*body)
             self.processed = True
 
-    def new(self, builder: ir.IRBuilder, args):
-        value = FloMem.halloc(builder, self.value)
-        object_ = FloObject(value, self)
-        if self.constructor:
-            self.constructor.current_object = object_
-            self.constructor.call(builder, args)
-        return object_
-
     def constant_init(self, builder: ir.IRBuilder, args):
-        if builder:
-            ptr_value = FloMem.salloc(builder, self.value)
-            for index, arg in enumerate(args):
-                ptr_value.store_at_index(
-                    builder, arg, FloInt(0), FloInt(index))
-        else:
-            const_value = ir.Constant(self.value, [arg.value for arg in args])
-            ptr_value = FloMem(const_value)
+        ptr_value = FloMem.salloc(builder, self.value)
+        for index, arg in enumerate(args):
+            ptr_value.store_at_index(
+                builder, arg, FloInt(0), FloInt(index))
         return FloObject(ptr_value, self)
 
 
@@ -846,6 +811,14 @@ class FloObject:
     def new(self, value):
         # For Functions
         return FloObject(value, self.referer)
+    
+    def construct(self, builder: ir.IRBuilder, args):
+        self.mem =  FloMem.halloc(builder, self.referer.value)
+        if self.referer.constructor:
+            self.referer.constructor.current_object = self
+            self.referer.constructor.call(builder, args)
+        return self
+        
 
     @property
     def value(self):

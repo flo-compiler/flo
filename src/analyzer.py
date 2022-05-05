@@ -1,4 +1,3 @@
-import collections
 from typing import List
 from context import Context
 from errors import GeneralError, TypeError, SyntaxError, NameError
@@ -312,14 +311,10 @@ class Analyzer(Visitor):
         return s
 
     def visitConstDeclarationNode(self, node: ConstDeclarationNode):
-        declaration = node.declaration
-        var_name = declaration.var_name.value
-        value = declaration.value
-        if not (isinstance(value, StrNode) or isinstance(value, IntNode)
-                or isinstance(value, FloatNode)):
-            GeneralError(value.range, "Expected a constant").throw()
-        self.visit(declaration)
-        self.constants.append(var_name)
+        const_name = node.const_name.value
+        value = self.visit(node.value)
+        self.context.set(const_name, value)
+        self.constants.append(const_name)
 
     def declare_value(self, var_name: str, var_value, var_type: Node, range: Range):
         if var_type:
@@ -689,25 +684,32 @@ class Analyzer(Visitor):
         return value
 
     def visitPropertyAssignNode(self, node: PropertyAssignNode):
-        self.visit(node.expr)
+        expr = self.visit(node.expr)
         value = self.visit(node.value)
+        if expr != value:
+            TypeError(node.range, f"Expected type {expr.str()} but got type {value.str()}").throw()
         return value
 
-    def visitObjectCreateNode(self, node: ObjectCreateNode):
-        class_name = node.class_name.type.referer.value
-        class_o: FloClass = self.context.get(class_name)
-        if class_o == None:
-            NameError(node.class_name.range, f"{class_name} not defined").throw()
-        if class_o.constructor:
-            self.check_fnc_call(class_o.constructor, node.args, node)
-        return FloObject(None, class_o)
+    def visitNewMemNode(self, node: NewMemNode):
+        typeval = self.visit(node.type)
+        if isinstance(typeval, FloObject):
+            if typeval.referer.constructor:
+                self.check_fnc_call(typeval.referer.constructor, node.args, node)
+            return typeval
+        else:
+            if len(node.args) > 1:
+                GeneralError(node.args[1].range, "Expecting only 1 or no argument").throw()
+            if len(node.args) > 0:
+                if (self.visit(node.args[0]) != FloInt):
+                    GeneralError(node.args[2].range, "Expecting arg to be int ").throw()
+            return FloPointer(None, typeval)
 
     def visitImportNode(self, node: ImportNode):
         relative_path = node.path.value
         names_to_find = [id.value for id in node.ids]
         importer = NodeFinder(Context(relative_path))
-        names_to_ignore = self.context.symbol_table.symbols.keys()
-        find_result = importer.find(names_to_find, list(names_to_ignore), node.range)
+        names_to_ignore = self.context.get_symbols()
+        find_result = importer.find(names_to_find, names_to_ignore, node.range)
         node.resolved_as = find_result.resolved
         for node in find_result.resolved:
             self.visit(node)

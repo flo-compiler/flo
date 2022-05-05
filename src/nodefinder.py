@@ -6,7 +6,7 @@ from typing import List
 from utils import get_ast_from_file
 from context import Context
 from flotypes import FloObject
-from astree import ArrayAssignNode, ClassDeclarationNode, ConstDeclarationNode, FncCallNode, FncDefNode, ForEachNode, ForNode, IfNode, ImportNode, NoOpNode, Node, NumOpNode, ObjectCreateNode, PropertyAssignNode, ReturnNode, StmtsNode, TypeNode, VarAccessNode, VarAssignNode, Visitor, WhileNode
+from astree import ArrayAssignNode, ClassDeclarationNode, ConstDeclarationNode, FncCallNode, FncDefNode, ForEachNode, ForNode, IfNode, ImportNode, NewMemNode, NoOpNode, Node, NumOpNode, PropertyAssignNode, ReturnNode, StmtsNode, TypeNode, VarAccessNode, VarAssignNode, Visitor, WhileNode
 from errors import Range, NameError
 
 def resource_path(relative_path):
@@ -52,12 +52,12 @@ class NodeFinder(Visitor):
         unresolved = []
         resolved_nodes = []
         for name in names:
+            if name in ignore: continue
             resolved_node = self.context.get(name)
             if resolved_node == None:
                 unresolved.append(name)
-            elif name not in ignore:
+            else:
                 dependencies_for_name = self.dependency_map.get(name)
-                # Add dependencies for current name.
                 if dependencies_for_name != None and len(dependencies_for_name) != 0:
                     dependency_nodes, unresolved_names = self.resolve_dependencies(dependencies_for_name, ignore)
                     resolved_nodes += dependency_nodes
@@ -72,6 +72,7 @@ class NodeFinder(Visitor):
         ast = get_ast_from_file(module_path, range)
         if len(names_to_find) == 0:
             return NodesFindResult([ast], [])
+        self.ignore = resolved_names
         self.visit(ast)
         resolved_nodes, unresolved_names = self.resolve_dependencies(names_to_find, resolved_names)
         if len(unresolved_names) > 0:
@@ -89,6 +90,7 @@ class NodeFinder(Visitor):
 
     def visitFncDefNode(self, node: FncDefNode):
         fnc_name = node.var_name.value
+        if fnc_name in self.ignore: return
         has_parent_block = self.block_in != None
         if not has_parent_block:
             self.context.set(fnc_name, node)
@@ -111,6 +113,7 @@ class NodeFinder(Visitor):
 
     def visitVarAssignNode(self, node: VarAssignNode):
         var_name = node.var_name.value
+        if var_name in self.ignore: return
         self.context.set(var_name, node)
         if self.block_in and self.block_in.type == BlockTy.func:
             self.local_vars.append(var_name)
@@ -129,6 +132,7 @@ class NodeFinder(Visitor):
 
     def visitVarAccessNode(self, node: VarAccessNode):
         var_name = node.var_name.value
+        if var_name in self.ignore: return
         if self.block_in and var_name not in self.local_vars:
             self.dependency_map.get(self.block_in.name).append(var_name)
 
@@ -136,9 +140,10 @@ class NodeFinder(Visitor):
         self.visit(node.name)
 
     def visitConstDeclarationNode(self, node: ConstDeclarationNode):
-        var_name = node.declaration.var_name.value
-        self.context.set(var_name, node)
-        self.visit(node.declaration.value)
+        const_name = node.const_name.value
+        if const_name in self.ignore: return
+        self.context.set(const_name, node)
+        self.visit(node.value)
     
     def visitForEachNode(self, node: ForEachNode):
         self.visit(node.stmt)
@@ -153,10 +158,10 @@ class NodeFinder(Visitor):
         if node.value:
             self.visit(node.value)
 
-    def visitObjectCreateNode(self, node: ObjectCreateNode):
-        class_name = node.class_name.type.referer.value
-        if self.block_in != None and self.context.get(class_name) == None:
-            self.dependency_map.get(self.block_in.name).append(class_name)
+    def visitNewMemNode(self, node: NewMemNode):
+        self.visit(node.type)
+        for arg in node.args:
+            self.visit(arg)
 
     def visitIfNode(self, node: IfNode):
         for cond, case in node.cases:
@@ -173,6 +178,7 @@ class NodeFinder(Visitor):
 
     def visitClassDeclarationNode(self, node: ClassDeclarationNode):
         class_name = node.name.value
+        if class_name in self.ignore: return
         self.context.set(class_name, node)
         self.context = self.context.create_child(class_name)
         self.block_in = Block(class_name, BlockTy.class_)
@@ -184,9 +190,9 @@ class NodeFinder(Visitor):
         self.block_in = None
 
     def visitImportNode(self, node: ImportNode):
-        symbols_to_import = [id.value for id in node.ids]
+        symbols_to_import = filter(lambda name: name not in self.ignore, [id.value for id in node.ids])
         ctx = self.context.create_child(node.path.value)
         node_finder = NodeFinder(ctx)
-        result = node_finder.find(symbols_to_import, self.context.get_symbols(), node.range)
+        result = node_finder.find(list(symbols_to_import), self.context.get_symbols(), node.range)
         for resolved_node in result.resolved:
             self.visit(resolved_node)

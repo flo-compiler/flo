@@ -1,4 +1,4 @@
-import STDOUT, STDIN, STDERR, alloc, dealloc, usleep, write, read, _exit from "../sys"
+import STDOUT, STDIN, STDERR, nanosleep, write, read, _exit from "../sys"
 import "string"
 import "../collection"
 fnc print(message: string){
@@ -10,7 +10,7 @@ fnc println(message: string){
 }
 fnc input(): string {
     size = -1
-    buffer = alloc(1)
+    buffer = new byte(1)
     while (buffer[size] != '\n'){
         buffer = realloc(buffer, (++size)+1)
         read(STDIN, buffer+size, 1)
@@ -23,4 +23,11 @@ fnc error(message: string){
 fnc exit(message: string = "", code : int = 1){
     error(message)
     _exit(code)
+}
+fnc sleep(secs: int, nanosecs: int){
+    req = [secs, nanosecs]
+    rem = [0, 0]
+    req_struct = &req[0] as byte*
+    rem_struct = &rem[0] as byte* 
+    while nanosleep(req_struct, rem_struct) > 0 1
 }
