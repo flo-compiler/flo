@@ -1,12 +1,12 @@
 import string, exit from "../core"
-import open, close, read, write, lseek, unlink, lstat, access, O_RDONLY, O_WRONLY, O_CREAT, SEEK_END, SEEK_SET, F_OK, R_OK, W_OK, X_OK, alloc from "../sys"
+import open, close, read, write, lseek, unlink, lstat, access, O_RDONLY, O_WRONLY, O_CREAT, SEEK_END, SEEK_SET, F_OK, R_OK, W_OK, X_OK from "../sys"
 class File {
     path: string
     fnc constructor(path: string) {
         this.path = path
     }
     fnc get_file_stat(): byte* {
-        stat_struct = alloc(144)
+        stat_struct = new byte(144)
         if lstat(this.path.to_cstring(), stat_struct) < 0 {
             exit("Could not open file\n")
         }
@@ -16,7 +16,6 @@ class File {
         stat_struct = this.get_file_stat() 
         file_size_offset = (stat_struct + 48) as int*
         size = file_size_offset[0]
-        free(stat_struct)
         return size
     }
     fnc read(size: int): byte* {
@@ -24,7 +23,7 @@ class File {
         if fd < 0 {
             exit("Error: could not open file\n")
         }
-        file_contents = alloc(size)
+        file_contents = new byte(size)
         if read(fd, file_contents, size) < 0 {
             exit("Error: could not read the file\n")
         }
@@ -64,13 +63,8 @@ class File {
         stat_struct = this.get_file_stat()
         st_mode_offset = (stat_struct + 24) as int*
         is_dir = (st_mode_offset[0] and 0o0170000) == 0o0040000
-        free(stat_struct)
         return is_dir
     }
-    // fnc list(): string[] {
-    //     s = [""]
-    //     return s
-    // }
     fnc delete(){
         unlink(this.path as byte*)
     }

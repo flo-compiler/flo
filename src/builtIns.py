@@ -39,12 +39,31 @@ binding.initialize_native_asmprinter()
 target_machine = binding.Target.from_default_triple().create_target_machine()
 target_data = target_machine.target_data
 
+def syscall_wrapper(builder: ir.IRBuilder, args):
+    regs = "{rax}", "{rdi}", "{rsi}", "{rdx}", "{r10}", "{r8}"
+    arg_tys = [arg.llvmtype for arg in args]
+    arg_vals = [arg.value for arg in args]
+    fn_ty = ir.FunctionType(i32_ty, arg_tys)
+    rval = builder.asm(fn_ty, "syscall","=r,"+",".join(regs[:len(args)]), arg_vals, True)
+    return ft.FloInt(rval)
+
+def realloc_wrapper(builder: ir.IRBuilder, args):
+    new_size = args[1]
+    ptr: ft.FloPointer = args[0]
+    new_mem = ft.FloMem.realloc(builder, ptr.mem, new_size)
+    return ptr.new(new_mem)
+
 def new_ctx(*args):
+    byte_flo_ptr_ty = ft.FloPointer(None, ft.FloByte)
     filename = Path(args[0]).name
     global_ctx = Context(*args)
     Context.current_llvm_module = ir.Module(name=filename)
     Context.current_llvm_module.triple = binding.get_default_triple()
     Context.current_llvm_module.data_layout = str(target_data)
-    global_ctx.set("true", ft.FloConst.make_constant(None, 'true', ft.FloBool(True)))
-    global_ctx.set("false", ft.FloConst.make_constant(None, 'false', ft.FloBool(False)))
+    global_ctx.set("true", ft.FloBool(True))
+    global_ctx.set("false", ft.FloBool(False))
+    syscall_fnc = ft.FloInlineFunc(syscall_wrapper, [ft.FloType], ft.FloInt, True)
+    realloc_fnc = ft.FloInlineFunc(realloc_wrapper, [byte_flo_ptr_ty, ft.FloInt], byte_flo_ptr_ty)
+    global_ctx.set("syscall", syscall_fnc)
+    global_ctx.set("realloc", realloc_fnc)
     return global_ctx

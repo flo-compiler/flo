@@ -131,13 +131,14 @@ class Parser:
         range_start = self.current_tok.range
         if self.current_tok.type != TokType.IDENTIFER:
             SyntaxError(range_start, "Expected and identifier").throw()
-        assign_node = self.expr_value_op()
-        if not isinstance(assign_node, VarAssignNode):
-            self.advance()
-            SyntaxError(assign_node.range,
-                        "Expected an assignment expression").throw()
+        name_tok = self.current_tok
+        self.advance()
+        if self.current_tok.type != TokType.EQ:
+            SyntaxError(self.current_tok.range, "Expected '='").throw()
+        self.advance()
+        value_node = self.expr()
         node_range = Range.merge(range_start, self.current_tok.range)
-        return ConstDeclarationNode(assign_node, node_range)
+        return ConstDeclarationNode(name_tok, value_node, node_range)
 
     def class_declaration(self) -> ClassDeclarationNode:
         self.advance()
@@ -478,20 +479,20 @@ class Parser:
             return ArrayNode(list, Range.merge(tok.range, end_range))
         elif tok.isKeyword("new"):
             self.advance()
-            class_name = self.composite_type()
+            type = self.composite_type()
             if self.current_tok.type != TokType.LPAR:
                 SyntaxError(self.current_tok.range, "Expected (").throw()
             self.advance()
             if self.current_tok.type == TokType.RPAR:
                 node_range = Range.merge(tok.range, self.current_tok.range)
                 self.advance()
-                return ObjectCreateNode(class_name, [], node_range)
+                return NewMemNode(type, [], node_range)
             args = self.expr_list()
             if self.current_tok.type != TokType.RPAR:
                 SyntaxError(self.current_tok.range, "Expected )").throw()
             self.advance()
             node_range = Range.merge(tok.range, self.current_tok.range)
-            return ObjectCreateNode(class_name, args, node_range)
+            return NewMemNode(type, args, node_range)
         SyntaxError(
             tok.range, f"Expected an expression value before '{tok}'").throw()
 

@@ -1,14 +1,56 @@
 /* IO */
-fnc open(pathname: byte*, flags: int): int
-fnc close(fd: int): int
-fnc read(fd: int, buff: byte*, size: int): int
-fnc access(pathname: byte*, mode: int): int
-fnc write(fd: int, buff: byte*, size: int): int
-fnc lseek(fd: int, offset: int, whence: int): int
-fnc lstat(pathname: byte*, stat_struct: byte*): int
-fnc unlink(pathname: byte*): int
-fnc rename(pathname: byte*, dest: byte*): int
-fnc fcntl(fd: int, cmd: int, arg: int): int
+fnc read(fd: int, buff: byte*, size: int): int {
+    return syscall(0x00, fd, buff, size)
+}
+fnc write(fd: int, buff: byte*, size: int): int {
+    return syscall(0x01, fd, buff, size)
+}
+fnc open(filename: byte*, flags: int): int {
+    return syscall(0x02, filename, flags)
+}
+fnc close(fd: int): int {
+    return syscall(0x03, fd)
+}
+fnc lstat(filename: byte*, stat_struct: byte*): int {
+    return syscall(0x06, filename, stat_struct)
+}
+fnc lseek(fd: int, offset: int, whence: int): int {
+    return syscall(0x08, fd, offset, whence)
+}
+fnc access(filename: byte*, mode: int): int {
+    return syscall(0x15, filename, mode)
+}
+fnc nanosleep(req: byte*, rem: byte*): int {
+    return syscall(0x23, req, rem) 
+}
+/* net */
+fnc socket(name: int, type: int, protocol: int): int {
+    return syscall(0x29, name, type, protocol)
+}
+fnc connect(sockfd: int, socketaddr_in: byte*, size: int): int {
+    return syscall(0x2a, sockfd, socketaddr_in, size)
+}
+fnc accept(sockfd: int, socketaddr_in: byte*, size_ptr: int*): int {
+    return syscall(0x2b, sockfd, socketaddr_in, size_ptr)
+}
+fnc bind(sockfd: int, socketaddr_in: byte*, size: int): int {
+    return syscall(0x31, sockfd, socketaddr_in, size)
+}
+fnc listen(sockfd: int, backlog: int): int {
+    return syscall(0x32, sockfd, backlog)
+}
+fnc fcntl(fd: int, cmd: int, arg: int): int {
+    return syscall(0x37, fd, cmd, arg)
+}
+fnc _exit (error_code: int){
+    syscall(0x3c, error_code)
+}
+fnc rename(oldname: byte*, newname: byte*): int {
+    return syscall(0x52, oldname, newname)
+}
+fnc unlink(pathname: byte*): int {
+    return syscall(0x57, pathname)
+}
 /* IO consts */
 const O_RDONLY = 0
 const O_WRONLY = 1
@@ -26,14 +68,7 @@ const F_GETFL = 3
 const SEEK_SET = 0 
 const SEEK_CUR = 1
 const SEEK_END = 2
-/* net */
-fnc socket(name: int, type: int, protocol: int): int
-fnc bind(sockfd: int, socketaddr_in: byte*, size: int): int
-fnc connect(sockfd: int, socketaddr_in: byte*, size: int): int
-fnc send(sockfd: int, buffer: byte*, size: int, flags: int): int
-fnc recv(sockfd: int, buffer: byte*, size: int, flags: int): int
-fnc listen(sockfd: int, backlog: int): int
-fnc accept(sockfd: int, socketaddr_in: byte*, size_ptr: int*): int
+
 /* net consts */
 /* Socket Framilies */
 const AF_UNSPEC = 0 /* Unspecified Family */
@@ -50,9 +85,3 @@ const SOCK_DGRAM = 2 /* UDP & AF_INET or AF_INET6 */
 const SOCK_RAW = 3 /* Header manipulation */
 const SOCK_RDM = 4 /* Reliable multicast programming */
 const SOCK_SEQPACKET = 5 /* Pseudo-stream packets */
-/* Program Syscalls */
-fnc _exit (code: int)
-/* time */
-fnc sleep(seconds: int): int
-fnc usleep(seconds: int): int
-fnc getcwd(): byte*

@@ -7,7 +7,7 @@ from astree import *
 from context import Context
 from ctypes import CFUNCTYPE, POINTER, c_char_p, c_int
 from builtIns import target_machine, target_data
-from llvmlite import binding as llvm
+from llvmlite import binding as llvm, ir
 
 
 saved_labels = []
@@ -36,6 +36,7 @@ class Compiler(Visitor):
 
     def compile(self, node: Node, options):
         self.visit(node)
+        llvm.initialize_native_asmparser()
         llvm_module = llvm.parse_assembly(str(self.module))
         llvm_module.verify()
         # Passes
@@ -186,6 +187,11 @@ class Compiler(Visitor):
 
     def visitUnaryNode(self, node: UnaryNode):
         if node.op.type == TokType.AMP:
+            if isinstance(node.value, ArrayAccessNode):
+                var_name = node.value.name.var_name.value
+                array: FloArray = self.context.get(var_name).load()
+                index = self.visit(node.value.index)
+                return array.get_pointer_at_index(self.builder, index)
             var_name = node.value.var_name.value
             var: FloRef = self.context.get(var_name)
             return FloPointer(var.addr, var.referee)
@@ -198,16 +204,16 @@ class Compiler(Visitor):
             return value
 
     def visitConstDeclarationNode(self, node: ConstDeclarationNode):
-        declaration = node.declaration
-        var_name = declaration.var_name.value
-        value = self.visit(declaration.value)
-        const_val = FloConst.make_constant(self.builder, var_name, value)
-        self.context.set(var_name, const_val)
+        const_name = node.const_name.value
+        const_val = FloConst(node.value)
+        self.context.set(const_name, const_val)
 
     def visitVarAssignNode(self, node: VarAssignNode):
         var_name = node.var_name.value
         if node.value == None:
             value = self.visit(node.type)
+            if isinstance(value, FloArray):
+                value.allocate(self.builder)
         else:
             value = self.visit(node.value)
         ref = self.context.get(var_name)
@@ -229,7 +235,7 @@ class Compiler(Visitor):
         if isinstance(ref, FloRef):
             return ref.load()
         elif isinstance(ref, FloConst):
-            return ref.load(self.builder)
+            return ref.load(self)
         return ref
 
     def visitIfNode(self, node: IfNode):
@@ -351,11 +357,10 @@ class Compiler(Visitor):
         if node.is_const_array:
             return FloArray(elems, len(elems), self.builder)
         else:
-            array_class: FloClass = self.context.get("Array")
+            array_class: FloClass = FloClass.classes.get("Array")
             length = FloInt(len(elems))
             llvm_ty = array_class.value.elements[0]
-            pointer = FloArray.create_array_buffer(self.builder, llvm_ty.pointee, elems, length)
-            pointer = FloMem.bitcast(self.builder, pointer, llvm_ty)
+            pointer = FloArray.create_array_buffer(self.builder, elems)
             size = FloInt(len(elems)*llvm_ty.pointee.get_abi_size(target_data))
             return array_class.constant_init(self.builder, [pointer, length, size])
 
@@ -375,11 +380,10 @@ class Compiler(Visitor):
         value = self.visit(node.value)
         root.set_property(self.builder, node.expr.property.value, value)
 
-    def visitObjectCreateNode(self, node: ObjectCreateNode):
-        class_o: FloClass = self.context.get(
-            node.class_name.type.referer.value)
+    def visitNewMemNode(self, node: NewMemNode):
+        typeval = self.visit(node.type)
         args = [self.visit(arg) for arg in node.args]
-        return class_o.new(self.builder, args)
+        return typeval.construct(self.builder, args)
 
     def visitArrayAssignNode(self, node: ArrayAssignNode):
         index = self.visit(node.array.index)
