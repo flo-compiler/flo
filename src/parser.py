@@ -69,14 +69,14 @@ class Parser:
             return self.import_stmt()
         if tok.isKeyword("const"):
             return self.const_declaration()
+        if tok.isKeyword("type"):
+            return self.type_alias()
         if tok.isKeyword("class"):
             return self.class_declaration()
         if tok.isKeyword("if"):
             return self.if_stmt()
         elif tok.isKeyword("for"):
             return self.for_stmt()
-        elif tok.isKeyword("foreach"):
-            return self.foreach_stmt()
         elif tok.isKeyword("while"):
             return self.while_stmt()
         elif tok.isKeyword(("fnc")):
@@ -139,6 +139,18 @@ class Parser:
         value_node = self.expr()
         node_range = Range.merge(range_start, self.current_tok.range)
         return ConstDeclarationNode(name_tok, value_node, node_range)
+    
+    def type_alias(self):
+        range_start = self.current_tok.range
+        self.advance()
+        identifier = self.current_tok
+        self.advance()
+        if self.current_tok.type != TokType.EQ:
+            SyntaxError(self.current_tok.range, "Expected =").throw()
+        self.advance()
+        type = self.composite_type()
+        node_range = Range.merge(range_start, type.range)
+        return TypeAliasNode(identifier, type, node_range)
 
     def class_declaration(self) -> ClassDeclarationNode:
         self.advance()
@@ -156,6 +168,13 @@ class Parser:
         init = None
         range_start = self.current_tok.range
         init = self.expr()
+        if self.current_tok.isKeyword("in"):
+            self.advance()
+            it = self.expr()
+            stmts = self.block()
+            return ForEachNode(
+                init, it, stmts, Range.merge(range_start, self.current_tok.range)
+            )
         if self.current_tok.type != TokType.SEMICOL:
             SyntaxError(self.current_tok.range, "Expected ';'").throw()
         self.advance()
@@ -167,24 +186,6 @@ class Parser:
         stmts = self.block()
         return ForNode(
             init, cond, incr_decr, stmts, Range.merge(range_start, stmts.range)
-        )
-
-    def foreach_stmt(self):
-        range_start = self.current_tok.range
-        self.advance()
-        if self.current_tok.type != TokType.IDENTIFER:
-            SyntaxError(self.current_tok.range,
-                        "Expected an Identifier").throw()
-        id = self.current_tok
-        self.advance()
-        if not self.current_tok.isKeyword("in"):
-            SyntaxError(self.current_tok.range,
-                        "Expected keyword 'in'").throw()
-        self.advance()
-        it = self.expr()
-        stmts = self.block()
-        return ForEachNode(
-            id, it, stmts, Range.merge(range_start, self.current_tok.range)
         )
 
     def while_stmt(self):

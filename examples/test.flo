@@ -1,5 +1,4 @@
 import "@flo/core"
-const x = "hello world"
 fnc main() {
-    println(x)
+    println("hello world 🤦‍♂️")
 }

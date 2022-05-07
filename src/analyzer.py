@@ -120,6 +120,7 @@ class Analyzer(Visitor):
         self.constants = context.get_symbols()
         self.class_within: str = None
         self.current_block = Block.stmt()
+        self.types_aliases = {}
 
     def visit(self, node: Node):
         return super().visit(node)
@@ -572,10 +573,18 @@ class Analyzer(Visitor):
                 class_ = self.class_within
         return class_
 
+    def get_type_alias(self, node_type: FloObject):
+        alias = self.types_aliases.get(node_type.referer.value)
+        if alias:
+            return self.visit(alias)
+
 
     def visitTypeNode(self, node: TypeNode):
         node_type = node.type
-        if isinstance(node_type, FloObject):    
+        if isinstance(node_type, FloObject):
+            alias = self.get_type_alias(node_type)
+            if alias:
+                return alias    
             class_ = self.get_object_class(node_type, node)
             node.type.referer = class_
             node.type.llvmtype = class_.value.as_pointer()
@@ -670,6 +679,9 @@ class Analyzer(Visitor):
         self.visit(node.body)
         self.class_within = None
         self.current_block.pop_block()
+    
+    def visitTypeAliasNode(self, node: TypeAliasNode):
+        self.types_aliases[node.identifier.value] = node.type
 
     def visitPropertyAccessNode(self, node: PropertyAccessNode):
         root: FloObject = self.visit(node.expr)

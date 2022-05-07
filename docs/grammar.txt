@@ -1,15 +1,16 @@
 
 
-stmts: ln* stmt (newlines stmt)*
+stmts: ln_tok* stmt (newlines stmt)*
 
-newlines: ln+
+newlines: ln_tok+
 
-block: newlines (lbrace stmts rbrace | stmt)
+block: newlines (lbrace_tok stmts rbrace_tok | stmt)
 
 stmt: import_stmt
-      | const_declaration
+      | const_kw_declaration
+      | type_alias
       | interface_declaration
-      | class_declaration
+      | class_kw_declaration
       | if_stmt
       | for_stmt
       | foreach_stmt
@@ -19,64 +20,65 @@ stmt: import_stmt
       | expr
 
       
-import_stmt: import (identifier_list from)? string
+import_stmt: import_kw (identifier_tok_list from)? string_tok
 
-const_declaration: const identifier eq expr
+const_declaration: const_kw identifier_tok eq_tok expr
 
-class_declaration: class block
+type_alias: type_kw identifier_tok eq_tok composite_type
 
-if_stmt: if expr block newlines (else (if_stmt | block)) *
+class_declaration: class_kw block
 
-for_stmt: for (expr semicolumn expr semicolumn expr) block 
+if_stmt: if_kw expr block newlines (else_kw (if_stmt | block)) *
 
-foreach_stmt: foreach (identifier in expr) block
+for_stmt: for_kw expr (semicolumn_tok expr semicolumn_tok expr) | (in_kw expr) block 
 
-while_stmt: while expr block
 
-fnc_def_stmt: fnc identifier lpar arg_list rpar arrow expr rpar column composite_type block
+while_stmt: while_kw expr block
 
-arg_list: (arg_item (comma arg_item)* (comma dot_dot_dot arg_item)?)?
+fnc_def_stmt: fnc_kw identifier_tok lpar_tok arg_list rpar_tok arrow expr rpar_tok column composite_type block
 
-arg_item: identifier ((column composite_type) 
-                     | ((column composite_type)? eq expr))
+arg_list: (arg_item (comma_tok arg_item)* (comma_tok dot_dot_dot_tok arg_item)?)?
+
+arg_item: identifier_tok ((column composite_type) 
+                     | ((column composite_type)? eq_tok expr))
 
 change_flow_stmt: return expr?
                   | continue
                   | break
 
-expr: bit_expr (("as" | "is") composite_type)?
+expr: bit_expr ((as_kw | is_kw) composite_type)?
 
-bit_expr: comp_expr (("and" | "or" | xor | in | sl | sr) (comp_expr | assign_part))?
+bit_expr: comp_expr (("and" | "or" | xor_kw | in_kw | sl_tok | sr_tok) (comp_expr | assign_part))?
 
-comp_expr: exclamation_mark comp_expr 
+comp_expr: exclamation_mark_tok comp_expr 
          | arith_expr (comp_op arith_expr)?
 
 arith_expr: arith_expr1 (( plus | minus ) (arith_expr1 | assign_part))?
 
-arith_expr1: unary_expr ((times | div | mod | exp ) (unary_expr | assign_part))?
+arith_expr1: unary_expr ((times_tok | div_tok | mod_tok | exp_tok) (unary_expr | assign_part))?
 
 
 unary_expr: (plus | minus | amp ) unary_expr
-      | (plus_plus | minus_minus) unary_expr
+      | (plus_plus_tok | minus_minus_tok) unary_expr
       | unary_expr1
 
-unary_expr1: expr_value_op  (plus_plus | minus_minus)?
+unary_expr1: expr_value_op  (plus_plus_tok | minus_minus_tok)?
 
-expr_list: (expr (comma expr)*)?
-expr_value_op: expr_value ((dot identifier) | (lbracket expr lbracket) | (lpar expr_list rpar))* assign_part?
-expr_value:   number
-            | string
-            | identifier
-            | rbracket expr lbracket
-            | lpar expr (property_acess) rpar
-            | new_kw composite_type lpar expr_list? rpar 
+expr_list: (expr (comma_tok expr)*)?
+expr_value_op: expr_value ((dot identifier_tok) | (lbracket_tok expr lbracket_tok) | (lpar_tok expr_list rpar_tok))* assign_part?
+expr_value:   number_tok
+            | string_tok
+            | identifier_tok
+            | rbracket_tok expr lbracket_tok
+            | lpar_tok expr (property_acess) rpar_tok
+            | new_kw composite_type lpar_tok expr_list? rpar_tok 
 
-assign_part: (column composite_type)? eq expr
+assign_part: (column composite_type)? eq_tok expr
 
-fnc_type: lpar (composite_type (comma composite_type)*)? lpar arrow composite_type
+fnc_type: lpar_tok (composite_type (comma_tok composite_type)*)? lpar_tok arrow composite_type
 
-composite_type:  prim_type (lbracket expr rbracket)*
-            |    prim_type times*
+composite_type:  prim_type (lbracket_tok expr rbracket_tok)*
+            |    prim_type times_tok*
             |    fnc_type
 
 prim_type:
@@ -85,58 +87,59 @@ prim_type:
     | "bool"
     | "void"
     | "byte"
-    | identifier
+    | identifier_tok
 
 
 ## tokens
-lpar: "("
-rpar: ")"
-lbracket: "["
-rbracket: "]"
-lbrace: "{"
-rbrace: "}"
+lpar_tok: "("
+rpar_tok: ")"
+lbracket_tok: "["
+rbracket_tok: "]"
+lbrace_tok: "{"
+rbrace_tok: "}"
 plus: "+"
 minus: "-"
-eq: "="
-times: "*"
-div: "/"
-exp: "^"
+eq_tok: "="
+times_tok: "*"
+div_tok: "/"
+exp_tok: "^"
 column: ":"
-mod: "%"
-question_mark: "?"
-exclamation_mark: "!"
-identifier: ([a-zA-Z]|_)[A-Za-z | 0-9 | _]*
-sl: "<<"
-sr: ">>"
-semicolumn: ";"
-comma: ","
-ln: "\n"
-number: /[0-9]+([0-9]*)+(.?)+([0-9]*)/
-string: /"(*?)"/
+mod_tok: "%"
+question_mark_tok: "?"
+exclamation_mark_tok: "!"
+identifier_tok: ([a-zA-Z]|_)[A-Za-z | 0-9 | _]*
+sl_tok: "<<"
+sr_tok: ">>"
+semicolumn_tok: ";"
+comma_tok: ","
+ln_tok: "\n"
+number_tok: /[0-9]+([0-9]*)+(.?)+([0-9]*)/
+string_tok: /"(*?)"/
       | /'(*?)'/
-plus_plus: "++"
-minus_minus: "--"
+plus_plus_tok: "++"
+minus_minus_tok: "--"
 dot: "."
 amp: &
 dot_dot: ".."
-dot_dot_dot: "..."
-xor: "xor"
+dot_dot_dot_tok: "..."
 
 
 
 ## keywords 
-if: "if"
-else: "else"
-for: "for"
-while: "while"
-fnc: "fnc"
-import: "import"
-foreach: "foreach"
-in: "in"
-let: "let"
-const: "const"
-class: "class"
+if_kw: "if"
+else_kw: "else"
+for_kw: "for"
+while_kw: "while"
+fnc_kw: "fnc"
+import_kw: "import"
+in_kw: "in"
+const_kw: "const"
+class_kw: "class"
 new_kw: "new"
+type_kw: "type"
+xor_kw: "xor"
+as_kw: "as"
+is_kw: "is"
           
 
 comp_op: ">"
@@ -145,16 +148,5 @@ comp_op: ">"
        | ">="
        | "<="
        | "!="
-
-bin_op: plus
-      | minus
-      | times
-      | div
-      | mod
-      | exp
-
-access: "pub"
-      | "priv"
-
 
 

@@ -93,6 +93,10 @@ class IOError(Error):
     def __init__(self, range: Range, message: str):
         super().__init__(range, "IO Error", message)
 
+class NullError(Error):
+    def __init__(self, range: Range, message: str):
+        super().__init__(range, "Null pointer Error", message)
+
 
 class NameError(Error):
     def __init__(self, range: Range, message: str):

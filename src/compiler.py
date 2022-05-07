@@ -1,7 +1,7 @@
 import inspect
 from pathlib import Path
 from errors import CompileError, TypeError
-from flotypes import FloByte, FloArray, FloClass, FloConst, FloFunc, FloInlineFunc, FloInt, FloFloat, FloIterable, FloMem, FloMethod, FloObject, FloPointer, FloRef, FloBool, FloVoid
+from flotypes import FloByte, FloArray, FloClass, FloConst, FloFunc, FloInlineFunc, FloInt, FloFloat, FloMethod, FloObject, FloPointer, FloRef, FloBool, FloVoid
 from lexer import TokType
 from astree import *
 from context import Context
@@ -9,9 +9,7 @@ from ctypes import CFUNCTYPE, POINTER, c_char_p, c_int
 from builtIns import target_machine, target_data
 from llvmlite import binding as llvm, ir
 
-
 saved_labels = []
-
 
 def save_labels(*args):
     saved_labels.append(list(args))
@@ -30,6 +28,7 @@ class Compiler(Visitor):
         self.break_block = None
         self.continue_block = None
         self.class_within = None
+        self.type_aliases  = {}
 
     def visit(self, node: Node):
         return super().visit(node)
@@ -86,7 +85,7 @@ class Compiler(Visitor):
     def visitStrNode(self, node: StrNode):
         str_val = node.tok.value
         str_buff =  FloConst.create_global_str(str_val)
-        str_len = FloInt(len(str_val))
+        str_len = FloInt(len(str_val.encode('utf-8')))
         string_class =  FloClass.classes.get("string")
         return string_class.constant_init(self.builder, [str_buff, str_len])
 
@@ -146,12 +145,17 @@ class Compiler(Visitor):
             v = self.visit(stmt)
         return v
 
+    def get_type_alias(self, node_type: FloObject):
+        alias = self.type_aliases.get(node_type.referer.value)
+        if alias:
+            return self.visit(alias)
+
     def visitTypeNode(self, node: TypeNode):
         type_ = node.type
         if isinstance(type_, FloObject):
+            alias = self.get_type_alias(type_)
+            if alias: return alias
             type_.referer = self.context.get(type_.referer.name)
-        if isinstance(type_, FloInlineFunc):
-            type_.llvmtype = type_.get_llvm_type().as_pointer()
         return type_
 
     def visitFncDefNode(self, node: FncDefNode):
@@ -188,8 +192,7 @@ class Compiler(Visitor):
     def visitUnaryNode(self, node: UnaryNode):
         if node.op.type == TokType.AMP:
             if isinstance(node.value, ArrayAccessNode):
-                var_name = node.value.name.var_name.value
-                array: FloArray = self.context.get(var_name).load()
+                array: FloArray = self.visit(node.value.name)
                 index = self.visit(node.value.index)
                 return array.get_pointer_at_index(self.builder, index)
             var_name = node.value.var_name.value
@@ -212,17 +215,13 @@ class Compiler(Visitor):
         var_name = node.var_name.value
         if node.value == None:
             value = self.visit(node.type)
-            if isinstance(value, FloArray):
+            if self.builder:
                 value.allocate(self.builder)
         else:
             value = self.visit(node.value)
         ref = self.context.get(var_name)
         if not self.builder and self.class_within != None:
             return self.class_within.add_property(var_name, value)
-        elif ref == None and self.class_within == None and node.type != None and node.value == None:
-            ref = FloRef.alloc(self.builder, value, var_name)
-            self.context.set(var_name, ref)
-            return
         if ref == None:
             ref = FloRef(self.builder, value, var_name)
             self.context.set(var_name, ref)
@@ -334,16 +333,9 @@ class Compiler(Visitor):
             array = self.visit(node.identifier.name)
             array.set_element(self.builder, index, nValue)
         return nValue if node.ispre else value
-
-    def visitForEachNode(self, node: ForEachNode):
-        iterable: FloArray = self.visit(node.iterator)
-        with FloIterable.foreach(iterable, self.builder) as (item, index, continue_block, break_block):
-            save_labels(self.break_block, self.continue_block)
-            self.break_block = break_block
-            self.continue_block = continue_block
-            self.context.set(node.identifier.value, item)
-            self.visit(node.stmt)
-            [self.break_block, self.continue_block] = pop_labels()
+    
+    def visitTypeAliasNode(self, node: TypeAliasNode):
+        self.type_aliases[node.identifier.value] = node.type
 
     def visitArrayAccessNode(self, node: ArrayAccessNode):
         index = self.visit(node.index)

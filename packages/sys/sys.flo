@@ -6,4 +6,3 @@ const STDERR = 2
 fnc memcmp(ptr1: byte*, ptr2: byte*, len: int): int
 fnc memcpy(ptr1: byte*, ptr2: byte*, len: int): int
 fnc memset(ptr1: byte*, c: int, len: int)
-fnc inet_addr(addr: byte*): int

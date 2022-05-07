@@ -24,8 +24,8 @@ fnc nanosleep(req: byte*, rem: byte*): int {
     return syscall(0x23, req, rem) 
 }
 /* net */
-fnc socket(name: int, type: int, protocol: int): int {
-    return syscall(0x29, name, type, protocol)
+fnc socket(name: int, socktype: int, protocol: int): int {
+    return syscall(0x29, name, socktype, protocol)
 }
 fnc connect(sockfd: int, socketaddr_in: byte*, size: int): int {
     return syscall(0x2a, sockfd, socketaddr_in, size)
