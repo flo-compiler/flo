@@ -30,13 +30,11 @@ KEYWORDS = [
     "continue",
     "return",
     "import",
+    "type",
     "from",
-    "foreach",
     "in",
     "class",
-    "pub",
     "new",
-    "priv",
     "as",
     "is"
 ]

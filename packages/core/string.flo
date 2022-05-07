@@ -11,7 +11,7 @@ class string {
         new_str_len = this.length + data.length
         new_buffer = new byte(new_str_len)
         memcpy(new_buffer, this.buffer, this.length)
-        trailing_buffer = new_buffer+this.length
+        trailing_buffer = new_buffer + this.length
         memcpy(trailing_buffer, data.buffer, data.length+1)
         return new string(new_buffer, new_str_len)   
     }
@@ -49,4 +49,6 @@ class string {
         c_string[this.length] = '\0'
         return c_string
     }
+    // TODO
+    fnc split(delim: string){1}
 }

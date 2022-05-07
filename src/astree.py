@@ -57,6 +57,8 @@ class Visitor:
 
     def visitTypeNode(self, node): pass
 
+    def visitTypeAliasNode(self, node): pass
+
     def visitArrayNode(self, node): pass
 
     def visitArrayAccessNode(self, node): pass
@@ -133,6 +135,14 @@ class TypeNode(Node):
 
     def accept(self, visitor: Visitor):
         return visitor.visitTypeNode(self)
+
+class TypeAliasNode(Node):
+    def __init__(self, identifier: Token, type: TypeNode, range: Range):
+        self.identifier = identifier
+        self.type = type
+        self.range = range
+    def accept(self, visitor: Visitor):
+        return visitor.visitTypeAliasNode(self)
 
 
 class VarAssignNode(Node):
