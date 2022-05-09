@@ -102,7 +102,7 @@ class Parser:
         self.advance()
         return ImportNode(
             ids, path, Range.merge(
-                range_start, self.current_tok.range)
+                range_start, path.range)
         )
 
     def if_stmt(self) -> IfNode:
@@ -139,7 +139,7 @@ class Parser:
         value_node = self.expr()
         node_range = Range.merge(range_start, self.current_tok.range)
         return ConstDeclarationNode(name_tok, value_node, node_range)
-    
+
     def type_alias(self):
         range_start = self.current_tok.range
         self.advance()
@@ -173,7 +173,8 @@ class Parser:
             it = self.expr()
             stmts = self.block()
             return ForEachNode(
-                init, it, stmts, Range.merge(range_start, self.current_tok.range)
+                init, it, stmts, Range.merge(
+                    range_start, self.current_tok.range)
             )
         if self.current_tok.type != TokType.SEMICOL:
             SyntaxError(self.current_tok.range, "Expected ';'").throw()
@@ -511,57 +512,79 @@ class Parser:
     def prim_type(self):
         tok = self.current_tok
         self.advance()
-        if tok.inKeywordList(("int", "float", "bool", "void", "byte")):
-            return FloType.str_to_flotype(tok.value)
+        if tok.type == TokType.LBRACE:
+            if self.current_tok.type != TokType.INT:
+                SyntaxError(self.current_tok.range, "Expected an int").throw()
+            size = self.current_tok.value
+            self.advance()
+            if self.current_tok.type != TokType.RBRACE:
+                SyntaxError(self.current_tok.range, "Expected a }").throw()
+            self.advance()
+            if not self.current_tok.inKeywordList(("int", "float")):
+                SyntaxError(self.current_tok.range,
+                            "Expected an 'int' or 'float'").throw()
+            type = FloType.str_to_flotype(self.current_tok.value)
+            type.bits = size
+            end_range = self.current_tok.range
+            self.advance()
+            return TypeNode(type, Range.merge(tok.range, end_range))
+        elif tok.inKeywordList(("int", "float", "void")):
+            type = FloType.str_to_flotype(tok.value)
+            return TypeNode(type, tok.range)
         elif tok.type == TokType.IDENTIFER:
-            return FloObject(None, tok)
-        else:
-            SyntaxError(tok.range, "Expected type definition").throw()
+            type = FloObject(None, tok)
+            return TypeNode(type, tok.range)
 
     def fnc_type(self):
+        range_start = self.current_tok.range
         self.advance()
         arg_types = []
         if self.current_tok.type != TokType.RPAR:
-            arg_types.append(self.composite_type().type)
+            arg_types.append(self.composite_type())
             while(self.current_tok.type == TokType.COMMA):
                 self.advance()
-                arg_types.append(self.composite_type().type)
+                arg_types.append(self.composite_type())
             if self.current_tok.type != TokType.RPAR:
                 SyntaxError(self.current_tok.range, "Expected ')'").throw()
         self.advance()
         if self.current_tok.type != TokType.ARROW:
             SyntaxError(self.current_tok.range, "Expected '=>'").throw()
         self.advance()
-        r_type = self.composite_type().type
-        return FloInlineFunc(None, arg_types, r_type)
+        type = FloInlineFunc(None, arg_types, self.composite_type())
+        return TypeNode(type, Range.merge(range_start, type.return_type.range))
 
     def composite_type(self):
-        start_range = self.current_tok.range
-        if self.current_tok.type == TokType.LPAR:
-            type = self.fnc_type()
-            return TypeNode(type, Range.merge(start_range, self.current_tok.range))
-        type = self.prim_type()
-        if self.current_tok.type == TokType.MULT:
-            self.advance()
-            type = FloPointer(None, type)
-        while self.current_tok.type == TokType.LBRACKET:
-            size = None
-            self.advance()
-            if self.current_tok.type != TokType.RBRACKET:
+        tok = self.current_tok
+        type = None
+        if tok.inKeywordList(("int", "float", "void")) or tok.type == TokType.IDENTIFER or tok.type == TokType.LBRACE:
+            type = self.prim_type()
+        elif tok.type == TokType.LPAR:
+            return self.fnc_type()
+        while self.current_tok.type == TokType.MULT or self.current_tok.type == TokType.LBRACKET:
+            if self.current_tok.type == TokType.MULT:
+                end_range = self.current_tok.range
+                self.advance()
+                type = TypeNode(FloPointer(None, type), Range.merge(type.range, end_range))
+            else:
+                self.advance()
                 if self.current_tok.type != TokType.INT:
                     SyntaxError(self.current_tok.range,
                                 "Expected an int").throw()
                 size = self.current_tok.value
                 self.advance()
                 if self.current_tok.type != TokType.RBRACKET:
-                    SyntaxError(self.current_tok.range,
-                                "Expected ']'").throw()
-            self.advance()
-            elm_type = type
-            type = FloArray(None, size)
-            type.elm_type = elm_type
-        return TypeNode(type, Range.merge(start_range, self.current_tok.range))
-    # TODO::>>>>
+                    if self.current_tok.type != TokType.RBRACKET:
+                        SyntaxError(self.current_tok.range,
+                                    "Expected ']'").throw()
+                end_range = self.current_tok.range
+                self.advance()
+                arr_ty = FloArray(None, size)
+                arr_ty.elm_type = type
+                type = TypeNode(arr_ty, Range.merge(type.range, end_range))
+        if type:
+            return type
+        else:
+            SyntaxError(tok.range, "Expected type definition").throw()
 
     def num_op(self, func_a, toks, func_b=None):
         if func_b == None:

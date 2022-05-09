@@ -1,13 +1,12 @@
-import inspect
 from pathlib import Path
 from errors import CompileError, TypeError
-from flotypes import FloByte, FloArray, FloClass, FloConst, FloFunc, FloInlineFunc, FloInt, FloFloat, FloMethod, FloObject, FloPointer, FloRef, FloBool, FloVoid
+from flotypes import FloArray, FloClass, FloConst, FloFunc, FloInt, FloFloat, FloMethod, FloObject, FloPointer, FloRef, FloVoid
 from lexer import TokType
 from astree import *
 from context import Context
 from ctypes import CFUNCTYPE, POINTER, c_char_p, c_int
 from builtIns import target_machine, target_data
-from llvmlite import binding as llvm, ir
+from llvmlite import binding as llvm
 
 saved_labels = []
 
@@ -28,7 +27,6 @@ class Compiler(Visitor):
         self.break_block = None
         self.continue_block = None
         self.class_within = None
-        self.type_aliases  = {}
 
     def visit(self, node: Node):
         return super().visit(node)
@@ -80,7 +78,7 @@ class Compiler(Visitor):
         return FloFloat(node.tok.value)
 
     def visitCharNode(self, node: CharNode):
-        return FloByte(node.tok.value)
+        return FloInt(node.tok.value, 8)
 
     def visitStrNode(self, node: StrNode):
         str_val = node.tok.value
@@ -135,26 +133,16 @@ class Compiler(Visitor):
                     node.range, f"Cannot cast {a.str()} to {b.str()}"
                 ).throw()
         elif node.op.isKeyword("is"):
-            if inspect.isclass(b):
-                return FloBool(isinstance(a, b))
-            else:
-                return FloBool(a == b)
+            return FloInt(isinstance(a, b), 1)
 
     def visitStmtsNode(self, node: StmtsNode):
         for stmt in node.stmts:
             v = self.visit(stmt)
         return v
 
-    def get_type_alias(self, node_type: FloObject):
-        alias = self.type_aliases.get(node_type.referer.value)
-        if alias:
-            return self.visit(alias)
-
     def visitTypeNode(self, node: TypeNode):
         type_ = node.type
         if isinstance(type_, FloObject):
-            alias = self.get_type_alias(type_)
-            if alias: return alias
             type_.referer = self.context.get(type_.referer.name)
         return type_
 
@@ -303,9 +291,9 @@ class Compiler(Visitor):
         self.builder.position_at_start(while_exit_block)
 
     def visitFncCallNode(self, node: FncCallNode):
-        fn = self.visit(node.name)
+        fnc = self.visit(node.name)
         args = [self.visit(arg) for arg in node.args]
-        return fn.call(self.builder, args)
+        return fnc.call(self.builder, args)
 
     def visitReturnNode(self, node: ReturnNode):
         if node.value == None:
@@ -321,7 +309,7 @@ class Compiler(Visitor):
 
     def visitIncrDecrNode(self, node: IncrDecrNode):
         value = self.visit(node.identifier)
-        incr = FloInt.one().neg(self.builder) if node.id.type == TokType.MINUS_MINUS else FloInt.one()
+        incr = FloInt(-1) if node.id.type == TokType.MINUS_MINUS else FloInt(1)
         nValue = value.add(self.builder, incr)
         if isinstance(node.identifier, VarAccessNode):
             ref: FloRef = self.context.get(
@@ -333,9 +321,6 @@ class Compiler(Visitor):
             array = self.visit(node.identifier.name)
             array.set_element(self.builder, index, nValue)
         return nValue if node.ispre else value
-    
-    def visitTypeAliasNode(self, node: TypeAliasNode):
-        self.type_aliases[node.identifier.value] = node.type
 
     def visitArrayAccessNode(self, node: ArrayAccessNode):
         index = self.visit(node.index)

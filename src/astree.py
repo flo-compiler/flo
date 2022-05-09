@@ -281,7 +281,7 @@ class ImportNode(Node):
         self.ids = ids
         self.path = path
         self.range = range
-        self.resolved_as = None
+        self.resolved_as = []
 
     def accept(self, visitor: Visitor):
         return visitor.visitImportNode(self)

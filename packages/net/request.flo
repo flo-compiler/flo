@@ -1,9 +1,10 @@
+import "@flo/core/types"
 const MAX_BUFFSIZE = 12400
 class Request {
-    raw_buffer: byte*
+    raw_buffer: i8*
     buffer_size: int
     fnc constructor(){
-        this.raw_buffer = new byte(MAX_BUFFSIZE)
+        this.raw_buffer = new i8(MAX_BUFFSIZE)
     }
     fnc set_size(size: int = MAX_BUFFSIZE){
         this.buffer_size = size

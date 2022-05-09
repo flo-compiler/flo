@@ -7,7 +7,6 @@ fnc partition(start: int, end: int, array: Array): int {
             start += 1
         while array[end] > pivot
             end -= 1
-        
         if start < end
             array.swap(start, end)
     }

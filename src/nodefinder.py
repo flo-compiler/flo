@@ -5,8 +5,8 @@ from typing import List
 
 from utils import get_ast_from_file
 from context import Context
-from flotypes import FloObject
-from astree import ArrayAssignNode, ClassDeclarationNode, ConstDeclarationNode, FncCallNode, FncDefNode, ForEachNode, ForNode, IfNode, ImportNode, NewMemNode, NoOpNode, Node, NumOpNode, PropertyAssignNode, ReturnNode, StmtsNode, TypeNode, VarAccessNode, VarAssignNode, Visitor, WhileNode
+from flotypes import FloArray, FloInlineFunc, FloObject, FloPointer
+from astree import ArrayAssignNode, ClassDeclarationNode, ConstDeclarationNode, FncCallNode, FncDefNode, ForEachNode, ForNode, IfNode, ImportNode, NewMemNode, NoOpNode, Node, NumOpNode, PropertyAssignNode, ReturnNode, StmtsNode, TypeAliasNode, TypeNode, VarAccessNode, VarAssignNode, Visitor, WhileNode
 from errors import Range, NameError
 
 def resource_path(relative_path):
@@ -69,15 +69,16 @@ class NodeFinder(Visitor):
     def find(self, names_to_find: List[str], resolved_names: List[str], range: Range):
         module_path = NodeFinder.get_abs_path(self.context.display_name, range.start.fn)
         self.module_path = module_path
-        ast = get_ast_from_file(module_path, range)
+        ast = get_ast_from_file(self.module_path, range)
         if len(names_to_find) == 0:
             return NodesFindResult([ast], [])
         self.ignore = resolved_names
         self.visit(ast)
         resolved_nodes, unresolved_names = self.resolve_dependencies(names_to_find, resolved_names)
-        if len(unresolved_names) > 0:
-            NameError(range, f"Could not find {', '.join(unresolved_names)} in {self.context.display_name}").throw()
-        return NodesFindResult(resolved_nodes, unresolved_names)
+        not_found_names = list(filter(lambda name: name in names_to_find, unresolved_names))
+        if len(not_found_names) > 0:
+            NameError(range, f"Could not find {', '.join(not_found_names)} in {self.context.display_name}").throw()
+        return NodesFindResult(resolved_nodes, not_found_names)
 
     
     def visitNumOpNode(self, node: NumOpNode):
@@ -169,12 +170,26 @@ class NodeFinder(Visitor):
             self.visit(case)
         if node.else_case:
             self.visit(node.else_case)
+  
 
     def visitTypeNode(self, node: TypeNode):
         if isinstance(node.type, FloObject):
             class_name = node.type.referer.value
             if self.block_in != None and self.block_in.name != class_name:
                 self.dependency_map.get(self.block_in.name).append(class_name)
+        
+        if isinstance(node.type, FloPointer) or isinstance(node.type, FloArray):
+            self.visit(node.type.elm_type)
+        if isinstance(node.type, FloInlineFunc):
+            for arg in node.type.arg_types:
+                self.visit(arg)
+    
+    def visitTypeAliasNode(self, node: TypeAliasNode):
+        type_name = node.identifier.value
+        if type_name in self.ignore: return
+        self.visit(node.type)
+        self.context.set(type_name, node)
+    
 
     def visitClassDeclarationNode(self, node: ClassDeclarationNode):
         class_name = node.name.value

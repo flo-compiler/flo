@@ -1,10 +1,11 @@
-import read, write, AF_INET, SOCK_STREAM from "../sys"
+import "@flo/core/types"
+import read, write, AF_INET, SOCK_STREAM from "@flo/sys"
 import "socket"
 import "server"
 const MAX_BUFFSIZE = 24000
 fnc fetch(url: string, port: int, payload: string): string{
     mysocket = new Socket(AF_INET, SOCK_STREAM, 0)
-    buffer = new byte(MAX_BUFFSIZE)
+    buffer = new i8(MAX_BUFFSIZE)
     mysocket.connect(port, url)
     write(mysocket.sockfd, payload.buffer, payload.length)
     size = read(mysocket.sockfd, buffer, MAX_BUFFSIZE)

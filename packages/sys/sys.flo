@@ -1,8 +1,9 @@
+import "@flo/core/types"
 import "linux/syscalls"
 const STDIN = 0
 const STDOUT = 1
 const STDERR = 2
 /* c standart library functions:*/
-fnc memcmp(ptr1: byte*, ptr2: byte*, len: int): int
-fnc memcpy(ptr1: byte*, ptr2: byte*, len: int): int
-fnc memset(ptr1: byte*, c: int, len: int)
+fnc memcmp(ptr1: i8*, ptr2: i8*, len: int): int
+fnc memcpy(ptr1: i8*, ptr2: i8*, len: int): int
+fnc memset(ptr1: i8*, c: int, len: int)

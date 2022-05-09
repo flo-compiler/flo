@@ -1,39 +1,40 @@
+import "@flo/core/types"
 /* IO */
-fnc read(fd: int, buff: byte*, size: int): int {
+fnc read(fd: int, buff: i8*, size: int): int {
     return syscall(0x00, fd, buff, size)
 }
-fnc write(fd: int, buff: byte*, size: int): int {
+fnc write(fd: int, buff: i8*, size: int): int {
     return syscall(0x01, fd, buff, size)
 }
-fnc open(filename: byte*, flags: int): int {
+fnc open(filename: i8*, flags: int): int {
     return syscall(0x02, filename, flags)
 }
 fnc close(fd: int): int {
     return syscall(0x03, fd)
 }
-fnc lstat(filename: byte*, stat_struct: byte*): int {
+fnc lstat(filename: i8*, stat_struct: i8*): int {
     return syscall(0x06, filename, stat_struct)
 }
 fnc lseek(fd: int, offset: int, whence: int): int {
     return syscall(0x08, fd, offset, whence)
 }
-fnc access(filename: byte*, mode: int): int {
+fnc access(filename: i8*, mode: int): int {
     return syscall(0x15, filename, mode)
 }
-fnc nanosleep(req: byte*, rem: byte*): int {
+fnc nanosleep(req: i8*, rem: i8*): int {
     return syscall(0x23, req, rem) 
 }
 /* net */
 fnc socket(name: int, socktype: int, protocol: int): int {
     return syscall(0x29, name, socktype, protocol)
 }
-fnc connect(sockfd: int, socketaddr_in: byte*, size: int): int {
+fnc connect(sockfd: int, socketaddr_in: i8*, size: int): int {
     return syscall(0x2a, sockfd, socketaddr_in, size)
 }
-fnc accept(sockfd: int, socketaddr_in: byte*, size_ptr: int*): int {
+fnc accept(sockfd: int, socketaddr_in: i8*, size_ptr: int*): int {
     return syscall(0x2b, sockfd, socketaddr_in, size_ptr)
 }
-fnc bind(sockfd: int, socketaddr_in: byte*, size: int): int {
+fnc bind(sockfd: int, socketaddr_in: i8*, size: int): int {
     return syscall(0x31, sockfd, socketaddr_in, size)
 }
 fnc listen(sockfd: int, backlog: int): int {
@@ -45,10 +46,10 @@ fnc fcntl(fd: int, cmd: int, arg: int): int {
 fnc _exit (error_code: int){
     syscall(0x3c, error_code)
 }
-fnc rename(oldname: byte*, newname: byte*): int {
+fnc rename(oldname: i8*, newname: i8*): int {
     return syscall(0x52, oldname, newname)
 }
-fnc unlink(pathname: byte*): int {
+fnc unlink(pathname: i8*): int {
     return syscall(0x57, pathname)
 }
 /* IO consts */
