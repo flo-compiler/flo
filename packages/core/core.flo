@@ -1,8 +1,9 @@
-import STDOUT, STDIN, STDERR, nanosleep, write, read, _exit from "../sys"
+import STDOUT, STDIN, STDERR, nanosleep, write, read, _exit from "@flo/sys"
 import "string"
-import "../collection"
+import "types"
+import "@flo/collection"
 fnc print(message: string){
-    write(STDOUT, message as byte*, message.length)
+    write(STDOUT, message as i8*, message.length)
 }
 fnc println(message: string){
     print(message)
@@ -10,7 +11,7 @@ fnc println(message: string){
 }
 fnc input(): string {
     size = -1
-    buffer = new byte(1)
+    buffer = new i8(1)
     while (buffer[size] != '\n'){
         buffer = realloc(buffer, (++size)+1)
         read(STDIN, buffer+size, 1)
@@ -18,7 +19,7 @@ fnc input(): string {
     return new string(buffer, size)
 }
 fnc error(message: string){
-    write(STDERR, message as byte*, message.length)
+    write(STDERR, message as i8*, message.length)
 }
 fnc exit(message: string = "", code : int = 1){
     error(message)
@@ -27,7 +28,7 @@ fnc exit(message: string = "", code : int = 1){
 fnc sleep(secs: int, nanosecs: int){
     req = [secs, nanosecs]
     rem = [0, 0]
-    req_struct = &req[0] as byte*
-    rem_struct = &rem[0] as byte* 
+    req_struct = &req[0] as i8*
+    rem_struct = &rem[0] as i8* 
     while nanosleep(req_struct, rem_struct) > 0 1
 }

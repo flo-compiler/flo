@@ -1,4 +1,4 @@
-import string from "../core/string.flo"
+import "@flo/core/string"
 
 class Array {
     buffer: int*
@@ -11,7 +11,7 @@ class Array {
     }
     fnc resize(){
         this.size = this.size*2 //* sizeof(int)
-        this.buffer = realloc(this.buffer as byte*, this.size) as int*
+        this.buffer = realloc(this.buffer as i8*, this.size) as int*
     }
     fnc append(num: int){
         if this.length >= this.size {

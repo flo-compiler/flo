@@ -54,16 +54,16 @@ def realloc_wrapper(builder: ir.IRBuilder, args):
     return ptr.new(new_mem)
 
 def new_ctx(*args):
-    byte_flo_ptr_ty = ft.FloPointer(None, ft.FloByte)
+    byte_flo_ptr_ty = ft.FloPointer(None, ft.FloInt(None, 8))
     filename = Path(args[0]).name
     global_ctx = Context(*args)
     Context.current_llvm_module = ir.Module(name=filename)
     Context.current_llvm_module.triple = binding.get_default_triple()
     Context.current_llvm_module.data_layout = str(target_data)
-    global_ctx.set("true", ft.FloBool(True))
-    global_ctx.set("false", ft.FloBool(False))
-    syscall_fnc = ft.FloInlineFunc(syscall_wrapper, [ft.FloType], ft.FloInt, True)
-    realloc_fnc = ft.FloInlineFunc(realloc_wrapper, [byte_flo_ptr_ty, ft.FloInt], byte_flo_ptr_ty)
+    global_ctx.set("true", ft.FloInt(1, 1))
+    global_ctx.set("false", ft.FloInt(0, 1))
+    syscall_fnc = ft.FloInlineFunc(syscall_wrapper, [ft.FloType], ft.FloInt(None), True)
+    realloc_fnc = ft.FloInlineFunc(realloc_wrapper, [byte_flo_ptr_ty,  ft.FloInt(None)], byte_flo_ptr_ty)
     global_ctx.set("syscall", syscall_fnc)
     global_ctx.set("realloc", realloc_fnc)
     return global_ctx

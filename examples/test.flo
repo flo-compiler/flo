@@ -1,4 +1,8 @@
 import "@flo/core"
 fnc main() {
     println("hello world 🤦‍♂️")
+    a = b = "a"
+    b = "b"
+    println(a)
+    println(b)
 }

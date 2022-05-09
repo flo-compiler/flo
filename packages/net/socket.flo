@@ -1,6 +1,6 @@
-import print, exit, string from "../core"
-import memset, socket, bind, close, listen, connect from "../sys"
-fnc inet_addr(addr: byte*): int
+import print, exit, string, i8 from "@flo/core"
+import memset, socket, bind, close, listen, connect from "@flo/sys"
+fnc inet_addr(addr: i8*): int
 fnc str_to_intaddr(addr: string): int {
     if addr == "" return 0
     return inet_addr(addr.buffer)
@@ -10,17 +10,17 @@ fnc htons(x: int): int {
     x2 = (x >> 8) and 255 
     return x1 or x2
 }
-fnc create_sockaddr_in (sin_family: int, sin_port: int, sin_addr: int): byte* {
+fnc create_sockaddr_in (sin_family: int, sin_port: int, sin_addr: int): i8* {
     sin_family_port = (sin_port << 16) or (sin_family and 0xFFFF)
     socket_addr_in = [sin_family_port, sin_addr]
-    return &socket_addr_in[0] as byte*
+    return &socket_addr_in[0] as i8*
 }
 class Socket {
     sockfd: int
     domain: int
-    address: byte*
-    fnc constructor(domain: int, type: int, protocol: int){
-        sockfd = socket(domain, type, protocol)
+    address: i8*
+    fnc constructor(domain: int, socktype: int, protocol: int){
+        sockfd = socket(domain, socktype, protocol)
         if sockfd < 1 {
             exit("Error: could not create TCP socket\n")
         }

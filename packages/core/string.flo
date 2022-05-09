@@ -1,22 +1,23 @@
-import memcmp, memcpy from "../sys"
+import "types"
+import memcmp, memcpy from "@flo/sys"
 class string {
-    buffer: byte*
+    buffer: i8*
     length: int
-    fnc constructor(data: byte*, len: int){
-        this.buffer = new byte(len)
+    fnc constructor(data: i8*, len: int){
+        this.buffer = new i8(len)
         this.buffer = data
         this.length = len
     }
     fnc __add__(data: string): string {
         new_str_len = this.length + data.length
-        new_buffer = new byte(new_str_len)
+        new_buffer = new i8(new_str_len)
         memcpy(new_buffer, this.buffer, this.length)
         trailing_buffer = new_buffer + this.length
         memcpy(trailing_buffer, data.buffer, data.length+1)
         return new string(new_buffer, new_str_len)   
     }
     fnc __getitem__(index: int): string {
-        new_buffer = new byte(2)
+        new_buffer = new i8(2)
         new_buffer[0] = this.buffer[index]
         new_buffer[1] = '\0'
         return new string(new_buffer, 2)
@@ -40,11 +41,11 @@ class string {
         }
         return -1
     }
-    fnc __as_byte_ptr__(): byte* {
+    fnc __as_i8_ptr__(): i8* {
         return this.buffer
     }
-    fnc to_cstring(): byte* {
-        c_string = new byte(this.length+1)
+    fnc to_cstring(): i8* {
+        c_string = new i8(this.length+1)
         memcpy(c_string, this.buffer, this.length)
         c_string[this.length] = '\0'
         return c_string

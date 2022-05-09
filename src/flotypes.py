@@ -3,7 +3,7 @@ import inspect
 import uuid
 import builtIns as bi
 from context import Context
-from llvmlite import ir, binding
+from llvmlite import ir
 from typing import Union
 from lexer import Token
 
@@ -24,24 +24,17 @@ class FloType:
     @staticmethod
     def str_to_flotype(str):
         if str == "int":
-            return FloInt
+            return FloInt(None)
         if str == "float":
-            return FloFloat
-        elif str == "bool":
-            return FloBool
+            return FloFloat(None)
         elif str == "void":
             return FloVoid
-        elif str == "byte":
-            return FloByte
 
     @staticmethod
     def to_flo_ty(val_type, value):
         if not isinstance(value, FloMem) and value.type.is_pointer:
             value = FloMem(value)
-        if inspect.isclass(val_type):
-            return val_type(value)
-        else:
-            return val_type.new(value)
+        return val_type.new(value)
 
 
 class FloVoid(FloType):
@@ -87,7 +80,7 @@ class FloConst(FloType):
             str_ptr.initializer = str_val
             str_ptr = str_ptr.bitcast(bi.byteptr_ty)
             FloConst.str_constants[value] = str_ptr
-        flo_ptr = FloPointer(FloMem(str_ptr), FloByte)
+        flo_ptr = FloPointer(FloMem(str_ptr), FloInt(None, 8))
         return flo_ptr
 
 
@@ -99,25 +92,29 @@ def create_string_object(builder, args):
     str_class = FloClass.classes.get("string")
     return FloObject(None, str_class).construct(builder, args)
 
+machine_word_size = 32
 
 class FloInt(FloType):
-    llvmtype = bi.i32_ty
 
-    def __init__(self, value: int):
-        self.size = FloInt.llvmtype.width
+    def __init__(self, value: int, bits = machine_word_size):
+        assert bits > 0 and bits < 128
+        self.bits = bits
         if isinstance(value, int):
-            self.value = ir.Constant(FloInt.llvmtype, int(value))
+            self.value = ir.Constant(self.llvmtype, int(value))
         else:
             self.value = value
-        self.i = 0
 
     @staticmethod
     def one():
-        return FloInt(ir.Constant(FloInt.llvmtype, 1))
+        return FloInt(1)
 
     @staticmethod
     def zero():
-        return FloInt(ir.Constant(FloInt.llvmtype, 0))
+        return FloInt(0)
+    
+    @property
+    def llvmtype(self):
+        return ir.IntType(self.bits)
 
     def to_float(self, builder: ir.IRBuilder):
         return FloFloat(builder.sitofp(self.value, FloFloat.llvmtype))
@@ -139,8 +136,8 @@ class FloInt(FloType):
 
     def cmp(self, builder: ir.IRBuilder, op, num):
         if not isinstance(num, FloInt):
-            return FloBool.false()
-        return FloBool(builder.icmp_signed(op, self.value, num.value))
+            return FloInt(0, 1)
+        return FloInt(builder.icmp_signed(op, self.value, num.value), 1)
 
     def neg(self, builder: ir.IRBuilder):
         self.value = builder.neg(self.value)
@@ -170,41 +167,63 @@ class FloInt(FloType):
         return FloInt(builder.xor(self.value, num.value))
 
     def cast_to(self, builder: ir.IRBuilder, type):
-        if type == FloFloat:
+        if isinstance(type, FloInt):
+            return self.bitcast(builder, type.bits)
+        elif isinstance(type, FloFloat):
             return self.to_float(builder)
-        elif type == FloBool:
-            return self.cmp(builder, "!=", FloInt.zero())
-        elif type == FloByte:
-            return FloByte(builder.trunc(self.value, FloByte.llvmtype))
         elif is_string_object(type):
             return self.to_string(builder)
         else:
             raise Exception(f"Unhandled type cast: int to {type.str()}")
+        
+    def bitcast(self, builder: ir.IRBuilder, bits: int):
+        llvmtype = ir.IntType(bits)
+        if bits != self.bits:
+            return FloInt(builder.trunc(self.value, llvmtype), bits)
+        else:
+            return self
+
+    def to_bool_string(self, builder: ir.IRBuilder):
+        value = builder.select(self.value, FloConst.create_global_str(
+            "true\0").value, FloConst.create_global_str("false\0").value)
+        lenval = builder.select(self.value, FloInt(4).value, FloInt(5).value)
+        return create_string_object(builder, [FloMem(value), FloInt(lenval)])
 
     def to_string(self, builder: ir.IRBuilder):
+        if self.bits == 1:
+            return self.to_bool_string(builder)
         sprintf = bi.get_instrinsic("sprintf")
         str_buff = FloMem.halloc_size(builder, FloInt(10))
         fmt = FloConst.create_global_str("%d")
         strlen = FloInt(builder.call(
             sprintf, [str_buff.value, fmt.value, self.value]))
         return create_string_object(builder, [str_buff, strlen])
+    
+    def str(self) -> str:
+        if self.bits == 1:
+            return "bool"
+        elif self.bits == machine_word_size:
+            return "int"
+        else:
+            return f"i{self.bits}"
+    
+    def __eq__(self, __o: object) -> bool:
+        return isinstance(__o, FloInt)
+    
+    def new(self, value):
+        return FloInt(value, self.bits)
 
-    @staticmethod
-    def str() -> str:
-        return "int"
-
-    @staticmethod
-    def construct(builder: ir.IRBuilder, args):
-        mem = FloMem.halloc(builder, FloInt.llvmtype, args[0])
-        return FloPointer(mem, FloInt)
+    def construct(self, builder: ir.IRBuilder, args):
+        mem = FloMem.halloc(builder, self.llvmtype, args[0])
+        return FloPointer(mem, FloInt(None, self.bits))
 
 
 class FloFloat(FloType):
-    llvmtype = ir.DoubleType()
-
-    def __init__(self, value: Union[float, ir.Constant]):
+    def __init__(self, value: Union[float, ir.Constant], bits = machine_word_size):
+        assert bits == 16 or bits == 32 or bits == 64
+        self.bits = bits
         if isinstance(value, float):
-            self.value = ir.Constant(ir.DoubleType(), value)
+            self.value = ir.Constant(self.llvmtype, value)
         else:
             self.value = value
 
@@ -225,8 +244,8 @@ class FloFloat(FloType):
 
     def cmp(self, builder: ir.IRBuilder, op, num):
         if not isinstance(num, FloFloat):
-            return FloBool.false()
-        return FloBool(builder.fcmp_ordered(op, self.value, num.value))
+            return FloInt(0, 1)
+        return FloInt(builder.fcmp_ordered(op, self.value, num.value), 1)
 
     def mod(self, builder: ir.IRBuilder, num):
         return FloFloat(builder.frem(self.value, num.value))
@@ -239,15 +258,16 @@ class FloFloat(FloType):
         self.value = builder.fneg(self.value)
         return self
 
+
     def cast_to(self, builder: ir.IRBuilder, type):
         if type == FloInt:
             return self.to_int(builder)
-        elif type == FloBool:
-            return self.cmp(builder, "!=", FloFloat.zero())
         elif is_string_object(type):
             return self.to_string(builder)
         else:
             raise Exception(f"Unhandled type cast: float to {type.str()}")
+    def __eq__(self, __o: object) -> bool:
+        return isinstance(__o, FloFloat) and __o.bits == self.bits
 
     def to_string(self, builder: ir.IRBuilder):
         sprintf = bi.get_instrinsic("sprintf")
@@ -255,6 +275,9 @@ class FloFloat(FloType):
         fmt = FloConst.create_global_str("%g")
         length = builder.call(sprintf, [str_buff.value, fmt.value, self.value])
         return create_string_object(builder, [str_buff, FloInt(length)])
+    
+    def new(self, value):
+        return FloFloat(value, self.bits)
 
     @staticmethod
     def zero():
@@ -264,109 +287,25 @@ class FloFloat(FloType):
     def one():
         return FloFloat(1.0)
 
-    @staticmethod
-    def str() -> str:
-        return "float"
+    def str(self) -> str:
+        if self.bits == machine_word_size:
+            return "float"
+        else:
+            return f"float{self.bits}"
+    
+    @property
+    def llvmtype(self):
+        if self.bits == 16:
+            return ir.HalfType()
+        elif self.bits == 32:
+            return ir.FloatType()
+        else:
+            return ir.DoubleType()
 
     @staticmethod
     def construct(builder: ir.IRBuilder, args):
         mem = FloMem.halloc(builder, FloFloat.llvmtype, args[0])
         return FloPointer(mem, FloFloat)
-
-
-class FloBool(FloType):
-    llvmtype = ir.IntType(1)
-    print_fmt = "%s"
-    def __init__(self, value):
-        if isinstance(value, bool):
-            self.value = ir.Constant(FloBool.llvmtype, int(value))
-        else:
-            self.value = value
-
-    def cmp(self, builder: ir.IRBuilder, op, bool):
-        if not isinstance(bool, FloBool):
-            return FloBool.false()
-        return FloBool(builder.icmp_signed(op, self.value, bool.value))
-
-    def not_(self, builder: ir.IRBuilder):
-        return FloBool(builder.not_(self.value))
-
-    def or_(self, builder: ir.IRBuilder, bool):
-        return FloBool(builder.or_(self.value, bool.value))
-
-    def and_(self, builder: ir.IRBuilder, bool):
-        return FloBool(builder.and_(self.value, bool.value))
-
-    def cast_to(self, builder: ir.IRBuilder, type):
-        if type == FloInt:
-            return FloInt(builder.zext(self.value, FloInt.llvmtype))
-        elif type == FloFloat:
-            return self.cast_to(builder, FloInt).to_float(builder)
-        elif is_string_object(type):
-            return self.to_string(builder)
-        else:
-            raise Exception(f"Unhandled type cast: bool to {type.str()}")
-
-    def to_string(self, builder):
-        value = builder.select(self.value, FloConst.create_global_str(
-            "true\0").value, FloConst.create_global_str("false\0").value)
-        lenval = builder.select(self.value, FloInt(4).value, FloInt(5).value)
-        return create_string_object(builder, [FloMem(value), FloInt(lenval)])
-
-    def __eq__(self, other):
-        return isinstance(other, FloBool) or other == FloBool
-
-    @staticmethod
-    def true():
-        return FloBool(True)
-
-    @staticmethod
-    def false():
-        return FloBool(False)
-
-    @staticmethod
-    def str() -> str:
-        return 'bool'
-
-    @staticmethod
-    def construct(builder: ir.IRBuilder, args):
-        mem = FloMem.halloc(builder, FloBool.llvmtype, args[0])
-        return FloPointer(mem, FloBool)
-
-
-class FloByte:
-    llvmtype = bi.byte_ty
-
-    def __init__(self, value) -> None:
-        if isinstance(value, int):
-            self.value = ir.Constant(ir.IntType(8), value)
-        else:
-            self.value = value
-        assert self.value != None
-
-    @staticmethod
-    def str():
-        return 'byte'
-
-    def cmp(self, builder: ir.IRBuilder, op, other):
-        bool_val = builder.icmp_unsigned(op, self.value, other.value)
-        return FloBool(bool_val)
-
-    def cast_to(self, builder: ir.IRBuilder, type):
-        if type == FloInt:
-            return FloInt(builder.zext(self.value, FloInt.llvmtype))
-        elif is_string_object(type):
-            return self.cast_to(builder, FloInt).to_string(builder)
-        else:
-            raise Exception(f"Unhandled type cast: bool to {type.str()}")
-
-    def print_val(self, builder: ir.IRBuilder):
-        bi.call_printf(builder, "%d", self.value)
-
-    @staticmethod
-    def construct(builder: ir.IRBuilder, args):
-        mem = FloMem.halloc(builder, FloByte.llvmtype, args[0])
-        return FloPointer(mem, FloByte)
 
 
 class FloMem(FloType):
@@ -405,7 +344,7 @@ class FloMem(FloType):
         return FloInt(res).cmp(builder, "==", FloInt(0))
 
     def copy_to(self, builder: ir.IRBuilder, dest, size: FloInt):
-        args = [dest.value, self.value,  size.value, FloBool.false().value]
+        args = [dest.value, self.value,  size.value, FloInt(0,1).value]
         builder.call(bi.get_instrinsic("memcpy"), args)
 
     def free(self, builder: ir.IRBuilder):
@@ -509,10 +448,6 @@ class FloPointer(FloType):
 
     def str(self):
         return f"{self.elm_type.str()}*"
-
-    def print_val(self, builder: ir.IRBuilder):
-        fmt = "%s" if self.elm_type == FloByte else "%p"
-        bi.call_printf(builder, fmt, self.value)
 
 
 class FloArray:
@@ -824,11 +759,11 @@ class FloObject:
         if op == "==":
             eq_method = self.get_method("__eq__")
             if eq_method == None:
-                return FloBool.false()
+                return FloInt(0, 1)
             if eq_method.arg_types[0] == other:
                 return eq_method.call(builder, [other])
             else:
-                return FloBool.false()
+                return FloInt(0, 1)
 
     def get_cast_method(self, type):
         name = "__as_"+type.str().replace("*", "_ptr")+"__"

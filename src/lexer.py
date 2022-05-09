@@ -20,8 +20,6 @@ KEYWORDS = [
     "else",
     "int",
     "float",
-    "bool",
-    "byte",
     "void",
     "for",
     "while",

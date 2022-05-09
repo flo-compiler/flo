@@ -1,9 +1,9 @@
-import exit from "../core"
-import accept, read, AF_INET, SOCK_STREAM from "../sys"
+import exit from "@flo/core"
+import accept, read, AF_INET, SOCK_STREAM from "@flo/sys"
 import "socket"
 import "response"
 import "request"
-
+type RequestHandler = (Request, Response)=>void
 class Server {
     socket: Socket
     response: Response
@@ -16,7 +16,7 @@ class Server {
         this.request = new Request()
     }
     fnc accept_connection(){
-        cli: byte[16]
+        cli: i8[16]
         cli_len = 4
         connfd = accept(this.socket.sockfd, &cli[0], &cli_len)
         if connfd < 0 {
@@ -26,7 +26,7 @@ class Server {
         this.request.set_size(size)
         this.response.set_connection(connfd)
     }
-    fnc listen(handler: (Request, Response)=>void){
+    fnc listen(handler: RequestHandler){
         while 1 {
             this.accept_connection()
             handler(this.request, this.response)

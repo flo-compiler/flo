@@ -66,7 +66,7 @@ unary_expr1: expr_value_op  (plus_plus_tok | minus_minus_tok)?
 
 expr_list: (expr (comma_tok expr)*)?
 expr_value_op: expr_value ((dot identifier_tok) | (lbracket_tok expr lbracket_tok) | (lpar_tok expr_list rpar_tok))* assign_part?
-expr_value:   number_tok
+expr_value:   number rbrace_tok
             | string_tok
             | identifier_tok
             | rbracket_tok expr lbracket_tok
@@ -77,16 +77,13 @@ assign_part: (column composite_type)? eq_tok expr
 
 fnc_type: lpar_tok (composite_type (comma_tok composite_type)*)? lpar_tok arrow composite_type
 
-composite_type:  prim_type (lbracket_tok expr rbracket_tok)*
+composite_type:  prim_type (lbracket_tok (number_tok | identifier_tok)  rbracket_tok)*
             |    prim_type times_tok*
             |    fnc_type
 
 prim_type:
-    | "float"
-    | "int"
-    | "bool"
+      (lbrace_tok number rbrace_tok)?("float" | "int")
     | "void"
-    | "byte"
     | identifier_tok
 
 
@@ -113,7 +110,7 @@ sr_tok: ">>"
 semicolumn_tok: ";"
 comma_tok: ","
 ln_tok: "\n"
-number_tok: /[0-9]+([0-9]*)+(.?)+([0-9]*)/
+number rbrace_tok: /[0-9]+([0-9]*)+(.?)+([0-9]*)/
 string_tok: /"(*?)"/
       | /'(*?)'/
 plus_plus_tok: "++"
