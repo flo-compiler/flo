@@ -1,6 +1,6 @@
 from pathlib import Path
 from errors import CompileError, TypeError
-from flotypes import FloArray, FloClass, FloConst, FloFunc, FloInt, FloFloat, FloMethod, FloObject, FloPointer, FloRef, FloVoid
+from flotypes import FloArray, FloClass, FloConst, FloFunc, FloInlineFunc, FloInt, FloFloat, FloMethod, FloObject, FloPointer, FloRef, FloVoid, create_array_buffer
 from lexer import TokType
 from astree import *
 from context import Context
@@ -185,7 +185,7 @@ class Compiler(Visitor):
                 return array.get_pointer_at_index(self.builder, index)
             var_name = node.value.var_name.value
             var: FloRef = self.context.get(var_name)
-            return FloPointer(var.addr, var.referee)
+            return FloPointer(var.referee).new(var.mem)
         value = self.visit(node.value)
         if node.op.type == TokType.MINUS:
             return value.neg(self.builder)
@@ -203,8 +203,6 @@ class Compiler(Visitor):
         var_name = node.var_name.value
         if node.value == None:
             value = self.visit(node.type)
-            if self.builder:
-                value.allocate(self.builder)
         else:
             value = self.visit(node.value)
         ref = self.context.get(var_name)
@@ -297,9 +295,9 @@ class Compiler(Visitor):
 
     def visitReturnNode(self, node: ReturnNode):
         if node.value == None:
-            return self.ret(FloVoid, self.builder)
+            return self.ret(FloVoid)
         val = self.visit(node.value)
-        return self.ret(val, self.builder)
+        return self.ret(val)
 
     def visitBreakNode(self, _: BreakNode):
         self.builder.branch(self.break_block)
@@ -332,12 +330,12 @@ class Compiler(Visitor):
     def visitArrayNode(self, node: ArrayNode):
         elems = [self.visit(elm_node) for elm_node in node.elements]
         if node.is_const_array:
-            return FloArray(elems, len(elems), self.builder)
+            return FloArray(elems, len(elems))
         else:
             array_class: FloClass = FloClass.classes.get("Array")
             length = FloInt(len(elems))
             llvm_ty = array_class.value.elements[0]
-            pointer = FloArray.create_array_buffer(self.builder, elems)
+            pointer = create_array_buffer(self.builder, elems)
             size = FloInt(len(elems)*llvm_ty.pointee.get_abi_size(target_data))
             return array_class.constant_init(self.builder, [pointer, length, size])
 

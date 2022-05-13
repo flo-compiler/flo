@@ -1,15 +1,17 @@
 
 from pathlib import Path
-from context import Context, SymbolTable
+from context import Context
 from llvmlite import ir, binding
 import flotypes as ft
 
-i32_ty = ir.IntType(32)
+import struct
+machine_word_size = struct.calcsize('P') * 8
+sizet_ty = ir.IntType(machine_word_size)
 void_ty = ir.VoidType()
 double_ty = ir.DoubleType()
 byte_ty = ir.IntType(8)
 byteptr_ty = byte_ty.as_pointer()
-
+int32_ty = ir.IntType(32)
 def get_instrinsic(name):
     m = Context.current_llvm_module
     if m.globals.get(name, None):
@@ -17,21 +19,21 @@ def get_instrinsic(name):
     elif name == "pow":
         return m.declare_intrinsic("llvm.pow", [double_ty])
     elif name == "memcpy":
-        return m.declare_intrinsic("llvm.memcpy", [byteptr_ty, byteptr_ty, i32_ty])
+        return m.declare_intrinsic("llvm.memcpy", [byteptr_ty, byteptr_ty, sizet_ty])
     elif name == "va_start":
         return m.declare_intrinsic("llvm.va_start", (), ir.FunctionType(void_ty, [byteptr_ty]))
     elif name == "va_end":
         return m.declare_intrinsic("llvm.va_end", (), ir.FunctionType(void_ty, [byteptr_ty]))
     elif name == "malloc":
-        return m.declare_intrinsic("malloc", (), ir.FunctionType(byteptr_ty, [i32_ty]))
+        return m.declare_intrinsic("malloc", (), ir.FunctionType(byteptr_ty, [sizet_ty]))
     elif name == "realloc":
-        return m.declare_intrinsic("realloc", (), ir.FunctionType(byteptr_ty, [byteptr_ty, i32_ty]))
+        return m.declare_intrinsic("realloc", (), ir.FunctionType(byteptr_ty, [byteptr_ty, sizet_ty]))
     elif name == "free":
         return m.declare_intrinsic("free", (), ir.FunctionType(ir.VoidType(), [byteptr_ty]))
     elif name == "memcmp":
-        return m.declare_intrinsic("memcmp", (), ir.FunctionType(i32_ty, [byteptr_ty, byteptr_ty, i32_ty]))
+        return m.declare_intrinsic("memcmp", (), ir.FunctionType(sizet_ty, [byteptr_ty, byteptr_ty, sizet_ty]))
     elif name == "sprintf":
-        return m.declare_intrinsic("sprintf", (), ir.FunctionType(i32_ty, [byteptr_ty, byteptr_ty], var_arg=True))
+        return m.declare_intrinsic("sprintf", (), ir.FunctionType(sizet_ty, [byteptr_ty, byteptr_ty], var_arg=True))
 
 binding.initialize()
 binding.initialize_native_target()
@@ -43,7 +45,7 @@ def syscall_wrapper(builder: ir.IRBuilder, args):
     regs = "{rax}", "{rdi}", "{rsi}", "{rdx}", "{r10}", "{r8}"
     arg_tys = [arg.llvmtype for arg in args]
     arg_vals = [arg.value for arg in args]
-    fn_ty = ir.FunctionType(i32_ty, arg_tys)
+    fn_ty = ir.FunctionType(sizet_ty, arg_tys)
     rval = builder.asm(fn_ty, "syscall","=r,"+",".join(regs[:len(args)]), arg_vals, True)
     return ft.FloInt(rval)
 
@@ -54,7 +56,7 @@ def realloc_wrapper(builder: ir.IRBuilder, args):
     return ptr.new(new_mem)
 
 def new_ctx(*args):
-    byte_flo_ptr_ty = ft.FloPointer(None, ft.FloInt(None, 8))
+    byte_flo_ptr_ty = ft.FloPointer(ft.FloInt(None, 8))
     filename = Path(args[0]).name
     global_ctx = Context(*args)
     Context.current_llvm_module = ir.Module(name=filename)

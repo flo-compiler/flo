@@ -38,6 +38,9 @@ class Context:
     
     def create_child(self, name):
         return Context(name, self)
+    
+    def get_values(self):
+        return list(self.symbol_table.symbols.values())
 
     def delete(self, name):
         self.symbol_table.delete(name)

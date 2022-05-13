@@ -1,11 +1,27 @@
 from ast import List
-import inspect
-import uuid
 import builtIns as bi
 from context import Context
 from llvmlite import ir
 from typing import Union
 from lexer import Token
+
+
+def create_array_buffer(builder: ir.IRBuilder, elems):
+    elm_ty = elems[0].llvmtype
+    mem = FloMem.halloc(builder, elm_ty, FloInt(len(elems)))
+    for index, elem in enumerate(elems):
+        mem.store_at_index(builder, elem, FloInt(index, 32))
+    return mem
+
+
+def is_string_object(type):
+    return isinstance(type, FloObject) and type.referer.name == 'string'
+
+
+def create_string_object(builder, args):
+    str_class = FloClass.classes.get("string")
+    return FloObject(str_class).construct(builder, args)
+
 
 class FloType:
     llvmtype = None
@@ -21,31 +37,39 @@ class FloType:
     def str():
         return "any"
 
-    @staticmethod
-    def str_to_flotype(str):
-        if str == "int":
-            return FloInt(None)
-        if str == "float":
-            return FloFloat(None)
-        elif str == "void":
-            return FloVoid
+    def store_value_to_ref(self, ref):
+        if not ref.mem:
+            ref.mem = FloMem.salloc(ref.builder, self.llvmtype, ref.name)
+        ref.mem.store_at_index(ref.builder, self)
 
-    @staticmethod
-    def to_flo_ty(val_type, value):
-        if not isinstance(value, FloMem) and value.type.is_pointer:
-            value = FloMem(value)
-        return val_type.new(value)
+    def load_value_from_ref(self, ref):
+        return self.__class__(ref.mem.load_at_index(ref.builder))
+
+    def construct(self, builder: ir.IRBuilder, args):
+        ptr = FloPointer(self)
+        ptr.mem = FloMem.halloc(builder, self.llvmtype, args[0])
+        return ptr
 
 
 class FloVoid(FloType):
     llvmtype = ir.VoidType()
 
-    def print_val(builder):
-        bi.call_printf(builder, "null")
+    def to_string(builder):
+        mem = FloConst.create_global_str("null")
+        length = FloInt(4)
+        return create_string_object(builder, [mem, length])
 
-    @staticmethod
     def str() -> str:
         return "void"
+
+    def cast_to(self, builder, new_ty):
+        if is_string_object(new_ty):
+            return self.to_string(builder)
+        else:
+            raise Exception("undefined case")
+
+    def __eq__(self, __o: object) -> bool:
+        return isinstance(__o, FloVoid)
 
 
 class FloConst(FloType):
@@ -80,23 +104,12 @@ class FloConst(FloType):
             str_ptr.initializer = str_val
             str_ptr = str_ptr.bitcast(bi.byteptr_ty)
             FloConst.str_constants[value] = str_ptr
-        flo_ptr = FloPointer(FloMem(str_ptr), FloInt(None, 8))
+        flo_ptr = FloMem(str_ptr)
         return flo_ptr
 
 
-def is_string_object(type):
-    return isinstance(type, FloObject) and type.referer.name == 'string'
-
-
-def create_string_object(builder, args):
-    str_class = FloClass.classes.get("string")
-    return FloObject(None, str_class).construct(builder, args)
-
-machine_word_size = 32
-
 class FloInt(FloType):
-
-    def __init__(self, value: int, bits = machine_word_size):
+    def __init__(self, value: int, bits=bi.machine_word_size):
         assert bits > 0 and bits < 128
         self.bits = bits
         if isinstance(value, int):
@@ -104,20 +117,13 @@ class FloInt(FloType):
         else:
             self.value = value
 
-    @staticmethod
-    def one():
-        return FloInt(1)
-
-    @staticmethod
-    def zero():
-        return FloInt(0)
-    
     @property
     def llvmtype(self):
         return ir.IntType(self.bits)
 
-    def to_float(self, builder: ir.IRBuilder):
-        return FloFloat(builder.sitofp(self.value, FloFloat.llvmtype))
+    @property
+    def is_constant(self):
+        return isinstance(self.value, ir.Constant)
 
     def add(self, builder: ir.IRBuilder, num):
         return FloInt(builder.add(self.value, num.value))
@@ -170,24 +176,26 @@ class FloInt(FloType):
         if isinstance(type, FloInt):
             return self.bitcast(builder, type.bits)
         elif isinstance(type, FloFloat):
-            return self.to_float(builder)
+            return FloFloat(builder.sitofp(self.value, type.llvmtype))
         elif is_string_object(type):
             return self.to_string(builder)
         else:
             raise Exception(f"Unhandled type cast: int to {type.str()}")
-        
+
     def bitcast(self, builder: ir.IRBuilder, bits: int):
         llvmtype = ir.IntType(bits)
         if bits != self.bits:
-            return FloInt(builder.trunc(self.value, llvmtype), bits)
+            cast_fnc = builder.trunc if bits < self.bits else builder.zext
+            return FloInt(cast_fnc(self.value, llvmtype), bits)
         else:
             return self
 
     def to_bool_string(self, builder: ir.IRBuilder):
         value = builder.select(self.value, FloConst.create_global_str(
-            "true\0").value, FloConst.create_global_str("false\0").value)
+            "true").value, FloConst.create_global_str("false").value)
         lenval = builder.select(self.value, FloInt(4).value, FloInt(5).value)
-        return create_string_object(builder, [FloMem(value), FloInt(lenval)])
+        mem = FloMem(value)
+        return create_string_object(builder, [mem, FloInt(lenval)])
 
     def to_string(self, builder: ir.IRBuilder):
         if self.bits == 1:
@@ -198,37 +206,30 @@ class FloInt(FloType):
         strlen = FloInt(builder.call(
             sprintf, [str_buff.value, fmt.value, self.value]))
         return create_string_object(builder, [str_buff, strlen])
-    
+
     def str(self) -> str:
         if self.bits == 1:
             return "bool"
-        elif self.bits == machine_word_size:
+        elif self.bits == bi.machine_word_size:
             return "int"
         else:
             return f"i{self.bits}"
-    
+
     def __eq__(self, __o: object) -> bool:
-        return isinstance(__o, FloInt)
-    
+        return isinstance(__o, FloInt) and __o.bits == self.bits
+
     def new(self, value):
         return FloInt(value, self.bits)
 
-    def construct(self, builder: ir.IRBuilder, args):
-        mem = FloMem.halloc(builder, self.llvmtype, args[0])
-        return FloPointer(mem, FloInt(None, self.bits))
-
 
 class FloFloat(FloType):
-    def __init__(self, value: Union[float, ir.Constant], bits = machine_word_size):
+    def __init__(self, value: Union[float, ir.Constant], bits=bi.machine_word_size):
         assert bits == 16 or bits == 32 or bits == 64
         self.bits = bits
         if isinstance(value, float):
             self.value = ir.Constant(self.llvmtype, value)
         else:
             self.value = value
-
-    def to_int(self, builder: ir.IRBuilder):
-        return FloInt(builder.fptosi(self.value, FloInt.llvmtype))
 
     def add(self, builder: ir.IRBuilder, num):
         return FloFloat(builder.fadd(self.value, num.value))
@@ -250,7 +251,7 @@ class FloFloat(FloType):
     def mod(self, builder: ir.IRBuilder, num):
         return FloFloat(builder.frem(self.value, num.value))
 
-    def pow(self, builder, num):
+    def pow(self, builder: ir.IRBuilder, num):
         v = builder.call(bi.get_instrinsic("pow"), [self.value, num.value])
         return FloFloat(v)
 
@@ -258,41 +259,37 @@ class FloFloat(FloType):
         self.value = builder.fneg(self.value)
         return self
 
-
     def cast_to(self, builder: ir.IRBuilder, type):
-        if type == FloInt:
-            return self.to_int(builder)
+        if isinstance(type, FloInt):
+            return FloInt(builder.fptosi(self.value, type.llvmtype))
         elif is_string_object(type):
             return self.to_string(builder)
         else:
             raise Exception(f"Unhandled type cast: float to {type.str()}")
+
     def __eq__(self, __o: object) -> bool:
         return isinstance(__o, FloFloat) and __o.bits == self.bits
 
     def to_string(self, builder: ir.IRBuilder):
         sprintf = bi.get_instrinsic("sprintf")
         str_buff = FloMem.halloc_size(builder, FloInt(1))
-        fmt = FloConst.create_global_str("%g")
+        fmt = FloConst.create_global_str("%.1lf")
         length = builder.call(sprintf, [str_buff.value, fmt.value, self.value])
         return create_string_object(builder, [str_buff, FloInt(length)])
-    
+
     def new(self, value):
         return FloFloat(value, self.bits)
 
-    @staticmethod
-    def zero():
-        return FloFloat(0.0)
-
-    @staticmethod
-    def one():
-        return FloFloat(1.0)
-
     def str(self) -> str:
-        if self.bits == machine_word_size:
+        if self.bits == bi.machine_word_size:
             return "float"
         else:
             return f"float{self.bits}"
-    
+
+    @property
+    def is_constant(self):
+        return isinstance(self.value, ir.Constant)
+
     @property
     def llvmtype(self):
         if self.bits == 16:
@@ -302,39 +299,34 @@ class FloFloat(FloType):
         else:
             return ir.DoubleType()
 
-    @staticmethod
-    def construct(builder: ir.IRBuilder, args):
-        mem = FloMem.halloc(builder, FloFloat.llvmtype, args[0])
-        return FloPointer(mem, FloFloat)
 
-
-class FloMem(FloType):
-    heap_allocations = {}
-    stack_allocations = {}
-    llvmtype = bi.byteptr_ty
-
+class FloMem:
     def __init__(self, value):
-        self.value = value
-        self.uuid = str(uuid.uuid1())
-        self.references = set()
         assert not isinstance(value, FloMem)
+        if value:
+            assert isinstance(value.type, ir.PointerType) or isinstance(
+                value.type, ir.ArrayType)
+        self.value = value
 
     def get_pointer_at_index(self, builder: ir.IRBuilder, *indices: FloInt):
         if len(list(indices)) == 0:
             return self
         ir_indices = [index.value for index in indices]
-        return FloMem(builder.gep(self.value, ir_indices, True))
+        mem = FloMem(builder.gep(self.value, ir_indices, True))
+        return mem
 
     def store_at_index(self, builder: ir.IRBuilder, floval: FloType, *indices: FloInt):
-        idx_ptr = self.get_pointer_at_index(builder, *indices)
-        if isinstance(floval, FloMem):
-            self.references.add(floval.uuid)
+        idx_ptr = self
+        if indices:
+            idx_ptr = self.get_pointer_at_index(builder, *indices)
         builder.store(floval.value, idx_ptr.value)
 
     def load_at_index(self, builder: ir.IRBuilder, *indices: FloInt):
-        ptr = self.get_pointer_at_index(builder, *indices)
+        ptr = self
+        if indices:
+            ptr = self.get_pointer_at_index(builder, *indices)
         loaded_value = builder.load(ptr.value)
-        if loaded_value.type.is_pointer:
+        if loaded_value.type.is_pointer or isinstance(loaded_value.type, ir.ArrayType):
             return FloMem(loaded_value)
         return loaded_value
 
@@ -344,24 +336,23 @@ class FloMem(FloType):
         return FloInt(res).cmp(builder, "==", FloInt(0))
 
     def copy_to(self, builder: ir.IRBuilder, dest, size: FloInt):
-        args = [dest.value, self.value,  size.value, FloInt(0,1).value]
+        args = [dest.value, self.value,  size.value, FloInt(0, 1).value]
         builder.call(bi.get_instrinsic("memcpy"), args)
 
     def free(self, builder: ir.IRBuilder):
-        i8_ptr = builder.bitcast(self.value, bi.byteptr_ty)
-        builder.call(bi.get_instrinsic("free"), i8_ptr)
+        if FloMem.heap_allocations.get(self.uuid) != None:
+            i8_ptr = builder.bitcast(self.value, bi.byteptr_ty)
+            builder.call(bi.get_instrinsic("free"), [i8_ptr])
 
     @staticmethod
     def bitcast(builder: ir.IRBuilder, mem, ir_type: ir.Type):
         new_mem = FloMem(builder.bitcast(mem.value, ir_type))
-        new_mem.uuid = mem.uuid
         return new_mem
 
     @staticmethod
     def halloc_size(builder: ir.IRBuilder, size: FloInt, name=''):
         malloc_fnc = bi.get_instrinsic("malloc")
         mem_obj = FloMem(builder.call(malloc_fnc, [size.value], name))
-        FloMem.heap_allocations[mem_obj.uuid] = mem_obj
         return mem_obj
 
     @staticmethod
@@ -379,7 +370,6 @@ class FloMem(FloType):
     def salloc(builder: ir.IRBuilder, ir_type: ir.Type, name=''):
         ty_ptr = builder.alloca(ir_type, name=name)
         mem_obj = FloMem(ty_ptr)
-        FloMem.stack_allocations[mem_obj.uuid] = mem_obj
         return mem_obj
 
     @staticmethod
@@ -388,37 +378,44 @@ class FloMem(FloType):
         old_mem = FloMem.bitcast(builder, mem, bi.byteptr_ty).value
         new_mem = builder.call(realloc, [old_mem, size.value])
         new_mem = FloMem(new_mem)
-        new_mem.uuid = mem.uuid
-        FloMem.heap_allocations[mem.uuid] = new_mem
         return new_mem
 
 
 class FloPointer(FloType):
-    def __init__(self, value: FloMem, flotype: FloType) -> None:
-        self.mem = value
+    def __init__(self, flotype: FloType) -> None:
+        self.is_constant = False
         self.elm_type = flotype
-        if value != None:
-            assert isinstance(self.mem, FloMem)
-
-    @property
-    def llvmtype(self):
-        return self.elm_type.llvmtype.as_pointer()
-
-    @llvmtype.setter
-    def llvmtype(self, ty):
-        self.elm_type.llvmtype = ty.pointee
+        self.mem = None
 
     @property
     def value(self):
         return self.mem.value
 
     @value.setter
-    def value(self, new_mem):
-        self.mem = new_mem
+    def value(self, n_val):
+        self.mem = FloMem(n_val)
+
+    @property
+    def llvmtype(self):
+        return self.elm_type.llvmtype.as_pointer()
+
+    def store_value_to_ref(self, ref):
+        if not ref.mem:
+            ref.mem = FloMem.salloc(ref.builder, self.llvmtype, ref.name)
+        if self.mem:
+            ref.mem.store_at_index(ref.builder, self)
+
+    def load_value_from_ref(self, ref):
+        return self.new(ref.mem.load_at_index(ref.builder))
+
+    def new(self, mem):
+        ptr = FloPointer(self.elm_type)
+        ptr.mem = mem
+        return ptr
 
     def get_element(self, builder: ir.IRBuilder, index: FloInt):
-        value = self.mem.load_at_index(builder, index)
-        return FloType.to_flo_ty(self.elm_type, value)
+        mem = self.mem.get_pointer_at_index(builder, index)
+        return self.elm_type.load_value_from_ref(FloRef(builder, self.elm_type, '', mem))
 
     def add(self, builder: ir.IRBuilder, increment: FloInt):
         return self.new(self.mem.get_pointer_at_index(builder, increment))
@@ -430,13 +427,6 @@ class FloPointer(FloType):
         self.mem.store_at_index(builder, value, index)
         return value
 
-    def new(self, value: FloMem):
-        return FloPointer(value, self.elm_type)
-
-    def construct(self, builder: ir.IRBuilder, args):
-        mem = FloMem.halloc(builder, self.llvmtype, args[0])
-        return FloPointer(mem, self)
-
     def __eq__(self, __o: object) -> bool:
         return isinstance(__o, FloPointer) and self.elm_type == __o.elm_type
 
@@ -444,76 +434,70 @@ class FloPointer(FloType):
         if not isinstance(type, FloPointer):
             raise Exception("Cannot cast")
         else:
-            return FloPointer(FloMem.bitcast(builder, self.mem, type.llvmtype), type.elm_type)
+            return FloPointer(type.elm_type).new(FloMem.bitcast(builder, self.mem, type.llvmtype))
 
     def str(self):
         return f"{self.elm_type.str()}*"
 
 
 class FloArray:
-    def __init__(self, values, arr_len=None, builder: ir.IRBuilder = None):
+    def __init__(self, values, arr_len=None):
+        self.mem = None
         if isinstance(values, list):
-            assert builder != None
-            self.len = arr_len or len(values)
-            self.elm_type = values[0] if hasattr(
-                values[0], 'new') else values[0].__class__
-            self.mem = FloMem.salloc(builder, self.llvmtype.pointee)
-            for i, array_value in enumerate(values):
-                self.mem.store_at_index(
-                    builder, array_value, FloInt(0), FloInt(i))
+            self.is_constant = True
+            self.elm_type = values[0]
+            for v in values:
+                if not v.is_constant:
+                    self.is_constant = False
+                    break
+            self.elems = values
+            self.len = len(values)
         else:
             self.len = arr_len
-            self.mem = values
-        assert isinstance(self.mem, FloMem) or self.mem == None
-
-    def create_array_buffer(builder: ir.IRBuilder, elems):
-        mem = FloMem.halloc(builder, elems[0].llvmtype, FloInt(len(elems)))
-        for index, elem in enumerate(elems):
-            mem.store_at_index(builder, elem, FloInt(index))
-        return mem
-
-    def new(self, value):
-        # For Functions
-        array = FloArray(value, self.len)
-        array.elm_type = self.elm_type
-        return array
-
-    def construct(self, builder: ir.IRBuilder, args):
-        mem = FloMem.halloc(builder, self.llvmtype, args[0])
-        return FloPointer(mem, self)
-
-    def allocate(self, builder: ir.IRBuilder):
-        self.mem = FloMem.salloc(builder, self.llvmtype.pointee)
-        if isinstance(self.elm_type, FloArray):
-            for i in range(self.len):
-                self.elm_type.allocate(builder)
-                self.mem.store_at_index(builder, self.elm_type, FloInt(0), FloInt(i))
-    
-    @property
-    def llvmtype(self):
-        return ir.ArrayType(self.elm_type.llvmtype, self.len).as_pointer()
+            self.elems = values
+            self.is_constant = False
 
     @property
     def value(self):
-        return self.mem.value
+        if self.elems:
+            return [elm.value for elm in self.elems]
 
-    @value.setter
-    def value(self, new_mem):
-        self.mem = new_mem
+    def store_value_to_ref(self, ref):
+        if not ref.mem:
+            ref.mem = FloMem.salloc(ref.builder, self.llvmtype, ref.name)
+        if self.is_constant:
+            ref.mem.store_at_index(ref.builder, FloType(
+                ir.Constant(self.llvmtype, self.value)), FloInt(0))
+        elif self.elems and len(self.elems) > 0:
+            next_idx = [FloInt(0, 32), FloInt(0, 32)]
+            tmp_mem = ref.mem
+            for floval in self.elems:
+                tmp_mem = tmp_mem.get_pointer_at_index(ref.builder, *next_idx)
+                next_idx = [FloInt(1, 32)]
+                floval.store_value_to_ref(
+                    FloRef(ref.builder, floval, '', tmp_mem))
 
-    def get_element(self, builder: ir.IRBuilder, index):
-        value = self.mem.load_at_index(builder, FloInt(0), index)
-        if inspect.isclass(self.elm_type):
-            return self.elm_type(value)
-        return self.elm_type.new(value)
+    @property
+    def llvmtype(self):
+        return ir.ArrayType(self.elm_type.llvmtype, self.len)
+
+    def load_value_from_ref(self, ref):
+        loaded_array = FloArray(self.elems, self.len)
+        loaded_array.mem = ref.mem
+        loaded_array.elm_type = self.elm_type
+        return loaded_array
+
+    def get_element(self, builder: ir.IRBuilder, index: FloInt):
+        value = self.mem.get_pointer_at_index(builder, FloInt(0, 32), index)
+        return self.elm_type.load_value_from_ref(FloRef(builder, self.elm_type, '', value))
 
     def set_element(self, builder: ir.IRBuilder, index, value):
-        self.mem.store_at_index(builder, value, FloInt(0), index)
+        self.mem.store_at_index(builder, value, FloInt(0, 32), index)
         return value
 
     def get_pointer_at_index(self, builder: ir.IRBuilder, index):
-        mem = self.mem.get_pointer_at_index(builder, FloInt(0), index)
-        return FloPointer(mem, self.elm_type)
+        mem = self.mem.get_pointer_at_index(builder, FloInt(0, 32), index)
+        return FloPointer(self.elm_type).new(mem)
 
     def str(self) -> str:
         return f"{self.elm_type.str()}[{self.len}]"
@@ -523,19 +507,20 @@ class FloArray:
 
 
 class FloRef:
-    def __init__(self, builder: ir.IRBuilder, referee: FloType, name=None):
+    def __init__(self, builder: ir.IRBuilder, referee: FloType, name='', mem=None):
         self.builder = builder
+        self.name = name
+        self.mem = mem
+        if not mem:
+            self.store(referee)
         self.referee = referee
-        self.addr = FloMem.salloc(builder, referee.llvmtype, name)
-        self.store(referee)
-
 
     def load(self):
-        self.referee.value = self.addr.load_at_index(self.builder)
-        return self.referee
+        return self.referee.load_value_from_ref(self)
 
     def store(self, referee: FloType):
-        self.addr.store_at_index(self.builder, referee)
+        referee.store_value_to_ref(self)
+
 
 class FloFunc(FloType):
     defined_methods = {}
@@ -554,9 +539,10 @@ class FloFunc(FloType):
             self.var_args = True
         self.arg_types = arg_types
         if name:
+            self.context = None
             current_module = Context.current_llvm_module
-            value = ir.Function(current_module, self.get_llvm_type(), name)
-            self.mem = FloMem(value)
+            self.value = ir.Function(
+                current_module, self.get_llvm_type(), name)
             fn_entry_block = self.value.append_basic_block()
             self.builder = ir.IRBuilder(fn_entry_block)
 
@@ -567,60 +553,54 @@ class FloFunc(FloType):
                                 n_arg_types, var_arg=var_args)
         val = Context.current_llvm_module.declare_intrinsic(name, (), fn_ty)
         new_fnc = FloFunc(arg_types, return_type, None)
-        new_fnc.value = FloMem(val)
+        new_fnc.value = val
         return new_fnc
 
     def call(self, builder: ir.IRBuilder, args):
         passed_args = [arg.value for arg in args]
-        rt_value = builder.call(self.mem.value, passed_args)
+        rt_value = builder.call(self.value, passed_args)
         if self.return_type == FloVoid:
             return FloVoid
-        return FloType.to_flo_ty(self.return_type, rt_value)
+        self.return_type.value = rt_value
+        return self.return_type
 
     def get_local_ctx(self, parent_ctx: Context, arg_names: List(str)):
         self.arg_names = arg_names
         local_ctx = parent_ctx.create_child(self.value.name)
-        for arg_name, arg_type, arg_value in zip(arg_names, self.arg_types, self.mem.value.args):
-            arg_val = FloType.to_flo_ty(arg_type, arg_value)
-            local_ctx.set(arg_name, FloRef(self.builder, arg_val, arg_name))
+        for arg_name, arg_type, arg_value in zip(arg_names, self.arg_types, self.value.args):
+            if isinstance(arg_type, FloFunc):
+                arg_type = FloFunc(
+                    arg_type.arg_types, arg_type.return_type, None, arg_type.var_args)
+            arg_type.value = arg_value
+            local_ctx.set(arg_name, FloRef(self.builder, arg_type, arg_name))
+        self.context = local_ctx
         return local_ctx
 
-    def new(self, val):
-        new_fnc = FloFunc(self.arg_types, self.return_type, None)
-        new_fnc.value = val
-        return new_fnc
-
-    def ret(self, value, b=None):
-        if self.var_args:
-            self.builder.call(bi.get_instrinsic("va_end"), [self.va_arg.value])
+    def ret(self, value):
         if value == FloVoid:
-            return self.builder.ret_void()
+            self.builder.ret_void()
         else:
-            return self.builder.ret(value.value)
-    
+            self.builder.ret(value.value)
+
     @property
     def llvmtype(self):
         return self.get_llvm_type().as_pointer()
 
-    @property
-    def value(self) -> ir.Function:
-        return self.mem.value
-
-    @value.setter
-    def value(self, new_mem):
-        self.mem = new_mem
+    def load_value_from_ref(self, ref):
+        loaded_func = FloFunc(self.arg_types, self.return_type, None, self.var_args)
+        loaded_func.value = ref.mem.load_at_index(ref.builder).value
+        return loaded_func
 
     def str(self) -> str:
         arg_list = ", ".join([arg.str() for arg in self.arg_types])
         return f"({arg_list})=>{self.return_type.str()}"
 
     def __eq__(self, other):
-        if isinstance(other, FloFunc) and len(self.arg_types) == len(other.arg_types):
+        if isinstance(other, FloFunc) and len(self.arg_types) == len(other.arg_types) and self.return_type != other.return_type:
             for my_arg, other_arg in zip(self.arg_types, other.arg_types):
                 if my_arg != other_arg:
                     return False
-            if self.return_type == other.return_type:
-                return True
+            return True
         return False
 
 
@@ -629,7 +609,7 @@ class FloClass(FloType):
 
     def __init__(self, name) -> None:
         self.name = name
-        self.methods: dict[str, FloType] = {}
+        self.methods: dict[str, FloMethod] = {}
         self.properties: dict[str, FloType] = {}
         self.value = ir.global_context.get_identified_type(name)
         self.constructor = None
@@ -639,6 +619,7 @@ class FloClass(FloType):
     def add_method(self, fnc: FloFunc):
         # prepend this in args
         assert isinstance(fnc, FloMethod)
+        assert fnc.value
         if fnc.value.name == self.name+'_constructor':
             self.constructor = fnc
         else:
@@ -657,15 +638,17 @@ class FloClass(FloType):
         ptr_value = FloMem.salloc(builder, self.value)
         for index, arg in enumerate(args):
             ptr_value.store_at_index(
-                builder, arg, FloInt(0), FloInt(index))
-        return FloObject(ptr_value, self)
+                builder, arg, FloInt(0, 32), FloInt(index, 32))
+        obj = FloObject(self)
+        obj.mem = ptr_value
+        return obj
 
 
 class FloMethod(FloFunc):
     def __init__(self, arg_types: List, return_type, name, var_args=False, class_: FloClass = None):
         if class_:
             name = class_.name + "_" + name
-            arg_types.insert(0, FloObject(None, class_))
+            arg_types.insert(0, FloObject(class_))
             self.class_ = class_
         self.current_object = None
         super().__init__(arg_types, return_type, name, var_args)
@@ -678,23 +661,41 @@ class FloMethod(FloFunc):
 
 
 class FloObject:
-    def __init__(self, mem: FloMem, referer: FloClass) -> None:
+    def __init__(self, referer: FloClass) -> None:
         self.referer = referer
+        self.mem = None
+        assert (referer)
         if not isinstance(referer.value, str):
             self.llvmtype = referer.value.as_pointer()
-        else:
-            self.llvmtype = None
-        self.mem = mem
+
+    def store_value_to_ref(self, ref):
+        if not ref.mem:
+            ref.mem = FloMem.salloc(ref.builder, self.llvmtype, ref.name)
+        if self.mem:
+            ref.mem.store_at_index(ref.builder, self)
+
+    def load_value_from_ref(self, ref):
+        loaded_object = FloObject(self.referer)
+        loaded_object.mem = ref.mem.load_at_index(ref.builder)
+        return loaded_object
+
+    @property
+    def value(self):
+        return self.mem.value
+
+    @value.setter
+    def value(self, n_val):
+        self.mem = FloMem(n_val)
 
     def get_property(self, builder: ir.IRBuilder, name):
         try:
             property_index = list(self.referer.properties.keys()).index(name)
-        except Exception as e:
+        except Exception:
             return self.get_method(name)
-        property_value = self.referer.properties.get(name)
-        val = self.mem.load_at_index(
-            builder, FloInt(0), FloInt(property_index))
-        return FloType.to_flo_ty(property_value, val)
+        property_value: FloType = self.referer.properties.get(name)
+        mem = self.mem.get_pointer_at_index(
+            builder, FloInt(0, 32), FloInt(property_index, 32))
+        return property_value.load_value_from_ref(FloRef(builder, property_value, '', mem))
 
     def get_method(self, name) -> Union[FloMethod, None]:
         assert isinstance(self.referer, FloClass)
@@ -706,15 +707,10 @@ class FloObject:
 
     def set_property(self, builder: ir.IRBuilder, name: str, value: FloType):
         property_index = list(self.referer.properties.keys()).index(name)
-        property_value = self.referer.properties.get(name)
-        val = self.mem.store_at_index(
-            builder, value, FloInt(0), FloInt(property_index))
-        property_value.value = val
-        return property_value
-
-    def new(self, value):
-        # For Functions
-        return FloObject(value, self.referer)
+        mem = self.mem.get_pointer_at_index(
+            builder, FloInt(0, 32), FloInt(property_index, 32))
+        value.store_value_to_ref(FloRef(builder, value, '', mem))
+        return value
 
     def construct(self, builder: ir.IRBuilder, args):
         self.mem = FloMem.halloc(builder, self.referer.value)
@@ -722,14 +718,6 @@ class FloObject:
             self.referer.constructor.current_object = self
             self.referer.constructor.call(builder, args)
         return self
-
-    @property
-    def value(self):
-        return self.mem.value
-
-    @value.setter
-    def value(self, new_mem):
-        self.mem = new_mem
 
     def str(self) -> str:
         return self.referer.name if isinstance(self.referer, FloClass) else self.referer.value
@@ -789,17 +777,12 @@ class FloInlineFunc(FloFunc):
         self.return_type = return_type
         self.var_args = var_args
         self.defaults = defaults
-        self.sym_tbl = None
-        if call:
-            self.call_method = call
-        if return_type == FloVoid:
-            self.returned = FloVoid
-        else:
-            self.returned = None
+        self.call_method = call
 
     def call(self, *kargs):
+        assert self.call_method
         returned = self.call_method(*kargs)
         if returned != None:
             return returned
         else:
-            return FloVoid
+            return FloVoid()

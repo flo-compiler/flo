@@ -1,11 +1,18 @@
 from typing import List
-from flotypes import FloArray, FloInlineFunc, FloObject, FloPointer, FloType
+from flotypes import *
 from astree import *
 from lexer import TokType, Token
 from errors import SyntaxError
 from errors import Range
 
-
+def str_to_flotype(str):
+    if str == "int":
+        return FloInt(None)
+    if str == "float":
+        return FloFloat(None)
+    elif str == "void":
+        return FloVoid(None)
+        
 class Parser:
     def __init__(self, tokens: List[Token]):
         self.tokens = tokens
@@ -287,6 +294,7 @@ class Parser:
             if (
                 self.current_tok.type != TokType.LN
                 and self.current_tok.type != TokType.EOF
+                and self.current_tok.type != TokType.RBRACE
             ):
                 expr = self.expr()
 
@@ -523,16 +531,16 @@ class Parser:
             if not self.current_tok.inKeywordList(("int", "float")):
                 SyntaxError(self.current_tok.range,
                             "Expected an 'int' or 'float'").throw()
-            type = FloType.str_to_flotype(self.current_tok.value)
+            type = str_to_flotype(self.current_tok.value)
             type.bits = size
             end_range = self.current_tok.range
             self.advance()
             return TypeNode(type, Range.merge(tok.range, end_range))
         elif tok.inKeywordList(("int", "float", "void")):
-            type = FloType.str_to_flotype(tok.value)
+            type = str_to_flotype(tok.value)
             return TypeNode(type, tok.range)
         elif tok.type == TokType.IDENTIFER:
-            type = FloObject(None, tok)
+            type = FloObject(tok)
             return TypeNode(type, tok.range)
 
     def fnc_type(self):
@@ -564,7 +572,7 @@ class Parser:
             if self.current_tok.type == TokType.MULT:
                 end_range = self.current_tok.range
                 self.advance()
-                type = TypeNode(FloPointer(None, type), Range.merge(type.range, end_range))
+                type = TypeNode(FloPointer(type), Range.merge(type.range, end_range))
             else:
                 self.advance()
                 if self.current_tok.type != TokType.INT:

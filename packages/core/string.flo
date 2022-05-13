@@ -1,5 +1,5 @@
-import "types"
 import memcmp, memcpy from "@flo/sys"
+import i8, bool from "types"
 class string {
     buffer: i8*
     length: int

@@ -6,7 +6,7 @@ from typing import List
 from utils import get_ast_from_file
 from context import Context
 from flotypes import FloArray, FloInlineFunc, FloObject, FloPointer
-from astree import ArrayAssignNode, ClassDeclarationNode, ConstDeclarationNode, FncCallNode, FncDefNode, ForEachNode, ForNode, IfNode, ImportNode, NewMemNode, NoOpNode, Node, NumOpNode, PropertyAssignNode, ReturnNode, StmtsNode, TypeAliasNode, TypeNode, VarAccessNode, VarAssignNode, Visitor, WhileNode
+from astree import ArrayAssignNode, ClassDeclarationNode, ConstDeclarationNode, FncCallNode, FncDefNode, ForEachNode, ForNode, IfNode, ImportNode, NewMemNode, Node, NumOpNode, PropertyAssignNode, ReturnNode, StmtsNode, TypeAliasNode, TypeNode, VarAccessNode, VarAssignNode, Visitor, WhileNode
 from errors import Range, NameError
 
 def resource_path(relative_path):
@@ -179,10 +179,12 @@ class NodeFinder(Visitor):
                 self.dependency_map.get(self.block_in.name).append(class_name)
         
         if isinstance(node.type, FloPointer) or isinstance(node.type, FloArray):
-            self.visit(node.type.elm_type)
+            if isinstance(node.type.elm_type, TypeNode):
+                self.visit(node.type.elm_type)
         if isinstance(node.type, FloInlineFunc):
             for arg in node.type.arg_types:
-                self.visit(arg)
+                if isinstance(arg, TypeNode):
+                    self.visit(arg)
     
     def visitTypeAliasNode(self, node: TypeAliasNode):
         type_name = node.identifier.value
@@ -200,7 +202,7 @@ class NodeFinder(Visitor):
         self.dependency_map[class_name] = []
         self.local_vars = []
         self.visit(node.body)
-        self.context = self.context.parent
+        self.context = self.context.get_parent()
         self.local_vars = []
         self.block_in = None
 
