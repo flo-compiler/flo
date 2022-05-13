@@ -1,0 +1,102 @@
+import "@flo/core"
+import "@flo/io"
+const img_width = 735
+const img_height = 588
+const channels = 4
+const header_end_maker_size = 21
+type Pixel = i8[4]
+
+fnc pixel_equal(color0: Pixel, color1: Pixel): bool {
+    return color0[0] == color1[0] and color0[1] == color1[1] and color0[2] == color1[2]  and color0[3] == color1[3]
+}
+fnc pixel_diff(color0: Pixel, color1: Pixel): Pixel {
+    new_color: Pixel
+    new_color[0] = color0[0] - color1[0]
+    new_color[1]  = color0[1] - color1[1]
+    new_color[2] = color0[2] - color1[2]
+    new_color[3] = color0[3] - color1[3]
+    return new_color
+}
+
+fnc main(){
+    file = new File("./examples/qoi/test-image.bin")
+    img_size = file.get_file_size()
+    img_buffer = file.read(img_size)
+    last_pixel = img_size - channels
+
+    prev_color: Pixel = [0, 0, 0, 255]
+    seen_pixels: Pixel[64]
+    current_color: Pixel = [0, 0, 0, 0]
+
+    max_size = img_height * img_width * (channels + 1) + header_end_maker_size
+    encoded_bytes: i8[max_size]
+
+    //writing header
+    bytes_32 = &(encoded_bytes[0]) as i32*
+    bytes_32[0] = 1718185841 // qoif
+    bytes_32[1] = img_width
+    bytes_32[2] = img_height
+    index = 12
+    encoded_bytes[index++] = channels
+    encoded_bytes[index++] = 1
+
+    run = 0
+    for offset = 0; offset <= last_pixel; offset += channels {
+        current_color[0] = img_buffer[offset + 0]
+        current_color[1] = img_buffer[offset + 1]
+        current_color[2] = img_buffer[offset + 2]
+        if channels == 4 {
+            current_color[3] = img_buffer[offset + 3]
+        } else {
+            current_color[3] = prev_color[3]
+        }
+        if pixel_equal(current_color, prev_color) {
+            run++
+            if run == 62 or offset == last_pixel {
+                encoded_bytes[index++] = 0xc0 or (run - 1)
+                run = 0
+            }
+        } else {
+            if run > 0 {
+                encoded_bytes[index++] = 0xc0 or (run - 1)
+                run = 0
+            }
+            hash: i8 = (current_color[0] * 3 + current_color[1] * 5 + current_color[2] * 7 + current_color[3] * 11) % 64
+            if current_color == seen_pixels[hash] {
+                encoded_bytes[index++] = 0x00 or hash
+            } else {
+                seen_pixels[hash] = current_color
+            }
+            
+            diff = pixel_diff(current_color, prev_color)
+            dr_dg = diff[0] - diff[1]
+            db_dg = diff[2] - diff[1]
+            if diff[3] == 0 {
+                if (diff[0] >= -2) and (diff[0] <= 1) and (diff[1] >= -2) and (diff[1] <= 1) and (diff[2] >= -2) and (diff[2] <= 1) {
+                    i2_byte = &(encoded_bytes[index]) as {2}int*
+                    i2_byte[0] = 1
+                    i2_byte[1] = diff[0]
+                    i2_byte[2] = diff[1]
+                    i2_byte[3] = diff[2]
+                    index++
+                } else if (diff[1] >= -32) and (diff[1] <= 31) and (dr_dg >= -8) and (dr_dg <= 7) and (db_dg >= -8) and (db_dg <= 7) {
+                    encoded_bytes[index++] = 0x80 or (diff[1] + 32)
+                    encoded_bytes[index++] = ((dr_dg + 8) << 4) or (db_dg + 8)
+                }
+            } else {
+                encoded_bytes[index++] = 0xff
+                encoded_bytes[index++] = current_color[0]
+                encoded_bytes[index++] = current_color[1]
+                encoded_bytes[index++] = current_color[2]
+                encoded_bytes[index++] = current_color[3]
+            }
+        }
+        prev_color = current_color
+    }
+    // end marker
+    bytes_64 = (&(encoded_bytes[0]) + index) as i64*
+    bytes_64[0] = 1
+    index += 8
+    out_file = new File("output.qoi")
+    out_file.write(&(encoded_bytes[0]), index)
+}

@@ -369,6 +369,3 @@ class WhileNode(Node):
 
     def accept(self, visitor: Visitor):
         return visitor.visitWhileNode(self)
-
-class NoOpNode(Node):
-    def accept(self, _: Visitor): pass

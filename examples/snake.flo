@@ -1,0 +1,95 @@
+import "@flo/core"
+import read, STDIN, fcntl, F_GETFL, F_SETFL, O_NONBLOCK from "@flo/sys"
+const WIDTH = 20
+const HEIGHT = 10
+/* Player Class */
+class Point{
+    x: int
+    y: int
+    fnc constructor(x: int, y: int){
+        this.x = x
+        this.y = y
+    }
+}
+class Player {
+    position: Point
+    direction: Point
+    fnc constructor(x: int, y: int){
+        this.position = new Point(x, y)
+        this.direction = new Point(1, 0)
+    }
+    fnc move_down(){
+        this.direction.y = 1
+        this.direction.x = 0
+    }
+    fnc move_up(){
+        this.direction.y = -1
+        this.direction.x = 0
+    }
+    fnc move_left(){
+        this.direction.x = -1
+        this.direction.y = 0
+    }
+    fnc move_right(){
+        this.direction.x = 1
+        this.direction.y = 0
+    }
+    fnc update(){
+        this.position.x +=  this.direction.x
+        this.position.y += this.direction.y
+        if this.position.x < 0 {
+            this.position.x = WIDTH
+        } else if this.position.x > WIDTH {
+            this.position.x = 0
+        }
+        if this.position.y < 0 {
+            this.position.y = HEIGHT
+        } else if this.position.y > HEIGHT {
+            this.position.y = 0
+        }
+    }
+}
+/* Display */
+fnc display(player: Player){
+    for y = 0; y < HEIGHT; y++ {
+        for x = 0; x < WIDTH; x++ {
+            if player.position.x == x and player.position.y == y{
+                print("#")
+            } else {
+                print(".")
+            }
+        }
+        print("\n")
+    }
+}
+fnc clear_screen(){
+    print("\033[21A")
+    print("\033[11D")
+}
+fnc main(){
+    player = new Player(5, 5)
+    exec("stty -icanon -echo")
+    key: byte = '0'
+    fcntl(STDIN, F_SETFL, fcntl(STDIN, F_GETFL, 0) or O_NONBLOCK)
+    print("\033[2J")
+    while true {
+        usleep(400000)
+        display(player)
+        if read(STDIN, &key, 1) == 1 {
+            if key == 's' {
+                player.move_down()
+            } else if key == 'w' {
+                player.move_up()
+            } else if key == 'a' {
+                player.move_left()
+            } else if key == 'd' {
+                player.move_right()
+            } else if key == 'q' {
+                exec("reset")
+                break
+            }
+        } 
+        player.update()
+        clear_screen()
+    }
+}

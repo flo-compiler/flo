@@ -5,7 +5,6 @@ from flotypes import FloArray, FloClass, FloFloat, FloInlineFunc, FloInt, FloObj
 from lexer import TokType
 from astree import *
 from nodefinder import NodeFinder
-from utils import get_ast_from_file
 
 class FncDescriptor:
     def __init__(self, name: str, rtype: FloType, arg_names: List[str]):
@@ -139,7 +138,7 @@ class Analyzer(Visitor):
         return FloInt(None, 8)
 
     def visitStrNode(self, node: StrNode):
-        return FloObject(None, self.context.get("string"))
+        return FloObject(self.context.get("string"))
 
     def cast(self, node: Node, type):
         return NumOpNode(
@@ -219,7 +218,7 @@ class Analyzer(Visitor):
     def visitUnaryNode(self, node: UnaryNode):
         type = self.visit(node.value)
         if node.op.type == TokType.AMP:
-            return FloPointer(None, type)
+            return FloPointer(type)
         if type != FloInt(None, 1) and (not self.isNumeric(type)):
             TypeError(
                 node.value.range,
@@ -394,8 +393,8 @@ class Analyzer(Visitor):
         if node.return_type:
             rt_type = self.visit(node.return_type)
         else:
-            node.return_type = TypeNode(FloVoid, node.range)
-            rt_type = FloVoid
+            node.return_type = TypeNode(FloVoid(None), node.range)
+            rt_type = FloVoid(None)
         arg_types = []
         default_args = []
         arg_names = []
@@ -415,7 +414,7 @@ class Analyzer(Visitor):
             elif arg_type == None and default_value:
                 arg_type = default_value
                 node.args[i] = (arg_name_tok, TypeNode(
-                    default_value, type_node.range), default_value_node)
+                    default_value, (type_node or default_value_node).range), default_value_node)
             if arg_name in arg_names:
                 NameError(
                     node.args[i][0].range,
@@ -438,7 +437,7 @@ class Analyzer(Visitor):
         else:
             self.context = self.context.create_child(fnc_name)
             self.context.set(
-                "this", FloObject(None, self.class_within))
+                "this", FloObject(self.class_within))
             self.class_within.methods[fnc_name] = fn_type
             if fnc_name == "constructor":
                 self.class_within.constructor = fn_type
@@ -455,7 +454,7 @@ class Analyzer(Visitor):
         if node.body:
             self.visit(node.body)
             if not self.current_block.always_returns:
-                if rt_type == FloVoid:
+                if rt_type == FloVoid(None):
                     node.body.stmts.append(ReturnNode(None, node.range))
                 else:
                     GeneralError(node.return_type.range,
@@ -467,7 +466,7 @@ class Analyzer(Visitor):
         if not self.current_block.can_return():
             SyntaxError(
                 node.range, "Illegal return outside a function").throw()
-        val = self.visit(node.value) if node.value else FloVoid
+        val = self.visit(node.value) if node.value else FloVoid()
         if not self.current_block.can_return_value(val):
             TypeError(
                 node.range,
@@ -573,8 +572,8 @@ class Analyzer(Visitor):
                     f"Expected array to be of type '{expected_type.str()}' because of first element but got '{type.str()}'",
                 ).throw()
         if not node.is_const_array:
-            return FloObject(None, self.context.get('Array'))
-        arr = FloArray(None)
+            return FloObject(self.context.get('Array'))
+        arr = FloArray(None, len(node.elements))
         arr.elm_type = expected_type
         return arr
 
@@ -603,7 +602,7 @@ class Analyzer(Visitor):
             if not self.isNumeric(index):
                 TypeError(
                     node.index.range,
-                    f"Expected key to be of type '{FloInt.str()}' but got '{index.str()}'",
+                    f"Expected key to be of type 'int' but got '{index.str()}'",
                 ).throw()
             return collection.elm_type
         elif isinstance(collection, FloObject):
@@ -611,7 +610,7 @@ class Analyzer(Visitor):
         else:
             TypeError(
                 node.name.range,
-                f"Expected array, dict or string but got '{collection.str()}'",
+                f"Expected array, pointer or object but got '{collection.str()}'",
             ).throw()
 
     def visitArrayAssignNode(self, node: ArrayAssignNode):
@@ -620,13 +619,16 @@ class Analyzer(Visitor):
         if isinstance(arr, FloObject):
             index = self.visit(node.array.index)
             obj = self.visit(node.array.name)
-            return self.check_subscribable(obj, index, node.array, value)
+            if isinstance(obj, FloArray):
+                obj = arr
+            else:
+                return self.check_subscribable(obj, index, node.array, value)
         if arr != value:
             TypeError(
                 node.range,
                 f"Expected assigned value to be of type '{arr.str()}' but got '{value.str()}'",
             ).throw()
-        return arr
+        return value
 
     def visitClassDeclarationNode(self, node: ClassDeclarationNode):
         self.current_block.append_block(Block.class_())
@@ -677,7 +679,7 @@ class Analyzer(Visitor):
                 if not isinstance(self.visit(node.args[0]), FloInt):
                     GeneralError(node.args[2].range,
                                  "Expecting arg to be int ").throw()
-            return FloPointer(None, typeval)
+            return FloPointer(typeval)
 
     def visitImportNode(self, node: ImportNode):
         #TODO: Needs work using NodeFinder.get_abs_path twice

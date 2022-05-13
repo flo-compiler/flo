@@ -1,8 +1,7 @@
 import "@flo/core"
+
 fnc main() {
-    println("hello world 🤦‍♂️")
-    a = b = "a"
-    b = "b"
-    println(a)
-    println(b)
+    a = 0
+    x: int[5] = [1, 2, 3, 4, 5]
+    x = [a, 2,3,4,5]
 }
