@@ -73,6 +73,8 @@ class Visitor:
 
     def visitCharNode(self, node): pass
 
+    def visitEnumDeclarationNode(self, node): pass
+
 
 class Node:
     def __init__(self, range: Range):
@@ -369,3 +371,12 @@ class WhileNode(Node):
 
     def accept(self, visitor: Visitor):
         return visitor.visitWhileNode(self)
+
+class EnumDeclarationNode(Node):
+    def __init__(self, name: Token, tokens: List[Token], range: Range):
+        self.name = name
+        self.tokens = tokens
+        self.range = range
+    
+    def accept(self, visitor: Visitor):
+        return visitor.visitEnumDeclarationNode(self)

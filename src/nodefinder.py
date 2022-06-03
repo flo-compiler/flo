@@ -6,7 +6,7 @@ from typing import List
 from utils import get_ast_from_file
 from context import Context
 from flotypes import FloArray, FloInlineFunc, FloObject, FloPointer
-from astree import ArrayAssignNode, ClassDeclarationNode, ConstDeclarationNode, FncCallNode, FncDefNode, ForEachNode, ForNode, IfNode, ImportNode, NewMemNode, Node, NumOpNode, PropertyAssignNode, ReturnNode, StmtsNode, TypeAliasNode, TypeNode, VarAccessNode, VarAssignNode, Visitor, WhileNode
+from astree import ArrayAssignNode, ClassDeclarationNode, ConstDeclarationNode, EnumDeclarationNode, FncCallNode, FncDefNode, ForEachNode, ForNode, IfNode, ImportNode, NewMemNode, Node, NumOpNode, PropertyAssignNode, ReturnNode, StmtsNode, TypeAliasNode, TypeNode, VarAccessNode, VarAssignNode, Visitor, WhileNode
 from errors import Range, NameError
 
 def resource_path(relative_path):
@@ -172,7 +172,10 @@ class NodeFinder(Visitor):
             self.visit(case)
         if node.else_case:
             self.visit(node.else_case)
-  
+    def visitEnumDeclarationNode(self, node: EnumDeclarationNode):
+        enum_name = node.name.value
+        if enum_name in self.ignore: return
+        self.context.set(enum_name, node)
 
     def visitTypeNode(self, node: TypeNode):
         if isinstance(node.type, FloObject):

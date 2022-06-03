@@ -32,6 +32,7 @@ KEYWORDS = [
     "from",
     "in",
     "class",
+    "enum",
     "new",
     "as",
     "is"

@@ -11,6 +11,7 @@ stmt: import_stmt
       | type_alias
       | interface_declaration
       | class_kw_declaration
+      | enum_declaration
       | if_stmt
       | for_stmt
       | foreach_stmt
@@ -27,6 +28,8 @@ const_declaration: const_kw identifier_tok eq_tok expr
 type_alias: type_kw identifier_tok eq_tok composite_type
 
 class_declaration: class_kw block
+
+enum_declaration: enum_kw lbrace_tok (identifier_tok ln_tok+)+ rbrace_tok
 
 if_stmt: if_kw expr block newlines (else_kw (if_stmt | block)) *
 
@@ -137,6 +140,7 @@ type_kw: "type"
 xor_kw: "xor"
 as_kw: "as"
 is_kw: "is"
+enum_kw: "enum"
           
 
 comp_op: ">"
