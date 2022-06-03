@@ -1,6 +1,6 @@
 from pathlib import Path
 from errors import CompileError, TypeError
-from flotypes import FloArray, FloClass, FloConst, FloFunc, FloInlineFunc, FloInt, FloFloat, FloMethod, FloObject, FloPointer, FloRef, FloVoid, create_array_buffer
+from flotypes import FloArray, FloClass, FloConst, FloEnum, FloFunc, FloInlineFunc, FloInt, FloFloat, FloMethod, FloObject, FloPointer, FloRef, FloVoid, create_array_buffer
 from lexer import TokType
 from astree import *
 from context import Context
@@ -348,7 +348,14 @@ class Compiler(Visitor):
 
     def visitPropertyAccessNode(self, node: PropertyAccessNode):
         root = self.visit(node.expr)
-        return root.get_property(self.builder, node.property.value)
+        property_name = node.property.value
+        if isinstance(root, FloEnum):
+            return root.get_property(property_name)
+        return root.get_property(self.builder, property_name)
+    
+    def visitEnumDeclarationNode(self, node: EnumDeclarationNode):
+        enum_name = node.name.value
+        self.context.set(enum_name, FloEnum([token.value for token in node.tokens]))
 
     def visitPropertyAssignNode(self, node: PropertyAssignNode):
         root = self.visit(node.expr.expr)

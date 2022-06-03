@@ -1,8 +1,10 @@
 import println from "@flo/core"
+enum Numbers {
+    ONE
+    TWO
+    THREE
+}
 fnc main() {
-    a = 0
-    x: int[5] = [1, 2, 3, 4, 5]
-    b = [a, 2, 3, 4, 5]
-    x = b
-    println(x[2] as string)
+    x = Numbers.TWO
+    print(x as string)
 }

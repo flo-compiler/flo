@@ -5,7 +5,6 @@ from llvmlite import ir
 from typing import Union
 from lexer import Token
 
-
 def create_array_buffer(builder: ir.IRBuilder, elems):
     elm_ty = elems[0].llvmtype
     mem = FloMem.halloc(builder, elm_ty, FloInt(len(elems)))
@@ -784,6 +783,13 @@ class FloObject:
         else:
             raise Exception("Cannot cast")
 
+
+class FloEnum(FloType):
+    def __init__(self, elements: List(str)):
+        self.elements = elements
+    def get_property(self, name: str) -> FloInt:
+        index = self.elements.index(name)
+        return FloInt(index)
 
 class FloInlineFunc(FloFunc):
     def __init__(self, call, arg_types, return_type, var_args=False, defaults=[]):

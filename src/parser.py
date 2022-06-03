@@ -80,6 +80,8 @@ class Parser:
             return self.type_alias()
         if tok.isKeyword("class"):
             return self.class_declaration()
+        if tok.isKeyword("enum"):
+            return self.enum_declaration()
         if tok.isKeyword("if"):
             return self.if_stmt()
         elif tok.isKeyword("for"):
@@ -169,6 +171,31 @@ class Parser:
         body = self.block()
         node_range = Range.merge(range_start, self.current_tok.range)
         return ClassDeclarationNode(name, body, node_range)
+    
+    def enum_declaration(self) -> EnumDeclarationNode:
+        self.advance()
+        range_start = self.current_tok.range
+        token_list = []
+        if self.current_tok.type != TokType.IDENTIFER:
+            SyntaxError(self.current_tok.range, "Expected an Identifier").throw()
+        name = self.current_tok
+        self.advance()
+        if self.current_tok.type != TokType.LBRACE:
+            SyntaxError(self.current_tok.range, "Expected '{'").throw()
+        self.advance()
+        while self.current_tok.type == TokType.LN:
+            self.advance()
+        while self.current_tok.type == TokType.IDENTIFER:
+            token_list.append(self.current_tok)
+            self.advance()
+            while self.current_tok.type == TokType.LN:
+                self.advance()
+        if self.current_tok.type != TokType.RBRACE:
+            SyntaxError(self.current_tok.range, "Expected '}'").throw()
+        self.advance()
+        node_range = Range.merge(range_start, self.current_tok.range)
+        return EnumDeclarationNode(name, token_list, node_range)
+
 
     def for_stmt(self) -> ForNode:
         self.advance()

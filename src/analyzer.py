@@ -1,7 +1,7 @@
 from typing import List
 from context import Context
 from errors import GeneralError, TypeError, SyntaxError, NameError
-from flotypes import FloArray, FloClass, FloFloat, FloInlineFunc, FloInt, FloObject, FloPointer, FloType, FloVoid
+from flotypes import FloArray, FloClass, FloEnum, FloFloat, FloInlineFunc, FloInt, FloObject, FloPointer, FloType, FloVoid
 from lexer import TokType
 from astree import *
 from nodefinder import NodeFinder, resource_path
@@ -315,6 +315,10 @@ class Analyzer(Visitor):
         var_type = self.visit(node_type)
         if isinstance(var_type, FloObject) and var_type.referer.name == 'Array':
             node.is_const_array = False
+
+    def visitEnumDeclarationNode(self, node: EnumDeclarationNode):
+        enum_name = node.name.value
+        self.context.set(enum_name, FloEnum([token.value for token in node.tokens]))
 
     def visitVarAssignNode(self, node: VarAssignNode):
         var_name = node.var_name.value
@@ -655,10 +659,12 @@ class Analyzer(Visitor):
         self.types_aliases[node.identifier.value] = node.type
 
     def visitPropertyAccessNode(self, node: PropertyAccessNode):
-        root: FloObject = self.visit(node.expr)
+        root = self.visit(node.expr)
+        property_name = node.property.value
+        if isinstance(root, FloEnum):
+            return root.get_property(property_name)
         if not isinstance(root, FloObject):
             TypeError(node.expr.range, "Expected an object").throw()
-        property_name = node.property.value
         value = root.referer.properties.get(
             property_name) or root.referer.methods.get(property_name)
         if value == None:
