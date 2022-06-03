@@ -1,4 +1,3 @@
-import "@flo/core/types"
 /* IO */
 fnc read(fd: int, buff: i8*, size: int): int {
     return syscall(0x00, fd, buff, size)
@@ -43,8 +42,14 @@ fnc listen(sockfd: int, backlog: int): int {
 fnc fcntl(fd: int, cmd: int, arg: int): int {
     return syscall(0x37, fd, cmd, arg)
 }
+fnc execve(filename: i8*, argv: i8**, envp: i8**): int{
+    return syscall(0x3b, filename, argv, envp)
+}
 fnc _exit (error_code: int){
     syscall(0x3c, error_code)
+}
+fnc getcwd(buf: i8*, size: int): int{
+    return syscall(0x4f, buff, size)
 }
 fnc rename(oldname: i8*, newname: i8*): int {
     return syscall(0x52, oldname, newname)

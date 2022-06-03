@@ -1,4 +1,4 @@
-import exit, i8 from "@flo/core"
+import exit from "@flo/core"
 import accept, read, AF_INET, SOCK_STREAM from "@flo/sys"
 import "socket"
 import "response"

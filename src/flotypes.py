@@ -59,7 +59,7 @@ class FloVoid(FloType):
         length = FloInt(4)
         return create_string_object(builder, [mem, length])
 
-    def str() -> str:
+    def str(self) -> str:
         return "void"
 
     def cast_to(self, builder, new_ty):
@@ -459,13 +459,24 @@ class FloArray:
 
     @property
     def value(self):
+        if self.mem:
+            return self.mem.value
         if self.elems:
             return [elm.value for elm in self.elems]
+    @value.setter
+    def value(self, new_value):
+        assert new_value
+        self.mem = FloMem(new_value)
 
     def store_value_to_ref(self, ref):
+        if self.mem and not ref.mem:
+            ref.mem = self.mem
+            return
         if not ref.mem:
             ref.mem = FloMem.salloc(ref.builder, self.llvmtype, ref.name)
-        if self.is_constant:
+        if self.mem:
+            ref.mem.store_at_index(ref.builder, self.mem.load_at_index(ref.builder))
+        elif self.is_constant:
             ref.mem.store_at_index(ref.builder, FloType(
                 ir.Constant(self.llvmtype, self.value)), FloInt(0))
         elif self.elems and len(self.elems) > 0:
@@ -563,6 +574,18 @@ class FloFunc(FloType):
             return FloVoid
         self.return_type.value = rt_value
         return self.return_type
+    
+    def __eq__(self, __o: object) -> bool:
+        if not isinstance(__o, FloFunc):
+            return False
+        if self.return_type != __o.return_type:
+            return False
+        if len(self.arg_types) != len(__o.arg_types):
+            return False
+        for argty1, argty2 in zip(self.arg_types, __o.arg_types):
+            if argty1 != argty2:
+                return False
+        return True
 
     def get_local_ctx(self, parent_ctx: Context, arg_names: List(str)):
         self.arg_names = arg_names
@@ -594,15 +617,6 @@ class FloFunc(FloType):
     def str(self) -> str:
         arg_list = ", ".join([arg.str() for arg in self.arg_types])
         return f"({arg_list})=>{self.return_type.str()}"
-
-    def __eq__(self, other):
-        if isinstance(other, FloFunc) and len(self.arg_types) == len(other.arg_types) and self.return_type != other.return_type:
-            for my_arg, other_arg in zip(self.arg_types, other.arg_types):
-                if my_arg != other_arg:
-                    return False
-            return True
-        return False
-
 
 class FloClass(FloType):
     classes = {}
@@ -785,4 +799,4 @@ class FloInlineFunc(FloFunc):
         if returned != None:
             return returned
         else:
-            return FloVoid()
+            return FloVoid(None)

@@ -1,5 +1,4 @@
-import "@flo/core"
-fnc partition(start: int, end: int, array: Array): int {
+fnc partition(start: int, end: int, array: int []): int {
     pivot_index = start
     pivot = array[pivot_index]
     while start < end {
@@ -15,7 +14,7 @@ fnc partition(start: int, end: int, array: Array): int {
 }
             
 // The main function that implements QuickSort
-fnc quick_sort(start: int, end: int, array: Array) {
+fnc quick_sort(start: int, end: int, array: int []) {
     if start < end {
         p = partition(start, end, array)
         quick_sort(start, p - 1, array)
@@ -25,7 +24,7 @@ fnc quick_sort(start: int, end: int, array: Array) {
 
 // Driver code
 fnc main() {
-    array: Array = [10, 7, 8, 9, 1, 5]
+    array: int [] = [10, 7, 8, 9, 1, 5]
     quick_sort(0, array.length - 1, array)
     println(array as string)
 }

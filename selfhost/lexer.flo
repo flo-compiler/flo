@@ -1,0 +1,16 @@
+class FloRange {
+    start: int
+    end: int
+}
+enum TokenType {
+
+}
+class Token {
+    toktype: TokenType
+    range: FloRange
+}
+class Lexer{
+    fnc get_tokens(): Token [] {
+        
+    }
+}

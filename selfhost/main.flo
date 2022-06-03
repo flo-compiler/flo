@@ -1,0 +1,5 @@
+import "lexer"
+fnc main(len: int, args: i8**){
+    lexer = new Lexer()
+    tokens = lexer.get_tokens()
+}

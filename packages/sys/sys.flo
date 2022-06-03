@@ -1,9 +1,11 @@
-import "@flo/core/types"
 import "linux/syscalls"
 const STDIN = 0
 const STDOUT = 1
 const STDERR = 2
 /* c standart library functions:*/
+/*@extern*/
 fnc memcmp(ptr1: i8*, ptr2: i8*, len: int): int
+/*@extern*/
 fnc memcpy(ptr1: i8*, ptr2: i8*, len: int): int
+/*@extern*/
 fnc memset(ptr1: i8*, c: int, len: int)
