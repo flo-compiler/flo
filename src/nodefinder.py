@@ -139,6 +139,8 @@ class NodeFinder(Visitor):
 
     def visitFncCallNode(self, node: FncCallNode):
         self.visit(node.name)
+        for arg in node.args:
+            self.visit(arg)
 
     def visitConstDeclarationNode(self, node: ConstDeclarationNode):
         const_name = node.const_name.value

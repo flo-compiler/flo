@@ -522,7 +522,7 @@ class Parser:
         self.advance()
         if tok.type == TokType.LBRACE:
             if self.current_tok.type != TokType.INT:
-                SyntaxError(self.current_tok.range, "Expected an int").throw()
+                SyntaxError(self.current_tok.range, "Expected an int constant").throw()
             size = self.current_tok.value
             self.advance()
             if self.current_tok.type != TokType.RBRACE:
@@ -575,10 +575,9 @@ class Parser:
                 type = TypeNode(FloPointer(type), Range.merge(type.range, end_range))
             else:
                 self.advance()
-                if self.current_tok.type != TokType.INT:
-                    SyntaxError(self.current_tok.range,
-                                "Expected an int").throw()
                 size = self.current_tok.value
+                if self.current_tok.type != TokType.INT:
+                    SyntaxError(self.current_tok.range, "Expected a constant int").throw()
                 self.advance()
                 if self.current_tok.type != TokType.RBRACKET:
                     if self.current_tok.type != TokType.RBRACKET:

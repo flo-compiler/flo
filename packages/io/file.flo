@@ -1,4 +1,4 @@
-import string, exit, i8 from "@flo/core"
+import string, exit from "@flo/core"
 import open, close, read, write, lseek, unlink, lstat, access, O_RDONLY, O_WRONLY, O_CREAT, SEEK_END, SEEK_SET, F_OK, R_OK, W_OK, X_OK from "@flo/sys"
 class File {
     path: string

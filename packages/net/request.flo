@@ -1,4 +1,3 @@
-import "@flo/core/types"
 const MAX_BUFFSIZE = 12400
 class Request {
     raw_buffer: i8*

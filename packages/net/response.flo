@@ -1,5 +1,4 @@
 import write, close from "@flo/sys"
-import string from "@flo/core/string"
 /* TODO: Make headers a hash map once you Map class*/
 class Response {
     connection: int

@@ -1,7 +1,8 @@
-import "@flo/core"
-
+import println from "@flo/core"
 fnc main() {
     a = 0
     x: int[5] = [1, 2, 3, 4, 5]
-    x = [a, 2,3,4,5]
+    b = [a, 2, 3, 4, 5]
+    x = b
+    println(x[2] as string)
 }

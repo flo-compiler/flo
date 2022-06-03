@@ -1,7 +1,4 @@
 import STDOUT, STDIN, STDERR, nanosleep, write, read, _exit from "@flo/sys"
-import "@flo/collection"
-import "string"
-import "types"
 fnc print(message: string){
     write(STDOUT, message as i8*, message.length)
 }

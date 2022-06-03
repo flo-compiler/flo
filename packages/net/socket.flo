@@ -1,4 +1,4 @@
-import print, exit, string, i8 from "@flo/core"
+import print, exit from "@flo/core"
 import memset, socket, bind, close, listen, connect from "@flo/sys"
 fnc inet_addr(addr: i8*): int
 fnc str_to_intaddr(addr: string): int {

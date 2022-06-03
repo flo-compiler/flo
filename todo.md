@@ -1,6 +1,8 @@
 # Flo Programming Language
 ### Today
 - **Implement** 
+    - [] Enums.
+    - [] Generics.
     - [] Automatic bit size casting for float and int.
     - [] pow operator.
     - [] identifiers possible to define array size.

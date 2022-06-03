@@ -1,4 +1,4 @@
-import read, write, AF_INET, SOCK_STREAM, i8 from "@flo/sys"
+import read, write, AF_INET, SOCK_STREAM from "@flo/sys"
 import "socket"
 import "server"
 const MAX_BUFFSIZE = 24000

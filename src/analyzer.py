@@ -4,7 +4,10 @@ from errors import GeneralError, TypeError, SyntaxError, NameError
 from flotypes import FloArray, FloClass, FloFloat, FloInlineFunc, FloInt, FloObject, FloPointer, FloType, FloVoid
 from lexer import TokType
 from astree import *
-from nodefinder import NodeFinder
+from nodefinder import NodeFinder, resource_path
+from glob import glob
+
+from utils import get_ast_from_file
 
 class FncDescriptor:
     def __init__(self, name: str, rtype: FloType, arg_names: List[str]):
@@ -126,7 +129,15 @@ class Analyzer(Visitor):
         return super().visit(node)
 
     def analyze(self, entry_node: Node):
+        self.include_builtins(entry_node)
         self.visit(entry_node)
+    
+    def include_builtins(self, node: StmtsNode):
+        mpath = resource_path("builtins")
+        files = glob(f"{mpath}/*.flo")
+        for file in files:
+            ast = get_ast_from_file(file, None)
+            node.stmts = ast.stmts + node.stmts
 
     def visitIntNode(self, _):
         return FloInt(None)
@@ -515,8 +526,7 @@ class Analyzer(Visitor):
             passed_arg_ty = self.visit(node_arg)
             if (
                 passed_arg_ty != fn_arg_ty
-                and not fn_arg_ty == FloType
-                and not passed_arg_ty == FloType
+                and fn_arg_ty != FloType
             ):
                 TypeError(
                     node_arg.range,

@@ -1,5 +1,5 @@
-import "@flo/core/core.flo"
-import "@flo/net/server.flo"
+import "@flo/core/core"
+import "@flo/net/server"
 const PORT = 8080
 fnc handler(request: Request, response: Response){
     response.write("HTTP/1.1 OK\r\n")
