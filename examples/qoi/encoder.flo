@@ -1,4 +1,3 @@
-import "@flo/core"
 import "@flo/io"
 const img_width = 735
 const img_height = 588

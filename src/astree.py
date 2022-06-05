@@ -166,8 +166,9 @@ class StmtsNode(Node):
         return visitor.visitStmtsNode(self)
 
 class ClassDeclarationNode(Node):
-    def __init__(self, name: Token, body: StmtsNode, range: Range):
+    def __init__(self, name: Token, parent: TypeNode, body: StmtsNode, range: Range):
         self.name = name
+        self.parent = parent
         self.body = body
         self.range = range
     

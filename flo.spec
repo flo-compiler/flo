@@ -8,7 +8,7 @@ a = Analysis(
     ['src/flo.py'],
     pathex=[],
     binaries=[],
-    datas=[( 'packages', 'packages' )],
+    datas=[( 'packages', 'packages' ), ('builtins', 'builtins')],
     hiddenimports=[],
     hookspath=[],
     hooksconfig={},

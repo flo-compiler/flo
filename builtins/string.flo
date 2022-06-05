@@ -40,6 +40,9 @@ class string {
         }
         return -1
     }
+    fnc get_byte(index: int): i8 {
+        return this.buffer[index]
+    }
     fnc __as_i8_ptr__(): i8* {
         return this.buffer
     }
