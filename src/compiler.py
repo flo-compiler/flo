@@ -10,6 +10,7 @@ from llvmlite import binding as llvm
 
 saved_labels = []
 
+
 def save_labels(*args):
     saved_labels.append(list(args))
 
@@ -82,9 +83,9 @@ class Compiler(Visitor):
 
     def visitStrNode(self, node: StrNode):
         str_val = node.tok.value
-        str_buff =  FloConst.create_global_str(str_val)
+        str_buff = FloConst.create_global_str(str_val)
         str_len = FloInt(len(str_val.encode('utf-8')))
-        string_class =  FloClass.classes.get("string")
+        string_class = FloClass.classes.get("string")
         return string_class.constant_init(self.builder, [str_buff, str_len])
 
     def visitNumOpNode(self, node: NumOpNode):
@@ -127,7 +128,7 @@ class Compiler(Visitor):
             pass
         elif node.op.isKeyword("as"):
             # try:
-                return a.cast_to(self.builder, b)
+            return a.cast_to(self.builder, b)
             # except Exception as e:
             #     TypeError(
             #         node.range, f"Cannot cast {a.str()} to {b.str()}"
@@ -165,6 +166,7 @@ class Compiler(Visitor):
         else:
             fn = FloMethod(arg_types, rtype, fn_name,
                            node.is_variadic, self.class_within)
+            fn.class_within = self.class_within
             self.class_within.add_method(fn)
         outer_ret = self.ret
         self.ret = fn.ret
@@ -355,16 +357,18 @@ class Compiler(Visitor):
         if isinstance(root, FloEnum):
             return root.get_property(property_name)
         return root.get_property(self.builder, property_name)
-    
+
     def visitEnumDeclarationNode(self, node: EnumDeclarationNode):
         enum_name = node.name.value
-        self.context.set(enum_name, FloEnum([token.value for token in node.tokens]))
+        self.context.set(enum_name, FloEnum(
+            [token.value for token in node.tokens]))
 
     def visitPropertyAssignNode(self, node: PropertyAssignNode):
         root = self.visit(node.expr.expr)
         value = self.visit(node.value)
         if not isinstance(root, FloObject):
-            TypeError(node.range, f"Can't set attribute {node.expr.property.value} of type {root.str()}").throw()
+            TypeError(
+                node.range, f"Can't set attribute {node.expr.property.value} of type {root.str()}").throw()
         root.set_property(self.builder, node.expr.property.value, value)
 
     def visitNewMemNode(self, node: NewMemNode):

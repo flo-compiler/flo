@@ -1,29 +1,42 @@
 import println from "@flo/core"
-enum Numbers {
-    ZERO
-    ONE
-    TWO
-}
 class Chef {
     specialty: string
     fnc constructor() {
         this.specialty = "specialty"
     }
-    fnc printSpecialty() {
+    fnc print_specialty() {
         println(this.specialty)
     }
 }
 class ItalianChef extends Chef {
+    specialty2: string
     fnc constructor() {
-        this.specialty = "pasta"
+        this.specialty = "Pasta"
+        this.specialty2 = "Pizza"
     }
-    fnc italian_secret() {
-        println("Tomato")
+    fnc print_specialty_two() {
+        println(this.specialty2)
+    }
+}
+class SpecialItalianChef extends ItalianChef {
+    secret: string
+    fnc constructor() {
+        super()
+        this.secret = "Olive Oil"
+    }
+    fnc print_secret() {
+        println(this.secret)
     }
 }
 fnc main() {
-    x = Numbers.ONE
-    println(x as string)
-    chef = new ItalianChef() 
-    chef.italian_secret()
+    chef: Chef = new ItalianChef() 
+    print_fnc = chef.print_specialty //think about how to fix this
+    print_fnc()
+    // @unsafe
+    italian_chef = chef as ItalianChef
+    italian_chef.print_specialty_two()
+    special: Chef = new SpecialItalianChef()
+    special.print_specialty()
+    spItalianChef = special as SpecialItalianChef
+    spItalianChef.print_secret()
 }

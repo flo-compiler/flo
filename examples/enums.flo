@@ -1,0 +1,10 @@
+import println from "@flo/core"
+enum Numbers {
+    ZERO
+    ONE
+    TWO
+}
+fnc main() {
+    x = Numbers.ONE
+    println(x as string)
+}
