@@ -201,6 +201,8 @@ class NodeFinder(Visitor):
     def visitClassDeclarationNode(self, node: ClassDeclarationNode):
         class_name = node.name.value
         if class_name in self.ignore: return
+        if node.parent:
+            self.visit(node.parent)
         self.context.set(class_name, node)
         self.context = self.context.create_child(class_name)
         self.block_in = Block(class_name, BlockTy.class_)

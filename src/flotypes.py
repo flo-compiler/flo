@@ -1,9 +1,11 @@
-from ast import List
+from typing import List
+import cache as c
 import builtIns as bi
 from context import Context
 from llvmlite import ir
 from typing import Union
 from lexer import Token
+
 
 def create_array_buffer(builder: ir.IRBuilder, elems):
     elm_ty = elems[0].llvmtype
@@ -462,6 +464,7 @@ class FloArray:
             return self.mem.value
         if self.elems:
             return [elm.value for elm in self.elems]
+
     @value.setter
     def value(self, new_value):
         assert new_value
@@ -474,7 +477,8 @@ class FloArray:
         if not ref.mem:
             ref.mem = FloMem.salloc(ref.builder, self.llvmtype, ref.name)
         if self.mem:
-            ref.mem.store_at_index(ref.builder, self.mem.load_at_index(ref.builder))
+            ref.mem.store_at_index(
+                ref.builder, self.mem.load_at_index(ref.builder))
         elif self.is_constant:
             ref.mem.store_at_index(ref.builder, FloType(
                 ir.Constant(self.llvmtype, self.value)), FloInt(0))
@@ -573,7 +577,7 @@ class FloFunc(FloType):
             return FloVoid
         self.return_type.value = rt_value
         return self.return_type
-    
+
     def __eq__(self, __o: object) -> bool:
         if not isinstance(__o, FloFunc):
             return False
@@ -586,7 +590,7 @@ class FloFunc(FloType):
                 return False
         return True
 
-    def get_local_ctx(self, parent_ctx: Context, arg_names: List(str)):
+    def get_local_ctx(self, parent_ctx: Context, arg_names: List[str]):
         self.arg_names = arg_names
         local_ctx = parent_ctx.create_child(self.value.name)
         for arg_name, arg_type, arg_value in zip(arg_names, self.arg_types, self.value.args):
@@ -609,7 +613,8 @@ class FloFunc(FloType):
         return self.get_llvm_type().as_pointer()
 
     def load_value_from_ref(self, ref):
-        loaded_func = FloFunc(self.arg_types, self.return_type, None, self.var_args)
+        loaded_func = FloFunc(
+            self.arg_types, self.return_type, None, self.var_args)
         loaded_func.value = ref.mem.load_at_index(ref.builder).value
         return loaded_func
 
@@ -617,16 +622,28 @@ class FloFunc(FloType):
         arg_list = ", ".join([arg.str() for arg in self.arg_types])
         return f"({arg_list})=>{self.return_type.str()}"
 
+
+vtable_offset = 1
+
+
 class FloClass(FloType):
     classes = {}
 
-    def __init__(self, name) -> None:
+    def __init__(self, name, parent=None, init_body=True) -> None:
         self.name = name
         self.methods: dict[str, FloMethod] = {}
         self.properties: dict[str, FloType] = {}
         self.value = ir.global_context.get_identified_type(name)
         self.constructor = None
-        self.processed = False
+        self.vtable_ty = None
+        self.vtable_data = None
+        self.parent = parent
+        if parent:
+            self.properties.update(parent.properties)
+            if init_body:
+                self.methods.update(parent.methods)
+        if init_body:
+            self.init_value()
         FloClass.classes[name] = self
 
     def add_method(self, fnc: FloFunc):
@@ -641,20 +658,56 @@ class FloClass(FloType):
     def add_property(self, name, value):
         self.properties[name] = value
 
-    def process(self):
-        if not self.processed:
-            body = [val.llvmtype for val in self.properties.values()]
-            self.value.set_body(*body)
-            self.processed = True
+    @property
+    def llvmtype(self):
+        return self.value.as_pointer()
+
+    def init_value(self):
+        cached_instance = c.AnalyzerCache.classes[self.name]
+        fields = [value.llvmtype for value in cached_instance.properties.values()]
+        methods = {}
+        self.vtable_ty = ir.global_context.get_identified_type(
+            f"{self.name}_vtable_ty")
+        if self.parent:
+            parent_methods = c.AnalyzerCache.classes[self.parent.name].methods
+            for key in parent_methods:
+                pmethod = parent_methods.get(key)
+                fnc_copy = FloInlineFunc(None, [
+                                         self.parent]+pmethod.arg_types, pmethod.return_type, pmethod.var_args, pmethod.defaults)
+                methods[key] = fnc_copy
+        for key in cached_instance.methods:
+            func = cached_instance.methods.get(key)
+            fnc_copy = FloInlineFunc(
+                None, [self]+func.arg_types, func.return_type, func.var_args, func.defaults)
+            methods[key] = fnc_copy
+        vtable_tys = [method.llvmtype for method in methods.values()]
+        self.vtable_ty.set_body(*vtable_tys)
+        fields.insert(0, self.vtable_ty.as_pointer())
+        self.value.set_body(*fields)
+        self.vtable_data = ir.GlobalVariable(
+            Context.current_llvm_module, self.vtable_ty, f"{self.name}_vtable_data")
 
     def constant_init(self, builder: ir.IRBuilder, args):
-        ptr_value = FloMem.salloc(builder, self.value)
+        # TODO: Decide when to allocate on the heap
+        ptr_value = FloMem.halloc(builder, self.value)
+        self.set_vtable_data(builder, ptr_value)
         for index, arg in enumerate(args):
             ptr_value.store_at_index(
-                builder, arg, FloInt(0, 32), FloInt(index, 32))
+                builder, arg, FloInt(0, 32), FloInt(index + vtable_offset, 32))
         obj = FloObject(self)
         obj.mem = ptr_value
         return obj
+
+    def set_vtable_data(self, builder: ir.IRBuilder, mem: FloMem):
+        mem.store_at_index(
+            builder, FloType(self.vtable_data), FloInt(0, 32), FloInt(0, 32))
+
+    def create_vtable(self):
+        self.vtable_data.initializer = ir.Constant(
+            self.vtable_ty, [func.value for func in self.methods.values()])
+
+    def has_parent(self, other):
+        return self.parent and self.parent.name == other.name
 
 
 class FloMethod(FloFunc):
@@ -667,10 +720,16 @@ class FloMethod(FloFunc):
         super().__init__(arg_types, return_type, name, var_args)
 
     def call(self, builder: ir.IRBuilder, args):
-        return super().call(builder, [self.current_object]+args)
+        return super().call(builder, [self.current_object] + args)
 
-    def get_local_ctx(self, parent_ctx: Context, arg_names: List(str)):
+    def get_local_ctx(self, parent_ctx: Context, arg_names: List[str]):
         return super().get_local_ctx(parent_ctx, ["this"]+arg_names)
+
+    def load_value_from_ref(self, ref):
+        loaded_func = FloMethod(
+            self.arg_types, self.return_type, None, self.var_args, None)
+        loaded_func.value = ref.mem.load_at_index(ref.builder).value
+        return loaded_func
 
 
 class FloObject:
@@ -704,29 +763,44 @@ class FloObject:
         try:
             property_index = list(self.referer.properties.keys()).index(name)
         except Exception:
-            return self.get_method(name)
+            return self.get_method(name, builder)
         property_value: FloType = self.referer.properties.get(name)
         mem = self.mem.get_pointer_at_index(
-            builder, FloInt(0, 32), FloInt(property_index, 32))
+            builder, FloInt(0, 32), FloInt(property_index + vtable_offset, 32))
         return property_value.load_value_from_ref(FloRef(builder, property_value, '', mem))
 
-    def get_method(self, name) -> Union[FloMethod, None]:
+    def get_method(self, Oname, builder: ir.IRBuilder) -> Union[FloMethod, None]:
         assert isinstance(self.referer, FloClass)
-        name = self.referer.name + "_" + name
-        method = self.referer.methods.get(name)
-        if method:
-            method.current_object = self
-            return method
+        needs_casting = False
+        name = self.referer.name + "_" + Oname
+        try:
+            method_index = list(self.referer.methods.keys()).index(name)
+        except:
+            name = self.referer.parent.name + "_" + Oname
+            method_index = list(self.referer.methods.keys()).index(name)
+            needs_casting = True
+        vtable_ptr = self.mem.load_at_index(
+            builder, FloInt(0, 32), FloInt(0, 32)
+        )
+        method_value: FloType = self.referer.methods.get(name)
+        method_mem = vtable_ptr.get_pointer_at_index(
+            builder, FloInt(0, 32), FloInt(method_index, 32))
+        flomethod = method_value.load_value_from_ref(
+            FloRef(builder, method_value, '', method_mem))
+        flomethod.current_object = self.cast_to(builder, FloObject(
+            self.referer.parent)) if needs_casting else self
+        return flomethod
 
     def set_property(self, builder: ir.IRBuilder, name: str, value: FloType):
         property_index = list(self.referer.properties.keys()).index(name)
         mem = self.mem.get_pointer_at_index(
-            builder, FloInt(0, 32), FloInt(property_index, 32))
+            builder, FloInt(0, 32), FloInt(property_index + vtable_offset, 32))
         value.store_value_to_ref(FloRef(builder, value, '', mem))
         return value
 
     def construct(self, builder: ir.IRBuilder, args):
         self.mem = FloMem.halloc(builder, self.referer.value)
+        self.referer.set_vtable_data(builder, self.mem)
         if self.referer.constructor:
             self.referer.constructor.current_object = self
             self.referer.constructor.call(builder, args)
@@ -738,18 +812,10 @@ class FloObject:
     def __eq__(self, other: object) -> bool:
         if not other:
             return False
-        self_classname = None
-        other_classname = None
         if not isinstance(other, FloObject):
             return False
-        if isinstance(self.referer, FloClass):
-            self_classname = self.referer.name
-        elif isinstance(self.referer, Token):
-            self_classname = self.referer.value
-        if isinstance(other.referer, FloClass):
-            other_classname = other.referer.name
-        elif isinstance(other.referer, Token):
-            other_classname = other.referer.value
+        self_classname = self.referer.name
+        other_classname = other.referer.name
         return self_classname == other_classname
 
     def add(self, builder: ir.IRBuilder, other):
@@ -766,9 +832,9 @@ class FloObject:
             else:
                 return FloInt(0, 1)
 
-    def get_cast_method(self, type):
+    def get_cast_method(self, type, builder):
         name = "__as_"+type.str().replace("*", "_ptr")+"__"
-        return self.get_method(name)
+        return self.get_method(name, builder)
 
     def cast_to(self, builder: ir.IRBuilder, type):
         if is_string_object(type):
@@ -777,7 +843,13 @@ class FloObject:
             if self.get_method('__as_string__') == None:
                 string = f"@{self.referer.name}"
                 return create_string_object(builder, [FloConst.create_global_str(string), FloInt(len(string))])
-        method: FloMethod = self.get_cast_method(type)
+        elif isinstance(type, FloObject):
+            if(self.referer.has_parent(type.referer)):
+                casted_mem = FloMem.bitcast(builder, self.mem, type.llvmtype)
+                newObj = FloObject(type.referer)
+                newObj.mem = casted_mem
+                return newObj
+        method: FloMethod = self.get_cast_method(type, builder)
         if method != None:
             return method.call(builder, [])
         else:
@@ -785,11 +857,16 @@ class FloObject:
 
 
 class FloEnum(FloType):
-    def __init__(self, elements: List(str)):
+    def __init__(self, elements: List[str]):
         self.elements = elements
+
     def get_property(self, name: str) -> FloInt:
         index = self.elements.index(name)
         return FloInt(index)
+
+    def str(self):
+        return "Enum"
+
 
 class FloInlineFunc(FloFunc):
     def __init__(self, call, arg_types, return_type, var_args=False, defaults=[]):

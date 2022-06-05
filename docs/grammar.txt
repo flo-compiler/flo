@@ -27,7 +27,7 @@ const_declaration: const_kw identifier_tok eq_tok expr
 
 type_alias: type_kw identifier_tok eq_tok composite_type
 
-class_declaration: class_kw block
+class_declaration: class_kw extends_kw prim_type block
 
 enum_declaration: enum_kw lbrace_tok (identifier_tok ln_tok+)+ rbrace_tok
 
@@ -141,6 +141,7 @@ xor_kw: "xor"
 as_kw: "as"
 is_kw: "is"
 enum_kw: "enum"
+extends_kw: "extends"
           
 
 comp_op: ">"

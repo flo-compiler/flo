@@ -1,0 +1,311 @@
+{
+	"$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+	"name": "flo",
+	"patterns": [
+		{
+			"include": "#statements"
+		}
+	],
+	"repository": {
+		"statements":{
+			"patterns": [
+				{
+					"include": "#statement"
+				}
+			]
+		},
+		"statement":{
+			"patterns": [
+				{
+					"include": "#import"
+				},
+				{
+					"include": "#class-declaration"
+				},
+				{
+					"include": "#const-declaration"
+				},
+				{
+					"include": "#control-statement"
+				},
+				{
+					"include": "#expressions"
+				},
+				{
+					"include": "#comment"
+				}
+			]
+		},
+		"expressions": {
+			"patterns": [
+				{
+					"include": "#strings"
+				},
+				{
+					"include": "#numbers"
+				},
+				{
+					"name": "meta.block.jakt",
+					"begin": "(\\{)",
+					"beginCaptures": {
+						"1": {
+							"name": "punctuation.begin.brace.jakt"
+						}
+					},
+					"end": "(\\})",
+					"endCaptures": {
+						"1": {
+							"name": "punctuation.end.brace.jakt"
+						}
+					},
+					"patterns": [
+						{
+							"include": "$self"
+						}
+					]
+				}
+			]
+		},
+		"const-declaration": {
+			"name": "meta.constant.definition.flo",
+			"begin": "\\b(const)((?:\\w|_)(?:\\w|_|[0-9])*)",
+			"beginCaptures": {
+				"1": {
+					"name": "keyword.const.flo"
+				},
+				"2": {
+					"name": "variable.other.flo"
+				},
+				"3": {
+					"name": "punctuation.colon.flo"
+				}
+			},
+			"end": "((?:\\+|\\-|\\*|\\/|%)?=)",
+			"endCaptures": {
+				"1": {
+					"name": "keyword.operator.assignment.flo"
+				}
+			},
+			"patterns": [
+				{
+					"include": "#types"
+				}
+			]
+		},
+		"class-declaration": {
+			"patterns": [
+				{
+					"name": "meta.type.class",
+					"begin": "\\b(class)((?:\\w|_)(?:\\w|_|[0-9])*))",
+					"captures": {
+						"1": {
+							"name": "keyword.type.class.flo"
+						},
+						"2": {
+							"name": "entity.name.type.class.flo"
+						}
+					},
+					"end": ""
+				},
+				{
+					"name": "meta.block.class.flo",
+					"begin": "(?<=(?:class).*?)(\\{)",
+					"beginCaptures": {
+						"1": {
+							"name": "punctuation.begin.brace.flo"
+						}
+					},
+					"end": "(\\})",
+					"endCaptures": {
+						"1": {
+							"name": "punctuation.end.brace.flo"
+						}
+					},
+					"patterns": [
+						{
+							"include": "#field"
+						},
+						{
+							"include": "#function"
+						},
+						{
+							"include": "$self"
+						}
+					]
+				},
+				{
+					"name": "meta.type.enum.body.flo",
+					"begin": "(?<=enum.*?)(\\{)",
+					"beginCaptures": {
+						"1": {
+							"name": "punctuation.begin.brace.flo"
+						}
+					},
+					"end": "(\\})",
+					"endCaptures": {
+						"1": {
+							"name": "punctuation.end.brace.flo"
+						}
+					},
+					"patterns": [
+						{
+							"include": "#enum-field"
+						},
+						{
+							"include": "$self"
+						}
+					]
+				}
+			]
+		},
+		"types": {
+			"patterns": [
+				{
+					"name": "storage.type.primitive.flo",
+					"match": "\\b(string|float|int|bool|i4|i8|i16|i32|i64|i128|f32|f64)\\b"
+				},
+				{
+					"name": "storage.type.other.flo",
+					"match": "\\b(?:[A-Z]|_)(?:\\w|_|[0-9])*\\b"
+				},
+				{
+					"begin": "\\b((?:[A-Z]|_)(?:\\w|_|[0-9])*)\\s*(\\[)",
+					"beginCaptures": {
+						"1": {
+							"name": "storage.type.array.flo"
+						},
+						"2": {
+							"name": "punctuation.begin.square-bracket.flo"
+						}
+					},
+					"end": "(\\])",
+					"endCaptures": {
+						"1": {
+							"name": "punctuation.end.square-bracket.jakt"
+						}
+					},
+					"patterns": [
+						{
+							"include": "#types"
+						}
+					]
+				}
+			]
+		},
+		"field": {
+			"name": "meta.field.flo",
+			"begin": "(?:\\b((?:\\w|_)(?:\\w|_|[0-9])*)\\s*(:)",
+			"beginCaptures": {
+				"1": {
+					"name": "variable.field.jakt"
+				},
+				"2": {
+					"name": "punctuation.colon.jakt"
+				}
+			},
+			"end": "$",
+			"patterns": [
+				{
+					"include": "#types"
+				}
+			]
+		},
+		"enum-field": {
+			"patterns": [
+				{
+					"name": "meta.field.enum.flo",
+					"begin": "\\b((?:\\w|_)(?:\\w|_|[0-9])*)\\s*(\\{)",
+					"beginCaptures": {
+						"1": {
+							"name": "variable.field.enum.flo"
+						},
+						"2": {
+							"name": "punctuation.begin.brace.flo"
+						}
+					},
+					"end": "(\\})",
+					"endCaptures": {
+						"1": {
+							"name": "punctuation.end.brace.flo"
+						}
+					}
+				}
+			]
+		},
+		"import": {
+			"patterns": [
+				{
+					"name": "meta.import.flo",
+					"begin": "\\b(import)((?:\\w|_)(?:\\w|_|[0-9])*(,(?:\\w|_)(?:\\w|_|[0-9])*)(from)\\s*",
+					"beginCaptures": {
+						"1": {
+							"name": "keyword.import.flo"
+						},
+						"2": {
+							"name": "variable.variable-list.flo"
+						},
+						"3": {
+							"name": "keyword.from.flo"
+						}
+					},
+					"end": "(\".*\")",
+					"endCaptures": {
+						"1": {
+							"name": "punctuation.end.quote.double.flo"
+						}
+					}
+				}
+			]
+		},
+		"control-keywords": {
+			"name": "keyword.control.flo",
+			"match": "\\b(if|else|for|while|break|continue|return|import|from|in|as|is)\\b"
+		},
+		"strings": {
+			"name": "string.quoted.double.flo",
+			"begin": "\"|'",
+			"end": "\"|'",
+			"patterns": [
+				{
+					"name": "constant.character.escape.flo",
+					"match": "\\\\."
+				}
+			]
+		},
+		"comment": {
+			"patterns": [
+				{
+					"match": "/\\*\\*/",
+					"name": "comment.block.flo"
+				},
+				{
+					"begin": "/\\*",
+					"end": "\\*/",
+					"name": "comment.block.flo"
+				},
+				{
+					"begin": "//",
+					"end": "\\n",
+					"name": "comment.block.flo"
+				}
+			]
+		},
+		"numbers": {
+			"patterns": [
+				{
+					"name": "keyword.other.unit.flo",
+					"match": "([0-9]+\\.?[0-9]*)"
+				}
+			]
+		},
+		"reserved-constants": {
+			"patterns": [
+				{
+					"name": "constant.language.flo",
+					"match": "\\b(true|false|null|this)\\b"
+				}
+			]
+		}
+	},
+	"scopeName": "source.flo"
+}

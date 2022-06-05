@@ -1,6 +1,6 @@
 from pathlib import Path
 from errors import CompileError, TypeError
-from flotypes import FloArray, FloClass, FloConst, FloEnum, FloFunc, FloInlineFunc, FloInt, FloFloat, FloMethod, FloObject, FloPointer, FloRef, FloVoid, create_array_buffer
+from flotypes import FloArray, FloClass, FloConst, FloEnum, FloFunc, FloInt, FloFloat, FloMethod, FloObject, FloPointer, FloRef, FloVoid, create_array_buffer
 from lexer import TokType
 from astree import *
 from context import Context
@@ -126,12 +126,12 @@ class Compiler(Visitor):
         elif node.op.isKeyword("in"):
             pass
         elif node.op.isKeyword("as"):
-            try:
+            # try:
                 return a.cast_to(self.builder, b)
-            except Exception as e:
-                TypeError(
-                    node.range, f"Cannot cast {a.str()} to {b.str()}"
-                ).throw()
+            # except Exception as e:
+            #     TypeError(
+            #         node.range, f"Cannot cast {a.str()} to {b.str()}"
+            #     ).throw()
         elif node.op.isKeyword("is"):
             return FloInt(isinstance(a, b), 1)
 
@@ -163,7 +163,6 @@ class Compiler(Visitor):
                     arg_types, rtype, fn_name, node.is_variadic)
             self.context.set(fn_name, fn)
         else:
-            self.class_within.process()
             fn = FloMethod(arg_types, rtype, fn_name,
                            node.is_variadic, self.class_within)
             self.class_within.add_method(fn)
@@ -340,10 +339,14 @@ class Compiler(Visitor):
             return array_class.constant_init(self.builder, [pointer, length, size])
 
     def visitClassDeclarationNode(self, node: ClassDeclarationNode):
-        class_obj = FloClass(node.name.value)
+        parent = None
+        if node.parent:
+            parent = self.visit(node.parent).referer
+        class_obj = FloClass(node.name.value, parent)
         self.class_within = class_obj
         self.context.set(node.name.value, class_obj)
         self.visit(node.body)
+        class_obj.create_vtable()
         self.class_within = None
 
     def visitPropertyAccessNode(self, node: PropertyAccessNode):
@@ -360,6 +363,8 @@ class Compiler(Visitor):
     def visitPropertyAssignNode(self, node: PropertyAssignNode):
         root = self.visit(node.expr.expr)
         value = self.visit(node.value)
+        if not isinstance(root, FloObject):
+            TypeError(node.range, f"Can't set attribute {node.expr.property.value} of type {root.str()}").throw()
         root.set_property(self.builder, node.expr.property.value, value)
 
     def visitNewMemNode(self, node: NewMemNode):

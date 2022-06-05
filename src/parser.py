@@ -168,9 +168,13 @@ class Parser:
             SyntaxError(range_start, "Expected and identifier").throw()
         name = self.current_tok
         self.advance()
+        parent = None
+        if self.current_tok.isKeyword("extends"):
+            self.advance()
+            parent = self.prim_type()
         body = self.block()
         node_range = Range.merge(range_start, self.current_tok.range)
-        return ClassDeclarationNode(name, body, node_range)
+        return ClassDeclarationNode(name, parent, body, node_range)
     
     def enum_declaration(self) -> EnumDeclarationNode:
         self.advance()

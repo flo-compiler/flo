@@ -1,4 +1,5 @@
 from typing import List
+from cache import AnalyzerCache
 from context import Context
 from errors import GeneralError, TypeError, SyntaxError, NameError
 from flotypes import FloArray, FloClass, FloEnum, FloFloat, FloInlineFunc, FloInt, FloObject, FloPointer, FloType, FloVoid
@@ -6,8 +7,9 @@ from lexer import TokType
 from astree import *
 from nodefinder import NodeFinder, resource_path
 from glob import glob
-
 from utils import get_ast_from_file
+
+
 
 class FncDescriptor:
     def __init__(self, name: str, rtype: FloType, arg_names: List[str]):
@@ -172,10 +174,10 @@ class Analyzer(Visitor):
         if node.op.type in self.arithmetic_ops_1:
             if isinstance(left, FloFloat) and isinstance(right, FloInt):
                 node.right_node = self.cast(node.right_node, left)
-                return FloFloat
+                return FloFloat(0)
             if isinstance(left, FloInt) and isinstance(right, FloFloat):
                 node.left_node = self.cast(node.left_node, right)
-                return FloFloat
+                return FloFloat(0)
             if isinstance(left, FloInt) and isinstance(right, FloInt):
                 # TODO: Check sizes and choose the biggest and cast the smallest
                 return left
@@ -297,13 +299,16 @@ class Analyzer(Visitor):
         self.context.set(const_name, value)
         self.constants.append(const_name)
 
-    def declare_value(self, var_name: str, var_value, var_type: Node, range: Range):
-        if var_type:
-            expected_type = self.visit(var_type)
+    def declare_value(self, var_name: str, var_value, node: Node):
+        if node.type:
+            expected_type = self.visit(node.type)
             #TODO: Int-Type/Float-type bitsize casting
-            if var_value != expected_type:
+            c = None
+            if isinstance(expected_type, FloObject):
+                c = self.check_inheritance(expected_type, var_value, node)
+            if c == None and var_value != expected_type:
                 TypeError(
-                    range, f"Expected type '{expected_type.str()}' but got type '{var_value.str()}'").throw()
+                    node.range, f"Expected type '{expected_type.str()}' but got type '{var_value.str()}'").throw()
         else:
             expected_type = var_value
         self.context.set(var_name, expected_type)
@@ -319,6 +324,14 @@ class Analyzer(Visitor):
     def visitEnumDeclarationNode(self, node: EnumDeclarationNode):
         enum_name = node.name.value
         self.context.set(enum_name, FloEnum([token.value for token in node.tokens]))
+    
+    def check_inheritance(self, parent, child, node: Node):
+        if parent == child:
+            return parent
+        if child.referer.has_parent(parent.referer):
+            node.value = self.cast(node.value, parent)
+            return parent
+        
 
     def visitVarAssignNode(self, node: VarAssignNode):
         var_name = node.var_name.value
@@ -338,7 +351,10 @@ class Analyzer(Visitor):
             self.class_within.properties[var_name] = var_value
             return var_value
         if defined_var_value == None:
-            return self.declare_value(var_name, var_value, node.type, node.range)
+            return self.declare_value(var_name, var_value, node)
+        if isinstance(defined_var_value, FloObject) and node.value:
+            c = self.check_inheritance(defined_var_value, var_value, node)
+            if c: return c
         if var_value != defined_var_value:
             TypeError(
                 node.range,
@@ -453,9 +469,10 @@ class Analyzer(Visitor):
             self.context = self.context.create_child(fnc_name)
             self.context.set(
                 "this", FloObject(self.class_within))
-            self.class_within.methods[fnc_name] = fn_type
             if fnc_name == "constructor":
                 self.class_within.constructor = fn_type
+            else:
+                self.class_within.methods[fnc_name] = fn_type
         for arg_name, arg_type in zip(arg_names, arg_types):
             self.context.set(arg_name, arg_type)
 
@@ -526,11 +543,16 @@ class Analyzer(Visitor):
                 node.range,
                 f"Expected {len(fn.arg_types)} arguments, but got {len(args)}",
             ).throw()
-        for node_arg, fn_arg_ty in zip(args, fn_args):
+        for i, (node_arg, fn_arg_ty) in enumerate(zip(args, fn_args)):
             passed_arg_ty = self.visit(node_arg)
+            c = None
+            if isinstance(passed_arg_ty, FloObject):
+                c = self.check_inheritance(fn_arg_ty, passed_arg_ty, VarAssignNode(None, node_arg, None, None))
+                if c: args[i] = self.cast(node_arg, fn_arg_ty)
             if (
                 passed_arg_ty != fn_arg_ty
                 and fn_arg_ty != FloType
+                and c == None
             ):
                 TypeError(
                     node_arg.range,
@@ -647,12 +669,16 @@ class Analyzer(Visitor):
     def visitClassDeclarationNode(self, node: ClassDeclarationNode):
         self.current_block.append_block(Block.class_())
         class_name = node.name.value
-        class_ob = FloClass(class_name)
+        parent = None
+        if node.parent:
+            parent = self.visit(node.parent).referer
+        class_ob = FloClass(class_name, parent, False)
         self.context.set(class_name, class_ob)
         self.class_within = class_ob
         self.constants.append(class_name)
         self.visit(node.body)
         self.class_within = None
+        AnalyzerCache.classes[class_name] = class_ob
         self.current_block.pop_block()
 
     def visitTypeAliasNode(self, node: TypeAliasNode):
@@ -667,6 +693,8 @@ class Analyzer(Visitor):
             TypeError(node.expr.range, "Expected an object").throw()
         value = root.referer.properties.get(
             property_name) or root.referer.methods.get(property_name)
+        if value == None and root.referer.parent:
+            value = root.referer.parent.methods.get(property_name)
         if value == None:
             GeneralError(node.property.range,
                          f"{property_name} not defined on {root.referer.name} object").throw()
@@ -675,6 +703,9 @@ class Analyzer(Visitor):
     def visitPropertyAssignNode(self, node: PropertyAssignNode):
         expr = self.visit(node.expr)
         value = self.visit(node.value)
+        if isinstance(expr, FloObject):
+            c = self.check_inheritance(expr, value, node)
+            if c: return c
         if expr != value:
             TypeError(
                 node.range, f"Expected type {expr.str()} but got type {value.str()}").throw()

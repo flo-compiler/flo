@@ -1,8 +1,11 @@
 # Flo Programming Language
 ### Today
 - **Implement** 
-    - [] Enums.
+    - [~] Enums.
+    - [~] Inheritance and polymorphism.
     - [] Generics.
+    - [] Think about access in classes and modules.
+    - [] Fix fixed size arrays.
     - [] Automatic bit size casting for float and int.
     - [] pow operator.
     - [] identifiers possible to define array size.
@@ -19,10 +22,7 @@
 - **Think**
     - Think about global variables.
     - Static Ref Counting.
-    - Generics.
     - Think about all operator overloading.
-    - Think about access in classes and modules.
     - Think about module renaming.
-    - Inheritance/Polymorphism.
     - Function Overloading in classes.
     - Think about closures.
