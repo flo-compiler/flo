@@ -620,7 +620,7 @@ class FloFunc(FloType):
 
     def str(self) -> str:
         arg_list = ", ".join([arg.str() for arg in self.arg_types])
-        return f"({arg_list})=>{self.return_type.str()}"
+        return f"({arg_list}) => {self.return_type.str()}"
 
 
 vtable_offset = 1
@@ -640,11 +640,17 @@ class FloClass(FloType):
         self.parent = parent
         if parent:
             self.properties.update(parent.properties)
-            if init_body:
-                self.methods.update(parent.methods)
         if init_body:
             self.init_value()
+            if self.parent:
+                self.methods.update(self.parent.methods)
         FloClass.classes[name] = self
+
+    def get_method(self, method_name: str):
+        current = self
+        while current.methods.get(method_name) == None and current.parent:
+            current = current.parent
+        return current.methods.get(method_name)
 
     def add_method(self, fnc: FloFunc):
         # prepend this in args
@@ -662,24 +668,23 @@ class FloClass(FloType):
     def llvmtype(self):
         return self.value.as_pointer()
 
+    @staticmethod
+    def get_methods(flo_class):
+        if flo_class == None:
+            return {}
+        methods = FloClass.get_methods(flo_class.parent)
+        for key in flo_class.methods:
+            func = flo_class.methods.get(key)
+            methods[key] = FloInlineFunc(
+                None, [flo_class]+func.arg_types, func.return_type, func.var_args, func.defaults)
+        return methods
+
     def init_value(self):
         cached_instance = c.AnalyzerCache.classes[self.name]
         fields = [value.llvmtype for value in cached_instance.properties.values()]
-        methods = {}
         self.vtable_ty = ir.global_context.get_identified_type(
             f"{self.name}_vtable_ty")
-        if self.parent:
-            parent_methods = c.AnalyzerCache.classes[self.parent.name].methods
-            for key in parent_methods:
-                pmethod = parent_methods.get(key)
-                fnc_copy = FloInlineFunc(None, [
-                                         self.parent]+pmethod.arg_types, pmethod.return_type, pmethod.var_args, pmethod.defaults)
-                methods[key] = fnc_copy
-        for key in cached_instance.methods:
-            func = cached_instance.methods.get(key)
-            fnc_copy = FloInlineFunc(
-                None, [self]+func.arg_types, func.return_type, func.var_args, func.defaults)
-            methods[key] = fnc_copy
+        methods = self.get_methods(cached_instance)
         vtable_tys = [method.llvmtype for method in methods.values()]
         self.vtable_ty.set_body(*vtable_tys)
         fields.insert(0, self.vtable_ty.as_pointer())
@@ -707,7 +712,12 @@ class FloClass(FloType):
             self.vtable_ty, [func.value for func in self.methods.values()])
 
     def has_parent(self, other):
-        return self.parent and self.parent.name == other.name
+        current = self
+        while current.parent:
+            if current.parent.name == other.name:
+                return True
+            current = current.parent
+        return False
 
 
 class FloMethod(FloFunc):
@@ -723,12 +733,19 @@ class FloMethod(FloFunc):
         return super().call(builder, [self.current_object] + args)
 
     def get_local_ctx(self, parent_ctx: Context, arg_names: List[str]):
-        return super().get_local_ctx(parent_ctx, ["this"]+arg_names)
+        local_ctx = super().get_local_ctx(parent_ctx, ["this"] + arg_names)
+        if self.class_within and self.class_within.parent:
+            parent_constructor = self.class_within.parent.constructor
+            parent_constructor.current_object = local_ctx.get("this").load().cast_to(
+                self.builder, FloObject(self.class_within.parent))
+            local_ctx.set("super", parent_constructor)
+        return local_ctx
 
     def load_value_from_ref(self, ref):
         loaded_func = FloMethod(
             self.arg_types, self.return_type, None, self.var_args, None)
         loaded_func.value = ref.mem.load_at_index(ref.builder).value
+        loaded_func.current_object = self.current_object
         return loaded_func
 
 
@@ -771,14 +788,16 @@ class FloObject:
 
     def get_method(self, Oname, builder: ir.IRBuilder) -> Union[FloMethod, None]:
         assert isinstance(self.referer, FloClass)
-        needs_casting = False
-        name = self.referer.name + "_" + Oname
-        try:
-            method_index = list(self.referer.methods.keys()).index(name)
-        except:
-            name = self.referer.parent.name + "_" + Oname
-            method_index = list(self.referer.methods.keys()).index(name)
-            needs_casting = True
+        method_index = -1
+        current = self.referer
+        while current:
+            name = current.name + "_" + Oname
+            method = current.methods.get(name)
+            if method != None:
+                method_index = list(self.referer.methods.keys()).index(name)
+                break
+            else:
+                current = current.parent
         vtable_ptr = self.mem.load_at_index(
             builder, FloInt(0, 32), FloInt(0, 32)
         )
@@ -788,7 +807,7 @@ class FloObject:
         flomethod = method_value.load_value_from_ref(
             FloRef(builder, method_value, '', method_mem))
         flomethod.current_object = self.cast_to(builder, FloObject(
-            self.referer.parent)) if needs_casting else self
+            current)) if self.referer != current else self
         return flomethod
 
     def set_property(self, builder: ir.IRBuilder, name: str, value: FloType):
@@ -844,11 +863,11 @@ class FloObject:
                 string = f"@{self.referer.name}"
                 return create_string_object(builder, [FloConst.create_global_str(string), FloInt(len(string))])
         elif isinstance(type, FloObject):
-            if(self.referer.has_parent(type.referer)):
-                casted_mem = FloMem.bitcast(builder, self.mem, type.llvmtype)
-                newObj = FloObject(type.referer)
-                newObj.mem = casted_mem
-                return newObj
+            # if(self.referer.has_parent(type.referer)): (Possibly unsafe with check on this line)
+            casted_mem = FloMem.bitcast(builder, self.mem, type.llvmtype)
+            newObj = FloObject(type.referer)
+            newObj.mem = casted_mem
+            return newObj
         method: FloMethod = self.get_cast_method(type, builder)
         if method != None:
             return method.call(builder, [])

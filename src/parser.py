@@ -450,6 +450,7 @@ class Parser:
                 node.range, "Unexpected expression expected identifier or array").throw()
 
     def expr_value_op(self):
+        range_start = self.current_tok.range
         node = self.expr_value()
         if self.current_tok.type == TokType.DOT:
             node = self.property_access(node)
@@ -481,6 +482,7 @@ class Parser:
                     node, args, Range.merge(node.range, end_range))
         if self.current_tok.type == TokType.COL or self.current_tok.type == TokType.EQ:
             return self.assign_part(node)
+        node.range  = Range.merge(range_start, node.range)
         return node
 
     def expr_value(self):
