@@ -29,9 +29,6 @@ class SpecialItalianChef extends ItalianChef {
     }
 }
 fnc main() {
-    // FIXME
-    2*x = y = z = 6
-    print(x as string)
     chef: Chef = new ItalianChef()
     // @unsafe
     chef.print_specialty()
