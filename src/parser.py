@@ -56,7 +56,7 @@ class Parser:
     def block(self):
         self.skip_new_lines()
         if self.current_tok.type != TokType.LBRACE:
-            return self.expressions()
+            return self.expression()
         self.advance()
         if self.current_tok.type == TokType.RBRACE:
             self.advance()
@@ -479,23 +479,10 @@ class Parser:
         return args
 
     def assign_part(self, node: Node):
-        var_type = None
-        if self.current_tok.type == TokType.COL:
-            if not isinstance(node, VarAccessNode):
-                SyntaxError(node.range, "Expected identifier").throw()
-            self.advance()
-            var_type = self.composite_type()
-        if self.current_tok.type != TokType.EQ and var_type == None:
-            SyntaxError(node.range, "Expected '='").throw()
-        node_range = Range.merge(node.range, self.current_tok.range)
-        value = None
-        if self.current_tok.type == TokType.EQ:
-            self.advance()
-            value = self.expr()
-            node_range = Range.merge(node.range, value.range)
-        if isinstance(node, VarAccessNode):
-            return VarAssignNode(node.var_name, value, var_type, node_range)
-        elif isinstance(node, ArrayAccessNode):
+        self.advance()
+        value = self.expr()
+        node_range = Range.merge(node.range, value.range)
+        if isinstance(node, ArrayAccessNode):
             return ArrayAssignNode(node, value, node_range)
         elif isinstance(node, PropertyAccessNode):
             return PropertyAssignNode(node, value, node_range)
@@ -534,7 +521,7 @@ class Parser:
                 self.advance()
                 node = FncCallNode(
                     node, args, Range.merge(node.range, end_range))
-        if self.current_tok.type == TokType.COL or self.current_tok.type == TokType.EQ:
+        if self.current_tok.type == TokType.EQ:
             return self.assign_part(node)
         node.range  = Range.merge(range_start, node.range)
         return node
@@ -555,7 +542,18 @@ class Parser:
             return StrNode(tok, tok.range)
         elif tok.type == TokType.IDENTIFER:
             self.advance()
-            return VarAccessNode(tok, tok.range)
+            node_type = None
+            if self.current_tok.type != TokType.EQ and self.current_tok.type != TokType.COL:
+                return VarAccessNode(tok, tok.range)
+            elif self.current_tok.type == TokType.COL:
+                self.advance()
+                node_type = self.composite_type()
+            if self.current_tok.type != TokType.EQ:
+                SyntaxError(self.current_tok.range, "Expected '='").throw()
+            self.advance()
+            value = self.expr()
+            node_range = Range.merge(tok.range, value.range)
+            return VarAssignNode(tok, value, node_type, node_range)
         elif tok.type == TokType.LPAR:
             self.advance()
             exp = self.expr()

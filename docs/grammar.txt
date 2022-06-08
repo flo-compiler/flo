@@ -81,13 +81,13 @@ expr_list: (expr (comma_tok expr)*)?
 expr_value_op: expr_value ((dot identifier_tok) | (lbracket_tok expr lbracket_tok) | (lpar_tok expr_list rpar_tok))* assign_part?
 
 expr_value:   number rbrace_tok
+            | identifier_tok ((column composite_type)? eq_tok exp_tok)?
             | string_tok
-            | identifier_tok
             | rbracket_tok expr lbracket_tok
             | lpar_tok expr (property_acess) rpar_tok
             | new_kw composite_type lpar_tok expr_list? rpar_tok 
 
-assign_part: (column composite_type)? eq_tok expr
+assign_part: eq_tok expr
 
 fnc_type: lpar_tok (composite_type (comma_tok composite_type)*)? lpar_tok arrow composite_type
 

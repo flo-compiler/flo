@@ -11,7 +11,7 @@
     - [] pow operator.
     - [] identifiers possible to define array size.
     - [] Default class initialization.
-    - [] Reformat grammar to avoid impossible structures. 
+    - [x] Reformat grammar to avoid impossible structures. 
         ex: for-loop outside function body.
             or functions within functions.
     - [] Var args
