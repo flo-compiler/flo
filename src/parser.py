@@ -482,8 +482,6 @@ class Parser:
         self.advance()
         value = self.expr()
         node_range = Range.merge(node.range, value.range)
-        if isinstance(node, VarAccessNode):
-            return VarAssignNode(node.var_name, value, None, node_range)
         if isinstance(node, ArrayAccessNode):
             return ArrayAssignNode(node, value, node_range)
         elif isinstance(node, PropertyAccessNode):
@@ -700,8 +698,6 @@ class Parser:
                 return assign_node
             else:
                 right_node = func_b()
-                if isinstance(right_node, (VarAssignNode, ArrayAssignNode, PropertyAssignNode)):
-                    SyntaxError(right_node.range, "Unexpected assignment expression").throw()
                 left_node = NumOpNode(
                     left_node,
                     op_tok,

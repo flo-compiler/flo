@@ -682,16 +682,15 @@ class FloClass(FloType):
     def init_value(self):
         cached_instance = c.AnalyzerCache.classes[self.name]
         fields = [value.llvmtype for value in cached_instance.properties.values()]
+        self.vtable_ty = ir.global_context.get_identified_type(
+            f"{self.name}_vtable_ty")
         methods = self.get_methods(cached_instance)
-        if len(methods.keys()) > 0: # Donot do anything if class has no methods.
-            self.vtable_ty = ir.global_context.get_identified_type(
-                f"{self.name}_vtable_ty")
-            vtable_tys = [method.llvmtype for method in methods.values()]
-            self.vtable_ty.set_body(*vtable_tys)
-            fields.insert(0, self.vtable_ty.as_pointer())
-            self.vtable_data = ir.GlobalVariable(
-                Context.current_llvm_module, self.vtable_ty, f"{self.name}_vtable_data")
+        vtable_tys = [method.llvmtype for method in methods.values()]
+        self.vtable_ty.set_body(*vtable_tys)
+        fields.insert(0, self.vtable_ty.as_pointer())
         self.value.set_body(*fields)
+        self.vtable_data = ir.GlobalVariable(
+            Context.current_llvm_module, self.vtable_ty, f"{self.name}_vtable_data")
 
     def constant_init(self, builder: ir.IRBuilder, args):
         # TODO: Decide when to allocate on the heap
@@ -705,14 +704,12 @@ class FloClass(FloType):
         return obj
 
     def set_vtable_data(self, builder: ir.IRBuilder, mem: FloMem):
-        if self.vtable_data:
-            mem.store_at_index(
-                builder, FloType(self.vtable_data), FloInt(0, 32), FloInt(0, 32))
+        mem.store_at_index(
+            builder, FloType(self.vtable_data), FloInt(0, 32), FloInt(0, 32))
 
     def create_vtable(self):
-        if self.vtable_data:
-            self.vtable_data.initializer = ir.Constant(
-                self.vtable_ty, [func.value for func in self.methods.values()])
+        self.vtable_data.initializer = ir.Constant(
+            self.vtable_ty, [func.value for func in self.methods.values()])
 
     def has_parent(self, other):
         current = self
@@ -789,7 +786,7 @@ class FloObject:
             builder, FloInt(0, 32), FloInt(property_index + vtable_offset, 32))
         return property_value.load_value_from_ref(FloRef(builder, property_value, '', mem))
 
-    def get_method(self, Oname: str, builder: ir.IRBuilder) -> Union[FloMethod, None]:
+    def get_method(self, Oname, builder: ir.IRBuilder) -> Union[FloMethod, None]:
         assert isinstance(self.referer, FloClass)
         method_index = -1
         current = self.referer
