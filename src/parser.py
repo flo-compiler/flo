@@ -700,6 +700,8 @@ class Parser:
                 return assign_node
             else:
                 right_node = func_b()
+                if isinstance(right_node, (VarAssignNode, ArrayAssignNode, PropertyAssignNode)):
+                    SyntaxError(right_node.range, "Unexpected assignment expression").throw()
                 left_node = NumOpNode(
                     left_node,
                     op_tok,
