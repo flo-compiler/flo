@@ -482,6 +482,8 @@ class Parser:
         self.advance()
         value = self.expr()
         node_range = Range.merge(node.range, value.range)
+        if isinstance(node, VarAccessNode):
+            return VarAssignNode(node.var_name, value, None, node_range)
         if isinstance(node, ArrayAccessNode):
             return ArrayAssignNode(node, value, node_range)
         elif isinstance(node, PropertyAccessNode):

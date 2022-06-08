@@ -7,9 +7,7 @@ from context import Context
 from ctypes import CFUNCTYPE, POINTER, c_char_p, c_int
 from builtIns import target_machine, target_data
 from llvmlite import binding as llvm
-
 saved_labels = []
-
 
 def save_labels(*args):
     saved_labels.append(list(args))
@@ -186,7 +184,6 @@ class Compiler(Visitor):
                         node.method_body.is_variadic, self.class_within)
         fn.class_within = self.class_within
         self.class_within.add_method(fn)
-        self.context.set(method_name, fn)
         self.evaluate_function_body(fn, arg_names, node.method_body.body)
 
 
@@ -303,7 +300,6 @@ class Compiler(Visitor):
 
     def visitFncCallNode(self, node: FncCallNode):
         fnc = self.visit(node.name)
-        print(node.name.var_name)
         args = [self.visit(arg) for arg in node.args]
         return fnc.call(self.builder, args)
 
