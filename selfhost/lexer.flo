@@ -3,7 +3,8 @@ class FloRange {
     end: int
 }
 enum TokenType {
-
+    LRBACE(string)
+    RBRACE(string)
 }
 class Token {
     toktype: TokenType
@@ -11,6 +12,6 @@ class Token {
 }
 class Lexer{
     fnc get_tokens(): Token [] {
-        
+        tokens: Tokens[] = []
     }
 }

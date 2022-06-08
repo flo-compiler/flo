@@ -1,42 +1,39 @@
 import println from "@flo/core"
 class Chef {
     specialty: string
-    fnc constructor() {
-        this.specialty = "specialty"
+    constructor(specialty: string) {
+        this.specialty = specialty
     }
-    fnc print_specialty() {
-        println(this.specialty)
+    print_specialty() {
+        println("specialty: " + this.specialty)
     }
 }
 class ItalianChef extends Chef {
     specialty2: string
-    fnc constructor() {
-        this.specialty = "Pasta"
+    constructor() {
+        super("Pasta")
         this.specialty2 = "Pizza"
     }
-    fnc print_specialty_two() {
-        println(this.specialty2)
+    print_specialty_two() {
+        println("specialty 2: " + this.specialty2)
     }
 }
 class SpecialItalianChef extends ItalianChef {
     secret: string
-    fnc constructor() {
+    constructor() {
         super()
         this.secret = "Olive Oil"
     }
-    fnc print_secret() {
-        println(this.secret)
+    print_secret() {
+        println("secret: " + this.secret)
     }
 }
 fnc main() {
-    chef: Chef = new ItalianChef() 
-    print_fnc = chef.print_specialty //think about how to fix this
-    print_fnc()
+    chef: Chef = new ItalianChef()
     // @unsafe
-    italian_chef = chef as ItalianChef
-    italian_chef.print_specialty_two()
-    special: Chef = new SpecialItalianChef()
-    special.print_specialty()
+    chef.print_specialty()
+    special: ItalianChef = new SpecialItalianChef()
+    special.print_specialty_two()
     spItalianChef = special as SpecialItalianChef
     spItalianChef.print_secret()
 }

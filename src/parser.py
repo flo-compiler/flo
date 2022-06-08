@@ -44,9 +44,6 @@ class Parser:
         stmts = []
         range_start = self.current_tok.range
         self.skip_new_lines()
-        stmt = self.stmt()
-        stmts.append(stmt)
-        self.skip_new_lines()
         while (
             self.current_tok.type != TokType.RBRACE
             and self.current_tok.type != TokType.EOF
@@ -59,18 +56,19 @@ class Parser:
     def block(self):
         self.skip_new_lines()
         if self.current_tok.type != TokType.LBRACE:
-            return self.stmt()
+            return self.expressions()
         self.advance()
         if self.current_tok.type == TokType.RBRACE:
             self.advance()
             return []
-        stmts = self.stmts()
+        stmts = self.expressions()
         if self.current_tok.type != TokType.RBRACE:
             SyntaxError(self.current_tok.range, "Expected '}'").throw()
         self.advance()
         return stmts
 
     def stmt(self):
+        self.skip_new_lines()
         tok = self.current_tok
         if tok.isKeyword("import"):
             return self.import_stmt()
@@ -82,14 +80,32 @@ class Parser:
             return self.class_declaration()
         if tok.isKeyword("enum"):
             return self.enum_declaration()
+        elif tok.isKeyword(("fnc")):
+            return self.fnc_def_stmt()
+        else:
+            SyntaxError(tok.range, f"Unexpected '{tok.value}'").throw()
+    
+    def expressions(self):
+        expressions = []
+        range_start = self.current_tok.range
+        self.skip_new_lines()
+        while (
+            self.current_tok.type != TokType.RBRACE
+            and self.current_tok.type != TokType.EOF
+        ):
+            stmt = self.expression()
+            expressions.append(stmt)
+            self.skip_new_lines()
+        return StmtsNode(expressions, Range.merge(range_start, self.current_tok.range))
+
+    def expression(self):
+        tok = self.current_tok
         if tok.isKeyword("if"):
             return self.if_stmt()
         elif tok.isKeyword("for"):
             return self.for_stmt()
         elif tok.isKeyword("while"):
             return self.while_stmt()
-        elif tok.isKeyword(("fnc")):
-            return self.fnc_def_stmt()
         elif tok.inKeywordList(("return", "continue", "break")):
             return self.change_flow_stmt()
         return self.expr()
@@ -172,9 +188,45 @@ class Parser:
         if self.current_tok.isKeyword("extends"):
             self.advance()
             parent = self.prim_type()
-        body = self.block()
+        class_body = self.class_block()
         node_range = Range.merge(range_start, self.current_tok.range)
-        return ClassDeclarationNode(name, parent, body, node_range)
+        return ClassDeclarationNode(name, parent, class_body, node_range)
+    
+    def class_block(self):
+        if self.current_tok.type != TokType.LBRACE:
+            SyntaxError(self.current_tok.range, "Expected '{'").throw()
+        self.advance()
+        statements = []
+        range_start = self.current_tok.range
+        while self.current_tok.type != TokType.RBRACE:
+            self.skip_new_lines()
+            statements.append(self.class_stmt())
+        if self.current_tok.type != TokType.RBRACE:
+            SyntaxError(self.current_tok.range, "Expected '}'").throw()
+        node_range = Range.merge(range_start, self.current_tok.range)
+        self.advance()
+        return StmtsNode(statements, node_range)
+
+    def class_stmt(self):
+        access_modifier = None
+        if self.current_tok.inKeywordList(["public", "private", "static"]):
+            access_modifier = self.current_tok
+            self.advance()
+        if self.current_tok.type != TokType.IDENTIFER: 
+            SyntaxError(self.current_tok.range, "Expected an Identifer").throw()
+        name = self.current_tok
+        self.advance()
+        if self.current_tok.type == TokType.COL:
+            self.advance()
+            property_type = self.composite_type()
+            node_range = Range.merge(name.range, property_type.range)
+            return PropertyDeclarationNode(access_modifier, name, property_type, node_range)
+        elif self.current_tok.type == TokType.LPAR:
+            method_body = self.function_body()
+            node_range = Range.merge(name.range, method_body.range)
+            return MethodDeclarationNode(access_modifier, name, method_body, node_range)
+        else:
+            SyntaxError(self.current_tok.range, "Expected a property declaration or a method declaration").throw()
     
     def enum_declaration(self) -> EnumDeclarationNode:
         self.advance()
@@ -187,13 +239,11 @@ class Parser:
         if self.current_tok.type != TokType.LBRACE:
             SyntaxError(self.current_tok.range, "Expected '{'").throw()
         self.advance()
-        while self.current_tok.type == TokType.LN:
-            self.advance()
+        self.skip_new_lines()
         while self.current_tok.type == TokType.IDENTIFER:
             token_list.append(self.current_tok)
             self.advance()
-            while self.current_tok.type == TokType.LN:
-                self.advance()
+            self.skip_new_lines()
         if self.current_tok.type != TokType.RBRACE:
             SyntaxError(self.current_tok.range, "Expected '}'").throw()
         self.advance()
@@ -235,14 +285,19 @@ class Parser:
 
     def fnc_def_stmt(self):
         self.advance()
-        start_range = self.current_tok.range
+        range_start = self.current_tok.range
         if self.current_tok.type != TokType.IDENTIFER:
             SyntaxError(self.current_tok.range, "Expected Identifier").throw()
         var_name = self.current_tok
         self.advance()
         if self.current_tok.type != TokType.LPAR:
             SyntaxError(self.current_tok.range, "Expected '('").throw()
+        function_body = self.function_body()
+        return FncDefNode(var_name, function_body, Range.merge(range_start, function_body.range))
+    
+    def function_body(self):
         self.advance()
+        range_start = self.current_tok.range
         args, is_var_arg = self.arg_list()
         if self.current_tok.type != TokType.RPAR:
             SyntaxError(self.current_tok.range, "Expected ')'").throw()
@@ -254,12 +309,11 @@ class Parser:
         body = None
         if self.current_tok.type == TokType.LBRACE:
             body = self.block()
-        return FncDefNode(
-            var_name,
+        return FncNode(
             args,
             body,
             is_var_arg,
-            Range.merge(start_range, self.current_tok.range),
+            Range.merge(range_start, self.current_tok.range),
             return_type,
         )
 

@@ -19,7 +19,7 @@ class Socket {
     sockfd: int
     domain: int
     address: i8*
-    fnc constructor(domain: int, socktype: int, protocol: int){
+    constructor(domain: int, socktype: int, protocol: int){
         sockfd = socket(domain, socktype, protocol)
         if sockfd < 1 {
             exit("Error: could not create TCP socket\n")
@@ -27,29 +27,29 @@ class Socket {
         this.sockfd = sockfd
         this.domain = domain
     }
-    fnc bind(port: int, address: string = ""){
+    bind(port: int, address: string = ""){
         interface = str_to_intaddr(address)
         this.address = create_sockaddr_in(this.domain, htons(port), interface)
         if bind(this.sockfd, this.address, 16) < 0 {
             exit("Error: could not bind socket\n")
         }
     }
-    fnc connect(port: int, address: string){
+    connect(port: int, address: string){
         interface = str_to_intaddr(address)
         this.address = create_sockaddr_in(this.domain, htons(port), interface)
         if connect(this.sockfd, this.address, 16)< 0 {
             exit("Error: could not connect socket\n")
         }
     }
-    fnc listen(backlog: int = 10){
+    listen(backlog: int = 10){
         if listen(this.sockfd, backlog) < 0 {
             exit("Error: could not start listening\n")
         }
     }
-    fnc close(){
+    close(){
         close(this.sockfd)
     }
-    fnc destroy(){
+    destroy(){
         this.close()
     }
 }

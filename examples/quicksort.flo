@@ -11,8 +11,7 @@ fnc partition(start: int, end: int, array: int []): int {
     }
     array.swap(end, pivot_index)
     return end
-}
-            
+} 
 // The main function that implements QuickSort
 fnc quick_sort(start: int, end: int, array: int []) {
     if start < end {

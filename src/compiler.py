@@ -127,12 +127,12 @@ class Compiler(Visitor):
         elif node.op.isKeyword("in"):
             pass
         elif node.op.isKeyword("as"):
-            # try:
-            return a.cast_to(self.builder, b)
-            # except Exception as e:
-            #     TypeError(
-            #         node.range, f"Cannot cast {a.str()} to {b.str()}"
-            #     ).throw()
+            try:
+                return a.cast_to(self.builder, b)
+            except Exception as e:
+                TypeError(
+                    node.range, f"Cannot cast {a.str()} to {b.str()}"
+                ).throw()
         elif node.op.isKeyword("is"):
             return FloInt(isinstance(a, b), 1)
 
@@ -146,37 +146,49 @@ class Compiler(Visitor):
         if isinstance(type_, FloObject):
             type_.referer = self.context.get(type_.referer.name)
         return type_
-
-    def visitFncDefNode(self, node: FncDefNode):
-        fn_name = node.var_name.value
-        rtype = self.visit(node.return_type)
+    
+    def visitFncNode(self, node: FncNode):
         arg_types = []
         arg_names = []
+        rtype = self.visit(node.return_type)
         for arg_name, arg_type, _ in node.args:
             arg_names.append(arg_name.value)
             arg_types.append(self.visit(arg_type))
-        outer_builder = self.builder
-        if self.class_within == None:
-            if node.body:
-                fn = FloFunc(arg_types, rtype, fn_name, node.is_variadic)
-            else:
-                fn = FloFunc.declare(
-                    arg_types, rtype, fn_name, node.is_variadic)
-            self.context.set(fn_name, fn)
-        else:
-            fn = FloMethod(arg_types, rtype, fn_name,
-                           node.is_variadic, self.class_within)
-            fn.class_within = self.class_within
-            self.class_within.add_method(fn)
+        return arg_types, arg_names, rtype
+
+    def evaluate_function_body(self, fn, arg_names, node: StmtsNode):
         outer_ret = self.ret
+        outer_builder = self.builder
         self.ret = fn.ret
-        if node.body:
+        if node:
             self.context = fn.get_local_ctx(self.context, arg_names)
             self.builder = fn.builder
-            self.visit(node.body)
+            self.visit(node)
             self.context = self.context.parent
             self.builder = outer_builder
         self.ret = outer_ret
+
+    def visitFncDefNode(self, node: FncDefNode):
+        fn_name = node.func_name.value
+        arg_types, arg_names, rtype = self.visit(node.func_body)
+        if node.func_body.body:
+            fn = FloFunc(arg_types, rtype, fn_name, node.func_body.is_variadic)
+        else:
+            fn = FloFunc.declare(
+                arg_types, rtype, fn_name, node.func_body.is_variadic)
+        self.context.set(fn_name, fn)
+        self.evaluate_function_body(fn, arg_names, node.func_body.body)
+    
+    def visitMethodDeclarationNode(self, node: MethodDeclarationNode):
+        method_name = node.method_name.value
+        arg_types, arg_names, rtype = self.visit(node.method_body)
+        fn = FloMethod(arg_types, rtype, method_name,
+                        node.method_body.is_variadic, self.class_within)
+        fn.class_within = self.class_within
+        self.class_within.add_method(fn)
+        self.context.set(method_name, fn)
+        self.evaluate_function_body(fn, arg_names, node.method_body.body)
+
 
     def visitUnaryNode(self, node: UnaryNode):
         if node.op.type == TokType.AMP:
@@ -202,19 +214,19 @@ class Compiler(Visitor):
 
     def visitVarAssignNode(self, node: VarAssignNode):
         var_name = node.var_name.value
-        if node.value == None:
-            value = self.visit(node.type)
-        else:
-            value = self.visit(node.value)
+        value = self.visit(node.value)
         ref = self.context.get(var_name)
-        if not self.builder and self.class_within != None:
-            return self.class_within.add_property(var_name, value)
         if ref == None:
             ref = FloRef(self.builder, value, var_name)
             self.context.set(var_name, ref)
         else:
             ref.store(value)
         return value
+    
+    def visitPropertyDeclarationNode(self, node: PropertyDeclarationNode):
+        property_name = node.property_name.value
+        property_type = self.visit(node.type)
+        self.class_within.add_property(property_name, property_type)
 
     def visitVarAccessNode(self, node: VarAccessNode):
         ref = self.context.get(node.var_name.value)
