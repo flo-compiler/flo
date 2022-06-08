@@ -303,6 +303,7 @@ class Compiler(Visitor):
 
     def visitFncCallNode(self, node: FncCallNode):
         fnc = self.visit(node.name)
+        print(node.name.var_name)
         args = [self.visit(arg) for arg in node.args]
         return fnc.call(self.builder, args)
 

@@ -36,4 +36,5 @@ fnc main() {
     special.print_specialty_two()
     spItalianChef = special as SpecialItalianChef
     spItalianChef.print_secret()
+    2*x = 4
 }
