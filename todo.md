@@ -3,6 +3,7 @@
 - **Implement** 
     - [~] Enums.
     - [~] Inheritance and polymorphism.
+        - More tests.
     - [] Generics.
     - [] Think about access in classes and modules.
     - [] Fix fixed size arrays.

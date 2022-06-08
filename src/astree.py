@@ -7,7 +7,7 @@ from errors import Range
 class Visitor:
     def __init__(self, context: Context):
         self.context = context
-
+        
     def visit(self, node):
         return node.accept(self)
 
@@ -41,6 +41,8 @@ class Visitor:
 
     def visitWhileNode(self, node): pass
 
+    def visitFncNode(self, node): pass
+
     def visitFncDefNode(self, node): pass
 
     def visitReturnNode(self, node): pass
@@ -54,6 +56,10 @@ class Visitor:
     def visitPropertyAccessNode(self, node): pass
     
     def visitPropertyAssignNode(self, node): pass
+
+    def visitMethodDeclarationNode(self, node): pass
+
+    def visitPropertyDeclarationNode(self, node): pass
 
     def visitTypeNode(self, node): pass
 
@@ -74,6 +80,7 @@ class Visitor:
     def visitCharNode(self, node): pass
 
     def visitEnumDeclarationNode(self, node): pass
+
 
 
 class Node:
@@ -219,20 +226,44 @@ class PropertyAssignNode(Node):
     def accept(self, visitor: Visitor):
         return visitor.visitPropertyAssignNode(self)
 
-class FncDefNode(Node):
-    def __init__(self, var_name: Token, args: List[Tuple[Token, TypeNode, Node]], body: StmtsNode, is_variadic: bool, range: Range, return_type: TypeNode = None):
-        self.var_name = var_name
+class FncNode(Node):
+    def __init__(self, args: List[Tuple[Token, TypeNode, Node]], body: StmtsNode, is_variadic: bool, range: Range, return_type: TypeNode = None):
         self.args = args
         self.body = body
         self.range = range
         self.is_variadic = is_variadic
         self.return_type = return_type
+    
+    def accept(self, visitor: Visitor):
+        return visitor.visitFncNode(self)
+
+class PropertyDeclarationNode(Node):
+    def __init__(self, access_modifier: Token, property_name: Token, type: TypeNode, range: Range):
+        self.access_modifier = access_modifier
+        self.property_name = property_name
+        self.type = type
+        self.range = range
+    def accept(self, visitor: Visitor):
+        return visitor.visitPropertyDeclarationNode(self)
+    
+class MethodDeclarationNode(Node):
+    def __init__(self, access_modifier: Token, method_name: Token, method_body: FncNode, range: Range):
+        self.access_modifier = access_modifier
+        self.method_name = method_name
+        self.method_body = method_body
+        self.range = range
+    
+    def accept(self, visitor: Visitor):
+        return visitor.visitMethodDeclarationNode(self)
+
+class FncDefNode(Node):
+    def __init__(self, func_name: Token, func_body: FncNode, range: Range):
+        self.func_name = func_name
+        self.func_body = func_body
+        self.range = range
 
     def accept(self, visitor: Visitor):
         return visitor.visitFncDefNode(self)
-    
-    def __repr__(self) -> str:
-        return f"{self.var_name}()"
 
 
 class ForNode(Node):

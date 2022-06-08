@@ -838,12 +838,12 @@ class FloObject:
         return self_classname == other_classname
 
     def add(self, builder: ir.IRBuilder, other):
-        method = self.get_method("__add__")
+        method = self.get_method("__add__", builder)
         return method.call(builder, [other])
 
     def cmp(self, builder: ir.IRBuilder, op, other):
         if op == "==":
-            eq_method = self.get_method("__eq__")
+            eq_method = self.get_method("__eq__", builder)
             if eq_method == None:
                 return FloInt(0, 1)
             if eq_method.arg_types[0] == other:

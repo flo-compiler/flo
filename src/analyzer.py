@@ -11,8 +11,7 @@ from utils import get_ast_from_file
 
 
 class FncDescriptor:
-    def __init__(self, name: str, rtype: FloType, arg_names: List[str]):
-        self.name = name
+    def __init__(self, rtype: FloType, arg_names: List[str]):
         self.rtype = rtype
         self.arg_names = arg_names
 
@@ -283,7 +282,6 @@ class Analyzer(Visitor):
 
     def visitStmtsNode(self, node: StmtsNode):
         self.current_block.append_block(Block.stmt())
-        s = None
         for i, expr in enumerate(node.stmts):
             s = self.visit(expr)
             if self.current_block.always_returns:
@@ -340,23 +338,9 @@ class Analyzer(Visitor):
                 f"changing constant's {var_name} value"
             ).throw()
         defined_var_value = self.context.get(var_name)
-        if node.value:
-            if isinstance(node.value, ArrayNode):
-                self.set_array_type(node.value, node.type)
-            var_value = self.visit(node.value)
-        else:
-            var_value = self.visit(node.type)
-        if self.class_within != None and not self.current_block.can_return():
-            if self.class_within.parent:
-                expected_ty = self.class_within.parent.properties.get(var_name)
-                if expected_ty and expected_ty != var_value:
-                    TypeError(node.var_name.range,
-                              f"Property '{var_name}' in type '{self.class_within.name}' is not assignable to the same property in base type '{self.class_within.parent.name}'."
-                              + "\n\t\t\t\t" +
-                              f"Type '{var_value.str()}' is not assignable to type '{expected_ty.str()}'.\n"
-                              ).throw()
-            self.class_within.properties[var_name] = var_value
-            return var_value
+        if isinstance(node.value, ArrayNode):
+            self.set_array_type(node.value, node.type)
+        var_value = self.visit(node.value)
         if defined_var_value == None:
             return self.declare_value(var_name, var_value, node)
         if isinstance(defined_var_value, FloObject) and node.value:
@@ -422,13 +406,7 @@ class Analyzer(Visitor):
         self.visit(node.stmt)
         self.current_block.pop_block()
 
-    def visitFncDefNode(self, node: FncDefNode):
-        fnc_name = node.var_name.value
-        if self.context.get(fnc_name) != None and self.class_within == None:
-            NameError(
-                node.var_name.range,
-                f"{fnc_name} is already defined",
-            ).throw()
+    def visitFncNode(self, node: FncNode):
         if node.return_type:
             rt_type = self.visit(node.return_type)
         else:
@@ -459,58 +437,89 @@ class Analyzer(Visitor):
                     node.args[i][0].range,
                     f"Parameter '{arg_name}' defined twice in function parameters",
                 ).throw()
-            elif arg_name == fnc_name:
-                NameError(
-                    arg_name.range, f"Parameter '{arg_name}' has same name as function"
-                ).throw()
             else:
                 arg_names.append(arg_name)
                 arg_types.append(arg_type)
                 default_args.append(default_value_node)
-        fn_type = FloInlineFunc(None, arg_types, rt_type,
-                                node.is_variadic, default_args)
-        # class stuff
-        if self.class_within == None:
-            self.context.set(fnc_name, fn_type)
-            self.context = self.context.create_child(fnc_name)
-        else:
-            self.context = self.context.create_child(fnc_name)
-            self.context.set(
-                "this", FloObject(self.class_within))
-            if fnc_name == "constructor":
-                self.class_within.constructor = fn_type
-            else:
-                if self.class_within.parent:
-                    expected_ty = self.class_within.parent.get_method(
-                        fnc_name)
-                    if expected_ty and expected_ty != fn_type:
-                        TypeError(node.var_name.range,
-                                  f"Method '{fnc_name}' in type '{self.class_within.name}' is not assignable to the same method in base type '{self.class_within.parent.name}'."
-                                  + "\n\t\t\t\t" +
-                                  f"Type '{fn_type.str()}' is not assignable to type '{expected_ty.str()}'.\n"
-                                  ).throw()
-                self.class_within.methods[fnc_name] = fn_type
+        fnc_type = FloInlineFunc(
+            None, arg_types, rt_type, node.is_variadic, default_args)
+        fnc_type.arg_names = arg_names
+        return fnc_type
 
-        for arg_name, arg_type in zip(arg_names, arg_types):
+    def evaluate_function_body(self, fnc_type: FloInlineFunc, node: FncNode):
+        for arg_name, arg_type in zip(fnc_type.arg_names, fnc_type.arg_types):
             self.context.set(arg_name, arg_type)
 
         if node.is_variadic:
             var_arr = FloArray(None)
-            var_arr.elm_type = arg_types[-1]
-            self.context.set(arg_names[-1], var_arr)
+            var_arr.elm_type = fnc_type.arg_types[-1]
+            self.context.set(fnc_type.arg_names[-1], var_arr)
 
-        fn_descriptor = FncDescriptor(fnc_name, rt_type, arg_names)
+        fn_descriptor = FncDescriptor(fnc_type.return_type, fnc_type.arg_names)
         self.current_block.append_block(Block.fnc(fn_descriptor))
         if node.body:
             self.visit(node.body)
             if not self.current_block.always_returns:
-                if rt_type == FloVoid(None):
+                if fnc_type.return_type == FloVoid(None):
                     node.body.stmts.append(ReturnNode(None, node.range))
                 else:
                     GeneralError(node.return_type.range,
                                  "Function missing ending return statement").throw()
         self.current_block.pop_block()
         self.context = self.context.parent
+
+    def visitFncDefNode(self, node: FncDefNode):
+        fnc_name = node.func_name.value
+        fnc_type = self.visit(node.func_body)
+        if self.context.get(fnc_name) != None:
+            NameError(
+                node.func_name.range,
+                f"{fnc_name} is already defined",
+            ).throw()
+        self.context.set(fnc_name, fnc_type)
+        self.context = self.context.create_child(fnc_name)
+        self.evaluate_function_body(fnc_type, node.func_body)
+
+    def visitMethodDeclarationNode(self, node: MethodDeclarationNode):
+        assert self.class_within
+        # TODO: think about access
+        method_name = node.method_name.value
+        method_ty = self.visit(node.method_body)
+        if self.class_within.methods.get(method_name) != None:
+            NameError(
+                node.method_name.range,
+                f"{method_name} is already defined in class {self.class_within.name}",
+            ).throw()
+        self.context = self.context.create_child(method_name)
+        self.context.set("this", FloObject(self.class_within))
+        if method_name == "constructor":
+            self.class_within.constructor = method_ty
+        else:
+            if self.class_within.parent:
+                expected_ty = self.class_within.parent.get_method(method_name)
+                if expected_ty and expected_ty != method_ty:
+                    TypeError(node.method_name.range,
+                              f"Method '{method_name}' in type '{self.class_within.name}' is not assignable to the same method in base type '{self.class_within.parent.name}'."
+                              + "\n\t\t\t\t" +
+                              f"Type '{method_ty.str()}' is not assignable to type '{expected_ty.str()}'.\n"
+                              ).throw()
+            self.class_within.methods[method_name] = method_ty
+        self.evaluate_function_body(method_ty, node.method_body)
+
+    def visitPropertyDeclarationNode(self, node: PropertyDeclarationNode):
+        assert self.class_within
+        property_name = node.property_name.value
+        property_ty = self.visit(node.type)
+        if self.class_within.parent:
+            expected_ty = self.class_within.parent.properties.get(
+                property_name)
+            if expected_ty and expected_ty != property_ty:
+                TypeError(node.property_name.range,
+                          f"Property '{property_name}' in type '{self.class_within.name}' is not assignable to the same property in base type '{self.class_within.parent.name}'."
+                          + "\n\t\t\t\t" +
+                          f"Type '{property_ty.str()}' is not assignable to type '{expected_ty.str()}'.\n"
+                          ).throw()
+        self.class_within.properties[property_name] = property_ty
 
     def visitReturnNode(self, node: ReturnNode):
         if not self.current_block.can_return():

@@ -2,23 +2,23 @@ import string, exit from "@flo/core"
 import open, close, read, write, lseek, unlink, lstat, access, O_RDONLY, O_WRONLY, O_CREAT, SEEK_END, SEEK_SET, F_OK, R_OK, W_OK, X_OK from "@flo/sys"
 class File {
     path: string
-    fnc constructor(path: string) {
+    constructor(path: string) {
         this.path = path
     }
-    fnc get_file_stat(): i8* {
+    get_file_stat(): i8* {
         stat_struct = new i8(144)
         if lstat(this.path.to_cstring(), stat_struct) < 0 {
             exit("Could not open file\n")
         }
         return stat_struct
     }
-    fnc get_file_size(): int {
+    get_file_size(): int {
         stat_struct = this.get_file_stat() 
         file_size_offset = (stat_struct + 48) as int*
         size = file_size_offset[0]
         return size
     }
-    fnc read(size: int): i8* {
+    read(size: int): i8* {
         fd = open(this.path.to_cstring(), O_RDONLY)
         if fd < 0 {
             exit("Error: could not open file\n")
@@ -30,7 +30,7 @@ class File {
         close(fd)
         return file_contents
     }
-    fnc write(buffer: i8*, size: int){
+    write(buffer: i8*, size: int){
         fd = open(this.path.to_cstring(), O_CREAT or O_WRONLY)
         if fd < 0 {
             exit("Error: could not open file\n")
@@ -40,32 +40,32 @@ class File {
         }
         close(fd)
     }
-    fnc read_as_string(): string {
+    read_as_string(): string {
         file_size = this.get_file_size()
         return new string(this.read(file_size), file_size)
     }
-    fnc write_as_string(data: string) {
+    write_as_string(data: string) {
         this.write(data as i8*, data.length)
     }
-    fnc exists(): bool {
+    exists(): bool {
         return access(this.path.to_cstring(), F_OK) >= 0
     }
-    fnc is_readable(): bool {
+    is_readable(): bool {
         return access(this.path.to_cstring(), R_OK) >= 0
     }
-    fnc is_writable(): bool {
+    is_writable(): bool {
         return access(this.path.to_cstring(), W_OK) >= 0
     }
-    fnc is_executable(): bool {
+    is_executable(): bool {
         return access(this.path.to_cstring(), X_OK) >= 0
     }
-    fnc is_dir(): bool {
+    is_dir(): bool {
         stat_struct = this.get_file_stat()
         st_mode_offset = (stat_struct + 24) as int*
         is_dir = (st_mode_offset[0] and 0o0170000) == 0o0040000
         return is_dir
     }
-    fnc delete(){
+    delete(){
         unlink(this.path as i8*)
     }
 }

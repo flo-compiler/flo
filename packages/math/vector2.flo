@@ -1,7 +1,7 @@
 class Vector2{
     x: int
     y: int
-    fnc constructor(x: int, y: int){
+    constructor(x: int, y: int){
         this.x = x
         this.y = y
     }

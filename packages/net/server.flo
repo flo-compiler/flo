@@ -8,14 +8,14 @@ class Server {
     socket: Socket
     response: Response
     request: Request
-    fnc constructor(port: int, address: string = ""){
+    constructor(port: int, address: string = ""){
         this.socket = new Socket(AF_INET, SOCK_STREAM, 0)
         this.socket.bind(port, address)
         this.socket.listen()
         this.response = new Response(-1)
         this.request = new Request()
     }
-    fnc accept_connection(){
+    accept_connection(){
         cli: i8[16]
         cli_len = 4
         connfd = accept(this.socket.sockfd, &cli[0], &cli_len)
@@ -26,16 +26,16 @@ class Server {
         this.request.set_size(size)
         this.response.set_connection(connfd)
     }
-    fnc listen(handler: RequestHandler){
+    listen(handler: RequestHandler){
         while 1 {
             this.accept_connection()
             handler(this.request, this.response)
         }
     }
-    fnc close(){
+    close(){
         this.socket.close()
     }
-    fnc destroy(){
+    destroy(){
         this.socket.destroy()
     }
 

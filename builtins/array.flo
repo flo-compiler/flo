@@ -2,23 +2,23 @@
     buffer: T*
     length: int
     size: int
-    fnc constructor(length: int){
+    constructor(length: int){
         this.length = length
         this.buffer = new T(length)
         this.size = length
     }
-    fnc resize(){
+    resize(){
         this.size = this.size*2 // * sizeof(int)
         this.buffer = realloc(this.buffer as i8*, this.size) as T*
     }
-    fnc append(element: T){
+    append(element: T){
         if this.length >= this.size {
             this.resize()
         }
         this.buffer[this.length] = element
         this.length++
     }
-    fnc swap(i1: int, i2: int){
+    swap(i1: int, i2: int){
         if i1 >= 0 and i1 < this.length and i2 >= 0 and i2 < this.length {
             tmp = this.buffer[i1]
             this.buffer[i1] = this.buffer[i2]
@@ -28,7 +28,7 @@
         //     println("Index out of range:", i1, i2)
         // }
     }
-    fnc __setitem__(index: int, value: int){
+    __setitem__(index: int, value: int){
         if index >= 0 and index < this.length {
             this.buffer[index] = value
         } 
@@ -36,10 +36,10 @@
         //     println("Index out of range:", index)
         // }
     }
-    fnc __getitem__(index: int): T{
+    __getitem__(index: int): T{
         return this.buffer[index]
     }
-    fnc find(search: T): int{
+    find(search: T): int{
         for i = 0; i < this.length; i++ {
             if this[i] == T 
                 return i
@@ -47,7 +47,7 @@
         return -1
     }
     
-    fnc __as_string__(): string {
+    __as_string__(): string {
         i = 0
         res = "["
         last_index = this.length - 1
@@ -58,4 +58,3 @@
         return res+(this.buffer[last_index] as string)+"]"
     }
 }*/
-1
