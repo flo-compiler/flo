@@ -216,7 +216,10 @@ class Analyzer(Visitor):
             return FloInt(None, 1)
         elif node.op.isKeyword("in"):
             # TODO: In For Objects and Arrays
-            raise Exception("Unimplemented")
+            if isinstance(right, FloObject):
+                in_method = right.referer.get_method("__in__")
+                if in_method:
+                    return self.check_fnc_call(in_method, [node.left_node], node)
         elif node.op.isKeyword("as"):
             if left == right:
                 node = node.left_node
@@ -663,6 +666,15 @@ class Analyzer(Visitor):
                     node.index.range,
                     f"{collection.referer.name} object expects type {fnc.arg_types[1].str()} for index assignment").throw()
         return fnc.return_type
+    
+    def visitRangeNode(self, node: RangeNode):
+        start = self.visit(node.start)
+        end = self.visit(node.end)
+        if not (isinstance(start, FloInt)):
+            TypeError(node.start.range, f"Excpected an 'int' but got a {start.str()}").throw()
+        if not (isinstance(end, FloInt)):
+            TypeError(node.end.range, f"Excpected an 'int' but got a {end.str()}").throw()
+        return FloObject(self.context.get("Range"))
 
     def visitArrayAccessNode(self, node: ArrayAccessNode):
         collection = self.visit(node.name)

@@ -1,0 +1,40 @@
+import println from "@flo/core"
+class Chef {
+    specialty: string
+    constructor(specialty: string) {
+        this.specialty = specialty
+    }
+    print_specialty() {
+        println("specialty: " + this.specialty)
+    }
+}
+class ItalianChef extends Chef {
+    specialty2: string
+    constructor() {
+        super("Pasta")
+        this.specialty2 = "Pizza"
+    }
+    print_specialty_two() {
+        println(this.specialty2)
+    }
+}
+class SpecialItalianChef extends ItalianChef {
+    secret: string
+    constructor() {
+        super()
+        this.secret = "Olive Oil"
+    }
+    print_secret() {
+        println(this.secret)
+    }
+}
+fnc main() {
+    chef: Chef = new ItalianChef()
+    // @unsafe
+    chef.print_specialty()
+    special: ItalianChef = new SpecialItalianChef()
+    special.print_specialty_two()
+    spItalianChef = special as SpecialItalianChef
+    spItalianChef.print_secret()
+    y = 2 * x = 4
+}

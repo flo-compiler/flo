@@ -767,6 +767,10 @@ class FloObject:
         loaded_object = FloObject(self.referer)
         loaded_object.mem = ref.mem.load_at_index(ref.builder)
         return loaded_object
+    
+    def in_(self, builder: ir.IRBuilder, member):
+        in_method = self.get_method("__in__", builder)
+        return in_method.call(builder, [member])
 
     @property
     def value(self):

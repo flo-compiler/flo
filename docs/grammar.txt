@@ -67,8 +67,9 @@ comp_expr: exclamation_mark_tok comp_expr
 
 arith_expr: arith_expr1 (( plus | minus ) (arith_expr1 | assign_part))?
 
-arith_expr1: unary_expr ((times_tok | div_tok | mod_tok | exp_tok) (unary_expr | assign_part))?
+arith_expr1: range_expr ((times_tok | div_tok | mod_tok | exp_tok) (range_expr | assign_part))?
 
+range_expr: unary_expr (dot_dot unary_expr)?
 
 unary_expr: (plus | minus | amp ) unary_expr
       | (plus_plus_tok | minus_minus_tok) unary_expr

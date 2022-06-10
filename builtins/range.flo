@@ -1,4 +1,7 @@
 class Range{
     start: int
     end: int
+    __in__(num: int): bool{
+        return num >= this.start and num <= this.end
+    }
 }
