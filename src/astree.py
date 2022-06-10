@@ -81,6 +81,8 @@ class Visitor:
 
     def visitEnumDeclarationNode(self, node): pass
 
+    def visitRangeNode(self, node): pass
+
 
 
 class Node:
@@ -236,6 +238,14 @@ class FncNode(Node):
     
     def accept(self, visitor: Visitor):
         return visitor.visitFncNode(self)
+
+class RangeNode(Node):
+    def __init__(self, start: Node, end: Node, range: Range):
+        self.start = start
+        self.end = end
+        self.range = range
+    def accept(self, visitor: Visitor):
+        return visitor.visitRangeNode(self)
 
 class PropertyDeclarationNode(Node):
     def __init__(self, access_modifier: Token, property_name: Token, type: TypeNode, range: Range):

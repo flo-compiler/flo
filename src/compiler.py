@@ -125,7 +125,7 @@ class Compiler(Visitor):
         elif node.op.isKeyword("xor"):
             return a.xor(self.builder, b)
         elif node.op.isKeyword("in"):
-            pass
+            return b.in_(self.builder, a)
         elif node.op.isKeyword("as"):
             try:
                 return a.cast_to(self.builder, b)
@@ -361,6 +361,12 @@ class Compiler(Visitor):
         self.visit(node.body)
         class_obj.create_vtable()
         self.class_within = None
+
+    def visitRangeNode(self, node: RangeNode):
+        start = self.visit(node.start)
+        end = self.visit(node.end)
+        range_class = FloClass.classes.get("Range")
+        return range_class.constant_init(self.builder, [start, end])
 
     def visitPropertyAccessNode(self, node: PropertyAccessNode):
         root = self.visit(node.expr)

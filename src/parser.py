@@ -434,7 +434,16 @@ class Parser:
         )
 
     def arith_expr(self):
-        return self.num_op(self.arith_expr1, (TokType.PLUS, TokType.MINUS))
+        return self.num_op(self.range_expr, (TokType.PLUS, TokType.MINUS))
+
+    def range_expr(self):
+        node = self.arith_expr1()
+        if self.current_tok.type ==  TokType.DOT_DOT:
+            self.advance()
+            end = self.arith_expr1()
+            node = RangeNode(node, end, Range.merge(node.range, end.range))
+        return node
+
 
     def arith_expr1(self):
         return self.num_op(

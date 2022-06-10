@@ -38,7 +38,7 @@ def main():
     parser.add_option(
         "--opt-level",
         dest="opt_level",
-        default=1,
+        default=3,
         action="store",
         help="Specify the compiler's optimization level which is a value from 0-3.",
     )

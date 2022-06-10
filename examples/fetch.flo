@@ -1,12 +1,11 @@
 import "@flo/core"
 import "@flo/net"
-
+const PORT = 80
 fnc main(){
     request_body = "GET / HTTP/1.1 \r\n
     Host: google.com \r\n
     \r\n"
     ipv4address = "142.250.191.142"
-    port = 80
-    response = fetch(ipv4address, port, request_body)
+    response = fetch(ipv4address, PORT, request_body)
     println(response)
 }

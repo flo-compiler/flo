@@ -213,6 +213,10 @@ def make_number(lexer: Lexer):
     while lexer.current_char != None and lexer.current_char in BASE_CHARSET:
         if lexer.current_char == ".":
             if is_float:
+                number = number[:-1]
+                is_float = "." in number
+                if not is_float:
+                    lexer.pos.ind-=1
                 break
             is_float = True
         number += lexer.current_char
