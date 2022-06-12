@@ -400,11 +400,7 @@ class Parser:
         if self.current_tok.isKeyword("return"):
             self.advance()
             expr = None
-            if (
-                self.current_tok.type != TokType.LN
-                and self.current_tok.type != TokType.EOF
-                and self.current_tok.type != TokType.RBRACE
-            ):
+            if self.current_tok.type not in (TokType.LN, TokType.EOF, TokType.RBRACE):
                 expr = self.expr()
 
             range = (
@@ -461,11 +457,16 @@ class Parser:
         return self.num_op(self.range_expr, (TokType.PLUS, TokType.MINUS))
 
     def range_expr(self):
-        node = self.arith_expr1()
+        node = None
+        if self.current_tok.type != TokType.DOT_DOT:
+            node = self.arith_expr1()
+            start_range = node.range
+        else:
+            start_range = self.current_tok.range
         if self.current_tok.type ==  TokType.DOT_DOT:
             self.advance()
             end = self.arith_expr1()
-            node = RangeNode(node, end, Range.merge(node.range, end.range))
+            node = RangeNode(node, end, Range.merge(start_range, end.range))
         return node
 
 

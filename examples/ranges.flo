@@ -1,5 +1,5 @@
 import println from "@flo/core"
 fnc main(){
-    x = 1..5
+    x = ..5
     println( (1 in x) as string)
 }
