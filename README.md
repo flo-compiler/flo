@@ -39,17 +39,17 @@ flo -e helloworld.flo
 
 ## Memory Safety
 Still in progress. In the future it might be acheived by:
-- [] Reference counting
-- [] A borrow mechanism inspired by rust.
+- [ ] Reference counting
+- [ ] A borrow mechanism inspired by rust.
 
 ## Math Safety
-- [] Integer Overflows.
-- [] Division by zero.
+- [ ] Integer Overflows.
+- [ ] Division by zero.
 
 ## Code Readablity and ease of use
-- [] A null
-- [] Argument labels `foo(bar: 3)`
-- [] Optional chaining `a?.b?.c`
+- [ ] A null
+- [ ] Argument labels `foo(bar: 3)`
+- [ ] Optional chaining `a?.b?.c`
 
 ## Ranges
 - [x] Declaring a range
@@ -60,7 +60,7 @@ less_than_ten = 0..10
 ```
 5 in less_than_then // true
 ```
-- [] Ranges of any type
+- [ ] Ranges of any type
 ```
 floats_range = 0.0..10.0
 ```
@@ -72,12 +72,12 @@ numbers: int [3] = [1, 2, 3]
 // or
 numbers = [1, 2, 3]
 ```
-- [] Static Array size is expression an not constant.
+- [ ] Static Array size is expression an not constant.
 2. Dynamic Arrays (On the heap, An object(generic) not fixed)
 ```
 numbers: Array<int> = [1, 2, 3]
 ```
-- [] Short Hand for arrays
+- [ ] Short Hand for arrays
 ```
 a = [1..100]
 ```
@@ -113,14 +113,14 @@ class ItalianChef extends Chef {
 chef: Chef = new ItalianChef()
 chef.print_specialty() // prints "Pizza"
 ```
-- [] Access modifiers.
-- [] Static Members.
-- [] Null initialization of uninitialized class members.
-- [] Object Literal Intialization. (Also should work on function return and parameter passing)
+- [ ] Access modifiers.
+- [ ] Static Members.
+- [ ] Null initialization of uninitialized class members.
+- [ ] Object Literal Intialization. (Also should work on function return and parameter passing)
 ```ts
 chef: Chef = {specialty: "cake"}
 ```
-- [] Do not Allow for object creation of class with implemented methods.
+- [ ] Do not Allow for object creation of class with implemented methods.
 
 - [x] Operator Overloading.
 - `__eq__` (==)
@@ -169,7 +169,7 @@ if a in 0..11 {
 ```
 for i = 0; i < 10; i++ // do something
 ```
-- [] For in loop
+- [ ] For in loop
 ```
 for x in 1..10
 ```
@@ -195,7 +195,7 @@ fnc add(x: int, y: int = 0): int => {
 }
 add(5)
 ```
-- [] Var args.
+- [ ] Var args.
 ```
 fnc max(...numbers: int){
     max_num = numbers[0]
@@ -207,10 +207,10 @@ fnc max(...numbers: int){
     return max_num
 }
 ```
-- [] Functions with closure(Anonymous functions).
-- [] Generic Functions.
-- [] JS style setters and getters.
-- [] Parameter Labels on functions.
+- [ ] Functions with closure(Anonymous functions).
+- [ ] Generic Functions.
+- [ ] JS style setters and getters.
+- [ ] Parameter Labels on functions.
 ```
 double(x: 5)
 ```
