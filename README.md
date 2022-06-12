@@ -1,9 +1,6 @@
 # Flo 
 Flo is a programming language designed to be general-purpose with a natural feel when used and fast when run. Like all other programming languages, it is a tool to help programmers to write fast and efficient computer instructions. Syntactically and semantically, it resembles a lot of modern interpreted high-level languages, and this vision will show in a lot of design decisions made in the language production.
 
-## Documentation
-Consult the [lang docs](./docs)
-
 ## Installation
 In order to install flo you will need
 -  [git](https://git-scm.com/downloads)
@@ -42,28 +39,28 @@ flo -e helloworld.flo
 
 ## Memory Safety
 Still in progress. In the future it might be acheived by:
-[] Reference counting
-[] A borrow mechanism inspired by rust.
+- [] Reference counting
+- [] A borrow mechanism inspired by rust.
 
 ## Math Safety
-[] Integer Overflows.
-[] Division by zero.
+- [] Integer Overflows.
+- [] Division by zero.
 
 ## Code Readablity and ease of use
-[] A null
-[] Argument labels `foo(bar: 3)`
-[] Optional chaining `a?.b?.c`
+- [] A null
+- [] Argument labels `foo(bar: 3)`
+- [] Optional chaining `a?.b?.c`
 
 ## Ranges
-[x] Declaring a range
+- [x] Declaring a range
 ```
 less_than_ten = 0..10
 ```
-[x] Checking if a number falls in a range
+- [x] Checking if a number falls in a range
 ```
 5 in less_than_then // true
 ```
-[] Ranges of any type
+- [] Ranges of any type
 ```
 floats_range = 0.0..10.0
 ```
@@ -75,17 +72,17 @@ numbers: int [3] = [1, 2, 3]
 // or
 numbers = [1, 2, 3]
 ```
-[] Static Array size is expression an not constant.
+- [] Static Array size is expression an not constant.
 2. Dynamic Arrays (On the heap, An object(generic) not fixed)
 ```
 numbers: Array<int> = [1, 2, 3]
 ```
-[] Short Hand for arrays
+- [] Short Hand for arrays
 ```
 a = [1..100]
 ```
 ## Classes
-[x] Basic Class support
+- [x] Basic Class support
 ```ts
 class Chef {
     specialty: string
@@ -97,8 +94,8 @@ class Chef {
     }
 }
 ```
-[x] Inheritance
-[x] Super
+- [x] Inheritance
+- [x] Super
 ```ts
 class ItalianChef extends Chef {
     specialty2: string
@@ -111,21 +108,21 @@ class ItalianChef extends Chef {
     }
 }
 ```
-[x] Polymorphism
+- [x] Polymorphism
 ```ts
 chef: Chef = new ItalianChef()
 chef.print_specialty() // prints "Pizza"
 ```
-[] Access modifiers.
-[] Static Members.
-[] Null initialization of uninitialized class members.
-[] Object Literal Intialization. (Also should work on function return and parameter passing)
+- [] Access modifiers.
+- [] Static Members.
+- [] Null initialization of uninitialized class members.
+- [] Object Literal Intialization. (Also should work on function return and parameter passing)
 ```ts
 chef: Chef = {specialty: "cake"}
 ```
-[] Do not Allow for object creation of class with implemented methods.
+- [] Do not Allow for object creation of class with implemented methods.
 
-[x] Operator Overloading.
+- [x] Operator Overloading.
 - `__eq__` (==)
 - `__add__` (+)
 - `__sub__` (-) TODO
@@ -167,30 +164,30 @@ if a in 0..11 {
 } else // DO SOMETHING
 ```
 ## Loops
-[x] traditional for Loop
+- [x] traditional for Loop
 - Optional parts doesn't work
 ```
 for i = 0; i < 10; i++ // do something
 ```
-[] For in loop
+- [] For in loop
 ```
 for x in 1..10
 ```
 - Need Iterable support
-[x] While loop
+- [x] While loop
 ```
 while 1 // do something 
 // or
 while true // do something
 ```
 ## Functions
-[x] Base Function
+- [x] Base Function
 ```
 fnc double(x: int): int {
     return x*2
 } 
 ```
-[x] Function with default args
+- [x] Function with default args
 ```
 // adds two numbers and returns their sum
 fnc add(x: int, y: int = 0): int => {
@@ -198,7 +195,7 @@ fnc add(x: int, y: int = 0): int => {
 }
 add(5)
 ```
-[] Var args.
+- [] Var args.
 ```
 fnc max(...numbers: int){
     max_num = numbers[0]
@@ -210,10 +207,10 @@ fnc max(...numbers: int){
     return max_num
 }
 ```
-[] Functions with closure(Anonymous functions).
-[] Generic Functions.
-[] JS style setters and getters.
-[] Parameter Labels on functions.
+- [] Functions with closure(Anonymous functions).
+- [] Generic Functions.
+- [] JS style setters and getters.
+- [] Parameter Labels on functions.
 ```
 double(x: 5)
 ```
