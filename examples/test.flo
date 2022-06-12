@@ -1,6 +1,4 @@
-import println from "@flo/core"
 
 fnc main(){
-    a: Array<int> = [1, 2, 3, 4, 5]
-    println(a[2] as string)
+    println("hello world", 1, 2, true, false, 7.0)
 }

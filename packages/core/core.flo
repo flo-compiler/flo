@@ -1,11 +1,4 @@
 import STDOUT, STDIN, STDERR, nanosleep, write, read, _exit from "@flo/sys"
-fnc print(message: string){
-    write(STDOUT, message.get_bytes(), message.length)
-}
-fnc println(message: string){
-    print(message)
-    print("\n")
-}
 fnc input(): string {
     size = -1
     buffer = new i8(1)
