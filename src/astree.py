@@ -31,6 +31,8 @@ class Visitor:
     
     def visitClassDeclarationNode(self, node): pass
 
+    def visitGenericClassNode(self, node): pass
+
     def visitVarAssignNode(self, node): pass
 
     def visitIfNode(self, node): pass
@@ -183,6 +185,14 @@ class ClassDeclarationNode(Node):
     
     def accept(self, visitor: Visitor):
         return visitor.visitClassDeclarationNode(self)
+
+class GenericClassNode(Node):
+    def __init__(self, generic_constraints: List[Token], class_declaration: ClassDeclarationNode, range: Range):
+        self.generic_constraints = generic_constraints
+        self.class_declaration = class_declaration
+        self.range = range
+    def accept(self, visitor: Visitor):
+        return visitor.visitGenericClassNode(self)
 
 class ConstDeclarationNode(Node):
     def __init__(self, const_name: Token, value: Node, range: Range):

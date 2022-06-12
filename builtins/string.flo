@@ -43,7 +43,7 @@ class string {
     get_byte(index: int): i8 {
         return this.buffer[index]
     }
-    __as_i8_ptr__(): i8* {
+    get_bytes(): i8* {
         return this.buffer
     }
     to_cstring(): i8* {

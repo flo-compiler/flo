@@ -1,0 +1,22 @@
+// FIXME: Add some kind of null constant.
+import println from "@flo/core"
+class Node<T> {
+    next: Node<T>
+    value: T
+    constructor(value: T){
+        this.value = value
+    }
+}
+class LinkedList<T> {
+    root: Node<T>
+    addNode(value: T){
+        tmp = this.root.next
+        this.root.next = new Node<T>(value)
+        this.root.next.next = tmp
+    }
+}
+fnc main(){
+    n = new LinkedList<string>()
+    n.addNode("Hello")
+    n.addNode("World")
+}

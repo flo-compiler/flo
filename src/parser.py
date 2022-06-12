@@ -176,21 +176,45 @@ class Parser:
         type = self.composite_type()
         node_range = Range.merge(range_start, type.range)
         return TypeAliasNode(identifier, type, node_range)
+    
+    def generic_constraint(self):
+        tok = self.current_tok
+        if tok.type != TokType.IDENTIFER:
+            SyntaxError(tok.range, "Expected an identifer").throw()
+        self.advance()
+        return tok
 
-    def class_declaration(self) -> ClassDeclarationNode:
+    def generic_constraints(self):
+        constraints = [self.generic_constraint()]
+        while self.current_tok.type == TokType.COMMA:
+            self.advance()
+            constraints.append(self.generic_constraint())
+        return constraints
+
+    def class_declaration(self) -> Union[ClassDeclarationNode, GenericClassNode]:
         self.advance()
         range_start = self.current_tok.range
         if self.current_tok.type != TokType.IDENTIFER:
             SyntaxError(range_start, "Expected and identifier").throw()
         name = self.current_tok
         self.advance()
+        constraints = None
+        if self.current_tok.type == TokType.LT:
+            self.advance()
+            constraints = self.generic_constraints()
+            if self.current_tok.type != TokType.GT:
+                SyntaxError(self.current_tok.range, "Expected a '>'").throw()
+            self.advance()
         parent = None
         if self.current_tok.isKeyword("extends"):
             self.advance()
             parent = self.prim_type()
         class_body = self.class_block()
         node_range = Range.merge(range_start, self.current_tok.range)
-        return ClassDeclarationNode(name, parent, class_body, node_range)
+        node = ClassDeclarationNode(name, parent, class_body, node_range)
+        if constraints != None:
+            node = GenericClassNode(constraints, node, node_range)
+        return node
     
     def class_block(self):
         if self.current_tok.type != TokType.LBRACE:
@@ -491,6 +515,8 @@ class Parser:
         self.advance()
         value = self.expr()
         node_range = Range.merge(node.range, value.range)
+        if isinstance(node, VarAccessNode):
+            return VarAssignNode(node.var_name, value, None, node_range)
         if isinstance(node, ArrayAccessNode):
             return ArrayAssignNode(node, value, node_range)
         elif isinstance(node, PropertyAccessNode):
@@ -594,8 +620,8 @@ class Parser:
             args = self.expr_list()
             if self.current_tok.type != TokType.RPAR:
                 SyntaxError(self.current_tok.range, "Expected )").throw()
-            self.advance()
             node_range = Range.merge(tok.range, self.current_tok.range)
+            self.advance()
             return NewMemNode(type, args, node_range)
         SyntaxError(
             tok.range, f"Expected an expression value before '{tok}'").throw()
@@ -635,17 +661,28 @@ class Parser:
             return TypeNode(type, tok.range)
         elif tok.type == TokType.IDENTIFER:
             type = FloObject(tok)
+            if self.current_tok.type == TokType.LT:
+                self.advance()
+                arg_list = self.type_list()
+                type = FloGeneric(tok, arg_list)
+                if self.current_tok.type != TokType.GT:
+                    SyntaxError(self.current_tok.range, "Expected '>'").throw()
+                self.advance()
             return TypeNode(type, tok.range)
+    
+    def type_list(self):
+        types = [self.composite_type()]
+        while(self.current_tok.type == TokType.COMMA):
+            self.advance()
+            types.append(self.composite_type())
+        return types
 
     def fnc_type(self):
         range_start = self.current_tok.range
         self.advance()
         arg_types = []
         if self.current_tok.type != TokType.RPAR:
-            arg_types.append(self.composite_type())
-            while(self.current_tok.type == TokType.COMMA):
-                self.advance()
-                arg_types.append(self.composite_type())
+            arg_types = self.type_list()
             if self.current_tok.type != TokType.RPAR:
                 SyntaxError(self.current_tok.range, "Expected ')'").throw()
         self.advance()

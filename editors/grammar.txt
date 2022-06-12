@@ -1,0 +1,174 @@
+newlines: ln_tok+
+
+stmts: (newlines stmt)*
+
+
+stmt: import_stmt
+      | const_kw_declaration
+      | type_alias
+      | class_declaration
+      | enum_declaration
+      | function_declaration
+
+block: newlines (lbrace_tok expressions rbrace_tok | stmt)
+
+expressions: newlines* expression
+
+expression: if_stmt
+            | for_stmt
+            | while_stmt
+            | change_flow_stmt
+            | expr
+
+
+      
+import_stmt: import_kw (identifier_tok_list from)? string_tok
+
+const_declaration: const_kw identifier_tok eq_tok expr
+
+type_alias: type_kw identifier_tok eq_tok composite_type
+
+generic_constraint: identifier_tok
+
+generic_constraints: generic_constraint (comma_tok, generic_constraint)*
+
+class_declaration: class_kw (extends_kw prim_type)? identifier_tok (lt_tok generic_constraints gt_tok)? class_block
+
+class_block: lbrace_tok (ln+ class_stmt)* rbrace_tok
+
+class_stmt: (public_kw | private_kw | static_kw)? (identifier_tok class_method_or_property)+
+
+class_method_or_property: function_body 
+                        | column composite_type
+
+function_declaration: fnc_kw identifier_tok function_body
+
+function_body: lpar_tok arg_list rpar_tok column composite_type block
+
+arg_list: (arg_item (comma_tok arg_item)* (comma_tok dot_dot_dot_tok arg_item)?)?
+
+arg_item: identifier_tok ((column composite_type) 
+                     | ((column composite_type)? eq_tok expr))
+
+enum_declaration: enum_kw lbrace_tok (identifier_tok ln_tok+)+ rbrace_tok
+
+if_stmt: if_kw expr block newlines (else_kw (if_stmt | block)) *
+
+for_stmt: for_kw expr (semicolumn_tok expr semicolumn_tok expr) | (in_kw expr) block 
+
+while_stmt: while_kw expr block
+
+change_flow_stmt: return expr?
+                  | continue
+                  | break
+
+expr: bit_expr ((as_kw | is_kw) composite_type)?
+
+bit_expr: comp_expr (("and" | "or" | xor_kw | in_kw | sl_tok | sr_tok) (comp_expr | assign_part))?
+
+comp_expr: exclamation_mark_tok comp_expr 
+         | arith_expr (comp_op arith_expr)?
+
+arith_expr: arith_expr1 (( plus | minus ) (arith_expr1 | assign_part))?
+
+arith_expr1: range_expr ((times_tok | div_tok | mod_tok | exp_tok) (range_expr | assign_part))?
+
+range_expr: unary_expr (dot_dot unary_expr)?
+
+unary_expr: (plus | minus | amp ) unary_expr
+      | (plus_plus_tok | minus_minus_tok) unary_expr
+      | unary_expr1
+
+unary_expr1: expr_value_op  (plus_plus_tok | minus_minus_tok)?
+
+expr_list: (expr (comma_tok expr)*)?
+
+expr_value_op: expr_value ((dot identifier_tok) | (lbracket_tok expr lbracket_tok) | (lpar_tok expr_list rpar_tok))* assign_part?
+
+expr_value:   number rbrace_tok
+            | identifier_tok ((column composite_type)? eq_tok exp_tok)?
+            | string_tok
+            | rbracket_tok expr lbracket_tok
+            | lpar_tok expr (property_acess) rpar_tok
+            | new_kw composite_type lpar_tok expr_list? rpar_tok 
+
+assign_part: eq_tok expr
+
+type_list: composite_type (comma_tok composite_type)*
+
+fnc_type: lpar_tok (type_list)? lpar_tok arrow composite_type
+
+composite_type:  prim_type (lbracket_tok (number_tok | identifier_tok)  rbracket_tok)*
+            |    prim_type times_tok*
+            |    fnc_type
+
+prim_type:
+      (lbrace_tok number rbrace_tok)?("float" | "int")
+    | "void"
+    | identifier_tok (lt_tok type_list gt_tok)?
+
+
+## tokens
+lpar_tok: "("
+rpar_tok: ")"
+lbracket_tok: "["
+rbracket_tok: "]"
+lbrace_tok: "{"
+rbrace_tok: "}"
+plus: "+"
+minus: "-"
+eq_tok: "="
+times_tok: "*"
+div_tok: "/"
+exp_tok: "^"
+column: ":"
+mod_tok: "%"
+question_mark_tok: "?"
+exclamation_mark_tok: "!"
+identifier_tok: ([a-zA-Z]|_)[A-Za-z | 0-9 | _]*
+sl_tok: "<<"
+sr_tok: ">>"
+semicolumn_tok: ";"
+comma_tok: ","
+ln_tok: "\n"
+number rbrace_tok: /[0-9]+([0-9]*)+(.?)+([0-9]*)/
+string_tok: /"(*?)"/
+      | /'(*?)'/
+plus_plus_tok: "++"
+minus_minus_tok: "--"
+lt_tok: "<"
+gt_tok: ">"
+dot: "."
+amp: &
+dot_dot: ".."
+dot_dot_dot_tok: "..."
+
+
+
+## keywords 
+if_kw: "if"
+else_kw: "else"
+for_kw: "for"
+while_kw: "while"
+fnc_kw: "fnc"
+import_kw: "import"
+in_kw: "in"
+const_kw: "const"
+class_kw: "class"
+new_kw: "new"
+type_kw: "type"
+xor_kw: "xor"
+as_kw: "as"
+is_kw: "is"
+enum_kw: "enum"
+extends_kw: "extends"
+          
+
+comp_op: lt_tok
+      | gt_tok
+      | "=="
+      | ">="
+      | "<="
+      | "!="
+
+

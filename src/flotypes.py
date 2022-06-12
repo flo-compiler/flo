@@ -856,7 +856,7 @@ class FloObject:
                 return FloInt(0, 1)
 
     def get_cast_method(self, type, builder):
-        name = "__as_"+type.str().replace("*", "_ptr")+"__"
+        name = "__as_"+type.str()+"__"
         return self.get_method(name, builder)
 
     def cast_to(self, builder: ir.IRBuilder, type):
@@ -877,6 +877,15 @@ class FloObject:
             return method.call(builder, [])
         else:
             raise Exception("Cannot cast")
+
+class FloGeneric(FloObject):
+    def __init__(self, referer: FloClass, constraints: List[FloType]) -> None:
+        self.name = referer.value
+        self.constraints = constraints
+        super().__init__(referer)
+    
+    def str(self):
+        return self.name +"<"+", ".join([constraint.str() for constraint in self.constraints])+">"
 
 
 class FloEnum(FloType):
