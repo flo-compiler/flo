@@ -701,7 +701,10 @@ class Analyzer(Visitor):
         return fnc.return_type
 
     def visitRangeNode(self, node: RangeNode):
-        start = self.visit(node.start)
+        if node.start:
+            start = self.visit(node.start)
+        else:
+            start = FloInt(0)
         end = self.visit(node.end)
         if not (isinstance(start, FloInt)):
             TypeError(node.start.range,

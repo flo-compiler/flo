@@ -387,7 +387,10 @@ class Compiler(Visitor):
         self.generics[node.class_declaration.name.value] = node
 
     def visitRangeNode(self, node: RangeNode):
-        start = self.visit(node.start)
+        if node.start:
+            start = self.visit(node.start)
+        else:
+            start = FloInt(0)
         end = self.visit(node.end)
         range_class = FloClass.classes.get("Range")
         return range_class.constant_init(self.builder, [start, end])
