@@ -1,6 +1,6 @@
 import STDOUT, STDIN, STDERR, nanosleep, write, read, _exit from "@flo/sys"
 fnc print(message: string){
-    write(STDOUT, message as i8*, message.length)
+    write(STDOUT, message.get_bytes(), message.length)
 }
 fnc println(message: string){
     print(message)
@@ -16,7 +16,7 @@ fnc input(): string {
     return new string(buffer, size)
 }
 fnc error(message: string){
-    write(STDERR, message as i8*, message.length)
+    write(STDERR, message.get_bytes(), message.length)
 }
 fnc exit(message: string = "", code : int = 1){
     error(message)

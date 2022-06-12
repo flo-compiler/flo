@@ -1,8 +1,8 @@
-from typing import List
+from typing import Dict, List
 from cache import AnalyzerCache
 from context import Context
 from errors import GeneralError, TypeError, SyntaxError, NameError
-from flotypes import FloArray, FloClass, FloEnum, FloFloat, FloInlineFunc, FloInt, FloObject, FloPointer, FloType, FloVoid
+from flotypes import FloArray, FloClass, FloEnum, FloFloat, FloGeneric, FloInlineFunc, FloInt, FloObject, FloPointer, FloType, FloVoid
 from lexer import TokType
 from astree import *
 from nodefinder import NodeFinder, resource_path
@@ -124,6 +124,8 @@ class Analyzer(Visitor):
         self.current_block = Block.stmt()
         self.imported_module_names = []  # denotes full imported module
         self.types_aliases = {}
+        self.generic_aliases = {}
+        self.generics: Dict[str, GenericClassNode] = {}
 
     def visit(self, node: Node):
         return super().visit(node)
@@ -318,7 +320,7 @@ class Analyzer(Visitor):
         if not node_type:
             return
         var_type = self.visit(node_type)
-        if isinstance(var_type, FloObject) and var_type.referer.name == 'Array':
+        if isinstance(var_type, FloGeneric) and var_type.name == 'Array':
             node.is_const_array = False
 
     def visitEnumDeclarationNode(self, node: EnumDeclarationNode):
@@ -510,7 +512,7 @@ class Analyzer(Visitor):
         self.evaluate_function_body(method_ty, node.method_body)
 
     def visitPropertyDeclarationNode(self, node: PropertyDeclarationNode):
-        assert self.class_within
+        assert self.class_within != None
         property_name = node.property_name.value
         property_ty = self.visit(node.type)
         if self.class_within.parent:
@@ -528,7 +530,7 @@ class Analyzer(Visitor):
         if not self.current_block.can_return():
             SyntaxError(
                 node.range, "Illegal return outside a function").throw()
-        val = self.visit(node.value) if node.value else FloVoid()
+        val = self.visit(node.value) if node.value else FloVoid(None)
         if not self.current_block.can_return_value(val):
             TypeError(
                 node.range,
@@ -609,14 +611,41 @@ class Analyzer(Visitor):
                 class_ = self.class_within
         return class_
 
+    def init_generic(self, generic: FloGeneric):
+        # if it has it's referer is a token
+        if isinstance(generic.referer, FloClass): return
+        generic_name = generic.referer.value
+        if self.context.get(generic_name) != None:
+            return
+        generic_node = self.generics.get(generic.name)
+        generic_node.class_declaration.name.value = generic_name
+        type_aliases = self.generic_aliases.copy()
+        for key_tok, type_arg in zip(generic_node.generic_constraints, generic.constraints):
+            self.generic_aliases[key_tok.value] = type_arg
+        self.visit(generic_node.class_declaration)
+        generic_node.class_declaration.name.value = generic.name
+        self.generic_aliases = type_aliases
+
     def visitTypeNode(self, node: TypeNode):
         node_type = node.type
+        if isinstance(node_type, FloGeneric):
+            for i, constraint in enumerate(node_type.constraints):
+                if isinstance(constraint, TypeNode):
+                    node_type.constraints[i] = self.visit(constraint)
+            if isinstance(node_type.referer, Token):
+                node_type.referer.value = node_type.str()
+            self.init_generic(node_type)
         if isinstance(node_type, FloObject):
+            if isinstance(node_type.referer, FloClass): return node_type
             alias = self.types_aliases.get(node_type.referer.value)
             if alias:
-                aliased = self.visit(alias)
-                node.type = aliased
-                return aliased
+                if isinstance(alias, TypeNode):
+                    aliased = self.visit(alias)
+                    node.type = aliased
+                    return aliased
+            alias = self.generic_aliases.get(node_type.referer.value)
+            if alias:
+                return alias
             class_ = self.get_object_class(node_type, node)
             node.type.referer = class_
             node.type.llvmtype = class_.value.as_pointer()
@@ -644,7 +673,11 @@ class Analyzer(Visitor):
                     f"Expected array to be of type '{expected_type.str()}' because of first element but got '{type.str()}'",
                 ).throw()
         if not node.is_const_array:
-            return FloObject(self.context.get('Array'))
+            gen_name = 'Array<'+expected_type.str()+'>'
+            gen_array_class = self.context.get(gen_name)
+            if not gen_array_class:
+                NameError(node.range, f"Type '{gen_name}' not defined").throw()
+            return FloObject(gen_array_class)
         arr = FloArray(None, len(node.elements))
         arr.elm_type = expected_type
         return arr
@@ -666,14 +699,16 @@ class Analyzer(Visitor):
                     node.index.range,
                     f"{collection.referer.name} object expects type {fnc.arg_types[1].str()} for index assignment").throw()
         return fnc.return_type
-    
+
     def visitRangeNode(self, node: RangeNode):
         start = self.visit(node.start)
         end = self.visit(node.end)
         if not (isinstance(start, FloInt)):
-            TypeError(node.start.range, f"Excpected an 'int' but got a {start.str()}").throw()
+            TypeError(node.start.range,
+                      f"Excpected an 'int' but got a {start.str()}").throw()
         if not (isinstance(end, FloInt)):
-            TypeError(node.end.range, f"Excpected an 'int' but got a {end.str()}").throw()
+            TypeError(node.end.range,
+                      f"Excpected an 'int' but got a {end.str()}").throw()
         return FloObject(self.context.get("Range"))
 
     def visitArrayAccessNode(self, node: ArrayAccessNode):
@@ -700,7 +735,7 @@ class Analyzer(Visitor):
         if isinstance(arr, FloObject):
             index = self.visit(node.array.index)
             obj = self.visit(node.array.name)
-            if isinstance(obj, FloArray):
+            if isinstance(obj, FloArray) or isinstance(obj, FloPointer):
                 obj = arr
             else:
                 return self.check_subscribable(obj, index, node.array, value)
@@ -725,13 +760,17 @@ class Analyzer(Visitor):
                 parent = parent_type.referer
         class_ob = FloClass(class_name, parent, False)
         self.context.set(class_name, class_ob)
+        prev_class = self.class_within
         self.class_within = class_ob
         self.constants.append(class_name)
         self.visit(node.body)
-        self.class_within = None
+        self.class_within = prev_class
         AnalyzerCache.classes[class_name] = class_ob
         self.context.set("super", None)
         self.current_block.pop_block()
+
+    def visitGenericClassNode(self, node: GenericClassNode):
+        self.generics[node.class_declaration.name.value] = node
 
     def visitTypeAliasNode(self, node: TypeAliasNode):
         self.types_aliases[node.identifier.value] = node.type

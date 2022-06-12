@@ -1,6 +1,7 @@
 from pathlib import Path
+from typing import Dict
 from errors import CompileError, TypeError
-from flotypes import FloArray, FloClass, FloConst, FloEnum, FloFunc, FloInt, FloFloat, FloMethod, FloObject, FloPointer, FloRef, FloVoid, create_array_buffer
+from flotypes import FloArray, FloClass, FloConst, FloEnum, FloFunc, FloGeneric, FloInt, FloFloat, FloMethod, FloObject, FloPointer, FloRef, FloVoid, create_array_buffer
 from lexer import TokType
 from astree import *
 from context import Context
@@ -28,6 +29,8 @@ class Compiler(Visitor):
         self.break_block = None
         self.continue_block = None
         self.class_within = None
+        self.generics: Dict[str, GenericClassNode] = {}
+        self.generic_aliases = {}
 
     def visit(self, node: Node):
         return super().visit(node)
@@ -141,9 +144,26 @@ class Compiler(Visitor):
             v = self.visit(stmt)
         return v
 
+    def init_generic(self, generic: FloGeneric):
+        previous_aliases = self.generic_aliases.copy()
+        generic_name = generic.str()
+        if self.context.get(generic_name): return
+        generic_node = self.generics.get(generic.name)
+        for key_tok, ty in zip(generic_node.generic_constraints, generic.constraints):
+            self.generic_aliases[key_tok.value] = ty
+        generic_node.class_declaration.name.value = generic_name
+        self.visit(generic_node.class_declaration)
+        self.generic_aliases = previous_aliases
+
     def visitTypeNode(self, node: TypeNode):
         type_ = node.type
+        if isinstance(type_, FloGeneric):
+            self.init_generic(type_)
         if isinstance(type_, FloObject):
+            if isinstance(type_.referer, Token):
+                alias = self.generic_aliases.get(type_.referer.value)
+                if alias:
+                    return alias
             type_.referer = self.context.get(type_.referer.name)
         return type_
     
@@ -344,23 +364,27 @@ class Compiler(Visitor):
         if node.is_const_array:
             return FloArray(elems, len(elems))
         else:
-            array_class: FloClass = FloClass.classes.get("Array")
+            array_class: FloClass = FloClass.classes.get("Array<"+elems[0].str()+">")
             length = FloInt(len(elems))
-            llvm_ty = array_class.value.elements[0]
+            llvm_ty = elems[0].llvmtype
+            size = llvm_ty.get_abi_size(target_data) * len(elems)
             pointer = create_array_buffer(self.builder, elems)
-            size = FloInt(len(elems)*llvm_ty.pointee.get_abi_size(target_data))
-            return array_class.constant_init(self.builder, [pointer, length, size])
+            return array_class.constant_init(self.builder, [pointer, length, FloInt(size)])
 
     def visitClassDeclarationNode(self, node: ClassDeclarationNode):
         parent = None
         if node.parent:
             parent = self.visit(node.parent).referer
         class_obj = FloClass(node.name.value, parent)
+        previous_class = self.class_within
         self.class_within = class_obj
         self.context.set(node.name.value, class_obj)
         self.visit(node.body)
         class_obj.create_vtable()
-        self.class_within = None
+        self.class_within = previous_class
+    
+    def visitGenericClassNode(self, node: GenericClassNode):
+        self.generics[node.class_declaration.name.value] = node
 
     def visitRangeNode(self, node: RangeNode):
         start = self.visit(node.start)
