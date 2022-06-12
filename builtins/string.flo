@@ -55,3 +55,6 @@ class string {
     // TODO
     split(delim: string){1}
 }
+// fnc println(message: string){
+//     print(message, "\n")
+// }

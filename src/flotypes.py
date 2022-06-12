@@ -29,6 +29,7 @@ class FloType:
     value: ir.Value
 
     def __init__(self, value) -> None:
+        self.fmt = "%s"
         self.value = value
 
     def cast_to():
@@ -50,6 +51,9 @@ class FloType:
         ptr = FloPointer(self)
         ptr.mem = FloMem.halloc(builder, self.llvmtype, args[0])
         return ptr
+    
+    def cval(self, _):
+        return self.value
 
 
 class FloVoid(FloType):
@@ -68,12 +72,15 @@ class FloVoid(FloType):
             return self.to_string(builder)
         else:
             raise Exception("undefined case")
+    
+    def cval(self, _):
+        return FloConst.create_global_str("null").value
 
     def __eq__(self, __o: object) -> bool:
         return isinstance(__o, FloVoid)
 
 
-class FloConst(FloType):
+class FloConst:
     # TODO be careful with arrays and strings
     str_constants = {}
 
@@ -113,10 +120,16 @@ class FloInt(FloType):
     def __init__(self, value: int, bits=bi.machine_word_size):
         assert bits > 0 and bits < 128
         self.bits = bits
+        if bits != 1:
+            self.fmt = "%d"
+        else: self.fmt = "%s"
         if isinstance(value, int):
             self.value = ir.Constant(self.llvmtype, int(value))
         else:
             self.value = value
+
+    def cval(self, builder):
+        return self.value if self.bits != 1 else self.bool_value(builder)
 
     @property
     def llvmtype(self):
@@ -191,9 +204,12 @@ class FloInt(FloType):
         else:
             return self
 
-    def to_bool_string(self, builder: ir.IRBuilder):
-        value = builder.select(self.value, FloConst.create_global_str(
+    def bool_value(self, builder: ir.IRBuilder):
+        return builder.select(self.value, FloConst.create_global_str(
             "true").value, FloConst.create_global_str("false").value)
+
+    def to_bool_string(self, builder: ir.IRBuilder):
+        value = self.bool_value(builder)
         lenval = builder.select(self.value, FloInt(4).value, FloInt(5).value)
         mem = FloMem(value)
         return create_string_object(builder, [mem, FloInt(lenval)])
@@ -203,7 +219,7 @@ class FloInt(FloType):
             return self.to_bool_string(builder)
         sprintf = bi.get_instrinsic("sprintf")
         str_buff = FloMem.halloc_size(builder, FloInt(10))
-        fmt = FloConst.create_global_str("%d")
+        fmt = FloConst.create_global_str(self.fmt)
         strlen = FloInt(builder.call(
             sprintf, [str_buff.value, fmt.value, self.value]))
         return create_string_object(builder, [str_buff, strlen])
@@ -227,10 +243,14 @@ class FloFloat(FloType):
     def __init__(self, value: Union[float, ir.Constant], bits=bi.machine_word_size):
         assert bits == 16 or bits == 32 or bits == 64
         self.bits = bits
+        self.fmt = "%.1lf"
         if isinstance(value, float):
             self.value = ir.Constant(self.llvmtype, value)
         else:
             self.value = value
+    
+    def cval(self, _):
+        return self.value
 
     def add(self, builder: ir.IRBuilder, num):
         return FloFloat(builder.fadd(self.value, num.value))
@@ -274,7 +294,7 @@ class FloFloat(FloType):
     def to_string(self, builder: ir.IRBuilder):
         sprintf = bi.get_instrinsic("sprintf")
         str_buff = FloMem.halloc_size(builder, FloInt(1))
-        fmt = FloConst.create_global_str("%.1lf")
+        fmt = FloConst.create_global_str(self.fmt)
         length = builder.call(sprintf, [str_buff.value, fmt.value, self.value])
         return create_string_object(builder, [str_buff, FloInt(length)])
 
@@ -626,7 +646,7 @@ class FloFunc(FloType):
 vtable_offset = 1
 
 
-class FloClass(FloType):
+class FloClass:
     classes = {}
 
     def __init__(self, name, parent=None, init_body=True) -> None:
@@ -749,8 +769,9 @@ class FloMethod(FloFunc):
         return loaded_func
 
 
-class FloObject:
+class FloObject(FloType):
     def __init__(self, referer: FloClass) -> None:
+        self.fmt = "%s"
         self.referer = referer
         self.mem = None
         assert (referer)
@@ -877,6 +898,9 @@ class FloObject:
             return method.call(builder, [])
         else:
             raise Exception("Cannot cast")
+    def cval(self, builder: ir.IRBuilder):
+        v = self.cast_to(builder, FloObject(FloClass.classes.get("string"))).get_method("to_cstring", builder).call(builder, []).value
+        return v
 
 class FloGeneric(FloObject):
     def __init__(self, referer: FloClass, constraints: List[FloType]) -> None:
@@ -889,11 +913,14 @@ class FloGeneric(FloObject):
 
 
 class FloEnum(FloType):
+    start = 0
     def __init__(self, elements: List[str]):
         self.elements = elements
+        self.global_offset = FloEnum.start
+        FloEnum.start+=len(elements)
 
     def get_property(self, name: str) -> FloInt:
-        index = self.elements.index(name)
+        index = self.elements.index(name)+self.global_offset
         return FloInt(index)
 
     def str(self):
