@@ -3,7 +3,6 @@ from pathlib import Path
 from context import Context
 from llvmlite import ir, binding
 import flotypes as ft
-
 import struct
 machine_word_size = struct.calcsize('P') * 8
 sizet_ty = ir.IntType(machine_word_size)

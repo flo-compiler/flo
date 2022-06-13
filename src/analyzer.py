@@ -191,11 +191,7 @@ class Analyzer(Visitor):
             if node.op.type == TokType.PLUS and isinstance(left, FloObject):
                 add_method = left.referer.get_method("__add__")
                 if add_method != None:
-                    add_arg = add_method.arg_types[0]
-                    if add_arg != right:
-                        TypeError(
-                            node.right_node.range, f"Expected type {add_arg.str()} but got {right.str()}").throw()
-                    return add_method.return_type
+                    return self.check_fnc_call(add_method, [node.right_node], node)
 
         elif node.op.type in self.bit_operators or node.op.isKeyword("xor") or node.op.isKeyword("or") or node.op.isKeyword("and"):
             if self.isNumeric(left, right):

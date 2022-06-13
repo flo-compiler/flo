@@ -1,5 +1,5 @@
 # Flo 
-Flo is a programming language designed to be general-purpose with a natural feel when used and fast when run. Like all other programming languages, it is a tool to help programmers to write fast and efficient computer instructions. Syntactically and semantically, it resembles a lot of modern interpreted high-level languages, and this vision will show in a lot of design decisions made in the language production.
+Flo is a programming language designed to be general-purpose with a natural feel when used and fast when run. Like all other programming languages, it is a tool to help programmers to write fast and efficient computer instructions. Syntactically and semantically, it resembles a lot of modern interpreted high-level languages.
 
 ## Installation
 In order to install flo you will need
@@ -249,8 +249,12 @@ Type Casting always works when converting these types to the following types.
     - Safe if object the method `__as_${other_object_name}__` is implemented (Generics do not apply here)
     - Needs to be checked by the compiler and looked for any memory error.
 
-Static Arrays to string shall not work.
-String to Int/Float might fail if String is not an Int or Float.
+This might not work
+- String to Int/Float might fail if String is not an Int or Float.
+
+This **will** not work
+- Static Arrays to string shall not work.
+
 
 ## Error Handling
 Work in progress
