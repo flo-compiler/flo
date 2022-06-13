@@ -55,6 +55,19 @@ class FloType:
     def cval(self, _):
         return self.value
 
+class FloNull(FloType):
+    def store_value_to_ref(self, ref):
+        if not ref.mem:
+            ref.mem = FloMem.salloc(ref.builder, self.llvmtype or self.value, ref.name)
+        ref.mem.store_at_index(ref.builder, self)
+
+    def load_value_from_ref(self, ref):
+        return self.__class__(ref.mem.load_at_index(ref.builder))
+    
+    def __eq__(self, other):
+        return isinstance(other, FloType)
+    def __ne__(self, __o: object) -> bool:
+        return False
 
 class FloVoid(FloType):
     llvmtype = ir.VoidType()
@@ -884,7 +897,7 @@ class FloObject(FloType):
         if is_string_object(type):
             if is_string_object(self):
                 return self
-            if self.get_method('__as_string__') == None:
+            if self.get_method('__as_string__', builder) == None:
                 string = f"@{self.referer.name}"
                 return create_string_object(builder, [FloConst.create_global_str(string), FloInt(len(string))])
         elif isinstance(type, FloObject):

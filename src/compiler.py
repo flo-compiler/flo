@@ -233,6 +233,8 @@ class Compiler(Visitor):
 
     def visitVarAssignNode(self, node: VarAssignNode):
         var_name = node.var_name.value
+        if node.type:
+            self.visit(node.type)
         value = self.visit(node.value)
         ref = self.context.get(var_name)
         if ref == None:

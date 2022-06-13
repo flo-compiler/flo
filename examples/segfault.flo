@@ -1,5 +1,4 @@
 // FIXME: Add some kind of null constant.
-import println from "@flo/core"
 class Node<T> {
     next: Node<T>
     value: T

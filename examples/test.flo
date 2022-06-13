@@ -1,3 +1,4 @@
 fnc main(){
     a: Array<int> = [1, 2, 3, 4]
+    println(a)
 }
