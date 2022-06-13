@@ -353,6 +353,9 @@ class Compiler(Visitor):
             index = self.visit(node.identifier.index)
             array = self.visit(node.identifier.name)
             array.set_element(self.builder, index, nValue)
+        elif isinstance(node.identifier, PropertyAccessNode):
+            root: FloObject = self.visit(node.identifier.expr)
+            root.set_property(self.builder, node.identifier.property.value, nValue)
         return nValue if node.ispre else value
 
     def visitArrayAccessNode(self, node: ArrayAccessNode):

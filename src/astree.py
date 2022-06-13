@@ -320,7 +320,7 @@ class IfNode(Node):
 
 
 class IncrDecrNode(Node):
-    def __init__(self, id: Token, identifier: Union[VarAccessNode, ArrayAccessNode], ispre: bool, range: Range):
+    def __init__(self, id: Token, identifier: Union[VarAccessNode, ArrayAccessNode, PropertyAccessNode], ispre: bool, range: Range):
         self.id = id
         self.identifier = identifier
         self.ispre = ispre
