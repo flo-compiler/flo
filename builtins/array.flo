@@ -2,10 +2,10 @@ class Array <T> {
     buffer: T*
     length: int
     size: int
-    constructor(){
+    constructor(size = 8){
         this.length = 0
-        this.size = 8
-        this.buffer = new i8(8) as T*
+        this.size = size
+        this.buffer = new T[size]
     }
     resize(){
         this.size = this.size * 2 // * sizeof(int)
@@ -64,9 +64,9 @@ class Array <T> {
         res = ""
         last_index = this.length - 1
         for i = 0; i < last_index; i++ {
-            res += (this.buffer[i] as string) + seperator
+            res += this.buffer[i] + seperator
         }
-        return res + (this.buffer[i] as string)
+        return res + this.buffer[i]
     }
     __as_string__(): string {
         return "[" + this.join(", ") + "]"

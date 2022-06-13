@@ -1,5 +1,7 @@
+import "@flo/core"
 fnc main(){
-    a: Array<int> = [1, 2, 3, 4]
-    a.append(1)
-    println(a)
+    x = new HashMap<int, string>()
+    x.set(1, "1")
+    x.set(100, "100")
+    println(x.get(1))
 }

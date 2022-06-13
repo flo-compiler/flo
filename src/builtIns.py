@@ -74,8 +74,6 @@ def new_ctx(*args):
     Context.current_llvm_module = ir.Module(name=filename)
     Context.current_llvm_module.triple = binding.get_default_triple()
     Context.current_llvm_module.data_layout = str(target_data)
-    global_ctx.set("true", ft.FloInt(1, 1))
-    global_ctx.set("false", ft.FloInt(0, 1))
     syscall_fnc = ft.FloInlineFunc(syscall_wrapper, [ft.FloType], ft.FloInt(None), True)
     realloc_fnc = ft.FloInlineFunc(realloc_wrapper, [byte_flo_ptr_ty,  ft.FloInt(None)], byte_flo_ptr_ty)
     print_fnc = ft.FloInlineFunc(print_wrapper, [ft.FloType], ft.FloVoid(None), True)

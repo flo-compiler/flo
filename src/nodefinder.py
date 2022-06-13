@@ -5,8 +5,8 @@ from typing import List
 
 from utils import get_ast_from_file
 from context import Context
-from flotypes import FloArray, FloInlineFunc, FloObject, FloPointer
-from astree import ArrayAssignNode, ClassDeclarationNode, ConstDeclarationNode, EnumDeclarationNode, FncCallNode, FncDefNode, FncNode, ForEachNode, ForNode, IfNode, ImportNode, MethodDeclarationNode, NewMemNode, Node, NumOpNode, PropertyAssignNode, PropertyDeclarationNode, ReturnNode, StmtsNode, TypeAliasNode, TypeNode, VarAccessNode, VarAssignNode, Visitor, WhileNode
+from flotypes import FloArray, FloGeneric, FloInlineFunc, FloObject, FloPointer
+from astree import ArrayAssignNode, ClassDeclarationNode, ConstDeclarationNode, EnumDeclarationNode, FncCallNode, FncDefNode, FncNode, ForEachNode, ForNode, GenericClassNode, IfNode, ImportNode, MethodDeclarationNode, NewMemNode, Node, NumOpNode, PropertyAssignNode, PropertyDeclarationNode, ReturnNode, StmtsNode, TypeAliasNode, TypeNode, VarAccessNode, VarAssignNode, Visitor, WhileNode
 from errors import Range, NameError
 
 
@@ -202,7 +202,10 @@ class NodeFinder(Visitor):
 
     def visitTypeNode(self, node: TypeNode):
         if isinstance(node.type, FloObject):
-            class_name = node.type.referer.value
+            if isinstance(node.type, FloGeneric):
+                class_name = node.type.name
+            else:
+                class_name = node.type.referer.value
             if self.block_in != None and self.block_in.name != class_name:
                 self.dependency_map.get(self.block_in.name).append(class_name)
 
@@ -220,6 +223,9 @@ class NodeFinder(Visitor):
             return
         self.visit(node.type)
         self.context.set(type_name, node)
+
+    def visitGenericClassNode(self, node: GenericClassNode):
+        self.visit(node.class_declaration)
 
     def visitClassDeclarationNode(self, node: ClassDeclarationNode):
         class_name = node.name.value

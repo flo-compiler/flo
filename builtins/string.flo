@@ -3,20 +3,20 @@ class string {
     buffer: i8*
     length: int
     constructor(data: i8*, len: int){
-        this.buffer = new i8(len)
+        this.buffer = new i8[len]
         this.buffer = data
         this.length = len
     }
     __add__(data: string): string {
         new_str_len = this.length + data.length
-        new_buffer = new i8(new_str_len)
+        new_buffer = new i8[new_str_len]
         memcpy(new_buffer, this.buffer, this.length)
         trailing_buffer = new_buffer + this.length
         memcpy(trailing_buffer, data.buffer, data.length+1)
         return new string(new_buffer, new_str_len)   
     }
     __getitem__(index: int): string {
-        new_buffer = new i8(2)
+        new_buffer = new i8[2]
         new_buffer[0] = this.buffer[index]
         new_buffer[1] = '\0'
         return new string(new_buffer, 2)
@@ -40,6 +40,9 @@ class string {
         }
         return -1
     }
+    __in__(other: string): bool {
+        return this.find(other) != -1
+    }
     get_byte(index: int): i8 {
         return this.buffer[index]
     }
@@ -47,7 +50,7 @@ class string {
         return this.buffer
     }
     to_cstring(): i8* {
-        c_string = new i8(this.length+1)
+        c_string = new i8[this.length+1]
         memcpy(c_string, this.buffer, this.length)
         c_string[this.length] = '\0'
         return c_string

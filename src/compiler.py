@@ -1,7 +1,7 @@
 from pathlib import Path
 from typing import Dict
 from errors import CompileError, TypeError
-from flotypes import FloArray, FloClass, FloConst, FloEnum, FloFunc, FloGeneric, FloInt, FloFloat, FloMethod, FloObject, FloPointer, FloRef, FloVoid, create_array_buffer
+from flotypes import FloArray, FloClass, FloConst, FloEnum, FloFunc, FloGeneric, FloInt, FloFloat, FloMem, FloMethod, FloObject, FloPointer, FloRef, FloVoid, create_array_buffer
 from lexer import TokType
 from astree import *
 from context import Context
@@ -94,6 +94,8 @@ class Compiler(Visitor):
     def visitNumOpNode(self, node: NumOpNode):
         a = self.visit(node.left_node)
         b = self.visit(node.right_node)
+        assert(a)
+        assert(b)
         if node.op.type == TokType.PLUS:
             return a.add(self.builder, b)
         elif node.op.type == TokType.MINUS:
@@ -148,7 +150,7 @@ class Compiler(Visitor):
     def init_generic(self, generic: FloGeneric):
         previous_aliases = self.generic_aliases.copy()
         generic_name = generic.str()
-        if self.context.get(generic_name): return
+        if FloClass.classes.get(generic_name): return
         generic_node = self.generics.get(generic.name)
         for key_tok, ty in zip(generic_node.generic_constraints, generic.constraints):
             self.generic_aliases[key_tok.value] = ty
@@ -165,7 +167,9 @@ class Compiler(Visitor):
                 alias = self.generic_aliases.get(type_.referer.value)
                 if alias:
                     return alias
-            type_.referer = self.context.get(type_.referer.name)
+            type_.referer = FloClass.classes.get(type_.referer.name)
+        elif isinstance(type_, FloArray):
+            self.visit(TypeNode(type_.elm_type, None))
         return type_
     
     def visitFncNode(self, node: FncNode):
@@ -423,8 +427,12 @@ class Compiler(Visitor):
 
     def visitNewMemNode(self, node: NewMemNode):
         typeval = self.visit(node.type)
-        args = [self.visit(arg) for arg in node.args]
-        return typeval.construct(self.builder, args)
+        if isinstance(typeval, FloObject):
+            args = [self.visit(arg) for arg in node.args]
+            return typeval.construct(self.builder, args)
+        else:
+            mem = FloMem.halloc(self.builder, typeval.elm_type.llvmtype, self.visit(typeval.len))
+            return FloPointer.new(FloPointer(typeval.elm_type), mem)
 
     def visitArrayAssignNode(self, node: ArrayAssignNode):
         index = self.visit(node.array.index)

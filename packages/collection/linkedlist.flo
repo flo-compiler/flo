@@ -1,4 +1,3 @@
-// FIXME: Add some kind of null constant.
 class Node<T> {
     next: Node<T>
     value: T
@@ -13,9 +12,4 @@ class LinkedList<T> {
         this.root.next = new Node<T>(value)
         this.root.next.next = tmp
     }
-}
-fnc main(){
-    n = new LinkedList<string>()
-    n.addNode("Hello")
-    n.addNode("World")
 }

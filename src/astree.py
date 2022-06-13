@@ -212,15 +212,6 @@ class ContinueNode(Node):
         return visitor.visitContinueNode(self)
 
 
-class FncCallNode(Node):
-    def __init__(self, name: VarAccessNode, args: List[Node], range: Range):
-        self.name = name
-        self.args = args
-        self.range = range
-
-    def accept(self, visitor: Visitor):
-        return visitor.visitFncCallNode(self)
-
 class PropertyAccessNode(Node):
     def __init__(self, expr: Node, property: Token, range: Range):
         self.expr = expr
@@ -229,6 +220,16 @@ class PropertyAccessNode(Node):
     
     def accept(self, visitor: Visitor):
         return visitor.visitPropertyAccessNode(self)
+
+class FncCallNode(Node):
+    def __init__(self, name: Union[VarAccessNode, PropertyAccessNode], args: List[Node], range: Range):
+        self.name = name
+        self.args = args
+        self.range = range
+
+    def accept(self, visitor: Visitor):
+        return visitor.visitFncCallNode(self)
+
 
 class PropertyAssignNode(Node):
     def __init__(self, expr: PropertyAccessNode, value: Node, range: Range):

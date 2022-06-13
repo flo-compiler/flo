@@ -151,7 +151,7 @@ class FloInt(FloType):
 
     @property
     def is_constant(self):
-        return isinstance(self.value, ir.Constant)
+        return isinstance(self.value, ir.Constant) and self.value.constant
 
     def add(self, builder: ir.IRBuilder, num):
         return FloInt(builder.add(self.value, num.value))
@@ -213,6 +213,8 @@ class FloInt(FloType):
     def bitcast(self, builder: ir.IRBuilder, bits: int):
         llvmtype = ir.IntType(bits)
         if bits != self.bits:
+            if self.is_constant:
+                return FloInt(self.value.constant, bits)
             cast_fnc = builder.trunc if bits < self.bits else builder.zext
             return FloInt(cast_fnc(self.value, llvmtype), bits)
         else:
@@ -678,7 +680,7 @@ class FloClass:
             self.init_value()
             if self.parent:
                 self.methods.update(self.parent.methods)
-        FloClass.classes[name] = self
+            FloClass.classes[name] = self
 
     def get_method(self, method_name: str):
         current = self
@@ -837,10 +839,19 @@ class FloObject(FloType):
                 break
             else:
                 current = current.parent
+        method_value: FloType = self.referer.methods.get(name)
+        if method_value == None:
+            # 1: Find where this goes wrong
+            self.referer = FloClass.classes.get(self.referer.name)
+            current = self.referer
+            method_value = current.methods.get(name)
+            if method_value == None: return None
+            # 1: Fix it.
+            method_index = list(current.methods.keys()).index(name)
+
         vtable_ptr = self.mem.load_at_index(
             builder, FloInt(0, 32), FloInt(0, 32)
         )
-        method_value: FloType = self.referer.methods.get(name)
         method_mem = vtable_ptr.get_pointer_at_index(
             builder, FloInt(0, 32), FloInt(method_index, 32))
         flomethod = method_value.load_value_from_ref(
@@ -881,14 +892,13 @@ class FloObject(FloType):
         return method.call(builder, [other])
 
     def cmp(self, builder: ir.IRBuilder, op, other):
-        if op == "==":
+        should_not = op == "!="
+        if op == "==" or op == "!=":
             eq_method = self.get_method("__eq__", builder)
-            if eq_method == None:
-                return FloInt(0, 1)
-            if eq_method.arg_types[0] == other:
-                return eq_method.call(builder, [other])
-            else:
-                return FloInt(0, 1)
+            value = FloInt(0, 1)
+            if eq_method:
+                value = eq_method.call(builder, [other])
+            return value.not_(builder) if should_not else value
 
     def get_cast_method(self, type, builder):
         name = "__as_"+type.str()+"__"
