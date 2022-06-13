@@ -69,6 +69,6 @@ class Array <T> {
         return res + (this.buffer[i] as string)
     }
     __as_string__(): string {
-        return "[" + this.join(",") + "]"
+        return "[" + this.join(", ") + "]"
     }
 }

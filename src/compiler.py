@@ -128,7 +128,8 @@ class Compiler(Visitor):
         elif node.op.isKeyword("xor"):
             return a.xor(self.builder, b)
         elif node.op.isKeyword("in"):
-            return b.in_(self.builder, a)
+            s = b.in_(self.builder, a)
+            return s
         elif node.op.isKeyword("as"):
             try:
                 return a.cast_to(self.builder, b)
