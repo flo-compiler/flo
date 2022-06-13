@@ -2,7 +2,7 @@ from typing import Dict, List
 from cache import AnalyzerCache
 from context import Context
 from errors import GeneralError, TypeError, SyntaxError, NameError
-from flotypes import FloArray, FloClass, FloEnum, FloFloat, FloGeneric, FloInlineFunc, FloInt, FloObject, FloPointer, FloType, FloVoid
+from flotypes import FloArray, FloClass, FloEnum, FloFloat, FloGeneric, FloInlineFunc, FloInt, FloObject, FloPointer, FloType, FloVoid, is_string_object
 from lexer import TokType
 from astree import *
 from nodefinder import NodeFinder, resource_path
@@ -188,6 +188,12 @@ class Analyzer(Visitor):
                 return left
             # TODO: Other object types arithmetic operators/operator overloading.
             # NOTE: For string and other type concatenation, Generics will handle it.
+            if node.op.type == TokType.PLUS and is_string_object(left):
+                node.right_node = self.cast(node.right_node, left)
+                return left
+            elif node.op.type == TokType.PLUS and is_string_object(right):
+                node.left_node = self.cast(node.left_node, right)
+                return right
             if node.op.type == TokType.PLUS and isinstance(left, FloObject):
                 add_method = left.referer.get_method("__add__")
                 if add_method != None:
@@ -809,14 +815,9 @@ class Analyzer(Visitor):
                     typeval.referer.constructor, node.args, node)
             return typeval
         else:
-            if len(node.args) > 1:
-                GeneralError(node.args[1].range,
-                             "Expecting only 1 or no argument").throw()
-            if len(node.args) > 0:
-                if not isinstance(self.visit(node.args[0]), FloInt):
-                    GeneralError(node.args[2].range,
-                                 "Expecting arg to be int ").throw()
-            return FloPointer(typeval)
+            if not isinstance(typeval, FloArray):
+                TypeError(node.type.range, "Type can only be an object or an array").throw()
+            return FloPointer(typeval.elm_type)
 
     def visitImportNode(self, node: ImportNode):
         # TODO: Needs work using NodeFinder.get_abs_path twice

@@ -488,7 +488,29 @@ class Parser:
             return IncrDecrNode(
                 tok, f, True, Range.merge(tok.range, self.current_tok.range)
             )
+        elif tok.isKeyword("new"):
+            return self.new_memexpr()
         return self.unary_expr1()
+
+    def new_memexpr(self):
+        tok = self.current_tok
+        self.advance()
+        type = self.composite_type()
+        args = None
+        end_range = self.current_tok.range
+        if self.current_tok.type == TokType.LPAR:
+            self.advance()
+            if self.current_tok.type == TokType.RPAR:
+                node_range = Range.merge(tok.range, self.current_tok.range)
+                self.advance()
+                return NewMemNode(type, [], node_range)
+            args = self.expr_list()
+            if self.current_tok.type != TokType.RPAR:
+                SyntaxError(self.current_tok.range, "Expected )").throw()
+            end_range = self.current_tok.range
+            self.advance()
+        node_range = Range.merge(tok.range, end_range)
+        return NewMemNode(type, args, node_range)
 
     def unary_expr1(self):
         node = self.expr_value_op()
@@ -529,13 +551,14 @@ class Parser:
     def expr_value_op(self):
         range_start = self.current_tok.range
         node = self.expr_value()
-        if self.current_tok.type == TokType.DOT:
-            node = self.property_access(node)
         while (
             self.current_tok.type == TokType.LBRACKET
             or self.current_tok.type == TokType.LPAR
+            or self.current_tok.type == TokType.DOT
         ):
-            if self.current_tok.type == TokType.LBRACKET:
+            if self.current_tok.type == TokType.DOT:
+                node = self.property_access(node)
+            elif self.current_tok.type == TokType.LBRACKET:
                 self.advance()
                 expr = self.expr()
                 if self.current_tok.type != TokType.RBRACKET:
@@ -608,34 +631,17 @@ class Parser:
             end_range = self.current_tok.range
             self.advance()
             return ArrayNode(list, Range.merge(tok.range, end_range))
-        elif tok.isKeyword("new"):
-            self.advance()
-            type = self.composite_type()
-            if self.current_tok.type != TokType.LPAR:
-                SyntaxError(self.current_tok.range, "Expected (").throw()
-            self.advance()
-            if self.current_tok.type == TokType.RPAR:
-                node_range = Range.merge(tok.range, self.current_tok.range)
-                self.advance()
-                return NewMemNode(type, [], node_range)
-            args = self.expr_list()
-            if self.current_tok.type != TokType.RPAR:
-                SyntaxError(self.current_tok.range, "Expected )").throw()
-            node_range = Range.merge(tok.range, self.current_tok.range)
-            self.advance()
-            return NewMemNode(type, args, node_range)
         SyntaxError(
             tok.range, f"Expected an expression value before '{tok}'").throw()
 
     def property_access(self, expr):
-        while self.current_tok.type == TokType.DOT:
-            self.advance()
-            ident = self.current_tok
-            node_range = ident.range
-            expr = PropertyAccessNode(expr, ident, node_range)
-            if ident.type != TokType.IDENTIFER:
-                SyntaxError(node_range, "Expected an Identifier").throw()
-            self.advance()
+        self.advance()
+        ident = self.current_tok
+        node_range = ident.range
+        expr = PropertyAccessNode(expr, ident, node_range)
+        if ident.type != TokType.IDENTIFER:
+            SyntaxError(node_range, "Expected an Identifier").throw()
+        self.advance()
         return expr
 
     def prim_type(self):
@@ -666,9 +672,12 @@ class Parser:
                 self.advance()
                 arg_list = self.type_list()
                 type = FloGeneric(tok, arg_list)
-                if self.current_tok.type != TokType.GT:
+                if self.current_tok.type != TokType.GT and self.current_tok.type != TokType.SR:
                     SyntaxError(self.current_tok.range, "Expected '>'").throw()
-                self.advance()
+                if self.current_tok.type == TokType.GT:
+                    self.advance()
+                else:
+                    self.current_tok.type = TokType.GT
             return TypeNode(type, tok.range)
     
     def type_list(self):
@@ -707,10 +716,7 @@ class Parser:
                 type = TypeNode(FloPointer(type), Range.merge(type.range, end_range))
             else:
                 self.advance()
-                size = self.current_tok.value
-                if self.current_tok.type != TokType.INT:
-                    SyntaxError(self.current_tok.range, "Expected a constant int").throw()
-                self.advance()
+                size = self.expr()
                 if self.current_tok.type != TokType.RBRACKET:
                     if self.current_tok.type != TokType.RBRACKET:
                         SyntaxError(self.current_tok.range,

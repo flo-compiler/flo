@@ -1,0 +1,45 @@
+class Bucket<T, U> {
+    key: T
+    value: U
+    constructor(key: T, value: U){
+        this.key = key
+        this.value = value
+    }
+    __as_string__(): string {
+        return this.key + ":" + this.value
+    }
+}
+class HashMap<T, U> {
+    buckets: Bucket<T, U>*
+    length: int
+    size: int
+    constructor(){
+        initial_capacity = 256
+        this.buckets = new Bucket<T, U>[initial_capacity]
+        this.size = initial_capacity
+        this.length = 0
+    }
+    hash_fnc(key: T): int{
+        str = key as string
+        hash = 5381
+        for i = 0; i < str; ++i {
+            hash = ((hash << 5) + hash) + (str.get_byte(i) as int)
+        }
+        return hash
+    }
+    resize(){
+        this.size *= 2
+        realloc(this.buckets as i8*, this.size)
+    }
+    set(key: T, value: U){
+        hash = this.hash_fnc(key) % this.size
+        if (this.size <= this.length) this.resize()
+        /* you need null.
+        if (this.buckets[hash] == null) this.length++*/
+        this.buckets[hash] = new Bucket<T, U>(key, value)
+    }
+    get(key: T): U {
+        hash = this.hash_fnc(key) % this.size
+        return this.buckets[hash].value
+    }
+}
