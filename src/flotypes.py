@@ -133,13 +133,14 @@ class FloInt(FloType):
     def __init__(self, value: int, bits=bi.machine_word_size):
         assert bits > 0 and bits < 128
         self.bits = bits
-        if bits != 1:
-            self.fmt = "%d"
-        else: self.fmt = "%s"
         if isinstance(value, int):
             self.value = ir.Constant(self.llvmtype, int(value))
         else:
             self.value = value
+    
+    @property
+    def fmt(self):
+        return "%s" if self.bits == 1 else "%d"
 
     def cval(self, builder):
         return self.value if self.bits != 1 else self.bool_value(builder)
