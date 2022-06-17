@@ -1,4 +1,3 @@
-import println from "@flo/core"
 enum JsonValue {
     Null
     Bool
@@ -13,23 +12,23 @@ fnc is_white_space(candidate: i8): bool {
 class JsonParser {
     source: string
     idx: int
-    fnc constructor(source: string) {
+    constructor(source: string) {
         this.idx = 0
         this.source = source
     }
-    fnc eof(): bool {
+    eof(): bool {
         return this.idx < this.source.length
     }
-    fnc get_current_char(): i8 {
+    get_current_char(): i8 {
         return this.source.get_byte(this.idx)
     }
-    fnc skip_white_space() {
+    skip_white_space() {
         index = this.idx
         while !this.eof() and is_white_space(this.source.get_byte(++index)) {
             this.idx++
         }
     }
-    fnc parse(): JsonValue {
+    parse(): JsonValue {
         // TODO: Use match in the future
         // TODO: Throw error
         while !this.eof(){

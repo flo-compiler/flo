@@ -6,24 +6,24 @@ class File {
         this.path = path
     }
     get_file_stat(): i8* {
-        stat_struct = new i8(144)
-        if lstat(this.path.to_cstring(), stat_struct) < 0 {
+        stat_struct: i8[144] = []
+        stat_ptr = &(stat_struct[0])
+        if lstat(this.path.to_cstring(), stat_ptr) < 0 {
             exit("Could not open file\n")
         }
-        return stat_struct
+        return stat_ptr
     }
     get_file_size(): int {
         stat_struct = this.get_file_stat() 
-        file_size_offset = (stat_struct + 48) as int*
-        size = file_size_offset[0]
-        return size
+        file_size_offset = &(stat_struct[48]) as int*
+        return file_size_offset[0]
     }
     read(size: int): i8* {
         fd = open(this.path.to_cstring(), O_RDONLY)
         if fd < 0 {
             exit("Error: could not open file\n")
         }
-        file_contents = new i8(size)
+        file_contents = new i8[size]
         if read(fd, file_contents, size) < 0 {
             exit("Error: could not read the file\n")
         }
@@ -45,7 +45,7 @@ class File {
         return new string(this.read(file_size), file_size)
     }
     write_as_string(data: string) {
-        this.write(data as i8*, data.length)
+        this.write(data.get_bytes(), data.length)
     }
     exists(): bool {
         return access(this.path.to_cstring(), F_OK) >= 0
@@ -66,6 +66,6 @@ class File {
         return is_dir
     }
     delete(){
-        unlink(this.path as i8*)
+        unlink(this.path.get_bytes())
     }
 }

@@ -1,7 +1,16 @@
-import "@flo/core"
+class SpecialArray<T> extends Array<int> {
+    constructor(){
+        super()
+    }
+}
 fnc main(){
-    x = new HashMap<int, string>()
-    x.set(1, "1")
-    x.set(100, "100")
-    println(x.get(1))
+    print("hello world\n")
+    x << 1.0..2
+    ==
+    !=
+    >>
+    >=
+    <=
+    =>
+    ``
 }

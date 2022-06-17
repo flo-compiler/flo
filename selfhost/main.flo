@@ -1,5 +1,38 @@
+import File from "@flo/io"
+import "error"
 import "lexer"
-fnc main(len: int, args: i8**){
-    lexer = new Lexer()
-    tokens = lexer.get_tokens()
+import "parser"
+// import "analyzer"
+// import "codegen"
+
+fnc strlen(str: i8*): int
+fnc string_from_cstring(str: i8*): string {
+    return new string(str, strlen(str))
+}
+fnc parse_args(size: int, args: i8**): Array<string> {
+    arr = new Array<string>(8)
+    for i = 0; i < size; i++ {
+        arr << string_from_cstring(args[i])
+    }
+    return arr
+}
+fnc read_file(filename: string): string {
+    file = new File(filename)
+    return file.read_as_string()
+}
+fnc main(size: int, ptr: i8**){
+    args = parse_args(size, ptr)
+    if args.length == 2 {
+        errors = new Array<FloError>(8)
+        filename = args[1]
+        text = read_file(filename)
+        lexer = new Lexer(text, errors)
+        tokens = lexer.tokenize()
+        print_errors(filename, errors, text)
+        // Test
+        for i = 0; i < tokens.length; i++ {
+            token = tokens[i]
+            println(token.ttype, token.range.start, token.range.end, text.substring(token.range.start, token.range.end - token.range.start))
+        }
+    }
 }

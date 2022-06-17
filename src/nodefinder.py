@@ -184,8 +184,9 @@ class NodeFinder(Visitor):
 
     def visitNewMemNode(self, node: NewMemNode):
         self.visit(node.type)
-        for arg in node.args:
-            self.visit(arg)
+        if node.args:
+            for arg in node.args:
+                self.visit(arg)
 
     def visitIfNode(self, node: IfNode):
         for cond, case in node.cases:
@@ -239,7 +240,7 @@ class NodeFinder(Visitor):
         self.dependency_map[class_name] = []
         self.local_vars = []
         self.visit(node.body)
-        self.context = self.context.get_parent()
+        self.context = self.context.parent
         self.local_vars = []
         self.block_in = None
 
