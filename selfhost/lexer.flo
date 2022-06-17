@@ -1,8 +1,4 @@
-class FloRange {
-    start: int
-    end: int
-}
-enum TokenType {
+enum TokType {
     COL
     SEMICOL
     COMMA
@@ -46,76 +42,274 @@ enum TokenType {
     IDENTIFER
     KEYWORD
 }
-class Token {
-    toktype: TokenType
-    range: FloRange
+class KeywordList extends Array<string> {
+    constructor(){
+        super(1)
+        this << "and"
+        this << "or"
+        this << "xor"
+        this << "const"
+        this << "if"
+        this << "else"
+        this << "int"
+        this << "float"
+        this << "void"
+        this << "for"
+        this << "while"
+        this << "fnc"
+        this << "break"
+        this << "continue"
+        this << "return"
+        this << "import"
+        this << "type"
+        this << "from"
+        this << "in"
+        this << "class"
+        this << "enum"
+        this << "new"
+        this << "as"
+        this << "is"
+        this << "extends"
+    }
 }
-class Lexer{
-    get_tokens(): Token [] {    
-        tokens: Tokens[] = []
-        while !this.eof(){
-            char = self.get_current_char()
-            if char in 65..90 or char in 97..122 or char == '_':
-                tokens << this.make_identifer()
-            if = ":" 
-                tokens << new Token(TokenType.COL, this.get_range(1))
-            else if = ";"
-                tokens << new Token(TokenType.SEMICOL, this.get_range(1))
-            else if = ","
-                tokens << new Token(TokenType.COMMA, this.get_range(1))
-            else if = "+"
-            else if = "++"
-            else if = "-"
-            else if = "--"
-            else if = "*"
-            else if = "/"
-            else if = "("
-                tokens << new Token(TokenType.LPAR, this.get_range(1))
-            else if = ")"
-                tokens << new Token(TokenType.RPAR, this.get_range(1))
-            else if = "%"
-                tokens << new Token(TokenType.MOD, this.get_range(1))
-            else if = "{"
-                tokens << new Token(TokenType.LBRACE, this.get_range(1))
-            else if = "}"
-                tokens << new Token(TokenType.RBRACE, this.get_range(1))
-            else if = "["
-                tokens << new Token(TokenType.LBRACKET, this.get_range(1))
-            else if = "]"
-                tokens << new Token(TokenType.RBRACKET, this.get_range(1))
-            else if = "int"
-                tokens << new Token(TokenType.INT, this.get_range(3))
-            else if = "float"
-                tokens << new Token(TokenType.FLOAT, this.get_range(5))
-            else if = '\n'
-                tokens << new Token(TokenType.LN, this.get_range(2))
-            else if = '"'
-                tokens << this.make_string()
-            else if = '\''
-                tokens << this.make_char()
-            else if = "^"
-                tokens << new Token(TokenType.POW, this.get_range(1))
-            else if = "?"
-                tokens << new Token(TokenType.QUES, this.get_range(1))
-            else if = "&"
-                tokens << new Token(TokenType.AMP, this.get_range(1))
-            else if = "="
-            else if = "=="
-            else if = "!"
-            else if = "!="
-            else if = ">"
-            else if = ">="
-            else if = "<"
-            else if = "<="
-            else if = "=>"
-            else if = "<<"
-            else if = ">>"
-            else if = "."
-            else if = ".."
-            else if = "..."
-            else // error
+fnc fflush(fd: int): void
+class Token {
+    ttype: int
+    range: Range
+    constructor(ttype: int, range: Range){
+        this.ttype = ttype
+        this.range = range
+    }
+}
+fnc is_identifier_char(char: i8): bool {
+    return (char >= 'A' and char <= 'Z') or (char >= 'a' and char <= 'z') or (char == '_')
+}
+fnc is_number_char(char: i8): bool {
+    return (char >= '0' and char <= '9')
+}
+
+class Lexer {
+    current_char: i8
+    text: string
+    keyword_list: KeywordList
+    errors: Array<FloError>
+    idx: int
+    constructor(text: string, errors: Array<FloError>){
+        this.idx = -1
+        this.text = text
+        this.errors = errors
+        this.keyword_list = new KeywordList()
+    }
+    eof(): bool{
+        return this.idx >= this.text.length
+    }
+    peek(offset = 0): i8 {
+        if this.idx + offset < this.text.length 
+            return this.text.get_byte(this.idx + offset)
+        return '\0'
+    }
+    advance(){
+        this.current_char = this.text.get_byte(this.idx++)
+    }
+    get_range(back: int): Range {
+        return new Range(this.idx - back, this.idx)
+    }
+    plus_token(): Token {
+        if this.peek() == '+' {
+            this.advance()
+            return new Token(TokType.PLUS_PLUS, this.get_range(2))
+        }
+        return new Token(TokType.PLUS, this.get_range(1))
+    }
+    skip_comment(): bool{
+        if this.peek() == '*' {
+            this.advance()
+            while this.peek() != '*' and this.peek(2) != '/'
+                this.advance()
+            return true
+        } else if this.peek() == '/' {
+            this.advance()
+            while this.peek() != '\n'
+                this.advance()
+            return true
+        }
+        return false
+    }
+    minus_token(): Token{
+        if this.peek() == '-' {
+            this.advance()
+            return new Token(TokType.MINUS_MINUS, this.get_range(2))
+        }
+        return new Token(TokType.MINUS, this.get_range(2))
+    }
+    eq_token(): Token {
+        if this.peek() == '='{
+            this.advance()
+            return new Token(TokType.EEQ, this.get_range(2))
+        } 
+        else if this.peek() == '>' {
+            this.advance()
+            return new Token(TokType.ARROW, this.get_range(2))
+        }
+        return new Token(TokType.EQ, this.get_range(1))
+    }
+    neq_token(): Token {
+        if this.peek() == '=' {
+            this.advance()
+            return new Token(TokType.NEQ, this.get_range(2))
+        }
+        return new Token(TokType.NOT, this.get_range(1))
+    }
+    gt_token(): Token {
+        if this.peek() == '=' {
+            this.advance()
+            return new Token(TokType.GTE, this.get_range(2))
+        }
+        else if this.peek() == '>' {
+            this.advance()
+            return new Token(TokType.SR, this.get_range(2))
+        }
+        return new Token(TokType.GT, this.get_range(1))
+    }
+    lt_token(): Token {
+        if this.peek() == '=' {
+            this.advance()
+            return new Token(TokType.LEQ, this.get_range(2))
+        }
+        else if this.peek() == '<' {
+            this.advance()
+            return new Token(TokType.SL, this.get_range(2))
+        }
+        return new Token(TokType.LT, this.get_range(1))
+    }
+    dot_token(): Token {
+        token = TokType.DOT
+        start = this.idx - 1
+        if this.peek() == '.'{
+            token = TokType.DOT_DOT
+            this.advance()
+            if this.peek() == '.' {
+                token = TokType.DOT_DOT_DOT
+                this.advance()
+            }
+        }
+        return new Token(token, start..(this.idx-1))
+    }
+    numeric_token(): Token {
+        length = 1
+        token = TokType.INT
+        while is_number_char(this.peek()) or this.peek() == '.'{
+            length++
+            this.advance()
+            if this.current_char == '.' {
+                if this.peek() != '.' {
+                    token = TokType.FLOAT
+                } else {
+                    break
+                }
+            }
+        }
+        return new Token(token, this.get_range(length))
+    }
+    identifier_token(): Token {
+        length = 1
+        start = this.idx - 1
+        next_char = this.peek()
+        while is_identifier_char(next_char) or is_number_char(next_char){
+            length++
+            this.advance()
+            next_char = this.peek()
+        }
+        range = start..this.idx
+        if this.text.substring(start, ++length) in this.keyword_list
+            return new Token(TokType.KEYWORD, range)
+        return new Token(TokType.IDENTIFER, range)
+    }
+    string_token(): Token {
+        start = this.idx - 1
+        this.advance()
+        while this.current_char != '"' {
             this.advance()
         }
-        tokens << new Token(TokenType.EOF, this.get_range(0))
+        range = start..this.idx
+        return new Token(TokType.STR, range)
+    }
+    char_token(): Token {
+        return new Token(TokType.CHAR, this.get_range(1))
+    }
+    tokenize(): Array<Token> {
+        this.advance()
+        tokens = new Array<Token>(8)
+        if this.current_char == '\0'
+            this.advance()
+        while !this.eof() and this.errors.length == 0 {
+            char = this.current_char
+            if char == ' ' {
+                this.advance()
+                continue
+            } else if is_identifier_char(char)
+                tokens << this.identifier_token()
+            else if char == '"'
+                tokens << this.string_token()
+            else if is_number_char(char)
+                tokens << this.numeric_token()
+            else if char == ':' 
+                tokens << new Token(TokType.COL, this.get_range(1))
+            else if char == ';'
+                tokens << new Token(TokType.SEMICOL, this.get_range(1))
+            else if char == ','
+                tokens << new Token(TokType.COMMA, this.get_range(1))
+            else if char == '+'
+                tokens << this.plus_token()
+            else if char == '-'
+                tokens << this.minus_token()
+            else if char == '*'
+                tokens << new Token(TokType.MULT, this.get_range(1))
+            else if char == '/' {
+                if !this.skip_comment()
+                    tokens << new Token(TokType.DIV, this.get_range(1))
+            }
+            else if char == '('
+                tokens << new Token(TokType.LPAR, this.get_range(1))
+            else if char == ')'
+                tokens << new Token(TokType.RPAR, this.get_range(1))
+            else if char == '%'
+                tokens << new Token(TokType.MOD, this.get_range(1))
+            else if char == '{'
+                tokens << new Token(TokType.LBRACE, this.get_range(1))
+            else if char == '}'
+                tokens << new Token(TokType.RBRACE, this.get_range(1))
+            else if char == '['
+                tokens << new Token(TokType.LBRACKET, this.get_range(1))
+            else if char == ']'
+                tokens << new Token(TokType.RBRACKET, this.get_range(1))
+            else if char == '\n' or char == '\r'
+                tokens << new Token(TokType.LN, this.get_range(1))
+            else if char == '\''
+                tokens << this.char_token()
+            else if char == '^'
+                tokens << new Token(TokType.POW, this.get_range(1))
+            else if char == '?'
+                tokens << new Token(TokType.QUES, this.get_range(1))
+            else if char == '&'
+                tokens << new Token(TokType.AMP, this.get_range(1))
+            else if char == '='
+                tokens << this.eq_token()
+            else if char == '!'
+                tokens << this.neq_token()
+            else if char == '>'
+                tokens << this.gt_token()
+            else if char == '<'
+                tokens << this.lt_token()
+            else if char == '.'
+                tokens << this.dot_token()
+            else {
+                end = this.idx + 1
+                this.errors << new FloError("Illegal character: "+this.text[this.idx-1], this.idx..end)
+            }
+            this.advance()
+        }
+        tokens << new Token(TokType.EOF, 0..0)
+        return tokens
     }
 }

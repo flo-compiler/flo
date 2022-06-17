@@ -3,7 +3,7 @@ class Request {
     raw_buffer: i8*
     buffer_size: int
     constructor(){
-        this.raw_buffer = new i8(MAX_BUFFSIZE)
+        this.raw_buffer = new i8[MAX_BUFFSIZE]
     }
     set_size(size: int = MAX_BUFFSIZE){
         this.buffer_size = size

@@ -9,11 +9,7 @@ class Array <T> {
     }
     resize(){
         this.size = this.size * 2 // * sizeof(int)
-        this.buffer = realloc(this.buffer as i8*, this.size) as T*
-    }
-    append(element: T){
-        if (this.length >= this.size) this.resize()
-        this.buffer[this.length++] = element
+        this.buffer = this.buffer.resize(this.size)
     }
     swap(i1: int, i2: int){
         if (i1 in 0..this.length) and (i2 in 0..this.length) {
@@ -25,6 +21,10 @@ class Array <T> {
         //     println("Index out of range:", i1, i2)
         // }
     }
+    __sl__(element: T){
+        if (this.length >= this.size) this.resize()
+        this.buffer[this.length++] = element
+    }
     __setitem__(index: int, value: T){
         if index in 0..this.length {
             this.buffer[index] = value
@@ -32,6 +32,9 @@ class Array <T> {
         // else {
         //     println("Index out of range:", index)
         // }
+    }
+    append(element: T){
+        this.__sl__(element)
     }
     __getitem__(index: int): T {
         return this.buffer[index]

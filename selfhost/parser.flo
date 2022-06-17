@@ -1,0 +1,8 @@
+class Node {
+
+}
+class Parser {
+    parse(tokens: Array<Token>): Node {
+        return new Node()
+    }
+}

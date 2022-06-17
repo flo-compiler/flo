@@ -76,6 +76,9 @@ class Compiler(Visitor):
                 cfn(len(args), args_array)
 
     def visitIntNode(self, node: IntNode):
+        if node.expects:
+            if isinstance(node.expects, FloInt):
+                return FloInt(node.tok.value, node.expects.bits)
         return FloInt(node.tok.value)
 
     def visitFloatNode(self, node: FloatNode):
@@ -94,8 +97,6 @@ class Compiler(Visitor):
     def visitNumOpNode(self, node: NumOpNode):
         a = self.visit(node.left_node)
         b = self.visit(node.right_node)
-        assert(a)
-        assert(b)
         if node.op.type == TokType.PLUS:
             return a.add(self.builder, b)
         elif node.op.type == TokType.MINUS:
@@ -144,8 +145,7 @@ class Compiler(Visitor):
 
     def visitStmtsNode(self, node: StmtsNode):
         for stmt in node.stmts:
-            v = self.visit(stmt)
-        return v
+            self.visit(stmt)
 
     def init_generic(self, generic: FloGeneric):
         previous_aliases = self.generic_aliases.copy()
@@ -161,15 +161,31 @@ class Compiler(Visitor):
     def visitTypeNode(self, node: TypeNode):
         type_ = node.type
         if isinstance(type_, FloGeneric):
+            gen = FloGeneric(Token(type_.referer.type, type_.referer.range, type_.referer.value), [])
+            for constraint in type_.constraints:
+                gen.constraints.append(self.visit(constraint))
+            type_ = gen
             self.init_generic(type_)
+            type_.referer.value = gen.str()
         if isinstance(type_, FloObject):
-            if isinstance(type_.referer, Token):
-                alias = self.generic_aliases.get(type_.referer.value)
-                if alias:
-                    return alias
-            type_.referer = FloClass.classes.get(type_.referer.name)
-        elif isinstance(type_, FloArray):
-            self.visit(TypeNode(type_.elm_type, None))
+            alias = self.generic_aliases.get(type_.referer.value)
+            if alias:
+                return alias
+            # Why?
+            classname = type_.referer.value if isinstance(type_.referer, Token) else  type_.referer.name
+            return FloObject(FloClass.classes.get(classname))
+        elif isinstance(type_, FloArray) or isinstance(type_, FloPointer):
+            if isinstance(type_.elm_type, Node):
+                if isinstance(type_, FloArray):
+                    mm = FloArray(type_.elems, type_.len)
+                else:
+                    mm = FloPointer(None)
+                mm.elm_type = self.visit(type_.elm_type)
+                type_ = mm
+            if isinstance(type_, FloArray):
+                if isinstance(type_.len, Node):
+                    type_.len = self.visit(type_.len)
+                self.visit(TypeNode(type_.elm_type, None))
         return type_
     
     def visitFncNode(self, node: FncNode):
@@ -239,7 +255,7 @@ class Compiler(Visitor):
     def visitVarAssignNode(self, node: VarAssignNode):
         var_name = node.var_name.value
         if node.type:
-            self.visit(node.type)
+            node.value.expects = self.visit(node.type)
         value = self.visit(node.value)
         ref = self.context.get(var_name)
         if ref == None:
@@ -346,7 +362,7 @@ class Compiler(Visitor):
 
     def visitIncrDecrNode(self, node: IncrDecrNode):
         value = self.visit(node.identifier)
-        incr = FloInt(-1) if node.id.type == TokType.MINUS_MINUS else FloInt(1)
+        incr = FloInt(-1, value.bits) if node.id.type == TokType.MINUS_MINUS else FloInt(1, value.bits)
         nValue = value.add(self.builder, incr)
         if isinstance(node.identifier, VarAccessNode):
             ref: FloRef = self.context.get(
@@ -371,15 +387,20 @@ class Compiler(Visitor):
 
     def visitArrayNode(self, node: ArrayNode):
         elems = [self.visit(elm_node) for elm_node in node.elements]
-        if node.is_const_array:
-            return FloArray(elems, len(elems))
-        else:
+        if isinstance(node.expects, FloGeneric):
             array_class: FloClass = FloClass.classes.get("Array<"+elems[0].str()+">")
             length = FloInt(len(elems))
             llvm_ty = elems[0].llvmtype
             size = llvm_ty.get_abi_size(target_data) * len(elems)
             pointer = create_array_buffer(self.builder, elems)
             return array_class.constant_init(self.builder, [pointer, length, FloInt(size)])
+        else:
+            size = FloInt(len(elems))
+            if node.expects and (node.expects.len.value) and len(elems) == 0:
+                size = node.expects.len
+            array = FloArray(elems, size)
+            array.elm_type = node.expects.elm_type if array.elm_type == None else array.elm_type
+            return array
 
     def visitClassDeclarationNode(self, node: ClassDeclarationNode):
         parent = None
@@ -410,10 +431,13 @@ class Compiler(Visitor):
         property_name = node.property.value
         if isinstance(root, FloEnum):
             return root.get_property(property_name)
+        if isinstance(root, FloPointer):
+            return root.methods.get(property_name)
         return root.get_property(self.builder, property_name)
 
     def visitEnumDeclarationNode(self, node: EnumDeclarationNode):
         enum_name = node.name.value
+        FloEnum.start = -1
         self.context.set(enum_name, FloEnum(
             [token.value for token in node.tokens]))
 
@@ -428,10 +452,14 @@ class Compiler(Visitor):
     def visitNewMemNode(self, node: NewMemNode):
         typeval = self.visit(node.type)
         if isinstance(typeval, FloObject):
-            args = [self.visit(arg) for arg in node.args]
+            if node.args:
+                args = [self.visit(arg) for arg in node.args]
+            else:
+                args = []
             return typeval.construct(self.builder, args)
         else:
-            mem = FloMem.halloc(self.builder, typeval.elm_type.llvmtype, self.visit(typeval.len))
+            len = self.visit(typeval.len) if isinstance(typeval.len, TypeNode) else typeval.len
+            mem = FloMem.halloc(self.builder, typeval.elm_type.llvmtype, size=len)
             return FloPointer.new(FloPointer(typeval.elm_type), mem)
 
     def visitArrayAssignNode(self, node: ArrayAssignNode):

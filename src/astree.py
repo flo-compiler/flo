@@ -90,14 +90,14 @@ class Visitor:
 class Node:
     def __init__(self, range: Range):
         self.range = range
-
+        self.expects = None
     def accept(self, _: Visitor): pass
 
 
 class VarAccessNode(Node):
     def __init__(self, var_name: Token, range: Range):
         self.var_name = var_name
-        self.range = range
+        super().__init__(range)
 
     def accept(self, visitor: Visitor):
         return visitor.visitVarAccessNode(self)
@@ -107,7 +107,7 @@ class ArrayAccessNode(Node):
     def __init__(self, name: VarAccessNode, index: Node, range: Range):
         self.name = name
         self.index = index
-        self.range = range
+        super().__init__(range)
 
     def accept(self, visitor: Visitor):
         return visitor.visitArrayAccessNode(self)
@@ -117,7 +117,7 @@ class ArrayAssignNode(Node):
     def __init__(self, array: ArrayAccessNode, value: Node, range: Range):
         self.array = array
         self.value = value
-        self.range = range
+        super().__init__(range)
 
     def accept(self, visitor: Visitor):
         return visitor.visitArrayAssignNode(self)
@@ -126,8 +126,7 @@ class ArrayAssignNode(Node):
 class ArrayNode(Node):
     def __init__(self, elements: List[Node], range: Range):
         self.elements = elements
-        self.range = range
-        self.is_const_array = True
+        super().__init__(range)
 
     def accept(self, visitor: Visitor):
         return visitor.visitArrayNode(self)
@@ -135,7 +134,7 @@ class ArrayNode(Node):
 
 class BreakNode(Node):
     def __init__(self, range: Range):
-        self.range = range
+        super().__init__(range)
 
     def accept(self, visitor: Visitor):
         return visitor.visitBreakNode(self)
@@ -144,7 +143,7 @@ class BreakNode(Node):
 class TypeNode(Node):
     def __init__(self, type, range: Range):
         self.type = type
-        self.range = range
+        super().__init__(range)
 
     def accept(self, visitor: Visitor):
         return visitor.visitTypeNode(self)
@@ -153,7 +152,7 @@ class TypeAliasNode(Node):
     def __init__(self, identifier: Token, type: TypeNode, range: Range):
         self.identifier = identifier
         self.type = type
-        self.range = range
+        super().__init__(range)
     def accept(self, visitor: Visitor):
         return visitor.visitTypeAliasNode(self)
 
@@ -163,7 +162,7 @@ class VarAssignNode(Node):
         self.var_name = var_name
         self.type = type
         self.value = value
-        self.range = range
+        super().__init__(range)
 
     def accept(self, visitor: Visitor):
         return visitor.visitVarAssignNode(self)
@@ -171,7 +170,7 @@ class VarAssignNode(Node):
 class StmtsNode(Node):
     def __init__(self, stmts: List[Node], range: Range):
         self.stmts = stmts
-        self.range = range
+        super().__init__(range)
 
     def accept(self, visitor: Visitor):
         return visitor.visitStmtsNode(self)
@@ -181,7 +180,7 @@ class ClassDeclarationNode(Node):
         self.name = name
         self.parent = parent
         self.body = body
-        self.range = range
+        super().__init__(range)
     
     def accept(self, visitor: Visitor):
         return visitor.visitClassDeclarationNode(self)
@@ -190,7 +189,7 @@ class GenericClassNode(Node):
     def __init__(self, generic_constraints: List[Token], class_declaration: ClassDeclarationNode, range: Range):
         self.generic_constraints = generic_constraints
         self.class_declaration = class_declaration
-        self.range = range
+        super().__init__(range)
     def accept(self, visitor: Visitor):
         return visitor.visitGenericClassNode(self)
 
@@ -198,7 +197,7 @@ class ConstDeclarationNode(Node):
     def __init__(self, const_name: Token, value: Node, range: Range):
         self.const_name = const_name
         self.value = value
-        self.range = range
+        super().__init__(range)
 
     def accept(self, visitor: Visitor):
         return visitor.visitConstDeclarationNode(self)
@@ -206,7 +205,7 @@ class ConstDeclarationNode(Node):
 
 class ContinueNode(Node):
     def __init__(self, range: Range):
-        self.range = range
+        super().__init__(range)
 
     def accept(self, visitor: Visitor):
         return visitor.visitContinueNode(self)
@@ -216,7 +215,7 @@ class PropertyAccessNode(Node):
     def __init__(self, expr: Node, property: Token, range: Range):
         self.expr = expr
         self.property = property
-        self.range = range
+        super().__init__(range)
     
     def accept(self, visitor: Visitor):
         return visitor.visitPropertyAccessNode(self)
@@ -225,7 +224,7 @@ class FncCallNode(Node):
     def __init__(self, name: Union[VarAccessNode, PropertyAccessNode], args: List[Node], range: Range):
         self.name = name
         self.args = args
-        self.range = range
+        super().__init__(range)
 
     def accept(self, visitor: Visitor):
         return visitor.visitFncCallNode(self)
@@ -235,7 +234,7 @@ class PropertyAssignNode(Node):
     def __init__(self, expr: PropertyAccessNode, value: Node, range: Range):
         self.expr = expr
         self.value = value
-        self.range = range
+        super().__init__(range)
     def accept(self, visitor: Visitor):
         return visitor.visitPropertyAssignNode(self)
 
@@ -243,7 +242,7 @@ class FncNode(Node):
     def __init__(self, args: List[Tuple[Token, TypeNode, Node]], body: StmtsNode, is_variadic: bool, range: Range, return_type: TypeNode = None):
         self.args = args
         self.body = body
-        self.range = range
+        super().__init__(range)
         self.is_variadic = is_variadic
         self.return_type = return_type
     
@@ -254,7 +253,7 @@ class RangeNode(Node):
     def __init__(self, start: Node, end: Node, range: Range):
         self.start = start
         self.end = end
-        self.range = range
+        super().__init__(range)
     def accept(self, visitor: Visitor):
         return visitor.visitRangeNode(self)
 
@@ -263,7 +262,7 @@ class PropertyDeclarationNode(Node):
         self.access_modifier = access_modifier
         self.property_name = property_name
         self.type = type
-        self.range = range
+        super().__init__(range)
     def accept(self, visitor: Visitor):
         return visitor.visitPropertyDeclarationNode(self)
     
@@ -272,7 +271,7 @@ class MethodDeclarationNode(Node):
         self.access_modifier = access_modifier
         self.method_name = method_name
         self.method_body = method_body
-        self.range = range
+        super().__init__(range)
     
     def accept(self, visitor: Visitor):
         return visitor.visitMethodDeclarationNode(self)
@@ -281,7 +280,7 @@ class FncDefNode(Node):
     def __init__(self, func_name: Token, func_body: FncNode, range: Range):
         self.func_name = func_name
         self.func_body = func_body
-        self.range = range
+        super().__init__(range)
 
     def accept(self, visitor: Visitor):
         return visitor.visitFncDefNode(self)
@@ -293,7 +292,7 @@ class ForNode(Node):
         self.cond = cond
         self.incr_decr = incr_decr
         self.stmt = stmt
-        self.range = range
+        super().__init__(range)
 
     def accept(self, visitor: Visitor):
         return visitor.visitForNode(self)
@@ -304,7 +303,7 @@ class ForEachNode(Node):
         self.identifier = identifier
         self.iterator = iterator
         self.stmt = stmt
-        self.range = range
+        super().__init__(range)
 
     def accept(self, visitor: Visitor):
         return visitor.visitForEachNode(self)
@@ -314,7 +313,7 @@ class IfNode(Node):
     def __init__(self, cases: List[Tuple[Node, StmtsNode]], else_case: StmtsNode, range: Range) -> None:
         self.cases = cases
         self.else_case = else_case
-        self.range = range
+        super().__init__(range)
 
     def accept(self, visitor: Visitor):
         return visitor.visitIfNode(self)
@@ -325,7 +324,7 @@ class IncrDecrNode(Node):
         self.id = id
         self.identifier = identifier
         self.ispre = ispre
-        self.range = range
+        super().__init__(range)
 
     def accept(self, visitor: Visitor):
         return visitor.visitIncrDecrNode(self)
@@ -335,7 +334,7 @@ class ImportNode(Node):
     def __init__(self, ids: List[Token], path: Token, range: Range):
         self.ids = ids
         self.path = path
-        self.range = range
+        super().__init__(range)
         self.resolved_as = []
 
     def accept(self, visitor: Visitor):
@@ -345,7 +344,7 @@ class ImportNode(Node):
 class IntNode(Node):
     def __init__(self, tok: Token, range: Range):
         self.tok = tok
-        self.range = range
+        super().__init__(range)
 
     def accept(self, visitor: Visitor):
         return visitor.visitIntNode(self)
@@ -353,14 +352,14 @@ class IntNode(Node):
 class CharNode(Node):
     def __init__(self, tok: Token, range: Range):
         self.tok = tok
-        self.range = range
+        super().__init__(range)
 
     def accept(self, visitor: Visitor):
         return visitor.visitCharNode(self)
 class FloatNode(Node):
     def __init__(self, tok: Token, range: Range):
         self.tok = tok
-        self.range = range
+        super().__init__(range)
 
     def accept(self, visitor: Visitor):
         return visitor.visitFloatNode(self)
@@ -371,7 +370,7 @@ class NumOpNode(Node):
         self.left_node = left_node
         self.op = op_tok
         self.right_node = right_node
-        self.range = range
+        super().__init__(range)
 
     def accept(self, visitor: Visitor):
         return visitor.visitNumOpNode(self)
@@ -380,7 +379,7 @@ class NumOpNode(Node):
 class ReturnNode(Node):
     def __init__(self, value: Node, range: Range):
         self.value = value
-        self.range = range
+        super().__init__(range)
 
     def accept(self, visitor: Visitor):
         return visitor.visitReturnNode(self)
@@ -389,18 +388,15 @@ class NewMemNode(Node):
     def __init__(self, type: TypeNode, args:List[Node] , range: Range):
         self.type = type
         self.args = args
-        self.range = range
+        super().__init__(range)
 
     def accept(self, visitor: Visitor):
         return visitor.visitNewMemNode(self)
-    
-
-
 
 class StrNode(Node):
     def __init__(self, tok: Token, range: Range):
         self.tok = tok
-        self.range = range
+        super().__init__(range)
 
     def accept(self, visitor: Visitor):
         return visitor.visitStrNode(self)
@@ -410,7 +406,7 @@ class UnaryNode(Node):
     def __init__(self, op: Token, value: Node, range):
         self.op = op
         self.value = value
-        self.range = range
+        super().__init__(range)
 
     def accept(self, visitor: Visitor):
         return visitor.visitUnaryNode(self)
@@ -420,7 +416,7 @@ class WhileNode(Node):
     def __init__(self, cond: Node, stmt: StmtsNode, range: Range):
         self.cond = cond
         self.stmt = stmt
-        self.range = range
+        super().__init__(range)
 
     def accept(self, visitor: Visitor):
         return visitor.visitWhileNode(self)
@@ -429,7 +425,7 @@ class EnumDeclarationNode(Node):
     def __init__(self, name: Token, tokens: List[Token], range: Range):
         self.name = name
         self.tokens = tokens
-        self.range = range
+        super().__init__(range)
     
     def accept(self, visitor: Visitor):
         return visitor.visitEnumDeclarationNode(self)

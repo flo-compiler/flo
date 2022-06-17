@@ -43,8 +43,13 @@ class string {
     __in__(other: string): bool {
         return this.find(other) != -1
     }
+    substring(start: int, length: int): string {
+        buffer = new i8[length]
+        memcpy(buffer, this.buffer+start, length)
+        return new string(buffer, length)
+    }
     get_byte(index: int): i8 {
-        return this.buffer[index]
+        return (this.buffer[index])
     }
     get_bytes(): i8* {
         return this.buffer
