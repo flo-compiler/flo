@@ -1,12 +1,3 @@
-enum Type {
-    INT
-    FLOAT
-    VOID
-    ENUM
-    STRING
-    PTR
-    OBJECT
-}
 class Program {
 
 }

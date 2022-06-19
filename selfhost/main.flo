@@ -4,13 +4,14 @@ import "lexer"
 import "parser"
 // import "analyzer"
 // import "codegen"
+import "debug"
 
 fnc strlen(str: i8*): int
 fnc string_from_cstring(str: i8*): string {
     return new string(str, strlen(str))
 }
 fnc parse_args(size: int, args: i8**): Array<string> {
-    arr = new Array<string>(8)
+    arr: Array<string> = []
     for i = 0; i < size; i++ {
         arr << string_from_cstring(args[i])
     }
@@ -22,17 +23,19 @@ fnc read_file(filename: string): string {
 }
 fnc main(size: int, ptr: i8**){
     args = parse_args(size, ptr)
-    if args.length == 2 {
-        errors = new Array<FloError>(8)
+    if args.length >= 2 {
+        errors: Array<FloError> = []
         filename = args[1]
         text = read_file(filename)
+        /***** Lexing ******/
         lexer = new Lexer(text, errors)
         tokens = lexer.tokenize()
         print_errors(filename, errors, text)
-        // Test
-        for i = 0; i < tokens.length; i++ {
-            token = tokens[i]
-            println(token.ttype, token.range.start, token.range.end, text.substring(token.range.start, token.range.end - token.range.start))
-        }
+        if "debug-lexer" in args
+            debug_lexer(tokens, text)
+        /***** Parsing *****/
+        parser = new Parser(tokens, errors)
+        module_node = parser.parse_module()
+        print_errors(filename, errors, text)
     }
 }

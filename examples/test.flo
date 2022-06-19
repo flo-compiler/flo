@@ -3,14 +3,17 @@ class SpecialArray<T> extends Array<int> {
         super()
     }
 }
+/* Hello world */
 fnc main(){
     print("hello world\n")
-    x << 1.0..2
+    x << 1...2
     ==
     !=
     >>
     >=
     <=
     =>
-    ``
+    'a'
+    '\0'
+    a = [1.0, 2, 3, 4]
 }

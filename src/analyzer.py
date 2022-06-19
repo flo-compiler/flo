@@ -625,13 +625,15 @@ class Analyzer(Visitor):
                 class_ = self.class_within
         return class_
 
-    def init_generic(self, generic: FloGeneric):
+    def init_generic(self, generic: FloGeneric, node):
         # if it has it's referer is a token
         if isinstance(generic.referer, FloClass): return
         generic_name = generic.referer.value
         if self.context.get(generic_name) != None:
             return
         generic_node = self.generics.get(generic.name)
+        if generic_node == None:
+            NameError(node.range, f"'{generic.name}' type not defined").throw()
         generic_node.class_declaration.name.value = generic_name
         type_aliases = self.generic_aliases.copy()
         for key_tok, type_arg in zip(generic_node.generic_constraints, generic.constraints):
@@ -644,11 +646,11 @@ class Analyzer(Visitor):
         node_type = node.type
         if isinstance(node_type, FloGeneric):
             generic = FloGeneric(Token(node_type.referer.type, node_type.referer.range, node_type.referer.value), [])
-            for i, constraint in enumerate(node.type.constraints):
+            for constraint in node.type.constraints:
                 if isinstance(constraint, TypeNode):
                     generic.constraints.append(self.visit(constraint))
                 generic.referer.value = generic.str()
-            self.init_generic(generic)
+            self.init_generic(generic, node)
             node_type = generic
         if isinstance(node_type, FloObject):
             if isinstance(node_type.referer, FloClass): return node_type
@@ -662,7 +664,10 @@ class Analyzer(Visitor):
             if alias:
                 return alias
             class_ = self.get_object_class(node_type, node)
-            return FloObject(class_)
+            if isinstance(node_type, FloGeneric):
+                return FloGeneric(class_, node_type.constraints)
+            else:
+                return FloObject(class_)
         elif isinstance(node_type, FloPointer) or isinstance(node_type, FloArray):
             if isinstance(node_type.elm_type, TypeNode):
                 mm = node_type.__class__(None)
@@ -828,6 +833,7 @@ class Analyzer(Visitor):
 
     def visitPropertyAssignNode(self, node: PropertyAssignNode):
         expr = self.visit(node.expr)
+        node.value.expects = expr
         value = self.visit(node.value)
         if isinstance(expr, FloObject):
             c = self.check_inheritance(expr, value, node)

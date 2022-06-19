@@ -1,0 +1,7 @@
+fnc fflush(fd: int)
+fnc debug_lexer(tokens: Array<Token>, text: string){
+    for i = 0; i < tokens.length; i++ {
+        token = tokens[i]
+        println(token.ttype, token.range.start, token.range.end, token_value(token, text))
+    }  
+}

@@ -6,6 +6,8 @@ from context import Context
 from llvmlite import ir
 from typing import Union
 
+from lexer import Token
+
 
 def create_array_buffer(builder: ir.IRBuilder, elems):
     elm_ty = elems[0].llvmtype
@@ -833,9 +835,10 @@ class FloMethod(FloFunc):
         local_ctx = super().get_local_ctx(parent_ctx, ["this"] + arg_names)
         if self.class_within and self.class_within.parent:
             parent_constructor = self.class_within.parent.constructor
-            parent_constructor.current_object = local_ctx.get("this").load().cast_to(
-                self.builder, FloObject(self.class_within.parent))
-            local_ctx.set("super", parent_constructor)
+            if parent_constructor:
+                parent_constructor.current_object = local_ctx.get("this").load().cast_to(
+                    self.builder, FloObject(self.class_within.parent))
+                local_ctx.set("super", parent_constructor)
         return local_ctx
 
     def load_value_from_ref(self, ref):
@@ -1004,6 +1007,8 @@ class FloGeneric(FloObject):
         super().__init__(referer)
     
     def str(self):
+        if isinstance(self.referer, FloClass):
+            return self.referer.name
         return self.name +"<"+", ".join([constraint.str() for constraint in self.constraints])+">"
 
 

@@ -40,39 +40,91 @@ enum TokType {
     DOT_DOT
     DOT_DOT_DOT
     IDENTIFER
-    KEYWORD
+    AND_KW
+    OR_KW
+    XOR_KW
+    CONST_KW
+    IF_KW
+    ELSE_KW
+    INT_KW
+    FLOAT_KW
+    VOID_KW
+    FOR_KW
+    WHILE_KW
+    FNC_KW
+    BREAK_KW
+    CONTINUE_KW
+    RETURN_KW
+    IMPORT_KW
+    TYPE_KW
+    FROM_KW
+    IN_KW
+    CLASS_KW
+    ENUM_KW
+    NEW_KW
+    AS_KW
+    IS_KW
+    EXTENDS_KW
 }
-class KeywordList extends Array<string> {
-    constructor(){
-        super(1)
-        this << "and"
-        this << "or"
-        this << "xor"
-        this << "const"
-        this << "if"
-        this << "else"
-        this << "int"
-        this << "float"
-        this << "void"
-        this << "for"
-        this << "while"
-        this << "fnc"
-        this << "break"
-        this << "continue"
-        this << "return"
-        this << "import"
-        this << "type"
-        this << "from"
-        this << "in"
-        this << "class"
-        this << "enum"
-        this << "new"
-        this << "as"
-        this << "is"
-        this << "extends"
-    }
+fnc string_to_kw_token(word: string): int{
+    if word == "and"
+        return TokType.AND_KW
+    if word == "or"
+        return TokType.OR_KW
+    if word == "xor"
+        return TokType.XOR_KW
+    if word == "const"
+        return TokType.CONST_KW
+    if word == "if"
+        return TokType.IF_KW
+    if word == "else"
+        return TokType.ELSE_KW
+    if word == "int"
+        return TokType.INT_KW
+    if word == "float"
+        return TokType.FLOAT_KW
+    if word == "void"
+        return TokType.VOID_KW
+    if word == "for"
+        return TokType.FOR_KW
+    if word == "while"
+        return TokType.WHILE_KW
+    if word == "fnc"
+        return TokType.FNC_KW
+    if word == "break"
+        return TokType.BREAK_KW
+    if word == "continue"
+        return TokType.CONTINUE_KW
+    if word == "return"
+        return TokType.RETURN_KW
+    if word == "import"
+        return TokType.IMPORT_KW
+    if word == "type"
+        return TokType.TYPE_KW
+    if word == "from"
+        return TokType.FROM_KW
+    if word == "in"
+        return TokType.IN_KW
+    if word == "class"
+        return TokType.CLASS_KW
+    if word == "enum"
+        return TokType.ENUM_KW
+    if word == "new"
+        return TokType.NEW_KW
+    if word == "as"
+        return TokType.AS_KW
+    if word == "is"
+        return TokType.IS_KW
+    if word == "extends"
+        return TokType.EXTENDS_KW
+    return -1
 }
-fnc fflush(fd: int): void
+fnc is_identifier_char(char: i8): bool {
+    return (char >= 'A' and char <= 'Z') or (char >= 'a' and char <= 'z') or (char == '_')
+}
+fnc is_number_char(char: i8): bool {
+    return (char >= '0' and char <= '9')
+}
 class Token {
     ttype: int
     range: Range
@@ -81,38 +133,33 @@ class Token {
         this.range = range
     }
 }
-fnc is_identifier_char(char: i8): bool {
-    return (char >= 'A' and char <= 'Z') or (char >= 'a' and char <= 'z') or (char == '_')
-}
-fnc is_number_char(char: i8): bool {
-    return (char >= '0' and char <= '9')
+fnc token_value(token: Token, text: string): string {
+    return text.substring(token.range.start, token.range.end - token.range.start)
 }
 
 class Lexer {
     current_char: i8
     text: string
-    keyword_list: KeywordList
     errors: Array<FloError>
     idx: int
     constructor(text: string, errors: Array<FloError>){
         this.idx = -1
         this.text = text
         this.errors = errors
-        this.keyword_list = new KeywordList()
     }
     eof(): bool{
         return this.idx >= this.text.length
     }
-    peek(offset = 0): i8 {
+    peek(offset = 1): i8 {
         if this.idx + offset < this.text.length 
             return this.text.get_byte(this.idx + offset)
         return '\0'
     }
     advance(){
-        this.current_char = this.text.get_byte(this.idx++)
+        this.current_char = this.text.get_byte(++this.idx)
     }
     get_range(back: int): Range {
-        return new Range(this.idx - back, this.idx)
+        return new Range(this.idx - back + 1, this.idx + 1)
     }
     plus_token(): Token {
         if this.peek() == '+' {
@@ -126,6 +173,8 @@ class Lexer {
             this.advance()
             while this.peek() != '*' and this.peek(2) != '/'
                 this.advance()
+            this.advance()
+            this.advance()
             return true
         } else if this.peek() == '/' {
             this.advance()
@@ -184,70 +233,79 @@ class Lexer {
     }
     dot_token(): Token {
         token = TokType.DOT
-        start = this.idx - 1
+        length = 1
         if this.peek() == '.'{
             token = TokType.DOT_DOT
+            length++
             this.advance()
             if this.peek() == '.' {
                 token = TokType.DOT_DOT_DOT
+                length++
                 this.advance()
             }
         }
-        return new Token(token, start..(this.idx-1))
+        return new Token(token, this.get_range(length))
     }
     numeric_token(): Token {
         length = 1
         token = TokType.INT
-        while is_number_char(this.peek()) or this.peek() == '.'{
+        while is_number_char(this.peek()) or this.peek() == '.' {
             length++
             this.advance()
-            if this.current_char == '.' {
-                if this.peek() != '.' {
+            if this.current_char == '.' and token == TokType.INT {
+                if is_number_char(this.peek()) {
                     token = TokType.FLOAT
                 } else {
+                    this.idx--
+                    length--
                     break
                 }
+            } else {
+                break
             }
         }
         return new Token(token, this.get_range(length))
     }
     identifier_token(): Token {
         length = 1
-        start = this.idx - 1
+        start = this.idx
         next_char = this.peek()
         while is_identifier_char(next_char) or is_number_char(next_char){
             length++
             this.advance()
             next_char = this.peek()
         }
-        range = start..this.idx
-        if this.text.substring(start, ++length) in this.keyword_list
-            return new Token(TokType.KEYWORD, range)
-        return new Token(TokType.IDENTIFER, range)
+        token = new Token(TokType.IDENTIFER, this.get_range(length))
+        ttype = string_to_kw_token(token_value(token, this.text))
+        if ttype != -1 return new Token(ttype, token.range)
+        return token
     }
     string_token(): Token {
-        start = this.idx - 1
+        length = 2
         this.advance()
         while this.current_char != '"' {
+            length++
             this.advance()
         }
-        range = start..this.idx
-        return new Token(TokType.STR, range)
+        return new Token(TokType.STR, this.get_range(length))
     }
     char_token(): Token {
-        return new Token(TokType.CHAR, this.get_range(1))
+        length = 3
+        this.advance()
+        if this.current_char == '\\' {
+            this.advance()
+            length+=2
+        }
+        this.advance()
+        return new Token(TokType.CHAR, this.get_range(length))
     }
     tokenize(): Array<Token> {
         this.advance()
-        tokens = new Array<Token>(8)
-        if this.current_char == '\0'
-            this.advance()
+        tokens: Array<Token> = []
         while !this.eof() and this.errors.length == 0 {
             char = this.current_char
-            if char == ' ' {
-                this.advance()
-                continue
-            } else if is_identifier_char(char)
+            if char == ' ' true
+            else if is_identifier_char(char)
                 tokens << this.identifier_token()
             else if char == '"'
                 tokens << this.string_token()
@@ -265,10 +323,6 @@ class Lexer {
                 tokens << this.minus_token()
             else if char == '*'
                 tokens << new Token(TokType.MULT, this.get_range(1))
-            else if char == '/' {
-                if !this.skip_comment()
-                    tokens << new Token(TokType.DIV, this.get_range(1))
-            }
             else if char == '('
                 tokens << new Token(TokType.LPAR, this.get_range(1))
             else if char == ')'
@@ -303,9 +357,12 @@ class Lexer {
                 tokens << this.lt_token()
             else if char == '.'
                 tokens << this.dot_token()
-            else {
+            else if char == '/' {
+                if (!this.skip_comment())
+                    tokens << new Token(TokType.DIV, this.get_range(1))
+            } else {
                 end = this.idx + 1
-                this.errors << new FloError("Illegal character: "+this.text[this.idx-1], this.idx..end)
+                this.errors << new FloError("Illegal character:", this.idx..end)
             }
             this.advance()
         }
