@@ -43,10 +43,8 @@ class string {
     __in__(other: string): bool {
         return this.find(other) != -1
     }
-    substring(start: int, length: int): string {
-        buffer = new i8[length]
-        memcpy(buffer, this.buffer+start, length)
-        return new string(buffer, length)
+    substring (start: int, length: int): string {
+        return new string(this.buffer + start, length)
     }
     get_byte(index: int): i8 {
         return (this.buffer[index])
@@ -60,9 +58,4 @@ class string {
         c_string[this.length] = '\0'
         return c_string
     }
-    // TODO
-    split(delim: string){1}
 }
-// fnc println(message: string){
-//     print(message, "\n")
-// }

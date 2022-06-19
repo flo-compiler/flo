@@ -1,8 +1,157 @@
+fnc merge_range(r1: Range, r2: Range): Range{
+    return r1.start..r2.end
+}
+enum Type {
+    INT
+    FLOAT
+    VOID
+    ENUM
+    STRING
+    PTR
+    OBJECT
+    ARRAY
+    GENERIC
+}
 class Node {
+    range: Range
+}
+class TypeNode extends Node {
+    tntype: int
+    constructor(tntype: int){
+        this.tntype = tntype
+    }
+}
+class BlockNode extends Node {
 
 }
+class ArgNode extends Node {
+    
+}
+class FunctionDeclarationNode extends Node {
+    name: Token
+    args: Array<ArgNode>
+    block: BlockNode
+    return_type: TypeNode
+    is_external: bool
+}
+class ClassDeclarationNode extends Node {
+
+}
+class EnumNode extends Node {
+
+}
+class ImportNode extends Node {
+
+}
+class ConstNode extends Node {
+
+}
+class ModuleNode {
+    functions: Array<FunctionDeclarationNode>
+    classes: Array<ClassDeclarationNode>
+    enums: Array<EnumNode>
+    imports: Array<ImportNode> 
+    consts: Array<ConstNode> 
+    constructor(){
+        this.functions = []
+        this.classes = []
+        this.imports = []
+        this.consts = []
+    }
+}
 class Parser {
-    parse(tokens: Array<Token>): Node {
-        return new Node()
+    tokens: Array<Token>
+    errors: Array<FloError>
+    current_token: Token
+    idx: int
+    constructor(tokens: Array<Token>, errors: Array<FloError>){
+        this.tokens = tokens
+        this.errors = errors
+        this.idx = -1
+    }
+    error(message: string){
+        this.errors << new FloError(message, this.current_token.range)
+    }
+    advance(){
+        if this.idx < this.tokens.length
+            this.current_token = this.tokens[++this.idx]
+    }
+    new_lines() {
+        while this.current_token.ttype == TokType.LN
+            this.advance()
+    }
+    parse_type(): TypeNode {
+        return new TypeNode(Type.INT)
+    }
+    parse_block(): BlockNode {
+        return new BlockNode()
+    }
+    parse_args(): Array<ArgNode> {
+        args: Array<ArgNode> = []
+        return args
+    }
+    parse_function(): FunctionDeclarationNode {
+        this.advance()
+        fnc_node = new FunctionDeclarationNode()
+        if this.current_token.ttype != TokType.IDENTIFER {
+            this.error("Expected an Identifer")
+            return fnc_node
+        }
+        fnc_node.name = this.current_token
+        this.advance()
+        if this.current_token.ttype != TokType.LPAR {
+            this.error("Expected '('")
+            return fnc_node
+        }
+        this.advance()
+        fnc_node.args = this.parse_args()
+        if this.current_token.ttype != TokType.RPAR {
+            this.error("Expected ')'")
+            return fnc_node
+        }
+        this.advance()
+        if this.current_token.ttype == TokType.COL {
+            this.advance()
+            fnc_node.return_type = this.parse_type()
+        } else
+            fnc_node.return_type = new TypeNode(Type.VOID)
+        if this.current_token.ttype != TokType.LBRACE {
+            this.error("Expected '{'")
+            return fnc_node
+        }
+        fnc_node.block = this.parse_block()
+        return fnc_node
+    }
+    parse_class(): ClassDeclarationNode {
+        return new ClassDeclarationNode()
+    }
+    parse_const(): ConstNode {
+        return new ConstNode()
+    }
+    parse_import(): ImportNode {
+        return new ImportNode()
+    }
+    parse_enum(): EnumNode {
+        return new EnumNode()
+    }
+    parse_module(): ModuleNode {
+        this.advance()
+        this.new_lines()
+        module_node = new ModuleNode()
+        while this.current_token.ttype != TokType.EOF or this.errors.length > 0 {
+            if this.current_token.ttype == TokType.FNC_KW 
+                module_node.functions << this.parse_function()
+            else if this.current_token.ttype == TokType.CLASS_KW
+                module_node.classes << this.parse_class()
+            else if this.current_token.ttype == TokType.ENUM_KW
+                module_node.enums << this.parse_enum()
+            else if this.current_token.ttype == TokType.IMPORT_KW
+                module_node.imports << this.parse_import()
+            else if this.current_token.ttype == TokType.CONST_KW
+                module_node.consts << this.parse_const()
+            else 
+                this.error("Illegal expression expected: 'fnc' or 'class' or 'enum' or 'import' or 'const'")
+        }
+        return module_node
     }
 }

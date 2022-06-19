@@ -173,7 +173,10 @@ class Compiler(Visitor):
                 return alias
             # Why?
             classname = type_.referer.value if isinstance(type_.referer, Token) else  type_.referer.name
-            return FloObject(FloClass.classes.get(classname))
+            associated_class = FloClass.classes.get(classname)
+            if isinstance(type_, FloGeneric):
+                return FloGeneric(associated_class, type_.constraints)
+            return FloObject(associated_class)
         elif isinstance(type_, FloArray) or isinstance(type_, FloPointer):
             if isinstance(type_.elm_type, Node):
                 if isinstance(type_, FloArray):
@@ -388,11 +391,17 @@ class Compiler(Visitor):
     def visitArrayNode(self, node: ArrayNode):
         elems = [self.visit(elm_node) for elm_node in node.elements]
         if isinstance(node.expects, FloGeneric):
-            array_class: FloClass = FloClass.classes.get("Array<"+elems[0].str()+">")
+            array_class: FloClass = FloClass.classes.get(node.expects.str())
             length = FloInt(len(elems))
-            llvm_ty = elems[0].llvmtype
+            llvm_ty = node.expects.constraints[0].llvmtype
             size = llvm_ty.get_abi_size(target_data) * len(elems)
-            pointer = create_array_buffer(self.builder, elems)
+            if len(elems) > 0: 
+                pointer = create_array_buffer(self.builder, elems)
+            else:
+                llvm_ty = node.expects.constraints[0].llvmtype
+                size = llvm_ty.get_abi_size(target_data)
+                length = FloInt(0)
+                pointer = FloMem.halloc(self.builder, llvm_ty, FloInt(size))
             return array_class.constant_init(self.builder, [pointer, length, FloInt(size)])
         else:
             size = FloInt(len(elems))

@@ -10,5 +10,6 @@ fnc print_errors(filename: string, errors: Array<FloError>, content: string){
     for i = 0; i < errors.length; i++ {
         println(errors[i].message)
     }
-    exit()
+    if errors.length > 0
+        exit()
 }
