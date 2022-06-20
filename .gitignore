@@ -6,3 +6,4 @@
 *.o
 *.ll
 **/*.vsix
+flo
