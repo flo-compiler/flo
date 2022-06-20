@@ -327,8 +327,12 @@ def make_char(lexer: Lexer):
         lexer.advance()
         if lexer.current_char == "n":
             char_val = "\n"
+        elif lexer.current_char == "a":
+            char_val = "\a"
         elif lexer.current_char == "b":
             char_val = "\b"
+        elif lexer.current_char == "t":
+            char_val = "\t"
         elif lexer.current_char == "r":
             char_val = "\r"
         elif lexer.current_char == "v":

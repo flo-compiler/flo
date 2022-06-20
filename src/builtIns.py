@@ -17,6 +17,10 @@ def get_instrinsic(name):
         return m.globals.get(name)
     elif name == "printf":
         return m.declare_intrinsic("printf", (), ir.FunctionType(int32_ty, [], var_arg=True))
+    elif name == "atoi":
+        return m.declare_intrinsic("atoi", (), ir.FunctionType(int32_ty, [byteptr_ty]))
+    elif name == "atof":
+        return m.declare_intrinsic("atof", (), ir.FunctionType(double_ty, [byteptr_ty]))
     elif name == "pow":
         return m.declare_intrinsic("llvm.pow", [double_ty])
     elif name == "memcpy":

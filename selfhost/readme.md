@@ -1,6 +1,6 @@
 Self Hosted Compiler
 # TODO
-- Lexer (80%)
-- Parser (5%)
+- Lexer (99%)
+- Parser (70%)
 - Typechecking/Analyzer (0%)
 - Codegen (0%)

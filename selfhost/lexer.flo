@@ -155,12 +155,57 @@ fnc is_identifier_char(char: i8): bool {
 fnc is_number_char(char: i8): bool {
     return (char >= '0' and char <= '9')
 }
+fnc capitalize(char: i8): i8 {
+    if char >= 'a' and char <= 'z'
+        return char - ' '
+    return char 
+}
+fnc in_base_range(char: i8, base: int): bool {
+    if base < 10 
+        return char >= '0' and char <= (base + 48)
+    return (char >= '0' and char <= (base + 48)) or (char >= 'A' and char <= (base + 65))
+}
 class Token {
     ttype: TokType
     range: Range
     constructor(ttype: TokType, range: Range){
         this.ttype = ttype
         this.range = range
+    }
+}
+class IntToken extends Token {
+    value: int
+    constructor(value: int, range: Range){
+        super(TokType.INT, range)
+        this.value = value
+    }
+}
+class FloatToken extends Token {
+    value: float
+    constructor(value: float, range: Range){
+        super(TokType.FLOAT, range)
+        this.value = value
+    }
+}
+class CharToken extends Token {
+    value: i8
+    constructor(value: i8, range: Range){
+        super(TokType.CHAR, range)
+        this.value = value
+    }
+}
+class StrToken extends Token {
+    value: string
+    constructor(value: string, range: Range){
+        super(TokType.CHAR, range)
+        this.value = value
+    }
+}
+class IdentifierToken extends Token {
+    value: string
+    constructor(value: string, range: Range){
+        super(TokType.IDENTIFER, range)
+        this.value = value
     }
 }
 fnc token_value(token: Token, text: string): string {
@@ -276,17 +321,41 @@ class Lexer {
         }
         return new Token(token, this.get_range(length))
     }
-    numeric_token(): Token {
-        length = 1
-        token = TokType.INT
-        while is_number_char(next_char = this.peek()) or next_char == '.' {
-            if next_char == '.' and (token == TokType.FLOAT or !is_number_char(this.peek(2))) break
-            if this.current_char == '.' 
-                token = TokType.FLOAT
+    base_int_token(base: int): IntToken{
+        this.advance()
+        this.advance()
+        length = 3
+        value = 0
+        while in_base_range(current_char = capitalize(this.current_char), base) {
+            value *= base
+            add =  current_char - '0'
+            if (current_char >= 'A') add = current_char - 'A' + 10
+            value += add
             length++
             this.advance()
         }
-        return new Token(token, this.get_range(length))
+        return new IntToken(value, this.get_range(length))
+    }
+    numeric_token(): Token {
+        length = 1
+        is_float = false
+        if this.current_char == '0' and this.peek() == 'b'
+            return this.base_int_token(2)
+        if this.current_char == '0' and this.peek() == 'o'
+            return this.base_int_token(8)
+        if this.current_char == '0' and this.peek() == 'x'
+            return this.base_int_token(16)
+        while is_number_char(next_char = this.peek()) or next_char == '.' {
+            if next_char == '.' and (is_float or !is_number_char(this.peek(2))) break
+            if this.current_char == '.' is_float = true
+            length++
+            this.advance()
+        }
+        range = this.get_range(length)
+        str_value = this.text.substring(range.start, length)
+        if is_float 
+            return new FloatToken(str_value as float, range)
+        return new IntToken(str_value as int, range)
     }
     identifier_token(): Token {
         length = 1
@@ -295,29 +364,54 @@ class Lexer {
             length++
             this.advance()
         }
-        token = new Token(TokType.IDENTIFER, this.get_range(length))
-        ttype = string_to_kw_token(token_value(token, this.text))
-        if ttype != -1 return new Token(ttype, token.range)
-        return token
+        value = this.text.substring(start, length)
+        range = this.get_range(length)
+        if (keyword = string_to_kw_token(value)) != -1 return new Token(keyword, range)
+        return new IdentifierToken(value, range)
     }
-    string_token(): Token {
+    string_token(): StrToken {
         length = 2
         this.advance()
         while this.current_char != '"' {
             length++
             this.advance()
         }
-        return new Token(TokType.STR, this.get_range(length))
+        range = this.get_range(length)
+        value = this.text.substring(range.start+1, length-2)
+        return new StrToken(value, range)
     }
-    char_token(): Token {
+    char_token(): CharToken {
         length = 3
+        value = this.current_char
         this.advance()
         if this.current_char == '\\' {
             this.advance()
+            if this.current_char == 'a'
+                value = '\a'
+            else if this.current_char == 'b'
+                value = '\b'
+            else if this.current_char == 't'
+                value = '\t'
+            else if this.current_char == 'n'
+                value = '\n'
+            else if this.current_char == 'r'
+                value = '\r'
+            else if this.current_char == 'v'
+                value = '\v'
+            else if this.current_char == '0'
+                value = '\0'
+            else if this.current_char == '\''
+                value = '\''
+            else if this.current_char == '\"'
+                value = '\"'
+            else if this.current_char == '\\'
+                value = '\\'
+            else
+                value = this.current_char
             length+=2
         }
         this.advance()
-        return new Token(TokType.CHAR, this.get_range(length))
+        return new CharToken(value, this.get_range(length))
     }
     tokenize(): Array<Token> {
         this.advance()
@@ -326,11 +420,11 @@ class Lexer {
             char = this.current_char
             if char == ' ' true
             else if is_identifier_char(char)
-                tokens << this.identifier_token()
+                tokens << (this.identifier_token() as Token)
             else if char == '"'
-                tokens << this.string_token()
+                tokens << (this.string_token() as Token)
             else if is_number_char(char)
-                tokens << this.numeric_token()
+                tokens << (this.numeric_token() as Token)
             else if char == ':' 
                 tokens << new Token(TokType.COL, this.get_range(1))
             else if char == ';'
@@ -360,7 +454,7 @@ class Lexer {
             else if char == '\n' or char == '\r'
                 tokens << new Token(TokType.LN, this.get_range(1))
             else if char == '\''
-                tokens << this.char_token()
+                tokens << (this.char_token() as Token)
             else if char == '^'
                 tokens << new Token(TokType.POW, this.get_range(1))
             else if char == '?'
