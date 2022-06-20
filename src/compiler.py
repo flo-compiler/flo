@@ -90,6 +90,9 @@ class Compiler(Visitor):
         return FloFloat(node.tok.value)
 
     def visitCharNode(self, node: CharNode):
+        if node.expects:
+            if isinstance(node.expects, FloInt):
+                return FloInt(node.tok.value, node.expects.bits)
         return FloInt(node.tok.value, 8)
 
     def visitStrNode(self, node: StrNode):
@@ -101,6 +104,7 @@ class Compiler(Visitor):
 
     def visitNumOpNode(self, node: NumOpNode):
         a = self.visit(node.left_node)
+        node.right_node.expects = a
         b = self.visit(node.right_node)
         if node.op.type == TokType.PLUS:
             return a.add(self.builder, b)

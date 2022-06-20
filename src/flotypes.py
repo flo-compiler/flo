@@ -20,6 +20,15 @@ def create_array_buffer(builder: ir.IRBuilder, elems):
 def is_string_object(type):
     return isinstance(type, FloObject) and type.referer.name == 'string'
 
+# TODO
+def str_to_int(builder: ir.IRBuilder, str_obj, bits):
+    val = builder.call(bi.get_instrinsic("atoi"), [str_obj.cval(builder)])
+    return FloInt(val, 32).cast_to(builder, FloInt(None, bits))
+
+def str_to_float(builder, str_obj, bits):
+    val = builder.call(bi.get_instrinsic("atof"), [str_obj.cval(builder)])
+    return FloFloat(val, 64).cast_to(builder, FloFloat(None, bits))
+    
 
 def create_string_object(builder, args):
     str_class = FloClass.classes.get("string")
@@ -310,6 +319,10 @@ class FloFloat(FloType):
     def cast_to(self, builder: ir.IRBuilder, type):
         if isinstance(type, FloInt):
             return FloInt(builder.fptosi(self.value, type.llvmtype))
+        if isinstance(type, FloFloat) and type.bits == self.bits:
+            return self
+        elif isinstance(type, FloFloat) and type.bits != self.bits:
+            return FloFloat(builder.bitcast(self.value, type.llvmtype), type.bits)
         elif is_string_object(type):
             return self.to_string(builder)
         else:
@@ -998,6 +1011,11 @@ class FloObject(FloType):
             if self.get_method('__as_string__', builder) == None:
                 string = f"@{self.referer.name}"
                 return create_string_object(builder, [FloConst.create_global_str(string), FloInt(len(string))])
+        elif is_string_object(self):
+            if isinstance(type, FloInt):
+                return str_to_int(builder, self, type.bits)
+            elif isinstance(type, FloFloat):
+                return str_to_float(builder, self, type.bits)
         elif isinstance(type, FloObject):
             # if(self.referer.has_parent(type.referer)): (Possibly unsafe with check on this line)
             casted_mem = FloMem.bitcast(builder, self.mem, type.llvmtype)
@@ -1009,6 +1027,7 @@ class FloObject(FloType):
             return method.call(builder, [])
         else:
             raise Exception("Cannot cast")
+
     def cval(self, builder: ir.IRBuilder):
         v = self.cast_to(builder, FloObject(FloClass.classes.get("string"))).get_method("to_cstring", builder).call(builder, []).value
         return v

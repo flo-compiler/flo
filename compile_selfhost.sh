@@ -1,3 +1,3 @@
-./src/flo.py selfhost/main.flo -o flo -l
+./src/flo.py selfhost/flo.flo
 gcc flo.o -o flo
 rm flo.o

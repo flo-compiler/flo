@@ -184,6 +184,12 @@ class Analyzer(Visitor):
                 node.right_node.expects = left
             left = self.visit(node.left_node)
             right = self.visit(node.right_node)
+        if left != right and isinstance(left, FloInt) and isinstance(right, FloInt):
+            node.left_node = self.cast(node.left_node, FloInt(None, max(left.bits, right.bits)))
+            node.right_node = self.cast(node.right_node, FloInt(None, max(left.bits, right.bits)))
+        if left != right and isinstance(left, FloFloat) and isinstance(right, FloFloat):
+            node.left_node = self.cast(node.left_node, FloFloat(None, max(left.bits, right.bits)))
+            node.right_node = self.cast(node.right_node, FloFloat(None, max(left.bits, right.bits)))
         if node.op.type in self.arithmetic_ops_1:
             if isinstance(left, FloFloat) and isinstance(right, FloInt):
                 node.right_node = self.cast(node.right_node, left)
@@ -300,7 +306,6 @@ class Analyzer(Visitor):
     def visitVarAccessNode(self, node: VarAccessNode):
         var_name = node.var_name.value
         value = self.context.get(var_name)
-        print(var_name, self.context.get(var_name))
         if value == None:
             NameError(node.var_name.range,
                       f"'{var_name}' is not defined").throw()
@@ -793,6 +798,7 @@ class Analyzer(Visitor):
         self.current_block.append_block(Block.class_())
         class_name = node.name.value
         parent = None
+        prev_super = self.context.get("super")
         if node.parent:
             parent_type = self.visit(node.parent)
             self.context.set("super", parent_type.referer.constructor)
@@ -809,7 +815,7 @@ class Analyzer(Visitor):
         self.visit(node.body)
         self.class_within = prev_class
         AnalyzerCache.classes[class_name] = class_ob
-        self.context.set("super", None)
+        self.context.set("super", prev_super)
         self.current_block.pop_block()
 
     def visitGenericClassNode(self, node: GenericClassNode):
