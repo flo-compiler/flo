@@ -696,7 +696,7 @@ class FloFunc(FloType):
         return local_ctx
 
     def ret(self, value):
-        if value == FloVoid:
+        if isinstance(value, FloVoid):
             self.builder.ret_void()
         else:
             self.builder.ret(value.value)
@@ -821,30 +821,43 @@ class FloClass:
 
 class FloMethod(FloFunc):
     def __init__(self, arg_types: List, return_type, name, var_args=False, class_: FloClass = None):
-        if class_:
-            name = class_.name + "_" + name
-            arg_types.insert(0, FloObject(class_))
-            self.class_ = class_
-        self.current_object = None
+        if name:
+            if class_:
+                name = class_.name + "_" + name
+                arg_types.insert(0, FloObject(class_))
+                self.class_ = class_
+            self.current_object = None
+        else:
+            self.value = var_args
+            var_args = None
         super().__init__(arg_types, return_type, name, var_args)
+    
+    @staticmethod
+    def declare(arg_types: List, return_type, name, var_args, class_):
+        n_arg_types = [FloObject(class_).llvmtype]+[arg_ty.llvmtype for arg_ty in arg_types]
+        name = class_.name + "_" + name
+        fn_ty = ir.FunctionType(return_type.llvmtype,
+                                n_arg_types, var_arg=var_args)
+        val = Context.current_llvm_module.declare_intrinsic(name, (), fn_ty)
+        new_fnc = FloMethod(arg_types, return_type, None, val, class_)
+        return new_fnc
 
     def call(self, builder: ir.IRBuilder, args):
         return super().call(builder, [self.current_object] + args)
 
     def get_local_ctx(self, parent_ctx: Context, arg_names: List[str]):
         local_ctx = super().get_local_ctx(parent_ctx, ["this"] + arg_names)
-        if self.class_within and self.class_within.parent:
-            parent_constructor = self.class_within.parent.constructor
+        if self.class_ and self.class_.parent:
+            parent_constructor = self.class_.parent.constructor
             if parent_constructor:
                 parent_constructor.current_object = local_ctx.get("this").load().cast_to(
-                    self.builder, FloObject(self.class_within.parent))
+                    self.builder, FloObject(self.class_.parent))
                 local_ctx.set("super", parent_constructor)
         return local_ctx
 
     def load_value_from_ref(self, ref):
         loaded_func = FloMethod(
-            self.arg_types, self.return_type, None, self.var_args, None)
-        loaded_func.value = ref.mem.load_at_index(ref.builder).value
+            self.arg_types, self.return_type, None, ref.mem.load_at_index(ref.builder).value, None)
         loaded_func.current_object = self.current_object
         return loaded_func
 

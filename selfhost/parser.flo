@@ -1,50 +1,180 @@
-fnc merge_range(r1: Range, r2: Range): Range{
+fnc merge_range(r1: Range, r2: Range): Range {
     return r1.start..r2.end
 }
-enum Type {
+enum TypeNodeKind {
+    BOOL
+    I4
+    I8
+    I16
+    I32
+    I64
+    I128
     INT
+    F16
+    F32
+    F64
     FLOAT
     VOID
-    ENUM
-    STRING
-    PTR
     OBJECT
+    PTR
     ARRAY
-    GENERIC
+    FNC
+}
+enum StatementKind {
+    IF
+    FOR
+    WHILE
+    CONTINUE
+    BREAK
+    RETURN
+    EXPRESSION
 }
 class Node {
     range: Range
 }
-class TypeNode extends Node {
-    tntype: int
-    constructor(tntype: int){
-        this.tntype = tntype
+class TypeNode {
+    kind: TypeNodeKind
+    constructor(kind: TypeNodeKind){
+        this.kind = kind
     }
 }
-class BlockNode extends Node {
-
+class ObjectTypeNode extends TypeNode {
+    name: Token
+    generic_args: Array<TypeNode>
+    constructor(name: Token) {
+        super(TypeNodeKind.OBJECT)
+        this.name = name
+        this.generic_args = []
+    }
 }
-class ArgNode extends Node {
-    
+class FunctionTypeNode extends TypeNode {
+    args: Array<TypeNode>
+    return_type: TypeNode
+    constructor(){
+        super(TypeNodeKind.FNC)
+        this.args = []
+    }
 }
-class FunctionDeclarationNode extends Node {
+class PointerTypeNode extends TypeNode {
+    element_type: TypeNode
+    constructor(element_type: TypeNode){
+        super(TypeNodeKind.PTR)
+        this.element_type = element_type
+    }
+}
+class StatementNode {
+    kind: StatementKind
+    constructor(kind: StatementKind){
+        this.kind = kind
+    }
+}
+class BlockNode {
+    statements: Array<StatementNode>
+}
+class ExpressionNode extends StatementNode {
+    constructor(){
+        super(StatementKind.EXPRESSION)
+    }
+}
+class IfStatementNode extends StatementNode {
+    condition: ExpressionNode
+    block: BlockNode
+    else_block: BlockNode
+    constructor(){
+        super(StatementKind.IF)
+    }
+}
+class WhileStatementNode extends StatementNode {
+    condition: ExpressionNode
+    block: ExpressionNode
+    constructor(){
+        super(StatementKind.WHILE)
+    }
+}
+class ForStatementNode extends StatementNode {
+    intialization: ExpressionNode
+    condition: ExpressionNode
+    incr_decr: ExpressionNode
+    iterator: ExpressionNode
+    constructor(){
+        super(StatementKind.FOR)
+    }
+}
+class ReturnStatementNode extends StatementNode {
+    value: ExpressionNode
+    constructor(){
+        super(StatementKind.RETURN)
+    }
+}
+class ArrayTypeNode extends TypeNode {
+    element_type: TypeNode
+    length: ExpressionNode
+    constructor(element_type: TypeNode, length: ExpressionNode){
+        super(TypeNodeKind.ARRAY)
+        this.element_type = element_type
+        this.length = length
+    }
+}
+class ArgNode {
+    name: Token
+    parsed_type: TypeNode
+    default: ExpressionNode
+}
+class FunctionDeclarationNode {
     name: Token
     args: Array<ArgNode>
     block: BlockNode
     return_type: TypeNode
     is_external: bool
 }
-class ClassDeclarationNode extends Node {
-
+class FieldNode {
+    name: Token
+    parsed_type: TypeNode
 }
-class EnumNode extends Node {
-
+class GenericParameterNode {
+    name: Token
+    constructor(name: Token){
+        this.name = name
+    }
 }
-class ImportNode extends Node {
-
+class ClassDeclarationNode {
+    name: Token
+    generic_parameters: Array<GenericParameterNode>
+    parent: TypeNode
+    fields: Array<FieldNode>
+    methods: Array<FunctionDeclarationNode>
+    constructor() {
+        this.fields = []
+        this.methods = []
+    }
 }
-class ConstNode extends Node {
-
+class EnumField {
+    name: Token
+    constructor(name: Token){
+        this.name = name
+    }
+}
+class EnumNode {
+    name: Token
+    fields: Array<EnumField>
+    constructor(){
+        this.fields = []
+    }
+}
+class ImportNode {
+    import_list: Array<Token>
+    module_path: Token
+    constructor(){
+        this.import_list = []
+    }
+}
+class ConstNode {
+    name: Token
+    value: ExpressionNode
+}
+class TypeAliasNode {
+    name: Token
+    parsed_type: TypeNode
 }
 class ModuleNode {
     functions: Array<FunctionDeclarationNode>
@@ -52,11 +182,13 @@ class ModuleNode {
     enums: Array<EnumNode>
     imports: Array<ImportNode> 
     consts: Array<ConstNode> 
-    constructor(){
+    type_aliases: Array<TypeAliasNode> 
+    constructor() {
         this.functions = []
         this.classes = []
         this.imports = []
         this.consts = []
+        this.type_aliases = []
     }
 }
 class Parser {
@@ -69,78 +201,337 @@ class Parser {
         this.errors = errors
         this.idx = -1
     }
+    can_parse(): bool{
+        return this.current_token.ttype != TokType.EOF and this.errors.length == 0
+    }
     error(message: string){
         this.errors << new FloError(message, this.current_token.range)
-    }
+    }    
     advance(){
         if this.idx < this.tokens.length
             this.current_token = this.tokens[++this.idx]
+    }
+    peek(offset = 1): Token{
+        peek_idx = this.idx + offset
+        if peek_idx < this.tokens.length
+            return this.tokens[peek_idx]
+        return this.tokens[this.tokens.length - 1]
+    }
+    eat(token_type: int): Token {
+        current_token = this.current_token
+        if token_type == current_token.ttype {
+            this.advance()
+            return current_token
+        } else {
+            if token_type == TokType.IDENTIFER 
+                this.error("Expected an Identifier")
+            else if token_type == TokType.EQ 
+                this.error("Expected '='")
+            else if token_type == TokType.COL 
+                this.error("Expected ':'")
+            else if token_type == TokType.LPAR 
+                this.error("Expected '('")
+            else if token_type == TokType.RPAR 
+                this.error("Expected ')'")
+            else if token_type == TokType.LBRACE 
+                this.error("Expected '{'")
+            else if token_type == TokType.RBRACE 
+                this.error("Expected '}'")
+            else if token_type == TokType.COMMA 
+                this.error("Expected ','")
+            else if token_type = TokType.LT 
+                this.error("Expected '<'")
+            else if token_type = TokType.GT 
+                this.error("Expected '>'")
+            else if token_type = TokType.ARROW 
+                this.error("Expected '=>'")
+            else if token_type == TokType.FROM_KW 
+                this.error("Expected 'from'")
+        }
+        return new Token(TokType.EOF, current_token.range)
     }
     new_lines() {
         while this.current_token.ttype == TokType.LN
             this.advance()
     }
+    parse_primitive_type(): TypeNode {
+        type_node = new TypeNode(TypeNodeKind.VOID)
+        if this.current_token.ttype == TokType.BOOL_KW
+            type_node.kind = TypeNodeKind.BOOL
+        else if this.current_token.ttype == TokType.I4_KW
+            type_node.kind = TypeNodeKind.I4
+        else if this.current_token.ttype == TokType.I8_KW
+            type_node.kind = TypeNodeKind.I8
+        else if this.current_token.ttype == TokType.I16_KW
+            type_node.kind = TypeNodeKind.I16
+        else if this.current_token.ttype == TokType.I32_KW
+            type_node.kind = TypeNodeKind.I32
+        else if this.current_token.ttype == TokType.I64_KW
+            type_node.kind = TypeNodeKind.I64
+        else if this.current_token.ttype == TokType.I128_KW
+            type_node.kind = TypeNodeKind.I128
+        else if this.current_token.ttype == TokType.INT_KW
+            type_node.kind = TypeNodeKind.INT
+        else if this.current_token.ttype == TokType.F16_KW
+            type_node.kind = TypeNodeKind.F16
+        else if this.current_token.ttype == TokType.F32_KW
+            type_node.kind = TypeNodeKind.F32
+        else if this.current_token.ttype == TokType.F64_KW
+            type_node.kind = TypeNodeKind.F64
+        else if this.current_token.ttype == TokType.FLOAT_KW
+            type_node.kind = TypeNodeKind.FLOAT
+        else if this.current_token.ttype != TokType.VOID_KW
+            this.error("Expected a type definition")
+        this.advance()
+        return type_node
+    }
+    parse_type_list(list: Array<TypeNode>): Array<TypeNode> {
+        list << this.parse_type()
+        while this.current_token.ttype == TokType.COMMA
+            list << this.parse_type()
+    }
+    parse_mixed_type(): TypeNode {
+        if this.current_token.ttype == TokType.IDENTIFER {
+            object_type_node = new ObjectTypeNode(this.eat(TokType.IDENTIFER))
+            if this.current_token.ttype == TokType.LT {
+                this.advance()
+                this.parse_type_list(object_type_node.generic_args)
+                this.eat(TokType.GT)
+            }
+            return object_type_node
+        } else if this.current_token.ttype == TokType.LPAR {
+            this.advance()
+            fnc_type_node = new FunctionTypeNode()
+            if this.current_token.ttype != TokType.RPAR
+                this.parse_type_list(fnc_type_node.args)
+            this.eat(TokType.RPAR)
+            this.eat(TokType.ARROW)
+            fnc_type_node.return_type = this.parse_type()
+            return fnc_type_node
+        } else 
+            this.parse_primitive_type()
+    }
     parse_type(): TypeNode {
-        return new TypeNode(Type.INT)
+        type_node = this.parse_mixed_type()
+        while this.current_token.ttype == TokType.LBRACKET or this.current_token.ttype == TokType.MULT {
+            if this.current_token.ttype == TokType.LBRACKET {
+                this.advance()
+                type_node = new ArrayTypeNode(type_node, this.expression())
+            } else {
+                this.eat(TokType.MULT)
+                type_node = new PointerTypeNode(type_node)
+            }
+        }
+        return type_node
+    }
+    parse_expression(): ExpressionNode {
+        return new ExpressionNode()
+    }
+    parse_if_statement(): IfStatementNode {
+        this.advance()
+        if_node = new IfNode()
+        if_node.condition = this.parse_expression()
+        if_node.block = this.parse_block()
+        if this.current_token.ttype == TokType.ELSE_KW {
+            this.advance()
+            if_node.else_block = this.parse_block()
+        }
+        return if_node
+    }
+    parse_while_statement(): WhileStatementNode {
+        this.advance()
+        while_node = new WhileStatementNode()
+        while_node.condition = this.parse_expression()
+        while_node.block = this.parse_block()
+        return while_node
+    }
+    parse_for_statement(): ForStatementNode {
+        this.advance()
+        for_node = new ForStatementNode()
+        for_node.intialization = this.parse_expression()
+        if this.current_token.ttype == TokType.SEMICOL {
+            this.advance()
+            for_node.condition = this.parse_expression()
+            if this.current_token.ttype == TokType.SEMICOL {
+                this.advance()
+                for_node.incr_decr = this.parse_expression()
+            }
+        } else if this.current_token.ttype == TokType.IN_KW {
+            for_node.iterator = this.parse_expression()
+        } else 
+            this.error("Expected ';' or 'in'")
+        for_node.block = this.parse_block()
+    }
+    parse_return_statement(){
+        this.advance()
+        return_node = new ReturnStatementNode()
+        if this.current_token.ttype != TokType.LN and this.can_parse() and this.current_token.ttype != TokType.RBRACE
+            return_node.value = this.parse_expression()
+        return return_node
+    }
+    parse_statement(): StatementNode {
+        if this.current_token.ttype == TokType.IF_KW 
+            return this.parse_if_statement()
+        else if this.current_token.ttype == TokType.WHILE_KW
+            return this.parse_while_statement()
+        else if this.current_token.ttype == TokType.FOR_KW
+            return this.parse_for_statement()
+        else if this.current_token.ttype == TokType.RETURN_KW
+            return this.parse_return_statement()
+        else if this.current_token.ttype == TokType.CONTINUE_KW {
+            this.advance()
+            return new StatementNode(StatementKind.CONTINUE)
+        } else if this.current_token.ttype == TokType.BREAK_KW {
+            this.advance()
+            return new StatementNode(StatementKind.BREAK)
+        }
+        else 
+            return this.parse_expression()
     }
     parse_block(): BlockNode {
-        return new BlockNode()
+        block_node = new BlockNode()
+        if this.current_token.ttype == TokType.LBRACE {
+            this.advance()
+            while this.can_parse() and this.current_token.ttype != TokType.RBRACE
+                block_node.statements << this.parse_statement()
+            this.eat(TokType.RBRACE)
+        } else {
+            block_node << this.parse_statement()
+        }
+        return block_node
+    }
+    parse_type_alias(): TypeAliasNode {
+        this.advance()
+        type_alias_node = new TypeAliasNode()
+        type_alias_node.name = this.eat(TokType.IDENTIFER)
+        this.eat(TokType.EQ)
+        type_alias_node.parsed_type = this.parse_type()
+        return type_alias_node
     }
     parse_args(): Array<ArgNode> {
         args: Array<ArgNode> = []
+        this.eat(TokType.LPAR)
+        while this.current_token.ttype != TokType.RPAR and this.can_parse() {
+            arg_node = new ArgNode()
+            arg_node.name = this.eat(TokType.IDENTIFER)
+            if this.current_token.ttype == TokType.COL {
+                this.advance()
+                arg_node.parsed_type = this.parse_type()
+            }
+            if this.current_token.ttype == TokType.EQ {
+                this.advance()
+                arg_node.default = this.parse_expression()
+            }
+            this.eat(TokType.COMMA)
+        }
+        this.eat(TokType.RPAR)
         return args
     }
     parse_function(): FunctionDeclarationNode {
-        this.advance()
         fnc_node = new FunctionDeclarationNode()
-        if this.current_token.ttype != TokType.IDENTIFER {
-            this.error("Expected an Identifer")
-            return fnc_node
-        }
-        fnc_node.name = this.current_token
-        this.advance()
-        if this.current_token.ttype != TokType.LPAR {
-            this.error("Expected '('")
-            return fnc_node
-        }
-        this.advance()
+        fnc_node.name = this.eat(TokType.IDENTIFER)
         fnc_node.args = this.parse_args()
-        if this.current_token.ttype != TokType.RPAR {
-            this.error("Expected ')'")
-            return fnc_node
-        }
-        this.advance()
         if this.current_token.ttype == TokType.COL {
             this.advance()
             fnc_node.return_type = this.parse_type()
         } else
-            fnc_node.return_type = new TypeNode(Type.VOID)
-        if this.current_token.ttype != TokType.LBRACE {
-            this.error("Expected '{'")
-            return fnc_node
-        }
+            fnc_node.return_type = new TypeNode(TypeNodeKind.VOID)
+        this.eat(TokType.LBRACE)
         fnc_node.block = this.parse_block()
         return fnc_node
     }
+    parse_class_block(class_node: ClassDeclarationNode) {
+        this.eat(TokType.LBRACE)
+        this.new_lines()
+        while this.current_token.ttype != TokType.RBRACE {
+            if this.peek().ttype == TokType.COL {
+                field = new FieldNode()
+                field.name = this.eat(TokType.IDENTIFER)
+                field.parsed_type = this.parse_type()
+                class_node.fields << field
+            } else if this.peek().ttype == TokType.LPAR {
+                class_node.methods << this.parse_function()
+            } else {
+                this.advance()
+                return this.error("Expected ':' or '('")
+            }
+            this.new_lines()
+        }
+    }
+    parse_generic_parameters(): Array<GenericParameterNode> {
+        generic_parameters: Array<GenericParameterNode> = []
+        this.advance()
+        generic_parameters << new GenericParameterNode(this.eat(TokType.IDENTIFER))
+        while this.current_token.ttype == TokType.COMMA  {
+            this.advance()
+            generic_parameters << new GenericParameterNode(this.eat(TokType.IDENTIFER))
+        }
+        this.eat(TokType.GT)
+        return generic_parameters
+    }
     parse_class(): ClassDeclarationNode {
-        return new ClassDeclarationNode()
+        class_node = new ClassDeclarationNode()
+        this.advance()
+        class_node.name = this.eat(TokType.IDENTIFER)
+        if this.current_token.ttype == TokType.LT
+            class_node.generic_parameters = this.parse_generic_parameters()
+        if this.current_token.ttype == TokType.EXTENDS_KW {
+            this.advance()
+            class_node.parent = this.parse_type()
+        } else {
+            class_node.parent = new TypeNode(TypeNodeKind.VOID)
+        }
+        this.new_lines()
+        this.parse_class_block(class_node)
+        return class_node
     }
     parse_const(): ConstNode {
-        return new ConstNode()
+        const_node = new ConstNode()
+        this.advance()
+        const_node.name = this.eat(TokType.IDENTIFER)
+        this.eat(TokType.EQ)
+        const_node.value = this.parse_expression()
+        return const_node
     }
     parse_import(): ImportNode {
-        return new ImportNode()
+        import_node = new ImportNode()
+        this.advance()
+        if this.current_token.ttype == TokType.IDENTIFER {
+            import_node.import_list << this.current_token
+            this.advance()
+            while this.current_token.ttype == TokType.COMMA {
+                this.advance()
+                import_node.import_list << this.eat(TokType.IDENTIFER)
+            }
+            this.eat(TokType.FROM_KW)
+        }
+        import_node.module_path = this.eat(TokType.STR)
+        return import_node
     }
     parse_enum(): EnumNode {
-        return new EnumNode()
+        enum_node = new EnumNode()
+        this.advance()
+        enum_node.name = this.eat(TokType.IDENTIFER)
+        this.new_lines()
+        this.eat(TokType.LBRACE)
+        this.new_lines()
+        while this.current_token.ttype == TokType.IDENTIFER {
+            enum_node.fields << new EnumField(this.current_token)
+            this.advance()
+            this.new_lines()
+        }
+        this.eat(TokType.RBRACE)
+        return enum_node
     }
     parse_module(): ModuleNode {
         this.advance()
-        this.new_lines()
         module_node = new ModuleNode()
-        while this.current_token.ttype != TokType.EOF or this.errors.length > 0 {
-            if this.current_token.ttype == TokType.FNC_KW 
+        while this.can_parse() {
+            this.new_lines()
+            if this.current_token.ttype == TokType.FNC_KW {
+                this.advance()
                 module_node.functions << this.parse_function()
+            }
             else if this.current_token.ttype == TokType.CLASS_KW
                 module_node.classes << this.parse_class()
             else if this.current_token.ttype == TokType.ENUM_KW
@@ -149,6 +540,8 @@ class Parser {
                 module_node.imports << this.parse_import()
             else if this.current_token.ttype == TokType.CONST_KW
                 module_node.consts << this.parse_const()
+            else if this.current_token.ttype == TokType.TYPE_KW
+                module_node.type_aliases << this.parse_type_alias()
             else 
                 this.error("Illegal expression expected: 'fnc' or 'class' or 'enum' or 'import' or 'const'")
         }
