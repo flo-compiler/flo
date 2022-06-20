@@ -38,15 +38,20 @@ class Compiler(Visitor):
     def compile(self, node: Node, options):
         self.visit(node)
         llvm.initialize_native_asmparser()
-        llvm_module = llvm.parse_assembly(str(self.module))
-        llvm_module.verify()
+        basename = Path(self.context.display_name).stem
+        try:
+            llvm_module = llvm.parse_assembly(str(self.module))
+            llvm_module.verify()
+        except RuntimeError as e:
+            with open(f"{basename}.ll", "w") as file:
+                file.write(str(self.module))
+            exit(e)
         # Passes
         pass_manager_builder = llvm.create_pass_manager_builder()
         pass_manager_builder.opt_level = int(options.opt_level)
         pass_manager = llvm.create_module_pass_manager()
         pass_manager_builder.populate(pass_manager)
         pass_manager.run(llvm_module)
-        basename = Path(self.context.display_name).stem
         if options.emit:
             with open(f"{basename}.ll", "w") as object:
                 object.write(str(llvm_module).replace(
@@ -173,6 +178,8 @@ class Compiler(Visitor):
                 return alias
             # Why?
             classname = type_.referer.value if isinstance(type_.referer, Token) else  type_.referer.name
+            if isinstance(self.context.get(classname), FloEnum):
+                return FloInt(None)
             associated_class = FloClass.classes.get(classname)
             if isinstance(type_, FloGeneric):
                 return FloGeneric(associated_class, type_.constraints)
@@ -226,9 +233,12 @@ class Compiler(Visitor):
     def visitMethodDeclarationNode(self, node: MethodDeclarationNode):
         method_name = node.method_name.value
         arg_types, arg_names, rtype = self.visit(node.method_body)
-        fn = FloMethod(arg_types, rtype, method_name,
-                        node.method_body.is_variadic, self.class_within)
-        fn.class_within = self.class_within
+        if node.method_body.body:
+            fn = FloMethod(arg_types, rtype, method_name,
+                            node.method_body.is_variadic, self.class_within)
+        else:
+            fn = FloMethod.declare(
+                arg_types, rtype, method_name, node.method_body.is_variadic, self.class_within)
         self.class_within.add_method(fn)
         self.evaluate_function_body(fn, arg_names, node.method_body.body)
 
@@ -353,8 +363,10 @@ class Compiler(Visitor):
 
     def visitReturnNode(self, node: ReturnNode):
         if node.value == None:
-            return self.ret(FloVoid)
+            return self.ret(FloVoid(None))
         val = self.visit(node.value)
+        if isinstance(val, FloVoid) or val == None:
+            return self.ret(FloVoid(None))
         return self.ret(val)
 
     def visitBreakNode(self, _: BreakNode):
@@ -405,7 +417,7 @@ class Compiler(Visitor):
             return array_class.constant_init(self.builder, [pointer, length, FloInt(size)])
         else:
             size = FloInt(len(elems))
-            if node.expects and (node.expects.len.value) and len(elems) == 0:
+            if node.expects and node.expects.len and len(elems) == 0:
                 size = node.expects.len
             array = FloArray(elems, size)
             array.elm_type = node.expects.elm_type if array.elm_type == None else array.elm_type

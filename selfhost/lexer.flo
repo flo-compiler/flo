@@ -46,7 +46,17 @@ enum TokType {
     CONST_KW
     IF_KW
     ELSE_KW
+    BOOL_KW
+    I4_KW
+    I8_KW
+    I16_KW
+    I32_KW
+    I64_KW
+    I128_KW
     INT_KW
+    F16_KW
+    F32_KW
+    F64_KW
     FLOAT_KW
     VOID_KW
     FOR_KW
@@ -66,7 +76,7 @@ enum TokType {
     IS_KW
     EXTENDS_KW
 }
-fnc string_to_kw_token(word: string): int{
+fnc string_to_kw_token(word: string): TokType {
     if word == "and"
         return TokType.AND_KW
     if word == "or"
@@ -79,8 +89,28 @@ fnc string_to_kw_token(word: string): int{
         return TokType.IF_KW
     if word == "else"
         return TokType.ELSE_KW
+    if word == "bool"
+        return TokType.BOOL_KW
+    if word == "i4"
+        return TokType.I4_KW
+    if word == "i8"
+        return TokType.I8_KW
+    if word == "i16"
+        return TokType.I16_KW
+    if word == "i32"
+        return TokType.I32_KW
+    if word == "i64"
+        return TokType.I64_KW
+    if word == "i128"
+        return TokType.I128_KW
     if word == "int"
         return TokType.INT_KW
+    if word == "f16"
+        return TokType.F16_KW
+    if word == "f32"
+        return TokType.F32_KW
+    if word == "f64"
+        return TokType.F64_KW
     if word == "float"
         return TokType.FLOAT_KW
     if word == "void"
@@ -126,9 +156,9 @@ fnc is_number_char(char: i8): bool {
     return (char >= '0' and char <= '9')
 }
 class Token {
-    ttype: int
+    ttype: TokType
     range: Range
-    constructor(ttype: int, range: Range){
+    constructor(ttype: TokType, range: Range){
         this.ttype = ttype
         this.range = range
     }
@@ -249,31 +279,21 @@ class Lexer {
     numeric_token(): Token {
         length = 1
         token = TokType.INT
-        while is_number_char(this.peek()) or this.peek() == '.' {
+        while is_number_char(next_char = this.peek()) or next_char == '.' {
+            if next_char == '.' and (token == TokType.FLOAT or !is_number_char(this.peek(2))) break
+            if this.current_char == '.' 
+                token = TokType.FLOAT
             length++
             this.advance()
-            if this.current_char == '.' and token == TokType.INT {
-                if is_number_char(this.peek()) {
-                    token = TokType.FLOAT
-                } else {
-                    this.idx--
-                    length--
-                    break
-                }
-            } else {
-                break
-            }
         }
         return new Token(token, this.get_range(length))
     }
     identifier_token(): Token {
         length = 1
         start = this.idx
-        next_char = this.peek()
-        while is_identifier_char(next_char) or is_number_char(next_char){
+        while is_identifier_char(next_char = this.peek()) or is_number_char(next_char){
             length++
             this.advance()
-            next_char = this.peek()
         }
         token = new Token(TokType.IDENTIFER, this.get_range(length))
         ttype = string_to_kw_token(token_value(token, this.text))

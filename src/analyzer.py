@@ -300,6 +300,7 @@ class Analyzer(Visitor):
     def visitVarAccessNode(self, node: VarAccessNode):
         var_name = node.var_name.value
         value = self.context.get(var_name)
+        print(var_name, self.context.get(var_name))
         if value == None:
             NameError(node.var_name.range,
                       f"'{var_name}' is not defined").throw()
@@ -546,6 +547,11 @@ class Analyzer(Visitor):
             SyntaxError(
                 node.range, "Illegal return outside a function").throw()
         val = self.visit(node.value) if node.value else FloVoid(None)
+        
+        if isinstance(val, FloObject):
+            if val.referer.has_parent(self.current_block.fn_within.rtype.referer):
+                node.value = self.cast(node.value, self.current_block.fn_within.rtype)
+                val = self.current_block.fn_within.rtype
         if not self.current_block.can_return_value(val):
             TypeError(
                 node.range,
@@ -666,6 +672,8 @@ class Analyzer(Visitor):
             class_ = self.get_object_class(node_type, node)
             if isinstance(node_type, FloGeneric):
                 return FloGeneric(class_, node_type.constraints)
+            elif isinstance(class_, FloEnum):
+                return FloInt(None)
             else:
                 return FloObject(class_)
         elif isinstance(node_type, FloPointer) or isinstance(node_type, FloArray):
