@@ -184,12 +184,13 @@ class Analyzer(Visitor):
                 node.right_node.expects = left
             left = self.visit(node.left_node)
             right = self.visit(node.right_node)
-        if left != right and isinstance(left, FloInt) and isinstance(right, FloInt):
-            node.left_node = self.cast(node.left_node, FloInt(None, max(left.bits, right.bits)))
-            node.right_node = self.cast(node.right_node, FloInt(None, max(left.bits, right.bits)))
-        if left != right and isinstance(left, FloFloat) and isinstance(right, FloFloat):
-            node.left_node = self.cast(node.left_node, FloFloat(None, max(left.bits, right.bits)))
-            node.right_node = self.cast(node.right_node, FloFloat(None, max(left.bits, right.bits)))
+        if not isinstance(node.right_node, TypeNode):
+            if left != right and isinstance(left, FloInt) and isinstance(right, FloInt):
+                node.left_node = self.cast(node.left_node, FloInt(None, max(left.bits, right.bits)))
+                node.right_node = self.cast(node.right_node, FloInt(None, max(left.bits, right.bits)))
+            if left != right and isinstance(left, FloFloat) and isinstance(right, FloFloat):
+                node.left_node = self.cast(node.left_node, FloFloat(None, max(left.bits, right.bits)))
+                node.right_node = self.cast(node.right_node, FloFloat(None, max(left.bits, right.bits)))
         if node.op.type in self.arithmetic_ops_1:
             if isinstance(left, FloFloat) and isinstance(right, FloInt):
                 node.right_node = self.cast(node.right_node, left)
@@ -828,7 +829,10 @@ class Analyzer(Visitor):
         root = self.visit(node.expr)
         property_name = node.property.value
         if isinstance(root, FloEnum):
-            return root.get_property(property_name)
+            try:
+                return root.get_property(property_name)
+            except:
+                NameError(node.property.range, f"property '{property_name}' is not defined on enum '{node.expr.var_name.value}'").throw()
         if isinstance(root, FloPointer):
             method = root.methods.get(property_name)
             if method == None:

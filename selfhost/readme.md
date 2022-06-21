@@ -1,6 +1,7 @@
 # Self Hosted Compiler
-## TODO
+## Approaximate of status of self-hosted compiler 
+- Error Reporting (10%)
 - Lexer (99%)
-- Parser (70%)
-- Typechecking/Analyzer (0%)
+- Parser (80%)
+- Typechecking/Analyzer (5%)
 - Codegen (0%)

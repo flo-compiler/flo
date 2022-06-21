@@ -590,11 +590,12 @@ class FloArray:
         loaded_array = FloArray(self.elems, self.len)
         if ref.mem:
             if ref.mem.value.type.pointee.is_pointer:
-                loaded_array.mem = ref.mem.load_at_index(ref.builder, *self.get_index(FloInt(0, 32)))
+                loaded_array.mem = ref.mem.load_at_index(ref.builder, FloInt(0, 32))
             else:
                 loaded_array.mem = ref.mem.get_pointer_at_index(ref.builder, *self.get_index(FloInt(0, 32)))
         elif not ref.mem:
             loaded_array.mem = self.mem
+        print(loaded_array.mem)
         loaded_array.elm_type = self.elm_type
         return loaded_array
 

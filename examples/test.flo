@@ -1,3 +1,4 @@
+/*  This file is currently used for tests in the development of the self-hosted compiler*/
 class SpecialArray<T> extends Array<int> {
     constructor(){
         super()
