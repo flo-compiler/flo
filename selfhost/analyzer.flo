@@ -2,7 +2,13 @@ class Program {
 
 }
 class Analyzer {
+    module_node: ModuleNode
+    errors: Array<FloError>
+    constructor(module_node: ModuleNode, errors: Array<FloError>){
+        this.module_node = module_node
+        this.errors = errors
+    }
     typecheck(): Program {
-
+        return new Program()
     }
 }

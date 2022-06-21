@@ -20,7 +20,7 @@ enum TypeNodeKind {
     ARRAY
     FNC
 }
-enum StatementKind {
+enum StatementNodeKind {
     IF
     VAR
     FOR
@@ -29,6 +29,18 @@ enum StatementKind {
     BREAK
     RETURN
     EXPRESSION
+}
+enum ExpressionNodeKind {
+    INT
+    FLOAT
+    CHAR
+    ARRAY
+    VAR
+    STR
+    BIN
+    UNARY
+    TYPEBOUND
+    NEW
 }
 enum BinaryOp {
     ADD
@@ -46,21 +58,19 @@ enum BinaryOp {
     OR
     AND
     XOR
-    ASSIGN
     IN
+    ASSIGN
 }
 enum UnaryOp {
     PREINCR
-    POSTINCR
     PREDECR
+    POSTINCR
     POSTDECR
     NEG
     NOT
     ADDROF
-    TYPECAST
-    IS
-    NEW
 }
+
 class Node {
     range: Range
 }
@@ -95,8 +105,8 @@ class PointerTypeNode extends TypeNode {
     }
 }
 class StatementNode {
-    kind: StatementKind
-    constructor(kind: StatementKind){
+    kind: StatementNodeKind
+    constructor(kind: StatementNodeKind){
         this.kind = kind
     }
 }
@@ -104,8 +114,10 @@ class BlockNode {
     statements: Array<StatementNode>
 }
 class ExpressionNode extends StatementNode {
-    constructor(){
-        super(StatementKind.EXPRESSION)
+    expr_kind: ExpressionNodeKind
+    constructor(expr_kind: ExpressionNodeKind){
+        super(StatementNodeKind.EXPRESSION)
+        this.expr_kind = expr_kind
     }
 }
 class ArrayTypeNode extends TypeNode {
@@ -120,51 +132,65 @@ class ArrayTypeNode extends TypeNode {
 class IntExpressionNode extends ExpressionNode {
     value: int
     constructor(value: int){
-        super()
+        super(ExpressionNodeKind.INT)
         this.value = value
     }
 }
 class FloatExpressionNode extends ExpressionNode {
     value: float
     constructor(value: float){
-        super()
+        super(ExpressionNodeKind.FLOAT)
         this.value = value
     }
 }
 class CharExpressionNode extends ExpressionNode {
     value: i8
     constructor(value: i8){
-        super()
+        super(ExpressionNodeKind.FLOAT)
         this.value = value
     }
 }
 class StringExpressionNode extends ExpressionNode {
     value: string
     constructor(value: string){
-        super()
+        super(ExpressionNodeKind.STR)
         this.value = value
     }
 }
 class VarAccessExpressionNode extends ExpressionNode {
-    var_name: string
-    constructor(var_name: string){
-        super()
-        this.var_name = var_name
+    name: string
+    constructor(name: string){
+        super(ExpressionNodeKind.VAR)
+        this.name = name
     }
 }
 class ArrayExpressionNode extends ExpressionNode {
     value: Array<ExpressionNode>
     constructor(value: Array<ExpressionNode>){
-        super()
+        super(ExpressionNodeKind.ARRAY)
         this.value = value
+    }
+}
+class TypeExpressionNode extends ExpressionNode {
+    expression: ExpressionNode
+    is_in_op: bool
+    bound_type: TypeNode
+    constructor(expression: ExpressionNode, bound_type: TypeNode){
+        super(ExpressionNodeKind.TYPEBOUND)
+        this.expression = expression
+        this.is_in_op = false
+        this.bound_type = bound_type
     }
 }
 class BinaryExpressionNode extends ExpressionNode {
     lhs: ExpressionNode
     op: BinaryOp
     rhs: ExpressionNode
-    constructor(){
-        super()
+    constructor(left: ExpressionNode, op: BinaryOp, right: ExpressionNode){
+        super(ExpressionNodeKind.BIN)
+        this.lhs = left
+        this.op = op
+        this.rhs = right
     }
 }
 class UnaryExpressionNode extends ExpressionNode {
@@ -172,28 +198,23 @@ class UnaryExpressionNode extends ExpressionNode {
     expression: ExpressionNode
     constructor(op: UnaryOp){
         this.op = op
+        super(ExpressionNodeKind.UNARY)
     }
 }
 /* Can be either 'as' or 'is' unary expression */
-class TypedUnaryExpressionNode extends UnaryExpressionNode {
-    parsed_type: TypeNode
-    constructor(op: UnaryOp){
-        super(op)
-    }
-}
 class IfStatementNode extends StatementNode {
     condition: ExpressionNode
     block: BlockNode
     else_block: BlockNode
     constructor(){
-        super(StatementKind.IF)
+        super(StatementNodeKind.IF)
     }
 }
 class WhileStatementNode extends StatementNode {
     condition: ExpressionNode
     block: ExpressionNode
     constructor(){
-        super(StatementKind.WHILE)
+        super(StatementNodeKind.WHILE)
     }
 }
 class ForStatementNode extends StatementNode {
@@ -202,13 +223,13 @@ class ForStatementNode extends StatementNode {
     incr_decr: ExpressionNode
     iterator: ExpressionNode
     constructor(){
-        super(StatementKind.FOR)
+        super(StatementNodeKind.FOR)
     }
 }
 class ReturnStatementNode extends StatementNode {
     value: ExpressionNode
     constructor(){
-        super(StatementKind.RETURN)
+        super(StatementNodeKind.RETURN)
     }
 }
 class VarDeclarationStatement extends StatementNode {
@@ -216,7 +237,7 @@ class VarDeclarationStatement extends StatementNode {
     var_type: TypeNode
     value: ExpressionNode
     constructor(){
-        super(StatementKind.RETURN)
+        super(StatementNodeKind.RETURN)
     }
 }
 class ArgNode {
@@ -439,6 +460,7 @@ class Parser {
         }
         return expressions
     }
+    /* TODO: NEW */
     parse_atom(): ExpressionNode {
         if this.current_token.ttype == TokType.STR
             return new StringExpressionNode((this.eat(TokType.STR) as StrToken).value)
@@ -460,15 +482,18 @@ class Parser {
             expression = this.parse_expression()
             this.eat(TokType.RPAR)
             return expression
-        } else 
+        } else if  this.current_token.ttype == TokType.NEW_KW // New.
+            true
+        else
             this.error("Expected an Expression value")
         return new ExpressionNode()
     }
-    get_binary_op_type(token_type: TokType): BinaryOp {
-        if token_type == TokType.PUS
-            return BinOp.ADD
-        if token_type == TokType.MINUS
-            return BinOp.SUB
+    // TODO Bellow, AccessNodes & Precedence reorganization
+    parse_unary_expression(): UnaryExpressionNode {
+        return new UnaryExpressionNode(UnaryOp.PREDECR, this.parse_atom())
+    }
+    is_term_expr_op(): int {
+        token_type = this.current_token.ttype
         if token_type == TokType.MULT
             return BinOp.MULT
         if token_type == TokType.DIV
@@ -477,6 +502,32 @@ class Parser {
             return BinOp.MOD
         if token_type == TokType.POW
             return BinOp.POW
+        return -1
+    }
+    parse_term_expression(): ExpressionNode {
+        left = this.parse_unary_expression()
+        if (op = this.is_term_expr_op()) == -1
+            return left
+        this.advance()
+        return new BinaryExpressionNode(left, op, this.parse_unary_expression())
+    }
+    is_arith_expr_op(): int {
+        token_type = this.current_token.ttype
+        if token_type == TokType.PLUS
+            return BinOp.ADD
+        if token_type == TokType.MINUS
+            return BinOp.SUB
+        return -1
+    }
+    parse_arithmetic_expression(): ExpressionNode {
+        left = this.parse_term_expression()
+        if (op =  this.is_arith_expr_op()) == -1
+            return left
+        this.advance()
+        return new BinaryExpressionNode(left, op, this.parse_term_expression())
+    }
+    is_comp_expr_op(): int {
+        token_type = this.current_token.ttype
         if token_type == TokType.GT
             return BinOp.GT
         if token_type == TokType.LT
@@ -485,6 +536,17 @@ class Parser {
             return BinOp.GTE
         if token_type == TokType.LTE
             return BinOp.LTE
+        return -1
+    }
+    parse_comparasion_expression(): ExpressionNode {
+        left = this.parse_arithmetic_expression()
+        if (op =  this.is_comp_expr_op()) == -1
+            return left
+        this.advance()
+        return new BinaryExpressionNode(left, op, this.parse_arithmetic_expression())
+    }
+    is_bit_expr_op(): int {
+        token_type = this.current_token.ttype
         if token_type == TokType.SL
             return BinOp.SL
         if token_type == TokType.SR
@@ -495,22 +557,31 @@ class Parser {
             return BinOp.AND
         if token_type == TokType.XOR_KW
             return BinOp.XOR
-        if token_type == TokType.EQ
-            return BinOp.ASSIGN
-        if token_type == TokType.IN_KW
-            return BinOp.IN
         return -1
     }
-    parse_binary_expression(): BinaryExpressionNode {
-    }
     parse_bit_expression(): ExpressionNode {
-        left = this.parse_arithmetic_expression()
-        tt =  this.current_token.ttype
-        OP_TYPE = 0
-
+        left = this.parse_comparasion_expression()
+        if (op = this.is_bit_expr_op()) == -1
+            return left
+        this.advance()
+        return new BinaryExpressionNode(left, op, this.parse_comparasion_expression())
+    }
+    parse_typed_expression(): Expression {
+        left = this.parse_bit_expression()
+        token_type = this.current_token.ttype
+        if token_type != TokType.IN_KW or token_type != TokType.IS_KW 
+            return left
+        this.advance()
+        node = TypeExpressionNode(left, this.parse_type())
+        node.is_in_op = token_type == TokType.IN_KW
+        this.advance()
+        return node
     }
     parse_expression(): ExpressionNode {
-        return this.parse_bit_expression()
+        left this.parse_typed_expression()
+        if this.current_token.ttype == TokType.EQ 
+            return new VarAssignExpression(left, BinaryOp.ASSIGN, this.parse_expression())
+        return left
     }
     parse_if_statement(): IfStatementNode {
         this.advance()
@@ -575,10 +646,10 @@ class Parser {
             return this.parse_variable_declaration_statement()
         else if this.current_token.ttype == TokType.CONTINUE_KW {
             this.advance()
-            return new StatementNode(StatementKind.CONTINUE)
+            return new StatementNode(StatementNodeKind.CONTINUE)
         } else if this.current_token.ttype == TokType.BREAK_KW {
             this.advance()
-            return new StatementNode(StatementKind.BREAK)
+            return new StatementNode(StatementNodeKind.BREAK)
         } else 
             return this.parse_expression()
     }
@@ -714,7 +785,7 @@ class Parser {
         this.eat(TokType.RBRACE)
         return enum_node
     }
-    parse_module(): ModuleNode {
+    parse(): ModuleNode {
         this.advance()
         module_node = new ModuleNode()
         while this.can_parse() {

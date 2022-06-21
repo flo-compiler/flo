@@ -104,7 +104,6 @@ class Compiler(Visitor):
 
     def visitNumOpNode(self, node: NumOpNode):
         a = self.visit(node.left_node)
-        node.right_node.expects = a
         b = self.visit(node.right_node)
         if node.op.type == TokType.PLUS:
             return a.add(self.builder, b)
