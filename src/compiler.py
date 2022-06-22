@@ -240,7 +240,7 @@ class Compiler(Visitor):
         if method_name == 'constructor':
             fn = self.class_within.constructor
         else:
-            fn = self.class_within.get_method(self.class_within.name +"_"+ method_name)
+            fn = self.class_within.get_method(self.class_within.name + "_" + method_name)
         assert fn
         _, arg_names, _ = self.visit(node.method_body)
         self.evaluate_function_body(fn, arg_names, node.method_body.body)

@@ -1,6 +1,7 @@
 fnc merge_range(r1: Range, r2: Range): Range {
     return r1.start..r2.end
 }
+fnc fflush(fd: int)
 enum TypeNodeKind {
     BOOL
     I4
@@ -41,6 +42,7 @@ enum ExpressionNodeKind {
     UNARY
     TYPEBOUND
     NEW
+    CALL
 }
 enum BinaryOp {
     ADD
@@ -115,6 +117,9 @@ class StatementNode {
 }
 class BlockNode {
     statements: Array<StatementNode>
+    constructor(){
+        this.statements = []
+    }
 }
 class ExpressionNode extends StatementNode {
     expr_kind: ExpressionNodeKind
@@ -180,6 +185,14 @@ class NewExpressionNode extends ExpressionNode {
     constructor(parsed_type: TypeNode){
         this.parsed_type = parsed_type
         super(ExpressionNodeKind.NEW)
+        this.args = []
+    }
+}
+class CallExpressionNode extends ExpressionNode {
+    callee: ExpressionNode
+    args: Array<ExpressionNode>
+    constructor(callee: ExpressionNode) {
+        this.callee = callee
         this.args = []
     }
 }
@@ -374,8 +387,9 @@ class Parser {
                 this.error("Expected ':'")
             else if token_type == TokType.LPAR 
                 this.error("Expected '('")
-            else if token_type == TokType.RPAR 
+            else if token_type == TokType.RPAR {
                 this.error("Expected ')'")
+            }
             else if token_type == TokType.LBRACE 
                 this.error("Expected '{'")
             else if token_type == TokType.RBRACE 
@@ -474,6 +488,7 @@ class Parser {
     parse_expression_list(expressions: Array<ExpressionNode>) {
         expressions << this.parse_expression()
         while this.current_token.ttype == TokType.COMMA and this.can_parse(){
+            this.advance()
             expressions << this.parse_expression()
         }
     }
@@ -524,9 +539,17 @@ class Parser {
     // parse_array_index_expression(): ArrayIndexExpressionNode {
 
     // }
-    // parse_call_expression(): CallExpressionNode {
-        
-    // }
+    parse_call_expression(): ExpressionNode {
+        expression = this.parse_atom()
+        if this.current_token.ttype != TokType.LPAR 
+            return expression
+        this.advance()
+        call_expression = new CallExpressionNode(expression)
+        if this.current_token.ttype != TokType.RPAR
+            this.parse_expression_list(call_expression.args)
+        this.eat(TokType.RPAR)
+        return call_expression
+    }
     // parse_member_expression(): MemeberExpressionNode {
     //     parse_expression()
     // }
@@ -546,8 +569,11 @@ class Parser {
     }
     parse_unary_expression(): ExpressionNode {
         if ((op = this.is_unary_op()) != -1) this.advance()
-        expression = this.parse_atom()
-        if (op == -1) op = this.is_unary_op() + 2
+        expression = this.parse_call_expression()
+        if (op == -1) {
+            op = this.is_unary_op()
+            if (op != -1)  op+=2
+        }
         if op == -1 return expression
         this.advance()
         return new UnaryExpressionNode(op, expression)
@@ -661,7 +687,7 @@ class Parser {
     }
     parse_expression(): ExpressionNode {
         left = this.parse_typed_expression()
-        if this.current_token.ttype == TokType.EQ 
+        if this.current_token.ttype == TokType.EQ
             return new BinaryExpressionNode(left, BinaryOp.ASSIGN, this.parse_expression())
         return left
     }
@@ -738,13 +764,15 @@ class Parser {
     }
     parse_block(): BlockNode {
         block_node = new BlockNode()
-        if this.current_token.ttype == TokType.LBRACE {
+        this.new_lines()
+        if this.current_token.ttype == TokType.LBRACE
             this.advance()
-            while this.can_parse() and this.current_token.ttype != TokType.RBRACE
-                block_node.statements << this.parse_statement()
-            this.eat(TokType.RBRACE)
-        } else
+        this.new_lines()
+        while this.can_parse() and this.current_token.ttype != TokType.RBRACE {
             block_node.statements << this.parse_statement()
+            this.new_lines()
+        }
+        this.eat(TokType.RBRACE)
         return block_node
     }
     parse_type_alias(): TypeAliasNode {
@@ -781,6 +809,7 @@ class Parser {
         this.eat(TokType.LPAR)
         if this.current_token.ttype != TokType.RPAR
             this.parse_args(fnc_node.args)
+        
         this.eat(TokType.RPAR)
         if this.current_token.ttype == TokType.COL {
             this.advance()
@@ -795,6 +824,8 @@ class Parser {
         this.new_lines()
         while this.current_token.ttype != TokType.RBRACE and this.can_parse() {
             if this.peek().ttype == TokType.COL {
+                this.advance()
+                this.advance()
                 field = new FieldNode()
                 field.name = this.eat(TokType.IDENTIFER)
                 field.parsed_type = this.parse_type()
@@ -807,6 +838,7 @@ class Parser {
             }
             this.new_lines()
         }
+        this.eat(TokType.RBRACE)
     }
     parse_generic_parameters(generic_parameters: Array<GenericParameterNode>) {
         this.advance()
