@@ -1,3 +1,4 @@
+# Hopefully the executable can stay under 1.2MB
 start=`date +%s`
 ./src/flo.py selfhost/flo.flo --opt-level=3
 gcc flo.o -o flo

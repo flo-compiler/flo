@@ -1,6 +1,4 @@
-from array import array
 from typing import List
-import cache as c
 import builtIns as bi
 from context import Context
 from llvmlite import ir
@@ -571,7 +569,6 @@ class FloArray:
                 # call stacksave and stackrestore at the end of function call.
                 self.mem = FloMem.salloc(builder, self.llvmtype.pointee, self.len, ref.name)
         if self.is_constant and self.len.is_constant and self.value:
-            print('stored')
             ref.mem.store_at_index(builder, FloType(self.value), FloInt(0))
         elif self.elems and len(self.elems) > 0:
             next_idx = self.get_index(FloInt(0, 32))
@@ -746,10 +743,8 @@ class FloClass:
         self.parent = parent
         if parent:
             self.properties.update(parent.properties)
+            if init_body: self.methods.update(self.parent.methods)
         if init_body:
-            self.init_value()
-            if self.parent:
-                self.methods.update(self.parent.methods)
             FloClass.classes[name] = self
 
     def get_method(self, method_name: str):
@@ -787,17 +782,17 @@ class FloClass:
         return methods
 
     def init_value(self):
-        cached_instance = c.AnalyzerCache.classes[self.name]
-        fields = [value.llvmtype for value in cached_instance.properties.values()]
         self.vtable_ty = ir.global_context.get_identified_type(
             f"{self.name}_vtable_ty")
-        methods = self.get_methods(cached_instance)
-        vtable_tys = [method.llvmtype for method in methods.values()]
+        vtable_tys = [method.llvmtype for method in self.methods.values()]
         self.vtable_ty.set_body(*vtable_tys)
+        fields = [value.llvmtype for value in self.properties.values()]
         fields.insert(0, self.vtable_ty.as_pointer())
         self.value.set_body(*fields)
         self.vtable_data = ir.GlobalVariable(
             Context.current_llvm_module, self.vtable_ty, f"{self.name}_vtable_data")
+        self.vtable_data.initializer = ir.Constant(
+            self.vtable_ty, [func.value for func in self.methods.values()])
 
     def constant_init(self, builder: ir.IRBuilder, args):
         # TODO: Decide when to allocate on the heap
@@ -818,10 +813,6 @@ class FloClass:
     def set_vtable_data(self, builder: ir.IRBuilder, mem: FloMem):
         mem.store_at_index(
             builder, FloType(self.vtable_data), FloInt(0, 32), FloInt(0, 32))
-
-    def create_vtable(self):
-        self.vtable_data.initializer = ir.Constant(
-            self.vtable_ty, [func.value for func in self.methods.values()])
 
     def has_parent(self, other):
         current = self

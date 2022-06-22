@@ -1,6 +1,5 @@
 from operator import le
 from typing import Dict, List
-from cache import AnalyzerCache
 from context import Context
 from errors import GeneralError, TypeError, SyntaxError, NameError
 from flotypes import FloArray, FloClass, FloEnum, FloFloat, FloGeneric, FloInlineFunc, FloInt, FloObject, FloPointer, FloType, FloVoid, is_string_object
@@ -511,12 +510,8 @@ class Analyzer(Visitor):
         assert self.class_within
         # TODO: think about access
         method_name = node.method_name.value
-        method_ty = self.visit(node.method_body)
-        if self.class_within.methods.get(method_name) != None:
-            NameError(
-                node.method_name.range,
-                f"{method_name} is already defined in class {self.class_within.name}",
-            ).throw()
+        method_ty = self.class_within.methods.get(method_name)
+        assert method_ty
         self.context = self.context.create_child(method_name)
         self.context.set("this", FloObject(self.class_within))
         if method_name == "constructor":
@@ -554,7 +549,7 @@ class Analyzer(Visitor):
                 node.range, "Illegal return outside a function").throw()
         val = self.visit(node.value) if node.value else FloVoid(None)
         
-        if isinstance(val, FloObject):
+        if isinstance(val, FloObject) and isinstance(self.current_block.fn_within.rtype, FloObject):
             if val.referer.has_parent(self.current_block.fn_within.rtype.referer):
                 node.value = self.cast(node.value, self.current_block.fn_within.rtype)
                 val = self.current_block.fn_within.rtype
@@ -794,6 +789,17 @@ class Analyzer(Visitor):
                 f"Expected assigned value to be of type '{arr.str()}' but got '{value.str()}'",
             ).throw()
         return value
+    
+    def declare_class(self, class_ob: FloClass, node: StmtsNode):
+        for stmt in node.stmts:
+            if isinstance(stmt, MethodDeclarationNode):
+                method_name = stmt.method_name.value
+                if class_ob.methods.get(method_name) != None:
+                            NameError(
+                            stmt.method_name.range,
+                            f"{method_name} is already defined in class {class_ob.name}",
+                        ).throw()
+                class_ob.methods[method_name] = self.visit(stmt.method_body)
 
     def visitClassDeclarationNode(self, node: ClassDeclarationNode):
         self.current_block.append_block(Block.class_())
@@ -810,12 +816,12 @@ class Analyzer(Visitor):
                 parent = parent_type.referer
         class_ob = FloClass(class_name, parent, False)
         self.context.set(class_name, class_ob)
+        self.declare_class(class_ob, node.body)
         prev_class = self.class_within
         self.class_within = class_ob
         self.constants.append(class_name)
         self.visit(node.body)
         self.class_within = prev_class
-        AnalyzerCache.classes[class_name] = class_ob
         self.context.set("super", prev_super)
         self.current_block.pop_block()
 
