@@ -2,9 +2,10 @@ import File from "@flo/io"
 import "error"
 import "lexer"
 import "parser"
+import "debug"
 // import "analyzer"
 // import "codegen"
-import "debug"
+
 
 fnc strlen(str: i8*): int
 fnc string_from_cstring(str: i8*): string {

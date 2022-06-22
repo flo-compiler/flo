@@ -197,7 +197,7 @@ class CharToken extends Token {
 class StrToken extends Token {
     value: string
     constructor(value: string, range: Range){
-        super(TokType.CHAR, range)
+        super(TokType.STR, range)
         this.value = value
     }
 }

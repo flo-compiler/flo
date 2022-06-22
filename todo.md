@@ -1,5 +1,8 @@
+## Bugs
+- [ ] ranges?.
+- [ ] Illegal Instruction Bug.
+- [ ] Finish Parser.
 ## Urgent For Self-Hosted Compiler.
-- [ ] Order of Definition.
 - [ ] Null.
 ### TODO Later (Probably After Self-Compiler).
 - [ ] Automatic bit size casting for float and int.
