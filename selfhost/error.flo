@@ -6,9 +6,46 @@ class FloError {
         this.message = message
     }
 }
+fnc get_range_line(text: string, range: Range): Range {
+    start = range.start
+    end = range.start
+    while text.get_byte(start) != '\n' and start >= 0
+        start--
+    while text.get_byte(end) != '\n'and end >= 0
+        end++
+    if (end == 0) end = 1
+    return (start + 1)..end
+}
+fnc print_error_line(text: string, range: Range){
+    line_range = get_range_line(text, range)
+    print(text.substring(line_range.start, line_range.end-line_range.start))
+    print("\n")
+    space_num = range.start - line_range.start
+    arrow_num = range.end - range.start
+    for i = 0; i < space_num; i++ {
+        print(" ")
+    }
+    print("\033[1;31m")
+    for i = 0; i < arrow_num; i++ {
+        print("^")
+    }
+    println("\033[0m")
+}
+fnc get_line_number(text: string, idx: int): int {
+    cidx = 0
+    line_no = 1
+    while cidx < idx {
+        if text.get_byte(cidx++) == '\n'
+            line_no++
+    }
+    return line_no
+}
 fnc print_errors(filename: string, errors: Array<FloError>, content: string){
     for i = 0; i < errors.length; i++ {
-        println(errors[i].message)
+        error_ = errors[i]
+        println("\033[1;31m[Error]:\033[0m", error_.message)
+        println("File \""+filename+"\", line", get_line_number(content, error_.range.start))
+        print_error_line(content, error_.range)
     }
     if errors.length > 0 exit()
 }

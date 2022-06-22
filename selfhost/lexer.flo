@@ -476,7 +476,7 @@ class Lexer {
                     tokens << new Token(TokType.DIV, this.get_range(1))
             } else {
                 end = this.idx + 1
-                this.errors << new FloError("Illegal character:", this.idx..end)
+                this.errors << new FloError("Illegal character: '"+this.text.substring(this.idx, 1)+"'", this.idx..end)
             }
             this.advance()
         }
