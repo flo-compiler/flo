@@ -1,7 +1,7 @@
 import File from "@flo/io"
 import "error"
 import "lexer"
-// import "parser"
+import "parser"
 // import "analyzer"
 // import "codegen"
 import "debug"
@@ -55,9 +55,9 @@ fnc main(size: int, ptr: i8**): int {
         if flag(args, "--print-tokens")
             print_tokens(tokens, text)
         /***** Parsing *****/
-        // parser = new Parser(tokens, errors)
-        // module_node = parser.parse()
-        // print_errors(filename, errors, text)
+        parser = new Parser(tokens, errors)
+        module_node = parser.parse()
+        print_errors(filename, errors, text)
         /**** Analyzing ****/
         // analyzer = new Analyzer(module_node, errors)
         // program = analyzer.typecheck()

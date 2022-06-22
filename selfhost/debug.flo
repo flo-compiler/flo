@@ -1,4 +1,3 @@
-fnc fflush(fd: int)
 fnc token_type(toktype: TokType): string{
     if toktype == TokType.COL
         return "COL"

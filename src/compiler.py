@@ -1,3 +1,4 @@
+from copyreg import constructor
 from pathlib import Path
 from typing import Dict
 from errors import CompileError, TypeError
@@ -236,14 +237,12 @@ class Compiler(Visitor):
     
     def visitMethodDeclarationNode(self, node: MethodDeclarationNode):
         method_name = node.method_name.value
-        arg_types, arg_names, rtype = self.visit(node.method_body)
-        if node.method_body.body:
-            fn = FloMethod(arg_types, rtype, method_name,
-                            node.method_body.is_variadic, self.class_within)
+        if method_name == 'constructor':
+            fn = self.class_within.constructor
         else:
-            fn = FloMethod.declare(
-                arg_types, rtype, method_name, node.method_body.is_variadic, self.class_within)
-        self.class_within.add_method(fn)
+            fn = self.class_within.get_method(self.class_within.name +"_"+ method_name)
+        assert fn
+        _, arg_names, _ = self.visit(node.method_body)
         self.evaluate_function_body(fn, arg_names, node.method_body.body)
 
 
@@ -282,10 +281,7 @@ class Compiler(Visitor):
             ref.store(value)
         return value
     
-    def visitPropertyDeclarationNode(self, node: PropertyDeclarationNode):
-        property_name = node.property_name.value
-        property_type = self.visit(node.type)
-        self.class_within.add_property(property_name, property_type)
+    def visitPropertyDeclarationNode(self, node: PropertyDeclarationNode): pass
 
     def visitVarAccessNode(self, node: VarAccessNode):
         ref = self.context.get(node.var_name.value)
@@ -427,16 +423,32 @@ class Compiler(Visitor):
             array.elm_type = node.expects.elm_type if array.elm_type == None else array.elm_type
             return array
 
+    def declare_class(self, class_obj, node: ClassDeclarationNode):
+        for stmt in node.body.stmts:
+            if isinstance(stmt, MethodDeclarationNode):
+                method_name = stmt.method_name.value
+                arg_types, _, rtype = self.visit(stmt.method_body)
+                if stmt.method_body.body:
+                    fn = FloMethod(arg_types, rtype, method_name,
+                                    stmt.method_body.is_variadic, class_obj)
+                class_obj.add_method(fn)
+            else:
+                property_name = stmt.property_name.value
+                property_type = self.visit(stmt.type)
+                class_obj.add_property(property_name, property_type)
+        class_obj.init_value()
+
+
     def visitClassDeclarationNode(self, node: ClassDeclarationNode):
         parent = None
         if node.parent:
             parent = self.visit(node.parent).referer
         class_obj = FloClass(node.name.value, parent)
         previous_class = self.class_within
-        self.class_within = class_obj
         self.context.set(node.name.value, class_obj)
+        self.declare_class(class_obj, node)
+        self.class_within = class_obj
         self.visit(node.body)
-        class_obj.create_vtable()
         self.class_within = previous_class
     
     def visitGenericClassNode(self, node: GenericClassNode):

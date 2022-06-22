@@ -1,2 +1,0 @@
-class AnalyzerCache:
-    classes = {}
