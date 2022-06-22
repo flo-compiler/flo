@@ -49,6 +49,8 @@ enum BinaryOp {
     DIV
     MOD
     POW
+    EEQ
+    NEQ
     GT
     LT
     GTE
@@ -81,9 +83,9 @@ class TypeNode {
     }
 }
 class ObjectTypeNode extends TypeNode {
-    name: Token
+    name: string
     generic_args: Array<TypeNode>
-    constructor(name: Token) {
+    constructor(name: string) {
         super(TypeNodeKind.OBJECT)
         this.name = name
         this.generic_args = []
@@ -165,10 +167,10 @@ class VarAccessExpressionNode extends ExpressionNode {
     }
 }
 class ArrayExpressionNode extends ExpressionNode {
-    value: Array<ExpressionNode>
-    constructor(value: Array<ExpressionNode>){
+    elements: Array<ExpressionNode>
+    constructor(){
         super(ExpressionNodeKind.ARRAY)
-        this.value = value
+        this.elements = []
     }
 }
 class TypeExpressionNode extends ExpressionNode {
@@ -251,6 +253,9 @@ class FunctionDeclarationNode {
     block: BlockNode
     return_type: TypeNode
     is_external: bool
+    constructor(){
+        this.args = []
+    }
 }
 class FieldNode {
     name: Token
@@ -271,6 +276,7 @@ class ClassDeclarationNode {
     constructor() {
         this.fields = []
         this.methods = []
+        this.generic_parameters = []
     }
 }
 class EnumField {
@@ -416,7 +422,7 @@ class Parser {
             type_nodes << this.parse_type()
     }
     parse_object_type(): ObjectTypeNode {
-        object_type_node = new ObjectTypeNode(this.eat(TokType.IDENTIFER))
+        object_type_node = new ObjectTypeNode((this.eat(TokType.IDENTIFER) as IdentifierToken).value)
         if this.current_token.ttype == TokType.LT {
             this.advance()
             this.parse_type_list(object_type_node.generic_args)
@@ -453,12 +459,31 @@ class Parser {
         }
         return type_node
     }
-    parse_expression_list(end: TokType): Array<ExpressionNode> {
-        expressions: Array<ExpressionNode> = [] 
-        while this.current_token.ttype != end and this.can_parse(){
+    parse_expression_list(expressions: Array<ExpressionNode>) {
+        expressions << this.parse_expression()
+        while this.current_token.ttype == TokType.COMMA and this.can_parse(){
             expression << this.parse_expression()
         }
         return expressions
+    }
+    parse_array_expression(): ArrayExpressionNode {
+        this.advance()
+        array_expression = new ArrayExpressionNode()
+        if this.current_token.ttype != TokType.RBRACKET
+            this.parse_expression_list(array_expression.elements)
+        this.eat(TokType.RBRACKET)
+        return array_expression
+    }
+    parse_new_expression(): NewExpressionNode {
+        this.advance()
+        new_node = new NewExpressionNode(this.parse_type())
+        if this.current_token.ttype == TokType.LPAR {
+            this.advance()
+            if this.current_token.ttype != TokType.RPAR
+                this.parse_expression_list(new_node.args)
+            this.eat(TokType.RPAR)
+        }
+        return new_node
     }
     /* TODO: NEW */
     parse_atom(): ExpressionNode {
@@ -472,25 +497,49 @@ class Parser {
             return new CharExpressionNode((this.eat(TokType.CHAR) as CharToken).value)
         else if this.current_token.ttype == TokType.IDENTIFER
             return new VarAccessExpressionNode((this.eat(this.TokType.IDENTIFER) as IdentifierToken).value)
-        else if this.current_token.ttype == TokType.LBRACKET {
-            this.advance()
-            array_expression = new ArrayExpressionNode(this.parse_expression_list(TokType.RBRACKET))
-            this.eat(TokType.RBRACKET)
-            return array_expression
-        } else if this.current_token.ttype == TokType.LPAR {
+        else if this.current_token.ttype == TokType.LBRACKET 
+            return this.parse_array_expression()
+        else if this.current_token.ttype == TokType.NEW_KW
+            return this.parse_new_expression()
+        else if this.current_token.ttype == TokType.LPAR {
             this.advance()
             expression = this.parse_expression()
             this.eat(TokType.RPAR)
             return expression
-        } else if  this.current_token.ttype == TokType.NEW_KW // New.
-            true
-        else
+        } else
             this.error("Expected an Expression value")
-        return new ExpressionNode()
+        return new ExpressionNode(ExpressionNodeKind.VAR)
     }
-    // TODO Bellow, AccessNodes & Precedence reorganization
+    parse_array_index_expression(): ArrayIndexExpressionNode {
+
+    }
+    parse_call_expression(): CallExpressionNode {
+        
+    }
+    parse_member_expression(): MemeberExpressionNode {
+        parse_expression()
+    }
+    is_unary_op(): UnaryOp {
+        token_type = this.current_token.ttype
+        if token_type == TokType.PLUS_PLUS 
+            return UnaryOP.PREINCR
+        if token_type == TokType.MINUS_MINUS 
+            return UnaryOP.PREDECR
+        if token_type == TokType.MINUS 
+            return UnaryOP.NEG
+        if token_type == TokType.NOT 
+            return UnaryOP.NOT
+        if token_type == TokType.AMP 
+            return UnaryOP.ADDROF
+        return -1
+    }
     parse_unary_expression(): UnaryExpressionNode {
-        return new UnaryExpressionNode(UnaryOp.PREDECR, this.parse_atom())
+        if ((op = this.is_unary_op()) != -1) this.advance()
+        expression = this.parse_member_expression()
+        if (op == -1) op = this.is_unary_op() + 2
+        if op == -1 return expression
+        this.advance()
+        return new UnaryExpressionNode(op, expression)
     }
     is_term_expr_op(): int {
         token_type = this.current_token.ttype
@@ -526,6 +575,21 @@ class Parser {
         this.advance()
         return new BinaryExpressionNode(left, op, this.parse_term_expression())
     }
+    is_bitshift_expr_op(): BinaryOp {
+        token_type = this.current_token.ttype
+        if token_type == TokType.SL
+            return BinOp.SL
+        if token_type == TokType.SR
+            return BinOp.SR
+        return -1
+    }
+    parse_bitshift_expression(): ExpressionNode {
+        left = this.parse_arithmetic_expression()
+        if (op =  this.is_bitshift_expr_op()) == -1
+            return left
+        this.advance()
+        return new BinaryExpressionNode(left, op, this.parse_arithmetic_expression())
+    }
     is_comp_expr_op(): int {
         token_type = this.current_token.ttype
         if token_type == TokType.GT
@@ -536,21 +600,21 @@ class Parser {
             return BinOp.GTE
         if token_type == TokType.LTE
             return BinOp.LTE
+        if token_type == TokType.EEQ
+            return BinOp.EEQ
+        if token_type == TokType.NEQ
+            return BinOp.NEQ
         return -1
     }
     parse_comparasion_expression(): ExpressionNode {
-        left = this.parse_arithmetic_expression()
+        left = this.parse_bitshift_expression()
         if (op =  this.is_comp_expr_op()) == -1
             return left
         this.advance()
-        return new BinaryExpressionNode(left, op, this.parse_arithmetic_expression())
+        return new BinaryExpressionNode(left, op, this.parse_bitshift_expression())
     }
     is_bit_expr_op(): int {
         token_type = this.current_token.ttype
-        if token_type == TokType.SL
-            return BinOp.SL
-        if token_type == TokType.SR
-            return BinOp.SR
         if token_type == TokType.OR
             return BinOp.OR
         if token_type == TokType.AND_KW
@@ -566,8 +630,15 @@ class Parser {
         this.advance()
         return new BinaryExpressionNode(left, op, this.parse_comparasion_expression())
     }
+    parse_range_expression(): RangeExpression {
+        left = parse_bit_expression()
+        if this.current_token.ttype != TokType.DOT_DOT
+            return left
+        this.advance()
+        return RangeExpressionNode(left, this.parse_bit_expression())
+    }
     parse_typed_expression(): Expression {
-        left = this.parse_bit_expression()
+        left = this.parse_range_expression()
         token_type = this.current_token.ttype
         if token_type != TokType.IN_KW or token_type != TokType.IS_KW 
             return left
@@ -578,7 +649,7 @@ class Parser {
         return node
     }
     parse_expression(): ExpressionNode {
-        left this.parse_typed_expression()
+        left = this.parse_typed_expression()
         if this.current_token.ttype == TokType.EQ 
             return new VarAssignExpression(left, BinaryOp.ASSIGN, this.parse_expression())
         return left
@@ -612,9 +683,9 @@ class Parser {
                 this.advance()
                 for_node.incr_decr = this.parse_expression()
             }
-        } else if this.current_token.ttype == TokType.IN_KW {
+        } else if this.current_token.ttype == TokType.IN_KW
             for_node.iterator = this.parse_expression()
-        } else 
+        else 
             this.error("Expected ';' or 'in'")
         for_node.block = this.parse_block()
     }
@@ -660,9 +731,8 @@ class Parser {
             while this.can_parse() and this.current_token.ttype != TokType.RBRACE
                 block_node.statements << this.parse_statement()
             this.eat(TokType.RBRACE)
-        } else {
+        } else
             block_node << this.parse_statement()
-        }
         return block_node
     }
     parse_type_alias(): TypeAliasNode {
@@ -673,29 +743,33 @@ class Parser {
         type_alias_node.parsed_type = this.parse_type()
         return type_alias_node
     }
-    parse_args(): Array<ArgNode> {
-        args: Array<ArgNode> = []
-        this.eat(TokType.LPAR)
-        while this.current_token.ttype != TokType.RPAR and this.can_parse() {
-            arg_node = new ArgNode()
-            arg_node.name = this.eat(TokType.IDENTIFER)
-            if this.current_token.ttype == TokType.COL {
-                this.advance()
-                arg_node.parsed_type = this.parse_type()
-            }
-            if this.current_token.ttype == TokType.EQ {
-                this.advance()
-                arg_node.default = this.parse_expression()
-            }
-            this.eat(TokType.COMMA)
+    parse_arg(): ArgNode {
+        arg_node = new ArgNode()
+        arg_node.name = this.eat(TokType.IDENTIFER)
+        if this.current_token.ttype == TokType.COL {
+            this.advance()
+            arg_node.parsed_type = this.parse_type()
         }
-        this.eat(TokType.RPAR)
-        return args
+        if this.current_token.ttype == TokType.EQ {
+            this.advance()
+            arg_node.default = this.parse_expression()
+        }
+        return arg_node
+    }
+    parse_args(args: Array<ArgNode>) {
+        args << this.parse_arg()
+        while this.current_token.ttype == TokType.COMMA {
+            this.eat(TokType.COMMA)
+            args << this.parse_arg()
+        }
     }
     parse_function(): FunctionDeclarationNode {
         fnc_node = new FunctionDeclarationNode()
         fnc_node.name = this.eat(TokType.IDENTIFER)
-        fnc_node.args = this.parse_args()
+        this.eat(TokType.LPAR)
+        if this.current_token.ttype != TokType.RPAR
+            this.parse_args(fnc_node.args)
+        this.eat(TokType.RPAR)
         if this.current_token.ttype == TokType.COL {
             this.advance()
             fnc_node.return_type = this.parse_type()
@@ -707,7 +781,7 @@ class Parser {
     parse_class_block(class_node: ClassDeclarationNode) {
         this.eat(TokType.LBRACE)
         this.new_lines()
-        while this.current_token.ttype != TokType.RBRACE {
+        while this.current_token.ttype != TokType.RBRACE and this.can_parse() {
             if this.peek().ttype == TokType.COL {
                 field = new FieldNode()
                 field.name = this.eat(TokType.IDENTIFER)
@@ -722,8 +796,7 @@ class Parser {
             this.new_lines()
         }
     }
-    parse_generic_parameters(): Array<GenericParameterNode> {
-        generic_parameters: Array<GenericParameterNode> = []
+    parse_generic_parameters(generic_parameters: Array<GenericParameterNode>) {
         this.advance()
         generic_parameters << new GenericParameterNode(this.eat(TokType.IDENTIFER))
         while this.current_token.ttype == TokType.COMMA  {
@@ -738,7 +811,7 @@ class Parser {
         this.advance()
         class_node.name = this.eat(TokType.IDENTIFER)
         if this.current_token.ttype == TokType.LT
-            class_node.generic_parameters = this.parse_generic_parameters()
+            this.parse_generic_parameters(class_node.generic_parameters)
         if this.current_token.ttype == TokType.EXTENDS_KW {
             this.advance()
             class_node.parent = this.parse_object_type()

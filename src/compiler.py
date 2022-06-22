@@ -36,6 +36,7 @@ class Compiler(Visitor):
         return super().visit(node)
 
     def compile(self, node: Node, options):
+        FloEnum.start = 0
         self.visit(node)
         llvm.initialize_native_asmparser()
         basename = Path(self.context.display_name).stem
@@ -461,7 +462,6 @@ class Compiler(Visitor):
 
     def visitEnumDeclarationNode(self, node: EnumDeclarationNode):
         enum_name = node.name.value
-        FloEnum.start = -1
         self.context.set(enum_name, FloEnum(
             [token.value for token in node.tokens]))
 
