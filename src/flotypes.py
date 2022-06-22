@@ -595,7 +595,6 @@ class FloArray:
                 loaded_array.mem = ref.mem.get_pointer_at_index(ref.builder, *self.get_index(FloInt(0, 32)))
         elif not ref.mem:
             loaded_array.mem = self.mem
-        print(loaded_array.mem)
         loaded_array.elm_type = self.elm_type
         return loaded_array
 
