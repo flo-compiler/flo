@@ -1,7 +1,170 @@
 fnc fflush(fd: int)
-fnc debug_lexer(tokens: Array<Token>, text: string){
+fnc token_type(toktype: TokType): string{
+    if toktype == TokType.COL
+        return "COL"
+    if toktype == TokType.SEMICOL
+        return "SEMICOL"
+    if toktype == TokType.COMMA
+        return "COMMA"
+    if toktype == TokType.PLUS
+        return "PLUS"
+    if toktype == TokType.PLUS_PLUS
+        return "PLUS_PLUS"
+    if toktype == TokType.MINUS
+        return "MINUS"
+    if toktype == TokType.MINUS_MINUS
+        return "MINUS_MINUS"
+    if toktype == TokType.MULT
+        return "MULT"
+    if toktype == TokType.DIV
+        return "DIV"
+    if toktype == TokType.LPAR
+        return "LPAR"
+    if toktype == TokType.RPAR
+        return "RPAR"
+    if toktype == TokType.MOD
+        return "MOD"
+    if toktype == TokType.LBRACE
+        return "LBRACE"
+    if toktype == TokType.RBRACE
+        return "RBRACE"
+    if toktype == TokType.LBRACKET
+        return "LBRACKET"
+    if toktype == TokType.RBRACKET
+        return "RBRACKET"
+    if toktype == TokType.INT
+        return "INT"
+    if toktype == TokType.FLOAT
+        return "FLOAT"
+    if toktype == TokType.LN
+        return "LN"
+    if toktype == TokType.STR
+        return "STR"
+    if toktype == TokType.CHAR
+        return "CHAR"
+    if toktype == TokType.POW
+        return "POW"
+    if toktype == TokType.QUES
+        return "QUES"
+    if toktype == TokType.AMP
+        return "AMP"
+    if toktype == TokType.EQ
+        return "EQ"
+    if toktype == TokType.EEQ
+        return "EEQ"
+    if toktype == TokType.NEQ
+        return "NEQ"
+    if toktype == TokType.GT
+        return "GT"
+    if toktype == TokType.LT
+        return "LT"
+    if toktype == TokType.LTE
+        return "LTE"
+    if toktype == TokType.GTE
+        return "GTE"
+    if toktype == TokType.LEQ
+        return "LEQ"
+    if toktype == TokType.ARROW
+        return "ARROW"
+    if toktype == TokType.EOF
+        return "EOF"
+    if toktype == TokType.NOT
+        return "NOT"
+    if toktype == TokType.SL
+        return "SL"
+    if toktype == TokType.SR
+        return "SR"
+    if toktype == TokType.DOT
+        return "DOT"
+    if toktype == TokType.DOT_DOT
+        return "DOT_DOT"
+    if toktype == TokType.DOT_DOT_DOT
+        return "DOT_DOT_DOT"
+    if toktype == TokType.IDENTIFER
+        return "IDENTIFER"
+    if toktype == TokType.AND_KW
+        return "AND_KW"
+    if toktype == TokType.OR_KW
+        return "OR_KW"
+    if toktype == TokType.XOR_KW
+        return "XOR_KW"
+    if toktype == TokType.CONST_KW
+        return "CONST_KW"
+    if toktype == TokType.IF_KW
+        return "IF_KW"
+    if toktype == TokType.ELSE_KW
+        return "ELSE_KW"
+    if toktype == TokType.BOOL_KW
+        return "BOOL_KW"
+    if toktype == TokType.I4_KW
+        return "I4_KW"
+    if toktype == TokType.I8_KW
+        return "I8_KW"
+    if toktype == TokType.I16_KW
+        return "I16_KW"
+    if toktype == TokType.I32_KW
+        return "I32_KW"
+    if toktype == TokType.I64_KW
+        return "I64_KW"
+    if toktype == TokType.I128_KW
+        return "I128_KW"
+    if toktype == TokType.INT_KW
+        return "INT_KW"
+    if toktype == TokType.F16_KW
+        return "F16_KW"
+    if toktype == TokType.F32_KW
+        return "F32_KW"
+    if toktype == TokType.F64_KW
+        return "F64_KW"
+    if toktype == TokType.FLOAT_KW
+        return "FLOAT_KW"
+    if toktype == TokType.VOID_KW
+        return "VOID_KW"
+    if toktype == TokType.FOR_KW
+        return "FOR_KW"
+    if toktype == TokType.WHILE_KW
+        return "WHILE_KW"
+    if toktype == TokType.FNC_KW
+        return "FNC_KW"
+    if toktype == TokType.BREAK_KW
+        return "BREAK_KW"
+    if toktype == TokType.CONTINUE_KW
+        return "CONTINUE_KW"
+    if toktype == TokType.RETURN_KW
+        return "RETURN_KW"
+    if toktype == TokType.IMPORT_KW
+        return "IMPORT_KW"
+    if toktype == TokType.TYPE_KW
+        return "TYPE_KW"
+    if toktype == TokType.FROM_KW
+        return "FROM_KW"
+    if toktype == TokType.IN_KW
+        return "IN_KW"
+    if toktype == TokType.CLASS_KW
+        return "CLASS_KW"
+    if toktype == TokType.ENUM_KW
+        return "ENUM_KW"
+    if toktype == TokType.NEW_KW
+        return "NEW_KW"
+    if toktype == TokType.AS_KW
+        return "AS_KW"
+    if toktype == TokType.IS_KW
+        return "IS_KW"
+    //if toktype == TokType.EXTENDS_KW
+    return "EXTENDS_KW"
+}
+fnc print_tokens(tokens: Array<Token>, text: string){
+    println("[")
     for i = 0; i < tokens.length; i++ {
         token = tokens[i]
-        println(token.ttype, token.range.start, token.range.end, token_value(token, text))
+        println(" {")
+        println("  type:", token_type(token.ttype)+",")
+        println("  range:", token.range.start+"-"+token.range.end)
+        if token.ttype != TokType.LN
+            println("  value:", token_value(token, text))
+        else
+            println("  value:", "\\n")
+        println(" },")
     }  
+    println("]")
 }

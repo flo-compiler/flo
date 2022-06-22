@@ -1,4 +1,6 @@
 /*  This file is currently used for tests in the development of the self-hosted compiler*/
+define macro = 15
+
 class SpecialArray<T> extends Array<int> {
     constructor(){
         super()

@@ -7,3 +7,4 @@
 *.ll
 **/*.vsix
 flo
+/experiments

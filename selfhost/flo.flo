@@ -1,8 +1,8 @@
 import File from "@flo/io"
 import "error"
 import "lexer"
-import "parser"
-import "analyzer"
+// import "parser"
+// import "analyzer"
 // import "codegen"
 import "debug"
 
@@ -17,28 +17,41 @@ fnc parse_args(size: int, args: i8**): Array<string> {
     }
     return arr
 }
-fnc read_file(filename: string): string {
-    file = new File(filename)
-    return file.read_as_string()
+fnc help(){
+    println("Usage: flo <path> [OPTIONS]\n")
+    println("Options:\n -h, --help\t\t\tShow this help message.\n --print-tokens\t\t\tPrint generated Tokens\n --print-ast\t\t\tPrint generated AST.\n --print-llvm\t\t\tPrint generated LLVM-IR.\n -o <file>\t\t\tPlace the output into <file>.\n --no-output\t\t\tCompile with no output.\n --opt-level=OPT_LEVEL\n \t\t\t\tSpecify the compiler's optimization level which is a\n \t\t\t\tvalue from 0-3.\n -e, --execute\t\t\tExecute file after compiling.\n -v, --version\t\t\tShow version.")
 }
-fnc main(size: int, ptr: i8**){
+fnc flag(args: Array<string>, name: string): bool {
+    return name in args
+}
+fnc main(size: int, ptr: i8**): int {
     args = parse_args(size, ptr)
     if args.length >= 2 {
         errors: Array<FloError> = []
+        if flag(args, "-v") or flag(args, "--version"){
+            println("v@0.01seflhost")
+            return 0
+        }
+        if flag(args, "-h") or flag(args, "--help"){
+            help()
+            return 0
+        }
         filename = args[1]
-        text = read_file(filename)
+        file = new File(filename)
+        text = file.read_as_string()
         /***** Lexing ******/
         lexer = new Lexer(text, errors)
         tokens = lexer.tokenize()
         print_errors(filename, errors, text)
-        if "debug-lexer" in args
-            debug_lexer(tokens, text)
+        if flag(args, "--print-tokens")
+            print_tokens(tokens, text)
         /***** Parsing *****/
-        parser = new Parser(tokens, errors)
-        module_node = parser.parse()
-        print_errors(filename, errors, text)
+        // parser = new Parser(tokens, errors)
+        // module_node = parser.parse()
+        // print_errors(filename, errors, text)
         /**** Analyzing ****/
-        analyzer = new Analyzer(module_node, errors)
-        program = analyzer.typecheck()
-    }
+        // analyzer = new Analyzer(module_node, errors)
+        // program = analyzer.typecheck()
+    } else help()
+    return 0
 }

@@ -9,6 +9,12 @@ class Analyzer {
         this.errors = errors
     }
     typecheck(): Program {
-        return new Program()
+        program = new Program()
+        this.declare_functions(program.declared_functions)
+    }
+    declare_functions(fncs: Array<FunctionType>){
+        for func in module_node.functions {
+            
+        }
     }
 }
