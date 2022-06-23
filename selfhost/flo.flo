@@ -39,7 +39,7 @@ fnc main(size: int, ptr: i8**): int {
     if args.length >= 2 {
         errors: Array<FloError> = []
         if flag(args, "-v") or flag(args, "--version"){
-            println("v@0.01seflhost")
+            println("v0.01@test.seflhost")
             return 0
         }
         if flag(args, "-h") or flag(args, "--help"){

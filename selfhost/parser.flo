@@ -366,6 +366,7 @@ class ModuleNode {
         this.classes = []
         this.imports = []
         this.consts = []
+        this.enums = []
         this.type_aliases = []
     }
 }
@@ -682,10 +683,11 @@ class Parser {
     }
     parse_comparasion_expression(): ExpressionNode {
         left = this.parse_bitshift_expression()
+        println(this.current_token.ttype, !this.can_parse())
         if (op =  this.is_comp_expr_op()) == -1 or !this.can_parse()
             return left
         this.advance()
-        return new BinaryExpressionNode(left, op, this.parse_comparasion_expression())
+        return new BinaryExpressionNode(left, op, this.parse_bit_expression())
     }
     is_bit_expr_op(): int {
         token_type = this.current_token.ttype
@@ -734,6 +736,7 @@ class Parser {
         if_node = new IfStatementNode()
         if_node.condition = this.parse_expression()
         if_node.block = this.parse_block()
+        this.new_lines()
         if this.current_token.ttype == TokType.ELSE_KW {
             this.advance()
             if_node.else_block = this.parse_block()
@@ -751,19 +754,22 @@ class Parser {
         this.advance()
         for_node = new ForStatementNode()
         if this.peek().ttype != TokType.IN_KW {
-            this.advance()
             for_node.intialization = this.parse_expression()
-            for_node.condition = this.parse_expression()
             if this.current_token.ttype == TokType.SEMICOL {
                 this.advance()
-                for_node.incr_decr = this.parse_expression()
+                for_node.condition = this.parse_expression()
+                if this.current_token.ttype == TokType.SEMICOL {
+                    this.advance()
+                    for_node.incr_decr = this.parse_expression()
+                }
             }
         } else {
             for_node.it_name = this.eat(TokType.IDENTIFER)
             this.eat(TokType.IN_KW)
             for_node.iterator = this.parse_expression()
         }
-        for_node.block = this.parse_block()
+        if this.can_parse()
+            for_node.block = this.parse_block()
         return for_node
     }
     parse_variable_declaration_statement(): VarDeclarationStatement {
@@ -805,14 +811,15 @@ class Parser {
     parse_block(): BlockNode {
         block_node = new BlockNode()
         this.new_lines()
-        if has_brace = (this.current_token.ttype == TokType.LBRACE)
+        if this.current_token.ttype == TokType.LBRACE {
             this.advance()
-        this.new_lines()
-        while this.can_parse() and this.current_token.ttype != TokType.RBRACE {
-            block_node.statements << this.parse_statement()
             this.new_lines()
-        }
-        if has_brace this.eat(TokType.RBRACE)
+            while this.can_parse() and this.current_token.ttype != TokType.RBRACE {
+                block_node.statements << this.parse_statement()
+                this.new_lines()
+            }
+            this.eat(TokType.RBRACE)
+        } else block_node.statements << this.parse_statement()
         return block_node
     }
     parse_type_alias(): TypeAliasNode {
