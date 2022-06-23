@@ -115,34 +115,38 @@ chef.print_specialty() // prints "Pizza"
 ```
 - [ ] Access modifiers.
 - [ ] Static Members.
-- [ ] Null initialization of uninitialized class members.
+- [ ] getters/setters.
 - [ ] Object Literal Intialization. (Also should work on function return and parameter passing)
+    - chef: Chef =  {specialty}
 ```ts
 chef: Chef = {specialty: "cake"}
 ```
 - [ ] Do not Allow for object creation of class with implemented methods.
 
 - [x] Operator Overloading.
-- `__eq__` (==)
-- `__add__` (+)
-- `__sub__` (-) TODO
-- `__mul__` (*) TODO
-- `__div__` (/) TODO
-- `__or__` (or) TODO
-- `__and__` (and) TODO
-- `__getitem__` (a[b])
-- `__setitem__` (a[b] = 2)
-- `__in__` (4 in int_array)
-- `__sl__` (<<)
-- `__sr__` (>>) TODO
-- `__lt__` (<) TODO
-- `__lg__` (>) TODO
-- `__ne__` (!=) TODO
-- `__le__` (<=) TODO
-- `__ge__` (>=) TODO
-- `__pow__` (^) TODO
-- `__mod__` (%) TODO
+    - `__eq__` (==)
+    - `__add__` (+)
+    - `__sub__` (-) TODO
+    - `__mul__` (*) TODO
+    - `__div__` (/) TODO
+    - `__or__` (or) TODO
+    - `__and__` (and) TODO
+    - `__getitem__` (a[b])
+    - `__setitem__` (a[b] = 2)
+    - `__in__` (4 in int_array)
+    - `__sl__` (<<)
+    - `__sr__` (>>) TODO
+    - `__lt__` (<) TODO
+    - `__lg__` (>) TODO
+    - `__ne__` (!=) TODO
+    - `__le__` (<=) TODO
+    - `__ge__` (>=) TODO
+    - `__pow__` (^) TODO
+    - `__mod__` (%) TODO
+
+- [ ] Operator Fall backs.
 ## Enums
+- [x] Enums constants (Assigned as numbers at compile time)
 ```
 enum Numbers{
     ONE
@@ -155,6 +159,7 @@ enum Numbers{
 ## Tuples
 Work in progress
 ## Conditionals
+- [x] `if`/`else`
 ```
 if a >= b {
 // DO SOMETHING
@@ -163,9 +168,10 @@ if a in 0..11 {
 // DO SOMETHING
 } else // DO SOMETHING
 ```
+- [ ] Match Expression.
+
 ## Loops
 - [x] traditional for Loop
-- Optional parts doesn't work
 ```
 for i = 0; i < 10; i++ // do something
 ```
@@ -208,18 +214,38 @@ fnc max(...numbers: int){
 }
 ```
 - [ ] Functions with closure(Anonymous functions).
-- [ ] Generic Functions.
-- [ ] JS style setters and getters.
-- [ ] Parameter Labels on functions.
+- [ ] Named parameters for function calls 
+    - add(x: 5, y: 6)
 ```
 double(x: 5)
 ```
+## Generics
+- [x] Generic Classes.
+- [ ] Generic Functions.
+    - Generic Methods in Classes.
+- [ ] Built-in Generics.
+    - `Readonly<T>`.
+
+## Types
+- [ ] Type Unions and Intersections (or, and).
+- [ ] Optional types. 
+```
+    x: int?
+```
+- [ ]  Meta-type programming capablitites?.
+
 ## Type Alias
+- [x] basic Type Aliasing.
 ```
 type char = i8
 type i1 = bool
 ```
+- [ ] Better Type Aliasing.
+    - Type Aliasing with Type Contraints.
+    - Type Aliasing with Generics.
+
 ## Type Checking
+- [x] `is` keyword.
 ```py
 1 is int // true
 2.0 is float //true
@@ -254,6 +280,8 @@ This might not work
 
 This **will** not work
 - Static Arrays to string shall not work.
+- [ ] Casting to pointer types using type aliased names.
+    - __as_cstr__(): cstr
 
 
 ## Error Handling
@@ -270,17 +298,36 @@ try error_prone_fnc() catch error {
     println(error)
 }
 ```
+
+## Taste
+- [ ] Compile time Macros ($symbol).
+```php
+$stdio = 0
+write($stdio, "ss", 2)
+```
+- [ ] Global Variables (static keyword). 
+    - `static y: int = 4`
+    - `static x: Readonly<T>` is a global const.
+
+## Imports/External
+- [x] Import Specific symbol.
+```ts
+import A, B from "module0"
+```
+- [x] Import All module.
+```ts
+import "module"
+```
+- [ ] Import renaming/ namespacing.
+```ts
+import A as C from "module"
+import "module" as B
+B.add(1)
+```
+
+## Errors / Bugs
+- Debugger.
 - Stack trace.
 
 ## Environment
 - Syntax highlithing / LSP server / Snippets.
-- Debugger.
-
-## Future
-- Think about global variables.
-- Think about module renaming.
-```ts
-import A as C from 'module1'
-import 'module2' as B
-```
-- Testing.
