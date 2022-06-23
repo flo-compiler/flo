@@ -195,6 +195,7 @@ while 1 // do something
 while true // do something
 ```
 ## Functions
+- Functions are first class so can be passed as an argument or assigned to vars.
 - [x] Base Function
 ```
 fnc double(x: int): int {
