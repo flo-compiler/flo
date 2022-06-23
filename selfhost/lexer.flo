@@ -85,7 +85,7 @@ fnc string_to_kw_token(word: string): TokType {
         return TokType.XOR_KW
     if word == "const"
         return TokType.CONST_KW
-    if word == "if"
+    if word == "if" 
         return TokType.IF_KW
     if word == "else"
         return TokType.ELSE_KW
@@ -246,8 +246,10 @@ class Lexer {
     skip_comment(): bool{
         if this.peek() == '*' {
             this.advance()
-            while this.peek() != '*' and this.peek(2) != '/'
+            while true {
+                if this.peek() == '*' and this.peek(2) == '/' break
                 this.advance()
+            }
             this.advance()
             this.advance()
             return true

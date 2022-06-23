@@ -22,6 +22,7 @@ class string {
         return new string(new_buffer, 2)
     }
     __eq__(other: string): bool {
+        if this.length != other.length return false
         return memcmp(this.buffer, other.buffer, this.length) == 0
     }
     find(search: string): int {
