@@ -46,9 +46,17 @@ Still in progress. In the future it might be acheived by:
 - [ ] Integer Overflows.
 - [ ] Division by zero.
 
-## Code Readablity and ease of use
-- [ ] A null
-- [ ] Argument labels `foo(bar: 3)`
+
+## Taste
+- [ ] Compile time Macros ($symbol).
+```php
+$stdio = 0
+write($stdio, "ss", 2)
+```
+- [ ] Global Variables (static keyword). 
+    - `static y: int = 4`
+    - `static x: Readonly<T>` is a global const.
+
 - [ ] Optional chaining `a?.b?.c`
 
 ## Ranges
@@ -117,7 +125,6 @@ chef.print_specialty() // prints "Pizza"
 - [ ] Static Members.
 - [ ] getters/setters.
 - [ ] Object Literal Intialization. (Also should work on function return and parameter passing)
-    - chef: Chef =  {specialty}
 ```ts
 chef: Chef = {specialty: "cake"}
 ```
@@ -157,7 +164,7 @@ enum Numbers{
 ## Dictionaries
 ## Sets
 ## Tuples
-Work in progress
+Work in progress (Will be in the standart library)
 ## Conditionals
 - [x] `if`/`else`
 ```
@@ -215,7 +222,6 @@ fnc max(...numbers: int){
 ```
 - [ ] Functions with closure(Anonymous functions).
 - [ ] Named parameters for function calls 
-    - add(x: 5, y: 6)
 ```
 double(x: 5)
 ```
@@ -232,7 +238,9 @@ double(x: 5)
 ```
     x: int?
 ```
-- [ ]  Meta-type programming capablitites?.
+- [ ]  Meta-type programming capablitites.?
+    - Type restrictions.
+
 
 ## Type Alias
 - [x] basic Type Aliasing.
@@ -274,14 +282,14 @@ Type Casting always works when converting these types to the following types.
 - Object of any type to Object of any type (Unsafe)
     - Safe if object the method `__as_${other_object_name}__` is implemented (Generics do not apply here)
     - Needs to be checked by the compiler and looked for any memory error.
+    - Casting to pointer types on objects using type aliased names.
+        - `__as_cstr__(): cstr`
 
 This might not work
 - String to Int/Float might fail if String is not an Int or Float.
 
 This **will** not work
 - Static Arrays to string shall not work.
-- [ ] Casting to pointer types using type aliased names.
-    - __as_cstr__(): cstr
 
 
 ## Error Handling
@@ -298,16 +306,6 @@ try error_prone_fnc() catch error {
     println(error)
 }
 ```
-
-## Taste
-- [ ] Compile time Macros ($symbol).
-```php
-$stdio = 0
-write($stdio, "ss", 2)
-```
-- [ ] Global Variables (static keyword). 
-    - `static y: int = 4`
-    - `static x: Readonly<T>` is a global const.
 
 ## Imports/External
 - [x] Import Specific symbol.
