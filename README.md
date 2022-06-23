@@ -47,8 +47,9 @@ Still in progress. In the future it might be acheived by:
 - [ ] Division by zero.
 
 
-## Taste
+## Taste of the language.
 - [ ] Compile time Macros ($symbol).
+- [x] Functions with no body are considered extern functions and Methods with no body make the class an abstract class.
 ```php
 $stdio = 0
 write($stdio, "ss", 2)
