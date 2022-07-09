@@ -4,8 +4,6 @@ from context import Context
 from llvmlite import ir
 from typing import Union
 
-from lexer import Token
-
 
 def create_array_buffer(builder: ir.IRBuilder, elems):
     elm_ty = elems[0].llvmtype
@@ -987,8 +985,11 @@ class FloObject(FloType):
         if op == "==" or op == "!=":
             eq_method = self.get_method("__eq__", builder)
             value = FloInt(0, 1)
+            other_object: FloObject = other
             if eq_method:
-                value = eq_method.call(builder, [other])
+                if len(eq_method.arg_types) > 0 and other_object.referer.has_parent(eq_method.arg_types[0].referer):
+                    other_object = other_object.cast_to(builder, eq_method.arg_types[0])
+                value = eq_method.call(builder, [other_object])
             return value.not_(builder) if should_not else value
 
     def get_cast_method(self, type, builder):

@@ -1,4 +1,3 @@
-from operator import le
 from typing import Dict, List
 from context import Context
 from errors import GeneralError, TypeError, SyntaxError, NameError
@@ -118,7 +117,7 @@ class Analyzer(Visitor):
     bit_operators = (TokType.SL, TokType.SR)
 
     def __init__(self, context: Context):
-        self.context = Context(context.display_name, context)
+        self.context = Context(context.display_name+"_typecheck", context)
         self.constants = context.get_symbols()
         self.class_within: str = None
         self.current_block = Block.stmt()

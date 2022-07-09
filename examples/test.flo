@@ -1,14 +1,4 @@
 /*  This file is currently used for tests in the development of the self-hosted compiler*/
-class SpecialArray<T> extends Array<int> {
-    constructor(){
-        super()
-    }
-}
-/* Hello world */
-fnc main(){
-    print("hello world\n")
-    0xA
-    0o55
-    0b111
-    '\t'
+fnc main() {
+    x = 4 + 5
 }

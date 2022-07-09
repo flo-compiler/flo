@@ -1,0 +1,52 @@
+
+class LLVMContext{}
+fnc LLVMContextCreate(): LLVMContext
+fnc LLVMContextDispose()
+class LLVMModule{}
+fnc LLVMModuleCreateWithNameInContext(moduleID: i8*, C: LLVMContext): LLVMModule
+class LLVMType{}
+fnc LLVMIntTypeInContext(C: LLVMContext, NumBits: int): LLVMType
+fnc LLVMHalfTypeInContext(C: LLVMContext): LLVMType
+fnc LLVMFloatTypeInContext(C: LLVMContext): LLVMType
+fnc LLVMDoubleTypeInContext(C: LLVMContext): LLVMType
+fnc LLVMX86FP80TypeInContext(C: LLVMContext): LLVMType
+fnc LLVMFP128TypeInContext(C: LLVMContext): LLVMType
+fnc LLVMVoidTypeInContext(C: LLVMContext): LLVMType
+fnc LLVMStructTypeInContext(
+        C: LLVMContext,
+        ElementTypes: LLVMType*,
+        ElementCount: int,
+        Packed: bool): LLVMType
+
+class LLVMValue{}
+enum InlineAsmDialect {
+    ATT
+    Intel
+}
+fnc LLVMGetInlineAsm(ty: LLVMType, asmString: i8*, asmStringSize: int, constraints: i8*, constraintsSize: int, HasSideEffects: bool, IsAlignStack: bool, Dialect: InlineAsmDialect, CanThrow: bool): LLVMValue
+
+fnc LLVMFunctionType(returnType: LLVMType, paramTypes: LLVMType*, paramCount: int, isVarArg: bool): LLVMType
+
+fnc LLVMAddFunction(module: LLVMModule, name: i8*, functionTy: LLVMType): LLVMValue
+
+fnc LLVMGetNamedFunction(module: LLVMModule, name: i8*): LLVMValue
+class LLVMExecutionEngine{}
+class LLVMPassManagerBuilder{}
+class LLVMPassManager{}
+class LLVMTargetData{}
+class LLVMTargetLibraryInfo{}
+class LLVMTarget{}
+class LLVMTargetMachine{}
+class LLVMMemoryBuffer{}
+class LLVMAttributeListIterator{}
+class LLVMAttributeSetIterator{}
+class LLVMGlobalsIterator{}
+class LLVMFunctionsIterator{}
+class LLVMBlocksIterator{}
+class LLVMArgumentsIterator{}
+class LLVMInstructionsIterator{}
+class LLVMOperandsIterator{}
+class LLVMTypesIterator{}
+class LLVMObjectCache{}
+class LLVMObjectFile{}
+class LLVMSectionIterator{}

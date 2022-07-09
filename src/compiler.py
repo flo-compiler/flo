@@ -1,4 +1,4 @@
-from copyreg import constructor
+import subprocess
 from pathlib import Path
 from typing import Dict
 from errors import CompileError, TypeError
@@ -65,6 +65,7 @@ class Compiler(Visitor):
             with open(f"{basename}.o", "wb") as object:
                 object.write(target_machine.emit_object(llvm_module))
                 object.close()
+            subprocess.run(["clang", f"{basename}.o", "-o" f"{basename}"])
         # Execute code
         if options.execute:
             # And an execution engine with an empty backing module

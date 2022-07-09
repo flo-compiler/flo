@@ -66,6 +66,6 @@ class File {
         return is_dir
     }
     delete(){
-        unlink(this.path.get_bytes())
+        unlink(this.path.to_cstring())
     }
 }

@@ -1,0 +1,32 @@
+fnc fflush(fd: int)
+class FloRange {
+    start: int
+    end: int
+    col: int
+    line: int
+    constructor(start: int, end: int, col: int, line: int){
+        this.start = start
+        this.end = end
+        this.col = col
+        this.line = line
+    }
+}
+class Optional<T> {
+    value: T
+    has_value: bool
+    construtor(){
+        this.has_value = false
+    }
+    set_value(value: T){
+        this.has_value = true
+        this.value = value
+    }
+}
+fnc merge_range(r1: FloRange, r2: FloRange): FloRange {
+    return new FloRange(r1.start, r2.end, r1.col, r2.line)
+}
+fnc color(color: string): string {
+    if color == "red"
+        return "\033[1;31m"
+    return "\033[0m"
+}

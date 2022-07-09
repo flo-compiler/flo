@@ -1,0 +1,129 @@
+
+enum TypeKind {
+    VOID
+    INT
+    FLOAT
+    ARRAY
+    CHAR
+    STRING
+    BOOL
+    ENUM
+    OBJECT
+    NAMESPACE
+}
+class Type {
+    kind: TypeKind
+    constructor(kind: TypeKind){
+        this.kind = kind
+    }
+    __eq__(other: Type): bool {
+        return this.kind == other.kind
+    }
+    __as_string__(): string {
+        if this.kind == TypeKind.INT
+            return "int"
+        if this.kind == TypeKind.FLOAT
+            return "float"
+        if this.kind == TypeKind.STRING
+            return "string"
+        if this.kind == TypeKind.CHAR
+            return "i8"
+        if this.kind == TypeKind.VOID
+            return "void"
+        return ""
+    }
+}
+class Value {
+    vtype: Type
+}
+class ArrayType extends Type {
+    element_type: Type
+    constructor(element_type: Type){
+        super(TypeKind.ARRAY)
+        this.element_type = element_type
+    }
+}
+class FunctionType extends Type {
+    name: string
+    args: Array<Type>
+    return_type: Type
+    constructor(){
+        this.args = []
+    }
+}
+class RangeType extends Type {
+    constructor(){
+        super(TypeKind.OBJECT)
+    }
+}
+class Module {
+    id: int
+    functions: Array<FunctionType>
+}
+class Program {
+    modules: Array<Module>
+    constructor(){
+        this.modules = []
+    }
+}
+// Hint: For Generics and typed constraints consider Hidley-Milner Algorithm.
+class TypeChecker {
+    program: Program
+    current_module: int
+    current_class: int
+    current_function: int
+    errors: Array<FloError>
+    constructor(errors: Array<FloError>){
+        this.errors = errors
+        this.program = new Program()
+    }
+    expect_type(actual: Type, expected: Type): bool {
+        return actual != expected
+    }
+    infer_type(expression: ExpressionNode): Type {
+        if expression.kind == ExpressionNodeKind.INT 
+            return new Type(TypeKind.INT)
+        if expression.kind == ExpressionNodeKind.FLOAT 
+            return new Type(TypeKind.FLOAT)
+        if expression.kind == ExpressionNodeKind.CHAR 
+            return new Type(TypeKind.CHAR)
+        if expression.kind == ExpressionNodeKind.STR 
+            return new Type(TypeKind.STRING)
+        if expression.kind == ExpressionNodeKind.ARRAY
+            return this.infer_array_type(expression as ArrayExpressionNode)
+        if expression.kind == ExpressionNodeKind.BIN 
+            return this.infer_binary_type(expression as BinaryExpressionNode)
+        return new Type(-1)
+    }
+    infer_array_type(arr: ArrayExpressionNode): ArrayType {
+        return new ArrayType(this.infer_type(arr.elements[0]))
+    }
+    infer_binary_type(binexpr: BinaryExpressionNode): Type {
+        if binexpr.op == BinaryOp.RANGE
+            return new RangeType()
+        left = this.infer_type(binexpr.lhs)
+        right = this.infer_type(binexpr.rhs)
+        if left.kind == TypeKind.INT and left.kind == right.kind
+            return new Type(left.kind)
+        if left.kind == TypeKind.FLOAT and left.kind == right.kind
+            return new Type(left.kind)
+        if left.kind == TypeKind.CHAR and left.kind == right.kind
+            return new Type(left.kind)
+        if left.kind == TypeKind.INT and right.kind == TypeKind.FLOAT
+            return new Type(TypeKind.FLOAT)
+        if left.kind == TypeKind.FLOAT and right.kind == TypeKind.INT
+            return new Type(TypeKind.FLOAT)
+        return new Type(TypeKind.VOID)
+    }
+    check(module_ast: ModuleAST): Program {
+        this.program.modules << new Module(0)
+        this.current_module = 0 
+        this.declare_functions(module_ast.functions)
+        return this.program
+    }
+    declare_functions(function_nodes: Array<FunctionDeclarationNode>){
+        for i = 0; i < function_nodes.length; i++ {
+            true
+        }
+    }
+}
