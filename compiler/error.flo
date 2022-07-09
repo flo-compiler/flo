@@ -1,0 +1,64 @@
+import FloRange, color from "utils"
+enum ErrorKind {
+    ILLEGALCHAR
+    NAME
+    SYNTAX
+    IO
+    GEN
+    TYPE
+}
+
+class FloError {
+    kind: ErrorKind
+    message: string
+    range: FloRange
+    constructor(kind: ErrorKind, message: string, range: FloRange){
+        this.kind = kind
+        this.range = range
+        this.message = message
+    }
+}
+fnc get_next_line_index(text: string, start: int): int {
+    while text.get_byte(start) != '\n' and start < text.length 
+        start++
+    return start
+}
+fnc print_error_line(text: string, range: FloRange){
+    end = get_next_line_index(text, range.end)
+    start_line = range.start - range.col
+    print(text.substring(start_line, end - start_line))
+    print("\n")
+    space_num = range.col
+    arrow_num = range.end - range.start
+    for i = 0; i < space_num; i++ {
+        print(" ")
+    }
+    print(color("red"))
+    for i = 0; i < arrow_num; i++ {
+        print("^")
+    }
+    println(color(""))
+}
+fnc print_message_error(kind: ErrorKind, message: string){
+    print(color("red"))
+    if kind == ErrorKind.ILLEGALCHAR {
+        print("[Illegal Character]: ")
+    } else if kind == ErrorKind.SYNTAX {
+        print("[Syntax Error]: ")
+    } else if kind == ErrorKind.IO {
+        print("[IO Error]: ")
+    } else {
+        print("[Error]: ")
+    }
+    print(color(""))
+    println(message)
+}
+fnc print_errors(filename: string, errors: Array<FloError>, content: string){
+    for i = 0; i < errors.length; i++ {
+        error_ = errors[i]
+        print_message_error(error_.kind, error_.message)
+        println("File \"" + filename + "\", line", error_.range.line)
+        print_error_line(content, error_.range)
+    }
+    if errors.length > 0 _exit(1)
+}

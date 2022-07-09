@@ -1,10 +1,7 @@
 **/__pycache__/*
 **/.vscode/**
-**/.venv/**
-**/build/**
-*.exe
 *.o
 *.ll
 **/*.vsix
 flo
-/experiments
+/llvm-project

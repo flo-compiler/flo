@@ -1,0 +1,985 @@
+enum TypeNodeKind {
+    BOOL
+    I4
+    I8
+    I16
+    I32
+    I64
+    I128
+    INT
+    F16
+    F32
+    F64
+    FLOAT
+    VOID
+    OBJECT
+    PTR
+    ARRAY
+    FNC
+}
+enum StatementNodeKind {
+    IF
+    VAR
+    FOR
+    WHILE
+    CONTINUE
+    BREAK
+    RETURN
+    EXPRESSION
+}
+enum ExpressionNodeKind {
+    INT
+    FLOAT
+    CHAR
+    ARRAY
+    VAR
+    STR
+    BIN
+    UNARY
+    TYPEBOUND
+    NEW
+    MEMBER
+    INDEX
+    CALL
+}
+enum BinaryOp {
+    ADD
+    SUB
+    TIMES
+    DIV
+    MOD
+    POW
+    EEQ
+    NEQ
+    GT
+    LT
+    GTE
+    LTE
+    SL
+    SR
+    OR
+    AND
+    XOR
+    IN
+    ASSIGN
+    RANGE
+}
+enum UnaryOp {
+    PREINCR
+    PREDECR
+    POSTINCR
+    POSTDECR
+    NEG
+    NOT
+    ADDROF
+}
+enum TypeExprOp {
+    IN
+    AS
+    IS
+}
+class Node {
+    range: Range
+}
+class TypeNode {
+    kind: TypeNodeKind
+    constructor(kind: TypeNodeKind){
+        this.kind = kind
+    }
+}
+class RecordTypeNode extends TypeNode {
+    name: string
+    generic_args: Array<TypeNode>
+    constructor(name: string) {
+        super(TypeNodeKind.OBJECT)
+        this.name = name
+        this.generic_args = []
+    }
+}
+class FunctionTypeNode extends TypeNode {
+    args: Array<TypeNode>
+    return_type: TypeNode
+    constructor(){
+        super(TypeNodeKind.FNC)
+        this.args = []
+    }
+}
+class PointerTypeNode extends TypeNode {
+    element_type: TypeNode
+    constructor(element_type: TypeNode){
+        super(TypeNodeKind.PTR)
+        this.element_type = element_type
+    }
+}
+class StatementNode {
+    kind: StatementNodeKind
+    constructor(kind: StatementNodeKind){
+        this.kind = kind
+    }
+}
+class BlockNode {
+    statements: Array<StatementNode>
+    constructor(){
+        this.statements = []
+    }
+}
+class ExpressionNode extends StatementNode {
+    expr_kind: ExpressionNodeKind
+    constructor(expr_kind: ExpressionNodeKind){
+        super(StatementNodeKind.EXPRESSION)
+        this.expr_kind = expr_kind
+    }
+}
+class ArrayTypeNode extends TypeNode {
+    element_type: TypeNode
+    length: ExpressionNode
+    constructor(element_type: TypeNode, length: ExpressionNode){
+        super(TypeNodeKind.ARRAY)
+        this.element_type = element_type
+        this.length = length
+    }
+}
+class IntExpressionNode extends ExpressionNode {
+    value: int
+    constructor(value: int){
+        super(ExpressionNodeKind.INT)
+        this.value = value
+    }
+}
+class FloatExpressionNode extends ExpressionNode {
+    value: float
+    constructor(value: float){
+        super(ExpressionNodeKind.FLOAT)
+        this.value = value
+    }
+}
+class CharExpressionNode extends ExpressionNode {
+    value: i8
+    constructor(value: i8){
+        super(ExpressionNodeKind.FLOAT)
+        this.value = value
+    }
+}
+class StringExpressionNode extends ExpressionNode {
+    value: string
+    constructor(value: string){
+        super(ExpressionNodeKind.STR)
+        this.value = value
+    }
+}
+class VarAccessExpressionNode extends ExpressionNode {
+    name: string
+    constructor(name: string){
+        super(ExpressionNodeKind.VAR)
+        this.name = name
+    }
+}
+class ArrayExpressionNode extends ExpressionNode {
+    elements: Array<ExpressionNode>
+    constructor(){
+        super(ExpressionNodeKind.ARRAY)
+        this.elements = []
+    }
+}
+class NewExpressionNode extends ExpressionNode {
+    parsed_type: TypeNode
+    args: Array<ExpressionNode>
+    constructor(parsed_type: TypeNode){
+        this.parsed_type = parsed_type
+        super(ExpressionNodeKind.NEW)
+        this.args = []
+    }
+}
+class ExpressionIndexNode extends ExpressionNode {
+    expression: ExpressionNode
+    index: ExpressionNode
+    constructor(expression: ExpressionNode, index: ExpressionNode){
+        this.expression = expression
+        this.index = index
+        super(ExpressionNodeKind.INDEX)
+    } 
+}
+class MemeberExpressionNode extends ExpressionNode {
+    expression: ExpressionNode
+    member: Token
+    constructor(expression: ExpressionNode, member: Token){
+        super(ExpressionNodeKind.MEMBER)
+        this.expression = expression
+        this.member = member
+    }
+}
+class CallExpressionNode extends ExpressionNode {
+    callee: ExpressionNode
+    args: Array<ExpressionNode>
+    constructor(callee: ExpressionNode) {
+        this.callee = callee
+        this.args = []
+    }
+}
+class TypeExpressionNode extends ExpressionNode {
+    expression: ExpressionNode
+    op: TypeExprOp
+    bound_type: TypeNode
+    constructor(expression: ExpressionNode, bound_type: TypeNode){
+        super(ExpressionNodeKind.TYPEBOUND)
+        this.expression = expression
+        this.bound_type = bound_type
+    }
+}
+class BinaryExpressionNode extends ExpressionNode {
+    lhs: ExpressionNode
+    op: BinaryOp
+    rhs: ExpressionNode
+    constructor(left: ExpressionNode, op: BinaryOp, right: ExpressionNode){
+        super(ExpressionNodeKind.BIN)
+        this.lhs = left
+        this.op = op
+        this.rhs = right
+    }
+}
+class UnaryExpressionNode extends ExpressionNode {
+    op: UnaryOp
+    expression: ExpressionNode
+    constructor(op: UnaryOp, expression: ExpressionNode){
+        this.op = op
+        this.expression = expression
+        super(ExpressionNodeKind.UNARY)
+    }
+}
+/* Can be either 'as' or 'is' unary expression */
+class IfStatementNode extends StatementNode {
+    condition: ExpressionNode
+    block: BlockNode
+    else_block: BlockNode
+    constructor(){
+        super(StatementNodeKind.IF)
+    }
+}
+class WhileStatementNode extends StatementNode {
+    condition: ExpressionNode
+    block: BlockNode
+    constructor(){
+        super(StatementNodeKind.WHILE)
+    }
+}
+class ForStatementNode extends StatementNode {
+    intialization: ExpressionNode
+    condition: ExpressionNode
+    incr_decr: ExpressionNode
+    iterator: ExpressionNode
+    it_name: Token
+    block: BlockNode
+    constructor(){
+        super(StatementNodeKind.FOR)
+    }
+}
+class ReturnStatementNode extends StatementNode {
+    value: ExpressionNode
+    constructor(){
+        super(StatementNodeKind.RETURN)
+    }
+}
+class VarDeclarationStatement extends StatementNode {
+    var_name: Token
+    var_type: TypeNode
+    value: ExpressionNode
+    constructor(){
+        super(StatementNodeKind.RETURN)
+    }
+}
+class ArgNode {
+    name: Token
+    parsed_type: TypeNode
+    default: ExpressionNode
+}
+class FunctionDeclarationNode {
+    name: Token
+    args: Array<ArgNode>
+    block: BlockNode
+    return_type: TypeNode
+    is_external: bool
+    constructor(){
+        this.args = []
+        this.is_external = false
+    }
+}
+class FieldNode {
+    name: Token
+    parsed_type: TypeNode
+}
+class GenericParameterNode {
+    name: Token
+    constructor(name: Token){
+        this.name = name
+    }
+}
+class ClassDeclarationNode {
+    name: Token
+    generic_parameters: Array<GenericParameterNode>
+    parent: RecordTypeNode
+    fields: Array<FieldNode>
+    methods: Array<FunctionDeclarationNode>
+    constructor(name: Token) {
+        this.name = name
+        this.fields = []
+        this.methods = []
+        this.generic_parameters = []
+    }
+}
+class EnumField {
+    name: Token
+    constructor(name: Token){
+        this.name = name
+    }
+}
+class EnumNode {
+    name: Token
+    fields: Array<EnumField>
+    constructor(){
+        this.fields = []
+    }
+}
+class ImportNode {
+    import_list: Array<Token>
+    module_path: Token
+    constructor(){
+        this.import_list = []
+    }
+}
+class ConstNode {
+    name: Token
+    value: ExpressionNode
+}
+class TypeAliasNode {
+    name: Token
+    parsed_type: TypeNode
+}
+class ModuleAST {
+    functions: Array<FunctionDeclarationNode>
+    classes: Array<ClassDeclarationNode>
+    enums: Array<EnumNode>
+    imports: Array<ImportNode> 
+    consts: Array<ConstNode> 
+    type_aliases: Array<TypeAliasNode> 
+    constructor() {
+        this.functions = []
+        this.classes = []
+        this.imports = []
+        this.consts = []
+        this.enums = []
+        this.type_aliases = []
+    }
+}
+class Parser {
+    tokens: Array<Token>
+    errors: Array<FloError>
+    current_token: Token
+    idx: int
+    constructor(tokens: Array<Token>, errors: Array<FloError>){
+        this.tokens = tokens
+        this.errors = errors
+        this.idx = -1
+    }
+    can_parse(): bool{
+        return this.current_token.ttype != TokType.EOF and this.errors.length == 0
+    }
+    error(message: string){
+        this.errors << new FloError(ErrorKind.SYNTAX, message, this.current_token.range)
+    }    
+    advance(){
+        if this.idx < this.tokens.length
+            this.current_token = this.tokens[++this.idx]
+    }
+    peek(offset = 1): Token{
+        peek_idx = this.idx + offset
+        if peek_idx < this.tokens.length
+            return this.tokens[peek_idx]
+        return this.tokens[this.tokens.length - 1]
+    }
+    eat(token_type: int): Token {
+        current_token = this.current_token
+        if token_type == current_token.ttype {
+            this.advance()
+            return current_token
+        } else {
+            if token_type == TokType.IDENTIFER 
+                this.error("Expected an Identifier")
+            else if token_type == TokType.EQ 
+                this.error("Expected '='")
+            else if token_type == TokType.COL 
+                this.error("Expected ':'")
+            else if token_type == TokType.LPAR 
+                this.error("Expected '('")
+            else if token_type == TokType.RPAR {
+                this.error("Expected ')'")
+            }
+            else if token_type == TokType.LBRACE 
+                this.error("Expected '{'")
+            else if token_type == TokType.RBRACE 
+                this.error("Expected '}'")
+            else if token_type == TokType.COMMA 
+                this.error("Expected ','")
+            else if token_type = TokType.LT 
+                this.error("Expected '<'")
+            else if token_type = TokType.GT 
+                this.error("Expected '>'")
+            else if token_type = TokType.ARROW 
+                this.error("Expected '=>'")
+            else if token_type == TokType.FROM_KW 
+                this.error("Expected 'from'")
+        }
+        return new Token(TokType.EOF, current_token.range)
+    }
+    new_lines() {
+        while this.current_token.ttype == TokType.LN
+            this.advance()
+    }
+    parse_primitive_type(): TypeNode {
+        type_node = new TypeNode(TypeNodeKind.VOID)
+        if this.current_token.ttype == TokType.BOOL_KW
+            type_node.kind = TypeNodeKind.BOOL
+        else if this.current_token.ttype == TokType.I4_KW
+            type_node.kind = TypeNodeKind.I4
+        else if this.current_token.ttype == TokType.I8_KW
+            type_node.kind = TypeNodeKind.I8
+        else if this.current_token.ttype == TokType.I16_KW
+            type_node.kind = TypeNodeKind.I16
+        else if this.current_token.ttype == TokType.I32_KW
+            type_node.kind = TypeNodeKind.I32
+        else if this.current_token.ttype == TokType.I64_KW
+            type_node.kind = TypeNodeKind.I64
+        else if this.current_token.ttype == TokType.I128_KW
+            type_node.kind = TypeNodeKind.I128
+        else if this.current_token.ttype == TokType.INT_KW
+            type_node.kind = TypeNodeKind.INT
+        else if this.current_token.ttype == TokType.F16_KW
+            type_node.kind = TypeNodeKind.F16
+        else if this.current_token.ttype == TokType.F32_KW
+            type_node.kind = TypeNodeKind.F32
+        else if this.current_token.ttype == TokType.F64_KW
+            type_node.kind = TypeNodeKind.F64
+        else if this.current_token.ttype == TokType.FLOAT_KW
+            type_node.kind = TypeNodeKind.FLOAT
+        else if this.current_token.ttype != TokType.VOID_KW
+            this.error("Expected a type definition")
+        this.advance()
+        return type_node
+    }
+    parse_type_list(type_nodes: Array<TypeNode>) {
+        type_nodes << this.parse_type()
+        while this.current_token.ttype == TokType.COMMA
+            type_nodes << this.parse_type()
+    }
+    parse_object_type(): RecordTypeNode {
+        object_type_node = new RecordTypeNode((this.eat(TokType.IDENTIFER) as IdentifierToken).value)
+        if this.current_token.ttype == TokType.LT {
+            this.advance()
+            this.parse_type_list(object_type_node.generic_args)
+            this.eat(TokType.GT)
+        }
+        return object_type_node
+    }
+    parse_function_type(): FunctionTypeNode {
+        this.advance()
+        fnc_type_node = new FunctionTypeNode()
+        if this.current_token.ttype != TokType.RPAR
+            this.parse_type_list(fnc_type_node.args)
+        this.eat(TokType.RPAR)
+        this.eat(TokType.ARROW)
+        fnc_type_node.return_type = this.parse_type()
+        return fnc_type_node
+    }
+    parse_type(): TypeNode {
+        type_node = new TypeNode(TypeNodeKind.VOID)
+        if this.current_token.ttype == TokType.IDENTIFER
+            type_node = this.parse_object_type()
+        else if this.current_token.ttype == TokType.LPAR
+            type_node = this.parse_function_type()
+        else 
+            type_node = this.parse_primitive_type()
+        while this.current_token.ttype == TokType.LBRACKET or this.current_token.ttype == TokType.MULT {
+            if this.current_token.ttype == TokType.LBRACKET {
+                this.advance()
+                type_node = new ArrayTypeNode(type_node, this.parse_expression())
+                this.advance()
+            } else {
+                this.eat(TokType.MULT)
+                type_node = new PointerTypeNode(type_node)
+            }
+        }
+        return type_node
+    }
+    parse_expression_list(expressions: Array<ExpressionNode>) {
+        expressions << this.parse_expression()
+        while this.current_token.ttype == TokType.COMMA and this.can_parse(){
+            this.advance()
+            expressions << this.parse_expression()
+        }
+    }
+    parse_array_expression(): ArrayExpressionNode {
+        this.advance()
+        array_expression = new ArrayExpressionNode()
+        if this.current_token.ttype != TokType.RBRACKET
+            this.parse_expression_list(array_expression.elements)
+        this.eat(TokType.RBRACKET)
+        return array_expression
+    }
+    parse_new_expression(): NewExpressionNode {
+        this.advance()
+        new_node = new NewExpressionNode(this.parse_type())
+        if this.current_token.ttype == TokType.LPAR {
+            this.advance()
+            if this.current_token.ttype != TokType.RPAR
+                this.parse_expression_list(new_node.args)
+            this.eat(TokType.RPAR)
+        }
+        return new_node
+    }
+    /* TODO: NEW */
+    parse_atom(): ExpressionNode {
+        if this.current_token.ttype == TokType.STR
+            return new StringExpressionNode((this.eat(TokType.STR) as StrToken).value)
+        else if this.current_token.ttype == TokType.INT
+            return new IntExpressionNode((this.eat(TokType.INT) as IntToken).value)
+        else if this.current_token.ttype == TokType.FLOAT
+            return new FloatExpressionNode((this.eat(TokType.FLOAT) as FloatToken).value)
+        else if this.current_token.ttype == TokType.CHAR
+            return new CharExpressionNode((this.eat(TokType.CHAR) as CharToken).value)
+        else if this.current_token.ttype == TokType.IDENTIFER
+            return new VarAccessExpressionNode((this.eat(TokType.IDENTIFER) as IdentifierToken).value)
+        else if this.current_token.ttype == TokType.LBRACKET 
+            return this.parse_array_expression()
+        else if this.current_token.ttype == TokType.NEW_KW
+            return this.parse_new_expression()
+        else if this.current_token.ttype == TokType.LPAR {
+            this.advance()
+            expression = this.parse_expression()
+            this.eat(TokType.RPAR)
+            return expression
+        } else
+            this.error("Expected an Expression value")
+        return new ExpressionNode(ExpressionNodeKind.VAR)
+    }
+    parse_index_expression(expression: ExpressionNode): ExpressionIndexNode {
+        this.eat(TokType.LBRACKET)
+        index_expression = new ExpressionIndexNode(expression, this.parse_expression())
+        this.eat(TokType.RBRACKET)
+        return index_expression
+    }
+    parse_call_expression(expression: ExpressionNode): CallExpressionNode {
+        this.eat(TokType.LPAR)
+        call_expression = new CallExpressionNode(expression)
+        if this.current_token.ttype != TokType.RPAR
+            this.parse_expression_list(call_expression.args)
+        this.eat(TokType.RPAR)
+        return call_expression
+    }
+    parse_member_expression(expression: ExpressionNode): MemeberExpressionNode {
+        this.eat(TokType.DOT)
+        return new MemeberExpressionNode(expression, this.eat(TokType.IDENTIFER))
+    }
+    parse_lhs_expression_allow_call(): ExpressionNode {
+        expression = this.parse_atom()
+        while this.can_parse() {
+            if this.current_token.ttype == TokType.LPAR
+                expression = this.parse_call_expression(expression)
+            else if this.current_token.ttype == TokType.LBRACKET
+                expression = this.parse_index_expression(expression)
+            else if this.current_token.ttype == TokType.DOT
+                expression = this.parse_member_expression(expression)
+            else
+                break
+        }
+        return expression
+    }
+    is_unary_op(): UnaryOp {
+        token_type = this.current_token.ttype
+        if token_type == TokType.PLUS_PLUS 
+            return UnaryOp.PREINCR
+        if token_type == TokType.MINUS_MINUS 
+            return UnaryOp.PREDECR
+        if token_type == TokType.MINUS 
+            return UnaryOp.NEG
+        if token_type == TokType.NOT 
+            return UnaryOp.NOT
+        if token_type == TokType.AMP 
+            return UnaryOp.ADDROF
+        return -1
+    }
+    parse_unary_expression(): ExpressionNode {
+        if ((op = this.is_unary_op()) != -1) this.advance()
+        expression = this.parse_lhs_expression_allow_call()
+        if (op == -1) {
+           if this.current_token.ttype == TokType.PLUS_PLUS
+                op = UnaryOp.POSTINCR
+           if this.current_token.ttype == TokType.MINUS_MINUS
+                op = UnaryOp.POSTDECR
+            if op != -1 this.advance()
+        }
+        if op == -1 return expression
+        return new UnaryExpressionNode(op, expression)
+    }
+    is_term_expr_op(): int {
+        token_type = this.current_token.ttype
+        if token_type == TokType.MULT
+            return BinaryOp.TIMES
+        if token_type == TokType.DIV
+            return BinaryOp.DIV
+        if token_type == TokType.MOD
+            return BinaryOp.MOD
+        if token_type == TokType.POW
+            return BinaryOp.POW
+        return -1
+    }
+    parse_term_expression(): ExpressionNode {
+        left = this.parse_unary_expression()
+        if (op = this.is_term_expr_op()) == -1 or !this.can_parse()
+            return left
+        this.advance()
+        return new BinaryExpressionNode(left, op, this.parse_term_expression())
+    }
+    is_arith_expr_op(): int {
+        token_type = this.current_token.ttype
+        if token_type == TokType.PLUS
+            return BinaryOp.ADD
+        if token_type == TokType.MINUS
+            return BinaryOp.SUB
+        return -1
+    }
+    parse_arithmetic_expression(): ExpressionNode {
+        left = this.parse_term_expression()
+        if (op =  this.is_arith_expr_op()) == -1 or !this.can_parse()
+            return left
+        this.advance()
+        return new BinaryExpressionNode(left, op, this.parse_arithmetic_expression())
+    }
+    is_bitshift_expr_op(): BinaryOp {
+        token_type = this.current_token.ttype
+        if token_type == TokType.SL
+            return BinaryOp.SL
+        if token_type == TokType.SR
+            return BinaryOp.SR
+        return -1
+    }
+    parse_bitshift_expression(): ExpressionNode {
+        left = this.parse_arithmetic_expression()
+        if (op =  this.is_bitshift_expr_op()) == -1 or !this.can_parse()
+            return left
+        this.advance()
+        return new BinaryExpressionNode(left, op, this.parse_bitshift_expression())
+    }
+    is_comp_expr_op(): int {
+        token_type = this.current_token.ttype
+        if token_type == TokType.GT
+            return BinaryOp.GT
+        if token_type == TokType.LT
+            return BinaryOp.LT
+        if token_type == TokType.GTE
+            return BinaryOp.GTE
+        if token_type == TokType.LTE
+            return BinaryOp.LTE
+        if token_type == TokType.EEQ
+            return BinaryOp.EEQ
+        if token_type == TokType.NEQ
+            return BinaryOp.NEQ
+        return -1
+    }
+    parse_comparasion_expression(): ExpressionNode {
+        left = this.parse_bitshift_expression()
+        if (op =  this.is_comp_expr_op()) == -1 or !this.can_parse()
+            return left
+        this.advance()
+        return new BinaryExpressionNode(left, op, this.parse_bit_expression())
+    }
+    is_bit_expr_op(): int {
+        token_type = this.current_token.ttype
+        if token_type == TokType.OR_KW
+            return BinaryOp.OR
+        if token_type == TokType.AND_KW
+            return BinaryOp.AND
+        if token_type == TokType.XOR_KW
+            return BinaryOp.XOR
+        return -1
+    }
+    parse_bit_expression(): ExpressionNode {
+        left = this.parse_comparasion_expression()
+        if (op = this.is_bit_expr_op()) == -1 or !this.can_parse()
+            return left
+        this.advance()
+        return new BinaryExpressionNode(left, op, this.parse_bit_expression())
+    }
+    parse_range_expression(): ExpressionNode {
+        left = this.parse_bit_expression()
+        if this.current_token.ttype != TokType.DOT_DOT or !this.can_parse()
+            return left
+        this.advance()
+        return new BinaryExpressionNode(left, BinaryOp.RANGE, this.parse_bit_expression())
+    }
+    is_type_expr_op(): TypeExprOp{
+        token_type = this.current_token.ttype
+        if token_type == TokType.IN_KW
+            return TypeExprOp.IN
+        if token_type == TokType.IS_KW
+            return TypeExprOp.IS
+        if token_type == TokType.AS_KW
+            return TypeExprOp.AS
+        return -1
+    }
+    parse_typed_expression(): ExpressionNode {
+        left = this.parse_range_expression()
+        if (op = this.is_type_expr_op()) == -1 or !this.can_parse() 
+            return left
+        this.advance()
+        node = new TypeExpressionNode(left, this.parse_type())
+        node.op = op
+        return node
+    }
+    parse_expression(): ExpressionNode {
+        left = this.parse_typed_expression()
+        if this.current_token.ttype != TokType.EQ or !this.can_parse()
+            return left
+        this.advance()
+        return new BinaryExpressionNode(left, BinaryOp.ASSIGN, this.parse_expression())
+    }
+    parse_if_statement(): IfStatementNode {
+        this.advance()
+        if_node = new IfStatementNode()
+        if_node.condition = this.parse_expression()
+        if_node.block = this.parse_block()
+        this.new_lines()
+        if this.current_token.ttype == TokType.ELSE_KW {
+            this.advance()
+            if_node.else_block = this.parse_block()
+        }
+        return if_node
+    }
+    parse_while_statement(): WhileStatementNode {
+        this.advance()
+        while_node = new WhileStatementNode()
+        while_node.condition = this.parse_expression()
+        while_node.block = this.parse_block()
+        return while_node
+    }
+    parse_for_statement(): ForStatementNode {
+        this.advance()
+        for_node = new ForStatementNode()
+        if this.peek().ttype != TokType.IN_KW {
+            for_node.intialization = this.parse_expression()
+            if this.current_token.ttype == TokType.SEMICOL {
+                this.advance()
+                for_node.condition = this.parse_expression()
+                if this.current_token.ttype == TokType.SEMICOL {
+                    this.advance()
+                    for_node.incr_decr = this.parse_expression()
+                }
+            }
+        } else {
+            for_node.it_name = this.eat(TokType.IDENTIFER)
+            this.eat(TokType.IN_KW)
+            for_node.iterator = this.parse_expression()
+        }
+        if this.can_parse()
+            for_node.block = this.parse_block()
+        return for_node
+    }
+    parse_variable_declaration_statement(): VarDeclarationStatement {
+        var_decl_node = new VarDeclarationStatement()
+        var_decl_node.var_name =  this.eat(TokType.IDENTIFER)
+        this.eat(TokType.COL)
+        var_decl_node.var_type = this.parse_type()
+        this.eat(TokType.EQ)
+        var_decl_node.value = this.parse_expression()
+        return var_decl_node
+    }
+    parse_return_statement(): ReturnStatementNode{
+        this.advance()
+        return_node = new ReturnStatementNode()
+        if this.current_token.ttype != TokType.LN and this.can_parse() and this.current_token.ttype != TokType.RBRACE
+            return_node.value = this.parse_expression()
+        return return_node
+    }
+    parse_statement(): StatementNode {
+        if this.current_token.ttype == TokType.IF_KW 
+            return this.parse_if_statement()
+        else if this.current_token.ttype == TokType.WHILE_KW
+            return this.parse_while_statement()
+        else if this.current_token.ttype == TokType.FOR_KW
+            return this.parse_for_statement()
+        else if this.current_token.ttype == TokType.RETURN_KW
+            return this.parse_return_statement()
+        else if this.current_token.ttype == TokType.IDENTIFER and this.peek().ttype == TokType.COL
+            return this.parse_variable_declaration_statement()
+        else if this.current_token.ttype == TokType.CONTINUE_KW {
+            this.advance()
+            return new StatementNode(StatementNodeKind.CONTINUE)
+        } else if this.current_token.ttype == TokType.BREAK_KW {
+            this.advance()
+            return new StatementNode(StatementNodeKind.BREAK)
+        }
+        return this.parse_expression()
+    }
+    parse_block(): BlockNode {
+        block_node = new BlockNode()
+        this.new_lines()
+        if this.current_token.ttype == TokType.LBRACE {
+            this.advance()
+            this.new_lines()
+            while this.can_parse() and this.current_token.ttype != TokType.RBRACE {
+                block_node.statements << this.parse_statement()
+                this.new_lines()
+            }
+            this.eat(TokType.RBRACE)
+        } else block_node.statements << this.parse_statement()
+        return block_node
+    }
+    parse_type_alias(): TypeAliasNode {
+        this.advance()
+        type_alias_node = new TypeAliasNode()
+        type_alias_node.name = this.eat(TokType.IDENTIFER)
+        this.eat(TokType.EQ)
+        type_alias_node.parsed_type = this.parse_type()
+        return type_alias_node
+    }
+    parse_arg(): ArgNode {
+        arg_node = new ArgNode()
+        arg_node.name = this.eat(TokType.IDENTIFER)
+        if this.current_token.ttype == TokType.COL {
+            this.advance()
+            arg_node.parsed_type = this.parse_type()
+        }
+        if this.current_token.ttype == TokType.EQ {
+            this.advance()
+            arg_node.default = this.parse_expression()
+        }
+        return arg_node
+    }
+    parse_args(args: Array<ArgNode>) {
+        args << this.parse_arg()
+        while this.current_token.ttype == TokType.COMMA {
+            this.eat(TokType.COMMA)
+            args << this.parse_arg()
+        }
+    }
+    parse_function(): FunctionDeclarationNode {
+        fnc_node = new FunctionDeclarationNode()
+        fnc_node.name = this.eat(TokType.IDENTIFER)
+        this.eat(TokType.LPAR)
+        if this.current_token.ttype != TokType.RPAR
+            this.parse_args(fnc_node.args)
+        
+        this.eat(TokType.RPAR)
+        if this.current_token.ttype == TokType.COL {
+            this.advance()
+            fnc_node.return_type = this.parse_type()
+        }
+        if this.current_token.ttype == TokType.LBRACE {
+            fnc_node.block = this.parse_block()
+        } else
+            fnc_node.is_external = true
+        return fnc_node
+    }
+    parse_class_block(class_node: ClassDeclarationNode) {
+        this.eat(TokType.LBRACE)
+        this.new_lines()
+        while this.current_token.ttype != TokType.RBRACE and this.can_parse() {
+            if this.peek().ttype == TokType.COL {
+                field = new FieldNode()
+                field.name = this.eat(TokType.IDENTIFER)
+                this.eat(TokType.COL)
+                field.parsed_type = this.parse_type()
+                class_node.fields << field
+            } else if this.peek().ttype == TokType.LPAR {
+                class_node.methods << this.parse_function()
+            } else {
+                this.advance()
+                return this.error("Expected ':' or '('")
+            }
+            this.new_lines()
+        }
+        this.eat(TokType.RBRACE)
+    }
+    parse_generic_parameters(generic_parameters: Array<GenericParameterNode>) {
+        this.advance()
+        generic_parameters << new GenericParameterNode(this.eat(TokType.IDENTIFER))
+        while this.current_token.ttype == TokType.COMMA  {
+            this.advance()
+            generic_parameters << new GenericParameterNode(this.eat(TokType.IDENTIFER))
+        }
+        this.eat(TokType.GT)
+    }
+    parse_class(): ClassDeclarationNode {
+        this.advance()
+        class_node = new ClassDeclarationNode(this.eat(TokType.IDENTIFER))
+        if this.current_token.ttype == TokType.LT
+            this.parse_generic_parameters(class_node.generic_parameters)
+        if this.current_token.ttype == TokType.EXTENDS_KW {
+            this.advance()
+            class_node.parent = this.parse_object_type()
+        }
+        this.new_lines()
+        this.parse_class_block(class_node)
+        return class_node
+    }
+    parse_const(): ConstNode {
+        const_node = new ConstNode()
+        this.advance()
+        const_node.name = this.eat(TokType.IDENTIFER)
+        this.eat(TokType.EQ)
+        const_node.value = this.parse_expression()
+        return const_node
+    }
+    parse_import(): ImportNode {
+        import_node = new ImportNode()
+        this.advance()
+        if this.current_token.ttype == TokType.IDENTIFER {
+            import_node.import_list << this.current_token
+            this.advance()
+            while this.current_token.ttype == TokType.COMMA {
+                this.advance()
+                import_node.import_list << this.eat(TokType.IDENTIFER)
+            }
+            this.eat(TokType.FROM_KW)
+        }
+        import_node.module_path = this.eat(TokType.STR)
+        return import_node
+    }
+    parse_enum(): EnumNode {
+        enum_node = new EnumNode()
+        this.advance()
+        enum_node.name = this.eat(TokType.IDENTIFER)
+        this.new_lines()
+        this.eat(TokType.LBRACE)
+        this.new_lines()
+        while this.current_token.ttype == TokType.IDENTIFER {
+            enum_node.fields << new EnumField(this.current_token)
+            this.advance()
+            this.new_lines()
+        }
+        this.eat(TokType.RBRACE)
+        return enum_node
+    }
+    parse(): ModuleAST {
+        this.advance()
+        module_node = new ModuleAST()
+        while this.can_parse() {
+            this.new_lines()
+            if this.current_token.ttype == TokType.FNC_KW {
+                this.advance()
+                module_node.functions << this.parse_function()
+            }
+            else if this.current_token.ttype == TokType.CLASS_KW
+                module_node.classes << this.parse_class()
+            else if this.current_token.ttype == TokType.ENUM_KW
+                module_node.enums << this.parse_enum()
+            else if this.current_token.ttype == TokType.IMPORT_KW
+                module_node.imports << this.parse_import()
+            else if this.current_token.ttype == TokType.CONST_KW
+                module_node.consts << this.parse_const()
+            else if this.current_token.ttype == TokType.TYPE_KW
+                module_node.type_aliases << this.parse_type_alias()
+            else 
+                this.error("Illegal expression expected: 'fnc' or 'class' or 'enum' or 'import' or 'const'")
+        }
+        return module_node
+    }
+}

@@ -1,0 +1,75 @@
+import File from "@flo/io"
+import "utils"
+import  "error"
+import  "lexer"
+import  "parser"
+import  "debug"
+import "typechecker"
+// import "codegen"
+
+
+fnc strlen(str: i8*): int
+fnc string_from_cstring(str: i8*): string {
+    return new string(str, strlen(str))
+}
+fnc parse_args(size: int, args: i8**): Array<string> {
+    arr: Array<string> = []
+    for i = 0; i < size; i++ {
+        arr << string_from_cstring(args[i])
+    }
+    return arr
+}
+fnc help(exec_file: string){
+    println("Usage: " + exec_file + " <path> [OPTIONS]\n")
+    println("OPTIONS:")
+    println(" -h, --help\t\t\tShow this help message.")
+    println(" --print-tokens\t\t\tPrint generated Tokens")
+    println(" --print-ast\t\t\tPrint generated AST.")
+    println(" --print-llvm\t\t\tPrint generated LLVM-IR.")
+    println(" -o <file>\t\t\tPlace the output into <file>.")
+    println(" --no-output\t\t\tCompile with no output.")
+    println(" --opt-level=OPT_LEVEL\n \t\t\t\tSpecify the compiler's optimization level which is a\n \t\t\t\tvalue from 0-3.")
+    println(" -e, --execute\t\t\tExecute file after compiling.")
+    println(" -v, --version\t\t\tShow version.")
+}
+fnc flag(args: Array<string>, name: string): bool {
+    return name in args
+}
+fnc main(size: int, ptr: i8**): int {
+    args = parse_args(size, ptr)
+    if args.length >= 2 {
+        errors: Array<FloError> = []
+        if flag(args, "-v") or flag(args, "--version"){
+            println("v0.01@test.seflhost")
+            return 0
+        }
+        if flag(args, "-h") or flag(args, "--help"){
+            help(args[0])
+            return 0
+        }
+        filename = args[1]
+        file = new File(filename)
+        if !file.exists(){
+            print_message_error(ErrorKind.IO, "No such file or directory: '" + filename + "'")
+            return 1
+        }
+        text = file.read_as_string()
+        /***** Lexing ******/
+        lexer = new Lexer(text, errors)
+        tokens = lexer.tokenize()
+        print_errors(filename, errors, text)
+        if flag(args, "--print-tokens")
+            print_tokens(tokens, text)
+        /***** Parsing *****/
+        parser = new Parser(tokens, errors)
+        module_node = parser.parse()
+        print_errors(filename, errors, text)
+        /**** Analyzing ****/
+        typechecker = new TypeChecker(errors)
+        program = typechecker.check(module_node)
+    } else {
+        print_message_error(ErrorKind.GEN, "No input file specified.")
+        return 1
+    }
+    return 0
+}

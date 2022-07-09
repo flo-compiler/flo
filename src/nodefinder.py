@@ -73,9 +73,10 @@ class NodeFinder(Visitor):
                 resolved_nodes.append(resolved_node)
         return resolved_nodes, unresolved
 
-    def find(self, names_to_find: List[str], resolved_names: List[str], range: Range):
+    def find(self, names_to_find: List[str], resolved_names: List[str], range: Range, imported_modules =  []):
         module_path = NodeFinder.get_abs_path(
             self.context.display_name, range.start.fn)
+        self.imported_modules = imported_modules + [range.start.fn, module_path]
         self.module_path = module_path
         ast = get_ast_from_file(self.module_path, range)
         if len(names_to_find) == 0:
@@ -248,8 +249,10 @@ class NodeFinder(Visitor):
         symbols_to_import = filter(lambda name: name not in self.ignore, [
                                    id.value for id in node.ids])
         ctx = self.context.create_child(node.path.value)
+        if NodeFinder.get_abs_path(node.path.value, node.range.start.fn) in self.imported_modules or node.path.value in self.imported_modules:
+            return
         node_finder = NodeFinder(ctx)
         result = node_finder.find(
-            list(symbols_to_import), self.context.get_symbols(), node.range)
+            list(symbols_to_import), self.context.get_symbols(), node.range, self.imported_modules)
         for resolved_node in result.resolved:
             self.visit(resolved_node)

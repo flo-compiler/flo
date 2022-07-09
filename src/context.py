@@ -18,6 +18,8 @@ class Context:
 
     def __init__(self, display_name, parent=None):
         self.display_name = display_name
+        if parent:
+            assert parent.display_name != self.display_name
         self.parent: Context = parent
         self.symbol_table = SymbolTable()
 
