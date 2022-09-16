@@ -28,3 +28,5 @@ fnc LLVMDisposeExecutionEngine(EE: LLVMExecutionEngineRef)
 fnc LLVMRunFunctionAsMain(EE: LLVMExecutionEngineRef, F: LLVMValueRef, ArgC: int, ArgV: i8*, EnvP: i8*): int
 
 fnc LLVMRunFunction(EE: LLVMExecutionEngineRef, F: LLVMValueRef, NumArgs: int, Args: LLVMGenericValueRef*): LLVMGenericValueRef
+
+fnc LLVMGetFunctionAddress(EE: LLVMExecutionEngineRef, Name: i8*): i8*
