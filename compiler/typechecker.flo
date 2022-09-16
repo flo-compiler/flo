@@ -54,11 +54,13 @@ class PointerType extends Type {
     }
 }
 class FunctionType extends Type {
-    args: Array<Type>
+    arg_names: Array<string>
+    arg_types: Array<Type>
     return_type: Type
     constructor(){
         super(TypeKind.FNC)
-        this.args = []
+        this.arg_types = []
+        this.arg_names = []
     }
 }
 enum ValueKind {
