@@ -599,7 +599,7 @@ class Analyzer(Visitor):
         for i, (node_arg, fn_arg_ty) in enumerate(zip(args, fn_args)):
             passed_arg_ty = self.visit(node_arg)
             c = None
-            if isinstance(passed_arg_ty, FloObject) and fn_arg_ty != FloType:
+            if isinstance(passed_arg_ty, FloObject) and fn_arg_ty != FloType and isinstance(fn_arg_ty, FloObject):
                 c = self.check_inheritance(
                     fn_arg_ty, passed_arg_ty, VarAssignNode(None, node_arg, None, None))
                 if c:
@@ -858,7 +858,7 @@ class Analyzer(Visitor):
         expr = self.visit(node.expr)
         node.value.expects = expr
         value = self.visit(node.value)
-        if isinstance(expr, FloObject):
+        if isinstance(expr, FloObject) and isinstance(value, FloObject):
             c = self.check_inheritance(expr, value, node)
             if c:
                 return c

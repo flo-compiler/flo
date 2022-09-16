@@ -65,7 +65,7 @@ class Compiler(Visitor):
             with open(f"{basename}.o", "wb") as object:
                 object.write(target_machine.emit_object(llvm_module))
                 object.close()
-            subprocess.run(["clang", f"{basename}.o", "-o" f"{basename}"])
+           # subprocess.run(["clang", f"{basename}.o", "-o" f"{basename}"])
         # Execute code
         if options.execute:
             # And an execution engine with an empty backing module
@@ -172,7 +172,10 @@ class Compiler(Visitor):
     def visitTypeNode(self, node: TypeNode):
         type_ = node.type
         if isinstance(type_, FloGeneric):
-            gen = FloGeneric(Token(type_.referer.type, type_.referer.range, type_.referer.value), [])
+            if isinstance(type_.referer, Token):
+                gen = FloGeneric(Token(type_.referer.type, type_.referer.range, type_.referer.value), [])
+            else:
+                return type_
             for constraint in type_.constraints:
                 gen.constraints.append(self.visit(constraint))
             type_ = gen
