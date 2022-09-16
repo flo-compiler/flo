@@ -73,7 +73,8 @@ fnc LLVMGetTarget(M: LLVMModuleRef): i8*
  */
 fnc LLVMSetTarget(M: LLVMModuleRef, Triple: i8* )
 
-fnc LLVMDumpModule(M: LLVMModuleRef ) 
+fnc LLVMDumpModule(M: LLVMModuleRef )
+fnc LLVMPrintModuleToFile(M: LLVMModuleRef, Filename: i8*, ErrorMessage: i8**): LLVMBool
 fnc LLVMPrintModuleToString(M: LLVMModuleRef): i8*
 
 fnc LLVMGetInlineAsm(Ty: LLVMTypeRef, AsmString: i8*, AsmStringSize: int, Constraints: i8*, ConstraintsSize: int, HasSideEffects: LLVMBool, IsAlignStack: LLVMBool, Dialect: LLVMInlineAsmDialect, CanThrow: LLVMBool ): LLVMValueRef

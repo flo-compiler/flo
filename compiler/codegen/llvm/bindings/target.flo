@@ -1,1 +1,3 @@
 fnc FloLLVMInitializeNativeTarget(): LLVMBool
+fnc FloLLVMInitializeNativeAsmParser(): LLVMBool
+fnc FloLLVMInitializeNativeAsmPrinter(): LLVMBool

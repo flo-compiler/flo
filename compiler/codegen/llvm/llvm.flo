@@ -1,4 +1,5 @@
 import "bindings"
+import "../../utils"
 import exit from "@flo/core"
 fnc strtol(nptr: i8*, end: i8*, base: int): i64
 fnc main(argc: int, argv: i8**) {
@@ -25,33 +26,31 @@ fnc main(argc: int, argv: i8**) {
     engine: LLVMExecutionEngineRef = new i8[64] as LLVMExecutionEngineRef
     LLVMLinkInMCJIT()
     FloLLVMInitializeNativeTarget()
+    FloLLVMInitializeNativeAsmPrinter()
+    FloLLVMInitializeNativeAsmParser()
     if (LLVMCreateExecutionEngineForModule(&engine, mod, &error_) != 0) {
         println("failed to create execution engine")
         exit()
     }
-    if (error_[0]) {
-        println("error:", error_)
+    if (zero) {
+        println("error:", string_from_cstring(error_))
         LLVMDisposeMessage(error_)
         exit()
     }
 
-    if (argc < 3) {
-        println("usage:", argv[0], "x y")
+    if (argc < 2) {
+        println("usage:", string_from_cstring(argv[0]), "x y")
         exit()
     }
-    x = strtol(argv[0], NULL, 10) 
-    y = strtol(argv[1], NULL, 10)
-
-    args = [
-        LLVMCreateGenericValueOfInt(LLVMInt32Type(), x, false),
-        LLVMCreateGenericValueOfInt(LLVMInt32Type(), y, false)
-    ]
-    LLVMGenericValueRef res = LLVMRunFunction(engine, sum, 2, &args[0])
-    println(LLVMGenericValueToInt(res, false) as int)
-
+    x = strtol(argv[1], NULL, 10) 
+    y = strtol(argv[2], NULL, 10)
+    functionPtr = LLVMGetFunctionAddress(engine, "sum".to_cstring())
+    sum_fnc = functionPtr as (i64, i64) => i32
+    println(sum_fnc(x, y))
+    LLVMPrintModuleToFile(mod, "sum.ll".to_cstring(), &error_)
     // Write out bitcode to file
-    if (LLVMWriteBitcodeToFile(mod, "sum.bc".to_cstring()) != 0) {
-        print("error writing bitcode to file, skipping\n")
+    if (zero != 0) {
+        println(string_from_cstring(error_))
     }
 
     LLVMDisposeBuilder(builder)
