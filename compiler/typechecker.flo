@@ -236,7 +236,7 @@ class TypeChecker {
         if type_node.kind == TypeNodeKind.I128
             return new IntType(128)
         if type_node.kind == TypeNodeKind.INT
-            return new new IntType(machine_word_size)
+            return new IntType(machine_word_size)
         if type_node.kind == TypeNodeKind.F16
             return new FloatType(16)
         if type_node.kind == TypeNodeKind.F32

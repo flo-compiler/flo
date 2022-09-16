@@ -1,0 +1,2 @@
+fnc LLVMVerifyModule(M: LLVMModuleRef, Action: int, OutMessage: i8 **): LLVMBool 
+fnc LLVMVerifyFunction(Fn: LLVMValueRef, Action: int): LLVMBool

@@ -1,0 +1,11 @@
+fnc LLVMWriteBitcodeToFile(M: LLVMModuleRef, Path: i8*): int
+
+/** Writes a module to an open file descriptor. Returns 0 on success. */
+fnc LLVMWriteBitcodeToFD(M: LLVMModuleRef, FD: int , ShouldClose: int, Unbuffered: int): int
+
+/** Deprecated for LLVMWriteBitcodeToFD. Writes a module to an open file
+    descriptor. Returns 0 on success. Closes the Handle. */
+fnc LLVMWriteBitcodeToFileHandle(M: LLVMModuleRef, Handle: int): int
+
+/** Writes a module to a new memory buffer and returns it. */
+fnc LLVMWriteBitcodeToMemoryBuffer(M: LLVMModuleRef): LLVMMemoryBufferRef

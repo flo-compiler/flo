@@ -300,3 +300,9 @@ enum LLVMAtomicRMWBinOp {
     LLVMAtomicRMWBinOpFSub /**< Subtract a floating point value and return the
                              old one */
 }
+
+/* Execution engine */
+class LLVMExecutionEngineRef{}
+class LLVMGenericValueRef{}
+class LLVMExecutionEngineRef{}
+class LLVMMCJITMemoryManagerRef{}
