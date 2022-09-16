@@ -442,6 +442,7 @@ class FloPointer(FloType):
         self.mem = None
         self.methods = {}
         self.init_methods()
+        self.fmt = "%X"
 
     def new_with_val(self, value):
         return self.new(FloMem(value))
@@ -498,6 +499,10 @@ class FloPointer(FloType):
         return self.new(self.mem.get_pointer_at_index(builder, index))
 
     def cast_to(self, builder: ir.IRBuilder, type):
+        if isinstance(type, FloObject):
+            return type.new_with_val(FloMem.bitcast(builder, self.mem, type.llvmtype).value)
+        if isinstance(type, FloFunc):
+            return type.new_with_val(FloMem.bitcast(builder, self.mem, type.llvmtype).value)
         if not isinstance(type, FloPointer):
             raise Exception("Cannot cast")
         else:
@@ -505,7 +510,7 @@ class FloPointer(FloType):
 
     def str(self):
         return f"{self.elm_type.str()}*"
-
+    
 
 class FloArray:
     def __init__(self, values, arr_len=None):
@@ -868,6 +873,7 @@ class FloObject(FloType):
     def __init__(self, referer: FloClass) -> None:
         self.fmt = "%s"
         self.referer = referer
+        self.is_constant = False
         self.mem = None
         assert (referer)
         if not isinstance(referer.value, str):
@@ -1054,6 +1060,7 @@ class FloEnum(FloType):
 class FloInlineFunc(FloFunc):
     def __init__(self, call, arg_types, return_type, var_args=False, defaults=[]):
         self.arg_types = arg_types
+        self.name = ""
         self.return_type = return_type
         self.var_args = var_args
         self.defaults = defaults

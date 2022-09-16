@@ -145,12 +145,12 @@ class Compiler(Visitor):
             s = b.in_(self.builder, a)
             return s
         elif node.op.isKeyword("as"):
-            try:
+           # try:
                 return a.cast_to(self.builder, b)
-            except Exception as e:
-                TypeError(
-                    node.range, f"Cannot cast {a.str()} to {b.str()}"
-                ).throw()
+            # except Exception as e:
+            #     TypeError(
+            #         node.range, f"Cannot cast {a.str()} to {b.str()}"
+            #     ).throw()
         elif node.op.isKeyword("is"):
             return FloInt(isinstance(a, b), 1)
 
@@ -171,7 +171,11 @@ class Compiler(Visitor):
 
     def visitTypeNode(self, node: TypeNode):
         type_ = node.type
-        if isinstance(type_, FloGeneric):
+        if isinstance(type_, FloFunc):
+            type_.arg_types = [self.visit(ty) if isinstance(ty, TypeNode) else ty for ty in type_.arg_types]
+            if isinstance(type_.return_type, TypeNode):
+                type_.return_type = self.visit(type_.return_type)
+        elif isinstance(type_, FloGeneric):
             if isinstance(type_.referer, Token):
                 gen = FloGeneric(Token(type_.referer.type, type_.referer.range, type_.referer.value), [])
             else:
@@ -440,7 +444,8 @@ class Compiler(Visitor):
                 property_name = stmt.property_name.value
                 property_type = self.visit(stmt.type)
                 class_obj.add_property(property_name, property_type)
-        class_obj.init_value()
+        if len(node.body.stmts) > 0:
+            class_obj.init_value()
 
 
     def visitClassDeclarationNode(self, node: ClassDeclarationNode):
