@@ -348,6 +348,7 @@ class Analyzer(Visitor):
     def check_inheritance(self, parent, child, node: Node):
         if parent == child:
             return None
+        if not isinstance(child, FloObject): return None
         if child.referer.has_parent(parent.referer):
             node.value = self.cast(node.value, parent)
             return parent

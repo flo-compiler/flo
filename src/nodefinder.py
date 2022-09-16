@@ -1,3 +1,4 @@
+import pathlib
 import sys
 from enum import Enum
 from os import path
@@ -13,7 +14,7 @@ from errors import Range, NameError
 def resource_path(relative_path):
     if hasattr(sys, '_MEIPASS'):
         return path.join(sys._MEIPASS, relative_path)
-    return path.join(path.abspath("."), relative_path)
+    return path.join(path.abspath(pathlib.Path(__file__).parent.parent.resolve()), relative_path)
 
 
 class NodesFindResult:

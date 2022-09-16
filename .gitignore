@@ -1,6 +1,7 @@
 **/__pycache__/*
 **/.vscode/**
 *.o
+*.a
 *.ll
 **/*.vsix
 flo
