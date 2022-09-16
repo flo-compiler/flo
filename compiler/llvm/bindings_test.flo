@@ -1,5 +1,5 @@
 import "bindings"
-import "../../utils"
+import "../utils"
 import exit from "@flo/core"
 fnc strtol(nptr: i8*, end: i8*, base: int): i64
 fnc main(argc: int, argv: i8**) {

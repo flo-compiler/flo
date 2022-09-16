@@ -1,0 +1,44 @@
+import 'llvm/bindings'
+class CodeGen {
+    module: LLVMModuleRef
+    codegen(){
+
+    }
+    codegenModule(){
+        this.module
+    }
+    codegenType(): LLVMTypeRef{
+
+    }
+    codegenReturnStmt(builder: LLVMBasicBlockRef, return_stmt: ReturnStatement){
+        if return_stmt.has_value
+            LLVMBuildRet(builder, return_stmt.value)
+        else
+            LLVMBuildRetVoid(builder)
+    }
+    codegenStatement(builder: LLVMBuilderRef, statement: Statement){
+        if statement.type == StatementKind.IF
+        if statement.type == StatementKind.FOR
+        if statement.type == StatementKind.WHILE
+        if statement.type == StatementKind.CONTINUE
+        if statement.type == StatementKind.BREAK
+        if statement.type == StatementKind.RETURN
+            this.codegenReturnStmt(builder, statement as ReturnStatement)
+        if statement.type == StatementKind.EXPRESSION
+            this.codegenExpression(builder, statement as Expression)
+    }
+    codegenFunction(func: FunctionType): {
+        param_types: Array<LLVMTypeRef> = []
+        for i = 0; i < func.arg_types.length; ++i 
+            param_types << this.codegenType(func.arg_types[i])
+        ret_type = this.codegenType(func.return_type)
+        func_type: LLVMTypeRef =  LLVMFunctionType(ret_type, param_types.buffer, param_types.length, false)
+        func = LLVMAddFunction(this.module, func.name.to_cstring(), func_type)
+        entry_block: LLVMBasicBlockRef  = LLVMAppendBasicBlock(func, (func.name + ".entry").to_cstring())
+        func_builder: LLVMBuilderRef = LLVMCreateBuilder()
+        LLVMPositionBuilderAtEnd(func_builder, entry_block)
+        for i = 0; i < func.block.statements.length; ++i {
+            this.codegenStatement(fnc_builder, func.block.statements[i])
+        }
+    }
+}
