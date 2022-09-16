@@ -88,9 +88,9 @@ class TypeNode {
     }
 }
 class RecordTypeNode extends TypeNode {
-    name: string
+    name: Token
     generic_args: Array<TypeNode>
-    constructor(name: string) {
+    constructor(name: Token) {
         super(TypeNodeKind.OBJECT)
         this.name = name
         this.generic_args = []
@@ -105,10 +105,10 @@ class FunctionTypeNode extends TypeNode {
     }
 }
 class PointerTypeNode extends TypeNode {
-    element_type: TypeNode
-    constructor(element_type: TypeNode){
+    pointee_type: TypeNode
+    constructor(pointee_type: TypeNode){
         super(TypeNodeKind.PTR)
-        this.element_type = element_type
+        this.pointee_type = pointee_type
     }
 }
 class StatementNode {
@@ -140,36 +140,36 @@ class ArrayTypeNode extends TypeNode {
     }
 }
 class IntExpressionNode extends ExpressionNode {
-    value: int
-    constructor(value: int){
+    value: IntToken
+    constructor(value: IntToken){
         super(ExpressionNodeKind.INT)
         this.value = value
     }
 }
 class FloatExpressionNode extends ExpressionNode {
-    value: float
-    constructor(value: float){
+    value: FloatToken
+    constructor(value: FloatToken){
         super(ExpressionNodeKind.FLOAT)
         this.value = value
     }
 }
 class CharExpressionNode extends ExpressionNode {
-    value: i8
-    constructor(value: i8){
+    value: CharToken
+    constructor(value: CharToken){
         super(ExpressionNodeKind.FLOAT)
         this.value = value
     }
 }
 class StringExpressionNode extends ExpressionNode {
-    value: string
-    constructor(value: string){
+    value: StrToken
+    constructor(value: StrToken){
         super(ExpressionNodeKind.STR)
         this.value = value
     }
 }
 class VarAccessExpressionNode extends ExpressionNode {
-    name: string
-    constructor(name: string){
+    name: IdentifierToken
+    constructor(name: IdentifierToken){
         super(ExpressionNodeKind.VAR)
         this.name = name
     }
@@ -199,7 +199,7 @@ class ExpressionIndexNode extends ExpressionNode {
         super(ExpressionNodeKind.INDEX)
     } 
 }
-class MemeberExpressionNode extends ExpressionNode {
+class MemberExpressionNode extends ExpressionNode {
     expression: ExpressionNode
     member: Token
     constructor(expression: ExpressionNode, member: Token){
@@ -274,8 +274,9 @@ class ForStatementNode extends StatementNode {
     }
 }
 class ReturnStatementNode extends StatementNode {
-    value: ExpressionNode
+    value: Optional<ExpressionNode>
     constructor(){
+        this.value = new Optional<ExpressionNode>()
         super(StatementNodeKind.RETURN)
     }
 }
@@ -471,7 +472,7 @@ class Parser {
             type_nodes << this.parse_type()
     }
     parse_object_type(): RecordTypeNode {
-        object_type_node = new RecordTypeNode((this.eat(TokType.IDENTIFER) as IdentifierToken).value)
+        object_type_node = new RecordTypeNode(this.eat(TokType.IDENTIFER))
         if this.current_token.ttype == TokType.LT {
             this.advance()
             this.parse_type_list(object_type_node.generic_args)
@@ -535,18 +536,17 @@ class Parser {
         }
         return new_node
     }
-    /* TODO: NEW */
     parse_atom(): ExpressionNode {
         if this.current_token.ttype == TokType.STR
-            return new StringExpressionNode((this.eat(TokType.STR) as StrToken).value)
+            return new StringExpressionNode(this.eat(TokType.STR) as StrToken)
         else if this.current_token.ttype == TokType.INT
-            return new IntExpressionNode((this.eat(TokType.INT) as IntToken).value)
+            return new IntExpressionNode(this.eat(TokType.INT) as IntToken)
         else if this.current_token.ttype == TokType.FLOAT
-            return new FloatExpressionNode((this.eat(TokType.FLOAT) as FloatToken).value)
+            return new FloatExpressionNode(this.eat(TokType.FLOAT) as FloatToken)
         else if this.current_token.ttype == TokType.CHAR
-            return new CharExpressionNode((this.eat(TokType.CHAR) as CharToken).value)
+            return new CharExpressionNode(this.eat(TokType.CHAR) as CharToken)
         else if this.current_token.ttype == TokType.IDENTIFER
-            return new VarAccessExpressionNode((this.eat(TokType.IDENTIFER) as IdentifierToken).value)
+            return new VarAccessExpressionNode(this.eat(TokType.IDENTIFER) as IdentifierToken)
         else if this.current_token.ttype == TokType.LBRACKET 
             return this.parse_array_expression()
         else if this.current_token.ttype == TokType.NEW_KW
@@ -574,9 +574,9 @@ class Parser {
         this.eat(TokType.RPAR)
         return call_expression
     }
-    parse_member_expression(expression: ExpressionNode): MemeberExpressionNode {
+    parse_member_expression(expression: ExpressionNode): MemberExpressionNode {
         this.eat(TokType.DOT)
-        return new MemeberExpressionNode(expression, this.eat(TokType.IDENTIFER))
+        return new MemberExpressionNode(expression, this.eat(TokType.IDENTIFER))
     }
     parse_lhs_expression_allow_call(): ExpressionNode {
         expression = this.parse_atom()
@@ -795,7 +795,7 @@ class Parser {
         this.advance()
         return_node = new ReturnStatementNode()
         if this.current_token.ttype != TokType.LN and this.can_parse() and this.current_token.ttype != TokType.RBRACE
-            return_node.value = this.parse_expression()
+            return_node.set_value(this.parse_expression())
         return return_node
     }
     parse_statement(): StatementNode {
@@ -978,7 +978,7 @@ class Parser {
             else if this.current_token.ttype == TokType.TYPE_KW
                 module_node.type_aliases << this.parse_type_alias()
             else 
-                this.error("Illegal expression expected: 'fnc' or 'class' or 'enum' or 'import' or 'const'")
+                this.error("Illegal expression expected: 'fnc', 'class', 'enum', 'import' or 'const'")
         }
         return module_node
     }

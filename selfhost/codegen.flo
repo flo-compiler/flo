@@ -1,5 +1,0 @@
-class CodeGen {
-    codegen(program: Program): string {
-        return ""
-    }
-}

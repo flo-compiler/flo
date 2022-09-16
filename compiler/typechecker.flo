@@ -1,15 +1,21 @@
-
+const machine_word_size = 64
 enum TypeKind {
-    VOID
+    BOOL
     INT
     FLOAT
+    VOID
+    PTR
     ARRAY
-    CHAR
+    FNC
     STRING
-    BOOL
     ENUM
     OBJECT
-    NAMESPACE
+    GENERIC_TEMPLATE
+    RESOLVED_GENERIC
+}
+class TypeId {
+    module_id: int
+    id: int
 }
 class Type {
     kind: TypeKind
@@ -19,46 +25,160 @@ class Type {
     __eq__(other: Type): bool {
         return this.kind == other.kind
     }
-    __as_string__(): string {
-        if this.kind == TypeKind.INT
-            return "int"
-        if this.kind == TypeKind.FLOAT
-            return "float"
-        if this.kind == TypeKind.STRING
-            return "string"
-        if this.kind == TypeKind.CHAR
-            return "i8"
-        if this.kind == TypeKind.VOID
-            return "void"
-        return ""
+}
+class IntType extends Type {
+    bits: int
+    constructor(bits: int){
+        super(TypeKind.INT)
+        this.bits = bits
+    }
+    __eq__(other: IntType): bool {
+        return this.bits == other.bits
     }
 }
-class Value {
-    vtype: Type
+class FloatType extends Type {
+    bits: int
+    constructor(bits: int){
+        super(TypeKind.FLOAT)
+        this.bits = bits
+    }
+    __eq__(other: IntType): bool {
+        return this.bits == other.bits
+    }
 }
-class ArrayType extends Type {
-    element_type: Type
-    constructor(element_type: Type){
-        super(TypeKind.ARRAY)
-        this.element_type = element_type
+class PointerType extends Type {
+    pointee_type: Type
+    constructor(pointee_type: Type){
+        super(TypeKind.PTR)
+        this.pointee_type = pointee_type
     }
 }
 class FunctionType extends Type {
-    name: string
     args: Array<Type>
     return_type: Type
     constructor(){
+        super(TypeKind.FNC)
         this.args = []
     }
 }
-class RangeType extends Type {
+enum ValueKind {
+    CONST
+    EXPR
+}
+class Value {
+    value_kind: ValueKind
+    value_type: Type
+}
+class Constant extends Value {
     constructor(){
-        super(TypeKind.OBJECT)
+        this.value_kind = ValueKind.CONST
+    }
+}
+class ConstantInt extends Constant {
+    value: int
+    constructor(value: int){
+        super()
+        this.value_type = new IntType(machine_word_size)
+        this.value = value
+    }
+}
+class ConstantFloat extends Constant {
+    value: float
+    constructor(value: float){
+        super()
+        this.value_type = new FloatType(machine_word_size)
+        this.value = value
+    }
+}
+class ConstantString extends Constant {
+    value: string
+    constructor(value: string){
+        super()
+        this.value_type = new Type(TypeKind.STRING)
+        this.value = value
+    }
+}
+class Expression extends Value {
+    constructor(){
+        this.value_kind = ValueKind.EXPR
+    }
+}
+class ArrayType extends Type {
+    element_type: Type
+    length: Expression
+    constructor(element_type: Type, length: Expression){
+        super(TypeKind.ARRAY)
+        this.element_type = element_type
+        this.length = length
+    }
+}
+class Statement {
+
+}
+class Block {
+    expressions: Array<Expression>
+    constructor(){
+        this.expression = []
+    }
+}
+class FunctionArg {
+    name: string
+    kind: Type
+}
+class FunctionId {
+    module_id: int
+    id: int
+}
+class Function {
+    id: FunctionId
+    name: string
+    args: Array<FunctionArg>
+    return_type: Type
+    block: Block
+    scope: Scope
+}
+class ClassField {
+    id: int
+    name: string
+    field_type: Type
+}
+class Class {
+    id: int
+    name: string
+    fields: Array<ClassField>
+    methods: Array<Function>
+}
+class EnumField {
+    name: string
+    value: Value
+}
+class Enum {
+    fields: Map<string, EnumField>
+}
+class Scope {
+    vars: Map<string, VarId>
+    classes: Map<string, ClassId>
+    functions: Map<string, FunctionId>
+    enums: Map<string, EnumId>
+    type_aliases: Map<string, TypeId>
+    parent: Optional<Scope>
+    constructor(){
+        this.vars = new Map<string, ValueId>()
+        this.classes = new Map<string, ClassId>()
+        this.functions = new Map<string, FunctionId>()
+        this.enums = new Map<string, EnumId>()
+        this.type_aliases = new Map<string, TypeId>()
+        this.parent = new Optional<Scope>() 
     }
 }
 class Module {
     id: int
-    functions: Array<FunctionType>
+    vars: Array<Var>
+    classes: Array<Class>
+    functions: Array<Function>
+    enums: Array<Enum>
+    types: Array<Type>
+    scope: Scope
 }
 class Program {
     modules: Array<Module>
@@ -74,56 +194,193 @@ class TypeChecker {
     current_function: int
     errors: Array<FloError>
     constructor(errors: Array<FloError>){
+        this.current_module = -1
         this.errors = errors
         this.program = new Program()
     }
-    expect_type(actual: Type, expected: Type): bool {
-        return actual != expected
-    }
-    infer_type(expression: ExpressionNode): Type {
-        if expression.kind == ExpressionNodeKind.INT 
-            return new Type(TypeKind.INT)
-        if expression.kind == ExpressionNodeKind.FLOAT 
-            return new Type(TypeKind.FLOAT)
-        if expression.kind == ExpressionNodeKind.CHAR 
-            return new Type(TypeKind.CHAR)
-        if expression.kind == ExpressionNodeKind.STR 
-            return new Type(TypeKind.STRING)
-        if expression.kind == ExpressionNodeKind.ARRAY
-            return this.infer_array_type(expression as ArrayExpressionNode)
-        if expression.kind == ExpressionNodeKind.BIN 
-            return this.infer_binary_type(expression as BinaryExpressionNode)
-        return new Type(-1)
-    }
-    infer_array_type(arr: ArrayExpressionNode): ArrayType {
-        return new ArrayType(this.infer_type(arr.elements[0]))
-    }
-    infer_binary_type(binexpr: BinaryExpressionNode): Type {
-        if binexpr.op == BinaryOp.RANGE
-            return new RangeType()
-        left = this.infer_type(binexpr.lhs)
-        right = this.infer_type(binexpr.rhs)
-        if left.kind == TypeKind.INT and left.kind == right.kind
-            return new Type(left.kind)
-        if left.kind == TypeKind.FLOAT and left.kind == right.kind
-            return new Type(left.kind)
-        if left.kind == TypeKind.CHAR and left.kind == right.kind
-            return new Type(left.kind)
-        if left.kind == TypeKind.INT and right.kind == TypeKind.FLOAT
-            return new Type(TypeKind.FLOAT)
-        if left.kind == TypeKind.FLOAT and right.kind == TypeKind.INT
-            return new Type(TypeKind.FLOAT)
-        return new Type(TypeKind.VOID)
-    }
     check(module_ast: ModuleAST): Program {
-        this.program.modules << new Module(0)
-        this.current_module = 0 
-        this.declare_functions(module_ast.functions)
+        this.current_module++
+        this.program.modules << new Module(this.current_module)
+        for i = 0; i < module_ast.classes.length; i++ 
+            this.declare_class(module_ast.classes[i])
+        for i = 0; i < module_ast.type_aliases.length; i++ 
+            this.declare_type(module_ast.type_aliases[i])
+        for i = 0; i < module_ast.functions.length; i++ 
+            this.declare_function(module_ast.functions[i])
+        for i = 0; i < module_ast.enums.length; i++ 
+            this.declare_enum(module_ast.enums[i])
         return this.program
     }
-    declare_functions(function_nodes: Array<FunctionDeclarationNode>){
-        for i = 0; i < function_nodes.length; i++ {
-            true
+    declare_class(class_decl_node: ClassDeclarationNode){
+
+    }
+    declare_type(type_alias_node: TypeAliasNode){
+        
+    }
+    declare_enum(enum_node: EnumNode){
+
+    }
+    check_type(type_node: TypeNode): Type {
+        if type_node.kind == TypeNodeKind.BOOL
+            return new Type(TypeKind.BOOL) 
+        if type_node.kind == TypeNodeKind.I4
+            return new IntType(4) 
+        if type_node.kind == TypeNodeKind.I8
+            return new IntType(8)
+        if type_node.kind == TypeNodeKind.I16
+            return new IntType(16)
+        if type_node.kind == TypeNodeKind.I32
+            return new IntType(32)
+        if type_node.kind == TypeNodeKind.I64
+            return new IntType(64)
+        if type_node.kind == TypeNodeKind.I128
+            return new IntType(128)
+        if type_node.kind == TypeNodeKind.INT
+            return new new IntType(machine_word_size)
+        if type_node.kind == TypeNodeKind.F16
+            return new FloatType(16)
+        if type_node.kind == TypeNodeKind.F32
+            return new FloatType(32)
+        if type_node.kind == TypeNodeKind.F64 or type_node.kind == TypeNodeKind.FLOAT
+            return new FloatType(64)
+        if type_node.kind == TypeNodeKind.VOID
+            return new Type(TypeKind.VOID)
+        if type_node.kind == TypeNodeKind.PTR
+            return new PointerType(this.check_type((type_node as PointerTypeNode).pointee_type))
+        if type_node.kind == TypeNodeKind.ARRAY {
+            array_node = type_node as ArrayTypeNode
+            length = this.check_expression(array_node.length)
+            element_type = this.check_type(array_node.element_type)
+            return new ArrayType(element_type, length)
+        }
+        if type_node.kind == TypeNodeKind.FNC {
+            fnc_node = type_node as FunctionTypeNode
+            fnc_type = new FunctionType()
+            for i = 0; i < fnc_node.args.length; i++ 
+                fnc_type.args << this.check_type(fnc_node.args[i])
+            fnc_type.return_type = this.check_type(fnc_node.return_type)
+            return fnc_type
+        }
+        else
+            return new Type(TypeKind.OBJECT)
+    }
+    check_array_expression(array_node: ArrayExpressionNode): Array {
+
+    }
+    check_var(var_decl_node: VarDeclarationStatement): VarDeclarationExpression {
+
+    }
+    check_bin_expr(binary_node: BinaryExpressionNode): BinaryExpression {
+
+    }
+    check_unary_expr(unary_node: UnaryExpressionNode): UnaryExpression {
+
+    }
+    check_type_expr(type_expr_node: TypeExpressionNode): TypeExpression {
+
+    }
+    check_new_expr(new_expr_node: NewExpressionNode): NewExpression {
+
+    }
+    check_member_expr(member_expr_node: MemberExpressionNode): MemberExpression {
+
+    }
+    check_index_expr(index_expr_node: ExpressionIndexNode): IndexExpression {
+
+    }
+    check_call_expr(call_expr_node: CallExpressionNode): CallExpression {
+
+    }
+    check_expression(expr_node: ExpressionNode): Expression {
+        if expr_node.kind == ExpressionNodeKind.INT
+            return new ConstantInt((expr_node as IntExpressionNode).value.value)
+        if expr_node.kind == ExpressionNodeKind.FLOAT
+            return new ConstantFloat((expr_node as FloatExpressionNode).value.value)
+        if expr_node.kind == ExpressionNodeKind.CHAR {
+            expr_value = new ConstantInt((expr_node as CharExpressionNode).value.value)
+            expr_value.value_type.bits = 8
+            return expr_value
+        }
+        if expr_node.kind == ExpressionNodeKind.STR
+            return new ConstantString((expr_node as StringExpressionNode).value.value)
+        if expr_node.kind == ExpressionNodeKind.ARRAY
+            return this.check_array_expression(expr_node as ArrayExpressionNode)
+        if expr_node.kind == ExpressionNodeKind.VAR
+            return this.check_var(expr_node as VarAccessExpressionNode)
+        if expr_node.kind == ExpressionNodeKind.BIN
+            return this.check_bin_expr(expr_node as BinaryExpressionNode)
+        if expr_node.kind == ExpressionNodeKind.UNARY
+            return this.check_unary_expr(expr_node as UnaryExpressionNode)
+        if expr_node.kind == ExpressionNodeKind.TYPEBOUND
+            return this.check_type_expr(expr_node as TypeExpressionNode)
+        if expr_node.kind == ExpressionNodeKind.NEW
+            return this.check_new_expr(expr_node as NewExpressionNode)
+        if expr_node.kind == ExpressionNodeKind.MEMBER
+            return this.check_member_expr(expr_node as MemberExpressionNode)
+        if expr_node.kind == ExpressionNodeKind.INDEX
+            return this.check_index_expr(expr_node as ExpressionIndexNode)
+        /* if expr_node.kind == ExpressionNodeKind.CALL */
+        return this.check_call_expr(expr_node as CallExpressionNode)
+    }
+    check_if_stamement(): IfStatement {
+
+    }
+    check_var_declaration(): VarDeclaration {
+
+    }
+    check_for_statement(): ForStatement {
+
+    }
+    check_while_statment(): WhileStatement {
+        
+    }
+    check_can_break(): Statement {
+
+    }
+    check_can_continue(): Statement {
+
+    }
+    check_can_return(expr: Optional<ExpressionNode>): ReturnStatement {
+        if expr.has_value {
+            expression_value = this.check_expression(expr.value).
+        } else {}
+    }
+    check_statement(stmt_node: StatementNode): Statement {
+        if stmt_node.kind == StatementNodeKind.IF
+            return this.check_if_stamement(stmt_node as IfStatementNode)
+        if stmt_node.kind == StatementNodeKind.VAR
+            return this.check_var_declaration(stmt_node as VarDeclarationStatement)
+        if stmt_node.kind == StatementNodeKind.FOR
+            return this.check_for_statement(stmt_node as ForStatementNode)
+        if stmt_node.kind == StatementNodeKind.WHILE
+            return this.check_while_statment(stmt_node as WhileStatementNode)
+        if stmt_node.kind == StatementNodeKind.CONTINUE
+            return this.check_can_continue()
+        if stmt_node.kind == StatementNodeKind.BREAK
+            return this.check_can_break()
+        if stmt_node.kind == StatementNodeKind.RETURN
+            return this.check_can_return((stmt_node as ReturnStatementNode).value)
+        return this.check_expression(stmt_node as ExpressionNode)
+    }
+    check_block(block_node: BlockNode): Block {
+        block = new Block()
+        for i = 0; i < block_node.statements.length; i++ {
+            // TODO: check control flow such as early return.
+            block.statements << this.check_statement(block_node[i])
+        }
+        return block
+    }
+    declare_function(function_node: FunctionDeclarationNode){
+        checked_function = new Function()
+        checked_function.name = (function_node.name  as IdentifierToken).value
+        this.check_fnc_args(checked_function, function_node.args)
+        checked_function.return_type = this.check_type(function_node.return_type)
+        checked_function.id = this.program.modules[this.current_module].functions.length
+        this.program.modules[this.current_module].functions << checked_function
+    }
+    check_fnc_args(checked_function: Function, args: Array<ArgNode>){
+        for i = 0; i < args.length; i++ {
+            
         }
     }
 }
