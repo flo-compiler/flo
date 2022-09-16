@@ -1,4 +1,23 @@
 import "types"
+import "analysis"
+import "executionEngine"
+import "target"
+import "bitwriter"
+/** Deallocate and destroy all ManagedStatic variables.
+    @see llvm::llvm_shutdown
+    @see ManagedStatic */
+fnc LLVMShutdown()
+
+/*===-- Error handling ----------------------------------------------------===*/
+
+fnc LLVMCreateMessage(Message: i8*): i8*
+fnc LLVMDisposeMessage(Message: i8*)
+/**
+ * Create a new context.
+ *
+ * Every call to this function should be paired with a call to
+ * LLVMContextDispose() or the context will leak memory.
+ */
 fnc LLVMContextCreate(): LLVMContextRef
 fnc LLVMContextDispose(C: LLVMContextRef)
 

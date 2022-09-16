@@ -1,9 +1,11 @@
 import "bindings"
+import exit from "@flo/core"
+fnc strtol(nptr: i8*, end: i8*, base: int): i64
 fnc main(argc: int, argv: i8**) {
     mod: LLVMModuleRef  = LLVMModuleCreateWithName("my_module".to_cstring())
 
-    param_types: Array<LLVMTypeRef> = [LLVMInt32Type(), LLVMInt32Type()]
-    ret_type: LLVMTypeRef  = LLVMFunctionType(LLVMInt32Type(), param_types.buffer, 2, 0)
+    param_types = [LLVMInt32Type(), LLVMInt32Type()]
+    ret_type: LLVMTypeRef  = LLVMFunctionType(LLVMInt32Type(), &param_types[0], 2, false)
     sum: LLVMValueRef  = LLVMAddFunction(mod, "sum".to_cstring(), ret_type)
 
     entry: LLVMBasicBlockRef  = LLVMAppendBasicBlock(sum, "entry".to_cstring())
@@ -14,39 +16,41 @@ fnc main(argc: int, argv: i8**) {
     LLVMBuildRet(builder, tmp)
 
     zero: i8 = 0
-    LLVMVerifyModule(mod, LLVMAbortProcessAction, &error)
-    LLVMDisposeMessage(error)
+    
+    NULL = &zero
+    error_ = &zero
+    LLVMVerifyModule(mod, /*LLVMAbortProcessAction*/ 0, &error_)
+    LLVMDisposeMessage(error_)
 
-    engine: LLVMExecutionEngineRef
-    error = &zero
-    LLVMLinkInJIT()
-    LLVMInitializeNativeTarget()
-    if (LLVMCreateExecutionEngineForModule(&engine, mod, &error) != 0) {
+    engine: LLVMExecutionEngineRef = new i8[64] as LLVMExecutionEngineRef
+    LLVMLinkInMCJIT()
+    FloLLVMInitializeNativeTarget()
+    if (LLVMCreateExecutionEngineForModule(&engine, mod, &error_) != 0) {
         println("failed to create execution engine")
-        abort()
+        exit()
     }
-    if (error) {
-        println("error:", error)
-        LLVMDisposeMessage(error)
-        exit(EXIT_FAILURE)
+    if (error_[0]) {
+        println("error:", error_)
+        LLVMDisposeMessage(error_)
+        exit()
     }
 
     if (argc < 3) {
         println("usage:", argv[0], "x y")
-        exit(EXIT_FAILURE)
+        exit()
     }
-    x = argv[1] as i64
-    y = argv[2] as i64
+    x = strtol(argv[0], NULL, 10) 
+    y = strtol(argv[1], NULL, 10)
 
-    args: Array<LLVMGenericValueRef> = [
-        LLVMCreateGenericValueOfInt(LLVMInt32Type(), x, 0),
-        LLVMCreateGenericValueOfInt(LLVMInt32Type(), y, 0)
+    args = [
+        LLVMCreateGenericValueOfInt(LLVMInt32Type(), x, false),
+        LLVMCreateGenericValueOfInt(LLVMInt32Type(), y, false)
     ]
-    LLVMGenericValueRef res = LLVMRunFunction(engine, sum, 2, args.buffer)
-    println(LLVMGenericValueToInt(res, 0) as int)
+    LLVMGenericValueRef res = LLVMRunFunction(engine, sum, 2, &args[0])
+    println(LLVMGenericValueToInt(res, false) as int)
 
     // Write out bitcode to file
-    if (LLVMWriteBitcodeToFile(mod, "sum.bc") != 0) {
+    if (LLVMWriteBitcodeToFile(mod, "sum.bc".to_cstring()) != 0) {
         print("error writing bitcode to file, skipping\n")
     }
 

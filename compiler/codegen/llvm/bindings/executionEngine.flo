@@ -1,0 +1,30 @@
+fnc LLVMLinkInMCJIT()
+fnc LLVMLinkInInterpreter()
+/*===-- Operations on generic values --------------------------------------===*/
+
+fnc LLVMCreateGenericValueOfInt(Ty: LLVMTypeRef, N: i64, IsSigned: LLVMBool): LLVMGenericValueRef
+
+fnc LLVMCreateGenericValueOfPointer(P: i8*): LLVMGenericValueRef
+
+fnc LLVMCreateGenericValueOfFloat(Ty: LLVMTypeRef, N: f64): LLVMGenericValueRef
+
+fnc LLVMGenericValueIntWidth(GenValRef: LLVMGenericValueRef): int
+
+fnc LLVMGenericValueToInt(GenVal: LLVMGenericValueRef, IsSigned: LLVMBool): i64 
+
+fnc LLVMGenericValueToPointer(GenVal: LLVMGenericValueRef): i8*
+
+fnc LLVMGenericValueToFloat(TyRef: LLVMTypeRef, GenVal: LLVMGenericValueRef): f64 
+
+fnc LLVMDisposeGenericValue(GenVal: LLVMGenericValueRef)
+
+
+/*===-- Operations on execution engines -----------------------------------===*/
+fnc LLVMCreateExecutionEngineForModule(OutEE: LLVMExecutionEngineRef*, M: LLVMModuleRef, OutError: i8**): LLVMBool
+fnc LLVMCreateInterpreterForModule(OutInterp: LLVMExecutionEngineRef*, M: LLVMModuleRef, OutError: i8**): LLVMBool 
+fnc LLVMCreateJITCompilerForModule(OutJIT: LLVMExecutionEngineRef*, M: LLVMModuleRef, OptLevel: int, OutError: i8**): LLVMBool 
+
+fnc LLVMDisposeExecutionEngine(EE: LLVMExecutionEngineRef)
+fnc LLVMRunFunctionAsMain(EE: LLVMExecutionEngineRef, F: LLVMValueRef, ArgC: int, ArgV: i8*, EnvP: i8*): int
+
+fnc LLVMRunFunction(EE: LLVMExecutionEngineRef, F: LLVMValueRef, NumArgs: int, Args: LLVMGenericValueRef*): LLVMGenericValueRef
