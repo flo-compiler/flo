@@ -175,6 +175,7 @@ class Scope {
 }
 class Module {
     id: int
+    name: string
     vars: Array<Var>
     classes: Array<Class>
     functions: Array<Function>

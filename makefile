@@ -6,7 +6,7 @@ LD=clang++
 LDFLAGS=`llvm-config --cxxflags --ldflags --libs core executionengine mcjit interpreter analysis native bitwriter --system-libs`
 
 compiler:
-	../src/flo.py flo.flo -o compiler
+	hostcompiler/flo.py flo.flo -o compiler
 	$(CC) -c llvm/bindings/c-deps.c -o clib.o && llvm-ar rc cdepslib.a clib.o
 	$(LD) compiler.o cdepslib.a $< $(LDFLAGS) -o $@
 clean:
