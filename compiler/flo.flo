@@ -1,26 +1,20 @@
 import File from "@flo/io"
 import "utils"
-import  "error"
-import  "lexer"
-import  "parser"
-import  "debug"
+import "error"
+import "lexer"
+import "parser"
+import "debug"
 import "typechecker"
-// import "codegen"
+import "codegen"
 
-
-fnc strlen(str: i8*): int
-fnc string_from_cstring(str: i8*): string {
-    return new string(str, strlen(str))
-}
 fnc parse_args(size: int, args: i8**): Array<string> {
-    arr: Array<string> = []
-    for i = 0; i < size; i++ {
+    letarr: Array<string> = []
+    for i = 0; i < size; i++
         arr << string_from_cstring(args[i])
-    }
     return arr
 }
 fnc help(exec_file: string){
-    println("Usage: " + exec_file + " <path> [OPTIONS]\n")
+    println("Usage:", exec_file, "<path> [OPTIONS]\n")
     println("OPTIONS:")
     println(" -h, --help\t\t\tShow this help message.")
     println(" --print-tokens\t\t\tPrint generated Tokens")
@@ -67,6 +61,9 @@ fnc main(size: int, ptr: i8**): int {
         /**** Analyzing ****/
         typechecker = new TypeChecker(errors)
         program = typechecker.check(module_node)
+        /**** Codegen ****/
+        codegen = new CodeGen()
+        codegen.codegenProgram(program)
     } else {
         print_message_error(ErrorKind.GEN, "No input file specified.")
         return 1
