@@ -795,7 +795,7 @@ class Parser {
         this.advance()
         return_node = new ReturnStatementNode()
         if this.current_token.ttype != TokType.LN and this.can_parse() and this.current_token.ttype != TokType.RBRACE
-            return_node.set_value(this.parse_expression())
+            return_node.value.set_value(this.parse_expression())
         return return_node
     }
     parse_statement(): StatementNode {
