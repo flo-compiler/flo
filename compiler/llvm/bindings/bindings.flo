@@ -3,6 +3,7 @@ import "analysis"
 import "executionEngine"
 import "target"
 import "bitwriter"
+import "linker"
 /** Deallocate and destroy all ManagedStatic variables.
     @see llvm::llvm_shutdown
     @see ManagedStatic */
@@ -116,7 +117,7 @@ fnc LLVMX86MMXType(): LLVMTypeRef
 fnc LLVMX86AMXType(): LLVMTypeRef 
 
 /* values */
-fnc LLVMIsConstant(Val: LLVMValueRef):LLVMBool
+fnc LLVMIsConstant(Val: LLVMValueRef): LLVMBool
 fnc LLVMConstNull(Ty: LLVMTypeRef): LLVMValueRef
 fnc LLVMIsNull(Val: LLVMValueRef ): LLVMBool
 

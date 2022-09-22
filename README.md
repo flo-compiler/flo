@@ -2,27 +2,7 @@
 Flo is a programming language designed to be general-purpose with a natural feel when used and fast when run. Like all other programming languages, it is a tool to help programmers to write fast and efficient computer instructions. Syntactically and semantically, it resembles a lot of modern interpreted high-level languages.
 
 ## Installation
-In order to install flo you will need
--  [git](https://git-scm.com/downloads)
--  [python>=3.8](https://www.python.org/downloads/)
--  [pip](https://pip.pypa.io/en/stable/installation/) and
--  [gcc](https://gcc.gnu.org/install/download.html) (Optional can use another program for linking object file)
-
-Clone the repo
-```bash
-git clone https://github.com/vanelk/flo.git
-```
-
-Move into the directory
-```bash
-cd flo
-```
-
-Install
-```bash
-pip install -r requirements.txt
-./install.py
-```
+*Note*: The Installation process is undetermined since I'm working on the self-compiler
 
 ## Usage
 Compile and execute file (Compilation requires gcc for linking)

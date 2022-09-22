@@ -1,4 +1,5 @@
 import File from "@flo/io"
+import "types"
 import "utils"
 import "error"
 import "lexer"
