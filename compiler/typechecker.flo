@@ -1,18 +1,4 @@
 const machine_word_size = 64
-enum TypeKind {
-    BOOL
-    INT
-    FLOAT
-    VOID
-    PTR
-    ARRAY
-    FNC
-    STRING
-    ENUM
-    OBJECT
-    GENERIC_TEMPLATE
-    RESOLVED_GENERIC
-}
 class TypeId {
     module_id: int
     id: int
@@ -26,26 +12,6 @@ class Type {
         return this.kind == other.kind
     }
 }
-class IntType extends Type {
-    bits: int
-    constructor(bits: int){
-        super(TypeKind.INT)
-        this.bits = bits
-    }
-    __eq__(other: IntType): bool {
-        return this.bits == other.bits
-    }
-}
-class FloatType extends Type {
-    bits: int
-    constructor(bits: int){
-        super(TypeKind.FLOAT)
-        this.bits = bits
-    }
-    __eq__(other: IntType): bool {
-        return this.bits == other.bits
-    }
-}
 class PointerType extends Type {
     pointee_type: Type
     constructor(pointee_type: Type){
@@ -54,55 +20,23 @@ class PointerType extends Type {
     }
 }
 class FunctionType extends Type {
-    arg_names: Array<string>
     arg_types: Array<Type>
     return_type: Type
-    constructor(){
+    constructor(arg_types: Array<Type>, return_type: Type){
         super(TypeKind.FNC)
-        this.arg_types = []
-        this.arg_names = []
+        this.arg_types = arg_types
+        this.return_type = return_type
     }
-}
-enum ValueKind {
-    CONST
-    EXPR
 }
 class Value {
-    value_kind: ValueKind
     value_type: Type
 }
-class Constant extends Value {
-    constructor(){
-        this.value_kind = ValueKind.CONST
-    }
-}
-class ConstantInt extends Constant {
-    value: int
-    constructor(value: int){
-        super()
-        this.value_type = new IntType(machine_word_size)
-        this.value = value
-    }
-}
-class ConstantFloat extends Constant {
-    value: float
-    constructor(value: float){
-        super()
-        this.value_type = new FloatType(machine_word_size)
-        this.value = value
-    }
-}
-class ConstantString extends Constant {
-    value: string
-    constructor(value: string){
-        super()
-        this.value_type = new Type(TypeKind.STRING)
-        this.value = value
-    }
-}
-class Expression extends Value {
-    constructor(){
-        this.value_kind = ValueKind.EXPR
+class Expression  extends Value {
+    is_constant: bool
+    expr_type: ExpressionKind
+    constructor(expr_type: ExpressionKind){
+        this.expr_type = expr_type
+        this.is_constant = false
     }
 }
 class ArrayType extends Type {
@@ -114,28 +48,141 @@ class ArrayType extends Type {
         this.length = length
     }
 }
-class Statement {
+class IntExpression extends Expression {
+    value: int
+    constructor(value: int){
+        super(ExpressionKind.INT)
+        this.value_type = new Type(TypeKind.INT)
+        this.value = value
+        this.is_constant = true
+    }
+}
+class FloatExpression extends Expression {
+    value: float
+    constructor(value: float){
+        super(ExpressionKind.FLOAT)
+        this.value_type = new Type(TypeKind.FLOAT)
+        this.value = value
+        this.is_constant = true
+    }
+}
+class StringExpression extends Expression {
+    value: string
+    constructor(value: string){
+        super(ExpressionKind.STRING)
+        this.value_type = new Type(TypeKind.STRING)
+        this.value = value
+        this.is_constant = true
+    }
+}
+class VarAccessExpression extends Expression {
+    value_id: VarId
+    constructor(value_id: VarId, value_type: Type){
+        super(ExpressionKind.VAR)
+        this.value_id = value_id
+        this.value_type = value_type
+    }
+}
+class ArrayExpression extends Expression {
+    value: Array<Expression>
+    constructor(value: Array<Expression>){
+        super(ExpressionKind.ARRAY)
+        this.value = value
+        if value.length > 0
+            this.value_type = new ArrayType(value[0].value_type, new IntExpression(value.length))
+    }
+}
+class BinaryExpression extends Expression {
+    lhs: Expression
+    op: BinaryOp
+    rhs: Expression
+    constructor(lhs: Expression, op: BinaryOp, rhs: Expression, value_type: Type){
+        super(ExpressionKind.BIN)
+        this.lhs = lhs
+        this.op = op
+        this.rhs = rhs
+        this.value_type = value_type
+    }
+}
+class UnaryExpression extends Expression {
+    op: UnaryOp
+    expression: Expression
+    constructor(op: UnaryOp, expression: Expression, value_type: Type){
+        super(ExpressionKind.UNARY)
+        this.op = op
+        this.expression = expression
+        this.value_type = value_type
+    }
+}
 
+class CallExpression extends Expression {
+    callee: Expression
+    args: Array<Expression>
+    constructor(callee: Expression, args: Array<Expression>, value_type: Type){
+        super(ExpressionKind.CALL)
+        this.callee = callee
+        this.args = args
+        this.value_type = value_type
+    }
+}
+class Statement {
+    kind: StatementKind
+    constructor(kind: StatementKind){
+        this.kind = kind
+    }
+}
+class ReturnStatement extends Statement {
+    return_value: Optional<Expression>
+    constructor(){
+        super(StatementKind.RETURN)
+        this.return_value = new Optional<Expression>()
+    }
 }
 class Block {
     expressions: Array<Expression>
     constructor(){
-        this.expression = []
+        this.expressions = []
     }
 }
 class FunctionArg {
     name: string
-    kind: Type
+    default: Optional<Expression>
 }
-class FunctionId {
+class VarId {
     module_id: int
     id: int
+    constructor(module_id: int, id: int){
+        this.module_id = module_id
+        this.id = id
+    }
 }
-class Function {
+class Scope {
+    vars: Map<string, VarId>
+    classes: Map<string, ClassId>
+    functions: Map<string, VarId>
+    enums: Map<string, EnumId>
+    type_aliases: Map<string, TypeId>
+    parent: Optional<Scope>
+    constructor(){
+        this.vars = new Map<string, ValueId>()
+        this.classes = new Map<string, ClassId>()
+        this.functions = new Map<string, VarId>()
+        this.enums = new Map<string, EnumId>()
+        this.type_aliases = new Map<string, TypeId>()
+        this.parent = new Optional<Scope>() 
+    }
+    getVar(name: string): Optional<Value> {
+        resolved = this.vars.get(name)
+        if !resolved.has_value
+            resolved = this.functions.get(name)
+        if resolved.has_value
+            return resolved.value.getValue()
+    }
+}
+class Function extends Value {
     id: FunctionId
     name: string
     args: Array<FunctionArg>
-    return_type: Type
     block: Block
     scope: Scope
 }
@@ -156,22 +203,6 @@ class EnumField {
 }
 class Enum {
     fields: Map<string, EnumField>
-}
-class Scope {
-    vars: Map<string, VarId>
-    classes: Map<string, ClassId>
-    functions: Map<string, FunctionId>
-    enums: Map<string, EnumId>
-    type_aliases: Map<string, TypeId>
-    parent: Optional<Scope>
-    constructor(){
-        this.vars = new Map<string, ValueId>()
-        this.classes = new Map<string, ClassId>()
-        this.functions = new Map<string, FunctionId>()
-        this.enums = new Map<string, EnumId>()
-        this.type_aliases = new Map<string, TypeId>()
-        this.parent = new Optional<Scope>() 
-    }
 }
 class Module {
     id: int
@@ -208,8 +239,11 @@ class TypeChecker {
             this.declare_class(module_ast.classes[i])
         for i = 0; i < module_ast.type_aliases.length; i++ 
             this.declare_type(module_ast.type_aliases[i])
-        for i = 0; i < module_ast.functions.length; i++ 
-            this.declare_function(module_ast.functions[i])
+        for i = 0; i < module_ast.functions.length; i++ {
+            checked_function = this.declare_function(module_ast.functions[i])
+            checked_function.id = i
+            this.program.modules[this.current_module].functions << checked_function
+        }
         for i = 0; i < module_ast.enums.length; i++ 
             this.declare_enum(module_ast.enums[i])
         return this.program
@@ -225,27 +259,9 @@ class TypeChecker {
     }
     check_type(type_node: TypeNode): Type {
         if type_node.kind == TypeNodeKind.BOOL
-            return new Type(TypeKind.BOOL) 
-        if type_node.kind == TypeNodeKind.I4
-            return new IntType(4) 
-        if type_node.kind == TypeNodeKind.I8
-            return new IntType(8)
-        if type_node.kind == TypeNodeKind.I16
-            return new IntType(16)
-        if type_node.kind == TypeNodeKind.I32
-            return new IntType(32)
-        if type_node.kind == TypeNodeKind.I64
-            return new IntType(64)
-        if type_node.kind == TypeNodeKind.I128
-            return new IntType(128)
-        if type_node.kind == TypeNodeKind.INT
-            return new IntType(machine_word_size)
-        if type_node.kind == TypeNodeKind.F16
-            return new FloatType(16)
-        if type_node.kind == TypeNodeKind.F32
-            return new FloatType(32)
-        if type_node.kind == TypeNodeKind.F64 or type_node.kind == TypeNodeKind.FLOAT
-            return new FloatType(64)
+            return new Type(TypeKind.BOOL)
+        if type_node.kind >= TypeNodeKind.I4 and type_node.kind <= TypeNodeKind.FLOAT
+            return new Type(type_node.kind)
         if type_node.kind == TypeNodeKind.VOID
             return new Type(TypeKind.VOID)
         if type_node.kind == TypeNodeKind.PTR
@@ -267,17 +283,39 @@ class TypeChecker {
         else
             return new Type(TypeKind.OBJECT)
     }
-    check_array_expression(array_node: ArrayExpressionNode): Array {
-
+    check_array_expression(array_node: ArrayExpressionNode): ArrayExpression {
+        //TODO: ARRAY is overloaded; Could be object or const so need to check which one it is.
+        elements: Array<Expression> = []
+        if array_node.elements.length > 0 {
+            element_type = array_node.elements[0].value_type
+            for i = 0; i < array_node.elements; ++i {
+                element = this.check_expression(array_node.elements[i])
+                if element.value_type == element_type
+                    elements << element
+                // TODO: Emit type mismatch error (else)
+            }
+        }
+        return new ArrayExpression(elements)
     }
-    check_var(var_decl_node: VarDeclarationStatement): VarDeclarationExpression {
-
+    check_var_access(var_access_node: VarAccessExpressionNode): UnaryExpression {
+        value = this.current_scope.gerVar(var_access_node.name.value)
+        if value.has_value 
+            return new VarAccessExpression(value.id, value.value_type)
+        //TODO: Emit error when not found.(else)
     }
     check_bin_expr(binary_node: BinaryExpressionNode): BinaryExpression {
-
+        left = this.check_expression(binary_node.lhs)
+        right = this.check_expression(binary_node.rhs)
+        op = binary_node.op
+        //TODO: check if left and right are compatible and cast if necessary
+        //TODO: Resolve type
+        return new BinaryExpression(left, op, right, new Type(TypeKind.UNKNOWN))
     }
     check_unary_expr(unary_node: UnaryExpressionNode): UnaryExpression {
-
+        op = unary_node.op
+        expression = this.check_expression(unary.expression)
+        //TODO: Resolve type
+        return new UnaryExpression(op, expression, new Type(TypeKind.UNKNOWN))
     }
     check_type_expr(type_expr_node: TypeExpressionNode): TypeExpression {
 
@@ -292,24 +330,41 @@ class TypeChecker {
 
     }
     check_call_expr(call_expr_node: CallExpressionNode): CallExpression {
-
+        called = this.check_expression(call_expr_node.callee)
+        //TODO: Check for generic functions.
+        func_ty = called.value_type as FunctionType
+        args: Array<Expression> = []
+        if func_ty.kind == TypeKind.FNC {
+            //TODO: fill default args.
+            if func_ty.arg_types.length == call_expr_node.args.length {
+                for i = 0; i < call_expr_node.args.length; ++i {
+                    arg = this.check_expression(call_expr_node.args[i])
+                    if arg.value_type == func_ty.arg_types[i]
+                        args << arg
+                    // TODO: Emit error if argument types do not match.(else)
+                }
+            }
+            //TODO: Emit Error if args length do not match. (else)
+        }
+        //TODO: Emit Type Error(else)
+        return new CallExpression(called, args, func_ty.return_type)
     }
     check_expression(expr_node: ExpressionNode): Expression {
         if expr_node.kind == ExpressionNodeKind.INT
-            return new ConstantInt((expr_node as IntExpressionNode).value.value)
+            return new IntExpression((expr_node as IntExpressionNode).value.value)
         if expr_node.kind == ExpressionNodeKind.FLOAT
-            return new ConstantFloat((expr_node as FloatExpressionNode).value.value)
+            return new FloatExpression((expr_node as FloatExpressionNode).value.value)
         if expr_node.kind == ExpressionNodeKind.CHAR {
-            expr_value = new ConstantInt((expr_node as CharExpressionNode).value.value)
-            expr_value.value_type.bits = 8
+            expr_value = new IntExpression((expr_node as CharExpressionNode).value.value)
+            expr_value.value_type.kind = TypeKind.I8
             return expr_value
         }
         if expr_node.kind == ExpressionNodeKind.STR
-            return new ConstantString((expr_node as StringExpressionNode).value.value)
+            return new StringExpression((expr_node as StringExpressionNode).value.value)
         if expr_node.kind == ExpressionNodeKind.ARRAY
             return this.check_array_expression(expr_node as ArrayExpressionNode)
         if expr_node.kind == ExpressionNodeKind.VAR
-            return this.check_var(expr_node as VarAccessExpressionNode)
+            return this.check_var_access(expr_node as VarAccessExpressionNode)
         if expr_node.kind == ExpressionNodeKind.BIN
             return this.check_bin_expr(expr_node as BinaryExpressionNode)
         if expr_node.kind == ExpressionNodeKind.UNARY
@@ -338,15 +393,20 @@ class TypeChecker {
         
     }
     check_can_break(): Statement {
-
+        //TODO: check if we are in a loop
+        return new Statement(StatementKind.BREAK)
     }
     check_can_continue(): Statement {
-
+        //TODO: check if we are in a loop
+        return new Statement(StatementKind.CONTINUE)
     }
     check_can_return(expr: Optional<ExpressionNode>): ReturnStatement {
-        if expr.has_value {
-            expression_value = this.check_expression(expr.value).
-        } else {}
+        //TODO: check if we are in a function.
+        //TODO: check if return type matches
+        rt_stmt = new ReturnStatement()
+        if expr.has_value 
+            rt_stmt.return_value.set_value(this.check_expression(expr.value))
+        return rt_stmt
     }
     check_statement(stmt_node: StatementNode): Statement {
         if stmt_node.kind == StatementNodeKind.IF
@@ -368,22 +428,28 @@ class TypeChecker {
     check_block(block_node: BlockNode): Block {
         block = new Block()
         for i = 0; i < block_node.statements.length; i++ {
-            // TODO: check control flow such as early return.
+            // TODO: check control flow and look for always return in the case of a function.
             block.statements << this.check_statement(block_node[i])
         }
         return block
     }
-    declare_function(function_node: FunctionDeclarationNode){
+    declare_function(function_node: FunctionDeclarationNode): Function {
         checked_function = new Function()
         checked_function.name = (function_node.name  as IdentifierToken).value
-        this.check_fnc_args(checked_function, function_node.args)
-        checked_function.return_type = this.check_type(function_node.return_type)
-        checked_function.id = this.program.modules[this.current_module].functions.length
-        this.program.modules[this.current_module].functions << checked_function
-    }
-    check_fnc_args(checked_function: Function, args: Array<ArgNode>){
-        for i = 0; i < args.length; i++ {
-            
+        arg_types: Array<Type> = []
+        checked_function.args = []
+        for i = 0; i < function_node.args.length; ++i {
+            arg = function_node.args[i]
+            fnc_arg = new FunctionArg()
+            fnc_arg.name = arg.name.value
+            fnc_arg.default = new Optional<Expression>()
+            if arg.default.has_value
+                fnc_arg.set_value(this.check_expression(arg.default.value))
+            checked_function.args << fnc_arg
+            arg_types << this.check_type(arg.parsed_type)
         }
+        ret_type = this.check_type(function_node.return_type)
+        checked_function.kind = new FunctionType(arg_types, ret_type)
+        return checked_function
     }
 }

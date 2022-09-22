@@ -12,20 +12,55 @@ class CodeGen {
         this.module = LLVMModuleCreateWithName(module.name.to_cstring())
         return this.module
     }
-    codegenType(tt: Type): LLVMTypeRef{
-        if tt.kind == TypeKind.INT
-            return LLVMIntType((tt as IntType).bits)
-        if tt.kind == TypeKind.FLOAT {
-            ft = tt as FloatType()
-            if ft.bits == 16 
-                return LLVMHalfType()
-            if ft.bits == 32
-                return LLVMFloatType()
-            return LLVMDoubleType()
-        }
-        if tt.kind == TypeKind.CHAR
+    codegenType(tt: Type): LLVMTypeRef {
+        if tt.kind == TypeKind.VOID
+            return LLVMVoidType()
+        if tt.kind == TypeKind.BOOL
+            return LLVMInt1Type()
+        if tt.kind == TypeKind.I4
+            return LLVMIntType(4)
+        if tt.kind == TypeKind.I8
             return LLVMInt8Type()
-        if tt.kind == TypeKind.
+        if tt.kind == TypeKind.I16
+            return LLVMInt16Type()
+        if tt.kind == TypeKind.I32
+            return LLVMInt32Type()
+        if tt.kind == TypeKind.I64
+            return LLVMInt64Type()
+        if tt.kind == TypeKind.I128
+            return LLVMInt128Type()
+        if tt.kind == TypeKind.F16 
+            return LLVMHalfType()
+        if tt.kind == TypeKind.F32
+            return LLVMFloatType()
+        if tt.kind == TypeKind.F64
+            return LLVMDoubleType()
+        if tt.kind == TypeKind.PTR
+            return LLVMPointerType(this.codegenType((tt as PointerType).pointee_type))
+        if tt.kind == TypeKind.ARRAY {
+            arr_ty = tt as ArrayType
+            arr_len = arr_ty.length
+            element_type = this.codegenType(arr_ty.element_type)
+            if arr_len.is_constant
+                return LLVMArrayType(element_type, (arr_len as ConstantInt).value)
+            return LLVMPointerType(element_type)
+        }
+        if tt.kind == TypeKind.ENUM
+            return LLVMInt32Type()
+        if tt.kind == TypeKind.FNC {
+            param_types: Array<LLVMTypeRef> = []
+            func_ty = tt as FunctionType
+            for i = 0; i < func_ty.args.length; ++i {
+                param_types << this.codegenType(func_ty.args[i].kind)
+                //TODO: add a new context and put the argnames to context
+            }
+            ret_type = this.codegenType(func_ty.return_type)
+            return  LLVMFunctionType(ret_type, param_types.buffer, param_types.length, false)
+        }
+            // STRING
+            // OBJECT
+            // GENERIC_TEMPLATE
+            // RESOLVED_GENERIC
 
     }
     codegenReturnStmt(builder: LLVMBasicBlockRef, return_stmt: ReturnStatement){
@@ -57,8 +92,10 @@ class CodeGen {
             return this.codegenIndexExp(builder, exp as IndexExpression)
         if expression.kind == ExpressionKind.NEW
             return this.codegenNewExp(builder, exp as NewExpression)
-        if expression.kind == ExpressionKind.CAST
+        if expression.kind == ExpressionKind.TYPEBOUND
             return this.codegenCastExp(builder, exp as CastExpression)
+        if expression.kind == ExpressionKind.ARRAY
+            return this.codegenArrayExp(builder, exp as ArrayExpression)
     }
     codegenIfStmt(builder: LLVMBasicBlockRef, if_statmt: IfStatement){
 
@@ -88,13 +125,8 @@ class CodeGen {
             this.codegenStatement(builder, block.statements[i])
         }
     }
-    codegenFunction(func: FunctionType): {
-        param_types: Array<LLVMTypeRef> = []
-        for i = 0; i < func.arg_types.length; ++i 
-            param_types << this.codegenType(func.arg_types[i])
-        ret_type = this.codegenType(func.return_type)
-        func_type: LLVMTypeRef =  LLVMFunctionType(ret_type, param_types.buffer, param_types.length, false)
-        func = LLVMAddFunction(this.module, func.name.to_cstring(), func_type)
+    codegenFunction(func: Function): {
+        func = LLVMAddFunction(this.module, func.name.to_cstring(), this.codegenType(func.value_type))
         entry_block: LLVMBasicBlockRef  = LLVMAppendBasicBlock(func, (func.name + ".entry").to_cstring())
         func_builder: LLVMBuilderRef = LLVMCreateBuilder()
         LLVMPositionBuilderAtEnd(func_builder, entry_block)
