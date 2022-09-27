@@ -470,6 +470,9 @@ class TypeChecker {
         left = this.check_expression(binary_node.lhs)
         right = this.check_expression(binary_node.rhs)
         op = binary_node.op
+        if left.value_type == right.value_type and left.value_type.kind == TypeKind.INT and op == BinaryOp.ADD {
+            return new BinaryExpression(left, op, right, left.value_type)
+        }
         //TODO: check if left and right are compatible and cast if necessary
         //TODO: Resolve type
         return new BinaryExpression(left, op, right, new Type(TypeKind.UNKNOWN))
