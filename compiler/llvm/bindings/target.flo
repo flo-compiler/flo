@@ -1,3 +1,55 @@
+enum LLVMCodeGenOptLevel{
+    LLVMCodeGenLevelNone
+    LLVMCodeGenLevelLess
+    LLVMCodeGenLevelDefault
+    LLVMCodeGenLevelAggressive
+}
+
+enum LLVMRelocMode {
+    LLVMRelocDefault
+    LLVMRelocStatic
+    LLVMRelocPIC
+    LLVMRelocDynamicNoPic
+    LLVMRelocROPI
+    LLVMRelocRWPI
+    LLVMRelocROPI_RWPI
+}
+
+enum LLVMCodeModel {
+    LLVMCodeModelDefault
+    LLVMCodeModelJITDefault
+    LLVMCodeModelTiny
+    LLVMCodeModelSmall
+    LLVMCodeModelKernel
+    LLVMCodeModelMedium
+    LLVMCodeModelLarge
+}
+enum LLVMCodeGenFileType {
+    LLVMAssemblyFile
+    LLVMObjectFile
+}
 fnc FloLLVMInitializeNativeTarget(): LLVMBool
 fnc FloLLVMInitializeNativeAsmParser(): LLVMBool
 fnc FloLLVMInitializeNativeAsmPrinter(): LLVMBool
+
+/*===-- Target ------------------------------------------------------------===*/
+/** Returns the first llvm::Target in the registered targets list. */
+fnc LLVMGetFirstTarget(): LLVMTargetRef
+/** Finds the target corresponding to the given name and stores it in \p T.
+  Returns 0 on success. */
+fnc LLVMGetTargetFromName(Name: i8*): LLVMTargetRef
+/** Emits an asm or object file for the given module to the filename. This
+  wraps several c++ only classes (among them a file stream). Returns any
+  error in ErrorMessage. Use LLVMDisposeMessage to dispose the message. */
+  /** Finds the target corresponding to the given triple and stores it in \p T.
+  Returns 0 on success. Optionally returns any error in ErrorMessage.
+  Use LLVMDisposeMessage to dispose the message. */
+fnc LLVMGetTargetFromTriple(Triple: i8*, T: LLVMTargetRef *, ErrorMessage: i8**): LLVMBool
+/** Create a DataLayout based on the targetMachine. */
+fnc LLVMCreateTargetDataLayout(T: LLVMTargetMachineRef): i8*
+fnc LLVMGetHostCPUFeatures(): i8*
+fnc LLVMCreateTargetMachine(T: LLVMTargetRef, Triple: i8*, CPU: i8*, Features: i8*, Level: LLVMCodeGenOptLevel, Reloc: LLVMRelocMode, CodeModel: LLVMCodeModel): LLVMTargetMachineRef
+fnc LLVMTargetMachineEmitToFile(T: LLVMTargetMachineRef, M: LLVMModuleRef, Filename: i8*, codegen: LLVMCodeGenFileType, ErrorMessage: i8**): LLVMBool
+/** Get a triple for the host machine as a string. The result needs to be
+  disposed with LLVMDisposeMessage. */
+fnc LLVMGetDefaultTargetTriple(): i8*

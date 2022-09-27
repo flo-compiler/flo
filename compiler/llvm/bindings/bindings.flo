@@ -58,7 +58,7 @@ fnc LLVMGetDataLayout(M: LLVMModuleRef ): i8*
  *
  * @see Module::setDataLayout()
  */
-fnc LLVMSetDataLayout(M: LLVMModuleRef, DataLayoutStr: i8* )
+fnc LLVMSetDataLayout(M: LLVMModuleRef, DataLayoutStr: i8*)
 
 /**
  * Obtain the target triple for a module.

@@ -120,6 +120,8 @@ class LLVMJITEventListenerRef {}
  * @see llvm::object::Binary
  */
 class LLVMBinaryRef {}
+class LLVMTargetRef {}
+class LLVMTargetMachineRef {}
 enum LLVMInlineAsmDialect {
   LLVMInlineAsmDialectATT
   LLVMInlineAsmDialectIntel
