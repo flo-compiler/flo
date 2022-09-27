@@ -7,11 +7,13 @@ LDFLAGS=`llvm-config --cxxflags --ldflags --libs --system-libs`
 
 all: flo
 
-flo: libllvm.a
-	hostcompiler/flo.py compiler/llvm/bindings_test.flo -o $@
+flo: libllvm.a flo.o
 	$(LD) flo.o libllvm.a $< $(LDFLAGS) -o $@
 
-flollvm.o:
+flo.o: compiler/*.flo
+	hostcompiler/flo.py compiler/main.flo -o flo
+
+flollvm.o: compiler/llvm/bindings/c-deps.c
 	$(CC) -c compiler/llvm/bindings/c-deps.c -o $@
 
 libllvm.a: flollvm.o

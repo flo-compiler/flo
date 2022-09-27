@@ -9,7 +9,7 @@ import "typechecker"
 import "codegen"
 
 fnc parse_args(size: int, args: i8**): Array<string> {
-    letarr: Array<string> = []
+    arr: Array<string> = []
     for i = 0; i < size; i++
         arr << string_from_cstring(args[i])
     return arr
@@ -61,10 +61,18 @@ fnc main(size: int, ptr: i8**): int {
         print_errors(filename, errors, text)
         /**** Analyzing ****/
         typechecker = new TypeChecker(errors)
-        program = typechecker.check(module_node)
+        program = typechecker.check(module_node, filename)
         /**** Codegen ****/
         codegen = new CodeGen()
-        codegen.codegenProgram(program)
+        flo_module = codegen.codegenProgram(program)
+        if flag(args, "--print-llvm")
+            flo_module.print()
+        if flag(args, "-e") or flag(args, "--execute") {
+            flo_module.exec()
+        }
+        if !flag(args, "--no-output") {
+            flo_module.write_object("a.o")
+        }
     } else {
         print_message_error(ErrorKind.GEN, "No input file specified.")
         return 1

@@ -77,7 +77,7 @@ class FloatExpressionNode extends ExpressionNode {
 class CharExpressionNode extends ExpressionNode {
     value: CharToken
     constructor(value: CharToken){
-        super(ExpressionKind.FLOAT)
+        super(ExpressionKind.CHAR)
         this.value = value
     }
 }
@@ -226,43 +226,43 @@ class FunctionDeclarationNode {
     }
 }
 class FieldNode {
-    name: Token
+    name: IdentifierToken
     parsed_type: TypeNode
 }
 class GenericParameterNode {
-    name: Token
-    constructor(name: Token){
+    name: IdentifierToken
+    constructor(name: IdentifierToken){
         this.name = name
     }
 }
 class ClassDeclarationNode {
-    name: Token
+    name: IdentifierToken
     generic_parameters: Array<GenericParameterNode>
     parent: RecordTypeNode
     fields: Array<FieldNode>
     methods: Array<FunctionDeclarationNode>
-    constructor(name: Token) {
+    constructor(name: IdentifierToken) {
         this.name = name
         this.fields = []
         this.methods = []
         this.generic_parameters = []
     }
 }
-class EnumField {
-    name: Token
-    constructor(name: Token){
+class EnumNodeField {
+    name: IdentifierToken
+    constructor(name: IdentifierToken){
         this.name = name
     }
 }
 class EnumNode {
-    name: Token
-    fields: Array<EnumField>
+    name: IdentifierToken
+    fields: Array<EnumNodeField>
     constructor(){
         this.fields = []
     }
 }
 class ImportNode {
-    import_list: Array<Token>
+    import_list: Array<IdentifierToken>
     module_path: Token
     constructor(){
         this.import_list = []
@@ -273,7 +273,7 @@ class ConstNode {
     value: ExpressionNode
 }
 class TypeAliasNode {
-    name: Token
+    name: IdentifierToken
     parsed_type: TypeNode
 }
 class ModuleAST {
@@ -756,7 +756,7 @@ class Parser {
     parse_type_alias(): TypeAliasNode {
         this.advance()
         type_alias_node = new TypeAliasNode()
-        type_alias_node.name = this.eat(TokType.IDENTIFER)
+        type_alias_node.name = this.eat(TokType.IDENTIFER) as IdentifierToken
         this.eat(TokType.EQ)
         type_alias_node.parsed_type = this.parse_type()
         return type_alias_node
@@ -806,7 +806,7 @@ class Parser {
         while this.current_token.ttype != TokType.RBRACE and this.can_parse() {
             if this.peek().ttype == TokType.COL {
                 field = new FieldNode()
-                field.name = this.eat(TokType.IDENTIFER)
+                field.name = this.eat(TokType.IDENTIFER) as IdentifierToken
                 this.eat(TokType.COL)
                 field.parsed_type = this.parse_type()
                 class_node.fields << field
@@ -822,16 +822,16 @@ class Parser {
     }
     parse_generic_parameters(generic_parameters: Array<GenericParameterNode>) {
         this.advance()
-        generic_parameters << new GenericParameterNode(this.eat(TokType.IDENTIFER))
+        generic_parameters << new GenericParameterNode(this.eat(TokType.IDENTIFER) as IdentifierToken)
         while this.current_token.ttype == TokType.COMMA  {
             this.advance()
-            generic_parameters << new GenericParameterNode(this.eat(TokType.IDENTIFER))
+            generic_parameters << new GenericParameterNode(this.eat(TokType.IDENTIFER) as IdentifierToken)
         }
         this.eat(TokType.GT)
     }
     parse_class(): ClassDeclarationNode {
         this.advance()
-        class_node = new ClassDeclarationNode(this.eat(TokType.IDENTIFER))
+        class_node = new ClassDeclarationNode(this.eat(TokType.IDENTIFER) as IdentifierToken)
         if this.current_token.ttype == TokType.LT
             this.parse_generic_parameters(class_node.generic_parameters)
         if this.current_token.ttype == TokType.EXTENDS_KW {
@@ -854,11 +854,11 @@ class Parser {
         import_node = new ImportNode()
         this.advance()
         if this.current_token.ttype == TokType.IDENTIFER {
-            import_node.import_list << this.current_token
+            import_node.import_list << (this.current_token as IdentifierToken)
             this.advance()
             while this.current_token.ttype == TokType.COMMA {
                 this.advance()
-                import_node.import_list << this.eat(TokType.IDENTIFER)
+                import_node.import_list << (this.eat(TokType.IDENTIFER) as IdentifierToken)
             }
             this.eat(TokType.FROM_KW)
         }
@@ -868,12 +868,12 @@ class Parser {
     parse_enum(): EnumNode {
         enum_node = new EnumNode()
         this.advance()
-        enum_node.name = this.eat(TokType.IDENTIFER)
+        enum_node.name = this.eat(TokType.IDENTIFER) as IdentifierToken
         this.new_lines()
         this.eat(TokType.LBRACE)
         this.new_lines()
         while this.current_token.ttype == TokType.IDENTIFER {
-            enum_node.fields << new EnumField(this.current_token)
+            enum_node.fields << new EnumNodeField(this.current_token as IdentifierToken)
             this.advance()
             this.new_lines()
         }

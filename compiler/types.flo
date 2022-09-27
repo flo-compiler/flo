@@ -97,6 +97,7 @@ enum TypeKind {
     FNC
     GENERIC_TEMPLATE
     RESOLVED_GENERIC
+    UNKNOWN
 }
 enum StatementKind {
     IF
@@ -111,6 +112,7 @@ enum StatementKind {
 enum ExpressionKind {
     INT
     FLOAT
+    STR
     CHAR
     STRING
     ARRAY

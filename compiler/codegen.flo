@@ -1,15 +1,73 @@
-import 'llvm/bindings'
+import "llvm/bindings"
+class GeneratedModule {
+    llvm_mod: LLVMModuleRef
+    constructor(llvm_mod: LLVMModuleRef){
+        this.llvm_mod = llvm_mod
+        LLVMLinkInMCJIT()
+        FloLLVMInitializeNativeTarget()
+        FloLLVMInitializeNativeAsmPrinter()
+        FloLLVMInitializeNativeAsmParser()
+    }
+    exec(){
+        zero: i8 = 0    
+        NULL = &zero
+        errors= &zero
+        LLVMVerifyModule(this.llvm_mod, /*LLVMAbortProcessAction*/ 0, &errors)
+        LLVMDisposeMessage(errors)
+
+        engine: LLVMExecutionEngineRef = new i8[64] as LLVMExecutionEngineRef
+        if (LLVMCreateExecutionEngineForModule(&engine, this.llvm_mod, &errors) != 0) {
+            println("failed to create execution engine")
+            exit()
+        }
+        if (zero) {
+            println("error:", string_from_cstring(errors))
+            LLVMDisposeMessage(errors)
+            exit()
+        }
+        functionPtr = LLVMGetFunctionAddress(engine, "main".to_cstring())
+        main_fnc = functionPtr as () => int
+        println(main_fnc())
+    }
+    write_object(fn: string){
+        zero: i8 = 0  
+        errors = &zero
+        triple = LLVMGetDefaultTargetTriple()
+        target = LLVMGetFirstTarget()
+        LLVMGetTargetFromTriple(triple, &target, &errors)
+        CPU = "generic".to_cstring()
+        Features = "".to_cstring()
+        tm = LLVMCreateTargetMachine(target, triple, CPU, LLVMGetHostCPUFeatures(), 0, 0, 0)
+        println(string_from_cstring(triple))
+        LLVMSetDataLayout(this.llvm_mod, LLVMCreateTargetDataLayout(tm))
+        LLVMSetTarget(this.llvm_mod, triple)
+        LLVMTargetMachineEmitToFile(tm, this.llvm_mod, fn.to_cstring(), 1, &errors)
+    }
+    print(){
+        LLVMDumpModule(this.llvm_mod)
+    }
+}
 class CodeGen {
     modules: Array<LLVMModuleRef>
     module: LLVMModuleRef
-    codegenProgram(program: Program){
+    codegenProgram(program: Program): GeneratedModule{
         this.modules = []
         for i = 0; i < program.modules.length; ++i {
             this.modules << this.codegenModule(program.modules[i])
         }
+        this.linkModules()
+        return new GeneratedModule(this.modules[0])
+    }
+    linkModules(){
+        for i = 1; i < this.modules.length; ++i {
+            LLVMLinkModules2(this.modules[0], this.modules[i])
+        }
     }
     codegenModule(module: Module): LLVMModuleRef {
         this.module = LLVMModuleCreateWithName(module.name.to_cstring())
+        for i = 0; i < module.functions.length; ++i {
+            this.codegenFunction(module.functions[i])
+        }
         return this.module
     }
     codegenType(tt: Type): LLVMTypeRef {
@@ -25,7 +83,7 @@ class CodeGen {
             return LLVMInt16Type()
         if tt.kind == TypeKind.I32
             return LLVMInt32Type()
-        if tt.kind == TypeKind.I64
+        if tt.kind == TypeKind.I64 or tt.kind == TypeKind.INT
             return LLVMInt64Type()
         if tt.kind == TypeKind.I128
             return LLVMInt128Type()
@@ -33,7 +91,7 @@ class CodeGen {
             return LLVMHalfType()
         if tt.kind == TypeKind.F32
             return LLVMFloatType()
-        if tt.kind == TypeKind.F64
+        if tt.kind == TypeKind.F64 or tt.kind == TypeKind.FLOAT
             return LLVMDoubleType()
         if tt.kind == TypeKind.PTR
             return LLVMPointerType(this.codegenType((tt as PointerType).pointee_type))
@@ -42,79 +100,85 @@ class CodeGen {
             arr_len = arr_ty.length
             element_type = this.codegenType(arr_ty.element_type)
             if arr_len.is_constant
-                return LLVMArrayType(element_type, (arr_len as ConstantInt).value)
+                return LLVMArrayType(element_type, (arr_len as IntExpression).value)
             return LLVMPointerType(element_type)
         }
-        if tt.kind == TypeKind.ENUM
-            return LLVMInt32Type()
         if tt.kind == TypeKind.FNC {
             param_types: Array<LLVMTypeRef> = []
             func_ty = tt as FunctionType
-            for i = 0; i < func_ty.args.length; ++i {
-                param_types << this.codegenType(func_ty.args[i].kind)
+            for i = 0; i < func_ty.arg_types.length; ++i {
+                param_types << this.codegenType(func_ty.arg_types[i])
                 //TODO: add a new context and put the argnames to context
             }
             ret_type = this.codegenType(func_ty.return_type)
             return  LLVMFunctionType(ret_type, param_types.buffer, param_types.length, false)
         }
+        
+        //if tt.kind == TypeKind.ENUM
+            return LLVMInt32Type()
             // STRING
             // OBJECT
             // GENERIC_TEMPLATE
             // RESOLVED_GENERIC
 
     }
-    codegenReturnStmt(builder: LLVMBasicBlockRef, return_stmt: ReturnStatement){
-        if return_stmt.has_value
-            LLVMBuildRet(builder, return_stmt.value)
+    codegenReturnStmt(builder: LLVMBuilderRef, return_stmt: ReturnStatement){
+        if return_stmt.return_value.has_value 
+            LLVMBuildRet(builder, this.codegenExpression(builder, return_stmt.return_value.value))
         else
             LLVMBuildRetVoid(builder)
     }
-    codegenExpression(builder: LLVMBasicBlockRef, exp: Expression): LLVMValueRef {
-        if expression.kind == ExpressionKind.INT
-            return this.codegenInt(builder, exp as IntExpression)
-        if expression.kind == ExpressionKind.FLOAT
-            return this.codegenFloat(builder, exp as FloatExpression)
-        if expression.kind == ExpressionKind.CHAR
-            return this.codegenChar(builder, exp as CharExpression)
-        if expression.kind == ExpressionKind.STR
-            return this.codegenChar(builder, exp as StringExpression)
-        if expression.kind == ExpressionKind.VAR 
-            return this.codegenBinExp(builder, exp as VarAccessExpression)
-        if expression.kind == ExpressionKind.BIN 
-            return this.codegenBinExp(builder, exp as BinaryExpression)
-        if expression.kind == ExpressionKind.UNARY
-            return this.codegenUnaryExp(builder, exp as UnaryExpression)
-        if expression.kind == ExpressionKind.CALL
-            return this.codegenCallExp(builder, exp as CallExpression)
-        if expression.kind == ExpressionKind.MEMBER
-            return this.codegenMemberExp(builder, exp as MemberExpression)
-        if expression.kind == ExpressionKind.INDEX
-            return this.codegenIndexExp(builder, exp as IndexExpression)
-        if expression.kind == ExpressionKind.NEW
-            return this.codegenNewExp(builder, exp as NewExpression)
-        if expression.kind == ExpressionKind.TYPEBOUND
-            return this.codegenCastExp(builder, exp as CastExpression)
-        if expression.kind == ExpressionKind.ARRAY
-            return this.codegenArrayExp(builder, exp as ArrayExpression)
+    codegenInt(intExp: IntExpression): LLVMValueRef {
+        return LLVMConstInt(this.codegenType(intExp.value_type), intExp.value, false)
     }
-    codegenIfStmt(builder: LLVMBasicBlockRef, if_statmt: IfStatement){
+    codegenFloat(floatExp: FloatExpression): LLVMValueRef {
+        return LLVMConstReal(this.codegenType(floatExp.value_type), floatExp.value)
+    }
+    codegenExpression(builder: LLVMBuilderRef, expression: Expression): LLVMValueRef {
+        if expression.expr_kind == ExpressionKind.INT
+            return this.codegenInt(expression as IntExpression)
+        if expression.expr_kind == ExpressionKind.FLOAT
+            return this.codegenFloat(expression as FloatExpression)
+        return LLVMConstInt(LLVMInt32Type(), 0, false)
+        // if expression.expr_kind == ExpressionKind.STR
+        //     return this.codegenChar(builder, expression as StringExpression)
+        // if expression.expr_kind == ExpressionKind.VAR 
+        //     return this.codegenBinExp(builder, expression as VarAccessExpression)
+        // if expression.expr_kind == ExpressionKind.BIN 
+        //     return this.codegenBinExp(builder, expression as BinaryExpression)
+        // if expression.expr_kind == ExpressionKind.UNARY
+        //     return this.codegenUnaryExp(builder, expression as UnaryExpression)
+        // if expression.expr_kind == ExpressionKind.CALL
+        //     return this.codegenCallExp(builder, expression as CallExpression)
+        // if expression.expr_kind == ExpressionKind.MEMBER
+        //     return this.codegenMemberExp(builder, expression as MemberExpression)
+        // if expression.expr_kind == ExpressionKind.INDEX
+        //     return this.codegenIndexExp(builder, expression as IndexExpression)
+        // if expression.expr_kind == ExpressionKind.NEW
+        //     return this.codegenNewExp(builder, expression as NewExpression)
+        // if expression.expr_kind == ExpressionKind.TYPEBOUND
+        //     return this.codegenCastExp(builder, expression as CastExpression)
+        // if expression.expr_kind == ExpressionKind.ARRAY
+        //     return this.codegenArrayExp(builder, expression as ArrayExpression)
+    }
+    // codegenIfStmt(builder: LLVMBuilderRef, if_statmt: IfStatement){
 
-    }
-    codegenForStmt(builder: LLVMBasicBlockRef, for_stmt: ForStatement){
+    // }
+    // codegenForStmt(builder: LLVMBuilderRef, for_stmt: ForStatement){
 
-    }
-    codegenWhileStmt(builder: LLVMBasicBlockRef, while_stmt: WhileStatement){
+    // }
+    // codegenWhileStmt(builder: LLVMBuilderRef, while_stmt: WhileStatement){
 
-    }
+    // }
     codegenStatement(builder: LLVMBuilderRef, statement: Statement){
-        if statement.kind == StatementKind.IF
-            this.codegenIfStmt(builder, statement as IfStatement)
-        if statement.kind == StatementKind.FOR
-            this.codegenForStmt(builder, statement as ForStatement)
-        if statement.kind == StatementKind.WHILE
-            this.codegenWhileStmt(builder, statement as WhileStatement)
-        if statement.kind == StatementKind.CONTINUE
-        if statement.kind == StatementKind.BREAK
+        // if statement.kind == StatementKind.IF
+        //     this.codegenIfStmt(builder, statement as IfStatement)
+        // if statement.kind == StatementKind.FOR
+        //     this.codegenForStmt(builder, statement as ForStatement)
+        // if statement.kind == StatementKind.WHILE
+        //     this.codegenWhileStmt(builder, statement as WhileStatement)
+        // if statement.kind == StatementKind.CONTINUE
+        // if statement.kind == StatementKind.BREAK
         if statement.kind == StatementKind.RETURN
             this.codegenReturnStmt(builder, statement as ReturnStatement)
         if statement.kind == StatementKind.EXPRESSION
@@ -125,11 +189,11 @@ class CodeGen {
             this.codegenStatement(builder, block.statements[i])
         }
     }
-    codegenFunction(func: Function): {
-        func = LLVMAddFunction(this.module, func.name.to_cstring(), this.codegenType(func.value_type))
-        entry_block: LLVMBasicBlockRef  = LLVMAppendBasicBlock(func, (func.name + ".entry").to_cstring())
+    codegenFunction(func: Function){
+        llvm_fnc: LLVMValueRef = LLVMAddFunction(this.module, func.name.to_cstring(), this.codegenType(func.value_type))
+        entry_block: LLVMBasicBlockRef  = LLVMAppendBasicBlock(llvm_fnc, (func.name + ".entry").to_cstring())
         func_builder: LLVMBuilderRef = LLVMCreateBuilder()
         LLVMPositionBuilderAtEnd(func_builder, entry_block)
-        this.codegenBlock(fnc_builder, func.block)
+        this.codegenBlock(func_builder, func.block)
     }
 }

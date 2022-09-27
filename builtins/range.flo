@@ -1,4 +1,4 @@
-class Range{
+class Range {
     start: int
     end: int
     constructor(start: int, end: int){
