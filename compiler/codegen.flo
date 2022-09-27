@@ -38,7 +38,6 @@ class GeneratedModule {
         CPU = "generic".to_cstring()
         Features = "".to_cstring()
         tm = LLVMCreateTargetMachine(target, triple, CPU, LLVMGetHostCPUFeatures(), 0, 0, 0)
-        println(string_from_cstring(triple))
         LLVMSetDataLayout(this.llvm_mod, LLVMCreateTargetDataLayout(tm))
         LLVMSetTarget(this.llvm_mod, triple)
         LLVMTargetMachineEmitToFile(tm, this.llvm_mod, fn.to_cstring(), 1, &errors)
@@ -134,18 +133,37 @@ class CodeGen {
     codegenFloat(floatExp: FloatExpression): LLVMValueRef {
         return LLVMConstReal(this.codegenType(floatExp.value_type), floatExp.value)
     }
+    codegenBinExp(builder: LLVMBuilderRef, binExp: BinaryExpression): LLVMValueRef {
+        lhs = this.codegenExpression(builder, binExp.lhs)
+        rhs = this.codegenExpression(builder, binExp.rhs)
+        op = binExp.op
+        name = "".to_cstring()
+        if op == BinaryOp.ADD and binExp.rhs.value_type.kind == TypeKind.INT {
+            if LLVMIsConstant(rhs) and LLVMIsConstant(rhs) {
+                return LLVMConstAdd(lhs, rhs)
+            } else {
+                return LLVMBuildAdd(builder, lhs, rhs, name)
+            }
+        } else if op == BinaryOp.ADD and binExp.rhs.value_type.kind == TypeKind.FLOAT {
+            if LLVMIsConstant(rhs) and LLVMIsConstant(rhs) {
+                return LLVMConstFAdd(lhs, rhs)
+            } else {
+                return LLVMBuildFAdd(builder, lhs, rhs, name)
+            }
+        }
+        return lhs
+    }
     codegenExpression(builder: LLVMBuilderRef, expression: Expression): LLVMValueRef {
         if expression.expr_kind == ExpressionKind.INT
             return this.codegenInt(expression as IntExpression)
         if expression.expr_kind == ExpressionKind.FLOAT
             return this.codegenFloat(expression as FloatExpression)
-        return LLVMConstInt(LLVMInt32Type(), 0, false)
         // if expression.expr_kind == ExpressionKind.STR
         //     return this.codegenChar(builder, expression as StringExpression)
         // if expression.expr_kind == ExpressionKind.VAR 
         //     return this.codegenBinExp(builder, expression as VarAccessExpression)
-        // if expression.expr_kind == ExpressionKind.BIN 
-        //     return this.codegenBinExp(builder, expression as BinaryExpression)
+        if expression.expr_kind == ExpressionKind.BIN 
+            return this.codegenBinExp(builder, expression as BinaryExpression)
         // if expression.expr_kind == ExpressionKind.UNARY
         //     return this.codegenUnaryExp(builder, expression as UnaryExpression)
         // if expression.expr_kind == ExpressionKind.CALL
@@ -160,6 +178,7 @@ class CodeGen {
         //     return this.codegenCastExp(builder, expression as CastExpression)
         // if expression.expr_kind == ExpressionKind.ARRAY
         //     return this.codegenArrayExp(builder, expression as ArrayExpression)
+        return LLVMConstInt(LLVMInt32Type(), 0, false)
     }
     // codegenIfStmt(builder: LLVMBuilderRef, if_statmt: IfStatement){
 
