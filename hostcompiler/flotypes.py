@@ -909,14 +909,17 @@ class FloObject(FloType):
     def value(self, n_val):
         self.mem = FloMem(n_val)
 
+    def get_property_mem(self, builder: ir.IRBuilder, name):
+        property_index = list(self.referer.properties.keys()).index(name)
+        return self.mem.get_pointer_at_index(
+            builder, FloInt(0, 32), FloInt(property_index + vtable_offset, 32))
+
     def get_property(self, builder: ir.IRBuilder, name):
         try:
-            property_index = list(self.referer.properties.keys()).index(name)
+            mem = self.get_property_mem(builder, name)
         except Exception:
             return self.get_method(name, builder)
         property_value: FloType = self.referer.properties.get(name)
-        mem = self.mem.get_pointer_at_index(
-            builder, FloInt(0, 32), FloInt(property_index + vtable_offset, 32))
         return property_value.load_value_from_ref(FloRef(builder, property_value, '', mem))
 
     def get_method(self, Oname, builder: ir.IRBuilder) -> Union[FloMethod, None]:
