@@ -473,6 +473,9 @@ class TypeChecker {
         if left.value_type == right.value_type and left.value_type.kind == TypeKind.INT and op == BinaryOp.ADD {
             return new BinaryExpression(left, op, right, left.value_type)
         }
+        if left.value_type == right.value_type and left.value_type.kind == TypeKind.FLOAT and op == BinaryOp.ADD {
+            return new BinaryExpression(left, op, right, left.value_type)
+        }
         //TODO: check if left and right are compatible and cast if necessary
         //TODO: Resolve type
         return new BinaryExpression(left, op, right, new Type(TypeKind.UNKNOWN))

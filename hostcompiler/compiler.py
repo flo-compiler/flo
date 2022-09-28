@@ -260,6 +260,9 @@ class Compiler(Visitor):
                 array: FloArray = self.visit(node.value.name)
                 index = self.visit(node.value.index)
                 return array.get_pointer_at_index(self.builder, index)
+            if isinstance(node.value, PropertyAccessNode):
+                object: FloObject = self.visit(node.value.expr)
+                return object.get_property_mem(self.builder, node.value.property.value)
             var_name = node.value.var_name.value
             var: FloRef = self.context.get(var_name)
             return FloPointer(var.referee).new(var.mem)

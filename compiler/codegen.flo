@@ -1,49 +1,61 @@
 import "llvm/bindings"
 class GeneratedModule {
     llvm_mod: LLVMModuleRef
+    errors: i8*
     constructor(llvm_mod: LLVMModuleRef){
         this.llvm_mod = llvm_mod
+        zero: i8 = 0
+        this.errors = &zero
         LLVMLinkInMCJIT()
         FloLLVMInitializeNativeTarget()
         FloLLVMInitializeNativeAsmPrinter()
         FloLLVMInitializeNativeAsmParser()
     }
+    check_errors(){
+        if (this.errors[0]) {
+            println("error:", string_from_cstring(this.errors))
+            LLVMDisposeMessage(this.errors)
+            exit()
+        }
+    }
     exec(){
-        zero: i8 = 0    
-        NULL = &zero
-        errors= &zero
-        LLVMVerifyModule(this.llvm_mod, /*LLVMAbortProcessAction*/ 0, &errors)
-        LLVMDisposeMessage(errors)
+        LLVMVerifyModule(this.llvm_mod, /*LLVMAbortProcessAction*/ 0, &this.errors)
+        this.check_errors()
 
         engine: LLVMExecutionEngineRef = new i8[64] as LLVMExecutionEngineRef
-        if (LLVMCreateExecutionEngineForModule(&engine, this.llvm_mod, &errors) != 0) {
+        if (LLVMCreateExecutionEngineForModule(&engine, this.llvm_mod, &this.errors) != 0) {
             println("failed to create execution engine")
-            exit()
         }
-        if (zero) {
-            println("error:", string_from_cstring(errors))
-            LLVMDisposeMessage(errors)
-            exit()
-        }
+        this.check_errors()
         functionPtr = LLVMGetFunctionAddress(engine, "main".to_cstring())
         main_fnc = functionPtr as () => int
         println(main_fnc())
     }
-    write_object(fn: string){
-        zero: i8 = 0  
-        errors = &zero
+    create_target_machine(): LLVMTargetMachineRef {
         triple = LLVMGetDefaultTargetTriple()
         target = LLVMGetFirstTarget()
-        LLVMGetTargetFromTriple(triple, &target, &errors)
+        if (LLVMGetTargetFromTriple(triple, &target, &this.errors) != 0) {
+            println("failed to get target tripple")
+        }
+        this.check_errors()
         CPU = "generic".to_cstring()
-        Features = "".to_cstring()
-        tm = LLVMCreateTargetMachine(target, triple, CPU, LLVMGetHostCPUFeatures(), 0, 0, 0)
+        return LLVMCreateTargetMachine(target, triple, CPU, LLVMGetHostCPUFeatures(), 0, 0, 0)
+    }
+    write_object(fn: string){
+        tm = this.create_target_machine()
         LLVMSetDataLayout(this.llvm_mod, LLVMCreateTargetDataLayout(tm))
-        LLVMSetTarget(this.llvm_mod, triple)
-        LLVMTargetMachineEmitToFile(tm, this.llvm_mod, fn.to_cstring(), 1, &errors)
+        LLVMSetTarget(this.llvm_mod, LLVMGetTargetMachineTriple(tm))
+        if (LLVMTargetMachineEmitToFile(tm, this.llvm_mod, fn.to_cstring(), 1, &this.errors) != 0) {
+            println("target machine failed to emit object code")
+        }
+        this.check_errors()
+        LLVMDisposeTargetMachine(tm)
     }
     print(){
         LLVMDumpModule(this.llvm_mod)
+    }
+    destroy(){
+        LLVMDisposeModule(this.llvm_mod)
     }
 }
 class CodeGen {
