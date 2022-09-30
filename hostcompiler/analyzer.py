@@ -706,6 +706,8 @@ class Analyzer(Visitor):
                     return node.expects
                 else:
                     gen_name = 'Array<'+expected_type.str()+'>'
+                    if node.expects.str() == gen_name:
+                        return node.expects
                     TypeError(node.range, f"Expected '{node.expects.str()}' but got '{gen_name}'").throw()
             elif isinstance(node.expects, FloArray):
                 expected_elm_ty = node.expects.elm_type

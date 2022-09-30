@@ -543,7 +543,7 @@ class Parser {
     is_term_expr_op(): int {
         token_type = this.current_token.ttype
         if token_type == TokType.MULT
-            return BinaryOp.TIMES
+            return BinaryOp.MUL
         if token_type == TokType.DIV
             return BinaryOp.DIV
         if token_type == TokType.MOD
@@ -638,8 +638,6 @@ class Parser {
     }
     is_type_expr_op(): TypeExprOp{
         token_type = this.current_token.ttype
-        if token_type == TokType.IN_KW
-            return TypeExprOp.IN
         if token_type == TokType.IS_KW
             return TypeExprOp.IS
         if token_type == TokType.AS_KW
@@ -657,6 +655,8 @@ class Parser {
     }
     parse_expression(): ExpressionNode {
         left = this.parse_typed_expression()
+        if this.current_token.ttype == TokType.IN_KW and this.can_parse()
+            return new BinaryExpressionNode(left, BinaryOp.IN, this.parse_expression())
         if this.current_token.ttype != TokType.EQ or !this.can_parse()
             return left
         this.advance()

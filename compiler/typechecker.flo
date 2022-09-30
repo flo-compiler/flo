@@ -16,6 +16,11 @@ class Type {
         return this.kind == other.kind
     }
 }
+class BooleanType extends Type {
+    constructor(){
+        super(TypeKind.BOOL)
+    }
+}
 class PointerType extends Type {
     pointee_type: Type
     constructor(pointee_type: Type){
@@ -65,6 +70,15 @@ class IntExpression extends Expression {
     constructor(value: int){
         super(ExpressionKind.INT)
         this.value_type = new Type(TypeKind.INT)
+        this.value = value
+        this.is_constant = true
+    }
+}
+class BooleanExpression extends Expression {
+    value: int 
+    constructor(value: int){
+        super(ExpressionKind.BOOL)
+        this.value_type = new BooleanType()
         this.value = value
         this.is_constant = true
     }
@@ -119,8 +133,18 @@ class UnaryExpression extends Expression {
     }
 }
 class TypeExpression extends Expression {
-    constructor(){
+    expr: Expression
+    ty_op: TypeExprOp
+    bound_type: Type
+    constructor(expr: Expression, ty_op: TypeExprOp, bound_type: Type){
         super(ExpressionKind.TYPEBOUND)
+        this.expr = expr
+        this.ty_op = ty_op
+        if ty_op == TypeExprOp.AS 
+            this.value_type = bound_type
+        if ty_op == TypeExprOp.IS
+            this.value_type = new BooleanType()
+        this.bound_type = bound_type
     }
 }
 class NewExpression extends Expression {
@@ -226,6 +250,72 @@ class ReturnStatement extends Statement {
 }
 
 
+fnc is_numeric(val_ty: Type): bool {
+    return val_ty.kind >= TypeKind.I4 and val_ty.kind <= TypeKind.FLOAT
+}
+fnc is_float(val_ty: Type): bool {
+    return val_ty.kind >= TypeKind.F16 and val_ty.kind <= TypeKind.FLOAT
+}
+fnc is_int(val_ty: Type): bool {
+    return val_ty.kind >= TypeKind.I4 and val_ty.kind <= TypeKind.INT
+}
+fnc is_bool(val_ty: Type): bool {
+    return val_ty.kind == TypeKind.BOOL
+}
+fnc cast_exp_to_type(exp: Expression, val_ty: Type): Expression {
+    if exp.value_type == val_ty
+        return exp
+    return new TypeExpression(exp, TypeExprOp.AS, val_ty)
+}
+fnc max_type(t1: Type, t2: Type): Type {
+    if t1.kind > t2.kind
+        return t1
+    return t2
+}
+fnc check_cast_lower_bits(p1: Expression*, p2: Expression*){
+    ty1 = p1[0].value_type
+    ty2 = p2[0].value_type
+    if ty1 != ty2 {
+        if is_float(ty1) and is_int(ty2) {
+            p2[0] = cast_exp_to_type(p2[0], ty1)
+        } else if is_int(ty1) and is_float(ty2){
+            p1[0] = cast_exp_to_type(p1[0], ty2)
+        } else {
+            ty1 = max_type(ty1, ty2)
+            p1[0] = cast_exp_to_type(p1[0], ty1)
+            p2[0] = cast_exp_to_type(p2[0], ty1)
+        }
+    }
+}
+fnc dump_type(ty: Type): string {
+    if ty.kind == TypeKind.BOOL
+        return "bool"
+    if ty.kind == TypeKind.I4
+        return "i4"
+    if ty.kind == TypeKind.I8
+        return "i8"
+    if ty.kind == TypeKind.I16
+        return "i16"
+    if ty.kind == TypeKind.I32
+        return "i32"
+    if ty.kind == TypeKind.I64
+        return "i64"
+    if ty.kind == TypeKind.I128
+        return "i128"
+    if ty.kind == TypeKind.INT
+        return "i"+machine_word_size
+    if ty.kind == TypeKind.F16
+        return "f16"
+    if ty.kind == TypeKind.F32
+        return "f32"
+    if ty.kind == TypeKind.F64
+        return "f64"
+    if ty.kind == TypeKind.FLOAT
+        return "f"+machine_word_size
+    if ty.kind == TypeKind.VOID
+        return "void"
+    return "any"
+}
 class Scope {
     vars: Map<string, VarId>
     classes: Map<string, ClassId>
@@ -448,8 +538,13 @@ class TypeChecker {
         }
         return new ArrayExpression(elements)
     }
-    check_var_access(var_access_node: VarAccessExpressionNode): VarAccessExpression {
+    check_var_access(var_access_node: VarAccessExpressionNode): Expression {
         name = var_access_node.name.value
+        if name == "true" {
+            return new BooleanExpression(1)
+        } else if name == "false"{
+            return new BooleanExpression(0)
+        }
         resolved = this.current_scope.vars.get(name)
         var_ty = new Type(TypeKind.UNKNOWN)
         if !resolved.has_value {
@@ -466,15 +561,50 @@ class TypeChecker {
         return new VarAccessExpression(new VarId(-1, -1), var_ty)
         //TODO: Emit error when not found.(else)
     }
+    check_assignment(left: Expression, right: Expression): BinaryExpression {
+        return new BinaryExpression(left, BinaryOp.ASSIGN, right, right.value_type)
+    }
     check_bin_expr(binary_node: BinaryExpressionNode): BinaryExpression {
         left = this.check_expression(binary_node.lhs)
         right = this.check_expression(binary_node.rhs)
         op = binary_node.op
-        if left.value_type == right.value_type and left.value_type.kind == TypeKind.INT and op == BinaryOp.ADD {
-            return new BinaryExpression(left, op, right, left.value_type)
-        }
-        if left.value_type == right.value_type and left.value_type.kind == TypeKind.FLOAT and op == BinaryOp.ADD {
-            return new BinaryExpression(left, op, right, left.value_type)
+        if is_numeric(left.value_type) and is_numeric(right.value_type){
+            if op == BinaryOp.POW {
+                if is_int(left.value_type)
+                    left = cast_exp_to_type(left, new Type(TypeKind.FLOAT)) // Might need to cast it to the biggest available
+                if is_int(right.value_type){
+                    right = cast_exp_to_type(right, new Type(TypeKind.FLOAT)) // Might need to cast it to the biggest available
+                }
+                return new BinaryExpression(left, op, right, left.value_type)
+            }
+            if op >= BinaryOp.ADD and op <=  BinaryOp.LTE {
+                //TODO: Check and cast the smaller bit size to the bigger one.
+                check_cast_lower_bits(&left, &right)
+                exp_type = left.value_type
+                if op >= BinaryOp.GT and op <= BinaryOp.LTE 
+                    exp_type = new BooleanType()
+                
+                return new BinaryExpression(left, op, right, exp_type)
+            }
+            if op >= BinaryOp.EEQ and op <= BinaryOp.NEQ {
+                return new BinaryExpression(left, op, right, new BooleanType())
+            }
+            if op >= BinaryOp.SL and op <= BinaryOp.XOR {
+                //TODO: Cast the float to int.
+                if is_float(left.value_type)
+                    left = cast_exp_to_type(left, new Type(TypeKind.INT)) // Might need to cast it to the biggest available
+                if is_float(right.value_type){
+                    right = cast_exp_to_type(right, new Type(TypeKind.INT)) // Might need to cast it to the biggest available
+                }
+                return new BinaryExpression(left, op, right, left.value_type)
+            }
+        } else if is_bool(left.value_type) and is_bool(right.value_type){
+            if op >= BinaryOp.OR and op <= BinaryOp.AND
+                return new BinaryExpression(left, op, right, left.value_type)
+        } 
+        //TODO: Handle Range Case.
+        else if op == BinaryOp.ASSIGN {
+            return this.check_assignment(left, right)
         }
         //TODO: check if left and right are compatible and cast if necessary
         //TODO: Resolve type
@@ -487,7 +617,10 @@ class TypeChecker {
         return new UnaryExpression(op, expression, new Type(TypeKind.UNKNOWN))
     }
     check_type_expr(type_expr_node: TypeExpressionNode): TypeExpression {
-        return new TypeExpression()
+        // Need to check if cast is compatible for typecase
+        exp = this.check_expression(type_expr_node.expression)
+        ty = this.check_type(type_expr_node.bound_type)
+        return new TypeExpression(exp, type_expr_node.op, ty)
     }
     check_new_expr(new_expr_node: NewExpressionNode): NewExpression {
         return new NewExpression()
