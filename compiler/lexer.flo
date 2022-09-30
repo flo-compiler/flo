@@ -314,8 +314,8 @@ class Lexer {
     }
     char_token(): CharToken {
         length = 3
-        value = this.current_char
         this.advance()
+        value = this.current_char
         if this.current_char == '\\' {
             this.advance()
             if this.current_char == 'a'

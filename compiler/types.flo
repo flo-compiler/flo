@@ -114,6 +114,7 @@ enum ExpressionKind {
     FLOAT
     STR
     CHAR
+    BOOL
     STRING
     ARRAY
     VAR
@@ -128,16 +129,16 @@ enum ExpressionKind {
 enum BinaryOp {
     ADD
     SUB
-    TIMES
+    MUL
     DIV
     MOD
     POW
+    GT
+    GTE
+    LT
+    LTE
     EEQ
     NEQ
-    GT
-    LT
-    GTE
-    LTE
     SL
     SR
     OR
@@ -157,7 +158,6 @@ enum UnaryOp {
     ADDROF
 }
 enum TypeExprOp {
-    IN
     AS
     IS
 }

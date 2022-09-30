@@ -143,8 +143,8 @@ fnc LLVMGetElementAsConstant(C: LLVMValueRef, idx: int): LLVMValueRef
 
 
 fnc LLVMGetConstOpcode(ConstantVal: LLVMValueRef): LLVMOpcode 
-fnc LLVMAlignOf (Ty: LLVMTypeRef): LLVMValueRef 
-fnc LLVMSizeOf (Ty: LLVMTypeRef): LLVMValueRef 
+fnc LLVMAlignOf(Ty: LLVMTypeRef): LLVMValueRef 
+fnc LLVMSizeOf(Ty: LLVMTypeRef): LLVMValueRef 
 fnc LLVMConstNeg(ConstantVal: LLVMValueRef ): LLVMValueRef 
 fnc LLVMConstNSWNeg(ConstantVal: LLVMValueRef ): LLVMValueRef 
 fnc LLVMConstNUWNeg(ConstantVal: LLVMValueRef ): LLVMValueRef 
@@ -223,6 +223,7 @@ fnc LLVMIsExternallyInitialized(GlobalVar: LLVMValueRef): LLVMBool
 fnc LLVMSetExternallyInitialized(GlobalVar: LLVMValueRef, IsExtInit: LLVMBool)
 /* functions */
 fnc LLVMDeleteFunction(Fn: LLVMValueRef)
+fnc LLVMLookupIntrinsicID(Name: i8*, NameLen: int): int
 fnc LLVMGetIntrinsicDeclaration(Mod: LLVMModuleRef, ID: int, ParamTypes: LLVMTypeRef*, ParamCount: int): LLVMValueRef
 fnc LLVMIntrinsicGetType(Ctx: LLVMContextRef, ID: int, ParamTypes: LLVMTypeRef*, ParamCount: int): LLVMTypeRef
 fnc LLVMGetGC(Fn: LLVMValueRef): i8*

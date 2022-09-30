@@ -11,7 +11,7 @@ flo: libllvm.a flo.o
 	$(LD) flo.o libllvm.a $< $(LDFLAGS) -o $@
 
 flo.o: compiler/*.flo
-	hostcompiler/flo.py compiler/main.flo -o flo
+	hostcompiler/flo.py --opt-level=3 compiler/main.flo -o flo
 
 flollvm.o: compiler/llvm/bindings/c-deps.c
 	$(CC) -c compiler/llvm/bindings/c-deps.c -o $@

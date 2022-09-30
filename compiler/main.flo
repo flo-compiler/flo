@@ -61,7 +61,7 @@ fnc main(size: int, ptr: i8**): int {
         print_errors(filename, errors, text)
         /**** Analyzing ****/
         typechecker = new TypeChecker(errors)
-        program = typechecker.check(module_node, filename)
+        program = typechecker.check(module_node, filename)        
         /**** Codegen ****/
         codegen = new CodeGen()
         flo_module = codegen.codegenProgram(program)

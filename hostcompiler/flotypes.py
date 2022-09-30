@@ -1046,11 +1046,9 @@ class FloGeneric(FloObject):
 
 
 class FloEnum(FloType):
-    start = 0
     def __init__(self, elements: List[str]):
         self.elements = elements
-        self.global_offset = FloEnum.start
-        FloEnum.start+=len(elements)
+        self.global_offset = 0
 
     def get_property(self, name: str) -> FloInt:
         index = self.elements.index(name)+self.global_offset
