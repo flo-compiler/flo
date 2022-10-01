@@ -3,10 +3,6 @@ class TypeId {
     module_id: int
     id: int
 }
-enum VarAccessType {
-    FNC
-    VAR
-}
 class Type {
     kind: TypeKind
     constructor(kind: TypeKind){
@@ -602,12 +598,10 @@ class TypeChecker {
             if op >= BinaryOp.OR and op <= BinaryOp.AND
                 return new BinaryExpression(left, op, right, left.value_type)
         } 
-        //TODO: Handle Range Case.
+        //TODO: Handle Range, In and Object Arithmetic and bit Cases.
         else if op == BinaryOp.ASSIGN {
             return this.check_assignment(left, right)
         }
-        //TODO: check if left and right are compatible and cast if necessary
-        //TODO: Resolve type
         return new BinaryExpression(left, op, right, new Type(TypeKind.UNKNOWN))
     }
     check_unary_expr(unary_node: UnaryExpressionNode): UnaryExpression {

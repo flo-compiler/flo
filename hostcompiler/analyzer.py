@@ -153,6 +153,8 @@ class Analyzer(Visitor):
         return FloInt(None, 8)
 
     def visitStrNode(self, node: StrNode):
+        if node.expects == FloPointer(FloInt(None, 8)):
+            return node.expects
         return FloObject(self.context.get("string"))
 
     def cast(self, node: Node, type):
@@ -598,6 +600,7 @@ class Analyzer(Visitor):
                 f"Expected {len(fn.arg_types)} arguments, but got {len(args)}",
             ).throw()
         for i, (node_arg, fn_arg_ty) in enumerate(zip(args, fn_args)):
+            node_arg.expects = fn_arg_ty
             passed_arg_ty = self.visit(node_arg)
             c = None
             if isinstance(passed_arg_ty, FloObject) and fn_arg_ty != FloType and isinstance(fn_arg_ty, FloObject):

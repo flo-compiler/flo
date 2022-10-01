@@ -27,7 +27,7 @@ class GeneratedModule {
             println("failed to create execution engine")
         }
         this.check_errors()
-        functionPtr = LLVMGetFunctionAddress(engine, "main".to_cstring())
+        functionPtr = LLVMGetFunctionAddress(engine, "main")
         main_fnc = functionPtr as () => float
         println(main_fnc())
     }
@@ -38,7 +38,7 @@ class GeneratedModule {
             println("failed to get target tripple")
         }
         this.check_errors()
-        CPU = "generic".to_cstring()
+        CPU: i8* = "generic"
         return LLVMCreateTargetMachine(target, triple, CPU, LLVMGetHostCPUFeatures(), 0, 0, 0)
     }
     write_object(fn: string){
@@ -171,88 +171,86 @@ class CodeGen {
         rty = bin_exp.rhs.value_type
         llvmty = this.codegen_type(rty)
         call = rhs
-        name = "".to_cstring()
         pred = 0
         if is_numeric(rty) and op == BinaryOp.POW {
-            tys: Array<LLVMTypeRef> = [llvmty, llvmty]
             args = [lhs, rhs]
-            res = get_intrinsic(this.module, "llvm.pow."+dump_type(rty), tys)
-            return LLVMBuildCall2(builder, res.fnc_type, res.call, &(args[0]), 2, name)
+            res = get_intrinsic(this.module, "llvm.pow."+dump_type(rty), [llvmty, llvmty])
+            return LLVMBuildCall2(builder, res.fnc_type, res.call, &(args[0]), 2, "")
         }
         if is_int(rty) {
             if op == BinaryOp.ADD { 
                 if LLVMIsConstant(rhs) and LLVMIsConstant(rhs) {
                     return LLVMConstAdd(lhs, rhs)
                 } else {
-                    return LLVMBuildAdd(builder, lhs, rhs, name)
+                    return LLVMBuildAdd(builder, lhs, rhs, "")
                 }
             } else if op == BinaryOp.SUB {
                 if LLVMIsConstant(rhs) and LLVMIsConstant(rhs) {
                     return LLVMConstSub(lhs, rhs)
                 } else {
-                    return LLVMBuildSub(builder, lhs, rhs, name)
+                    return LLVMBuildSub(builder, lhs, rhs, "")
                 }
             } else if op == BinaryOp.MUL {
                 if LLVMIsConstant(rhs) and LLVMIsConstant(rhs) {
                     return LLVMConstMul(lhs, rhs)
                 } else {
-                    return LLVMBuildMul(builder, lhs, rhs, name)
+                    return LLVMBuildMul(builder, lhs, rhs, "")
                 }
             } else if op == BinaryOp.DIV {
                 if LLVMIsConstant(rhs) and LLVMIsConstant(rhs) {
                     return LLVMConstSDiv(lhs, rhs)
                 } else {
-                    return LLVMBuildSDiv(builder, lhs, rhs, name)
+                    return LLVMBuildSDiv(builder, lhs, rhs, "")
                 }
             } else if op == BinaryOp.MOD {
                 if LLVMIsConstant(rhs) and LLVMIsConstant(rhs) {
                     return LLVMConstSRem(lhs, rhs)
                 } else {
-                    return LLVMBuildSRem(builder, lhs, rhs, name)
+                    return LLVMBuildSRem(builder, lhs, rhs, "")
                 }
             } else if op >= BinaryOp.GT and op <= BinaryOp.LTE {
                 pred = op - BinaryOp.GT + 38
                 if LLVMIsConstant(rhs) and LLVMIsConstant(rhs) {
                     return LLVMConstICmp(pred, lhs, rhs)
                 } else {
-                    return LLVMBuildICmp(builder, pred, lhs, rhs, name)
+                    return LLVMBuildICmp(builder, pred, lhs, rhs, "")
                 }
             } else if op >= BinaryOp.EEQ and op <= BinaryOp.NEQ {
                 pred = op - BinaryOp.EEQ + 32
                 if LLVMIsConstant(rhs) and LLVMIsConstant(rhs) {
                     return LLVMConstICmp(pred, lhs, rhs)
                 } else {
-                    return LLVMBuildICmp(builder, pred, lhs, rhs, name)
+                    return LLVMBuildICmp(builder, pred, lhs, rhs, "")
                 }
             } else if op == BinaryOp.SL {
                 if LLVMIsConstant(rhs) and LLVMIsConstant(rhs) {
                     return LLVMConstShl(lhs, rhs)
                 } else {
-                    return LLVMBuildShl(builder, lhs, rhs, name)
+                    return LLVMBuildShl(builder, lhs, rhs, "")
                 }
             } else if op == BinaryOp.SR {
                 if LLVMIsConstant(rhs) and LLVMIsConstant(rhs) {
                     return LLVMConstAShr(lhs, rhs)
                 } else {
-                    return LLVMBuildAShr(builder, lhs, rhs, name)
+                    return LLVMBuildAShr(builder, lhs, rhs, "")
                 }
             } else if op == BinaryOp.OR {
                 if LLVMIsConstant(rhs) and LLVMIsConstant(rhs) {
                     return LLVMConstOr(lhs, rhs)
                 } else {
-                    return LLVMBuildOr(builder, lhs, rhs, name)
+                    return LLVMBuildOr(builder, lhs, rhs, "")
                 }
             } else if op == BinaryOp.AND {
                 if LLVMIsConstant(rhs) and LLVMIsConstant(rhs) {
                     return LLVMConstAnd(lhs, rhs)
                 } else {
-                    return LLVMBuildAnd(builder, lhs, rhs, name)
+                    return LLVMBuildAnd(builder, lhs, rhs, "")
                 }
             } else if op == BinaryOp.XOR {
                 if LLVMIsConstant(rhs) and LLVMIsConstant(rhs) {
                     return LLVMConstXor(lhs, rhs)
                 } else {
-                    return LLVMBuildXor(builder, lhs, rhs, name)
+                    return LLVMBuildXor(builder, lhs, rhs, "")
                 }
             }
         } else if is_float(rty) {
@@ -260,38 +258,38 @@ class CodeGen {
                 if LLVMIsConstant(rhs) and LLVMIsConstant(rhs) {
                     return LLVMConstFAdd(lhs, rhs)
                 } else {
-                    return LLVMBuildFAdd(builder, lhs, rhs, name)
+                    return LLVMBuildFAdd(builder, lhs, rhs, "")
                 }
             } else if op == BinaryOp.SUB {
                 if LLVMIsConstant(rhs) and LLVMIsConstant(rhs) {
                     return LLVMConstFSub(lhs, rhs)
                 } else {
-                    return LLVMBuildFSub(builder, lhs, rhs, name)
+                    return LLVMBuildFSub(builder, lhs, rhs, "")
                 }
             } else if op == BinaryOp.MUL {
                 if LLVMIsConstant(rhs) and LLVMIsConstant(rhs) {
                     return LLVMConstFMul(lhs, rhs)
                 } else {
-                    return LLVMBuildFMul(builder, lhs, rhs, name)
+                    return LLVMBuildFMul(builder, lhs, rhs, "")
                 }
             } else if op == BinaryOp.DIV {
                 if LLVMIsConstant(rhs) and LLVMIsConstant(rhs) {
                     return LLVMConstFDiv(lhs, rhs)
                 } else {
-                    return LLVMBuildFDiv(builder, lhs, rhs, name)
+                    return LLVMBuildFDiv(builder, lhs, rhs, "")
                 }
             } else if op == BinaryOp.MOD {
                 if LLVMIsConstant(rhs) and LLVMIsConstant(rhs) {
                     return LLVMConstFRem(lhs, rhs)
                 } else {
-                    return LLVMBuildFRem(builder, lhs, rhs, name)
+                    return LLVMBuildFRem(builder, lhs, rhs, "")
                 }
             } else if op >= BinaryOp.GT and op <= BinaryOp.LTE {
                 pred = op - BinaryOp.GT + 2
                 if LLVMIsConstant(rhs) and LLVMIsConstant(rhs) {
                     return LLVMConstFCmp(pred, lhs, rhs)
                 } else {
-                    return LLVMBuildFCmp(builder, pred, lhs, rhs, name)
+                    return LLVMBuildFCmp(builder, pred, lhs, rhs, "")
                 }
             } else if op >= BinaryOp.EEQ and op <= BinaryOp.NEQ {
                 pred = 1
@@ -300,7 +298,7 @@ class CodeGen {
                 if LLVMIsConstant(rhs) and LLVMIsConstant(rhs) {
                     return LLVMConstICmp(pred, lhs, rhs)
                 } else {
-                    return LLVMBuildICmp(builder, pred, lhs, rhs, name)
+                    return LLVMBuildICmp(builder, pred, lhs, rhs, "")
                 }
             }
         } else if is_bool(rty) {
@@ -308,20 +306,19 @@ class CodeGen {
                 if LLVMIsConstant(lhs) and LLVMIsConstant(rhs) {
                     return LLVMConstAnd(lhs, rhs)
                 } else {
-                    return LLVMBuildAnd(builder, lhs, rhs, name)
+                    return LLVMBuildAnd(builder, lhs, rhs, "")
                 }
             } else if op == BinaryOp.OR {
                 if LLVMIsConstant(lhs) and LLVMIsConstant(rhs) {
                     return LLVMConstOr(lhs, rhs)
                 } else {
-                    return LLVMBuildOr(builder, lhs, rhs, name)
+                    return LLVMBuildOr(builder, lhs, rhs, "")
                 }
             }
         }
         return lhs
     }
     codegen_type_exp(builder: LLVMBuilderRef, type_exp: TypeExpression): LLVMValueRef {
-        name = "".to_cstring()
         exp = type_exp.expr
         bty = type_exp.bound_type
         val = this.codegen_expression(builder, exp)
@@ -331,26 +328,26 @@ class CodeGen {
                 if LLVMIsConstant(val){
                     return LLVMConstSIToFP(val, ty)
                 } else {
-                    return LLVMBuildSIToFP(builder, val, ty, name)
+                    return LLVMBuildSIToFP(builder, val, ty, "")
                 }
             } else if is_float(exp.value_type) and is_int(bty) {
                 if LLVMIsConstant(val){
                     return LLVMConstFPToSI(val, ty)
                 } else {
-                    return LLVMBuildFPToSI(builder, val, ty, name)
+                    return LLVMBuildFPToSI(builder, val, ty, "")
                 }
             } else if is_int(exp.value_type) and is_int(bty){
                 if exp.value_type.kind > bty.kind {
                     if LLVMIsConstant(val){
                         return LLVMConstTrunc(val, ty)
                     } else {
-                        return LLVMBuildTrunc(builder, val, ty, name)
+                        return LLVMBuildTrunc(builder, val, ty, "")
                     }
                 } else {
                     if LLVMIsConstant(val){
                         return LLVMConstZExt(val, ty)
                     } else {
-                        return LLVMBuildTrunc(builder, val, ty,name)
+                        return LLVMBuildTrunc(builder, val, ty,"")
                     }
                 }
             } else if is_float(exp.value_type) and is_float(bty){
@@ -358,19 +355,19 @@ class CodeGen {
                     if LLVMIsConstant(val){
                         return LLVMConstFPTrunc(val, ty)
                     } else {
-                        return LLVMBuildFPTrunc(builder, val, ty, name)
+                        return LLVMBuildFPTrunc(builder, val, ty, "")
                     }
                 } else {
                     if LLVMIsConstant(val){
                         return LLVMConstFPExt(val, ty)
                     } else {
-                        return LLVMBuildFPExt(builder, val, ty,name)
+                        return LLVMBuildFPExt(builder, val, ty,"")
                     }
                 }
             }
             if LLVMIsConstant(val)
                 return LLVMConstBitCast(val, ty)
-            return LLVMBuildBitCast(builder, val, ty, name)
+            return LLVMBuildBitCast(builder, val, ty, "")
             
         } 
         return val
@@ -383,19 +380,18 @@ class CodeGen {
         op = unary_exp.op
         exp = unary_exp.expression
         val = this.codegen_expression(builder, exp)
-        name = "".to_cstring()
         if op == UnaryOp.NEG {
             if is_int(exp.value_type){
                 if LLVMIsConstant(val) {
                     return LLVMConstNeg(val)
                 } else {
-                    return LLVMBuildNeg(builder, val, name)
+                    return LLVMBuildNeg(builder, val, "")
                 }
             } else if is_float(exp.value_type){
                 if LLVMIsConstant(val) {
                     return LLVMConstFNeg(val)
                 } else {
-                    return LLVMBuildFNeg(builder, val, name)
+                    return LLVMBuildFNeg(builder, val, "")
                 }
             }
         } 
@@ -403,7 +399,7 @@ class CodeGen {
             if LLVMIsConstant(val){
                 return LLVMConstNot(val)
             } else {
-                return LLVMBuildNot(builder, val, name)
+                return LLVMBuildNot(builder, val, "")
             }
         }
         return val
@@ -468,7 +464,7 @@ class CodeGen {
     }
     codegen_function(func: Function){
         llvm_fnc: LLVMValueRef = LLVMAddFunction(this.module, func.name.to_cstring(), this.codegen_type(func.value_type))
-        entry_block: LLVMBasicBlockRef  = LLVMAppendBasicBlock(llvm_fnc, (func.name + ".entry").to_cstring())
+        entry_block: LLVMBasicBlockRef  = LLVMAppendBasicBlock(llvm_fnc, "")
         func_builder: LLVMBuilderRef = LLVMCreateBuilder()
         LLVMPositionBuilderAtEnd(func_builder, entry_block)
         this.codegen_block(func_builder, func.block)
