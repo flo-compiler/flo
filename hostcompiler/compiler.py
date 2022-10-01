@@ -101,6 +101,8 @@ class Compiler(Visitor):
     def visitStrNode(self, node: StrNode):
         str_val = node.tok.value
         str_buff = FloConst.create_global_str(str_val)
+        if isinstance(node.expects, FloPointer):
+            return node.expects.new_with_val(str_buff.value)
         str_len = FloInt(len(str_val.encode('utf-8')))
         string_class = FloClass.classes.get("string")
         return string_class.constant_init(self.builder, [str_buff, str_len])

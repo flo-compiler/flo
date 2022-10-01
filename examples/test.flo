@@ -1,4 +1,4 @@
 fnc main(): float {
-    let a = 20
+    // a: int = 25
     return  25 ^ 0.5
 }
