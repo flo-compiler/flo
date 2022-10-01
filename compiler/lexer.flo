@@ -65,8 +65,6 @@ fnc string_to_kw_token(word: string): TokType {
         return TokType.AS_KW
     if word == "is"
         return TokType.IS_KW
-    if word == "extends"
-        return TokType.EXTENDS_KW
     return -1
 }
 fnc is_identifier_char(char: i8): bool {
@@ -93,35 +91,35 @@ class Token {
         this.range = range
     }
 }
-class IntToken extends Token {
+class IntToken (Token) {
     value: int
     constructor(value: int, range: FloRange){
         super(TokType.INT, range)
         this.value = value
     }
 }
-class FloatToken extends Token {
+class FloatToken (Token) {
     value: float
     constructor(value: float, range: FloRange){
         super(TokType.FLOAT, range)
         this.value = value
     }
 }
-class CharToken extends Token {
+class CharToken (Token) {
     value: i8
     constructor(value: i8, range: FloRange){
         super(TokType.CHAR, range)
         this.value = value
     }
 }
-class StrToken extends Token {
+class StrToken (Token) {
     value: string
     constructor(value: string, range: FloRange){
         super(TokType.STR, range)
         this.value = value
     }
 }
-class IdentifierToken extends Token {
+class IdentifierToken (Token) {
     value: string
     constructor(value: string, range: FloRange){
         super(TokType.IDENTIFER, range)

@@ -34,8 +34,7 @@ KEYWORDS = [
     "enum",
     "new",
     "as",
-    "is",
-    "extends"
+    "is"
 ]
 
 

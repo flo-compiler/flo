@@ -206,9 +206,12 @@ class Parser:
                 SyntaxError(self.current_tok.range, "Expected a '>'").throw()
             self.advance()
         parent = None
-        if self.current_tok.isKeyword("extends"):
+        if self.current_tok.type == TokType.LPAR:
             self.advance()
             parent = self.prim_type()
+            if self.current_tok.type != TokType.RPAR:
+                SyntaxError(self.current_tok.range, "Expected a matching ')'").throw()
+            self.advance()
         class_body = self.class_block()
         node_range = Range.merge(range_start, self.current_tok.range)
         node = ClassDeclarationNode(name, parent, class_body, node_range)

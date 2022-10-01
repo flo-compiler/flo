@@ -72,7 +72,7 @@ a = [1..100]
 ```
 ## Classes
 - [x] Basic Class support
-```ts
+```
 class Chef {
     specialty: string
     constructor(specialty: string) {
@@ -85,8 +85,8 @@ class Chef {
 ```
 - [x] Inheritance
 - [x] Super
-```ts
-class ItalianChef extends Chef {
+```
+class ItalianChef(Chef) {
     specialty2: string
     constructor() {
         super("Pasta")
@@ -98,7 +98,7 @@ class ItalianChef extends Chef {
 }
 ```
 - [x] Polymorphism
-```ts
+```t
 chef: Chef = new ItalianChef()
 chef.print_specialty() // prints "Pizza"
 ```
@@ -106,7 +106,7 @@ chef.print_specialty() // prints "Pizza"
 - [ ] Static Members.
 - [ ] getters/setters.
 - [ ] Object Literal Intialization. (Also should work on function return and parameter passing)
-```ts
+```
 chef: Chef = {specialty: "cake"}
 ```
 - [ ] Do not Allow for object creation of class with implemented methods.
@@ -291,16 +291,16 @@ try error_prone_fnc() catch error {
 
 ## Imports/External
 - [x] Import Specific symbol.
-```ts
-import A, B from "module0"
+```
+import A, B in "module0"
 ```
 - [x] Import All module.
-```ts
+```
 import "module"
 ```
 - [ ] Import renaming/ namespacing.
-```ts
-import A as C from "module"
+```
+import A as C in "module"
 import "module" as B
 B.add(1)
 ```
