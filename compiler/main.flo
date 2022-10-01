@@ -7,7 +7,6 @@ import "parser"
 import "debug"
 import "typechecker"
 import "codegen"
-
 fnc parse_args(size: int, args: i8**): Array<string> {
     arr: Array<string> = []
     for i = 0; i < size; i++
@@ -29,6 +28,17 @@ fnc help(exec_file: string){
 }
 fnc flag(args: Array<string>, name: string): bool {
     return name in args
+}
+fnc flag_value_or(args: Array<string>, name: string, default: string): string {
+    if (idx = args.find(name)) != -1 {
+        if args.length > ++idx
+            return args[idx]
+        else {
+            print_message_error(ErrorKind.GEN, "Missing filename after '-o' argument.")
+            exit("")
+        }
+    }
+    return default
 }
 fnc main(size: int, ptr: i8**): int {
     args = parse_args(size, ptr)
@@ -71,7 +81,7 @@ fnc main(size: int, ptr: i8**): int {
             flo_module.exec()
         }
         if !flag(args, "--no-output") {
-            flo_module.write_object("a.o")
+            flo_module.write_object(flag_value_or(args, "-o", "a")+ ".o")
         }
     } else {
         print_message_error(ErrorKind.GEN, "No input file specified.")
