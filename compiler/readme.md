@@ -3,5 +3,5 @@
 - Error Reporting (60%)
 - Lexer (99%)
 - Parser (96%)
-- Typechecking/Analyzer (5%)
-- Codegen (0%)
+- Typechecking/Analyzer (10%)
+- Codegen (10%)

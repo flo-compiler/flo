@@ -133,8 +133,6 @@ fnc token_str(toktype: TokType): string {
         return "IMPORT_KW"
     if toktype == TokType.TYPE_KW
         return "TYPE_KW"
-    if toktype == TokType.FROM_KW
-        return "FROM_KW"
     if toktype == TokType.IN_KW
         return "IN_KW"
     if toktype == TokType.CLASS_KW

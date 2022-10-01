@@ -1,3 +1,4 @@
-fnc main(): bool {
-    return  false or false
+fnc main(): float {
+    let a = 20
+    return  25 ^ 0.5
 }

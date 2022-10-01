@@ -347,8 +347,6 @@ class Parser {
                 this.error("Expected '>'")
             else if token_type = TokType.ARROW 
                 this.error("Expected '=>'")
-            else if token_type == TokType.FROM_KW 
-                this.error("Expected 'from'")
         }
         return new Token(TokType.EOF, current_token.range)
     }
@@ -793,6 +791,8 @@ class Parser {
         if this.current_token.ttype == TokType.COL {
             this.advance()
             fnc_node.return_type = this.parse_type()
+        } else {
+            fnc_node.return_type = new TypeNode(TypeKind.VOID)
         }
         if this.current_token.ttype == TokType.LBRACE {
             fnc_node.block = this.parse_block()
@@ -860,7 +860,7 @@ class Parser {
                 this.advance()
                 import_node.import_list << (this.eat(TokType.IDENTIFER) as IdentifierToken)
             }
-            this.eat(TokType.FROM_KW)
+            this.eat(TokType.IN_KW)
         }
         import_node.module_path = this.eat(TokType.STR)
         return import_node

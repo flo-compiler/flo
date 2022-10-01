@@ -1,4 +1,4 @@
-import memcmp, memcpy from "@flo/sys"
+import memcmp, memcpy in "@flo/sys"
 class string {
     buffer: i8*
     length: int

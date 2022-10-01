@@ -117,9 +117,9 @@ class Parser:
         path = ""
         if self.current_tok.type == TokType.IDENTIFER:
             ids = self.identifier_list()
-            if not self.current_tok.isKeyword("from"):
+            if not self.current_tok.isKeyword("in"):
                 SyntaxError(self.current_tok.range,
-                            "Expected keyword 'from'").throw()
+                            "Expected keyword 'in'").throw()
             self.advance()
         if self.current_tok.type != TokType.STR:
             SyntaxError(self.current_tok.range, "Expected a string").throw()
