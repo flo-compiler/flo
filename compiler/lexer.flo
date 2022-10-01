@@ -129,11 +129,11 @@ class IdentifierToken (Token) {
 class Lexer {
     current_char: i8
     text: string
-    errors: Array<FloError>
+    errors: FloError[]
     idx: int
     col: int
     line: int
-    constructor(text: string, errors: Array<FloError>){
+    constructor(text: string, errors: FloError[]){
         this.idx = -1
         this.line = 1
         this.col = 0
@@ -341,9 +341,9 @@ class Lexer {
         this.advance()
         return new CharToken(value, this.get_range(length))
     }
-    tokenize(): Array<Token> {
+    tokenize(): Token[] {
         this.advance()
-        tokens: Array<Token> = []
+        tokens: Token[] = []
         while !this.eof() and this.errors.length == 0 {
             char = this.current_char
             if char == ' ' true

@@ -151,7 +151,7 @@ fnc token_str(toktype: TokType): string {
 fnc token_value(token: Token, text: string): string {
     return text.substring(token.range.start, token.range.end - token.range.start)
 }
-fnc print_tokens(tokens: Array<Token>, text: string){
+fnc print_tokens(tokens: Token[], text: string){
     println("[")
     for i = 0; i < tokens.length; i++ {
         token = tokens[i]

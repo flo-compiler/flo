@@ -25,9 +25,9 @@ class PointerType (Type) {
     }
 }
 class FunctionType (Type) {
-    arg_types: Array<Type>
+    arg_types: Type[]
     return_type: Type
-    constructor(arg_types: Array<Type>, return_type: Type){
+    constructor(arg_types: Type[], return_type: Type){
         super(TypeKind.FNC)
         this.arg_types = arg_types
         this.return_type = return_type
@@ -98,8 +98,8 @@ class StringExpression (Expression) {
     }
 }
 class ArrayExpression (Expression) {
-    value: Array<Expression>
-    constructor(value: Array<Expression>){
+    value: Expression[]
+    constructor(value: Expression[]){
         super(ExpressionKind.ARRAY)
         this.value = value
         if value.length > 0
@@ -160,8 +160,8 @@ class IndexExpression (Expression) {
 }
 class CallExpression (Expression) {
     callee: Expression
-    args: Array<Expression>
-    constructor(callee: Expression, args: Array<Expression>, value_type: Type){
+    args: Expression[]
+    constructor(callee: Expression, args: Expression[], value_type: Type){
         super(ExpressionKind.CALL)
         this.callee = callee
         this.args = args
@@ -201,7 +201,7 @@ class VarAccessExpression (Expression) {
     }
 }
 class Block {
-    statements: Array<Statement>
+    statements: Statement[]
     constructor(){
         this.statements = []
     }
@@ -335,7 +335,7 @@ class FunctionArg {
 class Function (Value) {
     id: VarId
     name: string
-    args: Array<FunctionArg>
+    args: FunctionArg[]
     block: Block
     scope: Scope
 }
@@ -354,8 +354,8 @@ class ClassField {
 class Class {
     id: ClassId
     name: string
-    fields: Array<ClassField>
-    methods: Array<Function>
+    fields: ClassField[]
+    methods: Function[]
     scope: Scope
 }
 class EnumField {
@@ -368,7 +368,7 @@ class EnumField {
 class Enum {
     id: EnumId
     name: string
-    fields: Array<EnumField>
+    fields: EnumField[]
     constructor(){
         this.fields = []
     }
@@ -376,10 +376,10 @@ class Enum {
 class Module {
     id: int
     name: string
-    vars: Array<Var>
-    classes: Array<Class>
-    functions: Array<Function>
-    enums: Array<Enum>
+    vars: Var[]
+    classes: Class[]
+    functions: Function[]
+    enums: Enum[]
     scope: Scope
     constructor(){
         this.functions = []
@@ -390,7 +390,7 @@ class Module {
     }
 }
 class Program {
-    modules: Array<Module>
+    modules: Module[]
     constructor(){
         this.modules = []
     }
@@ -402,8 +402,8 @@ class TypeChecker {
     current_class: int
     current_function: int
     current_scope: Scope
-    errors: Array<FloError>
-    constructor(errors: Array<FloError>){
+    errors: FloError[]
+    constructor(errors: FloError[]){
         this.current_module = -1
         this.errors = errors
         this.program = new Program()
@@ -447,7 +447,7 @@ class TypeChecker {
     declare_function(function_node: FunctionDeclarationNode): Function {
         checked_function = new Function()
         checked_function.name = function_node.name.value
-        arg_types: Array<Type> = []
+        arg_types: Type[] = []
         checked_function.args = []
         for i = 0; i < function_node.args.length; ++i {
             arg = function_node.args[i]
@@ -509,7 +509,7 @@ class TypeChecker {
         }
         if type_node.kind == TypeKind.FNC {
             fnc_node = type_node as FunctionTypeNode
-            arg_types: Array<Type> = []
+            arg_types: Type[] = []
             for i = 0; i < fnc_node.args.length; i++ 
                 arg_types << this.check_type(fnc_node.args[i])
             return_type = this.check_type(fnc_node.return_type)
@@ -520,7 +520,7 @@ class TypeChecker {
     }
     check_array_expression(array_node: ArrayExpressionNode): ArrayExpression {
         //TODO: ARRAY is overloaded; Could be object or const so need to check which one it is.
-        elements: Array<Expression> = []
+        elements: Expression[] = []
         if array_node.elements.length > 0 {
 
             elements << this.check_expression(array_node.elements[0])
@@ -604,6 +604,12 @@ class TypeChecker {
         }
         return new BinaryExpression(left, op, right, new Type(TypeKind.UNKNOWN))
     }
+    declare_var(name: string, value: Expression){
+        var = new Var(value)
+        id = new VarId(this.current_module, this.current_scope.vars.length)
+        var.var_id = id
+        this.current_scope.vars.set(name, id)
+    }
     check_unary_expr(unary_node: UnaryExpressionNode): UnaryExpression {
         op = unary_node.op
         expression = this.check_expression(unary_node.expression)
@@ -638,7 +644,7 @@ class TypeChecker {
         called = this.check_expression(call_expr_node.callee)
         //TODO: Check for generic functions.
         func_ty = called.value_type as FunctionType
-        args: Array<Expression> = []
+        args: Expression[] = []
         if func_ty.kind == TypeKind.FNC {
             //TODO: fill default args.
             if func_ty.arg_types.length == call_expr_node.args.length {

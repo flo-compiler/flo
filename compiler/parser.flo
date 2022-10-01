@@ -10,7 +10,7 @@ class TypeNode {
 }
 class RecordTypeNode (TypeNode) {
     name: Token
-    generic_args: Array<TypeNode>
+    generic_args: TypeNode[]
     constructor(name: Token) {
         super(TypeKind.OBJECT)
         this.name = name
@@ -18,7 +18,7 @@ class RecordTypeNode (TypeNode) {
     }
 }
 class FunctionTypeNode (TypeNode) {
-    args: Array<TypeNode>
+    args: TypeNode[]
     return_type: TypeNode
     constructor(){
         super(TypeKind.FNC)
@@ -39,7 +39,7 @@ class StatementNode {
     }
 }
 class BlockNode {
-    statements: Array<StatementNode>
+    statements: StatementNode[]
     constructor(){
         this.statements = []
     }
@@ -96,7 +96,7 @@ class VarAccessExpressionNode (ExpressionNode) {
     }
 }
 class ArrayExpressionNode (ExpressionNode) {
-    elements: Array<ExpressionNode>
+    elements: ExpressionNode[]
     constructor(){
         super(ExpressionKind.ARRAY)
         this.elements = []
@@ -104,7 +104,7 @@ class ArrayExpressionNode (ExpressionNode) {
 }
 class NewExpressionNode (ExpressionNode) {
     parsed_type: TypeNode
-    args: Array<ExpressionNode>
+    args: ExpressionNode[]
     constructor(parsed_type: TypeNode){
         this.parsed_type = parsed_type
         super(ExpressionKind.NEW)
@@ -131,7 +131,7 @@ class MemberExpressionNode (ExpressionNode) {
 }
 class CallExpressionNode (ExpressionNode) {
     callee: ExpressionNode
-    args: Array<ExpressionNode>
+    args: ExpressionNode[]
     constructor(callee: ExpressionNode) {
         this.callee = callee
         this.args = []
@@ -216,7 +216,7 @@ class ArgNode {
 }
 class FunctionDeclarationNode {
     name: IdentifierToken
-    args: Array<ArgNode>
+    args: ArgNode[]
     block: BlockNode
     return_type: TypeNode
     is_external: bool
@@ -237,10 +237,10 @@ class GenericParameterNode {
 }
 class ClassDeclarationNode {
     name: IdentifierToken
-    generic_parameters: Array<GenericParameterNode>
+    generic_parameters: GenericParameterNode[]
     parent: RecordTypeNode
-    fields: Array<FieldNode>
-    methods: Array<FunctionDeclarationNode>
+    fields: FieldNode[]
+    methods: FunctionDeclarationNode[]
     constructor(name: IdentifierToken) {
         this.name = name
         this.fields = []
@@ -256,13 +256,13 @@ class EnumNodeField {
 }
 class EnumNode {
     name: IdentifierToken
-    fields: Array<EnumNodeField>
+    fields: EnumNodeField[]
     constructor(){
         this.fields = []
     }
 }
 class ImportNode {
-    import_list: Array<IdentifierToken>
+    import_list: IdentifierToken[]
     module_path: Token
     constructor(){
         this.import_list = []
@@ -277,12 +277,12 @@ class TypeAliasNode {
     parsed_type: TypeNode
 }
 class ModuleAST {
-    functions: Array<FunctionDeclarationNode>
-    classes: Array<ClassDeclarationNode>
-    enums: Array<EnumNode>
-    imports: Array<ImportNode> 
-    consts: Array<ConstNode> 
-    type_aliases: Array<TypeAliasNode> 
+    functions: FunctionDeclarationNode[]
+    classes: ClassDeclarationNode[]
+    enums: EnumNode[]
+    imports: ImportNode[] 
+    consts: ConstNode[] 
+    type_aliases: TypeAliasNode[] 
     constructor() {
         this.functions = []
         this.classes = []
@@ -293,11 +293,11 @@ class ModuleAST {
     }
 }
 class Parser {
-    tokens: Array<Token>
-    errors: Array<FloError>
+    tokens: Token[]
+    errors: FloError[]
     current_token: Token
     idx: int
-    constructor(tokens: Array<Token>, errors: Array<FloError>){
+    constructor(tokens: Token[], errors: FloError[]){
         this.tokens = tokens
         this.errors = errors
         this.idx = -1
@@ -385,7 +385,7 @@ class Parser {
         this.advance()
         return type_node
     }
-    parse_type_list(type_nodes: Array<TypeNode>) {
+    parse_type_list(type_nodes: TypeNode[]) {
         type_nodes << this.parse_type()
         while this.current_token.ttype == TokType.COMMA
             type_nodes << this.parse_type()
@@ -420,7 +420,13 @@ class Parser {
         while this.current_token.ttype == TokType.LBRACKET or this.current_token.ttype == TokType.MULT {
             if this.current_token.ttype == TokType.LBRACKET {
                 this.advance()
-                type_node = new ArrayTypeNode(type_node, this.parse_expression())
+                if this.current_token.ttype == TokType.RBRACKET {
+                    rec_node = new RecordTypeNode(new IdentifierToken("Array", this.current_token.range))
+                    rec_node.generic_args << type_node
+                    type_node = rec_node
+                } else {
+                    type_node = new ArrayTypeNode(type_node, this.parse_expression())
+                }
                 this.advance()
             } else {
                 this.eat(TokType.MULT)
@@ -429,7 +435,7 @@ class Parser {
         }
         return type_node
     }
-    parse_expression_list(expressions: Array<ExpressionNode>) {
+    parse_expression_list(expressions: ExpressionNode[]) {
         expressions << this.parse_expression()
         while this.current_token.ttype == TokType.COMMA and this.can_parse(){
             this.advance()
@@ -773,7 +779,7 @@ class Parser {
         }
         return arg_node
     }
-    parse_args(args: Array<ArgNode>) {
+    parse_args(args: ArgNode[]) {
         args << this.parse_arg()
         while this.current_token.ttype == TokType.COMMA {
             this.eat(TokType.COMMA)
@@ -820,7 +826,7 @@ class Parser {
         }
         this.eat(TokType.RBRACE)
     }
-    parse_generic_parameters(generic_parameters: Array<GenericParameterNode>) {
+    parse_generic_parameters(generic_parameters: GenericParameterNode[]) {
         this.advance()
         generic_parameters << new GenericParameterNode(this.eat(TokType.IDENTIFER) as IdentifierToken)
         while this.current_token.ttype == TokType.COMMA  {
