@@ -62,17 +62,14 @@ class IntrinsicResult {
     call: LLVMValueRef
     fnc_type: LLVMTypeRef
 }
-fnc get_intrinsic(mod: LLVMModuleRef, name: string, params: Array<LLVMTypeRef>): IntrinsicResult {
+fnc get_intrinsic(mod: LLVMModuleRef, name: string, params: LLVMTypeRef[]): IntrinsicResult {
     result = new IntrinsicResult()
     result.fnc_type = LLVMFunctionType(params[0], params.buffer, params.length, false)
     result.call = LLVMAddFunction(mod, name.to_cstring(), result.fnc_type)
     return result
 }
-fnc array_to_pointer(arr: Array<LLVMValueRef>): LLVMValueRef*{
-    return arr.buffer
-}
 class CodeGen {
-    modules: Array<LLVMModuleRef>
+    modules: LLVMModuleRef[]
     module: LLVMModuleRef
     codegenProgram(program: Program): GeneratedModule{
         this.modules = []
@@ -128,7 +125,7 @@ class CodeGen {
             return LLVMPointerType(element_type)
         }
         if tt.kind == TypeKind.FNC {
-            param_types: Array<LLVMTypeRef> = []
+            param_types: LLVMTypeRef[] = []
             func_ty = tt as FunctionType
             for i = 0; i < func_ty.arg_types.length; ++i {
                 param_types << this.codegen_type(func_ty.arg_types[i])

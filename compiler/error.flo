@@ -53,7 +53,7 @@ fnc print_message_error(kind: ErrorKind, message: string){
     print(color(""))
     println(message)
 }
-fnc print_errors(filename: string, errors: Array<FloError>, content: string){
+fnc print_errors(filename: string, errors: FloError[], content: string){
     for i = 0; i < errors.length; i++ {
         error_ = errors[i]
         print_message_error(error_.kind, error_.message)

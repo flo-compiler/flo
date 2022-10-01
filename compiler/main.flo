@@ -7,8 +7,8 @@ import "parser"
 import "debug"
 import "typechecker"
 import "codegen"
-fnc parse_args(size: int, args: i8**): Array<string> {
-    arr: Array<string> = []
+fnc parse_args(size: int, args: i8**): string[] {
+    arr: string[] = []
     for i = 0; i < size; i++
         arr << string_from_cstring(args[i])
     return arr
@@ -26,10 +26,10 @@ fnc help(exec_file: string){
     println(" -e, --execute\t\t\tExecute file after compiling.")
     println(" -v, --version\t\t\tShow version.")
 }
-fnc flag(args: Array<string>, name: string): bool {
+fnc flag(args: string[], name: string): bool {
     return name in args
 }
-fnc flag_value_or(args: Array<string>, name: string, default: string): string {
+fnc flag_value_or(args: string[], name: string, default: string): string {
     if (idx = args.find(name)) != -1 {
         if args.length > ++idx
             return args[idx]
@@ -43,7 +43,7 @@ fnc flag_value_or(args: Array<string>, name: string, default: string): string {
 fnc main(size: int, ptr: i8**): int {
     args = parse_args(size, ptr)
     if args.length >= 2 {
-        errors: Array<FloError> = []
+        errors: FloError[] = []
         if flag(args, "-v") or flag(args, "--version"){
             println("v0.01@test.seflhost")
             return 0

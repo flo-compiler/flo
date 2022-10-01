@@ -65,6 +65,8 @@ numbers = [1, 2, 3]
 2. Dynamic Arrays (On the heap, An object(generic) not fixed)
 ```
 numbers: Array<int> = [1, 2, 3]
+//or
+names: int[] = ["paul", "john", "xavier"]
 ```
 - [ ] Short Hand for arrays
 ```

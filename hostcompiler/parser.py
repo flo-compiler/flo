@@ -719,6 +719,11 @@ class Parser:
                 type = TypeNode(FloPointer(type), Range.merge(type.range, end_range))
             else:
                 self.advance()
+                if self.current_tok.type == TokType.RBRACKET:
+                    end_range = self.current_tok.range
+                    self.advance()
+                    type = TypeNode(FloGeneric(Token(TokType.IDENTIFER, None, "Array"), [type]), Range.merge(type.range, end_range))
+                    continue
                 size = self.expr()
                 if self.current_tok.type != TokType.RBRACKET:
                     if self.current_tok.type != TokType.RBRACKET:
