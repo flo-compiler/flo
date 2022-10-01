@@ -1,4 +1,4 @@
-import println from "@flo/core"
+import println in "@flo/core"
 class Chef {
     specialty: string
     constructor(specialty: string) {
@@ -8,7 +8,7 @@ class Chef {
         println("specialty: " + this.specialty)
     }
 }
-class ItalianChef extends Chef {
+class ItalianChef(Chef) {
     specialty2: string
     constructor() {
         super("Pasta")
@@ -18,7 +18,7 @@ class ItalianChef extends Chef {
         println(this.specialty2)
     }
 }
-class SpecialItalianChef extends ItalianChef {
+class SpecialItalianChef(ItalianChef) {
     secret: string
     constructor() {
         super()

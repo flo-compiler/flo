@@ -8,7 +8,7 @@ class TypeNode {
         this.kind = kind
     }
 }
-class RecordTypeNode extends TypeNode {
+class RecordTypeNode (TypeNode) {
     name: Token
     generic_args: Array<TypeNode>
     constructor(name: Token) {
@@ -17,7 +17,7 @@ class RecordTypeNode extends TypeNode {
         this.generic_args = []
     }
 }
-class FunctionTypeNode extends TypeNode {
+class FunctionTypeNode (TypeNode) {
     args: Array<TypeNode>
     return_type: TypeNode
     constructor(){
@@ -25,7 +25,7 @@ class FunctionTypeNode extends TypeNode {
         this.args = []
     }
 }
-class PointerTypeNode extends TypeNode {
+class PointerTypeNode (TypeNode) {
     pointee_type: TypeNode
     constructor(pointee_type: TypeNode){
         super(TypeKind.PTR)
@@ -44,14 +44,14 @@ class BlockNode {
         this.statements = []
     }
 }
-class ExpressionNode extends StatementNode {
+class ExpressionNode (StatementNode) {
     expr_kind: ExpressionKind
     constructor(expr_kind: ExpressionKind){
         super(StatementKind.EXPRESSION)
         this.expr_kind = expr_kind
     }
 }
-class ArrayTypeNode extends TypeNode {
+class ArrayTypeNode (TypeNode) {
     element_type: TypeNode
     length: ExpressionNode
     constructor(element_type: TypeNode, length: ExpressionNode){
@@ -60,49 +60,49 @@ class ArrayTypeNode extends TypeNode {
         this.length = length
     }
 }
-class IntExpressionNode extends ExpressionNode {
+class IntExpressionNode (ExpressionNode) {
     value: IntToken
     constructor(value: IntToken){
         super(ExpressionKind.INT)
         this.value = value
     }
 }
-class FloatExpressionNode extends ExpressionNode {
+class FloatExpressionNode (ExpressionNode) {
     value: FloatToken
     constructor(value: FloatToken){
         super(ExpressionKind.FLOAT)
         this.value = value
     }
 }
-class CharExpressionNode extends ExpressionNode {
+class CharExpressionNode (ExpressionNode) {
     value: CharToken
     constructor(value: CharToken){
         super(ExpressionKind.CHAR)
         this.value = value
     }
 }
-class StringExpressionNode extends ExpressionNode {
+class StringExpressionNode (ExpressionNode) {
     value: StrToken
     constructor(value: StrToken){
         super(ExpressionKind.STRING)
         this.value = value
     }
 }
-class VarAccessExpressionNode extends ExpressionNode {
+class VarAccessExpressionNode (ExpressionNode) {
     name: IdentifierToken
     constructor(name: IdentifierToken){
         super(ExpressionKind.VAR)
         this.name = name
     }
 }
-class ArrayExpressionNode extends ExpressionNode {
+class ArrayExpressionNode (ExpressionNode) {
     elements: Array<ExpressionNode>
     constructor(){
         super(ExpressionKind.ARRAY)
         this.elements = []
     }
 }
-class NewExpressionNode extends ExpressionNode {
+class NewExpressionNode (ExpressionNode) {
     parsed_type: TypeNode
     args: Array<ExpressionNode>
     constructor(parsed_type: TypeNode){
@@ -111,7 +111,7 @@ class NewExpressionNode extends ExpressionNode {
         this.args = []
     }
 }
-class ExpressionIndexNode extends ExpressionNode {
+class ExpressionIndexNode (ExpressionNode) {
     expression: ExpressionNode
     index: ExpressionNode
     constructor(expression: ExpressionNode, index: ExpressionNode){
@@ -120,7 +120,7 @@ class ExpressionIndexNode extends ExpressionNode {
         super(ExpressionKind.INDEX)
     } 
 }
-class MemberExpressionNode extends ExpressionNode {
+class MemberExpressionNode (ExpressionNode) {
     expression: ExpressionNode
     member: Token
     constructor(expression: ExpressionNode, member: Token){
@@ -129,7 +129,7 @@ class MemberExpressionNode extends ExpressionNode {
         this.member = member
     }
 }
-class CallExpressionNode extends ExpressionNode {
+class CallExpressionNode (ExpressionNode) {
     callee: ExpressionNode
     args: Array<ExpressionNode>
     constructor(callee: ExpressionNode) {
@@ -137,7 +137,7 @@ class CallExpressionNode extends ExpressionNode {
         this.args = []
     }
 }
-class TypeExpressionNode extends ExpressionNode {
+class TypeExpressionNode (ExpressionNode) {
     expression: ExpressionNode
     op: TypeExprOp
     bound_type: TypeNode
@@ -147,7 +147,7 @@ class TypeExpressionNode extends ExpressionNode {
         this.bound_type = bound_type
     }
 }
-class BinaryExpressionNode extends ExpressionNode {
+class BinaryExpressionNode (ExpressionNode) {
     lhs: ExpressionNode
     op: BinaryOp
     rhs: ExpressionNode
@@ -158,7 +158,7 @@ class BinaryExpressionNode extends ExpressionNode {
         this.rhs = right
     }
 }
-class UnaryExpressionNode extends ExpressionNode {
+class UnaryExpressionNode (ExpressionNode) {
     op: UnaryOp
     expression: ExpressionNode
     constructor(op: UnaryOp, expression: ExpressionNode){
@@ -168,7 +168,7 @@ class UnaryExpressionNode extends ExpressionNode {
     }
 }
 /* Can be either 'as' or 'is' unary expression */
-class IfStatementNode extends StatementNode {
+class IfStatementNode (StatementNode) {
     condition: ExpressionNode
     block: BlockNode
     else_block: BlockNode
@@ -176,14 +176,14 @@ class IfStatementNode extends StatementNode {
         super(StatementKind.IF)
     }
 }
-class WhileStatementNode extends StatementNode {
+class WhileStatementNode (StatementNode) {
     condition: ExpressionNode
     block: BlockNode
     constructor(){
         super(StatementKind.WHILE)
     }
 }
-class ForStatementNode extends StatementNode {
+class ForStatementNode (StatementNode) {
     intialization: ExpressionNode
     condition: ExpressionNode
     incr_decr: ExpressionNode
@@ -194,14 +194,14 @@ class ForStatementNode extends StatementNode {
         super(StatementKind.FOR)
     }
 }
-class ReturnStatementNode extends StatementNode {
+class ReturnStatementNode (StatementNode) {
     value: Optional<ExpressionNode>
     constructor(){
         this.value = new Optional<ExpressionNode>()
         super(StatementKind.RETURN)
     }
 }
-class VarDeclarationStatement extends StatementNode {
+class VarDeclarationStatement (StatementNode) {
     var_name: Token
     var_type: TypeNode
     value: ExpressionNode
@@ -834,9 +834,10 @@ class Parser {
         class_node = new ClassDeclarationNode(this.eat(TokType.IDENTIFER) as IdentifierToken)
         if this.current_token.ttype == TokType.LT
             this.parse_generic_parameters(class_node.generic_parameters)
-        if this.current_token.ttype == TokType.EXTENDS_KW {
+        if this.current_token.ttype == TokType.LPAR {
             this.advance()
             class_node.parent = this.parse_object_type()
+            this.eat(TokType.RPAR)
         }
         this.new_lines()
         this.parse_class_block(class_node)

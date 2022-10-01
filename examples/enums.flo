@@ -1,4 +1,4 @@
-import println from "@flo/core"
+import println in "@flo/core"
 enum Numbers {
     ZERO
     ONE
