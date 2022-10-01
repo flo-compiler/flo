@@ -1,4 +1,4 @@
-import STDOUT, STDIN, STDERR, nanosleep, write, read, _exit from "@flo/sys"
+import STDOUT, STDIN, STDERR, nanosleep, write, read, _exit in "@flo/sys"
 fnc input(): string {
     size = -1
     buffer = new i8[1]

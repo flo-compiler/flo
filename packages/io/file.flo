@@ -1,5 +1,5 @@
-import string, exit from "@flo/core"
-import open, close, read, write, lseek, unlink, lstat, access, O_RDONLY, O_WRONLY, O_CREAT, SEEK_END, SEEK_SET, F_OK, R_OK, W_OK, X_OK from "@flo/sys"
+import string, exit in "@flo/core"
+import open, close, read, write, lseek, unlink, lstat, access, O_RDONLY, O_WRONLY, O_CREAT, SEEK_END, SEEK_SET, F_OK, R_OK, W_OK, X_OK in "@flo/sys"
 class File {
     path: string
     constructor(path: string) {

@@ -613,6 +613,15 @@ class TypeChecker {
     check_unary_expr(unary_node: UnaryExpressionNode): UnaryExpression {
         op = unary_node.op
         expression = this.check_expression(unary_node.expression)
+        ty = expression.value_type
+        if op == UnaryOp.NEG {
+            if is_numeric(ty)
+                return new UnaryExpression(op, expression, ty)
+        }
+        if op == UnaryOp.NOT {
+            if is_bool(ty)
+                return new UnaryExpression(op, expression, ty)
+        }
         //TODO: Resolve type
         return new UnaryExpression(op, expression, new Type(TypeKind.UNKNOWN))
     }

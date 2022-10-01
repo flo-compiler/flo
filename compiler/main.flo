@@ -1,4 +1,4 @@
-import File from "@flo/io"
+import File in "@flo/io"
 import "types"
 import "utils"
 import "error"

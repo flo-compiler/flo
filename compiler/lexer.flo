@@ -53,8 +53,6 @@ fnc string_to_kw_token(word: string): TokType {
         return TokType.IMPORT_KW
     if word == "type"
         return TokType.TYPE_KW
-    if word == "from"
-        return TokType.FROM_KW
     if word == "in"
         return TokType.IN_KW
     if word == "class"

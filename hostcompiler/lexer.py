@@ -29,7 +29,6 @@ KEYWORDS = [
     "return",
     "import",
     "type",
-    "from",
     "in",
     "class",
     "enum",
