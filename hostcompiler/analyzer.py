@@ -327,21 +327,6 @@ class Analyzer(Visitor):
         self.context.set(const_name, value)
         self.constants.append(const_name)
 
-    def declare_value(self, var_name: str, var_value, node: Node):
-        if node.type:
-            expected_type = self.visit(node.type)
-            # TODO: Int-Type/Float-type bitsize casting
-            c = None
-            if isinstance(expected_type, FloObject):
-                c = self.check_inheritance(expected_type, var_value, node)
-            if c == None and var_value != expected_type:
-                TypeError(
-                    node.range, f"Expected type '{expected_type.str()}' but got type '{var_value.str()}'").throw()
-        else:
-            expected_type = var_value
-        self.context.set(var_name, expected_type)
-        return expected_type
-
     def visitEnumDeclarationNode(self, node: EnumDeclarationNode):
         enum_name = node.name.value
         self.context.set(enum_name, FloEnum(
@@ -355,22 +340,7 @@ class Analyzer(Visitor):
             node.value = self.cast(node.value, parent)
             return parent
 
-    def visitVarAssignNode(self, node: VarAssignNode):
-        var_name = node.var_name.value
-        if var_name in self.constants:
-            TypeError(
-                node.var_name.range,
-                f"changing constant's {var_name} value"
-            ).throw()
-        defined_var_value = self.context.get(var_name)
-        if node.type:
-            expected_ty = self.visit(node.type)
-            node.value.expects = expected_ty
-        if defined_var_value:
-            node.value.expects = defined_var_value
-        var_value = self.visit(node.value)
-        if defined_var_value == None:
-            return self.declare_value(var_name, var_value, node)
+    def check_value_assignment(self, defined_var_value, var_value, node):
         if isinstance(defined_var_value, FloObject) and node.value:
             c = self.check_inheritance(defined_var_value, var_value, node)
             if c:
@@ -380,6 +350,34 @@ class Analyzer(Visitor):
                 node.range,
                 f"Illegal assignment of type {var_value.str()} to {defined_var_value.str()}").throw()
         return defined_var_value
+
+    def visitVarAssignNode(self, node: VarAssignNode):
+        var_name = node.var_name.value
+        if var_name in self.constants:
+            TypeError(
+                node.var_name.range,
+                f"changing constant's {var_name} value"
+            ).throw()
+        defined_var_value = self.context.get(var_name)
+        if defined_var_value == None:
+            GeneralError(node.range, f"Illegal assignment to undeclared variable '{var_name}'").throw()
+        node.value.expects = defined_var_value
+        var_value = self.visit(node.value)
+        return self.check_value_assignment(defined_var_value, var_value, node)
+    
+    def visitVarDeclarationNode(self, node: VarDeclarationNode):
+        var_name = node.var_name.value
+        if self.context.get(var_name) != None:
+            GeneralError(node.range, f"Illegal redeclaration of variable '${var_name}'").throw()
+        expected_ty = None
+        if node.type:
+            node.value.expects = self.visit(node.type)
+            expected_ty = node.value.expects
+        var_value = self.visit(node.value)
+        if not expected_ty:
+            expected_ty = var_value
+        self.check_value_assignment(expected_ty, var_value, node)
+        self.context.set(var_name, expected_ty)
 
     def condition_check(self, cond_node: Node):
         cond_type = self.visit(cond_node)
@@ -605,7 +603,7 @@ class Analyzer(Visitor):
             c = None
             if isinstance(passed_arg_ty, FloObject) and fn_arg_ty != FloType and isinstance(fn_arg_ty, FloObject):
                 c = self.check_inheritance(
-                    fn_arg_ty, passed_arg_ty, VarAssignNode(None, node_arg, None, None))
+                    fn_arg_ty, passed_arg_ty, VarAssignNode(None, node_arg, None))
                 if c:
                     args[i] = self.cast(node_arg, fn_arg_ty)
             if (

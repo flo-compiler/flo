@@ -1,7 +1,7 @@
 import STDOUT, STDIN, STDERR, nanosleep, write, read, _exit in "@flo/sys"
 fnc input(): string {
-    size = -1
-    buffer = new i8[1]
+    let size = -1
+    let buffer = new i8[1]
     while (buffer[size] != '\n'){
         buffer = realloc(buffer, (++size)+1)
         read(STDIN, buffer+size, 1)
@@ -16,9 +16,9 @@ fnc exit(message: string = "", code : int = 1){
     _exit(code)
 }
 fnc sleep(secs: int, nanosecs: int){
-    req = [secs, nanosecs]
-    rem = [0, 0]
-    req_struct = &req[0] as i8*
-    rem_struct = &rem[0] as i8* 
+    let req = [secs, nanosecs]
+    let rem = [0, 0]
+    let req_struct = &req[0] as i8*
+    let rem_struct = &rem[0] as i8* 
     while nanosleep(req_struct, rem_struct) > 0 1
 }

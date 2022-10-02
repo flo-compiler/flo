@@ -1,4 +1,4 @@
-import write, close from "@flo/sys"
+import write, close in "@flo/sys"
 /* TODO: Make headers a hash map once you Map class*/
 class Response {
     connection: int

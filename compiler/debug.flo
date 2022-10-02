@@ -153,8 +153,8 @@ fnc token_value(token: Token, text: string): string {
 }
 fnc print_tokens(tokens: Token[], text: string){
     println("[")
-    for i = 0; i < tokens.length; i++ {
-        token = tokens[i]
+    for let i = 0; i < tokens.length; i++ {
+        let token = tokens[i]
         println(" {")
         println("  type:", token_str(token.ttype)+",")
         println("  range:", token.range.start+"-"+token.range.end)

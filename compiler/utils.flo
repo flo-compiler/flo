@@ -47,32 +47,32 @@ class Map<T, U> {
     length: int
     size: int
     constructor(){
-        initial_capacity = 256
+        let initial_capacity = 256
         this.buckets = new Bucket<T, U>[initial_capacity]
-        for i = 0; i < initial_capacity; i++ {
+        for let i = 0; i < initial_capacity; i++ {
             this.buckets[i] = new Bucket<T, U>()
         }
         this.size = initial_capacity
         this.length = 0
     }
     hash_fnc(key: T): int {
-        str = key as string
-        hash = 5381
-        for i = 0; i < str; ++i {
+        let str = key as string
+        let hash = 5381
+        for let i = 0; i < str; ++i {
             hash = ((hash << 5) + hash) + (str.get_byte(i) as int)
         }
         return hash
     }
     resize(){
-        original_size = this.size
+        let original_size = this.size
         this.size *= 2
         this.buckets = this.buckets.resize(this.size)
-        for i = original_size; i < this.size; i++ {
+        for let i = original_size; i < this.size; i++ {
             this.buckets[i] = new Bucket<T, U>()
         }
     }
     set(key: T, value: U){
-        hash = this.hash_fnc(key) % this.size
+        let hash = this.hash_fnc(key) % this.size
         if (this.size <= this.length) this.resize()
 
         while !this.buckets[hash].is_empty {
@@ -84,8 +84,8 @@ class Map<T, U> {
         this.buckets[hash].set(key, value)
     }
     get(key: T): Optional<U> {
-        hash = this.hash_fnc(key) % this.size
-        result = new Optional<U>
+        let hash = this.hash_fnc(key) % this.size
+        let result = new Optional<U>
         while !this.buckets[hash].is_empty {
             if this.buckets[hash].key == key
                 break

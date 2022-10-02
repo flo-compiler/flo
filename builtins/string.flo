@@ -8,15 +8,15 @@ class string {
         this.length = len
     }
     __add__(data: string): string {
-        new_str_len = this.length + data.length
-        new_buffer = new i8[new_str_len]
+        let new_str_len = this.length + data.length
+        let new_buffer = new i8[new_str_len]
         memcpy(new_buffer, this.buffer, this.length)
-        trailing_buffer = new_buffer + this.length
+        let trailing_buffer = new_buffer + this.length
         memcpy(trailing_buffer, data.buffer, data.length+1)
         return new string(new_buffer, new_str_len)   
     }
     __getitem__(index: int): string {
-        new_buffer = new i8[2]
+        let new_buffer = new i8[2]
         new_buffer[0] = this.buffer[index]
         new_buffer[1] = '\0'
         return new string(new_buffer, 2)
@@ -26,10 +26,10 @@ class string {
         return memcmp(this.buffer, other.buffer, this.length) == 0
     }
     find(search: string): int {
-        for i = 0; i < this.length; i++ {
+        for let i = 0; i < this.length; i++ {
             if (search.buffer[0] == this.buffer[i]) {
-                x = search.length - 1
-                matches = true
+                let x = search.length - 1
+                let matches = true
                 while x > 0 {
                     if (search.buffer[x] != this.buffer[x+i]){
                         return -1
@@ -54,7 +54,7 @@ class string {
         return this.buffer
     }
     to_cstring(): i8* {
-        c_string = new i8[this.length+1]
+        let c_string = new i8[this.length+1]
         memcpy(c_string, this.buffer, this.length)
         c_string[this.length] = '\0'
         return c_string

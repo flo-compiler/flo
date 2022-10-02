@@ -8,6 +8,6 @@ class URL {
     port: int
 }
 parse_url(urlstr: string): URL{
-    urlobj = new URL()
+    let urlobj = new URL()
     urlobj.raw = urlstr
 }

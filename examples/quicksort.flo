@@ -1,6 +1,6 @@
 fnc partition(start: int, end: int, array: int[]): int {
-    pivot_index = start
-    pivot = array[pivot_index]
+    let pivot_index = start
+    let pivot = array[pivot_index]
     while start < end {
         while start < array.length and array[start] <= pivot
             start += 1
@@ -15,7 +15,7 @@ fnc partition(start: int, end: int, array: int[]): int {
 // The main function that implements QuickSort
 fnc quick_sort(start: int, end: int, array: int[]) {
     if start < end {
-        p = partition(start, end, array)
+        let p = partition(start, end, array)
         quick_sort(start, p - 1, array)
         quick_sort(p + 1, end, array)
     }
@@ -23,7 +23,7 @@ fnc quick_sort(start: int, end: int, array: int[]) {
 
 // Driver code
 fnc main() {
-    array: int[] = [10, 7, 8, 9, 1, 5]
+    let array: int[] = [10, 7, 8, 9, 1, 5]
     quick_sort(0, array.length - 1, array)
     println(array as string)
 }

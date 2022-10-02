@@ -1,5 +1,5 @@
-import exit from "@flo/core"
-import accept, read, AF_INET, SOCK_STREAM from "@flo/sys"
+import exit in "@flo/core"
+import accept, read, AF_INET, SOCK_STREAM in "@flo/sys"
 import "socket"
 import "response"
 import "request"
@@ -16,13 +16,13 @@ class Server {
         this.request = new Request()
     }
     accept_connection(){
-        cli = new i8[16]
-        cli_len = 4
-        connfd = accept(this.socket.sockfd, cli, &cli_len)
+        let cli = new i8[16]
+        let cli_len = 4
+        let connfd = accept(this.socket.sockfd, cli, &cli_len)
         if connfd < 0 {
             exit("Error Accepting connection")
         }
-        size = read(connfd, this.request.raw_buffer, MAX_BUFFSIZE)
+        let size = read(connfd, this.request.raw_buffer, MAX_BUFFSIZE)
         this.request.set_size(size)
         this.response.set_connection(connfd)
     }

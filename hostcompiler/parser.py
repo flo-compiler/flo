@@ -1,3 +1,4 @@
+from keyword import iskeyword
 from typing import List
 from flotypes import *
 from astree import *
@@ -80,8 +81,8 @@ class Parser:
             return self.class_declaration()
         if tok.isKeyword("enum"):
             return self.enum_declaration()
-        elif tok.isKeyword(("fnc")):
-            return self.fnc_def_stmt()
+        elif tok.isKeyword("fnc"):
+            return self.fnc_def_stmt()        
         else:
             SyntaxError(tok.range, f"Unexpected '{tok.value}'").throw()
     
@@ -108,6 +109,8 @@ class Parser:
             return self.while_stmt()
         elif tok.inKeywordList(("return", "continue", "break")):
             return self.change_flow_stmt()
+        elif tok.isKeyword("let"):
+            return self.var_declaration()
         return self.expr()
 
     def import_stmt(self):
@@ -164,6 +167,24 @@ class Parser:
         value_node = self.expr()
         node_range = Range.merge(range_start, self.current_tok.range)
         return ConstDeclarationNode(name_tok, value_node, node_range)
+
+    def var_declaration(self) -> VarDeclarationNode:
+        self.advance()
+        range_start = self.current_tok.range
+        type = None
+        if self.current_tok.type != TokType.IDENTIFER:
+            SyntaxError(range_start, "Expected and identifier").throw()
+        name_tok = self.current_tok
+        self.advance()
+        if self.current_tok.type == TokType.COL:
+            self.advance()
+            type = self.composite_type()
+        if self.current_tok.type != TokType.EQ:
+            SyntaxError(self.current_tok.range, "Expected '='").throw()
+        self.advance()
+        value_node = self.expr()
+        node_range = Range.merge(range_start, self.current_tok.range)
+        return VarDeclarationNode(name_tok, type, value_node, node_range)
 
     def type_alias(self):
         range_start = self.current_tok.range
@@ -282,7 +303,10 @@ class Parser:
         self.advance()
         init = None
         range_start = self.current_tok.range
-        init = self.expr()
+        if self.current_tok.isKeyword("let"):
+            init = self.var_declaration()
+        else:
+            init = self.expr()
         if self.current_tok.isKeyword("in"):
             self.advance()
             it = self.expr()
@@ -542,7 +566,7 @@ class Parser:
         value = self.expr()
         node_range = Range.merge(node.range, value.range)
         if isinstance(node, VarAccessNode):
-            return VarAssignNode(node.var_name, value, None, node_range)
+            return VarAssignNode(node.var_name, value, node_range)
         if isinstance(node, ArrayAccessNode):
             return ArrayAssignNode(node, value, node_range)
         elif isinstance(node, PropertyAccessNode):
@@ -604,18 +628,7 @@ class Parser:
             return StrNode(tok, tok.range)
         elif tok.type == TokType.IDENTIFER:
             self.advance()
-            node_type = None
-            if self.current_tok.type != TokType.EQ and self.current_tok.type != TokType.COL:
-                return VarAccessNode(tok, tok.range)
-            elif self.current_tok.type == TokType.COL:
-                self.advance()
-                node_type = self.composite_type()
-            if self.current_tok.type != TokType.EQ:
-                SyntaxError(self.current_tok.range, "Expected '='").throw()
-            self.advance()
-            value = self.expr()
-            node_range = Range.merge(tok.range, value.range)
-            return VarAssignNode(tok, value, node_type, node_range)
+            return VarAccessNode(tok, tok.range)
         elif tok.type == TokType.LPAR:
             self.advance()
             exp = self.expr()
