@@ -63,16 +63,16 @@ fnc main(size: int, ptr: i8**): int {
         /***** Lexing ******/
         let lexer = new Lexer(text, errors)
         let tokens = lexer.tokenize()
-        print_errors(filename, errors, text)
+        print_errors(errors, filename, text)
         if flag(args, "--print-tokens")
             print_tokens(tokens, text)
         /***** Parsing *****/
         let parser = new Parser(tokens, errors)
         let module_node = parser.parse()
-        print_errors(filename, errors, text)
+        print_errors(errors, filename, text)
         /**** Analyzing ****/
-        let typechecker = new TypeChecker(errors)
-        let program = typechecker.check(module_node, filename)        
+        let typechecker = new TypeChecker()
+        let program = typechecker.check(module_node, filename, text)        
         /**** Codegen ****/
         let codegen = new CodeGen()
         let flo_module = codegen.codegenProgram(program)
