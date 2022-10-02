@@ -182,6 +182,20 @@ class CodeGen {
         if op == BinaryOp.ASSIGN
             return this.codegen_assignment(builder, bin_exp as AssignmentExression)
         let lhs = this.codegen_expression(builder, bin_exp.lhs)
+        if op == BinaryOp.EEQ and is_null(bin_exp.rhs) {
+            if LLVMIsConstant(lhs){
+                return LLVMConstInt(LLVMInt1Type(), LLVMIsNull(lhs) as int, false)
+            } else {
+                return LLVMBuildIsNull(builder, lhs, "")
+            }
+        }
+        if op == BinaryOp.NEQ and is_null(bin_exp.rhs) {
+            if LLVMIsConstant(lhs){
+                return  LLVMConstInt(LLVMInt1Type(), !LLVMIsNull(lhs) as int, false)
+            } else {
+                return LLVMBuildIsNull(builder, lhs, "")
+            }
+        }
         let rhs = this.codegen_expression(builder, bin_exp.rhs)
         let rty = bin_exp.rhs.value_type
         let llvmty = this.codegen_type(rty)
@@ -428,6 +442,9 @@ class CodeGen {
         }
         return LLVMBuildLoad2(builder, ty, val.value, "")
     }
+    codegen_null(null_exp: NullExpression): LLVMValueRef{
+        return LLVMConstNull(this.codegen_type(null_exp.value_type))
+    }
     codegen_expression(builder: LLVMBuilderRef, expression: Expression): LLVMValueRef {
         if expression.expr_kind == ExpressionKind.BOOL
             return this.codegen_bool(expression as BooleanExpression)
@@ -435,6 +452,8 @@ class CodeGen {
             return this.codegen_int(expression as IntExpression)
         if expression.expr_kind == ExpressionKind.FLOAT
             return this.codegen_float(expression as FloatExpression)
+        if expression.expr_kind == ExpressionKind.NULL
+            return this.codegen_null(expression as NullExpression)
         // if expression.expr_kind == ExpressionKind.STR
         //     return this.codegen_string(builder, expression as StringExpression)
         if expression.expr_kind == ExpressionKind.VAR 
@@ -452,7 +471,7 @@ class CodeGen {
         // if expression.expr_kind == ExpressionKind.NEW
         //     return this.codegen_new_exp(builder, expression as NewExpression)
         if expression.expr_kind == ExpressionKind.TYPEBOUND {
-             return this.codegen_type_exp(builder, expression as TypeExpression)
+            return this.codegen_type_exp(builder, expression as TypeExpression)
         }
         // if expression.expr_kind == ExpressionKind.ARRAY
         //     return this.codegen_array_exp(builder, expression as ArrayExpression)
@@ -476,7 +495,6 @@ class CodeGen {
         let ptr = LLVMBuildAlloca(builder, ty, var_decl.name.to_cstring())
         let var_id = var_decl.var_id
         LLVMBuildStore(builder, val, ptr)
-
         this.global_var_scope.set(this.create_var_key(var_id), ptr)
     }
     codegen_statement(builder: LLVMBuilderRef, statement: Statement){

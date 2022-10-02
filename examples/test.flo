@@ -1,7 +1,8 @@
 
 fnc main(): int {
-    let a = 25
+    let a: int = 121
     let b = 0.5
-    a = a ^ b as int
+    let c: float = null
+    a = a ^ b  + c as int
     return a
 }
