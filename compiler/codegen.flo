@@ -158,6 +158,19 @@ class CodeGen {
     codegen_float(float_exp: FloatExpression): LLVMValueRef {
         return LLVMConstReal(this.codegen_type(float_exp.value_type), float_exp.value)
     }
+    codegen_assignment(builder: LLVMBuilderRef, assign_exp: AssignmentExression): LLVMValueRef {
+        let value = this.codegen_expression(builder, assign_exp.rhs)
+        if assign_exp.assign_kind == AssignKind.VAR {
+            let var_assign = assign_exp as VarAssignmentExpression
+            let ptr = this.global_var_scope.get(this.create_var_key(var_assign.value_id))
+            if !ptr.has_value {
+                print("This should never happen! (codegen_assignment)")
+                error("")
+            }
+            LLVMBuildStore(builder, value, ptr.value)
+        }
+        return value
+    }
     codegen_bin_exp(builder: LLVMBuilderRef, bin_exp: BinaryExpression): LLVMValueRef {        
         let op = bin_exp.op
         if bin_exp.lhs.value_type != bin_exp.rhs.value_type {
@@ -166,6 +179,8 @@ class CodeGen {
             else if op == BinaryOp.NEQ
                 return LLVMConstInt(LLVMInt1Type(), 1, false)
         }
+        if op == BinaryOp.ASSIGN
+            return this.codegen_assignment(builder, bin_exp as AssignmentExression)
         let lhs = this.codegen_expression(builder, bin_exp.lhs)
         let rhs = this.codegen_expression(builder, bin_exp.rhs)
         let rty = bin_exp.rhs.value_type
@@ -408,7 +423,8 @@ class CodeGen {
         let val = this.global_var_scope.get(this.create_var_key(var_exp.value_id))
         let ty = this.codegen_type(var_exp.value_type)
         if !val.has_value {
-            println("This should never happen; Value should always be defined!")
+            println("This should never happen; (codegen_var_exp)")
+            error("")
         }
         return LLVMBuildLoad2(builder, ty, val.value, "")
     }

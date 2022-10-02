@@ -1,6 +1,7 @@
 
-fnc main(): float {
+fnc main(): int {
     let a = 25
     let b = 0.5
-    return a ^ b
+    a = a ^ b as int
+    return a
 }
