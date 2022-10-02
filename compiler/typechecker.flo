@@ -12,6 +12,7 @@ class Type {
         return this.kind == other.kind
     }
 }
+const unknown_type = new Type(TypeKind.UNKNOWN)
 class BooleanType (Type) {
     constructor(){
         super(TypeKind.BOOL)
@@ -94,6 +95,13 @@ class StringExpression (Expression) {
         super(ExpressionKind.STRING)
         this.value_type = new Type(TypeKind.STRING)
         this.value = value
+        this.is_constant = true
+    }
+}
+class NullExpression (Expression) {
+    constructor(value_type: Type){
+        super(ExpressionKind.NULL)
+        this.value_type = value_type 
         this.is_constant = true
     }
 }
@@ -277,6 +285,9 @@ fnc is_int(val_ty: Type): bool {
 }
 fnc is_bool(val_ty: Type): bool {
     return val_ty.kind == TypeKind.BOOL
+}
+fnc is_null(exp: Expression): bool {
+    return exp.expr_kind == ExpressionKind.NULL
 }
 fnc cast_exp_to_type(exp: Expression, val_ty: Type): Expression {
     if exp.value_type == val_ty
@@ -484,7 +495,7 @@ class TypeChecker {
         this.current_class = -1
         this.current_scope = -1
         this.program = new Program()
-        this.constants = ["true", "false"]
+        this.constants = ["true", "false", "null"]
     }
     get_current_module(): Module {
         return this.program.modules[this.current_module]
@@ -549,7 +560,7 @@ class TypeChecker {
             fnc_arg.name = arg.name.value
             fnc_arg.default = new Optional<Expression>()
             if arg.default.has_value
-                fnc_arg.default.set_value(this.check_expression(arg.default.value))
+                fnc_arg.default.set_value(this.check_expression(unknown_type, arg.default.value))
             checked_function.args << fnc_arg
             arg_types << this.check_type(arg.parsed_type)
         }
@@ -597,7 +608,7 @@ class TypeChecker {
             return new PointerType(this.check_type((type_node as PointerTypeNode).pointee_type))
         if type_node.kind == TypeKind.ARRAY {
             let array_node = type_node as ArrayTypeNode
-            let length = this.check_expression(array_node.length)
+            let length = this.check_expression(new Type(TypeKind.INT), array_node.length)
             let element_type = this.check_type(array_node.element_type)
             return new ArrayType(element_type, length)
         }
@@ -612,14 +623,14 @@ class TypeChecker {
         // else
             return new Type(TypeKind.OBJECT)
     }
-    check_array_expression(array_node: ArrayExpressionNode): ArrayExpression {
+    check_array_expression(expected_type: Type, array_node: ArrayExpressionNode): ArrayExpression {
         //TODO: ARRAY is overloaded; Could be object or const so need to check which one it is.
         let elements: Expression[] = []
         if array_node.elements.length > 0 {
-            elements << this.check_expression(array_node.elements[0])
+            elements << this.check_expression(expected_type, array_node.elements[0])
             let element_type =  elements[0].value_type
             for let i = 1; i < array_node.elements; ++i {
-                let element = this.check_expression(array_node.elements[i])
+                let element = this.check_expression(element_type, array_node.elements[i])
                 if element.value_type == element_type
                     elements << element
                 else
@@ -628,15 +639,17 @@ class TypeChecker {
         }
         return new ArrayExpression(elements)
     }
-    check_var_access(var_access_node: VarAccessExpressionNode): Expression {
+    check_var_access(expected_type: Type, var_access_node: VarAccessExpressionNode): Expression {
         let name = var_access_node.name.value
         if name == "true" 
             return new BooleanExpression(1) 
         if name == "false" 
             return new BooleanExpression(0)
+        if name == "null"
+            return new NullExpression(expected_type)
         let current_scope = this.get_current_scope()
         let resolved = current_scope.getVar(name)
-        let var_ty = new Type(TypeKind.UNKNOWN)
+        let var_ty = unknown_type
         if resolved.has_value {
             let var_id = resolved.value
             if var_id.kind == VarIdKind.FNC
@@ -650,6 +663,9 @@ class TypeChecker {
         return new VarAccessExpression(new VarId(0, -1, -1), var_ty)
     }
     check_assignment(left: Expression, right: Expression, binary_node: BinaryExpressionNode): BinaryExpression {
+        if left.is_constant {
+            this.error(ErrorKind.TYPE, "Cannot assign a value to a constant", binary_node.range)
+        }
         if left.value_type != right.value_type {
             this.error(ErrorKind.TYPE, "Illegal assignment of variable of type '"+dump_type(right.value_type)+"' to '"+dump_type(left.value_type)+"'", binary_node.range)
         }
@@ -657,16 +673,13 @@ class TypeChecker {
             let var_access = left as VarAccessExpression
             let var_name = (binary_node.lhs as VarAccessExpressionNode).name
             let name = var_name.value
-            if name in this.constants {
-                this.error(ErrorKind.NAME, "Illegal re-declaration of const '"+name+"'", var_name.range)
-            }
             return new VarAssignmentExpression(var_access.value_id, right)
         }
         return new BinaryExpression(left, BinaryOp.ASSIGN, right, right.value_type)
     }
     check_bin_expr(binary_node: BinaryExpressionNode): BinaryExpression {
-        let left = this.check_expression(binary_node.lhs)
-        let right = this.check_expression(binary_node.rhs)
+        let left = this.check_expression(unknown_type, binary_node.lhs)
+        let right = this.check_expression(left.value_type, binary_node.rhs)
         let op = binary_node.op
         if op == BinaryOp.ASSIGN {
             return this.check_assignment(left, right, binary_node)
@@ -707,11 +720,11 @@ class TypeChecker {
         } 
         //TODO: Handle Range, In and Object Arithmetic and bit Cases.
         this.error(ErrorKind.TYPE, "Illegal binary operation '"+dump_bin_op(op)+"' between types '"+dump_type(left.value_type)+"' and '"+dump_type(right.value_type)+"'", binary_node.range)
-        return new BinaryExpression(left, op, right, new Type(TypeKind.UNKNOWN))
+        return new BinaryExpression(left, op, right, unknown_type)
     }
     check_unary_expr(unary_node: UnaryExpressionNode): UnaryExpression {
         let op = unary_node.op
-        let expression = this.check_expression(unary_node.expression)
+        let expression = this.check_expression(unknown_type, unary_node.expression)
         let ty = expression.value_type
         if op == UnaryOp.NEG {
             if is_numeric(ty)
@@ -722,11 +735,11 @@ class TypeChecker {
                 return new UnaryExpression(op, expression, ty)
         }
         this.error(ErrorKind.GEN, "Illegal unary operation case", unary_node.range)
-        return new UnaryExpression(op, expression, new Type(TypeKind.UNKNOWN))
+        return new UnaryExpression(op, expression, unknown_type)
     }
     check_type_expr(type_expr_node: TypeExpressionNode): TypeExpression {
         // Need to check if cast is compatible for typecase
-        let exp = this.check_expression(type_expr_node.expression)
+        let exp = this.check_expression(unknown_type, type_expr_node.expression)
         let ty = this.check_type(type_expr_node.bound_type)
         return new TypeExpression(exp, type_expr_node.op, ty)
     }
@@ -740,7 +753,7 @@ class TypeChecker {
         return new IndexExpression()
     }
     check_call_expr(call_expr_node: CallExpressionNode): CallExpression {
-        let called = this.check_expression(call_expr_node.callee)
+        let called = this.check_expression(unknown_type, call_expr_node.callee)
         //TODO: Check for generic functions.
         let func_ty = called.value_type as FunctionType
         let args: Expression[] = []
@@ -748,7 +761,7 @@ class TypeChecker {
             //TODO: fill default args.
             if func_ty.arg_types.length == call_expr_node.args.length {
                 for let i = 0; i < call_expr_node.args.length; ++i {
-                    let arg = this.check_expression(call_expr_node.args[i])
+                    let arg = this.check_expression(func_ty.arg_types[i], call_expr_node.args[i])
                     if arg.value_type == func_ty.arg_types[i]
                         args << arg
                     else
@@ -762,22 +775,34 @@ class TypeChecker {
         }
         return new CallExpression(called, args, func_ty.return_type)
     }
-    check_expression(expr_node: ExpressionNode): Expression {
-        if expr_node.expr_kind == ExpressionKind.INT
-            return new IntExpression((expr_node as IntExpressionNode).value.value)
-        if expr_node.expr_kind == ExpressionKind.FLOAT
-            return new FloatExpression((expr_node as FloatExpressionNode).value.value)
+    check_expression(expected_type: Type, expr_node: ExpressionNode): Expression {
+        let exp = new Expression(ExpressionKind.INT)
+        if expr_node.expr_kind == ExpressionKind.INT {
+            exp = new IntExpression((expr_node as IntExpressionNode).value.value)
+            if is_int(expected_type){
+                exp.value_type = expected_type
+            }
+            return exp
+        }
+        if expr_node.expr_kind == ExpressionKind.FLOAT {
+            exp = new FloatExpression((expr_node as FloatExpressionNode).value.value)
+            if is_float(expected_type){
+                exp.value_type = expected_type
+            }
+            return exp
+        }
         if expr_node.expr_kind == ExpressionKind.CHAR {
             let expr_value = new IntExpression((expr_node as CharExpressionNode).value.value as int)
             expr_value.value_type.kind = TypeKind.I8
             return expr_value
         }
-        if expr_node.expr_kind == ExpressionKind.STR
+        if expr_node.expr_kind == ExpressionKind.STR {
             return new StringExpression((expr_node as StringExpressionNode).value.value)
+        }
         if expr_node.expr_kind == ExpressionKind.ARRAY
-            return this.check_array_expression(expr_node as ArrayExpressionNode)
+            return this.check_array_expression(expected_type, expr_node as ArrayExpressionNode)
         if expr_node.expr_kind == ExpressionKind.VAR
-            return this.check_var_access(expr_node as VarAccessExpressionNode)
+            return this.check_var_access(expected_type, expr_node as VarAccessExpressionNode)
         if expr_node.expr_kind == ExpressionKind.BIN
             return this.check_bin_expr(expr_node as BinaryExpressionNode)
         if expr_node.expr_kind == ExpressionKind.UNARY
@@ -798,25 +823,31 @@ class TypeChecker {
     }
     check_var_declaration(var_decl_node: VarDeclarationStatement): VarDeclaration {
         let name = var_decl_node.var_name.value
-        if name in this.constants {
+        
+        if name in this.constants
             this.error(ErrorKind.NAME, "Illegal re-declaration of const '"+name+"'", var_decl_node.var_name.range)
-        }
-        let var_type = new Type(TypeKind.UNKNOWN)
-        if var_decl_node.var_type.has_value {
+        
+        let var_type = unknown_type
+        
+        if var_decl_node.var_type.has_value
             var_type = this.check_type(var_decl_node.var_type.value)
-        }
-        let value = this.check_expression(var_decl_node.value)
-        if var_type.kind != TypeKind.UNKNOWN and var_type != value.value_type {
+        let value = this.check_expression(var_type, var_decl_node.value)
+        
+        if is_null(value) and value.value_type.kind == TypeKind.UNKNOWN
+            this.error(ErrorKind.TYPE, "Cannot declare a value as null without any type hint for future usage", var_decl_node.range)
+        
+        if var_type.kind != TypeKind.UNKNOWN and var_type != value.value_type
             this.error(ErrorKind.TYPE, "Expected type '"+dump_type(var_type)+"' but got type '"+dump_type(value.value_type)+"' on variable declaration", var_decl_node.range)
-        }
+        
         let var = new Var(value)
         let current_module = this.get_current_module()
         let current_scope = this.get_current_scope()
         let id = new VarId(VarIdKind.VAR, this.current_module, current_module.vars.length)
         var.var_id = id
-        if current_scope.vars.get(name).has_value {
+        
+        if current_scope.vars.get(name).has_value
             this.error(ErrorKind.NAME, "Illegal re-declaration of already declared variable '"+name+"'", var_decl_node.var_name.range)
-        }
+        
         current_scope.vars.set(name, id)
         current_module.vars << var
         return new VarDeclaration(name, id, value)
@@ -838,9 +869,10 @@ class TypeChecker {
     check_can_return(expr: Optional<ExpressionNode>): ReturnStatement {
         //TODO: check if we are in a function.
         //TODO: check if return type matches
+        let current_function_return_type = unknown_type
         let rt_stmt = new ReturnStatement()
         if expr.has_value 
-            rt_stmt.return_value.set_value(this.check_expression(expr.value))
+            rt_stmt.return_value.set_value(this.check_expression(current_function_return_type, expr.value))
         return rt_stmt
     }
     check_statement(stmt_node: StatementNode): Statement {
@@ -858,7 +890,7 @@ class TypeChecker {
             return this.check_can_break()
         if stmt_node.kind == StatementKind.RETURN
             return this.check_can_return((stmt_node as ReturnStatementNode).value)
-        return this.check_expression(stmt_node as ExpressionNode)
+        return this.check_expression(unknown_type, stmt_node as ExpressionNode)
     }
     check_block(block_node: BlockNode): Block {
         let block = new Block()

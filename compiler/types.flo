@@ -115,6 +115,7 @@ enum ExpressionKind {
     STR
     CHAR
     BOOL
+    NULL
     STRING
     ARRAY
     VAR
