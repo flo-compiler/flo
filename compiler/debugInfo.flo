@@ -1,0 +1,35 @@
+class DebugInfo {
+    builder: LLVMDIBuilderRef
+    CU: LLVMMetadataRef
+    types: LLVMMetadataRef[]
+    constructor(mod: LLVMModuleRef, fn: string){
+        this.builder = LLVMCreateDIBuilder(mod)
+        let file = LLVMMDStringInContext2(LLVMGetModuleContext(mod), fn.to_cstring(), fn.length)
+        this.CU = LLVMDIBuilderCreateCompileUnit(this.builder, LLVMDWARFSourceLanguage.LLVMDWarfSourceLanguageFlo, file, "Flo Compiler", 12, false, "", 0, 0, "", 0, LLVMDWARFEmissionKind.LLVMDWARFEmissionFull, 0, false, true, ".", 1, "", 0)
+        this.create_types()
+    }
+    create_types(){
+        this.types = []
+        this.types << LLVMDIBuilderCreateBasicType(this.builder, "bool", 4, 1, 1, 0)
+        this.types << LLVMDIBuilderCreateBasicType(this.builder, "i4", 2, 4, 4, 0)
+        this.types << LLVMDIBuilderCreateBasicType(this.builder, "i8", 2, 8, 8, 0)
+        this.types << LLVMDIBuilderCreateBasicType(this.builder, "i16", 3, 16, 16, 0)
+        this.types << LLVMDIBuilderCreateBasicType(this.builder, "i32", 3, 32, 32, 0)
+        this.types << LLVMDIBuilderCreateBasicType(this.builder, "i64", 3, 64, 64, 0)
+        this.types << LLVMDIBuilderCreateBasicType(this.builder, "i128", 4, 128, 128, 0)
+        this.types << LLVMDIBuilderCreateBasicType(this.builder, "int", 3, machine_word_size, machine_word_size, 0)
+        this.types << LLVMDIBuilderCreateBasicType(this.builder, "f16", 3, 16, 16, 0)
+        this.types << LLVMDIBuilderCreateBasicType(this.builder, "f32", 3, 32, 32, 0)
+        this.types << LLVMDIBuilderCreateBasicType(this.builder, "f64", 3, 64, 64, 0)
+        this.types << LLVMDIBuilderCreateBasicType(this.builder, "float", 3, machine_word_size, machine_word_size, 0)
+        // VOID
+        // ENUM
+        // OBJECT
+        // STRING
+        // PTR
+        // ARRAY
+        // FNC
+        // GENERIC_TEMPLATE
+        // RESOLVED_GENERIC
+    }
+}

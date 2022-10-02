@@ -1,10 +1,11 @@
 import "llvm/bindings"
+import "debugInfo"
 class GeneratedModule {
     llvm_mod: LLVMModuleRef
     errors: i8*
     constructor(llvm_mod: LLVMModuleRef){
         this.llvm_mod = llvm_mod
-        zero = '\0'
+        let zero = '\0'
         this.errors = &zero
         LLVMLinkInMCJIT()
         FloLLVMInitializeNativeTarget()
@@ -22,27 +23,26 @@ class GeneratedModule {
         LLVMVerifyModule(this.llvm_mod, /*LLVMAbortProcessAction*/ 0, &this.errors)
         this.check_errors()
 
-        engine: LLVMExecutionEngineRef = new i8[64] as LLVMExecutionEngineRef
+        let engine: LLVMExecutionEngineRef = new i8[64] as LLVMExecutionEngineRef
         if (LLVMCreateExecutionEngineForModule(&engine, this.llvm_mod, &this.errors) != 0) {
             println("failed to create execution engine")
         }
         this.check_errors()
-        functionPtr = LLVMGetFunctionAddress(engine, "main")
-        main_fnc = functionPtr as () => float
+        let main_fnc = LLVMGetFunctionAddress(engine, "main")  as () => float
         println(main_fnc())
     }
     create_target_machine(): LLVMTargetMachineRef {
-        triple = LLVMGetDefaultTargetTriple()
-        target = LLVMGetFirstTarget()
+        let triple = LLVMGetDefaultTargetTriple()
+        let target = LLVMGetFirstTarget()
         if (LLVMGetTargetFromTriple(triple, &target, &this.errors) != 0) {
             println("failed to get target tripple")
         }
         this.check_errors()
-        CPU: i8* = "generic"
+        let CPU: i8* = "generic"
         return LLVMCreateTargetMachine(target, triple, CPU, LLVMGetHostCPUFeatures(), 0, 0, 0)
     }
     write_object(fn: string){
-        tm = this.create_target_machine()
+        let tm = this.create_target_machine()
         LLVMSetDataLayout(this.llvm_mod, LLVMCreateTargetDataLayout(tm))
         LLVMSetTarget(this.llvm_mod, LLVMGetTargetMachineTriple(tm))
         if (LLVMTargetMachineEmitToFile(tm, this.llvm_mod, fn.to_cstring(), 1, &this.errors) != 0) {
@@ -63,7 +63,7 @@ class IntrinsicResult {
     fnc_type: LLVMTypeRef
 }
 fnc get_intrinsic(mod: LLVMModuleRef, name: string, params: LLVMTypeRef[]): IntrinsicResult {
-    result = new IntrinsicResult()
+    let result = new IntrinsicResult()
     result.fnc_type = LLVMFunctionType(params[0], params.buffer, params.length, false)
     result.call = LLVMAddFunction(mod, name.to_cstring(), result.fnc_type)
     return result
@@ -73,20 +73,21 @@ class CodeGen {
     module: LLVMModuleRef
     codegenProgram(program: Program): GeneratedModule{
         this.modules = []
-        for i = 0; i < program.modules.length; ++i {
+        for let i = 0; i < program.modules.length; ++i {
             this.modules << this.codegenModule(program.modules[i])
         }
         this.linkModules()
         return new GeneratedModule(this.modules[0])
     }
     linkModules(){
-        for i = 1; i < this.modules.length; ++i {
+        for let i = 1; i < this.modules.length; ++i {
             LLVMLinkModules2(this.modules[0], this.modules[i])
         }
     }
     codegenModule(module: Module): LLVMModuleRef {
         this.module = LLVMModuleCreateWithName(module.name.to_cstring())
-        for i = 0; i < module.functions.length; ++i {
+        //let DBFloInfo = new DebugInfo(this.module, module.name)
+        for let i = 0; i < module.functions.length; ++i {
             this.codegen_function(module.functions[i])
         }
         return this.module
@@ -117,21 +118,21 @@ class CodeGen {
         if tt.kind == TypeKind.PTR
             return LLVMPointerType(this.codegen_type((tt as PointerType).pointee_type))
         if tt.kind == TypeKind.ARRAY {
-            arr_ty = tt as ArrayType
-            arr_len = arr_ty.length
-            element_type = this.codegen_type(arr_ty.element_type)
+            let arr_ty = tt as ArrayType
+            let arr_len = arr_ty.length
+            let element_type = this.codegen_type(arr_ty.element_type)
             if arr_len.is_constant
                 return LLVMArrayType(element_type, (arr_len as IntExpression).value)
             return LLVMPointerType(element_type)
         }
         if tt.kind == TypeKind.FNC {
-            param_types: LLVMTypeRef[] = []
-            func_ty = tt as FunctionType
-            for i = 0; i < func_ty.arg_types.length; ++i {
+            let param_types: LLVMTypeRef[] = []
+            let func_ty = tt as FunctionType
+            for let i = 0; i < func_ty.arg_types.length; ++i {
                 param_types << this.codegen_type(func_ty.arg_types[i])
                 //TODO: add a new context and put the argnames to context
             }
-            ret_type = this.codegen_type(func_ty.return_type)
+            let ret_type = this.codegen_type(func_ty.return_type)
             return  LLVMFunctionType(ret_type, param_types.buffer, param_types.length, false)
         }
         
@@ -156,22 +157,22 @@ class CodeGen {
         return LLVMConstReal(this.codegen_type(float_exp.value_type), float_exp.value)
     }
     codegen_bin_exp(builder: LLVMBuilderRef, bin_exp: BinaryExpression): LLVMValueRef {        
-        op = bin_exp.op
+        let op = bin_exp.op
         if bin_exp.lhs.value_type != bin_exp.rhs.value_type {
             if op == BinaryOp.EEQ
                 return LLVMConstInt(LLVMInt1Type(), 0, false)
             else if op == BinaryOp.NEQ
                 return LLVMConstInt(LLVMInt1Type(), 1, false)
         }
-        lhs = this.codegen_expression(builder, bin_exp.lhs)
-        rhs = this.codegen_expression(builder, bin_exp.rhs)
-        rty = bin_exp.rhs.value_type
-        llvmty = this.codegen_type(rty)
-        call = rhs
-        pred = 0
+        let lhs = this.codegen_expression(builder, bin_exp.lhs)
+        let rhs = this.codegen_expression(builder, bin_exp.rhs)
+        let rty = bin_exp.rhs.value_type
+        let llvmty = this.codegen_type(rty)
+        let call = rhs
+        let pred = 0
         if is_numeric(rty) and op == BinaryOp.POW {
-            args = [lhs, rhs]
-            res = get_intrinsic(this.module, "llvm.pow."+dump_type(rty), [llvmty, llvmty])
+            let args = [lhs, rhs]
+            let res = get_intrinsic(this.module, "llvm.pow."+dump_type(rty), [llvmty, llvmty])
             return LLVMBuildCall2(builder, res.fnc_type, res.call, &(args[0]), 2, "")
         }
         if is_int(rty) {
@@ -316,10 +317,10 @@ class CodeGen {
         return lhs
     }
     codegen_type_exp(builder: LLVMBuilderRef, type_exp: TypeExpression): LLVMValueRef {
-        exp = type_exp.expr
-        bty = type_exp.bound_type
-        val = this.codegen_expression(builder, exp)
-        ty = this.codegen_type(bty)
+        let exp = type_exp.expr
+        let bty = type_exp.bound_type
+        let val = this.codegen_expression(builder, exp)
+        let ty = this.codegen_type(bty)
         if type_exp.ty_op == TypeExprOp.AS {
             if is_int(exp.value_type) and is_float(bty) {
                 if LLVMIsConstant(val){
@@ -370,13 +371,13 @@ class CodeGen {
         return val
     }
     codegen_bool(bool_exp: BooleanExpression): LLVMValueRef {
-        val = bool_exp.value
+        let val = bool_exp.value
         return LLVMConstInt(LLVMInt1Type(), val, false)
     }
     codegen_unary_exp(builder: LLVMBuilderRef, unary_exp: UnaryExpression): LLVMValueRef {
-        op = unary_exp.op
-        exp = unary_exp.expression
-        val = this.codegen_expression(builder, exp)
+        let op = unary_exp.op
+        let exp = unary_exp.expression
+        let val = this.codegen_expression(builder, exp)
         if op == UnaryOp.NEG {
             if is_int(exp.value_type){
                 if LLVMIsConstant(val) {
@@ -455,14 +456,14 @@ class CodeGen {
             this.codegen_expression(builder, statement as Expression)
     }
     codegen_block(builder: LLVMBuilderRef, block: Block){
-        for i = 0; i < block.statements.length; ++i {
+        for let i = 0; i < block.statements.length; ++i {
             this.codegen_statement(builder, block.statements[i])
         }
     }
     codegen_function(func: Function){
-        llvm_fnc: LLVMValueRef = LLVMAddFunction(this.module, func.name.to_cstring(), this.codegen_type(func.value_type))
-        entry_block: LLVMBasicBlockRef  = LLVMAppendBasicBlock(llvm_fnc, "")
-        func_builder: LLVMBuilderRef = LLVMCreateBuilder()
+        let llvm_fnc: LLVMValueRef = LLVMAddFunction(this.module, func.name.to_cstring(), this.codegen_type(func.value_type))
+        let entry_block: LLVMBasicBlockRef  = LLVMAppendBasicBlock(llvm_fnc, "")
+        let func_builder: LLVMBuilderRef = LLVMCreateBuilder()
         LLVMPositionBuilderAtEnd(func_builder, entry_block)
         this.codegen_block(func_builder, func.block)
     }

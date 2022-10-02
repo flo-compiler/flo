@@ -2,28 +2,22 @@ import string, exit in "@flo/core"
 import open, close, read, write, lseek, unlink, lstat, access, O_RDONLY, O_WRONLY, O_CREAT, SEEK_END, SEEK_SET, F_OK, R_OK, W_OK, X_OK in "@flo/sys"
 class File {
     path: string
+    stat_struct: i8*
     constructor(path: string) {
         this.path = path
-    }
-    get_file_stat(): i8* {
-        stat_struct: i8[144] = []
-        stat_ptr = &(stat_struct[0])
-        if lstat(this.path.to_cstring(), stat_ptr) < 0 {
-            exit("Could not open file\n")
-        }
-        return stat_ptr
+        this.stat_struct = new i8[144]
+        lstat(path.to_cstring(), this.stat_struct)
     }
     get_file_size(): int {
-        stat_struct = this.get_file_stat() 
-        file_size_offset = &(stat_struct[48]) as int*
-        return file_size_offset[0]
+        let size_offset = (this.stat_struct + 48) as int*
+        return size_offset[0]
     }
     read(size: int): i8* {
-        fd = open(this.path.to_cstring(), O_RDONLY)
+        let fd = open(this.path.to_cstring(), O_RDONLY)
         if fd < 0 {
             exit("Error: could not open file\n")
         }
-        file_contents = new i8[size]
+        let file_contents = new i8[size]
         if read(fd, file_contents, size) < 0 {
             exit("Error: could not read the file\n")
         }
@@ -31,7 +25,7 @@ class File {
         return file_contents
     }
     write(buffer: i8*, size: int){
-        fd = open(this.path.to_cstring(), O_CREAT or O_WRONLY)
+        let fd = open(this.path.to_cstring(), O_CREAT or O_WRONLY)
         if fd < 0 {
             exit("Error: could not open file\n")
         }
@@ -41,7 +35,7 @@ class File {
         close(fd)
     }
     read_as_string(): string {
-        file_size = this.get_file_size()
+        let file_size = this.get_file_size()
         return new string(this.read(file_size), file_size)
     }
     write_as_string(data: string) {
@@ -60,9 +54,8 @@ class File {
         return access(this.path.to_cstring(), X_OK) >= 0
     }
     is_dir(): bool {
-        stat_struct = this.get_file_stat()
-        st_mode_offset = (stat_struct + 24) as int*
-        is_dir = (st_mode_offset[0] and 0o0170000) == 0o0040000
+        let st_mode_offset = (this.stat_struct + 24) as int*
+        let is_dir = (st_mode_offset[0] and 0o0170000) == 0o0040000
         return is_dir
     }
     delete(){

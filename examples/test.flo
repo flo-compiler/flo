@@ -1,4 +1,4 @@
+
 fnc main(): float {
-    // a: int = 25
-    return  25 ^ 0.5
+    return 25 ^ 0.5
 }

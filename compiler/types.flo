@@ -43,6 +43,7 @@ enum TokType {
     OR_KW
     XOR_KW
     CONST_KW
+    LET_KW
     IF_KW
     ELSE_KW
     BOOL_KW

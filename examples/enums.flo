@@ -5,6 +5,6 @@ enum Numbers {
     TWO
 }
 fnc main() {
-    x = Numbers.ONE
+    let x = Numbers.ONE
     println(x as string)
 }

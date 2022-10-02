@@ -9,6 +9,6 @@ fnc handler(request: Request, response: Response){
     response.end("<h1>Hello From Flo Server</h1>")
 }
 fnc main(){
-    server = new Server(PORT)
+    let server = new Server(PORT)
     server.listen(handler)
 }

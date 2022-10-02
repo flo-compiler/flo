@@ -2,6 +2,7 @@ import "types"
 import "analysis"
 import "executionEngine"
 import "target"
+import "debugInfo.flo"
 import "bitwriter"
 import "linker"
 /** Deallocate and destroy all ManagedStatic variables.
@@ -29,7 +30,8 @@ fnc LLVMCloneModule(M: LLVMModuleRef): LLVMModuleRef
 fnc LLVMDisposeModule(M: LLVMModuleRef)
 
 fnc LLVMGetSourceFileName(M: LLVMModuleRef, Len: int*): i8* 
-
+fnc LLVMMDString (Str: i8*, SLen: int)
+fnc LLVMGetModuleContext(M: LLVMModuleRef): LLVMContextRef
 /**
  * Set the original source file name of a module to a string Name with length
  * Len.
@@ -40,7 +42,7 @@ fnc LLVMGetSourceFileName(M: LLVMModuleRef, Len: int*): i8*
  * @see Module::setSourceFileName()
  */
 fnc LLVMSetSourceFileName(M: LLVMModuleRef, Name: i8* , Len: int)
-
+fnc LLVMMDStringInContext2(C: LLVMContextRef, Str: i8*, SLen: int ): LLVMMetadataRef
 /**
  * Obtain the data layout for a module.
  *
@@ -73,7 +75,7 @@ fnc LLVMGetTarget(M: LLVMModuleRef): i8*
  * @see Module::setTargetTriple()
  */
 fnc LLVMSetTarget(M: LLVMModuleRef, Triple: i8* )
-
+fnc LLVMAddModuleFlag(M: LLVMModuleRef, Behavior: LLVMModuleFlagBehavior, Key: i8*, KeyLen: int, Val: LLVMMetadataRef)
 fnc LLVMDumpModule(M: LLVMModuleRef )
 fnc LLVMPrintModuleToFile(M: LLVMModuleRef, Filename: i8*, ErrorMessage: i8**): LLVMBool
 fnc LLVMPrintModuleToString(M: LLVMModuleRef): i8*

@@ -7,6 +7,8 @@ fnc string_to_kw_token(word: string): TokType {
         return TokType.XOR_KW
     if word == "const"
         return TokType.CONST_KW
+    if word == "let"
+        return TokType.LET_KW
     if word == "if" 
         return TokType.IF_KW
     if word == "else"
@@ -232,8 +234,8 @@ class Lexer {
         return new Token(TokType.LT, this.get_range(1))
     }
     dot_token(): Token {
-        token = TokType.DOT
-        length = 1
+        let token = TokType.DOT
+        let length = 1
         if this.peek() == '.'{
             token = TokType.DOT_DOT
             length++
@@ -249,11 +251,12 @@ class Lexer {
     base_int_token(base: int): IntToken{
         this.advance()
         this.advance()
-        length = 3
-        value = 0
+        let length = 3
+        let value = 0
+        let current_char = '\0'
         while in_base_range(current_char = capitalize(this.current_char), base) {
             value *= base
-            add =  current_char - '0'
+            let add =  current_char - '0'
             if (current_char >= 'A') add = current_char - 'A' + 10
             value += add
             length++
@@ -262,8 +265,9 @@ class Lexer {
         return new IntToken(value, this.get_range(length))
     }
     numeric_token(): Token {
-        length = 1
-        is_float = false
+        let length = 1
+        let is_float = false
+        let next_char = '\0'
         if this.current_char == '0' and this.peek() == 'b'
             return this.base_int_token(2)
         if this.current_char == '0' and this.peek() == 'o'
@@ -276,42 +280,44 @@ class Lexer {
             length++
             this.advance()
         }
-        range = this.get_range(length)
-        str_value = this.text.substring(range.start, length)
+        let range = this.get_range(length)
+        let str_value = this.text.substring(range.start, length)
         if is_float 
             return new FloatToken(str_value as float, range)
         return new IntToken(str_value as int, range)
     }
     identifier_token(): Token {
-        length = 1
-        start = this.idx
+        let length = 1
+        let start = this.idx
+        let next_char = this.peek()
         while is_identifier_char(next_char = this.peek()) or is_number_char(next_char){
             length++
             this.advance()
         }
-        value = this.text.substring(start, length)
-        range = this.get_range(length)
+        let value = this.text.substring(start, length)
+        let range = this.get_range(length)
+        let keyword = 0
         if (keyword = string_to_kw_token(value)) != -1 return new Token(keyword, range)
         return new IdentifierToken(value, range)
     }
     string_token(): StrToken {
-        length = 2
+        let length = 2
+        let escape_next = false
         this.advance()
-        escape_next = false
         while true {
             if (this.current_char == '"' and !escape_next) break
             length++
             escape_next = this.current_char == '\\'
             this.advance()
         }
-        range = this.get_range(length)
-        value = this.text.substring(range.start+1, length-2)
+        let range = this.get_range(length)
+        let value = this.text.substring(range.start+1, length-2)
         return new StrToken(value, range)
     }
     char_token(): CharToken {
-        length = 3
+        let length = 3
         this.advance()
-        value = this.current_char
+        let value = this.current_char
         if this.current_char == '\\' {
             this.advance()
             if this.current_char == 'a'
@@ -343,7 +349,8 @@ class Lexer {
     }
     tokenize(): Token[] {
         this.advance()
-        tokens: Token[] = []
+        let tokens: Token[] = []
+        let char = '\0'
         while !this.eof() and this.errors.length == 0 {
             char = this.current_char
             if char == ' ' true

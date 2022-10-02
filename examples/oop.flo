@@ -29,12 +29,11 @@ class SpecialItalianChef(ItalianChef) {
     }
 }
 fnc main() {
-    chef: Chef = new ItalianChef()
-    // @unsafe
     chef.print_specialty()
-    special: ItalianChef = new SpecialItalianChef()
+    let chef: Chef = new ItalianChef()
+    let special: ItalianChef = new SpecialItalianChef()
     special.print_specialty_two()
+    // @unsafe
     spItalianChef = special as SpecialItalianChef
     spItalianChef.print_secret()
-    y = 2 * x = 4
 }

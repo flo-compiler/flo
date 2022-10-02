@@ -28,6 +28,8 @@ class Visitor:
     def visitStmtsNode(self, node): pass
 
     def visitConstDeclarationNode(self, node): pass
+
+    def visitVarDeclarationNode(self, node): pass
     
     def visitClassDeclarationNode(self, node): pass
 
@@ -158,9 +160,8 @@ class TypeAliasNode(Node):
 
 
 class VarAssignNode(Node):
-    def __init__(self, var_name: Token, value: Node, type: TypeNode, range: Range):
+    def __init__(self, var_name: Token, value: Node, range: Range):
         self.var_name = var_name
-        self.type = type
         self.value = value
         super().__init__(range)
 
@@ -201,6 +202,16 @@ class ConstDeclarationNode(Node):
 
     def accept(self, visitor: Visitor):
         return visitor.visitConstDeclarationNode(self)
+
+class VarDeclarationNode(Node):
+    def __init__(self, var_name: Token, type: TypeNode, value: Node, range: Range):
+        self.var_name = var_name
+        self.type = type
+        self.value = value
+        super().__init__(range)
+
+    def accept(self, visitor: Visitor):
+        return visitor.visitVarDeclarationNode(self)
 
 
 class ContinueNode(Node):

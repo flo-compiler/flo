@@ -269,8 +269,8 @@ fnc max_type(t1: Type, t2: Type): Type {
     return t2
 }
 fnc check_cast_lower_bits(p1: Expression*, p2: Expression*){
-    ty1 = p1[0].value_type
-    ty2 = p2[0].value_type
+    let ty1 = p1[0].value_type
+    let ty2 = p2[0].value_type
     if ty1 != ty2 {
         if is_float(ty1) and is_int(ty2) {
             p2[0] = cast_exp_to_type(p2[0], ty1)
@@ -410,30 +410,30 @@ class TypeChecker {
     }
     check(module_ast: ModuleAST, name: string): Program {
         this.current_module++
-        module = new Module()
+        let module = new Module()
         module.name = name
         module.scope = new Scope()
         this.current_scope = module.scope
         this.program.modules << module
-        for i = 0; i < module_ast.classes.length; i++ {
-            checked_class = this.declare_class(module_ast.classes[i])
+        for let i = 0; i < module_ast.classes.length; i++ {
+            let checked_class = this.declare_class(module_ast.classes[i])
             checked_class.id = new ClassId(this.current_module, i)
             module.classes << checked_class
             module.scope.classes.set(checked_class.name, checked_class.id)
         }
         for i = 0; i < module_ast.type_aliases.length; i++  {
-            type_alias_node = module_ast.type_aliases[i]
-            ty = this.check_type(type_alias_node.parsed_type)
+            let type_alias_node = module_ast.type_aliases[i]
+            let ty = this.check_type(type_alias_node.parsed_type)
             module.scope.type_aliases.set(type_alias_node.name.value, ty)
         }
         for i = 0; i < module_ast.functions.length; i++ {
-            checked_function = this.declare_function(module_ast.functions[i])
+            let checked_function = this.declare_function(module_ast.functions[i])
             checked_function.id = new VarId(this.current_module, i)
             module.functions << checked_function
             module.scope.functions.set(checked_function.name, checked_function.id)
         }
         for i = 0; i < module_ast.enums.length; i++ {
-            checked_enum = this.declare_enum(module_ast.enums[i])
+            let checked_enum = this.declare_enum(module_ast.enums[i])
             checked_enum.id = new EnumId(this.current_module, i)
             module.enums << checked_enum
             module.scope.enums.set(checked_enum.name, checked_enum.id)
@@ -445,13 +445,13 @@ class TypeChecker {
         return this.program
     }
     declare_function(function_node: FunctionDeclarationNode): Function {
-        checked_function = new Function()
+        let checked_function = new Function()
         checked_function.name = function_node.name.value
-        arg_types: Type[] = []
+        let arg_types: Type[] = []
         checked_function.args = []
-        for i = 0; i < function_node.args.length; ++i {
-            arg = function_node.args[i]
-            fnc_arg = new FunctionArg()
+        for let i = 0; i < function_node.args.length; ++i {
+            let arg = function_node.args[i]
+            let fnc_arg = new FunctionArg()
             fnc_arg.name = arg.name.value
             fnc_arg.default = new Optional<Expression>()
             if arg.default.has_value
@@ -459,21 +459,21 @@ class TypeChecker {
             checked_function.args << fnc_arg
             arg_types << this.check_type(arg.parsed_type)
         }
-        ret_type = this.check_type(function_node.return_type)
+        let ret_type = this.check_type(function_node.return_type)
         checked_function.value_type = new FunctionType(arg_types, ret_type)
         return checked_function
     }
     declare_class(class_decl_node: ClassDeclarationNode): Class{
-        declared_class = new Class()
+        let declared_class = new Class()
         declared_class.fields = []
         declared_class.methods = []
         declared_class.name = class_decl_node.name.value
-        for i = 0; i < class_decl_node.generic_parameters.length; ++i {
-            generic_param = class_decl_node.generic_parameters[i]
+        for let i = 0; i < class_decl_node.generic_parameters.length; ++i {
+            let generic_param = class_decl_node.generic_parameters[i]
         }
         for i = 0; i < class_decl_node.fields.length; ++i {
-            field = new ClassField()
-            current_f_node = class_decl_node.fields[i]
+            let field = new ClassField()
+            let current_f_node = class_decl_node.fields[i]
             field.name = current_f_node.name.value
             field.field_type = this.check_type(current_f_node.parsed_type)
             declared_class.fields << field
@@ -484,10 +484,10 @@ class TypeChecker {
         return declared_class
     }
     declare_enum(enum_node: EnumNode): Enum{
-        declared_enum = new Enum()
+        let declared_enum = new Enum()
         declared_enum.name = enum_node.name.value
-        for i = 0; i < enum_node.fields.length; ++i {
-            enum_node_f = enum_node.fields[i]
+        for let i = 0; i < enum_node.fields.length; ++i {
+            let enum_node_f = enum_node.fields[i]
             declared_enum.fields << new EnumField(enum_node_f.name.value)
         }
         return declared_enum
@@ -502,17 +502,17 @@ class TypeChecker {
         if type_node.kind == TypeKind.PTR
             return new PointerType(this.check_type((type_node as PointerTypeNode).pointee_type))
         if type_node.kind == TypeKind.ARRAY {
-            array_node = type_node as ArrayTypeNode
-            length = this.check_expression(array_node.length)
-            element_type = this.check_type(array_node.element_type)
+            let array_node = type_node as ArrayTypeNode
+            let length = this.check_expression(array_node.length)
+            let element_type = this.check_type(array_node.element_type)
             return new ArrayType(element_type, length)
         }
         if type_node.kind == TypeKind.FNC {
-            fnc_node = type_node as FunctionTypeNode
-            arg_types: Type[] = []
-            for i = 0; i < fnc_node.args.length; i++ 
+            let fnc_node = type_node as FunctionTypeNode
+            let arg_types: Type[] = []
+            for let i = 0; i < fnc_node.args.length; i++ 
                 arg_types << this.check_type(fnc_node.args[i])
-            return_type = this.check_type(fnc_node.return_type)
+            let return_type = this.check_type(fnc_node.return_type)
             return new FunctionType(arg_types, return_type)
         }
         // else
@@ -520,13 +520,13 @@ class TypeChecker {
     }
     check_array_expression(array_node: ArrayExpressionNode): ArrayExpression {
         //TODO: ARRAY is overloaded; Could be object or const so need to check which one it is.
-        elements: Expression[] = []
+        let elements: Expression[] = []
         if array_node.elements.length > 0 {
 
             elements << this.check_expression(array_node.elements[0])
-            element_type =  elements[0].value_type
-            for i = 1; i < array_node.elements; ++i {
-                element = this.check_expression(array_node.elements[i])
+            let element_type =  elements[0].value_type
+            for let i = 1; i < array_node.elements; ++i {
+                let element = this.check_expression(array_node.elements[i])
                 if element.value_type == element_type
                     elements << element
                 // TODO: Emit type mismatch error (else)
@@ -535,21 +535,21 @@ class TypeChecker {
         return new ArrayExpression(elements)
     }
     check_var_access(var_access_node: VarAccessExpressionNode): Expression {
-        name = var_access_node.name.value
+        let name = var_access_node.name.value
         if name == "true" {
             return new BooleanExpression(1)
         } else if name == "false"{
             return new BooleanExpression(0)
         }
-        resolved = this.current_scope.vars.get(name)
-        var_ty = new Type(TypeKind.UNKNOWN)
+        let resolved = this.current_scope.vars.get(name)
+        let var_ty = new Type(TypeKind.UNKNOWN)
         if !resolved.has_value {
             resolved = this.current_scope.functions.get(name)
         } else {
             var_ty = this.program.modules[resolved.value.module_id].vars[resolved.value.id].value_type
         }
         if resolved.has_value {
-            val = resolved.value
+            let val = resolved.value
             if var_ty.kind == TypeKind.UNKNOWN
             var_ty = this.program.modules[val.module_id].functions[val.id].value_type
             return new VarAccessExpression(val, var_ty)
@@ -561,9 +561,9 @@ class TypeChecker {
         return new BinaryExpression(left, BinaryOp.ASSIGN, right, right.value_type)
     }
     check_bin_expr(binary_node: BinaryExpressionNode): BinaryExpression {
-        left = this.check_expression(binary_node.lhs)
-        right = this.check_expression(binary_node.rhs)
-        op = binary_node.op
+        let left = this.check_expression(binary_node.lhs)
+        let right = this.check_expression(binary_node.rhs)
+        let op = binary_node.op
         if is_numeric(left.value_type) and is_numeric(right.value_type){
             if op == BinaryOp.POW {
                 if is_int(left.value_type)
@@ -576,7 +576,7 @@ class TypeChecker {
             if op >= BinaryOp.ADD and op <=  BinaryOp.LTE {
                 //TODO: Check and cast the smaller bit size to the bigger one.
                 check_cast_lower_bits(&left, &right)
-                exp_type = left.value_type
+                let exp_type = left.value_type
                 if op >= BinaryOp.GT and op <= BinaryOp.LTE 
                     exp_type = new BooleanType()
                 
@@ -605,15 +605,15 @@ class TypeChecker {
         return new BinaryExpression(left, op, right, new Type(TypeKind.UNKNOWN))
     }
     declare_var(name: string, value: Expression){
-        var = new Var(value)
-        id = new VarId(this.current_module, this.current_scope.vars.length)
+        let var = new Var(value)
+        let id = new VarId(this.current_module, this.current_scope.vars.length)
         var.var_id = id
         this.current_scope.vars.set(name, id)
     }
     check_unary_expr(unary_node: UnaryExpressionNode): UnaryExpression {
-        op = unary_node.op
-        expression = this.check_expression(unary_node.expression)
-        ty = expression.value_type
+        let op = unary_node.op
+        let expression = this.check_expression(unary_node.expression)
+        let ty = expression.value_type
         if op == UnaryOp.NEG {
             if is_numeric(ty)
                 return new UnaryExpression(op, expression, ty)
@@ -627,8 +627,8 @@ class TypeChecker {
     }
     check_type_expr(type_expr_node: TypeExpressionNode): TypeExpression {
         // Need to check if cast is compatible for typecase
-        exp = this.check_expression(type_expr_node.expression)
-        ty = this.check_type(type_expr_node.bound_type)
+        let exp = this.check_expression(type_expr_node.expression)
+        let ty = this.check_type(type_expr_node.bound_type)
         return new TypeExpression(exp, type_expr_node.op, ty)
     }
     check_new_expr(new_expr_node: NewExpressionNode): NewExpression {
@@ -641,15 +641,15 @@ class TypeChecker {
         return new IndexExpression()
     }
     check_call_expr(call_expr_node: CallExpressionNode): CallExpression {
-        called = this.check_expression(call_expr_node.callee)
+        let called = this.check_expression(call_expr_node.callee)
         //TODO: Check for generic functions.
-        func_ty = called.value_type as FunctionType
-        args: Expression[] = []
+        let func_ty = called.value_type as FunctionType
+        let args: Expression[] = []
         if func_ty.kind == TypeKind.FNC {
             //TODO: fill default args.
             if func_ty.arg_types.length == call_expr_node.args.length {
-                for i = 0; i < call_expr_node.args.length; ++i {
-                    arg = this.check_expression(call_expr_node.args[i])
+                for let i = 0; i < call_expr_node.args.length; ++i {
+                    let arg = this.check_expression(call_expr_node.args[i])
                     if arg.value_type == func_ty.arg_types[i]
                         args << arg
                     // TODO: Emit error if argument types do not match.(else)
@@ -666,7 +666,7 @@ class TypeChecker {
         if expr_node.expr_kind == ExpressionKind.FLOAT
             return new FloatExpression((expr_node as FloatExpressionNode).value.value)
         if expr_node.expr_kind == ExpressionKind.CHAR {
-            expr_value = new IntExpression((expr_node as CharExpressionNode).value.value as int)
+            let expr_value = new IntExpression((expr_node as CharExpressionNode).value.value as int)
             expr_value.value_type.kind = TypeKind.I8
             return expr_value
         }
@@ -714,7 +714,7 @@ class TypeChecker {
     check_can_return(expr: Optional<ExpressionNode>): ReturnStatement {
         //TODO: check if we are in a function.
         //TODO: check if return type matches
-        rt_stmt = new ReturnStatement()
+        let rt_stmt = new ReturnStatement()
         if expr.has_value 
             rt_stmt.return_value.set_value(this.check_expression(expr.value))
         return rt_stmt
@@ -737,8 +737,8 @@ class TypeChecker {
         return this.check_expression(stmt_node as ExpressionNode)
     }
     check_block(block_node: BlockNode): Block {
-        block = new Block()
-        for i = 0; i < block_node.statements.length; i++ {
+        let block = new Block()
+        for let i = 0; i < block_node.statements.length; i++ {
             // TODO: check control flow and look for always return in the case of a function.
             block.statements << this.check_statement(block_node.statements[i])
         }

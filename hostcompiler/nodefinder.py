@@ -139,8 +139,6 @@ class NodeFinder(Visitor):
         self.context.set(var_name, node)
         if self.block_in and self.block_in.type == BlockTy.func:
             self.local_vars.append(var_name)
-        if node.type != None:
-            self.visit(node.type)
         if node.value:
             self.visit(node.value)
 

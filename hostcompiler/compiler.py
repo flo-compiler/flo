@@ -283,16 +283,16 @@ class Compiler(Visitor):
 
     def visitVarAssignNode(self, node: VarAssignNode):
         var_name = node.var_name.value
-        if node.type:
-            node.value.expects = self.visit(node.type)
         value = self.visit(node.value)
         ref = self.context.get(var_name)
-        if ref == None:
-            ref = FloRef(self.builder, value, var_name)
-            self.context.set(var_name, ref)
-        else:
-            ref.store(value)
+        ref.store(value)
         return value
+    
+    def visitVarDeclarationNode(self, node: VarDeclarationNode):
+        var_name = node.var_name.value
+        value = self.visit(node.value)
+        ref = FloRef(self.builder, value, var_name)
+        self.context.set(var_name, ref)
     
     def visitPropertyDeclarationNode(self, node: PropertyDeclarationNode): pass
 

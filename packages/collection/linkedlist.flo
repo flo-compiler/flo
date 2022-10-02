@@ -8,7 +8,7 @@ class Node<T> {
 class LinkedList<T> {
     root: Node<T>
     addNode(value: T){
-        tmp = this.root.next
+        let tmp = this.root.next
         this.root.next = new Node<T>(value)
         this.root.next.next = tmp
     }

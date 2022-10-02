@@ -1,18 +1,18 @@
-import print, exit from "@flo/core"
-import memset, socket, bind, close, listen, connect from "@flo/sys"
+import print, exit in "@flo/core"
+import memset, socket, bind, close, listen, connect in "@flo/sys"
 fnc inet_addr(addr: i8*): int
 fnc str_to_intaddr(addr: string): int {
     if addr == "" return 0
     return inet_addr(addr.buffer)
 }
 fnc htons(x: int): int {
-    x1 = (x and 255) << 8
-    x2 = (x >> 8) and 255 
+    let x1 = (x and 255) << 8
+    let x2 = (x >> 8) and 255 
     return x1 or x2
 }
 fnc create_sockaddr_in (sin_family: int, sin_port: int, sin_addr: int): i8* {
-    sin_family_port = (sin_port << 16) or (sin_family and 0xFFFF)
-    socket_addr_in = [sin_family_port, sin_addr]
+    let sin_family_port = (sin_port << 16) or (sin_family and 0xFFFF)
+    let socket_addr_in = [sin_family_port, sin_addr]
     return &socket_addr_in[0] as i8*
 }
 class Socket {
@@ -20,7 +20,7 @@ class Socket {
     domain: int
     address: i8*
     constructor(domain: int, socktype: int, protocol: int){
-        sockfd = socket(domain, socktype, protocol)
+        let sockfd = socket(domain, socktype, protocol)
         if sockfd < 1 {
             exit("Error: could not create TCP socket\n")
         }
@@ -28,14 +28,14 @@ class Socket {
         this.domain = domain
     }
     bind(port: int, address: string = ""){
-        interface = str_to_intaddr(address)
+        let interface = str_to_intaddr(address)
         this.address = create_sockaddr_in(this.domain, htons(port), interface)
         if bind(this.sockfd, this.address, 16) < 0 {
             exit("Error: could not bind socket\n")
         }
     }
     connect(port: int, address: string){
-        interface = str_to_intaddr(address)
+        let interface = str_to_intaddr(address)
         this.address = create_sockaddr_in(this.domain, htons(port), interface)
         if connect(this.sockfd, this.address, 16)< 0 {
             exit("Error: could not connect socket\n")

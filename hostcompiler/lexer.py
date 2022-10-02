@@ -28,6 +28,7 @@ KEYWORDS = [
     "continue",
     "return",
     "import",
+    "let",
     "type",
     "in",
     "class",
