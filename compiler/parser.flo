@@ -1,61 +1,68 @@
 
 class Node {
-    range: Range
+    range: FloRange
+    constructor(range: FloRange){
+        this.range = range
+    }
 }
-class TypeNode {
+class TypeNode(Node) {
     kind: TypeKind
-    constructor(kind: TypeKind){
+    constructor(kind: TypeKind, range: FloRange){
+        super(range)
         this.kind = kind
     }
 }
 class RecordTypeNode (TypeNode) {
-    name: Token
+    name: IdentifierToken
     generic_args: TypeNode[]
-    constructor(name: Token) {
-        super(TypeKind.OBJECT)
+    constructor(name: IdentifierToken, range: FloRange) {
+        super(TypeKind.OBJECT, range)
         this.name = name
         this.generic_args = []
+        
     }
 }
 class FunctionTypeNode (TypeNode) {
     args: TypeNode[]
     return_type: TypeNode
-    constructor(){
-        super(TypeKind.FNC)
+    constructor(range: FloRange){
+        super(TypeKind.FNC, range)
         this.args = []
     }
 }
 class PointerTypeNode (TypeNode) {
     pointee_type: TypeNode
-    constructor(pointee_type: TypeNode){
-        super(TypeKind.PTR)
+    constructor(pointee_type: TypeNode, range: FloRange){
+        super(TypeKind.PTR, range)
         this.pointee_type = pointee_type
     }
 }
-class StatementNode {
+class StatementNode(Node) {
     kind: StatementKind
-    constructor(kind: StatementKind){
+    constructor(kind: StatementKind, range: FloRange){
+        super(range)
         this.kind = kind
     }
 }
-class BlockNode {
+class BlockNode(Node) {
     statements: StatementNode[]
-    constructor(){
+    constructor(range: FloRange){
+        super(range)
         this.statements = []
     }
 }
 class ExpressionNode (StatementNode) {
     expr_kind: ExpressionKind
-    constructor(expr_kind: ExpressionKind){
-        super(StatementKind.EXPRESSION)
+    constructor(expr_kind: ExpressionKind, range: FloRange){
+        super(StatementKind.EXPRESSION, range)
         this.expr_kind = expr_kind
     }
 }
 class ArrayTypeNode (TypeNode) {
     element_type: TypeNode
     length: ExpressionNode
-    constructor(element_type: TypeNode, length: ExpressionNode){
-        super(TypeKind.ARRAY)
+    constructor(element_type: TypeNode, length: ExpressionNode, range: FloRange){
+        super(TypeKind.ARRAY, range)
         this.element_type = element_type
         this.length = length
     }
@@ -63,68 +70,68 @@ class ArrayTypeNode (TypeNode) {
 class IntExpressionNode (ExpressionNode) {
     value: IntToken
     constructor(value: IntToken){
-        super(ExpressionKind.INT)
+        super(ExpressionKind.INT, value.range)
         this.value = value
     }
 }
 class FloatExpressionNode (ExpressionNode) {
     value: FloatToken
     constructor(value: FloatToken){
-        super(ExpressionKind.FLOAT)
+        super(ExpressionKind.FLOAT, value.range)
         this.value = value
     }
 }
 class CharExpressionNode (ExpressionNode) {
     value: CharToken
     constructor(value: CharToken){
-        super(ExpressionKind.CHAR)
+        super(ExpressionKind.CHAR, value.range)
         this.value = value
     }
 }
 class StringExpressionNode (ExpressionNode) {
     value: StrToken
     constructor(value: StrToken){
-        super(ExpressionKind.STRING)
+        super(ExpressionKind.STRING, value.range)
         this.value = value
     }
 }
 class VarAccessExpressionNode (ExpressionNode) {
     name: IdentifierToken
     constructor(name: IdentifierToken){
-        super(ExpressionKind.VAR)
+        super(ExpressionKind.VAR, name.range)
         this.name = name
     }
 }
 class ArrayExpressionNode (ExpressionNode) {
     elements: ExpressionNode[]
-    constructor(){
-        super(ExpressionKind.ARRAY)
+    constructor(range: FloRange){
+        super(ExpressionKind.ARRAY, range)
         this.elements = []
     }
 }
 class NewExpressionNode (ExpressionNode) {
     parsed_type: TypeNode
     args: ExpressionNode[]
-    constructor(parsed_type: TypeNode){
+    constructor(parsed_type: TypeNode, range: FloRange){
         this.parsed_type = parsed_type
-        super(ExpressionKind.NEW)
+        super(ExpressionKind.NEW, range)
         this.args = []
     }
 }
 class ExpressionIndexNode (ExpressionNode) {
     expression: ExpressionNode
     index: ExpressionNode
-    constructor(expression: ExpressionNode, index: ExpressionNode){
+    constructor(expression: ExpressionNode, index: ExpressionNode, range: FloRange){
         this.expression = expression
         this.index = index
-        super(ExpressionKind.INDEX)
+        super(ExpressionKind.INDEX, range)
     } 
 }
 class MemberExpressionNode (ExpressionNode) {
     expression: ExpressionNode
-    member: Token
-    constructor(expression: ExpressionNode, member: Token){
-        super(ExpressionKind.MEMBER)
+    member: IdentifierToken
+    constructor(expression: ExpressionNode, member: IdentifierToken, range: FloRange){
+        super(ExpressionKind.MEMBER, range)
         this.expression = expression
         this.member = member
     }
@@ -132,7 +139,8 @@ class MemberExpressionNode (ExpressionNode) {
 class CallExpressionNode (ExpressionNode) {
     callee: ExpressionNode
     args: ExpressionNode[]
-    constructor(callee: ExpressionNode) {
+    constructor(callee: ExpressionNode, range: FloRange) {
+        super(ExpressionKind.CALL, range)
         this.callee = callee
         this.args = []
     }
@@ -142,7 +150,7 @@ class TypeExpressionNode (ExpressionNode) {
     op: TypeExprOp
     bound_type: TypeNode
     constructor(expression: ExpressionNode, bound_type: TypeNode){
-        super(ExpressionKind.TYPEBOUND)
+        super(ExpressionKind.TYPEBOUND, merge_range(expression.range, bound_type.range))
         this.expression = expression
         this.bound_type = bound_type
     }
@@ -152,7 +160,7 @@ class BinaryExpressionNode (ExpressionNode) {
     op: BinaryOp
     rhs: ExpressionNode
     constructor(left: ExpressionNode, op: BinaryOp, right: ExpressionNode){
-        super(ExpressionKind.BIN)
+        super(ExpressionKind.BIN, merge_range(left.range, right.range))
         this.lhs = left
         this.op = op
         this.rhs = right
@@ -161,10 +169,10 @@ class BinaryExpressionNode (ExpressionNode) {
 class UnaryExpressionNode (ExpressionNode) {
     op: UnaryOp
     expression: ExpressionNode
-    constructor(op: UnaryOp, expression: ExpressionNode){
+    constructor(op: UnaryOp, expression: ExpressionNode, range: FloRange){
         this.op = op
         this.expression = expression
-        super(ExpressionKind.UNARY)
+        super(ExpressionKind.UNARY, range)
     }
 }
 /* Can be either 'as' or 'is' unary expression */
@@ -172,15 +180,15 @@ class IfStatementNode (StatementNode) {
     condition: ExpressionNode
     block: BlockNode
     else_block: BlockNode
-    constructor(){
-        super(StatementKind.IF)
+    constructor(range: FloRange){
+        super(StatementKind.IF, range)
     }
 }
 class WhileStatementNode (StatementNode) {
     condition: ExpressionNode
     block: BlockNode
-    constructor(){
-        super(StatementKind.WHILE)
+    constructor(range: FloRange){
+        super(StatementKind.WHILE, range)
     }
 }
 class ForStatementNode (StatementNode) {
@@ -190,23 +198,23 @@ class ForStatementNode (StatementNode) {
     iterator: ExpressionNode
     it_name: Token
     block: BlockNode
-    constructor(){
-        super(StatementKind.FOR)
+    constructor(range: FloRange){
+        super(StatementKind.FOR, range)
     }
 }
 class ReturnStatementNode (StatementNode) {
     value: Optional<ExpressionNode>
-    constructor(){
+    constructor(range: FloRange){
         this.value = new Optional<ExpressionNode>()
-        super(StatementKind.RETURN)
+        super(StatementKind.RETURN, range)
     }
 }
 class VarDeclarationStatement (StatementNode) {
-    var_name: Token
+    var_name: IdentifierToken
     var_type: Optional<TypeNode>
     value: ExpressionNode
-    constructor(){
-        super(StatementKind.RETURN)
+    constructor(range: FloRange){
+        super(StatementKind.VAR, range)
         this.var_type = new Optional<TypeNode>()
     }
 }
@@ -356,7 +364,7 @@ class Parser {
             this.advance()
     }
     parse_primitive_type(): TypeNode {
-        let type_node = new TypeNode(TypeKind.VOID)
+        let type_node = new TypeNode(TypeKind.VOID, this.current_token.range)
         if this.current_token.ttype == TokType.BOOL_KW
             type_node.kind = TypeKind.BOOL
         else if this.current_token.ttype == TokType.I4_KW
@@ -392,26 +400,29 @@ class Parser {
             type_nodes << this.parse_type()
     }
     parse_object_type(): RecordTypeNode {
-        let object_type_node = new RecordTypeNode(this.eat(TokType.IDENTIFER))
+        let identifier_tok = this.eat(TokType.IDENTIFER) as IdentifierToken
+        let object_type_node = new RecordTypeNode( identifier_tok, identifier_tok.range)
         if this.current_token.ttype == TokType.LT {
             this.advance()
             this.parse_type_list(object_type_node.generic_args)
-            this.eat(TokType.GT)
+            let end_tok = this.eat(TokType.GT)
+            object_type_node.range = merge_range(object_type_node.range, end_tok.range)
         }
         return object_type_node
     }
     parse_function_type(): FunctionTypeNode {
+        let fnc_type_node = new FunctionTypeNode(this.current_token.range)
         this.advance()
-        let fnc_type_node = new FunctionTypeNode()
         if this.current_token.ttype != TokType.RPAR
             this.parse_type_list(fnc_type_node.args)
         this.eat(TokType.RPAR)
         this.eat(TokType.ARROW)
         fnc_type_node.return_type = this.parse_type()
+        fnc_type_node.range = merge_range(fnc_type_node.range, fnc_type_node.return_type.range)
         return fnc_type_node
     }
     parse_type(): TypeNode {
-        let type_node = new TypeNode(TypeKind.VOID)
+        let type_node = new TypeNode(TypeKind.VOID, this.current_token.range)
         if this.current_token.ttype == TokType.IDENTIFER
             type_node = this.parse_object_type()
         else if this.current_token.ttype == TokType.LPAR
@@ -422,16 +433,16 @@ class Parser {
             if this.current_token.ttype == TokType.LBRACKET {
                 this.advance()
                 if this.current_token.ttype == TokType.RBRACKET {
-                    let rec_node = new RecordTypeNode(new IdentifierToken("Array", this.current_token.range))
+                    let rec_node = new RecordTypeNode(new IdentifierToken("Array", this.current_token.range) as IdentifierToken, this.current_token.range)
                     rec_node.generic_args << type_node
                     type_node = rec_node
                 } else {
-                    type_node = new ArrayTypeNode(type_node, this.parse_expression())
+                    type_node = new ArrayTypeNode(type_node, this.parse_expression(), this.current_token.range)
                 }
-                this.eat(TokType.RBRACKET)  
+                type_node.range = merge_range(type_node.range, this.current_token.range)
+                this.eat(TokType.RBRACKET)
             } else {
-                this.eat(TokType.MULT)
-                type_node = new PointerTypeNode(type_node)
+                type_node = new PointerTypeNode(type_node, merge_range(type_node.range, this.eat(TokType.MULT).range))
             }
         }
         return type_node
@@ -444,21 +455,21 @@ class Parser {
         }
     }
     parse_array_expression(): ArrayExpressionNode {
+        let array_expression = new ArrayExpressionNode(this.current_token.range)
         this.advance()
-        let array_expression = new ArrayExpressionNode()
         if this.current_token.ttype != TokType.RBRACKET
             this.parse_expression_list(array_expression.elements)
-        this.eat(TokType.RBRACKET)
+        array_expression.range = merge_range(array_expression.range, this.eat(TokType.RBRACKET).range)
         return array_expression
     }
     parse_new_expression(): NewExpressionNode {
+        let new_node = new NewExpressionNode(this.parse_type(), this.current_token.range)
         this.advance()
-        let new_node = new NewExpressionNode(this.parse_type())
         if this.current_token.ttype == TokType.LPAR {
             this.advance()
             if this.current_token.ttype != TokType.RPAR
                 this.parse_expression_list(new_node.args)
-            this.eat(TokType.RPAR)
+            new_node.range = merge_range(new_node.range, this.eat(TokType.RPAR).range)
         }
         return new_node
     }
@@ -484,25 +495,26 @@ class Parser {
             return expression
         } else
             this.error("Expected an Expression value")
-        return new ExpressionNode(ExpressionKind.VAR)
+        return new ExpressionNode(ExpressionKind.VAR, this.current_token.range)
     }
     parse_index_expression(expression: ExpressionNode): ExpressionIndexNode {
         this.eat(TokType.LBRACKET)
-        let index_expression = new ExpressionIndexNode(expression, this.parse_expression())
-        this.eat(TokType.RBRACKET)
+        let index_expression = new ExpressionIndexNode(expression, this.parse_expression(), this.current_token.range)
+        index_expression.range = merge_range(expression.range, this.eat(TokType.RBRACKET).range)
         return index_expression
     }
     parse_call_expression(expression: ExpressionNode): CallExpressionNode {
         this.eat(TokType.LPAR)
-        let call_expression = new CallExpressionNode(expression)
+        let call_expression = new CallExpressionNode(expression, this.current_token.range)
         if this.current_token.ttype != TokType.RPAR
             this.parse_expression_list(call_expression.args)
-        this.eat(TokType.RPAR)
+        call_expression.range = merge_range(expression.range, this.eat(TokType.RPAR).range)
         return call_expression
     }
     parse_member_expression(expression: ExpressionNode): MemberExpressionNode {
         this.eat(TokType.DOT)
-        return new MemberExpressionNode(expression, this.eat(TokType.IDENTIFER))
+        let identifier_tok = this.eat(TokType.IDENTIFER) as IdentifierToken
+        return new MemberExpressionNode(expression, identifier_tok, merge_range(expression.range, identifier_tok.range))
     }
     parse_lhs_expression_allow_call(): ExpressionNode {
         let expression = this.parse_atom()
@@ -533,6 +545,7 @@ class Parser {
         return -1
     }
     parse_unary_expression(): ExpressionNode {
+        let start_range = this.current_token.range
         let op = this.is_unary_op()
         if (op != -1) this.advance()
         let expression = this.parse_lhs_expression_allow_call()
@@ -544,7 +557,7 @@ class Parser {
             if op != -1 this.advance()
         }
         if op == -1 return expression
-        return new UnaryExpressionNode(op, expression)
+        return new UnaryExpressionNode(op, expression, merge_range(start_range, expression.range))
     }
     is_term_expr_op(): int {
         let token_type = this.current_token.ttype
@@ -675,9 +688,10 @@ class Parser {
         return new BinaryExpressionNode(left, BinaryOp.ASSIGN, this.parse_expression())
     }
     parse_if_statement(): IfStatementNode {
+        let if_node = new IfStatementNode(this.current_token.range)
         this.advance()
-        let if_node = new IfStatementNode()
         if_node.condition = this.parse_expression()
+        if_node.range = merge_range(if_node.range, if_node.condition.range)
         if_node.block = this.parse_block()
         this.new_lines()
         if this.current_token.ttype == TokType.ELSE_KW {
@@ -687,15 +701,16 @@ class Parser {
         return if_node
     }
     parse_while_statement(): WhileStatementNode {
+        let while_node = new WhileStatementNode(this.current_token.range)
         this.advance()
-        let while_node = new WhileStatementNode()
         while_node.condition = this.parse_expression()
+        while_node.range = merge_range(while_node.range, while_node.condition.range)
         while_node.block = this.parse_block()
         return while_node
     }
     parse_for_statement(): ForStatementNode {
+        let for_node = new ForStatementNode(this.current_token.range)
         this.advance()
-        let for_node = new ForStatementNode()
         if this.peek().ttype != TokType.IN_KW {
             for_node.intialization = this.parse_expression()
             if this.current_token.ttype == TokType.SEMICOL {
@@ -711,30 +726,36 @@ class Parser {
             this.eat(TokType.IN_KW)
             for_node.iterator = this.parse_expression()
         }
+        for_node.range = merge_range(for_node.range, this.current_token.range)
         if this.can_parse()
             for_node.block = this.parse_block()
         return for_node
     }
     parse_variable_declaration_statement(): VarDeclarationStatement {
+        let var_decl_node = new VarDeclarationStatement(this.current_token.range)
         this.advance()
-        let var_decl_node = new VarDeclarationStatement()
-        var_decl_node.var_name =  this.eat(TokType.IDENTIFER)
+        var_decl_node.var_name =  this.eat(TokType.IDENTIFER) as IdentifierToken
         if this.current_token.ttype == TokType.COL {
             this.advance()
             var_decl_node.var_type.set_value(this.parse_type())
         }
         this.eat(TokType.EQ)
         var_decl_node.value = this.parse_expression()
+        var_decl_node.range = merge_range(var_decl_node.range, var_decl_node.value.range)
         return var_decl_node
     }
     parse_return_statement(): ReturnStatementNode{
+        let return_node = new ReturnStatementNode(this.current_token.range)
         this.advance()
-        let return_node = new ReturnStatementNode()
-        if this.current_token.ttype != TokType.LN and this.can_parse() and this.current_token.ttype != TokType.RBRACE
-            return_node.value.set_value(this.parse_expression())
+        if this.current_token.ttype != TokType.LN and this.can_parse() and this.current_token.ttype != TokType.RBRACE {
+            let value = this.parse_expression()
+            return_node.range = merge_range(return_node.range, value.range)
+            return_node.value.set_value(value)
+        }
         return return_node
     }
     parse_statement(): StatementNode {
+        let start_range = this.current_token.range
         if this.current_token.ttype == TokType.IF_KW 
             return this.parse_if_statement()
         else if this.current_token.ttype == TokType.WHILE_KW
@@ -747,15 +768,15 @@ class Parser {
             return this.parse_variable_declaration_statement()
         else if this.current_token.ttype == TokType.CONTINUE_KW {
             this.advance()
-            return new StatementNode(StatementKind.CONTINUE)
+            return new StatementNode(StatementKind.CONTINUE, start_range)
         } else if this.current_token.ttype == TokType.BREAK_KW {
             this.advance()
-            return new StatementNode(StatementKind.BREAK)
+            return new StatementNode(StatementKind.BREAK, start_range)
         }
         return this.parse_expression()
     }
     parse_block(): BlockNode {
-        let block_node = new BlockNode()
+        let block_node = new BlockNode(this.current_token.range)
         this.new_lines()
         if this.current_token.ttype == TokType.LBRACE {
             this.advance()
@@ -809,7 +830,7 @@ class Parser {
             this.advance()
             fnc_node.return_type = this.parse_type()
         } else {
-            fnc_node.return_type = new TypeNode(TypeKind.VOID)
+            fnc_node.return_type = new TypeNode(TypeKind.VOID, new FloRange(0, 0, 0, 0))
         }
         if this.current_token.ttype == TokType.LBRACE {
             fnc_node.block = this.parse_block()

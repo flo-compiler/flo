@@ -169,9 +169,11 @@ class CallExpression (Expression) {
     }
 }
 class VarId {
+    kind: VarIdKind
     module_id: int
     id: int
-    constructor(module_id: int, id: int){
+    constructor(kind: VarIdKind, module_id: int, id: int){
+        this.kind = kind
         this.module_id = module_id
         this.id = id
     }
@@ -216,8 +218,12 @@ class IfStatement (Statement) {
 }
 class VarDeclaration (Statement) {
     name: string
-    expression: Statement
-    constructor(){
+    var_id: VarId
+    expression: Expression
+    constructor(name: string, var_id: VarId, expression: Expression){
+        this.var_id = var_id
+        this.name = name
+        this.expression = expression
         super(StatementKind.VAR)
     }
 }
@@ -312,6 +318,47 @@ fnc dump_type(ty: Type): string {
         return "void"
     return "any"
 }
+fnc dump_bin_op(op: BinaryOp): string {
+    if op == BinaryOp.ADD
+        return "+"
+    if op == BinaryOp.SUB
+        return "-"
+    if op == BinaryOp.MUL
+        return "*"
+    if op == BinaryOp.DIV
+        return "/"
+    if op == BinaryOp.MOD
+        return "%"
+    if op == BinaryOp.POW
+        return "^"
+    if op == BinaryOp.GT
+        return ">"
+    if op == BinaryOp.GTE
+        return ">="
+    if op == BinaryOp.LT
+        return "<"
+    if op == BinaryOp.LTE
+        return "<="
+    if op == BinaryOp.EEQ
+        return "=="
+    if op == BinaryOp.NEQ
+        return "!"
+    if op == BinaryOp.SL
+        return "<<"
+    if op == BinaryOp.SR
+        return ">>"
+    if op == BinaryOp.OR
+        return "or"
+    if op == BinaryOp.AND
+        return "and"
+    if op == BinaryOp.XOR
+        return "xor"
+    if op == BinaryOp.IN
+        return "in"
+    if op == BinaryOp.ASSIGN
+        return "="
+    return ".."
+}
 class Scope {
     vars: Map<string, VarId>
     classes: Map<string, ClassId>
@@ -326,6 +373,17 @@ class Scope {
         this.enums = new Map<string, EnumId>()
         this.type_aliases = new Map<string, Type>()
         this.parent = new Optional<Scope>() 
+    }
+    getVar(name: string): Optional<VarId> {
+        let current_scope = this
+        let value = this.vars.get(name)
+        while current_scope.parent.has_value and !value.has_value {
+            current_scope = current_scope.parent.value
+            value = current_scope.vars.get(name)
+            if !value.has_value
+                value = current_scope.functions.get(name)
+        }
+        return value
     }
 }
 class FunctionArg {
@@ -380,13 +438,14 @@ class Module {
     classes: Class[]
     functions: Function[]
     enums: Enum[]
-    scope: Scope
+    scopes: Scope[]
     constructor(){
         this.functions = []
         this.vars = []
         this.classes = []
         this.functions = []
         this.enums = []
+        this.scopes = []
     }
 }
 class Program {
@@ -401,44 +460,59 @@ class TypeChecker {
     current_module: int
     current_class: int
     current_function: int
-    current_scope: Scope
-    errors: FloError[]
-    constructor(errors: FloError[]){
+    current_scope: int
+    filename: string
+    content: string
+    constructor(){
         this.current_module = -1
-        this.errors = errors
+        this.current_function = -1
+        this.current_class = -1
+        this.current_scope = -1
         this.program = new Program()
     }
-    check(module_ast: ModuleAST, name: string): Program {
+    get_current_module(): Module {
+        return this.program.modules[this.current_module]
+    }
+    get_current_scope(): Scope {
+        return this.get_current_module().scopes[this.current_scope]
+    }
+    error(kind: ErrorKind, message: string, range: FloRange){
+        print_error(new FloError(kind, message, range), this.filename, this.content)
+        exit("")
+    }
+    check(module_ast: ModuleAST, name: string, content: string): Program {
         this.current_module++
+        this.filename = name
+        this.content = content
         let module = new Module()
         module.name = name
-        module.scope = new Scope()
-        this.current_scope = module.scope
+        this.current_scope = module.scopes.length
+        module.scopes << new Scope()
         this.program.modules << module
         for let i = 0; i < module_ast.classes.length; i++ {
             let checked_class = this.declare_class(module_ast.classes[i])
             checked_class.id = new ClassId(this.current_module, i)
             module.classes << checked_class
-            module.scope.classes.set(checked_class.name, checked_class.id)
+            module.scopes[this.current_scope].classes.set(checked_class.name, checked_class.id)
         }
         for i = 0; i < module_ast.type_aliases.length; i++  {
             let type_alias_node = module_ast.type_aliases[i]
             let ty = this.check_type(type_alias_node.parsed_type)
-            module.scope.type_aliases.set(type_alias_node.name.value, ty)
+            module.scopes[this.current_scope].type_aliases.set(type_alias_node.name.value, ty)
         }
         for i = 0; i < module_ast.functions.length; i++ {
             let checked_function = this.declare_function(module_ast.functions[i])
-            checked_function.id = new VarId(this.current_module, i)
+            checked_function.id = new VarId(VarIdKind.FNC, this.current_module, i)
             module.functions << checked_function
-            module.scope.functions.set(checked_function.name, checked_function.id)
+            module.scopes[this.current_scope].functions.set(checked_function.name, checked_function.id)
         }
         for i = 0; i < module_ast.enums.length; i++ {
             let checked_enum = this.declare_enum(module_ast.enums[i])
             checked_enum.id = new EnumId(this.current_module, i)
             module.enums << checked_enum
-            module.scope.enums.set(checked_enum.name, checked_enum.id)
+            module.scopes[this.current_scope].enums.set(checked_enum.name, checked_enum.id)
         }
-        // We New check bodies
+        // We Now check bodies
         for i = 0; i < module_ast.functions.length; i++ {
             module.functions[i].block = this.check_block(module_ast.functions[i].block)
         }
@@ -529,33 +603,32 @@ class TypeChecker {
                 let element = this.check_expression(array_node.elements[i])
                 if element.value_type == element_type
                     elements << element
-                // TODO: Emit type mismatch error (else)
+                else
+                    this.error(ErrorKind.TYPE, "Expected element type of '"+dump_type(element_type)+"' but got type '"+dump_type(element.value_type)+"'", array_node.elements[i].range)
             }
         }
         return new ArrayExpression(elements)
     }
     check_var_access(var_access_node: VarAccessExpressionNode): Expression {
         let name = var_access_node.name.value
-        if name == "true" {
-            return new BooleanExpression(1)
-        } else if name == "false"{
+        if name == "true" 
+            return new BooleanExpression(1) 
+        if name == "false" 
             return new BooleanExpression(0)
-        }
-        let resolved = this.current_scope.vars.get(name)
+        let current_scope = this.get_current_scope()
+        let resolved = current_scope.getVar(name)
         let var_ty = new Type(TypeKind.UNKNOWN)
-        if !resolved.has_value {
-            resolved = this.current_scope.functions.get(name)
-        } else {
-            var_ty = this.program.modules[resolved.value.module_id].vars[resolved.value.id].value_type
-        }
         if resolved.has_value {
-            let val = resolved.value
-            if var_ty.kind == TypeKind.UNKNOWN
-            var_ty = this.program.modules[val.module_id].functions[val.id].value_type
-            return new VarAccessExpression(val, var_ty)
+            let var_id = resolved.value
+            if var_id.kind == VarIdKind.FNC
+                var_ty = this.program.modules[var_id.module_id].functions[var_id.id].value_type
+            else
+                var_ty = this.program.modules[var_id.module_id].vars[var_id.id].value_type
+            return new VarAccessExpression(var_id, var_ty)
+        } else {
+            this.error(ErrorKind.NAME, "Undefined variable '" + name + "'", var_access_node.range)
         }
-        return new VarAccessExpression(new VarId(-1, -1), var_ty)
-        //TODO: Emit error when not found.(else)
+        return new VarAccessExpression(new VarId(0, -1, -1), var_ty)
     }
     check_assignment(left: Expression, right: Expression): BinaryExpression {
         return new BinaryExpression(left, BinaryOp.ASSIGN, right, right.value_type)
@@ -564,6 +637,7 @@ class TypeChecker {
         let left = this.check_expression(binary_node.lhs)
         let right = this.check_expression(binary_node.rhs)
         let op = binary_node.op
+            println(dump_type(left.value_type), dump_type(right.value_type))
         if is_numeric(left.value_type) and is_numeric(right.value_type){
             if op == BinaryOp.POW {
                 if is_int(left.value_type)
@@ -602,13 +676,8 @@ class TypeChecker {
         else if op == BinaryOp.ASSIGN {
             return this.check_assignment(left, right)
         }
+        this.error(ErrorKind.TYPE, "Illegal binary operation '"+dump_bin_op(op)+"' between types '"+dump_type(left.value_type)+"' and '"+dump_type(right.value_type)+"'", binary_node.range)
         return new BinaryExpression(left, op, right, new Type(TypeKind.UNKNOWN))
-    }
-    declare_var(name: string, value: Expression){
-        let var = new Var(value)
-        let id = new VarId(this.current_module, this.current_scope.vars.length)
-        var.var_id = id
-        this.current_scope.vars.set(name, id)
     }
     check_unary_expr(unary_node: UnaryExpressionNode): UnaryExpression {
         let op = unary_node.op
@@ -622,7 +691,7 @@ class TypeChecker {
             if is_bool(ty)
                 return new UnaryExpression(op, expression, ty)
         }
-        //TODO: Resolve type
+        this.error(ErrorKind.GEN, "Illegal unary operation case", unary_node.range)
         return new UnaryExpression(op, expression, new Type(TypeKind.UNKNOWN))
     }
     check_type_expr(type_expr_node: TypeExpressionNode): TypeExpression {
@@ -652,12 +721,15 @@ class TypeChecker {
                     let arg = this.check_expression(call_expr_node.args[i])
                     if arg.value_type == func_ty.arg_types[i]
                         args << arg
-                    // TODO: Emit error if argument types do not match.(else)
+                    else
+                        this.error(ErrorKind.TYPE, "Expected type '"+dump_type(func_ty.arg_types[i])+"' but got type '"+dump_type(arg.value_type)+"' as function call argument", call_expr_node.args[i].range)
                 }
+            } else {
+                this.error(ErrorKind.GEN, "Expected "+func_ty.arg_types.length+" arguments on function call but got "+call_expr_node.args.length, call_expr_node.range)
             }
-            //TODO: Emit Error if args length do not match. (else)
+        } else {
+            this.error(ErrorKind.TYPE, "Expected a function type for call but got '"+dump_type(func_ty)+"'", call_expr_node.callee.range)
         }
-        //TODO: Emit Type Error(else)
         return new CallExpression(called, args, func_ty.return_type)
     }
     check_expression(expr_node: ExpressionNode): Expression {
@@ -694,8 +766,27 @@ class TypeChecker {
     check_if_stamement(if_stmt_node: IfStatementNode): IfStatement {
         return new IfStatement()
     }
-    check_var_declaration(var_decl: VarDeclarationStatement): VarDeclaration {
-        return new VarDeclaration()
+    check_var_declaration(var_decl_node: VarDeclarationStatement): VarDeclaration {
+        let name = var_decl_node.var_name.value
+        let var_type = new Type(TypeKind.UNKNOWN)
+        if var_decl_node.var_type.has_value {
+            var_type = this.check_type(var_decl_node.var_type.value)
+        }
+        let value = this.check_expression(var_decl_node.value)
+        if var_type.kind != TypeKind.UNKNOWN and var_type != value.value_type {
+            this.error(ErrorKind.TYPE, "Expected type '"+dump_type(var_type)+"' but got type '"+dump_type(value.value_type)+"' on variable declaration", var_decl_node.range)
+        }
+        let var = new Var(value)
+        let current_module = this.get_current_module()
+        let current_scope = this.get_current_scope()
+        let id = new VarId(VarIdKind.VAR, this.current_module, current_module.vars.length)
+        var.var_id = id
+        if current_scope.vars.get(name).has_value {
+            this.error(ErrorKind.NAME, "Illegal re-declaration of already declared variable '"+name+"'", var_decl_node.var_name.range)
+        }
+        current_scope.vars.set(name, id)
+        current_module.vars << var
+        return new VarDeclaration(name, id, value)
     }
     check_for_statement(for_stmt_node: ForStatementNode): ForStatement {
         return new ForStatement()

@@ -126,6 +126,10 @@ enum ExpressionKind {
     INDEX
     CALL
 }
+enum VarIdKind {
+    FNC
+    VAR
+}
 enum BinaryOp {
     ADD
     SUB

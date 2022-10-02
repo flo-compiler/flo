@@ -71,8 +71,10 @@ fnc get_intrinsic(mod: LLVMModuleRef, name: string, params: LLVMTypeRef[]): Intr
 class CodeGen {
     modules: LLVMModuleRef[]
     module: LLVMModuleRef
+    global_var_scope: Map<string, LLVMValueRef>
     codegenProgram(program: Program): GeneratedModule{
         this.modules = []
+        this.global_var_scope = new Map<string, LLVMValueRef>()
         for let i = 0; i < program.modules.length; ++i {
             this.modules << this.codegenModule(program.modules[i])
         }
@@ -402,6 +404,14 @@ class CodeGen {
         }
         return val
     }
+    codegen_var_exp(builder: LLVMBuilderRef, var_exp: VarAccessExpression): LLVMValueRef {
+        let val = this.global_var_scope.get(this.create_var_key(var_exp.value_id))
+        let ty = this.codegen_type(var_exp.value_type)
+        if !val.has_value {
+            println("This should never happen; Value should always be defined!")
+        }
+        return LLVMBuildLoad2(builder, ty, val.value, "")
+    }
     codegen_expression(builder: LLVMBuilderRef, expression: Expression): LLVMValueRef {
         if expression.expr_kind == ExpressionKind.BOOL
             return this.codegen_bool(expression as BooleanExpression)
@@ -411,8 +421,8 @@ class CodeGen {
             return this.codegen_float(expression as FloatExpression)
         // if expression.expr_kind == ExpressionKind.STR
         //     return this.codegen_string(builder, expression as StringExpression)
-        // if expression.expr_kind == ExpressionKind.VAR 
-        //      return this.codegen_bin_exp(builder, expression as VarAccessExpression)
+        if expression.expr_kind == ExpressionKind.VAR 
+              return this.codegen_var_exp(builder, expression as VarAccessExpression)
         if expression.expr_kind == ExpressionKind.BIN 
             return this.codegen_bin_exp(builder, expression as BinaryExpression)
         if expression.expr_kind == ExpressionKind.UNARY
@@ -441,6 +451,18 @@ class CodeGen {
     // codegenWhileStmt(builder: LLVMBuilderRef, while_stmt: WhileStatement){
 
     // }
+    create_var_key(var_id: VarId): string{
+        return var_id.module_id + ";" + var_id.id
+    }
+    codegen_var_declaration(builder: LLVMBuilderRef, var_decl: VarDeclaration){
+        let ty = this.codegen_type(var_decl.expression.value_type)
+        let val = this.codegen_expression(builder, var_decl.expression)
+        let ptr = LLVMBuildAlloca(builder, ty, var_decl.name.to_cstring())
+        let var_id = var_decl.var_id
+        LLVMBuildStore(builder, val, ptr)
+
+        this.global_var_scope.set(this.create_var_key(var_id), ptr)
+    }
     codegen_statement(builder: LLVMBuilderRef, statement: Statement){
         // if statement.kind == StatementKind.IF
         //     this.codegen_if_stmt(builder, statement as IfStatement)
@@ -450,6 +472,8 @@ class CodeGen {
         //     this.codegen_while_stmt(builder, statement as WhileStatement)
         // if statement.kind == StatementKind.CONTINUE
         // if statement.kind == StatementKind.BREAK
+        if statement.kind == StatementKind.VAR
+            this.codegen_var_declaration(builder, statement as VarDeclaration)
         if statement.kind == StatementKind.RETURN
             this.codegen_return_stmt(builder, statement as ReturnStatement)
         if statement.kind == StatementKind.EXPRESSION
