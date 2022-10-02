@@ -130,6 +130,11 @@ enum VarIdKind {
     FNC
     VAR
 }
+enum AssignKind {
+    VAR
+    ARRAY
+    MEMBER
+}
 enum BinaryOp {
     ADD
     SUB

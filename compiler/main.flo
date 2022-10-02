@@ -36,7 +36,7 @@ fnc flag_value_or(args: string[], name: string, default: string): string {
             return args[idx]
         else {
             print_message_error(ErrorKind.GEN, "Missing filename after '-o' argument.")
-            exit("")
+            exit()
         }
     }
     return default

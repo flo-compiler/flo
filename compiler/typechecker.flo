@@ -202,6 +202,20 @@ class VarAccessExpression (Expression) {
         this.value_type = value_type
     }
 }
+class AssignmentExression(BinaryExpression){
+    assign_kind: AssignKind
+    constructor(assign_kind: AssignKind, expression: Expression) {
+        super(expression, BinaryOp.ASSIGN, expression, expression.value_type)// TODO: Need to change that
+        this.assign_kind = assign_kind
+    }
+}
+class VarAssignmentExpression (AssignmentExression) {
+    value_id: VarId
+    constructor(value_id: VarId, expression: Expression) {
+        super(AssignKind.VAR, expression)
+        this.value_id = value_id
+    }
+}
 class Block {
     statements: Statement[]
     constructor(){
@@ -463,12 +477,14 @@ class TypeChecker {
     current_scope: int
     filename: string
     content: string
+    constants: string[]
     constructor(){
         this.current_module = -1
         this.current_function = -1
         this.current_class = -1
         this.current_scope = -1
         this.program = new Program()
+        this.constants = ["true", "false"]
     }
     get_current_module(): Module {
         return this.program.modules[this.current_module]
@@ -478,7 +494,7 @@ class TypeChecker {
     }
     error(kind: ErrorKind, message: string, range: FloRange){
         print_error(new FloError(kind, message, range), this.filename, this.content)
-        exit("")
+        exit()
     }
     check(module_ast: ModuleAST, name: string, content: string): Program {
         this.current_module++
@@ -520,7 +536,11 @@ class TypeChecker {
     }
     declare_function(function_node: FunctionDeclarationNode): Function {
         let checked_function = new Function()
-        checked_function.name = function_node.name.value
+        let name = function_node.name.value
+        checked_function.name = name
+        if name in this.constants {
+            this.error(ErrorKind.NAME, "Illegal re-declaration of const '"+name+"'", function_node.name.range)
+        }
         let arg_types: Type[] = []
         checked_function.args = []
         for let i = 0; i < function_node.args.length; ++i {
@@ -596,7 +616,6 @@ class TypeChecker {
         //TODO: ARRAY is overloaded; Could be object or const so need to check which one it is.
         let elements: Expression[] = []
         if array_node.elements.length > 0 {
-
             elements << this.check_expression(array_node.elements[0])
             let element_type =  elements[0].value_type
             for let i = 1; i < array_node.elements; ++i {
@@ -630,14 +649,28 @@ class TypeChecker {
         }
         return new VarAccessExpression(new VarId(0, -1, -1), var_ty)
     }
-    check_assignment(left: Expression, right: Expression): BinaryExpression {
+    check_assignment(left: Expression, right: Expression, binary_node: BinaryExpressionNode): BinaryExpression {
+        if left.value_type != right.value_type {
+            this.error(ErrorKind.TYPE, "Illegal assignment of variable of type '"+dump_type(right.value_type)+"' to '"+dump_type(left.value_type)+"'", binary_node.range)
+        }
+        if left.expr_kind == ExpressionKind.VAR {
+            let var_access = left as VarAccessExpression
+            let var_name = (binary_node.lhs as VarAccessExpressionNode).name
+            let name = var_name.value
+            if name in this.constants {
+                this.error(ErrorKind.NAME, "Illegal re-declaration of const '"+name+"'", var_name.range)
+            }
+            return new VarAssignmentExpression(var_access.value_id, right)
+        }
         return new BinaryExpression(left, BinaryOp.ASSIGN, right, right.value_type)
     }
     check_bin_expr(binary_node: BinaryExpressionNode): BinaryExpression {
         let left = this.check_expression(binary_node.lhs)
         let right = this.check_expression(binary_node.rhs)
         let op = binary_node.op
-            println(dump_type(left.value_type), dump_type(right.value_type))
+        if op == BinaryOp.ASSIGN {
+            return this.check_assignment(left, right, binary_node)
+        }
         if is_numeric(left.value_type) and is_numeric(right.value_type){
             if op == BinaryOp.POW {
                 if is_int(left.value_type)
@@ -673,9 +706,6 @@ class TypeChecker {
                 return new BinaryExpression(left, op, right, left.value_type)
         } 
         //TODO: Handle Range, In and Object Arithmetic and bit Cases.
-        else if op == BinaryOp.ASSIGN {
-            return this.check_assignment(left, right)
-        }
         this.error(ErrorKind.TYPE, "Illegal binary operation '"+dump_bin_op(op)+"' between types '"+dump_type(left.value_type)+"' and '"+dump_type(right.value_type)+"'", binary_node.range)
         return new BinaryExpression(left, op, right, new Type(TypeKind.UNKNOWN))
     }
@@ -768,6 +798,9 @@ class TypeChecker {
     }
     check_var_declaration(var_decl_node: VarDeclarationStatement): VarDeclaration {
         let name = var_decl_node.var_name.value
+        if name in this.constants {
+            this.error(ErrorKind.NAME, "Illegal re-declaration of const '"+name+"'", var_decl_node.var_name.range)
+        }
         let var_type = new Type(TypeKind.UNKNOWN)
         if var_decl_node.var_type.has_value {
             var_type = this.check_type(var_decl_node.var_type.value)

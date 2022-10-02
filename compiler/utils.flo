@@ -76,7 +76,7 @@ class Map<T, U> {
         if (this.size <= this.length) this.resize()
 
         while !this.buckets[hash].is_empty {
-            if this.buckets[hash].key != key
+            if this.buckets[hash].key == key
                 break
             hash++
         } 
@@ -96,6 +96,16 @@ class Map<T, U> {
             if this.buckets[hash].key == key
                 result.set_value(this.buckets[hash].value)
         return result
+    }
+    get_keys(): Array<T> {
+        let keys: T[] = []
+        for let i = 0; i < this.size; ++i {
+            let current_bucket = this.buckets[i]
+            if !current_bucket.is_empty {
+                keys << current_bucket.key
+            }
+        }
+        return keys
     }
 }
 fnc merge_range(r1: FloRange, r2: FloRange): FloRange {
