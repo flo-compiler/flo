@@ -681,8 +681,8 @@ class TypeChecker {
         }
         return new BinaryExpression(left, BinaryOp.ASSIGN, right, right.value_type)
     }
-    check_bin_expr(binary_node: BinaryExpressionNode): BinaryExpression {
-        let left = this.check_expression(unknown_type, binary_node.lhs)
+    check_bin_expr(expected_type: Type, binary_node: BinaryExpressionNode): BinaryExpression {
+        let left = this.check_expression(expected_type, binary_node.lhs)
         let right = this.check_expression(left.value_type, binary_node.rhs)
         let op = binary_node.op
         if op == BinaryOp.ASSIGN {
@@ -808,7 +808,7 @@ class TypeChecker {
         if expr_node.expr_kind == ExpressionKind.VAR
             return this.check_var_access(expected_type, expr_node as VarAccessExpressionNode)
         if expr_node.expr_kind == ExpressionKind.BIN
-            return this.check_bin_expr(expr_node as BinaryExpressionNode)
+            return this.check_bin_expr(expected_type, expr_node as BinaryExpressionNode)
         if expr_node.expr_kind == ExpressionKind.UNARY
             return this.check_unary_expr(expr_node as UnaryExpressionNode)
         if expr_node.expr_kind == ExpressionKind.TYPEBOUND

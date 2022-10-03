@@ -212,75 +212,75 @@ class CodeGen {
         }
         if is_int(rty) {
             if op == BinaryOp.ADD { 
-                if LLVMIsConstant(rhs) and LLVMIsConstant(rhs) {
+                if LLVMIsConstant(lhs) and LLVMIsConstant(rhs) {
                     return LLVMConstAdd(lhs, rhs)
                 } else {
                     return LLVMBuildAdd(builder, lhs, rhs, "")
                 }
             } else if op == BinaryOp.SUB {
-                if LLVMIsConstant(rhs) and LLVMIsConstant(rhs) {
+                if LLVMIsConstant(lhs) and LLVMIsConstant(rhs) {
                     return LLVMConstSub(lhs, rhs)
                 } else {
                     return LLVMBuildSub(builder, lhs, rhs, "")
                 }
             } else if op == BinaryOp.MUL {
-                if LLVMIsConstant(rhs) and LLVMIsConstant(rhs) {
+                if LLVMIsConstant(lhs) and LLVMIsConstant(rhs) {
                     return LLVMConstMul(lhs, rhs)
                 } else {
                     return LLVMBuildMul(builder, lhs, rhs, "")
                 }
             } else if op == BinaryOp.DIV {
-                if LLVMIsConstant(rhs) and LLVMIsConstant(rhs) {
+                if LLVMIsConstant(lhs) and LLVMIsConstant(rhs) {
                     return LLVMConstSDiv(lhs, rhs)
                 } else {
                     return LLVMBuildSDiv(builder, lhs, rhs, "")
                 }
             } else if op == BinaryOp.MOD {
-                if LLVMIsConstant(rhs) and LLVMIsConstant(rhs) {
+                if LLVMIsConstant(lhs) and LLVMIsConstant(rhs) {
                     return LLVMConstSRem(lhs, rhs)
                 } else {
                     return LLVMBuildSRem(builder, lhs, rhs, "")
                 }
             } else if op >= BinaryOp.GT and op <= BinaryOp.LTE {
                 pred = op - BinaryOp.GT + 38
-                if LLVMIsConstant(rhs) and LLVMIsConstant(rhs) {
+                if LLVMIsConstant(lhs) and LLVMIsConstant(rhs) {
                     return LLVMConstICmp(pred, lhs, rhs)
                 } else {
                     return LLVMBuildICmp(builder, pred, lhs, rhs, "")
                 }
             } else if op >= BinaryOp.EEQ and op <= BinaryOp.NEQ {
                 pred = op - BinaryOp.EEQ + 32
-                if LLVMIsConstant(rhs) and LLVMIsConstant(rhs) {
+                if LLVMIsConstant(lhs) and LLVMIsConstant(rhs) {
                     return LLVMConstICmp(pred, lhs, rhs)
                 } else {
                     return LLVMBuildICmp(builder, pred, lhs, rhs, "")
                 }
             } else if op == BinaryOp.SL {
-                if LLVMIsConstant(rhs) and LLVMIsConstant(rhs) {
+                if LLVMIsConstant(lhs) and LLVMIsConstant(rhs) {
                     return LLVMConstShl(lhs, rhs)
                 } else {
                     return LLVMBuildShl(builder, lhs, rhs, "")
                 }
             } else if op == BinaryOp.SR {
-                if LLVMIsConstant(rhs) and LLVMIsConstant(rhs) {
+                if LLVMIsConstant(lhs) and LLVMIsConstant(rhs) {
                     return LLVMConstAShr(lhs, rhs)
                 } else {
                     return LLVMBuildAShr(builder, lhs, rhs, "")
                 }
             } else if op == BinaryOp.OR {
-                if LLVMIsConstant(rhs) and LLVMIsConstant(rhs) {
+                if LLVMIsConstant(lhs) and LLVMIsConstant(rhs) {
                     return LLVMConstOr(lhs, rhs)
                 } else {
                     return LLVMBuildOr(builder, lhs, rhs, "")
                 }
             } else if op == BinaryOp.AND {
-                if LLVMIsConstant(rhs) and LLVMIsConstant(rhs) {
+                if LLVMIsConstant(lhs) and LLVMIsConstant(rhs) {
                     return LLVMConstAnd(lhs, rhs)
                 } else {
                     return LLVMBuildAnd(builder, lhs, rhs, "")
                 }
             } else if op == BinaryOp.XOR {
-                if LLVMIsConstant(rhs) and LLVMIsConstant(rhs) {
+                if LLVMIsConstant(lhs) and LLVMIsConstant(rhs) {
                     return LLVMConstXor(lhs, rhs)
                 } else {
                     return LLVMBuildXor(builder, lhs, rhs, "")
@@ -288,38 +288,38 @@ class CodeGen {
             }
         } else if is_float(rty) {
             if op == BinaryOp.ADD { 
-                if LLVMIsConstant(rhs) and LLVMIsConstant(rhs) {
+                if LLVMIsConstant(lhs) and LLVMIsConstant(rhs) {
                     return LLVMConstFAdd(lhs, rhs)
                 } else {
                     return LLVMBuildFAdd(builder, lhs, rhs, "")
                 }
             } else if op == BinaryOp.SUB {
-                if LLVMIsConstant(rhs) and LLVMIsConstant(rhs) {
+                if LLVMIsConstant(lhs) and LLVMIsConstant(rhs) {
                     return LLVMConstFSub(lhs, rhs)
                 } else {
                     return LLVMBuildFSub(builder, lhs, rhs, "")
                 }
             } else if op == BinaryOp.MUL {
-                if LLVMIsConstant(rhs) and LLVMIsConstant(rhs) {
+                if LLVMIsConstant(lhs) and LLVMIsConstant(rhs) {
                     return LLVMConstFMul(lhs, rhs)
                 } else {
                     return LLVMBuildFMul(builder, lhs, rhs, "")
                 }
             } else if op == BinaryOp.DIV {
-                if LLVMIsConstant(rhs) and LLVMIsConstant(rhs) {
+                if LLVMIsConstant(lhs) and LLVMIsConstant(rhs) {
                     return LLVMConstFDiv(lhs, rhs)
                 } else {
                     return LLVMBuildFDiv(builder, lhs, rhs, "")
                 }
             } else if op == BinaryOp.MOD {
-                if LLVMIsConstant(rhs) and LLVMIsConstant(rhs) {
+                if LLVMIsConstant(lhs) and LLVMIsConstant(rhs) {
                     return LLVMConstFRem(lhs, rhs)
                 } else {
                     return LLVMBuildFRem(builder, lhs, rhs, "")
                 }
             } else if op >= BinaryOp.GT and op <= BinaryOp.LTE {
                 pred = op - BinaryOp.GT + 2
-                if LLVMIsConstant(rhs) and LLVMIsConstant(rhs) {
+                if LLVMIsConstant(lhs) and LLVMIsConstant(rhs) {
                     return LLVMConstFCmp(pred, lhs, rhs)
                 } else {
                     return LLVMBuildFCmp(builder, pred, lhs, rhs, "")
@@ -328,7 +328,7 @@ class CodeGen {
                 pred = 1
                 if op == BinaryOp.NEQ
                     pred = 6
-                if LLVMIsConstant(rhs) and LLVMIsConstant(rhs) {
+                if LLVMIsConstant(lhs) and LLVMIsConstant(rhs) {
                     return LLVMConstICmp(pred, lhs, rhs)
                 } else {
                     return LLVMBuildICmp(builder, pred, lhs, rhs, "")
