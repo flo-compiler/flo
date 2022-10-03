@@ -258,6 +258,8 @@ fnc LLVMGetAllocatedType(Alloca: LLVMValueRef): LLVMTypeRef
 fnc LLVMIsInBounds(GEP: LLVMValueRef): LLVMBool 
 fnc LLVMGetGEPSourceElementType(GEP: LLVMValueRef): LLVMTypeRef
 
+
+fnc LLVMAddIncoming(PhiNode: LLVMValueRef, IncomingValues: LLVMValueRef*, IncomingBlocks: LLVMBasicBlockRef*, Count: int)
 /* builder instructions */
 fnc LLVMCreateBuilderInContext(C: LLVMContextRef): LLVMBuilderRef 
 fnc LLVMCreateBuilder(): LLVMBuilderRef 

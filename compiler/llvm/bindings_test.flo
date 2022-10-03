@@ -3,27 +3,27 @@ import "../utils"
 import exit in "@flo/core"
 fnc strtol(nptr: i8*, end: i8*, base: int): i64
 fnc main(argc: int, argv: i8**) {
-    mod: LLVMModuleRef  = LLVMModuleCreateWithName("my_module")
+    let mod: LLVMModuleRef  = LLVMModuleCreateWithName("my_module")
 
-    param_types = [LLVMInt32Type(), LLVMInt32Type()]
-    ret_type: LLVMTypeRef  = LLVMFunctionType(LLVMInt32Type(), &param_types[0], 2, false)
-    sum: LLVMValueRef  = LLVMAddFunction(mod, "sum", ret_type)
+    let param_types = [LLVMInt32Type(), LLVMInt32Type()]
+    let ret_type: LLVMTypeRef  = LLVMFunctionType(LLVMInt32Type(), &param_types[0], 2, false)
+    let sum: LLVMValueRef  = LLVMAddFunction(mod, "sum", ret_type)
 
-    entry: LLVMBasicBlockRef  = LLVMAppendBasicBlock(sum, "entry")
+    let entry: LLVMBasicBlockRef  = LLVMAppendBasicBlock(sum, "entry")
 
-    builder: LLVMBuilderRef  = LLVMCreateBuilder()
+    let builder: LLVMBuilderRef  = LLVMCreateBuilder()
     LLVMPositionBuilderAtEnd(builder, entry)
-    tmp: LLVMValueRef  = LLVMBuildAdd(builder, LLVMGetParam(sum, 0), LLVMGetParam(sum, 1), "tmp")
+    let tmp: LLVMValueRef  = LLVMBuildAdd(builder, LLVMGetParam(sum, 0), LLVMGetParam(sum, 1), "tmp")
     LLVMBuildRet(builder, tmp)
 
-    zero: i8 = 0
+    let zero: i8 = 0
     
-    NULL = &zero
-    error_ = &zero
+    let NULL = &zero
+    let error_ = &zero
     LLVMVerifyModule(mod, /*LLVMAbortProcessAction*/ 0, &error_)
     LLVMDisposeMessage(error_)
 
-    engine: LLVMExecutionEngineRef = new i8[64] as LLVMExecutionEngineRef
+    let engine: LLVMExecutionEngineRef = new i8[64] as LLVMExecutionEngineRef
     LLVMLinkInMCJIT()
     FloLLVMInitializeNativeTarget()
     FloLLVMInitializeNativeAsmPrinter()
@@ -42,10 +42,10 @@ fnc main(argc: int, argv: i8**) {
         println("usage:", string_from_cstring(argv[0]), "x y")
         exit()
     }
-    x = strtol(argv[1], NULL, 10) 
-    y = strtol(argv[2], NULL, 10)
-    functionPtr = LLVMGetFunctionAddress(engine, "sum")
-    sum_fnc = functionPtr as (i64, i64) => i32
+    let x = strtol(argv[1], NULL, 10) 
+    let y = strtol(argv[2], NULL, 10)
+    let functionPtr = LLVMGetFunctionAddress(engine, "sum")
+    let sum_fnc = functionPtr as (i64, i64) => i32
     println(sum_fnc(x, y))
     LLVMPrintModuleToFile(mod, "sum.ll", &error_)
     // Write out bitcode to file

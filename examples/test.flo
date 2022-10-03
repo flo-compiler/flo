@@ -2,7 +2,12 @@
 fnc main(): int {
     let a: int = 121
     let b = 0.5
-    let c: float = null
+    let c: int = null
+    if c == null {
+        return 1
+    } else {
+        return -1
+    }
     a = a ^ b  + c as int
     return a
 }
