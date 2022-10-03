@@ -1,13 +1,8 @@
 
 fnc main(): int {
-    let a: int = 121
+    let a: int = 9
     let b = 0.5
     let c: int = null
-    if c == null {
-        return 1
-    } else {
-        return -1
-    }
-    a = a ^ b  + c as int
+    b = a ^ a
     return a
 }
