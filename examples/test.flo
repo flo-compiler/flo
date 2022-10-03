@@ -1,8 +1,12 @@
 
-fnc main(): int {
-    let a: int = 9
+fnc main(): float {
+    let a: int = 121
     let b = 0.5
     let c: int = null
-    b = a ^ a
-    return a
+    b = a ^ b
+    if b == null
+        b = b + 1
+    else
+        b = b + c
+    return b
 }

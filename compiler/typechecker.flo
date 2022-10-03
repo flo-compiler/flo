@@ -685,16 +685,20 @@ class TypeChecker {
         let left = this.check_expression(expected_type, binary_node.lhs)
         let right = this.check_expression(left.value_type, binary_node.rhs)
         let op = binary_node.op
-        if op == BinaryOp.ASSIGN {
+        if is_null(left) and !is_null(right)
+            left.value_type = right.value_type
+        if is_null(left) and is_null(right) and  op == BinaryOp.EEQ
+            return new BooleanExpression(1) as BinaryExpression
+        if is_null(left) and is_null(right) and  op == BinaryOp.NEQ
+            return new BooleanExpression(0) as BinaryExpression
+        if op == BinaryOp.ASSIGN 
             return this.check_assignment(left, right, binary_node)
-        }
         if is_numeric(left.value_type) and is_numeric(right.value_type){
             if op == BinaryOp.POW {
                 if is_int(left.value_type)
                     left = cast_exp_to_type(left, new Type(TypeKind.FLOAT)) // Might need to cast it to the biggest available
-                if is_int(right.value_type){
+                if is_int(right.value_type)
                     right = cast_exp_to_type(right, new Type(TypeKind.FLOAT)) // Might need to cast it to the biggest available
-                }
                 return new BinaryExpression(left, op, right, left.value_type)
             }
             if op >= BinaryOp.ADD and op <=  BinaryOp.LTE {
