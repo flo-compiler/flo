@@ -231,11 +231,14 @@ class Block {
     }
 }
 class IfStatement (Statement) {
-    pred: Expression
-    if_block: Block
-    else_block: Block
-    constructor(){
+    condition: Expression
+    block: Block
+    else_block: Optional<Block>
+    constructor(condition: Expression, block: Block, else_block: Optional<Block>){
         super(StatementKind.IF)
+        this.condition = condition
+        this.block = block
+        this.else_block = else_block
     }
 }
 class VarDeclaration (Statement) {
@@ -625,6 +628,7 @@ class TypeChecker {
     }
     check_array_expression(expected_type: Type, array_node: ArrayExpressionNode): ArrayExpression {
         //TODO: ARRAY is overloaded; Could be object or const so need to check which one it is.
+        //TODO: Check Element type of expected type
         let elements: Expression[] = []
         if array_node.elements.length > 0 {
             elements << this.check_expression(expected_type, array_node.elements[0])
@@ -819,7 +823,15 @@ class TypeChecker {
         return this.check_call_expr(expr_node as CallExpressionNode)
     }
     check_if_stamement(if_stmt_node: IfStatementNode): IfStatement {
-        return new IfStatement()
+       // TODO: Flow Check for returns/optionals.
+       let condition = this.check_expression(new BooleanType(), if_stmt_node.condition)
+        if !is_bool(condition.value_type)
+            this.error(ErrorKind.TYPE, "Expected type 'bool' for if condition but got '"+dump_type(condition.value_type)+"'", if_stmt_node.condition.range)
+        let block = this.check_block(if_stmt_node.block)
+        let else_block = new Optional<Block>()
+        if if_stmt_node.else_block.has_value
+            else_block.set_value(this.check_block(if_stmt_node.else_block.value))
+        return new IfStatement(condition, block, else_block)
     }
     check_var_declaration(var_decl_node: VarDeclarationStatement): VarDeclaration {
         let name = var_decl_node.var_name.value

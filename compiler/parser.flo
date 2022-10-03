@@ -179,9 +179,10 @@ class UnaryExpressionNode (ExpressionNode) {
 class IfStatementNode (StatementNode) {
     condition: ExpressionNode
     block: BlockNode
-    else_block: BlockNode
+    else_block: Optional<BlockNode>
     constructor(range: FloRange){
         super(StatementKind.IF, range)
+        this.else_block = new Optional<BlockNode>()
     }
 }
 class WhileStatementNode (StatementNode) {
@@ -696,7 +697,7 @@ class Parser {
         this.new_lines()
         if this.current_token.ttype == TokType.ELSE_KW {
             this.advance()
-            if_node.else_block = this.parse_block()
+            if_node.else_block.set_value(this.parse_block())
         }
         return if_node
     }

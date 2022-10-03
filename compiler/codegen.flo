@@ -68,10 +68,14 @@ fnc get_intrinsic(mod: LLVMModuleRef, name: string, params: LLVMTypeRef[]): Intr
     result.call = LLVMAddFunction(mod, name.to_cstring(), result.fnc_type)
     return result
 }
+fnc is_terminated(stmts: Statement[]): bool {
+    return stmts[stmts.length - 1].kind == StatementKind.RETURN
+}
 class CodeGen {
     modules: LLVMModuleRef[]
     module: LLVMModuleRef
     global_var_scope: Map<string, LLVMValueRef>
+    function: LLVMValueRef
     codegenProgram(program: Program): GeneratedModule{
         this.modules = []
         this.global_var_scope = new Map<string, LLVMValueRef>()
@@ -477,9 +481,27 @@ class CodeGen {
         //     return this.codegen_array_exp(builder, expression as ArrayExpression)
         return LLVMConstInt(LLVMInt32Type(), 0, false)
     }
-    // codegenIfStmt(builder: LLVMBuilderRef, if_statmt: IfStatement){
+    codegen_if_stmt(builder: LLVMBuilderRef, if_stmt: IfStatement){
+        let condition = this.codegen_expression(builder, if_stmt.condition)
+        let if_block = LLVMAppendBasicBlock(this.function, "then")
+        let else_block = LLVMAppendBasicBlock(this.function, "else")
+        let merge_block = LLVMAppendBasicBlock(this.function, "ifend")
+        LLVMBuildCondBr(builder, condition, if_block, else_block)
+        LLVMPositionBuilderAtEnd(builder, if_block)
+        this.codegen_block(builder, if_stmt.block)
+        if !is_terminated(if_stmt.block.statements)
+            LLVMBuildBr(builder, merge_block)
 
-    // }
+        LLVMPositionBuilderAtEnd(builder, else_block)
+        let else_terminated = false
+        if if_stmt.else_block.has_value {
+            this.codegen_block(builder, if_stmt.else_block.value)
+            else_terminated = is_terminated(if_stmt.else_block.value.statements)
+        }
+        if !else_terminated
+            LLVMBuildBr(builder, merge_block)
+        LLVMPositionBuilderAtEnd(builder, merge_block)
+    }
     // codegenForStmt(builder: LLVMBuilderRef, for_stmt: ForStatement){
 
     // }
@@ -498,8 +520,8 @@ class CodeGen {
         this.global_var_scope.set(this.create_var_key(var_id), ptr)
     }
     codegen_statement(builder: LLVMBuilderRef, statement: Statement){
-        // if statement.kind == StatementKind.IF
-        //     this.codegen_if_stmt(builder, statement as IfStatement)
+        if statement.kind == StatementKind.IF
+            this.codegen_if_stmt(builder, statement as IfStatement)
         // if statement.kind == StatementKind.FOR
         //     this.codegen_for_stmt(builder, statement as ForStatement)
         // if statement.kind == StatementKind.WHILE
@@ -520,9 +542,10 @@ class CodeGen {
     }
     codegen_function(func: Function){
         let llvm_fnc: LLVMValueRef = LLVMAddFunction(this.module, func.name.to_cstring(), this.codegen_type(func.value_type))
-        let entry_block: LLVMBasicBlockRef  = LLVMAppendBasicBlock(llvm_fnc, "")
+        let entry_block: LLVMBasicBlockRef  = LLVMAppendBasicBlock(llvm_fnc, "entry")
         let func_builder: LLVMBuilderRef = LLVMCreateBuilder()
         LLVMPositionBuilderAtEnd(func_builder, entry_block)
+        this.function = llvm_fnc
         this.codegen_block(func_builder, func.block)
     }
 }
