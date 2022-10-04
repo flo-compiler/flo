@@ -4,9 +4,9 @@ fnc main(): float {
     let b = 0.5
     let c: int = null
     b = a ^ b
-    if b == null
-        b = b + 1
-    else
-        b = b + c
+    // if a == null 
+    //     b = b + 1
+    // else
+    //     b = b + c
     return b
 }

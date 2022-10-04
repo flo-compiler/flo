@@ -282,9 +282,7 @@ class Lexer {
         }
         let range = this.get_range(length)
         let str_value = this.text.substring(range.start, length)
-        if is_float 
-            return new FloatToken(str_value as float, range)
-        return new IntToken(str_value as int, range)
+        return is_float ? new FloatToken(str_value as float, range) as Token : new IntToken(str_value as int, range)
     }
     identifier_token(): Token {
         let length = 1

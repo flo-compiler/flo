@@ -23,6 +23,8 @@ class Visitor:
 
     def visitIncrDecrNode(self, node): pass
 
+    def visitTernaryNode(self, node): pass
+
     def visitVarAccessNode(self, node): pass
 
     def visitStmtsNode(self, node): pass
@@ -141,6 +143,15 @@ class BreakNode(Node):
     def accept(self, visitor: Visitor):
         return visitor.visitBreakNode(self)
 
+class TernaryNode(Node):
+    def __init__(self, cond: Node, is_true: Node, is_false: Node, range: Range):
+        self.cond = cond
+        self.is_true = is_true
+        self.is_false = is_false
+        super().__init__(range)
+
+    def accept(self, visitor: Visitor):
+        return visitor.visitTernaryNode(self)
 
 class TypeNode(Node):
     def __init__(self, type, range: Range):

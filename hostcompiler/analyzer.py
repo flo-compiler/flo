@@ -311,6 +311,7 @@ class Analyzer(Visitor):
             NameError(node.var_name.range,
                       f"'{var_name}' is not defined").throw()
         return value
+    
 
     def visitStmtsNode(self, node: StmtsNode):
         self.current_block.append_block(Block.stmt())
@@ -402,6 +403,22 @@ class Analyzer(Visitor):
             self.current_block.append_block(Block.else_())
             self.visit(node.else_case)
             self.current_block.pop_block()
+
+    def visitTernaryNode(self, node: TernaryNode):
+        self.condition_check(node.cond)
+        node.is_true.expects = node.expects
+        is_true = self.visit(node.is_true)
+        node.is_false.expects = is_true
+        is_false = self.visit(node.is_false)
+        if is_true != is_false:
+            if isinstance(is_true, FloObject) and isinstance(is_false, FloObject):
+                var = VarAssignNode(None, node.is_false, None)
+                c = self.check_inheritance(is_true, is_false, var)
+                if c:
+                    node.is_false = var.value
+                    return c
+            TypeError(node.is_false.range, f"Expected type {is_true.str()} from first case but got type {is_false.str()}").throw()
+        return is_true
 
     def visitForNode(self, node: ForNode):
         self.current_block.append_block(Block.loop())
