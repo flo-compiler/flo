@@ -325,6 +325,12 @@ class Compiler(Visitor):
                         ifCodeGen(cases, else_case)
 
         ifCodeGen(node.cases.copy(), node.else_case)
+    
+    def visitTernaryNode(self, node: TernaryNode):
+        cond = self.visit(node.cond)
+        is_true = self.visit(node.is_true)
+        is_false = self.visit(node.is_false)
+        return is_true.new_with_val(self.builder.select(cond.value, is_true.value, is_false.value))
 
     def visitForNode(self, node: ForNode):
         for_entry_block = self.builder.append_basic_block(f"for.entry")

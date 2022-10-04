@@ -444,10 +444,22 @@ class Parser:
 
     def expr(self):
         return self.num_op(
-            self.bit_expr,
+            self.ternary_expr,
             ((TokType.KEYWORD, "as"), (TokType.KEYWORD, "is")),
             self.composite_type,
         )
+
+    def ternary_expr(self):
+        cond = self.bit_expr()
+        if self.current_tok.type != TokType.QUES:
+            return cond
+        self.advance()
+        true_expr = self.expr()
+        if self.current_tok.type != TokType.COL:
+            SyntaxError(self.current_tok.range, f"Expected ':' but").throw()
+        self.advance()
+        false_expr = self.expr()
+        return TernaryNode(cond, true_expr, false_expr, Range.merge(cond.range, false_expr.range))
 
     def bit_expr(self):
         return self.num_op(

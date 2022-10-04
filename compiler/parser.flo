@@ -166,6 +166,17 @@ class BinaryExpressionNode (ExpressionNode) {
         this.rhs = right
     }
 }
+class TernaryExpressionNode (ExpressionNode) {
+    cond: ExpressionNode
+    is_true: ExpressionNode
+    is_false: ExpressionNode
+    constructor(cond: ExpressionNode, is_true: ExpressionNode, is_false: ExpressionNode){
+        super(ExpressionKind.TERNARY, merge_range(cond.range, is_false.range))
+        this.cond = cond
+        this.is_true = is_true
+        this.is_false = is_false
+    }
+}
 class UnaryExpressionNode (ExpressionNode) {
     op: UnaryOp
     expression: ExpressionNode
@@ -659,7 +670,7 @@ class Parser {
         if this.current_token.ttype != TokType.DOT_DOT or !this.can_parse()
             return left
         this.advance()
-        return new BinaryExpressionNode(left, BinaryOp.RANGE, this.parse_bit_expression())
+        return new BinaryExpressionNode(left, BinaryOp.RANGE, this.parse_expression())
     }
     is_type_expr_op(): TypeExprOp{
         let token_type = this.current_token.ttype
@@ -679,8 +690,19 @@ class Parser {
         node.op = op
         return node
     }
+    /* TODO: Need to figure out the logic here */
+    parse_ternary_expression(): ExpressionNode {
+        let cond = this.parse_typed_expression()
+        if this.current_token.ttype != TokType.QUES or !this.can_parse()
+            return cond
+        this.advance()
+        let is_true = this.parse_expression()
+        this.eat(TokType.COL)
+        let is_false = this.parse_expression()
+        return new TernaryExpressionNode(cond, is_true, is_false)
+    }
     parse_expression(): ExpressionNode {
-        let left = this.parse_typed_expression()
+        let left = this.parse_ternary_expression()
         if this.current_token.ttype == TokType.IN_KW and this.can_parse()
             return new BinaryExpressionNode(left, BinaryOp.IN, this.parse_expression())
         if this.current_token.ttype != TokType.EQ or !this.can_parse()

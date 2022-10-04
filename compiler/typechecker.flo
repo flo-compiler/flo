@@ -293,14 +293,10 @@ fnc is_null(exp: Expression): bool {
     return exp.expr_kind == ExpressionKind.NULL
 }
 fnc cast_exp_to_type(exp: Expression, val_ty: Type): Expression {
-    if exp.value_type == val_ty
-        return exp
-    return new TypeExpression(exp, TypeExprOp.AS, val_ty)
+    return exp.value_type == val_ty ? exp : new TypeExpression(exp, TypeExprOp.AS, val_ty)
 }
 fnc max_type(t1: Type, t2: Type): Type {
-    if t1.kind > t2.kind
-        return t1
-    return t2
+    return t1.kind > t2.kind ? t1 : t2
 }
 fnc check_cast_lower_bits(p1: Expression*, p2: Expression*){
     let ty1 = p1[0].value_type
@@ -685,12 +681,13 @@ class TypeChecker {
         let left = this.check_expression(expected_type, binary_node.lhs)
         let right = this.check_expression(left.value_type, binary_node.rhs)
         let op = binary_node.op
-        if is_null(left) and !is_null(right)
+        if is_null(left) and !is_null(right) {
             left.value_type = right.value_type
-        if is_null(left) and is_null(right) and  op == BinaryOp.EEQ
-            return new BooleanExpression(1) as BinaryExpression
-        if is_null(left) and is_null(right) and  op == BinaryOp.NEQ
-            return new BooleanExpression(0) as BinaryExpression
+            /* Null check only goes 1 way */
+            let tmp = left
+            left = right
+            right = tmp
+        }
         if op == BinaryOp.ASSIGN 
             return this.check_assignment(left, right, binary_node)
         if is_numeric(left.value_type) and is_numeric(right.value_type){
@@ -826,11 +823,14 @@ class TypeChecker {
         /* if expr_node.expr_kind == ExpressionKind.CALL */
         return this.check_call_expr(expr_node as CallExpressionNode)
     }
+    force_into_boolean(cond_node: ExpressionNode): Expression {
+       let bool_type = new BooleanType()
+       let condition = this.check_expression(bool_type, cond_node)
+       return !is_bool(condition.value_type) ? cast_exp_to_type(condition, bool_type) : condition
+    }
     check_if_stamement(if_stmt_node: IfStatementNode): IfStatement {
+        let condition = this.force_into_boolean(if_stmt_node.condition)
        // TODO: Flow Check for returns/optionals.
-       let condition = this.check_expression(new BooleanType(), if_stmt_node.condition)
-        if !is_bool(condition.value_type)
-            this.error(ErrorKind.TYPE, "Expected type 'bool' for if condition but got '"+dump_type(condition.value_type)+"'", if_stmt_node.condition.range)
         let block = this.check_block(if_stmt_node.block)
         let else_block = new Optional<Block>()
         if if_stmt_node.else_block.has_value

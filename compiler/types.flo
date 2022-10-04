@@ -126,6 +126,7 @@ enum ExpressionKind {
     MEMBER
     INDEX
     CALL
+    TERNARY
 }
 enum VarIdKind {
     FNC

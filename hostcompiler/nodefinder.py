@@ -7,7 +7,7 @@ from typing import List
 from utils import get_ast_from_file
 from context import Context
 from flotypes import FloArray, FloGeneric, FloInlineFunc, FloObject, FloPointer
-from astree import ArrayAssignNode, ClassDeclarationNode, ConstDeclarationNode, EnumDeclarationNode, FncCallNode, FncDefNode, FncNode, ForEachNode, ForNode, GenericClassNode, IfNode, ImportNode, MethodDeclarationNode, NewMemNode, Node, NumOpNode, PropertyAssignNode, PropertyDeclarationNode, ReturnNode, StmtsNode, TypeAliasNode, TypeNode, VarAccessNode, VarAssignNode, Visitor, WhileNode
+from astree import ArrayAssignNode, ClassDeclarationNode, ConstDeclarationNode, EnumDeclarationNode, FncCallNode, FncDefNode, FncNode, ForEachNode, ForNode, GenericClassNode, IfNode, ImportNode, MethodDeclarationNode, NewMemNode, Node, NumOpNode, PropertyAssignNode, PropertyDeclarationNode, ReturnNode, StmtsNode, TernaryNode, TypeAliasNode, TypeNode, VarAccessNode, VarAssignNode, Visitor, WhileNode
 from errors import Range, NameError
 
 
@@ -194,6 +194,11 @@ class NodeFinder(Visitor):
             self.visit(case)
         if node.else_case:
             self.visit(node.else_case)
+
+    def visitTernaryNode(self, node: TernaryNode):
+        self.visit(node.cond)
+        self.visit(node.is_true)
+        self.visit(node.is_false)
 
     def visitEnumDeclarationNode(self, node: EnumDeclarationNode):
         enum_name = node.name.value

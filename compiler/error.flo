@@ -64,5 +64,4 @@ fnc print_errors(errors: FloError[], filename: string, content: string){
     for let i = 0; i < errors.length; i++ {
       print_error(errors[i], filename, content)
     }
-    if errors.length > 0 _exit(1)
 }
