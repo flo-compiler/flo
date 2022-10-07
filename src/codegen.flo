@@ -70,8 +70,11 @@ fnc get_intrinsic(mod: LLVMModuleRef, name: string, params: LLVMTypeRef[]): Intr
 fnc createLLVMBool(val: bool): LLVMValueRef{
     return LLVMConstInt(LLVMInt1Type(), val as int, false)
 }
-fnc is_terminated(stmts: Statement[]): bool {
-    return stmts[stmts.length - 1].kind == StatementKind.RETURN
+fnc is_terminated(block: Block): bool {
+    return block.returns or block.continues or block.breaks
+}
+fnc create_var_key(var_id: VarId): string{
+    return var_id.module_id + ";" + var_id.id
 }
 class CodeGen {
     modules: LLVMModuleRef[]
@@ -79,8 +82,12 @@ class CodeGen {
     global_var_scope: Map<string, LLVMValueRef>
     intrinsic_scope: Map<string, IntrinsicResult>
     function: LLVMValueRef
+    break_bb: LLVMBasicBlockRef
+    continue_bb: LLVMBasicBlockRef
     codegenProgram(program: Program): GeneratedModule{
         this.modules = []
+        this.continue_bb = "\0" as LLVMBasicBlockRef
+        this.break_bb = this.continue_bb
         this.global_var_scope = new Map<string, LLVMValueRef>()
         this.intrinsic_scope = new Map<string, IntrinsicResult>()
         for let i = 0; i < program.modules.length; ++i {
@@ -96,7 +103,6 @@ class CodeGen {
     }
     codegenModule(module: Module): LLVMModuleRef {
         this.module = LLVMModuleCreateWithName(module.name.to_cstring())
-        LLVMContextSetOpaquePointers(LLVMGetGlobalContext(), false)
         //let DBFloInfo = new DebugInfo(this.module, module.name)
         for let i = 0; i < module.functions.length; ++i {
             this.codegen_function(module.functions[i])
@@ -171,7 +177,7 @@ class CodeGen {
         let value = this.codegen_expression(builder, assign_exp.rhs)
         if assign_exp.assign_kind == AssignKind.VAR {
             let var_assign = assign_exp as VarAssignmentExpression
-            let ptr = this.global_var_scope.get(this.create_var_key(var_assign.value_id))
+            let ptr = this.global_var_scope.get(create_var_key(var_assign.value_id))
             if !ptr.has_value {
                 println("This should never happen! (codegen_assignment)")
                 exit()
@@ -211,16 +217,13 @@ class CodeGen {
         let is_const_expr = LLVMIsConstant(lhs) and LLVMIsConstant(rhs)
         if is_int(rty) {
             if op == BinaryOp.ADD {
-                if is_const_expr
-                    return  LLVMConstAdd(lhs, rhs)
+                if is_const_expr return LLVMConstAdd(lhs, rhs)
                 return LLVMBuildAdd(builder, lhs, rhs, "")
             } else if op == BinaryOp.SUB {
-                if is_const_expr 
-                    return LLVMConstSub(lhs, rhs) 
+                if is_const_expr return LLVMConstSub(lhs, rhs) 
                 return LLVMBuildSub(builder, lhs, rhs, "")
             } else if op == BinaryOp.MUL {
-                if is_const_expr 
-                    return LLVMConstMul(lhs, rhs) 
+                if is_const_expr return LLVMConstMul(lhs, rhs) 
                 return LLVMBuildMul(builder, lhs, rhs, "")
             } else if op == BinaryOp.DIV {
                 return LLVMBuildSDiv(builder, lhs, rhs, "")
@@ -228,33 +231,26 @@ class CodeGen {
                 return LLVMBuildSRem(builder, lhs, rhs, "")
             } else if op >= BinaryOp.GT and op <= BinaryOp.LTE {
                 pred = op - BinaryOp.GT + 38
-                if is_const_expr 
-                    return LLVMConstICmp(pred, lhs, rhs)
+                if is_const_expr return LLVMConstICmp(pred, lhs, rhs)
                 return LLVMBuildICmp(builder, pred, lhs, rhs, "")
             } else if op >= BinaryOp.EEQ and op <= BinaryOp.NEQ {
                 pred = op - BinaryOp.EEQ + 32
-                if is_const_expr 
-                    return LLVMConstICmp(pred, lhs, rhs)
+                if is_const_expr return LLVMConstICmp(pred, lhs, rhs)
                 return LLVMBuildICmp(builder, pred, lhs, rhs, "")
             } else if op == BinaryOp.SL {
-                if is_const_expr 
-                    return LLVMConstShl(lhs, rhs)
+                if is_const_expr return LLVMConstShl(lhs, rhs)
                 return LLVMBuildShl(builder, lhs, rhs, "")
             } else if op == BinaryOp.SR {
-                if is_const_expr 
-                    return LLVMConstAShr(lhs, rhs)
+                if is_const_expr return LLVMConstAShr(lhs, rhs)
                 return LLVMBuildAShr(builder, lhs, rhs, "")
             } else if op == BinaryOp.OR {
-                if is_const_expr 
-                    return LLVMConstOr(lhs, rhs)
+                if is_const_expr return LLVMConstOr(lhs, rhs)
                 return LLVMBuildOr(builder, lhs, rhs, "")
             } else if op == BinaryOp.AND {
-                if is_const_expr 
-                    return LLVMConstAnd(lhs, rhs)
+                if is_const_expr return LLVMConstAnd(lhs, rhs)
                 return LLVMBuildAnd(builder, lhs, rhs, "")
             } else if op == BinaryOp.XOR {
-                if is_const_expr 
-                    return LLVMConstXor(lhs, rhs)
+                if is_const_expr return LLVMConstXor(lhs, rhs)
                 return LLVMBuildXor(builder, lhs, rhs, "")
             }
         } else if is_float(rty) {
@@ -270,23 +266,19 @@ class CodeGen {
                 return LLVMBuildFRem(builder, lhs, rhs, "")
             } else if op >= BinaryOp.GT and op <= BinaryOp.LTE {
                 pred = op - BinaryOp.GT + LLVMRealPredicate.LLVMRealOGT
-                if is_const_expr 
-                    return LLVMConstFCmp(pred, lhs, rhs) 
+                if is_const_expr return LLVMConstFCmp(pred, lhs, rhs) 
                 return LLVMBuildFCmp(builder, pred, lhs, rhs, "")
             } else if op >= BinaryOp.EEQ and op <= BinaryOp.NEQ {
                 pred = op == BinaryOp.NEQ ? LLVMRealPredicate.LLVMRealONE : LLVMRealPredicate.LLVMRealOEQ
-                if is_const_expr 
-                    return LLVMConstFCmp(pred, lhs, rhs) 
+                if is_const_expr return LLVMConstFCmp(pred, lhs, rhs) 
                 return LLVMBuildFCmp(builder, pred, lhs, rhs, "")
             }
         } else if is_bool(rty) {
             if op == BinaryOp.AND {
-                 if is_const_expr 
-                    return LLVMConstAnd(lhs, rhs)
+                if is_const_expr return LLVMConstAnd(lhs, rhs)
                 return LLVMBuildAnd(builder, lhs, rhs, "")
             } else if op == BinaryOp.OR {
-                 if is_const_expr 
-                    return LLVMConstOr(lhs, rhs)
+                if is_const_expr return LLVMConstOr(lhs, rhs)
                 return LLVMBuildOr(builder, lhs, rhs, "")
             }
         }
@@ -300,42 +292,34 @@ class CodeGen {
         let is_const = LLVMIsConstant(val)
         if type_exp.ty_op == TypeExprOp.AS {
             if is_bool(bty) {
-                 if is_const 
-                        return createLLVMBool(LLVMIsNull(val)) 
-                    return LLVMBuildIsNull(builder, val, "")
+                if is_const return createLLVMBool(!LLVMIsNull(val)) 
+                return LLVMBuildIsNotNull(builder, val, "")
             }
             if is_int(exp.value_type) and is_float(bty) {
-                 if is_const 
-                        return LLVMConstSIToFP(val, ty) 
-                    return LLVMBuildSIToFP(builder, val, ty, "")
+                if is_const return LLVMConstSIToFP(val, ty) 
+                return LLVMBuildSIToFP(builder, val, ty, "")
             } else if is_float(exp.value_type) and is_int(bty) {
-                 if is_const 
-                        return LLVMConstFPToSI(val, ty) 
-                    return LLVMBuildFPToSI(builder, val, ty, "")
+                if is_const return LLVMConstFPToSI(val, ty) 
+                return LLVMBuildFPToSI(builder, val, ty, "")
             } else if is_int(exp.value_type) and is_int(bty){
                 if exp.value_type.kind > bty.kind {
-                     if is_const 
-                        return LLVMConstTrunc(val, ty) 
+                    if is_const return LLVMConstTrunc(val, ty) 
                     return LLVMBuildTrunc(builder, val, ty, "")
                 } else {
-                     if is_const 
-                        return LLVMConstZExt(val, ty) 
+                    if is_const return LLVMConstZExt(val, ty) 
                     return LLVMBuildTrunc(builder, val, ty,"")
                 }
             } else if is_float(exp.value_type) and is_float(bty){
                 if exp.value_type.kind > bty.kind {
-                     if is_const 
-                        return LLVMConstFPTrunc(val, ty) 
+                    if is_const return LLVMConstFPTrunc(val, ty) 
                     return LLVMBuildFPTrunc(builder, val, ty, "")
                 } else {
-                     if is_const 
-                        return LLVMConstFPExt(val, ty) 
+                    if is_const return LLVMConstFPExt(val, ty) 
                     return LLVMBuildFPExt(builder, val, ty,"")
                 }
             }
-             if is_const 
-                        return LLVMConstBitCast(val, ty) 
-                    return LLVMBuildBitCast(builder, val, ty, "")
+            if is_const return LLVMConstBitCast(val, ty) 
+            return LLVMBuildBitCast(builder, val, ty, "")
         } 
         return val
     }
@@ -349,23 +333,25 @@ class CodeGen {
         let val = this.codegen_expression(builder, exp)
         if op == UnaryOp.NEG {
             if is_int(exp.value_type){
-                return LLVMIsConstant(val) ? LLVMConstNeg(val) : LLVMBuildNeg(builder, val, "")
+                if LLVMIsConstant(val) return LLVMConstNeg(val)
+                return LLVMBuildNeg(builder, val, "")
             } else if is_float(exp.value_type){
                 return LLVMBuildFNeg(builder, val, "")
             }
         } 
         if op == UnaryOp.NOT {
-            return LLVMIsConstant(val) ? LLVMConstNot(val) : LLVMBuildNot(builder, val, "")
+            if LLVMIsConstant(val) return LLVMConstNot(val) 
+            return LLVMBuildNot(builder, val, "")
         }
         return val
     }
     codegen_var_exp(builder: LLVMBuilderRef, var_exp: VarAccessExpression): LLVMValueRef {
-        let val = this.global_var_scope.get(this.create_var_key(var_exp.value_id))
+        let val = this.global_var_scope.get(create_var_key(var_exp.value_id))
         if !val.has_value {
             println("This should never happen; (codegen_var_exp)")
             exit()
         }
-        return LLVMBuildLoad(builder, val.value, "")
+        return LLVMBuildLoad2(builder, LLVMGetAllocatedType(val.value), val.value, "")
     }
     codegen_null(null_exp: NullExpression): LLVMValueRef{
         return LLVMConstNull(this.codegen_type(null_exp.value_type))
@@ -406,34 +392,47 @@ class CodeGen {
     }
     codegen_if_stmt(builder: LLVMBuilderRef, if_stmt: IfStatement){
         let condition = this.codegen_expression(builder, if_stmt.condition)
-        let if_block = LLVMAppendBasicBlock(this.function, "then")
-        let else_block = LLVMAppendBasicBlock(this.function, "else")
-        let merge_block = LLVMAppendBasicBlock(this.function, "ifend")
-        LLVMBuildCondBr(builder, condition, if_block, else_block)
-        LLVMPositionBuilderAtEnd(builder, if_block)
+        let if_bb = LLVMAppendBasicBlock(this.function, "if.entry")
+        let else_bb = LLVMAppendBasicBlock(this.function, "else")
+        let merge_bb = LLVMAppendBasicBlock(this.function, "ifend")
+        LLVMBuildCondBr(builder, condition, if_bb, else_bb)
+        LLVMPositionBuilderAtEnd(builder, if_bb)
         this.codegen_block(builder, if_stmt.block)
-        if !is_terminated(if_stmt.block.statements)
-            LLVMBuildBr(builder, merge_block)
+        if !is_terminated(if_stmt.block)
+            LLVMBuildBr(builder, merge_bb)
 
-        LLVMPositionBuilderAtEnd(builder, else_block)
+        LLVMPositionBuilderAtEnd(builder, else_bb)
         let else_terminated = false
         if if_stmt.else_block.has_value {
             this.codegen_block(builder, if_stmt.else_block.value)
-            else_terminated = is_terminated(if_stmt.else_block.value.statements)
+            else_terminated = is_terminated(if_stmt.else_block.value)
         }
         if !else_terminated
-            LLVMBuildBr(builder, merge_block)
+            LLVMBuildBr(builder, merge_bb)
     
-        LLVMPositionBuilderAtEnd(builder, merge_block)
+        LLVMPositionBuilderAtEnd(builder, merge_bb)
     }
     // codegenForStmt(builder: LLVMBuilderRef, for_stmt: ForStatement){
 
     // }
-    // codegenWhileStmt(builder: LLVMBuilderRef, while_stmt: WhileStatement){
-
-    // }
-    create_var_key(var_id: VarId): string{
-        return var_id.module_id + ";" + var_id.id
+    codegen_while_stmt(builder: LLVMBuilderRef, while_stmt: WhileStatement){
+        let while_bb = LLVMAppendBasicBlock(this.function, "while.entry")
+        let while_end_bb = LLVMAppendBasicBlock(this.function, "while.end")
+        let prev_break_bb = this.break_bb
+        let prev_continue_bb = this.continue_bb
+        this.break_bb = while_end_bb
+        this.continue_bb = while_bb
+        let condition = this.codegen_expression(builder, while_stmt.condition)
+        LLVMBuildCondBr(builder, condition, while_bb, while_end_bb)
+        LLVMPositionBuilderAtEnd(builder, while_bb)
+        this.codegen_block(builder, while_stmt.block)
+        if !is_terminated(while_stmt.block) {
+            condition = this.codegen_expression(builder, while_stmt.condition)
+            LLVMBuildCondBr(builder, condition, while_bb, while_end_bb)
+        }
+        LLVMPositionBuilderAtEnd(builder, while_end_bb)
+        this.break_bb = prev_break_bb
+        this.continue_bb = prev_continue_bb
     }
     codegen_var_declaration(builder: LLVMBuilderRef, var_decl: VarDeclaration){
         let ty = this.codegen_type(var_decl.expression.value_type)
@@ -441,17 +440,19 @@ class CodeGen {
         let ptr = LLVMBuildAlloca(builder, ty, var_decl.name.to_cstring())
         let var_id = var_decl.var_id
         LLVMBuildStore(builder, val, ptr)
-        this.global_var_scope.set(this.create_var_key(var_id), ptr)
+        this.global_var_scope.set(create_var_key(var_id), ptr)
     }
     codegen_statement(builder: LLVMBuilderRef, statement: Statement){
         if statement.kind == StatementKind.IF
             this.codegen_if_stmt(builder, statement as IfStatement)
         // if statement.kind == StatementKind.FOR
         //     this.codegen_for_stmt(builder, statement as ForStatement)
-        // if statement.kind == StatementKind.WHILE
-        //     this.codegen_while_stmt(builder, statement as WhileStatement)
-        // if statement.kind == StatementKind.CONTINUE
-        // if statement.kind == StatementKind.BREAK
+        if statement.kind == StatementKind.WHILE
+            this.codegen_while_stmt(builder, statement as WhileStatement)
+        if statement.kind == StatementKind.CONTINUE
+            LLVMBuildBr(builder, this.continue_bb)
+        if statement.kind == StatementKind.BREAK
+            LLVMBuildBr(builder, this.break_bb)
         if statement.kind == StatementKind.VAR
             this.codegen_var_declaration(builder, statement as VarDeclaration)
         if statement.kind == StatementKind.RETURN

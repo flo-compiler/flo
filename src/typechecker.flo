@@ -226,8 +226,14 @@ class VarAssignmentExpression (AssignmentExression) {
 }
 class Block {
     statements: Statement[]
+    returns: bool /* Block contains a return */
+    continues: bool /* Block contains a continue */
+    breaks: bool /* Block contains a break */
     constructor(){
         this.statements = []
+        this.returns = false
+        this.continues = false
+        this.breaks = false
     }
 }
 class IfStatement (Statement) {
@@ -262,9 +268,11 @@ class ForStatement (Statement) {
     }
 }
 class WhileStatement (Statement) {
-    cond: Expression
+    condition: Expression
     block: Block
-    constructor(){
+    constructor(condition: Expression, block: Block){
+        this.condition = condition
+        this.block = block
         super(StatementKind.WHILE)
     }
 }
@@ -488,11 +496,13 @@ class TypeChecker {
     filename: string
     content: string
     constants: string[]
+    in_loop: bool
     constructor(){
         this.current_module = -1
         this.current_function = -1
         this.current_class = -1
         this.current_scope = -1
+        this.in_loop = false
         this.program = new Program()
         this.constants = ["true", "false", "null"]
     }
@@ -501,6 +511,9 @@ class TypeChecker {
     }
     get_current_scope(): Scope {
         return this.get_current_module().scopes[this.current_scope]
+    }
+    get_current_function(): Function {
+        return this.get_current_module().functions[this.current_function]
     }
     error(kind: ErrorKind, message: string, range: FloRange){
         print_error(new FloError(kind, message, range), this.filename, this.content)
@@ -540,6 +553,7 @@ class TypeChecker {
         }
         // We Now check bodies
         for i = 0; i < module_ast.functions.length; i++ {
+            this.current_function = i
             module.functions[i].block = this.check_block(module_ast.functions[i].block)
         }
         return this.program
@@ -683,6 +697,8 @@ class TypeChecker {
         let op = binary_node.op
         if op == BinaryOp.ASSIGN 
             return this.check_assignment(left, right, binary_node)
+        if left.value_type.kind == TypeKind.UNKNOWN and right.value_type.kind != TypeKind.UNKNOWN
+            left.value_type = right.value_type
         if is_numeric(left.value_type) and is_numeric(right.value_type){
             if op == BinaryOp.POW {
                 if is_int(left.value_type)
@@ -818,13 +834,13 @@ class TypeChecker {
         /* if expr_node.expr_kind == ExpressionKind.CALL */
         return this.check_call_expr(expr_node as CallExpressionNode)
     }
-    force_into_boolean(cond_node: ExpressionNode): Expression {
+    check_condition(cond_node: ExpressionNode): Expression {
        let bool_type = new BooleanType()
-       let condition = this.check_expression(bool_type, cond_node)
+       let condition = this.check_expression(unknown_type, cond_node)
        return !is_bool(condition.value_type) ? cast_exp_to_type(condition, bool_type) : condition
     }
     check_if_stamement(if_stmt_node: IfStatementNode): IfStatement {
-        let condition = this.force_into_boolean(if_stmt_node.condition)
+        let condition = this.check_condition(if_stmt_node.condition)
        // TODO: Flow Check for returns/optionals.
         let block = this.check_block(if_stmt_node.block)
         let else_block = new Optional<Block>()
@@ -866,23 +882,40 @@ class TypeChecker {
         return new ForStatement()
     }
     check_while_statment(while_stmt_node: WhileStatementNode): WhileStatement {
-        return new WhileStatement()
+        let condition = this.check_condition(while_stmt_node.condition)
+        let prev_in_loop = this.in_loop
+        this.in_loop = true
+        let block = this.check_block(while_stmt_node.block)
+        this.in_loop = prev_in_loop
+        return new WhileStatement(condition, block)
     }
-    check_can_break(): Statement {
-        //TODO: check if we are in a loop
+    check_can_break(stmt_node: StatementNode): Statement {
+        if !this.in_loop {
+            this.error(ErrorKind.GEN, "Illegal break outside of loop", stmt_node.range)
+        }
         return new Statement(StatementKind.BREAK)
     }
-    check_can_continue(): Statement {
-        //TODO: check if we are in a loop
+    check_can_continue(stmt_node: StatementNode): Statement {
+        if !this.in_loop {
+            this.error(ErrorKind.GEN, "Illegal continue outside of loop", stmt_node.range)
+        }
         return new Statement(StatementKind.CONTINUE)
     }
-    check_can_return(expr: Optional<ExpressionNode>): ReturnStatement {
-        //TODO: check if we are in a function.
-        //TODO: check if return type matches
-        let current_function_return_type = unknown_type
+    check_can_return(return_stmt: ReturnStatementNode): ReturnStatement {
+        let expr = return_stmt.value
+        let current_function_return_type = (this.get_current_function().value_type as FunctionType).return_type
         let rt_stmt = new ReturnStatement()
-        if expr.has_value 
-            rt_stmt.return_value.set_value(this.check_expression(current_function_return_type, expr.value))
+        if expr.has_value {
+            let rt_value = this.check_expression(current_function_return_type, expr.value)
+            if rt_value.value_type != current_function_return_type {
+                this.error(ErrorKind.TYPE, "Expected return type of "+dump_type(current_function_return_type)+ " but got return type of " + dump_type(rt_value.value_type), expr.value.range)
+            }
+            rt_stmt.return_value.set_value(rt_value)
+        } else {
+            if current_function_return_type.kind != TypeKind.VOID {
+                this.error(ErrorKind.TYPE, "function return type is not void", return_stmt.range)
+            }
+        }
         return rt_stmt
     }
     check_statement(stmt_node: StatementNode): Statement {
@@ -895,18 +928,40 @@ class TypeChecker {
         if stmt_node.kind == StatementKind.WHILE
             return this.check_while_statment(stmt_node as WhileStatementNode)
         if stmt_node.kind == StatementKind.CONTINUE
-            return this.check_can_continue()
+            return this.check_can_continue(stmt_node)
         if stmt_node.kind == StatementKind.BREAK
-            return this.check_can_break()
+            return this.check_can_break(stmt_node)
         if stmt_node.kind == StatementKind.RETURN
-            return this.check_can_return((stmt_node as ReturnStatementNode).value)
+            return this.check_can_return((stmt_node as ReturnStatementNode))
         return this.check_expression(unknown_type, stmt_node as ExpressionNode)
     }
     check_block(block_node: BlockNode): Block {
         let block = new Block()
         for let i = 0; i < block_node.statements.length; i++ {
             // TODO: check control flow and look for always return in the case of a function.
-            block.statements << this.check_statement(block_node.statements[i])
+            let stmt = this.check_statement(block_node.statements[i])
+            block.statements << stmt
+            if stmt.kind == StatementKind.RETURN {
+                block.returns = true
+                break
+            }
+            if stmt.kind == StatementKind.IF {
+                let if_stmt = stmt as IfStatement
+                if if_stmt.else_block.has_value {
+                    if if_stmt.block.returns and if_stmt.else_block.value.returns {
+                        block.returns = true
+                        break
+                    }
+                }
+            }
+            if stmt.kind == StatementKind.CONTINUE {
+                block.continues = true
+                break
+            }
+            if stmt.kind == StatementKind.BREAK {
+                block.breaks = true
+                break
+            }
         }
         return block
     }

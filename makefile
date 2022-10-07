@@ -1,8 +1,7 @@
 
-FC=hostcompiler/flo.py 
-FCFLAGS=--opt-level=3
+FC=hostcompiler/flo.py
 
-SHAREDFLAGS=-shared -dynamiclib
+FCFLAGS=--opt-level=3
 
 CXX=clang++
 

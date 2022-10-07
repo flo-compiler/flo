@@ -1017,7 +1017,7 @@ class FloObject(FloType):
                 return str_to_int(builder, self, type.bits)
             elif isinstance(type, FloFloat):
                 return str_to_float(builder, self, type.bits)
-        elif isinstance(type, FloObject):
+        if isinstance(type, FloObject):
             # if(self.referer.has_parent(type.referer)): (Possibly unsafe with check on this line)
             casted_mem = FloMem.bitcast(builder, self.mem, type.llvmtype)
             newObj = FloObject(type.referer)

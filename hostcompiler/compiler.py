@@ -362,7 +362,7 @@ class Compiler(Visitor):
         while_entry_block = self.builder.append_basic_block(
             f"while.entry")
         while_exit_block = self.builder.append_basic_block(
-            f"while.entry")
+            f"while.exit")
         save_labels(self.break_block, self.continue_block)
         self.break_block = while_exit_block
         self.continue_block = while_entry_block
