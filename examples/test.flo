@@ -1,12 +1,5 @@
-
 fnc main(): float {
-    let a: int = 121
-    let b = 0.5
-    let c: int = null
-    b = a ^ b
-    // if a == null 
-    //     b = b + 1
-    // else
-    //     b = b + c
-    return b
+    let x = 10
+    let y: int = null
+    return (x^2) ^ 0.5
 }

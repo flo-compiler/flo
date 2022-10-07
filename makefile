@@ -1,23 +1,30 @@
 
-CC=clang
-CFLAGS=-g `llvm-config --cflags`
-SHAREDFLAGS=-shared
-LD=clang++
-LDFLAGS=`llvm-config --cxxflags --ldflags --libs --system-libs`
+FC=hostcompiler/flo.py 
+FCFLAGS=--opt-level=3
+
+SHAREDFLAGS=-shared -dynamiclib
+
+CXX=clang++
+
+CXXFLAGS := -fno-rtti -O3 -g
+
+LLVM_BUILD_PATH = $$HOME/llvm-project/build
+
+LLVM_LIB_PATH:=$(LLVM_BUILD_PATH)/lib
+
+LLVM_BIN_PATH := $(LLVM_BUILD_PATH)/bin
+
+LLVM_CXXFLAGS=`$(LLVM_BIN_PATH)/llvm-config --cxxflags`
+
+LLVM_LDFLAGS=`$(LLVM_BIN_PATH)/llvm-config --ldflags --libs --system-libs`
 
 all: flo
 
-flo: libllvm.a flo.o
-	$(LD) flo.o libllvm.a $< $(LDFLAGS) -o $@
+flo: flo.o
+	$(CXX) $(LLVM_CXXFLAGS) $^ $(LLVM_LDFLAGS) -o $@ 
 
-flo.o: compiler/*.flo
-	hostcompiler/flo.py --opt-level=3 compiler/main.flo -o flo
+flo.o: src/*.flo
+	$(FC) $(FCFLAGS) src/main.flo -o flo
 
-flollvm.o: compiler/llvm/bindings/c-deps.c
-	$(CC) -c compiler/llvm/bindings/c-deps.c -o $@
-
-libllvm.a: flollvm.o
-	ar rc $@ flollvm.o
-	
 clean:
-	rm -f *.o flo *.a *.ll
+	rm -f *.o flo *.so *.ll

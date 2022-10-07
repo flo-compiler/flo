@@ -1,10 +1,3 @@
-import "types"
-import "analysis"
-import "executionEngine"
-import "target"
-import "debugInfo.flo"
-import "bitwriter"
-import "linker"
 /** Deallocate and destroy all ManagedStatic variables.
     @see llvm::llvm_shutdown
     @see ManagedStatic */
@@ -21,6 +14,8 @@ fnc LLVMDisposeMessage(Message: i8*)
  * LLVMContextDispose() or the context will leak memory.
  */
 fnc LLVMContextCreate(): LLVMContextRef
+fnc LLVMGetGlobalContext(): LLVMContextRef
+fnc LLVMContextSetOpaquePointers(C: LLVMContextRef, OpaquePointers: LLVMBool)
 fnc LLVMContextDispose(C: LLVMContextRef)
 
 fnc LLVMModuleCreateWithName(ModuleID: i8*): LLVMModuleRef 
@@ -119,6 +114,7 @@ fnc LLVMX86MMXType(): LLVMTypeRef
 fnc LLVMX86AMXType(): LLVMTypeRef 
 
 /* values */
+fnc LLVMDumpValue(Val: LLVMValueRef)
 fnc LLVMIsConstant(Val: LLVMValueRef): LLVMBool
 fnc LLVMConstNull(Ty: LLVMTypeRef): LLVMValueRef
 fnc LLVMIsNull(Val: LLVMValueRef ): LLVMBool
@@ -150,28 +146,16 @@ fnc LLVMSizeOf(Ty: LLVMTypeRef): LLVMValueRef
 fnc LLVMConstNeg(ConstantVal: LLVMValueRef ): LLVMValueRef 
 fnc LLVMConstNSWNeg(ConstantVal: LLVMValueRef ): LLVMValueRef 
 fnc LLVMConstNUWNeg(ConstantVal: LLVMValueRef ): LLVMValueRef 
-fnc LLVMConstFNeg(ConstantVal: LLVMValueRef ): LLVMValueRef 
 fnc LLVMConstNot(ConstantVal: LLVMValueRef ): LLVMValueRef 
 fnc LLVMConstAdd(LHSConstant: LLVMValueRef, RHSConstant: LLVMValueRef): LLVMValueRef 
 fnc LLVMConstNSWAdd(LHSConstant: LLVMValueRef, RHSConstant: LLVMValueRef): LLVMValueRef 
 fnc LLVMConstNUWAdd(LHSConstant: LLVMValueRef, RHSConstant: LLVMValueRef): LLVMValueRef 
-fnc LLVMConstFAdd(LHSConstant: LLVMValueRef, RHSConstant: LLVMValueRef): LLVMValueRef 
 fnc LLVMConstSub(LHSConstant: LLVMValueRef, RHSConstant: LLVMValueRef): LLVMValueRef 
 fnc LLVMConstNSWSub(LHSConstant: LLVMValueRef, RHSConstant: LLVMValueRef): LLVMValueRef 
 fnc LLVMConstNUWSub(LHSConstant: LLVMValueRef, RHSConstant: LLVMValueRef): LLVMValueRef 
-fnc LLVMConstFSub(LHSConstant: LLVMValueRef, RHSConstant: LLVMValueRef): LLVMValueRef 
 fnc LLVMConstMul(LHSConstant: LLVMValueRef, RHSConstant: LLVMValueRef): LLVMValueRef 
 fnc LLVMConstNSWMul(LHSConstant: LLVMValueRef, RHSConstant: LLVMValueRef): LLVMValueRef 
 fnc LLVMConstNUWMul(LHSConstant: LLVMValueRef, RHSConstant: LLVMValueRef): LLVMValueRef 
-fnc LLVMConstFMul(LHSConstant: LLVMValueRef, RHSConstant: LLVMValueRef): LLVMValueRef 
-fnc LLVMConstUDiv(LHSConstant: LLVMValueRef, RHSConstant: LLVMValueRef): LLVMValueRef 
-fnc LLVMConstExactUDiv(LHSConstant: LLVMValueRef, RHSConstant: LLVMValueRef): LLVMValueRef 
-fnc LLVMConstSDiv(LHSConstant: LLVMValueRef, RHSConstant: LLVMValueRef): LLVMValueRef 
-fnc LLVMConstExactSDiv(LHSConstant: LLVMValueRef, RHSConstant: LLVMValueRef): LLVMValueRef 
-fnc LLVMConstFDiv(LHSConstant: LLVMValueRef, RHSConstant: LLVMValueRef): LLVMValueRef 
-fnc LLVMConstURem(LHSConstant: LLVMValueRef, RHSConstant: LLVMValueRef): LLVMValueRef 
-fnc LLVMConstSRem(LHSConstant: LLVMValueRef, RHSConstant: LLVMValueRef): LLVMValueRef 
-fnc LLVMConstFRem(LHSConstant: LLVMValueRef, RHSConstant: LLVMValueRef): LLVMValueRef 
 fnc LLVMConstAnd(LHSConstant: LLVMValueRef, RHSConstant: LLVMValueRef): LLVMValueRef 
 fnc LLVMConstOr(LHSConstant: LLVMValueRef, RHSConstant: LLVMValueRef): LLVMValueRef 
 fnc LLVMConstXor(LHSConstant: LLVMValueRef, RHSConstant: LLVMValueRef): LLVMValueRef 
@@ -180,6 +164,7 @@ fnc LLVMConstFCmp(Predicate: LLVMRealPredicate, LHSConstant: LLVMValueRef, RHSCo
 fnc LLVMConstShl(LHSConstant: LLVMValueRef, RHSConstant: LLVMValueRef): LLVMValueRef 
 fnc LLVMConstLShr(LHSConstant: LLVMValueRef, RHSConstant: LLVMValueRef): LLVMValueRef 
 fnc LLVMConstAShr(LHSConstant: LLVMValueRef, RHSConstant: LLVMValueRef): LLVMValueRef 
+fnc LLVMConstGEP2(Ty: LLVMTypeRef, ConstantVal: LLVMValueRef, ConstantIndices: LLVMValueRef*, NumIndices: int): LLVMValueRef
 fnc LLVMConstInBoundsGEP2(Ty: LLVMTypeRef, ConstantVal: LLVMValueRef, ConstantIndices: LLVMValueRef*, NumIndices: int): LLVMValueRef
 fnc LLVMConstTrunc(ConstantVal: LLVMValueRef, ToType: LLVMTypeRef): LLVMValueRef 
 fnc LLVMConstSExt(ConstantVal: LLVMValueRef, ToType: LLVMTypeRef): LLVMValueRef 
@@ -204,8 +189,6 @@ fnc LLVMConstSelect(ConstantCondition: LLVMValueRef, ConstantIfTrue: LLVMValueRe
 fnc LLVMConstExtractElement(VectorConstant: LLVMValueRef, IndexConstant: LLVMValueRef): LLVMValueRef
 fnc LLVMConstInsertElement(VectorConstant: LLVMValueRef, ElementValueConstant: LLVMValueRef, IndexConstant: LLVMValueRef): LLVMValueRef 
 fnc LLVMConstShuffleVector(VectorAConstant: LLVMValueRef, VectorBConstant: LLVMValueRef, MaskConstant: LLVMValueRef): LLVMValueRef 
-fnc LLVMConstExtractValue(AggConstant: LLVMValueRef, IdxList: int*, NumIdx: int): LLVMValueRef 
-fnc LLVMConstInsertValue(AggConstant: LLVMValueRef, ElementValueConstant: LLVMValueRef, IdxList: int*, NumIdx: int): LLVMValueRef
 fnc LLVMBlockAddress(F: LLVMValueRef, BB: LLVMBasicBlockRef): LLVMValueRef 
 
 /* globals */
@@ -385,6 +368,7 @@ fnc LLVMBuildAlloca(B: LLVMBuilderRef, Ty: LLVMTypeRef, Name: i8*): LLVMValueRef
 fnc LLVMBuildArrayAlloca(B: LLVMBuilderRef, Ty: LLVMTypeRef, Val: LLVMValueRef, Name: i8*): LLVMValueRef
 fnc LLVMBuildFree(B: LLVMBuilderRef, PointerVal: LLVMValueRef): LLVMValueRef
 
+fnc LLVMBuildLoad(B: LLVMBuilderRef, PointerVal: LLVMValueRef, Name: i8*): LLVMValueRef
 fnc LLVMBuildLoad2(B: LLVMBuilderRef, Ty: LLVMTypeRef, PointerVal: LLVMValueRef, Name: i8*): LLVMValueRef
 fnc LLVMBuildStore(B: LLVMBuilderRef, Val: LLVMValueRef, Ptr: LLVMValueRef): LLVMValueRef
 fnc LLVMBuildGEP2(B: LLVMBuilderRef, Ty: LLVMTypeRef, Pointer: LLVMValueRef, Indices: LLVMValueRef *, NumIndices: int, Name: i8*): LLVMValueRef
