@@ -1,5 +1,12 @@
 fnc main(): float {
     let x = 10
     let y: int = null
-    return (x^2) ^ 0.5
+    if null != y {
+        return 1.0
+    }
+    while x > 0 {
+        x = x - 1
+        y = y + x
+    }
+    return y as float
 }
