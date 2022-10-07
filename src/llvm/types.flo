@@ -275,6 +275,39 @@ enum LLVMIntPredicate {
   LLVMIntSLT     /**< signed less than */
   LLVMIntSLE      /**< signed less or equal */
 }
+enum LLVMCodeGenOptLevel {
+    LLVMCodeGenLevelNone
+    LLVMCodeGenLevelLess
+    LLVMCodeGenLevelDefault
+    LLVMCodeGenLevelAggressive
+}
+enum LLVMRelocMode {
+    LLVMRelocDefault
+    LLVMRelocStatic
+    LLVMRelocPIC
+    LLVMRelocDynamicNoPic
+    LLVMRelocROPI
+    LLVMRelocRWPI
+    LLVMRelocROPI_RWPI
+}
+enum LLVMCodeModel{
+    LLVMCodeModelDefault
+    LLVMCodeModelJITDefault
+    LLVMCodeModelTiny
+    LLVMCodeModelSmall
+    LLVMCodeModelKernel
+    LLVMCodeModelMedium
+    LLVMCodeModelLarge
+}
+enum LLVMVerifierFailureAction {
+  LLVMAbortProcessAction /* verifier will print to stderr and abort() */
+  LLVMPrintMessageAction /* verifier will print to stderr and return 1 */
+  LLVMReturnStatusAction  /* verifier will just return 1 */
+}
+enum LLVMCodeGenFileType {
+    LLVMAssemblyFile
+    LLVMObjectFile
+}
 enum LLVMRealPredicate {
   LLVMRealPredicateFalse /**< Always false (always folded) */
   LLVMRealOEQ            /**< True if ordered and equal */
@@ -287,7 +320,7 @@ enum LLVMRealPredicate {
   LLVMRealUNO            /**< True if unordered: isnan(X) | isnan(Y) */
   LLVMRealUEQ            /**< True if unordered or equal */
   LLVMRealUGT            /**< True if unordered or greater than */
-  LLVMRealUGE            /**< True if unordered, greater than, or equal */
+  LLVMRealUGE            /**< True if unordered greater than, or equal */
   LLVMRealULT            /**< True if unordered or less than */
   LLVMRealULE            /**< True if unordered, less than, or equal */
   LLVMRealUNE            /**< True if unordered or not equal */

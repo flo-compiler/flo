@@ -1,36 +1,25 @@
-enum LLVMCodeGenOptLevel{
-    LLVMCodeGenLevelNone
-    LLVMCodeGenLevelLess
-    LLVMCodeGenLevelDefault
-    LLVMCodeGenLevelAggressive
-}
 
-enum LLVMRelocMode {
-    LLVMRelocDefault
-    LLVMRelocStatic
-    LLVMRelocPIC
-    LLVMRelocDynamicNoPic
-    LLVMRelocROPI
-    LLVMRelocRWPI
-    LLVMRelocROPI_RWPI
-}
+fnc  LLVMInitializeX86TargetInfo()
+fnc LLVMInitializeX86Target()
+fnc LLVMInitializeX86TargetMC()
 
-enum LLVMCodeModel {
-    LLVMCodeModelDefault
-    LLVMCodeModelJITDefault
-    LLVMCodeModelTiny
-    LLVMCodeModelSmall
-    LLVMCodeModelKernel
-    LLVMCodeModelMedium
-    LLVMCodeModelLarge
+fnc LLVMInitializeX86AsmPrinter()
+fnc LLVMInitializeX86AsmParser()
+
+fnc LLVMInitializeNativeTarget(): LLVMBool {
+  LLVMInitializeX86TargetInfo()
+  LLVMInitializeX86Target()
+  LLVMInitializeX86TargetMC()
+  return true
 }
-enum LLVMCodeGenFileType {
-    LLVMAssemblyFile
-    LLVMObjectFile
+fnc LLVMInitializeNativeAsmParser(): LLVMBool {
+  LLVMInitializeX86AsmParser()
+  return true
 }
-fnc FloLLVMInitializeNativeTarget(): LLVMBool
-fnc FloLLVMInitializeNativeAsmParser(): LLVMBool
-fnc FloLLVMInitializeNativeAsmPrinter(): LLVMBool
+fnc LLVMInitializeNativeAsmPrinter(): LLVMBool {
+  LLVMInitializeX86AsmPrinter()
+  return true
+}
 
 /*===-- Target ------------------------------------------------------------===*/
 /** Returns the first llvm::Target in the registered targets list. */

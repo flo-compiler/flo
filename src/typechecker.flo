@@ -681,13 +681,6 @@ class TypeChecker {
         let left = this.check_expression(expected_type, binary_node.lhs)
         let right = this.check_expression(left.value_type, binary_node.rhs)
         let op = binary_node.op
-        if is_null(left) and !is_null(right) {
-            left.value_type = right.value_type
-            /* Null check only goes 1 way */
-            let tmp = left
-            left = right
-            right = tmp
-        }
         if op == BinaryOp.ASSIGN 
             return this.check_assignment(left, right, binary_node)
         if is_numeric(left.value_type) and is_numeric(right.value_type){
@@ -699,7 +692,6 @@ class TypeChecker {
                 return new BinaryExpression(left, op, right, left.value_type)
             }
             if op >= BinaryOp.ADD and op <=  BinaryOp.LTE {
-                //TODO: Check and cast the smaller bit size to the bigger one.
                 check_cast_lower_bits(&left, &right)
                 let exp_type = left.value_type
                 if op >= BinaryOp.GT and op <= BinaryOp.LTE 
@@ -707,11 +699,7 @@ class TypeChecker {
                 
                 return new BinaryExpression(left, op, right, exp_type)
             }
-            if op >= BinaryOp.EEQ and op <= BinaryOp.NEQ {
-                return new BinaryExpression(left, op, right, new BooleanType())
-            }
             if op >= BinaryOp.SL and op <= BinaryOp.XOR {
-                //TODO: Cast the float to int.
                 if is_float(left.value_type)
                     left = cast_exp_to_type(left, new Type(TypeKind.INT)) // Might need to cast it to the biggest available
                 if is_float(right.value_type){
@@ -722,7 +710,9 @@ class TypeChecker {
         } else if is_bool(left.value_type) and is_bool(right.value_type){
             if op >= BinaryOp.OR and op <= BinaryOp.AND
                 return new BinaryExpression(left, op, right, left.value_type)
-        } 
+        }
+        if op >= BinaryOp.GT and op <= BinaryOp.NEQ
+            return new BinaryExpression(left, op, right, new BooleanType())
         //TODO: Handle Range, In and Object Arithmetic and bit Cases.
         this.error(ErrorKind.TYPE, "Illegal binary operation '"+dump_bin_op(op)+"' between types '"+dump_type(left.value_type)+"' and '"+dump_type(right.value_type)+"'", binary_node.range)
         return new BinaryExpression(left, op, right, unknown_type)
@@ -736,7 +726,7 @@ class TypeChecker {
                 return new UnaryExpression(op, expression, ty)
         }
         if op == UnaryOp.NOT {
-            if is_bool(ty)
+            if is_bool(ty) or is_numeric(ty)
                 return new UnaryExpression(op, expression, ty)
         }
         this.error(ErrorKind.GEN, "Illegal unary operation case", unary_node.range)
@@ -780,30 +770,35 @@ class TypeChecker {
         }
         return new CallExpression(called, args, func_ty.return_type)
     }
+    check_int_expression(expected_type: Type, int_node: IntExpressionNode): IntExpression{
+        let expr_value = new IntExpression(int_node.value.value)
+        if is_int(expected_type)
+            expr_value.value_type = expected_type
+        return expr_value
+    }
+    check_float_expression(expected_type: Type, float_node: FloatExpressionNode): FloatExpression {
+        let expr_value = new FloatExpression(float_node.value.value)
+        if is_float(expected_type)
+            expr_value.value_type = expected_type
+        return expr_value
+    }
+    check_char_expression(char_node: CharExpressionNode): IntExpression {
+        let expr_value = new IntExpression(char_node.value.value as int)
+        expr_value.value_type.kind = TypeKind.I8
+        return expr_value
+    }
+    check_string_expression(expected_type: Type, str_node: StringExpressionNode): StringExpression{
+        return new StringExpression(str_node.value.value)
+    }
     check_expression(expected_type: Type, expr_node: ExpressionNode): Expression {
-        let exp = new Expression(ExpressionKind.INT)
-        if expr_node.expr_kind == ExpressionKind.INT {
-            exp = new IntExpression((expr_node as IntExpressionNode).value.value)
-            if is_int(expected_type){
-                exp.value_type = expected_type
-            }
-            return exp
-        }
-        if expr_node.expr_kind == ExpressionKind.FLOAT {
-            exp = new FloatExpression((expr_node as FloatExpressionNode).value.value)
-            if is_float(expected_type){
-                exp.value_type = expected_type
-            }
-            return exp
-        }
-        if expr_node.expr_kind == ExpressionKind.CHAR {
-            let expr_value = new IntExpression((expr_node as CharExpressionNode).value.value as int)
-            expr_value.value_type.kind = TypeKind.I8
-            return expr_value
-        }
-        if expr_node.expr_kind == ExpressionKind.STR {
-            return new StringExpression((expr_node as StringExpressionNode).value.value)
-        }
+        if expr_node.expr_kind == ExpressionKind.INT 
+            return this.check_int_expression(expected_type, expr_node as IntExpressionNode)
+        if expr_node.expr_kind == ExpressionKind.FLOAT
+            return this.check_float_expression(expected_type, expr_node as FloatExpressionNode)
+        if expr_node.expr_kind == ExpressionKind.CHAR
+            return this.check_char_expression(expr_node as CharExpressionNode)
+        if expr_node.expr_kind == ExpressionKind.STR 
+            return this.check_string_expression(expected_type, expr_node as StringExpressionNode)
         if expr_node.expr_kind == ExpressionKind.ARRAY
             return this.check_array_expression(expected_type, expr_node as ArrayExpressionNode)
         if expr_node.expr_kind == ExpressionKind.VAR
@@ -839,7 +834,6 @@ class TypeChecker {
     }
     check_var_declaration(var_decl_node: VarDeclarationStatement): VarDeclaration {
         let name = var_decl_node.var_name.value
-        
         if name in this.constants
             this.error(ErrorKind.NAME, "Illegal re-declaration of const '"+name+"'", var_decl_node.var_name.range)
         
