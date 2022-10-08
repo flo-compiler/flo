@@ -211,17 +211,8 @@ class VarAccessExpression (Expression) {
     }
 }
 class AssignmentExression(BinaryExpression){
-    assign_kind: AssignKind
-    constructor(assign_kind: AssignKind, expression: Expression) {
-        super(expression, BinaryOp.ASSIGN, expression, expression.value_type)// TODO: Need to change that
-        this.assign_kind = assign_kind
-    }
-}
-class VarAssignmentExpression (AssignmentExression) {
-    value_id: VarId
-    constructor(value_id: VarId, expression: Expression) {
-        super(AssignKind.VAR, expression)
-        this.value_id = value_id
+    constructor(right: Expression, left: Expression) {
+        super(right, BinaryOp.ASSIGN, left, right.value_type)// TODO: Need to change that
     }
 }
 class Block {
@@ -259,12 +250,15 @@ class VarDeclaration (Statement) {
     }
 }
 class ForStatement (Statement) {
-    init: Expression
-    comp: Expression
-    incrdecr: Expression
+    initialization: Optional<Statement>
+    condition: Optional<Expression>
+    incr_decr: Optional<Expression>
     block: Block
     constructor(){
         super(StatementKind.FOR)
+        this.initialization = new Optional<Statement>()
+        this.condition = new Optional<Expression>()
+        this.incr_decr = new Optional<Expression>()
     }
 }
 class WhileStatement (Statement) {
@@ -283,8 +277,6 @@ class ReturnStatement (Statement) {
         this.return_value = new Optional<Expression>()
     }
 }
-
-
 fnc is_numeric(val_ty: Type): bool {
     return val_ty.kind >= TypeKind.I4 and val_ty.kind <= TypeKind.FLOAT
 }
@@ -320,6 +312,9 @@ fnc check_cast_lower_bits(p1: Expression*, p2: Expression*){
             p2[0] = cast_exp_to_type(p2[0], ty1)
         }
     }
+}
+fnc check_is_var(expr: Expression): bool{
+    return expr.expr_kind == ExpressionKind.VAR or expr.expr_kind == ExpressionKind.MEMBER or expr.expr_kind == ExpressionKind.INDEX 
 }
 fnc dump_type(ty: Type): string {
     if ty.kind == TypeKind.BOOL
@@ -391,43 +386,62 @@ fnc dump_bin_op(op: BinaryOp): string {
         return "="
     return ".."
 }
+fnc dump_unary_op(op: UnaryOp): string{
+    if op == UnaryOp.PREINCR
+        return "++(pre)"
+    if op == UnaryOp.PREDECR
+        return "--(pre)"
+    if op == UnaryOp.POSTINCR
+        return "(post)++"
+    if op == UnaryOp.POSTDECR
+        return "(post)--"
+    if op == UnaryOp.NEG
+        return "-"
+    if op == UnaryOp.NOT
+        return "!"
+    return "&"
+}
+class ScopeId {
+    module_id: int
+    id: int
+    constructor(module_id: int, id: int){
+        this.module_id = module_id
+        this.id = id
+    }
+}
 class Scope {
+    id: ScopeId
     vars: Map<string, VarId>
     classes: Map<string, ClassId>
     functions: Map<string, VarId>
     enums: Map<string, EnumId>
-    parent: Optional<Scope>
+    parent: Optional<ScopeId>
     type_aliases: Map<string, Type>
-    constructor(){
+    constructor(module_id: int, id: int){
+        this.id = new ScopeId(module_id, id)
         this.vars = new Map<string, VarId>()
         this.classes = new Map<string, ClassId>()
         this.functions = new Map<string, VarId>()
         this.enums = new Map<string, EnumId>()
         this.type_aliases = new Map<string, Type>()
-        this.parent = new Optional<Scope>() 
-    }
-    getVar(name: string): Optional<VarId> {
-        let current_scope = this
-        let value = this.vars.get(name)
-        while current_scope.parent.has_value and !value.has_value {
-            current_scope = current_scope.parent.value
-            value = current_scope.vars.get(name)
-            if !value.has_value
-                value = current_scope.functions.get(name)
-        }
-        return value
+        this.parent = new Optional<ScopeId>() 
     }
 }
-class FunctionArg {
+class FunctionArg(Expression) {
+    id: VarId
     name: string
     default: Optional<Expression>
+    constructor(){
+        super(ExpressionKind.VAR)
+    }
 }
 class Function (Value) {
     id: VarId
     name: string
     args: FunctionArg[]
     block: Block
-    scope: Scope
+    scope: ScopeId
+    is_external: bool
 }
 class Var (Value) {
     var_id: VarId
@@ -446,7 +460,7 @@ class Class {
     name: string
     fields: ClassField[]
     methods: Function[]
-    scope: Scope
+    scope: ScopeId
 }
 class EnumField {
     name: string
@@ -490,31 +504,56 @@ class Program {
 class TypeChecker {
     program: Program
     current_module: int
-    current_class: int
-    current_function: int
-    current_scope: int
+    current_class: ClassId
+    current_function: VarId
+    current_scope: ScopeId
     filename: string
     content: string
     constants: string[]
     in_loop: bool
     constructor(){
         this.current_module = -1
-        this.current_function = -1
-        this.current_class = -1
-        this.current_scope = -1
         this.in_loop = false
         this.program = new Program()
         this.constants = ["true", "false", "null"]
+    }
+    get_scope(scope_id: ScopeId): Scope {
+       return this.program.modules[scope_id.module_id].scopes[scope_id.id]
+    }
+    get_function(var_id: VarId): Function {
+        return this.program.modules[var_id.module_id].functions[var_id.id]
     }
     get_current_module(): Module {
         return this.program.modules[this.current_module]
     }
     get_current_scope(): Scope {
-        return this.get_current_module().scopes[this.current_scope]
+        return this.get_scope(this.current_scope)
     }
     get_current_function(): Function {
-        return this.get_current_module().functions[this.current_function]
+        return this.get_current_module().functions[this.current_function.id]
     }
+    create_scope(): Scope {
+        let module = this.get_current_module()
+        let scope = new Scope(this.current_module, module.scopes.length)
+        module.scopes << scope
+        return scope
+    }
+    get_var_from_current_scope(name: string): Optional<VarId> {
+        let current_scope = this.get_current_scope()
+        let value = current_scope.vars.get(name)
+        while current_scope.parent.has_value and !value.has_value {
+            current_scope = this.get_scope(current_scope.parent.value)
+            value = current_scope.vars.get(name)
+            if !value.has_value
+                value = current_scope.functions.get(name)
+        }
+        return value
+    }
+    create_child_scope_within_current_scope(): Scope {
+        let new_scope = this.create_scope()
+        new_scope.parent.set_value(this.current_scope)
+        return new_scope
+    } 
     error(kind: ErrorKind, message: string, range: FloRange){
         print_error(new FloError(kind, message, range), this.filename, this.content)
         exit()
@@ -525,63 +564,79 @@ class TypeChecker {
         this.content = content
         let module = new Module()
         module.name = name
-        this.current_scope = module.scopes.length
-        module.scopes << new Scope()
         this.program.modules << module
+        let module_scope = this.create_scope()
+        this.current_scope = module_scope.id
+        
         for let i = 0; i < module_ast.classes.length; i++ {
-            let checked_class = this.declare_class(module_ast.classes[i])
-            checked_class.id = new ClassId(this.current_module, i)
-            module.classes << checked_class
-            module.scopes[this.current_scope].classes.set(checked_class.name, checked_class.id)
+            this.declare_class_within_current_scope(module_ast.classes[i])
         }
         for i = 0; i < module_ast.type_aliases.length; i++  {
             let type_alias_node = module_ast.type_aliases[i]
             let ty = this.check_type(type_alias_node.parsed_type)
-            module.scopes[this.current_scope].type_aliases.set(type_alias_node.name.value, ty)
+            module_scope.type_aliases.set(type_alias_node.name.value, ty)
         }
         for i = 0; i < module_ast.functions.length; i++ {
-            let checked_function = this.declare_function(module_ast.functions[i])
-            checked_function.id = new VarId(VarIdKind.FNC, this.current_module, i)
-            module.functions << checked_function
-            module.scopes[this.current_scope].functions.set(checked_function.name, checked_function.id)
+            this.declare_function_within_current_scope(module_ast.functions[i])
         }
         for i = 0; i < module_ast.enums.length; i++ {
-            let checked_enum = this.declare_enum(module_ast.enums[i])
-            checked_enum.id = new EnumId(this.current_module, i)
-            module.enums << checked_enum
-            module.scopes[this.current_scope].enums.set(checked_enum.name, checked_enum.id)
+            this.declare_enum_within_current_scope(module_ast.enums[i])
         }
         // We Now check bodies
         for i = 0; i < module_ast.functions.length; i++ {
-            this.current_function = i
-            module.functions[i].block = this.check_block(module_ast.functions[i].block)
+           this.check_function_body(module.functions[i], module_ast.functions[i])
         }
         return this.program
     }
-    declare_function(function_node: FunctionDeclarationNode): Function {
-        let checked_function = new Function()
+    declare_var_within_current_scope(name: string, value: Expression): Var {
+        let var = new Var(value)
+        let current_module = this.get_current_module()
+        let current_scope = this.get_current_scope()
+        let id = new VarId(VarIdKind.VAR, this.current_module, current_module.vars.length)
+        var.var_id = id
+        current_module.vars << var
+        current_scope.vars.set(name, id)
+        return var
+    }
+    declare_function_within_current_scope(function_node: FunctionDeclarationNode) {
+        let declared_function = new Function()
+        declared_function.is_external = function_node.is_external
         let name = function_node.name.value
-        checked_function.name = name
+        declared_function.name = name
         if name in this.constants {
             this.error(ErrorKind.NAME, "Illegal re-declaration of const '"+name+"'", function_node.name.range)
         }
         let arg_types: Type[] = []
-        checked_function.args = []
+        let fnc_scope = this.create_child_scope_within_current_scope()
+        this.current_scope = fnc_scope.id 
+        declared_function.args = []
         for let i = 0; i < function_node.args.length; ++i {
             let arg = function_node.args[i]
             let fnc_arg = new FunctionArg()
             fnc_arg.name = arg.name.value
             fnc_arg.default = new Optional<Expression>()
+            let arg_type = unknown_type
+            if arg.parsed_type.has_value
+                arg_type = this.check_type(arg.parsed_type.value)
             if arg.default.has_value
-                fnc_arg.default.set_value(this.check_expression(unknown_type, arg.default.value))
-            checked_function.args << fnc_arg
-            arg_types << this.check_type(arg.parsed_type)
+                fnc_arg.default.set_value(this.check_expression(arg_type, arg.default.value))
+                if !arg.parsed_type.has_value
+                    arg_type = fnc_arg.default.value.value_type
+            declared_function.args << fnc_arg
+            fnc_arg.value_type = arg_type
+            let var = this.declare_var_within_current_scope(fnc_arg.name, fnc_arg)
+            fnc_arg.id = var.var_id
+            arg_types << arg_type
         }
         let ret_type = this.check_type(function_node.return_type)
-        checked_function.value_type = new FunctionType(arg_types, ret_type)
-        return checked_function
+        declared_function.value_type = new FunctionType(arg_types, ret_type)
+        declared_function.id = new VarId(VarIdKind.FNC, this.current_module, this.get_current_module().functions.length)
+        this.current_scope = fnc_scope.parent.value
+        declared_function.scope = fnc_scope.id
+        this.get_current_module().functions << declared_function
+        this.get_current_scope().functions.set(declared_function.name, declared_function.id)
     }
-    declare_class(class_decl_node: ClassDeclarationNode): Class{
+    declare_class_within_current_scope(class_decl_node: ClassDeclarationNode) {
         let declared_class = new Class()
         declared_class.fields = []
         declared_class.methods = []
@@ -597,18 +652,32 @@ class TypeChecker {
             declared_class.fields << field
         }
         for i = 0; i < class_decl_node.methods.length; ++i {
-            declared_class.methods << this.declare_function(class_decl_node.methods[i])
+            this.declare_function_within_current_scope(class_decl_node.methods[i])
         }
-        return declared_class
+        declared_class.id = new ClassId(this.current_module, this.get_current_module().classes.length)
+        this.get_current_module().classes << declared_class
+        this.get_current_scope().classes.set(declared_class.name, declared_class.id)
     }
-    declare_enum(enum_node: EnumNode): Enum{
+    declare_enum_within_current_scope(enum_node: EnumNode){
         let declared_enum = new Enum()
         declared_enum.name = enum_node.name.value
         for let i = 0; i < enum_node.fields.length; ++i {
             let enum_node_f = enum_node.fields[i]
             declared_enum.fields << new EnumField(enum_node_f.name.value)
         }
-        return declared_enum
+        declared_enum.id = new EnumId(this.current_module, this.get_current_module().enums.length)
+        this.get_current_module().enums << declared_enum
+        this.get_current_scope().enums.set(declared_enum.name, declared_enum.id)
+    }
+    check_function_body(func: Function, func_node: FunctionDeclarationNode) {
+        if func.is_external{ return }
+        this.current_function = func.id
+        this.current_scope = func.scope
+        func.block = this.check_block(func_node.block)
+        if !func.block.returns {
+            this.error(ErrorKind.GEN, "Function missing ending return statement", func_node.return_type.range)
+        }
+        this.current_scope = this.get_scope(func.scope).parent.value
     }
     check_type(type_node: TypeNode): Type {
         if type_node.kind == TypeKind.BOOL
@@ -662,7 +731,7 @@ class TypeChecker {
         if name == "null"
             return new NullExpression(expected_type)
         let current_scope = this.get_current_scope()
-        let resolved = current_scope.getVar(name)
+        let resolved = this.get_var_from_current_scope(name)
         let var_ty = unknown_type
         if resolved.has_value {
             let var_id = resolved.value
@@ -677,17 +746,16 @@ class TypeChecker {
         return new VarAccessExpression(new VarId(0, -1, -1), var_ty)
     }
     check_assignment(left: Expression, right: Expression, binary_node: BinaryExpressionNode): BinaryExpression {
-        if left.is_constant {
+        if !check_is_var(left) {
             this.error(ErrorKind.TYPE, "Cannot assign a value to a constant", binary_node.range)
         }
         if left.value_type != right.value_type {
             this.error(ErrorKind.TYPE, "Illegal assignment of variable of type '"+dump_type(right.value_type)+"' to '"+dump_type(left.value_type)+"'", binary_node.range)
         }
         if left.expr_kind == ExpressionKind.VAR {
-            let var_access = left as VarAccessExpression
             let var_name = (binary_node.lhs as VarAccessExpressionNode).name
             let name = var_name.value
-            return new VarAssignmentExpression(var_access.value_id, right)
+            return new AssignmentExression(left, right)
         }
         return new BinaryExpression(left, BinaryOp.ASSIGN, right, right.value_type)
     }
@@ -745,7 +813,15 @@ class TypeChecker {
             if is_bool(ty) or is_numeric(ty)
                 return new UnaryExpression(op, expression, ty)
         }
-        this.error(ErrorKind.GEN, "Illegal unary operation case", unary_node.range)
+        if op >= UnaryOp.PREINCR and op <= UnaryOp.POSTDECR {
+            if is_numeric(ty) {
+                if !check_is_var(expression) {
+                    this.error(ErrorKind.GEN, "Illegal unary operation " + dump_unary_op(op) + " on constant", unary_node.expression.range)
+                }
+                return new UnaryExpression(op, expression, ty)
+            }
+        }
+        this.error(ErrorKind.TYPE, "Illegal unary operation " + dump_unary_op(op) + " on type " + "'" + dump_type(ty) +"'", unary_node.range)
         return new UnaryExpression(op, expression, unknown_type)
     }
     check_type_expr(type_expr_node: TypeExpressionNode): TypeExpression {
@@ -763,26 +839,42 @@ class TypeChecker {
     check_index_expr(index_expr_node: ExpressionIndexNode): IndexExpression {
         return new IndexExpression()
     }
+    fill_in_call_args(called: Expression, args: ExpressionNode[]): Expression[]{
+        let func = "\0" as Function
+        let called_args: Expression[] = []
+        if called.expr_kind == ExpressionKind.VAR
+            func = this.get_function((called as VarAccessExpression).value_id)
+        else {
+            println("Case not handled; fill_in_call_args")
+            exit()
+        }
+
+        for let i = 0; i < args.length; i++ {
+            called_args << this.check_expression(func.args[i].value_type, args[i])
+        }
+        if func.args.length > args.length {
+            for i = args.length; i < func.args.length; ++i {
+                let arg = func.args[i]
+                if arg.default.has_value
+                    called_args << arg.default.value
+                else
+                    this.error(ErrorKind.GEN, "Function argument has no default value for replacement", args[i].range)
+            }
+        }
+        return called_args
+    }
     check_call_expr(call_expr_node: CallExpressionNode): CallExpression {
         let called = this.check_expression(unknown_type, call_expr_node.callee)
         //TODO: Check for generic functions.
         let func_ty = called.value_type as FunctionType
-        let args: Expression[] = []
-        if func_ty.kind == TypeKind.FNC {
-            //TODO: fill default args.
-            if func_ty.arg_types.length == call_expr_node.args.length {
-                for let i = 0; i < call_expr_node.args.length; ++i {
-                    let arg = this.check_expression(func_ty.arg_types[i], call_expr_node.args[i])
-                    if arg.value_type == func_ty.arg_types[i]
-                        args << arg
-                    else
-                        this.error(ErrorKind.TYPE, "Expected type '"+dump_type(func_ty.arg_types[i])+"' but got type '"+dump_type(arg.value_type)+"' as function call argument", call_expr_node.args[i].range)
-                }
-            } else {
-                this.error(ErrorKind.GEN, "Expected "+func_ty.arg_types.length+" arguments on function call but got "+call_expr_node.args.length, call_expr_node.range)
-            }
-        } else {
+        if func_ty.kind != TypeKind.FNC
             this.error(ErrorKind.TYPE, "Expected a function type for call but got '"+dump_type(func_ty)+"'", call_expr_node.callee.range)
+        let args = this.fill_in_call_args(called, call_expr_node.args)
+        if func_ty.arg_types.length != args.length
+             this.error(ErrorKind.GEN, "Expected "+func_ty.arg_types.length+" arguments on function call but got "+call_expr_node.args.length, call_expr_node.range)
+        for let i = 0; i < args.length; ++i {
+            if args[i].value_type != func_ty.arg_types[i]
+                this.error(ErrorKind.TYPE, "Expected type '"+dump_type(func_ty.arg_types[i])+"' but got type '"+dump_type(args[i].value_type)+"' as function call argument", call_expr_node.args[i].range)
         }
         return new CallExpression(called, args, func_ty.return_type)
     }
@@ -841,7 +933,7 @@ class TypeChecker {
     }
     check_if_stamement(if_stmt_node: IfStatementNode): IfStatement {
         let condition = this.check_condition(if_stmt_node.condition)
-       // TODO: Flow Check for returns/optionals.
+       // TODO: optionals.
         let block = this.check_block(if_stmt_node.block)
         let else_block = new Optional<Block>()
         if if_stmt_node.else_block.has_value
@@ -854,6 +946,7 @@ class TypeChecker {
             this.error(ErrorKind.NAME, "Illegal re-declaration of const '"+name+"'", var_decl_node.var_name.range)
         
         let var_type = unknown_type
+        let current_scope = this.get_current_scope()
         
         if var_decl_node.var_type.has_value
             var_type = this.check_type(var_decl_node.var_type.value)
@@ -865,21 +958,28 @@ class TypeChecker {
         if var_type.kind != TypeKind.UNKNOWN and var_type != value.value_type
             this.error(ErrorKind.TYPE, "Expected type '"+dump_type(var_type)+"' but got type '"+dump_type(value.value_type)+"' on variable declaration", var_decl_node.range)
         
-        let var = new Var(value)
-        let current_module = this.get_current_module()
-        let current_scope = this.get_current_scope()
-        let id = new VarId(VarIdKind.VAR, this.current_module, current_module.vars.length)
-        var.var_id = id
-        
         if current_scope.vars.get(name).has_value
             this.error(ErrorKind.NAME, "Illegal re-declaration of already declared variable '"+name+"'", var_decl_node.var_name.range)
         
-        current_scope.vars.set(name, id)
-        current_module.vars << var
-        return new VarDeclaration(name, id, value)
+        let var = this.declare_var_within_current_scope(name, value)
+        
+        return new VarDeclaration(name, var.var_id, value)
     }
     check_for_statement(for_stmt_node: ForStatementNode): ForStatement {
-        return new ForStatement()
+        let for_stmt = new ForStatement()
+        let prev_in_loop = this.in_loop
+        if for_stmt_node.for_kind == ForKind.DEF {
+            if for_stmt_node.initialization.has_value
+                for_stmt.initialization.set_value(this.check_statement(for_stmt_node.initialization.value))
+            if for_stmt_node.condition.has_value
+                for_stmt.condition.set_value(this.check_condition(for_stmt_node.condition.value))
+            if for_stmt_node.incr_decr.has_value
+                for_stmt.incr_decr.set_value(this.check_expression(unknown_type, for_stmt_node.incr_decr.value))
+        }
+        this.in_loop = true
+        for_stmt.block = this.check_block(for_stmt_node.block)
+        this.in_loop = prev_in_loop
+        return for_stmt
     }
     check_while_statment(while_stmt_node: WhileStatementNode): WhileStatement {
         let condition = this.check_condition(while_stmt_node.condition)
@@ -937,8 +1037,9 @@ class TypeChecker {
     }
     check_block(block_node: BlockNode): Block {
         let block = new Block()
+        let new_scope = this.create_child_scope_within_current_scope()
+        this.current_scope = new_scope.id
         for let i = 0; i < block_node.statements.length; i++ {
-            // TODO: check control flow and look for always return in the case of a function.
             let stmt = this.check_statement(block_node.statements[i])
             block.statements << stmt
             if stmt.kind == StatementKind.RETURN {
@@ -963,6 +1064,7 @@ class TypeChecker {
                 break
             }
         }
+        this.current_scope = new_scope.parent.value
         return block
     }
 }

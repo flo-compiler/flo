@@ -1,3 +1,4 @@
+import re
 import subprocess
 from pathlib import Path
 from typing import Dict
@@ -423,6 +424,10 @@ class Compiler(Visitor):
         elems = [self.visit(elm_node) for elm_node in node.elements]
         if isinstance(node.expects, FloGeneric):
             array_class: FloClass = FloClass.classes.get(node.expects.str())
+            if array_class == None:
+                node.expects.name = re.sub(r'\<(.+?)\>', "", node.expects.str() )
+                self.init_generic(node.expects)
+                array_class: FloClass = FloClass.classes.get(node.expects.str())
             length = FloInt(len(elems))
             llvm_ty = node.expects.constraints[0].llvmtype
             size = llvm_ty.get_abi_size(target_data) * len(elems)

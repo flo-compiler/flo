@@ -109,6 +109,10 @@ enum StatementKind {
     RETURN
     EXPRESSION
 }
+enum ForKind {
+    DEF
+    IN
+}
 enum ExpressionKind {
     INT
     FLOAT
@@ -131,11 +135,6 @@ enum ExpressionKind {
 enum VarIdKind {
     FNC
     VAR
-}
-enum AssignKind {
-    VAR
-    ARRAY
-    MEMBER
 }
 enum BinaryOp {
     ADD
