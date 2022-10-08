@@ -204,13 +204,18 @@ class WhileStatementNode (StatementNode) {
     }
 }
 class ForStatementNode (StatementNode) {
-    intialization: ExpressionNode
-    condition: ExpressionNode
-    incr_decr: ExpressionNode
+    initialization: Optional<StatementNode>
+    condition: Optional<ExpressionNode>
+    incr_decr: Optional<ExpressionNode>
     iterator: ExpressionNode
-    it_name: Token
+    for_kind: ForKind
+    it_name: IdentifierToken
     block: BlockNode
     constructor(range: FloRange){
+        this.initialization = new Optional<StatementNode>()
+        this.condition = new Optional<ExpressionNode>()
+        this.incr_decr = new Optional<ExpressionNode>()
+        this.kind = ForKind.DEF
         super(StatementKind.FOR, range)
     }
 }
@@ -232,7 +237,7 @@ class VarDeclarationStatement (StatementNode) {
 }
 class ArgNode {
     name: IdentifierToken
-    parsed_type: TypeNode
+    parsed_type: Optional<TypeNode>
     default: Optional<ExpressionNode>
 }
 class FunctionDeclarationNode {
@@ -735,17 +740,20 @@ class Parser {
         let for_node = new ForStatementNode(this.current_token.range)
         this.advance()
         if this.peek().ttype != TokType.IN_KW {
-            for_node.intialization = this.parse_expression()
-            if this.current_token.ttype == TokType.SEMICOL {
-                this.advance()
-                for_node.condition = this.parse_expression()
-                if this.current_token.ttype == TokType.SEMICOL {
-                    this.advance()
-                    for_node.incr_decr = this.parse_expression()
-                }
+            if this.current_token.ttype != TokType.SEMICOL {
+                for_node.initialization.set_value(this.parse_statement())
+            }
+            this.eat(TokType.SEMICOL)
+            if this.current_token.ttype != TokType.SEMICOL {
+                for_node.condition.set_value(this.parse_expression())
+            }
+            this.eat(TokType.SEMICOL)
+            if this.current_token.ttype != TokType.LBRACE {
+                for_node.incr_decr.set_value(this.parse_expression())
             }
         } else {
-            for_node.it_name = this.eat(TokType.IDENTIFER)
+            for_node.kind = ForKind.IN
+            for_node.it_name = this.eat(TokType.IDENTIFER) as IdentifierToken
             this.eat(TokType.IN_KW)
             for_node.iterator = this.parse_expression()
         }
@@ -822,21 +830,26 @@ class Parser {
     }
     parse_arg(): ArgNode {
         let arg_node = new ArgNode()
+        arg_node.parsed_type = new Optional<TypeNode>()
         arg_node.default = new Optional<ExpressionNode>()
         arg_node.name = this.eat(TokType.IDENTIFER) as IdentifierToken
         if this.current_token.ttype == TokType.COL {
             this.advance()
-            arg_node.parsed_type = this.parse_type()
+            arg_node.parsed_type.set_value(this.parse_type())
         }
         if this.current_token.ttype == TokType.EQ {
             this.advance()
             arg_node.default.set_value(this.parse_expression())
         }
+        if !arg_node.parsed_type.has_value and !arg_node.default.has_value {
+            this.error("'"+arg_node.name.value+"' has no type information")
+            this.errors[this.errors.length - 1].range = arg_node.name.range
+        }
         return arg_node
     }
     parse_args(args: ArgNode[]) {
         args << this.parse_arg()
-        while this.current_token.ttype == TokType.COMMA {
+        while this.current_token.ttype == TokType.COMMA and this.can_parse() {
             this.eat(TokType.COMMA)
             args << this.parse_arg()
         }

@@ -79,7 +79,7 @@ fnc LLVMGetInlineAsm(Ty: LLVMTypeRef, AsmString: i8*, AsmStringSize: int, Constr
 
 fnc LLVMAddFunction(M: LLVMModuleRef, name: i8*, FunctionTy: LLVMTypeRef): LLVMValueRef
 fnc LLVMGetNamedFunction(M: LLVMModuleRef, Name: i8*): LLVMValueRef 
-
+fnc LLVMDumpType(Val: LLVMTypeRef)
 /* types */
 fnc LLVMInt1Type(): LLVMTypeRef 
 fnc LLVMInt8Type(): LLVMTypeRef 
@@ -99,7 +99,7 @@ fnc LLVMPPCFP128Type(): LLVMTypeRef
 
 
 fnc LLVMFunctionType(return_type:LLVMTypeRef, param_types: LLVMTypeRef*, param_count: int, is_var_arg: LLVMBool): LLVMTypeRef
-
+fnc LLVMGetReturnType(FunctionTy: LLVMTypeRef): LLVMTypeRef 
 
 fnc LLVMStructCreateNamed(C: LLVMContextRef, name: i8*): LLVMTypeRef 
 fnc LLVMStructSetBody(StructTy: LLVMTypeRef, ElementTypes: LLVMTypeRef *, element_count: int, packed: LLVMBool)

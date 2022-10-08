@@ -46,7 +46,7 @@ fnc main(size: int, ptr: i8**): int {
     if args.length >= 2 {
         let errors: FloError[] = []
         if flag(args, "-v") or flag(args, "--version"){
-            println("v0.01@test.seflhost")
+            println("v0.01@test.selfhost")
             return 0
         }
         if flag(args, "-h") or flag(args, "--help"){
