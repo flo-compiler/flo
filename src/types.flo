@@ -91,7 +91,6 @@ enum TypeKind {
     VOID
     ENUM
     OBJECT
-    STRING
     PTR
     ARRAY
     FNC
@@ -116,11 +115,10 @@ enum ForKind {
 enum ExpressionKind {
     INT
     FLOAT
-    STR
+    STRING
     CHAR
     BOOL
     NULL
-    STRING
     ARRAY
     VAR
     BIN

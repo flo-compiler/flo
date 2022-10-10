@@ -128,7 +128,12 @@ fnc LLVMConstStringInContext(C: LLVMContextRef, Str: i8*,length: int, DontNullTe
 
 fnc LLVMIsConstantString(c: LLVMValueRef): LLVMBool
 
+fnc LLVMConstIntGetZExtValue(ConstantVal: LLVMValueRef): int
+
+fnc LLVMConstIntGetSExtValue(ConstantVal: LLVMValueRef): int
+
 fnc LLVMConstStructInContext(C: LLVMContextRef, vals: LLVMValueRef*, count: int, Packed: LLVMBool): LLVMValueRef
+
 fnc LLVMConstStruct(ConstantVals: LLVMValueRef*, count: int, Packed: LLVMBool ): LLVMValueRef
 
 /**
@@ -375,7 +380,7 @@ fnc LLVMBuildGEP2(B: LLVMBuilderRef, Ty: LLVMTypeRef, Pointer: LLVMValueRef, Ind
 fnc LLVMBuildInBoundsGEP2(B: LLVMBuilderRef, Ty: LLVMTypeRef, Pointer: LLVMValueRef, Indices: LLVMValueRef *, NumIndices: int, Name: i8*): LLVMValueRef
 fnc LLVMBuildStructGEP2(B: LLVMBuilderRef, Ty: LLVMTypeRef, Pointer: LLVMValueRef, Idx: int, Name: i8*): LLVMValueRef
 fnc LLVMBuildGlobalString(B: LLVMBuilderRef, Str: i8*, Name: i8*): LLVMValueRef
-fnc LLVMBuildGlobalStringPtr(B: LLVMBuilderRef, Str: i8*,   Name: i8*): LLVMValueRef
+fnc LLVMBuildGlobalStringPtr(B: LLVMBuilderRef, Str: i8*, Name: i8*): LLVMValueRef
 fnc LLVMGetVolatile(MemoryAccessInst: LLVMValueRef): LLVMBool
 fnc LLVMSetVolatile(MemoryAccessInst: LLVMValueRef, IsVolatile: LLVMBool)
 fnc LLVMGetWeak(CmpXchgInst: LLVMValueRef): LLVMBool

@@ -764,7 +764,7 @@ class FloClass:
         if fnc.value.name == self.name+'_constructor':
             self.constructor = fnc
         else:
-            self.methods[fnc.value.name] = fnc
+            self.methods[fnc.original_name] = fnc
 
     def add_property(self, name, value):
         self.properties[name] = value
@@ -830,6 +830,7 @@ class FloMethod(FloFunc):
     def __init__(self, arg_types: List, return_type, name, var_args=False, class_: FloClass = None):
         if name:
             if class_:
+                self.original_name = name
                 name = class_.name + "_" + name
                 arg_types.insert(0, FloObject(class_))
                 self.class_ = class_
@@ -922,12 +923,11 @@ class FloObject(FloType):
         property_value: FloType = self.referer.properties.get(name)
         return property_value.load_value_from_ref(FloRef(builder, property_value, '', mem))
 
-    def get_method(self, Oname, builder: ir.IRBuilder) -> Union[FloMethod, None]:
+    def get_method(self, name, builder: ir.IRBuilder) -> Union[FloMethod, None]:
         assert isinstance(self.referer, FloClass)
         method_index = -1
         current = self.referer
         while current:
-            name = current.name + "_" + Oname
             method = current.methods.get(name)
             if method != None:
                 method_index = list(self.referer.methods.keys()).index(name)
