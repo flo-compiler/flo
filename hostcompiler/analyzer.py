@@ -642,7 +642,7 @@ class Analyzer(Visitor):
     def get_object_class(self, node_type, node):
         class_name = node_type.referer.value
         class_ = self.context.get(class_name)
-        if class_ == None:
+        if class_ == None or not (isinstance(class_, FloClass) or isinstance(class_, FloEnum)):
             if self.class_within == None or (class_name != self.class_within.name):
                 NameError(
                     node.range, f"type {class_name} not defined").throw()

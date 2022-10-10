@@ -1,11 +1,8 @@
-fnc fib(x: i32 = 10): i32 {
-    if x <= 2 return 1
-    return fib(x-1) + fib(x-2)
-}
-fnc malloc(amt: i32): i8*
-fnc main(): i32 {
-    let x = 10
-    let y = malloc(2)
-    x^2
-    return fib()
+fnc main(): int {
+    let end = 5
+    let arr: int[5] = [1, 2, 3, 4, end]
+    arr[2] = 10
+    let ptr = &arr[0]
+    ptr[0]++
+    return arr[0]
 }

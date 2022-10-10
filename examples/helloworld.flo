@@ -1,0 +1,5 @@
+fnc system(cmd: i8*)
+fnc main(): int {
+    system("echo 'hello, world!'")
+    return 0
+}
