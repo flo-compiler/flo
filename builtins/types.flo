@@ -8,6 +8,3 @@ type i128 = {128}int
 type f16 = {16}float
 type f32 = {32}float
 type f64 = {64}float
-
-const true = 1 as bool
-const false = 0 as bool

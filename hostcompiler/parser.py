@@ -73,8 +73,8 @@ class Parser:
         tok = self.current_tok
         if tok.isKeyword("import"):
             return self.import_stmt()
-        if tok.isKeyword("const"):
-            return self.const_declaration()
+        if tok.type == TokType.MACRO_IDENTIFIER:
+            return self.macro_declaration()
         if tok.isKeyword("type"):
             return self.type_alias()
         if tok.isKeyword("class"):
@@ -118,7 +118,7 @@ class Parser:
         self.advance()
         ids = []
         path = ""
-        if self.current_tok.type == TokType.IDENTIFER:
+        if self.current_tok.type == TokType.IDENTIFER or self.current_tok.type == TokType.MACRO_IDENTIFIER:
             ids = self.identifier_list()
             if not self.current_tok.isKeyword("in"):
                 SyntaxError(self.current_tok.range,
@@ -154,11 +154,8 @@ class Parser:
         range_end = (else_case or cases[len(cases) - 1][0]).range
         return IfNode(cases, else_case, Range.merge(range_start, range_end))
 
-    def const_declaration(self) -> ConstDeclarationNode:
-        self.advance()
+    def macro_declaration(self) -> MacroDeclarationNode:
         range_start = self.current_tok.range
-        if self.current_tok.type != TokType.IDENTIFER:
-            SyntaxError(range_start, "Expected and identifier").throw()
         name_tok = self.current_tok
         self.advance()
         if self.current_tok.type != TokType.EQ:
@@ -166,7 +163,7 @@ class Parser:
         self.advance()
         value_node = self.expr()
         node_range = Range.merge(range_start, self.current_tok.range)
-        return ConstDeclarationNode(name_tok, value_node, node_range)
+        return MacroDeclarationNode(name_tok, value_node, node_range)
 
     def var_declaration(self) -> VarDeclarationNode:
         self.advance()
@@ -370,13 +367,13 @@ class Parser:
 
     def identifier_list(self):
         args = []
-        if self.current_tok.type == TokType.IDENTIFER:
+        if self.current_tok.type == TokType.IDENTIFER or self.current_tok.type == TokType.MACRO_IDENTIFIER:
             id = self.current_tok
             self.advance()
             args.append(id)
             while self.current_tok.type == TokType.COMMA:
                 self.advance()
-                if self.current_tok.type != TokType.IDENTIFER:
+                if self.current_tok.type != TokType.IDENTIFER and self.current_tok.type != TokType.MACRO_IDENTIFIER:
                     SyntaxError(
                         self.current_tok.range, "Expected an Identifier"
                     ).throw()
@@ -638,7 +635,7 @@ class Parser:
         elif tok.type == TokType.STR:
             self.advance()
             return StrNode(tok, tok.range)
-        elif tok.type == TokType.IDENTIFER:
+        elif tok.type == TokType.IDENTIFER or tok.type == TokType.MACRO_IDENTIFIER:
             self.advance()
             return VarAccessNode(tok, tok.range)
         elif tok.type == TokType.LPAR:

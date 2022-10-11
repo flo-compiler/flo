@@ -277,10 +277,10 @@ class Compiler(Visitor):
         else:
             return value
 
-    def visitConstDeclarationNode(self, node: ConstDeclarationNode):
-        const_name = node.const_name.value
+    def visitMacroDeclarationNode(self, node: MacroDeclarationNode):
+        macro_name = node.macro_name.value
         const_val = FloConst(node.value)
-        self.context.set(const_name, const_val)
+        self.context.set(macro_name, const_val)
 
     def visitVarAssignNode(self, node: VarAssignNode):
         var_name = node.var_name.value
@@ -298,7 +298,12 @@ class Compiler(Visitor):
     def visitPropertyDeclarationNode(self, node: PropertyDeclarationNode): pass
 
     def visitVarAccessNode(self, node: VarAccessNode):
-        ref = self.context.get(node.var_name.value)
+        var_name = node.var_name.value
+        if var_name == "true":
+            return FloInt(1, 1)
+        elif var_name == "false":
+            return FloInt(0, 1)
+        ref = self.context.get(var_name)
         if isinstance(ref, FloRef):
             return ref.load()
         elif isinstance(ref, FloConst):

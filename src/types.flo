@@ -101,6 +101,7 @@ enum TypeKind {
 enum StatementKind {
     IF
     VAR
+    CONST
     FOR
     WHILE
     CONTINUE
@@ -133,6 +134,7 @@ enum ExpressionKind {
 enum VarIdKind {
     FNC
     VAR
+    CONST
 }
 enum BinaryOp {
     ADD
