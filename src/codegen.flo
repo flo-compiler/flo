@@ -1,7 +1,7 @@
 import "llvm"
-const native_int_type = LLVMIntType(machine_word_size)
-const zero = LLVMConstInt(native_int_type, 0, false)
-const one = LLVMConstInt(native_int_type, 1, false)
+$WORD_INT_TYPE = LLVMIntType($WORD_SIZE)
+$ZERO = LLVMConstInt($WORD_INT_TYPE, 0, false)
+$ONE = LLVMConstInt($WORD_INT_TYPE, 1, false)
 class GeneratedModule {
     llvm_mod: LLVMModuleRef
     errors: i8*
@@ -88,7 +88,10 @@ class CodeGen {
     function: LLVMValueRef
     break_bb: LLVMBasicBlockRef
     continue_bb: LLVMBasicBlockRef
+    program: Program
+    in_static_ctx: bool
     codegenProgram(program: Program): GeneratedModule{
+        this.program = program
         this.modules = []
         this.continue_bb = "\0" as LLVMBasicBlockRef
         this.break_bb = this.continue_bb
@@ -109,9 +112,18 @@ class CodeGen {
         this.module_intrinsic_scope = new Map<string, IntrinsicResult>()
         this.module = LLVMModuleCreateWithName(module.name.to_cstring())
         //let DBFloInfo = new DebugInfo(this.module, module.name)
-        for let i = 0; i < module.functions.length; ++i {
+        this.in_static_ctx = true
+        let poison_builder = "\0" as LLVMBuilderRef
+        for let i = 0; i < module.global_consts.length; ++i {
+            this.codegen_const_declaration(poison_builder, module.global_consts[i])
+        }
+        for i = 0; i < module.global_vars.length; ++i {
+            this.codegen_var_declaration(poison_builder, module.global_vars[i])
+        }
+        for i = 0; i < module.functions.length; ++i {
             this.declare_function(module.functions[i])
         }
+        this.in_static_ctx = false
         for i = 0; i < module.functions.length; ++i {
             this.codegen_function(module.functions[i])
         }
@@ -130,7 +142,9 @@ class CodeGen {
             return LLVMInt16Type()
         if tt.kind == TypeKind.I32
             return LLVMInt32Type()
-        if tt.kind == TypeKind.I64 or tt.kind == TypeKind.INT
+        if tt.kind == TypeKind.INT
+            return $WORD_INT_TYPE
+        if tt.kind == TypeKind.I64
             return LLVMInt64Type()
         if tt.kind == TypeKind.I128
             return LLVMInt128Type()
@@ -189,8 +203,8 @@ class CodeGen {
         return str
     }
     store_array_elements(builder: LLVMBuilderRef, ptr: LLVMValueRef, array_exp: ArrayExpression): LLVMValueRef {
-        let args = [zero, zero]
-        let next_args = [one]
+        let args = [$ZERO, $ZERO]
+        let next_args = [$ONE]
         let array_type = this.codegen_type(array_exp.value_type)
         let elem_ty = LLVMPointerType(this.codegen_type((array_exp.value_type as ArrayType).element_type))
         let addr = LLVMBuildInBoundsGEP2(builder, array_type, ptr, &args[0], 2, "")
@@ -220,7 +234,7 @@ class CodeGen {
         let ind_ptr = this.get_expr_mem(builder, index_exp.expression)
         let index_ty = this.codegen_type(index_exp.index.value_type)
         let index = this.codegen_expression(builder, index_exp.index)
-        let indices_0 = [zero, zero]
+        let indices_0 = [$ZERO, $ZERO]
         let ty = this.codegen_type(index_exp.expression.value_type)
         if index_exp.expression.value_type.kind == TypeKind.ARRAY {
             ind_ptr = LLVMBuildInBoundsGEP2(builder, ty, ind_ptr, &indices_0[0], 2, "")
@@ -266,9 +280,9 @@ class CodeGen {
         let op = bin_exp.op
         if bin_exp.lhs.value_type != bin_exp.rhs.value_type {
             if op == BinaryOp.EEQ
-                return createLLVMBool(0)
+                return createLLVMBool(false)
             else if op == BinaryOp.NEQ
-                return createLLVMBool(1)
+                return createLLVMBool(true)
         }
         if op == BinaryOp.ASSIGN
             return this.codegen_assignment(builder, bin_exp)
@@ -425,13 +439,16 @@ class CodeGen {
     }
     codegen_var_exp(builder: LLVMBuilderRef, var_exp: VarAccessExpression): LLVMValueRef {
         let val = this.global_var_scope.get(create_var_key(var_exp.value_id))
+        let ty = this.codegen_type(var_exp.value_type)
         if !val.has_value {
             println("This should never happen; (codegen_var_exp)")
             exit()
         }
         if var_exp.value_id.kind == VarIdKind.FNC
             return val.value
-        return LLVMBuildLoad2(builder, LLVMGetAllocatedType(val.value), val.value, "")
+        if this.in_static_ctx
+            return LLVMGetInitializer(val.value)
+        return LLVMBuildLoad2(builder, ty, val.value, "")
     }
     codegen_null(null_exp: NullExpression): LLVMValueRef{
         return LLVMConstNull(this.codegen_type(null_exp.value_type))
@@ -561,11 +578,37 @@ class CodeGen {
         this.continue_bb = prev_continue_bb
     }
     codegen_var_declaration(builder: LLVMBuilderRef, var_decl: VarDeclaration){
-        let ty = this.codegen_type(var_decl.expression.value_type)
-        let ptr = LLVMBuildAlloca(builder, ty, var_decl.name.to_cstring())
         let var_id = var_decl.var_id
-        this.store_expr_to_mem(builder, ptr, var_decl.expression)
+        let expression = get_var(this.program, var_id).value
+        let ty = this.codegen_type(expression.value_type)
+        let name = var_decl.name.to_cstring()
+        let ptr = "\0" as LLVMValueRef
+        if var_decl.is_static {
+            let value = this.codegen_expression(builder, expression)
+            ptr = LLVMAddGlobal(this.module, ty, name)
+            LLVMSetInitializer(ptr, value)
+        } else {
+            ptr = LLVMBuildAlloca(builder, ty, name)
+            this.store_expr_to_mem(builder, ptr, expression)
+        }
         this.global_var_scope.set(create_var_key(var_id), ptr)
+    }
+    codegen_const_declaration(builder: LLVMBuilderRef, const_decl: ConstDeclaration){
+        let const_id = const_decl.const_id
+        let expression = get_const(this.program, const_id).value
+        let ty = this.codegen_type(expression.value_type)
+        let name = const_decl.name.to_cstring()
+        let ptr = "\0" as LLVMValueRef
+        if const_decl.is_static {
+            let value = this.codegen_expression(builder, expression)
+            ptr = LLVMAddGlobal(this.module, ty, name)
+            LLVMSetInitializer(ptr, value)
+            LLVMSetGlobalConstant(ptr, true)
+        } else {
+            ptr = LLVMBuildAlloca(builder, ty, name)
+            this.store_expr_to_mem(builder, ptr, expression)
+        }
+        this.global_var_scope.set(create_var_key(const_id), ptr)
     }
     codegen_statement(builder: LLVMBuilderRef, statement: Statement){
         if statement.kind == StatementKind.IF
@@ -580,6 +623,8 @@ class CodeGen {
             LLVMBuildBr(builder, this.break_bb)
         if statement.kind == StatementKind.VAR
             this.codegen_var_declaration(builder, statement as VarDeclaration)
+        if statement.kind == StatementKind.CONST
+            this.codegen_const_declaration(builder, statement as ConstDeclaration)
         if statement.kind == StatementKind.RETURN
             this.codegen_return_stmt(builder, statement as ReturnStatement)
         if statement.kind == StatementKind.EXPRESSION

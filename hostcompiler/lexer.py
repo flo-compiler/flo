@@ -81,6 +81,7 @@ class TokType(Enum):
     DOT_DOT = ".."
     DOT_DOT_DOT = "..."
     IDENTIFER = "IDENTIFIER"
+    MACRO_IDENTIFIER = "MACRO_IDENTIFER"
     KEYWORD = "KEYWORD"
 
 
@@ -180,6 +181,8 @@ class Lexer:
             elif self.current_char == '"':
                 tok = make_str(self)
                 tokens.append(tok)
+            elif self.current_char == "$":
+                tokens.append(make_macro_identifer(self))
             else:
                 pos_start = self.pos.copy()
                 char = self.current_char
@@ -256,6 +259,14 @@ def make_identifier(lexer: Lexer):
     t_type = TokType.KEYWORD if id_string in KEYWORDS else TokType.IDENTIFER
     return Token(t_type, Range(pos_start, lexer.pos), id_string)
 
+def make_macro_identifer(lexer: Lexer):
+    DOLLAR_LETTERS_DIGITS = LETTERS + DEC_DIGITS + "$"
+    id_string = ""
+    pos_start = lexer.pos.copy()
+    while lexer.current_char != None and lexer.current_char in DOLLAR_LETTERS_DIGITS:
+        id_string += lexer.current_char
+        lexer.advance()
+    return Token(TokType.MACRO_IDENTIFIER, Range(pos_start, lexer.pos), id_string)
 
 def make_neq(lexer: Lexer):
     pos_start = lexer.pos.copy()

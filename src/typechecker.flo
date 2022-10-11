@@ -1,4 +1,4 @@
-const machine_word_size = 64
+$WORD_SIZE = 64
 class TypeId {
     module_id: int
     id: int
@@ -12,7 +12,7 @@ class Type {
         return this.kind == other.kind
     }
 }
-const unknown_type = new Type(TypeKind.UNKNOWN)
+$UNKNOW_TYPE = new Type(TypeKind.UNKNOWN)
 class BooleanType (Type) {
     constructor(){
         super(TypeKind.BOOL)
@@ -136,22 +136,24 @@ class BinaryExpression (Expression) {
     lhs: Expression
     op: BinaryOp
     rhs: Expression
-    constructor(lhs: Expression, op: BinaryOp, rhs: Expression, value_type: Type){
+    constructor(lhs: Expression, op: BinaryOp, rhs: Expression, value_type: Type, is_constant = false){
         super(ExpressionKind.BIN)
         this.lhs = lhs
         this.op = op
         this.rhs = rhs
         this.value_type = value_type
+        this.is_constant = is_constant
     }
 }
 class UnaryExpression (Expression) {
     op: UnaryOp
     expression: Expression
-    constructor(op: UnaryOp, expression: Expression, value_type: Type){
+    constructor(op: UnaryOp, expression: Expression, value_type: Type, is_constant = false){
         super(ExpressionKind.UNARY)
         this.op = op
         this.expression = expression
         this.value_type = value_type
+        this.is_constant = is_constant
     }
 }
 class TypeExpression (Expression) {
@@ -167,6 +169,7 @@ class TypeExpression (Expression) {
         if ty_op == TypeExprOp.IS
             this.value_type = new BooleanType()
         this.bound_type = bound_type
+        this.is_constant = expr.is_constant
     }
 }
 class NewExpression (Expression) {
@@ -209,6 +212,11 @@ class VarId {
         this.id = id
     }
 }
+class ConstId(VarId) {
+    constructor(module_id: int, id: int){
+       super(VarIdKind.CONST, module_id, id)
+    }
+}
 class ClassId {
     module_id: int
     class_id: int
@@ -231,6 +239,7 @@ class VarAccessExpression (Expression) {
         super(ExpressionKind.VAR)
         this.value_id = value_id
         this.value_type = value_type
+        this.is_constant = value_id.kind == VarIdKind.CONST
     }
 }
 class Block {
@@ -259,12 +268,23 @@ class IfStatement (Statement) {
 class VarDeclaration (Statement) {
     name: string
     var_id: VarId
-    expression: Expression
-    constructor(name: string, var_id: VarId, expression: Expression){
+    is_static: bool
+    constructor(name: string, var_id: VarId){
+        super(StatementKind.VAR)
         this.var_id = var_id
         this.name = name
-        this.expression = expression
-        super(StatementKind.VAR)
+        this.is_static = false
+    }
+}
+class ConstDeclaration (Statement) {
+    name: string
+    const_id: ConstId
+    is_static: bool
+    constructor(name: string, const_id: ConstId){
+        super(StatementKind.CONST)
+        this.const_id = const_id
+        this.name = name
+        this.is_static = false
     }
 }
 class ForStatement (Statement) {
@@ -283,9 +303,9 @@ class WhileStatement (Statement) {
     condition: Expression
     block: Block
     constructor(condition: Expression, block: Block){
+        super(StatementKind.WHILE)
         this.condition = condition
         this.block = block
-        super(StatementKind.WHILE)
     }
 }
 class ReturnStatement (Statement) {
@@ -337,7 +357,10 @@ fnc check_cast_lower_bits(p1: Expression*, p2: Expression*){
     }
 }
 fnc check_is_var(expr: Expression): bool{
-    return expr.expr_kind == ExpressionKind.VAR or expr.expr_kind == ExpressionKind.MEMBER or expr.expr_kind == ExpressionKind.INDEX 
+    if expr.expr_kind == ExpressionKind.VAR {
+        return (expr as VarAccessExpression).value_id.kind == VarIdKind.VAR
+    }
+    return expr.expr_kind == ExpressionKind.MEMBER or expr.expr_kind == ExpressionKind.INDEX
 }
 fnc dump_type(ty: Type, force_bit_size = false): string {
     if ty.kind == TypeKind.BOOL
@@ -355,7 +378,7 @@ fnc dump_type(ty: Type, force_bit_size = false): string {
     if ty.kind == TypeKind.I128
         return "i128"
     if ty.kind == TypeKind.INT
-        return force_bit_size ? "i"+machine_word_size : "int"
+        return force_bit_size ? "i"+$WORD_SIZE : "int"
     if ty.kind == TypeKind.F16
         return "f16"
     if ty.kind == TypeKind.F32
@@ -363,7 +386,7 @@ fnc dump_type(ty: Type, force_bit_size = false): string {
     if ty.kind == TypeKind.F64
         return "f64"
     if ty.kind == TypeKind.FLOAT
-        return force_bit_size ? "f"+machine_word_size : "float"
+        return force_bit_size ? "f"+$WORD_SIZE : "float"
     if ty.kind == TypeKind.VOID
         return "void"
     if ty.kind == TypeKind.PTR
@@ -416,44 +439,6 @@ fnc dump_bin_op(op: BinaryOp): string {
     if op == BinaryOp.ASSIGN
         return "="
     return ".."
-}
-fnc evaluate_const_int_expression(exp: Expression, err: i8*): int {
-    if exp.expr_kind == ExpressionKind.INT
-        return (exp as IntExpression).value
-    if exp.expr_kind == ExpressionKind.FLOAT
-        return (exp as FloatExpression).value as int
-    if exp.expr_kind == ExpressionKind.BIN {
-        let bin_exp = exp as BinaryExpression
-        if bin_exp.op == BinaryOp.ADD
-            return evaluate_const_int_expression(bin_exp.lhs, err) + evaluate_const_int_expression(bin_exp.rhs, err)
-        if bin_exp.op == BinaryOp.SUB
-            return evaluate_const_int_expression(bin_exp.lhs, err) - evaluate_const_int_expression(bin_exp.rhs, err)
-        if bin_exp.op == BinaryOp.MUL
-            return evaluate_const_int_expression(bin_exp.lhs, err) * evaluate_const_int_expression(bin_exp.rhs, err)
-        if bin_exp.op == BinaryOp.DIV
-            return evaluate_const_int_expression(bin_exp.lhs, err) / evaluate_const_int_expression(bin_exp.rhs, err)
-        if bin_exp.op == BinaryOp.MOD
-            return evaluate_const_int_expression(bin_exp.lhs, err) % evaluate_const_int_expression(bin_exp.rhs, err)
-        if bin_exp.op == BinaryOp.SL
-            return evaluate_const_int_expression(bin_exp.lhs, err) << evaluate_const_int_expression(bin_exp.rhs, err)
-        if bin_exp.op == BinaryOp.SR
-            return evaluate_const_int_expression(bin_exp.lhs, err) >> evaluate_const_int_expression(bin_exp.rhs, err)
-        if bin_exp.op == BinaryOp.OR
-            return evaluate_const_int_expression(bin_exp.lhs, err) or evaluate_const_int_expression(bin_exp.rhs, err)
-        if bin_exp.op == BinaryOp.AND
-            return evaluate_const_int_expression(bin_exp.lhs, err) and evaluate_const_int_expression(bin_exp.rhs, err)
-        if bin_exp.op == BinaryOp.XOR
-            return evaluate_const_int_expression(bin_exp.lhs, err) xor evaluate_const_int_expression(bin_exp.rhs, err)
-    }
-    if exp.expr_kind == ExpressionKind.UNARY {
-        let unary_exp = exp as UnaryExpression
-        if unary_exp.op == UnaryOp.NEG
-            return -evaluate_const_int_expression(unary_exp.expression, err)
-        if unary_exp.op == UnaryOp.NOT
-            return !evaluate_const_int_expression(unary_exp.expression, err)
-    }
-    err[0] = 1
-    return -1
 }
 fnc dump_unary_op(op: UnaryOp): string{
     if op == UnaryOp.PREINCR
@@ -520,6 +505,14 @@ class Var (Value) {
         this.value_type = value.value_type
     }
 }
+class Const (Value) {
+    const_id: ConstId
+    value: Expression
+    constructor(value: Expression){
+        this.value = value
+        this.value_type = value.value_type
+    }
+}
 class ClassField {
     name: string
     field_type: Type
@@ -550,10 +543,13 @@ class Module {
     id: int
     name: string
     vars: Var[]
+    consts: Const[]
     classes: Class[]
     functions: Function[]
     enums: Enum[]
     scopes: Scope[]
+    global_consts: ConstDeclaration[]
+    global_vars: VarDeclaration[]
     constructor(){
         this.functions = []
         this.vars = []
@@ -561,6 +557,9 @@ class Module {
         this.functions = []
         this.enums = []
         this.scopes = []
+        this.global_consts = []
+        this.global_vars = []
+        this.consts = []
     }
 }
 class Program {
@@ -568,6 +567,56 @@ class Program {
     constructor(){
         this.modules = []
     }
+}
+fnc get_var(program: Program, var_id: VarId): Var {
+    return program.modules[var_id.module_id].vars[var_id.id]
+}
+fnc get_const(program: Program, const_id: ConstId): Const {
+    return program.modules[const_id.module_id].consts[const_id.id]
+}
+fnc get_func(program: Program, func_id: VarId): Function {
+    return program.modules[func_id.module_id].functions[func_id.id]
+}
+fnc evaluate_const_int_expression(program: Program, exp: Expression): int {
+    if exp.expr_kind == ExpressionKind.INT
+        return (exp as IntExpression).value
+    if exp.expr_kind == ExpressionKind.FLOAT
+        return (exp as FloatExpression).value as int
+    if exp.expr_kind == ExpressionKind.BIN {
+        let bin_exp = exp as BinaryExpression
+        if bin_exp.op == BinaryOp.ADD
+            return evaluate_const_int_expression(program, bin_exp.lhs) + evaluate_const_int_expression(program, bin_exp.rhs)
+        if bin_exp.op == BinaryOp.SUB
+            return evaluate_const_int_expression(program, bin_exp.lhs) - evaluate_const_int_expression(program, bin_exp.rhs)
+        if bin_exp.op == BinaryOp.MUL
+            return evaluate_const_int_expression(program, bin_exp.lhs) * evaluate_const_int_expression(program, bin_exp.rhs)
+        if bin_exp.op == BinaryOp.DIV
+            return evaluate_const_int_expression(program, bin_exp.lhs) / evaluate_const_int_expression(program, bin_exp.rhs)
+        if bin_exp.op == BinaryOp.MOD
+            return evaluate_const_int_expression(program, bin_exp.lhs) % evaluate_const_int_expression(program, bin_exp.rhs)
+        if bin_exp.op == BinaryOp.SL
+            return evaluate_const_int_expression(program, bin_exp.lhs) << evaluate_const_int_expression(program, bin_exp.rhs)
+        if bin_exp.op == BinaryOp.SR
+            return evaluate_const_int_expression(program, bin_exp.lhs) >> evaluate_const_int_expression(program, bin_exp.rhs)
+        if bin_exp.op == BinaryOp.OR
+            return evaluate_const_int_expression(program, bin_exp.lhs) or evaluate_const_int_expression(program, bin_exp.rhs)
+        if bin_exp.op == BinaryOp.AND
+            return evaluate_const_int_expression(program, bin_exp.lhs) and evaluate_const_int_expression(program, bin_exp.rhs)
+        if bin_exp.op == BinaryOp.XOR
+            return evaluate_const_int_expression(program, bin_exp.lhs) xor evaluate_const_int_expression(program, bin_exp.rhs)
+    }
+    if exp.expr_kind == ExpressionKind.UNARY {
+        let unary_exp = exp as UnaryExpression
+        if unary_exp.op == UnaryOp.NEG
+            return -evaluate_const_int_expression(program, unary_exp.expression)
+        if unary_exp.op == UnaryOp.NOT
+            return !evaluate_const_int_expression(program, unary_exp.expression)
+    }
+    if exp.expr_kind == ExpressionKind.VAR {
+        let var_exp = exp as VarAccessExpression
+        return evaluate_const_int_expression(program, get_const(program, var_exp.value_id as ConstId).value)
+    }
+    return -99999999
 }
 // Hint: For Generics and typed constraints consider Hidley-Milner Algorithm.
 class TypeChecker {
@@ -578,13 +627,13 @@ class TypeChecker {
     current_scope: ScopeId
     filename: string
     content: string
-    constants: string[]
+    builtin_constants: string[]
     in_loop: bool
     constructor(){
         this.current_module = -1
         this.in_loop = false
         this.program = new Program()
-        this.constants = ["true", "false", "null"]
+        this.builtin_constants = ["true", "false", "null"]
     }
     get_scope(scope_id: ScopeId): Scope {
        return this.program.modules[scope_id.module_id].scopes[scope_id.id]
@@ -636,8 +685,13 @@ class TypeChecker {
         this.program.modules << module
         let module_scope = this.create_scope()
         this.current_scope = module_scope.id
-        
-        for let i = 0; i < module_ast.classes.length; i++ {
+        for let i = 0; i < module_ast.consts.length; i++ {
+            this.declare_global_const(module_ast.consts[i])
+        }
+        for i = 0; i < module_ast.vars.length; i++ {
+            this.declare_global_var(module_ast.vars[i])
+        }
+        for i = 0; i < module_ast.classes.length; i++ {
             this.declare_class_within_current_scope(module_ast.classes[i])
         }
         for i = 0; i < module_ast.type_aliases.length; i++  {
@@ -667,12 +721,34 @@ class TypeChecker {
         current_scope.vars.set(name, id)
         return var
     }
+    declare_const_within_current_scope(name: string, value: Expression): Const {
+        let constant = new Const(value)
+        let current_module = this.get_current_module()
+        let current_scope = this.get_current_scope()
+        let id = new ConstId(this.current_module, current_module.consts.length)
+        constant.const_id = id
+        current_module.consts << constant
+        current_scope.vars.set(name, id)
+        return constant
+    }
+    declare_global_const(const_decl_node: ConstDeclarationStatement){
+        let const_stmt = this.check_const_declaration(const_decl_node)
+        const_stmt.is_static = true
+        this.get_current_module().global_consts << const_stmt
+    }
+    declare_global_var(var_decl_node: VarDeclarationStatement){
+        let var_stmt = this.check_var_declaration(var_decl_node)
+        if !get_var(this.program, var_stmt.var_id).value.is_constant
+            this.error(ErrorKind.GEN, "Initilializer for global variable has to be a constant", var_decl_node.value.range)
+        var_stmt.is_static = true
+        this.get_current_module().global_vars << var_stmt
+    }
     declare_function_within_current_scope(function_node: FunctionDeclarationNode) {
         let declared_function = new Function()
         declared_function.is_external = function_node.is_external
         let name = function_node.name.value
         declared_function.name = name
-        if name in this.constants {
+        if name in this.builtin_constants {
             this.error(ErrorKind.NAME, "Illegal re-declaration of const '"+name+"'", function_node.name.range)
         }
         let arg_types: Type[] = []
@@ -684,7 +760,7 @@ class TypeChecker {
             let fnc_arg = new FunctionArg()
             fnc_arg.name = arg.name.value
             fnc_arg.default = new Optional<Expression>()
-            let arg_type = unknown_type
+            let arg_type = $UNKNOW_TYPE
             if arg.parsed_type.has_value
                 arg_type = this.check_type(arg.parsed_type.value)
             if arg.default.has_value
@@ -762,15 +838,14 @@ class TypeChecker {
             return new PointerType(this.check_type((type_node as PointerTypeNode).pointee_type))
         if type_node.kind == TypeKind.ARRAY {
             let array_node = type_node as ArrayTypeNode
-            let err = '\0'
             let len_expr = this.check_expression(new Type(TypeKind.INT), array_node.length)
             if !is_int(len_expr.value_type) {
                 this.error(ErrorKind.GEN, "length is an int", array_node.length.range)
             }
-            let length = evaluate_const_int_expression(len_expr, &err)
-            if err == 1 {
+            if !len_expr.is_constant {
                 this.error(ErrorKind.GEN, "length is a non-constant value", array_node.length.range)
             }
+            let length = evaluate_const_int_expression(this.program, len_expr)
             if length < 0 {
                 this.error(ErrorKind.GEN, "length should be greater than 0", array_node.length.range)
             }
@@ -786,12 +861,12 @@ class TypeChecker {
             return new FunctionType(arg_types, return_type)
         }
         // else TypeKind.OBJECT
-            return unknown_type
+            return $UNKNOW_TYPE
     }
     check_array_expression(expected_type: Type, array_node: ArrayExpressionNode): ArrayExpression {
         //TODO: ARRAY is overloaded; Could be object or const so need to check which one it is.
         let elements: Expression[] = []
-        let element_type = unknown_type
+        let element_type = $UNKNOW_TYPE
         let array_type = expected_type
         let is_constant = true
         if expected_type.kind == TypeKind.ARRAY {
@@ -799,7 +874,7 @@ class TypeChecker {
         }
         if array_node.elements.length > 0 {
             elements << this.check_expression(element_type, array_node.elements[0])
-            if element_type == unknown_type {
+            if element_type.kind == TypeKind.UNKNOWN {
                 is_constant = is_constant and elements[0].is_constant
                 element_type =  elements[0].value_type
             }
@@ -830,13 +905,15 @@ class TypeChecker {
             return new NullExpression(expected_type)
         let current_scope = this.get_current_scope()
         let resolved = this.get_var_from_current_scope(name)
-        let var_ty = unknown_type
+        let var_ty = $UNKNOW_TYPE
         if resolved.has_value {
             let var_id = resolved.value
             if var_id.kind == VarIdKind.FNC
-                var_ty = this.program.modules[var_id.module_id].functions[var_id.id].value_type
-            else
-                var_ty = this.program.modules[var_id.module_id].vars[var_id.id].value_type
+                var_ty = get_func(this.program, var_id).value_type
+            else if var_id.kind == VarIdKind.VAR
+                var_ty = get_var(this.program, var_id).value_type
+            else if var_id.kind == VarIdKind.CONST
+                var_ty = get_const(this.program, var_id as ConstId).value_type
             return new VarAccessExpression(var_id, var_ty)
         } else {
             this.error(ErrorKind.NAME, "Undefined variable '" + name + "'", var_access_node.range)
@@ -856,7 +933,8 @@ class TypeChecker {
         let left = this.check_expression(expected_type, binary_node.lhs)
         let right = this.check_expression(left.value_type, binary_node.rhs)
         let op = binary_node.op
-        if op == BinaryOp.ASSIGN 
+        let is_const = left.is_constant and right.is_constant
+        if op == BinaryOp.ASSIGN
             return this.check_assignment(left, right, binary_node)
         if left.value_type.kind == TypeKind.UNKNOWN and right.value_type.kind != TypeKind.UNKNOWN
             left.value_type = right.value_type
@@ -874,7 +952,7 @@ class TypeChecker {
                 if op >= BinaryOp.GT and op <= BinaryOp.LTE 
                     exp_type = new BooleanType()
                 
-                return new BinaryExpression(left, op, right, exp_type)
+                return new BinaryExpression(left, op, right, exp_type, is_const)
             }
             if op >= BinaryOp.SL and op <= BinaryOp.XOR {
                 if is_float(left.value_type)
@@ -882,29 +960,30 @@ class TypeChecker {
                 if is_float(right.value_type){
                     right = cast_exp_to_type(right, new Type(TypeKind.INT)) // Might need to cast it to the biggest available
                 }
-                return new BinaryExpression(left, op, right, left.value_type)
+                return new BinaryExpression(left, op, right, left.value_type, is_const)
             }
         } else if is_bool(left.value_type) and is_bool(right.value_type){
             if op >= BinaryOp.OR and op <= BinaryOp.AND
-                return new BinaryExpression(left, op, right, left.value_type)
+                return new BinaryExpression(left, op, right, left.value_type, is_const)
         }
         if op >= BinaryOp.GT and op <= BinaryOp.NEQ
-            return new BinaryExpression(left, op, right, new BooleanType())
+            return new BinaryExpression(left, op, right, new BooleanType(), is_const)
         //TODO: Handle Range, In and Object Arithmetic and bit Cases.
         this.error(ErrorKind.TYPE, "Illegal binary operation '"+dump_bin_op(op)+"' between types '"+dump_type(left.value_type)+"' and '"+dump_type(right.value_type)+"'", binary_node.range)
-        return new BinaryExpression(left, op, right, unknown_type)
+        return new BinaryExpression(left, op, right, $UNKNOW_TYPE)
     }
     check_unary_expr(unary_node: UnaryExpressionNode): UnaryExpression {
         let op = unary_node.op
-        let expression = this.check_expression(unknown_type, unary_node.expression)
+        let expression = this.check_expression($UNKNOW_TYPE, unary_node.expression)
         let ty = expression.value_type
+        let is_const = expression.is_constant
         if op == UnaryOp.NEG {
             if is_numeric(ty)
-                return new UnaryExpression(op, expression, ty)
+                return new UnaryExpression(op, expression, ty, is_const)
         }
         if op == UnaryOp.NOT {
             if is_bool(ty) or is_numeric(ty)
-                return new UnaryExpression(op, expression, ty)
+                return new UnaryExpression(op, expression, ty, is_const)
         }
         if op >= UnaryOp.PREINCR and op <= UnaryOp.POSTDECR {
             if is_numeric(ty) {
@@ -918,11 +997,11 @@ class TypeChecker {
                 return new UnaryExpression(op, expression, new PointerType(expression.value_type))
         }
         this.error(ErrorKind.TYPE, "Illegal unary operation " + dump_unary_op(op) + " on type " + "'" + dump_type(ty) +"'", unary_node.range)
-        return new UnaryExpression(op, expression, unknown_type)
+        return new UnaryExpression(op, expression, $UNKNOW_TYPE)
     }
     check_type_expr(type_expr_node: TypeExpressionNode): TypeExpression {
         // Need to check if cast is compatible for typecase
-        let exp = this.check_expression(unknown_type, type_expr_node.expression)
+        let exp = this.check_expression($UNKNOW_TYPE, type_expr_node.expression)
         let ty = this.check_type(type_expr_node.bound_type)
         return new TypeExpression(exp, type_expr_node.op, ty)
     }
@@ -933,11 +1012,11 @@ class TypeChecker {
         return new MemberExpression()
     }
     check_index_expr(index_expr_node: ExpressionIndexNode): IndexExpression {
-        let root_expression = this.check_expression(unknown_type, index_expr_node.expression)
+        let root_expression = this.check_expression($UNKNOW_TYPE, index_expr_node.expression)
         let index = this.check_expression(new Type(TypeKind.INT), index_expr_node.index)
         if !is_int(index.value_type)
             this.error(ErrorKind.TYPE, "Expected an integer type for index", index_expr_node.index.range)
-        let value_type = unknown_type
+        let value_type = $UNKNOW_TYPE
         let root_type = root_expression.value_type
         if root_type.kind == TypeKind.PTR {
             value_type = (root_type as PointerType).pointee_type
@@ -973,7 +1052,7 @@ class TypeChecker {
         return called_args
     }
     check_call_expr(call_expr_node: CallExpressionNode): CallExpression {
-        let called = this.check_expression(unknown_type, call_expr_node.callee)
+        let called = this.check_expression($UNKNOW_TYPE, call_expr_node.callee)
         //TODO: Check for generic functions.
         let func_ty = called.value_type as FunctionType
         if func_ty.kind != TypeKind.FNC
@@ -1040,7 +1119,7 @@ class TypeChecker {
     }
     check_condition(cond_node: ExpressionNode): Expression {
        let bool_type = new BooleanType()
-       let condition = this.check_expression(unknown_type, cond_node)
+       let condition = this.check_expression($UNKNOW_TYPE, cond_node)
        return !is_bool(condition.value_type) ? cast_exp_to_type(condition, bool_type) : condition
     }
     check_if_stamement(if_stmt_node: IfStatementNode): IfStatement {
@@ -1054,16 +1133,15 @@ class TypeChecker {
     }
     check_var_declaration(var_decl_node: VarDeclarationStatement): VarDeclaration {
         let name = var_decl_node.var_name.value
-        if name in this.constants
+        if name in this.builtin_constants
             this.error(ErrorKind.NAME, "Illegal re-declaration of const '"+name+"'", var_decl_node.var_name.range)
         
-        let var_type = unknown_type
+        let var_type = $UNKNOW_TYPE
         let current_scope = this.get_current_scope()
         
         if var_decl_node.var_type.has_value
             var_type = this.check_type(var_decl_node.var_type.value)
         let value = this.check_expression(var_type, var_decl_node.value)
-        
         if is_null(value) and value.value_type.kind == TypeKind.UNKNOWN
             this.error(ErrorKind.TYPE, "Cannot declare a value as null without any type hint for future usage", var_decl_node.range)
         if var_type.kind != TypeKind.UNKNOWN and var_type != value.value_type
@@ -1071,10 +1149,30 @@ class TypeChecker {
         
         if current_scope.vars.get(name).has_value
             this.error(ErrorKind.NAME, "Illegal re-declaration of already declared variable '"+name+"'", var_decl_node.var_name.range)
-        
         let var = this.declare_var_within_current_scope(name, value)
+        return new VarDeclaration(name, var.var_id)
+    }
+    check_const_declaration(const_decl_stmt: ConstDeclarationStatement): ConstDeclaration {
+        let name = const_decl_stmt.const_name.value
+        let current_scope = this.get_current_scope()
+        if name in this.builtin_constants or current_scope.vars.get(name).has_value
+            this.error(ErrorKind.NAME, "Illegal re-declaration of const '"+name+"'", const_decl_stmt.const_name.range)
         
-        return new VarDeclaration(name, var.var_id, value)
+        let const_type = $UNKNOW_TYPE
+        
+        if const_decl_stmt.const_type.has_value
+            const_type = this.check_type(const_decl_stmt.const_type.value)
+        let value = this.check_expression(const_type, const_decl_stmt.value)
+        if !value.is_constant
+            this.error(ErrorKind.GEN, "cannot assign a non-constant value to a constant", const_decl_stmt.value.range)
+        if is_null(value) and value.value_type.kind == TypeKind.UNKNOWN
+            this.error(ErrorKind.TYPE, "Cannot declare a value as null without any type hint for future usage", const_decl_stmt.range)
+        if const_type.kind != TypeKind.UNKNOWN and const_type != value.value_type
+            this.error(ErrorKind.TYPE, "Expected type '"+dump_type(const_type)+"' but got type '"+dump_type(value.value_type)+"' on variable declaration", const_decl_stmt.range)
+         
+        let constant = this.declare_const_within_current_scope(name, value)
+        
+        return new ConstDeclaration(name, constant.const_id)
     }
     check_for_statement(for_stmt_node: ForStatementNode): ForStatement {
         let for_stmt = new ForStatement()
@@ -1085,7 +1183,7 @@ class TypeChecker {
             if for_stmt_node.condition.has_value
                 for_stmt.condition.set_value(this.check_condition(for_stmt_node.condition.value))
             if for_stmt_node.incr_decr.has_value
-                for_stmt.incr_decr.set_value(this.check_expression(unknown_type, for_stmt_node.incr_decr.value))
+                for_stmt.incr_decr.set_value(this.check_expression($UNKNOW_TYPE, for_stmt_node.incr_decr.value))
         }
         this.in_loop = true
         for_stmt.block = this.check_block(for_stmt_node.block)
@@ -1134,6 +1232,8 @@ class TypeChecker {
             return this.check_if_stamement(stmt_node as IfStatementNode)
         if stmt_node.kind == StatementKind.VAR
             return this.check_var_declaration(stmt_node as VarDeclarationStatement)
+        if stmt_node.kind == StatementKind.CONST
+            return this.check_const_declaration(stmt_node as ConstDeclarationStatement)
         if stmt_node.kind == StatementKind.FOR
             return this.check_for_statement(stmt_node as ForStatementNode)
         if stmt_node.kind == StatementKind.WHILE
@@ -1144,7 +1244,7 @@ class TypeChecker {
             return this.check_can_break(stmt_node)
         if stmt_node.kind == StatementKind.RETURN
             return this.check_can_return((stmt_node as ReturnStatementNode))
-        return this.check_expression(unknown_type, stmt_node as ExpressionNode)
+        return this.check_expression($UNKNOW_TYPE, stmt_node as ExpressionNode)
     }
     check_block(block_node: BlockNode): Block {
         let block = new Block()

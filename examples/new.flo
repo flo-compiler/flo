@@ -1,13 +1,13 @@
-const HEIGHT = 10
-const WIDTH = HEIGHT
+$width = 10
+$height = 10
 fnc fill_array(arr: int*, width: int, height: int, value: int){
     for let i = 0; i < width*height; ++i {
         arr[i] = value
     }
 }
-let array: int[WIDTH * HEIGHT] = null
+let array: int[$width * $height] = null
 fnc main(): int {
     const bg_color = 0xFFA498
-    fill_array(&array[0], WIDTH, HEIGHT, bg_color)
+    fill_array(&arr[0], $width, $height, bg_color)
     return 0
 }

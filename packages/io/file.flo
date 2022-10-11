@@ -1,5 +1,5 @@
 import string, exit in "@flo/core"
-import open, close, read, write, lseek, unlink, lstat, access, O_RDONLY, O_WRONLY, O_CREAT, SEEK_END, SEEK_SET, F_OK, R_OK, W_OK, X_OK in "@flo/sys"
+import open, close, read, write, lseek, unlink, lstat, access, $O_RDONLY, $O_WRONLY, $O_CREAT, $SEEK_END, $SEEK_SET, $F_OK, $R_OK, $W_OK, $X_OK in "@flo/sys"
 class File {
     path: string
     stat_struct: i8*
@@ -13,7 +13,7 @@ class File {
         return size_offset[0]
     }
     read(size: int): i8* {
-        let fd = open(this.path.to_cstring(), O_RDONLY)
+        let fd = open(this.path.to_cstring(), $O_RDONLY)
         if fd < 0 {
             exit("Error: could not open file\n")
         }
@@ -25,7 +25,7 @@ class File {
         return file_contents
     }
     write(buffer: i8*, size: int){
-        let fd = open(this.path.to_cstring(), O_CREAT or O_WRONLY)
+        let fd = open(this.path.to_cstring(), $O_CREAT or $O_WRONLY)
         if fd < 0 {
             exit("Error: could not open file\n")
         }
@@ -42,16 +42,16 @@ class File {
         this.write(data.get_bytes(), data.length)
     }
     exists(): bool {
-        return access(this.path.to_cstring(), F_OK) >= 0
+        return access(this.path.to_cstring(), $F_OK) >= 0
     }
     is_readable(): bool {
-        return access(this.path.to_cstring(), R_OK) >= 0
+        return access(this.path.to_cstring(), $R_OK) >= 0
     }
     is_writable(): bool {
-        return access(this.path.to_cstring(), W_OK) >= 0
+        return access(this.path.to_cstring(), $W_OK) >= 0
     }
     is_executable(): bool {
-        return access(this.path.to_cstring(), X_OK) >= 0
+        return access(this.path.to_cstring(), $X_OK) >= 0
     }
     is_dir(): bool {
         let st_mode_offset = (this.stat_struct + 24) as int*

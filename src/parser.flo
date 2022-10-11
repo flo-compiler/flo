@@ -235,6 +235,16 @@ class VarDeclarationStatement (StatementNode) {
         this.var_type = new Optional<TypeNode>()
     }
 }
+
+class ConstDeclarationStatement (StatementNode) {
+    const_name: IdentifierToken
+    const_type: Optional<TypeNode>
+    value: ExpressionNode
+    constructor(range: FloRange){
+        super(StatementKind.CONST, range)
+        this.const_type = new Optional<TypeNode>()
+    }
+}
 class ArgNode {
     name: IdentifierToken
     parsed_type: Optional<TypeNode>
@@ -294,10 +304,6 @@ class ImportNode {
         this.import_list = []
     }
 }
-class ConstNode {
-    name: Token
-    value: ExpressionNode
-}
 class TypeAliasNode {
     name: IdentifierToken
     parsed_type: TypeNode
@@ -307,13 +313,15 @@ class ModuleAST {
     classes: ClassDeclarationNode[]
     enums: EnumNode[]
     imports: ImportNode[] 
-    consts: ConstNode[] 
+    consts: ConstDeclarationStatement[] 
+    vars: VarDeclarationStatement[] 
     type_aliases: TypeAliasNode[] 
     constructor() {
         this.functions = []
         this.classes = []
         this.imports = []
         this.consts = []
+        this.vars = []
         this.enums = []
         this.type_aliases = []
     }
@@ -797,6 +805,8 @@ class Parser {
             return this.parse_return_statement()
         else if this.current_token.ttype == TokType.LET_KW
             return this.parse_variable_declaration_statement()
+        else if this.current_token.ttype == TokType.CONST_KW
+            return this.parse_const_declaration_statement()
         else if this.current_token.ttype == TokType.CONTINUE_KW {
             this.advance()
             return new StatementNode(StatementKind.CONTINUE, start_range)
@@ -917,13 +927,18 @@ class Parser {
         this.parse_class_block(class_node)
         return class_node
     }
-    parse_const(): ConstNode {
-        let const_node = new ConstNode()
+    parse_const_declaration_statement(): ConstDeclarationStatement {
+        let const_decl_node = new ConstDeclarationStatement(this.current_token.range)
         this.advance()
-        const_node.name = this.eat(TokType.IDENTIFER)
+        const_decl_node.const_name = this.eat(TokType.IDENTIFER) as IdentifierToken
+        if this.current_token.ttype == TokType.COL {
+            this.advance()
+            const_decl_node.const_type.set_value(this.parse_type())
+        }
         this.eat(TokType.EQ)
-        const_node.value = this.parse_expression()
-        return const_node
+        const_decl_node.value = this.parse_expression()
+        const_decl_node.range = merge_range(const_decl_node.range, const_decl_node.value.range)
+        return const_decl_node
     }
     parse_import(): ImportNode {
         let import_node = new ImportNode()
@@ -971,11 +986,13 @@ class Parser {
             else if this.current_token.ttype == TokType.IMPORT_KW
                 module_node.imports << this.parse_import()
             else if this.current_token.ttype == TokType.CONST_KW
-                module_node.consts << this.parse_const()
+                module_node.consts << this.parse_const_declaration_statement()
+            else if this.current_token.ttype == TokType.LET_KW
+                module_node.vars << this.parse_variable_declaration_statement()
             else if this.current_token.ttype == TokType.TYPE_KW
                 module_node.type_aliases << this.parse_type_alias()
             else 
-                this.error("Illegal expression expected: 'fnc', 'class', 'enum', 'import' or 'const'")
+                this.error("Illegal expression expected: 'fnc', 'class', 'enum', 'import', 'const' or 'let'")
         }
         return module_node
     }

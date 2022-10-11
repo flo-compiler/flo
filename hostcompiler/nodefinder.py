@@ -7,7 +7,7 @@ from typing import List
 from utils import get_ast_from_file
 from context import Context
 from flotypes import FloArray, FloGeneric, FloInlineFunc, FloObject, FloPointer
-from astree import ArrayAssignNode, ClassDeclarationNode, ConstDeclarationNode, EnumDeclarationNode, FncCallNode, FncDefNode, FncNode, ForEachNode, ForNode, GenericClassNode, IfNode, ImportNode, MethodDeclarationNode, NewMemNode, Node, NumOpNode, PropertyAssignNode, PropertyDeclarationNode, ReturnNode, StmtsNode, TernaryNode, TypeAliasNode, TypeNode, VarAccessNode, VarAssignNode, Visitor, WhileNode
+from astree import ArrayAssignNode, ClassDeclarationNode, MacroDeclarationNode, EnumDeclarationNode, FncCallNode, FncDefNode, FncNode, ForEachNode, ForNode, GenericClassNode, IfNode, ImportNode, MethodDeclarationNode, NewMemNode, Node, NumOpNode, PropertyAssignNode, PropertyDeclarationNode, ReturnNode, StmtsNode, TernaryNode, TypeAliasNode, TypeNode, VarAccessNode, VarAssignNode, Visitor, WhileNode
 from errors import Range, NameError
 
 
@@ -162,11 +162,11 @@ class NodeFinder(Visitor):
         for arg in node.args:
             self.visit(arg)
 
-    def visitConstDeclarationNode(self, node: ConstDeclarationNode):
-        const_name = node.const_name.value
-        if const_name in self.ignore:
+    def visitMacroDeclarationNode(self, node: MacroDeclarationNode):
+        macro_name = node.macro_name.value
+        if macro_name in self.ignore:
             return
-        self.context.set(const_name, node)
+        self.context.set(macro_name, node)
         self.visit(node.value)
 
     def visitForEachNode(self, node: ForEachNode):

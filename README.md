@@ -34,10 +34,6 @@ Still in progress. In the future it might be acheived by:
 $STDOUT = 0
 write($STDOUT, "ss", 2)
 ```
-- [ ] Global Variables (static keyword). 
-    - `static y: int = 4`
-    - `static x: Readonly<T>` is a global const.
-
 - [ ] Optional chaining `a?.b?.c`
 
 ## Ranges

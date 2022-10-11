@@ -29,7 +29,7 @@ class Visitor:
 
     def visitStmtsNode(self, node): pass
 
-    def visitConstDeclarationNode(self, node): pass
+    def visitMacroDeclarationNode(self, node): pass
 
     def visitVarDeclarationNode(self, node): pass
     
@@ -205,14 +205,14 @@ class GenericClassNode(Node):
     def accept(self, visitor: Visitor):
         return visitor.visitGenericClassNode(self)
 
-class ConstDeclarationNode(Node):
-    def __init__(self, const_name: Token, value: Node, range: Range):
-        self.const_name = const_name
+class MacroDeclarationNode(Node):
+    def __init__(self, macro_name: Token, value: Node, range: Range):
+        self.macro_name = macro_name
         self.value = value
         super().__init__(range)
 
     def accept(self, visitor: Visitor):
-        return visitor.visitConstDeclarationNode(self)
+        return visitor.visitMacroDeclarationNode(self)
 
 class VarDeclarationNode(Node):
     def __init__(self, var_name: Token, type: TypeNode, value: Node, range: Range):

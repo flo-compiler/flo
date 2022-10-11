@@ -306,6 +306,10 @@ class Analyzer(Visitor):
 
     def visitVarAccessNode(self, node: VarAccessNode):
         var_name = node.var_name.value
+        if var_name == "true":
+            return FloInt(1, 1)
+        elif var_name == "false":
+            return FloInt(0, 1)
         value = self.context.get(var_name)
         if value == None:
             NameError(node.var_name.range,
@@ -322,8 +326,8 @@ class Analyzer(Visitor):
                 break
         self.current_block.pop_block()
 
-    def visitConstDeclarationNode(self, node: ConstDeclarationNode):
-        const_name = node.const_name.value
+    def visitMacroDeclarationNode(self, node: MacroDeclarationNode):
+        const_name = node.macro_name.value
         value = self.visit(node.value)
         self.context.set(const_name, value)
         self.constants.append(const_name)

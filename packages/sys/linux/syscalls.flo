@@ -58,36 +58,36 @@ fnc unlink(pathname: i8*): int {
     return syscall(0x57, pathname)
 }
 /* IO consts */
-const O_RDONLY = 0
-const O_WRONLY = 1
-const O_RDWR = 2
-const O_CREAT = 100
-const R_OK = 4		/* Test for read permission.  */
-const W_OK = 2		/* Test for write permission.  */
-const X_OK = 1		/* Test for execute permission.  */
-const F_OK = 0      /* Test if file exists */
-const O_NONBLOCK = 2048
+$O_RDONLY = 0
+$O_WRONLY = 1
+$O_RDWR = 2
+$O_CREAT = 100
+$R_OK = 4		/* Test for read permission.  */
+$W_OK = 2		/* Test for write permission.  */
+$X_OK = 1		/* Test for execute permission.  */
+$F_OK = 0      /* Test if file exists */
+$O_NONBLOCK = 2048
 
-const F_SETFL = 4
-const F_GETFL = 3
+$F_SETFL = 4
+$F_GETFL = 3
 /** SEEKS **/
-const SEEK_SET = 0 
-const SEEK_CUR = 1
-const SEEK_END = 2
+$SEEK_SET = 0 
+$SEEK_CUR = 1
+$SEEK_END = 2
 
 /* net consts */
 /* Socket Framilies */
-const AF_UNSPEC = 0 /* Unspecified Family */
-const AF_INET = 2 /* IPV4*/
-const AF_IPX = 6 /* IPX/SPX */
-const AF_APPLETALK = 16 /* AppleTalk */
-const AF_NETBIOS = 17 /* NetBIOS */
-const AF_INET6 = 23 /* IPV6 */
-const AF_IRDA = 23 /* IrDA (Infrared) */
-const AF_BTH = 31 /* Bluetooth */
+$AF_UNSPEC = 0 /* Unspecified Family */
+$AF_INET = 2 /* IPV4*/
+$AF_IPX = 6 /* IPX/SPX */
+$AF_APPLETALK = 16 /* AppleTalk */
+$AF_NETBIOS = 17 /* NetBIOS */
+$AF_INET6 = 23 /* IPV6 */
+$AF_IRDA = 23 /* IrDA (Infrared) */
+$AF_BTH = 31 /* Bluetooth */
 /* Socket types */
-const SOCK_STREAM = 1 /* TCP & AF_INET or AF_INET6 */
-const SOCK_DGRAM = 2 /* UDP & AF_INET or AF_INET6 */
-const SOCK_RAW = 3 /* Header manipulation */
-const SOCK_RDM = 4 /* Reliable multicast programming */
-const SOCK_SEQPACKET = 5 /* Pseudo-stream packets */
+$SOCK_STREAM = 1 /* TCP & AF_INET or AF_INET6 */
+$SOCK_DGRAM = 2 /* UDP & AF_INET or AF_INET6 */
+$SOCK_RAW = 3 /* Header manipulation */
+$SOCK_RDM = 4 /* Reliable multicast programming */
+$SOCK_SEQPACKET = 5 /* Pseudo-stream packets */
