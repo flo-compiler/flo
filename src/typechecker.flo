@@ -389,6 +389,15 @@ fnc dump_type(ty: Type, force_bit_size = false): string {
         return force_bit_size ? "f"+$WORD_SIZE : "float"
     if ty.kind == TypeKind.VOID
         return "void"
+    if ty.kind == TypeKind.FNC {
+        let fnc_ty = ty as FunctionType
+        let str = "("
+        for let i = 0; i < fnc_ty.arg_types.length; ++i {
+            str += dump_type(fnc_ty.arg_types[i]) + ","
+        }
+        str+=") => "+dump_type(fnc_ty.return_type)
+        return str
+    }
     if ty.kind == TypeKind.PTR
         return dump_type((ty as PointerType).pointee_type, force_bit_size)+"*"
     if ty.kind == TypeKind.OBJECT
@@ -637,9 +646,6 @@ class TypeChecker {
     }
     get_scope(scope_id: ScopeId): Scope {
        return this.program.modules[scope_id.module_id].scopes[scope_id.id]
-    }
-    get_function(var_id: VarId): Function {
-        return this.program.modules[var_id.module_id].functions[var_id.id]
     }
     get_current_module(): Module {
         return this.program.modules[this.current_module]
@@ -1030,8 +1036,13 @@ class TypeChecker {
     fill_in_call_args(called: Expression, args: ExpressionNode[]): Expression[]{
         let func = "\0" as Function
         let called_args: Expression[] = []
-        if called.expr_kind == ExpressionKind.VAR
-            func = this.get_function((called as VarAccessExpression).value_id)
+        if called.expr_kind == ExpressionKind.VAR {
+            let var_id = (called as VarAccessExpression).value_id
+            if var_id.kind == VarIdKind.FNC
+                func = get_func(this.program, var_id)
+            else 
+                return called_args
+        }
         else {
             println("Case not handled; fill_in_call_args")
             exit()
