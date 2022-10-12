@@ -7,40 +7,23 @@ const MAP_ANONYMOUS = 0x20
 
 fnc new_jit_mem(num_pages = 1): i8*{
     let size = num_pages * PAGE_SIZE
-    return mmap(null, size, PROT_EXEC or PROT_READ or PROT_WRITE, MAP_PRIVATE or MAP_ANONYMOUS, -1, 0)
+    return mmap(null, size, PROT_EXEC or PROT_WRITE, MAP_PRIVATE or MAP_ANONYMOUS, -1, 0)
 }
 
 fnc create_jit_function(machine_code: i8*, len: int): () => i64 {
     let jit_mem = new_jit_mem()
-    for let i = 0; i < len; i++ {
-        jit_mem[i] = machine_code[i]
-    }
+    memcpy(jit_mem, machine_code, len)
     return jit_mem as () => i64
 }
-fnc main(): int {
-    let message_body: i8* = "CS Class"
-    const message_size = 8
-    const end_machine_inst = 31
-    const machine_code_size = end_machine_inst + message_size
-    let machine_code: i8[machine_code_size] = [
-        0x48, 0xc7, 0xc0, 0x01, 0x00, 0x00, 0x00,           //Store the "write" system call number 0x01 for Linux
-        0x48, 0xc7, 0xc7, 0x01, 0x00, 0x00, 0x00,           //Store stdin file descriptor 0x01
-        0x48, 0x8d, 0x35, 0x0a, 0x00, 0x00, 0x00,           //Store the location of the string to write (3 instructions from the current instruction pointer)
-        0x48, 0xc7, 0xc2, 0x00, 0x00, 0x00, 0x00,           //Store the length of the string (initially zero)
-        0x0f, 0x05,                                         //Execute the system call
-        0xc3,                                               //return instruction
-        0, 0, 0, 0, 0, 0, 0, 0 
-    ]
-    machine_code[24] = ((message_size and 0xFF) >> 0) as i8
-    machine_code[25] = ((message_size and 0xFF00) >> 8) as i8
-    machine_code[26] = ((message_size and 0xFF0000) >> 16) as i8
-    machine_code[27] = ((message_size and 0xFF000000) >> 24) as i8
-    for let i = 0; i < message_size; ++i {
-        machine_code[end_machine_inst+i] = message_body[i]
-    }
-    let func = create_jit_function(&machine_code[0], machine_code_size)
+fnc main(argc: int, argv: i8**): int {
+    const code_size = 6
+    let machine_code: i8[code_size] = [0xb8, 0x00, 0x00, 0x00, 0x00, 0xc3]
+    let num = atoi(argv[0])
+    memcpy(&machine_code[1], &num, 4)
+    let func = create_jit_function(&machine_code[0], code_size)
     func()
     return 0
 }
-fnc memset(ptr: i8*, addr: i32, n: int) // stdlib
-fnc mmap(addr: i8*, len: int, prot: int, flags: int, fd: int, offset: i32): i8* // stdlib
+fnc memcpy(src: i8*, dest: i8*, len: int) // stdlib
+fnc atoi(str: i8*): int //c stdlib
+fnc mmap(addr: i8*, len: int, prot: int, flags: int, fd: int, offset: i32): i8* // linux syscall
