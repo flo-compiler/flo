@@ -1034,14 +1034,13 @@ class TypeChecker {
         return new IndexExpression(root_expression, index, value_type)
     }
     fill_in_call_args(called: Expression, args: ExpressionNode[]): Expression[]{
-        let func = "\0" as Function
+        let func = new Optional<Function>()
         let called_args: Expression[] = []
+        let fnc_ty = called.value_type as FunctionType
         if called.expr_kind == ExpressionKind.VAR {
             let var_id = (called as VarAccessExpression).value_id
             if var_id.kind == VarIdKind.FNC
-                func = get_func(this.program, var_id)
-            else 
-                return called_args
+                func.set_value(get_func(this.program, var_id))
         }
         else {
             println("Case not handled; fill_in_call_args")
@@ -1049,11 +1048,13 @@ class TypeChecker {
         }
 
         for let i = 0; i < args.length; i++ {
-            called_args << this.check_expression(func.args[i].value_type, args[i])
+            called_args << this.check_expression(fnc_ty.arg_types[i], args[i])
         }
-        if func.args.length > args.length {
-            for i = args.length; i < func.args.length; ++i {
-                let arg = func.args[i]
+        if !func.has_value { return called_args }
+        let func_value = func.value
+        if func_value.args.length > args.length {
+            for i = args.length; i < func_value.args.length; ++i {
+                let arg = func_value.args[i]
                 if arg.default.has_value
                     called_args << arg.default.value
                 else
@@ -1070,7 +1071,7 @@ class TypeChecker {
             this.error(ErrorKind.TYPE, "Expected a function type for call but got '"+dump_type(func_ty)+"'", call_expr_node.callee.range)
         let args = this.fill_in_call_args(called, call_expr_node.args)
         if func_ty.arg_types.length != args.length
-             this.error(ErrorKind.GEN, "Expected "+func_ty.arg_types.length+" arguments on function call but got "+call_expr_node.args.length, call_expr_node.range)
+             this.error(ErrorKind.GEN, "Expected "+func_ty.arg_types.length+" arguments on function call but got "+args.length, call_expr_node.range)
         for let i = 0; i < args.length; ++i {
             if args[i].value_type != func_ty.arg_types[i]
                 this.error(ErrorKind.TYPE, "Expected type '"+dump_type(func_ty.arg_types[i])+"' but got type '"+dump_type(args[i].value_type)+"' as function call argument", call_expr_node.args[i].range)

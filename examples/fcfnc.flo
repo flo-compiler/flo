@@ -1,0 +1,9 @@
+fnc system(element: i8*)
+fnc exec_function(func: (i8*) => void, param: i8* ){
+    func(param)
+}
+fnc main(): int {
+    let x = system
+    exec_function(x, "echo 'hello world'")
+    return 0
+}
