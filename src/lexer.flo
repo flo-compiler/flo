@@ -151,6 +151,9 @@ class Lexer {
         return '\0'
     }
     advance(){
+        if this.eof() {
+            return
+        }
         this.current_char = this.text.get_byte(++this.idx)
         if this.current_char == '\n' {
             this.col = 0
@@ -171,7 +174,7 @@ class Lexer {
     skip_comment(): bool{
         if this.peek() == '*' {
             this.advance()
-            while true {
+            while !this.eof() {
                 if this.peek() == '*' and this.peek(2) == '/' break
                 this.advance()
             }
@@ -180,7 +183,7 @@ class Lexer {
             return true
         } else if this.peek() == '/' {
             this.advance()
-            while this.peek() != '\n'
+            while this.peek() != '\n' and !this.eof()
                 this.advance()
             return true
         }
@@ -250,11 +253,10 @@ class Lexer {
     }
     base_int_token(base: int): IntToken{
         this.advance()
-        this.advance()
         let length = 3
         let value = 0
         let current_char = '\0'
-        while in_base_range(current_char = capitalize(this.current_char), base) {
+        while in_base_range(current_char = capitalize(this.peek()), base) and !this.eof() {
             value *= base
             let add =  current_char - '0'
             if (current_char >= 'A') add = current_char - 'A' + 10
@@ -274,7 +276,7 @@ class Lexer {
             return this.base_int_token(8)
         if this.current_char == '0' and this.peek() == 'x'
             return this.base_int_token(16)
-        while is_number_char(next_char = this.peek()) or next_char == '.' {
+        while (is_number_char(next_char = this.peek()) or next_char == '.') and !this.eof() {
             if next_char == '.' and (is_float or !is_number_char(this.peek(2))) break
             if this.current_char == '.' is_float = true
             length++
@@ -288,7 +290,7 @@ class Lexer {
         let length = 1
         let start = this.idx
         let next_char = this.peek()
-        while is_identifier_char(next_char = this.peek()) or is_number_char(next_char){
+        while (is_identifier_char(next_char = this.peek()) or is_number_char(next_char)) and !this.eof() {
             length++
             this.advance()
         }
@@ -302,7 +304,7 @@ class Lexer {
         let length = 2
         let escape_next = false
         this.advance()
-        while true {
+        while !this.eof() {
             if (this.current_char == '"' and !escape_next) break
             length++
             escape_next = this.current_char == '\\'

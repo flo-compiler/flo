@@ -1,4 +1,3 @@
-
 class Node {
     range: FloRange
     constructor(range: FloRange){
@@ -385,7 +384,7 @@ class Parser {
         return new Token(TokType.EOF, current_token.range)
     }
     new_lines() {
-        while this.current_token.ttype == TokType.LN
+        while this.current_token.ttype == TokType.LN and this.can_parse()
             this.advance()
     }
     parse_primitive_type(): TypeNode {
@@ -421,7 +420,7 @@ class Parser {
     }
     parse_type_list(type_nodes: TypeNode[]) {
         type_nodes << this.parse_type()
-        while this.current_token.ttype == TokType.COMMA
+        while this.current_token.ttype == TokType.COMMA and this.can_parse()
             type_nodes << this.parse_type()
     }
     parse_object_type(): RecordTypeNode {
@@ -473,11 +472,15 @@ class Parser {
         return type_node
     }
     parse_expression_list(expressions: ExpressionNode[]) {
+        this.new_lines()
         expressions << this.parse_expression()
+        this.new_lines()
         while this.current_token.ttype == TokType.COMMA and this.can_parse(){
             this.advance()
+            this.new_lines()
             expressions << this.parse_expression()
         }
+        this.new_lines()
     }
     parse_array_expression(): ArrayExpressionNode {
         let array_expression = new ArrayExpressionNode(this.current_token.range)
@@ -907,7 +910,7 @@ class Parser {
     parse_generic_parameters(generic_parameters: GenericParameterNode[]) {
         this.advance()
         generic_parameters << new GenericParameterNode(this.eat(TokType.IDENTIFER) as IdentifierToken)
-        while this.current_token.ttype == TokType.COMMA  {
+        while this.current_token.ttype == TokType.COMMA and this.can_parse() {
             this.advance()
             generic_parameters << new GenericParameterNode(this.eat(TokType.IDENTIFER) as IdentifierToken)
         }
@@ -946,7 +949,7 @@ class Parser {
         if this.current_token.ttype == TokType.IDENTIFER {
             import_node.import_list << (this.current_token as IdentifierToken)
             this.advance()
-            while this.current_token.ttype == TokType.COMMA {
+            while this.current_token.ttype == TokType.COMMA and this.can_parse() {
                 this.advance()
                 import_node.import_list << (this.eat(TokType.IDENTIFER) as IdentifierToken)
             }
@@ -962,7 +965,7 @@ class Parser {
         this.new_lines()
         this.eat(TokType.LBRACE)
         this.new_lines()
-        while this.current_token.ttype == TokType.IDENTIFER {
+        while this.current_token.ttype == TokType.IDENTIFER and this.can_parse() {
             enum_node.fields << new EnumNodeField(this.current_token as IdentifierToken)
             this.advance()
             this.new_lines()

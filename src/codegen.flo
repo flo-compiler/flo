@@ -129,7 +129,7 @@ class CodeGen {
         }
         return this.module
     }
-    codegen_type(tt: Type): LLVMTypeRef {
+    codegen_type(tt: Type, fnc_pointer = true): LLVMTypeRef {
         if tt.kind == TypeKind.VOID
             return LLVMVoidType()
         if tt.kind == TypeKind.BOOL
@@ -166,11 +166,14 @@ class CodeGen {
             let func_ty = tt as FunctionType
             for let i = 0; i < func_ty.arg_types.length; ++i {
                 param_types << this.codegen_type(func_ty.arg_types[i])
-                //TODO: add a new context and put the argnames to context
             }
             let ret_type = this.codegen_type(func_ty.return_type)
-            return  LLVMFunctionType(ret_type, param_types.buffer, param_types.length, false)
+            let llvm_fnty = LLVMFunctionType(ret_type, param_types.buffer, param_types.length, false)
+            if fnc_pointer
+                llvm_fnty = LLVMPointerType(llvm_fnty)
+            return llvm_fnty
         }
+        println("other:", dump_type(tt))
         // if tt.kind == TypeKind.ENUM
             return LLVMInt32Type()
             // OBJECT
@@ -396,7 +399,7 @@ class CodeGen {
                     return LLVMBuildFPExt(builder, val, ty,"")
                 }
             }
-            if is_const return LLVMConstBitCast(val, ty) 
+            if is_const return LLVMConstBitCast(val, ty)
             return LLVMBuildBitCast(builder, val, ty, "")
         } 
         return val
@@ -657,7 +660,7 @@ class CodeGen {
         this.codegen_block(func_builder, func.block)
     }
     declare_function(func: Function) {
-        let llvm_fnc = LLVMAddFunction(this.module, func.name.to_cstring(), this.codegen_type(func.value_type))
+        let llvm_fnc = LLVMAddFunction(this.module, func.name.to_cstring(), this.codegen_type(func.value_type, false))
         this.global_var_scope.set(create_var_key(func.id), llvm_fnc)
     }
 }
