@@ -345,6 +345,8 @@ def make_char(lexer: Lexer):
             char_val = "\t"
         elif lexer.current_char == "r":
             char_val = "\r"
+        elif lexer.current_char == "f":
+            char_val = "\f"
         elif lexer.current_char == "v":
             char_val = "\v"
         elif lexer.current_char == "'":

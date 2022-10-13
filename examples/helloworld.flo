@@ -1,5 +1,5 @@
-fnc system(cmd: i8*)
+fnc write(fd: int, cmd: i8*, len: int)
 fnc main(): int {
-    system("echo 'hello, world!'")
+    write(0, "\033[1;31mHello World\n\033[0m", 24)
     return 0
 }

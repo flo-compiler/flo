@@ -1,6 +1,6 @@
 import "@flo/core/core"
 import "@flo/net/server"
-const PORT = 8080
+$PORT = 8080
 fnc handler(request: Request, response: Response){
     response.write("HTTP/1.1 OK\r\n")
     response.write("Server: FloServer\r\n")
@@ -9,6 +9,6 @@ fnc handler(request: Request, response: Response){
     response.end("<h1>Hello From Flo Server</h1>")
 }
 fnc main(){
-    let server = new Server(PORT)
+    let server = new Server($PORT)
     server.listen(handler)
 }
