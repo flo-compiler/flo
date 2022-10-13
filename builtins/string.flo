@@ -2,10 +2,11 @@ import memcmp, memcpy in "@flo/sys"
 class string {
     buffer: i8*
     length: int
+    size: int
     constructor(data: i8*, len: int){
-        this.buffer = new i8[len]
         this.buffer = data
         this.length = len
+        this.size = len
     }
     __add__(data: string): string {
         let new_str_len = this.length + data.length
@@ -14,6 +15,14 @@ class string {
         let trailing_buffer = new_buffer + this.length
         memcpy(trailing_buffer, data.buffer, data.length+1)
         return new string(new_buffer, new_str_len)   
+    }
+    add_byte(char: i8){
+        if this.length + 1 >= this.size {
+            this.size *= 2
+            this.buffer = this.buffer.resize(this.size)
+        }
+        this.buffer[this.length]  = char
+        this.length++
     }
     __getitem__(index: int): string {
         let new_buffer = new i8[2]

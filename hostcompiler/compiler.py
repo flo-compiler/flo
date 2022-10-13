@@ -106,7 +106,7 @@ class Compiler(Visitor):
             return node.expects.new_with_val(str_buff.value)
         str_len = FloInt(len(str_val.encode('utf-8')))
         string_class = FloClass.classes.get("string")
-        return string_class.constant_init(self.builder, [str_buff, str_len])
+        return string_class.constant_init(self.builder, [str_buff, str_len, str_len])
 
     def visitNumOpNode(self, node: NumOpNode):
         a = self.visit(node.left_node)
