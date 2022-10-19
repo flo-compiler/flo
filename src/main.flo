@@ -41,8 +41,8 @@ fnc flag_value_or(args: string[], name: string, default: string): string {
     }
     return default
 }
-fnc main(size: int, ptr: i8**): int {
-    let args = parse_args(size, ptr)
+fnc main(argc: int, argv: i8**): int {
+    let args = parse_args(argc, argv)
     if args.length >= 2 {
         let errors: FloError[] = []
         if flag(args, "-v") or flag(args, "--version"){
@@ -84,11 +84,11 @@ fnc main(size: int, ptr: i8**): int {
         let flo_module = codegen.codegenProgram(program)
         if flag(args, "--print-llvm")
             flo_module.print()
-        if flag(args, "-e") or flag(args, "--execute") {
-            flo_module.exec()
-        }
         if !flag(args, "--no-output") {
             flo_module.write_object(flag_value_or(args, "-o", "a")+ ".o")
+        }
+        if flag(args, "-e") or flag(args, "--execute") {
+            flo_module.exec()
         }
     } else {
         print_message_error(ErrorKind.GEN, "No input file specified.")

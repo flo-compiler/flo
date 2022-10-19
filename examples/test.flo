@@ -1,14 +1,13 @@
-const HEIGHT = 10
-const WIDTH = 10
-fnc fill_array(arr: int*, width: int, height: int, value: int){
-    for let i = 0; i < width*height; ++i {
-        arr[i] = value
-    }
+class Vector {
+    x: int
+    y: int
 }
-let array: int[WIDTH * HEIGHT] = null
-
+fnc unit_vector(): Vector {
+    let vec: Vector = new Vector()
+    vec.x = vec.y = 0
+    return vec
+}
 fnc main(): int {
-    const bg_color = 0xFFA498
-    fill_array(&array[0], WIDTH, HEIGHT, bg_color)
-    return 0
+    let vec = unit_vector()
+    return vec.x
 }

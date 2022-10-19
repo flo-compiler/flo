@@ -3,9 +3,9 @@ FC=hostcompiler/flo.py
 
 FCFLAGS=--opt-level=3
 
-CXX=clang++
+CXX=g++
 
-CXXFLAGS := -fno-rtti -O3 -g
+CXXFLAGS := -g3 -O0 
 
 LLVM_BUILD_PATH = $$HOME/llvm-project/build
 
@@ -24,6 +24,9 @@ flo: flo.o
 
 flo.o: src/*.flo
 	$(FC) $(FCFLAGS) src/main.flo -o flo
+
+# flolib.o:
+
 
 clean:
 	rm -f *.o flo *.so *.ll

@@ -81,6 +81,13 @@ fnc LLVMAddFunction(M: LLVMModuleRef, name: i8*, FunctionTy: LLVMTypeRef): LLVMV
 fnc LLVMGetNamedFunction(M: LLVMModuleRef, Name: i8*): LLVMValueRef 
 fnc LLVMDumpType(Val: LLVMTypeRef)
 /* types */
+fnc LLVMInt1TypeInContext(C: LLVMContextRef): LLVMTypeRef
+fnc LLVMInt8TypeInContext(C: LLVMContextRef): LLVMTypeRef
+fnc LLVMInt16TypeInContext(C: LLVMContextRef): LLVMTypeRef
+fnc LLVMInt32TypeInContext(C: LLVMContextRef): LLVMTypeRef
+fnc LLVMInt64TypeInContext(C: LLVMContextRef): LLVMTypeRef
+fnc LLVMInt128TypeInContext(C: LLVMContextRef): LLVMTypeRef
+fnc LLVMIntTypeInContext(C: LLVMContextRef, NumBits: int): LLVMTypeRef
 fnc LLVMInt1Type(): LLVMTypeRef 
 fnc LLVMInt8Type(): LLVMTypeRef 
 fnc LLVMInt16Type(): LLVMTypeRef 
@@ -89,6 +96,32 @@ fnc LLVMInt64Type(): LLVMTypeRef
 fnc LLVMInt128Type(): LLVMTypeRef
 fnc LLVMIntType(bits: int): LLVMTypeRef 
 
+/**
+ * Obtain a 16-bit floating point type from a context.
+ */
+fnc LLVMHalfTypeInContext(C: LLVMContextRef): LLVMTypeRef
+fnc LLVMFloatTypeInContext(C: LLVMContextRef): LLVMTypeRef
+
+/**
+ * Obtain a 64-bit floating point type from a context.
+ */
+fnc LLVMDoubleTypeInContext(C: LLVMContextRef): LLVMTypeRef
+
+/**
+ * Obtain a 80-bit floating point type (X87) from a context.
+ */
+fnc LLVMX86FP80TypeInContext(C: LLVMContextRef): LLVMTypeRef
+
+/**
+ * Obtain a 128-bit floating point type (112-bit mantissa) from a
+ * context.
+ */
+fnc LLVMFP128TypeInContext(C: LLVMContextRef): LLVMTypeRef
+
+/**
+ * Obtain a 128-bit floating point type (two 64-bits) from a context.
+ */
+fnc LLVMPPCFP128TypeInContext(C: LLVMContextRef): LLVMTypeRef
 fnc LLVMHalfType(): LLVMTypeRef 
 fnc LLVMBFloatType(): LLVMTypeRef 
 fnc LLVMFloatType(): LLVMTypeRef 
@@ -109,6 +142,8 @@ fnc LLVMArrayType(ElementType: LLVMTypeRef, element_count: int): LLVMTypeRef
 fnc LLVMPointerType(ElementType: LLVMTypeRef, address_space = 0): LLVMTypeRef
 
 fnc LLVMVoidType(): LLVMTypeRef 
+
+fnc LLVMVoidTypeInContext(C: LLVMContextRef): LLVMTypeRef
 fnc LLVMLabelType(): LLVMTypeRef 
 fnc LLVMX86MMXType(): LLVMTypeRef 
 fnc LLVMX86AMXType(): LLVMTypeRef 

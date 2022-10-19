@@ -1,0 +1,14 @@
+const HEIGHT = 10
+const WIDTH = 10
+fnc fill_array(arr: int*, width: int, height: int, value: int){
+    for let i = 0; i < width*height; ++i {
+        arr[i] = value
+    }
+}
+let array: int[WIDTH * HEIGHT] = null
+
+fnc main(): int {
+    const bg_color = 0xFFA498
+    fill_array(&array[0], WIDTH, HEIGHT, bg_color)
+    return 0
+}
