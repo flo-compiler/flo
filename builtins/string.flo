@@ -13,7 +13,7 @@ class string {
         let new_buffer = new i8[new_str_len]
         memcpy(new_buffer, this.buffer, this.length)
         let trailing_buffer = new_buffer + this.length
-        memcpy(trailing_buffer, data.buffer, data.length+1)
+        memcpy(trailing_buffer, data.buffer, data.length + 1)
         return new string(new_buffer, new_str_len)   
     }
     add_byte(char: i8){

@@ -15,7 +15,7 @@ class RecordTypeNode (TypeNode) {
     name: IdentifierToken
     generic_args: TypeNode[]
     constructor(name: IdentifierToken, range: FloRange) {
-        super(TypeKind.OBJECT, range)
+        super(TypeKind.RECORD, range)
         this.name = name
         this.generic_args = []
         
@@ -97,7 +97,7 @@ class StringExpressionNode (ExpressionNode) {
 class VarAccessExpressionNode (ExpressionNode) {
     name: IdentifierToken
     constructor(name: IdentifierToken){
-        super(ExpressionKind.VAR, name.range)
+        super(ExpressionKind.ACCESS, name.range)
         this.name = name
     }
 }
@@ -491,8 +491,9 @@ class Parser {
         return array_expression
     }
     parse_new_expression(): NewExpressionNode {
-        let new_node = new NewExpressionNode(this.parse_type(), this.current_token.range)
+        let start_range = this.current_token.range
         this.advance()
+        let new_node = new NewExpressionNode(this.parse_type(), start_range)
         if this.current_token.ttype == TokType.LPAR {
             this.advance()
             if this.current_token.ttype != TokType.RPAR
@@ -523,7 +524,7 @@ class Parser {
             return expression
         } else
             this.error("Expected an Expression value")
-        return new ExpressionNode(ExpressionKind.VAR, this.current_token.range)
+        return new ExpressionNode(ExpressionKind.ACCESS, this.current_token.range)
     }
     parse_index_expression(expression: ExpressionNode): ExpressionIndexNode {
         this.eat(TokType.LBRACKET)

@@ -145,6 +145,8 @@ fnc token_str(toktype: TokType): string {
         return "AS_KW"
     if toktype == TokType.IS_KW
         return "IS_KW"
+    if toktype == TokType.LET_KW
+        return "LET_KW"
     //if toktype == TokType.EXTENDS_KW
     return "EXTENDS_KW"
 }
