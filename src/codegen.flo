@@ -7,6 +7,8 @@ class GeneratedModule {
         this.llvm_mod = llvm_mod
         let zero_char = '\0'
         this.errors = &zero_char
+        LLVMVerifyModule(this.llvm_mod, LLVMVerifierFailureAction.LLVMAbortProcessAction, &this.errors)
+        this.check_errors()
         LLVMLinkInMCJIT()
         LLVMInitializeNativeTarget()
         LLVMInitializeNativeAsmPrinter()
@@ -19,17 +21,34 @@ class GeneratedModule {
             exit()
         }
     }
+    run_passes(level: int){
+        let fpm = LLVMCreateFunctionPassManagerForModule(this.llvm_mod)
+        // let mpm = LLVMCreatePassManager()
+        let pmb = LLVMPassManagerBuilderCreate()
+        LLVMPassManagerBuilderSetOptLevel(pmb, level)
+        LLVMPassManagerBuilderUseInlinerWithThreshold(pmb, 255)
+        // LLVMPassManagerBuilderPopulateModulePassManager(pmb, mpm)
+        let func = LLVMGetFirstFunction(this.llvm_mod)
+        LLVMPassManagerBuilderPopulateFunctionPassManager(pmb, fpm)
+        while (func as int) != 0  {
+            LLVMRunFunctionPassManager(fpm, func)
+            func = LLVMGetNextFunction(func)
+        }
+        // LLVMRunPassManager(mpm, this.llvm_mod)
+        LLVMDisposePassManager(fpm)
+        // LLVMDisposePassManager(mpm)
+        LLVMPassManagerBuilderDispose(pmb)
+    }
     exec(){
-        LLVMVerifyModule(this.llvm_mod, LLVMVerifierFailureAction.LLVMAbortProcessAction, &this.errors)
-        this.check_errors()
-
-        let engine: LLVMExecutionEngineRef = new i8[64] as LLVMExecutionEngineRef
-        if (LLVMCreateExecutionEngineForModule(&engine, this.llvm_mod, &this.errors) != 0) {
+        let module_copy = this.copy_llvm_module()
+        let engine: LLVMExecutionEngineRef = new i8[1] as LLVMExecutionEngineRef
+        if (LLVMCreateExecutionEngineForModule(&engine, module_copy, &this.errors) != 0) {
             println("failed to create execution engine")
         }
         this.check_errors()
         let main_fnc = LLVMGetFunctionAddress(engine, "main")  as () => int
         println("Exited with code:", main_fnc())
+        LLVMDisposeExecutionEngine(engine)
     }
     create_target_machine(): LLVMTargetMachineRef {
         let triple = LLVMGetDefaultTargetTriple()
@@ -39,13 +58,14 @@ class GeneratedModule {
         }
         this.check_errors()
         let CPU: i8* = "generic"
-        return LLVMCreateTargetMachine(target, triple, CPU, LLVMGetHostCPUFeatures(), LLVMCodeGenOptLevel.LLVMCodeGenLevelNone, LLVMRelocMode.LLVMRelocDefault, LLVMCodeModel.LLVMCodeModelDefault)
+        return LLVMCreateTargetMachine(target, triple, CPU, LLVMGetHostCPUFeatures(), LLVMCodeGenOptLevel.LLVMCodeGenLevelAggressive, LLVMRelocMode.LLVMRelocDefault, LLVMCodeModel.LLVMCodeModelDefault)
     }
     write_object(fn: string){
         let tm = this.create_target_machine()
-        LLVMSetDataLayout(this.llvm_mod, LLVMCreateTargetDataLayout(tm))
-        LLVMSetTarget(this.llvm_mod, LLVMGetTargetMachineTriple(tm))
-        if (LLVMTargetMachineEmitToFile(tm, this.llvm_mod, fn.to_cstring(), 1, &this.errors) != 0) {
+        let module_copy = this.copy_llvm_module()
+        LLVMSetDataLayout(module_copy, LLVMCreateTargetDataLayout(tm))
+        LLVMSetTarget(module_copy, LLVMGetTargetMachineTriple(tm))
+        if (LLVMTargetMachineEmitToFile(tm, module_copy, fn.to_cstring(), 1, &this.errors) != 0) {
             println("target machine failed to emit object code")
         }
         this.check_errors()
@@ -54,8 +74,14 @@ class GeneratedModule {
     print(){
         LLVMDumpModule(this.llvm_mod)
     }
+    copy_llvm_module(): LLVMModuleRef{
+        return LLVMCloneModule(this.llvm_mod)
+    }
     destroy(){
+        let ctx = LLVMGetModuleContext(this.llvm_mod)
         LLVMDisposeModule(this.llvm_mod)
+        LLVMContextDispose(ctx)
+        LLVMShutdown()
     }
 }
 class IntrinsicResult {
@@ -143,7 +169,7 @@ class CodeGen {
         }
         return this.module
     }
-    codegen_type(tt: Type, fnc_pointer = true): LLVMTypeRef {
+    codegen_type(tt: Type, as_pointer = true): LLVMTypeRef {
         if tt.kind == TypeKind.VOID
             return LLVMVoidTypeInContext(this.module_ctx)
         if tt.kind == TypeKind.BOOL
@@ -183,14 +209,12 @@ class CodeGen {
             }
             let ret_type = this.codegen_type(func_ty.return_type)
             let llvm_fnty = LLVMFunctionType(ret_type, param_types.buffer, param_types.length, false)
-            if fnc_pointer
-                llvm_fnty = LLVMPointerType(llvm_fnty)
-            return llvm_fnty
+            return as_pointer ? LLVMPointerType(llvm_fnty) : llvm_fnty
         }
         if tt.kind == TypeKind.OBJECT {
             let obj_type = this.module_types.get(create_type_id_key((tt as ObjectType).class_id))
             if obj_type.has_value {
-                return LLVMPointerType(obj_type.value)
+                return as_pointer ? LLVMPointerType(obj_type.value) : obj_type.value
             }
         }
         // if tt.kind == TypeKind.ENUM
@@ -324,41 +348,31 @@ class CodeGen {
         let is_const_expr = LLVMIsConstant(lhs) and LLVMIsConstant(rhs)
         if is_int(rty) {
             if op == BinaryOp.ADD {
-                if is_const_expr return LLVMConstAdd(lhs, rhs)
-                return LLVMBuildAdd(builder, lhs, rhs, "")
+                return is_const_expr ? LLVMConstAdd(lhs, rhs) : LLVMBuildAdd(builder, lhs, rhs, "")
             } else if op == BinaryOp.SUB {
-                if is_const_expr return LLVMConstSub(lhs, rhs) 
-                return LLVMBuildSub(builder, lhs, rhs, "")
+                return is_const_expr ? LLVMConstSub(lhs, rhs) : LLVMBuildSub(builder, lhs, rhs, "")
             } else if op == BinaryOp.MUL {
-                if is_const_expr return LLVMConstMul(lhs, rhs) 
-                return LLVMBuildMul(builder, lhs, rhs, "")
+                return is_const_expr ? LLVMConstMul(lhs, rhs) : LLVMBuildMul(builder, lhs, rhs, "")
             } else if op == BinaryOp.DIV {
                 return LLVMBuildSDiv(builder, lhs, rhs, "")
             } else if op == BinaryOp.MOD {
                 return LLVMBuildSRem(builder, lhs, rhs, "")
             } else if op >= BinaryOp.GT and op <= BinaryOp.LTE {
                 pred = op - BinaryOp.GT + 38
-                if is_const_expr return LLVMConstICmp(pred, lhs, rhs)
-                return LLVMBuildICmp(builder, pred, lhs, rhs, "")
+                return is_const_expr ? LLVMConstICmp(pred, lhs, rhs) : LLVMBuildICmp(builder, pred, lhs, rhs, "")
             } else if op >= BinaryOp.EEQ and op <= BinaryOp.NEQ {
                 pred = op - BinaryOp.EEQ + 32
-                if is_const_expr return LLVMConstICmp(pred, lhs, rhs)
-                return LLVMBuildICmp(builder, pred, lhs, rhs, "")
+                return is_const_expr ? LLVMConstICmp(pred, lhs, rhs) : LLVMBuildICmp(builder, pred, lhs, rhs, "")
             } else if op == BinaryOp.SL {
-                if is_const_expr return LLVMConstShl(lhs, rhs)
-                return LLVMBuildShl(builder, lhs, rhs, "")
+                return is_const_expr ? LLVMConstShl(lhs, rhs) : LLVMBuildShl(builder, lhs, rhs, "")
             } else if op == BinaryOp.SR {
-                if is_const_expr return LLVMConstAShr(lhs, rhs)
-                return LLVMBuildAShr(builder, lhs, rhs, "")
+                return is_const_expr ? LLVMConstAShr(lhs, rhs) : LLVMBuildAShr(builder, lhs, rhs, "")
             } else if op == BinaryOp.OR {
-                if is_const_expr return LLVMConstOr(lhs, rhs)
-                return LLVMBuildOr(builder, lhs, rhs, "")
+                return is_const_expr ? LLVMConstOr(lhs, rhs) : LLVMBuildOr(builder, lhs, rhs, "")
             } else if op == BinaryOp.AND {
-                if is_const_expr return LLVMConstAnd(lhs, rhs)
-                return LLVMBuildAnd(builder, lhs, rhs, "")
+                return is_const_expr ? LLVMConstAnd(lhs, rhs) : LLVMBuildAnd(builder, lhs, rhs, "")
             } else if op == BinaryOp.XOR {
-                if is_const_expr return LLVMConstXor(lhs, rhs)
-                return LLVMBuildXor(builder, lhs, rhs, "")
+                return is_const_expr ? LLVMConstXor(lhs, rhs) : LLVMBuildXor(builder, lhs, rhs, "")
             }
         } else if is_float(rty) {
             if op == BinaryOp.ADD { 
@@ -373,22 +387,25 @@ class CodeGen {
                 return LLVMBuildFRem(builder, lhs, rhs, "")
             } else if op >= BinaryOp.GT and op <= BinaryOp.LTE {
                 pred = op - BinaryOp.GT + LLVMRealPredicate.LLVMRealOGT
-                if is_const_expr return LLVMConstFCmp(pred, lhs, rhs) 
-                return LLVMBuildFCmp(builder, pred, lhs, rhs, "")
+                return is_const_expr ? LLVMConstFCmp(pred, lhs, rhs) : LLVMBuildFCmp(builder, pred, lhs, rhs, "")
             } else if op >= BinaryOp.EEQ and op <= BinaryOp.NEQ {
                 pred = op == BinaryOp.NEQ ? LLVMRealPredicate.LLVMRealONE : LLVMRealPredicate.LLVMRealOEQ
-                if is_const_expr return LLVMConstFCmp(pred, lhs, rhs) 
-                return LLVMBuildFCmp(builder, pred, lhs, rhs, "")
+                return is_const_expr ? LLVMConstFCmp(pred, lhs, rhs) : LLVMBuildFCmp(builder, pred, lhs, rhs, "")
             }
         } else if is_bool(rty) {
             if op == BinaryOp.AND {
-                if is_const_expr return LLVMConstAnd(lhs, rhs)
-                return LLVMBuildAnd(builder, lhs, rhs, "")
+                return is_const_expr ? LLVMConstAnd(lhs, rhs) : LLVMBuildAnd(builder, lhs, rhs, "")
             } else if op == BinaryOp.OR {
-                if is_const_expr return LLVMConstOr(lhs, rhs)
-                return LLVMBuildOr(builder, lhs, rhs, "")
+                return is_const_expr ? LLVMConstOr(lhs, rhs) : LLVMBuildOr(builder, lhs, rhs, "")
             }
-        }
+        } 
+        // else if is_object(rty){
+        //     if op == BinaryOp.EEQ {
+        //         let i8_ptr_ty = LLVMPointerType(LLVMInt8TypeInContext(this.module_ctx))
+        //         let lhs_addr = LLVMBuildBitCast(builder, lhs, i8_ptr_ty, "")
+        //         let rhs_addr = LLVMBuildBitCast(builder, rhs, i8_ptr_ty, "")
+        //     }
+        // }
         return lhs
     }
     codegen_type_exp(builder: LLVMBuilderRef, type_exp: TypeExpression): LLVMValueRef {
@@ -399,34 +416,26 @@ class CodeGen {
         let is_const = LLVMIsConstant(val)
         if type_exp.ty_op == TypeExprOp.AS {
             if is_bool(bty) {
-                if is_const return createLLVMBool(!LLVMIsNull(val)) 
-                return LLVMBuildIsNotNull(builder, val, "")
+                return is_const ? createLLVMBool(!LLVMIsNull(val)) : LLVMBuildIsNotNull(builder, val, "")
             }
             if is_int(exp.value_type) and is_float(bty) {
-                if is_const return LLVMConstSIToFP(val, ty) 
-                return LLVMBuildSIToFP(builder, val, ty, "")
+                return is_const ? LLVMConstSIToFP(val, ty) : LLVMBuildSIToFP(builder, val, ty, "")
             } else if is_float(exp.value_type) and is_int(bty) {
-                if is_const return LLVMConstFPToSI(val, ty) 
-                return LLVMBuildFPToSI(builder, val, ty, "")
+                return is_const ? LLVMConstFPToSI(val, ty) : LLVMBuildFPToSI(builder, val, ty, "")
             } else if is_int(exp.value_type) and is_int(bty){
                 if exp.value_type.kind > bty.kind {
-                    if is_const return LLVMConstTrunc(val, ty) 
-                    return LLVMBuildTrunc(builder, val, ty, "")
+                    return is_const ? LLVMConstTrunc(val, ty) : LLVMBuildTrunc(builder, val, ty, "")
                 } else {
-                    if is_const return LLVMConstZExt(val, ty) 
-                    return LLVMBuildTrunc(builder, val, ty,"")
+                    return is_const ? LLVMConstZExt(val, ty) : LLVMBuildTrunc(builder, val, ty,"")
                 }
             } else if is_float(exp.value_type) and is_float(bty){
                 if exp.value_type.kind > bty.kind {
-                    if is_const return LLVMConstFPTrunc(val, ty) 
-                    return LLVMBuildFPTrunc(builder, val, ty, "")
+                    return is_const ? LLVMConstFPTrunc(val, ty) : LLVMBuildFPTrunc(builder, val, ty, "")
                 } else {
-                    if is_const return LLVMConstFPExt(val, ty) 
-                    return LLVMBuildFPExt(builder, val, ty,"")
+                    return is_const ? LLVMConstFPExt(val, ty) : LLVMBuildFPExt(builder, val, ty,"")
                 }
             }
-            if is_const return LLVMConstBitCast(val, ty)
-            return LLVMBuildBitCast(builder, val, ty, "")
+            return is_const ? LLVMConstBitCast(val, ty) : LLVMBuildBitCast(builder, val, ty, "")
         } 
         return val
     }
@@ -436,15 +445,13 @@ class CodeGen {
         let val = this.codegen_expression(builder, exp)
         if op == UnaryOp.NEG {
             if is_int(exp.value_type){
-                if LLVMIsConstant(val) return LLVMConstNeg(val)
-                return LLVMBuildNeg(builder, val, "")
+                return LLVMIsConstant(val) ? LLVMConstNeg(val) : LLVMBuildNeg(builder, val, "")
             } else if is_float(exp.value_type){
                 return LLVMBuildFNeg(builder, val, "")
             }
         } 
         if op == UnaryOp.NOT {
-            if LLVMIsConstant(val) return LLVMConstNot(val) 
-            return LLVMBuildNot(builder, val, "")
+            return LLVMIsConstant(val) ? LLVMConstNot(val) : LLVMBuildNot(builder, val, "")
         }
         if op >= UnaryOp.PREINCR and op <= UnaryOp.POSTDECR or op == UnaryOp.ADDROF {
             let ptr = this.get_expr_mem(builder, exp)
@@ -484,14 +491,11 @@ class CodeGen {
     }
     codegen_call_exp(builder: LLVMBuilderRef, call_exp: CallExpression): LLVMValueRef {
         let func = this.codegen_expression(builder, call_exp.callee)
+        let func_ty = this.codegen_type(call_exp.callee.value_type, false)
         let args: LLVMValueRef[] = []
-        let arg_types: LLVMTypeRef[] = []
-        let rt_ty = this.codegen_type(call_exp.value_type)
         for let i = 0; i < call_exp.args.length; i++ {
             args << this.codegen_expression(builder, call_exp.args[i])
-            arg_types << this.codegen_type(call_exp.args[i].value_type)
         }
-        let func_ty = LLVMFunctionType(rt_ty, arg_types.buffer, arg_types.length, false)
         return LLVMBuildCall2(builder, func_ty, func, args.buffer, args.length, "")
     }
     codegen_index_exp(builder: LLVMBuilderRef, index_exp: IndexExpression): LLVMValueRef {
@@ -499,7 +503,7 @@ class CodeGen {
         return LLVMBuildLoad2(builder, this.codegen_type(index_exp.value_type), ptr, "")
     }
     codegen_new_exp(builder: LLVMBuilderRef, new_expr: NewExpression): LLVMValueRef {
-        return LLVMBuildMalloc(builder, this.codegen_type(new_expr.value_type), "")
+        return LLVMBuildMalloc(builder, this.codegen_type(new_expr.value_type, false), "")
     }
     codegen_member_exp(builder: LLVMBuilderRef, member_exp: MemberExpression): LLVMValueRef {
         let ptr = this.get_expr_mem(builder, member_exp)
@@ -680,7 +684,7 @@ class CodeGen {
         }
         let llvm_fnc = result.value
         let entry_block: LLVMBasicBlockRef  = LLVMAppendBasicBlockInContext(this.module_ctx, llvm_fnc, "")
-        let func_builder: LLVMBuilderRef = LLVMCreateBuilder()
+        let func_builder: LLVMBuilderRef = LLVMCreateBuilderInContext(this.module_ctx)
         LLVMPositionBuilderAtEnd(func_builder, entry_block)
         for let i = 0; i < func.args.length; i++ {
             let arg = func.args[i]
@@ -691,6 +695,7 @@ class CodeGen {
         }
         this.function = llvm_fnc
         this.codegen_block(func_builder, func.block)
+        LLVMDisposeBuilder(func_builder)
     }
     declare_function(func: Function) {
         let llvm_fnc = LLVMAddFunction(this.module, func.name.to_cstring(), this.codegen_type(func.value_type, false))

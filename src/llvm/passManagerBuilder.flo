@@ -1,0 +1,26 @@
+
+/** See llvm::PassManagerBuilder. */
+fnc LLVMPassManagerBuilderCreate(): LLVMPassManagerBuilderRef
+fnc LLVMPassManagerBuilderDispose(PMB: LLVMPassManagerBuilderRef)
+fnc LLVMPassManagerBuilderSetOptLevel(PMB: LLVMPassManagerBuilderRef, OptLevel: int)
+
+/** See llvm::PassManagerBuilder::OptLevel. */
+fnc LLVMPassManagerBuilderSetSizeLevel(PMB: LLVMPassManagerBuilderRef, SizeLevel: int)
+
+/** See llvm::PassManagerBuilder::DisableUnitAtATime. */
+fnc LLVMPassManagerBuilderSetDisableUnitAtATime(PMB: LLVMPassManagerBuilderRef, Value: LLVMBool)
+
+/** See llvm::PassManagerBuilder::DisableUnrollLoops. */
+fnc LLVMPassManagerBuilderSetDisableUnrollLoops(PMB: LLVMPassManagerBuilderRef, Value: LLVMBool)
+
+/** See llvm::PassManagerBuilder::DisableSimplifyLibCalls */
+fnc LLVMPassManagerBuilderSetDisableSimplifyLibCalls(PMB: LLVMPassManagerBuilderRef, Value: LLVMBool)
+
+/** See llvm::PassManagerBuilder::Inliner. */
+fnc LLVMPassManagerBuilderUseInlinerWithThreshold(PMB: LLVMPassManagerBuilderRef, Threshold: int)
+
+/** See llvm::PassManagerBuilder::populateFunctionPassManager. */
+fnc LLVMPassManagerBuilderPopulateFunctionPassManager(PMB: LLVMPassManagerBuilderRef, PM: LLVMPassManagerRef)
+
+/** See llvm::PassManagerBuilder::populateModulePassManager. */
+fnc LLVMPassManagerBuilderPopulateModulePassManager(PMB: LLVMPassManagerBuilderRef, PM: LLVMPassManagerRef)

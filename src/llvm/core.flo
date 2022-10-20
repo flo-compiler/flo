@@ -79,6 +79,10 @@ fnc LLVMGetInlineAsm(Ty: LLVMTypeRef, AsmString: i8*, AsmStringSize: int, Constr
 
 fnc LLVMAddFunction(M: LLVMModuleRef, name: i8*, FunctionTy: LLVMTypeRef): LLVMValueRef
 fnc LLVMGetNamedFunction(M: LLVMModuleRef, Name: i8*): LLVMValueRef 
+fnc LLVMGetFirstFunction(M: LLVMModuleRef): LLVMValueRef
+fnc LLVMGetLastFunction(M: LLVMModuleRef): LLVMValueRef
+fnc LLVMGetNextFunction(Fn: LLVMValueRef): LLVMValueRef
+fnc LLVMGetPreviousFunction(Fn: LLVMValueRef): LLVMValueRef
 fnc LLVMDumpType(Val: LLVMTypeRef)
 /* types */
 fnc LLVMInt1TypeInContext(C: LLVMContextRef): LLVMTypeRef
@@ -133,13 +137,15 @@ fnc LLVMPPCFP128Type(): LLVMTypeRef
 
 fnc LLVMFunctionType(return_type:LLVMTypeRef, param_types: LLVMTypeRef*, param_count: int, is_var_arg: LLVMBool): LLVMTypeRef
 fnc LLVMGetReturnType(FunctionTy: LLVMTypeRef): LLVMTypeRef 
-
+fnc LLVMCountParamTypes(FunctionTy: LLVMTypeRef): int
 fnc LLVMStructCreateNamed(C: LLVMContextRef, name: i8*): LLVMTypeRef 
 fnc LLVMStructSetBody(StructTy: LLVMTypeRef, ElementTypes: LLVMTypeRef *, element_count: int, packed: LLVMBool)
 
 fnc LLVMArrayType(ElementType: LLVMTypeRef, element_count: int): LLVMTypeRef
 
 fnc LLVMPointerType(ElementType: LLVMTypeRef, address_space = 0): LLVMTypeRef
+
+fnc LLVMPointerTypeInContext(C: LLVMContextRef, address_space = 0): LLVMTypeRef
 
 fnc LLVMVoidType(): LLVMTypeRef 
 
@@ -472,3 +478,15 @@ fnc LLVMBuildPtrDiff2(B: LLVMBuilderRef, ElemTy: LLVMTypeRef, LHS: LLVMValueRef,
 fnc LLVMBuildFence(B: LLVMBuilderRef, ordering: LLVMAtomicOrdering, singleThread: LLVMBool, Name: i8*): LLVMValueRef
 fnc LLVMBuildAtomicRMW(B: LLVMBuilderRef, op: LLVMAtomicRMWBinOp, PTR: LLVMValueRef, Val: LLVMValueRef, ordering: LLVMAtomicOrdering , singleThread: LLVMBool): LLVMValueRef
 fnc LLVMBuildAtomicCmpXchg(B: LLVMBuilderRef, Ptr: LLVMValueRef, Cmp: LLVMValueRef, New: LLVMValueRef, SuccessOrdering: LLVMAtomicOrdering, FailureOrdering: LLVMAtomicOrdering, SingleThread: LLVMBool): LLVMValueRef
+
+/**
+ * @defgroup LLVMCCorePassManagers Pass Managers
+*/
+
+fnc LLVMCreatePassManager(): LLVMPassManagerRef
+fnc LLVMCreateFunctionPassManagerForModule(M: LLVMModuleRef): LLVMPassManagerRef
+fnc LLVMRunPassManager(PM: LLVMPassManagerRef, M: LLVMModuleRef): LLVMBool
+fnc LLVMInitializeFunctionPassManager(FPM: LLVMPassManagerRef): LLVMBool
+fnc LLVMRunFunctionPassManager(FPM: LLVMPassManagerRef, F: LLVMValueRef): LLVMBool
+fnc LLVMFinalizeFunctionPassManager(FPM: LLVMPassManagerRef): LLVMBool
+fnc LLVMDisposePassManager(PM: LLVMPassManagerRef)

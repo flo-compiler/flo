@@ -355,6 +355,9 @@ fnc is_i8_ptr(val_ty: Type): bool {
         return (val_ty as PointerType).pointee_type.kind == TypeKind.I8
     return false
 }
+fnc is_object(val_ty: Type): bool {
+    return val_ty.kind == TypeKind.OBJECT
+}
 fnc is_null(exp: Expression): bool {
     return exp.expr_kind == ExpressionKind.NULL
 }

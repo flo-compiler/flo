@@ -122,6 +122,8 @@ class LLVMBinaryRef {}
 class LLVMTargetRef {}
 class LLVMTargetMachineRef {}
 
+class LLVMPassManagerBuilderRef{}
+
 enum LLVMModuleFlagBehavior {
   /**
    * Emits an error if two values disagree, otherwise the resulting value is
