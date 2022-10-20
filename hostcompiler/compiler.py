@@ -1,5 +1,4 @@
 import re
-import subprocess
 from pathlib import Path
 from typing import Dict
 from errors import CompileError, TypeError
@@ -9,7 +8,7 @@ from astree import *
 from context import Context
 from ctypes import CFUNCTYPE, POINTER, c_char_p, c_int
 from builtIns import target_machine, target_data
-from llvmlite import binding as llvm
+from llvmlite import binding as llvm, ir
 
 saved_labels = []
 
@@ -26,7 +25,7 @@ class Compiler(Visitor):
     def __init__(self, context: Context):
         self.context = context
         self.module = Context.current_llvm_module
-        self.builder = None
+        self.builder: ir.IRBuilder = None
         self.ret = None
         self.break_block = None
         self.continue_block = None
@@ -333,10 +332,22 @@ class Compiler(Visitor):
         ifCodeGen(node.cases.copy(), node.else_case)
     
     def visitTernaryNode(self, node: TernaryNode):
+        true_block = self.builder.append_basic_block("true_block")
+        false_block = self.builder.append_basic_block("false_block")
+        end = self.builder.append_basic_block("end")
         cond = self.visit(node.cond)
+        self.builder.cbranch(cond.value, true_block, false_block)
+        self.builder.position_at_start(true_block)
         is_true = self.visit(node.is_true)
+        self.builder.branch(end)
+        self.builder.position_at_start(false_block)
         is_false = self.visit(node.is_false)
-        return is_true.new_with_val(self.builder.select(cond.value, is_true.value, is_false.value))
+        self.builder.branch(end)
+        self.builder.position_at_start(end)
+        phi_node = self.builder.phi(is_true.llvmtype)
+        phi_node.add_incoming(is_true.value, true_block)
+        phi_node.add_incoming(is_false.value, false_block)
+        return is_true.new_with_val(phi_node)
 
     def visitForNode(self, node: ForNode):
         for_entry_block = self.builder.append_basic_block(f"for.entry")

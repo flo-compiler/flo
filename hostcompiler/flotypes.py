@@ -32,7 +32,7 @@ def create_string_object(builder, args):
 
 
 class FloType:
-    llvmtype = None
+    llvmtype: ir.Type = None
     value: ir.Value
 
     def __init__(self, value) -> None:
@@ -61,20 +61,6 @@ class FloType:
     
     def cval(self, _):
         return self.value
-
-class FloNull(FloType):
-    def store_value_to_ref(self, ref):
-        if not ref.mem:
-            ref.mem = FloMem.salloc(ref.builder, self.llvmtype or self.value, ref.name)
-        ref.mem.store_at_index(ref.builder, self)
-
-    def load_value_from_ref(self, ref):
-        return self.__class__(ref.mem.load_at_index(ref.builder))
-    
-    def __eq__(self, other):
-        return isinstance(other, FloType)
-    def __ne__(self, __o: object) -> bool:
-        return False
 
 class FloVoid(FloType):
     llvmtype = ir.VoidType()
@@ -1017,6 +1003,8 @@ class FloObject(FloType):
                 return str_to_int(builder, self, type.bits)
             elif isinstance(type, FloFloat):
                 return str_to_float(builder, self, type.bits)
+        if isinstance(type, FloInt):
+            return type.new_with_val(builder.ptrtoint(self.mem.value, type.llvmtype))
         if isinstance(type, FloObject):
             # if(self.referer.has_parent(type.referer)): (Possibly unsafe with check on this line)
             casted_mem = FloMem.bitcast(builder, self.mem, type.llvmtype)

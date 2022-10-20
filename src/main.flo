@@ -22,7 +22,7 @@ fnc help(exec_file: string){
     println(" --print-llvm\t\t\tPrint generated LLVM-IR.")
     println(" -o <file>\t\t\tPlace the output into <file>.")
     println(" --no-output\t\t\tCompile with no output.")
-    println(" --opt-level=OPT_LEVEL\n \t\t\t\tSpecify the compiler's optimization level which is a\n \t\t\t\tvalue from 0-3.")
+    println(" -O OPT_LEVEL\n \t\t\t\tSpecify the compiler's optimization level which is a\n \t\t\t\tvalue from 0-3.")
     println(" -e, --execute\t\t\tExecute file after compiling.")
     println(" -v, --version\t\t\tShow version.")
 }
@@ -82,6 +82,7 @@ fnc main(argc: int, argv: i8**): int {
         /**** Codegen ****/
         let codegen = new CodeGen()
         let flo_module = codegen.codegenProgram(program)
+        flo_module.run_passes(flag_value_or(args, "-O", "1") as int)
         if flag(args, "--print-llvm")
             flo_module.print()
         if !flag(args, "--no-output") {
@@ -90,6 +91,7 @@ fnc main(argc: int, argv: i8**): int {
         if flag(args, "-e") or flag(args, "--execute") {
             flo_module.exec()
         }
+        flo_module.destroy()
     } else {
         print_message_error(ErrorKind.GEN, "No input file specified.")
         return 1

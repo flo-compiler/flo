@@ -36,7 +36,7 @@ def main():
         help="Compile with no output.",
     )
     parser.add_option(
-        "--opt-level",
+        "-O",
         dest="opt_level",
         default=1,
         action="store",

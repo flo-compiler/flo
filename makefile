@@ -1,7 +1,7 @@
 
 FC=hostcompiler/flo.py
 
-FCFLAGS=--opt-level=3
+FCFLAGS=-O 3
 
 CXX=g++
 
