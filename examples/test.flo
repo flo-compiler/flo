@@ -1,17 +1,6 @@
-class Vector {
-    x: int
-    y: int
-    name: i8*
-}
-fnc write(fd: int, str: i8*, len: int)
-fnc unit_vector(): Vector {
-    let vec: Vector = new Vector()
-    vec.x = vec.y = 0
-    vec.name = "unit vector\n"
-    return vec
-}
 fnc main(): int {
-    let vec = unit_vector()
-    write(0, vec.name, 12)
-    return vec.x
+    let arr: int [3] = [1, 2, 3]
+    let ptr = &arr[0]
+    ++ptr
+    return ptr[0]
 }

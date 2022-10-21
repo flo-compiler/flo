@@ -3,6 +3,3 @@ fnc fib(x: i32, a: i32 = 0, b: i32 = 1): i32 {
     if x == 1 return b
     return fib(x-1, b, a + b)
 }
-fnc main(): i32 {
-    return fib(10)
-}

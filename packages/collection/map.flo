@@ -1,0 +1,82 @@
+
+class Bucket<T, U> {
+    key: T
+    value: U
+    is_empty: bool
+    constructor(){
+        this.is_empty = true
+    }
+    set(key: T, value: U){
+        this.is_empty = false
+        this.key = key
+        this.value = value
+    }
+    __as_string__(): string {
+        return this.key + ":" + this.value
+    }
+}
+class Map<T, U> {
+    buckets: Bucket<T, U>*
+    length: int
+    size: int
+    constructor(){
+        let initial_capacity = 256
+        this.buckets = new Bucket<T, U>[initial_capacity]
+        for let i = 0; i < initial_capacity; i++ {
+            this.buckets[i] = new Bucket<T, U>()
+        }
+        this.size = initial_capacity
+        this.length = 0
+    }
+    hash_fnc(key: T): int {
+        let str = key as string
+        let hash = 5381
+        for let i = 0; i < str; ++i {
+            hash = ((hash << 5) + hash) + (str.get_byte(i) as int)
+        }
+        return hash
+    }
+    resize(){
+        let original_size = this.size
+        this.size *= 2
+        this.buckets = this.buckets.resize(this.size)
+        for let i = original_size; i < this.size; i++ {
+            this.buckets[i] = new Bucket<T, U>()
+        }
+    }
+    set(key: T, value: U){
+        let hash = this.hash_fnc(key) % this.size
+        if (this.size <= this.length) this.resize()
+
+        while !this.buckets[hash].is_empty {
+            if this.buckets[hash].key == key
+                break
+            hash++
+        } 
+        this.length++
+        this.buckets[hash].set(key, value)
+    }
+    get(key: T): U {
+        let hash = this.hash_fnc(key) % this.size
+        while !this.buckets[hash].is_empty {
+            if this.buckets[hash].key == key
+                break
+            else
+                hash++
+        }
+        if !this.buckets[hash].is_empty
+            if this.buckets[hash].key == key
+                return this.buckets[hash].value
+        return null
+    }
+    get_keys(): Array<T> {
+        let keys: T[] = []
+        for let i = 0; i < this.size; ++i {
+            let current_bucket = this.buckets[i]
+            if !current_bucket.is_empty {
+                keys << current_bucket.key
+            }
+        }
+        return keys
+    }
+}

@@ -388,8 +388,6 @@ class Analyzer(Visitor):
         var_value = self.visit(node.value)
         if not expected_ty:
             expected_ty = var_value
-        if isinstance(var_value, FloNull) and var_value.base_type == None:
-            TypeError(node.range, f"Cannot assign variable to null without type hint").throw()
         self.check_value_assignment(expected_ty, var_value, node)
         self.context.set(var_name, expected_ty)
 

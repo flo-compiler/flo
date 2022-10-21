@@ -358,6 +358,9 @@ fnc is_i8_ptr(val_ty: Type): bool {
 fnc is_object(val_ty: Type): bool {
     return val_ty.kind == TypeKind.OBJECT
 }
+fnc is_pointer(val_ty: Type): bool {
+    return val_ty.kind == TypeKind.PTR
+}
 fnc is_null(exp: Expression): bool {
     return exp.expr_kind == ExpressionKind.NULL
 }
@@ -1091,7 +1094,7 @@ class TypeChecker {
                 return new UnaryExpression(op, expression, ty, is_const)
         }
         if op >= UnaryOp.PREINCR and op <= UnaryOp.POSTDECR {
-            if is_numeric(ty) {
+            if is_numeric(ty) or is_pointer(ty) {
                 if !check_is_var(expression)
                     this.error(ErrorKind.GEN, "Illegal unary operation " + dump_unary_op(op) + " on constant", unary_node.expression.range)
                 return new UnaryExpression(op, expression, ty)
@@ -1259,9 +1262,7 @@ class TypeChecker {
         let condition = this.check_condition(if_stmt_node.condition)
        // TODO: optionals.
         let block = this.check_block(if_stmt_node.block)
-        let else_block: Block = null
-        if if_stmt_node.else_block != null
-            else_block = this.check_block(if_stmt_node.else_block)
+        let else_block: Block = if_stmt_node.else_block != null ? this.check_block(if_stmt_node.else_block) : null
         return new IfStatement(condition, block, else_block)
     }
     check_var_declaration(var_decl_node: VarDeclarationStatement): VarDeclaration {
@@ -1269,11 +1270,8 @@ class TypeChecker {
         if this.is_constant_in_scope(name)
             this.error(ErrorKind.NAME, "Illegal re-declaration of const '"+name+"'", var_decl_node.var_name.range)
         
-        let var_type = $UNKNOW_TYPE
         let current_scope = this.get_current_scope()
-        
-        if var_decl_node.var_type != null
-            var_type = this.check_type(var_decl_node.var_type)
+        let var_type = var_decl_node.var_type != null ? this.check_type(var_decl_node.var_type) : $UNKNOW_TYPE
         let value = this.check_expression(var_type, var_decl_node.value)
         if is_null(value) and value.value_type.kind == TypeKind.UNKNOWN
             this.error(ErrorKind.TYPE, "Cannot declare a value as null without any type hint for future usage", var_decl_node.range)
@@ -1291,10 +1289,7 @@ class TypeChecker {
         if this.is_constant_in_scope(name) or current_scope.vars.get(name) != null
             this.error(ErrorKind.NAME, "Illegal re-declaration of const '"+name+"'", const_decl_stmt.const_name.range)
         
-        let const_type = $UNKNOW_TYPE
-        
-        if const_decl_stmt.const_type != null
-            const_type = this.check_type(const_decl_stmt.const_type)
+        let const_type = const_decl_stmt.const_type != null ? this.check_type(const_decl_stmt.const_type) : $UNKNOW_TYPE
         let value = this.check_expression(const_type, const_decl_stmt.value)
         if !value.is_constant
             this.error(ErrorKind.GEN, "cannot assign a non-constant value to a constant", const_decl_stmt.value.range)

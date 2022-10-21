@@ -47,21 +47,25 @@ class GeneratedModule {
         }
         this.check_errors()
         let main_fnc = LLVMGetFunctionAddress(engine, "main")  as () => int
+        if main_fnc == null {
+            println("Main function not found in module; can't execute")
+            return
+        }
         println("Exited with code:", main_fnc())
         LLVMDisposeExecutionEngine(engine)
     }
-    create_target_machine(): LLVMTargetMachineRef {
-        let triple = LLVMGetDefaultTargetTriple()
+    create_target_machine(triple_str: string): LLVMTargetMachineRef {
+        let triple = triple_str == "" ? LLVMGetDefaultTargetTriple() : triple_str.to_cstring()
         let target = LLVMGetFirstTarget()
         if (LLVMGetTargetFromTriple(triple, &target, &this.errors) != 0) {
-            println("failed to get target tripple")
+            println("failed to get target triple")
         }
         this.check_errors()
         let CPU: i8* = "generic"
         return LLVMCreateTargetMachine(target, triple, CPU, LLVMGetHostCPUFeatures(), LLVMCodeGenOptLevel.LLVMCodeGenLevelAggressive, LLVMRelocMode.LLVMRelocDefault, LLVMCodeModel.LLVMCodeModelDefault)
     }
-    write_object(fn: string){
-        let tm = this.create_target_machine()
+    write_object(fn: string, target: string){
+        let tm = this.create_target_machine(target)
         let module_copy = this.copy_llvm_module()
         LLVMSetDataLayout(module_copy, LLVMCreateTargetDataLayout(tm))
         LLVMSetTarget(module_copy, LLVMGetTargetMachineTriple(tm))
@@ -281,18 +285,18 @@ class CodeGen {
         let indices_0 = [$ZERO, $ZERO]
         let ty = this.codegen_type(index_exp.expression.value_type)
         if index_exp.expression.value_type.kind == TypeKind.ARRAY {
-            ind_ptr = LLVMBuildInBoundsGEP2(builder, ty, ind_ptr, &indices_0[0], 2, "")
+            ind_ptr = LLVMBuildInBoundsGEP2(builder, ty, ind_ptr, &indices_0[0], 2, "arrayidx")
         } else {
             ind_ptr = LLVMBuildLoad2(builder, ty, ind_ptr, "")
         }
         let indices_1 = [index]
-        return LLVMBuildInBoundsGEP2(builder, ty, ind_ptr, &indices_1[0], 1, "")
+        return LLVMBuildInBoundsGEP2(builder, ty, ind_ptr, &indices_1[0], 1, "ptridx")
     }
     get_member_expr_mem(builder: LLVMBuilderRef, member_expr: MemberExpression): LLVMValueRef {
         let ptr = this.codegen_expression(builder, member_expr.expression)
         let ty = this.codegen_type(member_expr.expression.value_type)
         let indices = [createLLVMMachineSizeInt(member_expr.member_id.id)]
-        return LLVMBuildInBoundsGEP2(builder, ty, ptr, &indices[0], 1, "")
+        return LLVMBuildInBoundsGEP2(builder, ty, ptr, &indices[0], 1, "memberidx")
     }
     get_expr_mem(builder: LLVMBuilderRef, exp: Expression): LLVMValueRef {
         if exp.expr_kind == ExpressionKind.ACCESS
@@ -457,18 +461,18 @@ class CodeGen {
             if op == UnaryOp.ADDROF {
                 return ptr
             }
-            if is_numeric(exp.value_type){
-                let incr_amt: LLVMValueRef = null
-                let alloc_ty = this.codegen_type(exp.value_type)
-                if is_int(exp.value_type){
-                    incr_amt = LLVMConstInt(alloc_ty, op == UnaryOp.PREINCR or op == UnaryOp.POSTINCR ? 1 : -1, false)
-                } else {
-                    incr_amt = LLVMConstReal(alloc_ty, op == UnaryOp.PREINCR or op == UnaryOp.POSTINCR ? 1.0 : -1.0)
-                }
-                let new_value = LLVMBuildAdd(builder, val, incr_amt, "")
-                LLVMBuildStore(builder, new_value, ptr)
-                return op >= UnaryOp.PREDECR ? val : new_value 
+            let alloc_ty = this.codegen_type(exp.value_type)
+            let incr_value = op == UnaryOp.PREINCR or op == UnaryOp.POSTINCR ? 1 : -1
+            let new_value: LLVMValueRef = null
+            if is_pointer(exp.value_type) {
+                let indices = [createLLVMMachineSizeInt(incr_value)]
+                new_value = LLVMBuildInBoundsGEP2(builder, alloc_ty, val, &indices[0], 1, "incdec.ptr")
+            } else if is_numeric(exp.value_type){
+                let incr_amt = is_int(exp.value_type) ? LLVMConstInt(alloc_ty, incr_value, false) : LLVMConstReal(alloc_ty, incr_value * 1.0)
+                new_value = LLVMBuildAdd(builder, val, incr_amt, "")
             }
+            LLVMBuildStore(builder, new_value, ptr)
+            return op >= UnaryOp.PREDECR ? val : new_value 
         }
         return val
     }
