@@ -28,6 +28,7 @@ class Compiler(Visitor):
         self.builder: ir.IRBuilder = None
         self.ret = None
         self.break_block = None
+        self.current_fnc_return_ty = None
         self.continue_block = None
         self.class_within = None
         self.generics: Dict[str, GenericClassNode] = {}
@@ -237,6 +238,7 @@ class Compiler(Visitor):
     def visitFncDefNode(self, node: FncDefNode):
         fn_name = node.func_name.value
         arg_types, arg_names, rtype = self.visit(node.func_body)
+        self.current_fnc_return_ty = rtype
         if node.func_body.body:
             fn = FloFunc(arg_types, rtype, fn_name, node.func_body.is_variadic)
         else:
@@ -252,7 +254,8 @@ class Compiler(Visitor):
         else:
             fn = self.class_within.get_method(method_name)
         assert fn
-        _, arg_names, _ = self.visit(node.method_body)
+        _, arg_names, rt = self.visit(node.method_body)
+        self.current_fnc_return_ty = rt
         self.evaluate_function_body(fn, arg_names, node.method_body.body)
 
 
@@ -303,7 +306,12 @@ class Compiler(Visitor):
         elif var_name == "false":
             return FloInt(0, 1)
         elif var_name == "null":
-            return FloNull(node.expects)
+            ty = node.expects
+            if isinstance(ty, FloObject):
+                try:
+                    ty.referer = FloClass.classes[ty.referer.name]
+                except: pass
+            return FloNull(ty)
         ref = self.context.get(var_name)
         if isinstance(ref, FloRef):
             return ref.load()
@@ -402,6 +410,7 @@ class Compiler(Visitor):
     def visitReturnNode(self, node: ReturnNode):
         if node.value == None:
             return self.ret(FloVoid(None))
+        node.value.expects = self.current_fnc_return_ty
         val = self.visit(node.value)
         if isinstance(val, FloVoid) or val == None:
             return self.ret(FloVoid(None))

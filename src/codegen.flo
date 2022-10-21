@@ -212,8 +212,8 @@ class CodeGen {
         }
         if tt.kind == TypeKind.OBJECT {
             let obj_type = this.module_types.get(create_type_id_key((tt as ObjectType).class_id))
-            if obj_type.has_value {
-                return as_pointer ? LLVMPointerType(obj_type.value) : obj_type.value
+            if obj_type != null {
+                return as_pointer ? LLVMPointerType(obj_type) : obj_type
             }
         }
         // if tt.kind == TypeKind.ENUM
@@ -222,8 +222,8 @@ class CodeGen {
         return LLVMInt32Type()
     }
     codegen_return_stmt(builder: LLVMBuilderRef, return_stmt: ReturnStatement){
-        if return_stmt.return_value.has_value 
-            LLVMBuildRet(builder, this.codegen_expression(builder, return_stmt.return_value.value))
+        if return_stmt.return_value != null 
+            LLVMBuildRet(builder, this.codegen_expression(builder, return_stmt.return_value))
         else
             LLVMBuildRetVoid(builder)
     }
@@ -240,8 +240,8 @@ class CodeGen {
     
     codegen_string(builder: LLVMBuilderRef, string_exp: StringExpression): LLVMValueRef {
         let result = this.module_string_scope.get(string_exp.value)
-        if result.has_value
-            return result.value
+        if result != null
+            return result
         let str = LLVMBuildGlobalString(builder, string_exp.value.to_cstring(), "")
         this.module_string_scope.set(string_exp.value, str)
         return str
@@ -268,11 +268,11 @@ class CodeGen {
     }
     get_var_expr_mem(builder: LLVMBuilderRef, var_exp: VarAccessExpression): LLVMValueRef {
         let ptr = this.global_var_scope.get(create_var_key(var_exp.value_id))
-        if !ptr.has_value {
+        if ptr == null {
             println("This should never happen! (get_expr_mem: var)")
             exit()
         }
-        return ptr.value
+        return ptr
     }
     get_index_expr_mem(builder: LLVMBuilderRef, index_exp: IndexExpression): LLVMValueRef {
         let ind_ptr = this.get_expr_mem(builder, index_exp.expression)
@@ -320,8 +320,8 @@ class CodeGen {
         let llvmty = this.codegen_type(ty)
         let cached_instrinsic = this.module_intrinsic_scope.get(name)
         let res = new IntrinsicResult()
-        if cached_instrinsic.has_value {
-            res = cached_instrinsic.value
+        if cached_instrinsic != null {
+            res = cached_instrinsic
         } else {
             res = get_intrinsic(this.module, name, [llvmty, llvmty])
             this.module_intrinsic_scope.set(name, res)
@@ -475,15 +475,15 @@ class CodeGen {
     codegen_var_access_exp(builder: LLVMBuilderRef, var_exp: VarAccessExpression): LLVMValueRef {
         let val = this.global_var_scope.get(create_var_key(var_exp.value_id))
         let ty = this.codegen_type(var_exp.value_type)
-        if !val.has_value {
+        if val == null {
             println("This should never happen; (codegen_var_access_exp)")
             exit()
         }
         if var_exp.value_id.kind == VarIdKind.FNC
-            return val.value
+            return val
         if this.in_static_ctx
-            return LLVMGetInitializer(val.value)
-        return LLVMBuildLoad2(builder, ty, val.value, "")
+            return LLVMGetInitializer(val)
+        return LLVMBuildLoad2(builder, ty, val, "")
     }
     codegen_null(null_exp: NullExpression): LLVMValueRef{
         return LLVMConstNull(this.codegen_type(null_exp.value_type))
@@ -554,9 +554,9 @@ class CodeGen {
 
         LLVMPositionBuilderAtEnd(builder, else_bb)
         let else_terminated = false
-        if if_stmt.else_block.has_value {
-            this.codegen_block(builder, if_stmt.else_block.value)
-            else_terminated = is_terminated(if_stmt.else_block.value)
+        if if_stmt.else_block != null {
+            this.codegen_block(builder, if_stmt.else_block)
+            else_terminated = is_terminated(if_stmt.else_block)
         }
         if !else_terminated
             LLVMBuildBr(builder, merge_bb)
@@ -567,8 +567,8 @@ class CodeGen {
         let for_entry_block = LLVMAppendBasicBlockInContext(this.module_ctx, this.function, "for.entry")
         LLVMBuildBr(builder, for_entry_block)
         LLVMPositionBuilderAtEnd(builder, for_entry_block)
-        if for_stmt.initialization.has_value {
-            this.codegen_statement(builder, for_stmt.initialization.value)
+        if for_stmt.initialization != null {
+            this.codegen_statement(builder, for_stmt.initialization)
         }
         let for_cond_block = LLVMAppendBasicBlockInContext(this.module_ctx, this.function, "for.cond")
         let for_body_block = LLVMAppendBasicBlockInContext(this.module_ctx, this.function, "for.body")
@@ -581,8 +581,8 @@ class CodeGen {
         LLVMBuildBr(builder, for_cond_block)
         LLVMPositionBuilderAtEnd(builder, for_cond_block)
         let condition = createLLVMBool(true)
-        if for_stmt.condition.has_value {
-            condition = this.codegen_expression(builder, for_stmt.condition.value)
+        if for_stmt.condition != null {
+            condition = this.codegen_expression(builder, for_stmt.condition)
         }
         LLVMBuildCondBr(builder, condition, for_body_block, for_end_block)
         LLVMPositionBuilderAtEnd(builder, for_body_block)
@@ -590,8 +590,8 @@ class CodeGen {
         if !is_terminated(for_stmt.block)
             LLVMBuildBr(builder, for_incr_block)
         LLVMPositionBuilderAtEnd(builder, for_incr_block)
-        if for_stmt.incr_decr.has_value
-            this.codegen_expression(builder, for_stmt.incr_decr.value)
+        if for_stmt.incr_decr != null
+            this.codegen_expression(builder, for_stmt.incr_decr)
         LLVMBuildBr(builder, for_cond_block)
         this.break_bb = prev_break_bb
         this.continue_bb = prev_continue_bb
@@ -676,12 +676,11 @@ class CodeGen {
     }
     codegen_function(func: Function){
         if func.is_external { return }
-        let result = this.global_var_scope.get(create_var_key(func.id))
-        if !result.has_value {
+        let llvm_fnc = this.global_var_scope.get(create_var_key(func.id))
+        if llvm_fnc == null {
             println("This should never happen; (codegen_function)")
             exit()
         }
-        let llvm_fnc = result.value
         let entry_block: LLVMBasicBlockRef  = LLVMAppendBasicBlockInContext(this.module_ctx, llvm_fnc, "")
         let func_builder: LLVMBuilderRef = LLVMCreateBuilderInContext(this.module_ctx)
         LLVMPositionBuilderAtEnd(func_builder, entry_block)
