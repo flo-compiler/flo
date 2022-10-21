@@ -189,10 +189,10 @@ class UnaryExpressionNode (ExpressionNode) {
 class IfStatementNode (StatementNode) {
     condition: ExpressionNode
     block: BlockNode
-    else_block: Optional<BlockNode>
+    else_block: BlockNode
     constructor(range: FloRange){
         super(StatementKind.IF, range)
-        this.else_block = new Optional<BlockNode>()
+        this.else_block = null
     }
 }
 class WhileStatementNode (StatementNode) {
@@ -203,51 +203,51 @@ class WhileStatementNode (StatementNode) {
     }
 }
 class ForStatementNode (StatementNode) {
-    initialization: Optional<StatementNode>
-    condition: Optional<ExpressionNode>
-    incr_decr: Optional<ExpressionNode>
+    initialization: StatementNode
+    condition: ExpressionNode
+    incr_decr: ExpressionNode
     iterator: ExpressionNode
     for_kind: ForKind
     it_name: IdentifierToken
     block: BlockNode
     constructor(range: FloRange){
-        this.initialization = new Optional<StatementNode>()
-        this.condition = new Optional<ExpressionNode>()
-        this.incr_decr = new Optional<ExpressionNode>()
+        this.initialization = null
+        this.condition = null
+        this.incr_decr = null
         this.kind = ForKind.DEF
         super(StatementKind.FOR, range)
     }
 }
 class ReturnStatementNode (StatementNode) {
-    value: Optional<ExpressionNode>
+    value: ExpressionNode
     constructor(range: FloRange){
-        this.value = new Optional<ExpressionNode>()
+        this.value = null
         super(StatementKind.RETURN, range)
     }
 }
 class VarDeclarationStatement (StatementNode) {
     var_name: IdentifierToken
-    var_type: Optional<TypeNode>
+    var_type: TypeNode
     value: ExpressionNode
     constructor(range: FloRange){
         super(StatementKind.VAR, range)
-        this.var_type = new Optional<TypeNode>()
+        this.var_type = null
     }
 }
 
 class ConstDeclarationStatement (StatementNode) {
     const_name: IdentifierToken
-    const_type: Optional<TypeNode>
+    const_type: TypeNode
     value: ExpressionNode
     constructor(range: FloRange){
         super(StatementKind.CONST, range)
-        this.const_type = new Optional<TypeNode>()
+        this.const_type = null
     }
 }
 class ArgNode {
     name: IdentifierToken
-    parsed_type: Optional<TypeNode>
-    default: Optional<ExpressionNode>
+    parsed_type: TypeNode
+    default: ExpressionNode
 }
 class FunctionDeclarationNode {
     name: IdentifierToken
@@ -736,7 +736,7 @@ class Parser {
         this.new_lines()
         if this.current_token.ttype == TokType.ELSE_KW {
             this.advance()
-            if_node.else_block.set_value(this.parse_block())
+            if_node.else_block = this.parse_block()
         }
         return if_node
     }
@@ -753,15 +753,15 @@ class Parser {
         this.advance()
         if this.peek().ttype != TokType.IN_KW {
             if this.current_token.ttype != TokType.SEMICOL {
-                for_node.initialization.set_value(this.parse_statement())
+                for_node.initialization = this.parse_statement()
             }
             this.eat(TokType.SEMICOL)
             if this.current_token.ttype != TokType.SEMICOL {
-                for_node.condition.set_value(this.parse_expression())
+                for_node.condition = this.parse_expression()
             }
             this.eat(TokType.SEMICOL)
             if this.current_token.ttype != TokType.LBRACE {
-                for_node.incr_decr.set_value(this.parse_expression())
+                for_node.incr_decr = this.parse_expression()
             }
         } else {
             for_node.kind = ForKind.IN
@@ -780,7 +780,7 @@ class Parser {
         var_decl_node.var_name =  this.eat(TokType.IDENTIFER) as IdentifierToken
         if this.current_token.ttype == TokType.COL {
             this.advance()
-            var_decl_node.var_type.set_value(this.parse_type())
+            var_decl_node.var_type = this.parse_type()
         }
         this.eat(TokType.EQ)
         var_decl_node.value = this.parse_expression()
@@ -793,7 +793,7 @@ class Parser {
         if this.current_token.ttype != TokType.LN and this.can_parse() and this.current_token.ttype != TokType.RBRACE {
             let value = this.parse_expression()
             return_node.range = merge_range(return_node.range, value.range)
-            return_node.value.set_value(value)
+            return_node.value = value
         }
         return return_node
     }
@@ -844,19 +844,19 @@ class Parser {
     }
     parse_arg(): ArgNode {
         let arg_node = new ArgNode()
-        arg_node.parsed_type = new Optional<TypeNode>()
-        arg_node.default = new Optional<ExpressionNode>()
+        arg_node.parsed_type = null
+        arg_node.default = null
         arg_node.name = this.eat(TokType.IDENTIFER) as IdentifierToken
         if this.current_token.ttype == TokType.COL {
             this.advance()
-            arg_node.parsed_type.set_value(this.parse_type())
+            arg_node.parsed_type = this.parse_type()
         }
         if this.current_token.ttype == TokType.EQ {
             this.advance()
-            arg_node.default.set_value(this.parse_expression())
+            arg_node.default = this.parse_expression()
         }
-        if !arg_node.parsed_type.has_value and !arg_node.default.has_value {
-            this.error("'"+arg_node.name.value+"' has no type information")
+        if arg_node.parsed_type == null and arg_node.default == null {
+            this.error("'"+arg_node.name+"' has no type information")
             this.errors[this.errors.length - 1].range = arg_node.name.range
         }
         return arg_node
@@ -937,7 +937,7 @@ class Parser {
         const_decl_node.const_name = this.eat(TokType.IDENTIFER) as IdentifierToken
         if this.current_token.ttype == TokType.COL {
             this.advance()
-            const_decl_node.const_type.set_value(this.parse_type())
+            const_decl_node.const_type = this.parse_type()
         }
         this.eat(TokType.EQ)
         const_decl_node.value = this.parse_expression()

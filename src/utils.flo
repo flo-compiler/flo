@@ -15,17 +15,6 @@ class FloRange {
         this.line = line
     }
 }
-class Optional<T> {
-    value: T
-    has_value: bool
-    construtor(){
-        this.has_value = false
-    }
-    set_value(value: T){
-        this.has_value = true
-        this.value = value
-    }
-}
 class Bucket<T, U> {
     key: T
     value: U
@@ -83,9 +72,8 @@ class Map<T, U> {
         this.length++
         this.buckets[hash].set(key, value)
     }
-    get(key: T): Optional<U> {
+    get(key: T): U {
         let hash = this.hash_fnc(key) % this.size
-        let result = new Optional<U>
         while !this.buckets[hash].is_empty {
             if this.buckets[hash].key == key
                 break
@@ -94,8 +82,8 @@ class Map<T, U> {
         }
         if !this.buckets[hash].is_empty
             if this.buckets[hash].key == key
-                result.set_value(this.buckets[hash].value)
-        return result
+                return this.buckets[hash].value
+        return null
     }
     get_keys(): Array<T> {
         let keys: T[] = []
