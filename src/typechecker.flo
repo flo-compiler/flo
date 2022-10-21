@@ -180,6 +180,18 @@ class UnaryExpression (Expression) {
         this.is_constant = is_constant
     }
 }
+class TernaryExpression (Expression) {
+    cond: Expression
+    is_true: Expression
+    is_false: Expression
+    constructor(cond: Expression, is_true: Expression, is_false: Expression){
+        super(ExpressionKind.TERNARY)
+        this.cond = cond
+        this.is_true = is_true
+        this.is_false = is_false
+        this.value_type = is_true.value_type
+    }
+}
 class TypeExpression (Expression) {
     expr: Expression
     ty_op: TypeExprOp
@@ -1143,6 +1155,17 @@ class TypeChecker {
         }
         return new MemberExpression(prop_owner, prop_id, prop_ty)
     }
+    check_ternary_expr(expected_type: Type, ternary_expr_node: TernaryExpressionNode): TernaryExpression {
+        let cond = this.check_condition(ternary_expr_node.cond)
+        let is_true = this.check_expression(expected_type, ternary_expr_node.is_true)
+        let is_true_ty = is_true.value_type
+        let is_false = this.check_expression(is_true_ty, ternary_expr_node.is_false)
+        let is_false_ty = is_false.value_type
+        if is_true_ty != is_false_ty {
+            this.error(ErrorKind.TYPE, "Expected type '"+dump_type(is_true_ty)+"' from first case but got type '"+dump_type(is_false_ty) + "'", ternary_expr_node.range)
+        }
+        return new TernaryExpression(cond, is_true, is_false)
+    }
     check_index_expr(expected_type: Type, index_expr_node: ExpressionIndexNode): IndexExpression {
         let root_expression = this.check_expression($UNKNOW_TYPE, index_expr_node.expression)
         let index = this.check_expression(new Type(TypeKind.INT), index_expr_node.index)
@@ -1242,6 +1265,8 @@ class TypeChecker {
             return this.check_bin_expr(expected_type, expr_node as BinaryExpressionNode)
         if expr_node.expr_kind == ExpressionKind.UNARY
             return this.check_unary_expr(expr_node as UnaryExpressionNode)
+        if expr_node.expr_kind == ExpressionKind.TERNARY
+            return this.check_ternary_expr(expected_type, expr_node as TernaryExpressionNode)
         if expr_node.expr_kind == ExpressionKind.TYPEBOUND
             return this.check_type_expr(expr_node as TypeExpressionNode)
         if expr_node.expr_kind == ExpressionKind.NEW
