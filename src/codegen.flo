@@ -492,6 +492,25 @@ class CodeGen {
     codegen_null(null_exp: NullExpression): LLVMValueRef{
         return LLVMConstNull(this.codegen_type(null_exp.value_type))
     }
+    codegen_ternary_exp(builder: LLVMBuilderRef, ternary_exp: TernaryExpression): LLVMValueRef {
+        let true_block = LLVMAppendBasicBlockInContext(this.module_ctx, this.function, "true_block")
+        let false_block = LLVMAppendBasicBlockInContext(this.module_ctx, this.function, "false_block")
+        let end = LLVMAppendBasicBlockInContext(this.module_ctx, this.function, "end")
+        let cond = this.codegen_expression(builder, ternary_exp.cond)
+        LLVMBuildCondBr(builder, cond, true_block, false_block)
+        LLVMPositionBuilderAtEnd(builder, true_block)
+        let is_true = this.codegen_expression(builder, ternary_exp.is_true)
+        LLVMBuildBr(builder, end)
+        LLVMPositionBuilderAtEnd(builder, false_block)
+        let is_false = this.codegen_expression(builder, ternary_exp.is_false)
+        LLVMBuildBr(builder, end)
+        LLVMPositionBuilderAtEnd(builder, end)
+        let phi_node = LLVMBuildPhi(builder, this.codegen_type(ternary_exp.is_true.value_type), "ternary")
+        let incomming_vals = [is_true, is_false]
+        let blocks = [true_block, false_block]
+        LLVMAddIncoming(phi_node, &incomming_vals[0], &blocks[0], 2)
+        return phi_node
+    }
     codegen_call_exp(builder: LLVMBuilderRef, call_exp: CallExpression): LLVMValueRef {
         let func = this.codegen_expression(builder, call_exp.callee)
         let func_ty = this.codegen_type(call_exp.callee.value_type, false)
@@ -537,8 +556,8 @@ class CodeGen {
             return this.codegen_member_exp(builder, expression as MemberExpression)
         if expression.expr_kind == ExpressionKind.NEW
             return this.codegen_new_exp(builder, expression as NewExpression)
-        // if expression.expr_kind == ExpressionKind.TERNARY
-        //     return this.codegen_ternary_exp(builder, expression as TernaryExpression)
+        if expression.expr_kind == ExpressionKind.TERNARY
+            return this.codegen_ternary_exp(builder, expression as TernaryExpression)
         if expression.expr_kind == ExpressionKind.TYPEBOUND
             return this.codegen_type_exp(builder, expression as TypeExpression)
         if expression.expr_kind == ExpressionKind.ARRAY

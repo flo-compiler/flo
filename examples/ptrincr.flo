@@ -1,0 +1,6 @@
+fnc main(): int {
+    let arr: int [3] = [1, 2, 3]
+    let ptr = &arr[0]
+    ++ptr
+    return ptr[0]
+}
