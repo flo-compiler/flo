@@ -1,4 +1,5 @@
 import "@flo/io"
+import "@flo/collection/map"
 import "types"
 import "utils"
 import "error"
@@ -22,6 +23,7 @@ fnc help(exec_file: string){
     println(" --print-llvm\t\t\tPrint generated LLVM-IR.")
     println(" -o <file>\t\t\tPlace the output into <file>.")
     println(" --no-output\t\t\tCompile with no output.")
+    println(" -mtriple\t\t\tCompile to specific target triple.")
     println(" -O OPT_LEVEL\n \t\t\t\tSpecify the compiler's optimization level which is a\n \t\t\t\tvalue from 0-3.")
     println(" -e, --execute\t\t\tExecute file after compiling.")
     println(" -v, --version\t\t\tShow version.")
@@ -86,7 +88,7 @@ fnc main(argc: int, argv: i8**): int {
         if flag(args, "--print-llvm")
             flo_module.print()
         if !flag(args, "--no-output") {
-            flo_module.write_object(flag_value_or(args, "-o", "a")+ ".o")
+            flo_module.write_object(flag_value_or(args, "-o", "a")+ ".o", flag_value_or(args, "-mtriple", ""))
         }
         if flag(args, "-e") or flag(args, "--execute") {
             flo_module.exec()

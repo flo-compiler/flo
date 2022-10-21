@@ -12,10 +12,10 @@ def create_array_buffer(builder: ir.IRBuilder, elems):
         mem.store_at_index(builder, elem, FloInt(index, 32))
     return mem
 
-def strict_mem_compare(builder: ir.IRBuilder, o1, o2):    
-    my_int = FloInt(builder.ptrtoint(o1.mem.value, ir.IntType(32)), 32)
-    other_int = FloInt(builder.ptrtoint(o2.mem.value, ir.IntType(32)), 32)
-    return my_int.cmp(builder, "==", other_int)
+def strict_mem_compare(builder: ir.IRBuilder, op, mem1, mem2):    
+    my_int = FloInt(builder.ptrtoint(mem1.value, ir.IntType(32)), 32)
+    other_int = FloInt(builder.ptrtoint(mem2.value, ir.IntType(32)), 32)
+    return my_int.cmp(builder, op, other_int)
 
 def is_string_object(type):
     return isinstance(type, FloObject) and type.referer.name == 'string'
@@ -755,7 +755,13 @@ class FloFunc(FloType):
         arg_list = ", ".join([arg.str() for arg in self.arg_types])
         return f"({arg_list}) => {self.return_type.str()}"
 
-
+    def cmp(self, builder: ir.IRBuilder, op, other):
+        if op in ("==", "!="):
+            if isinstance(other, FloFunc):
+                return strict_mem_compare(builder, op, FloMem(self.value), FloMem(other.value))
+            elif isinstance(other, FloNull):
+                return strict_mem_compare(builder, op, FloMem(self.value), FloMem(other.floval.value))
+        return FloInt(0, 1)
 vtable_offset = 1
 
 
@@ -1021,8 +1027,7 @@ class FloObject(FloType):
     def cmp(self, builder: ir.IRBuilder, op, other):
         should_not = op == "!="
         if isinstance(other, FloNull):
-            value = strict_mem_compare(builder, self, other.floval)
-            return value.not_(builder) if should_not else value
+            return strict_mem_compare(builder,op, self.mem, other.floval.mem)
         if not isinstance(other, FloObject):
             return FloInt(0, 1)
         if op == "==" or op == "!=":
@@ -1033,7 +1038,7 @@ class FloObject(FloType):
                     other_object = other_object.cast_to(builder, eq_method.arg_types[0])
                 value = eq_method.call(builder, [other_object])
             else:
-                value = strict_mem_compare(builder, self, other_object)
+                return strict_mem_compare(builder, op, self.mem, other_object.mem)
             return value.not_(builder) if should_not else value
 
     def get_cast_method(self, type, builder):
