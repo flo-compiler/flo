@@ -30,7 +30,7 @@ class GeneratedModule {
         // LLVMPassManagerBuilderPopulateModulePassManager(pmb, mpm)
         let func = LLVMGetFirstFunction(this.llvm_mod)
         LLVMPassManagerBuilderPopulateFunctionPassManager(pmb, fpm)
-        while (func as int) != 0  {
+        while func != null {
             LLVMRunFunctionPassManager(fpm, func)
             func = LLVMGetNextFunction(func)
         }
@@ -128,8 +128,8 @@ class CodeGen {
     codegenProgram(program: Program): GeneratedModule{
         this.program = program
         this.modules = []
-        this.continue_bb = "\0" as LLVMBasicBlockRef
-        this.break_bb = this.continue_bb
+        this.continue_bb = null
+        this.break_bb = null
         this.global_var_scope = new Map<string, LLVMValueRef>()
         for let i = 0; i < program.modules.length; ++i {
             this.modules << this.codegen_module(program.modules[i])
@@ -150,12 +150,11 @@ class CodeGen {
         this.module = LLVMModuleCreateWithNameInContext(module.name.to_cstring(), this.module_ctx)
         //let DBFloInfo = new DebugInfo(this.module, module.name)
         this.in_static_ctx = true
-        let poison_builder = "\0" as LLVMBuilderRef
         for let i = 0; i < module.global_consts.length; ++i {
-            this.codegen_const_declaration(poison_builder, module.global_consts[i])
+            this.codegen_const_declaration(null, module.global_consts[i])
         }
         for i = 0; i < module.global_vars.length; ++i {
-            this.codegen_var_declaration(poison_builder, module.global_vars[i])
+            this.codegen_var_declaration(null, module.global_vars[i])
         }
         for i = 0; i < module.classes.length; ++i {
             this.declare_class(module.classes[i])
@@ -302,7 +301,7 @@ class CodeGen {
             return this.get_index_expr_mem(builder, exp as IndexExpression)
         if exp.expr_kind == ExpressionKind.MEMBER
             return this.get_member_expr_mem(builder, exp as MemberExpression)
-        return "\0" as LLVMValueRef
+        return null
     }
     store_expr_to_mem(builder: LLVMBuilderRef, ptr: LLVMValueRef, expr: Expression): LLVMValueRef {
         if expr.expr_kind == ExpressionKind.ARRAY and expr.is_constant == false
@@ -459,7 +458,7 @@ class CodeGen {
                 return ptr
             }
             if is_numeric(exp.value_type){
-                let incr_amt = "\0" as LLVMValueRef
+                let incr_amt: LLVMValueRef = null
                 let alloc_ty = this.codegen_type(exp.value_type)
                 if is_int(exp.value_type){
                     incr_amt = LLVMConstInt(alloc_ty, op == UnaryOp.PREINCR or op == UnaryOp.POSTINCR ? 1 : -1, false)
@@ -622,7 +621,7 @@ class CodeGen {
         let expression = get_var(this.program, var_id).value
         let ty = this.codegen_type(expression.value_type)
         let name = var_decl.name.to_cstring()
-        let ptr = "\0" as LLVMValueRef
+        let ptr: LLVMValueRef = null
         if var_decl.is_static {
             let value = this.codegen_expression(builder, expression)
             ptr = LLVMAddGlobal(this.module, ty, name)
@@ -638,7 +637,7 @@ class CodeGen {
         let expression = get_const(this.program, const_id).value
         let ty = this.codegen_type(expression.value_type)
         let name = const_decl.name.to_cstring()
-        let ptr = "\0" as LLVMValueRef
+        let ptr: LLVMValueRef = null
         if const_decl.is_static {
             let value = this.codegen_expression(builder, expression)
             ptr = LLVMAddGlobal(this.module, ty, name)
