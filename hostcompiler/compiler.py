@@ -2,7 +2,7 @@ import re
 from pathlib import Path
 from typing import Dict
 from errors import CompileError, TypeError
-from flotypes import FloArray, FloClass, FloConst, FloEnum, FloFunc, FloGeneric, FloInt, FloFloat, FloMem, FloMethod, FloObject, FloPointer, FloRef, FloVoid, create_array_buffer
+from flotypes import FloArray, FloClass, FloConst, FloEnum, FloFunc, FloGeneric, FloInt, FloFloat, FloMem, FloMethod, FloNull, FloObject, FloPointer, FloRef, FloVoid, create_array_buffer
 from lexer import TokType
 from astree import *
 from context import Context
@@ -302,6 +302,8 @@ class Compiler(Visitor):
             return FloInt(1, 1)
         elif var_name == "false":
             return FloInt(0, 1)
+        elif var_name == "null":
+            return FloNull(node.expects)
         ref = self.context.get(var_name)
         if isinstance(ref, FloRef):
             return ref.load()

@@ -1120,7 +1120,7 @@ class TypeChecker {
         let prop_owner = this.check_expression($UNKNOW_TYPE, member_expr_node.expression)
         let prop_owner_type = prop_owner.value_type
         let prop_name = member_expr_node.member.value
-        let prop_id = "\0" as FieldId
+        let prop_id: FieldId = null
         let prop_ty = $UNKNOW_TYPE
         if prop_owner_type.kind == TypeKind.OBJECT {
             let parent_class = this.get_class_from_id((prop_owner_type as ObjectType).class_id)

@@ -12,6 +12,10 @@ def create_array_buffer(builder: ir.IRBuilder, elems):
         mem.store_at_index(builder, elem, FloInt(index, 32))
     return mem
 
+def strict_mem_compare(builder: ir.IRBuilder, o1, o2):    
+    my_int = FloInt(builder.ptrtoint(o1.mem.value, ir.IntType(32)), 32)
+    other_int = FloInt(builder.ptrtoint(o2.mem.value, ir.IntType(32)), 32)
+    return my_int.cmp(builder, "==", other_int)
 
 def is_string_object(type):
     return isinstance(type, FloObject) and type.referer.name == 'string'
@@ -61,6 +65,33 @@ class FloType:
     
     def cval(self, _):
         return self.value
+
+class FloNull(FloType):
+    def __init__(self, base_type: FloType) -> None:
+        if base_type:
+            self.llvmtype = base_type.llvmtype
+        self.base_type = base_type
+        zero = ir.Constant(ir.IntType(32), 0)
+        if isinstance(base_type, FloInt):
+            self.floval = FloInt(0, base_type.bits)
+        elif isinstance(base_type, FloFloat):
+            self.floval = FloFloat(0.0, base_type.bits)
+        elif isinstance(base_type, FloPointer) or isinstance(base_type, FloObject) or isinstance(base_type, FloFunc):
+            self.floval = base_type.new_with_val(zero.inttoptr(base_type.llvmtype))
+
+    @property
+    def value(self):
+        return self.floval.value
+    def store_value_to_ref(self, ref):
+        return self.floval.store_value_to_ref(ref)
+
+    def load_value_from_ref(self, ref):
+        return self.floval.load_value_from_ref(ref)
+    
+    def __eq__(self, __o: object) -> bool:
+        return self.floval.__eq__(__o)
+    
+
 
 class FloVoid(FloType):
     llvmtype = ir.VoidType()
@@ -248,6 +279,8 @@ class FloInt(FloType):
             return f"i{self.bits}"
 
     def __eq__(self, __o: object) -> bool:
+        if isinstance(__o, FloNull):
+            return __o == self
         return isinstance(__o, FloInt) and __o.bits == self.bits
 
     def new(self, value):
@@ -311,6 +344,8 @@ class FloFloat(FloType):
             raise Exception(f"Unhandled type cast: float to {type.str()}")
 
     def __eq__(self, __o: object) -> bool:
+        if isinstance(__o, FloNull):
+            return __o == self
         return isinstance(__o, FloFloat) and __o.bits == self.bits
 
     def to_string(self, builder: ir.IRBuilder):
@@ -479,6 +514,8 @@ class FloPointer(FloType):
         return value
 
     def __eq__(self, __o: object) -> bool:
+        if isinstance(__o, FloNull):
+            return __o == self
         return isinstance(__o, FloPointer) and self.elm_type == __o.elm_type
 
     def get_pointer_at_index(self, builder: ir.IRBuilder, index: FloInt):
@@ -600,6 +637,8 @@ class FloArray:
         return f"{self.elm_type.str()}[]"
 
     def __eq__(self, __o: object) -> bool:
+        if isinstance(__o, FloNull):
+            return __o == self
         return isinstance(__o, FloArray) and self.elm_type == __o.elm_type
 
 
@@ -671,6 +710,8 @@ class FloFunc(FloType):
         
 
     def __eq__(self, __o: object) -> bool:
+        if isinstance(__o, FloNull):
+            return __o == self
         if not isinstance(__o, FloFunc):
             return False
         if self.return_type != __o.return_type:
@@ -963,6 +1004,8 @@ class FloObject(FloType):
         return self.referer.name if isinstance(self.referer, FloClass) else self.referer.value
 
     def __eq__(self, other: object) -> bool:
+        if isinstance(other, FloNull):
+            return other == self
         if not other:
             return False
         if not isinstance(other, FloObject):
@@ -977,14 +1020,20 @@ class FloObject(FloType):
 
     def cmp(self, builder: ir.IRBuilder, op, other):
         should_not = op == "!="
+        if isinstance(other, FloNull):
+            value = strict_mem_compare(builder, self, other.floval)
+            return value.not_(builder) if should_not else value
+        if not isinstance(other, FloObject):
+            return FloInt(0, 1)
         if op == "==" or op == "!=":
             eq_method = self.get_method("__eq__", builder)
-            value = FloInt(0, 1)
             other_object: FloObject = other
             if eq_method:
                 if len(eq_method.arg_types) > 0 and other_object.referer.has_parent(eq_method.arg_types[0].referer):
                     other_object = other_object.cast_to(builder, eq_method.arg_types[0])
                 value = eq_method.call(builder, [other_object])
+            else:
+                value = strict_mem_compare(builder, self, other_object)
             return value.not_(builder) if should_not else value
 
     def get_cast_method(self, type, builder):
@@ -1003,8 +1052,6 @@ class FloObject(FloType):
                 return str_to_int(builder, self, type.bits)
             elif isinstance(type, FloFloat):
                 return str_to_float(builder, self, type.bits)
-        if isinstance(type, FloInt):
-            return type.new_with_val(builder.ptrtoint(self.mem.value, type.llvmtype))
         if isinstance(type, FloObject):
             # if(self.referer.has_parent(type.referer)): (Possibly unsafe with check on this line)
             casted_mem = FloMem.bitcast(builder, self.mem, type.llvmtype)

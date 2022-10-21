@@ -1,7 +1,7 @@
 from typing import Dict, List
 from context import Context
 from errors import GeneralError, TypeError, SyntaxError, NameError
-from flotypes import FloArray, FloClass, FloEnum, FloFloat, FloGeneric, FloInlineFunc, FloInt, FloObject, FloPointer, FloType, FloVoid, is_string_object
+from flotypes import FloArray, FloClass, FloEnum, FloFloat, FloGeneric, FloInlineFunc, FloInt, FloNull, FloObject, FloPointer, FloType, FloVoid, is_string_object
 from lexer import TokType
 from astree import *
 from nodefinder import NodeFinder, resource_path
@@ -119,6 +119,9 @@ class Analyzer(Visitor):
     def __init__(self, context: Context):
         self.context = Context(context.display_name+"_typecheck", context)
         self.constants = context.get_symbols()
+        self.constants.append("null")
+        self.constants.append("true")
+        self.constants.append("false")
         self.class_within: str = None
         self.current_block = Block.stmt()
         self.imported_module_names = []  # denotes full imported module
@@ -174,8 +177,8 @@ class Analyzer(Visitor):
 
     def visitNumOpNode(self, node: NumOpNode):
         node.left_node.expects = node.expects
-        node.right_node.expects = node.expects
         left = self.visit(node.left_node)
+        node.right_node.expects = left
         right = self.visit(node.right_node)
         if isinstance(left, FloInt) and isinstance(right, FloInt) and left != right:
             if isinstance(node.left_node, IntNode) or isinstance(node.left_node, UnaryNode):
@@ -310,6 +313,10 @@ class Analyzer(Visitor):
             return FloInt(1, 1)
         elif var_name == "false":
             return FloInt(0, 1)
+        elif var_name == "null":
+            if node.expects == None:
+                TypeError(node.range, "Null without type hint context").throw()
+            return FloNull(node.expects)
         value = self.context.get(var_name)
         if value == None:
             NameError(node.var_name.range,
@@ -373,7 +380,7 @@ class Analyzer(Visitor):
     def visitVarDeclarationNode(self, node: VarDeclarationNode):
         var_name = node.var_name.value
         if self.context.get(var_name) != None:
-            GeneralError(node.range, f"Illegal redeclaration of variable '${var_name}'").throw()
+            GeneralError(node.range, f"Illegal redeclaration of variable '{var_name}'").throw()
         expected_ty = None
         if node.type:
             node.value.expects = self.visit(node.type)
@@ -381,6 +388,8 @@ class Analyzer(Visitor):
         var_value = self.visit(node.value)
         if not expected_ty:
             expected_ty = var_value
+        if isinstance(var_value, FloNull) and var_value.base_type == None:
+            TypeError(node.range, f"Cannot assign variable to null without type hint").throw()
         self.check_value_assignment(expected_ty, var_value, node)
         self.context.set(var_name, expected_ty)
 
@@ -568,7 +577,11 @@ class Analyzer(Visitor):
         if not self.current_block.can_return():
             SyntaxError(
                 node.range, "Illegal return outside a function").throw()
-        val = self.visit(node.value) if node.value else FloVoid(None)
+        if node.value:
+            node.value.expects = self.current_block.get_parent_fnc_ty()
+            val = self.visit(node.value)
+        else:
+            val = FloVoid(None)
         
         if isinstance(val, FloObject) and isinstance(self.current_block.fn_within.rtype, FloObject):
             if val.referer.has_parent(self.current_block.fn_within.rtype.referer):
