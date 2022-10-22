@@ -1,24 +1,51 @@
 
-fnc  LLVMInitializeX86TargetInfo()
+fnc LLVMInitializeX86TargetInfo()
 fnc LLVMInitializeX86Target()
 fnc LLVMInitializeX86TargetMC()
-
 fnc LLVMInitializeX86AsmPrinter()
 fnc LLVMInitializeX86AsmParser()
 
-fnc LLVMInitializeNativeTarget(): LLVMBool {
+fnc LLVMInitializeWebAssemblyTargetInfo()
+fnc LLVMInitializeWebAssemblyTarget()
+fnc LLVMInitializeWebAssemblyTargetMC()
+fnc LLVMInitializeWebAssemblyAsmPrinter()
+fnc LLVMInitializeWebAssemblyAsmParser()
+
+
+
+
+fnc LLVMInitializeNativeTarget() {
   LLVMInitializeX86TargetInfo()
   LLVMInitializeX86Target()
   LLVMInitializeX86TargetMC()
-  return true
 }
-fnc LLVMInitializeNativeAsmParser(): LLVMBool {
+fnc LLVMInitializeNativeAsmParser() {
   LLVMInitializeX86AsmParser()
-  return true
 }
-fnc LLVMInitializeNativeAsmPrinter(): LLVMBool {
+fnc LLVMInitializeNativeAsmPrinter() {
   LLVMInitializeX86AsmPrinter()
-  return true
+}
+
+
+fnc LLVMInitializeAllTargets() {
+  LLVMInitializeX86Target()
+  LLVMInitializeWebAssemblyTarget()
+}
+fnc LLVMInitializeAllTargetInfos(){
+  LLVMInitializeX86TargetInfo()
+  LLVMInitializeWebAssemblyTargetInfo()
+}
+fnc LLVMInitializeAllTargetMCs(){
+  LLVMInitializeX86TargetMC()
+  LLVMInitializeWebAssemblyTargetMC()
+}
+fnc LLVMInitializeAllTargetPrinters(){
+  LLVMInitializeX86AsmPrinter()
+  LLVMInitializeWebAssemblyAsmPrinter()
+}
+fnc LLVMInitializeAllTargetParsers(){
+  LLVMInitializeX86AsmParser()
+  LLVMInitializeWebAssemblyAsmParser()
 }
 
 /*===-- Target ------------------------------------------------------------===*/
@@ -27,6 +54,10 @@ fnc LLVMGetFirstTarget(): LLVMTargetRef
 /** Finds the target corresponding to the given name and stores it in \p T.
   Returns 0 on success. */
 fnc LLVMGetTargetFromName(Name: i8*): LLVMTargetRef
+fnc LLVMGetTargetName(T: LLVMTargetRef): i8*
+
+/** Returns the description  of a target. See llvm::Target::getDescription */
+fnc LLVMGetTargetDescription(T: LLVMTargetRef): i8*
 /** Emits an asm or object file for the given module to the filename. This
   wraps several c++ only classes (among them a file stream). Returns any
   error in ErrorMessage. Use LLVMDisposeMessage to dispose the message. */
