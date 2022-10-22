@@ -76,8 +76,10 @@ class FloNull(FloType):
             self.floval = FloInt(0, base_type.bits)
         elif isinstance(base_type, FloFloat):
             self.floval = FloFloat(0.0, base_type.bits)
-        elif isinstance(base_type, FloPointer) or isinstance(base_type, FloObject) or isinstance(base_type, FloFunc):
+        elif isinstance(base_type, FloPointer) or isinstance(base_type, FloObject) or isinstance(base_type, FloFunc) or isinstance(base_type, FloArray):
             self.floval = base_type.new_with_val(zero.inttoptr(base_type.llvmtype))
+        else:
+            print(base_type)
 
     @property
     def value(self):
@@ -89,7 +91,9 @@ class FloNull(FloType):
         return self.floval.load_value_from_ref(ref)
     
     def __eq__(self, __o: object) -> bool:
-        return self.floval.__eq__(__o)
+        if self.floval:
+            return self.floval.__eq__(__o)
+        return False
     
 
 
@@ -463,7 +467,7 @@ class FloPointer(FloType):
         self.mem = None
         self.methods = {}
         self.init_methods()
-        self.fmt = "%X"
+        self.fmt = "0x%X"
 
     def new_with_val(self, value):
         return self.new(FloMem(value))

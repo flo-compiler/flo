@@ -10,12 +10,14 @@ class GeneratedModule {
         LLVMVerifyModule(this.llvm_mod, LLVMVerifierFailureAction.LLVMAbortProcessAction, &this.errors)
         this.check_errors()
         LLVMLinkInMCJIT()
-        LLVMInitializeNativeTarget()
-        LLVMInitializeNativeAsmPrinter()
-        LLVMInitializeNativeAsmParser()
+        LLVMInitializeAllTargets()
+        LLVMInitializeAllTargetInfos()
+        LLVMInitializeAllTargetMCs()
+        LLVMInitializeAllTargetPrinters()
+        LLVMInitializeAllTargetParsers()
     }
     check_errors(){
-        if (this.errors[0]) {
+        if (this.errors[0] != 0) {
             println("error:", string_from_cstring(this.errors))
             LLVMDisposeMessage(this.errors)
             exit()
@@ -44,8 +46,8 @@ class GeneratedModule {
         let engine: LLVMExecutionEngineRef = new i8[1] as LLVMExecutionEngineRef
         if (LLVMCreateExecutionEngineForModule(&engine, module_copy, &this.errors) != 0) {
             println("failed to create execution engine")
+            return
         }
-        this.check_errors()
         let main_fnc = LLVMGetFunctionAddress(engine, "main")  as () => int
         if main_fnc == null {
             println("Main function not found in module; can't execute")
@@ -58,7 +60,7 @@ class GeneratedModule {
         let triple = triple_str == "" ? LLVMGetDefaultTargetTriple() : triple_str.to_cstring()
         let target = LLVMGetFirstTarget()
         if (LLVMGetTargetFromTriple(triple, &target, &this.errors) != 0) {
-            println("failed to get target triple")
+            println("failed to get target triple:", triple_str)
         }
         this.check_errors()
         let CPU: i8* = "generic"
@@ -426,17 +428,9 @@ class CodeGen {
             } else if is_float(exp.value_type) and is_int(bty) {
                 return is_const ? LLVMConstFPToSI(val, ty) : LLVMBuildFPToSI(builder, val, ty, "")
             } else if is_int(exp.value_type) and is_int(bty){
-                if exp.value_type.kind > bty.kind {
-                    return is_const ? LLVMConstTrunc(val, ty) : LLVMBuildTrunc(builder, val, ty, "")
-                } else {
-                    return is_const ? LLVMConstZExt(val, ty) : LLVMBuildTrunc(builder, val, ty,"")
-                }
+                return is_const ? LLVMConstIntCast(val, ty, true) : LLVMBuildIntCast2(builder, val, ty, true, "")
             } else if is_float(exp.value_type) and is_float(bty){
-                if exp.value_type.kind > bty.kind {
-                    return is_const ? LLVMConstFPTrunc(val, ty) : LLVMBuildFPTrunc(builder, val, ty, "")
-                } else {
-                    return is_const ? LLVMConstFPExt(val, ty) : LLVMBuildFPExt(builder, val, ty,"")
-                }
+                return is_const ? LLVMConstFPCast(val, ty) : LLVMBuildFPCast(builder, val, ty, "")
             }
             return is_const ? LLVMConstBitCast(val, ty) : LLVMBuildBitCast(builder, val, ty, "")
         } 

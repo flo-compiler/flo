@@ -779,16 +779,7 @@ class TypeChecker {
         module_scope.vars.set("false", const_id)
         module_scope.vars.set("null", const_id)
         this.current_scope = module_scope.id
-        for let i = 0; i < module_ast.consts.length; i++ {
-            this.declare_global_const(module_ast.consts[i])
-        }
-        for i = 0; i < module_ast.vars.length; i++ {
-            this.declare_global_var(module_ast.vars[i])
-        }
-        for i = 0; i < module_ast.classes.length; i++ {
-            this.declare_class_within_current_scope(module_ast.classes[i])
-        }
-        for i = 0; i < module_ast.type_aliases.length; i++  {
+        for let i = 0; i < module_ast.type_aliases.length; i++  {
             let type_alias_node = module_ast.type_aliases[i]
             let ty = this.check_type(type_alias_node.parsed_type)
             let identifer_tok = type_alias_node.name
@@ -797,6 +788,15 @@ class TypeChecker {
                 this.error(ErrorKind.NAME, "Name '"+alias_name+"' has already been used for another type. consider renaming", type_alias_node.name.range)
             }
             module_scope.type_aliases.set(alias_name, ty)
+        }
+        for i = 0; i < module_ast.consts.length; i++ {
+            this.declare_global_const(module_ast.consts[i])
+        }
+        for i = 0; i < module_ast.vars.length; i++ {
+            this.declare_global_var(module_ast.vars[i])
+        }
+        for i = 0; i < module_ast.classes.length; i++ {
+            this.declare_class_within_current_scope(module_ast.classes[i])
         }
         for i = 0; i < module_ast.functions.length; i++ {
             this.declare_function_within_current_scope(module_ast.functions[i])
@@ -1092,9 +1092,9 @@ class TypeChecker {
         this.error(ErrorKind.TYPE, "Illegal binary operation '"+dump_bin_op(op)+"' between types '"+dump_type(left.value_type)+"' and '"+dump_type(right.value_type)+"'", binary_node.range)
         return new BinaryExpression(left, op, right, $UNKNOW_TYPE)
     }
-    check_unary_expr(unary_node: UnaryExpressionNode): UnaryExpression {
+    check_unary_expr(expected_type: Type, unary_node: UnaryExpressionNode): UnaryExpression {
         let op = unary_node.op
-        let expression = this.check_expression($UNKNOW_TYPE, unary_node.expression)
+        let expression = this.check_expression(expected_type, unary_node.expression)
         let ty = expression.value_type
         let is_const = expression.is_constant
         if op == UnaryOp.NEG {
@@ -1264,7 +1264,7 @@ class TypeChecker {
         if expr_node.expr_kind == ExpressionKind.BIN
             return this.check_bin_expr(expected_type, expr_node as BinaryExpressionNode)
         if expr_node.expr_kind == ExpressionKind.UNARY
-            return this.check_unary_expr(expr_node as UnaryExpressionNode)
+            return this.check_unary_expr(expected_type, expr_node as UnaryExpressionNode)
         if expr_node.expr_kind == ExpressionKind.TERNARY
             return this.check_ternary_expr(expected_type, expr_node as TernaryExpressionNode)
         if expr_node.expr_kind == ExpressionKind.TYPEBOUND

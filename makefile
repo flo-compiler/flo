@@ -7,7 +7,7 @@ CXX=g++
 
 CXXFLAGS := -g3 -O0 
 
-LLVM_BUILD_PATH = $$HOME/llvm-project/build
+LLVM_BUILD_PATH = /lib/llvm-15#$$HOME/llvm-project/build
 
 LLVM_LIB_PATH:=$(LLVM_BUILD_PATH)/lib
 
@@ -16,6 +16,8 @@ LLVM_BIN_PATH := $(LLVM_BUILD_PATH)/bin
 LLVM_CXXFLAGS=`$(LLVM_BIN_PATH)/llvm-config --cxxflags`
 
 LLVM_LDFLAGS=`$(LLVM_BIN_PATH)/llvm-config --ldflags --libs --system-libs`
+
+FLO_INSTALL_PATH = ~/flo
 
 all: flo
 
@@ -27,6 +29,9 @@ flo.o: src/*.flo
 
 # flolib.o:
 
+install: all
+	cp -f flo $(FLO_INSTALL_PATH)
+	ln -f $(FLO_INSTALL_PATH) /usr/bin/flo
 
 clean:
 	rm -f *.o flo *.so *.ll

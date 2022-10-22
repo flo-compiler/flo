@@ -5,4 +5,4 @@
 *.ll
 **/*.vsix
 flo
-/llvm-project
+/journal
