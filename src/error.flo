@@ -47,6 +47,8 @@ fnc print_message_error(kind: ErrorKind, message: string){
         print("[Syntax Error]: ")
     } else if kind == ErrorKind.IO {
         print("[IO Error]: ")
+    } else if kind == ErrorKind.TYPE {
+        print("[Type Error]: ")
     } else if kind == ErrorKind.NAME {
         print("[Name Error]: ")
     } else {

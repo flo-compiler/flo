@@ -233,6 +233,7 @@ class VarDeclarationStatement (StatementNode) {
     constructor(range: FloRange){
         super(StatementKind.VAR, range)
         this.var_type = null
+        this.value = null
     }
 }
 
@@ -721,8 +722,10 @@ class Parser {
     }
     parse_expression(): ExpressionNode {
         let left = this.parse_ternary_expression()
-        if this.current_token.ttype == TokType.IN_KW and this.can_parse()
+        if this.current_token.ttype == TokType.IN_KW and this.can_parse() {
+            this.advance()
             return new BinaryExpressionNode(left, BinaryOp.IN, this.parse_expression())
+        }
         if this.current_token.ttype != TokType.EQ or !this.can_parse()
             return left
         this.advance()
@@ -783,9 +786,13 @@ class Parser {
             this.advance()
             var_decl_node.var_type = this.parse_type()
         }
-        this.eat(TokType.EQ)
-        var_decl_node.value = this.parse_expression()
-        var_decl_node.range = merge_range(var_decl_node.range, var_decl_node.value.range)
+        let end_range = this.current_token.range
+        if this.current_token.ttype == TokType.EQ {
+            this.advance()
+            var_decl_node.value = this.parse_expression()
+            end_range = var_decl_node.value.range
+        }
+        var_decl_node.range = merge_range(var_decl_node.range, end_range)
         return var_decl_node
     }
     parse_return_statement(): ReturnStatementNode{

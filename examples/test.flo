@@ -1,4 +1,3 @@
-let x = new int
 fnc main(): int {
     return 4 < 2 ? 1 : 0
 }
