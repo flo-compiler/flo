@@ -43,7 +43,7 @@ class GeneratedModule {
     }
     exec(){
         let module_copy = this.copy_llvm_module()
-        let engine: LLVMExecutionEngineRef = new i8[1] as LLVMExecutionEngineRef
+        let engine: LLVMExecutionEngineRef = null
         if (LLVMCreateExecutionEngineForModule(&engine, module_copy, &this.errors) != 0) {
             println("failed to create execution engine")
             return
@@ -95,7 +95,7 @@ class IntrinsicResult {
     fnc_type: LLVMTypeRef
 }
 fnc get_intrinsic(mod: LLVMModuleRef, name: string, params: LLVMTypeRef[]): IntrinsicResult {
-    let result = new IntrinsicResult()
+    let result: IntrinsicResult
     result.fnc_type = LLVMFunctionType(params[0], params.buffer, params.length, false)
     result.call = LLVMAddFunction(mod, name.to_cstring(), result.fnc_type)
     return result
@@ -136,7 +136,8 @@ class CodeGen {
         this.modules = []
         this.continue_bb = null
         this.break_bb = null
-        this.global_var_scope = new Map<string, LLVMValueRef>()
+        let global_var_map: Map<string, LLVMValueRef>
+        this.global_var_scope = global_var_map
         for let i = 0; i < program.modules.length; ++i {
             this.modules << this.codegen_module(program.modules[i])
         }
@@ -150,9 +151,12 @@ class CodeGen {
     }
     codegen_module(module: Module): LLVMModuleRef {
         this.module_ctx = LLVMContextCreate()
-        this.module_string_scope = new Map<string, LLVMValueRef>()
-        this.module_intrinsic_scope = new Map<string, IntrinsicResult>()
-        this.module_types = new Map<string, LLVMTypeRef>()
+        let module_string_scope: Map<string, LLVMValueRef>
+        let module_intrinsic_scope: Map<string, IntrinsicResult>
+        let module_types: Map<string, LLVMTypeRef>
+        this.module_string_scope = module_string_scope
+        this.module_intrinsic_scope = module_intrinsic_scope
+        this.module_types = module_types
         this.module = LLVMModuleCreateWithNameInContext(module.name.to_cstring(), this.module_ctx)
         //let DBFloInfo = new DebugInfo(this.module, module.name)
         this.in_static_ctx = true
@@ -325,7 +329,7 @@ class CodeGen {
         let name = "llvm.pow."+dump_type(ty, true)
         let llvmty = this.codegen_type(ty)
         let cached_instrinsic = this.module_intrinsic_scope.get(name)
-        let res = new IntrinsicResult()
+        let res: IntrinsicResult
         if cached_instrinsic != null {
             res = cached_instrinsic
         } else {

@@ -117,7 +117,8 @@ class BooleanExpression (Expression) {
     value: int 
     constructor(value: int){
         super(ExpressionKind.BOOL)
-        this.value_type = new BooleanType()
+        let bool_type: BooleanType
+        this.value_type = bool_type
         this.value = value
         this.is_constant = true
     }
@@ -135,7 +136,8 @@ class StringExpression (Expression) {
     value: string
     constructor(value: string){
         super(ExpressionKind.STRING)
-        this.value_type = new StringType()
+        let string_type: StringType
+        this.value_type = string_type
         this.value = value
         this.is_constant = true
     }
@@ -202,8 +204,10 @@ class TypeExpression (Expression) {
         this.ty_op = ty_op
         if ty_op == TypeExprOp.AS 
             this.value_type = bound_type
-        if ty_op == TypeExprOp.IS
-            this.value_type = new BooleanType()
+        if ty_op == TypeExprOp.IS {
+            let bool_type: BooleanType
+            this.value_type = bool_type
+        }
         this.bound_type = bound_type
         this.is_constant = expr.is_constant
     }
@@ -525,11 +529,16 @@ class Scope {
     type_aliases: Map<string, Type>
     constructor(module_id: int, id: int){
         this.id = new ScopeId(module_id, id)
-        this.vars = new Map<string, VarId>()
-        this.classes = new Map<string, ClassId>()
-        this.functions = new Map<string, VarId>()
-        this.enums = new Map<string, EnumId>()
-        this.type_aliases = new Map<string, Type>()
+        let vars: Map<string, VarId>
+        let classes: Map<string, ClassId>
+        let functions: Map<string, VarId>
+        let enums: Map<string, EnumId>
+        let type_aliases: Map<string, Type>
+        this.vars = vars
+        this.classes = classes
+        this.functions = functions
+        this.enums = enums
+        this.type_aliases = type_aliases
         this.parent = null 
     }
 }
@@ -699,7 +708,8 @@ class TypeChecker {
     constructor(){
         this.current_module = -1
         this.in_loop = false
-        this.program = new Program()
+        let program: Program
+        this.program = program
     }
     get_scope(scope_id: ScopeId): Scope {
        return this.program.modules[scope_id.module_id].scopes[scope_id.id]
@@ -780,7 +790,7 @@ class TypeChecker {
         this.current_module++
         this.filename = filename
         this.errors = errors
-        let module = new Module()
+        let module: Module
         module.name = filename
         this.program.modules << module
         let module_scope = this.create_scope()
@@ -906,10 +916,11 @@ class TypeChecker {
             this.error(ErrorKind.NAME, "Name '"+name+"' has already been used for another type. consider renaming", class_decl_node.name.range)
             return
         }
-        let declared_class = new Class()
+        let declared_class: Class
         declared_class.fields = []
         declared_class.methods = []
-        declared_class.field_map = new Map<string, PropId>()
+        let field_map: Map<string, PropId>
+        declared_class.field_map = field_map
         declared_class.name = name
         declared_class.id = new ClassId(this.current_module, this.get_current_module().classes.length)
         this.get_current_module().classes << declared_class
@@ -1158,8 +1169,10 @@ class TypeChecker {
             if op >= BinaryOp.OR and op <= BinaryOp.AND
                 return new BinaryExpression(left, op, right, left.value_type, is_const)
         }
-        if op >= BinaryOp.GT and op <= BinaryOp.NEQ
-            return new BinaryExpression(left, op, right, new BooleanType(), is_const)
+        if op >= BinaryOp.GT and op <= BinaryOp.NEQ {
+            let boolean_type: BooleanType
+            return new BinaryExpression(left, op, right, boolean_type, is_const)
+        }
         //TODO: Handle Range, In and Object Arithmetic and bit Cases.
         this.error(ErrorKind.TYPE, "Illegal binary operation '"+dump_bin_op(op)+"' between types '"+dump_type(left.value_type)+"' and '"+dump_type(right.value_type)+"'", binary_node.range)
         return null
@@ -1498,7 +1511,7 @@ class TypeChecker {
     check_can_return(return_stmt: ReturnStatementNode): ReturnStatement {
         let expr = return_stmt.value
         let current_function_return_type = (this.get_current_function().value_type as FunctionType).return_type
-        let rt_stmt = new ReturnStatement()
+        let rt_stmt: ReturnStatement
         if expr != null {
             let rt_value = this.check_expression(current_function_return_type, expr)
             if this.has_errored() return null
@@ -1538,7 +1551,7 @@ class TypeChecker {
     }
     check_block(block_node: BlockNode): Block {
         if this.has_errored() return null
-        let block = new Block()
+        let block: Block
         let new_scope = this.create_child_scope_within_current_scope()
         this.current_scope = new_scope.id
         for let i = 0; i < block_node.statements.length; i++ {

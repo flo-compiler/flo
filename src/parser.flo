@@ -332,9 +332,7 @@ class Parser {
     errors: FloError[]
     current_token: Token
     idx: int
-    constructor(tokens: Token[], errors: FloError[]){
-        this.tokens = tokens
-        this.errors = errors
+    constructor(){
         this.idx = -1
     }
     can_parse(): bool{
@@ -844,14 +842,14 @@ class Parser {
     }
     parse_type_alias(): TypeAliasNode {
         this.advance()
-        let type_alias_node = new TypeAliasNode()
+        let type_alias_node: TypeAliasNode
         type_alias_node.name = this.eat(TokType.IDENTIFER) as IdentifierToken
         this.eat(TokType.EQ)
         type_alias_node.parsed_type = this.parse_type()
         return type_alias_node
     }
     parse_arg(): ArgNode {
-        let arg_node = new ArgNode()
+        let arg_node: ArgNode
         arg_node.parsed_type = null
         arg_node.default = null
         arg_node.name = this.eat(TokType.IDENTIFER) as IdentifierToken
@@ -877,7 +875,7 @@ class Parser {
         }
     }
     parse_function(): FunctionDeclarationNode {
-        let fnc_node = new FunctionDeclarationNode()
+        let fnc_node: FunctionDeclarationNode
         fnc_node.name = this.eat(TokType.IDENTIFER) as IdentifierToken
         this.eat(TokType.LPAR)
         if this.current_token.ttype != TokType.RPAR
@@ -901,7 +899,7 @@ class Parser {
         this.new_lines()
         while this.current_token.ttype != TokType.RBRACE and this.can_parse() {
             if this.peek().ttype == TokType.COL {
-                let field = new FieldNode()
+                let field: FieldNode
                 field.name = this.eat(TokType.IDENTIFER) as IdentifierToken
                 this.eat(TokType.COL)
                 field.parsed_type = this.parse_type()
@@ -953,7 +951,7 @@ class Parser {
         return const_decl_node
     }
     parse_import(): ImportNode {
-        let import_node = new ImportNode()
+        let import_node: ImportNode
         this.advance()
         if this.current_token.ttype == TokType.IDENTIFER {
             import_node.import_list << (this.current_token as IdentifierToken)
@@ -968,7 +966,7 @@ class Parser {
         return import_node
     }
     parse_enum(): EnumNode {
-        let enum_node = new EnumNode()
+        let enum_node: EnumNode
         this.advance()
         enum_node.name = this.eat(TokType.IDENTIFER) as IdentifierToken
         this.new_lines()
@@ -982,9 +980,11 @@ class Parser {
         this.eat(TokType.RBRACE)
         return enum_node
     }
-    parse(): ModuleAST {
+    parse(tokens: Token[], errors: FloError[]): ModuleAST {
+        this.tokens = tokens
+        this.errors = errors
         this.advance()
-        let module_node = new ModuleAST()
+        let module_node: ModuleAST
         while this.can_parse() {
             this.new_lines()
             if this.current_token.ttype == TokType.FNC_KW {
