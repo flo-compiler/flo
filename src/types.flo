@@ -132,6 +132,10 @@ enum ExpressionKind {
     CALL
     TERNARY
 }
+enum PropIdKind {
+    METHOD
+    FIELD
+}
 enum VarIdKind {
     FNC
     VAR

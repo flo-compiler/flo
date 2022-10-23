@@ -238,6 +238,8 @@ fnc LLVMConstShuffleVector(VectorAConstant: LLVMValueRef, VectorBConstant: LLVMV
 fnc LLVMBlockAddress(F: LLVMValueRef, BB: LLVMBasicBlockRef): LLVMValueRef 
 
 /* globals */
+fnc LLVMGetLinkage(Global: LLVMValueRef)
+fnc LLVMSetLinkage(Global: LLVMValueRef, Linkage: LLVMLinkage)
 fnc LLVMAddGlobal(M: LLVMModuleRef, Ty: LLVMTypeRef, Name: i8*): LLVMValueRef 
 fnc LLVMAddGlobalInAddressSpace(M: LLVMModuleRef, Ty: LLVMTypeRef, Name: i8*, AddressSpace: int):LLVMValueRef 
 fnc LLVMGetNamedGlobal(M: LLVMModuleRef, Name: i8*): LLVMValueRef 
@@ -252,6 +254,8 @@ fnc LLVMGetThreadLocalMode(GlobalVar: LLVMValueRef): LLVMThreadLocalMode
 fnc LLVMSetThreadLocalMode(GlobalVar: LLVMValueRef, Mode: LLVMThreadLocalMode)
 fnc LLVMIsExternallyInitialized(GlobalVar: LLVMValueRef): LLVMBool
 fnc LLVMSetExternallyInitialized(GlobalVar: LLVMValueRef, IsExtInit: LLVMBool)
+/* Alginment */
+fnc LLVMGetAlignment(V: LLVMValueRef): int
 /* functions */
 fnc LLVMDeleteFunction(Fn: LLVMValueRef)
 fnc LLVMLookupIntrinsicID(Name: i8*, NameLen: int): int

@@ -307,7 +307,7 @@ class CodeGen {
             return this.get_index_expr_mem(builder, exp as IndexExpression)
         if exp.expr_kind == ExpressionKind.MEMBER
             return this.get_member_expr_mem(builder, exp as MemberExpression)
-        return null
+        return this.codegen_expression(builder, exp)
     }
     store_expr_to_mem(builder: LLVMBuilderRef, ptr: LLVMValueRef, expr: Expression): LLVMValueRef {
         if expr.expr_kind == ExpressionKind.ARRAY and expr.is_constant == false
@@ -635,8 +635,10 @@ class CodeGen {
     }
     codegen_var_declaration(builder: LLVMBuilderRef, var_decl: VarDeclaration){
         let var_id = var_decl.var_id
-        let expression = get_var(this.program, var_id).value
-        let ty = this.codegen_type(expression.value_type)
+        let var = get_var(this.program, var_id)
+        let expression = var.value
+        let expression_val_type = var.value_type
+        let ty = this.codegen_type(expression_val_type)
         let name = var_decl.name.to_cstring()
         let ptr: LLVMValueRef = null
         if var_decl.is_static {
@@ -645,7 +647,12 @@ class CodeGen {
             LLVMSetInitializer(ptr, value)
         } else {
             ptr = LLVMBuildAlloca(builder, ty, name)
-            this.store_expr_to_mem(builder, ptr, expression)
+            if expression != null {
+                this.store_expr_to_mem(builder, ptr, expression)
+            } else if expression_val_type.kind == TypeKind.OBJECT {
+                ty = this.codegen_type(expression_val_type, false)
+                LLVMBuildStore(builder, LLVMBuildAlloca(builder, ty, ""), ptr)
+            }
         }
         this.global_var_scope.set(create_var_key(var_id), ptr)
     }
@@ -692,8 +699,11 @@ class CodeGen {
         }
     }
     codegen_function(func: Function){
-        if func.is_external { return }
         let llvm_fnc = this.global_var_scope.get(create_var_key(func.id))
+        if func.is_external { 
+            LLVMSetLinkage(llvm_fnc, LLVMLinkage.LLVMExternalLinkage)
+            return
+        }
         if llvm_fnc == null {
             println("This should never happen; (codegen_function)")
             exit()

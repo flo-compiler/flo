@@ -8,7 +8,7 @@ class Type {
         return this.kind == other.kind
     }
 }
-$UNKNOW_TYPE = new Type(TypeKind.UNKNOWN)
+$UNKNOWN_TYPE = new Type(TypeKind.UNKNOWN)
 class BooleanType (Type) {
     constructor(){
         super(TypeKind.BOOL)
@@ -249,10 +249,12 @@ class ConstId(VarId) {
        super(VarIdKind.CONST, module_id, id)
     }
 }
-class FieldId {
+class PropId {
+    kind: PropIdKind
     type_id: TypeId
     id: int
-    constructor(type_id: TypeId, id: int){
+    constructor(kind: PropIdKind, type_id: TypeId, id: int){
+        this.kind = kind
         this.type_id = type_id
         this.id = id
     }
@@ -260,8 +262,8 @@ class FieldId {
  
 class MemberExpression (Expression) {
     expression: Expression
-    member_id: FieldId
-    constructor(expression: Expression, member_id: FieldId, value_type: Type){
+    member_id: PropId
+    constructor(expression: Expression, member_id: PropId, value_type: Type){
         super(ExpressionKind.MEMBER)
         this.expression = expression
         this.member_id = member_id
@@ -550,9 +552,9 @@ class Function (Value) {
 class Var (Value) {
     var_id: VarId
     value: Expression
-    constructor(value: Expression){
+    constructor(value: Expression, value_type: Type){
         this.value = value
-        this.value_type = value.value_type
+        this.value_type = value_type
     }
 }
 class Const (Value) {
@@ -566,23 +568,29 @@ class Const (Value) {
 $ACCESS_PUBLIC = 1
 $ACCESS_PRIVATE = 2
 $ACCESS_STATIC = 4
+
 class ClassField {
-    id: FieldId
+    id: PropId
     access_attributes: int
     name: string
     field_type: Type
 }
-class ClassMethod(Function){
+class ClassMethod {
     access_attributes: int
+    id: PropId
+    name: string
+    args: FunctionArg []
+    block: Block
+    method_type: Type
+    scope: ScopeId
 }
 class Class {
     id: ClassId
     name: string
     fields: ClassField[]
     methods: ClassMethod[]
-    field_map: Map<string, FieldId>
-    method_map: Map<string, int>
-    scope: ScopeId
+    field_map: Map<string, PropId>
+    method_map: Map<string, PropId>
 }
 class EnumField {
     name: string
@@ -686,7 +694,7 @@ class TypeChecker {
     current_function: VarId
     current_scope: ScopeId
     filename: string
-    content: string
+    errors: FloError []
     in_loop: bool
     constructor(){
         this.current_module = -1
@@ -735,7 +743,7 @@ class TypeChecker {
     }
     get_type_from_current_scope(name: string): Type {
         let current_scope = this.get_current_scope()
-        let found_type = $UNKNOW_TYPE
+        let found_type = $UNKNOWN_TYPE
         while true {
             let aliased_ty = current_scope.type_aliases.get(name)
             if aliased_ty != null {
@@ -763,13 +771,15 @@ class TypeChecker {
         return new_scope
     } 
     error(kind: ErrorKind, message: string, range: FloRange){
-        print_error(new FloError(kind, message, range), this.filename, this.content)
-        exit()
+        this.errors << new FloError(kind, message, range)
     }
-    check(module_ast: ModuleAST, filename: string, content: string): Program {
+    has_errored(): bool {
+        return this.errors.length > 0
+    }
+    check(module_ast: ModuleAST, filename: string, errors: FloError[]): Program {
         this.current_module++
         this.filename = filename
-        this.content = content
+        this.errors = errors
         let module = new Module()
         module.name = filename
         this.program.modules << module
@@ -779,13 +789,22 @@ class TypeChecker {
         module_scope.vars.set("false", const_id)
         module_scope.vars.set("null", const_id)
         this.current_scope = module_scope.id
-        for let i = 0; i < module_ast.type_aliases.length; i++  {
+        
+        // We declare module structures
+        for let i = 0; i < module_ast.enums.length; i++ {
+            this.declare_enum_within_current_scope(module_ast.enums[i])
+        }
+        for i = 0; i < module_ast.classes.length; i++ {
+            this.declare_class_within_current_scope(module_ast.classes[i])
+        }
+        for i = 0; i < module_ast.type_aliases.length; i++  {
             let type_alias_node = module_ast.type_aliases[i]
             let ty = this.check_type(type_alias_node.parsed_type)
             let identifer_tok = type_alias_node.name
             let alias_name = identifer_tok.value
             if this.get_type_from_current_scope(alias_name).kind != TypeKind.UNKNOWN {
                 this.error(ErrorKind.NAME, "Name '"+alias_name+"' has already been used for another type. consider renaming", type_alias_node.name.range)
+                return null
             }
             module_scope.type_aliases.set(alias_name, ty)
         }
@@ -795,23 +814,24 @@ class TypeChecker {
         for i = 0; i < module_ast.vars.length; i++ {
             this.declare_global_var(module_ast.vars[i])
         }
-        for i = 0; i < module_ast.classes.length; i++ {
-            this.declare_class_within_current_scope(module_ast.classes[i])
-        }
         for i = 0; i < module_ast.functions.length; i++ {
             this.declare_function_within_current_scope(module_ast.functions[i])
         }
-        for i = 0; i < module_ast.enums.length; i++ {
-            this.declare_enum_within_current_scope(module_ast.enums[i])
-        }
+        
         // We Now check bodies
+        for i = 0; i < module_ast.classes.length; i++ {
+            this.check_class_body(module.classes[i], module_ast.classes[i])
+        }
+        for i = 0; i < module_ast.enums.length; i++ {
+            this.check_enum_body(module.enums[i], module_ast.enums[i])
+        }
         for i = 0; i < module_ast.functions.length; i++ {
            this.check_function_body(module.functions[i], module_ast.functions[i])
         }
         return this.program
     }
-    declare_var_within_current_scope(name: string, value: Expression): Var {
-        let var = new Var(value)
+    declare_var_within_current_scope(name: string, value: Expression, value_type: Type): Var {
+        let var = new Var(value, value_type)
         let current_module = this.get_current_module()
         let current_scope = this.get_current_scope()
         let id = new VarId(VarIdKind.VAR, this.current_module, current_module.vars.length)
@@ -837,10 +857,63 @@ class TypeChecker {
     }
     declare_global_var(var_decl_node: VarDeclarationStatement){
         let var_stmt = this.check_var_declaration(var_decl_node)
-        if !get_var(this.program, var_stmt.var_id).value.is_constant
+        if !get_var(this.program, var_stmt.var_id).value.is_constant {
             this.error(ErrorKind.GEN, "Initilializer for global variable has to be a constant", var_decl_node.value.range)
+            return
+        }
         var_stmt.is_static = true
         this.get_current_module().global_vars << var_stmt
+    }
+    init_function_signature(arg_nodes: ArgNode[], return_type_node: TypeNode, args: FunctionArg[]): Type {
+        let arg_types: Type[] = []
+        for let i = 0; i < arg_nodes.length; ++i {
+            let arg = arg_nodes[i]
+            let fnc_arg = new FunctionArg()
+            fnc_arg.name = arg.name.value
+            fnc_arg.default = null
+            let arg_type = $UNKNOWN_TYPE
+            if arg.parsed_type != null
+                arg_type = this.check_type(arg.parsed_type)
+            if arg.default != null
+                fnc_arg.default = this.check_expression(arg_type, arg.default)
+                if !arg.parsed_type != null
+                    arg_type = fnc_arg.default.value_type
+            args << fnc_arg
+            fnc_arg.value_type = arg_type
+            let var = this.declare_var_within_current_scope(fnc_arg.name, fnc_arg, arg_type)
+            fnc_arg.id = var.var_id
+            arg_types << arg_type
+        }
+        let ret_type = this.check_type(return_type_node)
+        return new FunctionType(arg_types, ret_type)
+    }
+    declare_enum_within_current_scope(enum_node: EnumNode){
+        let declared_enum = new Enum()
+        let name = enum_node.name.value
+        declared_enum.name = name
+        if this.get_type_from_current_scope(name).kind != TypeKind.UNKNOWN {
+            this.error(ErrorKind.NAME, "Name '"+name+"' has already been used for another type. consider renaming", enum_node.name.range)
+            return
+        }
+        declared_enum.id = new EnumId(this.current_module, this.get_current_module().enums.length)
+        this.get_current_module().enums << declared_enum
+        this.get_current_scope().enums.set(declared_enum.name, declared_enum.id)
+    }
+    declare_class_within_current_scope(class_decl_node: ClassDeclarationNode) {
+        // TODO: Inheritance...
+        let name = class_decl_node.name.value
+        if this.get_type_from_current_scope(name).kind != TypeKind.UNKNOWN {
+            this.error(ErrorKind.NAME, "Name '"+name+"' has already been used for another type. consider renaming", class_decl_node.name.range)
+            return
+        }
+        let declared_class = new Class()
+        declared_class.fields = []
+        declared_class.methods = []
+        declared_class.field_map = new Map<string, PropId>()
+        declared_class.name = name
+        declared_class.id = new ClassId(this.current_module, this.get_current_module().classes.length)
+        this.get_current_module().classes << declared_class
+        this.get_current_scope().classes.set(declared_class.name, declared_class.id)
     }
     declare_function_within_current_scope(function_node: FunctionDeclarationNode) {
         let declared_function = new Function()
@@ -849,92 +922,80 @@ class TypeChecker {
         declared_function.name = name
         if this.is_constant_in_scope(name) {
             this.error(ErrorKind.NAME, "Illegal re-declaration of const '"+name+"'", function_node.name.range)
+            return
         }
-        let arg_types: Type[] = []
         let fnc_scope = this.create_child_scope_within_current_scope()
         this.current_scope = fnc_scope.id 
         declared_function.args = []
-        for let i = 0; i < function_node.args.length; ++i {
-            let arg = function_node.args[i]
-            let fnc_arg = new FunctionArg()
-            fnc_arg.name = arg.name.value
-            fnc_arg.default = null
-            let arg_type = $UNKNOW_TYPE
-            if arg.parsed_type != null
-                arg_type = this.check_type(arg.parsed_type)
-            if arg.default != null
-                fnc_arg.default = this.check_expression(arg_type, arg.default)
-                if !arg.parsed_type != null
-                    arg_type = fnc_arg.default.value_type
-            declared_function.args << fnc_arg
-            fnc_arg.value_type = arg_type
-            let var = this.declare_var_within_current_scope(fnc_arg.name, fnc_arg)
-            fnc_arg.id = var.var_id
-            arg_types << arg_type
-        }
-        let ret_type = this.check_type(function_node.return_type)
-        declared_function.value_type = new FunctionType(arg_types, ret_type)
+        declared_function.value_type = this.init_function_signature(function_node.args, function_node.return_type, declared_function.args)
         declared_function.id = new VarId(VarIdKind.FNC, this.current_module, this.get_current_module().functions.length)
         this.current_scope = fnc_scope.parent
         declared_function.scope = fnc_scope.id
         this.get_current_module().functions << declared_function
         this.get_current_scope().functions.set(declared_function.name, declared_function.id)
     }
-    declare_class_within_current_scope(class_decl_node: ClassDeclarationNode) {
-        // TODO: Inheritance...
-        let name = class_decl_node.name.value
-        if this.get_type_from_current_scope(name).kind != TypeKind.UNKNOWN {
-            this.error(ErrorKind.NAME, "Name '"+name+"' has already been used for another type. consider renaming", class_decl_node.name.range)
+    check_enum_body(declared_enum: Enum, enum_node: EnumNode){
+        for let i = 0; i < enum_node.fields.length; ++i {
+            let enum_node_f = enum_node.fields[i]
+            declared_enum.fields << new EnumField(enum_node_f.name.value)
         }
-        let declared_class = new Class()
-        declared_class.fields = []
-        declared_class.methods = []
-        declared_class.field_map = new Map<string, FieldId>()
-        declared_class.name = name
-        declared_class.id = new ClassId(this.current_module, this.get_current_module().classes.length)
-        for let i = 0; i < class_decl_node.generic_parameters.length; ++i {
-            let generic_param = class_decl_node.generic_parameters[i]
+    }
+    check_class_body(declared_class: Class, class_node: ClassDeclarationNode){
+        //TODO: Inheritance
+        //Generics
+        for let i = 0; i < class_node.generic_parameters.length; ++i {
+            let generic_param = class_node.generic_parameters[i]
         }
-        for i = 0; i < class_decl_node.fields.length; ++i {
+        // Fields
+        for i = 0; i < class_node.fields.length; ++i {
             let field = new ClassField()
-            let current_f_node = class_decl_node.fields[i]
-            field.id  = new FieldId(declared_class.id, i)
+            let current_f_node = class_node.fields[i]
+            field.id = new PropId(PropIdKind.FIELD, declared_class.id, i)
             field.name = current_f_node.name.value
             field.field_type = this.check_type(current_f_node.parsed_type)
             declared_class.fields << field
             declared_class.field_map.set(field.name, field.id)
         }
-        // TODO: Handle methods
-        this.get_current_module().classes << declared_class
-        this.get_current_scope().classes.set(declared_class.name, declared_class.id)
-    }
-    declare_enum_within_current_scope(enum_node: EnumNode){
-        let name = enum_node.name.value
-        if this.get_type_from_current_scope(name).kind != TypeKind.UNKNOWN {
-            this.error(ErrorKind.NAME, "Name '"+name+"' has already been used for another type. consider renaming", enum_node.name.range)
+        // Methods
+        for i = 0; i < class_node.methods.length; ++i {
+            let method = new ClassMethod()
+            let func_node = class_node.methods[i]
+            let name = func_node.name.value
+            if declared_class.method_map.get(name) != null {
+                this.error(ErrorKind.NAME, "Method '"+ name +"' is already declared on class '"+declared_class.name+"'", func_node.name.range)
+                return
+            }
+            method.name = name
+            let method_scope = this.create_child_scope_within_current_scope()
+            this.current_scope = method_scope.id
+            method.args = []
+            method.method_type = this.init_function_signature(func_node.args, func_node.return_type, method.args)
+            method.id = new PropId(PropIdKind.METHOD, declared_class.id, i)
+            method.scope = method_scope.id
+            declared_class.methods << method
+            declared_class.method_map.set(method.name, method.id)
+            if !func_node.is_external
+                method.block = this.check_block(func_node.block)
+            this.current_scope = method_scope.parent
         }
-        let declared_enum = new Enum()
-        declared_enum.name = name
-        for let i = 0; i < enum_node.fields.length; ++i {
-            let enum_node_f = enum_node.fields[i]
-            declared_enum.fields << new EnumField(enum_node_f.name.value)
-        }
-        declared_enum.id = new EnumId(this.current_module, this.get_current_module().enums.length)
-        this.get_current_module().enums << declared_enum
-        this.get_current_scope().enums.set(declared_enum.name, declared_enum.id)
     }
     check_function_body(func: Function, func_node: FunctionDeclarationNode) {
-        if func.is_external{ 
+        if func.is_external { 
             return
         }
         this.current_function = func.id
         this.current_scope = func.scope
         func.block = this.check_block(func_node.block)
+        if this.has_errored() {
+            return
+        }
         if !func.block.returns {
             if (func.value_type as FunctionType).return_type.kind == TypeKind.VOID {
                 func.block.statements << (new ReturnStatement() as Statement)
-            } else
+            } else {
                 this.error(ErrorKind.GEN, "Function missing ending return statement", func_node.return_type.range)
+                return
+            }
         }
         this.current_scope = this.get_scope(func.scope).parent
     }
@@ -952,13 +1013,16 @@ class TypeChecker {
             let len_expr = this.check_expression(new Type(TypeKind.INT), array_node.length)
             if !is_int(len_expr.value_type) {
                 this.error(ErrorKind.GEN, "length is an int", array_node.length.range)
+                return null
             }
             if !len_expr.is_constant {
                 this.error(ErrorKind.GEN, "length is a non-constant value", array_node.length.range)
+                return null
             }
             let length = evaluate_const_int_expression(this.program, len_expr)
             if length < 0 {
                 this.error(ErrorKind.GEN, "length should be greater than 0", array_node.length.range)
+                return null
             }
             let element_type = this.check_type(array_node.element_type)
             return new ArrayType(element_type, length)
@@ -976,16 +1040,18 @@ class TypeChecker {
             let identifer_tok = record_type.name
             let found_type = this.get_type_from_current_scope(identifer_tok.value)
             if found_type.kind == TypeKind.UNKNOWN {
-                this.error(ErrorKind.TYPE, "Undefined type '"+identifer_tok.value+"' not found", identifer_tok.range)
+                this.error(ErrorKind.TYPE, "Undefined type '"+identifer_tok.value+"'", identifer_tok.range)
+                return null
             }
             return found_type
         }
-        return $UNKNOW_TYPE
+        return $UNKNOWN_TYPE
     }
     check_array_expression(expected_type: Type, array_node: ArrayExpressionNode): ArrayExpression {
+        if this.has_errored() return null
         //TODO: ARRAY is overloaded; Could be object or const so need to check which one it is.
         let elements: Expression[] = []
-        let element_type = $UNKNOW_TYPE
+        let element_type = $UNKNOWN_TYPE
         let array_type = expected_type
         let is_constant = true
         if expected_type.kind == TypeKind.ARRAY {
@@ -993,17 +1059,20 @@ class TypeChecker {
         }
         if array_node.elements.length > 0 {
             elements << this.check_expression(element_type, array_node.elements[0])
+            if this.has_errored() return null
             if element_type.kind == TypeKind.UNKNOWN {
                 is_constant = is_constant and elements[0].is_constant
                 element_type =  elements[0].value_type
             }
             for let i = 1; i < array_node.elements.length; ++i {
                 let element = this.check_expression(element_type, array_node.elements[i])
+                if this.has_errored() return null
                 is_constant = is_constant and element.is_constant
                 if element.value_type == element_type {
                     elements << element
                 } else {
                     this.error(ErrorKind.TYPE, "Expected element type of '"+dump_type(element_type)+"' but got type '"+dump_type(element.value_type)+"'", array_node.elements[i].range)
+                    return null
                 }
             }
         } 
@@ -1025,7 +1094,7 @@ class TypeChecker {
             return new NullExpression(expected_type)
         let current_scope = this.get_current_scope()
         let resolved = this.get_var_from_current_scope(name)
-        let var_ty = $UNKNOW_TYPE
+        let var_ty = $UNKNOWN_TYPE
         if resolved != null {
             let var_id = resolved
             if var_id.kind == VarIdKind.FNC
@@ -1035,23 +1104,26 @@ class TypeChecker {
             else if var_id.kind == VarIdKind.CONST
                 var_ty = get_const(this.program, var_id as ConstId).value_type
             return new VarAccessExpression(var_id, var_ty)
-        } else {
-            this.error(ErrorKind.NAME, "Undefined variable '" + name + "'", var_access_node.range)
         }
-        return new VarAccessExpression(new VarId(0, -1, -1), var_ty)
+        this.error(ErrorKind.NAME, "Undefined variable '" + name + "'", var_access_node.range)
+        return null
     }
     check_assignment(left: Expression, right: Expression, binary_node: BinaryExpressionNode): BinaryExpression {
         if !check_is_var(left) {
             this.error(ErrorKind.TYPE, "Cannot assign a value to a constant", binary_node.range)
+            return null
         }
         if left.value_type != right.value_type {
             this.error(ErrorKind.TYPE, "Illegal assignment of variable of type '"+dump_type(right.value_type)+"' to '"+dump_type(left.value_type)+"'", binary_node.range)
+            return null
         }
         return new BinaryExpression(left, BinaryOp.ASSIGN, right, right.value_type)
     }
     check_bin_expr(expected_type: Type, binary_node: BinaryExpressionNode): BinaryExpression {
         let left = this.check_expression(expected_type, binary_node.lhs)
+        if this.has_errored() return null
         let right = this.check_expression(left.value_type, binary_node.rhs)
+        if this.has_errored() return null
         let op = binary_node.op
         let is_const = left.is_constant and right.is_constant
         if op == BinaryOp.ASSIGN
@@ -1090,11 +1162,12 @@ class TypeChecker {
             return new BinaryExpression(left, op, right, new BooleanType(), is_const)
         //TODO: Handle Range, In and Object Arithmetic and bit Cases.
         this.error(ErrorKind.TYPE, "Illegal binary operation '"+dump_bin_op(op)+"' between types '"+dump_type(left.value_type)+"' and '"+dump_type(right.value_type)+"'", binary_node.range)
-        return new BinaryExpression(left, op, right, $UNKNOW_TYPE)
+        return null
     }
     check_unary_expr(expected_type: Type, unary_node: UnaryExpressionNode): UnaryExpression {
         let op = unary_node.op
         let expression = this.check_expression(expected_type, unary_node.expression)
+        if this.has_errored() return null
         let ty = expression.value_type
         let is_const = expression.is_constant
         if op == UnaryOp.NEG {
@@ -1107,8 +1180,10 @@ class TypeChecker {
         }
         if op >= UnaryOp.PREINCR and op <= UnaryOp.POSTDECR {
             if is_numeric(ty) or is_pointer(ty) {
-                if !check_is_var(expression)
+                if !check_is_var(expression) {
                     this.error(ErrorKind.GEN, "Illegal unary operation " + dump_unary_op(op) + " on constant", unary_node.expression.range)
+                    return null
+                }
                 return new UnaryExpression(op, expression, ty)
             }
         }
@@ -1117,11 +1192,11 @@ class TypeChecker {
                 return new UnaryExpression(op, expression, new PointerType(expression.value_type))
         }
         this.error(ErrorKind.TYPE, "Illegal unary operation " + dump_unary_op(op) + " on type " + "'" + dump_type(ty) +"'", unary_node.range)
-        return new UnaryExpression(op, expression, $UNKNOW_TYPE)
+        return null
     }
     check_type_expr(type_expr_node: TypeExpressionNode): TypeExpression {
-        //TODO: Need to check if cast is compatible for typecase
-        let exp = this.check_expression($UNKNOW_TYPE, type_expr_node.expression)
+        //TODO: Need to check if cast is compatible for typecase & IS
+        let exp = this.check_expression($UNKNOWN_TYPE, type_expr_node.expression)
         let ty = this.check_type(type_expr_node.bound_type)
         return new TypeExpression(exp, type_expr_node.op, ty)
     }
@@ -1132,46 +1207,60 @@ class TypeChecker {
     }   
     check_member_expr(expected_type: Type, member_expr_node: MemberExpressionNode): MemberExpression {
         // TODO: Think about static member checks like enums/ static class attributes
-        let prop_owner = this.check_expression($UNKNOW_TYPE, member_expr_node.expression)
+        let prop_owner = this.check_expression($UNKNOWN_TYPE, member_expr_node.expression)
+        if this.has_errored() return null
         let prop_owner_type = prop_owner.value_type
         let prop_name = member_expr_node.member.value
-        let prop_id: FieldId = null
-        let prop_ty = $UNKNOW_TYPE
+        let prop_id: PropId = null
+        let prop_ty = $UNKNOWN_TYPE
         if prop_owner_type.kind == TypeKind.OBJECT {
             let parent_class = this.get_class_from_id((prop_owner_type as ObjectType).class_id)
             prop_id = parent_class.field_map.get(prop_name)
             if prop_id != null {
                 //TODO: check field access
-                let prop_field = parent_class.fields[prop_id.id]
-                prop_ty = prop_field.field_type
+                let field = parent_class.fields[prop_id.id]
+                prop_ty = field.field_type
+            } else {
+                prop_id = parent_class.field_map.get(prop_name)
+                if prop_id != null {
+                    let method = parent_class.methods[prop_id.id]
+                    prop_ty = method.method_type
+                }
             }
-            // TODO: Methods(else)
             if prop_ty.kind == TypeKind.UNKNOWN {
                 this.error(ErrorKind.NAME, "Property '"+prop_name+"' doesn't exist in object '"+parent_class.name+"'", member_expr_node.member.range)
+                return null
             }
         } else {
-            println("Case not handled")
-            exit()
+            this.error(ErrorKind.GEN, "Cannot get property of type '"+dump_type(prop_owner_type)+"'", member_expr_node.expression.range)
+            return null
         }
         return new MemberExpression(prop_owner, prop_id, prop_ty)
     }
     check_ternary_expr(expected_type: Type, ternary_expr_node: TernaryExpressionNode): TernaryExpression {
         let cond = this.check_condition(ternary_expr_node.cond)
+        if this.has_errored() return null
         let is_true = this.check_expression(expected_type, ternary_expr_node.is_true)
+        if this.has_errored() return null
         let is_true_ty = is_true.value_type
         let is_false = this.check_expression(is_true_ty, ternary_expr_node.is_false)
+        if this.has_errored() return null
         let is_false_ty = is_false.value_type
         if is_true_ty != is_false_ty {
             this.error(ErrorKind.TYPE, "Expected type '"+dump_type(is_true_ty)+"' from first case but got type '"+dump_type(is_false_ty) + "'", ternary_expr_node.range)
+            return null
         }
         return new TernaryExpression(cond, is_true, is_false)
     }
     check_index_expr(expected_type: Type, index_expr_node: ExpressionIndexNode): IndexExpression {
-        let root_expression = this.check_expression($UNKNOW_TYPE, index_expr_node.expression)
+        let root_expression = this.check_expression($UNKNOWN_TYPE, index_expr_node.expression)
         let index = this.check_expression(new Type(TypeKind.INT), index_expr_node.index)
-        if !is_int(index.value_type)
+        if this.has_errored() return null
+        if !is_int(index.value_type) {
             this.error(ErrorKind.TYPE, "Expected an integer type for index", index_expr_node.index.range)
-        let value_type = $UNKNOW_TYPE
+            return null
+        }
+        let value_type = $UNKNOWN_TYPE
         let root_type = root_expression.value_type
         if root_type.kind == TypeKind.PTR {
             value_type = (root_type as PointerType).pointee_type
@@ -1179,17 +1268,25 @@ class TypeChecker {
             value_type = (root_type as ArrayType).element_type
         } else {
             this.error(ErrorKind.TYPE, "Cannot index into a value of type '"+dump_type(root_type)+"'", index_expr_node.range)
+            return null
         }
         return new IndexExpression(root_expression, index, value_type)
     }
     fill_in_call_args(called: Expression, args: ExpressionNode[]): Expression[]{
-        let func: Function = null
+        let func_args: FunctionArg [] = null
         let called_args: Expression[] = []
         let fnc_ty = called.value_type as FunctionType
         if called.expr_kind == ExpressionKind.ACCESS {
             let var_id = (called as VarAccessExpression).value_id
             if var_id.kind == VarIdKind.FNC
-                func = get_func(this.program, var_id)
+                func_args = get_func(this.program, var_id).args
+        } else if called.expr_kind == ExpressionKind.MEMBER {
+            let method_id = (called as MemberExpression).member_id
+            let type_id = method_id.type_id
+            if type_id.kind == TypeIdKind.CLASS {
+                let owner_class = this.get_class_from_id(type_id as ClassId)
+                func_args = owner_class.methods[method_id.id].args
+            }
         } else {
             println("Case not handled; fill_in_call_args")
             exit()
@@ -1198,12 +1295,10 @@ class TypeChecker {
         for let i = 0; i < args.length; i++ {
             called_args << this.check_expression(fnc_ty.arg_types[i], args[i])
         }
-        if func == null { 
-            return called_args 
-        }
-        if func.args.length > args.length {
-            for i = args.length; i < func.args.length; ++i {
-                let arg = func.args[i]
+        if this.has_errored() or func_args == null return called_args
+        if func_args.length > args.length {
+            for i = args.length; i < func_args.length; ++i {
+                let arg = func_args[i]
                 if arg.default != null
                     called_args << arg.default
             }
@@ -1211,17 +1306,25 @@ class TypeChecker {
         return called_args
     }
     check_call_expr(expected_type: Type,call_expr_node: CallExpressionNode): CallExpression {
-        let called = this.check_expression($UNKNOW_TYPE, call_expr_node.callee)
+        let called = this.check_expression($UNKNOWN_TYPE, call_expr_node.callee)
+        if this.has_errored() return null
+        if called.value_type.kind != TypeKind.FNC {
+            this.error(ErrorKind.TYPE, "Expected a function type for call but got '"+dump_type(called.value_type)+"'", call_expr_node.callee.range)
+            return null
+        }
         //TODO: Check for generic functions.
         let func_ty = called.value_type as FunctionType
-        if func_ty.kind != TypeKind.FNC
-            this.error(ErrorKind.TYPE, "Expected a function type for call but got '"+dump_type(func_ty)+"'", call_expr_node.callee.range)
         let args = this.fill_in_call_args(called, call_expr_node.args)
-        if func_ty.arg_types.length != args.length
-             this.error(ErrorKind.GEN, "Expected "+func_ty.arg_types.length+" arguments on function call but got "+args.length, call_expr_node.range)
+        if this.has_errored() return null
+        if func_ty.arg_types.length != args.length {
+            this.error(ErrorKind.GEN, "Expected "+func_ty.arg_types.length+" arguments on function call but got "+args.length, call_expr_node.range)
+            return null
+        }
         for let i = 0; i < args.length; ++i {
-            if args[i].value_type != func_ty.arg_types[i]
+            if args[i].value_type != func_ty.arg_types[i] {
                 this.error(ErrorKind.TYPE, "Expected type '"+dump_type(func_ty.arg_types[i])+"' but got type '"+dump_type(args[i].value_type)+"' as function call argument", call_expr_node.args[i].range)
+                return null
+            }
         }
         return new CallExpression(called, args, func_ty.return_type)
     }
@@ -1280,7 +1383,8 @@ class TypeChecker {
     }
     check_condition(cond_node: ExpressionNode): Expression {
        let bool_type = new BooleanType()
-       let condition = this.check_expression($UNKNOW_TYPE, cond_node)
+       let condition = this.check_expression($UNKNOWN_TYPE, cond_node)
+       if this.has_errored() return null
        return !is_bool(condition.value_type) ? cast_exp_to_type(condition, bool_type) : condition
     }
     check_if_stamement(if_stmt_node: IfStatementNode): IfStatement {
@@ -1292,36 +1396,62 @@ class TypeChecker {
     }
     check_var_declaration(var_decl_node: VarDeclarationStatement): VarDeclaration {
         let name = var_decl_node.var_name.value
-        if this.is_constant_in_scope(name)
+        if this.is_constant_in_scope(name){
             this.error(ErrorKind.NAME, "Illegal re-declaration of const '"+name+"'", var_decl_node.var_name.range)
-        
+            return null
+        }
         let current_scope = this.get_current_scope()
-        let var_type = var_decl_node.var_type != null ? this.check_type(var_decl_node.var_type) : $UNKNOW_TYPE
-        let value = this.check_expression(var_type, var_decl_node.value)
-        if is_null(value) and value.value_type.kind == TypeKind.UNKNOWN
-            this.error(ErrorKind.TYPE, "Cannot declare a value as null without any type hint for future usage", var_decl_node.range)
-        if var_type.kind != TypeKind.UNKNOWN and var_type != value.value_type
-            this.error(ErrorKind.TYPE, "Expected type '"+dump_type(var_type)+"' but got type '"+dump_type(value.value_type)+"' on variable declaration", var_decl_node.range)
-        
-        if current_scope.vars.get(name) != null
+        let var_type = var_decl_node.var_type != null ? this.check_type(var_decl_node.var_type) : $UNKNOWN_TYPE
+        if this.has_errored() return null
+        if var_decl_node.value == null and var_type.kind == TypeKind.UNKNOWN {
+            this.error(ErrorKind.GEN, "Variable '"+name+"' has no type", var_decl_node.var_name.range)
+            return null
+        }
+        let value = var_decl_node.value != null ? this.check_expression(var_type, var_decl_node.value) : null
+        if this.has_errored() return null
+        if value != null {
+            if is_null(value) and value.value_type.kind == TypeKind.UNKNOWN {
+                this.error(ErrorKind.TYPE, "Cannot declare a value as null without any type hint for future usage", var_decl_node.range)
+                return null
+            }
+            if var_type.kind != TypeKind.UNKNOWN and var_type != value.value_type {
+                this.error(ErrorKind.TYPE, "Expected type '"+dump_type(var_type)+"' but got type '"+dump_type(value.value_type)+"' on variable declaration", var_decl_node.range)
+                return null
+            }
+            if var_type.kind == TypeKind.UNKNOWN {
+                var_type = value.value_type
+            }
+        }
+        if current_scope.vars.get(name) != null {
             this.error(ErrorKind.NAME, "Illegal re-declaration of already declared variable '"+name+"'", var_decl_node.var_name.range)
-        let var = this.declare_var_within_current_scope(name, value)
+            return null
+        }
+        let var = this.declare_var_within_current_scope(name, value, var_type)
         return new VarDeclaration(name, var.var_id)
     }
     check_const_declaration(const_decl_stmt: ConstDeclarationStatement): ConstDeclaration {
         let name = const_decl_stmt.const_name.value
         let current_scope = this.get_current_scope()
-        if this.is_constant_in_scope(name) or current_scope.vars.get(name) != null
+        if this.is_constant_in_scope(name) or current_scope.vars.get(name) != null {
             this.error(ErrorKind.NAME, "Illegal re-declaration of const '"+name+"'", const_decl_stmt.const_name.range)
-        
-        let const_type = const_decl_stmt.const_type != null ? this.check_type(const_decl_stmt.const_type) : $UNKNOW_TYPE
+            return null
+        }
+        let const_type = const_decl_stmt.const_type != null ? this.check_type(const_decl_stmt.const_type) : $UNKNOWN_TYPE
+        if this.has_errored() return null
         let value = this.check_expression(const_type, const_decl_stmt.value)
-        if !value.is_constant
+        if this.has_errored() return null
+        if !value.is_constant {
             this.error(ErrorKind.GEN, "cannot assign a non-constant value to a constant", const_decl_stmt.value.range)
-        if is_null(value) and value.value_type.kind == TypeKind.UNKNOWN
+            return null
+        }
+        if is_null(value) and value.value_type.kind == TypeKind.UNKNOWN {
             this.error(ErrorKind.TYPE, "Cannot declare a value as null without any type hint for future usage", const_decl_stmt.range)
-        if const_type.kind != TypeKind.UNKNOWN and const_type != value.value_type
+            return null
+        }
+        if const_type.kind != TypeKind.UNKNOWN and const_type != value.value_type {
             this.error(ErrorKind.TYPE, "Expected type '"+dump_type(const_type)+"' but got type '"+dump_type(value.value_type)+"' on variable declaration", const_decl_stmt.range)
+            return null
+        }
          
         let constant = this.declare_const_within_current_scope(name, value)
         
@@ -1336,7 +1466,7 @@ class TypeChecker {
             if for_stmt_node.condition != null
                 for_stmt.condition = this.check_condition(for_stmt_node.condition)
             if for_stmt_node.incr_decr != null
-                for_stmt.incr_decr = this.check_expression($UNKNOW_TYPE, for_stmt_node.incr_decr)
+                for_stmt.incr_decr = this.check_expression($UNKNOWN_TYPE, for_stmt_node.incr_decr)
         }
         this.in_loop = true
         for_stmt.block = this.check_block(for_stmt_node.block)
@@ -1354,12 +1484,14 @@ class TypeChecker {
     check_can_break(stmt_node: StatementNode): Statement {
         if !this.in_loop {
             this.error(ErrorKind.GEN, "Illegal break outside of loop", stmt_node.range)
+            return null
         }
         return new Statement(StatementKind.BREAK)
     }
     check_can_continue(stmt_node: StatementNode): Statement {
         if !this.in_loop {
             this.error(ErrorKind.GEN, "Illegal continue outside of loop", stmt_node.range)
+            return null
         }
         return new Statement(StatementKind.CONTINUE)
     }
@@ -1369,13 +1501,16 @@ class TypeChecker {
         let rt_stmt = new ReturnStatement()
         if expr != null {
             let rt_value = this.check_expression(current_function_return_type, expr)
+            if this.has_errored() return null
             if rt_value.value_type != current_function_return_type {
                 this.error(ErrorKind.TYPE, "Expected return type of "+dump_type(current_function_return_type)+ " but got return type of " + dump_type(rt_value.value_type), expr.range)
+                return null
             }
             rt_stmt.return_value = rt_value
         } else {
             if current_function_return_type.kind != TypeKind.VOID {
                 this.error(ErrorKind.TYPE, "function return type is not void", return_stmt.range)
+                return null
             }
         }
         return rt_stmt
@@ -1397,14 +1532,18 @@ class TypeChecker {
             return this.check_can_break(stmt_node)
         if stmt_node.kind == StatementKind.RETURN
             return this.check_can_return((stmt_node as ReturnStatementNode))
-        return this.check_expression($UNKNOW_TYPE, stmt_node as ExpressionNode)
+        if stmt_node.kind == StatementKind.EXPRESSION
+            return this.check_expression($UNKNOWN_TYPE, stmt_node as ExpressionNode)
+        return null
     }
     check_block(block_node: BlockNode): Block {
+        if this.has_errored() return null
         let block = new Block()
         let new_scope = this.create_child_scope_within_current_scope()
         this.current_scope = new_scope.id
         for let i = 0; i < block_node.statements.length; i++ {
             let stmt = this.check_statement(block_node.statements[i])
+            if this.has_errored() return null
             block.statements << stmt
             if stmt.kind == StatementKind.RETURN {
                 block.returns = true

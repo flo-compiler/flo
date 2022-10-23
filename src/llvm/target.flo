@@ -77,3 +77,9 @@ fnc LLVMTargetMachineEmitToFile(T: LLVMTargetMachineRef, M: LLVMModuleRef, Filen
 /** Get a triple for the host machine as a string. The result needs to be
   disposed with LLVMDisposeMessage. */
 fnc LLVMGetDefaultTargetTriple(): i8*
+
+fnc LLVMGetModuleDataLayout(M: LLVMModuleRef): LLVMTargetDataRef
+
+fnc LLVMStoreSizeOfType(TD: LLVMTargetDataRef, Ty: LLVMTypeRef): i64
+fnc LLVMABISizeOfType(TD: LLVMTargetDataRef, Ty: LLVMTypeRef): i64
+fnc LLVMABIAlignmentOfType(TD: LLVMTargetDataRef, Ty: LLVMTypeRef): int

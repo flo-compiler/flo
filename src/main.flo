@@ -80,7 +80,11 @@ fnc main(argc: int, argv: i8**): int {
         }
         /**** Analyzing ****/
         let typechecker = new TypeChecker()
-        let program = typechecker.check(module_node, filename, text)        
+        let program = typechecker.check(module_node, filename, errors)
+        if errors.length > 0 {
+            print_error(errors[0], filename, text)
+            return 1
+        }        
         /**** Codegen ****/
         let codegen = new CodeGen()
         let flo_module = codegen.codegenProgram(program)
