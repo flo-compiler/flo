@@ -293,7 +293,17 @@ class Compiler(Visitor):
     
     def visitVarDeclarationNode(self, node: VarDeclarationNode):
         var_name = node.var_name.value
-        value = self.visit(node.value)
+        if node.value:
+            value = self.visit(node.value)
+        else:
+            ty = self.visit(node.type)
+            if isinstance(ty, FloObject):
+                llvm_val = self.builder.alloca(ty.llvmtype)
+                value = ty.new_with_val(llvm_val)
+                print(ty.referer.name)
+                value.construct(self.builder, [])
+            else:
+                value = ty
         ref = FloRef(self.builder, value, var_name)
         self.context.set(var_name, ref)
     

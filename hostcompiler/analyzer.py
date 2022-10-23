@@ -383,12 +383,16 @@ class Analyzer(Visitor):
             GeneralError(node.range, f"Illegal redeclaration of variable '{var_name}'").throw()
         expected_ty = None
         if node.type:
-            node.value.expects = self.visit(node.type)
-            expected_ty = node.value.expects
-        var_value = self.visit(node.value)
-        if not expected_ty:
-            expected_ty = var_value
-        self.check_value_assignment(expected_ty, var_value, node)
+            expected_ty = self.visit(node.type)
+            if node.value:
+                node.value.expects = expected_ty
+        if node.value:
+            var_value = self.visit(node.value)
+            if not expected_ty:
+                expected_ty = var_value
+            self.check_value_assignment(expected_ty, var_value, node)
+        if expected_ty == None:
+            TypeError(node.var_name.range, f"Cannot declare variable {var_name} without type").throw()
         self.context.set(var_name, expected_ty)
 
     def condition_check(self, cond_node: Node):

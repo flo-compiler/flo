@@ -176,12 +176,15 @@ class Parser:
         if self.current_tok.type == TokType.COL:
             self.advance()
             type = self.composite_type()
-        if self.current_tok.type != TokType.EQ:
-            SyntaxError(self.current_tok.range, "Expected '='").throw()
-        self.advance()
-        value_node = self.expr()
-        node_range = Range.merge(range_start, self.current_tok.range)
+        if self.current_tok.type == TokType.EQ:
+            self.advance()
+            value_node = self.expr()
+            node_range = Range.merge(range_start, self.current_tok.range)
+        else:
+            value_node = None
+            node_range = Range.merge(range_start, self.current_tok.range)
         return VarDeclarationNode(name_tok, type, value_node, node_range)
+
 
     def type_alias(self):
         range_start = self.current_tok.range

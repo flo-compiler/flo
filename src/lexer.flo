@@ -179,12 +179,10 @@ class Lexer {
     idx: int
     col: int
     line: int
-    constructor(text: string, errors: FloError[]){
+    constructor(){
         this.idx = -1
         this.line = 1
         this.col = 0
-        this.text = text
-        this.errors = errors
     }
     eof(): bool{
         return this.idx >= this.text.length
@@ -370,7 +368,9 @@ class Lexer {
         this.advance()
         return new CharToken(value, this.get_range(length))
     }
-    tokenize(): Token[] {
+    tokenize(text: string, errors: FloError[]): Token[] {
+        this.text = text
+        this.errors = errors
         this.advance()
         let tokens: Token[] = []
         let char = '\0'

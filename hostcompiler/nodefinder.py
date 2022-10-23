@@ -7,7 +7,7 @@ from typing import List
 from utils import get_ast_from_file
 from context import Context
 from flotypes import FloArray, FloGeneric, FloInlineFunc, FloObject, FloPointer
-from astree import ArrayAssignNode, ClassDeclarationNode, MacroDeclarationNode, EnumDeclarationNode, FncCallNode, FncDefNode, FncNode, ForEachNode, ForNode, GenericClassNode, IfNode, ImportNode, MethodDeclarationNode, NewMemNode, Node, NumOpNode, PropertyAssignNode, PropertyDeclarationNode, ReturnNode, StmtsNode, TernaryNode, TypeAliasNode, TypeNode, VarAccessNode, VarAssignNode, Visitor, WhileNode
+from astree import ArrayAssignNode, ClassDeclarationNode, MacroDeclarationNode, EnumDeclarationNode, FncCallNode, FncDefNode, FncNode, ForEachNode, ForNode, GenericClassNode, IfNode, ImportNode, MethodDeclarationNode, NewMemNode, Node, NumOpNode, PropertyAssignNode, PropertyDeclarationNode, ReturnNode, StmtsNode, TernaryNode, TypeAliasNode, TypeNode, VarAccessNode, VarAssignNode, VarDeclarationNode, Visitor, WhileNode
 from errors import Range, NameError
 
 
@@ -139,8 +139,19 @@ class NodeFinder(Visitor):
         self.context.set(var_name, node)
         if self.block_in and self.block_in.type == BlockTy.func:
             self.local_vars.append(var_name)
+        self.visit(node.value)
+
+    def visitVarDeclaration(self, node: VarDeclarationNode):
+        var_name = node.var_name.value
         if node.value:
             self.visit(node.value)
+        if node.type:
+            self.visit(node.type)
+        if var_name in self.ignore:
+            return
+        self.context.set(var_name, node)
+        if self.block_in and self.block_in.type == BlockTy.func:
+            self.local_vars.append(var_name)
 
     def visitArrayAssignNode(self, node: ArrayAssignNode):
         if node.value:

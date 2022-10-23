@@ -63,8 +63,8 @@ fnc main(argc: int, argv: i8**): int {
         }
         let text = file.read_as_string()
         /***** Lexing ******/
-        let lexer = new Lexer(text, errors)
-        let tokens = lexer.tokenize()
+        let lexer: Lexer
+        let tokens = lexer.tokenize(text, errors)
         if errors.length > 0 {
             print_errors(errors, filename, text)
             return 1
@@ -72,21 +72,21 @@ fnc main(argc: int, argv: i8**): int {
         if flag(args, "--print-tokens")
             print_tokens(tokens, text)
         /***** Parsing *****/
-        let parser = new Parser(tokens, errors)
-        let module_node = parser.parse()
+        let parser: Parser
+        let module_node = parser.parse(tokens, errors)
         if errors.length > 0 {
             print_errors(errors, filename, text)
             return 1
         }
         /**** Analyzing ****/
-        let typechecker = new TypeChecker()
+        let typechecker: TypeChecker
         let program = typechecker.check(module_node, filename, errors)
         if errors.length > 0 {
             print_error(errors[0], filename, text)
             return 1
         }        
         /**** Codegen ****/
-        let codegen = new CodeGen()
+        let codegen: CodeGen
         let flo_module = codegen.codegenProgram(program)
         flo_module.run_passes(flag_value_or(args, "-O", "1") as int)
         if flag(args, "--print-llvm")
