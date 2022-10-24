@@ -1,10 +1,12 @@
 class Vector {
     x: int
     y: int
+    constructor(this){
+        this.x = 1
+        this.y = 1
+    }
 }
 fnc main(): int {
     let vec: Vector
-    vec.x = 1
-    vec.y = 2
     return vec.y
 }

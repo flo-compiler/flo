@@ -1,0 +1,5 @@
+fnc write(fd: int, cmd: i8*, len: int)
+fnc main(): int {
+    write(0, "Hello World\n", 24)
+    return 0
+}

@@ -1,0 +1,9 @@
+fnc main(): bool {
+    let a: int = 121
+    let b = 0.5
+    let c: int = null
+    b = a ^ b
+    let d = c == null
+    let e = null == c
+    return d == e
+}

@@ -300,7 +300,6 @@ class Compiler(Visitor):
             if isinstance(ty, FloObject):
                 llvm_val = self.builder.alloca(ty.llvmtype)
                 value = ty.new_with_val(llvm_val)
-                print(ty.referer.name)
                 value.construct(self.builder, [])
             else:
                 value = ty

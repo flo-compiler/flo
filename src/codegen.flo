@@ -5,8 +5,7 @@ class GeneratedModule {
     errors: i8*
     constructor(llvm_mod: LLVMModuleRef){
         this.llvm_mod = llvm_mod
-        let zero_char = '\0'
-        this.errors = &zero_char
+        this.errors = null
         LLVMVerifyModule(this.llvm_mod, LLVMVerifierFailureAction.LLVMAbortProcessAction, &this.errors)
         this.check_errors()
         LLVMLinkInMCJIT()
@@ -51,6 +50,7 @@ class GeneratedModule {
         let main_fnc = LLVMGetFunctionAddress(engine, "main")  as () => int
         if main_fnc == null {
             println("Main function not found in module; can't execute")
+            LLVMDisposeExecutionEngine(engine)
             return
         }
         println("Exited with code:", main_fnc())
@@ -118,6 +118,9 @@ fnc create_var_key(var_id: VarId): string {
 fnc create_type_id_key(type_id: TypeId): string {
     return type_id.module_id + ";" type_id.kind + ";" + type_id.id
 }
+fnc create_method_key(prop_id: PropId): string {
+    return create_type_id_key(prop_id.type_id) + ";" + prop_id.kind + ";" + prop_id.id
+}
 class CodeGen {
     modules: LLVMModuleRef[]
     module: LLVMModuleRef
@@ -173,6 +176,9 @@ class CodeGen {
             this.declare_function(module.functions[i])
         }
         this.in_static_ctx = false
+        for i = 0; i < module.classes.length; ++i {
+            this.codegen_class(module.classes[i])
+        }
         for i = 0; i < module.functions.length; ++i {
             this.codegen_function(module.functions[i])
         }
@@ -510,9 +516,15 @@ class CodeGen {
         return phi_node
     }
     codegen_call_exp(builder: LLVMBuilderRef, call_exp: CallExpression): LLVMValueRef {
+        let args: LLVMValueRef[] = []
+        if call_exp.callee.expr_kind == ExpressionKind.MEMBER {
+            let member_exp = call_exp.callee as MemberExpression
+            if !get_method(this.program, member_exp.member_id).is_static { 
+                args << this.codegen_expression(builder, member_exp.expression)
+            }
+        }
         let func = this.codegen_expression(builder, call_exp.callee)
         let func_ty = this.codegen_type(call_exp.callee.value_type, false)
-        let args: LLVMValueRef[] = []
         for let i = 0; i < call_exp.args.length; i++ {
             args << this.codegen_expression(builder, call_exp.args[i])
         }
@@ -526,8 +538,11 @@ class CodeGen {
         return LLVMBuildMalloc(builder, this.codegen_type(new_expr.value_type, false), "")
     }
     codegen_member_exp(builder: LLVMBuilderRef, member_exp: MemberExpression): LLVMValueRef {
-        let ptr = this.get_expr_mem(builder, member_exp)
-        return LLVMBuildLoad2(builder, this.codegen_type(member_exp.value_type), ptr, "")
+        if member_exp.member_id.kind == PropIdKind.FIELD {
+            let ptr = this.get_expr_mem(builder, member_exp)
+            return LLVMBuildLoad2(builder, this.codegen_type(member_exp.value_type), ptr, "")
+        }
+        return this.global_var_scope.get(create_method_key(member_exp.member_id))
     }
     codegen_expression(builder: LLVMBuilderRef, expression: Expression): LLVMValueRef {
         if expression.expr_kind == ExpressionKind.BOOL
@@ -637,6 +652,19 @@ class CodeGen {
         this.break_bb = prev_break_bb
         this.continue_bb = prev_continue_bb
     }
+    build_constructor_call(builder: LLVMBuilderRef, obj_type: ObjectType, self: LLVMValueRef, params: Expression[]){
+        let checked_class = get_class(this.program, obj_type.class_id)
+        let constructor_id = checked_class.method_map.get("constructor")
+        let passed_params: LLVMValueRef[] = [self]
+        for let i = 0; i < params.length; i++ {
+            passed_params << this.codegen_expression(builder, params[i])
+        }
+        if constructor_id != null {
+            let construct_type = this.codegen_type(checked_class.methods[constructor_id.id].method_type, false)
+            let constructor = this.global_var_scope.get(create_method_key(constructor_id))
+            LLVMBuildCall2(builder, construct_type, constructor, passed_params.buffer, passed_params.length, "")
+        }
+    }
     codegen_var_declaration(builder: LLVMBuilderRef, var_decl: VarDeclaration){
         let var_id = var_decl.var_id
         let var = get_var(this.program, var_id)
@@ -655,7 +683,9 @@ class CodeGen {
                 this.store_expr_to_mem(builder, ptr, expression)
             } else if expression_val_type.kind == TypeKind.OBJECT {
                 ty = this.codegen_type(expression_val_type, false)
-                LLVMBuildStore(builder, LLVMBuildAlloca(builder, ty, ""), ptr)
+                let struct_ref = LLVMBuildAlloca(builder, ty, "")
+                this.build_constructor_call(builder, expression_val_type as ObjectType, struct_ref, [])
+                LLVMBuildStore(builder, struct_ref, ptr)
             }
         }
         this.global_var_scope.set(create_var_key(var_id), ptr)
@@ -712,7 +742,7 @@ class CodeGen {
             println("This should never happen; (codegen_function)")
             exit()
         }
-        let entry_block: LLVMBasicBlockRef  = LLVMAppendBasicBlockInContext(this.module_ctx, llvm_fnc, "")
+        let entry_block: LLVMBasicBlockRef = LLVMAppendBasicBlockInContext(this.module_ctx, llvm_fnc, "")
         let func_builder: LLVMBuilderRef = LLVMCreateBuilderInContext(this.module_ctx)
         LLVMPositionBuilderAtEnd(func_builder, entry_block)
         for let i = 0; i < func.args.length; i++ {
@@ -726,17 +756,62 @@ class CodeGen {
         this.codegen_block(func_builder, func.block)
         LLVMDisposeBuilder(func_builder)
     }
+    codegen_class(checked_class: Class){
+        for let i = 0; i < checked_class.methods.length; i++ {
+            let method = checked_class.methods[i]
+            let llvm_fnc = this.global_var_scope.get(create_method_key(method.id))
+            if method.is_abstract {
+                continue
+            }
+            let entry_block: LLVMBasicBlockRef = LLVMAppendBasicBlockInContext(this.module_ctx, llvm_fnc, "")
+            let func_builder: LLVMBuilderRef = LLVMCreateBuilderInContext(this.module_ctx)
+            LLVMPositionBuilderAtEnd(func_builder, entry_block)
+            let offset = 0
+            if !method.is_static {
+                let object_type = LLVMPointerType(this.module_types.get(create_type_id_key(checked_class.id)))
+                let this_param = LLVMGetParam(llvm_fnc, 0)
+                let this_alloc = LLVMBuildAlloca(func_builder, object_type, "this")
+                let this_id = get_scope(this.program, method.scope).vars.get("this")
+                LLVMBuildStore(func_builder, this_param, this_alloc)
+                this.global_var_scope.set(create_var_key(this_id), this_alloc)
+                offset = 1
+            }
+            for let j = 0; j < method.args.length; j++ {
+                let arg = method.args[j]
+                let param = LLVMGetParam(llvm_fnc, j + offset)
+                let alloc = LLVMBuildAlloca(func_builder, this.codegen_type(arg.value_type), arg.name.to_cstring())
+                LLVMBuildStore(func_builder, param, alloc)
+                this.global_var_scope.set(create_var_key(arg.id), alloc)
+            }
+            this.function = llvm_fnc
+            this.codegen_block(func_builder, method.block)
+            LLVMDisposeBuilder(func_builder)
+        }
+    }
     declare_function(func: Function) {
-        let llvm_fnc = LLVMAddFunction(this.module, func.name.to_cstring(), this.codegen_type(func.value_type, false))
+        let llvm_fnc = LLVMAddFunction(this.module, func.name.to_cstring(), this.codegen_type(func.fnc_type, false))
         this.global_var_scope.set(create_var_key(func.id), llvm_fnc)
     }
-    declare_class(class_: Class) {
-        let struct_ty = LLVMStructCreateNamed(this.module_ctx, class_.name.to_cstring())
+    declare_class(checked_class: Class) {
+        let struct_ty = LLVMStructCreateNamed(this.module_ctx, checked_class.name.to_cstring())
         let fields: LLVMTypeRef[] = []
-        for let i = 0; i < class_.fields.length; i++ {
-            fields << this.codegen_type(class_.fields[i].field_type)
+        for let i = 0; i < checked_class.fields.length; i++ {
+            fields << this.codegen_type(checked_class.fields[i].field_type)
+        }
+        this.module_types.set(create_type_id_key(checked_class.id), struct_ty)
+        for i = 0; i < checked_class.methods.length; i++ {
+            let method = checked_class.methods[i]
+            if !method.is_static {
+                let args: Type [] = []
+                args << (new ObjectType(checked_class.id) as Type)
+                for let j = 0; j < method.method_type.arg_types.length; j++ {
+                    args << method.method_type.arg_types[j]
+                }
+                method.method_type.arg_types = args
+            }
+            let llvm_fnc = LLVMAddFunction(this.module, (checked_class.name+method.name).to_cstring(), this.codegen_type(method.method_type, false))
+            this.global_var_scope.set(create_method_key(method.id), llvm_fnc)
         }
         LLVMStructSetBody(struct_ty, fields.buffer, fields.length, true)
-        this.module_types.set(create_type_id_key(class_.id), struct_ty)
     }
 }
