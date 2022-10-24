@@ -386,6 +386,9 @@ class Analyzer(Visitor):
             expected_ty = self.visit(node.type)
             if node.value:
                 node.value.expects = expected_ty
+            else:
+                if isinstance(expected_ty, FloObject):
+                    self.check_constructor_call(expected_ty, [], node)
         if node.value:
             var_value = self.visit(node.value)
             if not expected_ty:
@@ -907,12 +910,15 @@ class Analyzer(Visitor):
                 node.range, f"Expected type {expr.str()} but got type {value.str()}").throw()
         return value
 
+    def check_constructor_call(self, object, args, node):
+        if object.referer.constructor:
+            self.check_fnc_call(
+                    object.referer.constructor, args, node)
+
     def visitNewMemNode(self, node: NewMemNode):
         typeval = self.visit(node.type)
         if isinstance(typeval, FloObject):
-            if typeval.referer.constructor:
-                self.check_fnc_call(
-                    typeval.referer.constructor, node.args or [], node)
+            self.check_constructor_call(typeval, node.args or [], node)
             return typeval
         else:
             if not isinstance(typeval, FloArray):

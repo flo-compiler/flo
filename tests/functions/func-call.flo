@@ -4,3 +4,7 @@ fnc collatz(x: i32): bool {
     let next = x % 2 == 0 ? x / 2 : (x* 3) + 1
     collatz(next)
 }
+fnc main(): bool {
+    let x: i32 = 10
+    return fib(x)
+}

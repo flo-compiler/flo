@@ -213,9 +213,11 @@ class TypeExpression (Expression) {
     }
 }
 class NewExpression (Expression) {
-    constructor(value_type: Type){
+    args: Expression[]
+    constructor(value_type: Type, args: Expression[]){
         super(ExpressionKind.NEW)
         this.value_type = value_type
+        this.args = args
     }
 }
 class IndexExpression (Expression) {
@@ -550,11 +552,12 @@ class FunctionArg(Expression) {
         super(ExpressionKind.ACCESS)
     }
 }
-class Function (Value) {
+class Function {
     id: VarId
     name: string
     args: FunctionArg[]
     block: Block
+    fnc_type: FunctionType
     scope: ScopeId
     is_external: bool
 }
@@ -569,9 +572,9 @@ class Var (Value) {
 class Const (Value) {
     const_id: ConstId
     value: Expression
-    constructor(value: Expression){
+    constructor(value: Expression, value_type: Type){
         this.value = value
-        this.value_type = value.value_type
+        this.value_type = value_type
     }
 }
 $ACCESS_PUBLIC = 1
@@ -590,7 +593,9 @@ class ClassMethod {
     name: string
     args: FunctionArg []
     block: Block
-    method_type: Type
+    method_type: FunctionType
+    is_abstract: bool
+    is_static: bool
     scope: ScopeId
 }
 class Class {
@@ -654,6 +659,15 @@ fnc get_const(program: Program, const_id: ConstId): Const {
 fnc get_func(program: Program, func_id: VarId): Function {
     return program.modules[func_id.module_id].functions[func_id.id]
 }
+fnc get_scope(program: Program, scope_id: ScopeId): Scope {
+    return program.modules[scope_id.module_id].scopes[scope_id.id]
+}
+fnc get_class(program: Program, type_id: ClassId): Class {
+    return program.modules[type_id.module_id].classes[type_id.id]   
+}
+fnc get_method(program: Program, prop_id: PropId): ClassMethod {
+    return get_class(program, prop_id.type_id as ClassId).methods[prop_id.id]
+}
 fnc evaluate_const_int_expression(program: Program, exp: Expression): int {
     if exp.expr_kind == ExpressionKind.INT
         return (exp as IntExpression).value
@@ -701,6 +715,7 @@ class TypeChecker {
     current_module: int
     current_class: ClassId
     current_function: VarId
+    current_method: PropId
     current_scope: ScopeId
     filename: string
     errors: FloError []
@@ -711,20 +726,22 @@ class TypeChecker {
         let program: Program
         this.program = program
     }
-    get_scope(scope_id: ScopeId): Scope {
-       return this.program.modules[scope_id.module_id].scopes[scope_id.id]
-    }
     get_current_module(): Module {
         return this.program.modules[this.current_module]
     }
-    get_class_from_id(class_id: ClassId): Class{
-        return this.program.modules[class_id.module_id].classes[class_id.id]
-    }
     get_current_scope(): Scope {
-        return this.get_scope(this.current_scope)
+        return get_scope(this.program, this.current_scope)
     }
     get_current_function(): Function {
         return this.get_current_module().functions[this.current_function.id]
+    }
+    get_current_function_type(): FunctionType {
+        if this.current_method != null
+            return this.get_current_class().methods[this.current_method.id].method_type
+        return this.get_current_function().fnc_type
+    }
+    get_current_class(): Class {
+        return get_class(this.program, this.current_class)
     }
     create_scope(): Scope {
         let module = this.get_current_module()
@@ -744,7 +761,7 @@ class TypeChecker {
         let current_scope = this.get_current_scope()
         let value = current_scope.vars.get(name)
         while current_scope.parent != null and value == null {
-            current_scope = this.get_scope(current_scope.parent)
+            current_scope = get_scope(this.program, current_scope.parent)
             value = current_scope.vars.get(name)
             if value == null
                 value = current_scope.functions.get(name)
@@ -771,7 +788,7 @@ class TypeChecker {
                 break
             }
             if (current_scope.parent == null) break
-            current_scope = this.get_scope(current_scope.parent)
+            current_scope = get_scope(this.program, current_scope.parent)
         }
         return found_type
     }
@@ -799,6 +816,9 @@ class TypeChecker {
         module_scope.vars.set("false", const_id)
         module_scope.vars.set("null", const_id)
         this.current_scope = module_scope.id
+        this.current_method = null
+        this.current_class = null
+        this.current_function = null
         
         // We declare module structures
         for let i = 0; i < module_ast.enums.length; i++ {
@@ -850,8 +870,8 @@ class TypeChecker {
         current_scope.vars.set(name, id)
         return var
     }
-    declare_const_within_current_scope(name: string, value: Expression): Const {
-        let constant = new Const(value)
+    declare_const_within_current_scope(name: string, value: Expression, value_type: Type): Const {
+        let constant = new Const(value, value_type)
         let current_module = this.get_current_module()
         let current_scope = this.get_current_scope()
         let id = new ConstId(this.current_module, current_module.consts.length)
@@ -874,7 +894,7 @@ class TypeChecker {
         var_stmt.is_static = true
         this.get_current_module().global_vars << var_stmt
     }
-    init_function_signature(arg_nodes: ArgNode[], return_type_node: TypeNode, args: FunctionArg[]): Type {
+    init_function_signature(arg_nodes: ArgNode[], return_type_node: TypeNode, args: FunctionArg[]): FunctionType {
         let arg_types: Type[] = []
         for let i = 0; i < arg_nodes.length; ++i {
             let arg = arg_nodes[i]
@@ -920,7 +940,9 @@ class TypeChecker {
         declared_class.fields = []
         declared_class.methods = []
         let field_map: Map<string, PropId>
+        let method_map: Map<string, PropId>
         declared_class.field_map = field_map
+        declared_class.method_map = method_map
         declared_class.name = name
         declared_class.id = new ClassId(this.current_module, this.get_current_module().classes.length)
         this.get_current_module().classes << declared_class
@@ -938,7 +960,7 @@ class TypeChecker {
         let fnc_scope = this.create_child_scope_within_current_scope()
         this.current_scope = fnc_scope.id 
         declared_function.args = []
-        declared_function.value_type = this.init_function_signature(function_node.args, function_node.return_type, declared_function.args)
+        declared_function.fnc_type = this.init_function_signature(function_node.args, function_node.return_type, declared_function.args)
         declared_function.id = new VarId(VarIdKind.FNC, this.current_module, this.get_current_module().functions.length)
         this.current_scope = fnc_scope.parent
         declared_function.scope = fnc_scope.id
@@ -951,9 +973,36 @@ class TypeChecker {
             declared_enum.fields << new EnumField(enum_node_f.name.value)
         }
     }
+    declare_class_methods(declared_class: Class, class_node: ClassDeclarationNode){
+        for let i = 0; i < class_node.methods.length; ++i {
+            let method = new ClassMethod()
+            let method_node = class_node.methods[i]
+            let name = method_node.name.value
+            if declared_class.method_map.get(name) != null {
+                this.error(ErrorKind.NAME, "Method '"+ name +"' is already declared on class '"+declared_class.name+"'", method_node.name.range)
+                return
+            }
+            method.name = name
+            let method_scope = this.create_child_scope_within_current_scope()
+            this.current_scope = method_scope.id
+            method.args = []
+            method.is_abstract = method_node.is_abstract
+            method.is_static = method_node.is_static
+            if !method_node.is_static {
+                this.declare_const_within_current_scope("this", null, new ObjectType(declared_class.id))
+            }
+            method.method_type = this.init_function_signature(method_node.args, method_node.return_type, method.args)
+            method.id = new PropId(PropIdKind.METHOD, declared_class.id, i)
+            method.scope = method_scope.id
+            declared_class.methods << method
+            declared_class.method_map.set(name, method.id)
+            this.current_scope = method_scope.parent
+        }
+    }
     check_class_body(declared_class: Class, class_node: ClassDeclarationNode){
         //TODO: Inheritance
         //Generics
+        this.current_class = declared_class.id
         for let i = 0; i < class_node.generic_parameters.length; ++i {
             let generic_param = class_node.generic_parameters[i]
         }
@@ -967,28 +1016,33 @@ class TypeChecker {
             declared_class.fields << field
             declared_class.field_map.set(field.name, field.id)
         }
-        // Methods
-        for i = 0; i < class_node.methods.length; ++i {
-            let method = new ClassMethod()
-            let func_node = class_node.methods[i]
-            let name = func_node.name.value
-            if declared_class.method_map.get(name) != null {
-                this.error(ErrorKind.NAME, "Method '"+ name +"' is already declared on class '"+declared_class.name+"'", func_node.name.range)
+        // Declare class methods
+        this.declare_class_methods(declared_class, class_node)
+        // Class Methods Body
+        for i = 0; i < declared_class.methods.length; i++ {
+            let method = declared_class.methods[i]
+            this.current_method = method.id
+            let method_node = class_node.methods[i]
+            this.current_scope = method.scope
+            if method.is_abstract {
+                continue
+            }
+            method.block = this.check_block(method_node.block)
+            if this.has_errored() {
                 return
             }
-            method.name = name
-            let method_scope = this.create_child_scope_within_current_scope()
-            this.current_scope = method_scope.id
-            method.args = []
-            method.method_type = this.init_function_signature(func_node.args, func_node.return_type, method.args)
-            method.id = new PropId(PropIdKind.METHOD, declared_class.id, i)
-            method.scope = method_scope.id
-            declared_class.methods << method
-            declared_class.method_map.set(method.name, method.id)
-            if !func_node.is_external
-                method.block = this.check_block(func_node.block)
-            this.current_scope = method_scope.parent
+            if !method.block.returns {
+                if method.method_type.return_type.kind == TypeKind.VOID {
+                    method.block.statements << (new ReturnStatement() as Statement)
+                } else {
+                    this.error(ErrorKind.GEN, "Method missing ending return statement", method_node.return_type.range)
+                    return
+                }
+            }
+            this.current_method = null
+            this.current_scope = get_scope(this.program, method.scope).parent
         }
+        this.current_class = null
     }
     check_function_body(func: Function, func_node: FunctionDeclarationNode) {
         if func.is_external { 
@@ -1001,14 +1055,15 @@ class TypeChecker {
             return
         }
         if !func.block.returns {
-            if (func.value_type as FunctionType).return_type.kind == TypeKind.VOID {
+            if func.fnc_type.return_type.kind == TypeKind.VOID {
                 func.block.statements << (new ReturnStatement() as Statement)
             } else {
                 this.error(ErrorKind.GEN, "Function missing ending return statement", func_node.return_type.range)
                 return
             }
         }
-        this.current_scope = this.get_scope(func.scope).parent
+        this.current_function = null
+        this.current_scope = get_scope(this.program, func.scope).parent
     }
     check_type(type_node: TypeNode): Type {
         if type_node.kind == TypeKind.BOOL
@@ -1109,7 +1164,7 @@ class TypeChecker {
         if resolved != null {
             let var_id = resolved
             if var_id.kind == VarIdKind.FNC
-                var_ty = get_func(this.program, var_id).value_type
+                var_ty = get_func(this.program, var_id).fnc_type
             else if var_id.kind == VarIdKind.VAR
                 var_ty = get_var(this.program, var_id).value_type
             else if var_id.kind == VarIdKind.CONST
@@ -1213,10 +1268,40 @@ class TypeChecker {
         let ty = this.check_type(type_expr_node.bound_type)
         return new TypeExpression(exp, type_expr_node.op, ty)
     }
+    check_constructor_call(class_id: ClassId, args: ExpressionNode[], range: FloRange): Expression[]{ 
+        let obj_class = get_class(this.program, class_id) 
+        let field_id = obj_class.method_map.get("constructor")
+        if field_id == null {
+            if args.length != 0 {
+                this.error(ErrorKind.GEN, "Class has missing constructor so expected 0 arguments for constructor call but got "+args.length, range)
+                return null
+            }
+            return []
+        } else {
+            let constructor = obj_class.methods[field_id.id]
+        } 
+        let construct_type = constructor.method_type
+        let checked_args = this.fill_in_call_args(construct_type, constructor.args, args)
+        if this.has_errored() return null
+        let index = this.check_function_call_args_match(construct_type, checked_args)
+        if index >= -1 {
+            if index == -1 {
+                this.error(ErrorKind.GEN, "Expected "+construct_type.arg_types.length+" arguments on constructor call but got "+args.length, range)
+            } else {
+                this.error(ErrorKind.TYPE, "Expected type '"+dump_type(construct_type.arg_types[index])+"' but got type '"+dump_type(checked_args[index].value_type)+"' as constructor call argument ("+index+")", range)
+            }
+            return null
+        }
+        return checked_args
+    }
     check_new_expr(new_expr_node: NewExpressionNode): NewExpression {
         let expr_ty = this.check_type(new_expr_node.parsed_type)
-        //TODO: Check constructor for classes
-        return new NewExpression(expr_ty)
+        let args: Expression[] = []
+        if this.has_errored() return null
+        if expr_ty.kind == TypeKind.OBJECT {
+            args = this.check_constructor_call((expr_ty as ObjectType).class_id, new_expr_node.args, new_expr_node.range)
+        }
+        return new NewExpression(expr_ty, args)
     }   
     check_member_expr(expected_type: Type, member_expr_node: MemberExpressionNode): MemberExpression {
         // TODO: Think about static member checks like enums/ static class attributes
@@ -1227,14 +1312,14 @@ class TypeChecker {
         let prop_id: PropId = null
         let prop_ty = $UNKNOWN_TYPE
         if prop_owner_type.kind == TypeKind.OBJECT {
-            let parent_class = this.get_class_from_id((prop_owner_type as ObjectType).class_id)
+            let parent_class = get_class(this.program, (prop_owner_type as ObjectType).class_id)
             prop_id = parent_class.field_map.get(prop_name)
             if prop_id != null {
                 //TODO: check field access
                 let field = parent_class.fields[prop_id.id]
                 prop_ty = field.field_type
             } else {
-                prop_id = parent_class.field_map.get(prop_name)
+                prop_id = parent_class.method_map.get(prop_name)
                 if prop_id != null {
                     let method = parent_class.methods[prop_id.id]
                     prop_ty = method.method_type
@@ -1285,10 +1370,8 @@ class TypeChecker {
         }
         return new IndexExpression(root_expression, index, value_type)
     }
-    fill_in_call_args(called: Expression, args: ExpressionNode[]): Expression[]{
+    get_func_args_from_expression(called: Expression): FunctionArg[]{
         let func_args: FunctionArg [] = null
-        let called_args: Expression[] = []
-        let fnc_ty = called.value_type as FunctionType
         if called.expr_kind == ExpressionKind.ACCESS {
             let var_id = (called as VarAccessExpression).value_id
             if var_id.kind == VarIdKind.FNC
@@ -1297,14 +1380,17 @@ class TypeChecker {
             let method_id = (called as MemberExpression).member_id
             let type_id = method_id.type_id
             if type_id.kind == TypeIdKind.CLASS {
-                let owner_class = this.get_class_from_id(type_id as ClassId)
+                let owner_class = get_class(this.program, type_id as ClassId)
                 func_args = owner_class.methods[method_id.id].args
             }
         } else {
             println("Case not handled; fill_in_call_args")
             exit()
         }
-
+        return func_args
+    }
+    fill_in_call_args(fnc_ty: FunctionType, func_args: FunctionArg[], args: ExpressionNode[]): Expression[] {
+        let called_args: Expression[] = []
         for let i = 0; i < args.length; i++ {
             called_args << this.check_expression(fnc_ty.arg_types[i], args[i])
         }
@@ -1318,7 +1404,18 @@ class TypeChecker {
         }
         return called_args
     }
-    check_call_expr(expected_type: Type,call_expr_node: CallExpressionNode): CallExpression {
+    check_function_call_args_match(func_ty: FunctionType, args: Expression[]): int {
+        if func_ty.arg_types.length != args.length {
+            return -1
+        }
+        for let i = 0; i < args.length; ++i {
+            if args[i].value_type != func_ty.arg_types[i] {
+                return i
+            }
+        }
+        return -2
+    }
+    check_call_expr(expected_type: Type, call_expr_node: CallExpressionNode): CallExpression {
         let called = this.check_expression($UNKNOWN_TYPE, call_expr_node.callee)
         if this.has_errored() return null
         if called.value_type.kind != TypeKind.FNC {
@@ -1327,17 +1424,17 @@ class TypeChecker {
         }
         //TODO: Check for generic functions.
         let func_ty = called.value_type as FunctionType
-        let args = this.fill_in_call_args(called, call_expr_node.args)
+        let func_args = this.get_func_args_from_expression(called)
+        let args = this.fill_in_call_args(func_ty, func_args, call_expr_node.args)
         if this.has_errored() return null
-        if func_ty.arg_types.length != args.length {
-            this.error(ErrorKind.GEN, "Expected "+func_ty.arg_types.length+" arguments on function call but got "+args.length, call_expr_node.range)
-            return null
-        }
-        for let i = 0; i < args.length; ++i {
-            if args[i].value_type != func_ty.arg_types[i] {
-                this.error(ErrorKind.TYPE, "Expected type '"+dump_type(func_ty.arg_types[i])+"' but got type '"+dump_type(args[i].value_type)+"' as function call argument", call_expr_node.args[i].range)
-                return null
+        let index = this.check_function_call_args_match(func_ty, args)
+        if index >= -1 {
+            if index == -1 {
+                this.error(ErrorKind.GEN, "Expected "+func_ty.arg_types.length+" arguments on function call but got "+args.length, call_expr_node.range)
+            } else {
+                this.error(ErrorKind.TYPE, "Expected type '"+dump_type(func_ty.arg_types[index])+"' but got type '"+dump_type(args[index].value_type)+"' as function call argument", call_expr_node.args[index].range)
             }
+            return null
         }
         return new CallExpression(called, args, func_ty.return_type)
     }
@@ -1391,8 +1488,9 @@ class TypeChecker {
             return this.check_member_expr(expected_type, expr_node as MemberExpressionNode)
         if expr_node.expr_kind == ExpressionKind.INDEX
             return this.check_index_expr(expected_type, expr_node as ExpressionIndexNode)
-        /* if expr_node.expr_kind == ExpressionKind.CALL */
-        return this.check_call_expr(expected_type, expr_node as CallExpressionNode)
+        if expr_node.expr_kind == ExpressionKind.CALL
+            return this.check_call_expr(expected_type, expr_node as CallExpressionNode)
+        return null
     }
     check_condition(cond_node: ExpressionNode): Expression {
        let bool_type = new BooleanType()
@@ -1466,7 +1564,7 @@ class TypeChecker {
             return null
         }
          
-        let constant = this.declare_const_within_current_scope(name, value)
+        let constant = this.declare_const_within_current_scope(name, value, value.value_type)
         
         return new ConstDeclaration(name, constant.const_id)
     }
@@ -1510,7 +1608,7 @@ class TypeChecker {
     }
     check_can_return(return_stmt: ReturnStatementNode): ReturnStatement {
         let expr = return_stmt.value
-        let current_function_return_type = (this.get_current_function().value_type as FunctionType).return_type
+        let current_function_return_type = this.get_current_function_type().return_type
         let rt_stmt: ReturnStatement
         if expr != null {
             let rt_value = this.check_expression(current_function_return_type, expr)

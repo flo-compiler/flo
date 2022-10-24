@@ -1,0 +1,4 @@
+fnc main(): int {
+    return 0
+}
+// This should be fine

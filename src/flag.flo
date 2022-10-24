@@ -1,0 +1,20 @@
+class Flag {
+    constructor(){
+
+    }
+    Int(value: int*, name: string, usage: string) {
+        
+    }
+    Bool(value: bool*, name: string, usage: string) {
+
+    }
+    String(value: string*, name: string, usage: string){
+        
+    }
+    Parse(){
+
+    }
+    PrintAll(){
+
+    }
+}

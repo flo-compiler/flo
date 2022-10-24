@@ -262,6 +262,20 @@ class FunctionDeclarationNode {
         this.is_external = false
     }
 }
+class MethodNode {
+    name: IdentifierToken
+    args: ArgNode[]
+    block: BlockNode
+    return_type: TypeNode
+    is_static: bool
+    is_abstract: bool
+    constructor(){
+        this.args = []
+        this.is_static = true
+        this.is_abstract = false
+    }
+}
+
 class FieldNode {
     name: IdentifierToken
     parsed_type: TypeNode
@@ -277,7 +291,7 @@ class ClassDeclarationNode {
     generic_parameters: GenericParameterNode[]
     parent: RecordTypeNode
     fields: FieldNode[]
-    methods: FunctionDeclarationNode[]
+    methods: MethodNode[]
     constructor(name: IdentifierToken) {
         this.name = name
         this.fields = []
@@ -894,6 +908,33 @@ class Parser {
             fnc_node.is_external = true
         return fnc_node
     }
+    parse_method(): MethodNode{
+        let method_node: MethodNode
+        method_node.name = this.eat(TokType.IDENTIFER) as IdentifierToken
+        this.eat(TokType.LPAR)
+        if this.current_token.ttype != TokType.RPAR
+            if (this.current_token as IdentifierToken).value == "this" {
+                method_node.is_static = false
+                this.advance()
+            }
+            if this.current_token.ttype != TokType.RPAR {
+                if !method_node.is_static
+                    this.eat(TokType.COMMA)
+                this.parse_args(method_node.args)
+            }
+        this.eat(TokType.RPAR)
+        if this.current_token.ttype == TokType.COL {
+            this.advance()
+            method_node.return_type = this.parse_type()
+        } else {
+            method_node.return_type = new TypeNode(TypeKind.VOID, new FloRange(0, 0, 0, 0))
+        }
+        if this.current_token.ttype == TokType.LBRACE {
+            method_node.block = this.parse_block()
+        } else
+            method_node.is_abstract = true
+        return method_node
+    }
     parse_class_block(class_node: ClassDeclarationNode) {
         this.eat(TokType.LBRACE)
         this.new_lines()
@@ -905,7 +946,7 @@ class Parser {
                 field.parsed_type = this.parse_type()
                 class_node.fields << field
             } else if this.peek().ttype == TokType.LPAR {
-                class_node.methods << this.parse_function()
+                class_node.methods << this.parse_method()
             } else {
                 this.advance()
                 return this.error("Expected ':' or '('")
@@ -985,8 +1026,8 @@ class Parser {
         this.errors = errors
         this.advance()
         let module_node: ModuleAST
+        this.new_lines()
         while this.can_parse() {
-            this.new_lines()
             if this.current_token.ttype == TokType.FNC_KW {
                 this.advance()
                 module_node.functions << this.parse_function()
@@ -1005,6 +1046,7 @@ class Parser {
                 module_node.type_aliases << this.parse_type_alias()
             else 
                 this.error("Illegal expression expected: 'fnc', 'class', 'enum', 'import', 'const' or 'let'")
+            this.new_lines()
         }
         return module_node
     }

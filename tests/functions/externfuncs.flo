@@ -1,0 +1,7 @@
+
+fnc main(){
+    let y = malloc(2)
+    free(y)
+}
+fnc malloc(amt: i32): i8*
+fnc free(ptr: i8*)

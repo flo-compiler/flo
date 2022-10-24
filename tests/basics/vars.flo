@@ -1,0 +1,5 @@
+fnc main(): float {
+    let a = 25
+    let b = 0.5
+    return a ^ b
+}
