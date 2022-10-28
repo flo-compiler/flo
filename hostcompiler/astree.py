@@ -289,8 +289,9 @@ class PropertyDeclarationNode(Node):
         return visitor.visitPropertyDeclarationNode(self)
     
 class MethodDeclarationNode(Node):
-    def __init__(self, access_modifier: Token, method_name: Token, method_body: FncNode, range: Range):
+    def __init__(self, access_modifier: Token, is_static: bool, method_name: Token, method_body: FncNode, range: Range):
         self.access_modifier = access_modifier
+        self.is_static = is_static
         self.method_name = method_name
         self.method_body = method_body
         super().__init__(range)

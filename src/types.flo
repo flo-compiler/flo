@@ -66,14 +66,15 @@ enum TokType {
     CONTINUE_KW
     RETURN_KW
     IMPORT_KW
-    TYPE_KW
+    PRIVATE_KW
+    PUBLIC_KW
+    PROTECTED_KW
     IN_KW
     CLASS_KW
     ENUM_KW
     NEW_KW
     AS_KW
     IS_KW
-    EXTENDS_KW
 }
 enum TypeKind {
     BOOL
@@ -95,6 +96,7 @@ enum TypeKind {
     PTR
     ARRAY
     FNC
+    CLASS
     GENERIC_TEMPLATE
     RESOLVED_GENERIC
     UNKNOWN
@@ -139,6 +141,8 @@ enum PropIdKind {
 enum VarIdKind {
     FNC
     VAR
+    CLASS
+    ENUM
     CONST
 }
 enum TypeIdKind {
@@ -179,4 +183,9 @@ enum UnaryOp {
 enum TypeExprOp {
     AS
     IS
+}
+enum ACCESS_ATTR {
+    PRIVATE
+    PUBLIC
+    PROTECTED
 }

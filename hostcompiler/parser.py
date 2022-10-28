@@ -28,6 +28,9 @@ class Parser:
         else:
             self.current_tok = self.tokens[-1]
 
+    def peek(self):
+        return self.tokens[self.current_i + 1 if self.current_i < len(self.tokens) else self.current_i]
+
     def parse(self):
         res = self.stmts()
         if self.current_tok.type != TokType.EOF:
@@ -257,7 +260,7 @@ class Parser:
 
     def class_stmt(self):
         access_modifier = None
-        if self.current_tok.inKeywordList(["public", "private", "static"]):
+        if self.current_tok.inKeywordList(["public", "private", "protected"]):
             access_modifier = self.current_tok
             self.advance()
         if self.current_tok.type != TokType.IDENTIFER: 
@@ -270,9 +273,16 @@ class Parser:
             node_range = Range.merge(name.range, property_type.range)
             return PropertyDeclarationNode(access_modifier, name, property_type, node_range)
         elif self.current_tok.type == TokType.LPAR:
+            is_static = True
+            next_token = self.peek()
+            if next_token.type == TokType.IDENTIFER and next_token.value == "this":
+                self.advance()
+                if self.peek().type == TokType.COMMA:
+                    self.advance()
+                is_static = False
             method_body = self.function_body()
             node_range = Range.merge(name.range, method_body.range)
-            return MethodDeclarationNode(access_modifier, name, method_body, node_range)
+            return MethodDeclarationNode(access_modifier, is_static, name, method_body, node_range)
         else:
             SyntaxError(self.current_tok.range, "Expected a property declaration or a method declaration").throw()
     

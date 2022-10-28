@@ -53,8 +53,12 @@ fnc string_to_kw_token(word: string): TokType {
         return TokType.RETURN_KW
     if word == "import"
         return TokType.IMPORT_KW
-    if word == "type"
-        return TokType.TYPE_KW
+    if word == "private"
+        return TokType.PRIVATE_KW
+    if word == "public"
+        return TokType.PUBLIC_KW
+    if word == "protected"
+        return TokType.PROTECTED_KW
     if word == "in"
         return TokType.IN_KW
     if word == "class"
@@ -179,20 +183,20 @@ class Lexer {
     idx: int
     col: int
     line: int
-    constructor(){
+    constructor(this){
         this.idx = -1
         this.line = 1
         this.col = 0
     }
-    eof(): bool{
+    private eof(this): bool{
         return this.idx >= this.text.length
     }
-    peek(offset = 1): i8 {
+    private peek(this, offset = 1): i8 {
         if this.idx + offset < this.text.length 
             return this.text.get_byte(this.idx + offset)
         return '\0'
     }
-    advance(){
+    private advance(this){
         if this.eof() {
             return
         }
@@ -203,17 +207,17 @@ class Lexer {
         } else
             this.col++
     }
-    get_range(back: int): FloRange {
+    private get_range(this, back: int): FloRange {
         return new FloRange(this.idx - back + 1, this.idx + 1, this.col - back, this.line)
     }
-    plus_token(): Token {
+    private plus_token(this): Token {
         if this.peek() == '+' {
             this.advance()
             return new Token(TokType.PLUS_PLUS, this.get_range(2))
         }
         return new Token(TokType.PLUS, this.get_range(1))
     }
-    skip_comment(): bool{
+    private skip_comment(this): bool{
         if this.peek() == '*' {
             this.advance()
             while !this.eof() {
@@ -231,14 +235,14 @@ class Lexer {
         }
         return false
     }
-    minus_token(): Token{
+    private minus_token(this): Token{
         if this.peek() == '-' {
             this.advance()
             return new Token(TokType.MINUS_MINUS, this.get_range(2))
         }
         return new Token(TokType.MINUS, this.get_range(2))
     }
-    eq_token(): Token {
+    private eq_token(this): Token {
         if this.peek() == '='{
             this.advance()
             return new Token(TokType.EEQ, this.get_range(2))
@@ -249,14 +253,14 @@ class Lexer {
         }
         return new Token(TokType.EQ, this.get_range(1))
     }
-    neq_token(): Token {
+    private neq_token(this): Token {
         if this.peek() == '=' {
             this.advance()
             return new Token(TokType.NEQ, this.get_range(2))
         }
         return new Token(TokType.NOT, this.get_range(1))
     }
-    gt_token(): Token {
+    private gt_token(this): Token {
         if this.peek() == '=' {
             this.advance()
             return new Token(TokType.GTE, this.get_range(2))
@@ -267,7 +271,7 @@ class Lexer {
         }
         return new Token(TokType.GT, this.get_range(1))
     }
-    lt_token(): Token {
+    private lt_token(this): Token {
         if this.peek() == '=' {
             this.advance()
             return new Token(TokType.LTE, this.get_range(2))
@@ -278,7 +282,7 @@ class Lexer {
         }
         return new Token(TokType.LT, this.get_range(1))
     }
-    dot_token(): Token {
+    private dot_token(this): Token {
         let token = TokType.DOT
         let length = 1
         if this.peek() == '.'{
@@ -293,7 +297,7 @@ class Lexer {
         }
         return new Token(token, this.get_range(length))
     }
-    base_int_token(base: int): IntToken{
+    private base_int_token(this, base: int): IntToken{
         this.advance()
         let length = 3
         let value = 0
@@ -308,7 +312,7 @@ class Lexer {
         }
         return new IntToken(value, this.get_range(length))
     }
-    numeric_token(): Token {
+    private numeric_token(this): Token {
         let length = 1
         let is_float = false
         let next_char = '\0'
@@ -328,7 +332,7 @@ class Lexer {
         let str_value = this.text.substring(range.start, length)
         return is_float ? new FloatToken(str_value as float, range) as Token : new IntToken(str_value as int, range)
     }
-    identifier_token(): Token {
+    private identifier_token(this): Token {
         let length = 1
         let start = this.idx
         let next_char = this.peek()
@@ -342,7 +346,7 @@ class Lexer {
         if (keyword = string_to_kw_token(value)) != -1 return new Token(keyword, range)
         return new IdentifierToken(value, range)
     }
-    string_token(): StrToken {
+    private string_token(this): StrToken {
         let length = 2
         let escape_next = false
         this.advance()
@@ -356,24 +360,24 @@ class Lexer {
         let value = unescape(this.text.substring(range.start+1, length-2))
         return new StrToken(value, range)
     }
-    char_token(): CharToken {
+    private char_token(this): CharToken {
         let length = 3
         this.advance()
         let value = this.current_char
         if this.current_char == '\\' {
             this.advance()
             value = get_escape_char(this.current_char)
-            length+=2
+            length += 2
         }
         this.advance()
         return new CharToken(value, this.get_range(length))
     }
-    tokenize(text: string, errors: FloError[]): Token[] {
+    public tokenize(this, text: string, errors: FloError[]): Token[] {
         this.text = text
         this.errors = errors
         this.advance()
         let tokens: Token[] = []
-        let char = '\0'
+        let char: i8 = 0
         while !this.eof() and this.errors.length == 0 {
             char = this.current_char
             if char == ' ' true
