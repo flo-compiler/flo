@@ -1,3 +1,17 @@
+class Person {
+    private age: int
+    constructor(this, age: int){
+        this.age = age
+    }
+    public getAge(this): int {
+        return this.age
+    }
+    public max(i1: int, i2: int): int {
+        return i1 > i2 ? i1 : i2
+    }
+}
 fnc main(): int {
-    return (8 ^ 10) as int
+    let p54: Person(54)
+    let age = p54.getAge()
+    return Person.max(89, age)
 }

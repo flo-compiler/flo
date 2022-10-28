@@ -1,16 +1,13 @@
 class Vector {
     x: int
     y: int
-}
-fnc write(fd: int, str: i8*, len: int)
-fnc unit_vector(): Vector {
-    let vec: Vector = new Vector()
-    vec.x = 1
-    vec.y = 2
-    return vec
+    constructor(this, x: int, y: int){
+        this.x = x
+        this.y = y
+    }
 }
 fnc main(): int {
-    let vec = unit_vector()
+    let vec = new Vector(10, 10)
     ++vec.y
     return vec.y
 }

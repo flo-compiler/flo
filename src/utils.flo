@@ -8,7 +8,7 @@ class FloRange {
     end: int
     col: int
     line: int
-    constructor(start: int, end: int, col: int, line: int){
+    constructor(this, start: int, end: int, col: int, line: int){
         this.start = start
         this.end = end
         this.col = col
