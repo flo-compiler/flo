@@ -533,6 +533,13 @@ fnc dump_unary_op(op: UnaryOp): string{
         return "!"
     return "&"
 }
+fnc dump_access(visibility: ACCESS_ATTR): string {
+    if visibility == ACCESS_ATTR.PRIVATE
+        return "private"
+    if visibility == ACCESS_ATTR.PUBLIC
+        return "public"
+    return "protected"
+}
 class ScopeId {
     module_id: int
     id: int
@@ -601,12 +608,12 @@ class Const (Value) {
 class ClassField {
     id: PropId
     is_static: bool
-    access_attributes: ACCESS_ATTR
+    visibility: ACCESS_ATTR
     name: string
     field_type: Type
 }
 class ClassMethod {
-    access_attributes: ACCESS_ATTR
+    visibility: ACCESS_ATTR
     id: PropId
     name: string
     args: FunctionArg []
@@ -1006,6 +1013,7 @@ class TypeChecker {
             method.args = []
             method.is_abstract = method_node.is_abstract
             method.is_static = method_node.is_static
+            method.visibility = method_node.access_modifier
             if !method_node.is_static {
                 this.declare_const_within_current_scope("this", null, new ObjectType(declared_class.id))
             }
@@ -1029,6 +1037,7 @@ class TypeChecker {
             let field = new ClassField()
             field.is_static = false
             let current_f_node = class_node.fields[i]
+            field.visibility = current_f_node.access_modifier
             field.id = new PropId(PropIdKind.FIELD, declared_class.id, i)
             field.name = current_f_node.name.value
             field.field_type = this.check_type(current_f_node.parsed_type)
@@ -1333,8 +1342,31 @@ class TypeChecker {
         }
         return new NewExpression(expr_ty, args, new_expr_node.onheap)
     }   
+    private check_member_access(this, accessee: Class, accessor: PropId, range: FloRange){
+        let visibility = ACCESS_ATTR.PUBLIC
+        let member_name = ""
+        if accessor.kind == PropIdKind.METHOD {
+            let method = accessee.methods[accessor.id]
+            visibility = method.visibility
+            member_name = method.name
+        } else {
+            let field = accessee.fields[accessor.id]
+            visibility = field.visibility
+            member_name = field.name
+        }
+        if this.current_class != null {
+            if this.current_class.module_id != accessee.id.module_id or accessee.id.id != this.current_class.id {
+                if visibility != ACCESS_ATTR.PUBLIC {
+                    //TODO: Check for inheritance in protected.
+                    this.error(ErrorKind.GEN, "Cannot access property "+member_name+" on method because it is marked as private", range)
+                }
+            }
+        } else if visibility != ACCESS_ATTR.PUBLIC {
+            this.error(ErrorKind.GEN, "Cannot access property "+member_name+" on method because it is marked as "+dump_access(visibility), range)
+        }
+
+    }
     private check_member_expr(this, expected_type: Type, member_expr_node: MemberExpressionNode): MemberExpression {
-        // TODO: Think about static member checks like enums/ static class attributes
         let prop_owner = this.check_expression($UNKNOWN_TYPE, member_expr_node.expression)
         if this.has_errored() return null
         let prop_owner_type = prop_owner.value_type
@@ -1346,8 +1378,8 @@ class TypeChecker {
             let prop_is_static = false
             let parent_class = get_class(this.program, (prop_owner_type as ObjectType).class_id)
             prop_id = parent_class.field_map.get(prop_name)
+            if this.has_errored() return null
             if prop_id != null {
-                //TODO: check field access
                 let field = parent_class.fields[prop_id.id]
                 prop_is_static = field.is_static
                 prop_ty = field.field_type
@@ -1362,10 +1394,12 @@ class TypeChecker {
             if prop_ty.kind == TypeKind.UNKNOWN {
                 this.error(ErrorKind.NAME, "Property '"+prop_name+"' doesn't exist in object '"+parent_class.name+"'", member_expr_node.member.range)
                 return null
-            } else if is_static_member_access and !prop_is_static {
-                this.error(ErrorKind.GEN, "Cannot access non-static property '"+prop_name+"' as static property on class '"+parent_class.name+"'",  member_expr_node.member.range)
+            } else {
+                this.check_member_access(parent_class, prop_id, member_expr_node.member.range)
+                if is_static_member_access and !prop_is_static 
+                    this.error(ErrorKind.GEN, "Cannot access non-static property '"+prop_name+"' as static property on class '"+parent_class.name+"'",  member_expr_node.member.range)
             }
-        } else {
+        } else { //TODO: Enums
             this.error(ErrorKind.GEN, "Cannot get property of type '"+dump_type(prop_owner_type)+"'", member_expr_node.expression.range)
             return null
         }

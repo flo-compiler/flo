@@ -12,6 +12,7 @@ class Person {
 }
 fnc main(): int {
     let p54: Person(54)
+    p54.age = 10
     let age = p54.getAge()
     return Person.max(89, age)
 }
