@@ -47,7 +47,6 @@ class Map<T, U> {
     set(key: T, value: U){
         let hash = this.hash_fnc(key) % this.size
         if (this.size <= this.length) this.resize()
-
         while !this.buckets[hash].is_empty {
             if this.buckets[hash].key == key
                 break
@@ -69,14 +68,14 @@ class Map<T, U> {
                 return this.buckets[hash].value
         return null
     }
-    get_keys(): Array<T> {
-        let keys: T[] = []
+    get_buckets(): Array<Bucket<T, U>> {
+      let buckets: Bucket<T, U>[] = []
         for let i = 0; i < this.size; ++i {
             let current_bucket = this.buckets[i]
             if !current_bucket.is_empty {
-                keys << current_bucket.key
+                buckets << current_bucket
             }
         }
-        return keys
+        return buckets  
     }
 }

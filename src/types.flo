@@ -89,14 +89,13 @@ enum TypeKind {
     F32
     F64
     FLOAT
-    RECORD
     VOID
-    ENUM
     OBJECT
+    ENUM
     PTR
     ARRAY
     FNC
-    CLASS
+    RECORD
     GENERIC_TEMPLATE
     RESOLVED_GENERIC
     UNKNOWN
@@ -141,9 +140,9 @@ enum PropIdKind {
 enum VarIdKind {
     FNC
     VAR
+    CONST
     CLASS
     ENUM
-    CONST
 }
 enum TypeIdKind {
     CLASS

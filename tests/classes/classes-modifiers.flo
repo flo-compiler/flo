@@ -1,7 +1,7 @@
 class Person {
     private age: int
     constructor(this, age: int){
-        this.setAge(age)
+        this.age = age
     }
     public getAge(this): int {
         return this.age
@@ -9,17 +9,14 @@ class Person {
     public setAge(this, age: int){
         this.age = age
     }
-    public max(i1: int, i2: int = 0): int {
+    public max(i1: int, i2: int): int {
         return i1 > i2 ? i1 : i2
-    }
-}
-class NextPerson(Person) {
-    constructor(this, age: int){
-        this.setAge(age)
     }
 }
 fnc main(): int {
     let p54: Person(54)
-    let pNext: NextPerson(100)
-    return Person.max(p54.getAge(), pNext.getAge())
+    p54.setAge(100)
+    p54.age = 10
+    let age = p54.getAge()
+    return Person.max(89, age)
 }

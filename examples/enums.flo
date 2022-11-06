@@ -1,4 +1,3 @@
-import println in "@flo/core"
 enum Numbers {
     ZERO
     ONE
@@ -6,5 +5,5 @@ enum Numbers {
 }
 fnc main() {
     let x = Numbers.ONE
-    println(x as string)
+    println(x)
 }
