@@ -1,3 +1,4 @@
+from lexer import Token
 from typing import List
 import builtIns as bi
 from context import Context
@@ -80,6 +81,8 @@ class FloNull(FloType):
             self.floval = base_type.new_with_val(zero.inttoptr(base_type.llvmtype))
         else:
             print(base_type)
+    def cast_to(self, builder: ir.IRBuilder, other_type):
+        return self.floval.cast_to(builder, other_type)
 
     @property
     def value(self):
@@ -980,7 +983,8 @@ class FloObject(FloType):
             if method_value == None: return None
             # 1: Fix it.
             method_index = list(current.methods.keys()).index(name)
-
+        if list(current.methods.keys())[0] == 'constructor':
+            method_index-=1
         vtable_ptr = self.mem.load_at_index(
             builder, FloInt(0, 32), FloInt(0, 32)
         )
@@ -1079,7 +1083,10 @@ class FloObject(FloType):
 
 class FloGeneric(FloObject):
     def __init__(self, referer: FloClass, constraints: List[FloType]) -> None:
-        self.name = referer.value
+        if isinstance(referer, Token):
+            self.name = referer.value
+        else:
+            self.name = referer.name
         self.constraints = constraints
         super().__init__(referer)
     

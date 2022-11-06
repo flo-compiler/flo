@@ -951,18 +951,12 @@ class Parser {
         return method_node
     }
     private parse_access_modifier(this): ACCESS_ATTR {
-        if this.current_token.ttype == TokType.PUBLIC_KW {
-            this.advance()
+        if this.current_token.ttype == TokType.PUBLIC_KW
             return ACCESS_ATTR.PUBLIC
-        }
-        if this.current_token.ttype == TokType.PRIVATE_KW {
-            this.advance()
+        if this.current_token.ttype == TokType.PRIVATE_KW
             return ACCESS_ATTR.PRIVATE
-        }
-        if this.current_token.ttype == TokType.PROTECTED_KW {
-            this.advance()
+        if this.current_token.ttype == TokType.PROTECTED_KW
             return ACCESS_ATTR.PROTECTED
-        }
         return -1
     }
     // (private | public | protected)? identider 
@@ -973,6 +967,8 @@ class Parser {
             let access_modifier = this.parse_access_modifier()
             if access_modifier < 0 {
                 access_modifier = ACCESS_ATTR.PUBLIC
+            } else {
+                this.advance()
             }
             if this.peek().ttype == TokType.COL {
                 let field: FieldNode
@@ -986,7 +982,6 @@ class Parser {
                 method.access_modifier = access_modifier
                 class_node.methods << method
             } else {
-                this.advance()
                 return this.error("Expected ':' or '('")
             }
             this.new_lines()

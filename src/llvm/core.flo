@@ -138,6 +138,7 @@ fnc LLVMPPCFP128Type(): LLVMTypeRef
 fnc LLVMFunctionType(return_type:LLVMTypeRef, param_types: LLVMTypeRef*, param_count: int, is_var_arg: LLVMBool): LLVMTypeRef
 fnc LLVMGetReturnType(FunctionTy: LLVMTypeRef): LLVMTypeRef 
 fnc LLVMCountParamTypes(FunctionTy: LLVMTypeRef): int
+fnc LLVMStructTypeInContext(C: LLVMContextRef, ElementTypes: LLVMTypeRef*, ElementCount: int, Packed: LLVMBool): LLVMTypeRef
 fnc LLVMStructCreateNamed(C: LLVMContextRef, name: i8*): LLVMTypeRef 
 fnc LLVMStructSetBody(StructTy: LLVMTypeRef, ElementTypes: LLVMTypeRef *, element_count: int, packed: LLVMBool)
 
@@ -254,6 +255,8 @@ fnc LLVMGetThreadLocalMode(GlobalVar: LLVMValueRef): LLVMThreadLocalMode
 fnc LLVMSetThreadLocalMode(GlobalVar: LLVMValueRef, Mode: LLVMThreadLocalMode)
 fnc LLVMIsExternallyInitialized(GlobalVar: LLVMValueRef): LLVMBool
 fnc LLVMSetExternallyInitialized(GlobalVar: LLVMValueRef, IsExtInit: LLVMBool)
+
+fnc LLVMGlobalGetValueType(Global: LLVMValueRef): LLVMTypeRef
 /* Alginment */
 fnc LLVMGetAlignment(V: LLVMValueRef): int
 /* functions */
@@ -483,6 +486,7 @@ fnc LLVMBuildFence(B: LLVMBuilderRef, ordering: LLVMAtomicOrdering, singleThread
 fnc LLVMBuildAtomicRMW(B: LLVMBuilderRef, op: LLVMAtomicRMWBinOp, PTR: LLVMValueRef, Val: LLVMValueRef, ordering: LLVMAtomicOrdering , singleThread: LLVMBool): LLVMValueRef
 fnc LLVMBuildAtomicCmpXchg(B: LLVMBuilderRef, Ptr: LLVMValueRef, Cmp: LLVMValueRef, New: LLVMValueRef, SuccessOrdering: LLVMAtomicOrdering, FailureOrdering: LLVMAtomicOrdering, SingleThread: LLVMBool): LLVMValueRef
 
+fnc LLVMAddGlobalIFunc(M: LLVMModuleRef, Name: i8*, NameLen: int, Ty: LLVMTypeRef, AddrSpace: int, Resolver: LLVMValueRef): LLVMValueRef 
 /**
  * @defgroup LLVMCCorePassManagers Pass Managers
 */

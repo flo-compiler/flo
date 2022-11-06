@@ -145,15 +145,14 @@ class Compiler(Visitor):
         elif node.op.isKeyword("xor"):
             return a.xor(self.builder, b)
         elif node.op.isKeyword("in"):
-            s = b.in_(self.builder, a)
-            return s
+            return b.in_(self.builder, a)
         elif node.op.isKeyword("as"):
-           # try:
+            try:
                 return a.cast_to(self.builder, b)
-            # except Exception as e:
-            #     TypeError(
-            #         node.range, f"Cannot cast {a.str()} to {b.str()}"
-            #     ).throw()
+            except Exception as e:
+                TypeError(
+                    node.range, f"Cannot cast {a.str()} to {b.str()}"
+                ).throw()
         elif node.op.isKeyword("is"):
             return FloInt(isinstance(a, b), 1)
 
@@ -182,10 +181,16 @@ class Compiler(Visitor):
             if isinstance(type_.referer, Token):
                 gen = FloGeneric(Token(type_.referer.type, type_.referer.range, type_.referer.value), [])
             else:
-                return type_
+                if FloClass.classes.get(type_.referer.name) == None:
+                    gen = FloGeneric(Token(TokType.IDENTIFER, None, type_.referer.name), [])
+                    type_.constraints = [TypeNode(constraint, None) for constraint in type_.constraints]
+                else:
+                    return type_
             for constraint in type_.constraints:
-                gen.constraints.append(self.visit(constraint))
+                res = self.visit(constraint)
+                gen.constraints.append(res)
             type_ = gen
+            type_.name = re.sub(r'(\<)+(.+?)(\>)+', "", type_.name)
             self.init_generic(type_)
             type_.referer.value = gen.str()
         if isinstance(type_, FloObject):
@@ -199,6 +204,8 @@ class Compiler(Visitor):
             associated_class = FloClass.classes.get(classname)
             if isinstance(type_, FloGeneric):
                 return FloGeneric(associated_class, type_.constraints)
+            if associated_class == None:
+                associated_class = FloClass(classname, None)
             return FloObject(associated_class)
         elif isinstance(type_, FloArray) or isinstance(type_, FloPointer):
             if isinstance(type_.elm_type, Node):
@@ -293,10 +300,15 @@ class Compiler(Visitor):
     
     def visitVarDeclarationNode(self, node: VarDeclarationNode):
         var_name = node.var_name.value
+        ty = None
+        if node.type:
+            ty = self.visit(node.type)
+        
         if node.value:
+            if ty != None:
+                node.value.expects = ty
             value = self.visit(node.value)
         else:
-            ty = self.visit(node.type)
             if isinstance(ty, FloObject):
                 llvm_val = self.builder.alloca(ty.llvmtype)
                 value = ty.new_with_val(llvm_val)
@@ -461,7 +473,7 @@ class Compiler(Visitor):
         if isinstance(node.expects, FloGeneric):
             array_class: FloClass = FloClass.classes.get(node.expects.str())
             if array_class == None:
-                node.expects.name = re.sub(r'\<(.+?)\>', "", node.expects.str() )
+                node.expects.name = re.sub(r'(\<)+(.+?)(\>)+', "", node.expects.str())
                 self.init_generic(node.expects)
                 array_class: FloClass = FloClass.classes.get(node.expects.str())
             length = FloInt(len(elems))
@@ -501,12 +513,13 @@ class Compiler(Visitor):
 
 
     def visitClassDeclarationNode(self, node: ClassDeclarationNode):
+        class_name = node.name.value
         parent = None
         if node.parent:
             parent = self.visit(node.parent).referer
-        class_obj = FloClass(node.name.value, parent)
+        class_obj = FloClass(class_name, parent)
         previous_class = self.class_within
-        self.context.set(node.name.value, class_obj)
+        self.context.set(class_name, class_obj)
         self.declare_class(class_obj, node)
         self.class_within = class_obj
         self.visit(node.body)
@@ -562,6 +575,9 @@ class Compiler(Visitor):
     def visitArrayAssignNode(self, node: ArrayAssignNode):
         index = self.visit(node.array.index)
         array = self.visit(node.array.name)
+        if isinstance(array, FloPointer):
+            if isinstance(array.elm_type, FloGeneric):
+                node.value.expects = array.elm_type
         value = self.visit(node.value)
         if isinstance(array, FloObject):
             return array.get_property(self.builder, '__setitem__').call(self.builder, [index, value])
