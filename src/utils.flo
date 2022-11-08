@@ -1,4 +1,3 @@
-fnc fflush(fd: int)
 fnc strlen(str: i8*): int
 fnc string_from_cstring(str: i8*): string {
     return new string(str, strlen(str))

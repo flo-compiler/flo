@@ -1,95 +1,7 @@
 import "llvm"
+import "codegenDI"
+import "codegenMod"
 $WORD_INT_TYPE = LLVMIntType($WORD_SIZE)
-class GeneratedModule {
-    private llvm_mod: LLVMModuleRef
-    private errors: i8*
-    constructor(this, llvm_mod: LLVMModuleRef){
-        this.llvm_mod = llvm_mod
-        this.errors = null
-        LLVMVerifyModule(this.llvm_mod, LLVMVerifierFailureAction.LLVMAbortProcessAction, &this.errors)
-        this.check_errors()
-        LLVMLinkInMCJIT()
-        LLVMInitializeAllTargets()
-        LLVMInitializeAllTargetInfos()
-        LLVMInitializeAllTargetMCs()
-        LLVMInitializeAllTargetPrinters()
-        LLVMInitializeAllTargetParsers()
-    }
-    private check_errors(this){
-        if (this.errors[0] != 0) {
-            println("error:", string_from_cstring(this.errors))
-            LLVMDisposeMessage(this.errors)
-            exit()
-        }
-    }
-    public run_passes(this, level: int){
-        let fpm = LLVMCreateFunctionPassManagerForModule(this.llvm_mod)
-        // let mpm = LLVMCreatePassManager()
-        let pmb = LLVMPassManagerBuilderCreate()
-        LLVMPassManagerBuilderSetOptLevel(pmb, level)
-        LLVMPassManagerBuilderUseInlinerWithThreshold(pmb, 255)
-        // LLVMPassManagerBuilderPopulateModulePassManager(pmb, mpm)
-        let func = LLVMGetFirstFunction(this.llvm_mod)
-        LLVMPassManagerBuilderPopulateFunctionPassManager(pmb, fpm)
-        while func != null {
-            LLVMRunFunctionPassManager(fpm, func)
-            func = LLVMGetNextFunction(func)
-        }
-        // LLVMRunPassManager(mpm, this.llvm_mod)
-        LLVMDisposePassManager(fpm)
-        // LLVMDisposePassManager(mpm)
-        LLVMPassManagerBuilderDispose(pmb)
-    }
-    public exec(this){
-        let module_copy = this.copy_llvm_module()
-        let engine: LLVMExecutionEngineRef = null
-        if (LLVMCreateExecutionEngineForModule(&engine, module_copy, &this.errors) != 0) {
-            println("failed to create execution engine")
-            return
-        }
-        let main_fnc = LLVMGetFunctionAddress(engine, "main")  as () => int
-        if main_fnc == null {
-            println("Main function not found in module; can't execute")
-            LLVMDisposeExecutionEngine(engine)
-            return
-        }
-        println("Exited with code:", main_fnc())
-        LLVMDisposeExecutionEngine(engine)
-    }
-    public create_target_machine(this, triple_str: string): LLVMTargetMachineRef {
-        let triple = triple_str == "" ? LLVMGetDefaultTargetTriple() : triple_str.to_cstring()
-        let target = LLVMGetFirstTarget()
-        if (LLVMGetTargetFromTriple(triple, &target, &this.errors) != 0) {
-            println("failed to get target triple:", triple_str)
-        }
-        this.check_errors()
-        let CPU: i8* = "generic"
-        return LLVMCreateTargetMachine(target, triple, CPU, LLVMGetHostCPUFeatures(), LLVMCodeGenOptLevel.LLVMCodeGenLevelAggressive, LLVMRelocMode.LLVMRelocDefault, LLVMCodeModel.LLVMCodeModelDefault)
-    }
-    public write_object(this, fn: string, target: string){
-        let tm = this.create_target_machine(target)
-        let module_copy = this.copy_llvm_module()
-        LLVMSetDataLayout(module_copy, LLVMCreateTargetDataLayout(tm))
-        LLVMSetTarget(module_copy, LLVMGetTargetMachineTriple(tm))
-        if (LLVMTargetMachineEmitToFile(tm, module_copy, fn.to_cstring(), 1, &this.errors) != 0) {
-            println("target machine failed to emit object code")
-        }
-        this.check_errors()
-        LLVMDisposeTargetMachine(tm)
-    }
-    public print(this){
-        LLVMDumpModule(this.llvm_mod)
-    }
-    private copy_llvm_module(this): LLVMModuleRef{
-        return LLVMCloneModule(this.llvm_mod)
-    }
-    public destroy(this){
-        let ctx = LLVMGetModuleContext(this.llvm_mod)
-        LLVMDisposeModule(this.llvm_mod)
-        LLVMContextDispose(ctx)
-        LLVMShutdown()
-    }
-}
 class IntrinsicResult {
     call: LLVMValueRef
     fnc_type: LLVMTypeRef
@@ -133,7 +45,17 @@ fnc create_prop_key(prop_id: PropId): string {
     return create_type_id_key(prop_id.type_id) + ";" + prop_id.kind + ";" + prop_id.id
 }
 fnc neg_int(builder: LLVMBuilderRef, val: LLVMValueRef): LLVMValueRef {
-        return LLVMIsConstant(val) ? LLVMConstNeg(val) : LLVMBuildNeg(builder, val, "")
+    return LLVMIsConstant(val) ? LLVMConstNeg(val) : LLVMBuildNeg(builder, val, "")
+}
+fnc resize_type_array(array: LLVMTypeRef[], amt: int){
+    for let i = array.length; i <= amt; i++ {
+        array << null
+    }
+}
+fnc resize_value_array(array: LLVMValueRef[], amt: int){
+    for let i = array.length; i <= amt; i++ {
+        array << null
+    }
 }
 class CodeGen {
     modules: LLVMModuleRef[]
@@ -148,6 +70,7 @@ class CodeGen {
     program: Program
     in_static_ctx: bool
     module_ctx: LLVMContextRef
+    debugInfoObj: DebugInfo
     codegenProgram(this, program: Program): GeneratedModule{
         this.program = program
         this.modules = []
@@ -190,6 +113,7 @@ class CodeGen {
         this.module_intrinsic_scope = module_intrinsic_scope
         this.module_classes = module_classes
         this.module = LLVMModuleCreateWithNameInContext(module.name.to_cstring(), this.module_ctx)
+        this.debugInfoObj = new DebugInfo(this.module, module.name)
         //let DBFloInfo = new DebugInfo(this.module, module.name)
         this.in_static_ctx = true
         for let i = 0; i < module.global_consts.length; ++i {
@@ -211,6 +135,7 @@ class CodeGen {
         for i = 0; i < module.functions.length; ++i {
             this.codegen_function(module.functions[i])
         }
+        this.debugInfoObj.finalize()
         return this.module
     }
     private codegen_type(this, tt: Type, as_pointer = true): LLVMTypeRef {
@@ -224,7 +149,7 @@ class CodeGen {
             return LLVMInt8TypeInContext(this.module_ctx)
         if tt.kind == TypeKind.I16
             return LLVMInt16TypeInContext(this.module_ctx)
-        if tt.kind == TypeKind.I32
+        if tt.kind == TypeKind.I32 
             return LLVMInt32TypeInContext(this.module_ctx)
         if tt.kind == TypeKind.INT
             return LLVMIntTypeInContext(this.module_ctx, $WORD_SIZE)
@@ -234,7 +159,7 @@ class CodeGen {
             return LLVMInt128TypeInContext(this.module_ctx)
         if tt.kind == TypeKind.F16 
             return LLVMHalfTypeInContext(this.module_ctx)
-        if tt.kind == TypeKind.F32
+        if tt.kind == TypeKind.F32 
             return LLVMFloatTypeInContext(this.module_ctx)
         if tt.kind == TypeKind.F64 or tt.kind == TypeKind.FLOAT
             return LLVMDoubleTypeInContext(this.module_ctx)
@@ -248,7 +173,7 @@ class CodeGen {
         if tt.kind == TypeKind.FNC {
             let param_types: LLVMTypeRef[] = []
             let func_ty = tt as FunctionType
-            for let i = 0; i < func_ty.arg_types.length; ++i {
+            for let i = 0; i < func_ty.arg_types.length; i++ {
                 param_types << this.codegen_type(func_ty.arg_types[i])
             }
             let ret_type = this.codegen_type(func_ty.return_type)
@@ -262,9 +187,8 @@ class CodeGen {
             }
         }
         // if tt.kind == TypeKind.ENUM
-        // GENERIC_TEMPLATE
         // RESOLVED_GENERIC
-        return LLVMInt32Type()
+        return null
     }
     private codegen_return_stmt(builder: LLVMBuilderRef, return_stmt: ReturnStatement){
         if return_stmt.return_value != null 
@@ -894,16 +818,6 @@ class CodeGen {
             struct_class.non_vt_methods_map.set(prop_id_key, static_prop_value)
         }
     }
-    private resize_type_array(array: LLVMTypeRef[], amt: int){
-        for let i = array.length; i <= amt; i++ {
-            array << null
-        }
-    }
-    private resize_value_array(array: LLVMValueRef[], amt: int){
-        for let i = array.length; i <= amt; i++ {
-            array << null
-        }
-    }
     private declare_class_props(this, struct_class: StructClass, checked_class: Class, prop_types: LLVMTypeRef[]){
         let buckets = checked_class.prop_map.get_buckets()
         let vtable_values: LLVMValueRef[] = []
@@ -922,14 +836,18 @@ class CodeGen {
             if prop_id.kind == PropIdKind.FIELD {
                 let field_type = this.codegen_type(prop_type)
                 struct_class.fields_pos_map.set(prop_id_key, prop_index)
-                this.resize_type_array(field_types, prop_index)
+                resize_type_array(field_types, prop_index)
                 field_types[prop_index] = field_type
             } else {
                 let method_type = prop_type as FunctionType
                 let llvm_method_val: LLVMValueRef = null
                 let llvm_method_type = this.codegen_type(method_type, false)
                 if prop_id.type_id == checked_class.id {
-                    method_type.arg_types = [new ObjectType(checked_class.id) as Type] + method_type.arg_types
+                    let arg_types: Type[] = [new ObjectType(checked_class.id) as Type]
+                    for let j = 0; j < method_type.arg_types.length; j++ {
+                        arg_types << method_type.arg_types[j]
+                    }
+                    method_type.arg_types = arg_types
                     llvm_method_type = this.codegen_type(method_type, false)
                     llvm_method_val = this.declare_method((checked_class.name + prop_name), llvm_method_type)
                     if (get_class_prop_visibility(this.program, prop_id) == ACCESS_ATTR.PRIVATE){ 
@@ -940,8 +858,8 @@ class CodeGen {
                     llvm_method_val = LLVMGetNamedFunction(this.module, (get_class(this.program, prop_id.type_id as ClassId).name + prop_name).to_cstring())
                 }
                 struct_class.vt_methods_pos_map.set(prop_id_key, prop_index)
-                this.resize_type_array(vtable_types, prop_index)
-                this.resize_value_array(vtable_values, prop_index)
+                resize_type_array(vtable_types, prop_index)
+                resize_value_array(vtable_values, prop_index)
                 vtable_values[prop_index] = llvm_method_val
                 vtable_types[prop_index] = LLVMPointerType(llvm_method_type)
             }
@@ -974,7 +892,11 @@ class CodeGen {
         // Now constructor
         if checked_class.constructor != null {
             let constructor_type = get_class_prop_type(this.program, checked_class.constructor) as FunctionType
-            constructor_type.arg_types = [new ObjectType(checked_class.id) as Type] + constructor_type.arg_types
+            let arg_types: Type[] = [new ObjectType(checked_class.id) as Type]
+            for let i = 0; i < constructor_type.arg_types.length; i++ {
+                arg_types << constructor_type.arg_types[i]
+            }
+            constructor_type.arg_types = arg_types
             let constructor_llvm_method_type = this.codegen_type(constructor_type, false)
             struct_class.constructor = this.declare_method((checked_class.name + "constructor"), constructor_llvm_method_type)
         } else {

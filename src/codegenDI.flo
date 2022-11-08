@@ -1,0 +1,17 @@
+class DebugInfo {
+    builder: LLVMDIBuilderRef
+    CU: LLVMMetadataRef
+    types: LLVMMetadataRef[]
+    file: LLVMMetadataRef
+    constructor(this, mod: LLVMModuleRef, fn: string){
+        this.builder = LLVMCreateDIBuilder(mod)
+        this.file = LLVMDIBuilderCreateFile(this.builder, fn.to_cstring(), fn.length, ".", 1)
+        this.CU = LLVMDIBuilderCreateCompileUnit(this.builder, LLVMDWARFSourceLanguage.LLVMDWARFSourceLanguageC, this.file, "Flo Compiler", 12, false, "", 0, 0, "", 0, LLVMDWARFEmissionKind.LLVMDWARFEmissionFull, 0, false, true, ".", 1, "", 0)
+    }
+    public finalize(this){
+        LLVMDIBuilderFinalize(this.builder)
+    }
+    // public create_function(this, function_name: string, linkage: string): LLVMMetadataRef {
+    //     return LLVMDIBuilderCreateFunction(this.builder, this.file, function_name.to_cstring(), function_name.length, linkage.to_cstring(), linkage.length, )
+    // }
+}

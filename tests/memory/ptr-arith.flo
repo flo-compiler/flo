@@ -2,5 +2,7 @@ let arr: int[2] = [1, 2]
 fnc main(): int {
     let ptr = &arr[0] + 1
     ptr[0] = 3
+    ptr = ptr - 1
+    ptr[0] = 2
     return arr[1]
 }

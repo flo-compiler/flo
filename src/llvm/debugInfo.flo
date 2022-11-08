@@ -52,8 +52,12 @@ enum LLVMDWARFEmissionKind{
     LLVMDWARFEmissionLineTablesOnly
 }
 type LLVMDWARFTypeEncoding = int
+type LLVMDIFlags = int
 fnc LLVMCreateDIBuilder(M: LLVMModuleRef): LLVMDIBuilderRef
-
+fnc LLVMDIBuilderCreateFile(Builder: LLVMDIBuilderRef, Filename: i8*, FilenameLen: int, Directory: i8*, DirectoryLen: int): LLVMMetadataRef
 fnc LLVMDIBuilderCreateCompileUnit(Builder: LLVMDIBuilderRef, Lang: LLVMDWARFSourceLanguage, FileRef: LLVMMetadataRef, Producer: i8*, ProducerLen: int, isOptimized: LLVMBool, Flags: i8*, FlagsLen: int, RuntimeVer: int, SplitName: i8*, SplitNameLen: int, Kind: LLVMDWARFEmissionKind, DWOId: int, SplitDebugInlining: LLVMBool, DebugInfoForProfiling: LLVMBool, SysRoot: i8*, SysRootLen: int, SDK: i8*, SDKLen: int): LLVMMetadataRef
+fnc LLVMDIBuilderFinalize(Builder: LLVMDIBuilderRef)
 /* See https://github.com/hdoc/llvm-project/blob/release/14.x/llvm/include/llvm-c/DebugInfo.h#L34 for flags */
 fnc LLVMDIBuilderCreateBasicType(Builder: LLVMDIBuilderRef, Name: i8*, NameLen: int, SizeInBits: int, Encoding: LLVMDWARFTypeEncoding, Flags: int): LLVMMetadataRef
+
+fnc LLVMDIBuilderCreateFunction(Builder: LLVMDIBuilderRef, Scope: LLVMMetadataRef, Name: i8*, NameLen: int, LinkageName: i8*, LinkageNameLen: int, File: LLVMMetadataRef, LineNo: int, Ty: LLVMMetadataRef, IsLocalToUnit: LLVMBool, IsDefinition: LLVMBool, ScopeLine: int, Flags: LLVMDIFlags, IsOptimized: LLVMBool): LLVMMetadataRef
