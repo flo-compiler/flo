@@ -282,6 +282,7 @@ class MethodNode {
 class FieldNode {
     name: IdentifierToken
     access_modifier: ACCESS_ATTR
+    initializer: ExpressionNode
     parsed_type: TypeNode
 }
 class GenericParameterNode {
@@ -975,6 +976,12 @@ class Parser {
                 field.name = this.eat(TokType.IDENTIFER) as IdentifierToken
                 this.eat(TokType.COL)
                 field.parsed_type = this.parse_type()
+                if this.current_token.ttype == TokType.EQ {
+                    this.advance()
+                    field.initializer = this.parse_expression()
+                } else {
+                    field.initializer = null
+                }
                 field.access_modifier = access_modifier
                 class_node.fields << field
             } else if this.peek().ttype == TokType.LPAR {

@@ -11,6 +11,16 @@ class Array <T> {
         this.size = this.size * 2 // * sizeof(int)
         this.buffer = this.buffer.resize(this.size)
     }
+    __add__(other: T[]): T[] {
+        let new_length = this.length + other.length
+        let new_size = ((this.size / this.length) as int) * new_length
+        let new_array = new Array<T>(new_size)
+        let new_buffer = new_array.buffer as i8*
+        memcpy(new_buffer, this.buffer as i8*, this.size)
+        memcpy(new_buffer + this.size, other.buffer as i8*, other.size)
+        new_array.length = new_length
+        return new_array
+    }
     swap(i1: int, i2: int){
         if (i1 in 0..this.length) and (i2 in 0..this.length) {
             let tmp = this.buffer[i1]
