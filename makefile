@@ -8,7 +8,6 @@ CXX=g++
 CXXFLAGS := -g3 -O0 
 
 LLVM_BUILD_PATH = /lib/llvm-15#$$HOME/llvm-project/build
-
 LLVM_LIB_PATH:=$(LLVM_BUILD_PATH)/lib
 
 LLVM_BIN_PATH := $(LLVM_BUILD_PATH)/bin

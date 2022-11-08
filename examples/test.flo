@@ -1,5 +1,6 @@
 class Person {
     private age: int
+    protected MAXAGE: int = 90
     constructor(this, age: int){
         this.setAge(age)
     }
@@ -9,17 +10,28 @@ class Person {
     public setAge(this, age: int){
         this.age = age
     }
-    public max(i1: int, i2: int = 0): int {
+    public max(i1: int, i2: int): int {
         return i1 > i2 ? i1 : i2
     }
 }
-class NextPerson(Person) {
+class PersonWithFavColor(Person) {
+    private favColor: i8*
     constructor(this, age: int){
         this.setAge(age)
+    }
+    setFavColor(this, favColor: i8*){
+        this.favColor = favColor
+    }
+    getFavColor(this): i8* {
+        return this.favColor
+    }
+    min(i1: int, i2: int): int {
+        return i1 > i2 ? i2 : i1
     }
 }
 fnc main(): int {
     let p54: Person(54)
-    let pNext: NextPerson(100)
-    return Person.max(p54.getAge(), pNext.getAge())
+    let pNext: PersonWithFavColor(100)
+    let pN: PersonWithFavColor(11)
+    return PersonWithFavColor.min(p54.getAge(), pN.getAge())
 }

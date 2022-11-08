@@ -1,0 +1,6 @@
+let arr: int[2] = [1, 2]
+fnc main(): int {
+    let ptr = &arr[0] + 1
+    ptr[0] = 3
+    return arr[1]
+}

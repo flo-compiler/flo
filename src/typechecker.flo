@@ -58,6 +58,9 @@ class TypeId {
         this.kind = kind
         this.id =  id
     }
+    public __eq__(this, other: TypeId): bool {
+        return this.module_id == other.module_id and this.kind == other.kind and this.id == other.id
+    }
 }
 class ClassId(TypeId) {
     constructor(this, module_id: int, id: int){
@@ -614,16 +617,17 @@ class ClassField {
     visibility: ACCESS_ATTR
     name: string
     field_type: Type
+    initializer: Expression
 }
 class ClassMethod {
-    visibility: ACCESS_ATTR
     id: PropId
-    name: string
-    args: FunctionArg []
-    block: Block
-    method_type: FunctionType
-    is_abstract: bool
     is_static: bool
+    visibility: ACCESS_ATTR
+    name: string
+    method_type: FunctionType
+    block: Block
+    args: FunctionArg []
+    is_abstract: bool
     scope: ScopeId
 }
 class Class {
@@ -944,6 +948,7 @@ class TypeChecker {
     }
     private declare_global_var(this, var_decl_node: VarDeclarationStatement){
         let var_stmt = this.check_var_declaration(var_decl_node)
+        if this.has_errored() {return}
         if !get_var(this.program, var_stmt.var_id).value.is_constant {
             this.error(ErrorKind.GEN, "Initilializer for global variable has to be a constant", var_decl_node.value.range)
             return
@@ -1041,25 +1046,35 @@ class TypeChecker {
         }
     }
     private declare_class_fields(this, declared_class: Class, class_node: ClassDeclarationNode){
-        for let i = 0; i < class_node.fields.length; ++i {
-            let field = new ClassField()
-            field.is_static = false
+        for let i = 0; i < class_node.fields.length; i++ {
             let current_f_node = class_node.fields[i]
+            let field = new ClassField()
+            field.name = current_f_node.name.value
             field.visibility = current_f_node.access_modifier
             field.id = new PropId(PropIdKind.FIELD, declared_class.id, i)
-            field.name = current_f_node.name.value
             field.field_type = this.check_type(current_f_node.parsed_type)
-            declared_class.fields << field
-            //TODO: Check if prop already exists exists
-            if field.is_static {
+            if this.has_errored() {return}
+            if current_f_node.initializer != null {
+                field.initializer = this.check_expression(field.field_type, current_f_node.initializer)
+                if this.has_errored() {return}
+                if field.initializer.value_type != field.field_type {
+                    this.error(ErrorKind.TYPE, "Expected type '"+dump_type(field.field_type)+"' but got type '"+dump_type(field.initializer.value_type)+"' on static field initialization", current_f_node.initializer.range)
+                }
+                if !field.initializer.is_constant {
+                    this.error(ErrorKind.GEN, "Static field initializer has to be a constant", current_f_node.initializer.range)
+                    return
+                }
+                field.is_static = true
                 declared_class.static_prop_map.set(field.name, field.id)
             } else {
+                field.is_static = false
                 declared_class.prop_map.set(field.name, field.id)
-            }   
+            }
+            declared_class.fields << field
         }
     }
     private declare_class_methods(this, declared_class: Class, class_node: ClassDeclarationNode){
-        for let i = 0; i < class_node.methods.length; ++i {
+        for let i = 0; i < class_node.methods.length; i++ {
             let method = new ClassMethod()
             let method_node = class_node.methods[i]
             let name = method_node.name.value
@@ -1102,18 +1117,19 @@ class TypeChecker {
         let parent_bucket_props = parent_class.prop_map.get_buckets()
         for let i = 0; i < parent_bucket_props.length; i++ {
             let parent_prop_name = parent_bucket_props[i].key
-            let parent_prop_id = parent_bucket_props[i].value
+            let parent_prop_id = parent_bucket_props[i].value  
+            let parent_prop_type = get_class_prop_type(this.program, parent_prop_id)
             let child_prop_id = declared_class.prop_map.get(parent_prop_name)
             let parent_prop_visibility = get_class_prop_visibility(this.program, parent_prop_id)
             let parent_prop_is_static = is_class_prop_static(this.program, parent_prop_id)
-            if parent_prop_visibility == ACCESS_ATTR.PRIVATE or parent_prop_is_static {
+            if parent_prop_is_static
                 continue
-            }
+            if parent_prop_visibility == ACCESS_ATTR.PRIVATE and parent_prop_type.kind == TypeKind.FNC
+                continue
             if child_prop_id == null {
                 declared_class.prop_map.set(parent_prop_name, parent_prop_id)
                 continue
             }
-            let parent_prop_type = get_class_prop_type(this.program, parent_prop_id)
             let child_prop_type = get_class_prop_type(this.program, child_prop_id)
             let child_prop_visibility = get_class_prop_visibility(this.program, child_prop_id)
             if parent_prop_type != child_prop_type {
@@ -1135,6 +1151,9 @@ class TypeChecker {
         }
         // Fields
         this.declare_class_fields(declared_class, class_node)     
+        if this.has_errored(){
+            return
+        }
         // Declare class methods
         this.declare_class_methods(declared_class, class_node)
         if declared_class.parent != null {
@@ -1356,6 +1375,9 @@ class TypeChecker {
             let boolean_type: BooleanType
             return new BinaryExpression(left, op, right, boolean_type, is_const)
         }
+        if op ==  BinaryOp.ADD or op == BinaryOp.SUB and is_pointer(left.value_type) and right.value_type.kind == TypeKind.INT {
+            return new BinaryExpression(left, op, right, left.value_type, false)
+        }
         //TODO: Handle Range, In and Object Arithmetic and bit Cases.
         this.error(ErrorKind.TYPE, "Illegal binary operation '"+dump_bin_op(op)+"' between types '"+dump_type(left.value_type)+"' and '"+dump_type(right.value_type)+"'", binary_node.range)
         return null
@@ -1491,7 +1513,7 @@ class TypeChecker {
                 prop_ty = get_class_prop_type(this.program, prop_id)
             } else {
                 // else: Get Enum.
-                exit("Case not handled")
+                exit("Case not handled.")
             }
         } else {
             this.error(ErrorKind.GEN, "Cannot get property of type '"+dump_type(prop_owner_type)+"'", member_expr_node.expression.range)
