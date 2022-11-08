@@ -5,7 +5,7 @@ FCFLAGS=-O 3
 
 CXX=g++
 
-CXXFLAGS := -g3 -O0 
+CXXFLAGS := -g3 -O1
 
 LLVM_BUILD_PATH = /lib/llvm-15#$$HOME/llvm-project/build
 LLVM_LIB_PATH:=$(LLVM_BUILD_PATH)/lib
