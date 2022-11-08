@@ -101,10 +101,6 @@ class StructClass  {
     non_vt_methods_map: Map<string, LLVMValueRef>
     vtable: LLVMValueRef
     constructor: LLVMValueRef
-    fields_num: int
-    methods_num: int
-    static_methods_num: int
-    static_fields_num: int
 }
 fnc get_intrinsic(mod: LLVMModuleRef, name: string, params: LLVMTypeRef[]): IntrinsicResult {
     let result: IntrinsicResult
@@ -879,8 +875,6 @@ class CodeGen {
         return LLVMAddFunction(this.module, method_name.to_cstring(), method_type)
     }
     private declare_static_props(this, struct_class: StructClass, checked_class: Class){
-        struct_class.static_fields_num = 0
-        struct_class.static_methods_num = 0
         let buckets = checked_class.static_prop_map.get_buckets()
         for let i = 0; i < buckets.length; i++ {
             let prop_id = buckets[i].value
@@ -891,10 +885,8 @@ class CodeGen {
             let static_prop_name_concat = (checked_class.name + static_prop_name)
             let static_prop_value: LLVMValueRef = null
             if prop_id.kind == PropIdKind.METHOD {
-                struct_class.static_methods_num++
                 static_prop_value = this.declare_method(static_prop_name_concat, static_prop_type)
             } else {
-                struct_class.static_fields_num++
                 static_prop_value = LLVMAddGlobal(this.module, static_prop_type, static_prop_name_concat.to_cstring())
                 let global_prop_initializer = this.codegen_expression(null, checked_class.fields[prop_id.id].initializer)
                 LLVMSetInitializer(static_prop_value, global_prop_initializer)
@@ -917,7 +909,6 @@ class CodeGen {
         let vtable_values: LLVMValueRef[] = []
         let vtable_types: LLVMTypeRef[] = []
         let field_types: LLVMTypeRef[] = []
-        let private_methods_num = 0
         let parent_class: StructClass = null
         if (checked_class.parent != null){
             parent_class = this.get_class_from_typeid((checked_class.parent as ObjectType).class_id)
@@ -927,18 +918,9 @@ class CodeGen {
             let prop_id_key = create_prop_key(prop_id)
             let prop_type = get_class_prop_type(this.program, prop_id)
             let prop_name = buckets[i].key
-            let prop_index = prop_id.id
+            let prop_index = get_vtable_index(this.program, prop_id)
             if prop_id.kind == PropIdKind.FIELD {
                 let field_type = this.codegen_type(prop_type)
-                if prop_id.type_id == checked_class.id {
-                    if prop_index > 0
-                        prop_index -= struct_class.static_fields_num
-                    if parent_class != null {
-                        prop_index += parent_class.fields_num
-                    }
-                } else {
-                    prop_index = parent_class.fields_pos_map.get(prop_id_key)
-                }
                 struct_class.fields_pos_map.set(prop_id_key, prop_index)
                 this.resize_type_array(field_types, prop_index)
                 field_types[prop_index] = field_type
@@ -952,18 +934,9 @@ class CodeGen {
                     llvm_method_val = this.declare_method((checked_class.name + prop_name), llvm_method_type)
                     if (get_class_prop_visibility(this.program, prop_id) == ACCESS_ATTR.PRIVATE){ 
                         struct_class.non_vt_methods_map.set(prop_id_key, llvm_method_val)
-                        private_methods_num++
                         continue
                     }
-                    if parent_class != null {
-                        prop_index += parent_class.methods_num
-                    }
-                    if checked_class.constructor != null and prop_index > 0
-                        prop_index--
-                    if prop_index > 0
-                        prop_index -= private_methods_num
                 } else {
-                    prop_index = parent_class.vt_methods_pos_map.get(prop_id_key)
                     llvm_method_val = LLVMGetNamedFunction(this.module, (get_class(this.program, prop_id.type_id as ClassId).name + prop_name).to_cstring())
                 }
                 struct_class.vt_methods_pos_map.set(prop_id_key, prop_index)
@@ -973,8 +946,6 @@ class CodeGen {
                 vtable_types[prop_index] = LLVMPointerType(llvm_method_type)
             }
         }
-        struct_class.fields_num = field_types.length
-        struct_class.methods_num = vtable_values.length
         if vtable_types.length > 0 {
             let vtable_struct_ty = LLVMStructTypeInContext(this.module_ctx, vtable_types.buffer, vtable_types.length, true)
             struct_class.vtable = LLVMAddGlobal(this.module, vtable_struct_ty, (checked_class.name+"VT").to_cstring())
