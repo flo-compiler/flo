@@ -302,6 +302,7 @@ class ClassDeclarationNode {
         this.fields = []
         this.methods = []
         this.generic_parameters = []
+        this.parent = null
     }
 }
 class EnumNodeField {

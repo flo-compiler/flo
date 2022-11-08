@@ -16,11 +16,11 @@ class Person {
 }
 class PersonWithFavColor(Person) {
     private favColor: i8*
-    constructor(this, age: int){
-        this.setAge(age)
-    }
     setFavColor(this, favColor: i8*){
         this.favColor = favColor
+    }
+    constructor(this, age: int){
+        this.setAge(age)
     }
     getFavColor(this): i8* {
         return this.favColor

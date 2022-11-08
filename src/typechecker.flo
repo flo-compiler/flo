@@ -618,6 +618,7 @@ class ClassField {
     name: string
     field_type: Type
     initializer: Expression
+    vtable_index: int
 }
 class ClassMethod {
     id: PropId
@@ -629,6 +630,7 @@ class ClassMethod {
     args: FunctionArg []
     is_abstract: bool
     scope: ScopeId
+    vtable_index: int
 }
 class Class {
     id: ClassId
@@ -639,6 +641,8 @@ class Class {
     methods: ClassMethod[]
     prop_map: Map<string, PropId>
     static_prop_map: Map<string, PropId>
+    inherited_methods_num: int
+    inherited_fields_num: int
 }
 class EnumField {
     name: string
@@ -715,6 +719,13 @@ fnc get_class_prop_visibility(program: Program, prop_id: PropId): ACCESS_ATTR {
         return owner.methods[prop_id.id].visibility
     }
     return owner.fields[prop_id.id].visibility
+}
+fnc get_vtable_index(program: Program, prop_id: PropId): ACCESS_ATTR {
+    let owner = get_class(program, prop_id.type_id as ClassId)
+    if prop_id.kind == PropIdKind.METHOD {
+        return owner.methods[prop_id.id].vtable_index
+    }
+    return owner.fields[prop_id.id].vtable_index
 }
 fnc is_class_prop_static(program: Program, prop_id: PropId): bool {
     let owner = get_class(program, prop_id.type_id as ClassId)
@@ -1001,6 +1012,8 @@ class TypeChecker {
             return
         }
         let declared_class: Class
+        declared_class.inherited_fields_num = 0
+        declared_class.inherited_methods_num = 0
         declared_class.fields = []
         declared_class.methods = []
         let prop_map: Map<string, PropId>
@@ -1046,22 +1059,42 @@ class TypeChecker {
         }
     }
     private declare_class_fields(this, declared_class: Class, class_node: ClassDeclarationNode){
+        let current_vtable_index = declared_class.inherited_fields_num
         for let i = 0; i < class_node.fields.length; i++ {
-            let current_f_node = class_node.fields[i]
+            let field_node = class_node.fields[i]
             let field = new ClassField()
-            field.name = current_f_node.name.value
-            field.visibility = current_f_node.access_modifier
+            field.name = field_node.name.value
+            field.visibility = field_node.access_modifier
             field.id = new PropId(PropIdKind.FIELD, declared_class.id, i)
-            field.field_type = this.check_type(current_f_node.parsed_type)
+            field.field_type = this.check_type(field_node.parsed_type)
+            field.vtable_index = current_vtable_index
             if this.has_errored() {return}
-            if current_f_node.initializer != null {
-                field.initializer = this.check_expression(field.field_type, current_f_node.initializer)
+            let possible_prop_id = declared_class.prop_map.get(field.name)
+            if possible_prop_id != null {
+                println(possible_prop_id.type_id.id, declared_class.id)
+                if possible_prop_id.type_id == declared_class.id {
+                    this.error(ErrorKind.NAME, "Field "+field.name+" in class "+declared_class.name+" already exists", field_node.name.range)
+                    return
+                }
+                let parent_prop_type = get_class_prop_type(this.program, possible_prop_id)
+                let parent_prop_visibility = get_class_prop_visibility(this.program, possible_prop_id)
+                if parent_prop_type != field.field_type {
+                    this.error(ErrorKind.TYPE, "Signature of inherited field "+field.name+" in class "+declared_class.name+" does not match expected parent signature '"+dump_type(parent_prop_type)+"'", field_node.name.range)
+                    return
+                }
+                if field.visibility != parent_prop_visibility {
+                    this.error(ErrorKind.GEN, "Expected inherited field "+field.name+" in class "+ declared_class.name + " to be "+dump_access(parent_prop_visibility), field_node.name.range)
+                    return
+                }
+            }
+            if field_node.initializer != null {
+                field.initializer = this.check_expression(field.field_type, field_node.initializer)
                 if this.has_errored() {return}
                 if field.initializer.value_type != field.field_type {
-                    this.error(ErrorKind.TYPE, "Expected type '"+dump_type(field.field_type)+"' but got type '"+dump_type(field.initializer.value_type)+"' on static field initialization", current_f_node.initializer.range)
+                    this.error(ErrorKind.TYPE, "Expected type '"+dump_type(field.field_type)+"' but got type '"+dump_type(field.initializer.value_type)+"' on static field initialization", field_node.initializer.range)
                 }
                 if !field.initializer.is_constant {
-                    this.error(ErrorKind.GEN, "Static field initializer has to be a constant", current_f_node.initializer.range)
+                    this.error(ErrorKind.GEN, "Static field initializer has to be a constant", field_node.initializer.range)
                     return
                 }
                 field.is_static = true
@@ -1069,19 +1102,17 @@ class TypeChecker {
             } else {
                 field.is_static = false
                 declared_class.prop_map.set(field.name, field.id)
+                current_vtable_index++
             }
             declared_class.fields << field
         }
     }
     private declare_class_methods(this, declared_class: Class, class_node: ClassDeclarationNode){
+        let current_vtable_index = declared_class.inherited_methods_num
         for let i = 0; i < class_node.methods.length; i++ {
             let method = new ClassMethod()
             let method_node = class_node.methods[i]
             let name = method_node.name.value
-            if declared_class.prop_map.get(name) != null {
-                this.error(ErrorKind.NAME, "Property '"+ name +"' is already declared on class '"+declared_class.name+"'", method_node.name.range)
-                return
-            }
             method.name = name
             let method_scope = this.create_child_scope_within_current_scope()
             this.current_scope = method_scope.id
@@ -1089,7 +1120,25 @@ class TypeChecker {
             method.is_abstract = method_node.is_abstract
             method.is_static = method_node.is_static
             method.visibility = method_node.access_modifier
+            method.vtable_index = current_vtable_index
             method.method_type = this.init_function_signature(method_node.args, method_node.return_type, method.args)
+            let possible_prop_id = declared_class.prop_map.get(name)
+            if possible_prop_id != null {
+                if possible_prop_id.type_id == declared_class.id {
+                    this.error(ErrorKind.NAME, "Method "+name+" in class "+declared_class.name+" already exists", method_node.name.range)
+                    return
+                }
+                let parent_prop_type = get_class_prop_type(this.program, possible_prop_id)
+                let parent_prop_visibility = get_class_prop_visibility(this.program, possible_prop_id)
+                if parent_prop_type != method.method_type {
+                    this.error(ErrorKind.TYPE, "Signature of inherited method "+name+" in class "+declared_class.name+" does not match expected parent signature '"+dump_type(parent_prop_type)+"'", method_node.name.range)
+                    return
+                }
+                if method.visibility != parent_prop_visibility {
+                    this.error(ErrorKind.GEN, "Expected inherited method "+name+" in class "+ declared_class.name + " to be "+dump_access(parent_prop_visibility), method_node.name.range)
+                    return
+                }
+            }
             method.id = new PropId(PropIdKind.METHOD, declared_class.id, i)
             //TODO: Check if method already exists.
             if method_node.is_static {
@@ -1098,6 +1147,8 @@ class TypeChecker {
                 if method.name == "constructor" {
                     declared_class.constructor = method.id
                 } else {
+                    if method.visibility != ACCESS_ATTR.PRIVATE
+                        current_vtable_index++
                     declared_class.prop_map.set(name, method.id)
                 }
                 this.declare_const_within_current_scope("this", null, new ObjectType(declared_class.id))
@@ -1109,11 +1160,12 @@ class TypeChecker {
     }
     private add_inherited_props_to_class(this, declared_class: Class, class_node: ClassDeclarationNode){
         //TODO: Check visibility
-        let parent_type = declared_class.parent
+        let parent_type = declared_class.parent as ObjectType
         if parent_type.kind != TypeKind.OBJECT {
             this.error(ErrorKind.TYPE, "Can only inherit from class not type '"+dump_type(parent_type)+"'", class_node.parent.range)
         }
-        let parent_class = get_class(this.program, (parent_type as ObjectType).class_id)
+        let parent_class_id = parent_type.class_id
+        let parent_class = get_class(this.program, parent_class_id)
         let parent_bucket_props = parent_class.prop_map.get_buckets()
         for let i = 0; i < parent_bucket_props.length; i++ {
             let parent_prop_name = parent_bucket_props[i].key
@@ -1127,20 +1179,12 @@ class TypeChecker {
             if parent_prop_visibility == ACCESS_ATTR.PRIVATE and parent_prop_type.kind == TypeKind.FNC
                 continue
             if child_prop_id == null {
+                if parent_prop_id.kind == PropIdKind.FIELD
+                    declared_class.inherited_fields_num++
+                if parent_prop_id.kind == PropIdKind.METHOD
+                    declared_class.inherited_methods_num++
                 declared_class.prop_map.set(parent_prop_name, parent_prop_id)
-                continue
             }
-            let child_prop_type = get_class_prop_type(this.program, child_prop_id)
-            let child_prop_visibility = get_class_prop_visibility(this.program, child_prop_id)
-            if parent_prop_type != child_prop_type {
-                this.error(ErrorKind.TYPE, "Expected inherited property "+parent_prop_name+" from class "+parent_class.name+"to have type '"+dump_type(parent_prop_type)+"' but got type '"+dump_type(child_prop_type), class_node.methods[child_prop_id.id].name.range)
-                return
-            }
-            if parent_prop_visibility != child_prop_visibility {
-                this.error(ErrorKind.TYPE, "Expected inherited property "+parent_prop_name+" from class "+parent_class.name+" to have be '"+dump_access(parent_prop_visibility)+" but instead property is "+dump_access(child_prop_visibility), class_node.methods[child_prop_id.id].name.range)
-                return
-            }
-            // TODO: Check Visibility correspondence.
         }
     }
     private check_class_body(this, declared_class: Class, class_node: ClassDeclarationNode){
@@ -1149,6 +1193,9 @@ class TypeChecker {
         for let i = 0; i < class_node.generic_parameters.length; ++i {
             let generic_param = class_node.generic_parameters[i]
         }
+        if declared_class.parent != null {
+            this.add_inherited_props_to_class(declared_class, class_node)
+        }
         // Fields
         this.declare_class_fields(declared_class, class_node)     
         if this.has_errored(){
@@ -1156,9 +1203,6 @@ class TypeChecker {
         }
         // Declare class methods
         this.declare_class_methods(declared_class, class_node)
-        if declared_class.parent != null {
-            this.add_inherited_props_to_class(declared_class, class_node)
-        }
         if this.has_errored(){
             return
         }
