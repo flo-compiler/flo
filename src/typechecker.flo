@@ -643,6 +643,7 @@ class Class {
     static_prop_map: Map<string, PropId>
     inherited_methods_num: int
     inherited_fields_num: int
+    is_abstract: bool
 }
 class EnumField {
     name: string
@@ -733,6 +734,50 @@ fnc is_class_prop_static(program: Program, prop_id: PropId): bool {
         return owner.methods[prop_id.id].is_static
     }
     return owner.fields[prop_id.id].is_static
+}
+fnc is_operator_overload_name(name: string): bool {
+    if name == "__eq__" return true
+    if name == "__add__" return true
+    if name == "__sub__" return true
+    if name == "__mul__" return true
+    if name == "__div__" return true
+    if name == "__or__" return true
+    if name == "__and__" return true
+    if name == "__xor__" return true
+    if name == "__getitem__" return true
+    if name == "__setitem__" return true
+    if name == "__in__" return true
+    if name == "__sl__" return true
+    if name == "__sr__" return true
+    if name == "__lt__" return true
+    if name == "__lg__" return true
+    if name == "__ne__" return true
+    if name == "__le__" return true
+    if name == "__ge__" return true
+    if name == "__pow__" return true
+    if name == "__mod__" return true
+    return false
+}
+fnc bin_op_to_op_overload_name(op: BinaryOp): string {
+    if op == BinaryOp.ADD return "__add__"
+    if op == BinaryOp.SUB return "__sub__"
+    if op == BinaryOp.MUL return "__mul__"
+    if op == BinaryOp.DIV return "__div__"
+    if op == BinaryOp.MOD return "__mod__"
+    if op == BinaryOp.POW return "__pow__"
+    if op == BinaryOp.GT return "__gt__"
+    if op == BinaryOp.GTE return "__ge__"
+    if op == BinaryOp.LT return "__lt__"
+    if op == BinaryOp.LTE return "__le__"
+    if op == BinaryOp.EEQ return "__eq__"
+    if op == BinaryOp.NEQ return "__ne__"
+    if op == BinaryOp.SL return "__sl__"
+    if op == BinaryOp.SR return "__sr__"
+    if op == BinaryOp.OR return "__or__"
+    if op == BinaryOp.AND return "__and__"
+    if op == BinaryOp.XOR return "__xor__"
+    if op == BinaryOp.IN return "__in__"
+    return null
 }
 fnc evaluate_const_int_expression(program: Program, exp: Expression): int {
     if exp.expr_kind == ExpressionKind.INT
@@ -1016,6 +1061,7 @@ class TypeChecker {
         declared_class.inherited_methods_num = 0
         declared_class.fields = []
         declared_class.methods = []
+        declared_class.is_abstract = false
         let prop_map: Map<string, PropId>
         let static_prop_map: Map<string, PropId>
         let current_scope = this.get_current_scope()
@@ -1064,6 +1110,9 @@ class TypeChecker {
             let field_node = class_node.fields[i]
             let field = new ClassField()
             field.name = field_node.name.value
+            if is_operator_overload_name(field.name) {
+                this.error(ErrorKind.NAME, field.name+" is reserved only for operator overloads and cannot be used as a field name", field_node.name.range)
+            }
             field.visibility = field_node.access_modifier
             field.id = new PropId(PropIdKind.FIELD, declared_class.id, i)
             field.field_type = this.check_type(field_node.parsed_type)
@@ -1117,10 +1166,20 @@ class TypeChecker {
             let method_scope = this.create_child_scope_within_current_scope()
             this.current_scope = method_scope.id
             method.args = []
+            if is_operator_overload_name(name) {
+                let args_num = name == "__setitem__" ? 2 : 1
+                if method_node.args.length != args_num {
+                    this.error(ErrorKind.GEN, "Expected "+ args_num +" arguments for binary operator overload "+name+" but got "+method_node.args.length, method_node.name.range)
+                    return
+                }
+                if method_node.is_static {
+                    this.error(ErrorKind.GEN, "Binary operator overload "+name+" cannot be static", method_node.name.range)
+                    return
+                }
+            }
             method.is_abstract = method_node.is_abstract
             method.is_static = method_node.is_static
             method.visibility = method_node.access_modifier
-            method.vtable_index = current_vtable_index
             method.method_type = this.init_function_signature(method_node.args, method_node.return_type, method.args)
             let possible_prop_id = declared_class.prop_map.get(name)
             if possible_prop_id != null {
@@ -1138,17 +1197,31 @@ class TypeChecker {
                     this.error(ErrorKind.GEN, "Expected inherited method "+name+" in class "+ declared_class.name + " to be "+dump_access(parent_prop_visibility), method_node.name.range)
                     return
                 }
+                method.vtable_index = get_vtable_index(this.program, possible_prop_id)
+            } else {
+                method.vtable_index = current_vtable_index
             }
             method.id = new PropId(PropIdKind.METHOD, declared_class.id, i)
-            //TODO: Check if method already exists.
             if method_node.is_static {
+                if method_node.is_abstract {
+                    this.error(ErrorKind.GEN, "Static method can't be abstract", method_node.name.range)
+                    return
+                }
                 declared_class.static_prop_map.set(name, method.id)
             } else {
                 if method.name == "constructor" {
+                    if method_node.is_abstract {
+                        this.error(ErrorKind.GEN, "Constructor method can't be abstract", method_node.name.range)
+                        return
+                    }
                     declared_class.constructor = method.id
                 } else {
                     if method.visibility != ACCESS_ATTR.PRIVATE
                         current_vtable_index++
+                    else if method_node.is_abstract {
+                        this.error(ErrorKind.GEN, "Can't have a abstract private method use protected instead", method_node.name.range)
+                        return
+                    }
                     declared_class.prop_map.set(name, method.id)
                 }
                 this.declare_const_within_current_scope("this", null, new ObjectType(declared_class.id))
@@ -1205,6 +1278,23 @@ class TypeChecker {
         this.declare_class_methods(declared_class, class_node)
         if this.has_errored(){
             return
+        }
+        // Checking if class is abstract.
+        let prop_buckets = declared_class.prop_map.get_buckets()
+        for i = 0; i < prop_buckets.length; i++ {
+            let prop_id = prop_buckets[i].value
+            let prop_name = prop_buckets[i].key
+            if prop_id.kind == PropIdKind.METHOD {
+                let prop_method = get_method(this.program, prop_id)
+                if prop_method.is_abstract {
+                    if declared_class.constructor != null {
+                        this.error(ErrorKind.GEN, "Class with constructor must implement all it's methods missing "+prop_name+" implementation", class_node.name.range)
+                        return
+                    }
+                    declared_class.is_abstract = true
+                    break
+                }
+            }
         }
         // Class Methods Body
         for i = 0; i < declared_class.methods.length; i++ {
@@ -1376,12 +1466,71 @@ class TypeChecker {
         }
         return new BinaryExpression(left, BinaryOp.ASSIGN, right, right.value_type)
     }
+    private check_object_binary_expr(this, left: Expression, binary_node: BinaryExpressionNode): Expression {
+        let obj_type = left.value_type as ObjectType
+        let op = binary_node.op
+        let method_name = bin_op_to_op_overload_name(op)
+        if method_name == null {
+            this.error(ErrorKind.GEN, "Unsupported binary operator overload for operator '"+dump_bin_op(op)+"'", binary_node.range)
+            return null
+        }
+        let owner_class = get_class(this.program, obj_type.class_id)
+        let prop_id = owner_class.prop_map.get(method_name)
+        if prop_id == null {
+            this.error(ErrorKind.NAME, "No binary operator overload for '"+dump_bin_op(op)+"' in object of class '"+owner_class.name+"' please implement the method "+method_name+" to support this", binary_node.range)
+            return null
+        }
+        let method_type = get_class_prop_type(this.program, prop_id) as FunctionType
+        let arg_type = method_type.arg_types[0]
+        let right = this.check_expression(arg_type, binary_node.rhs)
+        if arg_type != right.value_type {
+            this.error(ErrorKind.TYPE, "Expected type '"+dump_type(arg_type)+"' but got type '"+right.value_type+"'", binary_node.rhs.range)
+            return null
+        }
+        let member_exp = new MemberExpression(left, prop_id, method_type)
+        let args: Expression[] = [right]
+        return new CallExpression(member_exp, args, method_type.return_type)
+    }
+    private check_object_setitem_expr(this, object: Expression, binary_node: BinaryExpressionNode): Expression {
+        let obj_type = object.value_type as ObjectType
+        let index_expr_node = binary_node.lhs as ExpressionIndexNode
+        let owner_class = get_class(this.program, obj_type.class_id)
+        let prop_id = owner_class.prop_map.get("__setitem__")
+        if prop_id == null {
+            this.error(ErrorKind.GEN, "No operator overload for index set operator on "+owner_class.name+" object please implement method __setitem__ to use in this class", index_expr_node.range)
+            return null
+        }
+        let method_type = get_class_prop_type(this.program, prop_id) as FunctionType
+        let at1 = method_type.arg_types[0]
+        let at2 = method_type.arg_types[1]
+        let index = this.check_expression(at1, index_expr_node.index)
+        if index.value_type != at1 {
+            this.error(ErrorKind.TYPE, "Expected type '"+dump_type(at1)+"' but got type '"+dump_type(index.value_type)+"'", index_expr_node.index.range)
+            return null
+        }
+        let value = this.check_expression(at2, binary_node.rhs)
+        if value.value_type != at2 {
+            this.error(ErrorKind.TYPE, "Expected type '"+dump_type(at2)+"' but got type '"+dump_type(value.value_type)+"'", binary_node.rhs.range)
+            return null
+        }
+        let member_expr = new MemberExpression(object, prop_id, method_type)
+        let args: Expression[] = [index, value]
+        return new CallExpression(member_expr, args, method_type.return_type)
+    }
+
     private check_bin_expr(this, expected_type: Type, binary_node: BinaryExpressionNode): BinaryExpression {
+        let op = binary_node.op
+        if op == BinaryOp.ASSIGN and binary_node.lhs.expr_kind == ExpressionKind.INDEX {
+            let possible_obj = this.check_expression($UNKNOWN_TYPE, (binary_node.lhs as ExpressionIndexNode).expression)
+            if is_object(possible_obj.value_type)
+                return this.check_object_setitem_expr(possible_obj, binary_node) as BinaryExpression
+        }
         let left = this.check_expression(expected_type, binary_node.lhs)
         if this.has_errored() return null
+        if is_object(left.value_type) and op != BinaryOp.ASSIGN
+            return this.check_object_binary_expr(left, binary_node) as BinaryExpression
         let right = this.check_expression(left.value_type, binary_node.rhs)
         if this.has_errored() return null
-        let op = binary_node.op
         let is_const = left.is_constant and right.is_constant
         if op == BinaryOp.ASSIGN
             return this.check_assignment(left, right, binary_node)
@@ -1422,7 +1571,7 @@ class TypeChecker {
         if op ==  BinaryOp.ADD or op == BinaryOp.SUB and is_pointer(left.value_type) and right.value_type.kind == TypeKind.INT {
             return new BinaryExpression(left, op, right, left.value_type, false)
         }
-        //TODO: Handle Range, In and Object Arithmetic and bit Cases.
+        //TODO: Handle Range, In.
         this.error(ErrorKind.TYPE, "Illegal binary operation '"+dump_bin_op(op)+"' between types '"+dump_type(left.value_type)+"' and '"+dump_type(right.value_type)+"'", binary_node.range)
         return null
     }
@@ -1580,8 +1729,29 @@ class TypeChecker {
         }
         return new TernaryExpression(cond, is_true, is_false)
     }
+    private check_object_index_expr(this, object: Expression, index_expr_node: ExpressionIndexNode): Expression {
+        let obj_type = object.value_type as ObjectType
+        let owner_class = get_class(this.program, obj_type.class_id)
+        let prop_id = owner_class.prop_map.get("__getitem__")
+        if prop_id == null {
+            this.error(ErrorKind.GEN, "No operator overload for indexing operator on "+owner_class.name+" object please implement method __getitem__ to use indexing in this class", index_expr_node.range)
+            return null
+        }
+        let method_type = get_class_prop_type(this.program, prop_id) as FunctionType
+        let arg_type = method_type.arg_types[0]
+        let index = this.check_expression(arg_type, index_expr_node.index)
+        if index.value_type != arg_type {
+            this.error(ErrorKind.TYPE, "Expected type '"+dump_type(arg_type)+"' but got type '"+dump_type(index.value_type)+"'", index_expr_node.index.range)
+            return null
+        }
+        let member_expr = new MemberExpression(object, prop_id, method_type)
+        let args: Expression[] = [index]
+        return new CallExpression(member_expr, args, method_type.return_type)
+    }
     private check_index_expr(this, expected_type: Type, index_expr_node: ExpressionIndexNode): IndexExpression {
         let root_expression = this.check_expression($UNKNOWN_TYPE, index_expr_node.expression)
+        if is_object(root_expression.value_type)
+            return this.check_object_index_expr(root_expression, index_expr_node) as IndexExpression
         let index = this.check_expression(new Type(TypeKind.INT), index_expr_node.index)
         if this.has_errored() return null
         if !is_int(index.value_type) {

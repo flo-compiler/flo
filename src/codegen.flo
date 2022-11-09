@@ -12,6 +12,7 @@ class StructClass  {
     fields_pos_map: Map<string, int>
     non_vt_methods_map: Map<string, LLVMValueRef>
     vtable: LLVMValueRef
+    vtable_type: LLVMTypeRef
     constructor: LLVMValueRef
 }
 fnc get_intrinsic(mod: LLVMModuleRef, name: string, params: LLVMTypeRef[]): IntrinsicResult {
@@ -124,6 +125,9 @@ class CodeGen {
         }
         for i = 0; i < module.classes.length; ++i {
             this.declare_class(module.classes[i])
+        }
+        for i = 0; i < module.classes.length; ++i {
+            this.declare_class_struct(module.classes[i])
         }
         for i = 0; i < module.functions.length; ++i {
             this.declare_function(module.functions[i])
@@ -267,12 +271,12 @@ class CodeGen {
         }
         let indices: LLVMValueRef[] = [] 
         if !is_function_type {
-            let vtoffset = struct_class.vtable == null ? 0 : 1
+            let vtoffset = struct_class.vtable_type == null ? 0 : 1
             indices << createLLVMMachineSizeInt(struct_class.fields_pos_map.get(prop_id_key) + vtoffset)
         } else {
             indices << createLLVMMachineSizeInt(0)
             ptr = LLVMBuildInBoundsGEP2(builder, class_type, ptr, indices.buffer, indices.length, "")
-            ptr = LLVMBuildLoad2(builder, LLVMPointerType(LLVMGlobalGetValueType(struct_class.vtable)), ptr, "")
+            ptr = LLVMBuildLoad2(builder, LLVMPointerType(struct_class.vtable_type), ptr, "")
             indices[0] = createLLVMMachineSizeInt(struct_class.vt_methods_pos_map.get(prop_id_key))
         }
         return LLVMBuildInBoundsGEP2(builder, class_type, ptr, indices.buffer, indices.length, "memberidx")
@@ -757,6 +761,7 @@ class CodeGen {
         for let i = 0; i < checked_class.methods.length; i++ {
             let struct_class = this.get_class_from_typeid(checked_class.id)
             let method = checked_class.methods[i]
+            if method.is_abstract continue
             let prop_id_key = create_prop_key(method.id)
             let llvm_fnc = struct_class.non_vt_methods_map.get(prop_id_key)
             let is_constructor = method.name == "constructor"
@@ -823,10 +828,6 @@ class CodeGen {
         let vtable_values: LLVMValueRef[] = []
         let vtable_types: LLVMTypeRef[] = []
         let field_types: LLVMTypeRef[] = []
-        let parent_class: StructClass = null
-        if (checked_class.parent != null){
-            parent_class = this.get_class_from_typeid((checked_class.parent as ObjectType).class_id)
-        }
         for let i = 0; i < buckets.length; i++ {
             let prop_id = buckets[i].value
             let prop_id_key = create_prop_key(prop_id)
@@ -841,7 +842,7 @@ class CodeGen {
             } else {
                 let method_type = prop_type as FunctionType
                 let llvm_method_val: LLVMValueRef = null
-                let llvm_method_type = this.codegen_type(method_type, false)
+                let llvm_method_type: LLVMTypeRef = null
                 if prop_id.type_id == checked_class.id {
                     let arg_types: Type[] = [new ObjectType(checked_class.id) as Type]
                     for let j = 0; j < method_type.arg_types.length; j++ {
@@ -849,41 +850,54 @@ class CodeGen {
                     }
                     method_type.arg_types = arg_types
                     llvm_method_type = this.codegen_type(method_type, false)
-                    llvm_method_val = this.declare_method((checked_class.name + prop_name), llvm_method_type)
+                    if !checked_class.methods[prop_id.id].is_abstract {
+                        llvm_method_val = this.declare_method((checked_class.name + prop_name), llvm_method_type)
+                    }
                     if (get_class_prop_visibility(this.program, prop_id) == ACCESS_ATTR.PRIVATE){ 
                         struct_class.non_vt_methods_map.set(prop_id_key, llvm_method_val)
                         continue
                     }
                 } else {
+                    llvm_method_type = this.codegen_type(method_type, false)
+                    
                     llvm_method_val = LLVMGetNamedFunction(this.module, (get_class(this.program, prop_id.type_id as ClassId).name + prop_name).to_cstring())
                 }
                 struct_class.vt_methods_pos_map.set(prop_id_key, prop_index)
                 resize_type_array(vtable_types, prop_index)
-                resize_value_array(vtable_values, prop_index)
-                vtable_values[prop_index] = llvm_method_val
+                if !checked_class.methods[prop_id.id].is_abstract {
+                    resize_value_array(vtable_values, prop_index)
+                    vtable_values[prop_index] = llvm_method_val
+                }
                 vtable_types[prop_index] = LLVMPointerType(llvm_method_type)
             }
         }
         if vtable_types.length > 0 {
             let vtable_struct_ty = LLVMStructTypeInContext(this.module_ctx, vtable_types.buffer, vtable_types.length, true)
-            struct_class.vtable = LLVMAddGlobal(this.module, vtable_struct_ty, (checked_class.name+"VT").to_cstring())
-            let vtable_intializer = LLVMConstStructInContext(this.module_ctx, vtable_values.buffer, vtable_values.length, true)
-            LLVMSetInitializer(struct_class.vtable, vtable_intializer)
+            if !checked_class.is_abstract {
+                struct_class.vtable = LLVMAddGlobal(this.module, vtable_struct_ty, (checked_class.name+"VT").to_cstring())
+                let vtable_intializer = LLVMConstStructInContext(this.module_ctx, vtable_values.buffer, vtable_values.length, true)
+                LLVMSetInitializer(struct_class.vtable, vtable_intializer)
+            }
+            struct_class.vtable_type = vtable_struct_ty
             prop_types << LLVMPointerType(vtable_struct_ty)
         }
         for i = 0; i < field_types.length; i++ {
             prop_types << field_types[i]
         }
     }
-    private declare_class(this, checked_class: Class) {
+    private declare_class(this, checked_class: Class){
         let struct_class: StructClass
-        let prop_types: LLVMTypeRef[] = []
         struct_class.llvm_type = LLVMStructCreateNamed(this.module_ctx, checked_class.name.to_cstring())
-        struct_class.non_vt_methods_map = new Map<string, LLVMValueRef>()
         struct_class.vt_methods_pos_map = new Map<string, int>()
         struct_class.fields_pos_map = new Map<string, int>()
+        struct_class.non_vt_methods_map = new Map<string, LLVMValueRef>()
         struct_class.vtable = null
+        struct_class.vtable_type = null
         this.add_class(checked_class.id, struct_class)
+    }
+    private declare_class_struct(this, checked_class: Class) {
+        let prop_types: LLVMTypeRef[] = []
+        let struct_class = this.get_class_from_typeid(checked_class.id)
         // Taking care of static methods.
         this.declare_static_props(struct_class, checked_class)
         // creating a vtable
