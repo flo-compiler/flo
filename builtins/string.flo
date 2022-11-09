@@ -3,12 +3,12 @@ class string {
     buffer: i8*
     length: int
     size: int
-    constructor(data: i8*, len: int){
+    constructor(this, data: i8*, len: int){
         this.buffer = data
         this.length = len
         this.size = len
     }
-    __add__(data: string): string {
+    __add__(this, data: string): string {
         let new_str_len = this.length + data.length
         let new_buffer = new i8[new_str_len]
         memcpy(new_buffer, this.buffer, this.length)
@@ -16,7 +16,7 @@ class string {
         memcpy(trailing_buffer, data.buffer, data.length + 1)
         return new string(new_buffer, new_str_len)   
     }
-    add_byte(char: i8){
+    add_byte(this, char: i8){
         if this.length + 1 >= this.size {
             this.size *= 2
             this.buffer = this.buffer.resize(this.size)
@@ -24,17 +24,17 @@ class string {
         this.buffer[this.length]  = char
         this.length++
     }
-    __getitem__(index: int): string {
+    __getitem__(this, index: int): string {
         let new_buffer = new i8[2]
         new_buffer[0] = this.buffer[index]
         new_buffer[1] = '\0'
         return new string(new_buffer, 2)
     }
-    __eq__(other: string): bool {
+    __eq__(this, other: string): bool {
         if this.length != other.length return false
         return memcmp(this.buffer, other.buffer, this.length) == 0
     }
-    find(search: string): int {
+    find(this, search: string): int {
         for let i = 0; i < this.length; i++ {
             if (search.buffer[0] == this.buffer[i]) {
                 let x = search.length - 1
@@ -50,19 +50,19 @@ class string {
         }
         return -1
     }
-    __in__(other: string): bool {
+    __in__(this, other: string): bool {
         return this.find(other) != -1
     }
-    substring (start: int, length: int): string {
+    substring (this, start: int, length: int): string {
         return new string(this.buffer + start, length)
     }
-    get_byte(index: int): i8 {
+    get_byte(this, index: int): i8 {
         return (this.buffer[index])
     }
-    get_bytes(): i8* {
+    get_bytes(this): i8* {
         return this.buffer
     }
-    to_cstring(): i8* {
+    to_cstring(this): i8* {
         let c_string = new i8[this.length+1]
         memcpy(c_string, this.buffer, this.length)
         c_string[this.length] = '\0'
