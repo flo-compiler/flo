@@ -1,6 +1,6 @@
 enum Currencies {
-    USD = 2
-    CAD = 7
+    USD
+    CAD
     EUR
 }
 fnc main(): Currencies {

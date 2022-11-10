@@ -6,7 +6,7 @@ class IntrinsicResult {
     call: LLVMValueRef
     fnc_type: LLVMTypeRef
 }
-class StructClass  {
+class CGClassType  {
     llvm_type: LLVMTypeRef
     vt_methods_pos_map: Map<string, int>
     fields_pos_map: Map<string, int>
@@ -14,6 +14,10 @@ class StructClass  {
     vtable: LLVMValueRef
     vtable_type: LLVMTypeRef
     constructor: LLVMValueRef
+}
+class CGEnumType {
+    llvm_type: LLVMTypeRef
+    field_map: Map<string, LLVMValueRef> 
 }
 fnc get_intrinsic(mod: LLVMModuleRef, name: string, params: LLVMTypeRef[]): IntrinsicResult {
     let result: IntrinsicResult
@@ -64,7 +68,8 @@ class CodeGen {
     global_var_scope: Map<string, LLVMValueRef>
     module_intrinsic_scope: Map<string, IntrinsicResult>
     module_string_scope: Map<string, LLVMValueRef>
-    module_classes: Map<string, StructClass>
+    module_classes: Map<string, CGClassType>
+    module_enums: Map<string, CGEnumType>
     function: LLVMValueRef
     break_bb: LLVMBasicBlockRef
     continue_bb: LLVMBasicBlockRef
@@ -93,14 +98,23 @@ class CodeGen {
     private get_var_from_varid(var_id: VarId): LLVMValueRef{
         return this.global_var_scope.get(create_var_key(var_id))
     }
-    private get_class_from_typeid(type_id: TypeId): StructClass {
+    private get_class_from_typeid(type_id: TypeId): CGClassType {
         return this.module_classes.get(create_type_id_key(type_id))
     }
-    private get_class_from_varid(var_id: VarId): StructClass {
+    private get_enum_from_typeid(type_id: TypeId): CGEnumType {
+        return this.module_enums.get(create_type_id_key(type_id))
+    }
+    private get_class_from_varid(var_id: VarId): CGClassType {
         return this.module_classes.get(create_type_key_from_var(var_id))
     }
-    private add_class(type_id: TypeId, struct_class: StructClass){
+    private get_enum_from_varid(var_id: VarId): CGEnumType {
+        return this.module_enums.get(create_type_key_from_var(var_id))
+    }
+    private add_class(type_id: TypeId, struct_class: CGClassType){
         this.module_classes.set(create_type_id_key(type_id), struct_class)
+    }
+    private add_enum(type_id: TypeId, enum_type: CGEnumType){
+        this.module_enums.set(create_type_id_key(type_id), enum_type)
     }
     private add_var(var_id: VarId, value: LLVMValueRef){
         this.global_var_scope.set(create_var_key(var_id), value)
@@ -109,10 +123,12 @@ class CodeGen {
         this.module_ctx = LLVMContextCreate()
         let module_string_scope: Map<string, LLVMValueRef>
         let module_intrinsic_scope: Map<string, IntrinsicResult>
-        let module_classes: Map<string, StructClass>
+        let module_classes: Map<string, CGClassType>
+        let module_enums: Map<string, CGEnumType>
         this.module_string_scope = module_string_scope
         this.module_intrinsic_scope = module_intrinsic_scope
         this.module_classes = module_classes
+        this.module_enums = module_enums
         this.module = LLVMModuleCreateWithNameInContext(module.name.to_cstring(), this.module_ctx)
         this.debugInfoObj = new DebugInfo(this.module, module.name)
         //let DBFloInfo = new DebugInfo(this.module, module.name)
@@ -128,6 +144,9 @@ class CodeGen {
         }
         for i = 0; i < module.classes.length; ++i {
             this.declare_class_struct(module.classes[i])
+        }
+        for i = 0; i < module.enums.length; ++i {
+            this.declare_enum(module.enums[i])
         }
         for i = 0; i < module.functions.length; ++i {
             this.declare_function(module.functions[i])
@@ -190,7 +209,12 @@ class CodeGen {
                 return as_pointer ? LLVMPointerType(obj_type.llvm_type) : obj_type.llvm_type
             }
         }
-        // if tt.kind == TypeKind.ENUM
+        if tt.kind == TypeKind.ENUM {
+            let enum_type = this.get_enum_from_typeid((tt as EnumType).enum_id)
+            if enum_type != null {
+                return enum_type.llvm_type
+            }
+        }
         // RESOLVED_GENERIC
         return null
     }
@@ -531,27 +555,35 @@ class CodeGen {
             let ptr = this.get_member_expr_mem(builder, member_exp, self)
             return LLVMBuildLoad2(builder, this.codegen_type(member_exp.value_type), ptr, "")
         }
+        let prop_id_key = create_prop_key(member_exp.member_id)
         if var_id.kind == VarIdKind.CLASS {
             let struct_class = this.get_class_from_varid(var_id)
             if struct_class == null {
-                println("this should not happen; (codegen_member_exp)")
+                println("this should not happen; (codegen_member_exp); class")
                 exit()
             }
-            let prop_id_key = create_prop_key(member_exp.member_id)
             let prop = struct_class.non_vt_methods_map.get(prop_id_key)
             if prop == null {
-                println("This should never happen; (codegen_member_expr; prop)")
+                println("This should never happen; (codegen_member_expr; class prop)")
                 exit()
             }
             if member_exp.value_type.kind == TypeKind.FNC
                 return prop
             return LLVMBuildLoad2(builder, this.codegen_type(member_exp.value_type), prop, "")
         }
+        if var_id.kind == VarIdKind.ENUM {
+           let enum_type = this.get_enum_from_varid(var_id) 
+             if enum_type == null {
+                println("this should not happen; (codegen_member_exp); enum")
+                exit()
+            }
+            return enum_type.field_map.get(prop_id_key)
+        }
         return null
     }
     private codegen_expression(this, builder: LLVMBuilderRef, expression: Expression): LLVMValueRef {
         if expression.expr_kind == ExpressionKind.BOOL
-            return this.codegen_bool(expression as BooleanExpression) /* [] */
+            return this.codegen_bool(expression as BooleanExpression)
         if expression.expr_kind == ExpressionKind.INT
             return this.codegen_int(expression as IntExpression)
         if expression.expr_kind == ExpressionKind.FLOAT
@@ -805,7 +837,7 @@ class CodeGen {
     private declare_method(this, method_name: string, method_type: LLVMTypeRef): LLVMValueRef {
         return LLVMAddFunction(this.module, method_name.to_cstring(), method_type)
     }
-    private declare_static_props(this, struct_class: StructClass, checked_class: Class){
+    private declare_static_props(this, struct_class: CGClassType, checked_class: Class){
         let buckets = checked_class.static_prop_map.get_buckets()
         for let i = 0; i < buckets.length; i++ {
             let prop_id = buckets[i].value
@@ -825,7 +857,7 @@ class CodeGen {
             struct_class.non_vt_methods_map.set(prop_id_key, static_prop_value)
         }
     }
-    private declare_class_props(this, struct_class: StructClass, checked_class: Class, prop_types: LLVMTypeRef[]){
+    private declare_class_props(this, struct_class: CGClassType, checked_class: Class, prop_types: LLVMTypeRef[]){
         let buckets = checked_class.prop_map.get_buckets()
         let vtable_values: LLVMValueRef[] = []
         let vtable_types: LLVMTypeRef[] = []
@@ -888,7 +920,7 @@ class CodeGen {
         }
     }
     private declare_class(this, checked_class: Class){
-        let struct_class: StructClass
+        let struct_class: CGClassType
         struct_class.llvm_type = LLVMStructCreateNamed(this.module_ctx, checked_class.name.to_cstring())
         struct_class.vt_methods_pos_map = new Map<string, int>()
         struct_class.fields_pos_map = new Map<string, int>()
@@ -918,5 +950,20 @@ class CodeGen {
         } else {
             struct_class.constructor = null
         }
+    }
+    private declare_enum(this, checked_enum: Enum){
+        let enum_type: CGEnumType
+        enum_type.field_map = new Map<string, LLVMValueRef>()
+        if checked_enum.fields.length > 0 {
+            enum_type.llvm_type = this.codegen_type(checked_enum.fields[0].initializer.value_type)
+        } else {
+            enum_type.llvm_type = $WORD_INT_TYPE
+        }
+        for let i = 0; i < checked_enum.fields.length; i++ {
+            let enum_field = checked_enum.fields[i]
+            let prop_id = enum_field.id
+            enum_type.field_map.set(create_prop_key(prop_id), this.codegen_expression(null, enum_field.initializer))
+        }
+        this.add_enum(checked_enum.id, enum_type)
     }
 }

@@ -1,9 +1,9 @@
-enum Numbers {
-    ZERO
-    ONE
-    TWO
+enum Currencies {
+    USD
+    CAD
+    EUR
 }
 fnc main() {
-    let x = Numbers.ONE
+    let x = Currencies.USD
     println(x)
 }
