@@ -605,8 +605,9 @@ class Class {
     is_abstract: bool
 }
 class EnumField {
+    id: PropId
     name: string
-    // value: Value
+    initializer: Expression
     constructor(this, name: string){
         this.name = name
     }
@@ -615,6 +616,7 @@ class Enum {
     id: EnumId
     name: string
     fields: EnumField[]
+    field_map: Map<string, PropId>
     constructor(this){
         this.fields = []
     }
@@ -816,6 +818,12 @@ class TypeChecker {
     private get_class_from_var_id(this, var_id: VarId): Class {
         return this.program.modules[var_id.module_id].classes[var_id.id]
     }
+    private get_enum(this, type_id: EnumId): Enum {
+        return this.program.modules[type_id.module_id].enums[type_id.id]
+    }
+    private get_enum_from_var_id(this, var_id: VarId): Enum {
+        return this.program.modules[var_id.module_id].enums[var_id.id]
+    }
     private types_are_eq(this, t1: Type, t2: Type): bool {
         if t1.kind != t2.kind return false
         if t1.kind == TypeKind.FNC {
@@ -849,6 +857,13 @@ class TypeChecker {
             }
             return false
         }
+        if t1.kind == TypeKind.ENUM {
+            let t1_enum_type = t1 as EnumType
+            let t2_enum_type = t2 as EnumType
+            let t1_enum_typeid = t1_enum_type.enum_id as TypeId
+            let t2_enum_typeid = t2_enum_type.enum_id as TypeId
+            return t1_enum_typeid == t2_enum_typeid
+        }
         return true
     }
     private dump_type(this, ty: Type): string {
@@ -869,8 +884,9 @@ class TypeChecker {
         if ty.kind == TypeKind.OBJECT {
             return get_class(this.program, (ty as ObjectType).class_id).name
         }
-        if ty.kind == TypeKind.ENUM
-            return "enum"
+        if ty.kind == TypeKind.ENUM {
+            return this.get_enum((ty as EnumType).enum_id).name
+        }
         if ty.kind == TypeKind.ARRAY {
             let arr_ty = ty as ArrayType
             return this.dump_type(arr_ty.element_type) + "[" + arr_ty.length + "]"
@@ -1070,6 +1086,9 @@ class TypeChecker {
             this.error(ErrorKind.NAME, "Name '"+name+"' has already been used for another type. consider renaming", enum_node.name.range)
             return
         }
+        let field_map: Map<string, PropId>
+        declared_enum.field_map = field_map
+        declared_enum.fields = []
         declared_enum.id = new EnumId(this.current_module, this.get_current_module().enums.length)
         this.get_current_module().enums << declared_enum
         current_scope.enums.set(declared_enum.name, declared_enum.id)
@@ -1129,9 +1148,30 @@ class TypeChecker {
         this.get_current_scope().functions.set(declared_function.name, declared_function.id)
     }
     private check_enum_body(declared_enum: Enum, enum_node: EnumNode){
+        let enum_varient = new Type(TypeKind.INT)
+        let next_enum_value = 0
         for let i = 0; i < enum_node.fields.length; ++i {
-            let enum_node_f = enum_node.fields[i]
-            declared_enum.fields << new EnumField(enum_node_f.name.value)
+            let enum_node_field = enum_node.fields[i]
+            let enum_name = enum_node_field.name.value
+            let enum_field = new EnumField(enum_name)
+            enum_field.id = new PropId(PropIdKind.FIELD, declared_enum.id, i)
+            if enum_node_field.initializer != null {
+                enum_field.initializer = this.check_expression(enum_varient, enum_node_field.initializer)
+                if !enum_field.initializer.is_constant {
+                    this.error(ErrorKind.TYPE, "Enum initializer has to be a constant", enum_node_field.initializer.range)
+                    return
+                }
+                if !this.types_are_eq(enum_varient, enum_field.initializer.value_type){
+                    this.error(ErrorKind.TYPE, "Expected type '"+this.dump_type(enum_varient)+"' but got type '"+this.dump_type(enum_field.initializer.value_type), enum_node_field.initializer.range)
+                    return
+                }
+                next_enum_value = evaluate_const_int_expression(this.program, enum_field.initializer) + 1
+            } else {
+                enum_field.initializer = new IntExpression(next_enum_value)
+                next_enum_value++
+            }
+            declared_enum.field_map.set(enum_name, enum_field.id)
+            declared_enum.fields << enum_field
         }
     }
     private declare_class_fields(this, declared_class: Class, class_node: ClassDeclarationNode){
@@ -1480,7 +1520,7 @@ class TypeChecker {
                 var_ty = get_var(this.program, var_id).value_type
             else if var_id.kind == VarIdKind.CONST
                 var_ty = get_const(this.program, var_id as ConstId).value_type
-            else if var_id.kind == VarIdKind.CLASS or VarIdKind.ENUM
+            else if var_id.kind == VarIdKind.CLASS or var_id.kind == VarIdKind.ENUM
                 var_ty = new Type(TypeKind.RECORD)
             return new VarAccessExpression(var_id, var_ty)
         }
@@ -1649,6 +1689,7 @@ class TypeChecker {
         //TODO: Need to check if cast is compatible for typecase
         let exp = this.check_expression($UNKNOWN_TYPE, type_expr_node.expression)
         let ty = this.check_type(type_expr_node.bound_type)
+        if this.has_errored() return null
         return new TypeCastExpression(exp, ty)
     }
     private check_constructor_call(this, class_id: ClassId, args: ExpressionNode[], argsp: Expression[]*): string { 
@@ -1747,8 +1788,13 @@ class TypeChecker {
                 }
                 prop_ty = get_class_prop_type(this.program, prop_id)
             } else {
-                // else: Get Enum.
-                exit("Case not handled.")
+                let parent_enum = this.get_enum_from_var_id(var_id)
+                prop_id = parent_enum.field_map.get(prop_name)
+                if (prop_id == null) {   
+                    this.error(ErrorKind.NAME, "'"+prop_name+"' is not an element of enum '"+parent_enum.name+"'", member_expr_node.member.range)
+                    return null
+                }
+                prop_ty = new EnumType(parent_enum.id)
             }
         } else {
             this.error(ErrorKind.GEN, "Cannot get property of type '"+this.dump_type(prop_owner_type)+"'", member_expr_node.expression.range)
@@ -2052,7 +2098,7 @@ class TypeChecker {
                 return null
             }   
             if !this.types_are_eq(current_function_return_type, rt_value.value_type) {
-                this.error(ErrorKind.TYPE, "Expected return type of "+this.dump_type(current_function_return_type)+ " but got return type of " + this.dump_type(rt_value.value_type), expr.range)
+                this.error(ErrorKind.TYPE, "Expected return type of '"+this.dump_type(current_function_return_type)+ "' but got return type of '" + this.dump_type(rt_value.value_type)+"'", expr.range)
                 return null
             }
             rt_stmt.return_value = rt_value

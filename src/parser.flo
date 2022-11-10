@@ -283,6 +283,9 @@ class FieldNode {
     access_modifier: ACCESS_ATTR
     initializer: ExpressionNode
     parsed_type: TypeNode
+    constructor(this){
+        this.initializer = null
+    }
 }
 class GenericParameterNode {
     name: IdentifierToken
@@ -306,8 +309,10 @@ class ClassDeclarationNode {
 }
 class EnumNodeField {
     name: IdentifierToken
+    initializer: ExpressionNode
     constructor(this, name: IdentifierToken){
         this.name = name
+        this.initializer = null
     }
 }
 class EnumNode {
@@ -967,8 +972,6 @@ class Parser {
                 if this.current_token.ttype == TokType.EQ {
                     this.advance()
                     field.initializer = this.parse_expression()
-                } else {
-                    field.initializer = null
                 }
                 field.access_modifier = access_modifier
                 class_node.fields << field
@@ -1041,9 +1044,13 @@ class Parser {
         this.new_lines()
         this.eat(TokType.LBRACE)
         this.new_lines()
-        while this.current_token.ttype == TokType.IDENTIFER and this.can_parse() {
-            enum_node.fields << new EnumNodeField(this.current_token as IdentifierToken)
-            this.advance()
+        while this.current_token.ttype == TokType.IDENTIFER {
+            let enum_field = new EnumNodeField(this.eat(TokType.IDENTIFER) as IdentifierToken)
+            if this.current_token.ttype == TokType.EQ {
+                this.advance()
+                enum_field.initializer = this.parse_expression()
+            }
+            enum_node.fields << enum_field
             this.new_lines()
         }
         this.eat(TokType.RBRACE)
