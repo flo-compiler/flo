@@ -147,12 +147,9 @@ fnc token_str(toktype: TokType): string {
         return "NEW_KW"
     if toktype == TokType.AS_KW
         return "AS_KW"
-    if toktype == TokType.IS_KW
-        return "IS_KW"
     if toktype == TokType.LET_KW
         return "LET_KW"
-    //if toktype == TokType.EXTENDS_KW
-    return "EXTENDS_KW"
+    return ""
 }
 fnc token_value(token: Token, text: string): string {
     return text.substring(token.range.start, token.range.end - token.range.start)

@@ -69,8 +69,6 @@ fnc string_to_kw_token(word: string): TokType {
         return TokType.NEW_KW
     if word == "as"
         return TokType.AS_KW
-    if word == "is"
-        return TokType.IS_KW
     return -1
 }
 fnc is_identifier_char(char: i8): bool {

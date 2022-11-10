@@ -327,6 +327,11 @@ class CodeGen {
             return this.codegen_assignment(builder, bin_exp)
         let lhs = this.codegen_expression(builder, bin_exp.lhs)
         let rhs = this.codegen_expression(builder, bin_exp.rhs)
+        if is_null(bin_exp.rhs) and op == BinaryOp.EEQ or op == BinaryOp.NEQ {
+            if LLVMIsConstant(lhs)
+                return createLLVMBool(op == BinaryOp.EEQ ? LLVMIsNull(lhs) : LLVMIsNull(lhs))
+            return op == BinaryOp.EEQ ? LLVMBuildIsNull(builder, lhs, "") : LLVMBuildIsNotNull(builder, lhs, "")
+        }
         let lty = bin_exp.lhs.value_type
         let rty = bin_exp.rhs.value_type
         if is_numeric(rty) and op == BinaryOp.POW
@@ -393,28 +398,25 @@ class CodeGen {
         }
         return lhs
     }
-    private codegen_type_exp(this, builder: LLVMBuilderRef, type_exp: TypeExpression): LLVMValueRef {
+    private codegen_typecast_exp(this, builder: LLVMBuilderRef, type_exp: TypeCastExpression): LLVMValueRef {
         let exp = type_exp.expr
-        let bty = type_exp.bound_type
+        let value_type = type_exp.value_type
         let val = this.codegen_expression(builder, exp)
-        let ty = this.codegen_type(bty)
+        let ty = this.codegen_type(value_type)
         let is_const = LLVMIsConstant(val)
-        if type_exp.ty_op == TypeExprOp.AS {
-            if is_bool(bty) {
-                return is_const ? createLLVMBool(!LLVMIsNull(val)) : LLVMBuildIsNotNull(builder, val, "")
-            }
-            if is_int(exp.value_type) and is_float(bty) {
-                return is_const ? LLVMConstSIToFP(val, ty) : LLVMBuildSIToFP(builder, val, ty, "")
-            } else if is_float(exp.value_type) and is_int(bty) {
-                return is_const ? LLVMConstFPToSI(val, ty) : LLVMBuildFPToSI(builder, val, ty, "")
-            } else if is_int(exp.value_type) and is_int(bty){
-                return is_const ? LLVMConstIntCast(val, ty, true) : LLVMBuildIntCast2(builder, val, ty, true, "")
-            } else if is_float(exp.value_type) and is_float(bty){
-                return is_const ? LLVMConstFPCast(val, ty) : LLVMBuildFPCast(builder, val, ty, "")
-            }
-            return is_const ? LLVMConstBitCast(val, ty) : LLVMBuildBitCast(builder, val, ty, "")
-        } 
-        return val
+        if is_bool(value_type) {
+            return is_const ? createLLVMBool(!LLVMIsNull(val)) : LLVMBuildIsNotNull(builder, val, "")
+        }
+        if is_int(exp.value_type) and is_float(value_type) {
+            return is_const ? LLVMConstSIToFP(val, ty) : LLVMBuildSIToFP(builder, val, ty, "")
+        } else if is_float(exp.value_type) and is_int(value_type) {
+            return is_const ? LLVMConstFPToSI(val, ty) : LLVMBuildFPToSI(builder, val, ty, "")
+        } else if is_int(exp.value_type) and is_int(value_type){
+            return is_const ? LLVMConstIntCast(val, ty, true) : LLVMBuildIntCast2(builder, val, ty, true, "")
+        } else if is_float(exp.value_type) and is_float(value_type){
+            return is_const ? LLVMConstFPCast(val, ty) : LLVMBuildFPCast(builder, val, ty, "")
+        }
+        return is_const ? LLVMConstBitCast(val, ty) : LLVMBuildBitCast(builder, val, ty, "")
     }
     private codegen_unary_exp(this, builder: LLVMBuilderRef, unary_exp: UnaryExpression): LLVMValueRef {
         let op = unary_exp.op
@@ -574,8 +576,8 @@ class CodeGen {
             return this.codegen_new_exp(builder, expression as NewExpression)
         if expression.expr_kind == ExpressionKind.TERNARY
             return this.codegen_ternary_exp(builder, expression as TernaryExpression)
-        if expression.expr_kind == ExpressionKind.TYPEBOUND
-            return this.codegen_type_exp(builder, expression as TypeExpression)
+        if expression.expr_kind == ExpressionKind.CAST
+            return this.codegen_typecast_exp(builder, expression as TypeCastExpression)
         if expression.expr_kind == ExpressionKind.ARRAY
             return this.codegen_array_exp(builder, expression as ArrayExpression)
         return LLVMConstInt(LLVMInt32Type(), 0, false)
