@@ -30,10 +30,6 @@ Still in progress. In the future it might be acheived by:
 ## Taste of the language.
 - [ ] Compile time Macros ($symbol).
 - [x] Functions with no body are considered extern functions and Methods with no body make the class an abstract class.
-```php
-$STDOUT = 0
-write($STDOUT, "ss", 2)
-```
 - [ ] Optional chaining `a?.b?.c`
 
 ## Ranges
@@ -53,30 +49,30 @@ floats_range = 0.0..10.0
 ### Two types of arrays:
 1. Static Arrays (On the stack, fixed size):
 ```
-numbers: int [3] = [1, 2, 3]
+let numbers: int[3] = [1, 2, 3]
 // or
-numbers = [1, 2, 3]
+let numbers = [1, 2, 3]
 ```
 - [ ] Static Array size is expression an not constant.
 2. Dynamic Arrays (On the heap, An object(generic) not fixed)
 ```
-numbers: Array<int> = [1, 2, 3]
+let numbers: Array<int> = [1, 2, 3]
 //or
-names: int[] = ["paul", "john", "xavier"]
+let names: string[] = ["paul", "john", "xavier"]
 ```
 - [ ] Short Hand for arrays
 ```
-a = [1..100]
+let a = [1..100]
 ```
 ## Classes
 - [x] Basic Class support
 ```
 class Chef {
     specialty: string
-    constructor(specialty: string) {
+    constructor(this, specialty: string) {
         this.specialty = specialty
     }
-    print_specialty() {
+    print_specialty(this) {
         println(this.specialty)
     }
 }
@@ -85,19 +81,14 @@ class Chef {
 - [x] Super
 ```
 class ItalianChef(Chef) {
-    specialty2: string
-    constructor() {
-        super("Pasta")
-        this.specialty2 = "Pizza"
-    }
-    print_specialty_two() {
-        println(this.specialty2)
+    constructor(this) {
+        this.super("Pasta")
     }
 }
 ```
 - [x] Polymorphism
-```t
-chef: Chef = new ItalianChef()
+```
+let chef: Chef = new ItalianChef()
 chef.print_specialty() // prints "Pizza"
 ```
 - [ ] Access modifiers.
@@ -134,7 +125,7 @@ chef: Chef = {specialty: "cake"}
 ## Enums
 - [x] Enums constants (Assigned as numbers at compile time)
 ```
-enum Numbers{
+enum Numbers {
     ONE
     TWO
     THREE
@@ -159,7 +150,7 @@ if a in 0..11 {
 ## Loops
 - [x] traditional for Loop
 ```
-for i = 0; i < 10; i++ // do something
+for let i = 0; i < 10; i++ // do something
 ```
 - [ ] For in loop
 ```
@@ -209,11 +200,8 @@ double(x: 5)
 - [x] Generic Classes.
 - [ ] Generic Functions.
     - Generic Methods in Classes.
-- [ ] Built-in Generics.
-    - `Readonly<T>`.
 
 ## Types
-- [ ] Type Unions and Intersections (or, and).
 - [ ] Optional types. 
 ```
     x: int?
@@ -232,18 +220,10 @@ type i1 = bool
     - Type Aliasing with Type Contraints.
     - Type Aliasing with Generics.
 
-## Type Checking
-- [x] `is` keyword.
-```py
-1 is int // true
-2.0 is float //true
-'A' is i8 // true
-1 is string // false
-```
 ## Type Casting
 Type casting works with ``as`` keyword.
-```ts
-x = 1 as float // returns 1.0
+```
+let x = 1 as float // returns 1.0
 ```
 Type Casting always works when converting these types to the following types.
 
@@ -274,14 +254,14 @@ This **will** not work
 
 ## Error Handling
 Work in progress
-```ts
+```
 try {
     // unsafe code
 } catch error {
     println(error)
 }
 ```
-```ts
+```
 try error_prone_fnc() catch error {
     println(error)
 }

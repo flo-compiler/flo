@@ -160,7 +160,7 @@ fnc LLVMDumpValue(Val: LLVMValueRef)
 fnc LLVMIsConstant(Val: LLVMValueRef): LLVMBool
 fnc LLVMConstNull(Ty: LLVMTypeRef): LLVMValueRef
 fnc LLVMIsNull(Val: LLVMValueRef ): LLVMBool
-
+fnc LLVMConstPointerNull(Ty: LLVMTypeRef): LLVMValueRef
 /* constant */
 fnc LLVMConstInt(IntTy: LLVMTypeRef, N: i64, SignExtend: LLVMBool): LLVMValueRef 
 

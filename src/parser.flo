@@ -146,12 +146,11 @@ class CallExpressionNode (ExpressionNode) {
         this.args = []
     }
 }
-class TypeExpressionNode (ExpressionNode) {
+class TypeCastExpressionNode (ExpressionNode) {
     expression: ExpressionNode
-    op: TypeExprOp
     bound_type: TypeNode
     constructor(this, expression: ExpressionNode, bound_type: TypeNode){
-        super(ExpressionKind.TYPEBOUND, merge_range(expression.range, bound_type.range))
+        super(ExpressionKind.CAST, merge_range(expression.range, bound_type.range))
         this.expression = expression
         this.bound_type = bound_type
     }
@@ -709,27 +708,17 @@ class Parser {
         this.advance()
         return new BinaryExpressionNode(left, BinaryOp.RANGE, this.parse_expression())
     }
-    private is_type_expr_op(this): TypeExprOp{
-        let token_type = this.current_token.ttype
-        if token_type == TokType.IS_KW
-            return TypeExprOp.IS
-        if token_type == TokType.AS_KW
-            return TypeExprOp.AS
-        return -1
-    }
-    private parse_typed_expression(this): ExpressionNode {
+    private parse_typecast_expression(this): ExpressionNode {
         let left = this.parse_range_expression()
-        let op = this.is_type_expr_op()
-        if op == -1 or !this.can_parse() 
+         if this.current_token.ttype != TokType.AS_KW 
             return left
         this.advance()
-        let node = new TypeExpressionNode(left, this.parse_type())
-        node.op = op
+        let node = new TypeCastExpressionNode(left, this.parse_type())
         return node
     }
     /* TODO: Need to figure out the logic here */
     private parse_ternary_expression(this): ExpressionNode {
-        let cond = this.parse_typed_expression()
+        let cond = this.parse_typecast_expression()
         if this.current_token.ttype != TokType.QUES or !this.can_parse()
             return cond
         this.advance()
@@ -809,16 +798,14 @@ class Parser {
             this.advance()
             var_decl_node.value = this.parse_expression()
             end_range = var_decl_node.value.range
-        } else if var_decl_node.var_type != null {
+        } else if var_decl_node.var_type != null and this.current_token.ttype == TokType.LPAR {
             // REMEMBER: DRY
             let new_node = new NewExpressionNode(var_decl_node.var_type, var_decl_node.var_type.range)
             new_node.onheap = false
-            if this.current_token.ttype == TokType.LPAR {
-                this.advance()
-                if this.current_token.ttype != TokType.RPAR
-                    this.parse_expression_list(new_node.args)
-                new_node.range = merge_range(new_node.range, this.eat(TokType.RPAR).range)
-            }
+            this.advance()
+            if this.current_token.ttype != TokType.RPAR
+                this.parse_expression_list(new_node.args)
+            new_node.range = merge_range(new_node.range, this.eat(TokType.RPAR).range)
             var_decl_node.value = new_node
         }
         var_decl_node.range = merge_range(var_decl_node.range, end_range)

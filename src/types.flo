@@ -74,7 +74,6 @@ enum TokType {
     ENUM_KW
     NEW_KW
     AS_KW
-    IS_KW
 }
 enum TypeKind {
     BOOL
@@ -126,7 +125,7 @@ enum ExpressionKind {
     ACCESS
     BIN
     UNARY
-    TYPEBOUND
+    CAST
     NEW
     MEMBER
     INDEX
@@ -178,10 +177,6 @@ enum UnaryOp {
     NEG
     NOT
     ADDROF
-}
-enum TypeExprOp {
-    AS
-    IS
 }
 enum ACCESS_ATTR {
     PRIVATE

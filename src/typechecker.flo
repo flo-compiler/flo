@@ -4,9 +4,6 @@ class Type {
     constructor(this, kind: TypeKind){
         this.kind = kind
     }
-    __eq__(this, other: Type): bool {
-        return this.kind == other.kind
-    }
 }
 $UNKNOWN_TYPE = new Type(TypeKind.UNKNOWN)
 class BooleanType (Type) {
@@ -28,16 +25,6 @@ class FunctionType (Type) {
         super(TypeKind.FNC)
         this.arg_types = arg_types
         this.return_type = return_type
-    }
-    __eq__(this, other: Type): bool {
-        if other.kind != TypeKind.FNC return false
-        let other_type = other as FunctionType
-        if other_type.return_type != this.return_type return false
-        if this.arg_types.length != other_type.arg_types.length return false
-        for let i = 0; i < this.arg_types.length; i++ {
-            if this.arg_types[i] != other_type.arg_types[i] return false
-        }
-        return true
     }
 }
 class Value {
@@ -89,12 +76,6 @@ class ArrayType (Type) {
         super(TypeKind.ARRAY)
         this.element_type = element_type
         this.length = length
-    }
-    __eq__(other: Type): bool {
-        if other.kind != TypeKind.ARRAY
-            return false
-        let other_array = other as ArrayType
-        return this.length == other_array.length and this.element_type == other_array.element_type
     }
 }
 class ObjectType (Type) {
@@ -207,21 +188,12 @@ class TernaryExpression (Expression) {
         this.value_type = is_true.value_type
     }
 }
-class TypeExpression (Expression) {
+class TypeCastExpression (Expression) {
     expr: Expression
-    ty_op: TypeExprOp
-    bound_type: Type
-    constructor(this, expr: Expression, ty_op: TypeExprOp, bound_type: Type){
-        super(ExpressionKind.TYPEBOUND)
+    constructor(this, expr: Expression, value_type: Type){
+        super(ExpressionKind.CAST)
         this.expr = expr
-        this.ty_op = ty_op
-        if ty_op == TypeExprOp.AS 
-            this.value_type = bound_type
-        if ty_op == TypeExprOp.IS {
-            let bool_type: BooleanType
-            this.value_type = bool_type
-        }
-        this.bound_type = bound_type
+        this.value_type = value_type
         this.is_constant = expr.is_constant
     }
 }
@@ -409,7 +381,7 @@ fnc is_null(exp: Expression): bool {
     return exp.expr_kind == ExpressionKind.NULL
 }
 fnc cast_exp_to_type(exp: Expression, val_ty: Type): Expression {
-    return exp.value_type == val_ty ? exp : new TypeExpression(exp, TypeExprOp.AS, val_ty)
+    return new TypeCastExpression(exp, val_ty)
 }
 fnc max_type(t1: Type, t2: Type): Type {
     return t1.kind > t2.kind ? t1 : t2
@@ -433,7 +405,11 @@ fnc check_is_var(expr: Expression): bool{
     if expr.expr_kind == ExpressionKind.ACCESS {
         return (expr as VarAccessExpression).value_id.kind == VarIdKind.VAR
     }
-    return expr.expr_kind == ExpressionKind.MEMBER or expr.expr_kind == ExpressionKind.INDEX
+    if expr.expr_kind == ExpressionKind.MEMBER {
+        let prop_id = (expr as MemberExpression).member_id
+        return prop_id.kind == PropIdKind.FIELD
+    }
+    return expr.expr_kind == ExpressionKind.INDEX
 }
 fnc dump_type(ty: Type, force_bit_size = false): string {
     if ty.kind == TypeKind.BOOL
@@ -464,24 +440,7 @@ fnc dump_type(ty: Type, force_bit_size = false): string {
         return "void"
     if ty.kind == TypeKind.RECORD
         return "record"
-    if ty.kind == TypeKind.FNC {
-        let fnc_ty = ty as FunctionType
-        let str = "("
-        for let i = 0; i < fnc_ty.arg_types.length; ++i {
-            str += dump_type(fnc_ty.arg_types[i]) + ","
-        }
-        str+=") => "+dump_type(fnc_ty.return_type)
-        return str
-    }
-    if ty.kind == TypeKind.PTR
-        return dump_type((ty as PointerType).pointee_type, force_bit_size)+"*"
-    // if ty.kind == TypeKind.OBJECT
-    //     return (ty as ObjectType).name
-    if ty.kind == TypeKind.ARRAY {
-        let arr_ty = ty as ArrayType
-        return dump_type(arr_ty.element_type) + "[" + arr_ty.length + "]"
-    }
-    return "any"
+    return "unknown"
 }
 fnc dump_bin_op(op: BinaryOp): string {
     if op == BinaryOp.ADD
@@ -857,6 +816,67 @@ class TypeChecker {
     private get_class_from_var_id(this, var_id: VarId): Class {
         return this.program.modules[var_id.module_id].classes[var_id.id]
     }
+    private types_are_eq(this, t1: Type, t2: Type): bool {
+        if t1.kind != t2.kind return false
+        if t1.kind == TypeKind.FNC {
+            let t1_fnc_type = t1 as FunctionType
+            let t2_fnc_type = t2 as FunctionType
+            if t1_fnc_type.arg_types.length != t2_fnc_type.arg_types.length return false
+            if !this.types_are_eq(t2_fnc_type.return_type, t1_fnc_type.return_type) return false
+            for let i = 0; i < t1_fnc_type.arg_types.length; i++ {
+                if !this.types_are_eq(t1_fnc_type.arg_types[i], t2_fnc_type.arg_types[i]) return false
+            }
+        }
+        if t1.kind == TypeKind.ARRAY {
+            let t1_arr_type = t1 as ArrayType
+            let t2_arr_type = t2 as ArrayType
+            return t1_arr_type.length == t2_arr_type.length and this.types_are_eq(t1_arr_type.element_type, t2_arr_type.element_type)
+        }
+        if t1.kind == TypeKind.PTR {
+            let t1_ptr_type = t1 as PointerType
+            let t2_ptr_type = t2 as PointerType
+            return this.types_are_eq(t1_ptr_type.pointee_type, t2_ptr_type.pointee_type)
+        }
+        if t1.kind == TypeKind.OBJECT {
+            let t1_obj_type = t1 as ObjectType
+            let t2_obj_type = t2 as ObjectType
+            let t1_obj_typeid = t1_obj_type.class_id as TypeId
+            let t2_obj_typeid = t2_obj_type.class_id as TypeId
+            if t1_obj_typeid == t2_obj_typeid return true
+            let t2_class = get_class(this.program, t2_obj_typeid as ClassId)
+            if t2_class.parent != null {
+                return this.types_are_eq(t1_obj_type, t2_class.parent)
+            }
+            return false
+        }
+        return true
+    }
+    private dump_type(this, ty: Type): string {
+        if ty.kind == TypeKind.FNC {
+            let fnc_ty = ty as FunctionType
+            let str = "("
+            for let i = 0; i < fnc_ty.arg_types.length; ++i {
+                str += this.dump_type(fnc_ty.arg_types[i])
+                if i + 1 < fnc_ty.arg_types.length {
+                    str += ","
+                }
+            }
+            str += ") => " + this.dump_type(fnc_ty.return_type)
+            return str
+        }
+        if ty.kind == TypeKind.PTR
+            return this.dump_type((ty as PointerType).pointee_type)+"*"
+        if ty.kind == TypeKind.OBJECT {
+            return get_class(this.program, (ty as ObjectType).class_id).name
+        }
+        if ty.kind == TypeKind.ENUM
+            return "enum"
+        if ty.kind == TypeKind.ARRAY {
+            let arr_ty = ty as ArrayType
+            return this.dump_type(arr_ty.element_type) + "[" + arr_ty.length + "]"
+        }
+        return dump_type(ty, false)
+    }
     private create_scope(this): Scope {
         let module = this.get_current_module()
         let scope = new Scope(this.current_module, module.scopes.length)
@@ -964,7 +984,9 @@ class TypeChecker {
         for i = 0; i < module_ast.functions.length; i++ {
             this.declare_function_within_current_scope(module_ast.functions[i])
         }
-        
+        if this.has_errored() {
+            return null
+        }
         // We Now check bodies
         for i = 0; i < module_ast.classes.length; i++ {
             this.check_class_body(module.classes[i], module_ast.classes[i])
@@ -1022,10 +1044,14 @@ class TypeChecker {
             let arg_type = $UNKNOWN_TYPE
             if arg.parsed_type != null
                 arg_type = this.check_type(arg.parsed_type)
-            if arg.default != null
+            if arg.default != null {
                 fnc_arg.default = this.check_expression(arg_type, arg.default)
-                if !arg.parsed_type != null
+                if arg_type.kind == TypeKind.UNKNOWN
                     arg_type = fnc_arg.default.value_type
+                else if !this.types_are_eq(arg_type, fnc_arg.default.value_type){
+                    this.error(ErrorKind.TYPE, "Expected type of '"+this.dump_type(arg_type)+"' but got type of '"+this.dump_type(fnc_arg.default.value_type)+"' on signature", arg.default.range)
+                }
+            }
             args << fnc_arg
             fnc_arg.value_type = arg_type
             let var = this.declare_var_within_current_scope(fnc_arg.name, fnc_arg, arg_type)
@@ -1088,6 +1114,10 @@ class TypeChecker {
             this.error(ErrorKind.NAME, "Illegal re-declaration of const '"+name+"'", function_node.name.range)
             return
         }
+        if this.get_type_from_current_scope(name).kind != TypeKind.UNKNOWN {
+            this.error(ErrorKind.NAME, "Illegal re-declaration of type '"+name+"' as function", function_node.name.range)
+            return
+        }
         let fnc_scope = this.create_child_scope_within_current_scope()
         this.current_scope = fnc_scope.id 
         declared_function.args = []
@@ -1120,15 +1150,14 @@ class TypeChecker {
             if this.has_errored() {return}
             let possible_prop_id = declared_class.prop_map.get(field.name)
             if possible_prop_id != null {
-                println(possible_prop_id.type_id.id, declared_class.id)
                 if possible_prop_id.type_id == declared_class.id {
                     this.error(ErrorKind.NAME, "Field "+field.name+" in class "+declared_class.name+" already exists", field_node.name.range)
                     return
                 }
                 let parent_prop_type = get_class_prop_type(this.program, possible_prop_id)
                 let parent_prop_visibility = get_class_prop_visibility(this.program, possible_prop_id)
-                if parent_prop_type != field.field_type {
-                    this.error(ErrorKind.TYPE, "Signature of inherited field "+field.name+" in class "+declared_class.name+" does not match expected parent signature '"+dump_type(parent_prop_type)+"'", field_node.name.range)
+                if !this.types_are_eq(parent_prop_type, field.field_type) {
+                    this.error(ErrorKind.TYPE, "Signature of inherited field "+field.name+" in class "+declared_class.name+" does not match expected parent signature '"+this.dump_type(parent_prop_type)+"'", field_node.name.range)
                     return
                 }
                 if field.visibility != parent_prop_visibility {
@@ -1139,8 +1168,8 @@ class TypeChecker {
             if field_node.initializer != null {
                 field.initializer = this.check_expression(field.field_type, field_node.initializer)
                 if this.has_errored() {return}
-                if field.initializer.value_type != field.field_type {
-                    this.error(ErrorKind.TYPE, "Expected type '"+dump_type(field.field_type)+"' but got type '"+dump_type(field.initializer.value_type)+"' on static field initialization", field_node.initializer.range)
+                if !this.types_are_eq(field.field_type, field.initializer.value_type) {
+                    this.error(ErrorKind.TYPE, "Expected type '"+this.dump_type(field.field_type)+"' but got type '"+this.dump_type(field.initializer.value_type)+"' on static field initialization", field_node.initializer.range)
                 }
                 if !field.initializer.is_constant {
                     this.error(ErrorKind.GEN, "Static field initializer has to be a constant", field_node.initializer.range)
@@ -1189,8 +1218,8 @@ class TypeChecker {
                 }
                 let parent_prop_type = get_class_prop_type(this.program, possible_prop_id)
                 let parent_prop_visibility = get_class_prop_visibility(this.program, possible_prop_id)
-                if parent_prop_type != method.method_type {
-                    this.error(ErrorKind.TYPE, "Signature of inherited method "+name+" in class "+declared_class.name+" does not match expected parent signature '"+dump_type(parent_prop_type)+"'", method_node.name.range)
+                if !this.types_are_eq(parent_prop_type, method.method_type) {
+                    this.error(ErrorKind.TYPE, "Signature of inherited method "+name+" in class "+declared_class.name+" does not match expected parent signature '"+this.dump_type(parent_prop_type)+"'", method_node.name.range)
                     return
                 }
                 if method.visibility != parent_prop_visibility {
@@ -1207,11 +1236,15 @@ class TypeChecker {
                     this.error(ErrorKind.GEN, "Static method can't be abstract", method_node.name.range)
                     return
                 }
+                if method.name == "constructor" {
+                    this.error(ErrorKind.GEN, "Class constructor can't be static", method_node.name.range)
+                    return
+                }
                 declared_class.static_prop_map.set(name, method.id)
             } else {
                 if method.name == "constructor" {
                     if method_node.is_abstract {
-                        this.error(ErrorKind.GEN, "Constructor method can't be abstract", method_node.name.range)
+                        this.error(ErrorKind.GEN, "Class constructor can't be abstract", method_node.name.range)
                         return
                     }
                     declared_class.constructor = method.id
@@ -1235,7 +1268,7 @@ class TypeChecker {
         //TODO: Check visibility
         let parent_type = declared_class.parent as ObjectType
         if parent_type.kind != TypeKind.OBJECT {
-            this.error(ErrorKind.TYPE, "Can only inherit from class not type '"+dump_type(parent_type)+"'", class_node.parent.range)
+            this.error(ErrorKind.TYPE, "Can only inherit from class not type '"+this.dump_type(parent_type)+"'", class_node.parent.range)
         }
         let parent_class_id = parent_type.class_id
         let parent_class = get_class(this.program, parent_class_id)
@@ -1412,10 +1445,10 @@ class TypeChecker {
                 let element = this.check_expression(element_type, array_node.elements[i])
                 if this.has_errored() return null
                 is_constant = is_constant and element.is_constant
-                if element.value_type == element_type {
+                if this.types_are_eq(element_type, element.value_type) {
                     elements << element
                 } else {
-                    this.error(ErrorKind.TYPE, "Expected element type of '"+dump_type(element_type)+"' but got type '"+dump_type(element.value_type)+"'", array_node.elements[i].range)
+                    this.error(ErrorKind.TYPE, "Expected element type of '"+this.dump_type(element_type)+"' but got type '"+this.dump_type(element.value_type)+"'", array_node.elements[i].range)
                     return null
                 }
             }
@@ -1456,12 +1489,16 @@ class TypeChecker {
         return null
     }
     private check_assignment(this, left: Expression, right: Expression, binary_node: BinaryExpressionNode): BinaryExpression {
+        if left.value_type.kind == TypeKind.RECORD {
+            this.error(ErrorKind.TYPE, "Cannot assign a value to a record", binary_node.range)
+            return null
+        }
         if !check_is_var(left) {
             this.error(ErrorKind.TYPE, "Cannot assign a value to a constant", binary_node.range)
             return null
         }
-        if left.value_type != right.value_type {
-            this.error(ErrorKind.TYPE, "Illegal assignment of variable of type '"+dump_type(right.value_type)+"' to '"+dump_type(left.value_type)+"'", binary_node.range)
+        if !this.types_are_eq(left.value_type, right.value_type) {
+            this.error(ErrorKind.TYPE, "Illegal assignment of variable of type '"+this.dump_type(right.value_type)+"' to '"+this.dump_type(left.value_type)+"'", binary_node.range)
             return null
         }
         return new BinaryExpression(left, BinaryOp.ASSIGN, right, right.value_type)
@@ -1483,8 +1520,11 @@ class TypeChecker {
         let method_type = get_class_prop_type(this.program, prop_id) as FunctionType
         let arg_type = method_type.arg_types[0]
         let right = this.check_expression(arg_type, binary_node.rhs)
-        if arg_type != right.value_type {
-            this.error(ErrorKind.TYPE, "Expected type '"+dump_type(arg_type)+"' but got type '"+right.value_type+"'", binary_node.rhs.range)
+        if is_null(right) and op == BinaryOp.EEQ or op == BinaryOp.NEQ {
+            return new BinaryExpression(left, op, right, new BooleanType())
+        }
+        if !this.types_are_eq(arg_type, right.value_type) {
+            this.error(ErrorKind.TYPE, "Expected type '"+this.dump_type(arg_type)+"' but got type '"+right.value_type+"'", binary_node.rhs.range)
             return null
         }
         let member_exp = new MemberExpression(left, prop_id, method_type)
@@ -1504,13 +1544,13 @@ class TypeChecker {
         let at1 = method_type.arg_types[0]
         let at2 = method_type.arg_types[1]
         let index = this.check_expression(at1, index_expr_node.index)
-        if index.value_type != at1 {
-            this.error(ErrorKind.TYPE, "Expected type '"+dump_type(at1)+"' but got type '"+dump_type(index.value_type)+"'", index_expr_node.index.range)
+        if !this.types_are_eq(at1, index.value_type) {
+            this.error(ErrorKind.TYPE, "Expected type '"+this.dump_type(at1)+"' but got type '"+this.dump_type(index.value_type)+"'", index_expr_node.index.range)
             return null
         }
         let value = this.check_expression(at2, binary_node.rhs)
-        if value.value_type != at2 {
-            this.error(ErrorKind.TYPE, "Expected type '"+dump_type(at2)+"' but got type '"+dump_type(value.value_type)+"'", binary_node.rhs.range)
+        if !this.types_are_eq(at1, index.value_type) {
+            this.error(ErrorKind.TYPE, "Expected type '"+this.dump_type(at2)+"' but got type '"+this.dump_type(value.value_type)+"'", binary_node.rhs.range)
             return null
         }
         let member_expr = new MemberExpression(object, prop_id, method_type)
@@ -1572,7 +1612,7 @@ class TypeChecker {
             return new BinaryExpression(left, op, right, left.value_type, false)
         }
         //TODO: Handle Range, In.
-        this.error(ErrorKind.TYPE, "Illegal binary operation '"+dump_bin_op(op)+"' between types '"+dump_type(left.value_type)+"' and '"+dump_type(right.value_type)+"'", binary_node.range)
+        this.error(ErrorKind.TYPE, "Illegal binary operation '"+dump_bin_op(op)+"' between types '"+this.dump_type(left.value_type)+"' and '"+this.dump_type(right.value_type)+"'", binary_node.range)
         return null
     }
     private check_unary_expr(this, expected_type: Type, unary_node: UnaryExpressionNode): UnaryExpression {
@@ -1602,24 +1642,22 @@ class TypeChecker {
             if check_is_var(expression)
                 return new UnaryExpression(op, expression, new PointerType(expression.value_type))
         }
-        this.error(ErrorKind.TYPE, "Illegal unary operation " + dump_unary_op(op) + " on type " + "'" + dump_type(ty) +"'", unary_node.range)
+        this.error(ErrorKind.TYPE, "Illegal unary operation " + dump_unary_op(op) + " on type " + "'" + this.dump_type(ty) +"'", unary_node.range)
         return null
     }
-    private check_type_expr(this, type_expr_node: TypeExpressionNode): TypeExpression {
-        //TODO: Need to check if cast is compatible for typecase & IS
+    private check_typecast_expr(this, type_expr_node: TypeCastExpressionNode): TypeCastExpression {
+        //TODO: Need to check if cast is compatible for typecase
         let exp = this.check_expression($UNKNOWN_TYPE, type_expr_node.expression)
         let ty = this.check_type(type_expr_node.bound_type)
-        return new TypeExpression(exp, type_expr_node.op, ty)
+        return new TypeCastExpression(exp, ty)
     }
     private check_constructor_call(this, class_id: ClassId, args: ExpressionNode[], argsp: Expression[]*): string { 
         let obj_class = get_class(this.program, class_id)
         let field_id = obj_class.constructor
         if field_id == null {
             return "Cannot construct an object of abstract class"
-            return null
-        } else {
-            let constructor = obj_class.methods[field_id.id]
-        } 
+        }
+        let constructor = obj_class.methods[field_id.id] 
         let construct_type = constructor.method_type
         let checked_args = this.fill_in_call_args(construct_type, constructor.args, args)
         if this.has_errored() return null
@@ -1628,7 +1666,7 @@ class TypeChecker {
             if index == -1 {
                 return "Expected "+construct_type.arg_types.length+" argument(s) on constructor call but got "+args.length
             } else {
-                return "Expected type '"+dump_type(construct_type.arg_types[index])+"' but got type '"+dump_type(checked_args[index].value_type)+"' as constructor call argument ("+index+")"
+                return "Expected type '"+this.dump_type(construct_type.arg_types[index])+"' but got type '"+this.dump_type(checked_args[index].value_type)+"' as constructor call argument ("+index+")"
             }
         }
         argsp[0] = checked_args
@@ -1639,7 +1677,11 @@ class TypeChecker {
         let args: Expression[] = []
         if this.has_errored() return null
         if expr_ty.kind == TypeKind.OBJECT {
-            this.check_constructor_call((expr_ty as ObjectType).class_id, new_expr_node.args, &args)
+            let msg = this.check_constructor_call((expr_ty as ObjectType).class_id, new_expr_node.args, &args)
+            if msg != null {
+                this.error(ErrorKind.GEN, msg, new_expr_node.range)
+                return null
+            }
         }
         return new NewExpression(expr_ty, args, new_expr_node.onheap)
     }   
@@ -1709,7 +1751,7 @@ class TypeChecker {
                 exit("Case not handled.")
             }
         } else {
-            this.error(ErrorKind.GEN, "Cannot get property of type '"+dump_type(prop_owner_type)+"'", member_expr_node.expression.range)
+            this.error(ErrorKind.GEN, "Cannot get property of type '"+this.dump_type(prop_owner_type)+"'", member_expr_node.expression.range)
             return null
         }
         return new MemberExpression(prop_owner, prop_id, prop_ty)
@@ -1723,8 +1765,8 @@ class TypeChecker {
         let is_false = this.check_expression(is_true_ty, ternary_expr_node.is_false)
         if this.has_errored() return null
         let is_false_ty = is_false.value_type
-        if is_true_ty != is_false_ty {
-            this.error(ErrorKind.TYPE, "Expected type '"+dump_type(is_true_ty)+"' from first case but got type '"+dump_type(is_false_ty) + "'", ternary_expr_node.range)
+        if !this.types_are_eq(is_true_ty, is_false_ty) {
+            this.error(ErrorKind.TYPE, "Expected type '"+this.dump_type(is_true_ty)+"' from first case but got type '"+this.dump_type(is_false_ty) + "'", ternary_expr_node.range)
             return null
         }
         return new TernaryExpression(cond, is_true, is_false)
@@ -1740,8 +1782,8 @@ class TypeChecker {
         let method_type = get_class_prop_type(this.program, prop_id) as FunctionType
         let arg_type = method_type.arg_types[0]
         let index = this.check_expression(arg_type, index_expr_node.index)
-        if index.value_type != arg_type {
-            this.error(ErrorKind.TYPE, "Expected type '"+dump_type(arg_type)+"' but got type '"+dump_type(index.value_type)+"'", index_expr_node.index.range)
+        if !this.types_are_eq(arg_type, index.value_type) {
+            this.error(ErrorKind.TYPE, "Expected type '"+this.dump_type(arg_type)+"' but got type '"+this.dump_type(index.value_type)+"'", index_expr_node.index.range)
             return null
         }
         let member_expr = new MemberExpression(object, prop_id, method_type)
@@ -1765,7 +1807,7 @@ class TypeChecker {
         } else if root_type.kind == TypeKind.ARRAY {
             value_type = (root_type as ArrayType).element_type
         } else {
-            this.error(ErrorKind.TYPE, "Cannot index into a value of type '"+dump_type(root_type)+"'", index_expr_node.range)
+            this.error(ErrorKind.TYPE, "Cannot index into a value of type '"+this.dump_type(root_type)+"'", index_expr_node.range)
             return null
         }
         return new IndexExpression(root_expression, index, value_type)
@@ -1803,7 +1845,7 @@ class TypeChecker {
             return -1
         }
         for let i = 0; i < args.length; ++i {
-            if args[i].value_type != func_ty.arg_types[i] {
+            if !this.types_are_eq(func_ty.arg_types[i], args[i].value_type) {
                 return i
             }
         }
@@ -1813,7 +1855,7 @@ class TypeChecker {
         let called = this.check_expression($UNKNOWN_TYPE, call_expr_node.callee)
         if this.has_errored() return null
         if called.value_type.kind != TypeKind.FNC {
-            this.error(ErrorKind.TYPE, "Expected a function type for call but got '"+dump_type(called.value_type)+"'", call_expr_node.callee.range)
+            this.error(ErrorKind.TYPE, "Expected a function type for call but got '"+this.dump_type(called.value_type)+"'", call_expr_node.callee.range)
             return null
         }
         //TODO: Check for generic functions.
@@ -1826,7 +1868,7 @@ class TypeChecker {
             if index == -1 {
                 this.error(ErrorKind.GEN, "Expected "+func_ty.arg_types.length+" argument(s) on function call but got "+args.length, call_expr_node.range)
             } else {
-                this.error(ErrorKind.TYPE, "Expected type '"+dump_type(func_ty.arg_types[index])+"' but got type '"+dump_type(args[index].value_type)+"' as function call argument", call_expr_node.args[index].range)
+                this.error(ErrorKind.TYPE, "Expected type '"+this.dump_type(func_ty.arg_types[index])+"' but got type '"+this.dump_type(args[index].value_type)+"' as function call argument", call_expr_node.args[index].range)
             }
             return null
         }
@@ -1874,8 +1916,8 @@ class TypeChecker {
             return this.check_unary_expr(expected_type, expr_node as UnaryExpressionNode)
         if expr_node.expr_kind == ExpressionKind.TERNARY
             return this.check_ternary_expr(expected_type, expr_node as TernaryExpressionNode)
-        if expr_node.expr_kind == ExpressionKind.TYPEBOUND
-            return this.check_type_expr(expr_node as TypeExpressionNode)
+        if expr_node.expr_kind == ExpressionKind.CAST
+            return this.check_typecast_expr(expr_node as TypeCastExpressionNode)
         if expr_node.expr_kind == ExpressionKind.NEW
             return this.check_new_expr(expr_node as NewExpressionNode)
         if expr_node.expr_kind == ExpressionKind.MEMBER
@@ -1919,8 +1961,8 @@ class TypeChecker {
                 this.error(ErrorKind.TYPE, "Cannot declare a value as null without any type hint for future usage", var_decl_node.range)
                 return null
             }
-            if var_type.kind != TypeKind.UNKNOWN and var_type != value.value_type {
-                this.error(ErrorKind.TYPE, "Expected type '"+dump_type(var_type)+"' but got type '"+dump_type(value.value_type)+"' on variable declaration", var_decl_node.range)
+            if var_type.kind != TypeKind.UNKNOWN and !this.types_are_eq(var_type, value.value_type) {
+                this.error(ErrorKind.TYPE, "Expected type '"+this.dump_type(var_type)+"' but got type '"+this.dump_type(value.value_type)+"' on variable declaration", var_decl_node.range)
                 return null
             }
             if var_type.kind == TypeKind.UNKNOWN {
@@ -1949,12 +1991,12 @@ class TypeChecker {
             this.error(ErrorKind.GEN, "cannot assign a non-constant value to a constant", const_decl_stmt.value.range)
             return null
         }
-        if is_null(value) and value.value_type.kind == TypeKind.UNKNOWN {
+        if is_null(value) {
             this.error(ErrorKind.TYPE, "Cannot declare a value as null without any type hint for future usage", const_decl_stmt.range)
             return null
         }
         if const_type.kind != TypeKind.UNKNOWN and const_type != value.value_type {
-            this.error(ErrorKind.TYPE, "Expected type '"+dump_type(const_type)+"' but got type '"+dump_type(value.value_type)+"' on variable declaration", const_decl_stmt.range)
+            this.error(ErrorKind.TYPE, "Expected type '"+this.dump_type(const_type)+"' but got type '"+this.dump_type(value.value_type)+"' on variable declaration", const_decl_stmt.range)
             return null
         }
         let constant = this.declare_const_within_current_scope(name, value, value.value_type)
@@ -2005,14 +2047,18 @@ class TypeChecker {
         if expr != null {
             let rt_value = this.check_expression(current_function_return_type, expr)
             if this.has_errored() return null
-            if rt_value.value_type != current_function_return_type {
-                this.error(ErrorKind.TYPE, "Expected return type of "+dump_type(current_function_return_type)+ " but got return type of " + dump_type(rt_value.value_type), expr.range)
+            if current_function_return_type.kind == TypeKind.VOID {
+                this.error(ErrorKind.TYPE, "Function with void return type cannot return any value", expr.range)
+                return null
+            }   
+            if !this.types_are_eq(current_function_return_type, rt_value.value_type) {
+                this.error(ErrorKind.TYPE, "Expected return type of "+this.dump_type(current_function_return_type)+ " but got return type of " + this.dump_type(rt_value.value_type), expr.range)
                 return null
             }
             rt_stmt.return_value = rt_value
         } else {
             if current_function_return_type.kind != TypeKind.VOID {
-                this.error(ErrorKind.TYPE, "function return type is not void", return_stmt.range)
+                this.error(ErrorKind.TYPE, "Function return type is not void", return_stmt.range)
                 return null
             }
         }

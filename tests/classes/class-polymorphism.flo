@@ -72,5 +72,6 @@ fnc main(): int {
     if z == null {
         return 0
     }
+    let arr: ICMP[3] = [x, y, z]
     return (z as Int)[0]
 }
