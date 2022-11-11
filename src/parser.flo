@@ -318,6 +318,7 @@ class EnumNodeField {
 class EnumNode {
     name: IdentifierToken
     fields: EnumNodeField[]
+    variant: TypeNode
     constructor(){
         this.fields = []
     }
@@ -686,7 +687,7 @@ class Parser {
         if op == -1 or !this.can_parse()
             return left
         this.advance()
-        return new BinaryExpressionNode(left, op, this.parse_bit_expression())
+        return new BinaryExpressionNode(left, op, this.parse_comparasion_expression())
     }
     private is_bit_expr_op(this): int {
         let token_type = this.current_token.ttype
@@ -1041,6 +1042,11 @@ class Parser {
         let enum_node: EnumNode
         this.advance()
         enum_node.name = this.eat(TokType.IDENTIFER) as IdentifierToken
+        if this.current_token.ttype == TokType.LPAR {
+            this.advance()
+            enum_node.variant = this.parse_type()
+            this.eat(TokType.RPAR)
+        }
         this.new_lines()
         this.eat(TokType.LBRACE)
         this.new_lines()
