@@ -1,9 +1,0 @@
-enum Currencies {
-    USD
-    CAD
-    EUR
-}
-fnc main() {
-    let x = Currencies.USD
-    println(x)
-}

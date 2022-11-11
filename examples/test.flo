@@ -1,8 +1,3 @@
-enum Currencies {
-    USD = 2
-    CAD = 7
-    EUR
-}
-fnc main(): Currencies {
-    return Currencies.EUR
+fnc main(): int {
+    return 9
 }

@@ -1,0 +1,8 @@
+enum Currencies(i8) {
+    USD = 2
+    CAD = 90
+    EUR = 9
+}
+fnc main(): Currencies {
+    return Currencies.CAD
+}

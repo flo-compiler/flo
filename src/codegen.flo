@@ -31,7 +31,6 @@ fnc createLLVMBool(val: bool): LLVMValueRef{
 fnc createLLVMMachineSizeInt(i: int): LLVMValueRef {
     return LLVMConstInt($WORD_INT_TYPE, i, false)
 }
-
 $ZERO = createLLVMMachineSizeInt(0)
 $ONE = createLLVMMachineSizeInt(1)
 fnc is_terminated(block: Block): bool {
@@ -893,7 +892,6 @@ class CodeGen {
                     }
                 } else {
                     llvm_method_type = this.codegen_type(method_type, false)
-                    
                     llvm_method_val = LLVMGetNamedFunction(this.module, (get_class(this.program, prop_id.type_id as ClassId).name + prop_name).to_cstring())
                 }
                 struct_class.vt_methods_pos_map.set(prop_id_key, prop_index)

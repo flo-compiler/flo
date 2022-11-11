@@ -1148,7 +1148,15 @@ class TypeChecker {
         this.get_current_scope().functions.set(declared_function.name, declared_function.id)
     }
     private check_enum_body(declared_enum: Enum, enum_node: EnumNode){
-        let enum_varient = new Type(TypeKind.INT)
+        let enum_variant: Type = null
+        if enum_node.variant == null {
+            enum_variant = new Type(TypeKind.INT)
+        } else {
+            enum_variant = this.check_type(enum_node.variant)
+            if !is_int(enum_variant){
+                this.error(ErrorKind.TYPE, "Expected an int type for enum type but got type '"+this.dump_type(enum_variant)+"'", enum_node.variant.range)
+            }
+        }
         let next_enum_value = 0
         for let i = 0; i < enum_node.fields.length; ++i {
             let enum_node_field = enum_node.fields[i]
@@ -1156,18 +1164,19 @@ class TypeChecker {
             let enum_field = new EnumField(enum_name)
             enum_field.id = new PropId(PropIdKind.FIELD, declared_enum.id, i)
             if enum_node_field.initializer != null {
-                enum_field.initializer = this.check_expression(enum_varient, enum_node_field.initializer)
+                enum_field.initializer = this.check_expression(enum_variant, enum_node_field.initializer)
                 if !enum_field.initializer.is_constant {
                     this.error(ErrorKind.TYPE, "Enum initializer has to be a constant", enum_node_field.initializer.range)
                     return
                 }
-                if !this.types_are_eq(enum_varient, enum_field.initializer.value_type){
-                    this.error(ErrorKind.TYPE, "Expected type '"+this.dump_type(enum_varient)+"' but got type '"+this.dump_type(enum_field.initializer.value_type), enum_node_field.initializer.range)
+                if !this.types_are_eq(enum_variant, enum_field.initializer.value_type){
+                    this.error(ErrorKind.TYPE, "Expected type '"+this.dump_type(enum_variant)+"' but got type '"+this.dump_type(enum_field.initializer.value_type), enum_node_field.initializer.range)
                     return
                 }
                 next_enum_value = evaluate_const_int_expression(this.program, enum_field.initializer) + 1
             } else {
                 enum_field.initializer = new IntExpression(next_enum_value)
+                enum_field.initializer.value_type = enum_variant
                 next_enum_value++
             }
             declared_enum.field_map.set(enum_name, enum_field.id)
