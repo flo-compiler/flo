@@ -417,8 +417,9 @@ class NewMemNode(Node):
         return visitor.visitNewMemNode(self)
 
 class StrNode(Node):
-    def __init__(self, tok: Token, range: Range):
+    def __init__(self, tok: Token, nodes: List[Node], range: Range):
         self.tok = tok
+        self.nodes = nodes
         super().__init__(range)
 
     def accept(self, visitor: Visitor):

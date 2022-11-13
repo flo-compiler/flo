@@ -16,7 +16,7 @@ def get_instrinsic(name):
     if m.globals.get(name, None):
         return m.globals.get(name)
     elif name == "printf":
-        return m.declare_intrinsic("printf", (), ir.FunctionType(int32_ty, [], var_arg=True))
+        return m.declare_intrinsic("printf", (), ir.FunctionType(int32_ty, [byteptr_ty], var_arg=True))
     elif name == "atoi":
         return m.declare_intrinsic("atoi", (), ir.FunctionType(int32_ty, [byteptr_ty]))
     elif name == "atof":
@@ -39,6 +39,8 @@ def get_instrinsic(name):
         return m.declare_intrinsic("memcmp", (), ir.FunctionType(sizet_ty, [byteptr_ty, byteptr_ty, sizet_ty]))
     elif name == "sprintf":
         return m.declare_intrinsic("sprintf", (), ir.FunctionType(sizet_ty, [byteptr_ty, byteptr_ty], var_arg=True))
+    elif name == "snprintf":
+        return m.declare_intrinsic("snprintf", (), ir.FunctionType(sizet_ty, [byteptr_ty, sizet_ty, byteptr_ty], var_arg=True))
 
 binding.initialize()
 binding.initialize_native_target()
