@@ -103,23 +103,33 @@ chef: Chef = {specialty: "cake"}
 - [x] Operator Overloading.
     - `__eq__` (==)
     - `__add__` (+)
-    - `__sub__` (-) TODO
-    - `__mul__` (*) TODO
-    - `__div__` (/) TODO
-    - `__or__` (or) TODO
-    - `__and__` (and) TODO
+    - `__sub__` (-)
+    - `__mul__` (*)
+    - `__div__` (/)
+    - `__or__` (or)
+    - `__and__` (and)
+    - `__adda__` (+=)
+    - `__suba__` (-=)
+    - `__mula__` (*=)
+    - `__diva__` (/=)
+    - `__ora__` (or=)
+    - `__anda__` (and=)
     - `__getitem__` (a[b])
     - `__setitem__` (a[b] = 2)
     - `__in__` (4 in int_array)
     - `__sl__` (<<)
-    - `__sr__` (>>) TODO
-    - `__lt__` (<) TODO
-    - `__lg__` (>) TODO
-    - `__ne__` (!=) TODO
-    - `__le__` (<=) TODO
-    - `__ge__` (>=) TODO
-    - `__pow__` (^) TODO
-    - `__mod__` (%) TODO
+    - `__sr__` (>>)
+    - `__sla__` (<<=)
+    - `__sra__` (>>=)
+    - `__lt__` (<)
+    - `__lg__` (>)
+    - `__ne__` (!=)
+    - `__le__` (<=)
+    - `__ge__` (>=)
+    - `__pow__` (^)
+    - `__mod__` (%)
+    - `__pow__` (^=)
+    - `__mod__` (%=)
 
 - [ ] Operator Fall backs.
 ## Enums

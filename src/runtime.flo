@@ -146,7 +146,7 @@ class Array <T> {
         return res + this.buffer[i]
     }
     __as_string__(this): string {
-        return "[$(this.join(\", \"))]"
+        return "[$(this.join(", "))]"
     }
 }
 class Range {

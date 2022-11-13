@@ -2,15 +2,27 @@ enum TokType {
     COL
     SEMICOL
     COMMA
-    PLUS
-    PLUS_PLUS
-    MINUS
-    MINUS_MINUS
     MULT
+    MINUS
+    PLUS
     DIV
+    MOD
+    POW
+    MULT_EQ
+    MINUS_EQ
+    PLUS_EQ
+    DIV_EQ
+    MOD_EQ
+    POW_EQ
+    AND_EQ
+    OR_EQ
+    XOR_EQ
+    SR_EQ
+    SL_EQ
+    PLUS_PLUS
+    MINUS_MINUS
     LPAR
     RPAR
-    MOD
     LBRACE
     RBRACE
     LBRACKET
@@ -20,7 +32,6 @@ enum TokType {
     LN
     STR
     CHAR
-    POW
     QUES
     AMP
     EQ
@@ -167,6 +178,17 @@ enum BinaryOp {
     XOR
     IN
     ASSIGN
+    ADD_ASSIGN
+    SUB_ASSIGN
+    MUL_ASSIGN
+    DIV_ASSIGN
+    MOD_ASSIGN
+    POW_ASSIGN
+    AND_ASSIGN
+    OR_ASSIGN
+    XOR_ASSIGN
+    SL_ASSIGN
+    SR_ASSIGN
     RANGE
 }
 enum UnaryOp {

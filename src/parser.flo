@@ -748,16 +748,44 @@ class Parser {
         let is_false = this.parse_expression()
         return new TernaryExpressionNode(cond, is_true, is_false)
     }
+    private is_assign_op(this): BinaryOp {
+        if this.current_token.ttype == TokType.EQ 
+            return BinaryOp.ASSIGN
+        if this.current_token.ttype == TokType.MULT_EQ
+            return BinaryOp.MUL_ASSIGN
+        if this.current_token.ttype == TokType.MINUS_EQ
+            return BinaryOp.SUB_ASSIGN
+        if this.current_token.ttype == TokType.PLUS_EQ
+            return BinaryOp.ADD_ASSIGN
+        if this.current_token.ttype == TokType.DIV_EQ
+            return BinaryOp.DIV_ASSIGN
+        if this.current_token.ttype == TokType.MOD_EQ
+            return BinaryOp.MOD_ASSIGN
+        if this.current_token.ttype == TokType.POW_EQ
+            return BinaryOp.POW_ASSIGN
+        if this.current_token.ttype == TokType.AND_EQ
+            return BinaryOp.AND_ASSIGN
+        if this.current_token.ttype == TokType.OR_EQ
+            return BinaryOp.OR_ASSIGN
+        if this.current_token.ttype == TokType.XOR_EQ
+            return BinaryOp.XOR_ASSIGN
+        if this.current_token.ttype == TokType.SL_EQ
+            return BinaryOp.SL_ASSIGN
+        if this.current_token.ttype == TokType.SR_EQ
+            return BinaryOp.SR_ASSIGN
+        return -1
+    }
     private parse_expression(this): ExpressionNode {
         let left = this.parse_ternary_expression()
         if this.current_token.ttype == TokType.IN_KW and this.can_parse() {
             this.advance()
             return new BinaryExpressionNode(left, BinaryOp.IN, this.parse_expression())
         }
-        if this.current_token.ttype != TokType.EQ or !this.can_parse()
+        let op = this.is_assign_op()
+        if op == -1 or !this.can_parse()
             return left
         this.advance()
-        return new BinaryExpressionNode(left, BinaryOp.ASSIGN, this.parse_expression())
+        return new BinaryExpressionNode(left, op, this.parse_expression())
     }
     private parse_if_statement(this): IfStatementNode {
         let if_node = new IfStatementNode(this.current_token.range)

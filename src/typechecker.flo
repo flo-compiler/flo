@@ -507,6 +507,27 @@ fnc dump_access(visibility: ACCESS_ATTR): string {
         return "public"
     return "protected"
 }
+fnc lower_bin_assign_op(op: BinaryOp): BinaryOp {
+    if op == BinaryOp.ADD_ASSIGN
+        return BinaryOp.ADD
+    if op == BinaryOp.SUB_ASSIGN
+        return BinaryOp.SUB
+    if op == BinaryOp.MUL_ASSIGN
+        return BinaryOp.MUL
+    if op == BinaryOp.DIV_ASSIGN
+        return BinaryOp.DIV
+    if op == BinaryOp.MOD_ASSIGN
+        return BinaryOp.MOD
+    if op == BinaryOp.POW_ASSIGN
+        return BinaryOp.POW
+    if op == BinaryOp.AND_ASSIGN
+        return BinaryOp.AND
+    if op == BinaryOp.OR_ASSIGN
+        return BinaryOp.OR
+    if op == BinaryOp.SL_ASSIGN
+        return BinaryOp.SL
+    return BinaryOp.SR
+}
 class ScopeId {
     module_id: int
     id: int
@@ -705,13 +726,20 @@ fnc is_operator_overload_name(name: string): bool {
     if name == "__mul__" return true
     if name == "__div__" return true
     if name == "__or__" return true
-    if name == "__and__" return true
-    if name == "__xor__" return true
+    if name == "__adda__" return true
+    if name == "__suba__" return true
+    if name == "__mula__" return true
+    if name == "__diva__" return true
+    if name == "__ora__" return true
+    if name == "__anda__" return true
+    if name == "__xora__" return true
     if name == "__getitem__" return true
     if name == "__setitem__" return true
-    if name == "__in__" return true
     if name == "__sl__" return true
     if name == "__sr__" return true
+    if name == "__sla__" return true
+    if name == "__sra__" return true
+    if name == "__in__" return true
     if name == "__lt__" return true
     if name == "__lg__" return true
     if name == "__ne__" return true
@@ -719,6 +747,8 @@ fnc is_operator_overload_name(name: string): bool {
     if name == "__ge__" return true
     if name == "__pow__" return true
     if name == "__mod__" return true
+    if name == "__powa__" return true
+    if name == "__moda__" return true
     return false
 }
 fnc bin_op_to_op_overload_name(op: BinaryOp): string {
@@ -728,6 +758,12 @@ fnc bin_op_to_op_overload_name(op: BinaryOp): string {
     if op == BinaryOp.DIV return "__div__"
     if op == BinaryOp.MOD return "__mod__"
     if op == BinaryOp.POW return "__pow__"
+    if op == BinaryOp.ADD_ASSIGN return "__adda__"
+    if op == BinaryOp.SUB_ASSIGN return "__suba__"
+    if op == BinaryOp.MUL_ASSIGN return "__mula__"
+    if op == BinaryOp.DIV_ASSIGN return "__diva__"
+    if op == BinaryOp.MOD_ASSIGN return "__moda__"
+    if op == BinaryOp.POW_ASSIGN return "__powa__"
     if op == BinaryOp.GT return "__gt__"
     if op == BinaryOp.GTE return "__ge__"
     if op == BinaryOp.LT return "__lt__"
@@ -736,9 +772,13 @@ fnc bin_op_to_op_overload_name(op: BinaryOp): string {
     if op == BinaryOp.NEQ return "__ne__"
     if op == BinaryOp.SL return "__sl__"
     if op == BinaryOp.SR return "__sr__"
+    if op == BinaryOp.SL_ASSIGN return "__sla__"
+    if op == BinaryOp.SR_ASSIGN return "__sra__"
     if op == BinaryOp.OR return "__or__"
     if op == BinaryOp.AND return "__and__"
     if op == BinaryOp.XOR return "__xor__"
+    if op == BinaryOp.AND_ASSIGN return "__anda__"
+    if op == BinaryOp.XOR_ASSIGN return "__xora__"
     if op == BinaryOp.IN return "__in__"
     return null
 }
@@ -1535,7 +1575,16 @@ class TypeChecker {
         this.error(ErrorKind.NAME, "Undefined variable '$name'", var_access_node.range)
         return null
     }
-    private check_assignment(this, left: Expression, right: Expression, binary_node: BinaryExpressionNode): BinaryExpression {
+    private check_assignment(this, left: Expression, right: Expression, binary_node: BinaryExpressionNode): Expression {
+        let op = binary_node.op
+        if op != BinaryOp.ASSIGN {
+            if is_object(left.value_type){
+                let exp = this.check_object_bin_assign(left, binary_node)
+                if exp != null or this.has_errored() return exp
+            }
+            binary_node.op = lower_bin_assign_op(op)
+            right = this.check_bin_expr(left.value_type, binary_node)
+        }
         if left.value_type.kind == TypeKind.RECORD {
             this.error(ErrorKind.TYPE, "Cannot assign a value to a record", binary_node.range)
             return null
@@ -1549,6 +1598,26 @@ class TypeChecker {
             return null
         }
         return new BinaryExpression(left, BinaryOp.ASSIGN, right, right.value_type)
+    }
+    private check_object_bin_assign(this, left: Expression, binary_node: BinaryExpressionNode): Expression {
+        let obj_type = left.value_type as ObjectType
+        let op = binary_node.op
+        let method_name = bin_op_to_op_overload_name(op)
+        let owner_class = get_class(this.program, obj_type.class_id)
+        let prop_id = owner_class.prop_map.get(method_name)
+        if prop_id == null {
+            return null
+        }
+        let method_type = get_class_prop_type(this.program, prop_id) as FunctionType
+        let arg_type = method_type.arg_types[0]
+        let right = this.check_expression(arg_type, binary_node.rhs)
+        if !this.types_are_eq(arg_type, right.value_type) {
+            this.error(ErrorKind.TYPE, "Expected type '$(this.dump_type(arg_type))' but got type '$(right.value_type)'", binary_node.rhs.range)
+            return null
+        }
+        let member_exp = new MemberExpression(left, prop_id, method_type)
+        let args: Expression[] = [right]
+        return new CallExpression(member_exp, args, method_type.return_type)
     }
     private check_object_binary_expr(this, left: Expression, binary_node: BinaryExpressionNode): Expression {
         let obj_type = left.value_type as ObjectType
@@ -1619,8 +1688,8 @@ class TypeChecker {
         let right = this.check_expression(left.value_type, binary_node.rhs)
         if this.has_errored() return null
         let is_const = left.is_constant and right.is_constant
-        if op == BinaryOp.ASSIGN
-            return this.check_assignment(left, right, binary_node)
+        if op >= BinaryOp.ASSIGN and op <= BinaryOp.SR_ASSIGN
+            return this.check_assignment(left, right, binary_node) as BinaryExpression
         if left.value_type.kind == TypeKind.UNKNOWN and right.value_type.kind != TypeKind.UNKNOWN
             left.value_type = right.value_type
         if is_numeric(left.value_type) and is_numeric(right.value_type){

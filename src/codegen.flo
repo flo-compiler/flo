@@ -275,13 +275,14 @@ class CodeGen {
     }
     private codegen_string(this, builder: LLVMBuilderRef, string_exp: StringExpression): LLVMValueRef {
         let str_value = string_exp.value
-        let str = this.module_string_scope.get(str_value)
-        let call_args: LLVMValueRef[] = [str]
+        let call_args: LLVMValueRef[] = []
+        call_args << null
         for let i = 0; i < string_exp.template_args.length; i++ {
             let fmt = get_format_from_type(string_exp.template_args[i].value_type)
             call_args << this.codegen_expression(builder, string_exp.template_args[i])
             str_value = str_value.replace("\$", fmt)
         }
+        let str = this.module_string_scope.get(str_value)
         if str == null
             str = LLVMBuildGlobalString(builder, str_value.to_cstring(), "")
         let result = this.module_string_scope.get(str_value)
