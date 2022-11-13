@@ -212,13 +212,6 @@ class Analyzer(Visitor):
             if isinstance(left, FloPointer) and isinstance(right, FloInt):
                 return left
             # TODO: Other object types arithmetic operators/operator overloading.
-            # NOTE: For string and other type concatenation, Generics will handle it.
-            if node.op.type == TokType.PLUS and is_string_object(left):
-                node.right_node = self.cast(node.right_node, left)
-                return left
-            elif node.op.type == TokType.PLUS and is_string_object(right):
-                node.left_node = self.cast(node.left_node, right)
-                return right
             if node.op.type == TokType.PLUS and isinstance(left, FloObject):
                 add_method = left.referer.get_method("__add__")
                 if add_method != None:

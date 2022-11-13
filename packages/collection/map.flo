@@ -11,9 +11,6 @@ class Bucket<T, U> {
         this.key = key
         this.value = value
     }
-    __as_string__(): string {
-        return this.key + ":" + this.value
-    }
 }
 class Map<T, U> {
     buckets: Bucket<T, U>*
