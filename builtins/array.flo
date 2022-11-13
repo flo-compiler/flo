@@ -64,7 +64,7 @@ class Array <T> {
         let res = ""
         let last_index = this.length - 1
         for let i = 0; i < last_index; i++ {
-            res += (this.buffer[i] as string) + seperator
+            res += "$(this.buffer[i]) $seperator"
         }
         return res + (this.buffer[i] as string)
     }
