@@ -647,7 +647,11 @@ class Parser:
             return CharNode(tok, tok.range)
         elif tok.type == TokType.STR:
             self.advance()
-            return StrNode(tok, tok.range)
+            nodes = []
+            for group in tok.token_groups:
+                tmp_parser = Parser(group)
+                nodes.append(tmp_parser.expr())
+            return StrNode(tok, nodes, tok.range)
         elif tok.type == TokType.IDENTIFER or tok.type == TokType.MACRO_IDENTIFIER:
             self.advance()
             return VarAccessNode(tok, tok.range)

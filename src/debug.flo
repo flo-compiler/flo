@@ -160,7 +160,7 @@ fnc print_tokens(tokens: Token[], text: string){
         let token = tokens[i]
         println(" {")
         println("  type:", token_str(token.ttype)+",")
-        println("  range:", token.range.start+"-"+token.range.end)
+        println("  range:", "$(token.range.start)-$(token.range.end)")
         if token.ttype != TokType.LN
             println("  value:", token_value(token, text))
         else

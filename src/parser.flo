@@ -89,9 +89,11 @@ class CharExpressionNode (ExpressionNode) {
 }
 class StringExpressionNode (ExpressionNode) {
     value: StrToken
-    constructor(this, value: StrToken){
+    template_args: ExpressionNode[]
+    constructor(this, value: StrToken, template_args: ExpressionNode[]){
         super(ExpressionKind.STRING, value.range)
         this.value = value
+        this.template_args = template_args
     }
 }
 class VarAccessExpressionNode (ExpressionNode) {
@@ -527,16 +529,29 @@ class Parser {
         }
         return new_node
     }
+    private parse_string(this): StringExpressionNode {
+        let strtoken = this.eat(TokType.STR) as StrToken
+        let tmp_parser: Parser
+        tmp_parser.errors = this.errors
+        let template_args: ExpressionNode [] = []
+        for let i = 0; i < strtoken.args.length and this.can_parse(); i++ {
+            tmp_parser.tokens = strtoken.args[i]
+            tmp_parser.idx = -1
+            tmp_parser.advance()
+            template_args << tmp_parser.parse_expression()
+        }
+        return new StringExpressionNode(strtoken, template_args)
+    }
     private parse_atom(this): ExpressionNode {
         if this.current_token.ttype == TokType.STR
-            return new StringExpressionNode(this.eat(TokType.STR) as StrToken)
+            return this.parse_string()
         else if this.current_token.ttype == TokType.INT
             return new IntExpressionNode(this.eat(TokType.INT) as IntToken)
         else if this.current_token.ttype == TokType.FLOAT
             return new FloatExpressionNode(this.eat(TokType.FLOAT) as FloatToken)
         else if this.current_token.ttype == TokType.CHAR
             return new CharExpressionNode(this.eat(TokType.CHAR) as CharToken)
-        else if this.current_token.ttype == TokType.IDENTIFER
+        else if this.current_token.ttype == TokType.IDENTIFER 
             return new VarAccessExpressionNode(this.eat(TokType.IDENTIFER) as IdentifierToken)
         else if this.current_token.ttype == TokType.LBRACKET 
             return this.parse_array_expression()
@@ -886,7 +901,7 @@ class Parser {
             arg_node.default = this.parse_expression()
         }
         if arg_node.parsed_type == null and arg_node.default == null {
-            this.error("'"+arg_node.name+"' has no type information")
+            this.error("'$(arg_node.name.value)' has no type information")
             this.errors[this.errors.length - 1].range = arg_node.name.range
         }
         return arg_node

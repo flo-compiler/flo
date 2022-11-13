@@ -140,57 +140,62 @@ class Lexer:
                         break
                 if break_outer:
                     break
+    
+    def tokenizeNext(self):
+        if self.current_char == None:
+            return None
+        if self.current_char in " \t\n":
+            self.advance()
+            return self.tokenizeNext()
+        elif self.current_char == "/":
+            self.advance()
+            if self.current_char == "/" or self.current_char == "*":
+                self.skip_comment()
+                return self.tokenizeNext()
+            else:
+                return Token(TokType.DIV, Range(self.pos))
+        elif self.current_char == TokType.PLUS.value:
+            return make_plus_plus(self)
+        elif self.current_char == TokType.MINUS.value:
+            return make_minus_minus(self)
+        elif self.current_char == TokType.NOT.value:
+            return make_neq(self)
+        elif self.current_char == TokType.EQ.value:
+            return make_eq(self)
+        elif self.current_char == TokType.LT.value:
+            return make_lte(self)
+        elif self.current_char == TokType.GT.value:
+            return make_gte(self)
+        elif self.current_char == TokType.DOT.value:
+            return make_dots(self)
+        elif self.current_char in TokType._value2member_map_:
+            tok = TokType._value2member_map_[self.current_char]
+            pos = self.pos
+            self.advance()
+            return Token(tok, Range(pos))
+        # special cases so you need to make special characters
+        elif self.current_char in LETTERS:
+            return make_identifier(self)
+        elif self.current_char in DEC_DIGITS:
+            return make_number(self)
+        elif self.current_char == "'":
+            return make_char(self)
+        elif self.current_char == '"':
+            return make_str(self)
+        elif self.current_char == "$":
+            return make_macro_identifer(self)
+        else:
+            pos_start = self.pos.copy()
+            char = self.current_char
+            self.advance()
+            IllegalCharacterError(Range(pos_start, self.pos), char).throw()
 
     def tokenize(self):
         tokens = []
         while self.current_char != None:
-            if self.current_char in " \t\n":
-                self.advance()
-            elif self.current_char == "/":
-                self.advance()
-                if self.current_char == "/" or self.current_char == "*":
-                    self.skip_comment()
-                else:
-                    tokens.append(Token(TokType.DIV, Range(self.pos)))
-            elif self.current_char == TokType.PLUS.value:
-                tok = make_plus_plus(self)
-                tokens.append(tok)
-            elif self.current_char == TokType.MINUS.value:
-                tok = make_minus_minus(self)
-                tokens.append(tok)
-            elif self.current_char == TokType.NOT.value:
-                tok = make_neq(self)
-                tokens.append(tok)
-            elif self.current_char == TokType.EQ.value:
-                tokens.append(make_eq(self))
-            elif self.current_char == TokType.LT.value:
-                tokens.append(make_lte(self))
-            elif self.current_char == TokType.GT.value:
-                tokens.append(make_gte(self))
-            elif self.current_char == TokType.DOT.value:
-                tokens.append(make_dots(self))
-            elif self.current_char in TokType._value2member_map_:
-                tok = TokType._value2member_map_[self.current_char]
-                tokens.append(Token(tok, Range(self.pos)))
-                self.advance()
-            # special cases so you need to make special characters
-            elif self.current_char in LETTERS:
-                tokens.append(make_identifier(self))
-            elif self.current_char in DEC_DIGITS:
-                tokens.append(make_number(self))
-            elif self.current_char == "'":
-                tok = make_char(self)
-                tokens.append(tok)
-            elif self.current_char == '"':
-                tok = make_str(self)
-                tokens.append(tok)
-            elif self.current_char == "$":
-                tokens.append(make_macro_identifer(self))
-            else:
-                pos_start = self.pos.copy()
-                char = self.current_char
-                self.advance()
-                IllegalCharacterError(Range(pos_start, self.pos), char).throw()
+            token = self.tokenizeNext()
+            if token != None:
+                tokens.append(token)
         tokens.append(Token(TokType.EOF, Range(self.pos)))
         return tokens
 
@@ -372,22 +377,48 @@ def make_char(lexer: Lexer):
     lexer.advance()
     return Token(TokType.CHAR, Range(pos_start, lexer.pos), ord(char_val))
 
+class StrToken(Token):
+    def __init__(self, range: Range, token_groups, _value: str = None):
+        super().__init__(TokType.STR, range, _value)
+        self.token_groups = token_groups
 
 def make_str(lexer: Lexer):
     pos_start = lexer.pos.copy()
     str_val = ""
     escape_next = False
+    token_groups = []
     lexer.advance()
     while lexer.current_char != None and (
         lexer.current_char != '"' or escape_next
     ):
         if lexer.current_char == "\\":
             escape_next = True
-            str_val += lexer.current_char
+            if len(lexer.text) > lexer.pos.ind+1 and lexer.text[lexer.pos.ind+1] != '$':
+                str_val += lexer.current_char
+            lexer.advance()
+        elif (not escape_next and lexer.current_char == '$'):
+            token_group = []
+            str_val+=lexer.current_char
+            lexer.advance()
+            if lexer.current_char == '(':
+                lexer.advance()
+                open_par_num = 0
+                while lexer.current_char != None and (lexer.current_char != ')' or open_par_num != 0):
+                    if lexer.current_char == '(':
+                        open_par_num+=1
+                    if lexer.current_char == ')':
+                        open_par_num-=1
+                    next_tok = lexer.tokenizeNext()
+                    if next_tok != None:
+                        token_group.append(next_tok)
+                lexer.advance()
+            else:
+                token_group.append(lexer.tokenizeNext())
+            token_groups.append(token_group)
         else:
             str_val += lexer.current_char
             escape_next = False
-        lexer.advance()
+            lexer.advance()
     if lexer.current_char != '"':
         ExpectedCharError(
             Range(
@@ -396,4 +427,4 @@ def make_str(lexer: Lexer):
     lexer.advance()
     # Unstable code since codes.escape_decode is not a public python function and may be deprecated in the next future
     # Source from: https://stackoverflow.com/questions/4020539/process-escape-sequences-in-a-string-in-python
-    return Token(TokType.STR, Range(pos_start, lexer.pos), codecs.escape_decode(bytes(str_val, "utf-8"))[0].decode("utf-8"))
+    return StrToken(Range(pos_start, lexer.pos), token_groups, codecs.escape_decode(bytes(str_val, "utf-8"))[0].decode("utf-8"))

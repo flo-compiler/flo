@@ -62,8 +62,20 @@ class string {
     get_bytes(this): i8* {
         return this.buffer
     }
+    replace(this, val: string, repl: string): string {
+        let idx = this.find(val)
+        if idx > 0 {
+            let new_length = this.length - val.length + repl.length
+            let new_buffer = new i8[new_length]
+            memcpy(new_buffer, this.buffer, idx)
+            memcpy(new_buffer + idx, repl.buffer, repl.length)
+            memcpy(new_buffer + idx + repl.length, this.buffer + idx + 1, this.length - idx)
+            return new string(new_buffer, new_length)
+        } 
+        return this
+    }
     to_cstring(this): i8* {
-        let c_string = new i8[this.length+1]
+        let c_string = new i8[this.length + 1]
         memcpy(c_string, this.buffer, this.length)
         c_string[this.length] = '\0'
         return c_string

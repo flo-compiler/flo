@@ -7,7 +7,7 @@ from lexer import TokType
 from astree import *
 from context import Context
 from ctypes import CFUNCTYPE, POINTER, c_char_p, c_int
-from builtIns import target_machine, target_data
+from builtIns import get_instrinsic, target_machine, target_data
 from llvmlite import binding as llvm, ir
 
 saved_labels = []
@@ -101,10 +101,34 @@ class Compiler(Visitor):
 
     def visitStrNode(self, node: StrNode):
         str_val = node.tok.value
-        str_buff = FloConst.create_global_str(str_val)
+        values = []
+        str_len = None
+        for node in node.nodes:
+            val = self.visit(node)
+            values.append(val)
+            str_val = str_val.replace("$", val.fmt, 1)
+        fmt = FloConst.create_global_str(str_val)
+        if len(values) > 0:
+            sprintf = get_instrinsic("sprintf")
+            snprintf = get_instrinsic("snprintf")
+            passed_args = [arg.cval(self.builder) for arg in values]
+            i8_ty = ir.IntType(8)
+            i8_ptr_ty = ir.PointerType(i8_ty)
+            str_len = FloInt(self.builder.call(snprintf, [
+                    self.builder.inttoptr(FloInt(0).value, i8_ptr_ty),
+                    FloInt(0).value,
+                    fmt.value
+                ] + passed_args
+            ))
+            str_buff = FloMem.halloc(self.builder, i8_ty, str_len)
+            self.builder.call(sprintf, [
+                str_buff.value, fmt.value]+passed_args
+            )
+        else:
+            str_buff = fmt
+            str_len = FloInt(len(str_val.encode('utf-8')))
         if isinstance(node.expects, FloPointer):
-            return node.expects.new_with_val(str_buff.value)
-        str_len = FloInt(len(str_val.encode('utf-8')))
+            return node.expects.new_with_val(fmt.value)
         string_class = FloClass.classes.get("string")
         return string_class.constant_init(self.builder, [str_buff, str_len, str_len])
 
