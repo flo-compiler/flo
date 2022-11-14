@@ -288,7 +288,7 @@ class CodeGen {
         if result != null
             return result
         this.module_string_scope.set(str_value, str)
-        if call_args.length > 0 {
+        if call_args.length > 1 {
             call_args[0] = str
             return this.codegen_call_sprintf(builder, call_args)
         }
@@ -600,6 +600,8 @@ class CodeGen {
         let var_id = (member_exp.expression as VarAccessExpression).value_id
         if type_kind == TypeKind.OBJECT {
             let ptr = this.get_member_expr_mem(builder, member_exp, self)
+            if get_class_prop_visibility(this.program, member_exp.member_id) == ACCESS_ATTR.PRIVATE
+                return ptr
             return LLVMBuildLoad2(builder, this.codegen_type(member_exp.value_type), ptr, "")
         }
         let prop_id_key = create_prop_key(member_exp.member_id)

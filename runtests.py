@@ -21,7 +21,7 @@ def main():
             if p.returncode != expected_return_code:
                 failed_tests+=1
                 print(f"\033[41mFailed\033[0m Test {file.name}: return code {p.returncode}")
-                stdout = str(p.stdout, 'utf-8')[0:-1] if p.returncode != -11 else "segmentationfault"
+                stdout = str(p.stdout, 'utf-8')[0:-1] if p.returncode != -11 else "Segmentation fault"
                 print(f"\033[31m>>> {stdout}\033[0m")
                 failed_suites = True
             else:
