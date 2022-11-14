@@ -5,7 +5,7 @@ from subprocess import run, STDOUT, PIPE
 def main():
     TEST_PATH_DIR = "./tests"
     FLO_COMPILER_PROG_PATH = "./flo"
-    print("----Running tests------")
+    print("-------------------Running tests-------------------")
     failed_test_suits = 0
     passed_test_suits = 0
     failed_tests = 0
@@ -21,7 +21,8 @@ def main():
             if p.returncode != expected_return_code:
                 failed_tests+=1
                 print(f"\033[41mFailed\033[0m Test {file.name}: return code {p.returncode}")
-                # print(str(p.stdout, 'utf-8')[0:-1])
+                stdout = str(p.stdout, 'utf-8')[0:-1] if p.returncode != -11 else "segmentationfault"
+                print(f"\033[31m>>> {stdout}\033[0m")
                 failed_suites = True
             else:
                 print(f"\033[42mPassed\033[0m Test {file.name} passed!")
@@ -30,7 +31,7 @@ def main():
             failed_test_suits+=1
         else:
             passed_test_suits+=1
-        print("")
+        print("---------------------------------------------")
     print(f"Test Suites: \033[31;1m{failed_test_suits} failed\033[0m, \033[32;1m{passed_test_suits} passed\033[0m, {passed_test_suits+failed_test_suits} total")
     print(f"Tests:       \033[31;1m{failed_tests} failed\033[0m, \033[32;1m{passed_tests} passed\033[0m, {passed_tests+failed_tests} total")
 
