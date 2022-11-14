@@ -202,11 +202,13 @@ class TypeCastExpression (Expression) {
 class NewExpression (Expression) {
     args: Expression[]
     onheap: bool
-    constructor(this, value_type: Type, args: Expression[], onheap: bool){
+    memory_type: Type
+    constructor(this, memory_type: Type, args: Expression[], onheap: bool, value_type: Type){
         super(ExpressionKind.NEW)
-        this.value_type = value_type
+        this.memory_type = memory_type
         this.onheap = onheap
         this.args = args
+        this.value_type = value_type
     }
 }
 class IndexExpression (Expression) {
@@ -1571,7 +1573,6 @@ class TypeChecker {
                 var_ty = new Type(TypeKind.RECORD)
             return new VarAccessExpression(var_id, var_ty)
         }
-        let record_type = this.get_type_from_current_scope(name)
         this.error(ErrorKind.NAME, "Undefined variable '$name'", var_access_node.range)
         return null
     }
@@ -1657,16 +1658,16 @@ class TypeChecker {
             return null
         }
         let method_type = get_class_prop_type(this.program, prop_id) as FunctionType
-        let at1 = method_type.arg_types[0]
-        let at2 = method_type.arg_types[1]
-        let index = this.check_expression(at1, index_expr_node.index)
-        if !this.types_are_eq(at1, index.value_type) {
-            this.error(ErrorKind.TYPE, "Expected type '$(this.dump_type(at1))' but got type '$(this.dump_type(index.value_type))'", index_expr_node.index.range)
+        let arg1_type = method_type.arg_types[0]
+        let arg2_type = method_type.arg_types[1]
+        let index = this.check_expression(arg1_type, index_expr_node.index)
+        if !this.types_are_eq(arg1_type, index.value_type) {
+            this.error(ErrorKind.TYPE, "Expected type '$(this.dump_type(arg1_type))' but got type '$(this.dump_type(index.value_type))'", index_expr_node.index.range)
             return null
         }
-        let value = this.check_expression(at2, binary_node.rhs)
-        if !this.types_are_eq(at1, index.value_type) {
-            this.error(ErrorKind.TYPE, "Expected type '$(this.dump_type(at2))' but got type '$(this.dump_type(value.value_type))'", binary_node.rhs.range)
+        let value = this.check_expression(arg2_type, binary_node.rhs)
+        if !this.types_are_eq(arg1_type, index.value_type) {
+            this.error(ErrorKind.TYPE, "Expected type '$(this.dump_type(arg2_type))' but got type '$(this.dump_type(value.value_type))'", binary_node.rhs.range)
             return null
         }
         let member_expr = new MemberExpression(object, prop_id, method_type)
@@ -1676,6 +1677,7 @@ class TypeChecker {
 
     private check_bin_expr(this, expected_type: Type, binary_node: BinaryExpressionNode): BinaryExpression {
         let op = binary_node.op
+        let is_assign_op = op >= BinaryOp.ASSIGN and op <= BinaryOp.SR_ASSIGN
         if op == BinaryOp.ASSIGN and binary_node.lhs.expr_kind == ExpressionKind.INDEX {
             let possible_obj = this.check_expression($UNKNOWN_TYPE, (binary_node.lhs as ExpressionIndexNode).expression)
             if is_object(possible_obj.value_type)
@@ -1683,12 +1685,12 @@ class TypeChecker {
         }
         let left = this.check_expression(expected_type, binary_node.lhs)
         if this.has_errored() return null
-        if is_object(left.value_type) and op != BinaryOp.ASSIGN
+        if is_object(left.value_type) and !is_assign_op
             return this.check_object_binary_expr(left, binary_node) as BinaryExpression
         let right = this.check_expression(left.value_type, binary_node.rhs)
         if this.has_errored() return null
         let is_const = left.is_constant and right.is_constant
-        if op >= BinaryOp.ASSIGN and op <= BinaryOp.SR_ASSIGN
+        if is_assign_op
             return this.check_assignment(left, right, binary_node) as BinaryExpression
         if left.value_type.kind == TypeKind.UNKNOWN and right.value_type.kind != TypeKind.UNKNOWN
             left.value_type = right.value_type
@@ -1791,6 +1793,7 @@ class TypeChecker {
     }
     private check_new_expr(this, new_expr_node: NewExpressionNode): NewExpression {
         let expr_ty = this.check_type(new_expr_node.parsed_type)
+        let value_type = expr_ty
         let args: Expression[] = []
         if this.has_errored() return null
         if expr_ty.kind == TypeKind.OBJECT {
@@ -1799,8 +1802,10 @@ class TypeChecker {
                 this.error(ErrorKind.GEN, msg, new_expr_node.range)
                 return null
             }
+        } else {
+            value_type = new PointerType(expr_ty)
         }
-        return new NewExpression(expr_ty, args, new_expr_node.onheap)
+        return new NewExpression(expr_ty, args, new_expr_node.onheap, value_type)
     }   
     private check_member_access(this, accessor: PropId): string {
         let visibility = ACCESS_ATTR.PUBLIC
@@ -1867,13 +1872,13 @@ class TypeChecker {
                 let parent_enum = this.get_enum_from_var_id(var_id)
                 prop_id = parent_enum.field_map.get(prop_name)
                 if (prop_id == null) {   
-                    this.error(ErrorKind.NAME, "'$prop_name' is not an element of enum '$(parent_enum.name)'", member_expr_node.member.range)
+                    this.error(ErrorKind.NAME, "'$prop_name' is not an element of enum the '$(parent_enum.name)'", member_expr_node.member.range)
                     return null
                 }
                 prop_ty = new EnumType(parent_enum.id)
             }
         } else {
-            this.error(ErrorKind.GEN, "Cannot get property of type '$(this.dump_type(prop_owner_type))'", member_expr_node.expression.range)
+            this.error(ErrorKind.GEN, "Cannot get property '$prop_name' of type '$(this.dump_type(prop_owner_type))'", member_expr_node.expression.range)
             return null
         }
         return new MemberExpression(prop_owner, prop_id, prop_ty)
@@ -2114,7 +2119,7 @@ class TypeChecker {
         let value = this.check_expression(const_type, const_decl_stmt.value)
         if this.has_errored() return null
         if !value.is_constant {
-            this.error(ErrorKind.GEN, "cannot assign a non-constant value to a constant", const_decl_stmt.value.range)
+            this.error(ErrorKind.GEN, "Cannot assign a non-constant value to a constant", const_decl_stmt.value.range)
             return null
         }
         if is_null(value) {

@@ -1,0 +1,3 @@
+fnc fopen(file: i8*, mode: i8*): i8*
+fnc fseek(f: i8*, x: int, l: int)
+fnc ftell(f: i8*): int

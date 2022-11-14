@@ -1,0 +1,35 @@
+class Int {
+    private value: int
+    constructor(this, value: int){
+        this.value = value
+    }
+    public __add__(this, other: Int): Int {
+        let v: Int(this.value + other.value)
+        return v
+    }
+    public get_value(this): int {
+        return this.value
+    }
+}
+class Float {
+    private value: float
+    constructor(this, value: float){
+        this.value = value
+    }
+    public __adda__(this, other: Float): Float {
+        this.value += other.value
+        return this
+    }
+    public get_value(this): float {
+        return this.value
+    }
+}
+fnc main(): int {
+    let x: Int(4)
+    let y: Int(5)
+    y += x
+    let z: Float(8.8)
+    let w: Float(1.2)
+    z+=w
+    return z.get_value() as int
+}

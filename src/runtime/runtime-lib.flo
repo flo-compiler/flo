@@ -1,0 +1,140 @@
+class string {
+    private buffer: i8*
+    public length: int
+    private size: int
+    constructor(this, data: i8*, len: int)
+    public __add__(this, data: string): string 
+    public add_byte(this, char: i8)
+    public __getitem__(this, index: int): string 
+    public __eq__(this, other: string): bool 
+    public find(this, search: string): int 
+    public __in__(this, other: string): bool 
+    public substring (this, start: int, length: int): string 
+    public get_byte(this, index: int): i8 
+    public get_bytes(this): i8* 
+    public replace(this, val: string, repl: string): string 
+    public to_cstring(this): i8* 
+}
+
+class Range {
+    private start: int
+    private end: int
+    constructor(this, start: int, end: int)
+    public __in__(this, num: int): bool 
+}
+// class Array <T> {
+//     buffer: T*
+//     length: int
+//     size: int
+//     constructor(this, size: int)
+//     private resize(this){
+//         this.size = this.size * 2 // * sizeof(int)
+//         this.buffer = this.buffer.resize(this.size)
+//     }
+//     public swap(this, i1: int, i2: int){
+//         if (i1 in 0..this.length) and (i2 in 0..this.length) {
+//             let tmp = this.buffer[i1]
+//             this.buffer[i1] = this.buffer[i2]
+//             this.buffer[i2] = tmp 
+//         }
+//     }
+//     public __sl__(this, element: T){
+//         if (this.length >= this.size) this.resize()
+//         this.buffer[this.length++] = element
+//     }
+//     public __setitem__(this, index: int, value: T){
+//         if index in 0..this.length {
+//             this.buffer[index] = value
+//         }
+//     }
+//     public __getitem__(this, index: int): T {
+//         if index in 0..this.length {
+//             return this.buffer[index]
+//         }
+//         return null
+//     }
+//     public __eq__(this, other: Array<T>): bool{
+//         if this.length != other.length {
+//             return false
+//         } else {
+//            for let i = 0; i < this.length; i++ {
+//                if this[i] != other[i] return false
+//            }
+//            return true
+//         }
+//         return true
+//     }
+//     public __in__(this, element: T): bool {
+//         for let i = 0; i < this.length; i++ {
+//             if this[i] == element return true 
+//         }
+//         return false
+//     }
+    
+//     public find(this, search: T): int{
+//         for let i = 0; i < this.length; i++ {
+//             if this.buffer[i] == search return i
+//         }
+//         return -1
+//     }
+//     public join(this, seperator: string): string{
+//         let res = ""
+//         let last_index = this.length - 1
+//         for let i = 0; i < last_index; i++ {
+//             res += this.buffer[i] + seperator
+//         }
+//         return res + this.buffer[i]
+//     }
+//     public __as_string__(this): string {
+//         return "[$(this.join(", "))]"
+//     }
+// }
+
+/* Function generators int 
+fnc *array_generator<U[N]>(x: U[N]): U {
+    for i in 0..N {
+         yield x[i]
+    }
+} */
+/* Types as first class through generics.
+type integer = int + i4 + i8 + i16 + i32 + i64 + i128
+type rational = float + f16 + f32 + f64
+type numeric = integers + floats
+type integer_float = integer * floats
+fnc *array_generator<U[N]>(x: U[N]): U {
+    for i in 0..N {
+        yield x[i]
+    }
+}
+fnc ptr_element<U*>(): typeof<U> {
+    return @U
+}
+fnc is_generic<T>(x: T): bool {
+    return @T == @T<>
+}
+fnc is_ptr<T>(): bool {
+    try {
+        ptr_element(T)
+        return true
+    } catch error {
+        return false
+    }
+}
+fnc isa<T, U>(x: U): bool {
+    try {
+        let v: T = x
+        return true
+    } catch error {
+        return false
+    }
+}
+for method in Range.methods {
+
+}
+for field in Range.fields {
+
+}
+for type in type(int, float, Range){
+
+}
+*/

@@ -1,5 +1,5 @@
-fnc write(fd: int, cmd: i8*, len: int)
+fnc printf(str: i8*)
 fnc main(): int {
-    write(0, "Hello World\n", 13)
+    printf("Hello World\n")
     return 0
 }

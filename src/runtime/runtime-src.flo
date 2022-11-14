@@ -1,0 +1,225 @@
+/*@extern*/
+fnc memcmp(ptr1: i8*, ptr2: i8*, len: int): int
+/*@extern*/
+fnc memcpy(ptr1: i8*, ptr2: i8*, len: int): int
+/*@extern*/
+fnc memset(ptr1: i8*, c: int, len: int)
+/*@extern*/
+fnc realloc(ptr: i8*, size: int): i8*
+
+class string {
+    private buffer: i8*
+    public length: int
+    private size: int
+    constructor(this, data: i8*, len: int){
+        this.buffer = data
+        this.length = len
+        this.size = len
+    }
+    public __add__(this, data: string): string {
+        let new_str_len = this.length + data.length
+        let new_buffer = new i8(new_str_len)
+        memcpy(new_buffer, this.buffer, this.length)
+        let trailing_buffer = new_buffer + this.length
+        memcpy(trailing_buffer, data.buffer, data.length + 1)
+        return new string(new_buffer, new_str_len)   
+    }
+    public add_byte(this, char: i8){
+        if this.length + 1 >= this.size {
+            this.size *= 2
+            this.buffer = realloc(this.buffer, this.size)
+        }
+        this.buffer[this.length]  = char
+        this.length++
+    }
+    public __getitem__(this, index: int): string {
+        let new_buffer = new i8(2)
+        new_buffer[0] = this.buffer[index]
+        new_buffer[1] = '\0'
+        return new string(new_buffer, 2)
+    }
+    public __eq__(this, other: string): bool {
+        if this.length != other.length return false
+        return memcmp(this.buffer, other.buffer, this.length) == 0
+    }
+    public find(this, search: string): int {
+        for let i = 0; i < this.length; i++ {
+            if (search.buffer[0] == this.buffer[i]) {
+                let x = search.length - 1
+                let matches = true
+                while x > 0 {
+                    if (search.buffer[x] != this.buffer[x+i]){
+                        return -1
+                    }
+                    x--
+                }
+                if matches return i
+            }
+        }
+        return -1
+    }
+    public __in__(this, other: string): bool {
+        return this.find(other) != -1
+    }
+    public substring (this, start: int, length: int): string {
+        return new string(this.buffer + start, length)
+    }
+    public get_byte(this, index: int): i8 {
+        return (this.buffer[index])
+    }
+    public get_bytes(this): i8* {
+        return this.buffer
+    }
+    public replace(this, val: string, repl: string): string {
+        let idx = this.find(val)
+        if idx > 0 {
+            let new_length = this.length - val.length + repl.length
+            let new_buffer = new i8(new_length)
+            memcpy(new_buffer, this.buffer, idx)
+            memcpy(new_buffer + idx, repl.buffer, repl.length)
+            memcpy(new_buffer + idx + repl.length, this.buffer + idx + 1, this.length - idx)
+            return new string(new_buffer, new_length)
+        } 
+        return this
+    }
+    public to_cstring(this): i8* {
+        let c_string = new i8(this.length + 1)
+        memcpy(c_string, this.buffer, this.length)
+        c_string[this.length] = '\0'
+        return c_string
+    }
+}
+class Range {
+    private start: int
+    private end: int
+    constructor(this, start: int, end: int){
+        this.start = start
+        this.end = end
+    }
+    public __in__(this, num: int): bool {
+        return num >= this.start and num < this.end
+    }
+}
+// class Array <T> {
+//     buffer: T*
+//     length: int
+//     size: int
+//     constructor(this, size = 8){
+//         this.length = 0
+//         this.size = size
+//         this.buffer = new T[size]
+//     }
+//     resize(this){
+//         this.size = this.size * 2 // * sizeof(int)
+//         this.buffer = this.buffer.resize(this.size)
+//     }
+//     swap(this, i1: int, i2: int){
+//         if (i1 in 0..this.length) and (i2 in 0..this.length) {
+//             let tmp = this.buffer[i1]
+//             this.buffer[i1] = this.buffer[i2]
+//             this.buffer[i2] = tmp 
+//         }
+//     }
+//     __sl__(this, element: T){
+//         if (this.length >= this.size) this.resize()
+//         this.buffer[this.length++] = element
+//     }
+//     __setitem__(this, index: int, value: T){
+//         if index in 0..this.length {
+//             this.buffer[index] = value
+//         }
+//     }
+//     append(this, element: T){
+//         this.__sl__(element)
+//     }
+//     __getitem__(this, index: int): T {
+//         if index in 0..this.length {
+//             return this.buffer[index]
+//         }
+//         return null
+//     }
+//     __eq__(this, other: Array<T>): bool{
+//         if this.length != other.length {
+//             return false
+//         } else {
+//            for let i = 0; i < this.length; i++ {
+//                if this[i] != other[i] return false
+//            }
+//            return true
+//         }
+//         return true
+//     }
+//     __in__(this, element: T): bool {
+//         for let i = 0; i < this.length; i++ {
+//             if this[i] == element return true 
+//         }
+//         return false
+//     }
+    
+//     find(this, search: T): int{
+//         for let i = 0; i < this.length; i++ {
+//             if this.buffer[i] == search return i
+//         }
+//         return -1
+//     }
+//     join(this, seperator: string): string{
+//         let res = ""
+//         let last_index = this.length - 1
+//         for let i = 0; i < last_index; i++ {
+//             res += this.buffer[i] + seperator
+//         }
+//         return res + this.buffer[i]
+//     }
+//     __as_string__(this): string {
+//         return "[$(this.join(", "))]"
+//     }
+// }
+
+/* Function generators int 
+fnc *array_generator<U[N]>(x: U[N]): U {
+    for i in 0..N {
+         yield x[i]
+    }
+} */
+/* Types as first class through generics.
+type integer = int + i4 + i8 + i16 + i32 + i64 + i128
+type rational = float + f16 + f32 + f64
+type numeric = integers + floats
+type integer_float = integer * floats
+fnc *array_generator<U[N]>(x: U[N]): U {
+    for i in 0..N {
+        yield x[i]
+    }
+}
+fnc ptr_element<U*>(): typeof<U> {
+    return @U
+}
+fnc is_generic<T>(x: T): bool {
+    return @T == @T<>
+}
+fnc is_ptr<T>(): bool {
+    try {
+        ptr_element(T)
+        return true
+    } catch error {
+        return false
+    }
+}
+fnc isa<T, U>(x: U): bool {
+    try {
+        let v: T = x
+        return true
+    } catch error {
+        return false
+    }
+}
+for method in Range.methods {
+
+}
+for field in Range.fields {
+
+}
+for type in type(int, float, Range){
+
+}
+*/
