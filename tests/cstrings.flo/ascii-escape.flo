@@ -1,5 +1,5 @@
-fnc write(fd: int, cmd: i8*, len: int)
+fnc printf(str: i8*)
 fnc main(): int {
-    write(0, "\033[1;31mHello World\n\033[0m", 24)
+    printf("\033[1;31mHello World\n\033[0m")
     return 0
 }

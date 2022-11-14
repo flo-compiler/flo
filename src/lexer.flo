@@ -467,64 +467,66 @@ class Lexer {
         }
         if is_identifier_char(char) 
             return this.identifier_token()
-        else if char == '"'
+        if char == '"'
             return this.string_token()
-        else if is_number_char(char)
+        if is_number_char(char)
             return this.numeric_token()
-        else if char == ':' 
+        if char == ':' 
             return new Token(TokType.COL, this.get_range(1))
-        else if char == ';'
+        if char == ';'
             return new Token(TokType.SEMICOL, this.get_range(1))
-        else if char == ','
+        if char == ','
             return new Token(TokType.COMMA, this.get_range(1))
-        else if char == '+'
+        if char == '+'
             return this.plus_token()
-        else if char == '-'
+        if char == '-'
             return this.minus_token()
-        else if char == '*'
+        if char == '*'
             return this.mult_token()
-        else if char == '%'
+        if char == '%'
             return this.mod_token()
-        else if char == '^'
+        if char == '^'
             return this.pow_token()
-        else if char == '/' {
+        if char == '/' {
             if this.skip_comment() {
                 this.advance()
                 return this.lex_token()
             }
             return this.div_token()
-        } else if char == '('
+        } 
+        if char == '('
             return new Token(TokType.LPAR, this.get_range(1))
-        else if char == ')'
+        if char == ')'
             return new Token(TokType.RPAR, this.get_range(1))
-        else if char == '{'
+        if char == '{'
             return new Token(TokType.LBRACE, this.get_range(1))
-        else if char == '}'
+        if char == '}'
             return new Token(TokType.RBRACE, this.get_range(1))
-        else if char == '['
+        if char == '['
             return new Token(TokType.LBRACKET, this.get_range(1))
-        else if char == ']'
+        if char == ']'
             return new Token(TokType.RBRACKET, this.get_range(1))
-        else if char == '\n' or char == '\r'
+        if char == '\n' or char == '\r'
             return new Token(TokType.LN, this.get_range(1))
-        else if char == '\''
+        if char == '\''
             return (this.char_token() as Token)
-        else if char == '?'
+        if char == '?'
             return new Token(TokType.QUES, this.get_range(1))
-        else if char == '&'
+        if char == '&'
             return new Token(TokType.AMP, this.get_range(1))
-        else if char == '='
+        if char == '='
             return this.eq_token()
-        else if char == '!'
+        if char == '!'
             return this.neq_token()
-        else if char == '>'
+        if char == '>'
             return this.gt_token()
-        else if char == '<'
+        if char == '<'
             return this.lt_token()
-        else if char == '.'
+        if char == '.'
             return this.dot_token()
-        else
-            this.errors << new FloError(ErrorKind.ILLEGALCHAR, "Illegal character: '$(this.text.substring(this.idx, 1))'", this.get_range(1))
+        if char == '\0'
+            return new Token(TokType.EOF, new FloRange(0, 0, this.col, this.line))
+        this.errors << new FloError(ErrorKind.ILLEGALCHAR, "Illegal character: '$(this.text.substring(this.idx, 1))'", this.get_range(1))
         return null
     }
     public tokenize(this, text: string, errors: FloError[]): Token[] {

@@ -80,7 +80,6 @@ fnc get_format_from_type(ty: Type): string {
     if is_pointer(ty)
         return "%p"
     return "%s"
-        
 }
 class CodeGen {
     modules: LLVMModuleRef[]
@@ -586,13 +585,13 @@ class CodeGen {
     }
     private codegen_new_exp(this, builder: LLVMBuilderRef, new_expr: NewExpression): LLVMValueRef {
         let ptr: LLVMValueRef = null
-        let llvm_type = this.codegen_type(new_expr.value_type, false)
+        let llvm_type = this.codegen_type(new_expr.memory_type, false)
         if new_expr.onheap
             ptr = LLVMBuildMalloc(builder, llvm_type, "")
         else
             ptr = LLVMBuildAlloca(builder, llvm_type, "")
-        if is_object(new_expr.value_type){
-            this.build_constructor_call(builder, new_expr.value_type as ObjectType, ptr, new_expr.args)
+        if is_object(new_expr.memory_type){
+            this.build_constructor_call(builder, new_expr.memory_type as ObjectType, ptr, new_expr.args)
         }
         return ptr
     }
@@ -847,7 +846,7 @@ class CodeGen {
             let prop_id_key = create_prop_key(method.id)
             let llvm_fnc = struct_class.non_vt_methods_map.get(prop_id_key)
             let is_constructor = method.name == "constructor"
-            llvm_fnc = LLVMGetNamedFunction(this.module, (checked_class.name + method.name).to_cstring())
+            llvm_fnc = LLVMGetNamedFunction(this.module, "$(checked_class.name)_$(method.name)".to_cstring())
             let entry_block = LLVMAppendBasicBlockInContext(this.module_ctx, llvm_fnc, "")
             let func_builder = LLVMCreateBuilderInContext(this.module_ctx)
             LLVMPositionBuilderAtEnd(func_builder, entry_block)
@@ -893,7 +892,7 @@ class CodeGen {
             let prop_type = get_class_prop_type(this.program, prop_id)
             let static_prop_name = buckets[i].key
             let static_prop_type = this.codegen_type(prop_type, false)
-            let static_prop_name_concat = (checked_class.name + static_prop_name)
+            let static_prop_name_concat = "$(checked_class.name)_$static_prop_name"
             let static_prop_value: LLVMValueRef = null
             if prop_id.kind == PropIdKind.METHOD {
                 static_prop_value = this.declare_method(static_prop_name_concat, static_prop_type)
@@ -933,7 +932,7 @@ class CodeGen {
                     method_type.arg_types = arg_types
                     llvm_method_type = this.codegen_type(method_type, false)
                     if !checked_class.methods[prop_id.id].is_abstract {
-                        llvm_method_val = this.declare_method((checked_class.name + prop_name), llvm_method_type)
+                        llvm_method_val = this.declare_method("$(checked_class.name)_$prop_name", llvm_method_type)
                     }
                     if (get_class_prop_visibility(this.program, prop_id) == ACCESS_ATTR.PRIVATE){ 
                         struct_class.non_vt_methods_map.set(prop_id_key, llvm_method_val)
@@ -941,7 +940,8 @@ class CodeGen {
                     }
                 } else {
                     llvm_method_type = this.codegen_type(method_type, false)
-                    llvm_method_val = LLVMGetNamedFunction(this.module, (get_class(this.program, prop_id.type_id as ClassId).name + prop_name).to_cstring())
+                    let owner_classname = get_class(this.program, prop_id.type_id as ClassId).name
+                    llvm_method_val = LLVMGetNamedFunction(this.module, "$(owner_classname)_$prop_name".to_cstring())
                 }
                 struct_class.vt_methods_pos_map.set(prop_id_key, prop_index)
                 resize_type_array(vtable_types, prop_index)
@@ -955,7 +955,7 @@ class CodeGen {
         if vtable_types.length > 0 {
             let vtable_struct_ty = LLVMStructTypeInContext(this.module_ctx, vtable_types.buffer, vtable_types.length, true)
             if !checked_class.is_abstract {
-                struct_class.vtable = LLVMAddGlobal(this.module, vtable_struct_ty, (checked_class.name+"VT").to_cstring())
+                struct_class.vtable = LLVMAddGlobal(this.module, vtable_struct_ty, "VTable$(checked_class.name)".to_cstring())
                 let vtable_intializer = LLVMConstStructInContext(this.module_ctx, vtable_values.buffer, vtable_values.length, true)
                 LLVMSetInitializer(struct_class.vtable, vtable_intializer)
             }
@@ -993,7 +993,7 @@ class CodeGen {
             }
             constructor_type.arg_types = arg_types
             let constructor_llvm_method_type = this.codegen_type(constructor_type, false)
-            struct_class.constructor = this.declare_method((checked_class.name + "constructor"), constructor_llvm_method_type)
+            struct_class.constructor = this.declare_method("$(checked_class.name)_constructor", constructor_llvm_method_type)
         } else {
             struct_class.constructor = null
         }
