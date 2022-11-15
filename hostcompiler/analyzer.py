@@ -882,6 +882,14 @@ class Analyzer(Visitor):
                 GeneralError(node.property.range,
                          f"{property_name} not defined on pointer").throw()
             return method
+        if isinstance(root, FloClass):
+            value = root.properties.get(property_name)
+            if value == None:
+                value = root.get_method(property_name)
+            if value == None:
+                GeneralError(node.property.range,
+                         f"{property_name} not defined as static member of class {root.name}").throw()
+            return value
         if not isinstance(root, FloObject):
             TypeError(node.expr.range, "Expected an object").throw()
         value = root.referer.properties.get(property_name)

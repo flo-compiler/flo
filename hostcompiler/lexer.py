@@ -38,7 +38,7 @@ KEYWORDS = [
     "enum",
     "new",
     "as",
-    "is"
+    "const"
 ]
 
 
@@ -84,7 +84,6 @@ class TokType(Enum):
     DOT_DOT = ".."
     DOT_DOT_DOT = "..."
     IDENTIFER = "IDENTIFIER"
-    MACRO_IDENTIFIER = "MACRO_IDENTIFER"
     KEYWORD = "KEYWORD"
 
 
@@ -182,8 +181,6 @@ class Lexer:
             return make_char(self)
         elif self.current_char == '"':
             return make_str(self)
-        elif self.current_char == "$":
-            return make_macro_identifer(self)
         else:
             pos_start = self.pos.copy()
             char = self.current_char

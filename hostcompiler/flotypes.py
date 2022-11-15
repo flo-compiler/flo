@@ -774,11 +774,11 @@ vtable_offset = 1
 
 class FloClass:
     classes = {}
-
     def __init__(self, name, parent=None, init_body=True) -> None:
         self.name = name
         self.methods: dict[str, FloMethod] = {}
         self.properties: dict[str, FloType] = {}
+        self.static_members = {}
         self.value = ir.global_context.get_identified_type(name)
         self.constructor = None
         self.vtable_ty = None
@@ -797,9 +797,12 @@ class FloClass:
         return current.methods.get(method_name)
     
 
-    def add_method(self, fnc: FloFunc):
+    def add_method(self, fnc: FloFunc, name=''):
         # prepend this in args
-        assert isinstance(fnc, FloMethod)
+        if not isinstance(fnc, FloMethod):
+            assert isinstance(fnc, FloFunc)
+            self.static_members[name] = fnc
+            return
         assert fnc.value
         if fnc.value.name == self.name+'_constructor':
             self.constructor = fnc
@@ -812,17 +815,6 @@ class FloClass:
     @property
     def llvmtype(self):
         return self.value.as_pointer()
-
-    @staticmethod
-    def get_methods(flo_class):
-        if flo_class == None:
-            return {}
-        methods = FloClass.get_methods(flo_class.parent)
-        for key in flo_class.methods:
-            func = flo_class.methods.get(key)
-            methods[key] = FloInlineFunc(
-                None, [flo_class]+func.arg_types, func.return_type, func.var_args, func.defaults)
-        return methods
 
     def init_value(self):
         self.vtable_ty = ir.global_context.get_identified_type(

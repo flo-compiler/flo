@@ -1,15 +1,15 @@
-import $STDOUT, $STDIN, $STDERR, nanosleep, write, read, _exit in "@flo/sys"
+import STDOUT, STDIN, STDERR, nanosleep, write, read, _exit in "@flo/sys"
 fnc input(): string {
     let size = -1
     let buffer = new i8[1]
     while (buffer[size] != '\n'){
         buffer = realloc(buffer, (++size)+1)
-        read($STDIN, buffer+size, 1)
+        read(STDIN, buffer+size, 1)
     }
     return new string(buffer, size)
 }
 fnc error(message: string){
-    write($STDERR, message.get_bytes(), message.length)
+    write(STDERR, message.get_bytes(), message.length)
 }
 fnc exit(message: string = "", code : int = 1){
     error(message)

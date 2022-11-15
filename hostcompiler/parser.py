@@ -76,7 +76,7 @@ class Parser:
         tok = self.current_tok
         if tok.isKeyword("import"):
             return self.import_stmt()
-        if tok.type == TokType.MACRO_IDENTIFIER:
+        if tok.isKeyword("const"):
             return self.macro_declaration()
         if tok.isKeyword("type"):
             return self.type_alias()
@@ -121,7 +121,7 @@ class Parser:
         self.advance()
         ids = []
         path = ""
-        if self.current_tok.type == TokType.IDENTIFER or self.current_tok.type == TokType.MACRO_IDENTIFIER:
+        if self.current_tok.type == TokType.IDENTIFER:
             ids = self.identifier_list()
             if not self.current_tok.isKeyword("in"):
                 SyntaxError(self.current_tok.range,
@@ -159,6 +159,7 @@ class Parser:
 
     def macro_declaration(self) -> MacroDeclarationNode:
         range_start = self.current_tok.range
+        self.advance()
         name_tok = self.current_tok
         self.advance()
         if self.current_tok.type != TokType.EQ:
@@ -652,7 +653,7 @@ class Parser:
                 tmp_parser = Parser(group)
                 nodes.append(tmp_parser.expr())
             return StrNode(tok, nodes, tok.range)
-        elif tok.type == TokType.IDENTIFER or tok.type == TokType.MACRO_IDENTIFIER:
+        elif tok.type == TokType.IDENTIFER:
             self.advance()
             return VarAccessNode(tok, tok.range)
         elif tok.type == TokType.LPAR:

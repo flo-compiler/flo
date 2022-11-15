@@ -1,11 +1,13 @@
-$WORD_SIZE = 64
+const WORD_SIZE = 64
 class Type {
     kind: TypeKind
     constructor(this, kind: TypeKind){
         this.kind = kind
     }
+    unknown(): Type {
+        return new Type(TypeKind.UNKNOWN)
+    }
 }
-$UNKNOWN_TYPE = new Type(TypeKind.UNKNOWN)
 class BooleanType (Type) {
     constructor(this){
         super(TypeKind.BOOL)
@@ -242,12 +244,12 @@ class VarId {
     }
 }
 class ClassVarId(VarId){
-    constructor(class_id: ClassId){
+    constructor(this, class_id: ClassId){
         super(VarIdKind.CLASS, class_id.module_id, class_id.id)
     }
 }
 class EnumVarId(VarId){
-    constructor(enum_id: EnumId){
+    constructor(this, enum_id: EnumId){
         super(VarIdKind.ENUM, enum_id.module_id, enum_id.id)
     }
 }
@@ -393,7 +395,7 @@ fnc max_type(t1: Type, t2: Type): Type {
 fnc check_cast_lower_bits(p1: Expression*, p2: Expression*){
     let ty1 = p1[0].value_type
     let ty2 = p2[0].value_type
-    if ty1 != ty2 {
+    if ty1.kind != ty2.kind {
         if is_float(ty1) and is_int(ty2) {
             p2[0] = cast_exp_to_type(p2[0], ty1)
         } else if is_int(ty1) and is_float(ty2){
@@ -431,7 +433,7 @@ fnc dump_type(ty: Type, force_bit_size = false): string {
     if ty.kind == TypeKind.I128
         return "i128"
     if ty.kind == TypeKind.INT
-        return force_bit_size ? "i$($WORD_SIZE)" : "int"
+        return force_bit_size ? "i$WORD_SIZE" : "int"
     if ty.kind == TypeKind.F16
         return "f16"
     if ty.kind == TypeKind.F32
@@ -439,7 +441,7 @@ fnc dump_type(ty: Type, force_bit_size = false): string {
     if ty.kind == TypeKind.F64
         return "f64"
     if ty.kind == TypeKind.FLOAT
-        return force_bit_size ? "f$($WORD_SIZE)" : "float"
+        return force_bit_size ? "f$WORD_SIZE" : "float"
     if ty.kind == TypeKind.VOID
         return "void"
     if ty.kind == TypeKind.RECORD
@@ -785,8 +787,9 @@ fnc bin_op_to_op_overload_name(op: BinaryOp): string {
     return null
 }
 fnc evaluate_const_int_expression(program: Program, exp: Expression): int {
-    if exp.expr_kind == ExpressionKind.INT
+    if exp.expr_kind == ExpressionKind.INT {
         return (exp as IntExpression).value
+    }
     if exp.expr_kind == ExpressionKind.FLOAT
         return (exp as FloatExpression).value as int
     if exp.expr_kind == ExpressionKind.BIN {
@@ -836,7 +839,7 @@ class TypeChecker {
     filename: string
     errors: FloError []
     in_loop: bool
-    constructor(){
+    constructor(this){
         this.current_module = -1
         this.in_loop = false
         let program: Program
@@ -960,7 +963,7 @@ class TypeChecker {
     }
     private get_type_from_current_scope(this, name: string): Type {
         let current_scope = this.get_current_scope()
-        let found_type = $UNKNOWN_TYPE
+        let found_type = Type.unknown()
         while true {
             let aliased_ty = current_scope.type_aliases.get(name)
             if aliased_ty != null {
@@ -1097,7 +1100,7 @@ class TypeChecker {
             let fnc_arg = new FunctionArg()
             fnc_arg.name = arg.name.value
             fnc_arg.default = null
-            let arg_type = $UNKNOWN_TYPE
+            let arg_type = Type.unknown()
             if arg.parsed_type != null
                 arg_type = this.check_type(arg.parsed_type)
             if arg.default != null {
@@ -1187,7 +1190,7 @@ class TypeChecker {
         this.get_current_module().functions << declared_function
         this.get_current_scope().functions.set(declared_function.name, declared_function.id)
     }
-    private check_enum_body(declared_enum: Enum, enum_node: EnumNode){
+    private check_enum_body(this, declared_enum: Enum, enum_node: EnumNode){
         let enum_variant: Type = null
         if enum_node.variant == null {
             enum_variant = new Type(TypeKind.INT)
@@ -1511,13 +1514,13 @@ class TypeChecker {
             }
             return found_type
         }
-        return $UNKNOWN_TYPE
+        return Type.unknown()
     }
     private check_array_expression(this, expected_type: Type, array_node: ArrayExpressionNode): ArrayExpression {
         if this.has_errored() return null
         //TODO: ARRAY is overloaded; Could be object or const so need to check which one it is.
         let elements: Expression[] = []
-        let element_type = $UNKNOWN_TYPE
+        let element_type = Type.unknown()
         let array_type = expected_type
         let is_constant = true
         if expected_type.kind == TypeKind.ARRAY {
@@ -1560,7 +1563,7 @@ class TypeChecker {
             return new NullExpression(expected_type)
         let current_scope = this.get_current_scope()
         let resolved = this.get_var_from_current_scope(name)
-        let var_ty = $UNKNOWN_TYPE
+        let var_ty = Type.unknown()
         if resolved != null {
             let var_id = resolved
             if var_id.kind == VarIdKind.FNC
@@ -1679,7 +1682,7 @@ class TypeChecker {
         let op = binary_node.op
         let is_assign_op = op >= BinaryOp.ASSIGN and op <= BinaryOp.SR_ASSIGN
         if op == BinaryOp.ASSIGN and binary_node.lhs.expr_kind == ExpressionKind.INDEX {
-            let possible_obj = this.check_expression($UNKNOWN_TYPE, (binary_node.lhs as ExpressionIndexNode).expression)
+            let possible_obj = this.check_expression(Type.unknown(), (binary_node.lhs as ExpressionIndexNode).expression)
             if is_object(possible_obj.value_type)
                 return this.check_object_setitem_expr(possible_obj, binary_node) as BinaryExpression
         }
@@ -1765,7 +1768,7 @@ class TypeChecker {
     }
     private check_typecast_expr(this, type_expr_node: TypeCastExpressionNode): TypeCastExpression {
         //TODO: Need to check if cast is compatible for typecase
-        let exp = this.check_expression($UNKNOWN_TYPE, type_expr_node.expression)
+        let exp = this.check_expression(Type.unknown(), type_expr_node.expression)
         let ty = this.check_type(type_expr_node.bound_type)
         if this.has_errored() return null
         return new TypeCastExpression(exp, ty)
@@ -1832,11 +1835,11 @@ class TypeChecker {
         return null
     }
     private check_member_expr(this, expected_type: Type, member_expr_node: MemberExpressionNode): MemberExpression {
-        let prop_owner = this.check_expression($UNKNOWN_TYPE, member_expr_node.expression)
+        let prop_owner = this.check_expression(Type.unknown(), member_expr_node.expression)
         if this.has_errored() return null
         let prop_owner_type = prop_owner.value_type
         let prop_name = member_expr_node.member.value
-        let prop_ty = $UNKNOWN_TYPE
+        let prop_ty = Type.unknown()
         let parent_class: Class = null
         let prop_id: PropId = null
         let err_msg: string = null
@@ -1918,7 +1921,7 @@ class TypeChecker {
         return new CallExpression(member_expr, args, method_type.return_type)
     }
     private check_index_expr(this, expected_type: Type, index_expr_node: ExpressionIndexNode): IndexExpression {
-        let root_expression = this.check_expression($UNKNOWN_TYPE, index_expr_node.expression)
+        let root_expression = this.check_expression(Type.unknown(), index_expr_node.expression)
         if is_object(root_expression.value_type)
             return this.check_object_index_expr(root_expression, index_expr_node) as IndexExpression
         let index = this.check_expression(new Type(TypeKind.INT), index_expr_node.index)
@@ -1927,7 +1930,7 @@ class TypeChecker {
             this.error(ErrorKind.TYPE, "Expected an integer type for index", index_expr_node.index.range)
             return null
         }
-        let value_type = $UNKNOWN_TYPE
+        let value_type = Type.unknown()
         let root_type = root_expression.value_type
         if root_type.kind == TypeKind.PTR {
             value_type = (root_type as PointerType).pointee_type
@@ -1954,7 +1957,7 @@ class TypeChecker {
     private fill_in_call_args(this, fnc_ty: FunctionType, func_args: FunctionArg[], args: ExpressionNode[]): Expression[] {
         let called_args: Expression[] = []
         for let i = 0; i < args.length; i++ {
-            let expected_type = fnc_ty.arg_types.length > i ? fnc_ty.arg_types[i] : $UNKNOWN_TYPE
+            let expected_type = fnc_ty.arg_types.length > i ? fnc_ty.arg_types[i] : Type.unknown()
             called_args << this.check_expression(expected_type, args[i])
         }
         if this.has_errored() or func_args == null return called_args
@@ -1979,7 +1982,7 @@ class TypeChecker {
         return -2
     }
     private check_call_expr(this, expected_type: Type, call_expr_node: CallExpressionNode): CallExpression {
-        let called = this.check_expression($UNKNOWN_TYPE, call_expr_node.callee)
+        let called = this.check_expression(Type.unknown(), call_expr_node.callee)
         if this.has_errored() return null
         if called.value_type.kind != TypeKind.FNC {
             this.error(ErrorKind.TYPE, "Expected a function type for call but got '$(this.dump_type(called.value_type))'", call_expr_node.callee.range)
@@ -2021,7 +2024,7 @@ class TypeChecker {
     private check_string_expression(this, expected_type: Type, str_node: StringExpressionNode): StringExpression{
         let template_args: Expression[] = []
         for let i = 0; i < str_node.template_args.length; i++ {
-            template_args << this.check_expression($UNKNOWN_TYPE, str_node.template_args[i])
+            template_args << this.check_expression(Type.unknown(), str_node.template_args[i])
         }
         let exp = new StringExpression(str_node.value.value, template_args)
         if is_i8_ptr(expected_type)
@@ -2061,7 +2064,7 @@ class TypeChecker {
     }
     private check_condition(this, cond_node: ExpressionNode): Expression {
        let bool_type = new BooleanType()
-       let condition = this.check_expression($UNKNOWN_TYPE, cond_node)
+       let condition = this.check_expression(Type.unknown(), cond_node)
        if this.has_errored() return null
        return !is_bool(condition.value_type) ? cast_exp_to_type(condition, bool_type) : condition
     }
@@ -2079,7 +2082,7 @@ class TypeChecker {
             return null
         }
         let current_scope = this.get_current_scope()
-        let var_type = var_decl_node.var_type != null ? this.check_type(var_decl_node.var_type) : $UNKNOWN_TYPE
+        let var_type = var_decl_node.var_type != null ? this.check_type(var_decl_node.var_type) : Type.unknown()
         if this.has_errored() return null
         if var_decl_node.value == null and var_type.kind == TypeKind.UNKNOWN {
             this.error(ErrorKind.GEN, "Variable '$name' has no type", var_decl_node.var_name.range)
@@ -2114,7 +2117,7 @@ class TypeChecker {
             this.error(ErrorKind.NAME, "Illegal re-declaration of const '$name'", const_decl_stmt.const_name.range)
             return null
         }
-        let const_type = const_decl_stmt.const_type != null ? this.check_type(const_decl_stmt.const_type) : $UNKNOWN_TYPE
+        let const_type = const_decl_stmt.const_type != null ? this.check_type(const_decl_stmt.const_type) : Type.unknown()
         if this.has_errored() return null
         let value = this.check_expression(const_type, const_decl_stmt.value)
         if this.has_errored() return null
@@ -2142,7 +2145,7 @@ class TypeChecker {
             if for_stmt_node.condition != null
                 for_stmt.condition = this.check_condition(for_stmt_node.condition)
             if for_stmt_node.incr_decr != null
-                for_stmt.incr_decr = this.check_expression($UNKNOWN_TYPE, for_stmt_node.incr_decr)
+                for_stmt.incr_decr = this.check_expression(Type.unknown(), for_stmt_node.incr_decr)
         }
         this.in_loop = true
         for_stmt.block = this.check_block(for_stmt_node.block)
@@ -2213,7 +2216,7 @@ class TypeChecker {
         if stmt_node.kind == StatementKind.RETURN
             return this.check_can_return((stmt_node as ReturnStatementNode))
         if stmt_node.kind == StatementKind.EXPRESSION
-            return this.check_expression($UNKNOWN_TYPE, stmt_node as ExpressionNode)
+            return this.check_expression(Type.unknown(), stmt_node as ExpressionNode)
         return null
     }
     private check_block(this, block_node: BlockNode): Block {
