@@ -3,10 +3,10 @@ class Bucket<T, U> {
     key: T
     value: U
     is_empty: bool
-    constructor(){
+    constructor(this){
         this.is_empty = true
     }
-    set(key: T, value: U){
+    set(this, key: T, value: U){
         this.is_empty = false
         this.key = key
         this.value = value
@@ -16,7 +16,7 @@ class Map<T, U> {
     buckets: Bucket<T, U>*
     length: int
     size: int
-    constructor(){
+    constructor(this){
         let initial_capacity = 256
         this.buckets = new Bucket<T, U>[initial_capacity]
         for let i = 0; i < initial_capacity; i++ {
@@ -25,7 +25,7 @@ class Map<T, U> {
         this.size = initial_capacity
         this.length = 0
     }
-    hash_fnc(key: T): int {
+    hash_fnc(this, key: T): int {
         let str = key as string
         let hash = 5381
         for let i = 0; i < str; ++i {
@@ -33,7 +33,7 @@ class Map<T, U> {
         }
         return hash
     }
-    resize(){
+    resize(this){
         let original_size = this.size
         this.size *= 2
         this.buckets = this.buckets.resize(this.size)
@@ -41,7 +41,7 @@ class Map<T, U> {
             this.buckets[i] = new Bucket<T, U>()
         }
     }
-    set(key: T, value: U){
+    set(this, key: T, value: U){
         let hash = this.hash_fnc(key) % this.size
         if (this.size <= this.length) this.resize()
         while !this.buckets[hash].is_empty {
@@ -52,7 +52,7 @@ class Map<T, U> {
         this.length++
         this.buckets[hash].set(key, value)
     }
-    get(key: T): U {
+    get(this, key: T): U {
         let hash = this.hash_fnc(key) % this.size
         while !this.buckets[hash].is_empty {
             if this.buckets[hash].key == key
@@ -65,7 +65,7 @@ class Map<T, U> {
                 return this.buckets[hash].value
         return null
     }
-    get_buckets(): Array<Bucket<T, U>> {
+    get_buckets(this): Array<Bucket<T, U>> {
       let buckets: Bucket<T, U>[] = []
         for let i = 0; i < this.size; ++i {
             let current_bucket = this.buckets[i]

@@ -138,28 +138,28 @@ fnc unescape(str: string): string {
 class Token {
     ttype: TokType
     range: FloRange
-    constructor(ttype: TokType, range: FloRange){
+    constructor(this, ttype: TokType, range: FloRange){
         this.ttype = ttype
         this.range = range
     }
 }
 class IntToken (Token) {
     value: int
-    constructor(value: int, range: FloRange){
+    constructor(this, value: int, range: FloRange){
         super(TokType.INT, range)
         this.value = value
     }
 }
 class FloatToken (Token) {
     value: float
-    constructor(value: float, range: FloRange){
+    constructor(this, value: float, range: FloRange){
         super(TokType.FLOAT, range)
         this.value = value
     }
 }
 class CharToken (Token) {
     value: i8
-    constructor(value: i8, range: FloRange){
+    constructor(this, value: i8, range: FloRange){
         super(TokType.CHAR, range)
         this.value = value
     }
@@ -167,7 +167,7 @@ class CharToken (Token) {
 class StrToken (Token) {
     value: string
     args: Token[][]
-    constructor(args: Token[][], value: string, range: FloRange){
+    constructor(this, args: Token[][], value: string, range: FloRange){
         super(TokType.STR, range)
         this.value = value
         this.args = args
@@ -175,7 +175,7 @@ class StrToken (Token) {
 }
 class IdentifierToken (Token) {
     value: string
-    constructor(value: string, range: FloRange){
+    constructor(this, value: string, range: FloRange){
         super(TokType.IDENTIFER, range)
         this.value = value
     }

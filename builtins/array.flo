@@ -12,11 +12,9 @@ class Array <T> {
         this.buffer = this.buffer.resize(this.size)
     }
     swap(this, i1: int, i2: int){
-        if (i1 in 0..this.length) and (i2 in 0..this.length) {
-            let tmp = this.buffer[i1]
-            this.buffer[i1] = this.buffer[i2]
-            this.buffer[i2] = tmp 
-        }
+        let tmp = this.buffer[i1]
+        this.buffer[i1] = this.buffer[i2]
+        this.buffer[i2] = tmp 
     }
     __sl__(this, element: T){
         if (this.length >= this.size) this.resize()

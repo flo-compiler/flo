@@ -24,7 +24,7 @@ class RecordTypeNode (TypeNode) {
 class FunctionTypeNode (TypeNode) {
     args: TypeNode[]
     return_type: TypeNode
-    constructor(range: FloRange){
+    constructor(this, range: FloRange){
         super(TypeKind.FNC, range)
         this.args = []
     }
@@ -45,14 +45,14 @@ class StatementNode(Node) {
 }
 class BlockNode(Node) {
     statements: StatementNode[]
-    constructor(range: FloRange){
+    constructor(this, range: FloRange){
         super(range)
         this.statements = []
     }
 }
 class ExpressionNode (StatementNode) {
     expr_kind: ExpressionKind
-    constructor(expr_kind: ExpressionKind, range: FloRange){
+    constructor(this, expr_kind: ExpressionKind, range: FloRange){
         super(StatementKind.EXPRESSION, range)
         this.expr_kind = expr_kind
     }
@@ -321,14 +321,14 @@ class EnumNode {
     name: IdentifierToken
     fields: EnumNodeField[]
     variant: TypeNode
-    constructor(){
+    constructor(this){
         this.fields = []
     }
 }
 class ImportNode {
     import_list: IdentifierToken[]
     module_path: Token
-    constructor(){
+    constructor(this){
         this.import_list = []
     }
 }
@@ -344,7 +344,7 @@ class ModuleAST {
     consts: ConstDeclarationStatement[] 
     vars: VarDeclarationStatement[] 
     type_aliases: TypeAliasNode[] 
-    constructor() {
+    constructor(this) {
         this.functions = []
         this.classes = []
         this.imports = []

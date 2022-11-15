@@ -12,7 +12,7 @@ class FloError {
     kind: ErrorKind
     message: string
     range: FloRange
-    constructor(kind: ErrorKind, message: string, range: FloRange){
+    constructor(this, kind: ErrorKind, message: string, range: FloRange){
         this.kind = kind
         this.range = range
         this.message = message

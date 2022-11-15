@@ -284,6 +284,8 @@ class Compiler(Visitor):
             fn = self.class_within.constructor
         else:
             fn = self.class_within.get_method(method_name)
+            if fn == None:
+                fn = self.class_within.static_members.get(method_name)
         assert fn
         _, arg_names, rt = self.visit(node.method_body)
         self.current_fnc_return_ty = rt
@@ -524,10 +526,12 @@ class Compiler(Visitor):
             if isinstance(stmt, MethodDeclarationNode):
                 method_name = stmt.method_name.value
                 arg_types, _, rtype = self.visit(stmt.method_body)
-                if stmt.method_body.body:
+                if stmt.is_static:
+                    fn  = FloFunc(arg_types, rtype, class_obj.name+"_"+method_name, stmt.method_body.is_variadic)
+                elif stmt.method_body.body:
                     fn = FloMethod(arg_types, rtype, method_name,
                                     stmt.method_body.is_variadic, class_obj)
-                class_obj.add_method(fn)
+                class_obj.add_method(fn, method_name)
             else:
                 property_name = stmt.property_name.value
                 property_type = self.visit(stmt.type)
@@ -566,6 +570,8 @@ class Compiler(Visitor):
         property_name = node.property.value
         if isinstance(root, FloEnum):
             return root.get_property(property_name)
+        if isinstance(root, FloClass):
+            return root.static_members.get(property_name)
         if isinstance(root, FloPointer):
             return root.methods.get(property_name)
         return root.get_property(self.builder, property_name)
