@@ -447,8 +447,10 @@ class Parser {
     }
     private parse_type_list(this, type_nodes: TypeNode[]) {
         type_nodes << this.parse_type()
-        while this.current_token.ttype == TokType.COMMA and this.can_parse()
+        while this.current_token.ttype == TokType.COMMA and this.can_parse() {
+            this.advance()
             type_nodes << this.parse_type()
+        }
     }
     private parse_object_type(this): RecordTypeNode {
         let identifier_tok = this.eat(TokType.IDENTIFER) as IdentifierToken
@@ -456,8 +458,7 @@ class Parser {
         if this.current_token.ttype == TokType.LT {
             this.advance()
             this.parse_type_list(object_type_node.generic_args)
-            let end_tok = this.eat(TokType.GT)
-            object_type_node.range = merge_range(object_type_node.range, end_tok.range)
+            object_type_node.range = merge_range(object_type_node.range, this.eat(TokType.GT).range)
         }
         return object_type_node
     }

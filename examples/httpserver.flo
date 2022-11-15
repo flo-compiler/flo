@@ -1,4 +1,4 @@
-import HTTPServer as Server in "@flo/net/httpserver"
+import "@flo/net/server"
 
 const PORT = 8080
 fnc handler(request: Request, response: Response){
@@ -6,7 +6,7 @@ fnc handler(request: Request, response: Response){
     response.write("Server: FloServer\r\n")
     response.write("Content-Type: text/html\r\n")
     response.write("Connection: Closed\r\n\r\n")
-    response.end("<h1>Hello From Flo Server</h1>")
+    response.end("<h1>Hello From Flo Serssver</h1>")
 }
 fnc main(){
     let server = new Server(PORT)

@@ -2,13 +2,13 @@ const MAX_BUFFSIZE = 12400
 class Request {
     raw_buffer: i8*
     buffer_size: int
-    constructor(){
+    constructor(this){
         this.raw_buffer = new i8[MAX_BUFFSIZE]
     }
-    set_size(size: int = MAX_BUFFSIZE){
+    set_size(this, size: int = MAX_BUFFSIZE){
         this.buffer_size = size
     }
-    to_string(): string{
+    to_string(this): string{
         return new string(this.raw_buffer, this.buffer_size)
     }
 }

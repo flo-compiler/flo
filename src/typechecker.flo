@@ -656,6 +656,7 @@ class Module {
     classes: Class[]
     functions: Function[]
     enums: Enum[]
+    scope_id: ScopeId
     scopes: Scope[]
     global_consts: ConstDeclaration[]
     global_vars: VarDeclaration[]
@@ -839,9 +840,11 @@ class TypeChecker {
     filename: string
     errors: FloError []
     in_loop: bool
+    generic_templates: Map<string, ClassDeclarationNode>
     constructor(this){
         this.current_module = -1
         this.in_loop = false
+        this.generic_templates = new Map<string, ClassDeclarationNode>()
         let program: Program
         this.program = program
     }
@@ -850,6 +853,9 @@ class TypeChecker {
     }
     private get_current_scope(this): Scope {
         return get_scope(this.program, this.current_scope)
+    }
+    private get_module_scope(this): Scope {
+        return get_scope(this.program, this.get_current_module().scope_id)
     }
     private get_current_function(this): Function {
         return this.get_current_module().functions[this.current_function.id]
@@ -1009,6 +1015,7 @@ class TypeChecker {
         module_scope.vars.set("false", const_id)
         module_scope.vars.set("null", const_id)
         this.current_scope = module_scope.id
+        module.scope_id = module_scope.id
         this.current_method = null
         this.current_class = null
         this.current_function = null
@@ -1018,11 +1025,9 @@ class TypeChecker {
             this.declare_enum_within_current_scope(module_ast.enums[i])
         }
         for i = 0; i < module_ast.classes.length; i++ {
-            this.declare_class_within_current_scope(module_ast.classes[i])
+            this.declare_class_within_module(module_ast.classes[i])
         }
-        if this.has_errored() {
-            return null
-        }
+        if this.has_errored() return null
         for i = 0; i < module_ast.type_aliases.length; i++  {
             let type_alias_node = module_ast.type_aliases[i]
             let ty = this.check_type(type_alias_node.parsed_type)
@@ -1043,12 +1048,10 @@ class TypeChecker {
         for i = 0; i < module_ast.functions.length; i++ {
             this.declare_function_within_current_scope(module_ast.functions[i])
         }
-        if this.has_errored() {
-            return null
-        }
+        if this.has_errored() return null
         // We Now check bodies
         for i = 0; i < module_ast.classes.length; i++ {
-            this.check_class_body(module.classes[i], module_ast.classes[i])
+            this.check_class_body(module_ast.classes[i])
         }
         for i = 0; i < module_ast.enums.length; i++ {
             this.check_enum_body(module.enums[i], module_ast.enums[i])
@@ -1057,6 +1060,37 @@ class TypeChecker {
            this.check_function_body(module.functions[i], module_ast.functions[i])
         }
         return this.program
+    }
+    private create_generic_instance_in_module(this, name: string, types: Type[]): Type {
+        let generic_node = this.generic_templates.get(name)
+        if generic_node == null return null
+        let generic_params = generic_node.generic_parameters
+        if generic_params.length != types.length {
+            this.error(ErrorKind.TYPE, "Generic expects $(generic_params.length) parameters but got $(types.length)", generic_params[0].name.range)
+        }
+        let generic_scope = this.create_child_scope_within_current_scope()
+        let param_strings = ""
+        for let i = 0; i < generic_params.length; i++ {
+            let param_name = generic_params[i].name.value
+            param_strings += "_$(this.dump_type(types[i]))"
+            generic_scope.type_aliases.set(param_name, types[i])
+        }
+        let instantiated_generic_name = "$(name)$(param_strings)"
+        let possible_type = this.get_type_from_current_scope(instantiated_generic_name)
+        if possible_type.kind != TypeKind.UNKNOWN {
+            //TODO: find a way to remove/delete this context appended.
+            return possible_type
+        } 
+        // TODO: Find a better way to create this initialization.
+        generic_node.name.value = instantiated_generic_name
+        generic_node.generic_parameters = []
+        this.current_scope = generic_scope.id
+        this.declare_class_within_module(generic_node)
+        this.check_class_body(generic_node)
+        generic_node.name.value = name
+        generic_node.generic_parameters = generic_params
+        this.current_scope = generic_scope.parent
+        return this.get_type_from_current_scope(instantiated_generic_name)
     }
     private declare_var_within_current_scope(this, name: string, value: Expression, value_type: Type): Var {
         let var = new Var(value, value_type)
@@ -1137,11 +1171,14 @@ class TypeChecker {
         current_scope.enums.set(declared_enum.name, declared_enum.id)
         current_scope.vars.set(declared_enum.name, new EnumVarId(declared_enum.id))
     }
-    private declare_class_within_current_scope(this, class_decl_node: ClassDeclarationNode) {
-        // TODO: Inheritance...
+    private declare_class_within_module(this, class_decl_node: ClassDeclarationNode) {
         let name = class_decl_node.name.value
-        if this.get_type_from_current_scope(name).kind != TypeKind.UNKNOWN {
+        if this.get_type_from_current_scope(name).kind != TypeKind.UNKNOWN or this.generic_templates.get(name) != null {
             this.error(ErrorKind.NAME, "Name '$name' has already been used for another type. consider renaming", class_decl_node.name.range)
+            return
+        }
+        if class_decl_node.generic_parameters.length > 0 {
+            this.generic_templates.set(name, class_decl_node)
             return
         }
         let declared_class: Class
@@ -1152,7 +1189,7 @@ class TypeChecker {
         declared_class.is_abstract = false
         let prop_map: Map<string, PropId>
         let static_prop_map: Map<string, PropId>
-        let current_scope = this.get_current_scope()
+        let module_scope = this.get_module_scope()
         if class_decl_node.parent != null {
             declared_class.parent = this.check_type(class_decl_node.parent)
             if this.has_errored() return
@@ -1164,8 +1201,9 @@ class TypeChecker {
         declared_class.name = name
         declared_class.id = new ClassId(this.current_module, this.get_current_module().classes.length)
         this.get_current_module().classes << declared_class
-        current_scope.classes.set(declared_class.name, declared_class.id)
-        current_scope.vars.set(declared_class.name, new ClassVarId(declared_class.id))
+
+        module_scope.classes.set(name, declared_class.id)
+        module_scope.vars.set(name, new ClassVarId(declared_class.id))
     }
     private declare_function_within_current_scope(this, function_node: FunctionDeclarationNode) {
         let declared_function = new Function()
@@ -1385,12 +1423,13 @@ class TypeChecker {
             }
         }
     }
-    private check_class_body(this, declared_class: Class, class_node: ClassDeclarationNode){
-        //Generics
+    private check_class_body(this, class_node: ClassDeclarationNode){
+        let class_name = class_node.name.value
+        let resolved_type = this.get_type_from_current_scope(class_name)
+        if resolved_type.kind == TypeKind.UNKNOWN {return}
+        let id = (resolved_type as ObjectType).class_id
+        let declared_class = get_class(this.program, id)
         this.current_class = declared_class.id
-        for let i = 0; i < class_node.generic_parameters.length; ++i {
-            let generic_param = class_node.generic_parameters[i]
-        }
         if declared_class.parent != null {
             this.add_inherited_props_to_class(declared_class, class_node)
         }
@@ -1406,7 +1445,7 @@ class TypeChecker {
         }
         // Checking if class is abstract.
         let prop_buckets = declared_class.prop_map.get_buckets()
-        for i = 0; i < prop_buckets.length; i++ {
+        for let i = 0; i < prop_buckets.length; i++ {
             let prop_id = prop_buckets[i].value
             let prop_name = prop_buckets[i].key
             if prop_id.kind == PropIdKind.METHOD {
@@ -1506,7 +1545,16 @@ class TypeChecker {
         }
         if type_node.kind == TypeKind.RECORD {
             let record_type = type_node as RecordTypeNode
+            let types: Type[] = []
             let identifer_tok = record_type.name
+            if record_type.generic_args.length > 0 {
+                for let j = 0; j < record_type.generic_args.length; j++
+                    types << this.check_type(record_type.generic_args[j])
+                if this.has_errored() return null
+                let generic_type = this.create_generic_instance_in_module(identifer_tok.value, types)
+                if this.has_errored() this.errors[0].range = type_node.range
+                return generic_type
+            }
             let found_type = this.get_type_from_current_scope(identifer_tok.value)
             if found_type.kind == TypeKind.UNKNOWN {
                 this.error(ErrorKind.TYPE, "Undefined type '$(identifer_tok.value)", identifer_tok.range)
@@ -1616,14 +1664,14 @@ class TypeChecker {
         let arg_type = method_type.arg_types[0]
         let right = this.check_expression(arg_type, binary_node.rhs)
         if !this.types_are_eq(arg_type, right.value_type) {
-            this.error(ErrorKind.TYPE, "Expected type '$(this.dump_type(arg_type))' but got type '$(right.value_type)'", binary_node.rhs.range)
+            this.error(ErrorKind.TYPE, "Expected type '$(this.dump_type(arg_type))' but got type '$(this.dump_type(right.value_type))'", binary_node.rhs.range)
             return null
         }
         let member_exp = new MemberExpression(left, prop_id, method_type)
         let args: Expression[] = [right]
         return new CallExpression(member_exp, args, method_type.return_type)
     }
-    private check_object_binary_expr(this, left: Expression, binary_node: BinaryExpressionNode): Expression {
+    private check_object_binary_expr(this, left: Expression, binary_node: BinaryExpressionNode, right: Expression): Expression {
         let obj_type = left.value_type as ObjectType
         let op = binary_node.op
         let method_name = bin_op_to_op_overload_name(op)
@@ -1639,12 +1687,13 @@ class TypeChecker {
         }
         let method_type = get_class_prop_type(this.program, prop_id) as FunctionType
         let arg_type = method_type.arg_types[0]
-        let right = this.check_expression(arg_type, binary_node.rhs)
-        if is_null(right) and op == BinaryOp.EEQ or op == BinaryOp.NEQ {
+        if right == null 
+            right = this.check_expression(arg_type, binary_node.rhs)
+        if is_null(right) and (op == BinaryOp.EEQ or op == BinaryOp.NEQ) {
             return new BinaryExpression(left, op, right, new BooleanType())
         }
         if !this.types_are_eq(arg_type, right.value_type) {
-            this.error(ErrorKind.TYPE, "Expected type '$(this.dump_type(arg_type))' but got type '$(right.value_type)'", binary_node.rhs.range)
+            this.error(ErrorKind.TYPE, "Expected type '$(this.dump_type(arg_type))' but got type '$(this.dump_type(right.value_type))'", binary_node.rhs.range)
             return null
         }
         let member_exp = new MemberExpression(left, prop_id, method_type)
@@ -1689,8 +1738,10 @@ class TypeChecker {
         let left = this.check_expression(expected_type, binary_node.lhs)
         if this.has_errored() return null
         if is_object(left.value_type) and !is_assign_op
-            return this.check_object_binary_expr(left, binary_node) as BinaryExpression
+            return this.check_object_binary_expr(left, binary_node, null) as BinaryExpression
         let right = this.check_expression(left.value_type, binary_node.rhs)
+        if is_object(right.value_type) and op == BinaryOp.IN
+            return this.check_object_binary_expr(right, binary_node, left) as BinaryExpression
         if this.has_errored() return null
         let is_const = left.is_constant and right.is_constant
         if is_assign_op
@@ -1729,7 +1780,7 @@ class TypeChecker {
             let boolean_type: BooleanType
             return new BinaryExpression(left, op, right, boolean_type, is_const)
         }
-        if op ==  BinaryOp.ADD or op == BinaryOp.SUB and is_pointer(left.value_type) and right.value_type.kind == TypeKind.INT {
+        if op == BinaryOp.ADD or op == BinaryOp.SUB and is_pointer(left.value_type) and right.value_type.kind == TypeKind.INT {
             return new BinaryExpression(left, op, right, left.value_type, false)
         }
         //TODO: Handle Range, In.

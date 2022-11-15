@@ -2,14 +2,14 @@ import write, close in "@flo/sys"
 /* TODO: Make headers a hash map once you Map class*/
 class Response {
     connection: int
-    set_connection(connection: int) {
+    set_connection(this, connection: int) {
         this.connection = connection
     }
-    write(data: string): Response{
+    write(this, data: string): Response{
         write(this.connection, data.buffer, data.length)
         return this
     }
-    end(message: string = ""){
+    end(this, message: string = ""){
         this.write(message)
         close(this.connection)
     }
