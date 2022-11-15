@@ -65,8 +65,8 @@ class Map<T, U> {
                 return this.buckets[hash].value
         return null
     }
-    get_buckets(this): Array<Bucket<T, U>> {
-      let buckets: Bucket<T, U>[] = []
+    get_buckets(this): Bucket<T, U>[] {
+        let buckets: Bucket<T, U>[] = []
         for let i = 0; i < this.size; ++i {
             let current_bucket = this.buckets[i]
             if !current_bucket.is_empty {

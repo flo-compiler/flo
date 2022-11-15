@@ -8,14 +8,14 @@ class Server {
     socket: Socket
     response: Response
     request: Request
-    constructor(port: int, address: string = ""){
+    constructor(this, port: int, address: string = ""){
         this.socket = new Socket(AF_INET, SOCK_STREAM, 0)
         this.socket.bind(port, address)
         this.socket.listen()
         this.response = new Response(-1)
         this.request = new Request()
     }
-    accept_connection(){
+    accept_connection(this){
         let cli = new i8[16]
         let cli_len = 4
         let connfd = accept(this.socket.sockfd, cli, &cli_len)
@@ -26,16 +26,16 @@ class Server {
         this.request.set_size(size)
         this.response.set_connection(connfd)
     }
-    listen(handler: RequestHandler){
+    listen(this, handler: RequestHandler){
         while true {
             this.accept_connection()
             handler(this.request, this.response)
         }
     }
-    close(){
+    close(this){
         this.socket.close()
     }
-    destroy(){
+    destroy(this){
         this.socket.destroy()
     }
 
