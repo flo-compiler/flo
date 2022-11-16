@@ -23,7 +23,7 @@ class PointerType (Type) {
 class FunctionType (Type) {
     arg_types: Type[]
     return_type: Type
-    has_this: bool
+    has_this: bool //TODO: Need to eliminate this at some point.
     constructor(this, arg_types: Type[], return_type: Type){
         super(TypeKind.FNC)
         this.arg_types = arg_types
@@ -93,12 +93,6 @@ class EnumType (Type) {
         this.enum_id = enum_id
     }
 }
-//TODO: Find the string class.
-class StringType (ObjectType){
-    constructor(this){
-        super(new ClassId(-1, -1))
-    }
-}
 class IntExpression (Expression) {
     value: int
     constructor(this, value: int){
@@ -130,11 +124,10 @@ class FloatExpression (Expression) {
 class StringExpression (Expression) {
     value: string
     template_args: Expression[]
-    constructor(this, value: string, template_args: Expression[]){
+    constructor(this, value: string, template_args: Expression[], value_type: Type){
         super(ExpressionKind.STRING)
-        let string_type: StringType
         this.template_args = template_args
-        this.value_type = string_type
+        this.value_type = value_type
         this.value = value
         this.is_constant = true
     }
@@ -1205,6 +1198,34 @@ class TypeChecker {
         let ret_type = this.check_type(return_type_node)
         return new FunctionType(arg_types, ret_type)
     }
+    private import_all_from_module(this, module: Module){
+        let global_module_scope = module.scopes[0]
+        for let i = 0; i < module.global_vars.length; i++ {
+            let var_ = module.global_vars[i]
+            this.add_imported_var_to_module(var_.name, var_.var_id)
+        }
+        for i = 0; i < module.global_consts.length; i++ {
+            let const_ = module.global_consts[i]
+            this.add_imported_var_to_module(const_.name, const_.const_id)
+        }
+        for i = 0; i < module.functions.length; i++ {
+            let function = module.functions[i]
+            this.add_imported_fnc_to_module(function.name, function.id)
+        }
+        for i = 0; i < module.classes.length; i++ {
+            let class_ = module.classes[i]
+            this.add_imported_class_to_module(class_.name, class_.id)
+        }
+        for i = 0; i < module.enums.length; i++ {
+            let enum_ = module.enums[i]
+            this.add_imported_enum_to_module(enum_.name, enum_.id)
+        }
+        let type_buckets = global_module_scope.type_aliases.get_buckets()
+        for i = 0; i < type_buckets.length; i++ {
+            let type_bucket = type_buckets[i]
+            this.add_imported_typealias_to_module(type_bucket.key, type_bucket.value)
+        }
+    }
     private check_module_import(this, import_node: ImportNode){
         if import_node.module_path.args.length > 0 {
             this.error(ErrorKind.GEN, "Import statement path can't be a a formatted string", import_node.module_path.range)
@@ -1220,7 +1241,11 @@ class TypeChecker {
             for let i = 0; i < import_node.import_list.length; i++ {
                 let name_to_import = import_node.import_list[i].value
                 let renamed_name = name_to_import
-                if this.generic_templates.get(renamed_name) != null continue
+                if this.generic_templates.get(renamed_name) != null {
+                    // TODO: Temporary fix for importing generics since generics are templates represented by the AST and don't capture scope.
+                    this.import_all_from_module(module)
+                    return
+                }
                 let class_id = global_module_scope.classes.get(name_to_import)
                 if class_id != null {
                     this.add_imported_class_to_module(renamed_name, class_id)
@@ -1251,31 +1276,7 @@ class TypeChecker {
                 }
             }
         } else {
-            for let j = 0; j < module.global_vars.length; j++ {
-                let var_ = module.global_vars[j]
-                this.add_imported_var_to_module(var_.name, var_.var_id)
-            }
-            for j = 0; j < module.global_consts.length; j++ {
-                let const_ = module.global_consts[j]
-                this.add_imported_var_to_module(const_.name, const_.const_id)
-            }
-            for j = 0; j < module.functions.length; j++ {
-                let function = module.functions[j]
-                this.add_imported_fnc_to_module(function.name, function.id)
-            }
-            for j = 0; j < module.classes.length; j++ {
-                let class_ = module.classes[j]
-                this.add_imported_class_to_module(class_.name, class_.id)
-            }
-            for j = 0; j < module.enums.length; j++ {
-                let enum_ = module.enums[j]
-                this.add_imported_enum_to_module(enum_.name, enum_.id)
-            }
-            let type_buckets = global_module_scope.type_aliases.get_buckets()
-            for j = 0; j < type_buckets.length; j++ {
-                let type_bucket = type_buckets[j]
-                this.add_imported_typealias_to_module(type_bucket.key, type_bucket.value)
-            }
+            this.import_all_from_module(module)
         }
     }
     private lex_and_parse_file(this, filename: string, range: FloRange): ModuleAST {
@@ -1286,13 +1287,13 @@ class TypeChecker {
         }
         let file = File.open_for_reading(filename)
         let text = file.read_all()
-        let lexer: Lexer
+        let lexer = new Lexer()
         let tokens = lexer.tokenize(text, this.errors)
         if this.has_errored() {
             file.close()
             return null
         }
-        let parser: Parser
+        let parser = new Parser()
         let module_node = parser.parse(tokens, this.errors)
         if this.has_errored() {
             file.close()
@@ -1541,7 +1542,6 @@ class TypeChecker {
         }
     }
     private add_inherited_props_to_class(this, declared_class: Class, class_node: ClassDeclarationNode){
-        //TODO: Check visibility
         let parent_type = declared_class.parent as ObjectType
         if parent_type.kind != TypeKind.OBJECT {
             this.error(ErrorKind.TYPE, "Can only inherit from class not type '$(this.dump_type(parent_type))'", class_node.parent.range)
@@ -1937,7 +1937,7 @@ class TypeChecker {
         if op == BinaryOp.ADD or op == BinaryOp.SUB and is_pointer(left.value_type) and right.value_type.kind == TypeKind.INT {
             return new BinaryExpression(left, op, right, left.value_type, false)
         }
-        //TODO: Handle Range, In.
+        //TODO: Handle Range
         this.error(ErrorKind.TYPE, "Illegal binary operation '$(dump_bin_op(op))' between types '$(this.dump_type(left.value_type))' and '$(this.dump_type(right.value_type))'", binary_node.range)
         return null
     }
@@ -2153,9 +2153,8 @@ class TypeChecker {
             if var_id.kind == VarIdKind.FNC
                 return get_func(this.program, var_id).args
         } else if called.expr_kind == ExpressionKind.MEMBER {
-            //TODO: Enums?
             let prop_id = (called as MemberExpression).member_id
-                return get_method(this.program, prop_id).args
+            return get_method(this.program, prop_id).args
         }
         return null
     }
@@ -2231,8 +2230,11 @@ class TypeChecker {
         for let i = 0; i < str_node.template_args.length; i++ {
             template_args << this.check_expression(Type.unknown(), str_node.template_args[i])
         }
-        let exp = new StringExpression(str_node.value.value, template_args)
-        if is_i8_ptr(expected_type)
+        if !is_i8_ptr(expected_type) {
+            1//TODO: find string builtin and set it to expected type.
+        }
+        let exp = new StringExpression(str_node.value.value, template_args, expected_type)
+        
             exp.value_type = expected_type
         return exp
     }
@@ -2275,7 +2277,6 @@ class TypeChecker {
     }
     private check_if_stamement(this, if_stmt_node: IfStatementNode): IfStatement {
         let condition = this.check_condition(if_stmt_node.condition)
-       // TODO: optionals.
         let block = this.check_block(if_stmt_node.block)
         let else_block: Block = if_stmt_node.else_block != null ? this.check_block(if_stmt_node.else_block) : null
         return new IfStatement(condition, block, else_block)
@@ -2309,7 +2310,7 @@ class TypeChecker {
             }
         }
         if current_scope.vars.get(name) != null {
-            this.error(ErrorKind.NAME, "Illegal re-declaration of already declared variable '$name", var_decl_node.var_name.range)
+            this.error(ErrorKind.NAME, "Illegal re-declaration of already declared variable '$name'", var_decl_node.var_name.range)
             return null
         }
         let var = this.declare_var_within_current_scope(name, value, var_type)
