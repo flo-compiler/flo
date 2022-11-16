@@ -1,5 +1,3 @@
-import "@flo/io"
-import "@flo/collection/map"
 import "types"
 import "utils"
 import "error"
@@ -11,11 +9,11 @@ import "codegen"
 fnc parse_args(size: int, args: i8**): string[] {
     let arr: string[] = []
     for let i = 0; i < size; i++
-        arr << string_from_cstring(args[i])
+        arr << string.from_cstring(args[i])
     return arr
 }
 fnc help(exec_file: string){
-    println("Usage:", exec_file, "<path> [OPTIONS]\n")
+    println("Usage: $exec_file <path> [OPTIONS]\n")
     println("OPTIONS:")
     println(" -h, --help\t\t\tShow this help message.")
     println(" --print-tokens\t\t\tPrint generated Tokens")
@@ -38,7 +36,6 @@ fnc flag_value_or(args: string[], name: string, default: string): string {
             return args[idx]
         else {
             print_message_error(ErrorKind.GEN, "Missing value after '$name' argument.")
-            exit()
         }
     }
     return default
@@ -56,17 +53,18 @@ fnc main(argc: int, argv: i8**): int {
             return 0
         }
         let filename = args[1]
-        let file = new File(filename)
-        if !file.exists(){
+        if (!File.exists(filename)) {
             print_message_error(ErrorKind.IO, "No such file or directory: '$filename'")
             return 1
         }
-        let text = file.read_as_string()
+        let file = File.open_for_reading(filename)
+        let text = file.read_all()
         /***** Lexing ******/
         let lexer: Lexer
         let tokens = lexer.tokenize(text, errors)
         if errors.length > 0 {
             print_error(errors[0], filename, text)
+            file.close()
             return 1
         }
         if flag(args, "--print-tokens")
@@ -76,6 +74,7 @@ fnc main(argc: int, argv: i8**): int {
         let module_node = parser.parse(tokens, errors)
         if errors.length > 0 {
             print_error(errors[0], filename, text)
+            file.close()
             return 1
         }
         /**** Analyzing ****/
@@ -83,6 +82,7 @@ fnc main(argc: int, argv: i8**): int {
         let program = typechecker.check(module_node, filename, errors)
         if errors.length > 0 {
             print_error(errors[0], filename, text)
+            file.close()
             return 1
         }        
         /**** Codegen ****/
@@ -98,6 +98,7 @@ fnc main(argc: int, argv: i8**): int {
             flo_module.exec()
         }
         flo_module.destroy()
+        file.close()
     } else {
         print_message_error(ErrorKind.GEN, "No input file specified.")
         return 1

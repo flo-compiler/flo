@@ -85,7 +85,7 @@ class CodeGen {
     continue_bb: LLVMBasicBlockRef
     program: Program
     in_static_ctx: bool
-    module_ctx: LLVMContextRef
+    program_ctx: LLVMContextRef
     debugInfoObj: DebugInfo
     codegenProgram(this, program: Program): GeneratedModule{
         this.program = program
@@ -93,6 +93,7 @@ class CodeGen {
         this.continue_bb = null
         this.break_bb = null
         let global_var_map: Map<string, LLVMValueRef>
+        this.program_ctx = LLVMContextCreate()
         this.global_var_scope = global_var_map
         for let i = 0; i < program.modules.length; ++i {
             this.modules << this.codegen_module(program.modules[i])
@@ -133,13 +134,12 @@ class CodeGen {
         return LLVMIsConstant(val) ? LLVMConstNeg(val) : LLVMBuildNeg(builder, val, "")
     }
     private createLLVMBool(this, val: bool): LLVMValueRef{
-        return LLVMConstInt(LLVMInt1TypeInContext(this.module_ctx), val as int, false)
+        return LLVMConstInt(LLVMInt1TypeInContext(this.program_ctx), val as int, false)
     }
     private creatLLVMInt(this, i: int): LLVMValueRef {
-        return LLVMConstInt(LLVMIntTypeInContext(this.module_ctx, WORD_SIZE), i, false)
+        return LLVMConstInt(LLVMIntTypeInContext(this.program_ctx, WORD_SIZE), i, false)
     }
     private codegen_module(this, module: Module): LLVMModuleRef {
-        this.module_ctx = LLVMContextCreate()
         let module_string_scope: Map<string, LLVMValueRef>
         let module_intrinsic_scope: Map<string, IntrinsicResult>
         let module_classes: Map<string, CGClassType>
@@ -148,8 +148,9 @@ class CodeGen {
         this.module_intrinsic_scope = module_intrinsic_scope
         this.module_classes = module_classes
         this.module_enums = module_enums
-        this.module = LLVMModuleCreateWithNameInContext(module.name.to_cstring(), this.module_ctx)
+        this.module = LLVMModuleCreateWithNameInContext(module.name.to_cstring(), this.program_ctx)
         this.debugInfoObj = new DebugInfo(this.module, module.name)
+        this.codegen_imported_symbols(module.imported_symbols)
         //let DBFloInfo = new DebugInfo(this.module, module.name)
         this.in_static_ctx = true
         for let i = 0; i < module.global_consts.length; ++i {
@@ -180,31 +181,52 @@ class CodeGen {
         this.debugInfoObj.finalize()
         return this.module
     }
+    private codegen_imported_symbols(this, symbols: ImportedSymbols){
+        for let i = 0; i < symbols.vars.length; i++ {
+            let var_decl = symbols.vars[i]
+            let var = get_var(this.program, var_decl.var_id)
+            let ty = this.codegen_type(var.value_type)
+            let ptr = LLVMAddGlobal(this.module, ty, var_decl.name.to_cstring())
+        }
+        for i = 0; i < symbols.functions.length; i++ {
+            let function = get_func(this.program, symbols.functions[i])
+            this.declare_function(function)
+        }
+        for i = 0; i < symbols.classes.length; i++ {
+            let imported_class = get_class(this.program, symbols.classes[i])
+            this.declare_class(imported_class)
+            this.declare_class_struct(imported_class, false)
+        }
+        for i = 0; i < symbols.enums.length; i++ {
+            let imported_enum = get_enum(this.program, symbols.enums[i])
+            this.declare_enum(imported_enum)
+        }
+    }
     private codegen_type(this, tt: Type, as_pointer = true): LLVMTypeRef {
         if tt.kind == TypeKind.VOID
-            return LLVMVoidTypeInContext(this.module_ctx)
+            return LLVMVoidTypeInContext(this.program_ctx)
         if tt.kind == TypeKind.BOOL
-            return LLVMInt1TypeInContext(this.module_ctx)
+            return LLVMInt1TypeInContext(this.program_ctx)
         if tt.kind == TypeKind.I4
-            return LLVMIntTypeInContext(this.module_ctx, 4)
+            return LLVMIntTypeInContext(this.program_ctx, 4)
         if tt.kind == TypeKind.I8
-            return LLVMInt8TypeInContext(this.module_ctx)
+            return LLVMInt8TypeInContext(this.program_ctx)
         if tt.kind == TypeKind.I16
-            return LLVMInt16TypeInContext(this.module_ctx)
+            return LLVMInt16TypeInContext(this.program_ctx)
         if tt.kind == TypeKind.I32 
-            return LLVMInt32TypeInContext(this.module_ctx)
+            return LLVMInt32TypeInContext(this.program_ctx)
         if tt.kind == TypeKind.INT
-            return LLVMIntTypeInContext(this.module_ctx, WORD_SIZE)
+            return LLVMIntTypeInContext(this.program_ctx, WORD_SIZE)
         if tt.kind == TypeKind.I64
-            return LLVMInt64TypeInContext(this.module_ctx)
+            return LLVMInt64TypeInContext(this.program_ctx)
         if tt.kind == TypeKind.I128
-            return LLVMInt128TypeInContext(this.module_ctx)
+            return LLVMInt128TypeInContext(this.program_ctx)
         if tt.kind == TypeKind.F16 
-            return LLVMHalfTypeInContext(this.module_ctx)
+            return LLVMHalfTypeInContext(this.program_ctx)
         if tt.kind == TypeKind.F32 
-            return LLVMFloatTypeInContext(this.module_ctx)
+            return LLVMFloatTypeInContext(this.program_ctx)
         if tt.kind == TypeKind.F64 or tt.kind == TypeKind.FLOAT
-            return LLVMDoubleTypeInContext(this.module_ctx)
+            return LLVMDoubleTypeInContext(this.program_ctx)
         if tt.kind == TypeKind.PTR
             return LLVMPointerType(this.codegen_type((tt as PointerType).pointee_type))
         if tt.kind == TypeKind.ARRAY {
@@ -251,12 +273,12 @@ class CodeGen {
     }
     private codegen_bool(this, bool_exp: BooleanExpression): LLVMValueRef {
         let val = bool_exp.value
-        return LLVMConstInt(LLVMInt1TypeInContext(this.module_ctx), val, false)
+        return LLVMConstInt(LLVMInt1TypeInContext(this.program_ctx), val, false)
     }
     private codegen_call_sprintf(this, builder: LLVMBuilderRef, vargs: LLVMValueRef[]): LLVMValueRef {
-        let i8_ty = LLVMInt8TypeInContext(this.module_ctx)
+        let i8_ty = LLVMInt8TypeInContext(this.program_ctx)
         let i8_ptr_ty = LLVMPointerType(i8_ty)
-        let int_ty = LLVMIntTypeInContext(this.module_ctx, WORD_SIZE)
+        let int_ty = LLVMIntTypeInContext(this.program_ctx, WORD_SIZE)
         let args: LLVMValueRef[] = [LLVMConstNull(i8_ptr_ty), this.creatLLVMInt(0)]
         let snprintf = get_intrinsic(this.module, "snprintf", [i8_ptr_ty, int_ty, i8_ptr_ty], int_ty, true)
         for let i = 0; i < vargs.length; i++ {
@@ -319,7 +341,6 @@ class CodeGen {
         let ptr = this.get_var_from_varid(var_exp.value_id)
         if ptr == null {
             println("This should never happen! (get_expr_mem: var)")
-            exit()
         }
         return ptr
     }
@@ -528,7 +549,6 @@ class CodeGen {
         let ty = this.codegen_type(var_exp.value_type)
         if val == null {
             println("This should never happen; (codegen_var_access_exp)")
-            exit()
         }
         if var_exp.value_id.kind == VarIdKind.FNC
             return val
@@ -540,9 +560,9 @@ class CodeGen {
         return LLVMConstNull(this.codegen_type(null_exp.value_type))
     }
     private codegen_ternary_exp(this, builder: LLVMBuilderRef, ternary_exp: TernaryExpression): LLVMValueRef {
-        let true_block = LLVMAppendBasicBlockInContext(this.module_ctx, this.function, "true_block")
-        let false_block = LLVMAppendBasicBlockInContext(this.module_ctx, this.function, "false_block")
-        let end = LLVMAppendBasicBlockInContext(this.module_ctx, this.function, "end")
+        let true_block = LLVMAppendBasicBlockInContext(this.program_ctx, this.function, "true_block")
+        let false_block = LLVMAppendBasicBlockInContext(this.program_ctx, this.function, "false_block")
+        let end = LLVMAppendBasicBlockInContext(this.program_ctx, this.function, "end")
         let cond = this.codegen_expression(builder, ternary_exp.cond)
         LLVMBuildCondBr(builder, cond, true_block, false_block)
         LLVMPositionBuilderAtEnd(builder, true_block)
@@ -609,12 +629,10 @@ class CodeGen {
             let struct_class = this.get_class_from_varid(var_id)
             if struct_class == null {
                 println("this should not happen; (codegen_member_exp); class")
-                exit()
             }
             let prop = struct_class.non_vt_methods_map.get(prop_id_key)
             if prop == null {
                 println("This should never happen; (codegen_member_expr; class prop)")
-                exit()
             }
             if member_exp.value_type.kind == TypeKind.FNC
                 return prop
@@ -624,7 +642,6 @@ class CodeGen {
            let enum_type = this.get_enum_from_varid(var_id) 
              if enum_type == null {
                 println("this should not happen; (codegen_member_exp); enum")
-                exit()
             }
             return enum_type.field_map.get(prop_id_key)
         }
@@ -665,9 +682,9 @@ class CodeGen {
     }
     private codegen_if_stmt(this, builder: LLVMBuilderRef, if_stmt: IfStatement){
         let condition = this.codegen_expression(builder, if_stmt.condition)
-        let if_bb = LLVMAppendBasicBlockInContext(this.module_ctx, this.function, "if.entry")
-        let else_bb = LLVMAppendBasicBlockInContext(this.module_ctx, this.function, "else")
-        let merge_bb = LLVMAppendBasicBlockInContext(this.module_ctx, this.function, "ifend")
+        let if_bb = LLVMAppendBasicBlockInContext(this.program_ctx, this.function, "if.entry")
+        let else_bb = LLVMAppendBasicBlockInContext(this.program_ctx, this.function, "else")
+        let merge_bb = LLVMAppendBasicBlockInContext(this.program_ctx, this.function, "ifend")
         LLVMBuildCondBr(builder, condition, if_bb, else_bb)
         LLVMPositionBuilderAtEnd(builder, if_bb)
         this.codegen_block(builder, if_stmt.block)
@@ -689,16 +706,16 @@ class CodeGen {
         LLVMPositionBuilderAtEnd(builder, merge_bb)
     }
     private codegen_for_stmt(this, builder: LLVMBuilderRef, for_stmt: ForStatement){
-        let for_entry_block = LLVMAppendBasicBlockInContext(this.module_ctx, this.function, "for.entry")
+        let for_entry_block = LLVMAppendBasicBlockInContext(this.program_ctx, this.function, "for.entry")
         LLVMBuildBr(builder, for_entry_block)
         LLVMPositionBuilderAtEnd(builder, for_entry_block)
         if for_stmt.initialization != null {
             this.codegen_statement(builder, for_stmt.initialization)
         }
-        let for_cond_block = LLVMAppendBasicBlockInContext(this.module_ctx, this.function, "for.cond")
-        let for_body_block = LLVMAppendBasicBlockInContext(this.module_ctx, this.function, "for.body")
-        let for_incr_block = LLVMAppendBasicBlockInContext(this.module_ctx, this.function, "for.incr")
-        let for_end_block = LLVMAppendBasicBlockInContext(this.module_ctx, this.function, "for.end")
+        let for_cond_block = LLVMAppendBasicBlockInContext(this.program_ctx, this.function, "for.cond")
+        let for_body_block = LLVMAppendBasicBlockInContext(this.program_ctx, this.function, "for.body")
+        let for_incr_block = LLVMAppendBasicBlockInContext(this.program_ctx, this.function, "for.incr")
+        let for_end_block = LLVMAppendBasicBlockInContext(this.program_ctx, this.function, "for.end")
         let prev_break_bb = this.break_bb
         let prev_continue_bb = this.continue_bb
         this.break_bb = for_end_block
@@ -723,8 +740,8 @@ class CodeGen {
         LLVMPositionBuilderAtEnd(builder, for_end_block)
     }
     private codegen_while_stmt(this, builder: LLVMBuilderRef, while_stmt: WhileStatement){
-        let while_bb = LLVMAppendBasicBlockInContext(this.module_ctx, this.function, "while.entry")
-        let while_end_bb = LLVMAppendBasicBlockInContext(this.module_ctx, this.function, "while.end")
+        let while_bb = LLVMAppendBasicBlockInContext(this.program_ctx, this.function, "while.entry")
+        let while_end_bb = LLVMAppendBasicBlockInContext(this.program_ctx, this.function, "while.end")
         let prev_break_bb = this.break_bb
         let prev_continue_bb = this.continue_bb
         this.break_bb = while_end_bb
@@ -824,10 +841,9 @@ class CodeGen {
         }
         if llvm_fnc == null {
             println("This should never happen; (codegen_function)")
-            exit()
         }
-        let entry_block: LLVMBasicBlockRef = LLVMAppendBasicBlockInContext(this.module_ctx, llvm_fnc, "")
-        let func_builder: LLVMBuilderRef = LLVMCreateBuilderInContext(this.module_ctx)
+        let entry_block: LLVMBasicBlockRef = LLVMAppendBasicBlockInContext(this.program_ctx, llvm_fnc, "")
+        let func_builder: LLVMBuilderRef = LLVMCreateBuilderInContext(this.program_ctx)
         LLVMPositionBuilderAtEnd(func_builder, entry_block)
         for let i = 0; i < func.args.length; i++ {
             let arg = func.args[i]
@@ -849,8 +865,8 @@ class CodeGen {
             let llvm_fnc = struct_class.non_vt_methods_map.get(prop_id_key)
             let is_constructor = method.name == "constructor"
             llvm_fnc = LLVMGetNamedFunction(this.module, "$(checked_class.name)_$(method.name)".to_cstring())
-            let entry_block = LLVMAppendBasicBlockInContext(this.module_ctx, llvm_fnc, "")
-            let func_builder = LLVMCreateBuilderInContext(this.module_ctx)
+            let entry_block = LLVMAppendBasicBlockInContext(this.program_ctx, llvm_fnc, "")
+            let func_builder = LLVMCreateBuilderInContext(this.program_ctx)
             LLVMPositionBuilderAtEnd(func_builder, entry_block)
             let offset = 0
             if !method.is_static {
@@ -886,7 +902,7 @@ class CodeGen {
     private declare_method(this, method_name: string, method_type: LLVMTypeRef): LLVMValueRef {
         return LLVMAddFunction(this.module, method_name.to_cstring(), method_type)
     }
-    private declare_static_props(this, struct_class: CGClassType, checked_class: Class){
+    private declare_static_props(this, struct_class: CGClassType, checked_class: Class, initializer_fields = true){
         let buckets = checked_class.static_prop_map.get_buckets()
         for let i = 0; i < buckets.length; i++ {
             let prop_id = buckets[i].value
@@ -900,13 +916,14 @@ class CodeGen {
                 static_prop_value = this.declare_method(static_prop_name_concat, static_prop_type)
             } else {
                 static_prop_value = LLVMAddGlobal(this.module, static_prop_type, static_prop_name_concat.to_cstring())
+                if (!initializer_fields) continue
                 let global_prop_initializer = this.codegen_expression(null, checked_class.fields[prop_id.id].initializer)
                 LLVMSetInitializer(static_prop_value, global_prop_initializer)
             }
             struct_class.non_vt_methods_map.set(prop_id_key, static_prop_value)
         }
     }
-    private declare_class_props(this, struct_class: CGClassType, checked_class: Class, prop_types: LLVMTypeRef[]){
+    private declare_class_props(this, struct_class: CGClassType, checked_class: Class, prop_types: LLVMTypeRef[], initialize_vtable = true){
         let buckets = checked_class.prop_map.get_buckets()
         let vtable_values: LLVMValueRef[] = []
         let vtable_types: LLVMTypeRef[] = []
@@ -927,11 +944,14 @@ class CodeGen {
                 let llvm_method_val: LLVMValueRef = null
                 let llvm_method_type: LLVMTypeRef = null
                 if prop_id.type_id == checked_class.id {
-                    let arg_types: Type[] = [new ObjectType(checked_class.id) as Type]
-                    for let j = 0; j < method_type.arg_types.length; j++ {
-                        arg_types << method_type.arg_types[j]
+                    if !method_type.has_this {
+                        let arg_types: Type[] = [new ObjectType(checked_class.id) as Type]
+                        for let j = 0; j < method_type.arg_types.length; j++ {
+                            arg_types << method_type.arg_types[j]
+                        }
+                        method_type.arg_types = arg_types
                     }
-                    method_type.arg_types = arg_types
+                    method_type.has_this = true
                     llvm_method_type = this.codegen_type(method_type, false)
                     if !checked_class.methods[prop_id.id].is_abstract {
                         llvm_method_val = this.declare_method("$(checked_class.name)_$prop_name", llvm_method_type)
@@ -955,10 +975,10 @@ class CodeGen {
             }
         }
         if vtable_types.length > 0 {
-            let vtable_struct_ty = LLVMStructTypeInContext(this.module_ctx, vtable_types.buffer, vtable_types.length, true)
-            if !checked_class.is_abstract {
+            let vtable_struct_ty = LLVMStructTypeInContext(this.program_ctx, vtable_types.buffer, vtable_types.length, true)
+            if !checked_class.is_abstract and initialize_vtable {
                 struct_class.vtable = LLVMAddGlobal(this.module, vtable_struct_ty, "VTable$(checked_class.name)".to_cstring())
-                let vtable_intializer = LLVMConstStructInContext(this.module_ctx, vtable_values.buffer, vtable_values.length, true)
+                let vtable_intializer = LLVMConstStructInContext(this.program_ctx, vtable_values.buffer, vtable_values.length, true)
                 LLVMSetInitializer(struct_class.vtable, vtable_intializer)
             }
             struct_class.vtable_type = vtable_struct_ty
@@ -970,7 +990,7 @@ class CodeGen {
     }
     private declare_class(this, checked_class: Class){
         let struct_class: CGClassType
-        struct_class.llvm_type = LLVMStructCreateNamed(this.module_ctx, checked_class.name.to_cstring())
+        struct_class.llvm_type = LLVMStructCreateNamed(this.program_ctx, checked_class.name.to_cstring())
         struct_class.vt_methods_pos_map = new Map<string, int>()
         struct_class.fields_pos_map = new Map<string, int>()
         struct_class.non_vt_methods_map = new Map<string, LLVMValueRef>()
@@ -978,24 +998,27 @@ class CodeGen {
         struct_class.vtable_type = null
         this.add_class(checked_class.id, struct_class)
     }
-    private declare_class_struct(this, checked_class: Class) {
+    private declare_class_struct(this, checked_class: Class, initialize_all = true) {
         let prop_types: LLVMTypeRef[] = []
         let struct_class = this.get_class_from_typeid(checked_class.id)
         // Taking care of static methods.
-        this.declare_static_props(struct_class, checked_class)
+        this.declare_static_props(struct_class, checked_class, initialize_all)
         // creating a vtable
-        this.declare_class_props(struct_class, checked_class, prop_types)
+        this.declare_class_props(struct_class, checked_class, prop_types, initialize_all)
         LLVMStructSetBody(struct_class.llvm_type, prop_types.buffer, prop_types.length, true)
         // Now constructor
         if checked_class.constructor != null {
             let constructor_type = get_class_prop_type(this.program, checked_class.constructor) as FunctionType
-            let arg_types: Type[] = [new ObjectType(checked_class.id) as Type]
-            for let i = 0; i < constructor_type.arg_types.length; i++ {
-                arg_types << constructor_type.arg_types[i]
+            if !constructor_type.has_this {
+                let arg_types: Type[] = [new ObjectType(checked_class.id) as Type]
+                for let i = 0; i < constructor_type.arg_types.length; i++ {
+                    arg_types << constructor_type.arg_types[i]
+                }
+                constructor_type.arg_types = arg_types
             }
-            constructor_type.arg_types = arg_types
             let constructor_llvm_method_type = this.codegen_type(constructor_type, false)
             struct_class.constructor = this.declare_method("$(checked_class.name)_constructor", constructor_llvm_method_type)
+            constructor_type.has_this = true
         } else {
             struct_class.constructor = null
         }
@@ -1006,7 +1029,7 @@ class CodeGen {
         if checked_enum.fields.length > 0 {
             enum_type.llvm_type = this.codegen_type(checked_enum.fields[0].initializer.value_type)
         } else {
-            enum_type.llvm_type = LLVMIntTypeInContext(this.module_ctx, WORD_SIZE)
+            enum_type.llvm_type = LLVMIntTypeInContext(this.program_ctx, WORD_SIZE)
         }
         for let i = 0; i < checked_enum.fields.length; i++ {
             let enum_field = checked_enum.fields[i]

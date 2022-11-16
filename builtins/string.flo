@@ -1,4 +1,5 @@
 import memcmp, memcpy in "@flo/sys"
+fnc strlen(str: i8*): int
 class string {
     buffer: i8*
     length: int
@@ -79,5 +80,8 @@ class string {
         memcpy(c_string, this.buffer, this.length)
         c_string[this.length] = '\0'
         return c_string
+    }
+    from_cstring(str: i8*): string {
+        return new string(str, strlen(str))
     }
 }

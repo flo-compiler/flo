@@ -31,10 +31,12 @@ install: all
 	cp -f flo $(FLO_INSTALL_PATH)
 	ln -f $(FLO_INSTALL_PATH) /usr/bin/flo
 
-build: bootstrap/flo.ll
-	clang-15 $^ $(LLVM_LDFLAGS) -o stage0
-	./stage0 $(FCFLAGS) src/main.flo -o flo.o
+build: stage0
+	$^ $(FCFLAGS) src/main.flo -o flo.o
 	flo
+
+stage0: bootstrap/flo.ll
+	clang-15 $^ $(LLVM_LDFLAGS) -o $@
 
 clean:
 	rm -f *.o flo
