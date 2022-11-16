@@ -5,8 +5,12 @@ fnc memcpy(ptr1: i8*, ptr2: i8*, len: int): int
 /*@extern*/
 fnc memset(ptr1: i8*, c: int, len: int)
 /*@extern*/
+fnc malloc(size: int): i8*
+/*@extern*/
 fnc realloc(ptr: i8*, size: int): i8*
-
+/*@extern*/
+fnc strlen(str: i8*): int
+// ----- string -------
 class string {
     private buffer: i8*
     public length: int
@@ -88,7 +92,11 @@ class string {
         c_string[this.length] = '\0'
         return c_string
     }
+    public from_cstring(str: i8*): string {
+        return new string(str, strlen(str))
+    }
 }
+// ------- Range -------
 class Range {
     private start: int
     private end: int
@@ -100,6 +108,7 @@ class Range {
         return num >= this.start and num < this.end
     }
 }
+// ----- Array -------
 class Array <T> {
     buffer: T*
     length: int
@@ -174,7 +183,55 @@ class Array <T> {
         return "[$(this.join(", "))]"
     }
 }
+// ------- File -------
+fnc fopen(path: i8*, mode: i8*): int
+fnc fclose(stream: int)
+fnc fread(buf: i8*, size: int, nmemb: int, stream: int): int
+fnc access(path: i8*, mode: int): int
+const F_OK = 0
+class File {
+    fd: int
+    constructor(this, fd: int){
+        this.fd = fd
+    }
+    public open_for_reading(path: string): File {
+        let fd = fopen(path.to_cstring(), "r")
+        if fd == null return null
+        return new File(fd)
+    }
+    public read_all(this): string {
+        let size = 0
+        let allocated_mem = malloc(size)
+        while true {
+            const CHUNK_SIZE = 1024
+            let buffer: i8[CHUNK_SIZE]
+            let read_len = fread(&buffer[0], 1, CHUNK_SIZE, this.fd)
+            if read_len == 0 {
+                return new string(allocated_mem, size)
+            }
+            let prev_size = size
+            size += read_len
+            allocated_mem = realloc(allocated_mem, size)
+            memcpy(allocated_mem + prev_size, &buffer[0], read_len)
+        }
+        return null
+    }
+    public exists(path: string): bool {
+        return access(path.to_cstring(), F_OK) == 0
+    }
+    public close(this){
+        fclose(this.fd)
+    }
+}
 
+// generic functions.
+// fnc print<T>(arg: T, end = "\n"){
+//     let arg_mem = (arg as string).to_cstring()
+//     let end_mem = end.to_cstring()
+//     printf("%s%s", arg_mem, end_mem)
+//     free(arg_mem)
+//     free(end_mem)
+// }
 /* Function generators int 
 fnc *array_generator<U[N]>(x: U[N]): U {
     for i in 0..N {

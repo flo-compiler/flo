@@ -23,10 +23,12 @@ class PointerType (Type) {
 class FunctionType (Type) {
     arg_types: Type[]
     return_type: Type
+    has_this: bool
     constructor(this, arg_types: Type[], return_type: Type){
         super(TypeKind.FNC)
         this.arg_types = arg_types
         this.return_type = return_type
+        this.has_this = false
     }
 }
 class Value {
@@ -46,9 +48,6 @@ class TypeId {
         this.module_id = module_id
         this.kind = kind
         this.id =  id
-    }
-    public __eq__(this, other: TypeId): bool {
-        return this.module_id == other.module_id and this.kind == other.kind and this.id == other.id
     }
 }
 class ClassId(TypeId) {
@@ -648,6 +647,18 @@ class Enum {
         this.fields = []
     }
 }
+class ImportedSymbols {
+    vars: VarDeclaration[]
+    functions: VarId[]
+    enums: EnumId[]
+    classes: ClassId[]
+    constructor(this){
+        this.vars = []
+        this.functions = []
+        this.enums = []
+        this.classes = []
+    }
+}
 class Module {
     id: int
     name: string
@@ -656,10 +667,10 @@ class Module {
     classes: Class[]
     functions: Function[]
     enums: Enum[]
-    scope_id: ScopeId
     scopes: Scope[]
     global_consts: ConstDeclaration[]
     global_vars: VarDeclaration[]
+    imported_symbols: ImportedSymbols
     constructor(this){
         this.functions = []
         this.vars = []
@@ -670,6 +681,7 @@ class Module {
         this.global_consts = []
         this.global_vars = []
         this.consts = []
+        this.imported_symbols = new ImportedSymbols()
     }
 }
 class Program {
@@ -695,6 +707,9 @@ fnc get_class(program: Program, type_id: ClassId): Class {
 }
 fnc get_method(program: Program, prop_id: PropId): ClassMethod {
     return get_class(program, prop_id.type_id as ClassId).methods[prop_id.id]
+}
+fnc get_enum(program: Program, enum_id: EnumId): Enum {
+    return program.modules[enum_id.module_id].enums[enum_id.id]
 }
 fnc get_class_prop_type(program: Program, prop_id: PropId): Type {
     let owner = get_class(program, prop_id.type_id as ClassId)
@@ -844,9 +859,8 @@ class TypeChecker {
     constructor(this){
         this.current_module = -1
         this.in_loop = false
+        this.program = new Program()
         this.generic_templates = new Map<string, ClassDeclarationNode>()
-        let program: Program
-        this.program = program
     }
     private get_current_module(this): Module {
         return this.program.modules[this.current_module]
@@ -855,7 +869,7 @@ class TypeChecker {
         return get_scope(this.program, this.current_scope)
     }
     private get_module_scope(this): Scope {
-        return get_scope(this.program, this.get_current_module().scope_id)
+        return this.get_current_module().scopes[0]
     }
     private get_current_function(this): Function {
         return this.get_current_module().functions[this.current_function.id]
@@ -870,9 +884,6 @@ class TypeChecker {
     }
     private get_class_from_var_id(this, var_id: VarId): Class {
         return this.program.modules[var_id.module_id].classes[var_id.id]
-    }
-    private get_enum(this, type_id: EnumId): Enum {
-        return this.program.modules[type_id.module_id].enums[type_id.id]
     }
     private get_enum_from_var_id(this, var_id: VarId): Enum {
         return this.program.modules[var_id.module_id].enums[var_id.id]
@@ -903,7 +914,9 @@ class TypeChecker {
             let t2_obj_type = t2 as ObjectType
             let t1_obj_typeid = t1_obj_type.class_id as TypeId
             let t2_obj_typeid = t2_obj_type.class_id as TypeId
-            if t1_obj_typeid == t2_obj_typeid return true
+            if t1_obj_typeid.kind == t2_obj_typeid.kind and t1_obj_typeid.module_id == t2_obj_typeid.module_id and t1_obj_typeid.id == t2_obj_typeid.id  {
+                return true
+            }
             let t2_class = get_class(this.program, t2_obj_typeid as ClassId)
             if t2_class.parent != null {
                 return this.types_are_eq(t1_obj_type, t2_class.parent)
@@ -934,7 +947,7 @@ class TypeChecker {
             return get_class(this.program, (ty as ObjectType).class_id).name
         }
         if ty.kind == TypeKind.ENUM {
-            return this.get_enum((ty as EnumType).enum_id).name
+            return get_enum(this.program, (ty as EnumType).enum_id).name
         }
         if ty.kind == TypeKind.ARRAY {
             let arr_ty = ty as ArrayType
@@ -969,27 +982,23 @@ class TypeChecker {
     }
     private get_type_from_current_scope(this, name: string): Type {
         let current_scope = this.get_current_scope()
-        let found_type = Type.unknown()
         while true {
             let aliased_ty = current_scope.type_aliases.get(name)
             if aliased_ty != null {
-                found_type = aliased_ty
-                break
+                return aliased_ty
             }
             let class_id = current_scope.classes.get(name)
             if class_id != null {
-                found_type = new ObjectType(class_id)
-                break
+                return new ObjectType(class_id)
             }
             let enum_id = current_scope.enums.get(name)
             if enum_id != null {
-                found_type = new EnumType(enum_id)
-                break
+                return new EnumType(enum_id)
             }
             if (current_scope.parent == null) break
             current_scope = get_scope(this.program, current_scope.parent)
         }
-        return found_type
+        return Type.unknown()
     }
     private create_child_scope_within_current_scope(this): Scope {
         let new_scope = this.create_scope()
@@ -1003,9 +1012,15 @@ class TypeChecker {
         return this.errors.length > 0
     }
     public check(this, module_ast: ModuleAST, filename: string, errors: FloError[]): Program {
+        this.errors = errors
+        this.check_module(module_ast, filename)
+        return this.program
+    }
+    private check_module(this, module_ast: ModuleAST, filename: string): Module {
+        let prev_module = this.current_module
+        let prev_scope = this.current_scope
         this.current_module++
         this.filename = filename
-        this.errors = errors
         let module: Module
         module.name = filename
         this.program.modules << module
@@ -1015,13 +1030,14 @@ class TypeChecker {
         module_scope.vars.set("false", const_id)
         module_scope.vars.set("null", const_id)
         this.current_scope = module_scope.id
-        module.scope_id = module_scope.id
         this.current_method = null
         this.current_class = null
         this.current_function = null
-        
+        for let i = 0; i < module_ast.imports.length; i++ {
+            this.check_module_import(module_ast.imports[i])
+        }
         // We declare module structures
-        for let i = 0; i < module_ast.enums.length; i++ {
+        for i = 0; i < module_ast.enums.length; i++ {
             this.declare_enum_within_current_scope(module_ast.enums[i])
         }
         for i = 0; i < module_ast.classes.length; i++ {
@@ -1059,8 +1075,11 @@ class TypeChecker {
         for i = 0; i < module_ast.functions.length; i++ {
            this.check_function_body(module.functions[i], module_ast.functions[i])
         }
-        return this.program
+        this.current_scope = prev_scope
+        this.current_module = prev_module
+        return module
     }
+
     private create_generic_instance_in_module(this, name: string, types: Type[]): Type {
         let generic_node = this.generic_templates.get(name)
         if generic_node == null return null
@@ -1127,6 +1146,38 @@ class TypeChecker {
         var_stmt.is_static = true
         this.get_current_module().global_vars << var_stmt
     }
+    private add_imported_var_to_module(this, var_name: string, var_id: VarId){
+        let scope = this.get_module_scope()
+        let module = this.get_current_module()
+        scope.vars.set(var_name, var_id)
+        module.imported_symbols.vars << new VarDeclaration(var_name, var_id)
+    }
+    private add_imported_fnc_to_module(this, fnc_name: string, fnc_id: VarId){
+        let scope = this.get_module_scope()
+        let module = this.get_current_module()
+        scope.functions.set(fnc_name, fnc_id)
+        module.imported_symbols.functions << fnc_id
+    }
+    private add_imported_class_to_module(this, class_name: string, class_id: ClassId){
+        let scope = this.get_module_scope()
+        let module = this.get_current_module()
+        scope.classes.set(class_name, class_id)
+        scope.vars.set(class_name, new ClassVarId(class_id))
+        module.imported_symbols.classes << class_id
+    }
+    private add_imported_enum_to_module(this, enum_name: string, enum_id: EnumId){
+        let scope = this.get_module_scope()
+        let module = this.get_current_module()
+        scope.enums.set(enum_name, enum_id)
+        scope.vars.set(enum_name, new EnumVarId(enum_id))
+        module.imported_symbols.enums << enum_id
+    }
+    private add_imported_typealias_to_module(this, alias_name: string, type_: Type){
+        let scope = this.get_module_scope()
+        let module = this.get_current_module()
+        scope.type_aliases.set(alias_name, type_)
+        //TODO: Recursively look for object and enum types and import them into module
+    }
     private init_function_signature(this, arg_nodes: ArgNode[], return_type_node: TypeNode, args: FunctionArg[]): FunctionType {
         let arg_types: Type[] = []
         for let i = 0; i < arg_nodes.length; ++i {
@@ -1153,6 +1204,102 @@ class TypeChecker {
         }
         let ret_type = this.check_type(return_type_node)
         return new FunctionType(arg_types, ret_type)
+    }
+    private check_module_import(this, import_node: ImportNode){
+        if import_node.module_path.args.length > 0 {
+            this.error(ErrorKind.GEN, "Import statement path can't be a a formatted string", import_node.module_path.range)
+            return
+        }
+        let path = import_node.module_path.value
+        let ast = this.lex_and_parse_file(path, import_node.module_path.range)
+        if this.has_errored() {return}
+        let module = this.check_module(ast, path)
+        if this.has_errored() {return}
+        let global_module_scope = module.scopes[0]
+        if import_node.import_list.length > 0 {
+            for let i = 0; i < import_node.import_list.length; i++ {
+                let name_to_import = import_node.import_list[i].value
+                let renamed_name = name_to_import
+                if this.generic_templates.get(renamed_name) != null continue
+                let class_id = global_module_scope.classes.get(name_to_import)
+                if class_id != null {
+                    this.add_imported_class_to_module(renamed_name, class_id)
+                    continue
+                }
+                let enum_id = global_module_scope.enums.get(name_to_import)
+                if enum_id != null {
+                    this.add_imported_enum_to_module(renamed_name, enum_id)
+                    continue
+                }
+                let var_id = global_module_scope.vars.get(name_to_import)
+                if var_id != null {
+                    this.add_imported_var_to_module(renamed_name, var_id)
+                    continue 
+                }
+                let func_id = global_module_scope.functions.get(name_to_import)
+                if func_id != null {
+                    this.add_imported_fnc_to_module(renamed_name, func_id)
+                    continue
+                }
+                let type_alias = global_module_scope.type_aliases.get(name_to_import)
+                if type_alias != null {
+                    this.add_imported_typealias_to_module(renamed_name, type_alias)
+                    continue
+                } else {
+                    this.error(ErrorKind.NAME, "$name_to_import not found in module \"$path\"", import_node.import_list[i].range)
+                    return
+                }
+            }
+        } else {
+            for let j = 0; j < module.global_vars.length; j++ {
+                let var_ = module.global_vars[j]
+                this.add_imported_var_to_module(var_.name, var_.var_id)
+            }
+            for j = 0; j < module.global_consts.length; j++ {
+                let const_ = module.global_consts[j]
+                this.add_imported_var_to_module(const_.name, const_.const_id)
+            }
+            for j = 0; j < module.functions.length; j++ {
+                let function = module.functions[j]
+                this.add_imported_fnc_to_module(function.name, function.id)
+            }
+            for j = 0; j < module.classes.length; j++ {
+                let class_ = module.classes[j]
+                this.add_imported_class_to_module(class_.name, class_.id)
+            }
+            for j = 0; j < module.enums.length; j++ {
+                let enum_ = module.enums[j]
+                this.add_imported_enum_to_module(enum_.name, enum_.id)
+            }
+            let type_buckets = global_module_scope.type_aliases.get_buckets()
+            for j = 0; j < type_buckets.length; j++ {
+                let type_bucket = type_buckets[j]
+                this.add_imported_typealias_to_module(type_bucket.key, type_bucket.value)
+            }
+        }
+    }
+    private lex_and_parse_file(this, filename: string, range: FloRange): ModuleAST {
+        //TODO: Find a better organization system. (Caching)
+        if (!File.exists(filename)) {
+            this.error(ErrorKind.IO, "No such file or directory: '$filename'", range)
+            return null
+        }
+        let file = File.open_for_reading(filename)
+        let text = file.read_all()
+        let lexer: Lexer
+        let tokens = lexer.tokenize(text, this.errors)
+        if this.has_errored() {
+            file.close()
+            return null
+        }
+        let parser: Parser
+        let module_node = parser.parse(tokens, this.errors)
+        if this.has_errored() {
+            file.close()
+            return null
+        }
+        file.close()
+        return module_node
     }
     private declare_enum_within_current_scope(this, enum_node: EnumNode){
         let declared_enum = new Enum()
@@ -1201,7 +1348,6 @@ class TypeChecker {
         declared_class.name = name
         declared_class.id = new ClassId(this.current_module, this.get_current_module().classes.length)
         this.get_current_module().classes << declared_class
-
         module_scope.classes.set(name, declared_class.id)
         module_scope.vars.set(name, new ClassVarId(declared_class.id))
     }
@@ -1490,7 +1636,9 @@ class TypeChecker {
         if func.is_external { 
             return
         }
+        let prev_func = this.current_function
         this.current_function = func.id
+        let prev_scope = this.current_scope 
         this.current_scope = func.scope
         func.block = this.check_block(func_node.block)
         if this.has_errored() {
@@ -1504,7 +1652,6 @@ class TypeChecker {
                 return
             }
         }
-        this.current_function = null
         this.current_scope = get_scope(this.program, func.scope).parent
     }
     private check_type(this, type_node: TypeNode): Type {
@@ -1552,8 +1699,10 @@ class TypeChecker {
                     types << this.check_type(record_type.generic_args[j])
                 if this.has_errored() return null
                 let generic_type = this.create_generic_instance_in_module(identifer_tok.value, types)
-                if this.has_errored() this.errors[0].range = type_node.range
-                return generic_type
+                if generic_type != null {
+                    if this.has_errored() this.errors[0].range = type_node.range
+                    return generic_type
+                }
             }
             let found_type = this.get_type_from_current_scope(identifer_tok.value)
             if found_type.kind == TypeKind.UNKNOWN {
@@ -1663,6 +1812,7 @@ class TypeChecker {
         let method_type = get_class_prop_type(this.program, prop_id) as FunctionType
         let arg_type = method_type.arg_types[0]
         let right = this.check_expression(arg_type, binary_node.rhs)
+        if this.has_errored() return null
         if !this.types_are_eq(arg_type, right.value_type) {
             this.error(ErrorKind.TYPE, "Expected type '$(this.dump_type(arg_type))' but got type '$(this.dump_type(right.value_type))'", binary_node.rhs.range)
             return null
@@ -1712,12 +1862,14 @@ class TypeChecker {
         let method_type = get_class_prop_type(this.program, prop_id) as FunctionType
         let arg1_type = method_type.arg_types[0]
         let arg2_type = method_type.arg_types[1]
+        if this.has_errored() return null
         let index = this.check_expression(arg1_type, index_expr_node.index)
         if !this.types_are_eq(arg1_type, index.value_type) {
             this.error(ErrorKind.TYPE, "Expected type '$(this.dump_type(arg1_type))' but got type '$(this.dump_type(index.value_type))'", index_expr_node.index.range)
             return null
         }
         let value = this.check_expression(arg2_type, binary_node.rhs)
+        if this.has_errored() return null
         if !this.types_are_eq(arg1_type, index.value_type) {
             this.error(ErrorKind.TYPE, "Expected type '$(this.dump_type(arg2_type))' but got type '$(this.dump_type(value.value_type))'", binary_node.rhs.range)
             return null
@@ -1740,8 +1892,10 @@ class TypeChecker {
         if is_object(left.value_type) and !is_assign_op
             return this.check_object_binary_expr(left, binary_node, null) as BinaryExpression
         let right = this.check_expression(left.value_type, binary_node.rhs)
-        if is_object(right.value_type) and op == BinaryOp.IN
+        if this.has_errored() return null
+        if is_object(right.value_type) and op == BinaryOp.IN {
             return this.check_object_binary_expr(right, binary_node, left) as BinaryExpression
+        }
         if this.has_errored() return null
         let is_const = left.is_constant and right.is_constant
         if is_assign_op

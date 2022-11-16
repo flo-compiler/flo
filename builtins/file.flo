@@ -1,0 +1,41 @@
+
+// Using ---libc---
+fnc fopen(path: i8*, mode: i8*): int
+fnc fclose(stream: int)
+fnc fread(buf: i8*, size: int, nmemb: int, stream: int): int
+fnc access(path: i8*, mode: int): int
+const CHUNK_SIZE = 1024
+const F_OK = 0
+class File {
+    fd: int
+    constructor(this, fd: int){
+        this.fd = fd
+    }
+    public open_for_reading(path: string): File {
+        let fd = fopen(path.to_cstring(), "r")
+        if fd == null return null
+        return new File(fd)
+    }
+    public read_all(this): string {
+        let size = 0
+        let allocated_mem = new i8[0]
+        while true {
+            let buffer: i8[CHUNK_SIZE]
+            let read_len = fread(&buffer[0], 1, CHUNK_SIZE, this.fd)
+            if read_len == 0 {
+                return new string(allocated_mem, size)
+            }
+            let prev_size = size
+            size += read_len
+            allocated_mem = allocated_mem.resize(size)
+            memcpy(allocated_mem + prev_size, &buffer[0], read_len)
+        }
+        return null
+    }
+    public exists(path: string): bool {
+        return access(path.to_cstring(), F_OK) == 0
+    }
+    public close(this){
+        fclose(this.fd)
+    }
+}

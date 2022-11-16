@@ -1,7 +1,3 @@
-fnc strlen(str: i8*): int
-fnc string_from_cstring(str: i8*): string {
-    return new string(str, strlen(str))
-}
 class FloRange {
     start: int
     end: int
@@ -13,12 +9,91 @@ class FloRange {
         this.col = col
         this.line = line
     }
-}
-fnc merge_range(r1: FloRange, r2: FloRange): FloRange {
-    return new FloRange(r1.start, r2.end, r1.col, r2.line)
+    merge(r1: FloRange, r2: FloRange): FloRange {
+        return new FloRange(r1.start, r2.end, r1.col, r2.line)
+    }
 }
 fnc color(color: string): string {
     if color == "red"
         return "\033[1;31m"
     return "\033[0m"
+}
+
+
+class Bucket<T, U> {
+    key: T
+    value: U
+    is_empty: bool
+    constructor(this){
+        this.is_empty = true
+    }
+    set(this, key: T, value: U){
+        this.is_empty = false
+        this.key = key
+        this.value = value
+    }
+}
+class Map<T, U> {
+    buckets: Bucket<T, U>*
+    length: int
+    size: int
+    constructor(this){
+        let initial_capacity = 256
+        this.buckets = new Bucket<T, U>[initial_capacity]
+        for let i = 0; i < initial_capacity; i++ {
+            this.buckets[i] = new Bucket<T, U>()
+        }
+        this.size = initial_capacity
+        this.length = 0
+    }
+    hash_fnc(this, key: T): int {
+        let str = key as string
+        let hash = 5381
+        for let i = 0; i < str; ++i {
+            hash = ((hash << 5) + hash) + (str.get_byte(i) as int)
+        }
+        return hash
+    }
+    resize(this){
+        let original_size = this.size
+        this.size *= 2
+        this.buckets = this.buckets.resize(this.size)
+        for let i = original_size; i < this.size; i++ {
+            this.buckets[i] = new Bucket<T, U>()
+        }
+    }
+    set(this, key: T, value: U){
+        let hash = this.hash_fnc(key) % this.size
+        if (this.size <= this.length) this.resize()
+        while !this.buckets[hash].is_empty {
+            if this.buckets[hash].key == key
+                break
+            hash++
+        } 
+        this.length++
+        this.buckets[hash].set(key, value)
+    }
+    get(this, key: T): U {
+        let hash = this.hash_fnc(key) % this.size
+        while !this.buckets[hash].is_empty {
+            if this.buckets[hash].key == key
+                break
+            else
+                hash++
+        }
+        if !this.buckets[hash].is_empty
+            if this.buckets[hash].key == key
+                return this.buckets[hash].value
+        return null
+    }
+    get_buckets(this): Bucket<T, U>[] {
+        let buckets: Bucket<T, U>[] = []
+        for let i = 0; i < this.size; ++i {
+            let current_bucket = this.buckets[i]
+            if !current_bucket.is_empty {
+                buckets << current_bucket
+            }
+        }
+        return buckets  
+    }
 }
