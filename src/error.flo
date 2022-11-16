@@ -57,13 +57,8 @@ fnc print_message_error(kind: ErrorKind, message: string){
     print(color(""))
     println(message)
 }
-fnc print_error(error_: FloError, filename: string, content: string){
-      print_message_error(error_.kind, error_.message)
-      println("File \"" + filename + "\", line", error_.range.line)
-      print_error_line(content, error_.range)
-}
-fnc print_errors(errors: FloError[], filename: string, content: string){
-    for let i = 0; i < errors.length; i++ {
-      print_error(errors[i], filename, content)
-    }
+fnc print_error(error: FloError, filename: string, content: string){
+    print_message_error(error.kind, error.message)
+    println("File \"$filename\", line", error.range.line)
+    print_error_line(content, error.range)
 }
