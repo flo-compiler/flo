@@ -1,3 +1,4 @@
+import "types.flo"
 const WORD_SIZE = 64
 class Type {
     kind: TypeKind
@@ -542,16 +543,11 @@ class Scope {
     type_aliases: Map<string, Type>
     constructor(this, module_id: int, id: int){
         this.id = new ScopeId(module_id, id)
-        let vars: Map<string, VarId>
-        let classes: Map<string, ClassId>
-        let functions: Map<string, VarId>
-        let enums: Map<string, EnumId>
-        let type_aliases: Map<string, Type>
-        this.vars = vars
-        this.classes = classes
-        this.functions = functions
-        this.enums = enums
-        this.type_aliases = type_aliases
+        this.vars = new Map<string, VarId>()
+        this.classes = new Map<string, ClassId>()
+        this.functions = new Map<string, VarId>()
+        this.enums = new Map<string, EnumId>()
+        this.type_aliases = new Map<string, Type>()
         this.parent = null 
     }
 }
@@ -845,8 +841,7 @@ class TypeChecker {
     current_function: VarId
     current_method: PropId
     current_scope: ScopeId
-    filename: string
-    errors: FloError []
+    compiler: Compiler
     in_loop: bool
     generic_templates: Map<string, ClassDeclarationNode>
     constructor(this){
@@ -855,8 +850,11 @@ class TypeChecker {
         this.program = new Program()
         this.generic_templates = new Map<string, ClassDeclarationNode>()
     }
+    private get_module(this, id: int): Module {
+        return this.program.modules[id]
+    }
     private get_current_module(this): Module {
-        return this.program.modules[this.current_module]
+        return this.get_module(this.current_module)
     }
     private get_current_scope(this): Scope {
         return get_scope(this.program, this.current_scope)
@@ -876,10 +874,10 @@ class TypeChecker {
         return get_class(this.program, this.current_class)
     }
     private get_class_from_var_id(this, var_id: VarId): Class {
-        return this.program.modules[var_id.module_id].classes[var_id.id]
+        return this.get_module(var_id.module_id).classes[var_id.id]
     }
     private get_enum_from_var_id(this, var_id: VarId): Enum {
-        return this.program.modules[var_id.module_id].enums[var_id.id]
+        return this.get_module(var_id.module_id).enums[var_id.id]
     }
     private types_are_eq(this, t1: Type, t2: Type): bool {
         if t1.kind != t2.kind return false
@@ -999,23 +997,24 @@ class TypeChecker {
         return new_scope
     } 
     private error(this, kind: ErrorKind, message: string, range: FloRange){
-        this.errors << new FloError(kind, message, range)
+        this.compiler.errors << new FloError(kind, message, range)
     }
     private has_errored(this): bool {
-        return this.errors.length > 0
+        return this.compiler.errors.length > 0
     }
-    public check(this, module_ast: ModuleAST, filename: string, errors: FloError[]): Program {
-        this.errors = errors
+    public check(this, module_ast: ModuleAST, compiler: Compiler, filename: string): Program {
+        this.compiler = compiler
+        this.include_builtins()
+        if this.has_errored() return null
         this.check_module(module_ast, filename)
         return this.program
     }
     private check_module(this, module_ast: ModuleAST, filename: string): Module {
         let prev_module = this.current_module
         let prev_scope = this.current_scope
-        this.current_module++
-        this.filename = filename
         let module: Module
         module.name = filename
+        this.current_module = this.program.modules.length
         this.program.modules << module
         let module_scope = this.create_scope()
         let const_id = new ConstId(-1, -1)
@@ -1023,11 +1022,14 @@ class TypeChecker {
         module_scope.vars.set("false", const_id)
         module_scope.vars.set("null", const_id)
         this.current_scope = module_scope.id
+        if this.current_module > 0 
+            this.import_all_from_module(this.program.modules[0])
         this.current_method = null
         this.current_class = null
         this.current_function = null
         for let i = 0; i < module_ast.imports.length; i++ {
             this.check_module_import(module_ast.imports[i])
+            if (this.has_errored()) return null
         }
         // We declare module structures
         for i = 0; i < module_ast.enums.length; i++ {
@@ -1072,25 +1074,29 @@ class TypeChecker {
         this.current_module = prev_module
         return module
     }
-
+    private include_builtins(this){
+        this.lex_and_parse_typecheck_file(this.compiler.builtin_path, null)
+    }
     private create_generic_instance_in_module(this, name: string, types: Type[]): Type {
         let generic_node = this.generic_templates.get(name)
         if generic_node == null return null
         let generic_params = generic_node.generic_parameters
         if generic_params.length != types.length {
-            this.error(ErrorKind.TYPE, "Generic expects $(generic_params.length) parameters but got $(types.length)", generic_params[0].name.range)
+            let buckets = this.generic_templates.get_buckets()
+            this.error(ErrorKind.TYPE, "Generic expects $(generic_params.length) parameters but got $(types.length)", null)
+            return null
         }
         let generic_scope = this.create_child_scope_within_current_scope()
         let param_strings = ""
         for let i = 0; i < generic_params.length; i++ {
             let param_name = generic_params[i].name.value
-            param_strings += "_$(this.dump_type(types[i]))"
+            param_strings += "$(this.dump_type(types[i])),"
             generic_scope.type_aliases.set(param_name, types[i])
         }
-        let instantiated_generic_name = "$(name)$(param_strings)"
+        let instantiated_generic_name = "$(name)<$(param_strings)>"
         let possible_type = this.get_type_from_current_scope(instantiated_generic_name)
         if possible_type.kind != TypeKind.UNKNOWN {
-            //TODO: find a way to remove/delete this context appended.
+            // TODO: find a way to remove/delete this context appended.
             return possible_type
         } 
         // TODO: Find a better way to create this initialization.
@@ -1171,6 +1177,9 @@ class TypeChecker {
         scope.type_aliases.set(alias_name, type_)
         //TODO: Recursively look for object and enum types and import them into module
     }
+    // private add_imported_generic_to_module(this, generic_name: string, class_id: ClassId){
+    //     this.import_all_from_module(this.get_module(class_id.module_id))
+    // }
     private init_function_signature(this, arg_nodes: ArgNode[], return_type_node: TypeNode, args: FunctionArg[]): FunctionType {
         let arg_types: Type[] = []
         for let i = 0; i < arg_nodes.length; ++i {
@@ -1232,10 +1241,10 @@ class TypeChecker {
             return
         }
         let path = import_node.module_path.value
-        let ast = this.lex_and_parse_file(path, import_node.module_path.range)
-        if this.has_errored() {return}
-        let module = this.check_module(ast, path)
-        if this.has_errored() {return}
+        let module = this.lex_and_parse_typecheck_file(path, import_node.module_path.range)
+        if this.has_errored() {
+            return
+        }
         let global_module_scope = module.scopes[0]
         if import_node.import_list.length > 0 {
             for let i = 0; i < import_node.import_list.length; i++ {
@@ -1279,28 +1288,33 @@ class TypeChecker {
             this.import_all_from_module(module)
         }
     }
-    private lex_and_parse_file(this, filename: string, range: FloRange): ModuleAST {
-        //TODO: Find a better organization system. (Caching)
-        if (!File.exists(filename)) {
+    private lex_and_parse_typecheck_file(this, filename: string, range: FloRange): Module {
+        // TODO: You need to properly handle the built-in case; don't use null as a reference point.
+        let filepath = filename
+        let prev_file_id = this.compiler.current_file
+        if range != null {
+            filepath = Path.join(Path.dirname(this.get_current_module().name), filename) 
+        }
+        if !File.exists(filepath) {
             this.error(ErrorKind.IO, "No such file or directory: '$filename'", range)
             return null
         }
-        let file = File.open_for_reading(filename)
-        let text = file.read_all()
+        let file_id = this.compiler.register_file(filepath)
+        if file_id.id < this.program.modules.length {
+            return this.get_module(file_id.id)
+        }
+        if !this.compiler.set_current_file(file_id) return null
         let lexer = new Lexer()
-        let tokens = lexer.tokenize(text, this.errors)
-        if this.has_errored() {
-            file.close()
-            return null
-        }
+        let tokens = lexer.tokenize(this.compiler.current_file_contents, this.compiler.errors)
+        if this.has_errored() return null
         let parser = new Parser()
-        let module_node = parser.parse(tokens, this.errors)
-        if this.has_errored() {
-            file.close()
-            return null
-        }
-        file.close()
-        return module_node
+        let module_node = parser.parse(tokens, this.compiler.errors)
+        if this.has_errored() return null
+        let module = this.check_module(module_node, filepath)
+        if this.has_errored() return null
+        println("restoring file_id to: $(prev_file_id.id)")
+        this.compiler.set_current_file(prev_file_id)
+        return module
     }
     private declare_enum_within_current_scope(this, enum_node: EnumNode){
         let declared_enum = new Enum()
@@ -1321,7 +1335,7 @@ class TypeChecker {
     }
     private declare_class_within_module(this, class_decl_node: ClassDeclarationNode) {
         let name = class_decl_node.name.value
-        if this.get_type_from_current_scope(name).kind != TypeKind.UNKNOWN or this.generic_templates.get(name) != null {
+        if (this.get_type_from_current_scope(name).kind != TypeKind.UNKNOWN) or (this.generic_templates.get(name) != null) {
             this.error(ErrorKind.NAME, "Name '$name' has already been used for another type. consider renaming", class_decl_node.name.range)
             return
         }
@@ -1369,6 +1383,7 @@ class TypeChecker {
         this.current_scope = fnc_scope.id 
         declared_function.args = []
         declared_function.fnc_type = this.init_function_signature(function_node.args, function_node.return_type, declared_function.args)
+        if this.has_errored() {return}
         declared_function.id = new VarId(VarIdKind.FNC, this.current_module, this.get_current_module().functions.length)
         this.current_scope = fnc_scope.parent
         declared_function.scope = fnc_scope.id
@@ -1699,14 +1714,14 @@ class TypeChecker {
                     types << this.check_type(record_type.generic_args[j])
                 if this.has_errored() return null
                 let generic_type = this.create_generic_instance_in_module(identifer_tok.value, types)
+                if this.has_errored() this.compiler.errors[0].range = type_node.range
                 if generic_type != null {
-                    if this.has_errored() this.errors[0].range = type_node.range
                     return generic_type
                 }
             }
             let found_type = this.get_type_from_current_scope(identifer_tok.value)
             if found_type.kind == TypeKind.UNKNOWN {
-                this.error(ErrorKind.TYPE, "Undefined type '$(identifer_tok.value)", identifer_tok.range)
+                this.error(ErrorKind.TYPE, "Undefined type '$(identifer_tok.value)'", identifer_tok.range)
                 return null
             }
             return found_type
@@ -1715,11 +1730,10 @@ class TypeChecker {
     }
     private check_array_expression(this, expected_type: Type, array_node: ArrayExpressionNode): ArrayExpression {
         if this.has_errored() return null
-        //TODO: ARRAY is overloaded; Could be object or const so need to check which one it is.
         let elements: Expression[] = []
         let element_type = Type.unknown()
-        let array_type = expected_type
         let is_constant = true
+        //TODO if we are a generic then add look at parameter to get expected type.
         if expected_type.kind == TypeKind.ARRAY {
             element_type = (expected_type as ArrayType).element_type
         }
@@ -1742,8 +1756,13 @@ class TypeChecker {
                 }
             }
         } 
-        if array_type.kind == TypeKind.ARRAY {
-            array_type = new ArrayType(element_type, elements.length)
+        let array_type: Type = new ArrayType(element_type, elements.length)
+        if array_type.kind != TypeKind.ARRAY {
+            let generic_array_type = this.create_generic_instance_in_module("Array", [element_type])
+            if (generic_array_type != null) {
+                array_type = generic_array_type
+                is_constant = false
+            }
         }
         let arr_exp = new ArrayExpression(elements)
         arr_exp.is_constant = is_constant
@@ -2150,8 +2169,9 @@ class TypeChecker {
     private get_func_args_from_expression(this, called: Expression): FunctionArg[]{
         if called.expr_kind == ExpressionKind.ACCESS {
             let var_id = (called as VarAccessExpression).value_id
-            if var_id.kind == VarIdKind.FNC
+            if var_id.kind == VarIdKind.FNC {
                 return get_func(this.program, var_id).args
+            }
         } else if called.expr_kind == ExpressionKind.MEMBER {
             let prop_id = (called as MemberExpression).member_id
             return get_method(this.program, prop_id).args
@@ -2231,12 +2251,11 @@ class TypeChecker {
             template_args << this.check_expression(Type.unknown(), str_node.template_args[i])
         }
         if !is_i8_ptr(expected_type) {
-            1//TODO: find string builtin and set it to expected type.
+            expected_type = this.get_type_from_current_scope("string")
         }
-        let exp = new StringExpression(str_node.value.value, template_args, expected_type)
-        
-            exp.value_type = expected_type
-        return exp
+        let str_exp = new StringExpression(str_node.value.value, template_args, expected_type)
+        str_exp.value_type = expected_type
+        return str_exp
     }
     private check_expression(this, expected_type: Type, expr_node: ExpressionNode): Expression {
         if expr_node.expr_kind == ExpressionKind.INT 

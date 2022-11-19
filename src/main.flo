@@ -1,11 +1,11 @@
-import "types"
-import "utils"
-import "error"
-import "lexer"
-import "debug"
-import "parser"
-import "typechecker"
-import "codegen"
+import "utils.flo"
+import "error.flo"
+import "compiler.flo"
+import "lexer.flo"
+import "debug.flo"
+import "parser.flo"
+import "typechecker.flo"
+import "codegen.flo"
 fnc parse_args(size: int, args: i8**): string[] {
     let arr: string[] = []
     for let i = 0; i < size; i++
@@ -43,7 +43,6 @@ fnc flag_value_or(args: string[], name: string, default: string): string {
 fnc main(argc: int, argv: i8**): int {
     let args = parse_args(argc, argv)
     if args.length >= 2 {
-        let errors: FloError[] = []
         if flag(args, "-v") or flag(args, "--version"){
             println("v0.01@test.selfhost")
             return 0
@@ -53,52 +52,35 @@ fnc main(argc: int, argv: i8**): int {
             return 0
         }
         let filename = args[1]
-        if (!File.exists(filename)) {
+        let compiler = new Compiler()
+        let file_id = compiler.register_file(filename)
+        if (!compiler.set_current_file(file_id)) {
             print_message_error(ErrorKind.IO, "No such file or directory: '$filename'")
             return 1
         }
-        let file = File.open_for_reading(filename)
-        let text = file.read_all()
         /***** Lexing ******/
-        let lexer: Lexer
-        let tokens = lexer.tokenize(text, errors)
-        if errors.length > 0 {
-            print_error(errors[0], filename, text)
-            file.close()
-            return 1
-        }
-        if flag(args, "--print-tokens")
-            print_tokens(tokens, text)
+        let lexer = new Lexer()
+        let tokens = lexer.tokenize(compiler.current_file_contents, compiler.errors)
+        if (compiler.print_errors()) return 1
+        if flag(args, "--print-tokens") print_tokens(tokens, compiler.current_file_contents)
         /***** Parsing *****/
-        let parser: Parser
-        let module_node = parser.parse(tokens, errors)
-        if errors.length > 0 {
-            print_error(errors[0], filename, text)
-            file.close()
-            return 1
-        }
+        let parser = new Parser()
+        let module_node = parser.parse(tokens, compiler.errors)
+        if (compiler.print_errors()) return 1
         /**** Analyzing ****/
-        let typechecker: TypeChecker
-        let program = typechecker.check(module_node, filename, errors)
-        if errors.length > 0 {
-            print_error(errors[0], filename, text)
-            file.close()
-            return 1
-        }        
+        let typechecker = new TypeChecker()
+        let program = typechecker.check(module_node, compiler, filename)
+        if (compiler.print_errors()) return 1       
         /**** Codegen ****/
         let codegen: CodeGen
-        let flo_module = codegen.codegenProgram(program)
+        let flo_module = codegen.codegen(program)
         flo_module.run_passes(flag_value_or(args, "-O", "1") as int)
-        if flag(args, "--print-llvm")
-            flo_module.print()
+        if flag(args, "--print-llvm") flo_module.print()
         if !flag(args, "--no-output") {
             flo_module.write_object(flag_value_or(args, "-o", "a.o"), flag_value_or(args, "--target", ""))
         }
-        if flag(args, "-e") or flag(args, "--execute") {
-            flo_module.exec()
-        }
+        if (flag(args, "-e") or flag(args, "--execute")) flo_module.exec()
         flo_module.destroy()
-        file.close()
     } else {
         print_message_error(ErrorKind.GEN, "No input file specified.")
         return 1

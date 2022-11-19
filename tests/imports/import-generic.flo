@@ -1,0 +1,17 @@
+import Set in "./modules/sets.flo"
+fnc main(): int {
+    let s: Set<int>()
+    s.add(1)
+    s.add(2)
+    s.add(1)
+    s.add(2)
+    let sf: Set<float>()
+    sf.add(1.0)
+    let s1: Set<int>()
+    s1.add(0)
+    let len = s.len
+    s1.clear()
+    sf.clear()
+    s.clear()
+    return 0
+}

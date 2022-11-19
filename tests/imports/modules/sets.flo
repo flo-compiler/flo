@@ -1,0 +1,33 @@
+fnc malloc(amt: int): i8*
+fnc free(ptr: i8*)
+fnc realloc(ptr: i8*, amt: int): i8*
+class Set<T>{
+    private elements: T*
+    private size: int
+    public len: int
+    constructor(this){
+        this.size = 2
+        this.len = 0
+        this.elements = malloc(this.size) as T*
+    }
+    private resize(this){
+        this.size*=2
+        this.elements = realloc(this.elements as i8*, this.size) as T*
+    }
+    public add(this, e: T){
+        if (e in this) return
+        if (this.len >= this.size) this.resize()
+        this.elements[this.len++] = e
+    }
+    public clear(this){
+        this.size = 0
+        this.len = 0
+        free(this.elements as i8*)
+    }
+    public __in__(this, e: T): bool {
+        for let i = 0; i < this.len; i++ {
+            if e == this.elements[i] return true
+        }
+        return false
+    }
+}

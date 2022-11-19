@@ -1,0 +1,60 @@
+import "types.flo"
+class FileId {
+    id: int
+    constructor(this, id: int){
+        this.id = id
+    }
+}
+class FloFile {
+    abspath: string
+    relpath: string
+    constructor(this, abspath: string, relpath: string){
+        this.abspath = abspath
+        this.relpath = relpath
+    }
+}
+class Compiler {
+    private current_file: FileId
+    public current_file_contents: string
+    public builtin_path: string
+    private files: FloFile []
+    public errors: FloError []
+    private file_ids: Map<string, FileId>
+    constructor(this){
+        this.files = []
+        this.current_file = null
+        this.current_file_contents = null
+        this.errors = []
+        this.file_ids = new Map<string, FileId>()
+        this.builtin_path = "./src/runtime.flo"
+    }
+    public register_file(this, fpath: string): FileId {
+        let abspath = Path.abspath(fpath)
+        let file_id = this.file_ids.get(abspath)
+        if file_id != null return file_id
+        file_id = new FileId(this.files.length)
+        this.file_ids.set(abspath, file_id)
+        this.files << new FloFile(abspath, fpath)
+        return file_id
+    }
+    public set_current_file(this, file_id: FileId): bool {
+        let file_path = this.files[file_id.id]
+        // println(" $(this.files.length) : $(file_id.id) : $(file_path.abspath)")
+        if !File.exists(file_path.abspath) return false
+        let file = File.open_for_reading(file_path.abspath)
+        this.current_file_contents = file.read_all()
+        this.current_file = file_id
+        file.close()
+        return true
+    }
+    public print_errors(this): bool {
+        if this.errors.length > 0 {
+            print_error(this.errors[0], this.files[this.current_file.id].relpath, this.current_file_contents)
+            return true
+        }
+        return false
+    }
+    public add_builtins(this): FileId {
+        return this.register_file(this.builtin_path)
+    }   
+}

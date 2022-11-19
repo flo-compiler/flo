@@ -10,6 +10,7 @@ fnc malloc(size: int): i8*
 fnc realloc(ptr: i8*, size: int): i8*
 /*@extern*/
 fnc strlen(str: i8*): int
+
 // ----- string -------
 class string {
     private buffer: i8*
@@ -22,11 +23,16 @@ class string {
     }
     public __add__(this, data: string): string {
         let new_str_len = this.length + data.length
-        let new_buffer = new i8(new_str_len)
+        let new_buffer = malloc(new_str_len)
         memcpy(new_buffer, this.buffer, this.length)
         let trailing_buffer = new_buffer + this.length
         memcpy(trailing_buffer, data.buffer, data.length + 1)
         return new string(new_buffer, new_str_len)   
+    }
+    public __adda__(this, other: string): string {
+        this.buffer = realloc(this.buffer, this.length + other.length)
+        memcpy(this.buffer + this.length, other.buffer, other.length + 1)
+        return this
     }
     public add_byte(this, char: i8){
         if this.length + 1 >= this.size {
@@ -37,7 +43,7 @@ class string {
         this.length++
     }
     public __getitem__(this, index: int): string {
-        let new_buffer = new i8(2)
+        let new_buffer = malloc(2)
         new_buffer[0] = this.buffer[index]
         new_buffer[1] = '\0'
         return new string(new_buffer, 2)
@@ -78,7 +84,7 @@ class string {
         let idx = this.find(val)
         if idx > 0 {
             let new_length = this.length - val.length + repl.length
-            let new_buffer = new i8(new_length)
+            let new_buffer = malloc(new_length)
             memcpy(new_buffer, this.buffer, idx)
             memcpy(new_buffer + idx, repl.buffer, repl.length)
             memcpy(new_buffer + idx + repl.length, this.buffer + idx + 1, this.length - idx)
@@ -87,13 +93,16 @@ class string {
         return this
     }
     public to_cstring(this): i8* {
-        let c_string = new i8(this.length + 1)
+        let c_string = malloc(this.length + 1)
         memcpy(c_string, this.buffer, this.length)
         c_string[this.length] = '\0'
         return c_string
     }
     public from_cstring(str: i8*): string {
-        return new string(str, strlen(str))
+        let len = strlen(str)
+        let buf = malloc(len)
+        memcpy(buf, str, len)
+        return new string(buf, len)
     }
 }
 // ------- Range -------
@@ -221,6 +230,84 @@ class File {
     }
     public close(this){
         fclose(this.fd)
+    }
+}
+
+class Bucket<T, U> {
+    key: T
+    value: U
+    is_empty: bool
+    constructor(this){
+        this.is_empty = true
+    }
+    set(this, key: T, value: U){
+        this.is_empty = false
+        this.key = key
+        this.value = value
+    }
+}
+class Map<T, U> {
+    buckets: Bucket<T, U>*
+    length: int
+    size: int
+    constructor(this){
+        let initial_capacity = 256
+        this.buckets = malloc(initial_capacity * 32) as Bucket<T, U>*
+        for let i = 0; i < initial_capacity; i++ {
+            this.buckets[i] = new Bucket<T, U>()
+        }
+        this.size = initial_capacity
+        this.length = 0
+    }
+    hash_fnc(this, key: T): int {
+        let str = key as string
+        let hash = 5381
+        for let i = 0; i < str; ++i {
+            hash = ((hash << 5) + hash) + (str.get_byte(i) as int)
+        }
+        return hash
+    }
+    resize(this){
+        let original_size = this.size
+        this.size *= 2
+        this.buckets = realloc(this.buckets as i8*, this.size * 32) as Bucket<T, U>*
+        for let i = original_size; i < this.size; i++ {
+            this.buckets[i] = new Bucket<T, U>()
+        }
+    }
+    set(this, key: T, value: U){
+        let hash = this.hash_fnc(key) % this.size
+        if (this.size <= this.length) this.resize()
+        while !this.buckets[hash].is_empty {
+            if this.buckets[hash].key == key
+                break
+            hash++
+        } 
+        this.length++
+        this.buckets[hash].set(key, value)
+    }
+    get(this, key: T): U {
+        let hash = this.hash_fnc(key) % this.size
+        while !this.buckets[hash].is_empty {
+            if this.buckets[hash].key == key
+                break
+            else
+                hash++
+        }
+        if !this.buckets[hash].is_empty
+            if this.buckets[hash].key == key
+                return this.buckets[hash].value
+        return null
+    }
+    get_buckets(this): Bucket<T, U>[] {
+        let buckets: Bucket<T, U>[] = []
+        for let i = 0; i < this.size; ++i {
+            let current_bucket = this.buckets[i]
+            if !current_bucket.is_empty {
+                buckets << current_bucket
+            }
+        }
+        return buckets  
     }
 }
 
