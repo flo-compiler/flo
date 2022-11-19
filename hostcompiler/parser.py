@@ -546,19 +546,17 @@ class Parser:
         tok = self.current_tok
         self.advance()
         type = self.composite_type()
-        args = None
+        args = []
         end_range = self.current_tok.range
-        if self.current_tok.type == TokType.LPAR:
-            self.advance()
-            if self.current_tok.type == TokType.RPAR:
-                node_range = Range.merge(tok.range, self.current_tok.range)
-                self.advance()
-                return NewMemNode(type, [], node_range)
+        if self.current_tok.type != TokType.LPAR:
+            SyntaxError(self.current_tok.range, "Expected (").throw()
+        self.advance()
+        if self.current_tok.type != TokType.RPAR:
             args = self.expr_list()
-            if self.current_tok.type != TokType.RPAR:
+        if self.current_tok.type != TokType.RPAR:
                 SyntaxError(self.current_tok.range, "Expected )").throw()
-            end_range = self.current_tok.range
-            self.advance()
+        end_range = self.current_tok.range
+        self.advance()
         node_range = Range.merge(tok.range, end_range)
         return NewMemNode(type, args, node_range)
 
@@ -690,24 +688,41 @@ class Parser:
     def prim_type(self):
         tok = self.current_tok
         self.advance()
-        if tok.type == TokType.LBRACE:
-            if self.current_tok.type != TokType.INT:
-                SyntaxError(self.current_tok.range, "Expected an int constant").throw()
-            size = self.current_tok.value
-            self.advance()
-            if self.current_tok.type != TokType.RBRACE:
-                SyntaxError(self.current_tok.range, "Expected a }").throw()
-            self.advance()
-            if not self.current_tok.inKeywordList(("int", "float")):
-                SyntaxError(self.current_tok.range,
-                            "Expected an 'int' or 'float'").throw()
-            type = str_to_flotype(self.current_tok.value)
-            type.bits = size
-            end_range = self.current_tok.range
-            self.advance()
-            return TypeNode(type, Range.merge(tok.range, end_range))
-        elif tok.inKeywordList(("int", "float", "void")):
-            type = str_to_flotype(tok.value)
+        if tok.isKeyword("bool"):
+            type = FloInt(None, 1)
+            return TypeNode(type, tok.range)
+        elif tok.isKeyword("int"):
+            type = FloInt(None)
+            return TypeNode(type, tok.range)
+        elif tok.isKeyword("i4"):
+            type = FloInt(None, 4)
+            return TypeNode(type, tok.range)
+        elif tok.isKeyword("i8"):
+            type = FloInt(None, 8)
+            return TypeNode(type, tok.range)
+        elif tok.isKeyword("i16"):
+            type = FloInt(None, 16)
+            return TypeNode(type, tok.range)
+        elif tok.isKeyword("i32"):
+            type = FloInt(None, 32)
+            return TypeNode(type, tok.range)
+        elif tok.isKeyword("i64"):
+            type = FloInt(None, 64)
+            return TypeNode(type, tok.range)
+        elif tok.isKeyword("i128"):
+            type = FloInt(None, 128)
+            return TypeNode(type, tok.range)
+        elif tok.isKeyword("float"):
+            type = FloFloat(None)
+            return TypeNode(type, tok.range)
+        elif tok.isKeyword("f16"):
+            type = FloFloat(None, 16)
+            return TypeNode(type, tok.range)
+        elif tok.isKeyword("f32"):
+            type = FloFloat(None, 32)
+            return TypeNode(type, tok.range)
+        elif tok.isKeyword("f64"):
+            type = FloFloat(None, 64)
             return TypeNode(type, tok.range)
         elif tok.type == TokType.IDENTIFER:
             type = FloObject(tok)
@@ -748,7 +763,7 @@ class Parser:
     def composite_type(self):
         tok = self.current_tok
         type = None
-        if tok.inKeywordList(("int", "float", "void")) or tok.type == TokType.IDENTIFER or tok.type == TokType.LBRACE:
+        if tok.inKeywordList(("int", "i4", "i8", "i16", "i32", "i64", "i128", "float", "f16", "f32", "f64", "bool")) or tok.type == TokType.IDENTIFER or tok.type == TokType.LBRACE:
             type = self.prim_type()
         elif tok.type == TokType.LPAR:
             return self.fnc_type()

@@ -1,4 +1,7 @@
 import "types.flo"
+import "@flo/io/file.flo"
+import "@flo/collections/map.flo"
+import "@flo/path/path.flo"
 class FileId {
     id: int
     constructor(this, id: int){
@@ -39,7 +42,6 @@ class Compiler {
     }
     public set_current_file(this, file_id: FileId): bool {
         let file_path = this.files[file_id.id]
-        // println(" $(this.files.length) : $(file_id.id) : $(file_path.abspath)")
         if !File.exists(file_path.abspath) return false
         let file = File.open_for_reading(file_path.abspath)
         this.current_file_contents = file.read_all()

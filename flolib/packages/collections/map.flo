@@ -17,7 +17,7 @@ class Map<T, U> {
     size: int
     constructor(this){
         let initial_capacity = 256
-        this.buckets = new Bucket<T, U>[initial_capacity]
+        this.buckets = new Bucket<T, U>*(initial_capacity)
         for let i = 0; i < initial_capacity; i++ {
             this.buckets[i] = new Bucket<T, U>()
         }

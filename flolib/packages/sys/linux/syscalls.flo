@@ -45,7 +45,7 @@ fnc fcntl(fd: int, cmd: int, arg: int): int {
 fnc execve(filename: i8*, argv: i8**, envp: i8**): int{
     return syscall(0x3b, filename, argv, envp)
 }
-fnc _exit (error_code: int){
+fnc exit (error_code: int){
     syscall(0x3c, error_code)
 }
 fnc getcwd(buf: i8*, size: int): int{

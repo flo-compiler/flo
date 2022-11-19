@@ -5,10 +5,6 @@ fnc memcpy(ptr1: i8*, ptr2: i8*, len: int): int
 /*@extern*/
 fnc memset(ptr1: i8*, c: int, len: int)
 /*@extern*/
-fnc malloc(size: int): i8*
-/*@extern*/
-fnc realloc(ptr: i8*, size: int): i8*
-/*@extern*/
 fnc strlen(str: i8*): int
 
 // ----- string -------
@@ -23,27 +19,27 @@ class string {
     }
     public __add__(this, data: string): string {
         let new_str_len = this.length + data.length
-        let new_buffer = malloc(new_str_len)
+        let new_buffer = new i8*(new_str_len)
         memcpy(new_buffer, this.buffer, this.length)
         let trailing_buffer = new_buffer + this.length
         memcpy(trailing_buffer, data.buffer, data.length + 1)
         return new string(new_buffer, new_str_len)   
     }
     public __adda__(this, other: string): string {
-        this.buffer = realloc(this.buffer, this.length + other.length)
+        this.buffer = this.buffer.resize(this.length + other.length)
         memcpy(this.buffer + this.length, other.buffer, other.length + 1)
         return this
     }
     public add_byte(this, char: i8){
         if this.length + 1 >= this.size {
             this.size *= 2
-            this.buffer = realloc(this.buffer, this.size)
+            this.buffer = this.buffer.resize(this.size)
         }
         this.buffer[this.length]  = char
         this.length++
     }
     public __getitem__(this, index: int): string {
-        let new_buffer = malloc(2)
+        let new_buffer = new i8*(2)
         new_buffer[0] = this.buffer[index]
         new_buffer[1] = '\0'
         return new string(new_buffer, 2)
@@ -84,7 +80,7 @@ class string {
         let idx = this.find(val)
         if idx > 0 {
             let new_length = this.length - val.length + repl.length
-            let new_buffer = malloc(new_length)
+            let new_buffer = new i8*(new_length)
             memcpy(new_buffer, this.buffer, idx)
             memcpy(new_buffer + idx, repl.buffer, repl.length)
             memcpy(new_buffer + idx + repl.length, this.buffer + idx + 1, this.length - idx)
@@ -93,14 +89,14 @@ class string {
         return this
     }
     public to_cstring(this): i8* {
-        let c_string = malloc(this.length + 1)
+        let c_string = new i8*(this.length + 1)
         memcpy(c_string, this.buffer, this.length)
         c_string[this.length] = '\0'
         return c_string
     }
     public from_cstring(str: i8*): string {
         let len = strlen(str)
-        let buf = malloc(len)
+        let buf = new i8*(len)
         memcpy(buf, str, len)
         return new string(buf, len)
     }
@@ -125,7 +121,7 @@ class Array <T> {
     constructor(this, size = 8){
         this.length = 0
         this.size = size
-        this.buffer = malloc(size) as T*
+        this.buffer = new T*(size)
     }
     resize(this){
         this.size = this.size * 2
@@ -184,9 +180,9 @@ class Array <T> {
         let res = ""
         let last_index = this.length - 1
         for let i = 0; i < last_index; i++ {
-            res += this.buffer[i] + seperator
+            res += (this.buffer[i] as string) + seperator
         }
-        return res + this.buffer[i]
+        return res + (this.buffer[i] as string)
     }
     __as_string__(this): string {
         return "[$(this.join(", "))]"

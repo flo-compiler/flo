@@ -18,8 +18,6 @@ KEYWORDS = [
     "const",
     "if",
     "else",
-    "int",
-    "float",
     "void",
     "for",
     "while",
@@ -38,7 +36,19 @@ KEYWORDS = [
     "enum",
     "new",
     "as",
-    "const"
+    "bool",
+    "const",
+    "int",
+    "i4",
+    "i8",
+    "i16",
+    "i32",
+    "i64",
+    "i128",
+    "float",
+    "f16",
+    "f32",
+    "f64",
 ]
 
 
@@ -58,12 +68,12 @@ class TokType(Enum):
     LBRACE = "{"
     RBRACE = "}"
     LBRACKET = "["
-    RBRACKET = "]"
     INT = "int"
     FLOAT = "float"
-    LN = "\n"
-    STR = "string"
     CHAR = "char"
+    STR = "str"
+    RBRACKET = "]"
+    LN = "\n"
     POW = "^"
     QUES = "?"
     AMP = "&"

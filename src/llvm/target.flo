@@ -1,4 +1,4 @@
-
+import "types.flo"
 fnc LLVMInitializeX86TargetInfo()
 fnc LLVMInitializeX86Target()
 fnc LLVMInitializeX86TargetMC()

@@ -3,4 +3,5 @@
  * The return value is true if an error occurred, false otherwise.
  * Use the diagnostic handler to get any diagnostic message.
 */
+import "types.flo"
 fnc LLVMLinkModules2(Dest: LLVMModuleRef, Src: LLVMModuleRef): LLVMBool
