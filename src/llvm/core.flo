@@ -1,3 +1,4 @@
+import "types.flo"
 /** Deallocate and destroy all ManagedStatic variables.
     @see llvm::llvm_shutdown
     @see ManagedStatic */

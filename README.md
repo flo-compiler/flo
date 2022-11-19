@@ -50,8 +50,6 @@ floats_range = 0.0..10.0
 1. Static Arrays (On the stack, fixed size):
 ```
 let numbers: int[3] = [1, 2, 3]
-// or
-let numbers = [1, 2, 3]
 ```
 - [ ] Static Array size is expression an not constant.
 2. Dynamic Arrays (On the heap, An object(generic) not fixed)

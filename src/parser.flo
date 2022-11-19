@@ -1,3 +1,4 @@
+import "types.flo"
 class Node {
     range: FloRange
     constructor(this, range: FloRange){
@@ -481,6 +482,7 @@ class Parser {
             type_node = this.parse_function_type()
         else 
             type_node = this.parse_primitive_type()
+        
         while this.current_token.ttype == TokType.LBRACKET or this.current_token.ttype == TokType.MULT and this.can_parse() {
             if this.current_token.ttype == TokType.LBRACKET {
                 this.advance()
@@ -921,9 +923,11 @@ class Parser {
         arg_node.parsed_type = null
         arg_node.default = null
         arg_node.name = this.eat(TokType.IDENTIFER) as IdentifierToken
+        if !this.can_parse() return arg_node
         if this.current_token.ttype == TokType.COL {
             this.advance()
             arg_node.parsed_type = this.parse_type()
+            if !this.can_parse() return arg_node
         }
         if this.current_token.ttype == TokType.EQ {
             this.advance()

@@ -1,6 +1,8 @@
-import "llvm"
-import "codegenDI"
-import "codegenMod"
+import "llvm/core.flo"
+import "llvm/executionEngine.flo"
+import "llvm/linker.flo"
+import "codegenDI.flo"
+import "codegenMod.flo"
 
 class IntrinsicResult {
     call: LLVMValueRef
@@ -87,7 +89,7 @@ class CodeGen {
     in_static_ctx: bool
     program_ctx: LLVMContextRef
     debugInfoObj: DebugInfo
-    codegenProgram(this, program: Program): GeneratedModule{
+    codegen(this, program: Program): GeneratedModule{
         this.program = program
         this.modules = []
         this.continue_bb = null
@@ -151,7 +153,6 @@ class CodeGen {
         this.module = LLVMModuleCreateWithNameInContext(module.name.to_cstring(), this.program_ctx)
         this.debugInfoObj = new DebugInfo(this.module, module.name)
         this.codegen_imported_symbols(module.imported_symbols)
-        //let DBFloInfo = new DebugInfo(this.module, module.name)
         this.in_static_ctx = true
         for let i = 0; i < module.global_consts.length; ++i {
             this.codegen_const_declaration(null, module.global_consts[i])
@@ -275,7 +276,7 @@ class CodeGen {
         let val = bool_exp.value
         return LLVMConstInt(LLVMInt1TypeInContext(this.program_ctx), val, false)
     }
-    private codegen_call_sprintf(this, builder: LLVMBuilderRef, vargs: LLVMValueRef[]): LLVMValueRef {
+    private codegen_call_snprintf(this, builder: LLVMBuilderRef, vargs: LLVMValueRef[]): LLVMValueRef {
         let i8_ty = LLVMInt8TypeInContext(this.program_ctx)
         let i8_ptr_ty = LLVMPointerType(i8_ty)
         let int_ty = LLVMIntTypeInContext(this.program_ctx, WORD_SIZE)
@@ -284,10 +285,23 @@ class CodeGen {
         for let i = 0; i < vargs.length; i++ {
             args << vargs[i]
         }
-        let needed_memory_size = LLVMBuildCall2(builder, snprintf.fnc_type, snprintf.call, args.buffer, args.length, "")
-        let mem = LLVMBuildArrayAlloca(builder, i8_ty, needed_memory_size, "")
-        args = [mem]
-        for i = 0; i < vargs.length; i++ {
+        return LLVMBuildCall2(builder, snprintf.fnc_type, snprintf.call, args.buffer, args.length, "")
+    }
+    private codegen_malloc_call(this, builder: LLVMBuilderRef, size: LLVMValueRef): LLVMValueRef{
+        let i8_ty = LLVMInt8TypeInContext(this.program_ctx)
+        let i8_ptr_ty = LLVMPointerType(i8_ty)
+        let int_ty = LLVMIntTypeInContext(this.program_ctx, WORD_SIZE)
+        let mallocf = get_intrinsic(this.module, "malloc", [int_ty], i8_ptr_ty, true)
+        let args: LLVMValueRef[1] = [size]
+        return LLVMBuildCall2(builder, mallocf.fnc_type, mallocf.call, &args[0], 1, "")
+    }
+    private codegen_call_sprintf(this, builder: LLVMBuilderRef, vargs: LLVMValueRef[], size: LLVMValueRef, onheap: bool): LLVMValueRef {
+        let i8_ty = LLVMInt8TypeInContext(this.program_ctx)
+        let i8_ptr_ty = LLVMPointerType(i8_ty)
+        let int_ty = LLVMIntTypeInContext(this.program_ctx, WORD_SIZE)
+        let mem = onheap ? this.codegen_malloc_call(builder, size) : LLVMBuildArrayAlloca(builder, i8_ty, size, "")
+        let args: LLVMValueRef[] = [mem]
+        for let i = 0; i < vargs.length; i++ {
             args << vargs[i]
         }
         let sprintf = get_intrinsic(this.module, "sprintf", [i8_ptr_ty, i8_ptr_ty], int_ty, true)
@@ -303,22 +317,28 @@ class CodeGen {
             call_args << this.codegen_expression(builder, string_exp.template_args[i])
             str_value = str_value.replace("\$", fmt)
         }
+        let str_len = this.creatLLVMInt(str_value.length)
         let str = this.module_string_scope.get(str_value)
-        if str == null
+        if str == null {
             str = LLVMBuildGlobalString(builder, str_value.to_cstring(), "")
-        let result = this.module_string_scope.get(str_value)
-        if result != null
-            return result
-        this.module_string_scope.set(str_value, str)
+            this.module_string_scope.set(str_value, str)
+        }
+        let is_string_object = is_object(string_exp.value_type)
         if call_args.length > 1 {
             call_args[0] = str
-            return this.codegen_call_sprintf(builder, call_args)
+            str_len = this.codegen_call_snprintf(builder, call_args)
+            str = this.codegen_call_sprintf(builder, call_args, str_len, is_string_object)
+        }
+        if is_string_object {
+            let self = LLVMBuildMalloc(builder, this.codegen_type(string_exp.value_type), "")
+            this.build_constructor_call(builder, string_exp.value_type as ObjectType, [self, str, str_len])
+            str = self
         }
         return str
     }
     private store_array_elements(this, builder: LLVMBuilderRef, ptr: LLVMValueRef, array_exp: ArrayExpression): LLVMValueRef {
         let zero = this.creatLLVMInt(0)
-        let args = [zero, zero]
+        let args: LLVMValueRef[2] = [zero, zero]
         let next_args = [this.creatLLVMInt(1)]
         let array_type = this.codegen_type(array_exp.value_type)
         let elem_ty = LLVMPointerType(this.codegen_type((array_exp.value_type as ArrayType).element_type))
@@ -349,11 +369,11 @@ class CodeGen {
         let ty = this.codegen_type(index_exp.expression.value_type)
         let ind_ptr: LLVMValueRef = null
         if index_exp.expression.value_type.kind == TypeKind.ARRAY {
-            let indices = [this.creatLLVMInt(0), index]
+            let indices: LLVMValueRef[2] = [this.creatLLVMInt(0), index]
             ind_ptr = this.get_expr_mem(builder, index_exp.expression)
             return LLVMBuildInBoundsGEP2(builder, ty, ind_ptr, &indices[0], 2, "arrayidx")
         }
-        let indices_1 = [index]
+        let indices_1: LLVMValueRef[1] = [index]
         ind_ptr = this.codegen_expression(builder, index_exp.expression)
         return LLVMBuildInBoundsGEP2(builder, ty, ind_ptr, &indices_1[0], 1, "ptridx")
     }
@@ -611,7 +631,9 @@ class CodeGen {
         else
             ptr = LLVMBuildAlloca(builder, llvm_type, "")
         if is_object(new_expr.memory_type){
-            this.build_constructor_call(builder, new_expr.memory_type as ObjectType, ptr, new_expr.args)
+            let args: LLVMValueRef[] = [ptr]
+            this.evaluate_expression_list(builder, args, new_expr.args)
+            this.build_constructor_call(builder, new_expr.memory_type as ObjectType, args)
         }
         return ptr
     }
@@ -758,17 +780,18 @@ class CodeGen {
         this.break_bb = prev_break_bb
         this.continue_bb = prev_continue_bb
     }
-    private build_constructor_call(this, builder: LLVMBuilderRef, obj_type: ObjectType, self: LLVMValueRef, params: Expression[]){
+    private evaluate_expression_list(this, builder: LLVMBuilderRef, evaluated_list: LLVMValueRef[], list: Expression[]){
+        for let i = 0; i < list.length; i++ {
+            evaluated_list << this.codegen_expression(builder, list[i])
+        }
+    }
+    private build_constructor_call(this, builder: LLVMBuilderRef, obj_type: ObjectType, params: LLVMValueRef[]){
         let checked_class = get_class(this.program, obj_type.class_id)
         let constructor = this.get_class_from_typeid(obj_type.class_id).constructor
         let constructor_id = checked_class.constructor.id
-        let passed_params: LLVMValueRef[] = [self]
-        for let i = 0; i < params.length; i++ {
-            passed_params << this.codegen_expression(builder, params[i])
-        }
         if constructor != null {
             let construct_type = this.codegen_type(checked_class.methods[constructor_id].method_type, false)
-            LLVMBuildCall2(builder, construct_type, constructor, passed_params.buffer, passed_params.length, "")
+            LLVMBuildCall2(builder, construct_type, constructor, params.buffer, params.length, "")
         }
     }
     private codegen_var_declaration(this, builder: LLVMBuilderRef, var_decl: VarDeclaration){
@@ -896,7 +919,11 @@ class CodeGen {
         }
     }
     private declare_function(this, func: Function) {
-        let llvm_fnc = LLVMAddFunction(this.module, func.name.to_cstring(), this.codegen_type(func.fnc_type, false))
+        let fn_name = func.name.to_cstring()
+        let llvm_fnc = LLVMGetNamedFunction(this.module, fn_name)
+        if llvm_fnc == null {
+            llvm_fnc = LLVMAddFunction(this.module, fn_name, this.codegen_type(func.fnc_type, false))
+        }
         this.add_var(func.id, llvm_fnc)
     }
     private declare_method(this, method_name: string, method_type: LLVMTypeRef): LLVMValueRef {

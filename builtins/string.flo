@@ -82,6 +82,9 @@ class string {
         return c_string
     }
     from_cstring(str: i8*): string {
-        return new string(str, strlen(str))
+        let len =  strlen(str)
+        let mem = new i8[len]
+        memcpy(mem, str, len)
+        return new string(mem, len)
     }
 }

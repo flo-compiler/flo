@@ -16,6 +16,8 @@ def main():
         print(f"\033[1mRunning {test_name} Test suite:\033[0m")
         for file in os.scandir(os.path.join(TEST_PATH_DIR, dir.name)):
             abs_file_path = os.path.join(TEST_PATH_DIR, dir.name, file.name)
+            if os.path.isdir(abs_file_path):
+                continue
             p = run([FLO_COMPILER_PROG_PATH, abs_file_path, "--no-output", "-e"], stdout=PIPE, stderr=STDOUT)
             expected_return_code = parse_return_code(abs_file_path)
             if p.returncode != expected_return_code:
