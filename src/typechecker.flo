@@ -1,4 +1,5 @@
 import "types.flo"
+import "@flo/collections/map.flo"
 const WORD_SIZE = 64
 class Type {
     kind: TypeKind
@@ -198,12 +199,12 @@ class NewExpression (Expression) {
     args: Expression[]
     onheap: bool
     memory_type: Type
-    constructor(this, memory_type: Type, args: Expression[], onheap: bool, value_type: Type){
+    constructor(this, memory_type: Type, args: Expression[], onheap: bool){
         super(ExpressionKind.NEW)
         this.memory_type = memory_type
         this.onheap = onheap
         this.args = args
-        this.value_type = value_type
+        this.value_type = memory_type
     }
 }
 class IndexExpression (Expression) {
@@ -1312,7 +1313,6 @@ class TypeChecker {
         if this.has_errored() return null
         let module = this.check_module(module_node, filepath)
         if this.has_errored() return null
-        println("restoring file_id to: $(prev_file_id.id)")
         this.compiler.set_current_file(prev_file_id)
         return module
     }
@@ -2029,10 +2029,21 @@ class TypeChecker {
                 this.error(ErrorKind.GEN, msg, new_expr_node.range)
                 return null
             }
-        } else {
-            value_type = new PointerType(expr_ty)
+        } else if expr_ty.kind == TypeKind.PTR {
+            let argno = new_expr_node.args.length
+            if argno != 1 {
+                this.error(ErrorKind.GEN, "New operator expects 1 argument for pointers but got $argno argument(s)", new_expr_node.range)
+                return null
+            }
+            let int_ty = new Type(TypeKind.INT)
+            let arg = this.check_expression(int_ty, new_expr_node.args[0])
+            if !this.types_are_eq(int_ty, arg.value_type) {
+                this.error(ErrorKind.GEN, "New operator for pointers expects argument of type '$(this.dump_type(int_ty))' but got type '$(arg.value_type)'", new_expr_node.args[0].range)
+                return null
+            }
+            args << arg
         }
-        return new NewExpression(expr_ty, args, new_expr_node.onheap, value_type)
+        return new NewExpression(expr_ty, args, new_expr_node.onheap)
     }   
     private check_member_access(this, accessor: PropId): string {
         let visibility = ACCESS_ATTR.PUBLIC

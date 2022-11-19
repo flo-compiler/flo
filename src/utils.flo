@@ -18,19 +18,3 @@ fnc color(color: string): string {
         return "\033[1;31m"
     return "\033[0m"
 }
-
-fnc realpath(path: i8*, abspath: i8*): i8*
-fnc dirname(path: i8*): i8*
-class Path {
-    public join(root: string, rest: string): string {        
-        return "$root/$rest"
-    }
-    public abspath(p: string): string {
-        let buf: i8[400]
-        realpath(p.to_cstring(), &buf[0])
-        return string.from_cstring(&buf[0])
-    }
-    public dirname(p: string): string {
-        return string.from_cstring(dirname(p.to_cstring()))
-    }
-}

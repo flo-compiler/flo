@@ -102,7 +102,7 @@ fnc get_escape_char(char: i8): i8 {
     return char
 }
 fnc heap_string(size: int): string {
-    let buffer = new i8[size]
+    let buffer = new i8*(size)
     let new_string = new string(buffer, 0)
     new_string.size = size
     return new_string

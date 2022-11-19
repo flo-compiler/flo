@@ -524,12 +524,10 @@ class Parser {
         let start_range = this.current_token.range
         this.advance()
         let new_node = new NewExpressionNode(this.parse_type(), start_range)
-        if this.current_token.ttype == TokType.LPAR {
-            this.advance()
-            if this.current_token.ttype != TokType.RPAR
-                this.parse_expression_list(new_node.args)
-            new_node.range = FloRange.merge(new_node.range, this.eat(TokType.RPAR).range)
-        }
+        this.eat(TokType.LPAR)
+        if this.current_token.ttype != TokType.RPAR and this.can_parse()
+            this.parse_expression_list(new_node.args)
+        new_node.range = FloRange.merge(new_node.range, this.eat(TokType.RPAR).range)
         return new_node
     }
     private parse_string(this): StringExpressionNode {

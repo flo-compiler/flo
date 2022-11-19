@@ -1,3 +1,4 @@
+import "types.flo"
 fnc LLVMWriteBitcodeToFile(M: LLVMModuleRef, Path: i8*): int
 
 /** Writes a module to an open file descriptor. Returns 0 on success. */

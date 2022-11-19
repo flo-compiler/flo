@@ -1,5 +1,6 @@
 import "llvm/analysis.flo"
 import "llvm/bitwriter.flo"
+import "llvm/executionEngine.flo"
 import "llvm/passManagerBuilder.flo"
 import "llvm/target.flo"
 class GeneratedModule {

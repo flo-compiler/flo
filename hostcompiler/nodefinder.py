@@ -44,7 +44,7 @@ class NodeFinder(Visitor):
     def get_abs_path(m_path, current_file):
         abs_path = ""
         if m_path[:5] == "@flo/":
-            stddir = resource_path('packages')
+            stddir = resource_path('flolib/packages')
             abs_path = path.join(stddir, m_path[5:])
         else:
             abs_path = path.join(path.dirname(current_file), m_path)

@@ -592,13 +592,10 @@ class Compiler(Visitor):
     def visitNewMemNode(self, node: NewMemNode):
         typeval = self.visit(node.type)
         if isinstance(typeval, FloObject):
-            if node.args:
-                args = [self.visit(arg) for arg in node.args]
-            else:
-                args = []
+            args = [self.visit(arg) for arg in node.args]
             return typeval.construct(self.builder, args)
         else:
-            len = self.visit(typeval.len) if isinstance(typeval.len, TypeNode) else typeval.len
+            len = self.visit(node.args[0])
             mem = FloMem.halloc(self.builder, typeval.elm_type.llvmtype, size=len)
             return FloPointer.new(FloPointer(typeval.elm_type), mem)
 

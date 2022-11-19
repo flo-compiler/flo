@@ -137,11 +137,9 @@ class Analyzer(Visitor):
         self.visit(entry_node)
 
     def include_builtins(self, node: StmtsNode):
-        mpath = resource_path("builtins")
-        files = glob(f"{mpath}/*.flo")
-        for file in files:
-            ast = get_ast_from_file(file, None)
-            node.stmts = ast.stmts + node.stmts
+        mpath = resource_path("flolib/builtins.flo")
+        ast = get_ast_from_file(mpath, None)
+        node.stmts = ast.stmts + node.stmts
 
     def visitIntNode(self, node: IntNode):
         if node.expects:
@@ -241,7 +239,6 @@ class Analyzer(Visitor):
                     node.left_node = self.cast(node.left_node, left)
             return FloInt(None, 1)
         elif node.op.isKeyword("in"):
-            # TODO: In For Objects and Arrays
             if isinstance(right, FloObject):
                 in_method = right.referer.get_method("__in__")
                 if in_method:
@@ -924,10 +921,10 @@ class Analyzer(Visitor):
             self.check_constructor_call(typeval, node.args or [], node)
             return typeval
         else:
-            if not isinstance(typeval, FloArray):
-                TypeError(node.type.range, "Type can only be an object or an array").throw()
-            if node.args or isinstance(node.args, list):
-                TypeError(node.range, "New array intialization doesn't take any arguments.").throw()
+            if not isinstance(typeval, FloPointer):
+                TypeError(node.type.range, "Type can only be an object or a pointer").throw()
+            if len(node.args) != 1:
+                TypeError(node.range, f"Expected 1 argument for new call but got {len(node.args)}").throw()
             return FloPointer(typeval.elm_type)
 
     def visitImportNode(self, node: ImportNode):
