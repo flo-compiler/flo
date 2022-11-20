@@ -142,6 +142,7 @@ enum ExpressionKind {
     INDEX
     CALL
     TERNARY
+    INTRINSIC
 }
 enum PropIdKind {
     METHOD
@@ -204,4 +205,11 @@ enum ACCESS_ATTR {
     PRIVATE
     PUBLIC
     PROTECTED
+}
+enum Intrinsics {
+    MEMCPY
+    MEMMOVE
+    MEMSET
+    MEMRESIZE
+    MEMCMP
 }

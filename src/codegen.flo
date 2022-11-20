@@ -276,14 +276,7 @@ class CodeGen {
         let val = bool_exp.value
         return LLVMConstInt(LLVMInt1TypeInContext(this.program_ctx), val, false)
     }
-    private codegen_call_array_malloc(this, builder: LLVMBuilderRef, size: LLVMValueRef): LLVMValueRef{
-        let i8_ptr_ty = LLVMPointerType(LLVMInt8TypeInContext(this.program_ctx))
-        return LLVMBuildArrayMalloc(builder, i8_ptr_ty, size, "")
-    }
-    private codegen_call_malloc(this, builder: LLVMBuilderRef, ty: LLVMTypeRef): LLVMValueRef {
-        return LLVMBuildMalloc(builder, ty, "")
-    }
-    private codegen_call_snprintf(this, builder: LLVMBuilderRef, vargs: LLVMValueRef[]): LLVMValueRef {
+    private codegen_snprintf_call(this, builder: LLVMBuilderRef, vargs: LLVMValueRef[]): LLVMValueRef {
         let i8_ty = LLVMInt8TypeInContext(this.program_ctx)
         let i8_ptr_ty = LLVMPointerType(i8_ty)
         let int_ty = LLVMIntTypeInContext(this.program_ctx, WORD_SIZE)
@@ -294,11 +287,23 @@ class CodeGen {
         }
         return LLVMBuildCall2(builder, snprintf.fnc_type, snprintf.call, args.buffer, args.length, "")
     }
-    private codegen_call_sprintf(this, builder: LLVMBuilderRef, vargs: LLVMValueRef[], size: LLVMValueRef, onheap: bool): LLVMValueRef {
+    private codegen_realloc_call(this, builder: LLVMBuilderRef, args: LLVMValueRef[]): LLVMValueRef {
+        let i8_ptr_ty = LLVMPointerType(LLVMInt8TypeInContext(this.program_ctx))
+        let int_ty = LLVMIntTypeInContext(this.program_ctx, WORD_SIZE)
+        let realloc = get_intrinsic(this.module, "realloc", [i8_ptr_ty, int_ty], i8_ptr_ty)
+        return LLVMBuildCall2(builder, realloc.fnc_type, realloc.call, args.buffer, args.length, "")
+    }
+    private codegen_memcmp_call(this, builder: LLVMBuilderRef, args: LLVMValueRef[]): LLVMValueRef {
+        let i8_ptr_ty = LLVMPointerType(LLVMInt8TypeInContext(this.program_ctx))
+        let int_ty = LLVMIntTypeInContext(this.program_ctx, WORD_SIZE)
+        let realloc = get_intrinsic(this.module, "memcmp", [i8_ptr_ty, i8_ptr_ty, int_ty], int_ty)
+        return LLVMBuildCall2(builder, realloc.fnc_type, realloc.call, args.buffer, args.length, "")
+    }
+    private codegen_sprintf_call(this, builder: LLVMBuilderRef, vargs: LLVMValueRef[], size: LLVMValueRef, onheap: bool): LLVMValueRef {
         let i8_ty = LLVMInt8TypeInContext(this.program_ctx)
         let i8_ptr_ty = LLVMPointerType(i8_ty)
         let int_ty = LLVMIntTypeInContext(this.program_ctx, WORD_SIZE)
-        let mem = onheap ? this.codegen_call_array_malloc(builder, size) : LLVMBuildArrayAlloca(builder, i8_ty, size, "")
+        let mem = onheap ? LLVMBuildArrayMalloc(builder, i8_ty, size, "") : LLVMBuildArrayAlloca(builder, i8_ty, size, "")
         let args: LLVMValueRef[] = [mem]
         for let i = 0; i < vargs.length; i++ {
             args << vargs[i]
@@ -325,11 +330,11 @@ class CodeGen {
         let is_string_object = is_object(string_exp.value_type)
         if call_args.length > 1 {
             call_args[0] = str
-            str_len = this.codegen_call_snprintf(builder, call_args)
-            str = this.codegen_call_sprintf(builder, call_args, str_len, is_string_object)
+            str_len = this.codegen_snprintf_call(builder, call_args)
+            str = this.codegen_sprintf_call(builder, call_args, str_len, is_string_object)
         }
         if is_string_object {
-            let self = this.codegen_call_malloc(builder, this.codegen_type(string_exp.value_type))
+            let self = LLVMBuildMalloc(builder, this.codegen_type(string_exp.value_type), "")
             this.build_constructor_call(builder, string_exp.value_type as ObjectType, [self, str, str_len])
             str = self
         }
@@ -625,15 +630,25 @@ class CodeGen {
     private codegen_new_exp(this, builder: LLVMBuilderRef, new_expr: NewExpression): LLVMValueRef {
         let ptr: LLVMValueRef = null
         let alloc_ty = new_expr.memory_type
-        if is_pointer(alloc_ty)
-            alloc_ty = (alloc_ty as PointerType).pointee_type
-        let llvm_type = this.codegen_type(alloc_ty, false)
-        if new_expr.onheap
-            ptr = LLVMBuildMalloc(builder, llvm_type, "")
-        else
-            ptr = LLVMBuildAlloca(builder, llvm_type, "")
-        if is_object(alloc_ty){
-            let args: LLVMValueRef[] = [ptr]
+        let is_ptr_ty = is_pointer(alloc_ty)
+        let llvm_type: LLVMTypeRef = null
+        let args: LLVMValueRef[] = []
+        if is_ptr_ty {
+            llvm_type = this.codegen_type((alloc_ty as PointerType).pointee_type, false)
+            this.evaluate_expression_list(builder, args, new_expr.args)
+            if new_expr.onheap {
+                ptr = LLVMBuildArrayMalloc(builder, llvm_type, args[0], "")
+            } else {
+                ptr = LLVMBuildArrayAlloca(builder, llvm_type, args[0], "")
+            }
+        } else if is_object(alloc_ty) {
+            llvm_type = this.codegen_type(alloc_ty, false)
+            if new_expr.onheap {
+                ptr = LLVMBuildMalloc(builder, llvm_type, "")
+            } else {
+                ptr = LLVMBuildAlloca(builder, llvm_type, "")
+            }
+            args << ptr
             this.evaluate_expression_list(builder, args, new_expr.args)
             this.build_constructor_call(builder, alloc_ty as ObjectType, args)
         }
@@ -671,6 +686,33 @@ class CodeGen {
         }
         return null
     }
+    private codegen_intrinsic_exp(this, builder: LLVMBuilderRef, intrinsic_call_exp: IntrinsicCall): LLVMValueRef {
+        let intrinsic_type = intrinsic_call_exp.intrinsic
+        let args: LLVMValueRef[] = []
+        this.evaluate_expression_list(builder, args, intrinsic_call_exp.args)
+        let arg0_pointee_size = LLVMSizeOf(this.codegen_type((intrinsic_call_exp.args[0].value_type as PointerType).pointee_type))
+        
+        if intrinsic_type == Intrinsics.MEMRESIZE {
+            args[1] = LLVMBuildMul(builder, args[1], arg0_pointee_size, "")
+            return this.codegen_realloc_call(builder, args)
+        }
+        args[2] = LLVMBuildMul(builder, args[2], arg0_pointee_size, "")
+        if intrinsic_type == Intrinsics.MEMCMP {
+            return this.codegen_memcmp_call(builder, args)
+        }
+
+        let arg0_align = LLVMGetAlignment(args[0])
+        if intrinsic_type == Intrinsics.MEMSET
+            return LLVMBuildMemSet(builder, args[0], LLVMBuildIntCast2(builder, args[1], LLVMInt8TypeInContext(this.program_ctx), false, ""), args[2], arg0_align)
+
+        let arg1_align = LLVMGetAlignment(args[1])
+        if intrinsic_type == Intrinsics.MEMCPY 
+            return LLVMBuildMemCpy(builder, args[0], arg0_align, args[1], arg1_align, args[2])
+        if intrinsic_type == Intrinsics.MEMMOVE 
+            return LLVMBuildMemMove(builder, args[0], arg0_align, args[1], arg1_align, args[2])
+
+        return null
+    }
     private codegen_expression(this, builder: LLVMBuilderRef, expression: Expression): LLVMValueRef {
         if expression.expr_kind == ExpressionKind.BOOL
             return this.codegen_bool(expression as BooleanExpression)
@@ -702,6 +744,8 @@ class CodeGen {
             return this.codegen_typecast_exp(builder, expression as TypeCastExpression)
         if expression.expr_kind == ExpressionKind.ARRAY
             return this.codegen_array_exp(builder, expression as ArrayExpression)
+        if expression.expr_kind == ExpressionKind.INTRINSIC
+            return this.codegen_intrinsic_exp(builder, expression as IntrinsicCall)
         return LLVMConstInt(LLVMInt32Type(), 0, false)
     }
     private codegen_if_stmt(this, builder: LLVMBuilderRef, if_stmt: IfStatement){
