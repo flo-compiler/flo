@@ -1104,20 +1104,21 @@ class TypeChecker {
             param_strings += "$(this.dump_type(types[i])),"
             generic_scope.type_aliases.set(param_name, types[i])
         }
-        let instantiated_generic_name = "$(name)<$(param_strings)>"
+        let instantiated_generic_name = "$name<$param_strings>"
         let possible_type = this.get_type_from_current_scope(instantiated_generic_name)
         if possible_type.kind != TypeKind.UNKNOWN {
             // TODO: find a way to remove/delete this context appended.
             return possible_type
         } 
         // TODO: Find a better way to create this initialization.
-        generic_node.name.value = instantiated_generic_name
-        generic_node.generic_parameters = []
+        let new_identok = new IdentifierToken(instantiated_generic_name, generic_node.name.range)
+        let instantiated_generic_class = new ClassDeclarationNode(new_identok)
+        instantiated_generic_class.parent = generic_node.parent
+        instantiated_generic_class.fields = generic_node.fields
+        instantiated_generic_class.methods = generic_node.methods
         this.current_scope = generic_scope.id
-        this.declare_class_within_module(generic_node)
-        this.check_class_body(generic_node)
-        generic_node.name.value = name
-        generic_node.generic_parameters = generic_params
+        this.declare_class_within_module(instantiated_generic_class)
+        this.check_class_body(instantiated_generic_class)
         this.current_scope = generic_scope.parent
         return this.get_type_from_current_scope(instantiated_generic_name)
     }
