@@ -138,7 +138,7 @@ class CodeGen {
     private createLLVMBool(this, val: bool): LLVMValueRef{
         return LLVMConstInt(LLVMInt1TypeInContext(this.program_ctx), val as int, false)
     }
-    private creatLLVMInt(this, i: int): LLVMValueRef {
+    private createLLVMInt(this, i: int): LLVMValueRef {
         return LLVMConstInt(LLVMIntTypeInContext(this.program_ctx, WORD_SIZE), i, false)
     }
     private codegen_module(this, module: Module): LLVMModuleRef {
@@ -280,7 +280,7 @@ class CodeGen {
         let i8_ty = LLVMInt8TypeInContext(this.program_ctx)
         let i8_ptr_ty = LLVMPointerType(i8_ty)
         let int_ty = LLVMIntTypeInContext(this.program_ctx, WORD_SIZE)
-        let args: LLVMValueRef[] = [LLVMConstNull(i8_ptr_ty), this.creatLLVMInt(0)]
+        let args: LLVMValueRef[] = [LLVMConstNull(i8_ptr_ty), this.createLLVMInt(0)]
         let snprintf = get_intrinsic(this.module, "snprintf", [i8_ptr_ty, int_ty, i8_ptr_ty], int_ty, true)
         for let i = 0; i < vargs.length; i++ {
             args << vargs[i]
@@ -321,7 +321,7 @@ class CodeGen {
             call_args << this.codegen_expression(builder, string_exp.template_args[i])
             str_value = str_value.replace("\$", fmt)
         }
-        let str_len = this.creatLLVMInt(str_value.length)
+        let str_len = this.createLLVMInt(str_value.length)
         let str = this.module_string_scope.get(str_value)
         if str == null {
             str = LLVMBuildGlobalString(builder, str_value.to_cstring(), "")
@@ -341,9 +341,9 @@ class CodeGen {
         return str
     }
     private store_array_elements(this, builder: LLVMBuilderRef, ptr: LLVMValueRef, array_exp: ArrayExpression): LLVMValueRef {
-        let zero = this.creatLLVMInt(0)
+        let zero = this.createLLVMInt(0)
         let args: LLVMValueRef[2] = [zero, zero]
-        let next_args = [this.creatLLVMInt(1)]
+        let next_args = [this.createLLVMInt(1)]
         let array_type = this.codegen_type(array_exp.value_type)
         let elem_ty = LLVMPointerType(this.codegen_type((array_exp.value_type as ArrayType).element_type))
         let addr = LLVMBuildInBoundsGEP2(builder, array_type, ptr, &args[0], 2, "")
@@ -373,7 +373,7 @@ class CodeGen {
         let ty = this.codegen_type(index_exp.expression.value_type)
         let ind_ptr: LLVMValueRef = null
         if index_exp.expression.value_type.kind == TypeKind.ARRAY {
-            let indices: LLVMValueRef[2] = [this.creatLLVMInt(0), index]
+            let indices: LLVMValueRef[2] = [this.createLLVMInt(0), index]
             ind_ptr = this.get_expr_mem(builder, index_exp.expression)
             return LLVMBuildInBoundsGEP2(builder, ty, ind_ptr, &indices[0], 2, "arrayidx")
         }
@@ -394,12 +394,12 @@ class CodeGen {
         let indices: LLVMValueRef[] = [] 
         if !is_function_type {
             let vtoffset = struct_class.vtable_type == null ? 0 : 1
-            indices << this.creatLLVMInt(struct_class.fields_pos_map.get(prop_id_key) + vtoffset)
+            indices << this.createLLVMInt(struct_class.fields_pos_map.get(prop_id_key) + vtoffset)
         } else {
-            indices << this.creatLLVMInt(0)
+            indices << this.createLLVMInt(0)
             ptr = LLVMBuildInBoundsGEP2(builder, class_type, ptr, indices.buffer, indices.length, "")
             ptr = LLVMBuildLoad2(builder, LLVMPointerType(struct_class.vtable_type), ptr, "")
-            indices[0] = this.creatLLVMInt(struct_class.vt_methods_pos_map.get(prop_id_key))
+            indices[0] = this.createLLVMInt(struct_class.vt_methods_pos_map.get(prop_id_key))
         }
         return LLVMBuildInBoundsGEP2(builder, class_type, ptr, indices.buffer, indices.length, "memberidx")
     }
@@ -557,7 +557,7 @@ class CodeGen {
             let incr_value = op == UnaryOp.PREINCR or op == UnaryOp.POSTINCR ? 1 : -1
             let new_value: LLVMValueRef = null
             if is_pointer(exp.value_type) {
-                let indices: LLVMValueRef[1] = [this.creatLLVMInt(incr_value)]
+                let indices: LLVMValueRef[1] = [this.createLLVMInt(incr_value)]
                 new_value = LLVMBuildInBoundsGEP2(builder, alloc_ty, val, &indices[0], 1, "incdec.ptr")
             } else if is_numeric(exp.value_type){
                 let incr_amt = is_int(exp.value_type) ? LLVMConstInt(alloc_ty, incr_value, false) : LLVMConstReal(alloc_ty, incr_value * 1.0)
@@ -945,7 +945,7 @@ class CodeGen {
                 let this_id = get_scope(this.program, method.scope).vars.get("this")
                 LLVMBuildStore(func_builder, this_param, this_alloc)
                 if is_constructor and struct_class.vtable != null {
-                    let index: LLVMValueRef[1] = [this.creatLLVMInt(0)]
+                    let index: LLVMValueRef[1] = [this.createLLVMInt(0)]
                     let vt_ptr =  LLVMBuildInBoundsGEP2(func_builder, object_type, this_param, &index[0], 1, "")
                     LLVMBuildStore(func_builder, struct_class.vtable, vt_ptr)
                 }
