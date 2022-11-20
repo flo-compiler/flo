@@ -183,7 +183,16 @@ class CodeGen {
         return this.module
     }
     private codegen_imported_symbols(this, symbols: ImportedSymbols){
-        for let i = 0; i < symbols.vars.length; i++ {
+        for let i = 0; i < symbols.classes.length; i++ {
+            let imported_class = get_class(this.program, symbols.classes[i])
+            this.declare_class(imported_class)
+            this.declare_class_struct(imported_class, false)
+        }
+        for i = 0; i < symbols.enums.length; i++ {
+            let imported_enum = get_enum(this.program, symbols.enums[i])
+            this.declare_enum(imported_enum)
+        }
+        for i = 0; i < symbols.vars.length; i++ {
             let var_decl = symbols.vars[i]
             let var = get_var(this.program, var_decl.var_id)
             let ty = this.codegen_type(var.value_type)
@@ -192,15 +201,6 @@ class CodeGen {
         for i = 0; i < symbols.functions.length; i++ {
             let function = get_func(this.program, symbols.functions[i])
             this.declare_function(function)
-        }
-        for i = 0; i < symbols.classes.length; i++ {
-            let imported_class = get_class(this.program, symbols.classes[i])
-            this.declare_class(imported_class)
-            this.declare_class_struct(imported_class, false)
-        }
-        for i = 0; i < symbols.enums.length; i++ {
-            let imported_enum = get_enum(this.program, symbols.enums[i])
-            this.declare_enum(imported_enum)
         }
     }
     private codegen_type(this, tt: Type, as_pointer = true): LLVMTypeRef {

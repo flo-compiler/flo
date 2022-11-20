@@ -1303,7 +1303,7 @@ class TypeChecker {
         // TODO: You need to properly handle the built-in case; don't use null as a reference point.
         let filepath = filename
         let prev_file_id = this.compiler.current_file
-        if range != null {
+        if range != null and !filename.starts_with("@") {
             filepath = Path.join(Path.dirname(this.get_current_module().name), filename)
         }
         let file_id = this.compiler.register_file(filepath)

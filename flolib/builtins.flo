@@ -78,12 +78,12 @@ class string {
     }
     public replace(this, val: string, repl: string): string {
         let idx = this.find(val)
-        if idx > 0 {
+        if idx >= 0 {
             let new_length = this.length - val.length + repl.length
             let new_buffer = new i8*(new_length)
             memcpy(new_buffer, this.buffer, idx)
             memcpy(new_buffer + idx, repl.buffer, repl.length)
-            memcpy(new_buffer + idx + repl.length, this.buffer + idx + 1, this.length - idx)
+            memcpy(new_buffer + idx + repl.length, this.buffer + idx + val.length, this.length - val.length)
             return new string(new_buffer, new_length)
         } 
         return this
@@ -98,6 +98,10 @@ class string {
         if (this.length < suffix.length) return false
         let end_buff = this.buffer + this.length - suffix.length
         return memcmp(end_buff, suffix.buffer, suffix.length) == 0
+    }
+    public starts_with(this, preffix: string): bool {
+        if (this.length < preffix.length) return false
+        return memcmp(this.buffer, preffix.buffer, preffix.length) == 0
     }
     public from_cstring(str: i8*): string {
         let len = strlen(str)
@@ -192,6 +196,15 @@ class Array <T> {
     __as_string__(this): string {
         return "[$(this.join(", "))]"
     }
+}
+const STDOUT = 0
+fnc write(res: int, buf: i8*, len: int)
+fnc print(str: string){
+    write(STDOUT, str.get_bytes(), str.length)
+}
+fnc println(str: string){
+    print(str)
+    write(STDOUT, "\n", 1)
 }
 // generic functions.
 // fnc print<T>(arg: T, end = "\n"){
