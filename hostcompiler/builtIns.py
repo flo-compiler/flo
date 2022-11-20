@@ -53,15 +53,15 @@ target_machine = binding.Target.from_default_triple().create_target_machine()
 target_data = target_machine.target_data
 
 
-def print_wrapper(builder: ir.IRBuilder, args):
-    fmt = [arg.fmt for arg in args]
-    c_fmt = ft.FloConst.create_global_str(" ".join(fmt)).value
-    args = [c_fmt]+[arg.cval(builder) for arg in args]
-    builder.call(get_instrinsic("printf"), args)
+# def print_wrapper(builder: ir.IRBuilder, args):
+#     fmt = [arg.fmt for arg in args]
+#     c_fmt = ft.FloConst.create_global_str(" ".join(fmt)).value
+#     args = [c_fmt]+[arg.cval(builder) for arg in args]
+#     builder.call(get_instrinsic("printf"), args)
 
-def println_wrapper(builder: ir.IRBuilder, args):
-    end_arg = ft.FloType(ft.FloConst.create_global_str("\n").value)
-    print_wrapper(builder, args+[end_arg])
+# def println_wrapper(builder: ir.IRBuilder, args):
+#     end_arg = ft.FloType(ft.FloConst.create_global_str("\n").value)
+#     print_wrapper(builder, args+[end_arg])
 
 def syscall_wrapper(builder: ir.IRBuilder, args):
     regs = "{rax}", "{rdi}", "{rsi}", "{rdx}", "{r10}", "{r8}"
@@ -84,9 +84,9 @@ def new_ctx(*args):
     Context.current_llvm_module.triple = binding.get_default_triple()
     Context.current_llvm_module.data_layout = str(target_data)
     syscall_fnc = ft.FloInlineFunc(syscall_wrapper, [ft.FloType], ft.FloInt(None), True)
-    print_fnc = ft.FloInlineFunc(print_wrapper, [ft.FloType], ft.FloVoid(None), True)
-    println_fnc = ft.FloInlineFunc(println_wrapper, [ft.FloType], ft.FloVoid(None), True)
+    # print_fnc = ft.FloInlineFunc(print_wrapper, [ft.FloType], ft.FloVoid(None), True)
+    # println_fnc = ft.FloInlineFunc(println_wrapper, [ft.FloType], ft.FloVoid(None), True)
     global_ctx.set("syscall", syscall_fnc)
-    global_ctx.set("print", print_fnc)
-    global_ctx.set("println", println_fnc)
+    # global_ctx.set("print", print_fnc)
+    # global_ctx.set("println", println_fnc)
     return global_ctx

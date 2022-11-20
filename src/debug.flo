@@ -159,12 +159,12 @@ fnc print_tokens(tokens: Token[], text: string){
     for let i = 0; i < tokens.length; i++ {
         let token = tokens[i]
         println(" {")
-        println("  type:", token_str(token.ttype)+",")
-        println("  range:", "$(token.range.start)-$(token.range.end)")
+        println("  type: $(token_str(token.ttype)),")
+        println("  range: (token.range.start)-$(token.range.end)")
         if token.ttype != TokType.LN
-            println("  value:", token_value(token, text))
+            println("  value: $(token_value(token, text))")
         else
-            println("  value:", "\\n")
+            println("  value: \\n")
         println(" },")
     }  
     println("]")
