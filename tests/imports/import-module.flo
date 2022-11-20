@@ -1,0 +1,6 @@
+import "modules/engine"
+fnc main(): int {
+    let engine = new Engine()
+    engine.start(10)
+    return engine.end()
+}

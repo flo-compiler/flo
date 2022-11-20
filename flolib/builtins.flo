@@ -94,6 +94,11 @@ class string {
         c_string[this.length] = '\0'
         return c_string
     }
+    public ends_with(this, suffix: string): bool {
+        if (this.length < suffix.length) return false
+        let end_buff = this.buffer + this.length - suffix.length
+        return memcmp(end_buff, suffix.buffer, suffix.length) == 0
+    }
     public from_cstring(str: i8*): string {
         let len = strlen(str)
         let buf = new i8*(len)
@@ -125,7 +130,7 @@ class Array <T> {
     }
     resize(this){
         this.size = this.size * 2
-        this.buffer = realloc(this.buffer as i8*, this.size) as T*
+        this.buffer = this.buffer.resize(this.size)
     }
     swap(this, i1: int, i2: int){
         if (i1 in 0..this.length) and (i2 in 0..this.length) {

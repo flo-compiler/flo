@@ -23,16 +23,20 @@ def get_instrinsic(name):
         return m.declare_intrinsic("atof", (), ir.FunctionType(double_ty, [byteptr_ty]))
     elif name == "pow":
         return m.declare_intrinsic("llvm.pow", [double_ty])
-    elif name == "memcpy":
-        return m.declare_intrinsic("llvm.memcpy", [byteptr_ty, byteptr_ty, sizet_ty])
-    elif name == "va_start":
-        return m.declare_intrinsic("llvm.va_start", (), ir.FunctionType(void_ty, [byteptr_ty]))
-    elif name == "va_end":
-        return m.declare_intrinsic("llvm.va_end", (), ir.FunctionType(void_ty, [byteptr_ty]))
     elif name == "malloc":
         return m.declare_intrinsic("malloc", (), ir.FunctionType(byteptr_ty, [sizet_ty]))
     elif name == "realloc":
         return m.declare_intrinsic("realloc", (), ir.FunctionType(byteptr_ty, [byteptr_ty, sizet_ty]))
+    elif name == "memcpy":
+        return m.declare_intrinsic("llvm.memcpy", [byteptr_ty, byteptr_ty, sizet_ty])
+    elif name == "memmove":
+        return m.declare_intrinsic("llvm.memmove", [byteptr_ty, byteptr_ty, sizet_ty])
+    elif name == "memset":
+        return m.declare_intrinsic("llvm.memset", [byteptr_ty, sizet_ty])
+    elif name == "va_start":
+        return m.declare_intrinsic("llvm.va_start", (), ir.FunctionType(void_ty, [byteptr_ty]))
+    elif name == "va_end":
+        return m.declare_intrinsic("llvm.va_end", (), ir.FunctionType(void_ty, [byteptr_ty]))
     elif name == "free":
         return m.declare_intrinsic("free", (), ir.FunctionType(ir.VoidType(), [byteptr_ty]))
     elif name == "memcmp":
@@ -74,18 +78,15 @@ def realloc_wrapper(builder: ir.IRBuilder, args):
     return ptr.new(new_mem)
 
 def new_ctx(*args):
-    byte_flo_ptr_ty = ft.FloPointer(ft.FloInt(None, 8))
     filename = Path(args[0]).name
     global_ctx = Context(*args)
     Context.current_llvm_module = ir.Module(name=filename)
     Context.current_llvm_module.triple = binding.get_default_triple()
     Context.current_llvm_module.data_layout = str(target_data)
     syscall_fnc = ft.FloInlineFunc(syscall_wrapper, [ft.FloType], ft.FloInt(None), True)
-    realloc_fnc = ft.FloInlineFunc(realloc_wrapper, [byte_flo_ptr_ty,  ft.FloInt(None)], byte_flo_ptr_ty)
     print_fnc = ft.FloInlineFunc(print_wrapper, [ft.FloType], ft.FloVoid(None), True)
     println_fnc = ft.FloInlineFunc(println_wrapper, [ft.FloType], ft.FloVoid(None), True)
     global_ctx.set("syscall", syscall_fnc)
-    global_ctx.set("realloc", realloc_fnc)
     global_ctx.set("print", print_fnc)
     global_ctx.set("println", println_fnc)
     return global_ctx

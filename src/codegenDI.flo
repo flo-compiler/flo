@@ -1,4 +1,4 @@
-import "llvm/debugInfo.flo"
+import "llvm/debugInfo"
 class DebugInfo {
     builder: LLVMDIBuilderRef
     CU: LLVMMetadataRef

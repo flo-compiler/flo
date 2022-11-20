@@ -1,4 +1,4 @@
-import FloRange, color in "utils.flo"
+import FloRange, color in "utils"
 enum ErrorKind {
     ILLEGALCHAR
     NAME

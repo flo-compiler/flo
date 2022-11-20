@@ -605,7 +605,7 @@ class Analyzer(Visitor):
         fn = self.visit(node.name)
         if not isinstance(fn, FloInlineFunc):
             TypeError(
-                node.range, f"{node.name.var_name.value} is not a function"
+                node.range, f"{node.name} is not a function"
             ).throw()
         return self.check_fnc_call(fn, node.args, node)
 

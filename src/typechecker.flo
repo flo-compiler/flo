@@ -1,5 +1,5 @@
-import "types.flo"
-import "@flo/collections/map.flo"
+import "types"
+import "@flo/collections/map"
 const WORD_SIZE = 64
 class Type {
     kind: TypeKind
@@ -526,6 +526,21 @@ fnc lower_bin_assign_op(op: BinaryOp): BinaryOp {
         return BinaryOp.SL
     return BinaryOp.SR
 }
+fnc ptr_method_to_prop_id(name: string): PropId {
+    let id = -1
+    if name == "resize" {
+        id = 0
+    } else if name == "copy" {
+        id = 1
+    } else if name == "move" {
+        id = 2
+    } else if name == "set" {
+        id = 3
+    } else {
+        return null
+    }
+    return new PropId(TypeIdKind.CLASS, new TypeId(-1, -1, -1), id)
+}
 class ScopeId {
     module_id: int
     id: int
@@ -860,7 +875,7 @@ class TypeChecker {
     private get_current_scope(this): Scope {
         return get_scope(this.program, this.current_scope)
     }
-    private get_module_scope(this): Scope {
+    private get_current_module_global_scope(this): Scope {
         return this.get_current_module().scopes[0]
     }
     private get_current_function(this): Function {
@@ -1005,7 +1020,7 @@ class TypeChecker {
     }
     public check(this, module_ast: ModuleAST, compiler: Compiler, filename: string): Program {
         this.compiler = compiler
-        this.include_builtins()
+        // this.include_builtins()
         if this.has_errored() return null
         this.check_module(module_ast, filename)
         return this.program
@@ -1147,33 +1162,33 @@ class TypeChecker {
         this.get_current_module().global_vars << var_stmt
     }
     private add_imported_var_to_module(this, var_name: string, var_id: VarId){
-        let scope = this.get_module_scope()
+        let scope = this.get_current_module_global_scope()
         let module = this.get_current_module()
         scope.vars.set(var_name, var_id)
         module.imported_symbols.vars << new VarDeclaration(var_name, var_id)
     }
     private add_imported_fnc_to_module(this, fnc_name: string, fnc_id: VarId){
-        let scope = this.get_module_scope()
+        let scope = this.get_current_module_global_scope()
         let module = this.get_current_module()
         scope.functions.set(fnc_name, fnc_id)
         module.imported_symbols.functions << fnc_id
     }
     private add_imported_class_to_module(this, class_name: string, class_id: ClassId){
-        let scope = this.get_module_scope()
+        let scope = this.get_current_module_global_scope()
         let module = this.get_current_module()
         scope.classes.set(class_name, class_id)
         scope.vars.set(class_name, new ClassVarId(class_id))
         module.imported_symbols.classes << class_id
     }
     private add_imported_enum_to_module(this, enum_name: string, enum_id: EnumId){
-        let scope = this.get_module_scope()
+        let scope = this.get_current_module_global_scope()
         let module = this.get_current_module()
         scope.enums.set(enum_name, enum_id)
         scope.vars.set(enum_name, new EnumVarId(enum_id))
         module.imported_symbols.enums << enum_id
     }
     private add_imported_typealias_to_module(this, alias_name: string, type_: Type){
-        let scope = this.get_module_scope()
+        let scope = this.get_current_module_global_scope()
         let module = this.get_current_module()
         scope.type_aliases.set(alias_name, type_)
         //TODO: Recursively look for object and enum types and import them into module
@@ -1294,17 +1309,16 @@ class TypeChecker {
         let filepath = filename
         let prev_file_id = this.compiler.current_file
         if range != null {
-            filepath = Path.join(Path.dirname(this.get_current_module().name), filename) 
-        }
-        if !File.exists(filepath) {
-            this.error(ErrorKind.IO, "No such file or directory: '$filename'", range)
-            return null
+            filepath = Path.join(Path.dirname(this.get_current_module().name), filename)
         }
         let file_id = this.compiler.register_file(filepath)
         if file_id.id < this.program.modules.length {
             return this.get_module(file_id.id)
         }
-        if !this.compiler.set_current_file(file_id) return null
+        if !this.compiler.set_current_file(file_id){ 
+            this.error(ErrorKind.IO, "No such file or directory: '$filename'", range)
+            return null
+        }
         let lexer = new Lexer()
         let tokens = lexer.tokenize(this.compiler.current_file_contents, this.compiler.errors)
         if this.has_errored() return null
@@ -1351,7 +1365,7 @@ class TypeChecker {
         declared_class.is_abstract = false
         let prop_map: Map<string, PropId>
         let static_prop_map: Map<string, PropId>
-        let module_scope = this.get_module_scope()
+        let module_scope = this.get_current_module_global_scope()
         if class_decl_node.parent != null {
             declared_class.parent = this.check_type(class_decl_node.parent)
             if this.has_errored() return
@@ -2115,7 +2129,7 @@ class TypeChecker {
                 }
                 prop_ty = new EnumType(parent_enum.id)
             }
-        } else {
+        }else {
             this.error(ErrorKind.GEN, "Cannot get property '$prop_name' of type '$(this.dump_type(prop_owner_type))'", member_expr_node.expression.range)
             return null
         }
