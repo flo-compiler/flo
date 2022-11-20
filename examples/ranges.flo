@@ -1,4 +1,0 @@
-fnc main(){
-    let x = 0..5
-    println(1 in x)
-}

@@ -1,6 +1,7 @@
 import "@flo/io/file"
 import "@flo/collections/map"
 import "@flo/path/path"
+import "error"
 class FileId {
     id: int
     constructor(this, id: int){
