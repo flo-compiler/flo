@@ -1,0 +1,21 @@
+fnc printf(fmt: i8*, x: int)
+fnc main(): int {
+    let mymem: int*(5)
+    mymem.fill_with(65, 5)
+    printf("%c\n", mymem[2])
+    let mymem2: int*(6)
+    mymem2.copy_from(mymem, 5)
+    printf("%d\n", mymem2.compare(mymem, 5))
+    mymem[3] = 100
+    printf("%d\n", mymem.compare(mymem2, 5))
+    // let mymem3 = new i8*(5); uncomment to test failure
+    let mymem3 = new int*(5)
+    mymem3.move_from(mymem, 5)
+    mymem3 = mymem3.resize(10)
+    if mymem3 == null {
+        printf("bad!", 0)
+        return 1
+    }
+    printf("%d\n", mymem3[4])
+    return 0
+}

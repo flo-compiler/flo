@@ -1,5 +1,4 @@
 fnc free(ptr: i8*)
-fnc realloc(ptr: i8*, amt: int): i8*
 class Set<T>{
     private elements: T*
     private size: int
@@ -11,7 +10,7 @@ class Set<T>{
     }
     private resize(this){
         this.size*=2
-        this.elements = realloc(this.elements as i8*, this.size) as T*
+        this.elements = this.elements.resize(this.size)
     }
     public add(this, e: T){
         if (e in this) return

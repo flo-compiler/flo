@@ -227,6 +227,16 @@ class CallExpression (Expression) {
         this.value_type = value_type
     }
 }
+class IntrinsicCall (Expression) {
+    intrinsic: Intrinsics
+    args: Expression[]
+    constructor(this, intrinsic: Intrinsics){
+        super(ExpressionKind.INTRINSIC)
+        this.intrinsic = intrinsic
+        this.args = []
+        this.value_type = Type.unknown()
+    }
+}
 class VarId {
     kind: VarIdKind
     module_id: int
@@ -525,21 +535,6 @@ fnc lower_bin_assign_op(op: BinaryOp): BinaryOp {
     if op == BinaryOp.SL_ASSIGN
         return BinaryOp.SL
     return BinaryOp.SR
-}
-fnc ptr_method_to_prop_id(name: string): PropId {
-    let id = -1
-    if name == "resize" {
-        id = 0
-    } else if name == "copy" {
-        id = 1
-    } else if name == "move" {
-        id = 2
-    } else if name == "set" {
-        id = 3
-    } else {
-        return null
-    }
-    return new PropId(TypeIdKind.CLASS, new TypeId(-1, -1, -1), id)
 }
 class ScopeId {
     module_id: int
@@ -1020,7 +1015,7 @@ class TypeChecker {
     }
     public check(this, module_ast: ModuleAST, compiler: Compiler, filename: string): Program {
         this.compiler = compiler
-        // this.include_builtins()
+        this.include_builtins()
         if this.has_errored() return null
         this.check_module(module_ast, filename)
         return this.program
@@ -2129,7 +2124,27 @@ class TypeChecker {
                 }
                 prop_ty = new EnumType(parent_enum.id)
             }
-        }else {
+        } else if is_pointer(prop_owner_type){
+            // FIXME: Better way to express this.
+            let mem_intrinsic = Intrinsics.MEMCPY 
+            if prop_name == "copy_from" {
+                mem_intrinsic = Intrinsics.MEMCPY 
+            } else if prop_name == "move_from" {
+               mem_intrinsic = Intrinsics.MEMMOVE
+            } else if prop_name == "fill_with" {
+                mem_intrinsic = Intrinsics.MEMSET
+            } else if prop_name == "resize" {
+                mem_intrinsic = Intrinsics.MEMRESIZE
+            } else if prop_name == "compare" {
+                mem_intrinsic = Intrinsics.MEMCMP
+            } else {
+                this.error(ErrorKind.NAME, "intrinsic $prop_name is not defined", member_expr_node.member.range)
+                return null
+            }
+            let intrinsic_call = new IntrinsicCall(mem_intrinsic) 
+            intrinsic_call.args << prop_owner
+            return intrinsic_call as MemberExpression
+        } else {
             this.error(ErrorKind.GEN, "Cannot get property '$prop_name' of type '$(this.dump_type(prop_owner_type))'", member_expr_node.expression.range)
             return null
         }
@@ -2233,6 +2248,9 @@ class TypeChecker {
     private check_call_expr(this, expected_type: Type, call_expr_node: CallExpressionNode): CallExpression {
         let called = this.check_expression(Type.unknown(), call_expr_node.callee)
         if this.has_errored() return null
+        if called.expr_kind == ExpressionKind.INTRINSIC and called.value_type.kind == TypeKind.UNKNOWN {
+            return this.check_intrinsic_call(called as IntrinsicCall, call_expr_node) as CallExpression
+        }
         if called.value_type.kind != TypeKind.FNC {
             this.error(ErrorKind.TYPE, "Expected a function type for call but got '$(this.dump_type(called.value_type))'", call_expr_node.callee.range)
             return null
@@ -2252,6 +2270,52 @@ class TypeChecker {
             return null
         }
         return new CallExpression(called, args, func_ty.return_type)
+    }
+    private check_intrinsic_call(this, intrinsic_call: IntrinsicCall, call_expr_node: CallExpressionNode): IntrinsicCall {
+        //Note: This assumes that intrisics always have alteast 1 arg and that call_expr_node.args has the rest of the args
+        let args = call_expr_node.args
+        for let i = 0; i < args.length; i++ {
+            intrinsic_call.args << this.check_expression(Type.unknown(), args[i])
+        }
+        let intrinsic_func = intrinsic_call.intrinsic
+        // Mem intrinsics
+        if !is_pointer(intrinsic_call.args[0].value_type) {
+            this.error(ErrorKind.TYPE, "Expected argument 1 to be of type to be of a pointer but got '$(this.dump_type(intrinsic_call.args[0].value_type))'", call_expr_node.callee.range)
+            return null
+        }
+        if intrinsic_func == Intrinsics.MEMRESIZE {
+            if intrinsic_call.args.length != 2 {
+                this.error(ErrorKind.GEN, "Expected 2 arguments on function call but got $(intrinsic_call.args.length)", call_expr_node.range)
+                return null
+            }
+            intrinsic_call.value_type = intrinsic_call.args[0].value_type
+            if !is_int(intrinsic_call.args[1].value_type) {
+                this.error(ErrorKind.TYPE, "Expected an int of but got type '$(this.dump_type(intrinsic_call.args[1].value_type))' as function call argument", call_expr_node.args[0].range)
+                return null
+            }
+        } else if intrinsic_func == Intrinsics.MEMCPY or intrinsic_func == Intrinsics.MEMMOVE or intrinsic_func == Intrinsics.MEMCMP or  intrinsic_func == Intrinsics.MEMSET {
+            if intrinsic_call.args.length != 3 {
+                this.error(ErrorKind.GEN, "Expected 3 arguments on function call but got $(intrinsic_call.args.length)", call_expr_node.range)
+                return null
+            }
+            let exp_arg2_type = intrinsic_call.args[0].value_type
+            intrinsic_call.value_type = exp_arg2_type
+            if intrinsic_func == Intrinsics.MEMSET {
+                exp_arg2_type = (exp_arg2_type as PointerType).pointee_type
+            }
+            if !this.types_are_eq(exp_arg2_type, intrinsic_call.args[1].value_type) {
+                this.error(ErrorKind.TYPE, "Expected type '$(this.dump_type(exp_arg2_type))' of but got type '$(this.dump_type(intrinsic_call.args[1].value_type))' as function call argument", call_expr_node.args[0].range)
+                return null
+            }
+            if !is_int(intrinsic_call.args[2].value_type) {
+                this.error(ErrorKind.TYPE, "Expected an int of but got type '$(this.dump_type(intrinsic_call.args[2].value_type))' as function call argument", call_expr_node.args[1].range)
+                return null
+            }
+            if intrinsic_func == Intrinsics.MEMCMP {
+                intrinsic_call.value_type = new Type(TypeKind.INT)
+            }
+        }
+        return intrinsic_call
     }
     private check_int_expression(this, expected_type: Type, int_node: IntExpressionNode): IntExpression{
         let expr_value = new IntExpression(int_node.value.value)
