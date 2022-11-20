@@ -1,8 +1,8 @@
-import "@flo/collections/map.flo"
-import "llvm/core.flo"
-import "llvm/linker.flo"
-import "codegenDI.flo"
-import "codegenMod.flo"
+import "@flo/collections/map"
+import "llvm/core"
+import "llvm/linker"
+import "codegenDI"
+import "codegenMod"
 
 class IntrinsicResult {
     call: LLVMValueRef
@@ -276,6 +276,13 @@ class CodeGen {
         let val = bool_exp.value
         return LLVMConstInt(LLVMInt1TypeInContext(this.program_ctx), val, false)
     }
+    private codegen_call_array_malloc(this, builder: LLVMBuilderRef, size: LLVMValueRef): LLVMValueRef{
+        let i8_ptr_ty = LLVMPointerType(LLVMInt8TypeInContext(this.program_ctx))
+        return LLVMBuildArrayMalloc(builder, i8_ptr_ty, size, "")
+    }
+    private codegen_call_malloc(this, builder: LLVMBuilderRef, ty: LLVMTypeRef): LLVMValueRef {
+        return LLVMBuildMalloc(builder, ty, "")
+    }
     private codegen_call_snprintf(this, builder: LLVMBuilderRef, vargs: LLVMValueRef[]): LLVMValueRef {
         let i8_ty = LLVMInt8TypeInContext(this.program_ctx)
         let i8_ptr_ty = LLVMPointerType(i8_ty)
@@ -287,19 +294,11 @@ class CodeGen {
         }
         return LLVMBuildCall2(builder, snprintf.fnc_type, snprintf.call, args.buffer, args.length, "")
     }
-    private codegen_malloc_call(this, builder: LLVMBuilderRef, size: LLVMValueRef): LLVMValueRef{
-        let i8_ty = LLVMInt8TypeInContext(this.program_ctx)
-        let i8_ptr_ty = LLVMPointerType(i8_ty)
-        let int_ty = LLVMIntTypeInContext(this.program_ctx, WORD_SIZE)
-        let mallocf = get_intrinsic(this.module, "malloc", [int_ty], i8_ptr_ty, true)
-        let args: LLVMValueRef[1] = [size]
-        return LLVMBuildCall2(builder, mallocf.fnc_type, mallocf.call, &args[0], 1, "")
-    }
     private codegen_call_sprintf(this, builder: LLVMBuilderRef, vargs: LLVMValueRef[], size: LLVMValueRef, onheap: bool): LLVMValueRef {
         let i8_ty = LLVMInt8TypeInContext(this.program_ctx)
         let i8_ptr_ty = LLVMPointerType(i8_ty)
         let int_ty = LLVMIntTypeInContext(this.program_ctx, WORD_SIZE)
-        let mem = onheap ? this.codegen_malloc_call(builder, size) : LLVMBuildArrayAlloca(builder, i8_ty, size, "")
+        let mem = onheap ? this.codegen_call_array_malloc(builder, size) : LLVMBuildArrayAlloca(builder, i8_ty, size, "")
         let args: LLVMValueRef[] = [mem]
         for let i = 0; i < vargs.length; i++ {
             args << vargs[i]
@@ -330,7 +329,7 @@ class CodeGen {
             str = this.codegen_call_sprintf(builder, call_args, str_len, is_string_object)
         }
         if is_string_object {
-            let self = LLVMBuildMalloc(builder, this.codegen_type(string_exp.value_type), "")
+            let self = this.codegen_call_malloc(builder, this.codegen_type(string_exp.value_type))
             this.build_constructor_call(builder, string_exp.value_type as ObjectType, [self, str, str_len])
             str = self
         }

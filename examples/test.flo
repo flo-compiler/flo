@@ -1,7 +1,6 @@
-fnc printf(fmt: i8*, s: i8*)
 fnc main(): int {
    let x = 10
-   let mystring = "string works $x"
-   printf("%s\n", mystring.to_cstring())
+   let mystring = "myfile.flo"
+   println(mystring.ends_with(".flo"))
    return mystring.length
 }

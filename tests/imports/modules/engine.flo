@@ -1,0 +1,10 @@
+class Engine {
+    code: int
+    constructor(this){}
+    public start(this, code: int){
+        this.code = code
+    }
+    public end(this): int {
+        return this.code
+    }
+}

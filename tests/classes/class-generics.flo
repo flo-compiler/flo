@@ -1,4 +1,3 @@
-fnc malloc(amt: int): i8*
 fnc free(ptr: i8*)
 fnc realloc(ptr: i8*, amt: int): i8*
 class Set<T>{
@@ -8,7 +7,7 @@ class Set<T>{
     constructor(this){
         this.size = 2
         this.len = 0
-        this.elements = malloc(this.size) as T*
+        this.elements = new T*(this.size)
     }
     private resize(this){
         this.size*=2

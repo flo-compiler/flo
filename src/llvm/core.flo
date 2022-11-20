@@ -398,6 +398,7 @@ fnc LLVMBuildFNeg(B: LLVMBuilderRef, V: LLVMValueRef, Name: i8*): LLVMValueRef
 fnc LLVMBuildNot(B: LLVMBuilderRef, V: LLVMValueRef, Name: i8*): LLVMValueRef
 /* Memory */
 fnc LLVMBuildMalloc(B: LLVMBuilderRef, Ty: LLVMTypeRef, Name: i8*): LLVMValueRef 
+fnc LLVMBuildArrayMalloc(B: LLVMBuilderRef, Ty: LLVMTypeRef, Val: LLVMValueRef, Name: i8*): LLVMValueRef
 /**
  * Creates and inserts a memset to the specified pointer and the
  * specified value.

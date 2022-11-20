@@ -1,3 +1,4 @@
+import "types"
 fnc string_to_kw_token(word: string): TokType {
     if word == "and"
         return TokType.AND_KW

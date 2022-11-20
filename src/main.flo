@@ -1,11 +1,11 @@
-import "utils.flo"
-import "error.flo"
-import "compiler.flo"
-import "lexer.flo"
-import "debug.flo"
-import "parser.flo"
-import "typechecker.flo"
-import "codegen.flo"
+import "utils"
+import "error"
+import "compiler"
+import "lexer"
+import "debug"
+import "parser"
+import "typechecker"
+import "codegen"
 fnc parse_args(size: int, args: i8**): string[] {
     let arr: string[] = []
     for let i = 0; i < size; i++

@@ -1,7 +1,6 @@
-import "types.flo"
-import "@flo/io/file.flo"
-import "@flo/collections/map.flo"
-import "@flo/path/path.flo"
+import "@flo/io/file"
+import "@flo/collections/map"
+import "@flo/path/path"
 class FileId {
     id: int
     constructor(this, id: int){
@@ -18,6 +17,7 @@ class FloFile {
 }
 class Compiler {
     private current_file: FileId
+    private std_dir_path: string
     public current_file_contents: string
     public builtin_path: string
     private files: FloFile []
@@ -29,10 +29,17 @@ class Compiler {
         this.current_file_contents = null
         this.errors = []
         this.file_ids = new Map<string, FileId>()
-        this.builtin_path = "./src/runtime.flo"
+        this.std_dir_path = "./flolib"
+        this.builtin_path = Path.join(this.std_dir_path, "builtins.flo")
+    }
+    private find_module_path(this, fpath: string): string {
+        let path = fpath.replace("@flo", Path.join(this.std_dir_path, "packages"))
+        if !path.ends_with(".flo")
+            path+=".flo"
+        return Path.abspath(path)
     }
     public register_file(this, fpath: string): FileId {
-        let abspath = Path.abspath(fpath)
+        let abspath = this.find_module_path(fpath)
         let file_id = this.file_ids.get(abspath)
         if file_id != null return file_id
         file_id = new FileId(this.files.length)

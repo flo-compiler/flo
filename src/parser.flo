@@ -1,4 +1,4 @@
-import "types.flo"
+import "types"
 class Node {
     range: FloRange
     constructor(this, range: FloRange){
