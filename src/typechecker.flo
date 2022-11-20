@@ -476,7 +476,7 @@ fnc dump_bin_op(op: BinaryOp): string {
     if op == BinaryOp.EEQ
         return "=="
     if op == BinaryOp.NEQ
-        return "!"
+        return "!="
     if op == BinaryOp.SL
         return "<<"
     if op == BinaryOp.SR
@@ -1965,8 +1965,11 @@ class TypeChecker {
         }
         if op == BinaryOp.ADD or op == BinaryOp.SUB and is_pointer(left.value_type) and right.value_type.kind == TypeKind.INT {
             return new BinaryExpression(left, op, right, left.value_type, false)
+        } if op == BinaryOp.RANGE and left.value_type.kind == TypeKind.INT and right.value_type.kind == TypeKind.INT {
+            let range_class_id = this.program.modules[0].scopes[0].classes.get("Range")
+            let range_type = new ObjectType(range_class_id)
+            return new NewExpression(range_type, [left, right], true) as BinaryExpression
         }
-        //TODO: Handle Range
         this.error(ErrorKind.TYPE, "Illegal binary operation '$(dump_bin_op(op))' between types '$(this.dump_type(left.value_type))' and '$(this.dump_type(right.value_type))'", binary_node.range)
         return null
     }
