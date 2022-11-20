@@ -1,7 +1,5 @@
 fnc main(): int {
    let x = 10
-   let mystring = "myfile.flo"
-   let ends_with = mystring.ends_with(".flo") ? 1 : 0
-   println("$ends_with")
+   let mystring = "$x myfile.flo"
    return mystring.length
 }
