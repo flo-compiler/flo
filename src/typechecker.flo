@@ -878,7 +878,7 @@ class TypeChecker {
     }
     private get_current_function_type(this): FunctionType {
         if this.current_method != null
-            return this.get_current_class().methods[this.current_method.id].method_type
+            return get_class_prop_type(this.program, this.current_method) as FunctionType
         return this.get_current_function().fnc_type
     }
     private get_current_class(this): Class {
@@ -1101,7 +1101,10 @@ class TypeChecker {
         let param_strings = ""
         for let i = 0; i < generic_params.length; i++ {
             let param_name = generic_params[i].name.value
-            param_strings += "$(this.dump_type(types[i])),"
+            param_strings += "$(this.dump_type(types[i]))"
+            if (i < generic_params.length - 1){
+                param_strings += ", "
+            }
             generic_scope.type_aliases.set(param_name, types[i])
         }
         let instantiated_generic_name = "$name<$param_strings>"
