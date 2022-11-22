@@ -94,9 +94,8 @@ class CodeGen {
         this.modules = []
         this.continue_bb = null
         this.break_bb = null
-        let global_var_map: Map<string, LLVMValueRef>
         this.program_ctx = LLVMContextCreate()
-        this.global_var_scope = global_var_map
+        this.global_var_scope = new Map<string, LLVMValueRef>()
         for let i = 0; i < program.modules.length; ++i {
             this.modules << this.codegen_module(program.modules[i])
         }
@@ -142,14 +141,10 @@ class CodeGen {
         return LLVMConstInt(LLVMIntTypeInContext(this.program_ctx, WORD_SIZE), i, false)
     }
     private codegen_module(this, module: Module): LLVMModuleRef {
-        let module_string_scope: Map<string, LLVMValueRef>
-        let module_intrinsic_scope: Map<string, IntrinsicResult>
-        let module_classes: Map<string, CGClassType>
-        let module_enums: Map<string, CGEnumType>
-        this.module_string_scope = module_string_scope
-        this.module_intrinsic_scope = module_intrinsic_scope
-        this.module_classes = module_classes
-        this.module_enums = module_enums
+        this.module_string_scope = new Map<string, LLVMValueRef>()
+        this.module_intrinsic_scope = new Map<string, IntrinsicResult>()
+        this.module_classes = new Map<string, CGClassType>()
+        this.module_enums = new Map<string, CGEnumType>()
         this.module = LLVMModuleCreateWithNameInContext(module.name.to_cstring(), this.program_ctx)
         this.debugInfoObj = new DebugInfo(this.module, module.name)
         this.codegen_imported_symbols(module.imported_symbols)

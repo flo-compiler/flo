@@ -63,7 +63,7 @@ class Compiler(Visitor):
         # Write executable
         if not options.no_output:
             basename = options.output_file.replace("<file>", basename)
-            with open(f"{basename}.o", "wb") as object:
+            with open(f"{basename}", "wb") as object:
                 object.write(target_machine.emit_object(llvm_module))
                 object.close()
            # subprocess.run(["clang", f"{basename}.o", "-o" f"{basename}"])

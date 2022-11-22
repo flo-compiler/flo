@@ -19,24 +19,28 @@ LLVM_LDFLAGS=`$(LLVM_BIN_PATH)/llvm-config --ldflags --libs --system-libs`
 
 FLO_INSTALL_PATH = ~/flo
 
+define compile_and_link_fc
+	./$(1) src/main.flo -o $(1).o
+	$(CXX) $(LLVM_CXXFLAGS) $(1).o $(LLVM_LDFLAGS) -o $(2)
+endef
+
 all: flo
 
-flo: flo.o
-	$(CXX) $(LLVM_CXXFLAGS) $^ $(LLVM_LDFLAGS) -o $@ 
-
-flo.o: src/*.flo
-	$(FC) $(FCFLAGS) src/main.flo -o flo
+flo: src/*.flo
+	$(call compile_and_link_fc,$(FC),flo)
 
 install: all
 	cp -f flo $(FLO_INSTALL_PATH)
 	ln -f $(FLO_INSTALL_PATH) /usr/bin/flo
 
-build: stage0
-	$^ $(FCFLAGS) src/main.flo -o flo.o
-	flo
+bootstrap: stage0 stage1
+	$(call compile_and_link_fc,stage1,flo)
 
 stage0: bootstrap/flo.ll
 	clang-15 $^ $(LLVM_LDFLAGS) -o $@
 
+stage1: stage0 src/main.flo
+	$(call compile_and_link_fc,stage0,$@)
+
 clean:
-	rm -f *.o flo
+	rm -f *.o flo stage0 stage1
