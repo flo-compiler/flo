@@ -197,7 +197,7 @@ class Array <T> {
         return "[$(this.join(", "))]"
     }
 }
-const STDOUT = 0
+const STDOUT = 1
 fnc write(res: int, buf: i8*, len: int)
 fnc print(str: string){
     write(STDOUT, str.get_bytes(), str.length)

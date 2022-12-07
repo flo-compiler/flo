@@ -2,6 +2,7 @@
 **/.vscode/**
 *.o
 *.so
+*.a
 **/*.vsix
 flo
 /journal

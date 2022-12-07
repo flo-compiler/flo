@@ -96,13 +96,17 @@ class CodeGen {
         this.break_bb = null
         this.program_ctx = LLVMContextCreate()
         this.global_var_scope = new Map<string, LLVMValueRef>()
-        for let i = 0; i < program.modules.length; ++i {
+        let i = program.uses_builtins ? 0 : 1
+        for i; i < program.modules.length; ++i {
             this.modules << this.codegen_module(program.modules[i])
         }
         this.link_modules()
         return new GeneratedModule(this.modules[0])
     }
     private link_modules(this){
+        if this.program.uses_builtins {
+            this.modules.swap(0, 1)
+        }
         for let i = 1; i < this.modules.length; ++i {
             LLVMLinkModules2(this.modules[0], this.modules[i])
         }

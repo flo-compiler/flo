@@ -30,24 +30,11 @@ def main():
         help="Place the output into <file>.",
     )
     parser.add_option(
-        "--no-output",
-        dest="no_output",
-        action="store_true",
-        help="Compile with no output.",
-    )
-    parser.add_option(
         "-O",
         dest="opt_level",
-        default=1,
+        default=0,
         action="store",
         help="Specify the compiler's optimization level which is a value from 0-3.",
-    )
-    parser.add_option(
-        "-e",
-        "--execute",
-        dest="execute",
-        action="store_true",
-        help="Execute file after compiling.",
     )
     parser.add_option(
         "-v",

@@ -1,82 +1,129 @@
 import "types.flo"
+fnc LLVMInitializeAMDGPUTargetInfo()
+fnc LLVMInitializeAMDGPUTarget()
+fnc LLVMInitializeAMDGPUTargetMC()
+fnc LLVMInitializeAMDGPUAsmPrinter()
+fnc LLVMInitializeAMDGPUAsmParser()
+// Dissass?
+
+fnc LLVMInitializeSystemZTargetInfo()
+fnc LLVMInitializeSystemZTarget()
+fnc LLVMInitializeSystemZTargetMC()
+fnc LLVMInitializeSystemZAsmPrinter()
+fnc LLVMInitializeSystemZAsmParser()
+fnc LLVMInitializeSystemZDisassembler()
+
+fnc LLVMInitializeHexagonTargetInfo()
+fnc LLVMInitializeHexagonTarget()
+fnc LLVMInitializeHexagonTargetMC()
+fnc LLVMInitializeHexagonAsmPrinter()
+// Parser?
+fnc LLVMInitializeHexagonDisassembler()
+
+fnc LLVMInitializeNVPTXTargetInfo()
+fnc LLVMInitializeNVPTXTarget()
+fnc LLVMInitializeNVPTXTargetMC()
+fnc LLVMInitializeNVPTXAsmPrinter()
+// Parser?
+
+fnc LLVMInitializeMSP430TargetInfo()
+fnc LLVMInitializeMSP430Target()
+fnc LLVMInitializeMSP430TargetMC()
+fnc LLVMInitializeMSP430AsmPrinter()
+// Parser?
+
+fnc LLVMInitializeXCoreTargetInfo()
+fnc LLVMInitializeXCoreTarget()
+fnc LLVMInitializeXCoreTargetMC()
+fnc LLVMInitializeXCoreAsmPrinter()
+// Parser?
+fnc LLVMInitializeXCoreDisassembler()
+
+fnc LLVMInitializeMipsTargetInfo()
+fnc LLVMInitializeMipsTarget()
+fnc LLVMInitializeMipsTargetMC()
+fnc LLVMInitializeMipsAsmPrinter()
+fnc LLVMInitializeMipsAsmParser()
+fnc LLVMInitializeMipsDisassembler()
+
+fnc LLVMInitializeAArch64TargetInfo()
+fnc LLVMInitializeAArch64Target()
+fnc LLVMInitializeAArch64TargetMC()
+fnc LLVMInitializeAArch64AsmPrinter()
+fnc LLVMInitializeAArch64AsmParser()
+fnc LLVMInitializeAArch64Disassembler()
+
+fnc LLVMInitializeARMTargetInfo()
+fnc LLVMInitializeARMTarget()
+fnc LLVMInitializeARMTargetMC()
+fnc LLVMInitializeARMAsmPrinter()
+fnc LLVMInitializeARMAsmParser()
+fnc LLVMInitializeARMDisassembler()
+
+fnc LLVMInitializePowerPCTargetInfo()
+fnc LLVMInitializePowerPCTarget()
+fnc LLVMInitializePowerPCTargetMC()
+fnc LLVMInitializePowerPCAsmPrinter()
+fnc LLVMInitializePowerPCAsmParser()
+fnc LLVMInitializePowerPCDisassembler()
+
+fnc LLVMInitializeSparcTargetInfo()
+fnc LLVMInitializeSparcTarget()
+fnc LLVMInitializeSparcTargetMC()
+fnc LLVMInitializeSparcAsmPrinter()
+fnc LLVMInitializeSparcAsmParser()
+fnc LLVMInitializeSparcDisassembler()
+
 fnc LLVMInitializeX86TargetInfo()
 fnc LLVMInitializeX86Target()
 fnc LLVMInitializeX86TargetMC()
 fnc LLVMInitializeX86AsmPrinter()
 fnc LLVMInitializeX86AsmParser()
+fnc LLVMInitializeX86Disassembler()
+
+fnc LLVMInitializeBPFTargetInfo()
+fnc LLVMInitializeBPFTarget()
+fnc LLVMInitializeBPFTargetMC()
+fnc LLVMInitializeBPFAsmPrinter()
+// Parser?
+fnc LLVMInitializeBPFDisassembler()
+
+fnc LLVMInitializeLanaiTargetInfo()
+fnc LLVMInitializeLanaiTarget()
+fnc LLVMInitializeLanaiTargetMC()
+fnc LLVMInitializeLanaiAsmPrinter()
+fnc LLVMInitializeLanaiAsmParser()
+fnc LLVMInitializeLanaiDisassembler()
+
+fnc LLVMInitializeRISCVTargetInfo()
+fnc LLVMInitializeRISCVTarget()
+fnc LLVMInitializeRISCVTargetMC()
+fnc LLVMInitializeRISCVAsmPrinter()
+fnc LLVMInitializeRISCVAsmParser()
+fnc LLVMInitializeRISCVDisassembler()
 
 fnc LLVMInitializeWebAssemblyTargetInfo()
 fnc LLVMInitializeWebAssemblyTarget()
 fnc LLVMInitializeWebAssemblyTargetMC()
 fnc LLVMInitializeWebAssemblyAsmPrinter()
 fnc LLVMInitializeWebAssemblyAsmParser()
+fnc LLVMInitializeWebAssemblyDisassembler()
+
+/** Linked with TargetIntializationMacros.c */
+fnc LLVM_InitializeNativeTarget(): bool
+fnc LLVM_InitializeNativeAsmParser(): bool
+fnc LLVM_InitializeNativeAsmPrinter(): bool 
+fnc LLVM_InitializeNativeDisassembler(): bool
 
 
-
-
-fnc LLVMInitializeNativeTarget() {
-  LLVMInitializeX86TargetInfo()
-  LLVMInitializeX86Target()
-  LLVMInitializeX86TargetMC()
-}
-fnc LLVMInitializeNativeAsmParser() {
-  LLVMInitializeX86AsmParser()
-}
-fnc LLVMInitializeNativeAsmPrinter() {
-  LLVMInitializeX86AsmPrinter()
-}
-
-
-fnc LLVMInitializeAllTargets() {
-  LLVMInitializeX86Target()
-  LLVMInitializeWebAssemblyTarget()
-}
-fnc LLVMInitializeAllTargetInfos(){
-  LLVMInitializeX86TargetInfo()
-  LLVMInitializeWebAssemblyTargetInfo()
-}
-fnc LLVMInitializeAllTargetMCs(){
-  LLVMInitializeX86TargetMC()
-  LLVMInitializeWebAssemblyTargetMC()
-}
-fnc LLVMInitializeAllTargetPrinters(){
-  LLVMInitializeX86AsmPrinter()
-  LLVMInitializeWebAssemblyAsmPrinter()
-}
-fnc LLVMInitializeAllTargetParsers(){
-  LLVMInitializeX86AsmParser()
-  LLVMInitializeWebAssemblyAsmParser()
-}
+fnc LLVM_InitializeAllTargetInfos()
+fnc LLVM_InitializeAllTargets() 
+fnc LLVM_InitializeAllTargetMCs()
+fnc LLVM_InitializeAllAsmPrinters()
+fnc LLVM_InitializeAllAsmParsers()
+fnc LLVM_InitializeAllDisassemblers()
 
 /*===-- Target ------------------------------------------------------------===*/
-/** Returns the first llvm::Target in the registered targets list. */
-fnc LLVMGetFirstTarget(): LLVMTargetRef
-/** Finds the target corresponding to the given name and stores it in \p T.
-  Returns 0 on success. */
-fnc LLVMGetTargetFromName(Name: i8*): LLVMTargetRef
-fnc LLVMGetTargetName(T: LLVMTargetRef): i8*
-
-/** Returns the description  of a target. See llvm::Target::getDescription */
-fnc LLVMGetTargetDescription(T: LLVMTargetRef): i8*
-/** Emits an asm or object file for the given module to the filename. This
-  wraps several c++ only classes (among them a file stream). Returns any
-  error in ErrorMessage. Use LLVMDisposeMessage to dispose the message. */
-  /** Finds the target corresponding to the given triple and stores it in \p T.
-  Returns 0 on success. Optionally returns any error in ErrorMessage.
-  Use LLVMDisposeMessage to dispose the message. */
-fnc LLVMGetTargetFromTriple(Triple: i8*, T: LLVMTargetRef *, ErrorMessage: i8**): LLVMBool
-/** Create a DataLayout based on the targetMachine. */
-fnc LLVMCreateTargetDataLayout(T: LLVMTargetMachineRef): i8*
-fnc LLVMGetHostCPUFeatures(): i8*
-fnc LLVMCreateTargetMachine(T: LLVMTargetRef, Triple: i8*, CPU: i8*, Features: i8*, Level: LLVMCodeGenOptLevel, Reloc: LLVMRelocMode, CodeModel: LLVMCodeModel): LLVMTargetMachineRef
-/** Dispose the LLVMTargetMachineRef instance generated by
-  LLVMCreateTargetMachine. */
-fnc LLVMDisposeTargetMachine(T: LLVMTargetMachineRef)
-fnc LLVMGetTargetMachineTriple(T: LLVMTargetMachineRef): i8*
-fnc LLVMTargetMachineEmitToFile(T: LLVMTargetMachineRef, M: LLVMModuleRef, Filename: i8*, codegen: LLVMCodeGenFileType, ErrorMessage: i8**): LLVMBool
-/** Get a triple for the host machine as a string. The result needs to be
-  disposed with LLVMDisposeMessage. */
-fnc LLVMGetDefaultTargetTriple(): i8*
 
 fnc LLVMGetModuleDataLayout(M: LLVMModuleRef): LLVMTargetDataRef
 
