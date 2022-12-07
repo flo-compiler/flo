@@ -1,25 +1,25 @@
-fnc printf(fmt: i8*, n: i32 = 0): i32
+fnc printf(fmt: i8*, n = 0): int
 const VMSTACK_CAPACITY = 1000
 class StackVM {
-    pc: i32
-    sp: i32
-    mem: i32*
-    typ: i32
-    dat: i32
+    pc: int
+    sp: int
+    mem: int*
+    typ: int
+    dat: int
     running: bool
     constructor(this) {
         this.pc = 10
         this.sp = 0
         this.typ = 0
-        let mem: i32*(VMSTACK_CAPACITY)
+        let mem: int*(VMSTACK_CAPACITY)
         this.mem = mem
         this.dat = 0
         this.running = true
     }
-    private getType(instruction: i32): i32 {
+    private getType(instruction: int): int {
         return (0xc0000000 and instruction) >> 30
     }
-    private getData(instruction: i32): i32 {
+    private getData(instruction: int): int {
         return (0x3fffffff and instruction)
     }
     private fetch(this){
@@ -68,11 +68,11 @@ class StackVM {
             this.decode()
             this.execute()
         }
-        printf("output: %x\n", this.mem[this.sp] as i32)
+        printf("output: %x\n", this.mem[this.sp])
     }
     loadProgram(this, prog: int*, size: int){
         for let i = 0; i < size; i++ {
-            this.mem[this.pc + i] = prog[i] as i32
+            this.mem[this.pc + i] = prog[i]
         }
     }
 }
