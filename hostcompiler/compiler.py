@@ -49,27 +49,26 @@ class Compiler(Visitor):
             with open(f"{basename}.ll", "w") as file:
                 file.write(str(self.module))
             exit(e)
+        
         # Passes
         pass_manager_builder = llvm.create_pass_manager_builder()
         pass_manager_builder.opt_level = int(options.opt_level)
         pass_manager = llvm.create_module_pass_manager()
         pass_manager_builder.populate(pass_manager)
         pass_manager.run(llvm_module)
+        basename = options.output_file.replace("<file>", basename)
         if options.emit:
             with open(f"{basename}.ll", "w") as object:
                 object.write(str(llvm_module).replace(
-                    "<string>", self.module.name))
-                object.close()
+                "<string>", self.module.name))
+            object.close()
         # Write executable
-        if not options.no_output:
-            basename = options.output_file.replace("<file>", basename)
+        if options.output_file != "<file>":
             with open(f"{basename}", "wb") as object:
                 object.write(target_machine.emit_object(llvm_module))
                 object.close()
-           # subprocess.run(["clang", f"{basename}.o", "-o" f"{basename}"])
-        # Execute code
-        if options.execute:
-            # And an execution engine with an empty backing module
+        else:
+            # Execute code
             if self.context.get("main") == None:
                 CompileError("No main method to execute").throw()
             backing_mod = llvm.parse_assembly("")
@@ -83,6 +82,8 @@ class Compiler(Visitor):
                 args_array = (c_char_p * (len(args)+1))()
                 args_array[:-1] = args
                 cfn(len(args), args_array)
+
+           # subprocess.run(["clang", f"{basename}.o", "-o" f"{basename}"])
 
     def visitIntNode(self, node: IntNode):
         if node.expects:
@@ -103,8 +104,8 @@ class Compiler(Visitor):
         str_val = node.tok.value
         values = []
         str_len = None
-        for node in node.nodes:
-            val = self.visit(node)
+        for node_args in node.nodes:
+            val = self.visit(node_args)
             values.append(val)
             str_val = str_val.replace("$", val.fmt, 1)
         fmt = FloConst.create_global_str(str_val)

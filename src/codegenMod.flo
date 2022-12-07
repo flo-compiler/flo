@@ -2,7 +2,9 @@ import "llvm/analysis"
 import "llvm/bitwriter"
 import "llvm/executionEngine"
 import "llvm/passManagerBuilder"
+import "llvm/transforms"
 import "llvm/target"
+import "llvm/targetMachine"
 class GeneratedModule {
     private llvm_mod: LLVMModuleRef
     private errors: i8*
@@ -11,12 +13,11 @@ class GeneratedModule {
         this.errors = null
         LLVMVerifyModule(this.llvm_mod, LLVMVerifierFailureAction.LLVMAbortProcessAction, &this.errors)
         this.check_errors()
-        LLVMLinkInMCJIT()
-        LLVMInitializeAllTargets()
-        LLVMInitializeAllTargetInfos()
-        LLVMInitializeAllTargetMCs()
-        LLVMInitializeAllTargetPrinters()
-        LLVMInitializeAllTargetParsers()
+        LLVM_InitializeAllTargetInfos()
+        LLVM_InitializeAllTargets()
+        LLVM_InitializeAllTargetMCs()
+        LLVM_InitializeAllAsmParsers()
+        LLVM_InitializeAllAsmPrinters()
     }
     private check_errors(this){
         if (this.errors[0] != 0) {
@@ -25,42 +26,41 @@ class GeneratedModule {
         }
     }
     public run_passes(this, level: int){
-        let fpm = LLVMCreateFunctionPassManagerForModule(this.llvm_mod)
-        // let mpm = LLVMCreatePassManager()
-        let pmb = LLVMPassManagerBuilderCreate()
-        LLVMPassManagerBuilderSetOptLevel(pmb, level)
-        LLVMPassManagerBuilderUseInlinerWithThreshold(pmb, 255)
-        // LLVMPassManagerBuilderPopulateModulePassManager(pmb, mpm)
-        let func = LLVMGetFirstFunction(this.llvm_mod)
-        LLVMPassManagerBuilderPopulateFunctionPassManager(pmb, fpm)
-        while func != null {
-            LLVMRunFunctionPassManager(fpm, func)
-            func = LLVMGetNextFunction(func)
-        }
-        // LLVMRunPassManager(mpm, this.llvm_mod)
-        LLVMDisposePassManager(fpm)
-        // LLVMDisposePassManager(mpm)
-        LLVMPassManagerBuilderDispose(pmb)
+        let pm = LLVMCreatePassManager()
+        let pmp = LLVMPassManagerBuilderCreate()
+        LLVMAddInternalizePass(pm, 1)
+        LLVMAddGlobalDCEPass(pm)
+        LLVMAddGlobalOptimizerPass(pm)
+        LLVMAddInstructionCombiningPass(pm)
+        LLVMAddScalarReplAggregatesPass(pm)
+        LLVMAddFunctionInliningPass(pm)
+        LLVMPassManagerBuilderSetOptLevel(pmp, level)
+        LLVMPassManagerBuilderPopulateModulePassManager(pmp, pm)
+        LLVMRunPassManager(pm, this.llvm_mod)
+        LLVMPassManagerBuilderDispose(pmp)
+        LLVMDisposePassManager(pm)
     }
     public exec(this){
+        LLVMLinkInMCJIT()
         let module_copy = this.copy_llvm_module()
         let engine: LLVMExecutionEngineRef = null
         if (LLVMCreateExecutionEngineForModule(&engine, module_copy, &this.errors) != 0) {
             println("failed to create execution engine")
             return
         }
-        let main_fnc = LLVMGetFunctionAddress(engine, "main")  as () => int
+        let main_fnc = LLVMGetNamedFunction(module_copy, "main")
         if main_fnc == null {
             println("Main function not found in module; can't execute")
             LLVMDisposeExecutionEngine(engine)
             return
         }
-        println("Exited with code: $(main_fnc())")
+        let ret = LLVMRunFunctionAsMain(engine, main_fnc, 0, null, null)
+        println("Exited with code: $ret")
         LLVMDisposeExecutionEngine(engine)
     }
     public create_target_machine(this, triple_str: string): LLVMTargetMachineRef {
         let triple = triple_str == "" ? LLVMGetDefaultTargetTriple() : triple_str.to_cstring()
-        let target = LLVMGetFirstTarget()
+        let target: LLVMTargetRef = null
         if (LLVMGetTargetFromTriple(triple, &target, &this.errors) != 0) {
             println("failed to get target triple: $triple_str")
         }
@@ -73,7 +73,7 @@ class GeneratedModule {
         let module_copy = this.copy_llvm_module()
         LLVMSetDataLayout(module_copy, LLVMCreateTargetDataLayout(tm))
         LLVMSetTarget(module_copy, LLVMGetTargetMachineTriple(tm))
-        if (LLVMTargetMachineEmitToFile(tm, module_copy, fn.to_cstring(), 1, &this.errors) != 0) {
+        if (LLVMTargetMachineEmitToFile(tm, module_copy, fn.to_cstring(), LLVMCodeGenFileType.LLVMObjectFile, &this.errors) != 0) {
             println("target machine failed to emit object code")
         }
         this.check_errors()

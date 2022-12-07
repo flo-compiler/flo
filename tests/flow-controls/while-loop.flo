@@ -1,12 +1,12 @@
-fnc main(): float {
+fnc main(): int {
     let x = 10
     let y: int = null
     if null != y {
-        return 1.0
+        return 1.0 as int
     }
     while x > 0 {
         x = x - 1
         y = y + x
     }
-    return y as float
+    return y
 }

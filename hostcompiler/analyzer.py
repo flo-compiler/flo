@@ -154,8 +154,8 @@ class Analyzer(Visitor):
         return FloInt(None, 8)
 
     def visitStrNode(self, node: StrNode):
-        for node in node.nodes:
-            self.visit(node)
+        for arg_node in node.nodes:
+            self.visit(arg_node)
         if node.expects == FloPointer(FloInt(None, 8)):
             return node.expects
         return FloObject(self.context.get("string"))

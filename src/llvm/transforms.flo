@@ -1,0 +1,207 @@
+/**
+------------------------------------
+    File: Transforms/IPO.h
+------------------------------------
+**/
+/** See llvm::createConstantMergePass function. */
+fnc LLVMAddConstantMergePass(PM: LLVMPassManagerRef)
+
+/** See llvm::createMergeFunctionsPass function. */
+fnc LLVMAddMergeFunctionsPass(PM: LLVMPassManagerRef)
+
+/** See llvm::createCalledValuePropagationPass function. */
+fnc LLVMAddCalledValuePropagationPass(PM: LLVMPassManagerRef)
+
+/** See llvm::createDeadArgEliminationPass function. */
+fnc LLVMAddDeadArgEliminationPass(PM: LLVMPassManagerRef)
+
+/** See llvm::createFunctionAttrsPass function. */
+fnc LLVMAddFunctionAttrsPass(PM: LLVMPassManagerRef)
+
+/** See llvm::createFunctionInliningPass function. */
+fnc LLVMAddFunctionInliningPass(PM: LLVMPassManagerRef)
+
+/** See llvm::createAlwaysInlinerPass function. */
+fnc LLVMAddAlwaysInlinerPass(PM: LLVMPassManagerRef)
+
+/** See llvm::createGlobalDCEPass function. */
+fnc LLVMAddGlobalDCEPass(PM: LLVMPassManagerRef)
+
+/** See llvm::createGlobalOptimizerPass function. */
+fnc LLVMAddGlobalOptimizerPass(PM: LLVMPassManagerRef)
+
+/** See llvm::createIPSCCPPass function. */
+fnc LLVMAddIPSCCPPass(PM: LLVMPassManagerRef)
+
+/** See llvm::createInternalizePass function. */
+fnc LLVMAddInternalizePass(PM: LLVMPassManagerRef, AllButMain: int)
+
+/** See llvm::createStripDeadPrototypesPass function. */
+fnc LLVMAddStripDeadPrototypesPass(PM: LLVMPassManagerRef)
+
+/** See llvm::createStripSymbolsPass function. */
+fnc LLVMAddStripSymbolsPass(PM: LLVMPassManagerRef)
+/**
+------------------------------------
+    File: Transforms/Vectorize.h
+------------------------------------
+**/
+/** See llvm::createLoopVectorizePass function. */
+fnc LLVMAddLoopVectorizePass(PM: LLVMPassManagerRef)
+
+/** See llvm::createSLPVectorizerPass function. */
+fnc LLVMAddSLPVectorizePass(PM: LLVMPassManagerRef)
+
+
+/**
+------------------------------------
+    File: Transforms/Utils.h
+------------------------------------
+**/
+/** See llvm::createLowerSwitchPass function. */
+fnc LLVMAddLowerSwitchPass(PM: LLVMPassManagerRef)
+
+/** See llvm::createPromoteMemoryToRegisterPass function. */
+fnc LLVMAddPromoteMemoryToRegisterPass(PM: LLVMPassManagerRef)
+
+/** See llvm::createAddDiscriminatorsPass function. */
+fnc LLVMAddAddDiscriminatorsPass(PM: LLVMPassManagerRef)
+
+
+/**
+------------------------------------
+    File: Transforms/InstCombine.h
+------------------------------------
+**/
+/** See llvm::createInstructionCombiningPass function. */
+fnc LLVMAddInstructionCombiningPass(PM: LLVMPassManagerRef)
+
+
+/** 
+---------------------------------
+    File: Transforms/Scalar.h 
+---------------------------------
+**
+/
+/** See llvm::createAggressiveDCEPass function. */
+fnc LLVMAddAggressiveDCEPass(PM: LLVMPassManagerRef)
+
+/** See llvm::createDeadCodeEliminationPass function. */
+fnc LLVMAddDCEPass(PM: LLVMPassManagerRef)
+
+/** See llvm::createBitTrackingDCEPass function. */
+fnc LLVMAddBitTrackingDCEPass(PM: LLVMPassManagerRef)
+
+/** See llvm::createAlignmentFromAssumptionsPass function. */
+fnc LLVMAddAlignmentFromAssumptionsPass(PM: LLVMPassManagerRef)
+
+/** See llvm::createCFGSimplificationPass function. */
+fnc LLVMAddCFGSimplificationPass(PM: LLVMPassManagerRef)
+
+/** See llvm::createDeadStoreEliminationPass function. */
+fnc LLVMAddDeadStoreEliminationPass(PM: LLVMPassManagerRef)
+
+/** See llvm::createScalarizerPass function. */
+fnc LLVMAddScalarizerPass(PM: LLVMPassManagerRef)
+
+/** See llvm::createMergedLoadStoreMotionPass function. */
+fnc LLVMAddMergedLoadStoreMotionPass(PM: LLVMPassManagerRef)
+
+/** See llvm::createGVNPass function. */
+fnc LLVMAddGVNPass(PM: LLVMPassManagerRef)
+
+/** See llvm::createGVNPass function. */
+fnc LLVMAddNewGVNPass(PM: LLVMPassManagerRef)
+
+/** See llvm::createIndVarSimplifyPass function. */
+fnc LLVMAddIndVarSimplifyPass(PM: LLVMPassManagerRef)
+
+/** See llvm::createInstSimplifyLegacyPass function. */
+fnc LLVMAddInstructionSimplifyPass(PM: LLVMPassManagerRef)
+
+/** See llvm::createJumpThreadingPass function. */
+fnc LLVMAddJumpThreadingPass(PM: LLVMPassManagerRef)
+
+/** See llvm::createLICMPass function. */
+fnc LLVMAddLICMPass(PM: LLVMPassManagerRef)
+
+/** See llvm::createLoopDeletionPass function. */
+fnc LLVMAddLoopDeletionPass(PM: LLVMPassManagerRef)
+
+/** See llvm::createLoopIdiomPass function */
+fnc LLVMAddLoopIdiomPass(PM: LLVMPassManagerRef)
+
+/** See llvm::createLoopRotatePass function. */
+fnc LLVMAddLoopRotatePass(PM: LLVMPassManagerRef)
+
+/** See llvm::createLoopRerollPass function. */
+fnc LLVMAddLoopRerollPass(PM: LLVMPassManagerRef)
+
+/** See llvm::createLoopUnrollPass function. */
+fnc LLVMAddLoopUnrollPass(PM: LLVMPassManagerRef)
+
+/** See llvm::createLoopUnrollAndJamPass function. */
+fnc LLVMAddLoopUnrollAndJamPass(PM: LLVMPassManagerRef)
+
+/** See llvm::createLowerAtomicPass function. */
+fnc LLVMAddLowerAtomicPass(PM: LLVMPassManagerRef)
+
+/** See llvm::createMemCpyOptPass function. */
+fnc LLVMAddMemCpyOptPass(PM: LLVMPassManagerRef)
+
+/** See llvm::createPartiallyInlineLibCallsPass function. */
+fnc LLVMAddPartiallyInlineLibCallsPass(PM: LLVMPassManagerRef)
+
+/** See llvm::createReassociatePass function. */
+fnc LLVMAddReassociatePass(PM: LLVMPassManagerRef)
+
+/** See llvm::createSCCPPass function. */
+fnc LLVMAddSCCPPass(PM: LLVMPassManagerRef)
+
+/** See llvm::createSROAPass function. */
+fnc LLVMAddScalarReplAggregatesPass(PM: LLVMPassManagerRef)
+
+/** See llvm::createSROAPass function. */
+fnc LLVMAddScalarReplAggregatesPassSSA(PM: LLVMPassManagerRef)
+
+/** See llvm::createSROAPass function. */
+fnc LLVMAddScalarReplAggregatesPassWithThreshold(PM: LLVMPassManagerRef, Threshold: int)
+
+/** See llvm::createSimplifyLibCallsPass function. */
+fnc LLVMAddSimplifyLibCallsPass(PM: LLVMPassManagerRef)
+
+/** See llvm::createTailCallEliminationPass function. */
+fnc LLVMAddTailCallEliminationPass(PM: LLVMPassManagerRef)
+
+/** See llvm::demotePromoteMemoryToRegisterPass function. */
+fnc LLVMAddDemoteMemoryToRegisterPass(PM: LLVMPassManagerRef)
+
+/** See llvm::createVerifierPass function. */
+fnc LLVMAddVerifierPass(PM: LLVMPassManagerRef)
+
+/** See llvm::createCorrelatedValuePropagationPass function */
+fnc LLVMAddCorrelatedValuePropagationPass(PM: LLVMPassManagerRef)
+
+/** See llvm::createEarlyCSEPass function */
+fnc LLVMAddEarlyCSEPass(PM: LLVMPassManagerRef)
+
+/** See llvm::createEarlyCSEPass function */
+fnc LLVMAddEarlyCSEMemSSAPass(PM: LLVMPassManagerRef)
+
+/** See llvm::createLowerExpectIntrinsicPass function */
+fnc LLVMAddLowerExpectIntrinsicPass(PM: LLVMPassManagerRef)
+
+/** See llvm::createLowerConstantIntrinsicsPass function */
+fnc LLVMAddLowerConstantIntrinsicsPass(PM: LLVMPassManagerRef)
+
+/** See llvm::createTypeBasedAliasAnalysisPass function */
+fnc LLVMAddTypeBasedAliasAnalysisPass(PM: LLVMPassManagerRef)
+
+/** See llvm::createScopedNoAliasAAPass function */
+fnc LLVMAddScopedNoAliasAAPass(PM: LLVMPassManagerRef)
+
+/** See llvm::createBasicAliasAnalysisPass function */
+fnc LLVMAddBasicAliasAnalysisPass(PM: LLVMPassManagerRef)
+
+/** See llvm::createUnifyFunctionExitNodesPass function */
+fnc LLVMAddUnifyFunctionExitNodesPass(PM: LLVMPassManagerRef)

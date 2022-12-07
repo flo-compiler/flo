@@ -251,10 +251,16 @@ class ClassVarId(VarId){
     constructor(this, class_id: ClassId){
         super(VarIdKind.CLASS, class_id.module_id, class_id.id)
     }
+    public to_classId(this): ClassId {
+        return new ClassId(this.module_id, this.id)
+    }
 }
 class EnumVarId(VarId){
     constructor(this, enum_id: EnumId){
         super(VarIdKind.ENUM, enum_id.module_id, enum_id.id)
+    }
+    public to_enumId(this): EnumId {
+        return new EnumId(this.module_id, this.id)
     }
 }
 class ConstId(VarId) {
@@ -685,8 +691,10 @@ class Module {
     }
 }
 class Program {
+    uses_builtins: bool
     modules: Module[]
     constructor(this){
+        this.uses_builtins = false
         this.modules = []
     }
 }
@@ -973,12 +981,32 @@ class TypeChecker {
     }
     private get_var_from_current_scope(this, name: string): VarId {
         let current_scope = this.get_current_scope()
-        let value = current_scope.vars.get(name)
-        while current_scope.parent != null and value == null {
-            current_scope = get_scope(this.program, current_scope.parent)
+        let value: VarId = null
+        while value == null {
             value = current_scope.vars.get(name)
             if value == null
                 value = current_scope.functions.get(name)
+            if current_scope.parent == null or value != null
+                break
+            current_scope = get_scope(this.program, current_scope.parent)
+        }
+        // Get Var from builtins
+        if value == null and this.current_scope.module_id != 0 {
+            let previous_scope = this.current_scope
+            this.current_scope = this.program.modules[0].scopes[0].id
+            value = this.get_var_from_current_scope(name)
+            this.current_scope = previous_scope
+            if value != null {
+                this.program.uses_builtins = true
+                if value.kind == VarIdKind.FNC
+                    this.add_imported_fnc_to_module(name, value)
+                if value.kind == VarIdKind.VAR or value.kind == VarIdKind.CONST
+                    this.add_imported_var_to_module(name, value)
+                if value.kind == VarIdKind.CLASS
+                    this.add_imported_class_to_module(name, (value as ClassVarId).to_classId())
+                if value.kind == VarIdKind.ENUM
+                    this.add_imported_enum_to_module(name, (value as EnumVarId).to_enumId())
+            }
         }
         return value
     }
@@ -1000,6 +1028,19 @@ class TypeChecker {
             if (current_scope.parent == null) break
             current_scope = get_scope(this.program, current_scope.parent)
         }
+        // Get type from builtins
+        if this.current_scope.module_id != 0 {
+            let previous_scope = this.current_scope
+            this.current_scope = this.program.modules[0].scopes[0].id
+            let builtin_type = this.get_type_from_current_scope(name)
+            if builtin_type.kind != TypeKind.UNKNOWN {
+                this.program.uses_builtins = true
+                // Assume that there are no enums in builtins
+                this.add_imported_class_to_module(name, (builtin_type as ObjectType).class_id)
+            }
+            this.current_scope = previous_scope
+            return builtin_type
+        }
         return Type.unknown()
     }
     private create_child_scope_within_current_scope(this): Scope {
@@ -1015,7 +1056,7 @@ class TypeChecker {
     }
     public check(this, module_ast: ModuleAST, compiler: Compiler, filename: string): Program {
         this.compiler = compiler
-        this.include_builtins()
+        this.load_builtins_module()
         if this.has_errored() return null
         this.check_module(module_ast, filename)
         return this.program
@@ -1033,8 +1074,6 @@ class TypeChecker {
         module_scope.vars.set("false", const_id)
         module_scope.vars.set("null", const_id)
         this.current_scope = module_scope.id
-        if this.current_module > 0 
-            this.import_all_from_module(this.program.modules[0])
         this.current_method = null
         this.current_class = null
         this.current_function = null
@@ -1085,7 +1124,7 @@ class TypeChecker {
         this.current_module = prev_module
         return module
     }
-    private include_builtins(this){
+    private load_builtins_module(this){
         this.lex_and_parse_typecheck_file(this.compiler.builtin_path, null)
     }
     private create_generic_instance_in_module(this, name: string, types: Type[]): Type {
@@ -1192,9 +1231,6 @@ class TypeChecker {
         scope.type_aliases.set(alias_name, type_)
         //TODO: Recursively look for object and enum types and import them into module
     }
-    // private add_imported_generic_to_module(this, generic_name: string, class_id: ClassId){
-    //     this.import_all_from_module(this.get_module(class_id.module_id))
-    // }
     private init_function_signature(this, arg_nodes: ArgNode[], return_type_node: TypeNode, args: FunctionArg[]): FunctionType {
         let arg_types: Type[] = []
         for let i = 0; i < arg_nodes.length; ++i {
