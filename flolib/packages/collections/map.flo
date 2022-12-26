@@ -30,34 +30,36 @@ class Map<T, U> {
         for let i = 0; i < str; ++i {
             hash = ((hash << 5) + hash) + (str.get_byte(i) as int)
         }
-        return hash
+        return hash % this.size
     }
     resize(this){
-        let original_size = this.size
+        let old_size = this.size
         this.size *= 2
         this.buckets = this.buckets.resize(this.size)
-        for let i = original_size; i < this.size; i++ {
+        for let i = old_size; i < this.size; i++ {
             this.buckets[i] = new Bucket<T, U>()
         }
     }
     set(this, key: T, value: U){
-        let hash = this.hash_fnc(key) % this.size
         if (this.size <= this.length) this.resize()
+        let hash = this.hash_fnc(key) % this.size
         while !this.buckets[hash].is_empty {
             if this.buckets[hash].key == key
                 break
-            hash++
+            hash = (hash + 1) % this.size
         } 
         this.length++
         this.buckets[hash].set(key, value)
     }
     get(this, key: T): U {
         let hash = this.hash_fnc(key) % this.size
-        while !this.buckets[hash].is_empty {
+        let count = 0
+        while !this.buckets[hash].is_empty and count <= this.length {
             if this.buckets[hash].key == key
                 break
             else
-                hash++
+                hash = (hash + 1) % this.size
+            count++
         }
         if !this.buckets[hash].is_empty
             if this.buckets[hash].key == key

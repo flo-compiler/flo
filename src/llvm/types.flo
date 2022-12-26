@@ -415,5 +415,4 @@ enum LLVMAtomicRMWBinOp {
 /* Execution engine */
 class LLVMExecutionEngineRef{}
 class LLVMGenericValueRef{}
-class LLVMExecutionEngineRef{}
 class LLVMMCJITMemoryManagerRef{}

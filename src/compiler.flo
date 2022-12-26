@@ -17,7 +17,7 @@ class FloFile {
     }
 }
 class Compiler {
-    private current_file: FileId
+    public current_file: FileId
     private std_dir_path: string
     public current_file_contents: string
     public builtin_path: string

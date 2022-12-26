@@ -1,4 +1,5 @@
 enum TokType {
+    ILLEGAL
     COL
     SEMICOL
     COMMA
@@ -160,6 +161,7 @@ enum TypeIdKind {
     ENUM
 }
 enum BinaryOp {
+    UNDEF
     ADD
     SUB
     MUL
@@ -193,6 +195,7 @@ enum BinaryOp {
     RANGE
 }
 enum UnaryOp {
+    UNDEF
     PREINCR
     PREDECR
     POSTINCR
@@ -202,6 +205,7 @@ enum UnaryOp {
     ADDROF
 }
 enum ACCESS_ATTR {
+    UNDEF
     PRIVATE
     PUBLIC
     PROTECTED

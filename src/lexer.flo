@@ -1,4 +1,6 @@
-import "types"
+import TokType in "types"
+import FloRange in "utils"
+import FloError, ErrorKind in "error"
 fnc string_to_kw_token(word: string): TokType {
     if word == "and"
         return TokType.AND_KW
@@ -70,7 +72,7 @@ fnc string_to_kw_token(word: string): TokType {
         return TokType.NEW_KW
     if word == "as"
         return TokType.AS_KW
-    return -1
+    return TokType.ILLEGAL
 }
 fnc is_identifier_char(char: i8): bool {
     return (char >= 'A' and char <= 'Z') or (char >= 'a' and char <= 'z') or (char == '_')
@@ -104,8 +106,8 @@ fnc get_escape_char(char: i8): i8 {
 }
 fnc heap_string(size: int): string {
     let buffer = new i8*(size)
-    let new_string = new string(buffer, 0)
-    new_string.size = size
+    let new_string = new string(buffer, size)
+    new_string.length = 0
     return new_string
 }
 fnc unescape(str: string): string {
@@ -389,8 +391,8 @@ class Lexer {
         }
         let value = this.text.substring(start, length)
         let range = this.get_range(length)
-        let keyword = 0
-        if (keyword = string_to_kw_token(value)) != -1 { 
+        let keyword: TokType = TokType.ILLEGAL
+        if (keyword = string_to_kw_token(value)) != TokType.ILLEGAL { 
             if this.peek() == '=' {
                 if keyword == TokType.AND_KW {
                     this.advance()
