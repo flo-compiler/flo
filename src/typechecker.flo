@@ -143,10 +143,12 @@ class FloatExpression (Expression) {
 }
 class StringExpression (Expression) {
     value: string
+    fmt_indices: int[]
     template_args: Expression[]
-    constructor(this, value: string, template_args: Expression[], value_type: Type){
+    constructor(this, value: string, fmt_indices: int[], template_args: Expression[], value_type: Type){
         super(ExpressionKind.STRING)
         this.template_args = template_args
+        this.fmt_indices = fmt_indices
         this.value_type = value_type
         this.value = value
         this.is_constant = true
@@ -1841,7 +1843,6 @@ class TypeChecker {
         let element_type = Type.unknown()
         let is_constant = true
         let array_type = expected_type
-        //TODO if we are a generic then add look at parameter to get expected type.
         if expected_type.kind == TypeKind.ARRAY {
             element_type = (expected_type as ArrayType).element_type
         } else if expected_type.kind == TypeKind.RESOLVED_GENERIC {
@@ -2070,8 +2071,7 @@ class TypeChecker {
         if op == BinaryOp.ADD or op == BinaryOp.SUB and is_pointer(left.value_type) and right.value_type.kind == TypeKind.INT {
             return new BinaryExpression(left, op, right, left.value_type, false)
         } if op == BinaryOp.RANGE and left.value_type.kind == TypeKind.INT and right.value_type.kind == TypeKind.INT {
-            let range_class_id = this.program.modules[0].scopes[0].classes.get("Range")
-            let range_type = new ObjectType(range_class_id)
+            let range_type = this.get_type_from_current_scope("Range")
             return new NewExpression(range_type, [left, right], true) as BinaryExpression
         }
         this.error(ErrorKind.TYPE, "Illegal binary operation '$(dump_bin_op(op))' between types '$(this.dump_type(left.value_type))' and '$(this.dump_type(right.value_type))'", binary_node.range)
@@ -2452,7 +2452,7 @@ class TypeChecker {
         if !is_i8_ptr(expected_type) {
             expected_type = this.get_type_from_current_scope("string")
         }
-        let str_exp = new StringExpression(str_node.value.value, template_args, expected_type)
+        let str_exp = new StringExpression(str_node.value.value, str_node.value.fmt_indices, template_args, expected_type)
         str_exp.value_type = expected_type
         return str_exp
     }

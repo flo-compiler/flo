@@ -30,14 +30,6 @@ class string {
         memcpy(this.buffer + this.length, other.buffer, other.length)
         return this
     }
-    public add_byte(this, char: i8){
-        if this.length + 1 >= this.size {
-            this.size *= 2
-            this.buffer = this.buffer.resize(this.size)
-        }
-        this.buffer[this.length]  = char
-        this.length++
-    }
     public __getitem__(this, index: int): string {
         let new_buffer = new i8*(2)
         new_buffer[0] = this.buffer[index]
@@ -128,6 +120,41 @@ class string {
     //     }
     //     return result
     // }
+}
+class StringBuilder {
+    private buffer: i8*
+    private size: int
+    private working_buffer: i8*
+    length: int
+    constructor(this, size: int){
+        this.size = size
+        this.buffer = new i8*(this.size)
+        this.working_buffer = this.buffer
+        this.length = 0
+    }
+    private resize(this){
+        this.size *= 2
+        this.buffer = this.buffer.resize(this.size)
+        this.working_buffer = this.buffer + this.length
+    }
+    public add_bytes_length(this, bytes: i8*, length: int){
+        if (this.size - this.length <= length) this.resize()
+        memcpy(this.working_buffer, bytes, length)
+        this.working_buffer += length
+        this.length += length
+    }
+    public append_string(this, str: string){
+        this.add_bytes_length(str.get_bytes(), str.length)
+    }
+    public add_byte(this, byte: i8){
+        if (this.size - this.length <= 1) this.resize()
+        this.working_buffer[0] = byte
+        this.working_buffer += 1
+        this.length += 1
+    }
+    public get_string(this): string {
+        return new string(this.buffer, this.length)
+    }
 }
 // ------- Range -------
 class Range {
