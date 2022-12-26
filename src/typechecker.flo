@@ -219,12 +219,12 @@ class NewExpression (Expression) {
     args: Expression[]
     onheap: bool
     memory_type: Type
-    constructor(this, memory_type: Type, args: Expression[], onheap: bool){
+    constructor(this, memory_type: Type, value_type: Type, args: Expression[], onheap: bool){
         super(ExpressionKind.NEW)
         this.memory_type = memory_type
         this.onheap = onheap
         this.args = args
-        this.value_type = memory_type
+        this.value_type = value_type
     }
 }
 class IndexExpression (Expression) {
@@ -2072,7 +2072,7 @@ class TypeChecker {
             return new BinaryExpression(left, op, right, left.value_type, false)
         } if op == BinaryOp.RANGE and left.value_type.kind == TypeKind.INT and right.value_type.kind == TypeKind.INT {
             let range_type = this.get_type_from_current_scope("Range")
-            return new NewExpression(range_type, [left, right], true) as BinaryExpression
+            return new NewExpression(range_type, range_type, [left, right], true) as BinaryExpression
         }
         this.error(ErrorKind.TYPE, "Illegal binary operation '$(dump_bin_op(op))' between types '$(this.dump_type(left.value_type))' and '$(this.dump_type(right.value_type))'", binary_node.range)
         return null
@@ -2138,6 +2138,9 @@ class TypeChecker {
     private check_new_expr(this, new_expr_node: NewExpressionNode): NewExpression {
         let expr_ty = this.check_type(new_expr_node.parsed_type)
         let value_type = expr_ty
+        if value_type.kind == TypeKind.RESOLVED_GENERIC {
+            value_type = (value_type as GenericType).instantiated_type
+        }
         let args: Expression[] = []
         if this.has_errored() return null
         if is_object(expr_ty) {
@@ -2160,7 +2163,7 @@ class TypeChecker {
             }
             args << arg
         }
-        return new NewExpression(expr_ty, args, new_expr_node.onheap)
+        return new NewExpression(value_type, expr_ty, args, new_expr_node.onheap)
     }   
     private check_member_access(this, accessor: PropId): string {
         let visibility = ACCESS_ATTR.PUBLIC
