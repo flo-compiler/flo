@@ -622,7 +622,7 @@ class CodeGen {
         let func_ty = this.codegen_type(call_exp.callee.value_type, false)
         if call_exp.callee.expr_kind == ExpressionKind.MEMBER {
             let member_exp = call_exp.callee as MemberExpression
-            if member_exp.expression.value_type.kind == TypeKind.OBJECT or member_exp.expression.value_type.kind == TypeKind.RESOLVED_GENERIC { 
+            if is_object(member_exp.expression.value_type) { 
                 let struct_class = this.get_class_from_typeid(member_exp.member_id.type_id)
                 let self = this.codegen_expression(builder, member_exp.expression)
                 func = this.codegen_member_exp(builder, member_exp, self)
@@ -669,9 +669,8 @@ class CodeGen {
         return ptr
     }
     private codegen_member_exp(this, builder: LLVMBuilderRef, member_exp: MemberExpression, self: LLVMValueRef): LLVMValueRef {
-        let type_kind = member_exp.expression.value_type.kind
         let var_id = (member_exp.expression as VarAccessExpression).value_id
-        if type_kind == TypeKind.OBJECT or type_kind == TypeKind.RESOLVED_GENERIC {
+        if is_object(member_exp.expression.value_type) {
             let ptr = this.get_member_expr_mem(builder, member_exp, self)
             if get_class_prop_visibility(this.program, member_exp.member_id) == ACCESS_ATTR.PRIVATE and member_exp.value_type.kind == TypeKind.FNC
                 return ptr
