@@ -1,7 +1,7 @@
 import "@flo/collections/map"
 import "llvm/core"
-import "llvm/linker"
-import "codegenDI"
+import LLVMLinkModules2 in "llvm/linker"
+import DebugInfo in "codegenDI"
 import "codegenMod"
 
 class IntrinsicResult {
@@ -317,8 +317,8 @@ class CodeGen {
         call_args << null
         for let i = 0; i < string_exp.template_args.length; i++ {
             let fmt = get_format_from_type(string_exp.template_args[i].value_type)
-            call_args << this.codegen_expression(builder, string_exp.template_args[i])
             str_value = str_value.replace("\$", fmt)
+            call_args << this.codegen_expression(builder, string_exp.template_args[i])
         }
         let str_len = this.createLLVMInt(str_value.length)
         let str = this.module_string_scope.get(str_value)
@@ -330,7 +330,8 @@ class CodeGen {
         if call_args.length > 1 {
             call_args[0] = str
             str_len = this.codegen_snprintf_call(builder, call_args)
-            str = this.codegen_sprintf_call(builder, call_args, str_len, is_string_object)
+
+            str = this.codegen_sprintf_call(builder, call_args, this.add_one(builder, str_len), is_string_object)
         }
         if is_string_object {
             let self = LLVMBuildMalloc(builder, this.codegen_type(string_exp.value_type), "")
@@ -532,6 +533,9 @@ class CodeGen {
             return is_const ? LLVMConstFPCast(val, ty) : LLVMBuildFPCast(builder, val, ty, "")
         }
         return is_const ? LLVMConstBitCast(val, ty) : LLVMBuildBitCast(builder, val, ty, "")
+    }
+    private add_one(this, builder: LLVMBuilderRef, val: LLVMValueRef): LLVMValueRef {
+        return LLVMBuildAdd(builder, val, this.createLLVMInt(1), "")
     }
     private codegen_unary_exp(this, builder: LLVMBuilderRef, unary_exp: UnaryExpression): LLVMValueRef {
         let op = unary_exp.op
@@ -833,7 +837,7 @@ class CodeGen {
     private build_constructor_call(this, builder: LLVMBuilderRef, obj_type: ObjectType, params: LLVMValueRef[]){
         let checked_class = get_class(this.program, obj_type.class_id)
         let constructor = this.get_class_from_typeid(obj_type.class_id).constructor
-        let constructor_id = checked_class.constructor.id
+        let constructor_id = checked_class.construct.id
         if constructor != null {
             let construct_type = this.codegen_type(checked_class.methods[constructor_id].method_type, false)
             LLVMBuildCall2(builder, construct_type, constructor, params.buffer, params.length, "")
@@ -1079,8 +1083,8 @@ class CodeGen {
         this.declare_class_props(struct_class, checked_class, prop_types, initialize_all)
         LLVMStructSetBody(struct_class.llvm_type, prop_types.buffer, prop_types.length, true)
         // Now constructor
-        if checked_class.constructor != null {
-            let constructor_type = get_class_prop_type(this.program, checked_class.constructor) as FunctionType
+        if checked_class.construct != null {
+            let constructor_type = get_class_prop_type(this.program, checked_class.construct) as FunctionType
             if !constructor_type.has_this {
                 let arg_types: Type[] = [new ObjectType(checked_class.id) as Type]
                 for let i = 0; i < constructor_type.arg_types.length; i++ {

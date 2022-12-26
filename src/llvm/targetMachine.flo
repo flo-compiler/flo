@@ -1,3 +1,4 @@
+import "types"
 /*===-- Target ------------------------------------------------------------===*/
 /** Returns the first llvm::Target in the registered targets list. */
 fnc LLVMGetFirstTarget(): LLVMTargetRef

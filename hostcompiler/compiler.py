@@ -121,7 +121,7 @@ class Compiler(Visitor):
                     fmt.value
                 ] + passed_args
             ))
-            str_buff = FloMem.halloc(self.builder, i8_ty, str_len)
+            str_buff = FloMem.halloc(self.builder, i8_ty, str_len.add(self.builder, FloInt(1)))
             self.builder.call(sprintf, [
                 str_buff.value, fmt.value]+passed_args
             )

@@ -1,3 +1,5 @@
+import TokType in "types"
+import Token in "lexer"
 fnc token_str(toktype: TokType): string {
     if toktype == TokType.COL
         return "COL"

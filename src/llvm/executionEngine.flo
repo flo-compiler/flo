@@ -1,3 +1,4 @@
+import "types"
 fnc LLVMLinkInMCJIT()
 fnc LLVMLinkInInterpreter()
 /*===-- Operations on generic values --------------------------------------===*/

@@ -1,4 +1,5 @@
 import "llvm/debugInfo"
+import "llvm/types"
 class DebugInfo {
     builder: LLVMDIBuilderRef
     CU: LLVMMetadataRef

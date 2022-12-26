@@ -1,5 +1,12 @@
-import "types"
 import "@flo/collections/map"
+import "@flo/path/path"
+import "types"
+import Compiler in "compiler"
+import FloRange in "utils"
+import FloError, ErrorKind in "error"
+import Lexer, IdentifierToken in "lexer"
+import "parser"
+// import TypeNode, ImportNode, EnumNode, ClassDeclarationNode, FunctionDeclarationNode, ExpressionNode, IntExpressionNode, StringExpressionNode, FloatExpressionNode, CharExpressionNode, BinaryExpressionNode, UnaryExpressionNode, NewExpressionNode, MemberExpressionNode, TypeCastExpressionNode, ExpressionIndexNode, TernaryExpressionNode, ArrayExpressionNode, CallExpressionNode, VarAccessExpressionNode, StatementNode, BlockNode, ConstDeclarationStatement, IfStatementNode, ForStatementNode, WhileStatementNode, ReturnStatementNode, ArgNode, VarDeclarationStatement, RecordTypeNode, ModuleAST in "parser"
 const WORD_SIZE = 64
 class Type {
     kind: TypeKind
@@ -79,6 +86,17 @@ class ArrayType (Type) {
         super(TypeKind.ARRAY)
         this.element_type = element_type
         this.length = length
+    }
+}
+class GenericType(Type) {
+    name: string
+    arg_types: Type[]
+    instantiated_type: Type
+    constructor(this, name: string, arg_types: Type[], instantiated_type: Type){
+        super(TypeKind.RESOLVED_GENERIC)
+        this.name = name
+        this.arg_types = arg_types
+        this.instantiated_type = instantiated_type
     }
 }
 class ObjectType (Type) {
@@ -388,6 +406,8 @@ fnc is_i8_ptr(val_ty: Type): bool {
     return false
 }
 fnc is_object(val_ty: Type): bool {
+    if (val_ty.kind == TypeKind.RESOLVED_GENERIC)
+        return is_object((val_ty as GenericType).instantiated_type)
     return val_ty.kind == TypeKind.OBJECT
 }
 fnc is_pointer(val_ty: Type): bool {
@@ -584,6 +604,9 @@ class Function {
     fnc_type: FunctionType
     scope: ScopeId
     is_external: bool
+    constructor(this){
+        this.is_external = false
+    }
 }
 class Var (Value) {
     var_id: VarId
@@ -610,6 +633,9 @@ class ClassField {
     field_type: Type
     initializer: Expression
     vtable_index: int
+    constructor(this){
+        this.is_static = false
+    }
 }
 class ClassMethod {
     id: PropId
@@ -622,12 +648,15 @@ class ClassMethod {
     is_abstract: bool
     scope: ScopeId
     vtable_index: int
+    constructor(this){
+        this.is_abstract = false
+    }
 }
 class Class {
     id: ClassId
     name: string
     parent: Type
-    constructor: PropId
+    construct: PropId
     fields: ClassField[]
     methods: ClassMethod[]
     prop_map: Map<string, PropId>
@@ -635,6 +664,9 @@ class Class {
     inherited_methods_num: int
     inherited_fields_num: int
     is_abstract: bool
+    constructor(this){
+        this.construct = null
+    }
 }
 class EnumField {
     id: PropId
@@ -713,6 +745,13 @@ fnc get_scope(program: Program, scope_id: ScopeId): Scope {
 fnc get_class(program: Program, type_id: ClassId): Class {
     return program.modules[type_id.module_id].classes[type_id.id]   
 }
+fnc get_class_from_type(program: Program, type_: Type): Class {
+    if type_.kind == TypeKind.RESOLVED_GENERIC
+        return get_class_from_type(program, (type_ as GenericType).instantiated_type)
+    if type_.kind == TypeKind.OBJECT
+        return get_class(program, (type_ as ObjectType).class_id)
+    return null
+}
 fnc get_method(program: Program, prop_id: PropId): ClassMethod {
     return get_class(program, prop_id.type_id as ClassId).methods[prop_id.id]
 }
@@ -733,7 +772,7 @@ fnc get_class_prop_visibility(program: Program, prop_id: PropId): ACCESS_ATTR {
     }
     return owner.fields[prop_id.id].visibility
 }
-fnc get_vtable_index(program: Program, prop_id: PropId): ACCESS_ATTR {
+fnc get_vtable_index(program: Program, prop_id: PropId): int {
     let owner = get_class(program, prop_id.type_id as ClassId)
     if prop_id.kind == PropIdKind.METHOD {
         return owner.methods[prop_id.id].vtable_index
@@ -940,6 +979,15 @@ class TypeChecker {
             let t2_enum_typeid = t2_enum_type.enum_id as TypeId
             return t1_enum_typeid == t2_enum_typeid
         }
+        if t1.kind == TypeKind.RESOLVED_GENERIC {
+            let t1_gen_type = t1 as GenericType
+            let t2_gen_type = t2 as GenericType
+            if t1_gen_type.name != t2_gen_type.name return false
+            if t1_gen_type.arg_types.length != t2_gen_type.arg_types.length return false
+            for let x = 0; x < t1_gen_type.arg_types.length; x++ {
+                if !this.types_are_eq(t1_gen_type.arg_types[x], t2_gen_type.arg_types[x]) return false
+            }
+        }
         return true
     }
     private dump_type(this, ty: Type): string {
@@ -962,6 +1010,14 @@ class TypeChecker {
         if ty.kind == TypeKind.ARRAY {
             let arr_ty = ty as ArrayType
             return "$(this.dump_type(arr_ty.element_type))[$(arr_ty.length)]"
+        }
+        if ty.kind == TypeKind.RESOLVED_GENERIC {
+            let gen_ty = ty as GenericType
+            let s = gen_ty.name + "<"
+            for let x = 0; x < gen_ty.arg_types.length; x++ {
+                s +=  this.dump_type(gen_ty.arg_types[x])
+            }
+            return s + ">"
         }
         return dump_type(ty, false)
     }
@@ -1127,7 +1183,7 @@ class TypeChecker {
     private load_builtins_module(this){
         this.lex_and_parse_typecheck_file(this.compiler.builtin_path, null)
     }
-    private create_generic_instance_in_module(this, name: string, types: Type[]): Type {
+    private create_generic_instance_in_module(this, name: string, types: Type[]): GenericType {
         let generic_node = this.generic_templates.get(name)
         if generic_node == null return null
         let generic_params = generic_node.generic_parameters
@@ -1140,29 +1196,26 @@ class TypeChecker {
         let param_strings = ""
         for let i = 0; i < generic_params.length; i++ {
             let param_name = generic_params[i].name.value
-            param_strings += "$(this.dump_type(types[i]))"
-            if (i < generic_params.length - 1){
-                param_strings += ", "
-            }
+            param_strings += "$(this.dump_type(types[i]))_"
             generic_scope.type_aliases.set(param_name, types[i])
         }
-        let instantiated_generic_name = "$name<$param_strings>"
+        let instantiated_generic_name = "$(name)_$param_strings"
+        // TODO: find a way to remove/delete this context appended.
         let possible_type = this.get_type_from_current_scope(instantiated_generic_name)
-        if possible_type.kind != TypeKind.UNKNOWN {
-            // TODO: find a way to remove/delete this context appended.
-            return possible_type
+        if possible_type.kind == TypeKind.UNKNOWN {
+            // TODO: Find a better way to create this initialization.
+            let new_identok = new IdentifierToken(instantiated_generic_name, generic_node.name.range)
+            let instantiated_generic_class = new ClassDeclarationNode(new_identok)
+            instantiated_generic_class.parent = generic_node.parent
+            instantiated_generic_class.fields = generic_node.fields
+            instantiated_generic_class.methods = generic_node.methods
+            this.current_scope = generic_scope.id
+            this.declare_class_within_module(instantiated_generic_class)
+            this.check_class_body(instantiated_generic_class)
+            possible_type = this.get_type_from_current_scope(instantiated_generic_name)
         } 
-        // TODO: Find a better way to create this initialization.
-        let new_identok = new IdentifierToken(instantiated_generic_name, generic_node.name.range)
-        let instantiated_generic_class = new ClassDeclarationNode(new_identok)
-        instantiated_generic_class.parent = generic_node.parent
-        instantiated_generic_class.fields = generic_node.fields
-        instantiated_generic_class.methods = generic_node.methods
-        this.current_scope = generic_scope.id
-        this.declare_class_within_module(instantiated_generic_class)
-        this.check_class_body(instantiated_generic_class)
         this.current_scope = generic_scope.parent
-        return this.get_type_from_current_scope(instantiated_generic_name)
+        return new GenericType(name, types, possible_type)
     }
     private declare_var_within_current_scope(this, name: string, value: Expression, value_type: Type): Var {
         let var = new Var(value, value_type)
@@ -1374,8 +1427,7 @@ class TypeChecker {
             this.error(ErrorKind.NAME, "Name '$name' has already been used for another type. consider renaming", enum_node.name.range)
             return
         }
-        let field_map: Map<string, PropId>
-        declared_enum.field_map = field_map
+        declared_enum.field_map = new Map<string, PropId>()
         declared_enum.fields = []
         declared_enum.id = new EnumId(this.current_module, this.get_current_module().enums.length)
         this.get_current_module().enums << declared_enum
@@ -1398,8 +1450,6 @@ class TypeChecker {
         declared_class.fields = []
         declared_class.methods = []
         declared_class.is_abstract = false
-        let prop_map: Map<string, PropId>
-        let static_prop_map: Map<string, PropId>
         let module_scope = this.get_current_module_global_scope()
         if class_decl_node.parent != null {
             declared_class.parent = this.check_type(class_decl_node.parent)
@@ -1407,8 +1457,8 @@ class TypeChecker {
         } else {
             declared_class.parent = null
         }
-        declared_class.prop_map = prop_map
-        declared_class.static_prop_map = static_prop_map
+        declared_class.prop_map = new Map<string, PropId>()
+        declared_class.static_prop_map = new Map<string, PropId>()
         declared_class.name = name
         declared_class.id = new ClassId(this.current_module, this.get_current_module().classes.length)
         this.get_current_module().classes << declared_class
@@ -1588,7 +1638,7 @@ class TypeChecker {
                         this.error(ErrorKind.GEN, "Class constructor can't be abstract", method_node.name.range)
                         return
                     }
-                    declared_class.constructor = method.id
+                    declared_class.construct = method.id
                 } else {
                     if method.visibility != ACCESS_ATTR.PRIVATE
                         current_vtable_index++
@@ -1598,7 +1648,16 @@ class TypeChecker {
                     }
                     declared_class.prop_map.set(name, method.id)
                 }
-                this.declare_const_within_current_scope("this", null, new ObjectType(declared_class.id))
+                let object_type = new ObjectType(declared_class.id)
+                let this_const = this.declare_const_within_current_scope("this", null, object_type)
+                if declared_class.parent != null {
+                    let constructor_method = get_class_from_type(this.program, declared_class.parent).construct
+                    if constructor_method != null {
+                        let constructor_type = get_class_prop_type(this.program, constructor_method)
+                        let var = new MemberExpression(new VarAccessExpression(this_const.const_id, object_type), constructor_method, constructor_type)
+                        this.declare_const_within_current_scope("super", var, constructor_type)
+                    }
+                }
             }
             method.scope = method_scope.id
             declared_class.methods << method
@@ -1606,12 +1665,11 @@ class TypeChecker {
         }
     }
     private add_inherited_props_to_class(this, declared_class: Class, class_node: ClassDeclarationNode){
-        let parent_type = declared_class.parent as ObjectType
-        if parent_type.kind != TypeKind.OBJECT {
+        let parent_type = declared_class.parent
+        if !is_object(parent_type) {
             this.error(ErrorKind.TYPE, "Can only inherit from class not type '$(this.dump_type(parent_type))'", class_node.parent.range)
         }
-        let parent_class_id = parent_type.class_id
-        let parent_class = get_class(this.program, parent_class_id)
+        let parent_class = get_class_from_type(this.program, parent_type)
         let parent_bucket_props = parent_class.prop_map.get_buckets()
         for let i = 0; i < parent_bucket_props.length; i++ {
             let parent_prop_name = parent_bucket_props[i].key
@@ -1637,8 +1695,8 @@ class TypeChecker {
         let class_name = class_node.name.value
         let resolved_type = this.get_type_from_current_scope(class_name)
         if resolved_type.kind == TypeKind.UNKNOWN {return}
-        let id = (resolved_type as ObjectType).class_id
-        let declared_class = get_class(this.program, id)
+        let declared_class = get_class_from_type(this.program, resolved_type)
+        let outer_class = this.current_class
         this.current_class = declared_class.id
         if declared_class.parent != null {
             this.add_inherited_props_to_class(declared_class, class_node)
@@ -1661,7 +1719,7 @@ class TypeChecker {
             if prop_id.kind == PropIdKind.METHOD {
                 let prop_method = get_method(this.program, prop_id)
                 if prop_method.is_abstract {
-                    if declared_class.constructor != null {
+                    if declared_class.construct != null {
                         this.error(ErrorKind.GEN, "Class with constructor must implement all it's methods missing $(prop_name) implementation", class_node.name.range)
                         return
                     }
@@ -1694,7 +1752,7 @@ class TypeChecker {
             this.current_method = null
             this.current_scope = get_scope(this.program, method.scope).parent
         }
-        this.current_class = null
+        this.current_class = outer_class
     }
     private check_function_body(this, func: Function, func_node: FunctionDeclarationNode) {
         if func.is_external { 
@@ -1782,15 +1840,20 @@ class TypeChecker {
         let elements: Expression[] = []
         let element_type = Type.unknown()
         let is_constant = true
+        let array_type = expected_type
         //TODO if we are a generic then add look at parameter to get expected type.
         if expected_type.kind == TypeKind.ARRAY {
             element_type = (expected_type as ArrayType).element_type
-        }
+        } else if expected_type.kind == TypeKind.RESOLVED_GENERIC {
+            let generic_ty =  expected_type as GenericType
+            if is_object(generic_ty) and generic_ty.name == "Array"
+                element_type = generic_ty.arg_types[0]
+        } 
         if array_node.elements.length > 0 {
             elements << this.check_expression(element_type, array_node.elements[0])
             if this.has_errored() return null
             if element_type.kind == TypeKind.UNKNOWN {
-                is_constant = is_constant and elements[0].is_constant
+                is_constant = elements[0].is_constant
                 element_type =  elements[0].value_type
             }
             for let i = 1; i < array_node.elements.length; ++i {
@@ -1804,8 +1867,10 @@ class TypeChecker {
                     return null
                 }
             }
-        } 
-        let array_type: Type = new ArrayType(element_type, elements.length)
+        }
+        if array_type.kind == TypeKind.UNKNOWN {
+            array_type = new ArrayType(element_type, elements.length)
+        }
         if array_type.kind != TypeKind.ARRAY {
             let generic_array_type = this.create_generic_instance_in_module("Array", [element_type])
             if (generic_array_type != null) {
@@ -1869,10 +1934,9 @@ class TypeChecker {
         return new BinaryExpression(left, BinaryOp.ASSIGN, right, right.value_type)
     }
     private check_object_bin_assign(this, left: Expression, binary_node: BinaryExpressionNode): Expression {
-        let obj_type = left.value_type as ObjectType
         let op = binary_node.op
         let method_name = bin_op_to_op_overload_name(op)
-        let owner_class = get_class(this.program, obj_type.class_id)
+        let owner_class = get_class_from_type(this.program, left.value_type as ObjectType)
         let prop_id = owner_class.prop_map.get(method_name)
         if prop_id == null {
             return null
@@ -1890,14 +1954,13 @@ class TypeChecker {
         return new CallExpression(member_exp, args, method_type.return_type)
     }
     private check_object_binary_expr(this, left: Expression, binary_node: BinaryExpressionNode, right: Expression): Expression {
-        let obj_type = left.value_type as ObjectType
         let op = binary_node.op
         let method_name = bin_op_to_op_overload_name(op)
         if method_name == null {
             this.error(ErrorKind.GEN, "Unsupported binary operator overload for operator '$(dump_bin_op(op))'", binary_node.range)
             return null
         }
-        let owner_class = get_class(this.program, obj_type.class_id)
+        let owner_class = get_class_from_type(this.program, left.value_type)
         let prop_id = owner_class.prop_map.get(method_name)
         if prop_id == null {
             if op == BinaryOp.EEQ or op == BinaryOp.NEQ {
@@ -1922,9 +1985,8 @@ class TypeChecker {
         return new CallExpression(member_exp, args, method_type.return_type)
     }
     private check_object_setitem_expr(this, object: Expression, binary_node: BinaryExpressionNode): Expression {
-        let obj_type = object.value_type as ObjectType
         let index_expr_node = binary_node.lhs as ExpressionIndexNode
-        let owner_class = get_class(this.program, obj_type.class_id)
+        let owner_class = get_class_from_type(this.program, object.value_type)
         let prop_id = owner_class.prop_map.get("__setitem__")
         if prop_id == null {
             this.error(ErrorKind.GEN, "No operator overload for index set operator on $(owner_class.name) object please implement method __setitem__ to use in this class", index_expr_node.range)
@@ -2054,7 +2116,7 @@ class TypeChecker {
     }
     private check_constructor_call(this, class_id: ClassId, args: ExpressionNode[], argsp: Expression[]*): string { 
         let obj_class = get_class(this.program, class_id)
-        let field_id = obj_class.constructor
+        let field_id = obj_class.construct
         if field_id == null {
             return "Cannot construct an object of abstract class"
         }
@@ -2078,8 +2140,8 @@ class TypeChecker {
         let value_type = expr_ty
         let args: Expression[] = []
         if this.has_errored() return null
-        if expr_ty.kind == TypeKind.OBJECT {
-            let msg = this.check_constructor_call((expr_ty as ObjectType).class_id, new_expr_node.args, &args)
+        if is_object(expr_ty) {
+            let msg = this.check_constructor_call(get_class_from_type(this.program, expr_ty).id, new_expr_node.args, &args)
             if msg != null {
                 this.error(ErrorKind.GEN, msg, new_expr_node.range)
                 return null
@@ -2133,8 +2195,11 @@ class TypeChecker {
         let parent_class: Class = null
         let prop_id: PropId = null
         let err_msg: string = null
-        if prop_owner_type.kind == TypeKind.OBJECT {
-            parent_class = get_class(this.program, (prop_owner_type as ObjectType).class_id)
+        if is_object(prop_owner_type) {
+            while prop_owner_type.kind == TypeKind.RESOLVED_GENERIC {
+                prop_owner_type = (prop_owner_type as GenericType).instantiated_type
+            }
+            parent_class = get_class_from_type(this.program, prop_owner_type)
             prop_id = parent_class.prop_map.get(prop_name)
             if (prop_id == null){   
                 this.error(ErrorKind.NAME, "Property '$prop_name' doesn't exist in object of class '$(parent_class.name)'", member_expr_node.member.range)
@@ -2191,7 +2256,7 @@ class TypeChecker {
             intrinsic_call.args << prop_owner
             return intrinsic_call as MemberExpression
         } else {
-            this.error(ErrorKind.GEN, "Cannot get property '$prop_name' of type '$(this.dump_type(prop_owner_type))'", member_expr_node.expression.range)
+            this.error(ErrorKind.GEN, "Cannot get property '$prop_name' of type '$(this.dump_type(prop_owner.value_type))'", member_expr_node.expression.range)
             return null
         }
         return new MemberExpression(prop_owner, prop_id, prop_ty)
@@ -2212,8 +2277,7 @@ class TypeChecker {
         return new TernaryExpression(cond, is_true, is_false)
     }
     private check_object_index_expr(this, object: Expression, index_expr_node: ExpressionIndexNode): Expression {
-        let obj_type = object.value_type as ObjectType
-        let owner_class = get_class(this.program, obj_type.class_id)
+        let owner_class = get_class_from_type(this.program, object.value_type)
         let prop_id = owner_class.prop_map.get("__getitem__")
         if prop_id == null {
             this.error(ErrorKind.GEN, "No operator overload for indexing operator on $(owner_class.name) object please implement method __getitem__ to use indexing in this class", index_expr_node.range)

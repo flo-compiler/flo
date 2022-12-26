@@ -6,7 +6,7 @@ fnc memcpy(ptr1: i8*, ptr2: i8*, len: int): int
 fnc memset(ptr1: i8*, c: int, len: int)
 /*@extern*/
 fnc strlen(str: i8*): int
-
+fnc printf(str: i8*, a: int, b: int)
 // ----- string -------
 class string {
     private buffer: i8*
@@ -22,12 +22,12 @@ class string {
         let new_buffer = new i8*(new_str_len)
         memcpy(new_buffer, this.buffer, this.length)
         let trailing_buffer = new_buffer + this.length
-        memcpy(trailing_buffer, data.buffer, data.length + 1)
+        memcpy(trailing_buffer, data.buffer, data.length)
         return new string(new_buffer, new_str_len)   
     }
     public __adda__(this, other: string): string {
         this.buffer = this.buffer.resize(this.length + other.length)
-        memcpy(this.buffer + this.length, other.buffer, other.length + 1)
+        memcpy(this.buffer + this.length, other.buffer, other.length)
         return this
     }
     public add_byte(this, char: i8){
@@ -48,8 +48,8 @@ class string {
         if this.length != other.length return false
         return memcmp(this.buffer, other.buffer, this.length) == 0
     }
-    public find(this, search: string): int {
-        for let i = 0; i < this.length; i++ {
+    public find(this, search: string, start: int = 0): int {
+        for let i = start; i < this.length; i++ {
             if (search.buffer[0] == this.buffer[i]) {
                 let x = search.length - 1
                 let matches = true
@@ -79,12 +79,14 @@ class string {
     public replace(this, val: string, repl: string): string {
         let idx = this.find(val)
         if idx >= 0 {
-            let new_length = this.length - val.length + repl.length
-            let new_buffer = new i8*(new_length)
-            memcpy(new_buffer, this.buffer, idx)
-            memcpy(new_buffer + idx, repl.buffer, repl.length)
-            memcpy(new_buffer + idx + repl.length, this.buffer + idx + val.length, this.length - val.length)
-            return new string(new_buffer, new_length)
+            let nlen = this.length - val.length + repl.length
+            let nbuff = new i8*(nlen)
+            memcpy(nbuff, this.buffer, idx)
+            let wbuff = nbuff + idx
+            memcpy(wbuff, repl.buffer, repl.length)
+            wbuff += repl.length
+            memcpy(wbuff, this.buffer + idx + val.length, this.length - val.length)
+            return new string(nbuff, nlen)
         } 
         return this
     }
@@ -109,6 +111,23 @@ class string {
         memcpy(buf, str, len)
         return new string(buf, len)
     }
+    // public split(str: string): string [] {
+    //     let result: string[] = []
+    //     let start = 0
+    //     let pos = this.find(str)
+    //     while pos >= start {
+    //         if pos > start {
+    //             result << this.substring(start, pos)
+    //         }
+    //         start = pos + str.length
+    //         result << str
+    //         pos = this.find(str, start) 
+    //     }
+    //     if (start < str.length) {
+    //         result << str.substring(start)
+    //     }
+    //     return result
+    // }
 }
 // ------- Range -------
 class Range {

@@ -1,10 +1,11 @@
-import "llvm/analysis"
-import "llvm/bitwriter"
-import "llvm/executionEngine"
-import "llvm/passManagerBuilder"
-import "llvm/transforms"
-import "llvm/target"
-import "llvm/targetMachine"
+import "llvm/types"
+import LLVMVerifyModule in "llvm/analysis"
+import LLVMDisposeModule, LLVMContextDispose, LLVMShutdown, LLVMGetModuleContext, LLVMCloneModule, LLVMDumpModule, LLVMSetTarget, LLVMCreatePassManager, LLVMSetDataLayout, LLVMDisposeMessage, LLVMRunPassManager, LLVMDisposePassManager, LLVMGetNamedFunction in "llvm/core"
+import LLVMLinkInMCJIT, LLVMCreateExecutionEngineForModule, LLVMDisposeExecutionEngine, LLVMRunFunctionAsMain in "llvm/executionEngine"
+import LLVMPassManagerBuilderDispose, LLVMPassManagerBuilderCreate, LLVMPassManagerBuilderSetOptLevel, LLVMPassManagerBuilderPopulateModulePassManager in "llvm/passManagerBuilder"
+import LLVMAddInternalizePass, LLVMAddInstructionCombiningPass, LLVMAddGlobalDCEPass, LLVMAddGlobalOptimizerPass, LLVMAddScalarReplAggregatesPass, LLVMAddFunctionInliningPass in "llvm/transforms"
+import LLVM_InitializeAllTargetInfos, LLVM_InitializeAllTargetMCs, LLVM_InitializeAllTargets, LLVM_InitializeAllAsmParsers, LLVM_InitializeAllAsmPrinters in "llvm/target"
+import LLVMDisposeTargetMachine, LLVMTargetMachineEmitToFile, LLVMGetDefaultTargetTriple, LLVMGetTargetMachineTriple, LLVMCreateTargetDataLayout, LLVMCreateTargetMachine, LLVMGetTargetFromTriple, LLVMGetHostCPUFeatures in "llvm/targetMachine"
 class GeneratedModule {
     private llvm_mod: LLVMModuleRef
     private errors: i8*

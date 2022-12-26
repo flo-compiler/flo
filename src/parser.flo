@@ -1,4 +1,7 @@
-import "types"
+import TokType, ExpressionKind, StatementKind, TypeKind, ForKind, BinaryOp, UnaryOp, ACCESS_ATTR in "types"
+import FloRange in "utils"
+import FloError, ErrorKind in "error"
+import Token, IntToken, FloatToken, StrToken, CharToken, IdentifierToken in "lexer"
 class Node {
     range: FloRange
     constructor(this, range: FloRange){
@@ -219,7 +222,7 @@ class ForStatementNode (StatementNode) {
         this.initialization = null
         this.condition = null
         this.incr_decr = null
-        this.kind = ForKind.DEF
+        this.for_kind = ForKind.DEF
         super(StatementKind.FOR, range)
     }
 }
@@ -324,6 +327,7 @@ class EnumNode {
     variant: TypeNode
     constructor(this){
         this.fields = []
+        this.variant = null
     }
 }
 class ImportNode {
@@ -379,7 +383,7 @@ class Parser {
             return this.tokens[peek_idx]
         return this.tokens[this.tokens.length - 1]
     }
-    private eat(this, token_type: int): Token {
+    private eat(this, token_type: TokType): Token {
         let current_token = this.current_token
         if token_type == current_token.ttype {
             this.advance()
@@ -402,11 +406,11 @@ class Parser {
                 this.error("Expected '}'")
             else if token_type == TokType.COMMA 
                 this.error("Expected ','")
-            else if token_type = TokType.LT 
+            else if token_type == TokType.LT 
                 this.error("Expected '<'")
-            else if token_type = TokType.GT 
+            else if token_type == TokType.GT 
                 this.error("Expected '>'")
-            else if token_type = TokType.ARROW 
+            else if token_type == TokType.ARROW 
                 this.error("Expected '=>'")
         }
         return new Token(TokType.EOF, current_token.range)
@@ -612,24 +616,24 @@ class Parser {
             return UnaryOp.NOT
         if token_type == TokType.AMP 
             return UnaryOp.ADDROF
-        return -1
+        return UnaryOp.UNDEF
     }
     private parse_unary_expression(this): ExpressionNode {
         let start_range = this.current_token.range
         let op = this.is_unary_op()
-        if (op != -1) this.advance()
+        if (op != UnaryOp.UNDEF) this.advance()
         let expression = this.parse_lhs_expression_allow_call()
-        if (op == -1) {
+        if (op == UnaryOp.UNDEF) {
            if this.current_token.ttype == TokType.PLUS_PLUS
                 op = UnaryOp.POSTINCR
            if this.current_token.ttype == TokType.MINUS_MINUS
                 op = UnaryOp.POSTDECR
-            if op != -1 this.advance()
+            if op != UnaryOp.UNDEF this.advance()
         }
-        if op == -1 return expression
+        if op == UnaryOp.UNDEF return expression
         return new UnaryExpressionNode(op, expression, FloRange.merge(start_range, expression.range))
     }
-    private is_term_expr_op(this): int {
+    private is_term_expr_op(this): BinaryOp {
         let token_type = this.current_token.ttype
         if token_type == TokType.MULT
             return BinaryOp.MUL
@@ -639,28 +643,28 @@ class Parser {
             return BinaryOp.MOD
         if token_type == TokType.POW
             return BinaryOp.POW
-        return -1
+        return BinaryOp.UNDEF
     }
     private parse_term_expression(this): ExpressionNode {
         let left = this.parse_unary_expression()
         let op = this.is_term_expr_op()
-        if op == -1 or !this.can_parse()
+        if op == BinaryOp.UNDEF or !this.can_parse()
             return left
         this.advance()
         return new BinaryExpressionNode(left, op, this.parse_term_expression())
     }
-    private is_arith_expr_op(this): int {
+    private is_arith_expr_op(this): BinaryOp {
         let token_type = this.current_token.ttype
         if token_type == TokType.PLUS
             return BinaryOp.ADD
         if token_type == TokType.MINUS
             return BinaryOp.SUB
-        return -1
+        return BinaryOp.UNDEF
     }
     private parse_arithmetic_expression(this): ExpressionNode {
         let left = this.parse_term_expression()
         let op = this.is_arith_expr_op()
-        if op == -1 or !this.can_parse()
+        if op == BinaryOp.UNDEF or !this.can_parse()
             return left
         this.advance()
         return new BinaryExpressionNode(left, op, this.parse_arithmetic_expression())
@@ -671,17 +675,17 @@ class Parser {
             return BinaryOp.SL
         if token_type == TokType.SR
             return BinaryOp.SR
-        return -1
+        return BinaryOp.UNDEF
     }
     private parse_bitshift_expression(this): ExpressionNode {
         let left = this.parse_arithmetic_expression()
         let op = this.is_bitshift_expr_op()
-        if op == -1 or !this.can_parse()
+        if op == BinaryOp.UNDEF or !this.can_parse()
             return left
         this.advance()
         return new BinaryExpressionNode(left, op, this.parse_bitshift_expression())
     }
-    private is_comp_expr_op(this): int {
+    private is_comp_expr_op(this): BinaryOp {
         let token_type = this.current_token.ttype
         if token_type == TokType.GT
             return BinaryOp.GT
@@ -695,17 +699,17 @@ class Parser {
             return BinaryOp.EEQ
         if token_type == TokType.NEQ
             return BinaryOp.NEQ
-        return -1
+        return BinaryOp.UNDEF
     }
     private parse_comparasion_expression(this): ExpressionNode {
         let left = this.parse_bitshift_expression()
         let op = this.is_comp_expr_op()
-        if op == -1 or !this.can_parse()
+        if op == BinaryOp.UNDEF or !this.can_parse()
             return left
         this.advance()
         return new BinaryExpressionNode(left, op, this.parse_comparasion_expression())
     }
-    private is_bit_expr_op(this): int {
+    private is_bit_expr_op(this): BinaryOp {
         let token_type = this.current_token.ttype
         if token_type == TokType.OR_KW
             return BinaryOp.OR
@@ -713,12 +717,12 @@ class Parser {
             return BinaryOp.AND
         if token_type == TokType.XOR_KW
             return BinaryOp.XOR
-        return -1
+        return BinaryOp.UNDEF
     }
     private parse_bit_expression(this): ExpressionNode {
         let left = this.parse_comparasion_expression()
         let op = this.is_bit_expr_op()
-        if op == -1 or !this.can_parse()
+        if op == BinaryOp.UNDEF or !this.can_parse()
             return left
         this.advance()
         return new BinaryExpressionNode(left, op, this.parse_bit_expression())
@@ -774,7 +778,7 @@ class Parser {
             return BinaryOp.SL_ASSIGN
         if this.current_token.ttype == TokType.SR_EQ
             return BinaryOp.SR_ASSIGN
-        return -1
+        return BinaryOp.UNDEF
     }
     private parse_expression(this): ExpressionNode {
         let left = this.parse_ternary_expression()
@@ -783,7 +787,7 @@ class Parser {
             return new BinaryExpressionNode(left, BinaryOp.IN, this.parse_expression())
         }
         let op = this.is_assign_op()
-        if op == -1 or !this.can_parse()
+        if op == BinaryOp.UNDEF or !this.can_parse()
             return left
         this.advance()
         return new BinaryExpressionNode(left, op, this.parse_expression())
@@ -825,7 +829,7 @@ class Parser {
                 for_node.incr_decr = this.parse_expression()
             }
         } else {
-            for_node.kind = ForKind.IN
+            for_node.for_kind = ForKind.IN
             for_node.it_name = this.eat(TokType.IDENTIFER) as IdentifierToken
             this.eat(TokType.IN_KW)
             for_node.iterator = this.parse_expression()
@@ -998,7 +1002,7 @@ class Parser {
             return ACCESS_ATTR.PRIVATE
         if this.current_token.ttype == TokType.PROTECTED_KW
             return ACCESS_ATTR.PROTECTED
-        return -1
+        return ACCESS_ATTR.UNDEF
     }
     // (private | public | protected)? identider 
     private parse_class_block(this, class_node: ClassDeclarationNode) {
@@ -1006,7 +1010,7 @@ class Parser {
         this.new_lines()
         while this.current_token.ttype != TokType.RBRACE and this.can_parse() {
             let access_modifier = this.parse_access_modifier()
-            if access_modifier < 0 {
+            if access_modifier == ACCESS_ATTR.UNDEF {
                 access_modifier = ACCESS_ATTR.PUBLIC
             } else {
                 this.advance()
@@ -1027,7 +1031,8 @@ class Parser {
                 method.access_modifier = access_modifier
                 class_node.methods << method
             } else {
-                return this.error("Expected ':' or '('")
+                this.error("Expected ':' or '('")
+                return
             }
             this.new_lines()
         }
