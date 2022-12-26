@@ -315,11 +315,22 @@ class CodeGen {
         let str_value = string_exp.value
         let call_args: LLVMValueRef[] = []
         call_args << null
+        let fmt_str_builder = new StringBuilder(str_value.length + string_exp.fmt_indices.length*2)
+        let chars = str_value.get_bytes()
+        let curr_ind = 0
+        let prev_ind = 0
         for let i = 0; i < string_exp.template_args.length; i++ {
             let fmt = get_format_from_type(string_exp.template_args[i].value_type)
-            str_value = str_value.replace("\$", fmt)
+            prev_ind = curr_ind
+            curr_ind = string_exp.fmt_indices[i]
+            let incr = curr_ind - prev_ind
+            fmt_str_builder.add_bytes_length(chars, incr)
+            fmt_str_builder.append_string(fmt)
+            chars += incr
             call_args << this.codegen_expression(builder, string_exp.template_args[i])
         }
+        fmt_str_builder.add_bytes_length(chars, str_value.length - curr_ind)
+        str_value = fmt_str_builder.get_string()
         let str_len = this.createLLVMInt(str_value.length)
         let str = this.module_string_scope.get(str_value)
         if str == null {
@@ -331,7 +342,7 @@ class CodeGen {
             call_args[0] = str
             str_len = this.codegen_snprintf_call(builder, call_args)
 
-            str = this.codegen_sprintf_call(builder, call_args, this.add_one(builder, str_len), is_string_object)
+            str = this.codegen_sprintf_call(builder, call_args, str_len, is_string_object)
         }
         if is_string_object {
             let self = LLVMBuildMalloc(builder, this.codegen_type(string_exp.value_type), "")
@@ -533,9 +544,6 @@ class CodeGen {
             return is_const ? LLVMConstFPCast(val, ty) : LLVMBuildFPCast(builder, val, ty, "")
         }
         return is_const ? LLVMConstBitCast(val, ty) : LLVMBuildBitCast(builder, val, ty, "")
-    }
-    private add_one(this, builder: LLVMBuilderRef, val: LLVMValueRef): LLVMValueRef {
-        return LLVMBuildAdd(builder, val, this.createLLVMInt(1), "")
     }
     private codegen_unary_exp(this, builder: LLVMBuilderRef, unary_exp: UnaryExpression): LLVMValueRef {
         let op = unary_exp.op
