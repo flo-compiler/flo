@@ -50,21 +50,15 @@ class Int(ICMP) {
     public __setitem__(this, index: int, value: int) {
         this.value = value
     }
-    public make(value: int): Int {
-        let res: Int(value)
-        return res
-    }
     protected __cmp__(this, other: Int): int {
         return this.value - other.value
     }
 }
 fnc main(): int {
     let x: Int(7)
-    let y: Int(7)
+    let y: Int(9)
     let z: ICMP
-    if x == y {
-        z = Int.make(2)
-    } else if x > y {
+    if x > y {
         z = x - y
     } else {
         z = y - x

@@ -1,47 +1,14 @@
-fnc free(ptr: i8*)
-class Set<T>{
-    private elements: T*
-    private size: int
-    public len: int
-    constructor(this){
-        this.size = 2
-        this.len = 0
-        this.elements = new T*(this.size)
+class Generic<T>{
+    private data: T
+    constructor(this, data: T){
+        this.data = data
     }
-    private resize(this){
-        this.size*=2
-        this.elements = this.elements.resize(this.size)
-    }
-    public add(this, e: T){
-        if (e in this) return
-        if (this.len >= this.size) this.resize()
-        this.elements[this.len++] = e
-    }
-    public clear(this){
-        this.size = 0
-        this.len = 0
-        free(this.elements as i8*)
-    }
-    public __in__(this, e: T): bool {
-        for let i = 0; i < this.len; i++ {
-            if e == this.elements[i] return true
-        }
-        return false
+    getData(this): T {
+        return this.data
     }
 }
 fnc main(): int {
-    let s: Set<int>()
-    s.add(1)
-    s.add(2)
-    s.add(1)
-    s.add(2)
-    let sf: Set<float>()
-    sf.add(1.0)
-    let s1: Set<int>()
-    s1.add(0)
-    let len = s.len
-    s1.clear()
-    sf.clear()
-    s.clear()
-    return len
+    let intObj: Generic<int>(5)
+    let floatObj: Generic<float>(8.0)
+    return intObj.getData()
 }
