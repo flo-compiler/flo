@@ -6,7 +6,6 @@ import FloRange in "utils"
 import FloError, ErrorKind in "error"
 import Lexer, IdentifierToken in "lexer"
 import "parser"
-// import TypeNode, ImportNode, EnumNode, ClassDeclarationNode, FunctionDeclarationNode, ExpressionNode, IntExpressionNode, StringExpressionNode, FloatExpressionNode, CharExpressionNode, BinaryExpressionNode, UnaryExpressionNode, NewExpressionNode, MemberExpressionNode, TypeCastExpressionNode, ExpressionIndexNode, TernaryExpressionNode, ArrayExpressionNode, CallExpressionNode, VarAccessExpressionNode, StatementNode, BlockNode, ConstDeclarationStatement, IfStatementNode, ForStatementNode, WhileStatementNode, ReturnStatementNode, ArgNode, VarDeclarationStatement, RecordTypeNode, ModuleAST in "parser"
 const WORD_SIZE = 64
 class Type {
     kind: TypeKind
@@ -123,8 +122,8 @@ class IntExpression (Expression) {
     }
 }
 class BooleanExpression (Expression) {
-    value: int 
-    constructor(this, value: int){
+    value: bool 
+    constructor(this, value: bool){
         super(ExpressionKind.BOOL)
         let bool_type: BooleanType
         this.value_type = bool_type
@@ -573,13 +572,13 @@ class ScopeId {
     }
 }
 class Scope {
-    id: ScopeId
-    vars: Map<string, VarId>
-    classes: Map<string, ClassId>
-    functions: Map<string, VarId>
-    enums: Map<string, EnumId>
-    parent: ScopeId
-    type_aliases: Map<string, Type>
+    public id: ScopeId
+    public vars: Map<string, VarId>
+    public classes: Map<string, ClassId>
+    public functions: Map<string, VarId>
+    public enums: Map<string, EnumId>
+    public parent: ScopeId
+    public type_aliases: Map<string, Type>
     constructor(this, module_id: int, id: int){
         this.id = new ScopeId(module_id, id)
         this.vars = new Map<string, VarId>()
@@ -1141,7 +1140,7 @@ class TypeChecker {
         }
         // We declare module structures
         for i = 0; i < module_ast.enums.length; i++ {
-            this.declare_enum_within_current_scope(module_ast.enums[i])
+            this.declare_enum_within_module(module_ast.enums[i])
         }
         for i = 0; i < module_ast.classes.length; i++ {
             this.declare_class_within_module(module_ast.classes[i])
@@ -1165,7 +1164,7 @@ class TypeChecker {
             this.declare_global_var(module_ast.vars[i])
         }
         for i = 0; i < module_ast.functions.length; i++ {
-            this.declare_function_within_current_scope(module_ast.functions[i])
+            this.declare_function_within_module(module_ast.functions[i])
         }
         if this.has_errored() return null
         // We Now check bodies
@@ -1356,7 +1355,7 @@ class TypeChecker {
             for let i = 0; i < import_node.import_list.length; i++ {
                 let name_to_import = import_node.import_list[i].value
                 let renamed_name = name_to_import
-                if this.generic_templates.get(renamed_name) != null {
+                if this.generic_templates.get(name_to_import) != null {
                     // TODO: Temporary fix for importing generics since generics are templates represented by the AST and don't capture scope.
                     this.import_all_from_module(module)
                     return
@@ -1420,10 +1419,10 @@ class TypeChecker {
         this.compiler.set_current_file(prev_file_id)
         return module
     }
-    private declare_enum_within_current_scope(this, enum_node: EnumNode){
+    private declare_enum_within_module(this, enum_node: EnumNode){
         let declared_enum = new Enum()
         let name = enum_node.name.value
-        let current_scope = this.get_current_scope()
+        let module_scope =  this.get_current_module_global_scope()
         declared_enum.name = name
         if this.get_type_from_current_scope(name).kind != TypeKind.UNKNOWN {
             this.error(ErrorKind.NAME, "Name '$name' has already been used for another type. consider renaming", enum_node.name.range)
@@ -1433,8 +1432,8 @@ class TypeChecker {
         declared_enum.fields = []
         declared_enum.id = new EnumId(this.current_module, this.get_current_module().enums.length)
         this.get_current_module().enums << declared_enum
-        current_scope.enums.set(declared_enum.name, declared_enum.id)
-        current_scope.vars.set(declared_enum.name, new EnumVarId(declared_enum.id))
+        module_scope.enums.set(declared_enum.name, declared_enum.id)
+        module_scope.vars.set(declared_enum.name, new EnumVarId(declared_enum.id))
     }
     private declare_class_within_module(this, class_decl_node: ClassDeclarationNode) {
         let name = class_decl_node.name.value
@@ -1467,13 +1466,13 @@ class TypeChecker {
         module_scope.classes.set(name, declared_class.id)
         module_scope.vars.set(name, new ClassVarId(declared_class.id))
     }
-    private declare_function_within_current_scope(this, function_node: FunctionDeclarationNode) {
+    private declare_function_within_module(this, function_node: FunctionDeclarationNode) {
         let declared_function = new Function()
         declared_function.is_external = function_node.is_external
         let name = function_node.name.value
         declared_function.name = name
         if this.is_constant_in_scope(name) {
-            this.error(ErrorKind.NAME, "Illegal re-declaration of const '$name+", function_node.name.range)
+            this.error(ErrorKind.NAME, "Illegal re-declaration of const '$name'", function_node.name.range)
             return
         }
         if this.get_type_from_current_scope(name).kind != TypeKind.UNKNOWN {
@@ -1488,8 +1487,9 @@ class TypeChecker {
         declared_function.id = new VarId(VarIdKind.FNC, this.current_module, this.get_current_module().functions.length)
         this.current_scope = fnc_scope.parent
         declared_function.scope = fnc_scope.id
+        let module_scope =  this.get_current_module_global_scope()
         this.get_current_module().functions << declared_function
-        this.get_current_scope().functions.set(declared_function.name, declared_function.id)
+        module_scope.functions.set(declared_function.name, declared_function.id)
     }
     private check_enum_body(this, declared_enum: Enum, enum_node: EnumNode){
         let enum_variant: Type = null
@@ -1887,9 +1887,9 @@ class TypeChecker {
     private check_var_access_expr(this, expected_type: Type, var_access_node: VarAccessExpressionNode): Expression {
         let name = var_access_node.name.value
         if name == "true" 
-            return new BooleanExpression(1) 
+            return new BooleanExpression(true) 
         if name == "false" 
-            return new BooleanExpression(0)
+            return new BooleanExpression(false)
         if name == "null"
             return new NullExpression(expected_type)
         let current_scope = this.get_current_scope()
@@ -2023,7 +2023,7 @@ class TypeChecker {
         }
         let left = this.check_expression(expected_type, binary_node.lhs)
         if this.has_errored() return null
-        if is_object(left.value_type) and !is_assign_op
+        if is_object(left.value_type) and !is_assign_op and op != BinaryOp.IN
             return this.check_object_binary_expr(left, binary_node, null) as BinaryExpression
         let right = this.check_expression(left.value_type, binary_node.rhs)
         if this.has_errored() return null

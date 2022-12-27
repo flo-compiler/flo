@@ -1,5 +1,8 @@
 import "@flo/collections/map"
+import "typechecker"
+import "llvm/types"
 import "llvm/core"
+import "types"
 import LLVMLinkModules2 in "llvm/linker"
 import DebugInfo in "codegenDI"
 import "codegenMod"
@@ -9,13 +12,13 @@ class IntrinsicResult {
     fnc_type: LLVMTypeRef
 }
 class CGClassType  {
-    llvm_type: LLVMTypeRef
-    vt_methods_pos_map: Map<string, int>
-    fields_pos_map: Map<string, int>
-    non_vt_methods_map: Map<string, LLVMValueRef>
-    vtable: LLVMValueRef
-    vtable_type: LLVMTypeRef
-    constructor: LLVMValueRef
+    public llvm_type: LLVMTypeRef
+    public vt_methods_pos_map: Map<string, int>
+    public fields_pos_map: Map<string, int>
+    public non_vt_methods_map: Map<string, LLVMValueRef>
+    public vtable: LLVMValueRef
+    public vtable_type: LLVMTypeRef
+    public constructor: LLVMValueRef
 }
 class CGEnumType {
     llvm_type: LLVMTypeRef
@@ -43,7 +46,7 @@ fnc create_type_id_key(type_id: TypeId): string {
     return "$(type_id.module_id);$(type_id.kind);$(type_id.id)"
 }
 fnc create_type_key_from_var(var_id: VarId): string {
-    return "$(var_id.module_id);$(var_id.kind - VarIdKind.CLASS);$(var_id.id)"
+    return "$(var_id.module_id);$(var_id.kind);$(var_id.id)"
 }
 fnc create_prop_key(prop_id: PropId): string {
     return "$(create_type_id_key(prop_id.type_id));$(prop_id.kind);$(prop_id.id)"
@@ -75,20 +78,20 @@ fnc get_format_from_type(ty: Type): string {
     return "%s"
 }
 class CodeGen {
-    modules: LLVMModuleRef[]
-    module: LLVMModuleRef
-    global_var_scope: Map<string, LLVMValueRef>
-    module_intrinsic_scope: Map<string, IntrinsicResult>
-    module_string_scope: Map<string, LLVMValueRef>
-    module_classes: Map<string, CGClassType>
-    module_enums: Map<string, CGEnumType>
-    function: LLVMValueRef
-    break_bb: LLVMBasicBlockRef
-    continue_bb: LLVMBasicBlockRef
-    program: Program
-    in_static_ctx: bool
-    program_ctx: LLVMContextRef
-    debugInfoObj: DebugInfo
+    private modules: LLVMModuleRef[]
+    private module: LLVMModuleRef
+    private global_var_scope: Map<string, LLVMValueRef>
+    private module_intrinsic_scope: Map<string, IntrinsicResult>
+    private module_string_scope: Map<string, LLVMValueRef>
+    private module_classes: Map<string, CGClassType>
+    private module_enums: Map<string, CGEnumType>
+    private function: LLVMValueRef
+    private break_bb: LLVMBasicBlockRef
+    private continue_bb: LLVMBasicBlockRef
+    private program: Program
+    private in_static_ctx: bool
+    private program_ctx: LLVMContextRef
+    private debugInfoObj: DebugInfo
     codegen(this, program: Program): GeneratedModule{
         this.program = program
         this.modules = []
@@ -139,10 +142,10 @@ class CodeGen {
         return LLVMIsConstant(val) ? LLVMConstNeg(val) : LLVMBuildNeg(builder, val, "")
     }
     private createLLVMBool(this, val: bool): LLVMValueRef{
-        return LLVMConstInt(LLVMInt1TypeInContext(this.program_ctx), val as int, false)
+        return LLVMConstInt(LLVMInt1TypeInContext(this.program_ctx), val as i64, false)
     }
     private createLLVMInt(this, i: int): LLVMValueRef {
-        return LLVMConstInt(LLVMIntTypeInContext(this.program_ctx, WORD_SIZE), i, false)
+        return LLVMConstInt(LLVMIntTypeInContext(this.program_ctx, WORD_SIZE), i as i64, false)
     }
     private codegen_module(this, module: Module): LLVMModuleRef {
         this.module_string_scope = new Map<string, LLVMValueRef>()
@@ -259,7 +262,6 @@ class CodeGen {
                 return enum_type.llvm_type
             }
         }
-        // RESOLVED_GENERIC
         return null
     }
     private codegen_return_stmt(this, builder: LLVMBuilderRef, return_stmt: ReturnStatement){
@@ -269,14 +271,14 @@ class CodeGen {
             LLVMBuildRetVoid(builder)
     }
     private codegen_int(this, int_exp: IntExpression): LLVMValueRef {
-        return LLVMConstInt(this.codegen_type(int_exp.value_type), int_exp.value, true)
+        return LLVMConstInt(this.codegen_type(int_exp.value_type), int_exp.value as i64, true)
     }
     private codegen_float(this, float_exp: FloatExpression): LLVMValueRef {
-        return LLVMConstReal(this.codegen_type(float_exp.value_type), float_exp.value)
+        return LLVMConstReal(this.codegen_type(float_exp.value_type), float_exp.value as f64)
     }
     private codegen_bool(this, bool_exp: BooleanExpression): LLVMValueRef {
         let val = bool_exp.value
-        return LLVMConstInt(LLVMInt1TypeInContext(this.program_ctx), val, false)
+        return this.createLLVMBool(val)
     }
     private codegen_snprintf_call(this, builder: LLVMBuilderRef, vargs: LLVMValueRef[]): LLVMValueRef {
         let i8_ty = LLVMInt8TypeInContext(this.program_ctx)
@@ -471,7 +473,8 @@ class CodeGen {
             let ptr_type = this.codegen_type(lty)
             return LLVMBuildInBoundsGEP2(builder, ptr_type, lhs, &indices[0], 1, "")
         }
-        let pred = 0
+        let ipred: LLVMIntPredicate = null
+        let rpred: LLVMRealPredicate = null
         let is_const_expr = LLVMIsConstant(lhs) and LLVMIsConstant(rhs)
         if is_int(rty) {
             if op == BinaryOp.ADD {
@@ -485,11 +488,11 @@ class CodeGen {
             } else if op == BinaryOp.MOD {
                 return LLVMBuildSRem(builder, lhs, rhs, "")
             } else if op >= BinaryOp.GT and op <= BinaryOp.LTE {
-                pred = op - BinaryOp.GT + 38
-                return is_const_expr ? LLVMConstICmp(pred, lhs, rhs) : LLVMBuildICmp(builder, pred, lhs, rhs, "")
+                ipred = ((op as int) - (BinaryOp.GT as int) + 38) as LLVMIntPredicate
+                return is_const_expr ? LLVMConstICmp(ipred, lhs, rhs) : LLVMBuildICmp(builder, ipred, lhs, rhs, "")
             } else if op >= BinaryOp.EEQ and op <= BinaryOp.NEQ {
-                pred = op - BinaryOp.EEQ + 32
-                return is_const_expr ? LLVMConstICmp(pred, lhs, rhs) : LLVMBuildICmp(builder, pred, lhs, rhs, "")
+                ipred = ((op as int) - (BinaryOp.EEQ as int) + 32) as LLVMIntPredicate
+                return is_const_expr ? LLVMConstICmp(ipred, lhs, rhs) : LLVMBuildICmp(builder, ipred, lhs, rhs, "")
             } else if op == BinaryOp.SL {
                 return is_const_expr ? LLVMConstShl(lhs, rhs) : LLVMBuildShl(builder, lhs, rhs, "")
             } else if op == BinaryOp.SR {
@@ -513,11 +516,11 @@ class CodeGen {
             } else if op == BinaryOp.MOD {
                 return LLVMBuildFRem(builder, lhs, rhs, "")
             } else if op >= BinaryOp.GT and op <= BinaryOp.LTE {
-                pred = op - BinaryOp.GT + LLVMRealPredicate.LLVMRealOGT
-                return is_const_expr ? LLVMConstFCmp(pred, lhs, rhs) : LLVMBuildFCmp(builder, pred, lhs, rhs, "")
+                rpred = ((op as int) - (BinaryOp.GT as int) + (LLVMRealPredicate.LLVMRealOGT as int)) as LLVMRealPredicate
+                return is_const_expr ? LLVMConstFCmp(rpred, lhs, rhs) : LLVMBuildFCmp(builder, rpred, lhs, rhs, "")
             } else if op >= BinaryOp.EEQ and op <= BinaryOp.NEQ {
-                pred = op == BinaryOp.NEQ ? LLVMRealPredicate.LLVMRealONE : LLVMRealPredicate.LLVMRealOEQ
-                return is_const_expr ? LLVMConstFCmp(pred, lhs, rhs) : LLVMBuildFCmp(builder, pred, lhs, rhs, "")
+                rpred = op == BinaryOp.NEQ ? LLVMRealPredicate.LLVMRealONE : LLVMRealPredicate.LLVMRealOEQ
+                return is_const_expr ? LLVMConstFCmp(rpred, lhs, rhs) : LLVMBuildFCmp(builder, rpred, lhs, rhs, "")
             }
         } else if is_bool(rty) {
             if op == BinaryOp.AND {
@@ -574,7 +577,7 @@ class CodeGen {
                 let indices: LLVMValueRef[1] = [this.createLLVMInt(incr_value)]
                 new_value = LLVMBuildInBoundsGEP2(builder, alloc_ty, val, &indices[0], 1, "incdec.ptr")
             } else if is_numeric(exp.value_type){
-                let incr_amt = is_int(exp.value_type) ? LLVMConstInt(alloc_ty, incr_value, false) : LLVMConstReal(alloc_ty, incr_value * 1.0)
+                let incr_amt = is_int(exp.value_type) ? LLVMConstInt(alloc_ty, incr_value as i64, false) : LLVMConstReal(alloc_ty, incr_value * 1.0 as f64)
                 new_value = LLVMBuildAdd(builder, val, incr_amt, "")
             }
             LLVMBuildStore(builder, new_value, ptr)
@@ -1102,6 +1105,7 @@ class CodeGen {
                 }
                 constructor_type.arg_types = arg_types
             }
+            println("$(checked_class.name)")
             let constructor_llvm_method_type = this.codegen_type(constructor_type, false)
             struct_class.constructor = this.declare_method("$(checked_class.name)_constructor", constructor_llvm_method_type)
             constructor_type.has_this = true

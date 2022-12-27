@@ -207,7 +207,7 @@ class Array <T> {
         }
         return null
     }
-    __eq__(this, other: Array<T>): bool{
+    __eq__(this, other: T[]): bool{
         if this.length != other.length {
             return false
         } else {
