@@ -143,7 +143,7 @@ class CodeGen {
         return LLVMIsConstant(val) ? LLVMConstNeg(val) : LLVMBuildNeg(builder, val, "")
     }
     private createLLVMBool(this, val: bool): LLVMValueRef{
-        return LLVMConstInt(LLVMInt1TypeInContext(this.program_ctx), val as i64, false)
+        return LLVMConstInt(LLVMInt1TypeInContext(this.program_ctx), val ? 1 : 0 as i64, false)
     }
     private createLLVMInt(this, i: int): LLVMValueRef {
         return LLVMConstInt(LLVMIntTypeInContext(this.program_ctx, WORD_SIZE), i as i64, false)
@@ -317,6 +317,22 @@ class CodeGen {
         LLVMBuildCall2(builder, sprintf.fnc_type, sprintf.call, args.buffer, args.length, "")
         return mem
     }
+    private createGlobalLLVMString(this, builder: LLVMBuilderRef, str_value: string): LLVMValueRef {
+        let str = this.module_string_scope.get(str_value)
+        if str == null {
+            str = LLVMBuildGlobalString(builder, str_value.to_cstring(), "")
+            this.module_string_scope.set(str_value, str)
+        }
+        return str
+    }
+    private get_string_val(this, builder: LLVMBuilderRef, llvm_val: LLVMValueRef, val_ty: Type): LLVMValueRef {
+        if is_bool(val_ty){
+            let true_str = this.createGlobalLLVMString(builder, "true")
+            let false_str = this.createGlobalLLVMString(builder, "false")
+            return LLVMBuildSelect(builder, llvm_val, true_str, false_str, "")
+        }
+        return llvm_val
+    }
     private codegen_string(this, builder: LLVMBuilderRef, string_exp: StringExpression): LLVMValueRef {
         let str_value = string_exp.value
         let call_args: LLVMValueRef[] = []
@@ -326,23 +342,22 @@ class CodeGen {
         let curr_ind = 0
         let prev_ind = 0
         for let i = 0; i < string_exp.template_args.length; i++ {
-            let fmt = get_format_from_type(string_exp.template_args[i].value_type)
+            let templ_arg = string_exp.template_args[i]
+            let templ_arg_ty = templ_arg.value_type
+            let fmt = get_format_from_type(templ_arg_ty)
             prev_ind = curr_ind
             curr_ind = string_exp.fmt_indices[i]
             let incr = curr_ind - prev_ind
             fmt_str_builder.add_bytes_length(chars, incr)
             fmt_str_builder.append_string(fmt)
             chars += incr
-            call_args << this.codegen_expression(builder, string_exp.template_args[i])
+            let templ_arg_exp = this.codegen_expression(builder, templ_arg)
+            call_args << this.get_string_val(builder, templ_arg_exp, templ_arg_ty)
         }
         fmt_str_builder.add_bytes_length(chars, str_value.length - curr_ind)
         str_value = fmt_str_builder.get_string()
         let str_len = this.createLLVMInt(str_value.length)
-        let str = this.module_string_scope.get(str_value)
-        if str == null {
-            str = LLVMBuildGlobalString(builder, str_value.to_cstring(), "")
-            this.module_string_scope.set(str_value, str)
-        }
+        let str = this.createGlobalLLVMString(builder, str_value)
         let is_string_object = is_object(string_exp.value_type)
         if call_args.length > 1 {
             call_args[0] = str

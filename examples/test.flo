@@ -1,0 +1,4 @@
+fnc main(): int {
+    println(false as string)
+    return 0
+}
