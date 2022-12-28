@@ -46,7 +46,8 @@ fnc create_type_id_key(type_id: TypeId): string {
     return "$(type_id.module_id);$(type_id.kind);$(type_id.id)"
 }
 fnc create_type_key_from_var(var_id: VarId): string {
-    return "$(var_id.module_id);$(var_id.kind);$(var_id.id)"
+    let diff =  (var_id.kind as int) - (VarIdKind.CLASS as int)
+    return "$(var_id.module_id);$diff;$(var_id.id)"
 }
 fnc create_prop_key(prop_id: PropId): string {
     return "$(create_type_id_key(prop_id.type_id));$(prop_id.kind);$(prop_id.id)"
@@ -711,11 +712,6 @@ class CodeGen {
         }
         let prop_id_key = create_prop_key(member_exp.member_id)
         if var_id.kind == VarIdKind.CLASS {
-            println(create_type_key_from_var(var_id))
-            let buckets = this.module_classes.get_buckets()
-            for let i = 0; i < buckets.length; i++ {
-                println("$i $(buckets[i].key)")
-            }
             let struct_class = this.get_class_from_varid(var_id)
             if struct_class == null {
                 println("this should not happen; (codegen_member_exp); class")
