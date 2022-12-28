@@ -20,6 +20,8 @@ fnc LLVMGenericValueToFloat(TyRef: LLVMTypeRef, GenVal: LLVMGenericValueRef): f6
 fnc LLVMDisposeGenericValue(GenVal: LLVMGenericValueRef)
 
 
+fnc LLVMRemoveModule(EE: LLVMExecutionEngineRef, M: LLVMModuleRef ,
+                          OutMod: LLVMModuleRef*, OutError: i8**): LLVMBool
 /*===-- Operations on execution engines -----------------------------------===*/
 fnc LLVMCreateExecutionEngineForModule(OutEE: LLVMExecutionEngineRef*, M: LLVMModuleRef, OutError: i8**): LLVMBool
 fnc LLVMCreateInterpreterForModule(OutInterp: LLVMExecutionEngineRef*, M: LLVMModuleRef, OutError: i8**): LLVMBool 
