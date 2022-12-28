@@ -9,9 +9,11 @@ import LLVMDisposeTargetMachine, LLVMTargetMachineEmitToFile, LLVMGetDefaultTarg
 class GeneratedModule {
     private llvm_mod: LLVMModuleRef
     private errors: i8*
+    private ee: LLVMExecutionEngineRef
     constructor(this, llvm_mod: LLVMModuleRef){
         this.llvm_mod = llvm_mod
         this.errors = null
+        this.ee = null
         LLVMVerifyModule(this.llvm_mod, LLVMVerifierFailureAction.LLVMAbortProcessAction, &this.errors)
         this.check_errors()
         LLVM_InitializeAllTargetInfos()
@@ -43,20 +45,19 @@ class GeneratedModule {
     }
     public exec(this){
         LLVMLinkInMCJIT()
-        let engine: LLVMExecutionEngineRef = null
-        if (LLVMCreateExecutionEngineForModule(&engine, this.llvm_mod, &this.errors) != 0) {
+        if (LLVMCreateExecutionEngineForModule(&this.ee, this.llvm_mod, &this.errors) != 0) {
             println("failed to create execution engine")
             return
         }
         let main_fnc = LLVMGetNamedFunction(this.llvm_mod, "main")
         if main_fnc == null {
             println("Main function not found in module; can't execute")
-            LLVMDisposeExecutionEngine(engine)
+            LLVMDisposeExecutionEngine(this.ee)
+            this.ee = null
             return
         }
-        let ret = LLVMRunFunctionAsMain(engine, main_fnc, 0, null, null)
+        let ret = LLVMRunFunctionAsMain(this.ee, main_fnc, 0, null, null)
         println("Exited with code: $ret")
-        LLVMDisposeExecutionEngine(engine)
     }
     public create_target_machine(this, triple_str: string): LLVMTargetMachineRef {
         let triple = triple_str == "" ? LLVMGetDefaultTargetTriple() : triple_str.to_cstring()
@@ -83,7 +84,11 @@ class GeneratedModule {
     }
     public destroy(this){
         let ctx = LLVMGetModuleContext(this.llvm_mod)
-        LLVMDisposeModule(this.llvm_mod)
+        if this.ee == null {
+            LLVMDisposeModule(this.llvm_mod)
+        } else {
+            LLVMDisposeExecutionEngine(this.ee)
+        }
         LLVMContextDispose(ctx)
         LLVMShutdown()
     }
