@@ -1,5 +1,5 @@
-fnc printf(fmt: i8*, x: i32 = 0): i32
 fnc main(): int {
-   printf("Hello world\n")
-   return 0
+    let arr: int[] = [1, 2, 3, 4]
+    arr << 8
+    return arr[4] + arr[1]
 }
