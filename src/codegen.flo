@@ -357,15 +357,12 @@ class CodeGen {
         return str
     }
     private store_array_elements(this, builder: LLVMBuilderRef, ptr: LLVMValueRef, array_exp: ArrayExpression): LLVMValueRef {
-        let zero = this.createLLVMInt(0)
-        let args: LLVMValueRef[2] = [zero, zero]
         let next_args = [this.createLLVMInt(1)]
-        let array_type = this.codegen_type(array_exp.value_type)
-        let elem_ty = LLVMPointerType(this.codegen_type((array_exp.value_type as ArrayType).element_type))
-        let addr = LLVMBuildInBoundsGEP2(builder, array_type, ptr, &args[0], 2, "")
+        let ptr_ty = LLVMTypeOf(ptr)
+        let addr = ptr
         for let i = 0; i < array_exp.value.length; ++i {
             LLVMBuildStore(builder, this.codegen_expression(builder, array_exp.value[i]), addr)
-            addr = LLVMBuildInBoundsGEP2(builder, elem_ty, addr, &next_args[0], 1, "")
+            addr = LLVMBuildInBoundsGEP2(builder, ptr_ty, addr, &next_args[0], 1, "")
         }
         return addr
     }
@@ -428,10 +425,43 @@ class CodeGen {
             return this.get_member_expr_mem(builder, exp as MemberExpression, null)
         return this.codegen_expression(builder, exp)
     }
+    private get_member_mem_with_name(this, builder: LLVMBuilderRef, val: LLVMValueRef, obj_type: ObjectType, name: string): LLVMValueRef {
+        let class_id = obj_type.class_id
+        let prop_id = get_class(this.program, class_id).prop_map.get(name)
+        let prop_ty = get_class_prop_type(this.program, prop_id)
+        let member_expr = new MemberExpression(null, prop_id, prop_ty)
+        return this.get_member_expr_mem(builder, member_expr, val)
+    }
+    private codegen_builtin_array(this, builder: LLVMBuilderRef, arrgen_ty: GenericType, arr_expr: ArrayExpression): LLVMValueRef {
+        let obj_ty = (arrgen_ty as GenericType).instantiated_type as ObjectType
+        let objllvm_ty = this.codegen_type(obj_ty, false)
+        let elmllvm_ty = this.codegen_type(arrgen_ty.arg_types[0])
+        let self = LLVMBuildMalloc(builder, objllvm_ty, "")
+        let len_val = this.createLLVMInt(arr_expr.value.length)
+        this.build_constructor_call(builder, obj_ty, [self, LLVMConstMul(len_val, LLVMSizeOf(elmllvm_ty))])
+        let buff_ptr = this.get_member_mem_with_name(builder, self, obj_ty, "buffer")
+        let arg_ptr = LLVMBuildLoad2(builder, LLVMPointerType(elmllvm_ty), buff_ptr, "")
+        this.store_array_elements(builder, arg_ptr, arr_expr)
+        let len_ptr = this.get_member_mem_with_name(builder, self, obj_ty, "length")
+        LLVMBuildStore(builder, len_val, len_ptr)
+        return self
+    }
     private store_expr_to_mem(this, builder: LLVMBuilderRef, ptr: LLVMValueRef, expr: Expression): LLVMValueRef {
-        if expr.expr_kind == ExpressionKind.ARRAY and expr.is_constant == false
-            return this.store_array_elements(builder, ptr, expr as ArrayExpression)
-        let value = this.codegen_expression(builder, expr)
+        let value: LLVMValueRef = null
+        if expr.expr_kind == ExpressionKind.ARRAY and expr.is_constant == false {
+            let arr_expr = expr as ArrayExpression
+            let value_ty = expr.value_type
+            if value_ty.kind != TypeKind.RESOLVED_GENERIC {
+                let zero = this.createLLVMInt(0)
+                let args: LLVMValueRef[2] = [zero, zero]
+                let array_type = this.codegen_type(value_ty)
+                ptr = LLVMBuildInBoundsGEP2(builder, array_type, ptr, &args[0], 2, "")
+                return this.store_array_elements(builder, ptr, arr_expr)
+            }
+            value = this.codegen_builtin_array(builder, value_ty as GenericType, arr_expr)
+        } else {
+            value = this.codegen_expression(builder, expr)
+        }
         LLVMBuildStore(builder, value, ptr)
         return value
     }
@@ -681,6 +711,11 @@ class CodeGen {
         }
         let prop_id_key = create_prop_key(member_exp.member_id)
         if var_id.kind == VarIdKind.CLASS {
+            println(create_type_key_from_var(var_id))
+            let buckets = this.module_classes.get_buckets()
+            for let i = 0; i < buckets.length; i++ {
+                println("$i $(buckets[i].key)")
+            }
             let struct_class = this.get_class_from_varid(var_id)
             if struct_class == null {
                 println("this should not happen; (codegen_member_exp); class")
@@ -1105,7 +1140,6 @@ class CodeGen {
                 }
                 constructor_type.arg_types = arg_types
             }
-            println("$(checked_class.name)")
             let constructor_llvm_method_type = this.codegen_type(constructor_type, false)
             struct_class.constructor = this.declare_method("$(checked_class.name)_constructor", constructor_llvm_method_type)
             constructor_type.has_this = true

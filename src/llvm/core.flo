@@ -84,6 +84,8 @@ fnc LLVMGetFirstFunction(M: LLVMModuleRef): LLVMValueRef
 fnc LLVMGetLastFunction(M: LLVMModuleRef): LLVMValueRef
 fnc LLVMGetNextFunction(Fn: LLVMValueRef): LLVMValueRef
 fnc LLVMGetPreviousFunction(Fn: LLVMValueRef): LLVMValueRef
+
+fnc LLVMGetTypeKind(Ty: LLVMTypeRef): LLVMTypeKind
 fnc LLVMDumpType(Val: LLVMTypeRef)
 /* types */
 fnc LLVMInt1TypeInContext(C: LLVMContextRef): LLVMTypeRef
@@ -143,6 +145,8 @@ fnc LLVMStructTypeInContext(C: LLVMContextRef, ElementTypes: LLVMTypeRef*, Eleme
 fnc LLVMStructCreateNamed(C: LLVMContextRef, name: i8*): LLVMTypeRef 
 fnc LLVMStructSetBody(StructTy: LLVMTypeRef, ElementTypes: LLVMTypeRef *, element_count: int, packed: LLVMBool)
 
+fnc LLVMGetElementType(Ty: LLVMTypeRef): LLVMTypeRef
+
 fnc LLVMArrayType(ElementType: LLVMTypeRef, element_count: int): LLVMTypeRef
 
 fnc LLVMPointerType(ElementType: LLVMTypeRef, address_space = 0): LLVMTypeRef
@@ -157,6 +161,7 @@ fnc LLVMX86MMXType(): LLVMTypeRef
 fnc LLVMX86AMXType(): LLVMTypeRef 
 
 /* values */
+fnc LLVMTypeOf(Val: LLVMValueRef): LLVMTypeRef
 fnc LLVMDumpValue(Val: LLVMValueRef)
 fnc LLVMIsConstant(Val: LLVMValueRef): LLVMBool
 fnc LLVMConstNull(Ty: LLVMTypeRef): LLVMValueRef

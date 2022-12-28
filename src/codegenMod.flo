@@ -43,13 +43,12 @@ class GeneratedModule {
     }
     public exec(this){
         LLVMLinkInMCJIT()
-        let module_copy = this.copy_llvm_module()
         let engine: LLVMExecutionEngineRef = null
-        if (LLVMCreateExecutionEngineForModule(&engine, module_copy, &this.errors) != 0) {
+        if (LLVMCreateExecutionEngineForModule(&engine, this.llvm_mod, &this.errors) != 0) {
             println("failed to create execution engine")
             return
         }
-        let main_fnc = LLVMGetNamedFunction(module_copy, "main")
+        let main_fnc = LLVMGetNamedFunction(this.llvm_mod, "main")
         if main_fnc == null {
             println("Main function not found in module; can't execute")
             LLVMDisposeExecutionEngine(engine)
@@ -71,10 +70,9 @@ class GeneratedModule {
     }
     public write_object(this, fn: string, target: string){
         let tm = this.create_target_machine(target)
-        let module_copy = this.copy_llvm_module()
-        LLVMSetDataLayout(module_copy, LLVMCreateTargetDataLayout(tm))
-        LLVMSetTarget(module_copy, LLVMGetTargetMachineTriple(tm))
-        if (LLVMTargetMachineEmitToFile(tm, module_copy, fn.to_cstring(), LLVMCodeGenFileType.LLVMObjectFile, &this.errors) != 0) {
+        LLVMSetDataLayout(this.llvm_mod, LLVMCreateTargetDataLayout(tm))
+        LLVMSetTarget(this.llvm_mod, LLVMGetTargetMachineTriple(tm))
+        if (LLVMTargetMachineEmitToFile(tm, this.llvm_mod, fn.to_cstring(), LLVMCodeGenFileType.LLVMObjectFile, &this.errors) != 0) {
             println("target machine failed to emit object code")
         }
         this.check_errors()
@@ -82,9 +80,6 @@ class GeneratedModule {
     }
     public print(this){
         LLVMDumpModule(this.llvm_mod)
-    }
-    private copy_llvm_module(this): LLVMModuleRef{
-        return LLVMCloneModule(this.llvm_mod)
     }
     public destroy(this){
         let ctx = LLVMGetModuleContext(this.llvm_mod)
