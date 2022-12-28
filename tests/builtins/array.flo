@@ -1,5 +1,9 @@
 fnc main(): int {
     let arr: int[] = [1, 2, 3, 4]
     arr << 8
-    return arr[4] + arr[1]
+    let sum = 0
+    for let i = 0; i < arr.length; i++ {
+        sum += arr[i]
+    }
+    return sum
 }
