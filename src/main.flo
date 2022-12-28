@@ -79,7 +79,7 @@ fnc main(argc: int, argv: i8**): int {
         } else {
             flo_module.exec()
         }
-        // flo_module.destroy()
+        flo_module.llvm_shutdown()
     } else {
         print_message_error(ErrorKind.GEN, "No input file specified.")
         return 1
