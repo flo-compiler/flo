@@ -281,17 +281,6 @@ class CodeGen {
         let val = bool_exp.value
         return this.createLLVMBool(val)
     }
-    private codegen_snprintf_call(this, builder: LLVMBuilderRef, vargs: LLVMValueRef[]): LLVMValueRef {
-        let i8_ty = LLVMInt8TypeInContext(this.program_ctx)
-        let i8_ptr_ty = LLVMPointerType(i8_ty)
-        let int_ty = LLVMIntTypeInContext(this.program_ctx, WORD_SIZE)
-        let args: LLVMValueRef[] = [LLVMConstNull(i8_ptr_ty), this.createLLVMInt(0)]
-        let snprintf = get_intrinsic(this.module, "snprintf", [i8_ptr_ty, int_ty, i8_ptr_ty], int_ty, true)
-        for let i = 0; i < vargs.length; i++ {
-            args << vargs[i]
-        }
-        return LLVMBuildCall2(builder, snprintf.fnc_type, snprintf.call, args.buffer, args.length, "")
-    }
     private codegen_atof_call(this, builder: LLVMBuilderRef, args: LLVMValueRef[]): LLVMValueRef {
         let i8_ptr_ty = LLVMPointerType(LLVMInt8TypeInContext(this.program_ctx))
         let float_ty = LLVMDoubleTypeInContext(this.program_ctx)
@@ -322,19 +311,6 @@ class CodeGen {
         let realloc = get_intrinsic(this.module, "memcmp", [i8_ptr_ty, i8_ptr_ty, int_ty], int_ty)
         return LLVMBuildCall2(builder, realloc.fnc_type, realloc.call, args.buffer, args.length, "")
     }
-    private codegen_sprintf_call(this, builder: LLVMBuilderRef, vargs: LLVMValueRef[], size: LLVMValueRef, onheap: bool): LLVMValueRef {
-        let i8_ty = LLVMInt8TypeInContext(this.program_ctx)
-        let i8_ptr_ty = LLVMPointerType(i8_ty)
-        let int_ty = LLVMIntTypeInContext(this.program_ctx, WORD_SIZE)
-        let mem = onheap ? LLVMBuildArrayMalloc(builder, i8_ty, size, "") : LLVMBuildArrayAlloca(builder, i8_ty, size, "")
-        let args: LLVMValueRef[] = [mem]
-        for let i = 0; i < vargs.length; i++ {
-            args << vargs[i]
-        }
-        let sprintf = get_intrinsic(this.module, "sprintf", [i8_ptr_ty, i8_ptr_ty], int_ty, true)
-        LLVMBuildCall2(builder, sprintf.fnc_type, sprintf.call, args.buffer, args.length, "")
-        return mem
-    }
     private createGlobalLLVMString(this, builder: LLVMBuilderRef, str_value: string): LLVMValueRef {
         let str = this.module_string_scope.get(str_value)
         if str == null {
@@ -343,16 +319,22 @@ class CodeGen {
         }
         return str
     }
-    private codegen_safe_fmt_string(this, builder: LLVMBuilderRef, fmt: string, args: LLVMValueRef[], onheap: bool, len_ptr: LLVMValueRef*): LLVMValueRef {
-        let call_args: LLVMValueRef[] = [this.createGlobalLLVMString(builder, fmt)]
+    private codegen_safe_fmt_string(this, builder: LLVMBuilderRef, fmt: string, args: LLVMValueRef[], len_ptr: LLVMValueRef*): LLVMValueRef {
+        let i8_ty = LLVMInt8TypeInContext(this.program_ctx)
+        let i8_ptr_ty = LLVMPointerType(i8_ty)
+        let int_ty = LLVMIntTypeInContext(this.program_ctx, WORD_SIZE)
+        let alloc_buff = LLVMBuildAlloca(builder, i8_ptr_ty, "")
+        let llvm_fmt = this.createGlobalLLVMString(builder, fmt)
+        let call_args: LLVMValueRef[] = [alloc_buff, llvm_fmt]
         for let i = 0; i < args.length; i++ {
             call_args << args[i]
         }
-        let str_len = this.codegen_snprintf_call(builder, call_args)
+        let asprintf = get_intrinsic(this.module, "asprintf", [i8_ptr_ty, i8_ptr_ty], int_ty, true)
+        let str_len = LLVMBuildCall2(builder, asprintf.fnc_type, asprintf.call, call_args.buffer, call_args.length, "")
         if len_ptr != null {
             len_ptr[0] = str_len
         }
-        return this.codegen_sprintf_call(builder, call_args, str_len, onheap)
+        return LLVMBuildLoad2(builder, i8_ptr_ty, alloc_buff, "")
     }
     private get_string_val(this, builder: LLVMBuilderRef, llvm_val: LLVMValueRef, val_ty: Type, depth = 0): LLVMValueRef {
         if is_bool(val_ty){
@@ -380,7 +362,7 @@ class CodeGen {
                 fmt_str += " '$(field_bucket.key)': $(get_format_from_type(field_ty)), \n"
             }
             fmt_str += "}"
-            return this.codegen_safe_fmt_string(builder, fmt_str, fmt_args, false, null)
+            return this.codegen_safe_fmt_string(builder, fmt_str, fmt_args, null)
         }
         return llvm_val
     }
@@ -407,14 +389,8 @@ class CodeGen {
         fmt_str_builder.add_bytes_length(chars, str_value.length - curr_ind)
         str_value = fmt_str_builder.get_string()
         let str_len: LLVMValueRef = this.createLLVMInt(str_value.length)
-        let str: LLVMValueRef = null
-        let is_string_object = is_object(string_exp.value_type)
-        if call_args.length > 0 {
-            str = this.codegen_safe_fmt_string(builder, str_value, call_args, is_string_object, &str_len)
-        } else {
-            str = this.createGlobalLLVMString(builder, str_value)
-        }
-        if is_string_object {
+        let str = call_args.length > 0 ? this.codegen_safe_fmt_string(builder, str_value, call_args, &str_len) : this.createGlobalLLVMString(builder, str_value)
+        if is_object(string_exp.value_type) {
             let self = LLVMBuildMalloc(builder, this.codegen_type(string_exp.value_type), "")
             this.build_constructor_call(builder, string_exp.value_type as ObjectType, [self, str, str_len])
             return self
