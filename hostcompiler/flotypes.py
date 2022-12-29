@@ -487,7 +487,6 @@ class FloPointer(FloType):
     @value.setter
     def value(self, n_val):
         self.mem = FloMem(n_val)
-
     @property
     def llvmtype(self):
         return self.elm_type.llvmtype.as_pointer()
@@ -537,6 +536,10 @@ class FloPointer(FloType):
             raise Exception("Cannot cast")
         else:
             return FloPointer(type.elm_type).new(FloMem.bitcast(builder, self.mem, type.llvmtype))
+    
+    def cmp(self, builder: ir.IRBuilder, op, other):
+        should_not = op == "!="
+        return strict_mem_compare(builder, op, self.mem, other.floval.mem)
 
     def str(self):
         return f"{self.elm_type.str()}*"

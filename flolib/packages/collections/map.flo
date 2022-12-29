@@ -30,7 +30,7 @@ class Map<T, U> {
         for let i = 0; i < str.length; ++i {
             hash = (hash << 1) + (str.get_byte(i) as int)
         }
-        return hash
+        return hash < 0 ? -hash : hash
     }
     resize(this){
         let old_size = this.size
