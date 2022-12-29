@@ -292,6 +292,24 @@ class CodeGen {
         }
         return LLVMBuildCall2(builder, snprintf.fnc_type, snprintf.call, args.buffer, args.length, "")
     }
+    private codegen_atof_call(this, builder: LLVMBuilderRef, args: LLVMValueRef[]): LLVMValueRef {
+        let i8_ptr_ty = LLVMPointerType(LLVMInt8TypeInContext(this.program_ctx))
+        let float_ty = LLVMDoubleTypeInContext(this.program_ctx)
+        let atof = get_intrinsic(this.module, "atof", [i8_ptr_ty], float_ty)
+        return LLVMBuildCall2(builder, atof.fnc_type, atof.call, args.buffer, args.length, "")
+    }
+    private codegen_atoi_call(this, builder: LLVMBuilderRef, args: LLVMValueRef[]): LLVMValueRef {
+        let i8_ptr_ty = LLVMPointerType(LLVMInt8TypeInContext(this.program_ctx))
+        let int_ty = LLVMInt32TypeInContext(this.program_ctx)
+        let atoi = get_intrinsic(this.module, "atoi", [i8_ptr_ty], int_ty)
+        return LLVMBuildCall2(builder, atoi.fnc_type, atoi.call, args.buffer, args.length, "")
+    }
+    private codegen_atol_call(this, builder: LLVMBuilderRef, args: LLVMValueRef[]): LLVMValueRef {
+        let i8_ptr_ty = LLVMPointerType(LLVMInt8TypeInContext(this.program_ctx))
+        let big_int_ty = LLVMInt64TypeInContext(this.program_ctx)
+        let atol = get_intrinsic(this.module, "atol", [i8_ptr_ty], big_int_ty)
+        return LLVMBuildCall2(builder, atol.fnc_type, atol.call, args.buffer, args.length, "")
+    }
     private codegen_realloc_call(this, builder: LLVMBuilderRef, args: LLVMValueRef[]): LLVMValueRef {
         let i8_ptr_ty = LLVMPointerType(LLVMInt8TypeInContext(this.program_ctx))
         let int_ty = LLVMIntTypeInContext(this.program_ctx, WORD_SIZE)
@@ -752,8 +770,20 @@ class CodeGen {
         let intrinsic_type = intrinsic_call_exp.intrinsic
         let args: LLVMValueRef[] = []
         this.evaluate_expression_list(builder, args, intrinsic_call_exp.args)
+        if intrinsic_type < Intrinsics.MEMCPY {
+            let sbuff = this.get_member_mem_with_name(builder, args[0], intrinsic_call_exp.args[0].value_type as ObjectType, "buffer")
+            sbuff = LLVMBuildLoad2(builder, LLVMPointerType(LLVMInt8TypeInContext(this.program_ctx)), sbuff, "")
+            if intrinsic_type == Intrinsics.STR_TO_F {
+                return this.codegen_atof_call(builder, [sbuff])
+            }
+            if intrinsic_type == Intrinsics.STR_TO_I {
+                return this.codegen_atoi_call(builder, [sbuff])
+            }
+            if intrinsic_type == Intrinsics.STR_TO_L {
+                return this.codegen_atol_call(builder, [sbuff])
+            }
+        }
         let arg0_pointee_size = LLVMSizeOf(this.codegen_type((intrinsic_call_exp.args[0].value_type as PointerType).pointee_type))
-        
         if intrinsic_type == Intrinsics.MEMRESIZE {
             args[1] = LLVMBuildMul(builder, args[1], arg0_pointee_size, "")
             return this.codegen_realloc_call(builder, args)

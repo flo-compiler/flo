@@ -1,0 +1,5 @@
+fnc main(): int {
+    println(9.2 as string)
+    println(true as string)
+    return 0
+}

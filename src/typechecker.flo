@@ -2128,6 +2128,16 @@ class TypeChecker {
             is_valid_cast = true
         }
         if is_numeric(dest_ty) and this.is_buitin(val_ty, "string") {
+            let call: IntrinsicCall = null
+            if is_float(dest_ty) {
+                call = new IntrinsicCall(Intrinsics.STR_TO_F)
+            } else if dest_ty.kind < TypeKind.I64 or (WORD_SIZE < 64 and dest_ty.kind == TypeKind.INT) {
+                call = new IntrinsicCall(Intrinsics.STR_TO_I)
+            } else {
+                call = new IntrinsicCall(Intrinsics.STR_TO_L)
+            }
+            call.args = [exp]
+            exp = call
             is_valid_cast = true
         }
         
