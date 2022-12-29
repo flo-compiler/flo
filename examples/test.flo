@@ -1,0 +1,22 @@
+class NaiveClass {
+    x: int
+    y: int
+    dumy: Dumy
+    constructor(this, x: int, y: int){
+        this.x = x
+        this.y = y
+    }
+}
+class Dumy {
+    percent: f32
+    constructor(this, percent: f32){
+        this.percent = percent
+    }
+}
+fnc main(): int {
+    let nate: NaiveClass(4, 5)
+    let dum: Dumy(4.9)
+    nate.dumy = dum
+    println("$nate")
+    return 0
+}

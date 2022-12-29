@@ -343,18 +343,50 @@ class CodeGen {
         }
         return str
     }
-    private get_string_val(this, builder: LLVMBuilderRef, llvm_val: LLVMValueRef, val_ty: Type): LLVMValueRef {
+    private codegen_safe_fmt_string(this, builder: LLVMBuilderRef, fmt: string, args: LLVMValueRef[], onheap: bool, len_ptr: LLVMValueRef*): LLVMValueRef {
+        let call_args: LLVMValueRef[] = [this.createGlobalLLVMString(builder, fmt)]
+        for let i = 0; i < args.length; i++ {
+            call_args << args[i]
+        }
+        let str_len = this.codegen_snprintf_call(builder, call_args)
+        if len_ptr != null {
+            len_ptr[0] = str_len
+        }
+        return this.codegen_sprintf_call(builder, call_args, str_len, onheap)
+    }
+    private get_string_val(this, builder: LLVMBuilderRef, llvm_val: LLVMValueRef, val_ty: Type, depth = 0): LLVMValueRef {
         if is_bool(val_ty){
             let true_str = this.createGlobalLLVMString(builder, "true")
             let false_str = this.createGlobalLLVMString(builder, "false")
             return LLVMBuildSelect(builder, llvm_val, true_str, false_str, "")
+        }
+        if is_object(val_ty){
+            if is_buitin(this.program, val_ty, "string") {
+                return this.get_member_with_name(builder, llvm_val, val_ty as ObjectType, "buffer")
+            }
+            //TODO: will need to check for nullable
+            let obj_class = get_class_from_type(this.program, val_ty)
+            let fmt_str = "$(obj_class.name) {\n"
+            if depth == 3 {
+                return this.createGlobalLLVMString(builder, fmt_str + " ... }")
+            }
+            let fmt_args: LLVMValueRef[] = []
+            let field_buckets = obj_class.prop_map.get_buckets()
+            for let i = 0; i < field_buckets.length; i++ {
+                let field_bucket = field_buckets[i]
+                let field_ty = get_class_prop_type(this.program, field_bucket.value)
+                let member_val = this.get_member_with_name(builder, llvm_val, val_ty as ObjectType, field_bucket.key)
+                fmt_args << this.get_string_val(builder, member_val, field_ty, depth + 1)
+                fmt_str += " '$(field_bucket.key)': $(get_format_from_type(field_ty)), \n"
+            }
+            fmt_str += "}"
+            return this.codegen_safe_fmt_string(builder, fmt_str, fmt_args, false, null)
         }
         return llvm_val
     }
     private codegen_string(this, builder: LLVMBuilderRef, string_exp: StringExpression): LLVMValueRef {
         let str_value = string_exp.value
         let call_args: LLVMValueRef[] = []
-        call_args << null
         let fmt_str_builder = new StringBuilder(str_value.length + string_exp.fmt_indices.length*2)
         let chars = str_value.get_bytes()
         let curr_ind = 0
@@ -374,19 +406,18 @@ class CodeGen {
         }
         fmt_str_builder.add_bytes_length(chars, str_value.length - curr_ind)
         str_value = fmt_str_builder.get_string()
-        let str_len = this.createLLVMInt(str_value.length)
-        let str = this.createGlobalLLVMString(builder, str_value)
+        let str_len: LLVMValueRef = this.createLLVMInt(str_value.length)
+        let str: LLVMValueRef = null
         let is_string_object = is_object(string_exp.value_type)
-        if call_args.length > 1 {
-            call_args[0] = str
-            str_len = this.codegen_snprintf_call(builder, call_args)
-
-            str = this.codegen_sprintf_call(builder, call_args, str_len, is_string_object)
+        if call_args.length > 0 {
+            str = this.codegen_safe_fmt_string(builder, str_value, call_args, is_string_object, &str_len)
+        } else {
+            str = this.createGlobalLLVMString(builder, str_value)
         }
         if is_string_object {
             let self = LLVMBuildMalloc(builder, this.codegen_type(string_exp.value_type), "")
             this.build_constructor_call(builder, string_exp.value_type as ObjectType, [self, str, str_len])
-            str = self
+            return self
         }
         return str
     }
@@ -460,11 +491,16 @@ class CodeGen {
         return this.codegen_expression(builder, exp)
     }
     private get_member_mem_with_name(this, builder: LLVMBuilderRef, val: LLVMValueRef, obj_type: ObjectType, name: string): LLVMValueRef {
-        let class_id = obj_type.class_id
-        let prop_id = get_class(this.program, class_id).prop_map.get(name)
+        let obj_class = get_class(this.program, obj_type.class_id)
+        let prop_id = obj_class.prop_map.get(name)
         let prop_ty = get_class_prop_type(this.program, prop_id)
         let member_expr = new MemberExpression(null, prop_id, prop_ty)
         return this.get_member_expr_mem(builder, member_expr, val)
+    }
+    private get_member_with_name(this, builder: LLVMBuilderRef, val: LLVMValueRef, obj_type: ObjectType, name: string): LLVMValueRef {
+        let memb_mem = this.get_member_mem_with_name(builder, val, obj_type, name)
+        let prop_ty = get_class_prop_type_with_name(this.program, obj_type.class_id, name)
+        return LLVMBuildLoad2(builder, this.codegen_type(prop_ty), memb_mem, "")
     }
     private codegen_builtin_array(this, builder: LLVMBuilderRef, arrgen_ty: GenericType, arr_expr: ArrayExpression): LLVMValueRef {
         let obj_ty = (arrgen_ty as GenericType).instantiated_type as ObjectType
@@ -771,8 +807,7 @@ class CodeGen {
         let args: LLVMValueRef[] = []
         this.evaluate_expression_list(builder, args, intrinsic_call_exp.args)
         if intrinsic_type < Intrinsics.MEMCPY {
-            let sbuff = this.get_member_mem_with_name(builder, args[0], intrinsic_call_exp.args[0].value_type as ObjectType, "buffer")
-            sbuff = LLVMBuildLoad2(builder, LLVMPointerType(LLVMInt8TypeInContext(this.program_ctx)), sbuff, "")
+            let sbuff = this.get_member_with_name(builder, args[0], intrinsic_call_exp.args[0].value_type as ObjectType, "buffer")
             if intrinsic_type == Intrinsics.STR_TO_F {
                 return this.codegen_atof_call(builder, [sbuff])
             }

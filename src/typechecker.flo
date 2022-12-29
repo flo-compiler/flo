@@ -766,6 +766,13 @@ fnc get_class_prop_type(program: Program, prop_id: PropId): Type {
     }
     return owner.fields[prop_id.id].field_type
 }
+fnc get_class_prop_type_with_name(program: Program, class_id: ClassId, name: string): Type {
+    let obj_class = get_class(program, class_id)
+    if (obj_class == null) return null 
+    let prop_id = obj_class.prop_map.get(name)
+    if (prop_id == null) return null 
+    return get_class_prop_type(program, prop_id)
+}
 fnc get_class_prop_visibility(program: Program, prop_id: PropId): ACCESS_ATTR {
     let owner = get_class(program, prop_id.type_id as ClassId)
     if prop_id.kind == PropIdKind.METHOD {
@@ -786,6 +793,11 @@ fnc is_class_prop_static(program: Program, prop_id: PropId): bool {
         return owner.methods[prop_id.id].is_static
     }
     return owner.fields[prop_id.id].is_static
+}
+fnc is_buitin(program: Program, ty: Type, name: string): bool {
+    if !is_object(ty) return false
+    let class_obj = get_class_from_type(program, ty)
+    return class_obj.name == name and class_obj.id.module_id == 0
 }
 fnc is_operator_overload_name(name: string): bool {
     if name == "__eq__" return true
@@ -2032,8 +2044,9 @@ class TypeChecker {
         }
         if this.has_errored() return null
         let is_const = left.is_constant and right.is_constant
-        if is_assign_op
+        if is_assign_op {
             return this.check_assignment(left, right, binary_node) as BinaryExpression
+        }
         if left.value_type.kind == TypeKind.UNKNOWN and right.value_type.kind != TypeKind.UNKNOWN
             left.value_type = right.value_type
         if is_numeric(left.value_type) and is_numeric(right.value_type){
@@ -2107,17 +2120,12 @@ class TypeChecker {
         this.error(ErrorKind.TYPE, "Illegal unary operation $(dump_unary_op(op)) on type '$(this.dump_type(ty))'", unary_node.range)
         return null
     }
-    private is_buitin(this, ty: Type, name: string): bool {
-        if !is_object(ty) return false
-        let class_ty = get_class_from_type(this.program, ty)
-        return class_ty.name == name and class_ty.id.module_id == 0
-    }
     private check_typecast_expr(this, type_expr_node: TypeCastExpressionNode): Expression {
         let exp = this.check_expression(Type.unknown(), type_expr_node.expression)
         let val_ty = exp.value_type
         let dest_ty = this.check_type(type_expr_node.bound_type)
         if this.has_errored() return null
-        if this.is_buitin(dest_ty, "string") {
+        if is_buitin(this.program, dest_ty, "string") {
             return new StringExpression("", [0], [exp], dest_ty)
         }
         let is_valid_cast = false
@@ -2127,7 +2135,7 @@ class TypeChecker {
         if is_int(dest_ty) and val_ty.kind == TypeKind.ENUM {
             is_valid_cast = true
         }
-        if is_numeric(dest_ty) and this.is_buitin(val_ty, "string") {
+        if is_numeric(dest_ty) and is_buitin(this.program, val_ty, "string") {
             let call: IntrinsicCall = null
             if is_float(dest_ty) {
                 call = new IntrinsicCall(Intrinsics.STR_TO_F)
