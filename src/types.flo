@@ -211,6 +211,9 @@ enum ACCESS_ATTR {
     PROTECTED
 }
 enum Intrinsics {
+    STR_TO_F
+    STR_TO_I
+    STR_TO_L
     MEMCPY
     MEMMOVE
     MEMSET
