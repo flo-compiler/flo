@@ -753,42 +753,45 @@ fnc get_class_from_type(program: Program, type_: Type): Class {
         return get_class(program, (type_ as ObjectType).class_id)
     return null
 }
+fnc get_class_from_prop_id(program: Program, prop_id: PropId): Class {
+    return get_class(program, prop_id.type_id as ClassId)
+}
 fnc get_method(program: Program, prop_id: PropId): ClassMethod {
-    return get_class(program, prop_id.type_id as ClassId).methods[prop_id.id]
+    return get_class_from_prop_id(program, prop_id).methods[prop_id.id]
 }
 fnc get_enum(program: Program, enum_id: EnumId): Enum {
     return program.modules[enum_id.module_id].enums[enum_id.id]
 }
 fnc get_class_prop_type(program: Program, prop_id: PropId): Type {
-    let owner = get_class(program, prop_id.type_id as ClassId)
+    let owner = get_class_from_prop_id(program, prop_id)
     if prop_id.kind == PropIdKind.METHOD {
         return owner.methods[prop_id.id].method_type
     }
     return owner.fields[prop_id.id].field_type
 }
-fnc get_class_prop_type_with_name(program: Program, class_id: ClassId, name: string): Type {
-    let obj_class = get_class(program, class_id)
+fnc get_class_prop_type_with_name(program: Program, obj_ty: ObjectType, name: string): Type {
+    let obj_class = get_class_from_type(program, obj_ty)
     if (obj_class == null) return null 
     let prop_id = obj_class.prop_map.get(name)
     if (prop_id == null) return null 
     return get_class_prop_type(program, prop_id)
 }
 fnc get_class_prop_visibility(program: Program, prop_id: PropId): ACCESS_ATTR {
-    let owner = get_class(program, prop_id.type_id as ClassId)
+    let owner = get_class_from_prop_id(program, prop_id)
     if prop_id.kind == PropIdKind.METHOD {
         return owner.methods[prop_id.id].visibility
     }
     return owner.fields[prop_id.id].visibility
 }
 fnc get_vtable_index(program: Program, prop_id: PropId): int {
-    let owner = get_class(program, prop_id.type_id as ClassId)
+    let owner = get_class_from_prop_id(program, prop_id)
     if prop_id.kind == PropIdKind.METHOD {
         return owner.methods[prop_id.id].vtable_index
     }
     return owner.fields[prop_id.id].vtable_index
 }
 fnc is_class_prop_static(program: Program, prop_id: PropId): bool {
-    let owner = get_class(program, prop_id.type_id as ClassId)
+    let owner = get_class_from_prop_id(program, prop_id)
     if prop_id.kind == PropIdKind.METHOD {
         return owner.methods[prop_id.id].is_static
     }
@@ -1015,7 +1018,7 @@ class TypeChecker {
         if ty.kind == TypeKind.PTR
             return "$(this.dump_type((ty as PointerType).pointee_type))*"
         if ty.kind == TypeKind.OBJECT {
-            return get_class(this.program, (ty as ObjectType).class_id).name
+            return get_class_from_type(this.program, ty).name
         }
         if ty.kind == TypeKind.ENUM {
             return get_enum(this.program, (ty as EnumType).enum_id).name
@@ -1104,7 +1107,7 @@ class TypeChecker {
             let builtin_type = this.get_type_from_current_scope(name)
             if builtin_type.kind != TypeKind.UNKNOWN {
                 this.program.uses_builtins = true
-                // Assume that there are no enums in builtins
+                // Assuming that there are no enums in builtins
                 this.add_imported_class_to_module(name, (builtin_type as ObjectType).class_id)
             }
             this.current_scope = previous_scope
@@ -1180,11 +1183,11 @@ class TypeChecker {
         }
         if this.has_errored() return null
         // We Now check bodies
-        for i = 0; i < module_ast.classes.length; i++ {
-            this.check_class_body(module_ast.classes[i])
-        }
         for i = 0; i < module_ast.enums.length; i++ {
             this.check_enum_body(module.enums[i], module_ast.enums[i])
+        }
+        for i = 0; i < module_ast.classes.length; i++ {
+            this.check_class_body(module_ast.classes[i])
         }
         for i = 0; i < module_ast.functions.length; i++ {
            this.check_function_body(module.functions[i], module_ast.functions[i])
@@ -1252,6 +1255,7 @@ class TypeChecker {
     }
     private declare_global_const(this, const_decl_node: ConstDeclarationStatement){
         let const_stmt = this.check_const_declaration(const_decl_node)
+        if this.has_errored() {return}
         const_stmt.is_static = true
         this.get_current_module().global_consts << const_stmt
     }
@@ -1977,7 +1981,7 @@ class TypeChecker {
         let prop_id = owner_class.prop_map.get(method_name)
         if prop_id == null {
             if op == BinaryOp.EEQ or op == BinaryOp.NEQ {
-                return new BinaryExpression(left, op, right, new BooleanType())
+                return new BinaryExpression(left, op, this.check_expression(Type.unknown(), binary_node.rhs), new BooleanType())
             }
             this.error(ErrorKind.NAME, "No binary operator overload for '$(dump_bin_op(op))' in object of class '$(owner_class.name)' please implement the method $method_name to support this", binary_node.range)
             return null
@@ -2135,6 +2139,10 @@ class TypeChecker {
         if is_int(dest_ty) and val_ty.kind == TypeKind.ENUM {
             is_valid_cast = true
         }
+        // TODO: Re-think this, this is a temporary fix
+        if is_int(val_ty) and dest_ty.kind == TypeKind.ENUM {
+            is_valid_cast = true
+        }
         if is_numeric(dest_ty) and is_buitin(this.program, val_ty, "string") {
             let call: IntrinsicCall = null
             if is_float(dest_ty) {
@@ -2148,7 +2156,6 @@ class TypeChecker {
             exp = call
             is_valid_cast = true
         }
-        
         if is_object(dest_ty) and is_object(val_ty) {
             is_valid_cast = true
         }
@@ -2214,7 +2221,7 @@ class TypeChecker {
     }   
     private check_member_access(this, accessor: PropId): string {
         let visibility = ACCESS_ATTR.PUBLIC
-        let accessee = get_class(this.program, accessor.type_id as ClassId)
+        let accessee = get_class_from_prop_id(this.program, accessor)
         let member_name = ""
         if accessor.kind == PropIdKind.METHOD {
             let method = accessee.methods[accessor.id]

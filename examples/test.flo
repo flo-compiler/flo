@@ -17,6 +17,6 @@ fnc main(): int {
     let nate: NaiveClass(4, 5)
     let dum: Dumy(4.9)
     nate.dumy = dum
-    println("$nate")
+    println(nate as string)
     return 0
 }

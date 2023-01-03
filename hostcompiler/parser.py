@@ -245,6 +245,7 @@ class Parser:
         return node
     
     def class_block(self):
+        self.skip_new_lines()
         if self.current_tok.type != TokType.LBRACE:
             SyntaxError(self.current_tok.range, "Expected '{'").throw()
         self.advance()
@@ -253,6 +254,7 @@ class Parser:
         while self.current_tok.type != TokType.RBRACE:
             self.skip_new_lines()
             statements.append(self.class_stmt())
+            self.skip_new_lines()
         if self.current_tok.type != TokType.RBRACE:
             SyntaxError(self.current_tok.range, "Expected '}'").throw()
         node_range = Range.merge(range_start, self.current_tok.range)

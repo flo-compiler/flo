@@ -1,3 +1,4 @@
+//@expect: return_code=11
 fnc main(): int {
     let a: int = 121
     let b = 0.5

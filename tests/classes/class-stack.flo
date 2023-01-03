@@ -1,3 +1,4 @@
+//@expect: return_code=2
 class Vector {
     x: int
     y: int

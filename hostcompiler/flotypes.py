@@ -415,9 +415,12 @@ class FloMem:
             return FloMem(loaded_value)
         return loaded_value
 
+    def compare(builder: ir.IRBuilder, mem1, mem2, size: FloInt):
+        args = [mem1.value, mem2.value, size.value]
+        return builder.call(bi.get_instrinsic("memcmp"), args)
+
     def cmp(self, builder: ir.IRBuilder, mem2, size: FloInt):
-        args = [self.value, mem2.value, size.value]
-        res = builder.call(bi.get_instrinsic("memcmp"), args)
+        res = FloMem.compare(builder, self, mem2, size)
         return FloInt(res).cmp(builder, "==", FloInt(0))
 
     def copy_to(self, builder: ir.IRBuilder, dest, size: FloInt):
@@ -478,7 +481,13 @@ class FloPointer(FloType):
     def init_methods(self):
         resize_call = lambda builder, args: self.new(FloMem.realloc(builder, self.mem, args[0]))
         resize_fnc = FloInlineFunc(resize_call, [FloInt(None)], self)
+        copy_call = lambda builder, args: self.new(args[0].mem.copy_to(builder, self.mem, args[1]))
+        copy_fnc = FloInlineFunc(copy_call, [self, FloInt(None)], self)
+        cmp_call = lambda builder, args: FloInt(FloMem.compare(builder, self.mem, args[0].mem, args[1]))
+        cmp_fnc = FloInlineFunc(cmp_call, [self, FloInt(None)], FloInt(None))
         self.methods["resize"] = resize_fnc
+        self.methods["copy_from"] = copy_fnc
+        self.methods["compare"] = cmp_fnc
 
     @property
     def value(self):
@@ -538,7 +547,6 @@ class FloPointer(FloType):
             return FloPointer(type.elm_type).new(FloMem.bitcast(builder, self.mem, type.llvmtype))
     
     def cmp(self, builder: ir.IRBuilder, op, other):
-        should_not = op == "!="
         return strict_mem_compare(builder, op, self.mem, other.floval.mem)
 
     def str(self):

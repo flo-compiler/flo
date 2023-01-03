@@ -1,13 +1,12 @@
-import exit in "@flo/core"
-import accept, read, AF_INET, SOCK_STREAM in "@flo/sys"
+import accept, read, AF_INET, SOCK_STREAM in "@flo/sys/lib"
 import "socket"
 import "response"
 import "request"
-type RequestHandler = (Request, Response)=>void
-class Server {
-    socket: Socket
-    response: Response
-    request: Request
+type RequestHandler = (Request, Response) => void
+class HTTPServer {
+    private socket: Socket
+    private response: Response
+    private request: Request
     constructor(this, port: int, address: string = ""){
         this.socket = new Socket(AF_INET, SOCK_STREAM, 0)
         this.socket.bind(port, address)
@@ -15,27 +14,28 @@ class Server {
         this.response = new Response(-1)
         this.request = new Request()
     }
-    accept_connection(this){
+    private accept_connection(this){
         let cli: i8[16]
         let cli_len = 4
-        let connfd = accept(this.socket.sockfd, cli, &cli_len)
+        let connfd = accept(this.socket.sockfd, &cli[0], &cli_len)
         if connfd < 0 {
-            exit("Error Accepting connection")
+            println("Error Accepting connection")
+            return
         }
         let size = read(connfd, this.request.raw_buffer, MAX_BUFFSIZE)
         this.request.set_size(size)
         this.response.set_connection(connfd)
     }
-    listen(this, handler: RequestHandler){
+    public listen(this, handler: RequestHandler){
         while true {
             this.accept_connection()
             handler(this.request, this.response)
         }
     }
-    close(this){
+    public close(this){
         this.socket.close()
     }
-    destroy(this){
+    public destroy(this){
         this.socket.destroy()
     }
 

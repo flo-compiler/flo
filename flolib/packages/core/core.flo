@@ -1,4 +1,4 @@
-import STDOUT, STDIN, STDERR, nanosleep, write, read, exit in "@flo/sys"
+import STDIN, nanosleep, write, read in "@flo/sys/lib"
 fnc input(): string {
     let size = -1
     let buffer = new i8*(1)
@@ -7,9 +7,6 @@ fnc input(): string {
         read(STDIN, buffer+size, 1)
     }
     return new string(buffer, size)
-}
-fnc printerr(message: string){
-    write(STDERR, message.get_bytes(), message.length)
 }
 fnc sleep(secs: int, nanosecs: int){
     let req = [secs, nanosecs]

@@ -1,3 +1,4 @@
+//@expect: return_code=90
 enum Currencies(i8) {
     USD = 2
     CAD = 90

@@ -1,3 +1,4 @@
+//@expect: return_code=10
 import "modules/engine"
 fnc main(): int {
     let engine = new Engine()
