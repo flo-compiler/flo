@@ -1,0 +1,12 @@
+import HTTPServer, Request, Response in "@flo/net/httpserver"
+fnc handler(req: Request, res: Response){
+    res.write("HTTP/1.1 OK\r\n")
+    res.write("Server: FloServer\r\n")
+    res.write("Content-Type: text/html\r\n")
+    res.write("Connection: Closed\r\n\r\n")
+    res.end("<h1>Hello From Flo Server</h1>")
+}
+fnc main(){
+    let http_server = new HTTPServer(8080)
+    http_server.listen(handler)
+}

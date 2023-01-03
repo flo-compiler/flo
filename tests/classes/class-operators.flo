@@ -1,3 +1,4 @@
+//@expect: return_code=10
 class Int {
     private value: int
     constructor(this, value: int){

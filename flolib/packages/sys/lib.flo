@@ -1,0 +1,64 @@
+const STDIN = 0
+const STDERR = 2
+/* c standart library functions:*/
+/*@extern*/
+fnc memcmp(ptr1: i8*, ptr2: i8*, len: int): int
+/*@extern*/
+fnc memcpy(ptr1: i8*, ptr2: i8*, len: int): int
+/*@extern*/
+fnc memset(ptr1: i8*, c: int, len: int)
+/* IO */
+fnc read(fd: int, buff: i8*, size: int): int 
+fnc write(fd: int, buff: i8*, size: int): int
+fnc open(filename: i8*, flags: int): int 
+fnc close(fd: int): int 
+fnc lstat(filename: i8*, stat_struct: i8*): int 
+fnc lseek(fd: int, offset: int, whence: int): int 
+fnc access(filename: i8*, mode: int): int 
+fnc nanosleep(req: i8*, rem: i8*): int 
+/* net */
+fnc socket(name: int, socktype: int, protocol: int): int 
+fnc connect(sockfd: int, socketaddr_in: i8*, size: int): int 
+fnc accept(sockfd: int, socketaddr_in: i8*, size_ptr: int*): int 
+fnc bind(sockfd: int, socketaddr_in: i8*, size: int): int 
+fnc listen(sockfd: int, backlog: int): int
+fnc fcntl(fd: int, cmd: int, arg: int): int 
+fnc execve(filename: i8*, argv: i8**, envp: i8**): int
+fnc exit (error_code: int)
+fnc getcwd(buf: i8*, size: int): int
+fnc rename(oldname: i8*, newname: i8*): int 
+fnc unlink(pathname: i8*): int 
+/* IO consts */
+const O_RDONLY = 0
+const O_WRONLY = 1
+const O_RDWR = 2
+const O_CREAT = 100
+const R_OK = 4 /* Test for read permission.  */
+const W_OK = 2 /* Test for write permission.  */
+const X_OK = 1 /* Test for execute permission.  */
+const F_OK = 0 /* Test if file exists */
+const O_NONBLOCK = 2048
+
+const F_SETFL = 4
+const F_GETFL = 3
+/** SEEKS **/
+const SEEK_SET = 0 
+const SEEK_CUR = 1
+const SEEK_END = 2
+
+/* net consts */
+/* Socket Framilies */
+const AF_UNSPEC = 0 /* Unspecified Family */
+const AF_INET = 2 /* IPV4*/
+const AF_IPX = 6 /* IPX/SPX */
+const AF_APPLETALK = 16 /* AppleTalk */
+const AF_NETBIOS = 17 /* NetBIOS */
+const AF_INET6 = 23 /* IPV6 */
+const AF_IRDA = 23 /* IrDA (Infrared) */
+const AF_BTH = 31 /* Bluetooth */
+/* Socket types */
+const SOCK_STREAM = 1 /* TCP & AF_INET or AF_INET6 */
+const SOCK_DGRAM = 2 /* UDP & AF_INET or AF_INET6 */
+const SOCK_RAW = 3 /* Header manipulation */
+const SOCK_RDM = 4 /* Reliable multicast programming */
+const SOCK_SEQPACKET = 5 /* Pseudo-stream packets */

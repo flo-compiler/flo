@@ -41,28 +41,28 @@ class GeneratedModule {
         LLVMPassManagerBuilderDispose(pmp)
         LLVMDisposePassManager(pm)
     }
-    public exec(this){
+    public exec(this): int {
         LLVMLinkInMCJIT()
         let engine: LLVMExecutionEngineRef = null
         if (LLVMCreateExecutionEngineForModule(&engine, this.llvm_mod, &this.errors) != 0) {
             println("failed to create execution engine")
-            return
+            return 1
         }
         let main_fnc = LLVMGetNamedFunction(this.llvm_mod, "main")
         if main_fnc == null {
             println("Main function not found in module; can't execute")
             LLVMDisposeExecutionEngine(engine)
-            return
+            return 1
         }
         let ret = LLVMRunFunctionAsMain(engine, main_fnc, 0, null, null)
-        println("Exited with code: $ret")
         if LLVMRemoveModule(engine, this.llvm_mod, &this.llvm_mod, &this.errors) {
             println("Failure to delete execution engine")
-            return
+            return 1
         }
         LLVMDisposeExecutionEngine(engine)
+        return ret
     }
-    public create_target_machine(this, triple_str: string): LLVMTargetMachineRef {
+    private create_target_machine(this, triple_str: string): LLVMTargetMachineRef {
         let triple = triple_str == "" ? LLVMGetDefaultTargetTriple() : triple_str.to_cstring()
         let target: LLVMTargetRef = null
         if (LLVMGetTargetFromTriple(triple, &target, &this.errors) != 0) {

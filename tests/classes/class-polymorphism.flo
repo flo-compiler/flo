@@ -1,3 +1,4 @@
+//@expect: return_code=2
 class ICMP {
     protected __cmp__(this, other: ICMP): int
     public __eq__(this, other: Int): bool {

@@ -1,9 +1,8 @@
-import print, exit in "@flo/core"
-import memset, socket, bind, close, listen, connect in "@flo/sys"
+import socket, connect, accept, bind, listen, close in "@flo/sys/lib"
 fnc inet_addr(addr: i8*): int
 fnc str_to_intaddr(addr: string): int {
     if addr == "" return 0
-    return inet_addr(addr.buffer)
+    return inet_addr(addr.to_cstring())
 }
 fnc htons(x: int): int {
     let x1 = (x and 255) << 8
@@ -12,7 +11,7 @@ fnc htons(x: int): int {
 }
 fnc create_sockaddr_in (sin_family: int, sin_port: int, sin_addr: int): i8* {
     let sin_family_port = (sin_port << 16) or (sin_family and 0xFFFF)
-    let socket_addr_in = [sin_family_port, sin_addr]
+    let socket_addr_in: int[2] = [sin_family_port, sin_addr]
     return &socket_addr_in[0] as i8*
 }
 class Socket {
@@ -22,7 +21,8 @@ class Socket {
     constructor(this, domain: int, socktype: int, protocol: int){
         let sockfd = socket(domain, socktype, protocol)
         if sockfd < 1 {
-            exit("Error: could not create TCP socket\n")
+            println("Error: could not create TCP socket")
+            return
         }
         this.sockfd = sockfd
         this.domain = domain
@@ -31,19 +31,22 @@ class Socket {
         let interface = str_to_intaddr(address)
         this.address = create_sockaddr_in(this.domain, htons(port), interface)
         if bind(this.sockfd, this.address, 16) < 0 {
-            exit("Error: could not bind socket\n")
+            println("Error: could not bind socket")
+            return
         }
     }
     connect(this, port: int, address: string){
         let interface = str_to_intaddr(address)
         this.address = create_sockaddr_in(this.domain, htons(port), interface)
         if connect(this.sockfd, this.address, 16)< 0 {
-            exit("Error: could not connect socket\n")
+            println("Error: could not connect socket")
+            return
         }
     }
     listen(this, backlog: int = 10){
         if listen(this.sockfd, backlog) < 0 {
-            exit("Error: could not start listening\n")
+            println("Error: could not start listening")
+            return
         }
     }
     close(this){

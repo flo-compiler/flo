@@ -18,3 +18,8 @@ fnc color(color: string): string {
         return "\033[1;31m"
     return "\033[0m"
 }
+fnc panic(message: string){
+    println(message)
+    let s: string = null
+    s.get_byte(1)
+}

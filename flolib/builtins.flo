@@ -1,12 +1,5 @@
 /*@extern*/
-fnc memcmp(ptr1: i8*, ptr2: i8*, len: int): int
-/*@extern*/
-fnc memcpy(ptr1: i8*, ptr2: i8*, len: int): int
-/*@extern*/
-fnc memset(ptr1: i8*, c: int, len: int)
-/*@extern*/
 fnc strlen(str: i8*): int
-fnc printf(str: i8*, a: int, b: int)
 // ----- string -------
 class string {
     private buffer: i8*
@@ -20,14 +13,14 @@ class string {
     public __add__(this, data: string): string {
         let new_str_len = this.length + data.length
         let new_buffer = new i8*(new_str_len)
-        memcpy(new_buffer, this.buffer, this.length)
+        new_buffer.copy_from(this.buffer, this.length)
         let trailing_buffer = new_buffer + this.length
-        memcpy(trailing_buffer, data.buffer, data.length)
+        trailing_buffer.copy_from(data.buffer, data.length)
         return new string(new_buffer, new_str_len)   
     }
     public __adda__(this, other: string): string {
         this.buffer = this.buffer.resize(this.length + other.length)
-        memcpy(this.buffer + this.length, other.buffer, other.length)
+        (this.buffer + this.length).copy_from(other.buffer, other.length)
         return this
     }
     public __getitem__(this, index: int): string {
@@ -38,7 +31,7 @@ class string {
     }
     public __eq__(this, other: string): bool {
         if this.length != other.length return false
-        return memcmp(this.buffer, other.buffer, this.length) == 0
+        return this.buffer.compare(other.buffer, this.length) == 0
     }
     public find(this, search: string, start: int = 0): int {
         for let i = start; i < this.length; i++ {
@@ -73,53 +66,36 @@ class string {
         if idx >= 0 {
             let nlen = this.length - val.length + repl.length
             let nbuff = new i8*(nlen)
-            memcpy(nbuff, this.buffer, idx)
+            nbuff.copy_from(this.buffer, idx)
             let wbuff = nbuff + idx
-            memcpy(wbuff, repl.buffer, repl.length)
+            wbuff.copy_from(repl.buffer, repl.length)
             wbuff += repl.length
-            memcpy(wbuff, this.buffer + idx + val.length, this.length - val.length)
+            wbuff.copy_from(this.buffer + idx + val.length, this.length - val.length)
             return new string(nbuff, nlen)
         } 
         return this
     }
     public to_cstring(this): i8* {
         let c_string = new i8*(this.length + 1)
-        memcpy(c_string, this.buffer, this.length)
+        c_string.copy_from(this.buffer, this.length)
         c_string[this.length] = '\0'
         return c_string
     }
     public ends_with(this, suffix: string): bool {
         if (this.length < suffix.length) return false
         let end_buff = this.buffer + this.length - suffix.length
-        return memcmp(end_buff, suffix.buffer, suffix.length) == 0
+        return end_buff.compare(suffix.buffer, suffix.length) == 0
     }
     public starts_with(this, preffix: string): bool {
         if (this.length < preffix.length) return false
-        return memcmp(this.buffer, preffix.buffer, preffix.length) == 0
+        return this.buffer.compare(preffix.buffer, preffix.length) == 0
     }
     public from_cstring(str: i8*): string {
         let len = strlen(str)
         let buf = new i8*(len)
-        memcpy(buf, str, len)
+        buf.copy_from(str, len)
         return new string(buf, len)
     }
-    // public split(str: string): string [] {
-    //     let result: string[] = []
-    //     let start = 0
-    //     let pos = this.find(str)
-    //     while pos >= start {
-    //         if pos > start {
-    //             result << this.substring(start, pos)
-    //         }
-    //         start = pos + str.length
-    //         result << str
-    //         pos = this.find(str, start) 
-    //     }
-    //     if (start < str.length) {
-    //         result << str.substring(start)
-    //     }
-    //     return result
-    // }
 }
 class StringBuilder {
     private buffer: i8*
@@ -139,7 +115,7 @@ class StringBuilder {
     }
     public add_bytes_length(this, bytes: i8*, length: int){
         if (this.size - this.length <= length) this.resize()
-        memcpy(this.working_buffer, bytes, length)
+        this.working_buffer.copy_from(bytes, length)
         this.working_buffer += length
         this.length += length
     }
@@ -207,14 +183,13 @@ class Array <T> {
         }
         return null
     }
-    __eq__(this, other: T[]): bool{
+    __eq__(this, other: T[]): bool {
         if this.length != other.length {
             return false
         } else {
            for let i = 0; i < this.length; i++ {
                if this[i] != other[i] return false
            }
-           return true
         }
         return true
     }

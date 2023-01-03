@@ -1,9 +1,8 @@
+import access, F_OK in "@flo/sys/lib"
 // ------- File -------
 fnc fopen(path: i8*, mode: i8*): int
 fnc fclose(stream: int)
 fnc fread(buf: i8*, size: int, nmemb: int, stream: int): int
-fnc access(path: i8*, mode: int): int
-const F_OK = 0
 class File {
     fd: int
     constructor(this, fd: int){
@@ -27,7 +26,7 @@ class File {
             let prev_size = size
             size += read_len
             allocated_mem = allocated_mem.resize(size)
-            memcpy(allocated_mem + prev_size, &buffer[0], read_len)
+            (allocated_mem + prev_size).copy_from(&buffer[0], read_len)
         }
         return null
     }

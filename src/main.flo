@@ -40,6 +40,7 @@ fnc flag_value_or(args: string[], name: string, default: string): string {
 }
 fnc main(argc: int, argv: i8**): int {
     let args = parse_args(argc, argv)
+    let code = 0
     if args.length >= 2 {
         if flag(args, "-v") or flag(args, "--version"){
             println("v0.01@test.selfhost")
@@ -77,12 +78,12 @@ fnc main(argc: int, argv: i8**): int {
         if flag(args, "-o") {
             flo_module.write_object(flag_value_or(args, "-o", "a.o"), flag_value_or(args, "--target", ""))
         } else {
-            flo_module.exec()
+            code = flo_module.exec()
         }
         flo_module.llvm_shutdown()
     } else {
         print_message_error(ErrorKind.GEN, "No input file specified.")
         return 1
     }
-    return 0
+    return code
 }

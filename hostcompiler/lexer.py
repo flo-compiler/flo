@@ -153,7 +153,7 @@ class Lexer:
     def tokenizeNext(self):
         if self.current_char == None:
             return None
-        if self.current_char in " \t\n":
+        if self.current_char in " \t":
             self.advance()
             return self.tokenizeNext()
         elif self.current_char == "/":

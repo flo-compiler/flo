@@ -1,3 +1,4 @@
+//@expect: return_code=1
 fnc main(): int {
     let x = 10
     let y: int = null

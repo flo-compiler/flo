@@ -1,4 +1,4 @@
-
+//@expect: return_code=181
 fnc main(){
     let y = malloc(2)
     free(y)

@@ -1,4 +1,4 @@
-fnc printf(fmt: i8*, n = 0): int
+fnc printf(fmt: i8*, n: i32 = 0): i32
 const VMSTACK_CAPACITY = 1000
 class StackVM {
     pc: int
@@ -7,11 +7,10 @@ class StackVM {
     typ: int
     dat: int
     running: bool
-    constructor(this) {
+    constructor(this, mem: int*) {
         this.pc = 10
         this.sp = 0
         this.typ = 0
-        let mem: int*(VMSTACK_CAPACITY)
         this.mem = mem
         this.dat = 0
         this.running = true
@@ -32,7 +31,7 @@ class StackVM {
     private execute(this){
         if (this.typ == 0) or (this.typ == 2) {
             this.sp++
-            printf("push (%d)\n",  this.dat)
+            printf("push (%d)\n",  this.dat as i32)
             this.mem[this.sp] = this.dat
         } else {
             this.doPrimitive()
@@ -68,7 +67,7 @@ class StackVM {
             this.decode()
             this.execute()
         }
-        printf("output: %x\n", this.mem[this.sp])
+        printf("output: %x\n", this.mem[this.sp] as i32)
     }
     loadProgram(this, prog: int*, size: int){
         for let i = 0; i < size; i++ {
