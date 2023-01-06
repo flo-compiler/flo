@@ -25,10 +25,6 @@ class CGEnumType {
     llvm_type: LLVMTypeRef
     field_map: Map<string, LLVMValueRef> 
 }
-class CGModule {
-    classes: Map<string, GCClassType>
-    enums: Map<string, CGEnumType>
-}
 fnc get_intrinsic(mod: LLVMModuleRef, name: string, params_types: LLVMTypeRef[], return_type: LLVMTypeRef, var_args = false): IntrinsicResult {
     let result: IntrinsicResult
     result.fnc_type = LLVMFunctionType(return_type, params_types.buffer, params_types.length, var_args)
@@ -57,6 +53,7 @@ fnc create_type_key_from_var(var_id: VarId): string {
 fnc create_prop_key(prop_id: PropId): string {
     return "$(create_type_id_key(prop_id.type_id));$(prop_id.kind);$(prop_id.id)"
 }
+// These two functions will eventually become a generic function once we implement those.
 fnc resize_type_array(array: LLVMTypeRef[], amt: int){
     for let i = array.length; i <= amt; i++ {
         array << null
@@ -156,8 +153,6 @@ class CodeGen {
     private codegen_module(this, module: Module): LLVMModuleRef {
         this.module_string_scope = new Map<string, LLVMValueRef>()
         this.module_intrinsic_scope = new Map<string, IntrinsicResult>()
-        this.module_classes = new Map<string, CGClassType>()
-        this.module_enums = new Map<string, CGEnumType>()
         this.module = LLVMModuleCreateWithNameInContext(module.name.to_cstring(), this.program_ctx)
         this.debugInfoObj = new DebugInfo(this.module, module.name)
         this.codegen_imported_symbols(module.imported_symbols)
