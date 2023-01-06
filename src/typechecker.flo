@@ -2441,10 +2441,13 @@ class TypeChecker {
     private check_intrinsic_call(this, intrinsic_call: IntrinsicCall, call_expr_node: CallExpressionNode): IntrinsicCall {
         //Note: This assumes that intrisics always have alteast 1 arg and that call_expr_node.args has the rest of the args
         let args = call_expr_node.args
-        for let i = 0; i < args.length; i++ {
-            intrinsic_call.args << this.check_expression(Type.unknown(), args[i])
-        }
         let intrinsic_func = intrinsic_call.intrinsic
+        let is_mem_grp1 = intrinsic_func == Intrinsics.MEMCPY or intrinsic_func == Intrinsics.MEMMOVE or intrinsic_func == Intrinsics.MEMCMP
+        for let i = 0; i < args.length; i++ {
+            let expected_type = is_mem_grp1 and i == 1 ? Type.unknown() : intrinsic_call.args[0].value_type
+            intrinsic_call.args << this.check_expression(expected_type, args[i])
+            if this.has_errored() return null
+        }
         // Mem intrinsics
         if !is_pointer(intrinsic_call.args[0].value_type) {
             this.error(ErrorKind.TYPE, "Expected argument 1 to be of type to be of a pointer but got '$(this.dump_type(intrinsic_call.args[0].value_type))'", call_expr_node.callee.range)
@@ -2460,7 +2463,7 @@ class TypeChecker {
                 this.error(ErrorKind.TYPE, "Expected an int of but got type '$(this.dump_type(intrinsic_call.args[1].value_type))' as function call argument", call_expr_node.args[0].range)
                 return null
             }
-        } else if intrinsic_func == Intrinsics.MEMCPY or intrinsic_func == Intrinsics.MEMMOVE or intrinsic_func == Intrinsics.MEMCMP or  intrinsic_func == Intrinsics.MEMSET {
+        } else if is_mem_grp1 or intrinsic_func == Intrinsics.MEMSET {
             if intrinsic_call.args.length != 3 {
                 this.error(ErrorKind.GEN, "Expected 3 arguments on function call but got $(intrinsic_call.args.length)", call_expr_node.range)
                 return null
