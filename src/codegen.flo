@@ -13,17 +13,21 @@ class IntrinsicResult {
     fnc_type: LLVMTypeRef
 }
 class CGClassType  {
-    public llvm_type: LLVMTypeRef
-    public vt_methods_pos_map: Map<string, int>
-    public fields_pos_map: Map<string, int>
-    public non_vt_methods_map: Map<string, LLVMValueRef>
-    public vtable: LLVMValueRef
-    public vtable_type: LLVMTypeRef
-    public constructor: LLVMValueRef
+    llvm_type: LLVMTypeRef
+    vt_methods_pos_map: Map<string, int>
+    fields_pos_map: Map<string, int>
+    non_vt_methods_map: Map<string, LLVMValueRef>
+    vtable: LLVMValueRef
+    vtable_type: LLVMTypeRef
+    constructor: LLVMValueRef
 }
 class CGEnumType {
     llvm_type: LLVMTypeRef
     field_map: Map<string, LLVMValueRef> 
+}
+class CGModule {
+    classes: Map<string, GCClassType>
+    enums: Map<string, CGEnumType>
 }
 fnc get_intrinsic(mod: LLVMModuleRef, name: string, params_types: LLVMTypeRef[], return_type: LLVMTypeRef, var_args = false): IntrinsicResult {
     let result: IntrinsicResult
@@ -94,7 +98,7 @@ class CodeGen {
     private in_static_ctx: bool
     private program_ctx: LLVMContextRef
     private debugInfoObj: DebugInfo
-    codegen(this, program: Program): GeneratedModule{
+    public codegen(this, program: Program): GeneratedModule{
         this.program = program
         this.modules = []
         this.continue_bb = null
@@ -256,6 +260,7 @@ class CodeGen {
             if obj_type != null {
                 return as_pointer ? LLVMPointerType(obj_type.llvm_type) : obj_type.llvm_type
             }
+            println(get_class_from_type(this.program, obj_type).name)
         }
         if tt.kind == TypeKind.ENUM {
             let enum_type = this.get_enum_from_typeid((tt as EnumType).enum_id)

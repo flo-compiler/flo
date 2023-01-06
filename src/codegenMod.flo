@@ -1,4 +1,5 @@
 import "llvm/types"
+import panic in "utils"
 import LLVMVerifyModule in "llvm/analysis"
 import LLVMDisposeModule, LLVMContextDispose, LLVMShutdown, LLVMGetModuleContext, LLVMCloneModule, LLVMDumpModule, LLVMSetTarget, LLVMCreatePassManager, LLVMSetDataLayout, LLVMDisposeMessage, LLVMRunPassManager, LLVMDisposePassManager, LLVMGetNamedFunction in "llvm/core"
 import LLVMRemoveModule, LLVMLinkInMCJIT, LLVMCreateExecutionEngineForModule, LLVMDisposeExecutionEngine, LLVMRunFunctionAsMain in "llvm/executionEngine"
@@ -22,8 +23,9 @@ class GeneratedModule {
     }
     private check_errors(this){
         if (this.errors[0] != 0) {
-            println("error: $(string.from_cstring(this.errors))")
+            let error = string.from_cstring(this.errors)
             LLVMDisposeMessage(this.errors)
+            panic("error: $error")
         }
     }
     public run_passes(this, level: int){
@@ -45,8 +47,7 @@ class GeneratedModule {
         LLVMLinkInMCJIT()
         let engine: LLVMExecutionEngineRef = null
         if (LLVMCreateExecutionEngineForModule(&engine, this.llvm_mod, &this.errors) != 0) {
-            println("failed to create execution engine")
-            return 1
+            this.check_errors()
         }
         let main_fnc = LLVMGetNamedFunction(this.llvm_mod, "main")
         if main_fnc == null {
@@ -56,8 +57,7 @@ class GeneratedModule {
         }
         let ret = LLVMRunFunctionAsMain(engine, main_fnc, 0, null, null)
         if LLVMRemoveModule(engine, this.llvm_mod, &this.llvm_mod, &this.errors) {
-            println("Failure to delete execution engine")
-            return 1
+            this.check_errors()
         }
         LLVMDisposeExecutionEngine(engine)
         return ret
@@ -66,9 +66,8 @@ class GeneratedModule {
         let triple = triple_str == "" ? LLVMGetDefaultTargetTriple() : triple_str.to_cstring()
         let target: LLVMTargetRef = null
         if (LLVMGetTargetFromTriple(triple, &target, &this.errors) != 0) {
-            println("failed to get target triple: $triple_str")
+            this.check_errors()
         }
-        this.check_errors()
         let CPU: i8* = "generic"
         return LLVMCreateTargetMachine(target, triple, CPU, LLVMGetHostCPUFeatures(), LLVMCodeGenOptLevel.LLVMCodeGenLevelAggressive, LLVMRelocMode.LLVMRelocDefault, LLVMCodeModel.LLVMCodeModelDefault)
     }
@@ -77,7 +76,7 @@ class GeneratedModule {
         LLVMSetDataLayout(this.llvm_mod, LLVMCreateTargetDataLayout(tm))
         LLVMSetTarget(this.llvm_mod, LLVMGetTargetMachineTriple(tm))
         if (LLVMTargetMachineEmitToFile(tm, this.llvm_mod, fn.to_cstring(), LLVMCodeGenFileType.LLVMObjectFile, &this.errors) != 0) {
-            println("target machine failed to emit object code")
+            this.check_errors()
         }
         this.check_errors()
         LLVMDisposeTargetMachine(tm)

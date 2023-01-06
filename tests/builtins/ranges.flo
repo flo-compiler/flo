@@ -1,5 +1,5 @@
 fnc main(): int {
     let x = 0..5
-    println("$((4 in x) ? 1 : 0)")
+    println("$(4 in x)")
     return 0
 }
