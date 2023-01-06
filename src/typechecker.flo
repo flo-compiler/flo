@@ -2129,6 +2129,11 @@ class TypeChecker {
         let val_ty = exp.value_type
         let dest_ty = this.check_type(type_expr_node.bound_type)
         if this.has_errored() return null
+        /* TODO:
+            int to pointer.
+            any type to boolean.
+            boolean to int/float.
+        */
         if is_buitin(this.program, dest_ty, "string") {
             return new StringExpression("", [0], [exp], dest_ty)
         }
