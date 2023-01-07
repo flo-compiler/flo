@@ -5,10 +5,8 @@ Flo is a programming language designed to be general-purpose with a natural feel
 *Note*: The Installation process is undetermined since I'm working on the self-compiler
 
 ## Usage
-Compile and execute file (Compilation requires gcc for linking)
 ```bash
-flo -e helloworld.flo
-./helloworld
+flo -h
 ```
 ## Language Goals
 1. Smooth developer experience. 
@@ -32,9 +30,9 @@ Still in progress. In the future it might be acheived by:
 - [ ] Optional chaining `a?.b?.c`
 - [ ] Multiple assignemt/destructing
 ```
-    let (a, b, c) = (5, 6, 7)
-    // or
-    let [a, b, c] = [5, 6, 7]
+let (a, b, c) = (5, 6, 7)
+// or
+let [a, b, c] = [5, 6, 7]
 ```
 
 
