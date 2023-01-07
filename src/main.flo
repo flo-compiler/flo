@@ -20,7 +20,8 @@ fnc help(exec_file: string){
     println(" --print-ast\t\t\tPrint generated AST.")
     println(" -emit-llvm\t\t\tPrint generated LLVM-IR.")
     println(" -o <file>\t\t\tPlace the output into <file>.")
-    println(" --target\t\t\tCompile to specific target triple.")
+    println(" -target\t\t\tCompile to specific target triple.")
+    println(" -I\t\t\tSpecify runtime directory.")
     println(" -O OPT_LEVEL\n \t\t\t\tSpecify the compiler's optimization level which is a\n \t\t\t\tvalue from 0-3.")
     println(" -v, --version\t\t\tShow version.")
 }
@@ -52,6 +53,12 @@ fnc main(argc: int, argv: i8**): int {
         }
         let filename = args[1]
         let compiler = new Compiler()
+        if flag(args, "-I") {
+            let rt_path = flag_value_or(args, "-I", "")
+            if rt_path != "" {
+                compiler.set_std_path(rt_path)
+            }
+        }
         let file_id = compiler.register_file(filename)
         if (!compiler.set_current_file(file_id)) {
             print_message_error(ErrorKind.IO, "No such file or directory: '$filename'")
@@ -76,7 +83,7 @@ fnc main(argc: int, argv: i8**): int {
         if flag(args, "--print-llvm") flo_module.print()
         flo_module.run_passes(flag_value_or(args, "-O", "1") as int)
         if flag(args, "-o") {
-            flo_module.write_object(flag_value_or(args, "-o", "a.o"), flag_value_or(args, "--target", ""))
+            flo_module.write_object(flag_value_or(args, "-o", "a.o"), flag_value_or(args, "-target", ""))
         } else {
             code = flo_module.exec()
         }

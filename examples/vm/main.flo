@@ -1,10 +1,9 @@
-import StackVM, VMSTACK_CAPACITY in "stackvm"
+import StackVM in "stackvm"
 
 fnc main(): int {
     const PROG_SIZE = 10
-    let stack_mem: int[VMSTACK_CAPACITY]
     let prog: int[PROG_SIZE] = [3000, 800, 0x40000001, 100, 0x40000001, 29, 0x40000002, 16, 0x40000003, 0x40000000]
-    let vm: StackVM(&stack_mem[0])
+    let vm: StackVM()
     vm.loadProgram(&prog[0], PROG_SIZE)
     vm.run()
     return 0

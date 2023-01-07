@@ -2614,7 +2614,7 @@ class TypeChecker {
             this.error(ErrorKind.GEN, "Cannot assign a non-constant value to a constant", const_decl_stmt.value.range)
             return null
         }
-        if is_null(value) {
+        if is_null(value) and const_type.kind == TypeKind.UNKNOWN {
             this.error(ErrorKind.TYPE, "Cannot declare a value as null without any type hint for future usage", const_decl_stmt.range)
             return null
         }

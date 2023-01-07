@@ -30,8 +30,11 @@ class Compiler {
         this.current_file_contents = null
         this.errors = []
         this.file_ids = new Map<string, FileId>()
-        this.std_dir_path = "./flolib"
-        this.builtin_path = Path.join(this.std_dir_path, "builtins.flo")
+        this.set_std_path("./flolib")
+    }
+    public set_std_path(this, std_dir_path: string){
+        this.std_dir_path = std_dir_path
+        this.builtin_path = Path.join(std_dir_path, "builtins.flo")
     }
     private find_module_path(this, fpath: string): string {
         let path = fpath.replace("@flo", Path.join(this.std_dir_path, "packages"))

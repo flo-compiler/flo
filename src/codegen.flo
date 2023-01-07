@@ -153,6 +153,8 @@ class CodeGen {
     private codegen_module(this, module: Module): LLVMModuleRef {
         this.module_string_scope = new Map<string, LLVMValueRef>()
         this.module_intrinsic_scope = new Map<string, IntrinsicResult>()
+        this.module_classes = new Map<string, CGClassType>()
+        this.module_enums = new Map<string, CGEnumType>()
         this.module = LLVMModuleCreateWithNameInContext(module.name.to_cstring(), this.program_ctx)
         this.debugInfoObj = new DebugInfo(this.module, module.name)
         this.codegen_imported_symbols(module.imported_symbols)
@@ -255,7 +257,6 @@ class CodeGen {
             if obj_type != null {
                 return as_pointer ? LLVMPointerType(obj_type.llvm_type) : obj_type.llvm_type
             }
-            println(get_class_from_type(this.program, obj_type).name)
         }
         if tt.kind == TypeKind.ENUM {
             let enum_type = this.get_enum_from_typeid((tt as EnumType).enum_id)
@@ -1111,6 +1112,7 @@ class CodeGen {
         let field_types: LLVMTypeRef[] = []
         for let i = 0; i < buckets.length; i++ {
             let prop_id = buckets[i].value
+            let prop_owner = checked_class
             let prop_id_key = create_prop_key(prop_id)
             let prop_type = get_class_prop_type(this.program, prop_id)
             let prop_name = buckets[i].key
@@ -1143,12 +1145,12 @@ class CodeGen {
                     }
                 } else {
                     llvm_method_type = this.codegen_type(method_type, false)
-                    let owner_classname = get_class_from_prop_id(this.program, prop_id).name
-                    llvm_method_val = LLVMGetNamedFunction(this.module, "$(owner_classname)_$prop_name".to_cstring())
+                    prop_owner = get_class_from_prop_id(this.program, prop_id)
+                    llvm_method_val = LLVMGetNamedFunction(this.module, "$(prop_owner.name)_$prop_name".to_cstring())
                 }
                 struct_class.vt_methods_pos_map.set(prop_id_key, prop_index)
                 resize_type_array(vtable_types, prop_index)
-                if !checked_class.methods[prop_id.id].is_abstract {
+                if !prop_owner.methods[prop_id.id].is_abstract {
                     resize_value_array(vtable_values, prop_index)
                     vtable_values[prop_index] = llvm_method_val
                 }
