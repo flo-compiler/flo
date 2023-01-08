@@ -159,20 +159,20 @@ class CodeGen {
         this.debugInfoObj = new DebugInfo(this.module, module.name)
         this.codegen_imported_symbols(module.imported_symbols)
         this.in_static_ctx = true
-        for let i = 0; i < module.global_consts.length; ++i {
-            this.codegen_const_declaration(null, module.global_consts[i])
-        }
-        for i = 0; i < module.global_vars.length; ++i {
-            this.codegen_var_declaration(null, module.global_vars[i])
+        for let i = 0; i < module.enums.length; ++i {
+            this.declare_enum(module.enums[i])
         }
         for i = 0; i < module.classes.length; ++i {
             this.declare_class(module.classes[i])
         }
-        for i = 0; i < module.enums.length; ++i {
-            this.declare_enum(module.enums[i])
-        }
         for i = 0; i < module.classes.length; ++i {
             this.declare_class_struct(module.classes[i])
+        }
+        for i = 0; i < module.global_consts.length; ++i {
+            this.codegen_const_declaration(null, module.global_consts[i])
+        }
+        for i = 0; i < module.global_vars.length; ++i {
+            this.codegen_var_declaration(null, module.global_vars[i])
         }
         for i = 0; i < module.functions.length; ++i {
             this.declare_function(module.functions[i])
@@ -191,16 +191,19 @@ class CodeGen {
         for let i = 0; i < symbols.enums.length; i++ {
             this.declare_enum(get_enum(this.program, symbols.enums[i]))
         }
+        for i = 0; i < symbols.classes.length; i++ {
+            let imported_class = get_class(this.program, symbols.classes[i])
+            this.declare_class(imported_class)
+        }
+        for i = 0; i < symbols.classes.length; i++ {
+            let decl_class = get_class(this.program, symbols.classes[i])
+            this.declare_class_struct(decl_class, false)
+        }
         for i = 0; i < symbols.vars.length; i++ {
             let var_decl = symbols.vars[i]
             let var = get_var(this.program, var_decl.var_id)
             let ty = this.codegen_type(var.value_type)
             let ptr = LLVMAddGlobal(this.module, ty, var_decl.name.to_cstring())
-        }
-        for i = 0; i < symbols.classes.length; i++ {
-            let imported_class = get_class(this.program, symbols.classes[i])
-            this.declare_class(imported_class)
-            this.declare_class_struct(imported_class, false)
         }
         for i = 0; i < symbols.functions.length; i++ {
             let function = get_func(this.program, symbols.functions[i])
@@ -1128,7 +1131,8 @@ class CodeGen {
                 let llvm_method_type: LLVMTypeRef = null
                 if prop_id.type_id == checked_class.id {
                     if !method_type.has_this {
-                        let arg_types: Type[] = [new ObjectType(checked_class.id) as Type]
+                        let arg_types: Type[] = []
+                        arg_types << (new ObjectType(checked_class.id) as Type)
                         for let j = 0; j < method_type.arg_types.length; j++ {
                             arg_types << method_type.arg_types[j]
                         }
@@ -1193,7 +1197,8 @@ class CodeGen {
         if checked_class.construct != null {
             let constructor_type = get_class_prop_type(this.program, checked_class.construct) as FunctionType
             if !constructor_type.has_this {
-                let arg_types: Type[] = [new ObjectType(checked_class.id) as Type]
+                let arg_types: Type[] = []
+                arg_types << (new ObjectType(checked_class.id) as Type)
                 for let i = 0; i < constructor_type.arg_types.length; i++ {
                     arg_types << constructor_type.arg_types[i]
                 }

@@ -753,14 +753,17 @@ fnc get_class_from_type(program: Program, type_: Type): Class {
         return get_class(program, (type_ as ObjectType).class_id)
     return null
 }
+fnc get_enum(program: Program, enum_id: EnumId): Enum {
+    return program.modules[enum_id.module_id].enums[enum_id.id]
+}
+fnc get_enum_from_type(program: Program, type_: Type): Enum {
+    return get_enum(program, (type_ as EnumType).enum_id)
+}
 fnc get_class_from_prop_id(program: Program, prop_id: PropId): Class {
     return get_class(program, prop_id.type_id as ClassId)
 }
 fnc get_method(program: Program, prop_id: PropId): ClassMethod {
     return get_class_from_prop_id(program, prop_id).methods[prop_id.id]
-}
-fnc get_enum(program: Program, enum_id: EnumId): Enum {
-    return program.modules[enum_id.module_id].enums[enum_id.id]
 }
 fnc get_class_prop_type(program: Program, prop_id: PropId): Type {
     let owner = get_class_from_prop_id(program, prop_id)
@@ -1212,7 +1215,8 @@ class TypeChecker {
         let param_strings = ""
         for let i = 0; i < generic_params.length; i++ {
             let param_name = generic_params[i].name.value
-            param_strings += "$(this.dump_type(types[i]))_"
+            let param_type: Type = types[i].kind == TypeKind.RESOLVED_GENERIC ? (types[i] as GenericType).instantiated_type : types[i]
+            param_strings += "$(this.dump_type(param_type))_"
             generic_scope.type_aliases.set(param_name, types[i])
         }
         let instantiated_generic_name = "$(name)_$param_strings"
@@ -1269,10 +1273,39 @@ class TypeChecker {
         var_stmt.is_static = true
         this.get_current_module().global_vars << var_stmt
     }
+    private add_type_to_module_if_not_found(this, type_: Type) {
+        if type_.kind == TypeKind.ARRAY {
+            let arr_ty = type_ as ArrayType
+            this.add_type_to_module_if_not_found(arr_ty.element_type)
+        } else if type_.kind == TypeKind.ENUM {
+            let enum_ = get_enum_from_type(this.program, type_)
+            if this.get_type_from_current_scope(enum_.name).kind == TypeKind.UNKNOWN {
+                this.add_imported_enum_to_module(enum_.name, enum_.id)
+            }
+        } else if is_object(type_) {
+            let class_ = get_class_from_type(this.program, type_)
+            if this.get_type_from_current_scope(class_.name).kind == TypeKind.UNKNOWN {
+                this.add_imported_class_to_module(class_.name, class_.id)
+            }
+        } else if type_.kind == TypeKind.FNC {
+            let fnc_ty = type_ as FunctionType
+            for let i = 0; i < fnc_ty.arg_types.length; i++ {
+                this.add_type_to_module_if_not_found(fnc_ty.arg_types[i])
+            }
+            this.add_type_to_module_if_not_found(fnc_ty.return_type)
+        }
+    }
+    private add_imported_typealias_to_module(this, alias_name: string, type_: Type){
+        let scope = this.get_current_module_global_scope()
+        let module = this.get_current_module()
+        scope.type_aliases.set(alias_name, type_)
+        this.add_type_to_module_if_not_found(type_)
+    }
     private add_imported_var_to_module(this, var_name: string, var_id: VarId){
         let scope = this.get_current_module_global_scope()
         let module = this.get_current_module()
         scope.vars.set(var_name, var_id)
+        this.add_type_to_module_if_not_found(get_var(this.program, var_id).value_type)
         module.imported_symbols.vars << new VarDeclaration(var_name, var_id)
     }
     private add_imported_fnc_to_module(this, fnc_name: string, fnc_id: VarId){
@@ -1280,6 +1313,7 @@ class TypeChecker {
         let module = this.get_current_module()
         scope.functions.set(fnc_name, fnc_id)
         module.imported_symbols.functions << fnc_id
+        this.add_type_to_module_if_not_found(get_func(this.program, fnc_id).fnc_type)
     }
     private add_imported_class_to_module(this, class_name: string, class_id: ClassId){
         let scope = this.get_current_module_global_scope()
@@ -1287,6 +1321,13 @@ class TypeChecker {
         scope.classes.set(class_name, class_id)
         scope.vars.set(class_name, new ClassVarId(class_id))
         module.imported_symbols.classes << class_id
+        let class_ = get_class(this.program, class_id)
+        for let i = 0; i < class_.fields.length; i++ {
+            this.add_type_to_module_if_not_found(class_.fields[i].field_type)
+        }
+        for i = 0; i < class_.methods.length; i++ {
+            this.add_type_to_module_if_not_found(class_.methods[i].method_type)
+        }
     }
     private add_imported_enum_to_module(this, enum_name: string, enum_id: EnumId){
         let scope = this.get_current_module_global_scope()
@@ -1294,12 +1335,6 @@ class TypeChecker {
         scope.enums.set(enum_name, enum_id)
         scope.vars.set(enum_name, new EnumVarId(enum_id))
         module.imported_symbols.enums << enum_id
-    }
-    private add_imported_typealias_to_module(this, alias_name: string, type_: Type){
-        let scope = this.get_current_module_global_scope()
-        let module = this.get_current_module()
-        scope.type_aliases.set(alias_name, type_)
-        //TODO: Recursively look for object and enum types and import them into module
     }
     private init_function_signature(this, arg_nodes: ArgNode[], return_type_node: TypeNode, args: FunctionArg[]): FunctionType {
         let arg_types: Type[] = []
