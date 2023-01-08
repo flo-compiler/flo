@@ -204,6 +204,7 @@ class CodeGen {
             let var = get_var(this.program, var_decl.var_id)
             let ty = this.codegen_type(var.value_type)
             let ptr = LLVMAddGlobal(this.module, ty, var_decl.name.to_cstring())
+            this.add_var(var_decl.var_id, ptr)
         }
         for i = 0; i < symbols.functions.length; i++ {
             let function = get_func(this.program, symbols.functions[i])
