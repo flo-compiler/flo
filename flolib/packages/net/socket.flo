@@ -1,9 +1,5 @@
 import socket, connect, accept, bind, listen, close in "@flo/sys/lib"
 fnc inet_addr(addr: i8*): int
-fnc str_to_intaddr(addr: string): int {
-    if addr == "" return 0
-    return inet_addr(addr.to_cstring())
-}
 fnc htons(x: int): int {
     let x1 = (x and 255) << 8
     let x2 = (x >> 8) and 255 
@@ -28,7 +24,7 @@ class Socket {
         this.domain = domain
     }
     bind(this, port: int, address: string = ""){
-        let interface = str_to_intaddr(address)
+        let interface = inet_addr(address.to_cstring())
         this.address = create_sockaddr_in(this.domain, htons(port), interface)
         if bind(this.sockfd, this.address, 16) < 0 {
             println("Error: could not bind socket")
@@ -36,9 +32,9 @@ class Socket {
         }
     }
     connect(this, port: int, address: string){
-        let interface = str_to_intaddr(address)
+        let interface = inet_addr(address.to_cstring())
         this.address = create_sockaddr_in(this.domain, htons(port), interface)
-        if connect(this.sockfd, this.address, 16)< 0 {
+        if connect(this.sockfd, this.address, 16) < 0 {
             println("Error: could not connect socket")
             return
         }
