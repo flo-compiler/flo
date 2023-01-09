@@ -19,6 +19,7 @@ flo -h
 Still in progress. In the future it might be acheived by:
 - [ ] Reference counting
 - [ ] A borrow mechanism inspired by rust.
+- [ ] Manual memory management with `del` keyword.
 
 ## Math Safety
 - [ ] Integer Overflows.
@@ -26,7 +27,26 @@ Still in progress. In the future it might be acheived by:
 
 
 ## Taste of the language.
-- [x] Functions with no body are considered extern functions and Methods with no body make the class an abstract class.
+- [x] Type Inference
+```
+let y = 5 
+```
+instead of
+```
+let y: int = 5
+```
+- [x] Type Annotations affect the resulting type
+```
+let y: i8 = 5 // becomes an i8 instead of int
+```
+- Similarly if you had a function
+```
+fnc addTwo(x: i8, y: i8): i8 {
+    return x + y
+}
+addTwo(8, 7) 
+```
+The type of 8 and 7 are infered as `i8` using the type inference at function call.
 - [ ] Optional chaining `a?.b?.c`
 - [ ] Multiple assignemt/destructing
 ```
@@ -81,10 +101,171 @@ let numbers: Array<int> = [1, 2, 3]
 //or
 let names: string[] = ["paul", "john", "xavier"]
 ```
+- Indexing arrays
+```
+let number = numbers[0] // paul
+```
+- [x] Adding to dynamic arrays
+```
+names << "Josh"
+```
 - [ ] Short Hand for arrays
 ```
 let a = [1..100]
 ```
+
+## Conditionals
+- [x] `if`/`else`
+```
+if a >= b {
+// DO SOMETHING
+} else 
+if a in 0..11 {
+// DO SOMETHING
+} else // DO SOMETHING
+```
+- [ ] Match Expression.
+```
+match test {
+    expr1 => result1
+    expr2 => result2
+    expr3 => result3
+    _ => default_result
+}
+```
+
+## Loops
+- [x] traditional for Loop
+```
+for let i = 0; i < 10; i++ // do something
+```
+- [ ] For in loop
+```
+for x in 1..10
+```
+- Need Iterable support
+- [x] While loop
+```
+while 1 // do something 
+// or
+while true // do something
+```
+## Functions
+- Functions are first class so can be passed as an argument or assigned to vars.
+- [x] Base Function
+```
+fnc double(x: int): int {
+    return x*2
+} 
+```
+- [x] Function with default args
+```
+// adds two numbers and returns their sum
+fnc add(x: int, y: int = 0): int => {
+    return x+y
+}
+add(5)
+```
+- [ ] Var args.
+```
+fnc max(...numbers: int){
+    max_num = numbers[0]
+    for number in numbers {
+        if number > max_num {
+            max_num = number
+        }
+    }
+    return max_num
+}
+```
+- [ ] Functions with closure (Anonymous functions).
+```
+fnc main(){
+    let add = (x: int, y: int) => x + y
+}
+```
+- [ ] Named parameters for function calls 
+```
+let result = sum(y: 6, x: 5)
+```
+## Dictionaries
+- [ ] Intialization
+```
+let dic: Dict<string, int> = ["foo": 34, "bar": 36, "zoo": 55]
+// or
+let dic: [string: int] = ["foo": 34, "bar": 36, "zoo": 55]
+// or 
+let dic = ["foo": 34, "bar": 36, "zoo": 55]
+```
+The empty dictionary **must** have a type annotation
+- [ ] Adding to dictionary
+```
+dic["anny"] = 70
+```
+- [ ] Getting from dictionary (returns null if value was not found)
+```
+let age = dic["bar"]
+```
+## Sets
+```
+let set: Set<int> = {1, 2, 3, 4, 5}
+// or
+let set: {int} = = {1, 2, 3, 4, 5}
+// or
+let set = {1, 2, 3, 4, 5}
+```
+- Indexing a set.
+```
+let a = set[0]
+```
+- Checking if a set contains a member.
+```
+println("$(1 in set)")
+```
+## Tuples
+- [ ] Creating tuples
+```
+let items: (int, float, bool) = (1, 1.0, true)
+// or 
+let items = (1, 1.0, true)
+```
+- [ ] Named tuples
+```
+let numerics: (x: int, y: int) = (x: 0, y: 1.0)
+// or
+let numerics = (x: 0, y: 1.0)
+```
+- [ ] Accessing tuples
+```
+items[0] // 1
+numerics.y // 1.0
+```
+## Enums
+- [x] Enums constants (Assigned as numbers at compile time) values are all of type `int` by default
+```
+enum Currencies {
+    USD
+    EUR
+    CAD
+}
+```
+- [x] Enum constraints (limited only to integer types (`i4`, `i8`, `i16`, `i32`, `i64`, `i128`, `int`))
+```
+/*
+The values of the members of the month enum are all of type i8 
+*/
+enum Months(i4) {
+    JANUARY,
+    FEBUARY,
+    MARCH,
+    ...
+}
+```
+- [x] Accessing enum elements
+```
+let jan = Months.JANUARY
+```
+
 ## Classes
 - [x] Basic Class support
 ```
@@ -212,92 +393,6 @@ class Int(ICMP) {
 
 - [x] Operator Fall backs.
     -   Overloads for `==` and `!=` have fallbacks other operators don't and need to be implemented in order to use those in an object.
-## Enums
-- [x] Enums constants (Assigned as numbers at compile time)
-```
-enum Numbers {
-    ONE
-    TWO
-    THREE
-}
-```
-## Dictionaries
-## Sets
-## Tuples
-## Conditionals
-- [x] `if`/`else`
-```
-if a >= b {
-// DO SOMETHING
-} else 
-if a in 0..11 {
-// DO SOMETHING
-} else // DO SOMETHING
-```
-- [ ] Match Expression.
-```
-match test {
-    expr1 => result1
-    expr2 => result2
-    expr3 => result3
-    _ => default_result
-}
-```
-
-## Loops
-- [x] traditional for Loop
-```
-for let i = 0; i < 10; i++ // do something
-```
-- [ ] For in loop
-```
-for x in 1..10
-```
-- Need Iterable support
-- [x] While loop
-```
-while 1 // do something 
-// or
-while true // do something
-```
-## Functions
-- Functions are first class so can be passed as an argument or assigned to vars.
-- [x] Base Function
-```
-fnc double(x: int): int {
-    return x*2
-} 
-```
-- [x] Function with default args
-```
-// adds two numbers and returns their sum
-fnc add(x: int, y: int = 0): int => {
-    return x+y
-}
-add(5)
-```
-- [ ] Var args.
-```
-fnc max(...numbers: int){
-    max_num = numbers[0]
-    for number in numbers {
-        if number > max_num {
-            max_num = number
-        }
-    }
-    return max_num
-}
-```
-- [ ] Functions with closure (Anonymous functions).
-```
-fnc main(){
-    let add = (x: int, y: int) => x + y
-}
-```
-- [ ] Named parameters for function calls 
-```
-let result = sum(y: 6, x: 5)
-```
 ## Generics
 - [x] Generic Classes.
     - Items to test:
@@ -306,7 +401,7 @@ let result = sum(y: 6, x: 5)
 ```
 class GenericNumber<T> {
   value: T
-  __add__ (this, y: T){
+  __add__ (this, y: GenericNumber<T>){
     return this.value + y.value
   }
 }
@@ -394,8 +489,8 @@ let (result, error) = io_operation()
 - [ ] Using Optional chaining
 ```
 let result = io_operation()?
-``(
-- [ ] )sing match
+```
+- [ ] Using match
 ```
 let result = match io_operation() {
     Error(e) => println("An error occured")
