@@ -32,11 +32,30 @@ Still in progress. In the future it might be acheived by:
 ```
 let (a, b, c) = (5, 6, 7)
 // or
-let [a, b, c] = [5, 6, 7]
+let (a, b, c) = [5, 6, 7]
 ```
-
-
-
+## Strings
+### Two types of strings:
+1. C-String (null terminated string)
+```
+let message: i8* = "Hello, world!"
+```
+2. String object
+```
+let message: string = "Hello, world!"
+// or
+let message = "Hello, world!"
+```
+### Formated strings:
+(Heap string)
+```
+let x = 33
+let y = 36
+let message = "$x + $y = $(x+y)" // 33 + 36 = 69
+// or as a cstring
+let message2: i8* = "$x + $y = $(x+y)" // 33 + 36 = 69
+```
+Automatically converts format parameters to string and includes then in the formatted string.
 ## Ranges
 - [x] Declaring a range
 ```
@@ -123,9 +142,9 @@ class Number {
     }
 }
 ```
-- [ ] Object Literal Intialization. (Also should work on function return and parameter passing)
+- [ ] Object Literal Intialization as named tuples. (Also should work on function return and parameter passing)
 ```
-chef: Chef = {specialty: "cake"}
+chef: Chef = (specialty: "cake")
 ```
 - [x] Class containing methods without body are considered an abstract class/interface (Objects of that class cannot be created but other classes can inherit that class and implement those methods).
 ```
@@ -375,16 +394,12 @@ let (result, error) = io_operation()
 - [ ] Using Optional chaining
 ```
 let result = io_operation()?
-```
-- [ ] Using Nullish coalescing
-```
-let result = io_operation() ?? null
-```
-- [ ] Using match
+``(
+- [ ] )sing match
 ```
 let result = match io_operation() {
-    error(e) => println("An error occured")
-    success(r) => r
+    Error(e) => println("An error occured")
+    _(result) => result
 }
 ```
 
