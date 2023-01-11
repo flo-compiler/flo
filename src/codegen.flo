@@ -1057,12 +1057,22 @@ class CodeGen {
                 let this_alloc = LLVMBuildAlloca(func_builder, object_type, "this")
                 let this_id = get_scope(this.program, method.scope).vars.get("this")
                 LLVMBuildStore(func_builder, this_param, this_alloc)
-                if is_constructor and struct_class.vtable != null {
-                    let index: LLVMValueRef[1] = [this.createLLVMInt(0)]
-                    let vt_ptr =  LLVMBuildInBoundsGEP2(func_builder, object_type, this_param, &index[0], 1, "")
-                    LLVMBuildStore(func_builder, struct_class.vtable, vt_ptr)
-                }
                 this.add_var(this_id, this_alloc)
+                if is_constructor {
+                    if struct_class.vtable != null {
+                        let index: LLVMValueRef[1] = [this.createLLVMInt(0)]
+                        let vt_ptr =  LLVMBuildInBoundsGEP2(func_builder, object_type, this_param, &index[0], 1, "")
+                        LLVMBuildStore(func_builder, struct_class.vtable, vt_ptr)
+                    }
+                    let parent_ty = checked_class.parent as ObjectType
+                    if parent_ty != null {
+                        let super_id = get_scope(this.program, method.scope).vars.get("super")
+                        if super_id != null {
+                            let super_constructor = this.get_class_from_typeid(parent_ty.class_id).constructor
+                            this.add_var(super_id, super_constructor)
+                        }
+                    }
+                }
                 offset = 1
             }
             for let j = 0; j < method.args.length; j++ {

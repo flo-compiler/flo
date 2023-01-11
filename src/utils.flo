@@ -20,7 +20,6 @@ fnc color(color: string): string {
 }
 fnc exit(code: int)
 fnc panic(message: string){
-    print("Panic: ")
-    println(message)
+    println("Panic: $message")
     exit(1)
 }
