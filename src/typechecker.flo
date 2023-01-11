@@ -910,6 +910,14 @@ fnc evaluate_const_int_expression(program: Program, exp: Expression): int {
     }
     return -99999999
 }
+class Generic {
+    module_id: int
+    template: ClassDeclarationNode
+    constructor(this, module_id: int, template: ClassDeclarationNode){
+        this.module_id = module_id
+        this.template = template
+    }
+}
 // Hint: For Generics and typed constraints consider Hidley-Milner Algorithm.
 class TypeChecker {
     program: Program
@@ -920,12 +928,12 @@ class TypeChecker {
     current_scope: ScopeId
     compiler: Compiler
     in_loop: bool
-    generic_templates: Map<string, ClassDeclarationNode>
+    generic_templates: Map<string, Generic>
     constructor(this){
         this.current_module = -1
         this.in_loop = false
         this.program = new Program()
-        this.generic_templates = new Map<string, ClassDeclarationNode>()
+        this.generic_templates = new Map<string, Generic>()
     }
     private get_module(this, id: int): Module {
         return this.program.modules[id]
@@ -1015,6 +1023,9 @@ class TypeChecker {
             let args_tys_str = ""
             for let i = 0; i < fnc_ty.arg_types.length; i++ {
                 args_tys_str += this.dump_type(fnc_ty.arg_types[i])
+                if i < fnc_ty.arg_types.length - 1 {
+                    args_tys_str += ", "
+                }
             }
             return "($args_tys_str) => $(this.dump_type(fnc_ty.return_type))"
         }
@@ -1110,8 +1121,11 @@ class TypeChecker {
             let builtin_type = this.get_type_from_current_scope(name)
             if builtin_type.kind != TypeKind.UNKNOWN {
                 this.program.uses_builtins = true
-                // Assuming that there are no enums in builtins
-                this.add_imported_class_to_module(name, (builtin_type as ObjectType).class_id)
+                if builtin_type.kind == TypeKind.OBJECT {
+                    this.add_imported_class_to_module(name, (builtin_type as ObjectType).class_id)
+                } else {
+                    this.add_imported_enum_to_module(name, (builtin_type as EnumType).enum_id)
+                }
             }
             this.current_scope = previous_scope
             return builtin_type
@@ -1203,20 +1217,26 @@ class TypeChecker {
         this.lex_and_parse_typecheck_file(this.compiler.builtin_path, null)
     }
     private create_generic_instance_in_module(this, name: string, types: Type[]): GenericType {
-        let generic_node = this.generic_templates.get(name)
-        if generic_node == null return null
-        let generic_params = generic_node.generic_parameters
+        let generic = this.generic_templates.get(name)
+        if generic == null return null
+        let generic_params = generic.template.generic_parameters
         if generic_params.length != types.length {
             let buckets = this.generic_templates.get_buckets()
             this.error(ErrorKind.TYPE, "Generic expects $(generic_params.length) parameters but got $(types.length)", null)
             return null
         }
+        let module_id = this.current_module
+        let scope_id = this.current_scope
+        let generic_module_id = 1
+        this.current_module = generic_module_id
+        this.current_scope = this.get_module(generic_module_id).scopes[0].id
         let generic_scope = this.create_child_scope_within_current_scope()
         let param_strings = ""
         for let i = 0; i < generic_params.length; i++ {
             let param_name = generic_params[i].name.value
             let param_type: Type = types[i].kind == TypeKind.RESOLVED_GENERIC ? (types[i] as GenericType).instantiated_type : types[i]
             param_strings += "$(this.dump_type(param_type))_"
+            this.add_type_to_module_if_not_found(types[i])
             generic_scope.type_aliases.set(param_name, types[i])
         }
         let instantiated_generic_name = "$(name)_$param_strings"
@@ -1224,18 +1244,21 @@ class TypeChecker {
         let possible_type = this.get_type_from_current_scope(instantiated_generic_name)
         if possible_type.kind == TypeKind.UNKNOWN {
             // TODO: Find a better way to create this initialization.
-            let new_identok = new IdentifierToken(instantiated_generic_name, generic_node.name.range)
+            let new_identok = new IdentifierToken(instantiated_generic_name, generic.template.name.range)
             let instantiated_generic_class = new ClassDeclarationNode(new_identok)
-            instantiated_generic_class.parent = generic_node.parent
-            instantiated_generic_class.fields = generic_node.fields
-            instantiated_generic_class.methods = generic_node.methods
+            instantiated_generic_class.parent = generic.template.parent
+            instantiated_generic_class.fields = generic.template.fields
+            instantiated_generic_class.methods = generic.template.methods
             this.current_scope = generic_scope.id
             this.declare_class_within_module(instantiated_generic_class)
             this.check_class_body(instantiated_generic_class)
             possible_type = this.get_type_from_current_scope(instantiated_generic_name)
-        } 
-        this.current_scope = generic_scope.parent
-        return new GenericType(name, types, possible_type)
+        }
+        this.current_module = module_id
+        this.current_scope = scope_id
+        let generic_ty = new GenericType(name, types, possible_type)
+        this.add_type_to_module_if_not_found(generic_ty)
+        return generic_ty
     }
     private declare_var_within_current_scope(this, name: string, value: Expression, value_type: Type): Var {
         let var = new Var(value, value_type)
@@ -1493,7 +1516,7 @@ class TypeChecker {
             return
         }
         if class_decl_node.generic_parameters.length > 0 {
-            this.generic_templates.set(name, class_decl_node)
+            this.generic_templates.set(name, new Generic(this.current_module, class_decl_node))
             return
         }
         let declared_class: Class
@@ -1707,8 +1730,7 @@ class TypeChecker {
                     let constructor_method = get_class_from_type(this.program, declared_class.parent).construct
                     if constructor_method != null {
                         let constructor_type = get_class_prop_type(this.program, constructor_method)
-                        let var = new MemberExpression(new VarAccessExpression(this_const.const_id, object_type), constructor_method, constructor_type)
-                        this.declare_const_within_current_scope("super", var, constructor_type)
+                        this.declare_const_within_current_scope("super", null, constructor_type)
                     }
                 }
             }

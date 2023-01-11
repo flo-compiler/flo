@@ -206,17 +206,17 @@ class Array <T> {
         }
         return -1
     }
-    join(this, seperator: string): string{
-        let res = ""
-        let last_index = this.length - 1
-        for let i = 0; i < last_index; i++ {
-            res += "$(this.buffer[i]) $seperator"
-        }
-        return "$res $(this.buffer[i])"
-    }
-    __as_string__(this): string {
-        return "[$(this.join(", "))]"
-    }
+    // join(this, seperator: string): string{
+    //     let res = ""
+    //     let last_index = this.length - 1
+    //     for let i = 0; i < last_index; i++ {
+    //         res += "$(this.buffer[i]) $seperator"
+    //     }
+    //     return "$res $(this.buffer[i])"
+    // }
+    // __as_string__(this): string {
+    //     return "[$(this.join(", "))]"
+    // }
 }
 const STDOUT = 1
 fnc write(res: int, buf: i8*, len: int)
