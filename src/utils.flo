@@ -13,10 +13,12 @@ class FloRange {
         return new FloRange(r1.start, r2.end, r1.col, r2.line)
     }
 }
-fnc color(color: string): string {
-    if color == "red"
-        return "\033[1;31m"
-    return "\033[0m"
+enum COLORS {
+    RED
+    RESET
+}
+fnc change_print_color(color: COLORS) {
+    print(color == COLORS.RED ? "\033[1;31m" : "\033[0m")
 }
 fnc exit(code: int)
 fnc panic(message: string){
