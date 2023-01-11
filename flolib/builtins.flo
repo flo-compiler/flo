@@ -1,5 +1,7 @@
 /*@extern*/
 fnc strlen(str: i8*): int
+
+const STDOUT = 1
 // ----- string -------
 class string {
     private buffer: i8*
@@ -206,19 +208,7 @@ class Array <T> {
         }
         return -1
     }
-    // join(this, seperator: string): string{
-    //     let res = ""
-    //     let last_index = this.length - 1
-    //     for let i = 0; i < last_index; i++ {
-    //         res += "$(this.buffer[i]) $seperator"
-    //     }
-    //     return "$res $(this.buffer[i])"
-    // }
-    // __as_string__(this): string {
-    //     return "[$(this.join(", "))]"
-    // }
 }
-const STDOUT = 1
 fnc write(res: int, buf: i8*, len: int)
 fnc print(str: string){
     write(STDOUT, str.get_bytes(), str.length)
@@ -227,59 +217,3 @@ fnc println(str: string){
     print(str)
     write(STDOUT, "\n", 1)
 }
-// generic functions.
-// fnc print<T>(arg: T, end = "\n"){
-//     let arg_mem = (arg as string).to_cstring()
-//     let end_mem = end.to_cstring()
-//     printf("%s%s", arg_mem, end_mem)
-//     free(arg_mem)
-//     free(end_mem)
-// }
-/* Function generators int 
-fnc *array_generator<U[N]>(x: U[N]): U {
-    for i in 0..N {
-         yield x[i]
-    }
-} */
-/* Types as first class through generics.
-type integer = int + i4 + i8 + i16 + i32 + i64 + i128
-type rational = float + f16 + f32 + f64
-type numeric = integers + floats
-type integer_float = integer * floats
-fnc *array_generator<U[N]>(x: U[N]): U {
-    for i in 0..N {
-        yield x[i]
-    }
-}
-fnc ptr_element<U*>(): typeof<U> {
-    return @U
-}
-fnc is_generic<T>(x: T): bool {
-    return @T == @T<>
-}
-fnc is_ptr<T>(): bool {
-    try {
-        ptr_element(T)
-        return true
-    } catch error {
-        return false
-    }
-}
-fnc isa<T, U>(x: U): bool {
-    try {
-        let v: T = x
-        return true
-    } catch error {
-        return false
-    }
-}
-for method in Range.methods {
-
-}
-for field in Range.fields {
-
-}
-for type in type(int, float, Range){
-
-}
-*/
