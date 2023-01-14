@@ -1,0 +1,12 @@
+enum Types {
+    ZERO
+    ONE
+    TWO
+    THREE
+}
+fnc main(): int {
+    let token_type = Types.THREE
+    if token_type == Types.THREE
+        println("ko")
+    return 0
+}

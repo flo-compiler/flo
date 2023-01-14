@@ -1,13 +1,12 @@
-//@expect: return_code=1
+//@expect: return_code=45
 fnc main(): int {
     let x = 10
     let y: int = null
     if null != y {
         return 1.0 as int
     }
-    while x > 0 {
-        x = x - 1
-        y = y + x
+    while x--> 0 {
+        y += x
     }
     return y
 }

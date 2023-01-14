@@ -1,7 +1,7 @@
 import "@flo/io/file"
 import "@flo/collections/map"
 import "@flo/path/path"
-import "error"
+import  "error"
 class FileId {
     id: int
     constructor(this, id: int){
@@ -39,7 +39,7 @@ class Compiler {
     private find_module_path(this, fpath: string): string {
         let path = fpath.replace("@flo", Path.join(this.std_dir_path, "packages"))
         if !path.ends_with(".flo")
-            path+=".flo"
+            path += ".flo"
         return Path.abspath(path)
     }
     public register_file(this, fpath: string): FileId {
