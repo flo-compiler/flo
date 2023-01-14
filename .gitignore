@@ -5,4 +5,6 @@
 *.a
 **/*.vsix
 flo
+stage0
+stage1
 /journal
