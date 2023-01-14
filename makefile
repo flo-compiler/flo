@@ -15,7 +15,7 @@ FLO_COMPILER_SRC=src/main.flo
 define compile_and_link_fc
 	./$(1) $(FLO_COMPILER_SRC) -o $(1).o -O 0
 	$(CXX) -c src/llvm/TargetInitializationMacros.c -o $(1).so
-	$(CXX) $(1).o $(1).so $(LLVM_LDFLAGS) -o $(2)
+	$(CXX) -no-pie $(1).o $(1).so $(LLVM_LDFLAGS) -o $(2)
 endef
 
 all: flo
