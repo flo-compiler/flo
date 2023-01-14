@@ -1,7 +1,7 @@
 import "llvm/types"
 import panic in "utils"
 import LLVMVerifyModule in "llvm/analysis"
-import LLVMDisposeModule, LLVMContextDispose, LLVMShutdown, LLVMGetModuleContext, LLVMCloneModule, LLVMDumpModule, LLVMSetTarget, LLVMCreatePassManager, LLVMSetDataLayout, LLVMDisposeMessage, LLVMRunPassManager, LLVMDisposePassManager, LLVMGetNamedFunction in "llvm/core"
+import LLVMPrintModuleToFile, LLVMDisposeModule, LLVMContextDispose, LLVMShutdown, LLVMGetModuleContext, LLVMCloneModule, LLVMDumpModule, LLVMSetTarget, LLVMCreatePassManager, LLVMSetDataLayout, LLVMDisposeMessage, LLVMRunPassManager, LLVMDisposePassManager, LLVMGetNamedFunction in "llvm/core"
 import LLVMRemoveModule, LLVMLinkInMCJIT, LLVMCreateExecutionEngineForModule, LLVMDisposeExecutionEngine, LLVMRunFunctionAsMain in "llvm/executionEngine"
 import LLVMPassManagerBuilderDispose, LLVMPassManagerBuilderCreate, LLVMPassManagerBuilderSetOptLevel, LLVMPassManagerBuilderPopulateModulePassManager in "llvm/passManagerBuilder"
 import LLVMAddInternalizePass, LLVMAddInstructionCombiningPass, LLVMAddGlobalDCEPass, LLVMAddGlobalOptimizerPass, LLVMAddScalarReplAggregatesPass, LLVMAddFunctionInliningPass in "llvm/transforms"
@@ -29,6 +29,9 @@ class GeneratedModule {
         }
     }
     public run_passes(this, level: int){
+        if level <= 0 {
+            return
+        }
         let pm = LLVMCreatePassManager()
         let pmp = LLVMPassManagerBuilderCreate()
         LLVMAddInternalizePass(pm, 1)
@@ -82,7 +85,8 @@ class GeneratedModule {
         LLVMDisposeTargetMachine(tm)
     }
     public print(this){
-        LLVMDumpModule(this.llvm_mod)
+        LLVMPrintModuleToFile(this.llvm_mod, "output.ll", &this.errors)
+        this.check_errors()
     }
     public llvm_shutdown(this){
         LLVMShutdown()

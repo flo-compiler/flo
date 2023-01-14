@@ -40,9 +40,9 @@ fnc flag_value_or(args: string[], name: string, default: string): string {
     return default
 }
 fnc main(argc: int, argv: i8**): int {
-    let args = parse_args(argc, argv)
     let code = 0
-    if args.length >= 2 {
+    if argc >= 2 {
+        let args = parse_args(argc, argv)
         if flag(args, "-v") or flag(args, "--version"){
             println("v0.01@test.selfhost")
             return 0
@@ -80,9 +80,10 @@ fnc main(argc: int, argv: i8**): int {
         /**** Codegen ****/
         let codegen: CodeGen
         let flo_module = codegen.codegen(program)
-        if flag(args, "--print-llvm") flo_module.print()
         flo_module.run_passes(flag_value_or(args, "-O", "1") as int)
-        if flag(args, "-o") {
+        if flag(args, "--print-llvm") {
+            flo_module.print()
+        } else if flag(args, "-o") {
             flo_module.write_object(flag_value_or(args, "-o", "a.o"), flag_value_or(args, "-target", ""))
         } else {
             code = flo_module.exec()

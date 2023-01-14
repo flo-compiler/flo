@@ -1877,6 +1877,7 @@ class TypeChecker {
         if expected_type.kind == TypeKind.ARRAY {
             element_type = (expected_type as ArrayType).element_type
         } else if expected_type.kind == TypeKind.RESOLVED_GENERIC {
+            is_constant = false
             let generic_ty =  expected_type as GenericType
             if is_object(generic_ty) and generic_ty.name == "Array"
                 element_type = generic_ty.arg_types[0]
@@ -1884,14 +1885,14 @@ class TypeChecker {
         if array_node.elements.length > 0 {
             elements << this.check_expression(element_type, array_node.elements[0])
             if this.has_errored() return null
+            is_constant and= elements[0].is_constant
             if element_type.kind == TypeKind.UNKNOWN {
-                is_constant = elements[0].is_constant
                 element_type =  elements[0].value_type
             }
             for let i = 1; i < array_node.elements.length; ++i {
                 let element = this.check_expression(element_type, array_node.elements[i])
                 if this.has_errored() return null
-                is_constant = is_constant and element.is_constant
+                is_constant and= element.is_constant
                 if this.types_are_eq(element_type, element.value_type) {
                     elements << element
                 } else {
