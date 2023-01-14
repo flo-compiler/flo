@@ -34,8 +34,8 @@ stage1: stage0
 	$(call compile_and_link_fc,$^,$@)
 
 stage0: bootstrap/flo.ll
-	$(CXX) -c src/llvm/TargetInitializationMacros.c -o $^.so
-	$(CXX) $^ $^.so $(LLVM_LDFLAGS) -o $@
+	$(CXX) -c src/llvm/TargetInitializationMacros.c -o $@.so
+	$(CXX) $^ $@.so $(LLVM_LDFLAGS) -o $@
 
 clean:
-	rm -f *.o *.a flo stage0 stage1
+	rm -f *.o *.a .*so flo stage0 stage1
