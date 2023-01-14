@@ -1,3 +1,4 @@
+//@expect: return_code=1
 fnc main(): int {
     if true != false
         return 1

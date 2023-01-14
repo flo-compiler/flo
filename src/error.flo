@@ -1,4 +1,4 @@
-import FloRange, change_print_color in "utils"
+import FloRange, COLORS, change_print_color in "utils"
 enum ErrorKind {
     ILLEGALCHAR
     NAME

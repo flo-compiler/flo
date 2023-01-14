@@ -1,0 +1,20 @@
+class ICMP {
+    protected __cmp__(this, other: ICMP): int
+    public __eq__(this, other: Int): bool {
+        return this.__cmp__(other) == 0
+    }
+
+}
+class Int(ICMP) {
+    private value: int
+    constructor(this, value: int){
+        this.value = value
+    }
+    protected __cmp__(this, other: Int): int {
+        return this.value - other.value
+    }
+}
+fnc main(): int {
+    let x: Int(7)
+    return 0
+}

@@ -1,7 +1,7 @@
 //@expect: return_code=2
 class ICMP {
     protected __cmp__(this, other: ICMP): int
-    public __eq__(this, other: Int): bool {
+    public __eq__(this, other: ICMP): bool {
         return this.__cmp__(other) == 0
     }
     public __ne__(this, other: ICMP): bool {

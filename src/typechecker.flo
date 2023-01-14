@@ -36,7 +36,6 @@ class FunctionType (Type) {
         super(TypeKind.FNC)
         this.arg_types = arg_types
         this.return_type = return_type
-        this.has_this = false
     }
 }
 class Value {
@@ -686,18 +685,6 @@ class Enum {
         this.fields = []
     }
 }
-class ImportedSymbols {
-    vars: VarDeclaration[]
-    functions: VarId[]
-    enums: EnumId[]
-    classes: ClassId[]
-    constructor(this){
-        this.vars = []
-        this.functions = []
-        this.enums = []
-        this.classes = []
-    }
-}
 class Module {
     id: int
     name: string
@@ -709,7 +696,6 @@ class Module {
     scopes: Scope[]
     global_consts: ConstDeclaration[]
     global_vars: VarDeclaration[]
-    imported_symbols: ImportedSymbols
     constructor(this){
         this.functions = []
         this.vars = []
@@ -720,7 +706,6 @@ class Module {
         this.global_consts = []
         this.global_vars = []
         this.consts = []
-        this.imported_symbols = new ImportedSymbols()
     }
 }
 class Program {
@@ -928,6 +913,7 @@ class TypeChecker {
     current_scope: ScopeId
     compiler: Compiler
     in_loop: bool
+    module_contains_generics: bool
     generic_templates: Map<string, Generic>
     constructor(this){
         this.current_module = -1
@@ -1147,10 +1133,26 @@ class TypeChecker {
         this.compiler = compiler
         this.load_builtins_module()
         if this.has_errored() return null
+        this.load_generic_module()
         this.check_module(module_ast, filename)
         return this.program
     }
+    private load_builtins_module(this){
+        this.lex_and_parse_typecheck_file(this.compiler.builtin_path, null)
+    }
+    private load_generic_module(this){
+        this.compiler.register_file("__generics__")
+        this.check_module(new ModuleAST(), "__generics__")
+        this.switch_to_generic_module()
+        this.import_all_from_module(this.get_module(0))
+    }
+    private switch_to_generic_module(this){
+        let generic_module_id = 1
+        this.current_module = generic_module_id
+        this.current_scope = this.get_module(generic_module_id).scopes[0].id
+    }
     private check_module(this, module_ast: ModuleAST, filename: string): Module {
+        this.module_contains_generics = false
         let prev_module = this.current_module
         let prev_scope = this.current_scope
         let module: Module
@@ -1209,12 +1211,14 @@ class TypeChecker {
         for i = 0; i < module_ast.functions.length; i++ {
            this.check_function_body(module.functions[i], module_ast.functions[i])
         }
+        if this.module_contains_generics and this.current_module != 0 {
+            this.switch_to_generic_module()
+            this.import_all_from_module(module)
+        }
         this.current_scope = prev_scope
         this.current_module = prev_module
+        if this.has_errored() return null
         return module
-    }
-    private load_builtins_module(this){
-        this.lex_and_parse_typecheck_file(this.compiler.builtin_path, null)
     }
     private create_generic_instance_in_module(this, name: string, types: Type[]): GenericType {
         let generic = this.generic_templates.get(name)
@@ -1227,16 +1231,13 @@ class TypeChecker {
         }
         let module_id = this.current_module
         let scope_id = this.current_scope
-        let generic_module_id = 1
-        this.current_module = generic_module_id
-        this.current_scope = this.get_module(generic_module_id).scopes[0].id
+        this.switch_to_generic_module()
         let generic_scope = this.create_child_scope_within_current_scope()
         let param_strings = ""
         for let i = 0; i < generic_params.length; i++ {
             let param_name = generic_params[i].name.value
             let param_type: Type = types[i].kind == TypeKind.RESOLVED_GENERIC ? (types[i] as GenericType).instantiated_type : types[i]
             param_strings += "$(this.dump_type(param_type))_"
-            this.add_type_to_module_if_not_found(types[i])
             generic_scope.type_aliases.set(param_name, types[i])
         }
         let instantiated_generic_name = "$(name)_$param_strings"
@@ -1257,7 +1258,6 @@ class TypeChecker {
         this.current_module = module_id
         this.current_scope = scope_id
         let generic_ty = new GenericType(name, types, possible_type)
-        this.add_type_to_module_if_not_found(generic_ty)
         return generic_ty
     }
     private declare_var_within_current_scope(this, name: string, value: Expression, value_type: Type): Var {
@@ -1296,68 +1296,27 @@ class TypeChecker {
         var_stmt.is_static = true
         this.get_current_module().global_vars << var_stmt
     }
-    private add_type_to_module_if_not_found(this, type_: Type) {
-        if type_.kind == TypeKind.ARRAY {
-            let arr_ty = type_ as ArrayType
-            this.add_type_to_module_if_not_found(arr_ty.element_type)
-        } else if type_.kind == TypeKind.ENUM {
-            let enum_ = get_enum_from_type(this.program, type_)
-            if this.get_type_from_current_scope(enum_.name).kind == TypeKind.UNKNOWN {
-                this.add_imported_enum_to_module(enum_.name, enum_.id)
-            }
-        } else if is_object(type_) {
-            let class_ = get_class_from_type(this.program, type_)
-            if this.get_type_from_current_scope(class_.name).kind == TypeKind.UNKNOWN {
-                this.add_imported_class_to_module(class_.name, class_.id)
-            }
-        } else if type_.kind == TypeKind.FNC {
-            let fnc_ty = type_ as FunctionType
-            for let i = 0; i < fnc_ty.arg_types.length; i++ {
-                this.add_type_to_module_if_not_found(fnc_ty.arg_types[i])
-            }
-            this.add_type_to_module_if_not_found(fnc_ty.return_type)
-        }
-    }
     private add_imported_typealias_to_module(this, alias_name: string, type_: Type){
         let scope = this.get_current_module_global_scope()
-        let module = this.get_current_module()
         scope.type_aliases.set(alias_name, type_)
-        this.add_type_to_module_if_not_found(type_)
     }
     private add_imported_var_to_module(this, var_name: string, var_id: VarId){
         let scope = this.get_current_module_global_scope()
-        let module = this.get_current_module()
         scope.vars.set(var_name, var_id)
-        this.add_type_to_module_if_not_found(get_var(this.program, var_id).value_type)
-        module.imported_symbols.vars << new VarDeclaration(var_name, var_id)
     }
     private add_imported_fnc_to_module(this, fnc_name: string, fnc_id: VarId){
         let scope = this.get_current_module_global_scope()
-        let module = this.get_current_module()
         scope.functions.set(fnc_name, fnc_id)
-        module.imported_symbols.functions << fnc_id
-        this.add_type_to_module_if_not_found(get_func(this.program, fnc_id).fnc_type)
     }
     private add_imported_class_to_module(this, class_name: string, class_id: ClassId){
         let scope = this.get_current_module_global_scope()
-        let module = this.get_current_module()
         scope.classes.set(class_name, class_id)
         scope.vars.set(class_name, new ClassVarId(class_id))
-        module.imported_symbols.classes << class_id
-        let class_ = get_class(this.program, class_id)
-        for let i = 0; i < class_.fields.length; i++ {
-            this.add_type_to_module_if_not_found(class_.fields[i].field_type)
-        }
-        for i = 0; i < class_.methods.length; i++ {
-            this.add_type_to_module_if_not_found(class_.methods[i].method_type)
-        }
     }
     private add_imported_enum_to_module(this, enum_name: string, enum_id: EnumId){
         let scope = this.get_current_module_global_scope()
-        let module = this.get_current_module()
         scope.enums.set(enum_name, enum_id)
         scope.vars.set(enum_name, new EnumVarId(enum_id))
-        module.imported_symbols.enums << enum_id
     }
     private init_function_signature(this, arg_nodes: ArgNode[], return_type_node: TypeNode, args: FunctionArg[]): FunctionType {
         let arg_types: Type[] = []
@@ -1430,9 +1389,7 @@ class TypeChecker {
                 let name_to_import = import_node.import_list[i].value
                 let renamed_name = name_to_import
                 if this.generic_templates.get(name_to_import) != null {
-                    // TODO: Temporary fix for importing generics since generics are templates represented by the AST and don't capture scope.
-                    this.import_all_from_module(module)
-                    return
+                    continue
                 }
                 let class_id = global_module_scope.classes.get(name_to_import)
                 if class_id != null {
@@ -1516,6 +1473,7 @@ class TypeChecker {
             return
         }
         if class_decl_node.generic_parameters.length > 0 {
+            this.module_contains_generics = true
             this.generic_templates.set(name, new Generic(this.current_module, class_decl_node))
             return
         }
