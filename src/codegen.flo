@@ -518,7 +518,7 @@ class CodeGen {
     }
     private store_expr_to_mem(this, builder: LLVMBuilderRef, ptr: LLVMValueRef, expr: Expression): LLVMValueRef {
         let value: LLVMValueRef = null
-        if expr.expr_kind == ExpressionKind.ARRAY and expr.is_constant == false {
+        if expr.expr_kind == ExpressionKind.ARRAY and !expr.is_constant {
             let arr_expr = expr as ArrayExpression
             let value_ty = expr.value_type
             if value_ty.kind != TypeKind.RESOLVED_GENERIC {
