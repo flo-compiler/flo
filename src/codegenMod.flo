@@ -1,9 +1,9 @@
 import "llvm/types"
 import panic in "utils"
 import LLVMVerifyModule in "llvm/analysis"
-import LLVMPrintModuleToFile, LLVMDisposeModule, LLVMContextDispose, LLVMShutdown, LLVMGetModuleContext, LLVMCloneModule, LLVMDumpModule, LLVMSetTarget, LLVMCreatePassManager, LLVMSetDataLayout, LLVMDisposeMessage, LLVMRunPassManager, LLVMDisposePassManager, LLVMGetNamedFunction in "llvm/core"
+import LLVMGetFirstFunction, LLVMGetNextFunction, LLVMPrintModuleToFile, LLVMShutdown, LLVMSetTarget, LLVMSetDataLayout, LLVMDisposeMessage, LLVMCreateFunctionPassManagerForModule, LLVMRunFunctionPassManager, LLVMDisposePassManager, LLVMGetNamedFunction in "llvm/core"
 import LLVMRemoveModule, LLVMLinkInMCJIT, LLVMCreateExecutionEngineForModule, LLVMDisposeExecutionEngine, LLVMRunFunctionAsMain in "llvm/executionEngine"
-import LLVMPassManagerBuilderDispose, LLVMPassManagerBuilderCreate, LLVMPassManagerBuilderSetOptLevel, LLVMPassManagerBuilderPopulateModulePassManager in "llvm/passManagerBuilder"
+import LLVMPassManagerBuilderPopulateFunctionPassManager, LLVMPassManagerBuilderUseInlinerWithThreshold, LLVMPassManagerBuilderDispose, LLVMPassManagerBuilderCreate, LLVMPassManagerBuilderSetOptLevel in "llvm/passManagerBuilder"
 import LLVMAddInternalizePass, LLVMAddInstructionCombiningPass, LLVMAddGlobalDCEPass, LLVMAddGlobalOptimizerPass, LLVMAddScalarReplAggregatesPass, LLVMAddFunctionInliningPass in "llvm/transforms"
 import LLVM_InitializeAllTargetInfos, LLVM_InitializeAllTargetMCs, LLVM_InitializeAllTargets, LLVM_InitializeAllAsmParsers, LLVM_InitializeAllAsmPrinters in "llvm/target"
 import LLVMDisposeTargetMachine, LLVMTargetMachineEmitToFile, LLVMGetDefaultTargetTriple, LLVMGetTargetMachineTriple, LLVMCreateTargetDataLayout, LLVMCreateTargetMachine, LLVMGetTargetFromTriple, LLVMGetHostCPUFeatures in "llvm/targetMachine"
@@ -29,22 +29,18 @@ class GeneratedModule {
         }
     }
     public run_passes(this, level: int){
-        if level <= 0 {
-            return
+        let fpm = LLVMCreateFunctionPassManagerForModule(this.llvm_mod)
+        let pmb = LLVMPassManagerBuilderCreate()
+        LLVMPassManagerBuilderSetOptLevel(pmb, level)
+        LLVMPassManagerBuilderUseInlinerWithThreshold(pmb, 255)
+        let func = LLVMGetFirstFunction(this.llvm_mod)
+        LLVMPassManagerBuilderPopulateFunctionPassManager(pmb, fpm)
+        while func != null {
+            LLVMRunFunctionPassManager(fpm, func)
+            func = LLVMGetNextFunction(func)
         }
-        let pm = LLVMCreatePassManager()
-        let pmp = LLVMPassManagerBuilderCreate()
-        LLVMAddInternalizePass(pm, 1)
-        LLVMAddGlobalDCEPass(pm)
-        LLVMAddGlobalOptimizerPass(pm)
-        LLVMAddInstructionCombiningPass(pm)
-        LLVMAddScalarReplAggregatesPass(pm)
-        LLVMAddFunctionInliningPass(pm)
-        LLVMPassManagerBuilderSetOptLevel(pmp, level)
-        LLVMPassManagerBuilderPopulateModulePassManager(pmp, pm)
-        LLVMRunPassManager(pm, this.llvm_mod)
-        LLVMPassManagerBuilderDispose(pmp)
-        LLVMDisposePassManager(pm)
+        LLVMDisposePassManager(fpm)
+        LLVMPassManagerBuilderDispose(pmb)
     }
     public exec(this): int {
         LLVMLinkInMCJIT()
