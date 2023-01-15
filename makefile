@@ -1,6 +1,6 @@
 CXX=clang-15
 
-LLVM_BUILD_PATH=/lib/llvm-15#$$HOME/llvm-project/build
+LLVM_BUILD_PATH=/lib/llvm-15
 
 LLVM_BIN_PATH=$(LLVM_BUILD_PATH)/bin
 
@@ -21,7 +21,7 @@ endef
 all: flo
 
 flo: src/*.flo
-	$(call compile_and_link_fc,hostcompiler/flo.py,$@)
+	$(call compile_and_link_fc,flo.py,$@)
 
 install: all
 	cp -f flo $(FLO_INSTALL_PATH)
