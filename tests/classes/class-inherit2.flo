@@ -10,7 +10,8 @@ class Parent {
 class Child(Parent){
     constructor(this){}
 }
-fnc main(){
+fnc main(): int {
     let c: Child()
     c.callDoStuff()
+    return 0
 }

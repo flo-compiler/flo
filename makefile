@@ -38,4 +38,4 @@ stage0: bootstrap/flo.ll
 	$(CXX) $^ $@.so $(LLVM_LDFLAGS) -o $@
 
 clean:
-	rm -f *.o *.a .*so flo stage0 stage1
+	rm -f *.o *.a *.so flo stage0 stage1
