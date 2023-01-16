@@ -18,7 +18,7 @@ fnc help(exec_file: string){
     println(" -h, --help\t\t\tShow this help message.")
     println(" --print-tokens\t\t\tPrint generated Tokens")
     println(" --print-ast\t\t\tPrint generated AST.")
-    println(" -emit-llvm\t\t\tPrint generated LLVM-IR.")
+    println(" --emit-llvm\t\t\tPrint generated LLVM-IR.")
     println(" -o <file>\t\t\tPlace the output into <file>.")
     println(" -target\t\t\tCompile to specific target triple.")
     println(" -I\t\t\tSpecify runtime directory.")
@@ -81,7 +81,7 @@ fnc main(argc: int, argv: i8**): int {
         let codegen: CodeGen
         let flo_module = codegen.codegen(program)
         flo_module.run_passes(flag_value_or(args, "-O", "1") as int)
-        if flag(args, "--print-llvm") {
+        if flag(args, "--emit-llvm") {
             flo_module.print()
         } else if flag(args, "-o") {
             flo_module.write_object(flag_value_or(args, "-o", "a.o"), flag_value_or(args, "-target", ""))

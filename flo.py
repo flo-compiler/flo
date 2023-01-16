@@ -4723,7 +4723,7 @@ class Compiler(Visitor):
                 object.write(str(llvm_module).replace("<string>", self.module.name))
             object.close()
         # Write executable
-        if options.output_file != "<file>":
+        elif options.output_file != "<file>":
             with open(f"{basename}", "wb") as object:
                 object.write(target_machine.emit_object(llvm_module))
                 object.close()

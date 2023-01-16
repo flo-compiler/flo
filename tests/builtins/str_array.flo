@@ -1,0 +1,7 @@
+fnc main(): int {
+    let arr: string[] = []
+    for let i = 0; i < 10; i++ {
+        arr << "hello"
+    }
+    return 0
+}
