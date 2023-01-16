@@ -13,7 +13,9 @@ class GeneratedModule {
     constructor(this, llvm_mod: LLVMModuleRef){
         this.llvm_mod = llvm_mod
         this.errors = null
-        LLVMVerifyModule(this.llvm_mod, LLVMVerifierFailureAction.LLVMAbortProcessAction, &this.errors)
+        if LLVMVerifyModule(this.llvm_mod, LLVMVerifierFailureAction.LLVMPrintMessageAction, &this.errors) != 0 {
+            LLVMPrintModuleToFile(llvm_mod, "deficient-module.ll", &this.errors)
+        }
         this.check_errors()
         LLVM_InitializeAllTargetInfos()
         LLVM_InitializeAllTargets()

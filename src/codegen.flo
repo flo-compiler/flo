@@ -301,7 +301,7 @@ class CodeGen {
         }
         if is_object(val_ty){
             if is_buitin(this.program, val_ty, "string") {
-                return this.get_member_with_name(builder, llvm_val, val_ty as ObjectType, "buffer")
+                return this.codegen_string_to_cstring(builder, llvm_val) // TODO: Need to free
             }
             //TODO: will need to check for nullable
             let obj_class = get_class_from_type(this.program, val_ty)
@@ -352,7 +352,7 @@ class CodeGen {
         let str_len: LLVMValueRef = this.createLLVMInt(str_value.length)
         let str = call_args.length > 0 ? this.codegen_safe_fmt_string(builder, str_value, call_args, &str_len) : this.createGlobalLLVMString(builder, str_value)
         if is_object(string_exp.value_type) {
-            let self = LLVMBuildMalloc(builder, this.codegen_type(string_exp.value_type), "")
+            let self = LLVMBuildMalloc(builder, this.codegen_type(string_exp.value_type, false), "")
             this.build_constructor_call(builder, string_exp.value_type as ObjectType, [self, str, str_len])
             return self
         }
@@ -507,13 +507,15 @@ class CodeGen {
         let objllvm_ty = this.codegen_type(obj_ty, false)
         let elmllvm_ty = this.codegen_type(arrgen_ty.arg_types[0])
         let self = LLVMBuildMalloc(builder, objllvm_ty, "")
-        let len_val = this.createLLVMInt(arr_expr.value.length)
-        this.build_constructor_call(builder, obj_ty, [self, LLVMConstMul(len_val, LLVMSizeOf(elmllvm_ty))])
+        let len_val = arr_expr.value.length
+        let size_value = this.createLLVMInt(len_val > 0 ? len_val: 1)
+        let len_value = this.createLLVMInt(len_val)
+        this.build_constructor_call(builder, obj_ty, [self, LLVMConstMul(size_value, LLVMSizeOf(elmllvm_ty))])
         let buff_ptr = this.get_member_mem_with_name(builder, self, obj_ty, "buffer")
         let arg_ptr = LLVMBuildLoad2(builder, LLVMPointerType(elmllvm_ty), buff_ptr, "")
         this.store_array_elements(builder, arg_ptr, arr_expr)
         let len_ptr = this.get_member_mem_with_name(builder, self, obj_ty, "length")
-        LLVMBuildStore(builder, len_val, len_ptr)
+        LLVMBuildStore(builder, len_value, len_ptr)
         return self
     }
     private store_expr_to_mem(this, builder: LLVMBuilderRef, ptr: LLVMValueRef, expr: Expression): LLVMValueRef {
@@ -807,21 +809,32 @@ class CodeGen {
         }
         return null
     }
+    private codegen_string_to_cstring(this, builder: LLVMBuilderRef, value: LLVMValueRef): LLVMValueRef {
+        let string_class_id = this.program.modules[0].scopes[0].classes.get("string")
+        let string_obj_ty = new ObjectType(string_class_id)
+        let prop_ty = get_class_prop_type_with_name(this.program, string_obj_ty, "to_cstring")
+        let func = this.get_member_with_name(builder, value, string_obj_ty, "to_cstring")
+        let args: LLVMValueRef[1] = [value] 
+        return LLVMBuildCall2(builder, this.codegen_type(prop_ty, false), func, &args[0], 1, "")
+    }
     private codegen_intrinsic_exp(this, builder: LLVMBuilderRef, intrinsic_call_exp: IntrinsicCall): LLVMValueRef {
         let intrinsic_type = intrinsic_call_exp.intrinsic
         let args: LLVMValueRef[] = []
         this.evaluate_expression_list(builder, args, intrinsic_call_exp.args)
         if intrinsic_type < Intrinsics.MEMCPY {
-            let sbuff = this.get_member_with_name(builder, args[0], intrinsic_call_exp.args[0].value_type as ObjectType, "buffer")
+            let cbuff = this.codegen_string_to_cstring(builder, args[0])
+            let value: LLVMValueRef = null
             if intrinsic_type == Intrinsics.STR_TO_F {
-                return this.codegen_atof_call(builder, [sbuff])
+                value = this.codegen_atof_call(builder, [cbuff])
             }
             if intrinsic_type == Intrinsics.STR_TO_I {
-                return this.codegen_atoi_call(builder, [sbuff])
+                value = this.codegen_atoi_call(builder, [cbuff])
             }
             if intrinsic_type == Intrinsics.STR_TO_L {
-                return this.codegen_atol_call(builder, [sbuff])
+                value = this.codegen_atol_call(builder, [cbuff])
             }
+            LLVMBuildFree(builder, cbuff)
+            return value
         }
         let arg0_pointee_size = LLVMSizeOf(this.codegen_type((intrinsic_call_exp.args[0].value_type as PointerType).pointee_type))
         if intrinsic_type == Intrinsics.MEMRESIZE {

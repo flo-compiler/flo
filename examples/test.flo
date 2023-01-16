@@ -1,9 +1,18 @@
-fnc call(): int {
-    return 1
+class Chef {
+    specialty: string
+    constructor(this, specialty: string) {
+        this.specialty = specialty
+    }
+    print_specialty(this) {
+        println(this.specialty)
+    }
 }
-fnc main(): int {
-    let a = 5
-    let b = 10
-    let arr: int[1] = [call()]
-    return 0
+class ItalianChef(Chef) {
+    constructor(this) {
+        this.super.constructor("Pasta")
+    }
+}
+fnc main(){
+    let chef: Chef = new ItalianChef()
+    chef.print_specialty()
 }

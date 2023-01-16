@@ -1,0 +1,17 @@
+class FileId {
+    id: int
+    constructor(this, id: int){
+        this.id = id
+    }
+}
+fnc get_file(): FileId {
+    return null
+}
+fnc main(): int {
+    let fid = get_file()
+    if fid == null {
+        return 0
+    } else {
+        return fid.id
+    }
+}

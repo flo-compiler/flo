@@ -1997,7 +1997,7 @@ class TypeChecker {
         let prop_id = owner_class.prop_map.get(method_name)
         if prop_id == null {
             if op == BinaryOp.EEQ or op == BinaryOp.NEQ {
-                return new BinaryExpression(left, op, this.check_expression(Type.unknown(), binary_node.rhs), new BooleanType())
+                return new BinaryExpression(left, op, this.check_expression(left.value_type, binary_node.rhs), new BooleanType())
             }
             this.error(ErrorKind.NAME, "No binary operator overload for '$(dump_bin_op(op))' in object of class '$(owner_class.name)' please implement the method $method_name to support this", binary_node.range)
             return null
