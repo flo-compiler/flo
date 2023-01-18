@@ -4,8 +4,6 @@ import "typechecker"
 import "llvm/types"
 import "llvm/core"
 import "types"
-import LLVMLinkModules2 in "llvm/linker"
-import DebugInfo in "codegenDI"
 import "codegenMod"
 
 class IntrinsicResult {
@@ -99,7 +97,6 @@ class CodeGen {
     private program: Program
     private in_static_ctx: bool
     private program_ctx: LLVMContextRef /** Get rid of ctx */
-    private debugInfoObj: DebugInfo
     public codegen(this, program: Program): GeneratedModule{
         let module = program.modules[2]
         this.program = program
@@ -111,7 +108,6 @@ class CodeGen {
         this.global_class_scope = new Map<string, CGClassType>()
         this.global_enum_scope = new Map<string, CGEnumType>()
         this.module = LLVMModuleCreateWithNameInContext(module.name.to_cstring(), this.program_ctx)
-        this.debugInfoObj = new DebugInfo(this.module, module.name)
         this.in_static_ctx = true
         for let i = 0; i < module.enums.length; ++i {
             this.declare_enum(module.enums[i])
@@ -132,7 +128,6 @@ class CodeGen {
         for i = 0; i < module.functions.length; ++i {
             this.codegen_function(module.functions[i])
         }
-        this.debugInfoObj.finalize()
         return new GeneratedModule(this.module)
     }
     private get_var_from_varid(this, var_id: VarId): LLVMValueRef{
