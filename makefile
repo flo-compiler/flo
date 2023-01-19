@@ -10,7 +10,7 @@ FLO_INSTALL_PATH=~/flo
 
 
 define compile_and_link_fc
-	./$(1) src/main.flo -o $(1).o -O 0
+	./$(1) src/main.flo -o $(1).o -O 3
 	$(CC) -c src/llvm/TargetInitializationMacros.c -o $(1).so
 	$(CC) -no-pie $(1).o $(1).so $(LDFLAGS) -o $(2)
 	rm -rf *.o *.so

@@ -3385,13 +3385,13 @@ class NodesFindResult:
         self.unresolved = unresolved
 
 
-class BlockTy(Enum):
+class NFBlockTy(Enum):
     class_ = "class"
     func = "function"
 
 
-class Block:
-    def __init__(self, name: str, ty: BlockTy):
+class NFBlock:
+    def __init__(self, name: str, ty: NFBlockTy):
         self.name = name
         self.type = ty
 
@@ -3492,7 +3492,7 @@ class NodeFinder(Visitor):
         self.context = self.context.create_child(fnc_name)
         self.local_vars = []
         self.dependency_map[fnc_name] = []
-        self.block_in = Block(fnc_name, BlockTy.func)
+        self.block_in = NFBlock(fnc_name, NFBlockTy.func)
         self.visit(node.func_body)
         self.context = self.context.parent
         self.local_vars = []
@@ -3509,7 +3509,7 @@ class NodeFinder(Visitor):
         if var_name in self.ignore:
             return
         self.context.set(var_name, node)
-        if self.block_in and self.block_in.type == BlockTy.func:
+        if self.block_in and self.block_in.type == NFBlockTy.func:
             self.local_vars.append(var_name)
         self.visit(node.value)
 
@@ -3522,7 +3522,7 @@ class NodeFinder(Visitor):
         if var_name in self.ignore:
             return
         self.context.set(var_name, node)
-        if self.block_in and self.block_in.type == BlockTy.func:
+        if self.block_in and self.block_in.type == NFBlockTy.func:
             self.local_vars.append(var_name)
 
     def visitArrayAssignNode(self, node: ArrayAssignNode):
@@ -3624,7 +3624,7 @@ class NodeFinder(Visitor):
             self.visit(node.parent)
         self.context.set(class_name, node)
         self.context = self.context.create_child(class_name)
-        self.block_in = Block(class_name, BlockTy.class_)
+        self.block_in = NFBlock(class_name, NFBlockTy.class_)
         self.dependency_map[class_name] = []
         self.local_vars = []
         self.visit(node.body)
@@ -5337,7 +5337,7 @@ def main():
     parser.add_option(
         "-O",
         dest="opt_level",
-        default=0,
+        default=1,
         action="store",
         help="Specify the compiler's optimization level which is a value from 0-3.",
     )
