@@ -96,6 +96,7 @@ class CodeGen {
     private continue_bb: LLVMBasicBlockRef
     private program: Program
     private in_static_ctx: bool
+    private super_functions: Map<string, LLVMValueRef>
     private program_ctx: LLVMContextRef /** Get rid of ctx */
     public codegen(this, program: Program): GeneratedModule{
         let module = program.modules[2]
@@ -107,6 +108,7 @@ class CodeGen {
         this.global_string_scope = new Map<string, LLVMValueRef>()
         this.global_class_scope = new Map<string, CGClassType>()
         this.global_enum_scope = new Map<string, CGEnumType>()
+        this.super_functions = new Map<string, LLVMValueRef>()
         this.module = LLVMModuleCreateWithNameInContext(module.name.to_cstring(), this.program_ctx)
         this.in_static_ctx = true
         for let i = 0; i < module.enums.length; ++i {
@@ -733,6 +735,14 @@ class CodeGen {
             }
         }
         if func == null {
+            if call_exp.callee.expr_kind == ExpressionKind.ACCESS {
+                let super_id = (call_exp.callee as VarAccessExpression).value_id
+                let this_param = this.super_functions.get(create_var_key(super_id))
+                if this_param != null {
+                    args << this_param
+                    arg_types << LLVMPointerType(LLVMInt8TypeInContext(this.program_ctx))
+                }
+            }
             func = this.codegen_expression(builder, call_exp.callee)
         }
         for let i = 0; i < call_exp.args.length; i++ {
@@ -1096,7 +1106,10 @@ class CodeGen {
                         let super_id = get_scope(this.program, method.scope).vars.get("super")
                         if super_id != null {
                             let super_constructor = this.get_or_codegen_class_from_typeid(parent_ty.class_id).class_constructor
-                            this.add_var(super_id, super_constructor)
+                            let super_ptr = LLVMBuildAlloca(func_builder, object_type, "super")
+                            LLVMBuildStore(func_builder, super_constructor, super_ptr)
+                            this.add_var(super_id, super_ptr)
+                            this.super_functions.set(create_var_key(super_id), this_param)
                         }
                     }
                 }
