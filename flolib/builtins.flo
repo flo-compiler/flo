@@ -26,9 +26,8 @@ class string {
         return this
     }
     public __getitem__(this, index: int): string {
-        let new_buffer = new i8*(2)
+        let new_buffer = new i8*(1)
         new_buffer[0] = this.buffer[index]
-        new_buffer[1] = '\0'
         return new string(new_buffer, 2)
     }
     public __eq__(this, other: string): bool {

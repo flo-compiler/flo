@@ -82,7 +82,7 @@ fnc get_format_from_type(ty: Type): string {
     if ty.kind == TypeKind.F64 or ty.kind == TypeKind.FLOAT
         return "%lf"
     if is_pointer(ty)
-        return "%p"
+        return "0x%X"
     return "%s"
 }
 class CodeGen {
