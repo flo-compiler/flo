@@ -78,7 +78,7 @@ fnc main(argc: int, argv: i8**): int {
         let program = typechecker.check(module_node, compiler, filename)
         if (compiler.print_errors()) return 1       
         /**** Codegen ****/
-        let codegen: CodeGen
+        let codegen = new CodeGen()
         let flo_module = codegen.codegen(program)
         flo_module.run_passes(flag_value_or(args, "-O", "1") as int)
         if flag(args, "--emit-llvm") {

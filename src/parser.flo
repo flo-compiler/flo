@@ -257,6 +257,11 @@ class ArgNode {
     name: IdentifierToken
     parsed_type: TypeNode
     default: ExpressionNode
+    constructor(this, name: IdentifierToken){
+        this.name = name
+        this.parsed_type = null
+        this.default = null
+    }
 }
 class FunctionDeclarationNode {
     name: IdentifierToken
@@ -277,7 +282,8 @@ class MethodNode {
     return_type: TypeNode
     is_static: bool
     is_abstract: bool
-    constructor(this){
+    constructor(this, name: IdentifierToken){
+        this.name = name
         this.args = []
         this.is_static = true
         this.is_abstract = false
@@ -289,7 +295,8 @@ class FieldNode {
     access_modifier: ACCESS_ATTR
     initializer: ExpressionNode
     parsed_type: TypeNode
-    constructor(this){
+    constructor(this, name: IdentifierToken){
+        this.name = name
         this.initializer = null
     }
 }
@@ -325,7 +332,8 @@ class EnumNode {
     name: IdentifierToken
     fields: EnumNodeField[]
     variant: TypeNode
-    constructor(this){
+    constructor(this, name: IdentifierToken){
+        this.name = name
         this.fields = []
         this.variant = null
     }
@@ -340,6 +348,9 @@ class ImportNode {
 class TypeAliasNode {
     name: IdentifierToken
     parsed_type: TypeNode
+    constructor(this, name: IdentifierToken){
+        this.name = name
+    }
 }
 class ModuleAST {
     functions: FunctionDeclarationNode[]
@@ -536,7 +547,7 @@ class Parser {
     }
     private parse_string(this): StringExpressionNode {
         let strtoken = this.eat(TokType.STR) as StrToken
-        let tmp_parser: Parser
+        let tmp_parser = new Parser()
         tmp_parser.errors = this.errors
         let template_args: ExpressionNode [] = []
         for let i = 0; i < strtoken.args.length and this.can_parse(); i++ {
@@ -914,17 +925,13 @@ class Parser {
     }
     private parse_type_alias(this): TypeAliasNode {
         this.advance()
-        let type_alias_node: TypeAliasNode
-        type_alias_node.name = this.eat(TokType.IDENTIFER) as IdentifierToken
+        let type_alias_node = new TypeAliasNode(this.eat(TokType.IDENTIFER) as IdentifierToken)
         this.eat(TokType.EQ)
         type_alias_node.parsed_type = this.parse_type()
         return type_alias_node
     }
     private parse_arg(this): ArgNode {
-        let arg_node: ArgNode
-        arg_node.parsed_type = null
-        arg_node.default = null
-        arg_node.name = this.eat(TokType.IDENTIFER) as IdentifierToken
+        let arg_node = new ArgNode(this.eat(TokType.IDENTIFER) as IdentifierToken)
         if !this.can_parse() return arg_node
         if this.current_token.ttype == TokType.COL {
             this.advance()
@@ -949,7 +956,7 @@ class Parser {
         }
     }
     private parse_function(this): FunctionDeclarationNode {
-        let fnc_node: FunctionDeclarationNode
+        let fnc_node = new FunctionDeclarationNode()
         fnc_node.name = this.eat(TokType.IDENTIFER) as IdentifierToken
         this.eat(TokType.LPAR)
         if this.current_token.ttype != TokType.RPAR
@@ -969,8 +976,7 @@ class Parser {
         return fnc_node
     }
     private parse_method(this): MethodNode{
-        let method_node: MethodNode
-        method_node.name = this.eat(TokType.IDENTIFER) as IdentifierToken
+        let method_node = new MethodNode(this.eat(TokType.IDENTIFER) as IdentifierToken)
         this.eat(TokType.LPAR)
         if this.current_token.ttype != TokType.RPAR
             if (this.current_token as IdentifierToken).value == "this" {
@@ -1016,8 +1022,7 @@ class Parser {
                 this.advance()
             }
             if this.peek().ttype == TokType.COL {
-                let field: FieldNode
-                field.name = this.eat(TokType.IDENTIFER) as IdentifierToken
+                let field = new FieldNode(this.eat(TokType.IDENTIFER) as IdentifierToken)
                 this.eat(TokType.COL)
                 field.parsed_type = this.parse_type()
                 if this.current_token.ttype == TokType.EQ {
@@ -1075,7 +1080,7 @@ class Parser {
         return const_decl_node
     }
     private parse_import(this): ImportNode {
-        let import_node: ImportNode
+        let import_node = new ImportNode()
         this.advance()
         if this.current_token.ttype == TokType.IDENTIFER {
             import_node.import_list << (this.current_token as IdentifierToken)
@@ -1090,9 +1095,8 @@ class Parser {
         return import_node
     }
     private parse_enum(this): EnumNode {
-        let enum_node: EnumNode
         this.advance()
-        enum_node.name = this.eat(TokType.IDENTIFER) as IdentifierToken
+        let enum_node = new EnumNode(this.eat(TokType.IDENTIFER) as IdentifierToken)
         if this.current_token.ttype == TokType.LPAR {
             this.advance()
             enum_node.variant = this.parse_type()
@@ -1117,7 +1121,7 @@ class Parser {
         this.tokens = tokens
         this.errors = errors
         this.advance()
-        let module_node: ModuleAST
+        let module_node = new ModuleAST()
         this.new_lines()
         while this.can_parse() {
             if this.current_token.ttype == TokType.FNC_KW {

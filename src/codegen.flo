@@ -9,6 +9,10 @@ import "codegenMod"
 class IntrinsicResult {
     call: LLVMValueRef
     fnc_type: LLVMTypeRef
+    constructor(this){
+        this.call = null
+        this.fnc_type = null
+    }
 }
 class CGClassType  {
     llvm_type: LLVMTypeRef
@@ -29,9 +33,12 @@ class CGClassType  {
 class CGEnumType {
     llvm_type: LLVMTypeRef
     field_map: Map<string, LLVMValueRef> 
+    constructor(this){
+        this.field_map = new Map<string, LLVMValueRef>()
+    }
 }
 fnc get_intrinsic(mod: LLVMModuleRef, name: string, params_types: LLVMTypeRef[], return_type: LLVMTypeRef, var_args = false): IntrinsicResult {
-    let result: IntrinsicResult
+    let result = new IntrinsicResult()
     result.fnc_type = LLVMFunctionType(return_type, params_types.buffer, params_types.length, var_args)
     let fn_name = name.to_cstring()
     let fnc_in_mod = LLVMGetNamedFunction(mod, fn_name)
@@ -98,17 +105,19 @@ class CodeGen {
     private in_static_ctx: bool
     private super_functions: Map<string, LLVMValueRef>
     private program_ctx: LLVMContextRef /** Get rid of ctx */
+    constructor(this){
+        this.global_var_scope = new Map<string, LLVMValueRef>()
+        this.global_string_scope = new Map<string, LLVMValueRef>()
+        this.global_class_scope = new Map<string, CGClassType>()
+        this.global_enum_scope = new Map<string, CGEnumType>()
+        this.super_functions = new Map<string, LLVMValueRef>()
+    }
     public codegen(this, program: Program): GeneratedModule{
         let module = program.modules[2]
         this.program = program
         this.continue_bb = null
         this.break_bb = null
         this.program_ctx = LLVMContextCreate()
-        this.global_var_scope = new Map<string, LLVMValueRef>()
-        this.global_string_scope = new Map<string, LLVMValueRef>()
-        this.global_class_scope = new Map<string, CGClassType>()
-        this.global_enum_scope = new Map<string, CGEnumType>()
-        this.super_functions = new Map<string, LLVMValueRef>()
         this.module = LLVMModuleCreateWithNameInContext(module.name.to_cstring(), this.program_ctx)
         this.in_static_ctx = true
         for let i = 0; i < module.enums.length; ++i {
@@ -1248,8 +1257,7 @@ class CodeGen {
         }
     }
     private declare_enum(this, checked_enum: Enum){
-        let enum_type: CGEnumType
-        enum_type.field_map = new Map<string, LLVMValueRef>()
+        let enum_type = new CGEnumType()
         if checked_enum.fields.length > 0 {
             enum_type.llvm_type = this.codegen_type(checked_enum.fields[0].initializer.value_type)
         } else {
