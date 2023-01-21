@@ -124,7 +124,7 @@ class BooleanExpression (Expression) {
     value: bool 
     constructor(this, value: bool){
         super(ExpressionKind.BOOL)
-        let bool_type: BooleanType
+        let bool_type = new BooleanType()
         this.value_type = bool_type
         this.value = value
         this.is_constant = true
@@ -666,6 +666,11 @@ class Class {
     is_abstract: bool
     constructor(this){
         this.construct = null
+        this.inherited_fields_num = 0
+        this.inherited_methods_num = 0
+        this.fields = []
+        this.methods = []
+        this.is_abstract = false
     }
 }
 class EnumField {
@@ -696,7 +701,8 @@ class Module {
     scopes: Scope[]
     global_consts: ConstDeclaration[]
     global_vars: VarDeclaration[]
-    constructor(this){
+    constructor(this, name: string){
+        this.name = name
         this.functions = []
         this.vars = []
         this.classes = []
@@ -1155,8 +1161,7 @@ class TypeChecker {
         this.module_contains_generics = false
         let prev_module = this.current_module
         let prev_scope = this.current_scope
-        let module: Module
-        module.name = filename
+        let module = new Module(filename)
         this.current_module = this.program.modules.length
         this.program.modules << module
         let module_scope = this.create_scope()
@@ -1477,12 +1482,7 @@ class TypeChecker {
             this.generic_templates.set(name, new Generic(this.current_module, class_decl_node))
             return
         }
-        let declared_class: Class
-        declared_class.inherited_fields_num = 0
-        declared_class.inherited_methods_num = 0
-        declared_class.fields = []
-        declared_class.methods = []
-        declared_class.is_abstract = false
+        let declared_class = new Class()
         let module_scope = this.get_current_module_global_scope()
         if class_decl_node.parent != null {
             declared_class.parent = this.check_type(class_decl_node.parent)
@@ -2098,7 +2098,7 @@ class TypeChecker {
                 return new BinaryExpression(left, op, right, left.value_type, is_const)
         }
         if op >= BinaryOp.GT and op <= BinaryOp.NEQ {
-            let boolean_type: BooleanType
+            let boolean_type = new BooleanType()
             return new BinaryExpression(left, op, right, boolean_type, is_const)
         }
         if op == BinaryOp.ADD or op == BinaryOp.SUB and is_pointer(left.value_type) and right.value_type.kind == TypeKind.INT {
@@ -2682,7 +2682,7 @@ class TypeChecker {
     private check_can_return(this, return_stmt: ReturnStatementNode): ReturnStatement {
         let expr = return_stmt.value
         let current_function_return_type = this.get_current_function_type().return_type
-        let rt_stmt: ReturnStatement
+        let rt_stmt = new ReturnStatement()
         if expr != null {
             let rt_value = this.check_expression(current_function_return_type, expr)
             if this.has_errored() return null
@@ -2726,7 +2726,7 @@ class TypeChecker {
     }
     private check_block(this, block_node: BlockNode): Block {
         if this.has_errored() return null
-        let block: Block
+        let block = new Block()
         let new_scope = this.create_child_scope_within_current_scope()
         this.current_scope = new_scope.id
         for let i = 0; i < block_node.statements.length; i++ {
