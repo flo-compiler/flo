@@ -1,0 +1,18 @@
+class Chef {
+    specialty: string
+    constructor(this, specialty: string) {
+        this.specialty = specialty
+    }
+    print_specialty(this) {
+        println(this.specialty)
+    }
+}
+class ItalianChef(Chef) {
+    constructor(this) {
+        super("Pasta")
+    }
+}
+fnc main(){
+    let chef: Chef = new ItalianChef()
+    chef.print_specialty()
+}
