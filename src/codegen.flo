@@ -445,9 +445,10 @@ class CodeGen {
     }
     private get_index_expr_mem(this, builder: LLVMBuilderRef, index_exp: IndexExpression): LLVMValueRef {
         let index = this.codegen_expression(builder, index_exp.index)
-        let ty = this.codegen_type(index_exp.expression.value_type)
+        let expr_val_ty = index_exp.expression.value_type
+        let ty = is_pointer(expr_val_ty) ? this.codegen_type((expr_val_ty as PointerType).pointee_type) : this.codegen_type(expr_val_ty)
         let ind_ptr: LLVMValueRef = null
-        if index_exp.expression.value_type.kind == TypeKind.ARRAY {
+        if expr_val_ty.kind == TypeKind.ARRAY {
             let indices: LLVMValueRef[2] = [this.createLLVMInt(0), index]
             ind_ptr = this.get_expr_mem(builder, index_exp.expression)
             return LLVMBuildInBoundsGEP2(builder, ty, ind_ptr, &indices[0], 2, "arrayidx")
@@ -568,8 +569,8 @@ class CodeGen {
             return this.codegen_pow_expr(builder, rty, lhs, rhs)
         if is_pointer(lty){
             let indices: LLVMValueRef[1] = [op == BinaryOp.ADD ? rhs: CodeGen.neg_int(builder, rhs)]
-            let ptr_type = this.codegen_type(lty)
-            return LLVMBuildInBoundsGEP2(builder, ptr_type, lhs, &indices[0], 1, "")
+            let pointee_type = this.codegen_type((lty as PointerType).pointee_type)
+            return LLVMBuildInBoundsGEP2(builder, pointee_type, lhs, &indices[0], 1, "")
         }
         let ipred: LLVMIntPredicate = null
         let rpred: LLVMRealPredicate = null
@@ -652,7 +653,8 @@ class CodeGen {
         }
         return is_const ? LLVMConstBitCast(val, ty) : LLVMBuildBitCast(builder, val, ty, "")
     }
-    private codegen_unary_exp(this, builder: LLVMBuilderRef, unary_exp: UnaryExpression): LLVMValueRef {
+    //TODO: Refactor!!
+    private codegen_unary_exp(this, builder: LLVMBuilderRef, unary_exp: UnaryExpression): LLVMValueRef { 
         let op = unary_exp.op
         let exp = unary_exp.expression
         let val = this.codegen_expression(builder, exp)
@@ -675,6 +677,7 @@ class CodeGen {
             let incr_value = op == UnaryOp.PREINCR or op == UnaryOp.POSTINCR ? 1 : -1
             let new_value: LLVMValueRef = null
             if is_pointer(exp.value_type) {
+                alloc_ty = this.codegen_type((exp.value_type as PointerType).pointee_type)
                 let indices: LLVMValueRef[1] = [this.createLLVMInt(incr_value)]
                 new_value = LLVMBuildInBoundsGEP2(builder, alloc_ty, val, &indices[0], 1, "incdec.ptr")
             } else if is_numeric(exp.value_type){
@@ -857,9 +860,9 @@ class CodeGen {
 
         let arg1_align = LLVMGetAlignment(args[1])
         if intrinsic_type == Intrinsics.MEMCPY 
-            return LLVMBuildMemCpy(builder, args[0], arg0_align, args[1], arg1_align, args[2])
+            return LLVMBuildMemCpy(builder, args[0], arg1_align, args[1], arg1_align, args[2])
         if intrinsic_type == Intrinsics.MEMMOVE 
-            return LLVMBuildMemMove(builder, args[0], arg0_align, args[1], arg1_align, args[2])
+            return LLVMBuildMemMove(builder, args[0], arg1_align, args[1], arg1_align, args[2])
         panic("instrinsic not found!")
         return null
     }

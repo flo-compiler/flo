@@ -563,7 +563,7 @@ target triple = "x86_64-unknown-linux-gnu"
 @str.136 = private unnamed_addr constant [2 x i8] c"[\00"
 @str.137 = private unnamed_addr constant [3 x i8] c" {\00"
 @str.138 = private unnamed_addr constant [12 x i8] c"  type: %s,\00"
-@str.139 = private unnamed_addr constant [32 x i8] c"  range: (token.range.start)-%d\00"
+@str.139 = private unnamed_addr constant [15 x i8] c"  range: %d-%d\00"
 @str.140 = private unnamed_addr constant [12 x i8] c"  value: %s\00"
 @str.141 = private unnamed_addr constant [12 x i8] c"  value: \\n\00"
 @str.142 = private unnamed_addr constant [4 x i8] c" },\00"
@@ -8714,7 +8714,7 @@ for.body.lr.ph:                                   ; preds = %.4
   br label %for.body
 
 for.body:                                         ; preds = %for.body.lr.ph, %for.body.endif
-  %storemerge19 = phi i64 [ 0, %for.body.lr.ph ], [ %.124, %for.body.endif ]
+  %storemerge19 = phi i64 [ 0, %for.body.lr.ph ], [ %.129, %for.body.endif ]
   %.23 = load %"Array<Token>_vtable_ty.557803"*, %"Array<Token>_vtable_ty.557803"** %.22, align 8
   %.24 = getelementptr inbounds %"Array<Token>_vtable_ty.557803", %"Array<Token>_vtable_ty.557803"* %.23, i64 0, i32 5
   %.25 = load %Token.557790* (%"Array<Token>.557802"*, i64)*, %Token.557790* (%"Array<Token>.557802"*, i64)** %.24, align 8
@@ -8761,94 +8761,96 @@ for.body:                                         ; preds = %for.body.lr.ph, %fo
   tail call void @println(%string.557760* %.48)
   %.59 = getelementptr inbounds %Token.557790, %Token.557790* %.26, i64 0, i32 2
   %.60 = load %FloRange.557766*, %FloRange.557766** %.59, align 8
-  %.61 = getelementptr inbounds %FloRange.557766, %FloRange.557766* %.60, i64 0, i32 2
+  %.61 = getelementptr inbounds %FloRange.557766, %FloRange.557766* %.60, i64 0, i32 1
   %.62 = load i64, i64* %.61, align 8
-  %.64 = tail call i64 (i8*, i64, i8*, ...) @snprintf(i8* null, i64 0, i8* getelementptr inbounds ([32 x i8], [32 x i8]* @str.139, i64 0, i64 0), i64 %.62)
-  %.65 = add i64 %.64, 1
-  %.67 = tail call i8* @malloc(i64 %.65)
-  %.68 = tail call i64 (i8*, i8*, ...) @sprintf(i8* %.67, i8* getelementptr inbounds ([32 x i8], [32 x i8]* @str.139, i64 0, i64 0), i64 %.62)
-  %.69 = tail call dereferenceable_or_null(32) i8* @malloc(i64 32)
-  %.70 = bitcast i8* %.69 to %string.557760*
-  %.71 = bitcast i8* %.69 to %string_vtable_ty.557761**
-  store %string_vtable_ty.557761* @string_vtable_data, %string_vtable_ty.557761** %.71, align 8
-  %.73 = getelementptr inbounds i8, i8* %.69, i64 8
-  %9 = bitcast i8* %.73 to i8**
-  store i8* %.67, i8** %9, align 8
-  %.75 = getelementptr inbounds i8, i8* %.69, i64 16
-  %10 = bitcast i8* %.75 to i64*
-  store i64 %.64, i64* %10, align 8
-  %.77 = getelementptr inbounds i8, i8* %.69, i64 24
-  %11 = bitcast i8* %.77 to i64*
-  store i64 %.64, i64* %11, align 8
-  tail call void @println(%string.557760* %.70)
-  %.82 = load i64, i64* %.33, align 8
-  %.83.not = icmp eq i64 %.82, 31
-  br i1 %.83.not, label %for.body.endif, label %for.body.if
+  %.66 = getelementptr inbounds %FloRange.557766, %FloRange.557766* %.60, i64 0, i32 2
+  %.67 = load i64, i64* %.66, align 8
+  %.69 = tail call i64 (i8*, i64, i8*, ...) @snprintf(i8* null, i64 0, i8* getelementptr inbounds ([15 x i8], [15 x i8]* @str.139, i64 0, i64 0), i64 %.62, i64 %.67)
+  %.70 = add i64 %.69, 1
+  %.72 = tail call i8* @malloc(i64 %.70)
+  %.73 = tail call i64 (i8*, i8*, ...) @sprintf(i8* %.72, i8* getelementptr inbounds ([15 x i8], [15 x i8]* @str.139, i64 0, i64 0), i64 %.62, i64 %.67)
+  %.74 = tail call dereferenceable_or_null(32) i8* @malloc(i64 32)
+  %.75 = bitcast i8* %.74 to %string.557760*
+  %.76 = bitcast i8* %.74 to %string_vtable_ty.557761**
+  store %string_vtable_ty.557761* @string_vtable_data, %string_vtable_ty.557761** %.76, align 8
+  %.78 = getelementptr inbounds i8, i8* %.74, i64 8
+  %9 = bitcast i8* %.78 to i8**
+  store i8* %.72, i8** %9, align 8
+  %.80 = getelementptr inbounds i8, i8* %.74, i64 16
+  %10 = bitcast i8* %.80 to i64*
+  store i64 %.69, i64* %10, align 8
+  %.82 = getelementptr inbounds i8, i8* %.74, i64 24
+  %11 = bitcast i8* %.82 to i64*
+  store i64 %.69, i64* %11, align 8
+  tail call void @println(%string.557760* %.75)
+  %.87 = load i64, i64* %.33, align 8
+  %.88.not = icmp eq i64 %.87, 31
+  br i1 %.88.not, label %for.body.endif, label %for.body.if
 
 for.end:                                          ; preds = %for.body.endif, %.4
-  %.127 = tail call dereferenceable_or_null(32) i8* @malloc(i64 32)
-  %.128 = bitcast i8* %.127 to %string.557760*
-  %.128.repack = bitcast i8* %.127 to %string_vtable_ty.557761**
-  store %string_vtable_ty.557761* @string_vtable_data, %string_vtable_ty.557761** %.128.repack, align 8
-  %.128.repack4 = getelementptr inbounds i8, i8* %.127, i64 8
-  %12 = bitcast i8* %.128.repack4 to i8**
+  %.132 = tail call dereferenceable_or_null(32) i8* @malloc(i64 32)
+  %.133 = bitcast i8* %.132 to %string.557760*
+  %.133.repack = bitcast i8* %.132 to %string_vtable_ty.557761**
+  store %string_vtable_ty.557761* @string_vtable_data, %string_vtable_ty.557761** %.133.repack, align 8
+  %.133.repack4 = getelementptr inbounds i8, i8* %.132, i64 8
+  %12 = bitcast i8* %.133.repack4 to i8**
   store i8* getelementptr inbounds ([2 x i8], [2 x i8]* @str.143, i64 0, i64 0), i8** %12, align 8
-  %.128.repack5 = getelementptr inbounds i8, i8* %.127, i64 16
-  %13 = bitcast i8* %.128.repack5 to i64*
+  %.133.repack5 = getelementptr inbounds i8, i8* %.132, i64 16
+  %13 = bitcast i8* %.133.repack5 to i64*
   store i64 1, i64* %13, align 8
-  %.128.repack6 = getelementptr inbounds i8, i8* %.127, i64 24
-  %14 = bitcast i8* %.128.repack6 to i64*
+  %.133.repack6 = getelementptr inbounds i8, i8* %.132, i64 24
+  %14 = bitcast i8* %.133.repack6 to i64*
   store i64 1, i64* %14, align 8
-  tail call void @println(%string.557760* %.128)
+  tail call void @println(%string.557760* %.133)
   ret void
 
 for.body.if:                                      ; preds = %for.body
-  %.87 = tail call %string.557760* @token_value(%Token.557790* %.26, %string.557760* %.2)
-  %.88 = getelementptr inbounds %string.557760, %string.557760* %.87, i64 0, i32 0
-  %.89 = load %string_vtable_ty.557761*, %string_vtable_ty.557761** %.88, align 8
-  %.90 = getelementptr inbounds %string_vtable_ty.557761, %string_vtable_ty.557761* %.89, i64 0, i32 10
-  %.91 = load i8* (%string.557760*)*, i8* (%string.557760*)** %.90, align 8
-  %.92 = tail call i8* %.91(%string.557760* %.87)
-  %.94 = tail call i64 (i8*, i64, i8*, ...) @snprintf(i8* null, i64 0, i8* getelementptr inbounds ([12 x i8], [12 x i8]* @str.140, i64 0, i64 0), i8* %.92)
-  %.95 = add i64 %.94, 1
-  %.97 = tail call i8* @malloc(i64 %.95)
-  %.98 = tail call i64 (i8*, i8*, ...) @sprintf(i8* %.97, i8* getelementptr inbounds ([12 x i8], [12 x i8]* @str.140, i64 0, i64 0), i8* %.92)
+  %.92 = tail call %string.557760* @token_value(%Token.557790* %.26, %string.557760* %.2)
+  %.93 = getelementptr inbounds %string.557760, %string.557760* %.92, i64 0, i32 0
+  %.94 = load %string_vtable_ty.557761*, %string_vtable_ty.557761** %.93, align 8
+  %.95 = getelementptr inbounds %string_vtable_ty.557761, %string_vtable_ty.557761* %.94, i64 0, i32 10
+  %.96 = load i8* (%string.557760*)*, i8* (%string.557760*)** %.95, align 8
+  %.97 = tail call i8* %.96(%string.557760* %.92)
+  %.99 = tail call i64 (i8*, i64, i8*, ...) @snprintf(i8* null, i64 0, i8* getelementptr inbounds ([12 x i8], [12 x i8]* @str.140, i64 0, i64 0), i8* %.97)
+  %.100 = add i64 %.99, 1
+  %.102 = tail call i8* @malloc(i64 %.100)
+  %.103 = tail call i64 (i8*, i8*, ...) @sprintf(i8* %.102, i8* getelementptr inbounds ([12 x i8], [12 x i8]* @str.140, i64 0, i64 0), i8* %.97)
   br label %for.body.endif
 
 for.body.endif:                                   ; preds = %for.body, %for.body.if
-  %.sink24 = phi i8* [ %.97, %for.body.if ], [ getelementptr inbounds ([12 x i8], [12 x i8]* @str.141, i64 0, i64 0), %for.body ]
-  %.sink21 = phi i64 [ %.94, %for.body.if ], [ 11, %for.body ]
-  %.111 = tail call dereferenceable_or_null(32) i8* @malloc(i64 32)
-  %.112 = bitcast i8* %.111 to %string.557760*
-  %.112.repack = bitcast i8* %.111 to %string_vtable_ty.557761**
-  store %string_vtable_ty.557761* @string_vtable_data, %string_vtable_ty.557761** %.112.repack, align 8
-  %.112.repack10 = getelementptr inbounds i8, i8* %.111, i64 8
-  %15 = bitcast i8* %.112.repack10 to i8**
-  store i8* %.sink24, i8** %15, align 8
-  %.112.repack11 = getelementptr inbounds i8, i8* %.111, i64 16
-  %16 = bitcast i8* %.112.repack11 to i64*
-  store i64 %.sink21, i64* %16, align 8
-  %.112.repack12 = getelementptr inbounds i8, i8* %.111, i64 24
-  %17 = bitcast i8* %.112.repack12 to i64*
-  store i64 %.sink21, i64* %17, align 8
-  tail call void @println(%string.557760* %.112)
+  %.sink24 = phi i8* [ %.102, %for.body.if ], [ getelementptr inbounds ([12 x i8], [12 x i8]* @str.141, i64 0, i64 0), %for.body ]
+  %.sink21 = phi i64 [ %.99, %for.body.if ], [ 11, %for.body ]
   %.116 = tail call dereferenceable_or_null(32) i8* @malloc(i64 32)
   %.117 = bitcast i8* %.116 to %string.557760*
   %.117.repack = bitcast i8* %.116 to %string_vtable_ty.557761**
   store %string_vtable_ty.557761* @string_vtable_data, %string_vtable_ty.557761** %.117.repack, align 8
-  %.117.repack13 = getelementptr inbounds i8, i8* %.116, i64 8
-  %18 = bitcast i8* %.117.repack13 to i8**
-  store i8* getelementptr inbounds ([4 x i8], [4 x i8]* @str.142, i64 0, i64 0), i8** %18, align 8
-  %.117.repack14 = getelementptr inbounds i8, i8* %.116, i64 16
-  %19 = bitcast i8* %.117.repack14 to i64*
-  store i64 3, i64* %19, align 8
-  %.117.repack15 = getelementptr inbounds i8, i8* %.116, i64 24
-  %20 = bitcast i8* %.117.repack15 to i64*
-  store i64 3, i64* %20, align 8
+  %.117.repack10 = getelementptr inbounds i8, i8* %.116, i64 8
+  %15 = bitcast i8* %.117.repack10 to i8**
+  store i8* %.sink24, i8** %15, align 8
+  %.117.repack11 = getelementptr inbounds i8, i8* %.116, i64 16
+  %16 = bitcast i8* %.117.repack11 to i64*
+  store i64 %.sink21, i64* %16, align 8
+  %.117.repack12 = getelementptr inbounds i8, i8* %.116, i64 24
+  %17 = bitcast i8* %.117.repack12 to i64*
+  store i64 %.sink21, i64* %17, align 8
   tail call void @println(%string.557760* %.117)
-  %.124 = add nuw nsw i64 %storemerge19, 1
+  %.121 = tail call dereferenceable_or_null(32) i8* @malloc(i64 32)
+  %.122 = bitcast i8* %.121 to %string.557760*
+  %.122.repack = bitcast i8* %.121 to %string_vtable_ty.557761**
+  store %string_vtable_ty.557761* @string_vtable_data, %string_vtable_ty.557761** %.122.repack, align 8
+  %.122.repack13 = getelementptr inbounds i8, i8* %.121, i64 8
+  %18 = bitcast i8* %.122.repack13 to i8**
+  store i8* getelementptr inbounds ([4 x i8], [4 x i8]* @str.142, i64 0, i64 0), i8** %18, align 8
+  %.122.repack14 = getelementptr inbounds i8, i8* %.121, i64 16
+  %19 = bitcast i8* %.122.repack14 to i64*
+  store i64 3, i64* %19, align 8
+  %.122.repack15 = getelementptr inbounds i8, i8* %.121, i64 24
+  %20 = bitcast i8* %.122.repack15 to i64*
+  store i64 3, i64* %20, align 8
+  tail call void @println(%string.557760* %.122)
+  %.129 = add nuw nsw i64 %storemerge19, 1
   %.17 = load i64, i64* %.16, align 8
-  %.18 = icmp slt i64 %.124, %.17
+  %.18 = icmp slt i64 %.129, %.17
   br i1 %.18, label %for.body, label %for.end
 }
 
@@ -49438,50 +49440,59 @@ define %LLVMValueRef.558110* @CodeGen_get_index_expr_mem(%CodeGen.558158* %.1, %
   %.16 = getelementptr inbounds %IndexExpression.557978, %IndexExpression.557978* %.3, i64 0, i32 6
   %.17 = load %Expression.557944*, %Expression.557944** %.16, align 8
   %.18 = tail call %LLVMValueRef.558110* %.13(%CodeGen.558158* %.1, %LLVMBuilderRef.558115* %.2, %Expression.557944* %.17)
-  %.22 = load %CodeGen_vtable_ty.558159*, %CodeGen_vtable_ty.558159** %.10, align 8
-  %.23 = getelementptr inbounds %CodeGen_vtable_ty.558159, %CodeGen_vtable_ty.558159* %.22, i64 0, i32 9
-  %.24 = load %LLVMTypeRef.558109* (%CodeGen.558158*, %Type.557924*, i1)*, %LLVMTypeRef.558109* (%CodeGen.558158*, %Type.557924*, i1)** %.23, align 8
-  %.26 = getelementptr inbounds %IndexExpression.557978, %IndexExpression.557978* %.3, i64 0, i32 5
-  %.27 = load %Expression.557944*, %Expression.557944** %.26, align 8
-  %.28 = getelementptr inbounds %Expression.557944, %Expression.557944* %.27, i64 0, i32 4
-  %.29 = load %Type.557924*, %Type.557924** %.28, align 8
-  %.30 = tail call %LLVMTypeRef.558109* %.24(%CodeGen.558158* %.1, %Type.557924* %.29, i1 true)
-  %.35 = load %Expression.557944*, %Expression.557944** %.26, align 8
-  %.36 = getelementptr inbounds %Expression.557944, %Expression.557944* %.35, i64 0, i32 4
-  %.37 = load %Type.557924*, %Type.557924** %.36, align 8
-  %.38 = getelementptr inbounds %Type.557924, %Type.557924* %.37, i64 0, i32 1
-  %.39 = load i64, i64* %.38, align 8
-  %.40 = icmp eq i64 %.39, 16
-  br i1 %.40, label %.5.if, label %.5.endif
+  %.21 = getelementptr inbounds %IndexExpression.557978, %IndexExpression.557978* %.3, i64 0, i32 5
+  %.22 = load %Expression.557944*, %Expression.557944** %.21, align 8
+  %.23 = getelementptr inbounds %Expression.557944, %Expression.557944* %.22, i64 0, i32 4
+  %.24 = load %Type.557924*, %Type.557924** %.23, align 8
+  %.27 = tail call i1 @is_pointer(%Type.557924* %.24)
+  %.31 = load %CodeGen_vtable_ty.558159*, %CodeGen_vtable_ty.558159** %.10, align 8
+  %.32 = getelementptr inbounds %CodeGen_vtable_ty.558159, %CodeGen_vtable_ty.558159* %.31, i64 0, i32 9
+  %.33 = load %LLVMTypeRef.558109* (%CodeGen.558158*, %Type.557924*, i1)*, %LLVMTypeRef.558109* (%CodeGen.558158*, %Type.557924*, i1)** %.32, align 8
+  br i1 %.27, label %true_block, label %end
 
-.5.if:                                            ; preds = %.5
-  %.44 = load %CodeGen_vtable_ty.558159*, %CodeGen_vtable_ty.558159** %.10, align 8
-  %.45 = getelementptr inbounds %CodeGen_vtable_ty.558159, %CodeGen_vtable_ty.558159* %.44, i64 0, i32 8
-  %.46 = load %LLVMValueRef.558110* (%CodeGen.558158*, i64)*, %LLVMValueRef.558110* (%CodeGen.558158*, i64)** %.45, align 8
-  %.47 = tail call %LLVMValueRef.558110* %.46(%CodeGen.558158* nonnull %.1, i64 0)
+true_block:                                       ; preds = %.5
+  %.36 = getelementptr inbounds %Type.557924, %Type.557924* %.24, i64 1
+  %0 = bitcast %Type.557924* %.36 to %Type.557924**
+  %.37 = load %Type.557924*, %Type.557924** %0, align 8
+  br label %end
+
+end:                                              ; preds = %.5, %true_block
+  %.24.sink = phi %Type.557924* [ %.37, %true_block ], [ %.24, %.5 ]
+  %.46 = tail call %LLVMTypeRef.558109* %.33(%CodeGen.558158* nonnull %.1, %Type.557924* %.24.sink, i1 true)
+  %.52 = getelementptr inbounds %Type.557924, %Type.557924* %.24, i64 0, i32 1
+  %.53 = load i64, i64* %.52, align 8
+  %.54 = icmp eq i64 %.53, 16
+  br i1 %.54, label %end.if, label %end.endif
+
+end.if:                                           ; preds = %end
+  %.58 = load %CodeGen_vtable_ty.558159*, %CodeGen_vtable_ty.558159** %.10, align 8
+  %.59 = getelementptr inbounds %CodeGen_vtable_ty.558159, %CodeGen_vtable_ty.558159* %.58, i64 0, i32 8
+  %.60 = load %LLVMValueRef.558110* (%CodeGen.558158*, i64)*, %LLVMValueRef.558110* (%CodeGen.558158*, i64)** %.59, align 8
+  %.61 = tail call %LLVMValueRef.558110* %.60(%CodeGen.558158* nonnull %.1, i64 0)
   %indices = alloca [2 x %LLVMValueRef.558110*], align 8
-  %.49 = getelementptr inbounds [2 x %LLVMValueRef.558110*], [2 x %LLVMValueRef.558110*]* %indices, i64 0, i64 0
-  store %LLVMValueRef.558110* %.47, %LLVMValueRef.558110** %.49, align 8
-  %.51 = getelementptr inbounds [2 x %LLVMValueRef.558110*], [2 x %LLVMValueRef.558110*]* %indices, i64 0, i64 1
-  store %LLVMValueRef.558110* %.18, %LLVMValueRef.558110** %.51, align 8
-  %.55 = load %CodeGen_vtable_ty.558159*, %CodeGen_vtable_ty.558159** %.10, align 8
-  %.56 = getelementptr inbounds %CodeGen_vtable_ty.558159, %CodeGen_vtable_ty.558159* %.55, i64 0, i32 33
-  %.57 = load %LLVMValueRef.558110* (%CodeGen.558158*, %LLVMBuilderRef.558115*, %Expression.557944*)*, %LLVMValueRef.558110* (%CodeGen.558158*, %LLVMBuilderRef.558115*, %Expression.557944*)** %.56, align 8
-  %.61 = load %Expression.557944*, %Expression.557944** %.26, align 8
-  %.62 = tail call %LLVMValueRef.558110* %.57(%CodeGen.558158* nonnull %.1, %LLVMBuilderRef.558115* %.2, %Expression.557944* %.61)
-  %.69 = call %LLVMValueRef.558110* @LLVMBuildInBoundsGEP2(%LLVMBuilderRef.558115* %.2, %LLVMTypeRef.558109* %.30, %LLVMValueRef.558110* %.62, %LLVMValueRef.558110** nonnull %.49, i64 2, i8* getelementptr inbounds ([9 x i8], [9 x i8]* @str.351, i64 0, i64 0))
-  ret %LLVMValueRef.558110* %.69
+  %.63 = getelementptr inbounds [2 x %LLVMValueRef.558110*], [2 x %LLVMValueRef.558110*]* %indices, i64 0, i64 0
+  store %LLVMValueRef.558110* %.61, %LLVMValueRef.558110** %.63, align 8
+  %.65 = getelementptr inbounds [2 x %LLVMValueRef.558110*], [2 x %LLVMValueRef.558110*]* %indices, i64 0, i64 1
+  store %LLVMValueRef.558110* %.18, %LLVMValueRef.558110** %.65, align 8
+  %.69 = load %CodeGen_vtable_ty.558159*, %CodeGen_vtable_ty.558159** %.10, align 8
+  %.70 = getelementptr inbounds %CodeGen_vtable_ty.558159, %CodeGen_vtable_ty.558159* %.69, i64 0, i32 33
+  %.71 = load %LLVMValueRef.558110* (%CodeGen.558158*, %LLVMBuilderRef.558115*, %Expression.557944*)*, %LLVMValueRef.558110* (%CodeGen.558158*, %LLVMBuilderRef.558115*, %Expression.557944*)** %.70, align 8
+  %.75 = load %Expression.557944*, %Expression.557944** %.21, align 8
+  %.76 = tail call %LLVMValueRef.558110* %.71(%CodeGen.558158* nonnull %.1, %LLVMBuilderRef.558115* %.2, %Expression.557944* %.75)
+  %.83 = call %LLVMValueRef.558110* @LLVMBuildInBoundsGEP2(%LLVMBuilderRef.558115* %.2, %LLVMTypeRef.558109* %.46, %LLVMValueRef.558110* %.76, %LLVMValueRef.558110** nonnull %.63, i64 2, i8* getelementptr inbounds ([9 x i8], [9 x i8]* @str.351, i64 0, i64 0))
+  ret %LLVMValueRef.558110* %.83
 
-.5.endif:                                         ; preds = %.5
+end.endif:                                        ; preds = %end
   %indices_1 = alloca [1 x %LLVMValueRef.558110*], align 8
-  %.72 = getelementptr inbounds [1 x %LLVMValueRef.558110*], [1 x %LLVMValueRef.558110*]* %indices_1, i64 0, i64 0
-  store %LLVMValueRef.558110* %.18, %LLVMValueRef.558110** %.72, align 8
-  %.76 = load %CodeGen_vtable_ty.558159*, %CodeGen_vtable_ty.558159** %.10, align 8
-  %.77 = getelementptr inbounds %CodeGen_vtable_ty.558159, %CodeGen_vtable_ty.558159* %.76, i64 0, i32 52
-  %.78 = load %LLVMValueRef.558110* (%CodeGen.558158*, %LLVMBuilderRef.558115*, %Expression.557944*)*, %LLVMValueRef.558110* (%CodeGen.558158*, %LLVMBuilderRef.558115*, %Expression.557944*)** %.77, align 8
-  %.83 = tail call %LLVMValueRef.558110* %.78(%CodeGen.558158* nonnull %.1, %LLVMBuilderRef.558115* %.2, %Expression.557944* %.35)
-  %.90 = call %LLVMValueRef.558110* @LLVMBuildInBoundsGEP2(%LLVMBuilderRef.558115* %.2, %LLVMTypeRef.558109* %.30, %LLVMValueRef.558110* %.83, %LLVMValueRef.558110** nonnull %.72, i64 1, i8* getelementptr inbounds ([7 x i8], [7 x i8]* @str.352, i64 0, i64 0))
-  ret %LLVMValueRef.558110* %.90
+  %.86 = getelementptr inbounds [1 x %LLVMValueRef.558110*], [1 x %LLVMValueRef.558110*]* %indices_1, i64 0, i64 0
+  store %LLVMValueRef.558110* %.18, %LLVMValueRef.558110** %.86, align 8
+  %.90 = load %CodeGen_vtable_ty.558159*, %CodeGen_vtable_ty.558159** %.10, align 8
+  %.91 = getelementptr inbounds %CodeGen_vtable_ty.558159, %CodeGen_vtable_ty.558159* %.90, i64 0, i32 52
+  %.92 = load %LLVMValueRef.558110* (%CodeGen.558158*, %LLVMBuilderRef.558115*, %Expression.557944*)*, %LLVMValueRef.558110* (%CodeGen.558158*, %LLVMBuilderRef.558115*, %Expression.557944*)** %.91, align 8
+  %.96 = load %Expression.557944*, %Expression.557944** %.21, align 8
+  %.97 = tail call %LLVMValueRef.558110* %.92(%CodeGen.558158* nonnull %.1, %LLVMBuilderRef.558115* %.2, %Expression.557944* %.96)
+  %.104 = call %LLVMValueRef.558110* @LLVMBuildInBoundsGEP2(%LLVMBuilderRef.558115* %.2, %LLVMTypeRef.558109* %.46, %LLVMValueRef.558110* %.97, %LLVMValueRef.558110** nonnull %.86, i64 1, i8* getelementptr inbounds ([7 x i8], [7 x i8]* @str.352, i64 0, i64 0))
+  ret %LLVMValueRef.558110* %.104
 }
 
 define %LLVMValueRef.558110* @CodeGen_get_member_expr_mem(%CodeGen.558158* %.1, %LLVMBuilderRef.558115* %.2, %MemberExpression.557994* nocapture readonly %.3, %LLVMValueRef.558110* %.4) {
@@ -50055,12 +50066,14 @@ define %LLVMValueRef.558110* @CodeGen_codegen_bin_exp(%CodeGen.558158* %.1, %LLV
 .5.endif.endif.endif:                             ; preds = %.5.endif.endif
   %.131 = load %Expression.557944*, %Expression.557944** %.14, align 8
   %.132 = getelementptr inbounds %Expression.557944, %Expression.557944* %.131, i64 0, i32 4
-  %.13316 = load %Type.557924*, %Type.557924** %.132, align 8
+  %2 = bitcast %Type.557924** %.132 to i64*
+  %.1331 = load i64, i64* %2, align 8
   %.138 = getelementptr inbounds %Expression.557944, %Expression.557944* %.87, i64 0, i32 4
   %.13927 = load %Type.557924*, %Type.557924** %.138, align 8
   %.142 = tail call i1 @is_numeric(%Type.557924* %.13927)
   %.144 = icmp eq i64 %.11, 6
   %.145 = and i1 %.144, %.142
+  %3 = inttoptr i64 %.1331 to %Type.557924*
   br i1 %.145, label %.5.endif.endif.endif.if, label %.5.endif.endif.endif.endif
 
 .5.endif.endif.if.if:                             ; preds = %.5.endif.endif.if
@@ -50084,7 +50097,7 @@ false_block.1:                                    ; preds = %.5.endif.endif.if.e
   br label %end.1
 
 end.1:                                            ; preds = %true_block.18, %false_block.18, %true_block.17, %false_block.17, %true_block.16, %false_block.16, %true_block.15, %false_block.15, %true_block.13, %false_block.13, %true_block.12, %false_block.12, %true_block.11, %false_block.11, %true_block.10, %false_block.10, %true_block.9, %false_block.9, %true_block.8, %false_block.8, %true_block.7, %false_block.7, %true_block.6, %false_block.6, %true_block.5, %false_block.5, %true_block.4, %false_block.4, %true_block.3, %false_block.3, %false_block.1, %true_block.1
-  %.127 = phi %LLVMValueRef.558110* [ %.121, %true_block.1 ], [ %.125, %false_block.1 ], [ %.223, %true_block.3 ], [ %.228, %false_block.3 ], [ %.239, %true_block.4 ], [ %.244, %false_block.4 ], [ %.255, %true_block.5 ], [ %.260, %false_block.5 ], [ %.295, %true_block.6 ], [ %.301, %false_block.6 ], [ %.320, %true_block.7 ], [ %.326, %false_block.7 ], [ %.337, %true_block.8 ], [ %.342, %false_block.8 ], [ %.353, %true_block.9 ], [ %.358, %false_block.9 ], [ %.369, %true_block.10 ], [ %.374, %false_block.10 ], [ %.385, %true_block.11 ], [ %.390, %false_block.11 ], [ %.401, %true_block.12 ], [ %.406, %false_block.12 ], [ %.480, %true_block.13 ], [ %.486, %false_block.13 ], [ %.508, %true_block.15 ], [ %.514, %false_block.15 ], [ %.538, %true_block.16 ], [ %.543, %false_block.16 ], [ %.554, %true_block.17 ], [ %.559, %false_block.17 ], [ %.570, %true_block.18 ], [ %.575, %false_block.18 ]
+  %.127 = phi %LLVMValueRef.558110* [ %.121, %true_block.1 ], [ %.125, %false_block.1 ], [ %.226, %true_block.3 ], [ %.231, %false_block.3 ], [ %.242, %true_block.4 ], [ %.247, %false_block.4 ], [ %.258, %true_block.5 ], [ %.263, %false_block.5 ], [ %.298, %true_block.6 ], [ %.304, %false_block.6 ], [ %.323, %true_block.7 ], [ %.329, %false_block.7 ], [ %.340, %true_block.8 ], [ %.345, %false_block.8 ], [ %.356, %true_block.9 ], [ %.361, %false_block.9 ], [ %.372, %true_block.10 ], [ %.377, %false_block.10 ], [ %.388, %true_block.11 ], [ %.393, %false_block.11 ], [ %.404, %true_block.12 ], [ %.409, %false_block.12 ], [ %.483, %true_block.13 ], [ %.489, %false_block.13 ], [ %.511, %true_block.15 ], [ %.517, %false_block.15 ], [ %.541, %true_block.16 ], [ %.546, %false_block.16 ], [ %.557, %true_block.17 ], [ %.562, %false_block.17 ], [ %.573, %true_block.18 ], [ %.578, %false_block.18 ]
   ret %LLVMValueRef.558110* %.127
 
 .5.endif.endif.endif.if:                          ; preds = %.5.endif.endif.endif
@@ -50095,7 +50108,7 @@ end.1:                                            ; preds = %true_block.18, %fal
   ret %LLVMValueRef.558110* %.156
 
 .5.endif.endif.endif.endif:                       ; preds = %.5.endif.endif.endif
-  %.159 = tail call i1 @is_pointer(%Type.557924* %.13316)
+  %.159 = tail call i1 @is_pointer(%Type.557924* %3)
   br i1 %.159, label %.5.endif.endif.endif.endif.if, label %.5.endif.endif.endif.endif.endif
 
 .5.endif.endif.endif.endif.if:                    ; preds = %.5.endif.endif.endif.endif
@@ -50103,20 +50116,20 @@ end.1:                                            ; preds = %true_block.18, %fal
   br i1 %.162, label %end.2, label %false_block.2
 
 .5.endif.endif.endif.endif.endif:                 ; preds = %.5.endif.endif.endif.endif
-  %.191 = tail call i1 @LLVMIsConstant(%LLVMValueRef.558110* %.72)
-  %.193 = tail call i1 @LLVMIsConstant(%LLVMValueRef.558110* %.83)
-  %.194 = and i1 %.191, %.193
-  %.197 = tail call i1 @is_int(%Type.557924* %.13927)
-  %.199 = tail call i1 @is_object(%Type.557924* %.13316)
-  %.201 = tail call i1 @is_object(%Type.557924* %.13927)
-  %.202 = and i1 %.199, %.201
-  %.208 = and i1 %1, %.202
-  %.209 = or i1 %.197, %.208
-  %.211 = getelementptr inbounds %Type.557924, %Type.557924* %.13927, i64 0, i32 1
-  %.212 = load i64, i64* %.211, align 8
-  %.213 = icmp eq i64 %.212, 14
-  %.214 = or i1 %.213, %.209
-  br i1 %.214, label %.5.endif.endif.endif.endif.endif.if, label %.5.endif.endif.endif.endif.endif.else
+  %.194 = tail call i1 @LLVMIsConstant(%LLVMValueRef.558110* %.72)
+  %.196 = tail call i1 @LLVMIsConstant(%LLVMValueRef.558110* %.83)
+  %.197 = and i1 %.194, %.196
+  %.200 = tail call i1 @is_int(%Type.557924* %.13927)
+  %.202 = tail call i1 @is_object(%Type.557924* %3)
+  %.204 = tail call i1 @is_object(%Type.557924* %.13927)
+  %.205 = and i1 %.202, %.204
+  %.211 = and i1 %1, %.205
+  %.212 = or i1 %.200, %.211
+  %.214 = getelementptr inbounds %Type.557924, %Type.557924* %.13927, i64 0, i32 1
+  %.215 = load i64, i64* %.214, align 8
+  %.216 = icmp eq i64 %.215, 14
+  %.217 = or i1 %.216, %.212
+  br i1 %.217, label %.5.endif.endif.endif.endif.endif.if, label %.5.endif.endif.endif.endif.endif.else
 
 false_block.2:                                    ; preds = %.5.endif.endif.endif.endif.if
   %.168 = tail call %LLVMValueRef.558110* @CodeGen_neg_int(%LLVMBuilderRef.558115* %.2, %LLVMValueRef.558110* %.83)
@@ -50124,15 +50137,18 @@ false_block.2:                                    ; preds = %.5.endif.endif.endi
 
 end.2:                                            ; preds = %.5.endif.endif.endif.endif.if, %false_block.2
   %.170 = phi %LLVMValueRef.558110* [ %.168, %false_block.2 ], [ %.83, %.5.endif.endif.endif.endif.if ]
+  %4 = inttoptr i64 %.1331 to %PointerType.557928*
   %indices = alloca [1 x %LLVMValueRef.558110*], align 8
   %.171 = getelementptr inbounds [1 x %LLVMValueRef.558110*], [1 x %LLVMValueRef.558110*]* %indices, i64 0, i64 0
   store %LLVMValueRef.558110* %.170, %LLVMValueRef.558110** %.171, align 8
   %.175 = load %CodeGen_vtable_ty.558159*, %CodeGen_vtable_ty.558159** %.55, align 8
   %.176 = getelementptr inbounds %CodeGen_vtable_ty.558159, %CodeGen_vtable_ty.558159* %.175, i64 0, i32 9
   %.177 = load %LLVMTypeRef.558109* (%CodeGen.558158*, %Type.557924*, i1)*, %LLVMTypeRef.558109* (%CodeGen.558158*, %Type.557924*, i1)** %.176, align 8
-  %.179 = tail call %LLVMTypeRef.558109* %.177(%CodeGen.558158* nonnull %.1, %Type.557924* %.13316, i1 true)
-  %.186 = call %LLVMValueRef.558110* @LLVMBuildInBoundsGEP2(%LLVMBuilderRef.558115* %.2, %LLVMTypeRef.558109* %.179, %LLVMValueRef.558110* %.72, %LLVMValueRef.558110** nonnull %.171, i64 1, i8* getelementptr inbounds ([1 x i8], [1 x i8]* @str.135, i64 0, i64 0))
-  ret %LLVMValueRef.558110* %.186
+  %.180 = getelementptr inbounds %PointerType.557928, %PointerType.557928* %4, i64 0, i32 2
+  %.181 = load %Type.557924*, %Type.557924** %.180, align 8
+  %.182 = tail call %LLVMTypeRef.558109* %.177(%CodeGen.558158* nonnull %.1, %Type.557924* %.181, i1 true)
+  %.189 = call %LLVMValueRef.558110* @LLVMBuildInBoundsGEP2(%LLVMBuilderRef.558115* %.2, %LLVMTypeRef.558109* %.182, %LLVMValueRef.558110* %.72, %LLVMValueRef.558110** nonnull %.171, i64 1, i8* getelementptr inbounds ([1 x i8], [1 x i8]* @str.135, i64 0, i64 0))
+  ret %LLVMValueRef.558110* %.189
 
 .5.endif.endif.endif.endif.endif.if:              ; preds = %.5.endif.endif.endif.endif.endif
   switch i64 %.11, label %.5.endif.endif.endif.endi...else [
@@ -50144,103 +50160,103 @@ end.2:                                            ; preds = %.5.endif.endif.endi
   ]
 
 .5.endif.endif.endif.endif.endif.else:            ; preds = %.5.endif.endif.endif.endif.endif
-  %.423 = tail call i1 @is_float(%Type.557924* nonnull %.13927)
-  br i1 %.423, label %.5.endif.endif.endif.endif.endif.else.if, label %.5.endif.endif.endif.endif.endif.else.else
+  %.426 = tail call i1 @is_float(%Type.557924* nonnull %.13927)
+  br i1 %.426, label %.5.endif.endif.endif.endif.endif.else.if, label %.5.endif.endif.endif.endif.endif.else.else
 
 .5.endif.endif.endif.endif.endif.endif:           ; preds = %.5.endif.endif.endif.endif.endif.else.else.if, %.5.endif.endif.endif.endif.endif.else.else, %.5.endif.endif.endif.endi...else.2.else.else, %.5.endif.endif.endif.endi...else.else.else
-  %.585 = getelementptr inbounds %Type.557924, %Type.557924* %.13316, i64 0, i32 1
-  %.586 = load i64, i64* %.585, align 8
-  %.588 = tail call %string.557760* @dump_bin_op(i64 %.11)
-  %.591 = load i64, i64* %.211, align 8
-  %.592 = getelementptr inbounds %string.557760, %string.557760* %.588, i64 0, i32 0
-  %.593 = load %string_vtable_ty.557761*, %string_vtable_ty.557761** %.592, align 8
-  %.594 = getelementptr inbounds %string_vtable_ty.557761, %string_vtable_ty.557761* %.593, i64 0, i32 10
-  %.595 = load i8* (%string.557760*)*, i8* (%string.557760*)** %.594, align 8
-  %.596 = tail call i8* %.595(%string.557760* %.588)
-  %.598 = tail call i64 (i8*, i64, i8*, ...) @snprintf(i8* null, i64 0, i8* getelementptr inbounds ([23 x i8], [23 x i8]* @str.357, i64 0, i64 0), i64 %.586, i8* %.596, i64 %.591)
-  %.599 = add i64 %.598, 1
-  %.601 = tail call i8* @malloc(i64 %.599)
-  %.602 = tail call i64 (i8*, i8*, ...) @sprintf(i8* %.601, i8* getelementptr inbounds ([23 x i8], [23 x i8]* @str.357, i64 0, i64 0), i64 %.586, i8* %.596, i64 %.591)
-  %.603 = tail call dereferenceable_or_null(32) i8* @malloc(i64 32)
-  %.604 = bitcast i8* %.603 to %string.557760*
-  %.605 = bitcast i8* %.603 to %string_vtable_ty.557761**
-  store %string_vtable_ty.557761* @string_vtable_data, %string_vtable_ty.557761** %.605, align 8
-  %.607 = getelementptr inbounds i8, i8* %.603, i64 8
-  %2 = bitcast i8* %.607 to i8**
-  store i8* %.601, i8** %2, align 8
-  %.609 = getelementptr inbounds i8, i8* %.603, i64 16
-  %3 = bitcast i8* %.609 to i64*
-  store i64 %.598, i64* %3, align 8
-  %.611 = getelementptr inbounds i8, i8* %.603, i64 24
-  %4 = bitcast i8* %.611 to i64*
-  store i64 %.598, i64* %4, align 8
-  tail call void @panic(%string.557760* %.604)
+  %.588 = getelementptr inbounds %Type.557924, %Type.557924* %3, i64 0, i32 1
+  %.589 = load i64, i64* %.588, align 8
+  %.591 = tail call %string.557760* @dump_bin_op(i64 %.11)
+  %.594 = load i64, i64* %.214, align 8
+  %.595 = getelementptr inbounds %string.557760, %string.557760* %.591, i64 0, i32 0
+  %.596 = load %string_vtable_ty.557761*, %string_vtable_ty.557761** %.595, align 8
+  %.597 = getelementptr inbounds %string_vtable_ty.557761, %string_vtable_ty.557761* %.596, i64 0, i32 10
+  %.598 = load i8* (%string.557760*)*, i8* (%string.557760*)** %.597, align 8
+  %.599 = tail call i8* %.598(%string.557760* %.591)
+  %.601 = tail call i64 (i8*, i64, i8*, ...) @snprintf(i8* null, i64 0, i8* getelementptr inbounds ([23 x i8], [23 x i8]* @str.357, i64 0, i64 0), i64 %.589, i8* %.599, i64 %.594)
+  %.602 = add i64 %.601, 1
+  %.604 = tail call i8* @malloc(i64 %.602)
+  %.605 = tail call i64 (i8*, i8*, ...) @sprintf(i8* %.604, i8* getelementptr inbounds ([23 x i8], [23 x i8]* @str.357, i64 0, i64 0), i64 %.589, i8* %.599, i64 %.594)
+  %.606 = tail call dereferenceable_or_null(32) i8* @malloc(i64 32)
+  %.607 = bitcast i8* %.606 to %string.557760*
+  %.608 = bitcast i8* %.606 to %string_vtable_ty.557761**
+  store %string_vtable_ty.557761* @string_vtable_data, %string_vtable_ty.557761** %.608, align 8
+  %.610 = getelementptr inbounds i8, i8* %.606, i64 8
+  %5 = bitcast i8* %.610 to i8**
+  store i8* %.604, i8** %5, align 8
+  %.612 = getelementptr inbounds i8, i8* %.606, i64 16
+  %6 = bitcast i8* %.612 to i64*
+  store i64 %.601, i64* %6, align 8
+  %.614 = getelementptr inbounds i8, i8* %.606, i64 24
+  %7 = bitcast i8* %.614 to i64*
+  store i64 %.601, i64* %7, align 8
+  tail call void @panic(%string.557760* %.607)
   ret %LLVMValueRef.558110* null
 
 .5.endif.endif.endif.endif.endif.if.if:           ; preds = %.5.endif.endif.endif.endif.endif.if
-  br i1 %.194, label %true_block.3, label %false_block.3
+  br i1 %.197, label %true_block.3, label %false_block.3
 
 true_block.3:                                     ; preds = %.5.endif.endif.endif.endif.endif.if.if
-  %.223 = tail call %LLVMValueRef.558110* @LLVMConstAdd(%LLVMValueRef.558110* %.72, %LLVMValueRef.558110* %.83)
+  %.226 = tail call %LLVMValueRef.558110* @LLVMConstAdd(%LLVMValueRef.558110* %.72, %LLVMValueRef.558110* %.83)
   br label %end.1
 
 false_block.3:                                    ; preds = %.5.endif.endif.endif.endif.endif.if.if
-  %.228 = tail call %LLVMValueRef.558110* @LLVMBuildAdd(%LLVMBuilderRef.558115* %.2, %LLVMValueRef.558110* %.72, %LLVMValueRef.558110* %.83, i8* getelementptr inbounds ([1 x i8], [1 x i8]* @str.135, i64 0, i64 0))
+  %.231 = tail call %LLVMValueRef.558110* @LLVMBuildAdd(%LLVMBuilderRef.558115* %.2, %LLVMValueRef.558110* %.72, %LLVMValueRef.558110* %.83, i8* getelementptr inbounds ([1 x i8], [1 x i8]* @str.135, i64 0, i64 0))
   br label %end.1
 
 .5.endif.endif.endif.endif.endif.if.else.if:      ; preds = %.5.endif.endif.endif.endif.endif.if
-  br i1 %.194, label %true_block.4, label %false_block.4
+  br i1 %.197, label %true_block.4, label %false_block.4
 
 true_block.4:                                     ; preds = %.5.endif.endif.endif.endif.endif.if.else.if
-  %.239 = tail call %LLVMValueRef.558110* @LLVMConstSub(%LLVMValueRef.558110* %.72, %LLVMValueRef.558110* %.83)
+  %.242 = tail call %LLVMValueRef.558110* @LLVMConstSub(%LLVMValueRef.558110* %.72, %LLVMValueRef.558110* %.83)
   br label %end.1
 
 false_block.4:                                    ; preds = %.5.endif.endif.endif.endif.endif.if.else.if
-  %.244 = tail call %LLVMValueRef.558110* @LLVMBuildSub(%LLVMBuilderRef.558115* %.2, %LLVMValueRef.558110* %.72, %LLVMValueRef.558110* %.83, i8* getelementptr inbounds ([1 x i8], [1 x i8]* @str.135, i64 0, i64 0))
+  %.247 = tail call %LLVMValueRef.558110* @LLVMBuildSub(%LLVMBuilderRef.558115* %.2, %LLVMValueRef.558110* %.72, %LLVMValueRef.558110* %.83, i8* getelementptr inbounds ([1 x i8], [1 x i8]* @str.135, i64 0, i64 0))
   br label %end.1
 
 .5.endif.endif.endif.endif.endif.if.else.else.if: ; preds = %.5.endif.endif.endif.endif.endif.if
-  br i1 %.194, label %true_block.5, label %false_block.5
+  br i1 %.197, label %true_block.5, label %false_block.5
 
 true_block.5:                                     ; preds = %.5.endif.endif.endif.endif.endif.if.else.else.if
-  %.255 = tail call %LLVMValueRef.558110* @LLVMConstMul(%LLVMValueRef.558110* %.72, %LLVMValueRef.558110* %.83)
+  %.258 = tail call %LLVMValueRef.558110* @LLVMConstMul(%LLVMValueRef.558110* %.72, %LLVMValueRef.558110* %.83)
   br label %end.1
 
 false_block.5:                                    ; preds = %.5.endif.endif.endif.endif.endif.if.else.else.if
-  %.260 = tail call %LLVMValueRef.558110* @LLVMBuildMul(%LLVMBuilderRef.558115* %.2, %LLVMValueRef.558110* %.72, %LLVMValueRef.558110* %.83, i8* getelementptr inbounds ([1 x i8], [1 x i8]* @str.135, i64 0, i64 0))
+  %.263 = tail call %LLVMValueRef.558110* @LLVMBuildMul(%LLVMBuilderRef.558115* %.2, %LLVMValueRef.558110* %.72, %LLVMValueRef.558110* %.83, i8* getelementptr inbounds ([1 x i8], [1 x i8]* @str.135, i64 0, i64 0))
   br label %end.1
 
 .5.endif.endif.endif.endif.endif.if.else.else.else.if: ; preds = %.5.endif.endif.endif.endif.endif.if
-  %.270 = tail call %LLVMValueRef.558110* @LLVMBuildSDiv(%LLVMBuilderRef.558115* %.2, %LLVMValueRef.558110* %.72, %LLVMValueRef.558110* %.83, i8* getelementptr inbounds ([1 x i8], [1 x i8]* @str.135, i64 0, i64 0))
-  ret %LLVMValueRef.558110* %.270
+  %.273 = tail call %LLVMValueRef.558110* @LLVMBuildSDiv(%LLVMBuilderRef.558115* %.2, %LLVMValueRef.558110* %.72, %LLVMValueRef.558110* %.83, i8* getelementptr inbounds ([1 x i8], [1 x i8]* @str.135, i64 0, i64 0))
+  ret %LLVMValueRef.558110* %.273
 
 .5.endif.endif.endif.endi...if:                   ; preds = %.5.endif.endif.endif.endif.endif.if
-  %.278 = tail call %LLVMValueRef.558110* @LLVMBuildSRem(%LLVMBuilderRef.558115* %.2, %LLVMValueRef.558110* %.72, %LLVMValueRef.558110* %.83, i8* getelementptr inbounds ([1 x i8], [1 x i8]* @str.135, i64 0, i64 0))
-  ret %LLVMValueRef.558110* %.278
+  %.281 = tail call %LLVMValueRef.558110* @LLVMBuildSRem(%LLVMBuilderRef.558115* %.2, %LLVMValueRef.558110* %.72, %LLVMValueRef.558110* %.83, i8* getelementptr inbounds ([1 x i8], [1 x i8]* @str.135, i64 0, i64 0))
+  ret %LLVMValueRef.558110* %.281
 
 .5.endif.endif.endif.endi...else:                 ; preds = %.5.endif.endif.endif.endif.endif.if
   %.11.off4 = add i64 %.11, -7
-  %5 = icmp ult i64 %.11.off4, 4
-  br i1 %5, label %.5.endif.endif.endif.endi...else.if, label %.5.endif.endif.endif.endi...else.else
+  %8 = icmp ult i64 %.11.off4, 4
+  br i1 %8, label %.5.endif.endif.endif.endi...else.if, label %.5.endif.endif.endif.endi...else.else
 
 .5.endif.endif.endif.endi...else.if:              ; preds = %.5.endif.endif.endif.endi...else
-  %.288 = add nuw nsw i64 %.11, 31
-  br i1 %.194, label %true_block.6, label %false_block.6
+  %.291 = add nuw nsw i64 %.11, 31
+  br i1 %.197, label %true_block.6, label %false_block.6
 
 .5.endif.endif.endif.endi...else.else:            ; preds = %.5.endif.endif.endif.endi...else
   br i1 %1, label %.5.endif.endif.endif.endi...else.else.if, label %.5.endif.endif.endif.endi...else.else.else
 
 true_block.6:                                     ; preds = %.5.endif.endif.endif.endi...else.if
-  %.295 = tail call %LLVMValueRef.558110* @LLVMConstICmp(i64 %.288, %LLVMValueRef.558110* %.72, %LLVMValueRef.558110* %.83)
+  %.298 = tail call %LLVMValueRef.558110* @LLVMConstICmp(i64 %.291, %LLVMValueRef.558110* %.72, %LLVMValueRef.558110* %.83)
   br label %end.1
 
 false_block.6:                                    ; preds = %.5.endif.endif.endif.endi...else.if
-  %.301 = tail call %LLVMValueRef.558110* @LLVMBuildICmp(%LLVMBuilderRef.558115* %.2, i64 %.288, %LLVMValueRef.558110* %.72, %LLVMValueRef.558110* %.83, i8* getelementptr inbounds ([1 x i8], [1 x i8]* @str.135, i64 0, i64 0))
+  %.304 = tail call %LLVMValueRef.558110* @LLVMBuildICmp(%LLVMBuilderRef.558115* %.2, i64 %.291, %LLVMValueRef.558110* %.72, %LLVMValueRef.558110* %.83, i8* getelementptr inbounds ([1 x i8], [1 x i8]* @str.135, i64 0, i64 0))
   br label %end.1
 
 .5.endif.endif.endif.endi...else.else.if:         ; preds = %.5.endif.endif.endif.endi...else.else
-  %.313 = add nuw nsw i64 %.11, 21
-  br i1 %.194, label %true_block.7, label %false_block.7
+  %.316 = add nuw nsw i64 %.11, 21
+  br i1 %.197, label %true_block.7, label %false_block.7
 
 .5.endif.endif.endif.endi...else.else.else:       ; preds = %.5.endif.endif.endif.endi...else.else
   switch i64 %.11, label %.5.endif.endif.endif.endif.endif.endif [
@@ -50252,66 +50268,66 @@ false_block.6:                                    ; preds = %.5.endif.endif.endi
   ]
 
 true_block.7:                                     ; preds = %.5.endif.endif.endif.endi...else.else.if
-  %.320 = tail call %LLVMValueRef.558110* @LLVMConstICmp(i64 %.313, %LLVMValueRef.558110* %.72, %LLVMValueRef.558110* %.83)
+  %.323 = tail call %LLVMValueRef.558110* @LLVMConstICmp(i64 %.316, %LLVMValueRef.558110* %.72, %LLVMValueRef.558110* %.83)
   br label %end.1
 
 false_block.7:                                    ; preds = %.5.endif.endif.endif.endi...else.else.if
-  %.326 = tail call %LLVMValueRef.558110* @LLVMBuildICmp(%LLVMBuilderRef.558115* %.2, i64 %.313, %LLVMValueRef.558110* %.72, %LLVMValueRef.558110* %.83, i8* getelementptr inbounds ([1 x i8], [1 x i8]* @str.135, i64 0, i64 0))
+  %.329 = tail call %LLVMValueRef.558110* @LLVMBuildICmp(%LLVMBuilderRef.558115* %.2, i64 %.316, %LLVMValueRef.558110* %.72, %LLVMValueRef.558110* %.83, i8* getelementptr inbounds ([1 x i8], [1 x i8]* @str.135, i64 0, i64 0))
   br label %end.1
 
 .5.endif.endif.endif.endi...else.else.else.if:    ; preds = %.5.endif.endif.endif.endi...else.else.else
-  br i1 %.194, label %true_block.8, label %false_block.8
+  br i1 %.197, label %true_block.8, label %false_block.8
 
 true_block.8:                                     ; preds = %.5.endif.endif.endif.endi...else.else.else.if
-  %.337 = tail call %LLVMValueRef.558110* @LLVMConstShl(%LLVMValueRef.558110* %.72, %LLVMValueRef.558110* %.83)
+  %.340 = tail call %LLVMValueRef.558110* @LLVMConstShl(%LLVMValueRef.558110* %.72, %LLVMValueRef.558110* %.83)
   br label %end.1
 
 false_block.8:                                    ; preds = %.5.endif.endif.endif.endi...else.else.else.if
-  %.342 = tail call %LLVMValueRef.558110* @LLVMBuildShl(%LLVMBuilderRef.558115* %.2, %LLVMValueRef.558110* %.72, %LLVMValueRef.558110* %.83, i8* getelementptr inbounds ([1 x i8], [1 x i8]* @str.135, i64 0, i64 0))
+  %.345 = tail call %LLVMValueRef.558110* @LLVMBuildShl(%LLVMBuilderRef.558115* %.2, %LLVMValueRef.558110* %.72, %LLVMValueRef.558110* %.83, i8* getelementptr inbounds ([1 x i8], [1 x i8]* @str.135, i64 0, i64 0))
   br label %end.1
 
 .5.endif.endif.endif.endi...else.else.else.else.if: ; preds = %.5.endif.endif.endif.endi...else.else.else
-  br i1 %.194, label %true_block.9, label %false_block.9
+  br i1 %.197, label %true_block.9, label %false_block.9
 
 true_block.9:                                     ; preds = %.5.endif.endif.endif.endi...else.else.else.else.if
-  %.353 = tail call %LLVMValueRef.558110* @LLVMConstAShr(%LLVMValueRef.558110* %.72, %LLVMValueRef.558110* %.83)
+  %.356 = tail call %LLVMValueRef.558110* @LLVMConstAShr(%LLVMValueRef.558110* %.72, %LLVMValueRef.558110* %.83)
   br label %end.1
 
 false_block.9:                                    ; preds = %.5.endif.endif.endif.endi...else.else.else.else.if
-  %.358 = tail call %LLVMValueRef.558110* @LLVMBuildAShr(%LLVMBuilderRef.558115* %.2, %LLVMValueRef.558110* %.72, %LLVMValueRef.558110* %.83, i8* getelementptr inbounds ([1 x i8], [1 x i8]* @str.135, i64 0, i64 0))
+  %.361 = tail call %LLVMValueRef.558110* @LLVMBuildAShr(%LLVMBuilderRef.558115* %.2, %LLVMValueRef.558110* %.72, %LLVMValueRef.558110* %.83, i8* getelementptr inbounds ([1 x i8], [1 x i8]* @str.135, i64 0, i64 0))
   br label %end.1
 
 .5.endif.endif.endif.endi...if.1:                 ; preds = %.5.endif.endif.endif.endi...else.else.else
-  br i1 %.194, label %true_block.10, label %false_block.10
+  br i1 %.197, label %true_block.10, label %false_block.10
 
 true_block.10:                                    ; preds = %.5.endif.endif.endif.endi...if.1
-  %.369 = tail call %LLVMValueRef.558110* @LLVMConstOr(%LLVMValueRef.558110* %.72, %LLVMValueRef.558110* %.83)
+  %.372 = tail call %LLVMValueRef.558110* @LLVMConstOr(%LLVMValueRef.558110* %.72, %LLVMValueRef.558110* %.83)
   br label %end.1
 
 false_block.10:                                   ; preds = %.5.endif.endif.endif.endi...if.1
-  %.374 = tail call %LLVMValueRef.558110* @LLVMBuildOr(%LLVMBuilderRef.558115* %.2, %LLVMValueRef.558110* %.72, %LLVMValueRef.558110* %.83, i8* getelementptr inbounds ([1 x i8], [1 x i8]* @str.135, i64 0, i64 0))
+  %.377 = tail call %LLVMValueRef.558110* @LLVMBuildOr(%LLVMBuilderRef.558115* %.2, %LLVMValueRef.558110* %.72, %LLVMValueRef.558110* %.83, i8* getelementptr inbounds ([1 x i8], [1 x i8]* @str.135, i64 0, i64 0))
   br label %end.1
 
 .5.endif.endif.endif.endi...else.1.if:            ; preds = %.5.endif.endif.endif.endi...else.else.else
-  br i1 %.194, label %true_block.11, label %false_block.11
+  br i1 %.197, label %true_block.11, label %false_block.11
 
 true_block.11:                                    ; preds = %.5.endif.endif.endif.endi...else.1.if
-  %.385 = tail call %LLVMValueRef.558110* @LLVMConstAnd(%LLVMValueRef.558110* %.72, %LLVMValueRef.558110* %.83)
+  %.388 = tail call %LLVMValueRef.558110* @LLVMConstAnd(%LLVMValueRef.558110* %.72, %LLVMValueRef.558110* %.83)
   br label %end.1
 
 false_block.11:                                   ; preds = %.5.endif.endif.endif.endi...else.1.if
-  %.390 = tail call %LLVMValueRef.558110* @LLVMBuildAnd(%LLVMBuilderRef.558115* %.2, %LLVMValueRef.558110* %.72, %LLVMValueRef.558110* %.83, i8* getelementptr inbounds ([1 x i8], [1 x i8]* @str.135, i64 0, i64 0))
+  %.393 = tail call %LLVMValueRef.558110* @LLVMBuildAnd(%LLVMBuilderRef.558115* %.2, %LLVMValueRef.558110* %.72, %LLVMValueRef.558110* %.83, i8* getelementptr inbounds ([1 x i8], [1 x i8]* @str.135, i64 0, i64 0))
   br label %end.1
 
 .5.endif.endif.endif.endi...else.1.else.if:       ; preds = %.5.endif.endif.endif.endi...else.else.else
-  br i1 %.194, label %true_block.12, label %false_block.12
+  br i1 %.197, label %true_block.12, label %false_block.12
 
 true_block.12:                                    ; preds = %.5.endif.endif.endif.endi...else.1.else.if
-  %.401 = tail call %LLVMValueRef.558110* @LLVMConstXor(%LLVMValueRef.558110* %.72, %LLVMValueRef.558110* %.83)
+  %.404 = tail call %LLVMValueRef.558110* @LLVMConstXor(%LLVMValueRef.558110* %.72, %LLVMValueRef.558110* %.83)
   br label %end.1
 
 false_block.12:                                   ; preds = %.5.endif.endif.endif.endi...else.1.else.if
-  %.406 = tail call %LLVMValueRef.558110* @LLVMBuildXor(%LLVMBuilderRef.558115* %.2, %LLVMValueRef.558110* %.72, %LLVMValueRef.558110* %.83, i8* getelementptr inbounds ([1 x i8], [1 x i8]* @str.135, i64 0, i64 0))
+  %.409 = tail call %LLVMValueRef.558110* @LLVMBuildXor(%LLVMBuilderRef.558115* %.2, %LLVMValueRef.558110* %.72, %LLVMValueRef.558110* %.83, i8* getelementptr inbounds ([1 x i8], [1 x i8]* @str.135, i64 0, i64 0))
   br label %end.1
 
 .5.endif.endif.endif.endif.endif.else.if:         ; preds = %.5.endif.endif.endif.endif.endif.else
@@ -50324,60 +50340,60 @@ false_block.12:                                   ; preds = %.5.endif.endif.endi
   ]
 
 .5.endif.endif.endif.endif.endif.else.else:       ; preds = %.5.endif.endif.endif.endif.endif.else
-  %.526 = tail call i1 @is_bool(%Type.557924* nonnull %.13927)
-  br i1 %.526, label %.5.endif.endif.endif.endif.endif.else.else.if, label %.5.endif.endif.endif.endif.endif.endif
+  %.529 = tail call i1 @is_bool(%Type.557924* nonnull %.13927)
+  br i1 %.529, label %.5.endif.endif.endif.endif.endif.else.else.if, label %.5.endif.endif.endif.endif.endif.endif
 
 .5.endif.endif.endif.endif.endif.else.if.if:      ; preds = %.5.endif.endif.endif.endif.endif.else.if
-  %.431 = tail call %LLVMValueRef.558110* @LLVMBuildFAdd(%LLVMBuilderRef.558115* %.2, %LLVMValueRef.558110* %.72, %LLVMValueRef.558110* %.83, i8* getelementptr inbounds ([1 x i8], [1 x i8]* @str.135, i64 0, i64 0))
-  ret %LLVMValueRef.558110* %.431
+  %.434 = tail call %LLVMValueRef.558110* @LLVMBuildFAdd(%LLVMBuilderRef.558115* %.2, %LLVMValueRef.558110* %.72, %LLVMValueRef.558110* %.83, i8* getelementptr inbounds ([1 x i8], [1 x i8]* @str.135, i64 0, i64 0))
+  ret %LLVMValueRef.558110* %.434
 
 .5.endif.endif.endif.endif.endif.else.if.else.if: ; preds = %.5.endif.endif.endif.endif.endif.else.if
-  %.439 = tail call %LLVMValueRef.558110* @LLVMBuildFSub(%LLVMBuilderRef.558115* %.2, %LLVMValueRef.558110* %.72, %LLVMValueRef.558110* %.83, i8* getelementptr inbounds ([1 x i8], [1 x i8]* @str.135, i64 0, i64 0))
-  ret %LLVMValueRef.558110* %.439
+  %.442 = tail call %LLVMValueRef.558110* @LLVMBuildFSub(%LLVMBuilderRef.558115* %.2, %LLVMValueRef.558110* %.72, %LLVMValueRef.558110* %.83, i8* getelementptr inbounds ([1 x i8], [1 x i8]* @str.135, i64 0, i64 0))
+  ret %LLVMValueRef.558110* %.442
 
 .5.endif.endif.endif.endif.endif.else.if.else.else.if: ; preds = %.5.endif.endif.endif.endif.endif.else.if
-  %.447 = tail call %LLVMValueRef.558110* @LLVMBuildFMul(%LLVMBuilderRef.558115* %.2, %LLVMValueRef.558110* %.72, %LLVMValueRef.558110* %.83, i8* getelementptr inbounds ([1 x i8], [1 x i8]* @str.135, i64 0, i64 0))
-  ret %LLVMValueRef.558110* %.447
+  %.450 = tail call %LLVMValueRef.558110* @LLVMBuildFMul(%LLVMBuilderRef.558115* %.2, %LLVMValueRef.558110* %.72, %LLVMValueRef.558110* %.83, i8* getelementptr inbounds ([1 x i8], [1 x i8]* @str.135, i64 0, i64 0))
+  ret %LLVMValueRef.558110* %.450
 
 .5.endif.endif.endif.endi...if.2:                 ; preds = %.5.endif.endif.endif.endif.endif.else.if
-  %.455 = tail call %LLVMValueRef.558110* @LLVMBuildFDiv(%LLVMBuilderRef.558115* %.2, %LLVMValueRef.558110* %.72, %LLVMValueRef.558110* %.83, i8* getelementptr inbounds ([1 x i8], [1 x i8]* @str.135, i64 0, i64 0))
-  ret %LLVMValueRef.558110* %.455
+  %.458 = tail call %LLVMValueRef.558110* @LLVMBuildFDiv(%LLVMBuilderRef.558115* %.2, %LLVMValueRef.558110* %.72, %LLVMValueRef.558110* %.83, i8* getelementptr inbounds ([1 x i8], [1 x i8]* @str.135, i64 0, i64 0))
+  ret %LLVMValueRef.558110* %.458
 
 .5.endif.endif.endif.endi...else.2.if:            ; preds = %.5.endif.endif.endif.endif.endif.else.if
-  %.463 = tail call %LLVMValueRef.558110* @LLVMBuildFRem(%LLVMBuilderRef.558115* %.2, %LLVMValueRef.558110* %.72, %LLVMValueRef.558110* %.83, i8* getelementptr inbounds ([1 x i8], [1 x i8]* @str.135, i64 0, i64 0))
-  ret %LLVMValueRef.558110* %.463
+  %.466 = tail call %LLVMValueRef.558110* @LLVMBuildFRem(%LLVMBuilderRef.558115* %.2, %LLVMValueRef.558110* %.72, %LLVMValueRef.558110* %.83, i8* getelementptr inbounds ([1 x i8], [1 x i8]* @str.135, i64 0, i64 0))
+  ret %LLVMValueRef.558110* %.466
 
 .5.endif.endif.endif.endi...else.2.else:          ; preds = %.5.endif.endif.endif.endif.endif.else.if
   %.11.off = add i64 %.11, -7
-  %6 = icmp ult i64 %.11.off, 4
-  br i1 %6, label %.5.endif.endif.endif.endi...else.2.else.if, label %.5.endif.endif.endif.endi...else.2.else.else
+  %9 = icmp ult i64 %.11.off, 4
+  br i1 %9, label %.5.endif.endif.endif.endi...else.2.else.if, label %.5.endif.endif.endif.endi...else.2.else.else
 
 .5.endif.endif.endif.endi...else.2.else.if:       ; preds = %.5.endif.endif.endif.endi...else.2.else
-  %.473 = add nsw i64 %.11, -5
-  br i1 %.194, label %true_block.13, label %false_block.13
+  %.476 = add nsw i64 %.11, -5
+  br i1 %.197, label %true_block.13, label %false_block.13
 
 .5.endif.endif.endif.endi...else.2.else.else:     ; preds = %.5.endif.endif.endif.endi...else.2.else
   br i1 %1, label %.5.endif.endif.endif.endi...else.2.else.else.if, label %.5.endif.endif.endif.endif.endif.endif
 
 true_block.13:                                    ; preds = %.5.endif.endif.endif.endi...else.2.else.if
-  %.480 = tail call %LLVMValueRef.558110* @LLVMConstFCmp(i64 %.473, %LLVMValueRef.558110* %.72, %LLVMValueRef.558110* %.83)
+  %.483 = tail call %LLVMValueRef.558110* @LLVMConstFCmp(i64 %.476, %LLVMValueRef.558110* %.72, %LLVMValueRef.558110* %.83)
   br label %end.1
 
 false_block.13:                                   ; preds = %.5.endif.endif.endif.endi...else.2.else.if
-  %.486 = tail call %LLVMValueRef.558110* @LLVMBuildFCmp(%LLVMBuilderRef.558115* %.2, i64 %.473, %LLVMValueRef.558110* %.72, %LLVMValueRef.558110* %.83, i8* getelementptr inbounds ([1 x i8], [1 x i8]* @str.135, i64 0, i64 0))
+  %.489 = tail call %LLVMValueRef.558110* @LLVMBuildFCmp(%LLVMBuilderRef.558115* %.2, i64 %.476, %LLVMValueRef.558110* %.72, %LLVMValueRef.558110* %.83, i8* getelementptr inbounds ([1 x i8], [1 x i8]* @str.135, i64 0, i64 0))
   br label %end.1
 
 .5.endif.endif.endif.endi...else.2.else.else.if:  ; preds = %.5.endif.endif.endif.endi...else.2.else.else
-  %.497 = icmp eq i64 %.11, 12
-  %. = select i1 %.497, i64 6, i64 1
-  br i1 %.194, label %true_block.15, label %false_block.15
+  %.500 = icmp eq i64 %.11, 12
+  %. = select i1 %.500, i64 6, i64 1
+  br i1 %.197, label %true_block.15, label %false_block.15
 
 true_block.15:                                    ; preds = %.5.endif.endif.endif.endi...else.2.else.else.if
-  %.508 = tail call %LLVMValueRef.558110* @LLVMConstFCmp(i64 %., %LLVMValueRef.558110* %.72, %LLVMValueRef.558110* %.83)
+  %.511 = tail call %LLVMValueRef.558110* @LLVMConstFCmp(i64 %., %LLVMValueRef.558110* %.72, %LLVMValueRef.558110* %.83)
   br label %end.1
 
 false_block.15:                                   ; preds = %.5.endif.endif.endif.endi...else.2.else.else.if
-  %.514 = tail call %LLVMValueRef.558110* @LLVMBuildFCmp(%LLVMBuilderRef.558115* %.2, i64 %., %LLVMValueRef.558110* %.72, %LLVMValueRef.558110* %.83, i8* getelementptr inbounds ([1 x i8], [1 x i8]* @str.135, i64 0, i64 0))
+  %.517 = tail call %LLVMValueRef.558110* @LLVMBuildFCmp(%LLVMBuilderRef.558115* %.2, i64 %., %LLVMValueRef.558110* %.72, %LLVMValueRef.558110* %.83, i8* getelementptr inbounds ([1 x i8], [1 x i8]* @str.135, i64 0, i64 0))
   br label %end.1
 
 .5.endif.endif.endif.endif.endif.else.else.if:    ; preds = %.5.endif.endif.endif.endif.endif.else.else
@@ -50389,36 +50405,36 @@ false_block.15:                                   ; preds = %.5.endif.endif.endi
   ]
 
 .5.endif.endif.endif.endif.endif.else.else.if.if: ; preds = %.5.endif.endif.endif.endif.endif.else.else.if, %.5.endif.endif.endif.endif.endif.else.else.if
-  br i1 %.194, label %true_block.16, label %false_block.16
+  br i1 %.197, label %true_block.16, label %false_block.16
 
 true_block.16:                                    ; preds = %.5.endif.endif.endif.endif.endif.else.else.if.if
-  %.538 = tail call %LLVMValueRef.558110* @LLVMConstAnd(%LLVMValueRef.558110* %.72, %LLVMValueRef.558110* %.83)
+  %.541 = tail call %LLVMValueRef.558110* @LLVMConstAnd(%LLVMValueRef.558110* %.72, %LLVMValueRef.558110* %.83)
   br label %end.1
 
 false_block.16:                                   ; preds = %.5.endif.endif.endif.endif.endif.else.else.if.if
-  %.543 = tail call %LLVMValueRef.558110* @LLVMBuildAnd(%LLVMBuilderRef.558115* %.2, %LLVMValueRef.558110* %.72, %LLVMValueRef.558110* %.83, i8* getelementptr inbounds ([1 x i8], [1 x i8]* @str.135, i64 0, i64 0))
+  %.546 = tail call %LLVMValueRef.558110* @LLVMBuildAnd(%LLVMBuilderRef.558115* %.2, %LLVMValueRef.558110* %.72, %LLVMValueRef.558110* %.83, i8* getelementptr inbounds ([1 x i8], [1 x i8]* @str.135, i64 0, i64 0))
   br label %end.1
 
 .5.endif.endif.endif.endif.endif.else.else.if.else.if: ; preds = %.5.endif.endif.endif.endif.endif.else.else.if
-  br i1 %.194, label %true_block.17, label %false_block.17
+  br i1 %.197, label %true_block.17, label %false_block.17
 
 true_block.17:                                    ; preds = %.5.endif.endif.endif.endif.endif.else.else.if.else.if
-  %.554 = tail call %LLVMValueRef.558110* @LLVMConstOr(%LLVMValueRef.558110* %.72, %LLVMValueRef.558110* %.83)
+  %.557 = tail call %LLVMValueRef.558110* @LLVMConstOr(%LLVMValueRef.558110* %.72, %LLVMValueRef.558110* %.83)
   br label %end.1
 
 false_block.17:                                   ; preds = %.5.endif.endif.endif.endif.endif.else.else.if.else.if
-  %.559 = tail call %LLVMValueRef.558110* @LLVMBuildOr(%LLVMBuilderRef.558115* %.2, %LLVMValueRef.558110* %.72, %LLVMValueRef.558110* %.83, i8* getelementptr inbounds ([1 x i8], [1 x i8]* @str.135, i64 0, i64 0))
+  %.562 = tail call %LLVMValueRef.558110* @LLVMBuildOr(%LLVMBuilderRef.558115* %.2, %LLVMValueRef.558110* %.72, %LLVMValueRef.558110* %.83, i8* getelementptr inbounds ([1 x i8], [1 x i8]* @str.135, i64 0, i64 0))
   br label %end.1
 
 .5.endif.endif.endif.endi...if.3:                 ; preds = %.5.endif.endif.endif.endif.endif.else.else.if
-  br i1 %.194, label %true_block.18, label %false_block.18
+  br i1 %.197, label %true_block.18, label %false_block.18
 
 true_block.18:                                    ; preds = %.5.endif.endif.endif.endi...if.3
-  %.570 = tail call %LLVMValueRef.558110* @LLVMConstXor(%LLVMValueRef.558110* %.72, %LLVMValueRef.558110* %.83)
+  %.573 = tail call %LLVMValueRef.558110* @LLVMConstXor(%LLVMValueRef.558110* %.72, %LLVMValueRef.558110* %.83)
   br label %end.1
 
 false_block.18:                                   ; preds = %.5.endif.endif.endif.endi...if.3
-  %.575 = tail call %LLVMValueRef.558110* @LLVMBuildXor(%LLVMBuilderRef.558115* %.2, %LLVMValueRef.558110* %.72, %LLVMValueRef.558110* %.83, i8* getelementptr inbounds ([1 x i8], [1 x i8]* @str.135, i64 0, i64 0))
+  %.578 = tail call %LLVMValueRef.558110* @LLVMBuildXor(%LLVMBuilderRef.558115* %.2, %LLVMValueRef.558110* %.72, %LLVMValueRef.558110* %.83, i8* getelementptr inbounds ([1 x i8], [1 x i8]* @str.135, i64 0, i64 0))
   br label %end.1
 }
 
@@ -50591,7 +50607,7 @@ false_block:                                      ; preds = %.5.endif.if
   br label %end
 
 end:                                              ; preds = %.5.endif.endif.if, %.5.if.else, %.5, %end.1.endif, %false_block, %true_block
-  %.62 = phi %LLVMValueRef.558110* [ %.56, %true_block ], [ %.60, %false_block ], [ %.171, %end.1.endif ], [ %.24, %.5 ], [ %.24, %.5.if.else ], [ %.80, %.5.endif.endif.if ]
+  %.62 = phi %LLVMValueRef.558110* [ %.56, %true_block ], [ %.60, %false_block ], [ %.184, %end.1.endif ], [ %.24, %.5 ], [ %.24, %.5.if.else ], [ %.80, %.5.endif.endif.if ]
   ret %LLVMValueRef.558110* %.62
 
 .5.endif.endif.if:                                ; preds = %.5, %.5, %.5, %.5, %.5
@@ -50618,42 +50634,49 @@ end:                                              ; preds = %.5.endif.endif.if, 
 
 end.1.if:                                         ; preds = %.5.endif.endif.if.endif
   %.116 = load %CodeGen_vtable_ty.558159*, %CodeGen_vtable_ty.558159** %.18, align 8
-  %.117 = getelementptr inbounds %CodeGen_vtable_ty.558159, %CodeGen_vtable_ty.558159* %.116, i64 0, i32 8
-  %.118 = load %LLVMValueRef.558110* (%CodeGen.558158*, i64)*, %LLVMValueRef.558110* (%CodeGen.558158*, i64)** %.117, align 8
-  %.120 = tail call %LLVMValueRef.558110* %.118(%CodeGen.558158* nonnull %.1, i64 %.)
+  %.117 = getelementptr inbounds %CodeGen_vtable_ty.558159, %CodeGen_vtable_ty.558159* %.116, i64 0, i32 9
+  %.118 = load %LLVMTypeRef.558109* (%CodeGen.558158*, %Type.557924*, i1)*, %LLVMTypeRef.558109* (%CodeGen.558158*, %Type.557924*, i1)** %.117, align 8
+  %.123 = getelementptr inbounds %Type.557924, %Type.557924* %.111, i64 1
+  %2 = bitcast %Type.557924* %.123 to %Type.557924**
+  %.124 = load %Type.557924*, %Type.557924** %2, align 8
+  %.125 = tail call %LLVMTypeRef.558109* %.118(%CodeGen.558158* nonnull %.1, %Type.557924* %.124, i1 true)
+  %.129 = load %CodeGen_vtable_ty.558159*, %CodeGen_vtable_ty.558159** %.18, align 8
+  %.130 = getelementptr inbounds %CodeGen_vtable_ty.558159, %CodeGen_vtable_ty.558159* %.129, i64 0, i32 8
+  %.131 = load %LLVMValueRef.558110* (%CodeGen.558158*, i64)*, %LLVMValueRef.558110* (%CodeGen.558158*, i64)** %.130, align 8
+  %.133 = tail call %LLVMValueRef.558110* %.131(%CodeGen.558158* nonnull %.1, i64 %.)
   %indices = alloca [1 x %LLVMValueRef.558110*], align 8
-  %.121 = getelementptr inbounds [1 x %LLVMValueRef.558110*], [1 x %LLVMValueRef.558110*]* %indices, i64 0, i64 0
-  store %LLVMValueRef.558110* %.120, %LLVMValueRef.558110** %.121, align 8
-  %.128 = call %LLVMValueRef.558110* @LLVMBuildInBoundsGEP2(%LLVMBuilderRef.558115* %.2, %LLVMTypeRef.558109* %.95, %LLVMValueRef.558110* %.24, %LLVMValueRef.558110** nonnull %.121, i64 1, i8* getelementptr inbounds ([11 x i8], [11 x i8]* @str.358, i64 0, i64 0))
+  %.134 = getelementptr inbounds [1 x %LLVMValueRef.558110*], [1 x %LLVMValueRef.558110*]* %indices, i64 0, i64 0
+  store %LLVMValueRef.558110* %.133, %LLVMValueRef.558110** %.134, align 8
+  %.141 = call %LLVMValueRef.558110* @LLVMBuildInBoundsGEP2(%LLVMBuilderRef.558115* %.2, %LLVMTypeRef.558109* %.125, %LLVMValueRef.558110* %.24, %LLVMValueRef.558110** nonnull %.134, i64 1, i8* getelementptr inbounds ([11 x i8], [11 x i8]* @str.358, i64 0, i64 0))
   br label %end.1.endif
 
 end.1.else:                                       ; preds = %.5.endif.endif.if.endif
-  %.134 = tail call i1 @is_numeric(%Type.557924* %.111)
-  br i1 %.134, label %end.1.else.if, label %end.1.endif
+  %.147 = tail call i1 @is_numeric(%Type.557924* %.111)
+  br i1 %.147, label %end.1.else.if, label %end.1.endif
 
 end.1.endif:                                      ; preds = %end.1.else, %end.2, %end.1.if
-  %.161 = phi %LLVMValueRef.558110* [ null, %end.1.else ], [ %.156, %end.2 ], [ %.128, %end.1.if ]
-  %.163 = call %LLVMValueRef.558110* @LLVMBuildStore(%LLVMBuilderRef.558115* %.2, %LLVMValueRef.558110* %.161, %LLVMValueRef.558110* %.80)
-  %.165 = icmp sgt i64 %.11, 1
-  %.171 = select i1 %.165, %LLVMValueRef.558110* %.24, %LLVMValueRef.558110* %.161
+  %.174 = phi %LLVMValueRef.558110* [ null, %end.1.else ], [ %.169, %end.2 ], [ %.141, %end.1.if ]
+  %.176 = call %LLVMValueRef.558110* @LLVMBuildStore(%LLVMBuilderRef.558115* %.2, %LLVMValueRef.558110* %.174, %LLVMValueRef.558110* %.80)
+  %.178 = icmp sgt i64 %.11, 1
+  %.184 = select i1 %.178, %LLVMValueRef.558110* %.24, %LLVMValueRef.558110* %.174
   br label %end
 
 end.1.else.if:                                    ; preds = %end.1.else
-  %.139 = tail call i1 @is_int(%Type.557924* %.111)
-  br i1 %.139, label %true_block.2, label %false_block.2
+  %.152 = tail call i1 @is_int(%Type.557924* %.111)
+  br i1 %.152, label %true_block.2, label %false_block.2
 
 true_block.2:                                     ; preds = %end.1.else.if
-  %.143 = tail call %LLVMValueRef.558110* @LLVMConstInt(%LLVMTypeRef.558109* %.95, i64 %., i1 false)
+  %.156 = tail call %LLVMValueRef.558110* @LLVMConstInt(%LLVMTypeRef.558109* %.95, i64 %., i1 false)
   br label %end.2
 
 false_block.2:                                    ; preds = %end.1.else.if
-  %.147 = sitofp i64 %. to double
-  %.149 = tail call %LLVMValueRef.558110* @LLVMConstReal(%LLVMTypeRef.558109* %.95, double %.147)
+  %.160 = sitofp i64 %. to double
+  %.162 = tail call %LLVMValueRef.558110* @LLVMConstReal(%LLVMTypeRef.558109* %.95, double %.160)
   br label %end.2
 
 end.2:                                            ; preds = %false_block.2, %true_block.2
-  %.151 = phi %LLVMValueRef.558110* [ %.143, %true_block.2 ], [ %.149, %false_block.2 ]
-  %.156 = tail call %LLVMValueRef.558110* @LLVMBuildAdd(%LLVMBuilderRef.558115* %.2, %LLVMValueRef.558110* %.24, %LLVMValueRef.558110* %.151, i8* getelementptr inbounds ([1 x i8], [1 x i8]* @str.135, i64 0, i64 0))
+  %.164 = phi %LLVMValueRef.558110* [ %.156, %true_block.2 ], [ %.162, %false_block.2 ]
+  %.169 = tail call %LLVMValueRef.558110* @LLVMBuildAdd(%LLVMBuilderRef.558115* %.2, %LLVMValueRef.558110* %.24, %LLVMValueRef.558110* %.164, i8* getelementptr inbounds ([1 x i8], [1 x i8]* @str.135, i64 0, i64 0))
   br label %end.1.endif
 }
 
@@ -51602,7 +51625,7 @@ define %LLVMValueRef.558110* @CodeGen_codegen_intrinsic_exp(%CodeGen.558158* %.1
   %.288 = getelementptr inbounds %"Array<LLVMValueRef>_vtable_ty.558157", %"Array<LLVMValueRef>_vtable_ty.558157"* %.287, i64 0, i32 5
   %.289 = load %LLVMValueRef.558110* (%"Array<LLVMValueRef>.558156"*, i64)*, %LLVMValueRef.558110* (%"Array<LLVMValueRef>.558156"*, i64)** %.288, align 8
   %.290 = tail call %LLVMValueRef.558110* %.289(%"Array<LLVMValueRef>.558156"* nonnull %.17, i64 2)
-  %.291 = tail call %LLVMValueRef.558110* @LLVMBuildMemCpy(%LLVMBuilderRef.558115* %.2, %LLVMValueRef.558110* %.276, i64 %.226, %LLVMValueRef.558110* %.283, i64 %.265, %LLVMValueRef.558110* %.290)
+  %.291 = tail call %LLVMValueRef.558110* @LLVMBuildMemCpy(%LLVMBuilderRef.558115* %.2, %LLVMValueRef.558110* %.276, i64 %.265, %LLVMValueRef.558110* %.283, i64 %.265, %LLVMValueRef.558110* %.290)
   ret %LLVMValueRef.558110* %.291
 
 .5.endif.endif.endif.endif.endif.if:              ; preds = %.5.endif.endif.endif.endif
@@ -51618,7 +51641,7 @@ define %LLVMValueRef.558110* @CodeGen_codegen_intrinsic_exp(%CodeGen.558158* %.1
   %.314 = getelementptr inbounds %"Array<LLVMValueRef>_vtable_ty.558157", %"Array<LLVMValueRef>_vtable_ty.558157"* %.313, i64 0, i32 5
   %.315 = load %LLVMValueRef.558110* (%"Array<LLVMValueRef>.558156"*, i64)*, %LLVMValueRef.558110* (%"Array<LLVMValueRef>.558156"*, i64)** %.314, align 8
   %.316 = tail call %LLVMValueRef.558110* %.315(%"Array<LLVMValueRef>.558156"* nonnull %.17, i64 2)
-  %.317 = tail call %LLVMValueRef.558110* @LLVMBuildMemMove(%LLVMBuilderRef.558115* %.2, %LLVMValueRef.558110* %.302, i64 %.226, %LLVMValueRef.558110* %.309, i64 %.265, %LLVMValueRef.558110* %.316)
+  %.317 = tail call %LLVMValueRef.558110* @LLVMBuildMemMove(%LLVMBuilderRef.558115* %.2, %LLVMValueRef.558110* %.302, i64 %.265, %LLVMValueRef.558110* %.309, i64 %.265, %LLVMValueRef.558110* %.316)
   ret %LLVMValueRef.558110* %.317
 
 .5.endif.endif.endif.endif.endif.endif:           ; preds = %.5.endif.endif.endif.endif
