@@ -3,7 +3,7 @@ source_filename = "main.flo"
 target datalayout = "e-m:e-p270:32:32-p271:32:32-p272:64:64-i64:64-f80:128-n8:16:32:64-S128"
 target triple = "x86_64-unknown-linux-gnu"
 
-%string_vtable_ty.559063 = type { %string.559062* (%string.559062*, %string.559062*)*, %string.559062* (%string.559062*, %string.559062*)*, %string.559062* (%string.559062*, i64)*, i1 (%string.559062*, %string.559062*)*, i64 (%string.559062*, %string.559062*, i64)*, i1 (%string.559062*, %string.559062*)*, %string.559062* (%string.559062*, i64, i64)*, i8 (%string.559062*, i64)*, i8* (%string.559062*)*, %string.559062* (%string.559062*, %string.559062*, %string.559062*)*, i8* (%string.559062*)*, i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)* }
+%string_vtable_ty.559063 = type { %string.559062* (%string.559062*, %string.559062*)*, %string.559062* (%string.559062*, %string.559062*)*, %string.559062* (%string.559062*, i64)*, i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)*, i64 (%string.559062*, %string.559062*, i64)*, i1 (%string.559062*, %string.559062*)*, %string.559062* (%string.559062*, i64, i64)*, i8 (%string.559062*, i64)*, i8* (%string.559062*)*, %string.559062* (%string.559062*, %string.559062*, %string.559062*)*, i8* (%string.559062*)*, i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)* }
 %string.559062 = type { %string_vtable_ty.559063*, i8*, i64, i64 }
 %StringBuilder_vtable_ty.559065 = type { void (%StringBuilder.559064*)*, void (%StringBuilder.559064*, i8*, i64)*, void (%StringBuilder.559064*, %string.559062*)*, void (%StringBuilder.559064*, i8)*, %string.559062* (%StringBuilder.559064*)* }
 %StringBuilder.559064 = type { %StringBuilder_vtable_ty.559065*, i8*, i64, i8*, i64 }
@@ -399,7 +399,7 @@ target triple = "x86_64-unknown-linux-gnu"
 %LLVMTargetRef.559429 = type opaque
 %IntrinsicResult.559438 = type { %IntrinsicResult_vtable_ty.559439*, %LLVMValueRef.559412*, %LLVMTypeRef.559411* }
 
-@string_vtable_data = global %string_vtable_ty.559063 { %string.559062* (%string.559062*, %string.559062*)* @string___add__, %string.559062* (%string.559062*, %string.559062*)* @string___adda__, %string.559062* (%string.559062*, i64)* @string___getitem__, i1 (%string.559062*, %string.559062*)* @string___eq__, i64 (%string.559062*, %string.559062*, i64)* @string_find, i1 (%string.559062*, %string.559062*)* @string___in__, %string.559062* (%string.559062*, i64, i64)* @string_substring, i8 (%string.559062*, i64)* @string_get_byte, i8* (%string.559062*)* @string_get_bytes, %string.559062* (%string.559062*, %string.559062*, %string.559062*)* @string_replace, i8* (%string.559062*)* @string_to_cstring, i1 (%string.559062*, %string.559062*)* @string_ends_with, i1 (%string.559062*, %string.559062*)* @string_starts_with }
+@string_vtable_data = global %string_vtable_ty.559063 { %string.559062* (%string.559062*, %string.559062*)* @string___add__, %string.559062* (%string.559062*, %string.559062*)* @string___adda__, %string.559062* (%string.559062*, i64)* @string___getitem__, i1 (%string.559062*, %string.559062*)* @string___ne__, i1 (%string.559062*, %string.559062*)* @string___eq__, i64 (%string.559062*, %string.559062*, i64)* @string_find, i1 (%string.559062*, %string.559062*)* @string___in__, %string.559062* (%string.559062*, i64, i64)* @string_substring, i8 (%string.559062*, i64)* @string_get_byte, i8* (%string.559062*)* @string_get_bytes, %string.559062* (%string.559062*, %string.559062*, %string.559062*)* @string_replace, i8* (%string.559062*)* @string_to_cstring, i1 (%string.559062*, %string.559062*)* @string_ends_with, i1 (%string.559062*, %string.559062*)* @string_starts_with }
 @StringBuilder_vtable_data = global %StringBuilder_vtable_ty.559065 { void (%StringBuilder.559064*)* @StringBuilder_resize, void (%StringBuilder.559064*, i8*, i64)* @StringBuilder_add_bytes_length, void (%StringBuilder.559064*, %string.559062*)* @StringBuilder_append_string, void (%StringBuilder.559064*, i8)* @StringBuilder_add_byte, %string.559062* (%StringBuilder.559064*)* @StringBuilder_get_string }
 @Range_vtable_data = global %Range_vtable_ty.559067 { i1 (%Range.559066*, i64)* @Range___in__ }
 @str.0 = private unnamed_addr constant [2 x i8] c"\0A\00"
@@ -1005,8 +1005,11 @@ target triple = "x86_64-unknown-linux-gnu"
 ; Function Attrs: argmemonly nofree nounwind readonly
 declare i64 @strlen(i8* nocapture) local_unnamed_addr #0
 
+; Function Attrs: nofree
+declare void @write(i64, i8* nocapture readonly, i64) local_unnamed_addr #1
+
 ; Function Attrs: nofree norecurse nounwind writeonly
-define void @string_constructor(%string.559062* nocapture %.1, i8* %.2, i64 %.3) local_unnamed_addr #1 {
+define void @string_constructor(%string.559062* nocapture %.1, i8* %.2, i64 %.3) local_unnamed_addr #2 {
 .5:
   %.11 = getelementptr inbounds %string.559062, %string.559062* %.1, i64 0, i32 1
   store i8* %.2, i8** %.11, align 8
@@ -1018,7 +1021,7 @@ define void @string_constructor(%string.559062* nocapture %.1, i8* %.2, i64 %.3)
 }
 
 ; Function Attrs: nounwind
-define noalias %string.559062* @string___add__(%string.559062* nocapture readonly %.1, %string.559062* nocapture readonly %.2) #2 {
+define noalias %string.559062* @string___add__(%string.559062* nocapture readonly %.1, %string.559062* nocapture readonly %.2) #3 {
 .4:
   %.8 = getelementptr inbounds %string.559062, %string.559062* %.1, i64 0, i32 2
   %.9 = load i64, i64* %.8, align 8
@@ -1042,7 +1045,7 @@ define noalias %string.559062* @string___add__(%string.559062* nocapture readonl
 }
 
 ; Function Attrs: nounwind
-define %string.559062* @string___adda__(%string.559062* returned %.1, %string.559062* nocapture readonly %.2) #2 {
+define %string.559062* @string___adda__(%string.559062* returned %.1, %string.559062* nocapture readonly %.2) #3 {
 .4:
   %.8 = getelementptr inbounds %string.559062, %string.559062* %.1, i64 0, i32 2
   %.9 = load i64, i64* %.8, align 8
@@ -1065,7 +1068,7 @@ define %string.559062* @string___adda__(%string.559062* returned %.1, %string.55
 }
 
 ; Function Attrs: nofree nounwind
-define noalias %string.559062* @string___getitem__(%string.559062* nocapture readonly %.1, i64 %.2) #3 {
+define noalias %string.559062* @string___getitem__(%string.559062* nocapture readonly %.1, i64 %.2) #4 {
 .4:
   %.8 = tail call dereferenceable_or_null(1) i8* @malloc(i64 1)
   %.13 = getelementptr inbounds %string.559062, %string.559062* %.1, i64 0, i32 1
@@ -1079,6 +1082,17 @@ define noalias %string.559062* @string___getitem__(%string.559062* nocapture rea
   store %string_vtable_ty.559063* @string_vtable_data, %string_vtable_ty.559063** %.22, align 8
   tail call void @string_constructor(%string.559062* %.21, i8* nonnull %.8, i64 2)
   ret %string.559062* %.21
+}
+
+define i1 @string___ne__(%string.559062* %.1, %string.559062* %.2) {
+.4:
+  %.8 = getelementptr inbounds %string.559062, %string.559062* %.1, i64 0, i32 0
+  %.9 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.8, align 8
+  %.10 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.9, i64 0, i32 4
+  %.11 = load i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)** %.10, align 8
+  %.13 = tail call i1 %.11(%string.559062* %.1, %string.559062* %.2)
+  %.14 = xor i1 %.13, true
+  ret i1 %.14
 }
 
 define i1 @string___eq__(%string.559062* nocapture readonly %.1, %string.559062* nocapture readonly %.2) {
@@ -1104,7 +1118,7 @@ define i1 @string___eq__(%string.559062* nocapture readonly %.1, %string.559062*
 }
 
 ; Function Attrs: norecurse nounwind readonly
-define i64 @string_find(%string.559062* nocapture readonly %.1, %string.559062* nocapture readonly %.2, i64 %.3) #4 {
+define i64 @string_find(%string.559062* nocapture readonly %.1, %string.559062* nocapture readonly %.2, i64 %.3) #5 {
 .5:
   %.15 = getelementptr inbounds %string.559062, %string.559062* %.1, i64 0, i32 2
   %.166 = load i64, i64* %.15, align 8
@@ -1162,7 +1176,7 @@ define i1 @string___in__(%string.559062* %.1, %string.559062* %.2) {
 .4:
   %.8 = getelementptr inbounds %string.559062, %string.559062* %.1, i64 0, i32 0
   %.9 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.8, align 8
-  %.10 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.9, i64 0, i32 4
+  %.10 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.9, i64 0, i32 5
   %.11 = load i64 (%string.559062*, %string.559062*, i64)*, i64 (%string.559062*, %string.559062*, i64)** %.10, align 8
   %.13 = tail call i64 %.11(%string.559062* %.1, %string.559062* %.2, i64 0)
   %.15 = icmp ne i64 %.13, -1
@@ -1170,7 +1184,7 @@ define i1 @string___in__(%string.559062* %.1, %string.559062* %.2) {
 }
 
 ; Function Attrs: nofree nounwind
-define noalias %string.559062* @string_substring(%string.559062* nocapture readonly %.1, i64 %.2, i64 %.3) #3 {
+define noalias %string.559062* @string_substring(%string.559062* nocapture readonly %.1, i64 %.2, i64 %.3) #4 {
 .5:
   %.10 = getelementptr inbounds %string.559062, %string.559062* %.1, i64 0, i32 1
   %.11 = load i8*, i8** %.10, align 8
@@ -1184,7 +1198,7 @@ define noalias %string.559062* @string_substring(%string.559062* nocapture reado
 }
 
 ; Function Attrs: norecurse nounwind readonly
-define i8 @string_get_byte(%string.559062* nocapture readonly %.1, i64 %.2) #4 {
+define i8 @string_get_byte(%string.559062* nocapture readonly %.1, i64 %.2) #5 {
 .4:
   %.9 = getelementptr inbounds %string.559062, %string.559062* %.1, i64 0, i32 1
   %.10 = load i8*, i8** %.9, align 8
@@ -1194,7 +1208,7 @@ define i8 @string_get_byte(%string.559062* nocapture readonly %.1, i64 %.2) #4 {
 }
 
 ; Function Attrs: norecurse nounwind readonly
-define i8* @string_get_bytes(%string.559062* nocapture readonly %.1) #4 {
+define i8* @string_get_bytes(%string.559062* nocapture readonly %.1) #5 {
 .3:
   %.6 = getelementptr inbounds %string.559062, %string.559062* %.1, i64 0, i32 1
   %.7 = load i8*, i8** %.6, align 8
@@ -1205,7 +1219,7 @@ define %string.559062* @string_replace(%string.559062* %.1, %string.559062* %.2,
 .5:
   %.10 = getelementptr inbounds %string.559062, %string.559062* %.1, i64 0, i32 0
   %.11 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.10, align 8
-  %.12 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.11, i64 0, i32 4
+  %.12 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.11, i64 0, i32 5
   %.13 = load i64 (%string.559062*, %string.559062*, i64)*, i64 (%string.559062*, %string.559062*, i64)** %.12, align 8
   %.15 = tail call i64 %.13(%string.559062* %.1, %string.559062* %.2, i64 0)
   %.18 = icmp sgt i64 %.15, -1
@@ -1246,7 +1260,7 @@ define %string.559062* @string_replace(%string.559062* %.1, %string.559062* %.2,
 }
 
 ; Function Attrs: nounwind
-define noalias i8* @string_to_cstring(%string.559062* nocapture readonly %.1) #2 {
+define noalias i8* @string_to_cstring(%string.559062* nocapture readonly %.1) #3 {
 .3:
   %.6 = getelementptr inbounds %string.559062, %string.559062* %.1, i64 0, i32 2
   %.7 = load i64, i64* %.6, align 8
@@ -1308,7 +1322,7 @@ define i1 @string_starts_with(%string.559062* nocapture readonly %.1, %string.55
 }
 
 ; Function Attrs: nounwind
-define noalias %string.559062* @string_from_cstring(i8* nocapture readonly %.1) local_unnamed_addr #2 {
+define noalias %string.559062* @string_from_cstring(i8* nocapture readonly %.1) local_unnamed_addr #3 {
 .3:
   %.6 = tail call i64 @strlen(i8* nonnull dereferenceable(1) %.1)
   %.10 = tail call i8* @malloc(i64 %.6)
@@ -1322,7 +1336,7 @@ define noalias %string.559062* @string_from_cstring(i8* nocapture readonly %.1) 
 }
 
 ; Function Attrs: nounwind
-define noalias %string.559062* @string_from_bytes(i8* nocapture readonly %.1, i64 %.2) local_unnamed_addr #2 {
+define noalias %string.559062* @string_from_bytes(i8* nocapture readonly %.1, i64 %.2) local_unnamed_addr #3 {
 .4:
   %.9 = tail call i8* @malloc(i64 %.2)
   tail call void @llvm.memcpy.p0i8.p0i8.i64(i8* align 1 %.9, i8* align 1 %.1, i64 %.2, i1 false)
@@ -1335,18 +1349,18 @@ define noalias %string.559062* @string_from_bytes(i8* nocapture readonly %.1, i6
 }
 
 ; Function Attrs: nofree nounwind
-declare noalias i8* @malloc(i64) local_unnamed_addr #3
+declare noalias i8* @malloc(i64) local_unnamed_addr #4
 
 ; Function Attrs: argmemonly nounwind willreturn
-declare void @llvm.memcpy.p0i8.p0i8.i64(i8* noalias nocapture writeonly, i8* noalias nocapture readonly, i64, i1 immarg) #5
+declare void @llvm.memcpy.p0i8.p0i8.i64(i8* noalias nocapture writeonly, i8* noalias nocapture readonly, i64, i1 immarg) #6
 
 ; Function Attrs: nounwind
-declare noalias i8* @realloc(i8* nocapture, i64) local_unnamed_addr #2
+declare noalias i8* @realloc(i8* nocapture, i64) local_unnamed_addr #3
 
 declare i64 @memcmp(i8*, i8*, i64) local_unnamed_addr
 
 ; Function Attrs: nofree nounwind
-define void @StringBuilder_constructor(%StringBuilder.559064* nocapture %.1, i64 %.2) local_unnamed_addr #3 {
+define void @StringBuilder_constructor(%StringBuilder.559064* nocapture %.1, i64 %.2) local_unnamed_addr #4 {
 .4:
   %.9 = getelementptr inbounds %StringBuilder.559064, %StringBuilder.559064* %.1, i64 0, i32 2
   store i64 %.2, i64* %.9, align 8
@@ -1363,7 +1377,7 @@ define void @StringBuilder_constructor(%StringBuilder.559064* nocapture %.1, i64
 }
 
 ; Function Attrs: nounwind
-define void @StringBuilder_resize(%StringBuilder.559064* nocapture %.1) #2 {
+define void @StringBuilder_resize(%StringBuilder.559064* nocapture %.1) #3 {
 .3:
   %.7 = getelementptr inbounds %StringBuilder.559064, %StringBuilder.559064* %.1, i64 0, i32 2
   %.8 = load i64, i64* %.7, align 8
@@ -1421,7 +1435,7 @@ define void @StringBuilder_append_string(%StringBuilder.559064* %.1, %string.559
   %.11 = load void (%StringBuilder.559064*, i8*, i64)*, void (%StringBuilder.559064*, i8*, i64)** %.10, align 8
   %.13 = getelementptr inbounds %string.559062, %string.559062* %.2, i64 0, i32 0
   %.14 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.13, align 8
-  %.15 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.14, i64 0, i32 8
+  %.15 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.14, i64 0, i32 9
   %.16 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.15, align 8
   %.17 = tail call i8* %.16(%string.559062* %.2)
   %.19 = getelementptr inbounds %string.559062, %string.559062* %.2, i64 0, i32 2
@@ -1462,7 +1476,7 @@ define void @StringBuilder_add_byte(%StringBuilder.559064* %.1, i8 %.2) {
 }
 
 ; Function Attrs: nofree nounwind
-define noalias %string.559062* @StringBuilder_get_string(%StringBuilder.559064* nocapture readonly %.1) #3 {
+define noalias %string.559062* @StringBuilder_get_string(%StringBuilder.559064* nocapture readonly %.1) #4 {
 .3:
   %.6 = getelementptr inbounds %StringBuilder.559064, %StringBuilder.559064* %.1, i64 0, i32 1
   %.7 = load i8*, i8** %.6, align 8
@@ -1477,7 +1491,7 @@ define noalias %string.559062* @StringBuilder_get_string(%StringBuilder.559064* 
 }
 
 ; Function Attrs: nofree norecurse nounwind writeonly
-define void @Range_constructor(%Range.559066* nocapture %.1, i64 %.2, i64 %.3) local_unnamed_addr #1 {
+define void @Range_constructor(%Range.559066* nocapture %.1, i64 %.2, i64 %.3) local_unnamed_addr #2 {
 .5:
   %.11 = getelementptr inbounds %Range.559066, %Range.559066* %.1, i64 0, i32 1
   store i64 %.2, i64* %.11, align 8
@@ -1487,7 +1501,7 @@ define void @Range_constructor(%Range.559066* nocapture %.1, i64 %.2, i64 %.3) l
 }
 
 ; Function Attrs: norecurse nounwind readonly
-define i1 @Range___in__(%Range.559066* nocapture readonly %.1, i64 %.2) #4 {
+define i1 @Range___in__(%Range.559066* nocapture readonly %.1, i64 %.2) #5 {
 .4:
   %.9 = getelementptr inbounds %Range.559066, %Range.559066* %.1, i64 0, i32 1
   %.10 = load i64, i64* %.9, align 8
@@ -1499,14 +1513,11 @@ define i1 @Range___in__(%Range.559066* nocapture readonly %.1, i64 %.2) #4 {
   ret i1 %.17
 }
 
-; Function Attrs: nofree
-declare void @write(i64, i8* nocapture readonly, i64) local_unnamed_addr #6
-
 define void @print(%string.559062* %.1) local_unnamed_addr {
 .3:
   %.6 = getelementptr inbounds %string.559062, %string.559062* %.1, i64 0, i32 0
   %.7 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.6, align 8
-  %.8 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.7, i64 0, i32 8
+  %.8 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.7, i64 0, i32 9
   %.9 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.8, align 8
   %.10 = tail call i8* %.9(%string.559062* %.1)
   %.12 = getelementptr inbounds %string.559062, %string.559062* %.1, i64 0, i32 2
@@ -1523,7 +1534,7 @@ define void @println(%string.559062* %.1) local_unnamed_addr {
 }
 
 ; Function Attrs: nofree norecurse nounwind writeonly
-define void @FloRange_constructor(%FloRange.559068* nocapture %.1, i64 %.2, i64 %.3, i64 %.4, i64 %.5) local_unnamed_addr #1 {
+define void @FloRange_constructor(%FloRange.559068* nocapture %.1, i64 %.2, i64 %.3, i64 %.4, i64 %.5) local_unnamed_addr #2 {
 .7:
   %.15 = getelementptr inbounds %FloRange.559068, %FloRange.559068* %.1, i64 0, i32 1
   store i64 %.2, i64* %.15, align 8
@@ -1537,7 +1548,7 @@ define void @FloRange_constructor(%FloRange.559068* nocapture %.1, i64 %.2, i64 
 }
 
 ; Function Attrs: nofree nounwind
-define noalias %FloRange.559068* @FloRange_merge(%FloRange.559068* nocapture readonly %.1, %FloRange.559068* nocapture readonly %.2) local_unnamed_addr #3 {
+define noalias %FloRange.559068* @FloRange_merge(%FloRange.559068* nocapture readonly %.1, %FloRange.559068* nocapture readonly %.2) local_unnamed_addr #4 {
 .4:
   %.8 = getelementptr inbounds %FloRange.559068, %FloRange.559068* %.1, i64 0, i32 1
   %.9 = load i64, i64* %.8, align 8
@@ -1584,7 +1595,7 @@ define void @panic(%string.559062* %.1) local_unnamed_addr {
 .3:
   %.6 = getelementptr inbounds %string.559062, %string.559062* %.1, i64 0, i32 0
   %.7 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.6, align 8
-  %.8 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.7, i64 0, i32 10
+  %.8 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.7, i64 0, i32 11
   %.9 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.8, align 8
   %.10 = tail call i8* %.9(%string.559062* %.1)
   %.12 = tail call i64 (i8*, i64, i8*, ...) @snprintf(i8* null, i64 0, i8* getelementptr inbounds ([10 x i8], [10 x i8]* @str.3, i64 0, i64 0), i8* %.10)
@@ -1614,7 +1625,7 @@ declare i64 @sprintf(i8*, i8*, ...) local_unnamed_addr
 declare i64 @snprintf(i8*, i64, i8*, ...) local_unnamed_addr
 
 ; Function Attrs: nofree norecurse nounwind writeonly
-define void @FloError_constructor(%FloError.559070* nocapture %.1, i64 %.2, %string.559062* %.3, %FloRange.559068* %.4) local_unnamed_addr #1 {
+define void @FloError_constructor(%FloError.559070* nocapture %.1, i64 %.2, %string.559062* %.3, %FloRange.559068* %.4) local_unnamed_addr #2 {
 .6:
   %.13 = getelementptr inbounds %FloError.559070, %FloError.559070* %.1, i64 0, i32 1
   store i64 %.2, i64* %.13, align 8
@@ -1629,7 +1640,7 @@ define i64 @get_next_line_index(%string.559062* %.1, i64 %.2) local_unnamed_addr
 .4:
   %.8 = getelementptr inbounds %string.559062, %string.559062* %.1, i64 0, i32 0
   %.9 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.8, align 8
-  %.10 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.9, i64 0, i32 7
+  %.10 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.9, i64 0, i32 8
   %.11 = load i8 (%string.559062*, i64)*, i8 (%string.559062*, i64)** %.10, align 8
   %.13 = tail call i8 %.11(%string.559062* %.1, i64 %.2)
   %.14 = icmp ne i8 %.13, 10
@@ -1643,7 +1654,7 @@ while.entry:                                      ; preds = %.4, %while.entry
   %start.0 = phi i64 [ %.25, %while.entry ], [ %.2, %.4 ]
   %.25 = add nsw i64 %start.0, 1
   %.29 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.8, align 8
-  %.30 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.29, i64 0, i32 7
+  %.30 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.29, i64 0, i32 8
   %.31 = load i8 (%string.559062*, i64)*, i8 (%string.559062*, i64)** %.30, align 8
   %.33 = tail call i8 %.31(%string.559062* nonnull %.1, i64 %.25)
   %.34 = icmp ne i8 %.33, 10
@@ -1669,7 +1680,7 @@ define void @print_error_line(%string.559062* %.1, %FloRange.559068* nocapture r
   %.19 = sub i64 %.15, %.18
   %.22 = getelementptr inbounds %string.559062, %string.559062* %.1, i64 0, i32 0
   %.23 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.22, align 8
-  %.24 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.23, i64 0, i32 6
+  %.24 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.23, i64 0, i32 7
   %.25 = load %string.559062* (%string.559062*, i64, i64)*, %string.559062* (%string.559062*, i64, i64)** %.24, align 8
   %.29 = sub i64 %.11, %.19
   %.30 = tail call %string.559062* %.25(%string.559062* %.1, i64 %.19, i64 %.29)
@@ -1806,7 +1817,7 @@ define void @print_error(%FloError.559070* nocapture readonly %.1, %string.55906
   %.21 = load i64, i64* %.20, align 8
   %.22 = getelementptr inbounds %string.559062, %string.559062* %.2, i64 0, i32 0
   %.23 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.22, align 8
-  %.24 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.23, i64 0, i32 10
+  %.24 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.23, i64 0, i32 11
   %.25 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.24, align 8
   %.26 = tail call i8* %.25(%string.559062* %.2)
   %.28 = tail call i64 (i8*, i64, i8*, ...) @snprintf(i8* null, i64 0, i8* getelementptr inbounds ([19 x i8], [19 x i8]* @str.12, i64 0, i64 0), i8* %.26, i64 %.21)
@@ -1833,7 +1844,7 @@ define void @print_error(%FloError.559070* nocapture readonly %.1, %string.55906
 }
 
 ; Function Attrs: nofree nounwind
-declare i64 @access(i8* nocapture readonly, i64) local_unnamed_addr #3
+declare i64 @access(i8* nocapture readonly, i64) local_unnamed_addr #4
 
 declare i64 @fopen(i8*, i8*) local_unnamed_addr
 
@@ -1842,7 +1853,7 @@ declare void @fclose(i64) local_unnamed_addr
 declare i64 @fread(i8*, i64, i64, i64) local_unnamed_addr
 
 ; Function Attrs: nofree norecurse nounwind writeonly
-define void @File_constructor(%File.559072* nocapture %.1, i64 %.2) local_unnamed_addr #1 {
+define void @File_constructor(%File.559072* nocapture %.1, i64 %.2) local_unnamed_addr #2 {
 .4:
   %.9 = getelementptr inbounds %File.559072, %File.559072* %.1, i64 0, i32 1
   store i64 %.2, i64* %.9, align 8
@@ -1853,7 +1864,7 @@ define noalias %File.559072* @File_open_for_reading(%string.559062* %.1) local_u
 .3:
   %.6 = getelementptr inbounds %string.559062, %string.559062* %.1, i64 0, i32 0
   %.7 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.6, align 8
-  %.8 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.7, i64 0, i32 10
+  %.8 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.7, i64 0, i32 11
   %.9 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.8, align 8
   %.10 = tail call i8* %.9(%string.559062* %.1)
   %.11 = tail call i64 @fopen(i8* %.10, i8* getelementptr inbounds ([2 x i8], [2 x i8]* @str.13, i64 0, i64 0))
@@ -1908,7 +1919,7 @@ define i1 @File_exists(%string.559062* %.1) local_unnamed_addr {
 .3:
   %.6 = getelementptr inbounds %string.559062, %string.559062* %.1, i64 0, i32 0
   %.7 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.6, align 8
-  %.8 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.7, i64 0, i32 10
+  %.8 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.7, i64 0, i32 11
   %.9 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.8, align 8
   %.10 = tail call i8* %.9(%string.559062* %.1)
   %.11 = tail call i64 @access(i8* %.10, i64 0)
@@ -1925,7 +1936,7 @@ define void @File_close(%File.559072* nocapture readonly %.1) {
 }
 
 ; Function Attrs: nofree nounwind
-declare i8* @realpath(i8* nocapture readonly, i8*) local_unnamed_addr #3
+declare i8* @realpath(i8* nocapture readonly, i8*) local_unnamed_addr #4
 
 declare i8* @dirname(i8*) local_unnamed_addr
 
@@ -1933,12 +1944,12 @@ define noalias %string.559062* @Path_join(%string.559062* %.1, %string.559062* %
 .4:
   %.9 = getelementptr inbounds %string.559062, %string.559062* %.1, i64 0, i32 0
   %.10 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.9, align 8
-  %.11 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.10, i64 0, i32 10
+  %.11 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.10, i64 0, i32 11
   %.12 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.11, align 8
   %.13 = tail call i8* %.12(%string.559062* %.1)
   %.14 = getelementptr inbounds %string.559062, %string.559062* %.2, i64 0, i32 0
   %.15 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.14, align 8
-  %.16 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.15, i64 0, i32 10
+  %.16 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.15, i64 0, i32 11
   %.17 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.16, align 8
   %.18 = tail call i8* %.17(%string.559062* %.2)
   %.20 = tail call i64 (i8*, i64, i8*, ...) @snprintf(i8* null, i64 0, i8* getelementptr inbounds ([6 x i8], [6 x i8]* @str.14, i64 0, i64 0), i8* %.13, i8* %.18)
@@ -1966,7 +1977,7 @@ define noalias %string.559062* @Path_abspath(%string.559062* %.1) local_unnamed_
   %buf = alloca [400 x i8], align 1
   %.6 = getelementptr inbounds %string.559062, %string.559062* %.1, i64 0, i32 0
   %.7 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.6, align 8
-  %.8 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.7, i64 0, i32 10
+  %.8 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.7, i64 0, i32 11
   %.9 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.8, align 8
   %.10 = tail call i8* %.9(%string.559062* %.1)
   %.11 = getelementptr inbounds [400 x i8], [400 x i8]* %buf, i64 0, i64 0
@@ -1979,7 +1990,7 @@ define noalias %string.559062* @Path_dirname(%string.559062* %.1) local_unnamed_
 .3:
   %.6 = getelementptr inbounds %string.559062, %string.559062* %.1, i64 0, i32 0
   %.7 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.6, align 8
-  %.8 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.7, i64 0, i32 10
+  %.8 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.7, i64 0, i32 11
   %.9 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.8, align 8
   %.10 = tail call i8* %.9(%string.559062* %.1)
   %.11 = tail call i8* @dirname(i8* %.10)
@@ -1988,7 +1999,7 @@ define noalias %string.559062* @Path_dirname(%string.559062* %.1) local_unnamed_
 }
 
 ; Function Attrs: nofree norecurse nounwind writeonly
-define void @FileId_constructor(%FileId.559076* nocapture %.1, i64 %.2) local_unnamed_addr #1 {
+define void @FileId_constructor(%FileId.559076* nocapture %.1, i64 %.2) local_unnamed_addr #2 {
 .4:
   %.9 = getelementptr inbounds %FileId.559076, %FileId.559076* %.1, i64 0, i32 1
   store i64 %.2, i64* %.9, align 8
@@ -1996,7 +2007,7 @@ define void @FileId_constructor(%FileId.559076* nocapture %.1, i64 %.2) local_un
 }
 
 ; Function Attrs: nofree norecurse nounwind writeonly
-define void @FloFile_constructor(%FloFile.559078* nocapture %.1, %string.559062* %.2, %string.559062* %.3) local_unnamed_addr #1 {
+define void @FloFile_constructor(%FloFile.559078* nocapture %.1, %string.559062* %.2, %string.559062* %.3) local_unnamed_addr #2 {
 .5:
   %.11 = getelementptr inbounds %FloFile.559078, %FloFile.559078* %.1, i64 0, i32 1
   store %string.559062* %.2, %string.559062** %.11, align 8
@@ -2006,7 +2017,7 @@ define void @FloFile_constructor(%FloFile.559078* nocapture %.1, %string.559062*
 }
 
 ; Function Attrs: nofree nounwind
-define void @"Array<FloFile>_constructor"(%"Array<FloFile>.559082"* nocapture %.1, i64 %.2) local_unnamed_addr #3 {
+define void @"Array<FloFile>_constructor"(%"Array<FloFile>.559082"* nocapture %.1, i64 %.2) local_unnamed_addr #4 {
 .4:
   %.8 = getelementptr inbounds %"Array<FloFile>.559082", %"Array<FloFile>.559082"* %.1, i64 0, i32 2
   store i64 0, i64* %.8, align 8
@@ -2021,7 +2032,7 @@ define void @"Array<FloFile>_constructor"(%"Array<FloFile>.559082"* nocapture %.
 }
 
 ; Function Attrs: nounwind
-define void @"Array<FloFile>_resize"(%"Array<FloFile>.559082"* nocapture %.1) #2 {
+define void @"Array<FloFile>_resize"(%"Array<FloFile>.559082"* nocapture %.1) #3 {
 .3:
   %.7 = getelementptr inbounds %"Array<FloFile>.559082", %"Array<FloFile>.559082"* %.1, i64 0, i32 3
   %.8 = load i64, i64* %.7, align 8
@@ -2267,7 +2278,7 @@ for.end:                                          ; preds = %for.cond, %for.body
 }
 
 ; Function Attrs: norecurse nounwind readonly
-define i64 @"Array<FloFile>_find"(%"Array<FloFile>.559082"* nocapture readonly %.1, %FloFile.559078* %.2) #4 {
+define i64 @"Array<FloFile>_find"(%"Array<FloFile>.559082"* nocapture readonly %.1, %FloFile.559078* %.2) #5 {
 .4:
   %.12 = getelementptr inbounds %"Array<FloFile>.559082", %"Array<FloFile>.559082"* %.1, i64 0, i32 2
   %.133 = load i64, i64* %.12, align 8
@@ -2301,7 +2312,7 @@ for.body.endif:                                   ; preds = %for.body
 }
 
 ; Function Attrs: nofree nounwind
-define void @"Array<FloError>_constructor"(%"Array<FloError>.559083"* nocapture %.1, i64 %.2) local_unnamed_addr #3 {
+define void @"Array<FloError>_constructor"(%"Array<FloError>.559083"* nocapture %.1, i64 %.2) local_unnamed_addr #4 {
 .4:
   %.8 = getelementptr inbounds %"Array<FloError>.559083", %"Array<FloError>.559083"* %.1, i64 0, i32 2
   store i64 0, i64* %.8, align 8
@@ -2316,7 +2327,7 @@ define void @"Array<FloError>_constructor"(%"Array<FloError>.559083"* nocapture 
 }
 
 ; Function Attrs: nounwind
-define void @"Array<FloError>_resize"(%"Array<FloError>.559083"* nocapture %.1) #2 {
+define void @"Array<FloError>_resize"(%"Array<FloError>.559083"* nocapture %.1) #3 {
 .3:
   %.7 = getelementptr inbounds %"Array<FloError>.559083", %"Array<FloError>.559083"* %.1, i64 0, i32 3
   %.8 = load i64, i64* %.7, align 8
@@ -2562,7 +2573,7 @@ for.end:                                          ; preds = %for.cond, %for.body
 }
 
 ; Function Attrs: norecurse nounwind readonly
-define i64 @"Array<FloError>_find"(%"Array<FloError>.559083"* nocapture readonly %.1, %FloError.559070* %.2) #4 {
+define i64 @"Array<FloError>_find"(%"Array<FloError>.559083"* nocapture readonly %.1, %FloError.559070* %.2) #5 {
 .4:
   %.12 = getelementptr inbounds %"Array<FloError>.559083", %"Array<FloError>.559083"* %.1, i64 0, i32 2
   %.133 = load i64, i64* %.12, align 8
@@ -2596,7 +2607,7 @@ for.body.endif:                                   ; preds = %for.body
 }
 
 ; Function Attrs: nofree norecurse nounwind writeonly
-define void @"Bucket<string, FileId>_constructor"(%"Bucket<string, FileId>.559088"* nocapture %.1) local_unnamed_addr #1 {
+define void @"Bucket<string, FileId>_constructor"(%"Bucket<string, FileId>.559088"* nocapture %.1) local_unnamed_addr #2 {
 .3:
   %.6 = getelementptr inbounds %"Bucket<string, FileId>.559088", %"Bucket<string, FileId>.559088"* %.1, i64 0, i32 3
   store i1 true, i1* %.6, align 1
@@ -2604,7 +2615,7 @@ define void @"Bucket<string, FileId>_constructor"(%"Bucket<string, FileId>.55908
 }
 
 ; Function Attrs: nofree norecurse nounwind writeonly
-define void @"Bucket<string, FileId>_set"(%"Bucket<string, FileId>.559088"* nocapture %.1, %string.559062* %.2, %FileId.559076* %.3) #1 {
+define void @"Bucket<string, FileId>_set"(%"Bucket<string, FileId>.559088"* nocapture %.1, %string.559062* %.2, %FileId.559076* %.3) #2 {
 .5:
   %.10 = getelementptr inbounds %"Bucket<string, FileId>.559088", %"Bucket<string, FileId>.559088"* %.1, i64 0, i32 3
   store i1 false, i1* %.10, align 1
@@ -2616,7 +2627,7 @@ define void @"Bucket<string, FileId>_set"(%"Bucket<string, FileId>.559088"* noca
 }
 
 ; Function Attrs: nofree nounwind
-define void @"Map<string, FileId>_constructor"(%"Map<string, FileId>.559084"* nocapture %.1) local_unnamed_addr #3 {
+define void @"Map<string, FileId>_constructor"(%"Map<string, FileId>.559084"* nocapture %.1) local_unnamed_addr #4 {
 .3:
   %.9 = tail call dereferenceable_or_null(2048) i8* @malloc(i64 2048)
   %.11 = getelementptr inbounds %"Map<string, FileId>.559084", %"Map<string, FileId>.559084"* %.1, i64 0, i32 1
@@ -2669,7 +2680,7 @@ for.body:                                         ; preds = %for.body.lr.ph, %fo
   %hash.05 = phi i64 [ 0, %for.body.lr.ph ], [ %.29, %for.body ]
   %storemerge4 = phi i64 [ 0, %for.body.lr.ph ], [ %.35, %for.body ]
   %.23 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.22, align 8
-  %.24 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.23, i64 0, i32 7
+  %.24 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.23, i64 0, i32 8
   %.25 = load i8 (%string.559062*, i64)*, i8 (%string.559062*, i64)** %.24, align 8
   %.27 = tail call i8 %.25(%string.559062* nonnull %.2, i64 %storemerge4)
   %.20 = shl i64 %hash.05, 1
@@ -2819,7 +2830,7 @@ while.entry:                                      ; preds = %.5.endif, %while.en
   %.56 = load %string.559062*, %string.559062** %.55, align 8
   %.58 = getelementptr inbounds %string.559062, %string.559062* %.56, i64 0, i32 0
   %.59 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.58, align 8
-  %.60 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.59, i64 0, i32 3
+  %.60 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.59, i64 0, i32 4
   %.61 = load i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)** %.60, align 8
   %.62 = tail call i1 %.61(%string.559062* %.56, %string.559062* %.2)
   br i1 %.62, label %while.entry.while.exit.loopexit_crit_edge, label %while.entry.endif
@@ -2880,7 +2891,7 @@ while.entry:                                      ; preds = %.4, %while.entry.el
   %.36 = load %string.559062*, %string.559062** %.35, align 8
   %.38 = getelementptr inbounds %string.559062, %string.559062* %.36, i64 0, i32 0
   %.39 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.38, align 8
-  %.40 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.39, i64 0, i32 3
+  %.40 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.39, i64 0, i32 4
   %.41 = load i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)** %.40, align 8
   %.42 = tail call i1 %.41(%string.559062* %.36, %string.559062* %.2)
   br i1 %.42, label %while.exit, label %while.entry.else
@@ -2914,7 +2925,7 @@ while.exit.endif:                                 ; preds = %while.entry.else, %
 }
 
 ; Function Attrs: nofree nounwind
-define void @"Array<Bucket<string, FileId>>_constructor"(%"Array<Bucket<string, FileId>>.559090"* nocapture %.1, i64 %.2) local_unnamed_addr #3 {
+define void @"Array<Bucket<string, FileId>>_constructor"(%"Array<Bucket<string, FileId>>.559090"* nocapture %.1, i64 %.2) local_unnamed_addr #4 {
 .4:
   %.8 = getelementptr inbounds %"Array<Bucket<string, FileId>>.559090", %"Array<Bucket<string, FileId>>.559090"* %.1, i64 0, i32 2
   store i64 0, i64* %.8, align 8
@@ -2929,7 +2940,7 @@ define void @"Array<Bucket<string, FileId>>_constructor"(%"Array<Bucket<string, 
 }
 
 ; Function Attrs: nounwind
-define void @"Array<Bucket<string, FileId>>_resize"(%"Array<Bucket<string, FileId>>.559090"* nocapture %.1) #2 {
+define void @"Array<Bucket<string, FileId>>_resize"(%"Array<Bucket<string, FileId>>.559090"* nocapture %.1) #3 {
 .3:
   %.7 = getelementptr inbounds %"Array<Bucket<string, FileId>>.559090", %"Array<Bucket<string, FileId>>.559090"* %.1, i64 0, i32 3
   %.8 = load i64, i64* %.7, align 8
@@ -3175,7 +3186,7 @@ for.end:                                          ; preds = %for.cond, %for.body
 }
 
 ; Function Attrs: norecurse nounwind readonly
-define i64 @"Array<Bucket<string, FileId>>_find"(%"Array<Bucket<string, FileId>>.559090"* nocapture readonly %.1, %"Bucket<string, FileId>.559088"* %.2) #4 {
+define i64 @"Array<Bucket<string, FileId>>_find"(%"Array<Bucket<string, FileId>>.559090"* nocapture readonly %.1, %"Bucket<string, FileId>.559088"* %.2) #5 {
 .4:
   %.12 = getelementptr inbounds %"Array<Bucket<string, FileId>>.559090", %"Array<Bucket<string, FileId>>.559090"* %.1, i64 0, i32 2
   %.133 = load i64, i64* %.12, align 8
@@ -3355,7 +3366,7 @@ define noalias %string.559062* @Compiler_find_module_path(%Compiler.559080* noca
 .4:
   %.8 = getelementptr inbounds %string.559062, %string.559062* %.2, i64 0, i32 0
   %.9 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.8, align 8
-  %.10 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.9, i64 0, i32 9
+  %.10 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.9, i64 0, i32 10
   %.11 = load %string.559062* (%string.559062*, %string.559062*, %string.559062*)*, %string.559062* (%string.559062*, %string.559062*, %string.559062*)** %.10, align 8
   %.12 = tail call dereferenceable_or_null(32) i8* @malloc(i64 32)
   %.13 = bitcast i8* %.12 to %string.559062*
@@ -3389,7 +3400,7 @@ define noalias %string.559062* @Compiler_find_module_path(%Compiler.559080* noca
   %.22 = tail call %string.559062* %.11(%string.559062* %.2, %string.559062* %.13, %string.559062* %.21)
   %.25 = getelementptr inbounds %string.559062, %string.559062* %.22, i64 0, i32 0
   %.26 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.25, align 8
-  %.27 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.26, i64 0, i32 11
+  %.27 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.26, i64 0, i32 12
   %.28 = load i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)** %.27, align 8
   %.29 = tail call dereferenceable_or_null(32) i8* @malloc(i64 32)
   %.30 = bitcast i8* %.29 to %string.559062*
@@ -3589,7 +3600,7 @@ define i64 @string_to_kw_token(%string.559062* %.1) local_unnamed_addr {
   store i64 3, i64* %2, align 8
   %.9 = getelementptr inbounds %string.559062, %string.559062* %.1, i64 0, i32 0
   %.10 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.9, align 8
-  %.11 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.10, i64 0, i32 3
+  %.11 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.10, i64 0, i32 4
   %.12 = load i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)** %.11, align 8
   %.13 = tail call i1 %.12(%string.559062* %.1, %string.559062* %.7)
   br i1 %.13, label %.3.if, label %.3.endif
@@ -3613,7 +3624,7 @@ define i64 @string_to_kw_token(%string.559062* %.1) local_unnamed_addr {
   %5 = bitcast i8* %.18.repack6 to i64*
   store i64 2, i64* %5, align 8
   %.21 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.9, align 8
-  %.22 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.21, i64 0, i32 3
+  %.22 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.21, i64 0, i32 4
   %.23 = load i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)** %.22, align 8
   %.24 = tail call i1 %.23(%string.559062* nonnull %.1, %string.559062* %.18)
   br i1 %.24, label %.3.if, label %.3.endif.endif
@@ -3633,7 +3644,7 @@ define i64 @string_to_kw_token(%string.559062* %.1) local_unnamed_addr {
   %8 = bitcast i8* %.29.repack9 to i64*
   store i64 3, i64* %8, align 8
   %.32 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.9, align 8
-  %.33 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.32, i64 0, i32 3
+  %.33 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.32, i64 0, i32 4
   %.34 = load i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)** %.33, align 8
   %.35 = tail call i1 %.34(%string.559062* nonnull %.1, %string.559062* %.29)
   br i1 %.35, label %.3.if, label %.3.endif.endif.endif
@@ -3653,7 +3664,7 @@ define i64 @string_to_kw_token(%string.559062* %.1) local_unnamed_addr {
   %11 = bitcast i8* %.40.repack12 to i64*
   store i64 5, i64* %11, align 8
   %.43 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.9, align 8
-  %.44 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.43, i64 0, i32 3
+  %.44 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.43, i64 0, i32 4
   %.45 = load i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)** %.44, align 8
   %.46 = tail call i1 %.45(%string.559062* nonnull %.1, %string.559062* %.40)
   br i1 %.46, label %.3.if, label %.3.endif.endif.endif.endif
@@ -3673,7 +3684,7 @@ define i64 @string_to_kw_token(%string.559062* %.1) local_unnamed_addr {
   %14 = bitcast i8* %.51.repack15 to i64*
   store i64 3, i64* %14, align 8
   %.54 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.9, align 8
-  %.55 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.54, i64 0, i32 3
+  %.55 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.54, i64 0, i32 4
   %.56 = load i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)** %.55, align 8
   %.57 = tail call i1 %.56(%string.559062* nonnull %.1, %string.559062* %.51)
   br i1 %.57, label %.3.if, label %.3.endif.endif.endif.endif.endif
@@ -3693,7 +3704,7 @@ define i64 @string_to_kw_token(%string.559062* %.1) local_unnamed_addr {
   %17 = bitcast i8* %.62.repack18 to i64*
   store i64 2, i64* %17, align 8
   %.65 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.9, align 8
-  %.66 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.65, i64 0, i32 3
+  %.66 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.65, i64 0, i32 4
   %.67 = load i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)** %.66, align 8
   %.68 = tail call i1 %.67(%string.559062* nonnull %.1, %string.559062* %.62)
   br i1 %.68, label %.3.if, label %.3.endif.endif.endif.endif.endif.endif
@@ -3713,7 +3724,7 @@ define i64 @string_to_kw_token(%string.559062* %.1) local_unnamed_addr {
   %20 = bitcast i8* %.73.repack21 to i64*
   store i64 4, i64* %20, align 8
   %.76 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.9, align 8
-  %.77 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.76, i64 0, i32 3
+  %.77 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.76, i64 0, i32 4
   %.78 = load i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)** %.77, align 8
   %.79 = tail call i1 %.78(%string.559062* nonnull %.1, %string.559062* %.73)
   br i1 %.79, label %.3.if, label %.3.endif.endif.endif.endif.endif.endif.endif
@@ -3733,7 +3744,7 @@ define i64 @string_to_kw_token(%string.559062* %.1) local_unnamed_addr {
   %23 = bitcast i8* %.84.repack24 to i64*
   store i64 4, i64* %23, align 8
   %.87 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.9, align 8
-  %.88 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.87, i64 0, i32 3
+  %.88 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.87, i64 0, i32 4
   %.89 = load i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)** %.88, align 8
   %.90 = tail call i1 %.89(%string.559062* nonnull %.1, %string.559062* %.84)
   br i1 %.90, label %.3.if, label %.3.endif.endif.endif.endif.endif.endif.endif.endif
@@ -3753,7 +3764,7 @@ define i64 @string_to_kw_token(%string.559062* %.1) local_unnamed_addr {
   %26 = bitcast i8* %.95.repack27 to i64*
   store i64 2, i64* %26, align 8
   %.98 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.9, align 8
-  %.99 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.98, i64 0, i32 3
+  %.99 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.98, i64 0, i32 4
   %.100 = load i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)** %.99, align 8
   %.101 = tail call i1 %.100(%string.559062* nonnull %.1, %string.559062* %.95)
   br i1 %.101, label %.3.if, label %.3.endif.endif.endif.endif.endif.endif.endif.endif.endif
@@ -3773,7 +3784,7 @@ define i64 @string_to_kw_token(%string.559062* %.1) local_unnamed_addr {
   %29 = bitcast i8* %.106.repack30 to i64*
   store i64 2, i64* %29, align 8
   %.109 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.9, align 8
-  %.110 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.109, i64 0, i32 3
+  %.110 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.109, i64 0, i32 4
   %.111 = load i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)** %.110, align 8
   %.112 = tail call i1 %.111(%string.559062* nonnull %.1, %string.559062* %.106)
   br i1 %.112, label %.3.if, label %.3.endif.endif.endif.endi...endif
@@ -3793,7 +3804,7 @@ define i64 @string_to_kw_token(%string.559062* %.1) local_unnamed_addr {
   %32 = bitcast i8* %.117.repack33 to i64*
   store i64 3, i64* %32, align 8
   %.120 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.9, align 8
-  %.121 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.120, i64 0, i32 3
+  %.121 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.120, i64 0, i32 4
   %.122 = load i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)** %.121, align 8
   %.123 = tail call i1 %.122(%string.559062* nonnull %.1, %string.559062* %.117)
   br i1 %.123, label %.3.if, label %.3.endif.endif.endif.endi...endif.endif
@@ -3813,7 +3824,7 @@ define i64 @string_to_kw_token(%string.559062* %.1) local_unnamed_addr {
   %35 = bitcast i8* %.128.repack36 to i64*
   store i64 3, i64* %35, align 8
   %.131 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.9, align 8
-  %.132 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.131, i64 0, i32 3
+  %.132 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.131, i64 0, i32 4
   %.133 = load i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)** %.132, align 8
   %.134 = tail call i1 %.133(%string.559062* nonnull %.1, %string.559062* %.128)
   br i1 %.134, label %.3.if, label %.3.endif.endif.endif.endi...endif.endif.endif
@@ -3833,7 +3844,7 @@ define i64 @string_to_kw_token(%string.559062* %.1) local_unnamed_addr {
   %38 = bitcast i8* %.139.repack39 to i64*
   store i64 3, i64* %38, align 8
   %.142 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.9, align 8
-  %.143 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.142, i64 0, i32 3
+  %.143 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.142, i64 0, i32 4
   %.144 = load i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)** %.143, align 8
   %.145 = tail call i1 %.144(%string.559062* nonnull %.1, %string.559062* %.139)
   br i1 %.145, label %.3.if, label %.3.endif.endif.endif.endi...endif.endif.endif.endif
@@ -3853,7 +3864,7 @@ define i64 @string_to_kw_token(%string.559062* %.1) local_unnamed_addr {
   %41 = bitcast i8* %.150.repack42 to i64*
   store i64 4, i64* %41, align 8
   %.153 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.9, align 8
-  %.154 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.153, i64 0, i32 3
+  %.154 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.153, i64 0, i32 4
   %.155 = load i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)** %.154, align 8
   %.156 = tail call i1 %.155(%string.559062* nonnull %.1, %string.559062* %.150)
   br i1 %.156, label %.3.if, label %.3.endif.endif.endif.endi...endif.1
@@ -3873,7 +3884,7 @@ define i64 @string_to_kw_token(%string.559062* %.1) local_unnamed_addr {
   %44 = bitcast i8* %.161.repack45 to i64*
   store i64 3, i64* %44, align 8
   %.164 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.9, align 8
-  %.165 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.164, i64 0, i32 3
+  %.165 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.164, i64 0, i32 4
   %.166 = load i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)** %.165, align 8
   %.167 = tail call i1 %.166(%string.559062* nonnull %.1, %string.559062* %.161)
   br i1 %.167, label %.3.if, label %.3.endif.endif.endif.endi...endif.1.endif
@@ -3893,7 +3904,7 @@ define i64 @string_to_kw_token(%string.559062* %.1) local_unnamed_addr {
   %47 = bitcast i8* %.172.repack48 to i64*
   store i64 3, i64* %47, align 8
   %.175 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.9, align 8
-  %.176 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.175, i64 0, i32 3
+  %.176 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.175, i64 0, i32 4
   %.177 = load i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)** %.176, align 8
   %.178 = tail call i1 %.177(%string.559062* nonnull %.1, %string.559062* %.172)
   br i1 %.178, label %.3.if, label %.3.endif.endif.endif.endi...endif.1.endif.endif
@@ -3913,7 +3924,7 @@ define i64 @string_to_kw_token(%string.559062* %.1) local_unnamed_addr {
   %50 = bitcast i8* %.183.repack51 to i64*
   store i64 3, i64* %50, align 8
   %.186 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.9, align 8
-  %.187 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.186, i64 0, i32 3
+  %.187 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.186, i64 0, i32 4
   %.188 = load i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)** %.187, align 8
   %.189 = tail call i1 %.188(%string.559062* nonnull %.1, %string.559062* %.183)
   br i1 %.189, label %.3.if, label %.3.endif.endif.endif.endi...endif.1.endif.endif.endif
@@ -3933,7 +3944,7 @@ define i64 @string_to_kw_token(%string.559062* %.1) local_unnamed_addr {
   %53 = bitcast i8* %.194.repack54 to i64*
   store i64 3, i64* %53, align 8
   %.197 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.9, align 8
-  %.198 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.197, i64 0, i32 3
+  %.198 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.197, i64 0, i32 4
   %.199 = load i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)** %.198, align 8
   %.200 = tail call i1 %.199(%string.559062* nonnull %.1, %string.559062* %.194)
   br i1 %.200, label %.3.if, label %.3.endif.endif.endif.endi...endif.2
@@ -3953,7 +3964,7 @@ define i64 @string_to_kw_token(%string.559062* %.1) local_unnamed_addr {
   %56 = bitcast i8* %.205.repack57 to i64*
   store i64 5, i64* %56, align 8
   %.208 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.9, align 8
-  %.209 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.208, i64 0, i32 3
+  %.209 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.208, i64 0, i32 4
   %.210 = load i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)** %.209, align 8
   %.211 = tail call i1 %.210(%string.559062* nonnull %.1, %string.559062* %.205)
   br i1 %.211, label %.3.if, label %.3.endif.endif.endif.endi...endif.2.endif
@@ -3973,7 +3984,7 @@ define i64 @string_to_kw_token(%string.559062* %.1) local_unnamed_addr {
   %59 = bitcast i8* %.216.repack60 to i64*
   store i64 4, i64* %59, align 8
   %.219 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.9, align 8
-  %.220 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.219, i64 0, i32 3
+  %.220 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.219, i64 0, i32 4
   %.221 = load i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)** %.220, align 8
   %.222 = tail call i1 %.221(%string.559062* nonnull %.1, %string.559062* %.216)
   br i1 %.222, label %.3.if, label %.3.endif.endif.endif.endi...endif.2.endif.endif
@@ -3993,7 +4004,7 @@ define i64 @string_to_kw_token(%string.559062* %.1) local_unnamed_addr {
   %62 = bitcast i8* %.227.repack63 to i64*
   store i64 3, i64* %62, align 8
   %.230 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.9, align 8
-  %.231 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.230, i64 0, i32 3
+  %.231 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.230, i64 0, i32 4
   %.232 = load i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)** %.231, align 8
   %.233 = tail call i1 %.232(%string.559062* nonnull %.1, %string.559062* %.227)
   br i1 %.233, label %.3.if, label %.3.endif.endif.endif.endi...endif.2.endif.endif.endif
@@ -4013,7 +4024,7 @@ define i64 @string_to_kw_token(%string.559062* %.1) local_unnamed_addr {
   %65 = bitcast i8* %.238.repack66 to i64*
   store i64 5, i64* %65, align 8
   %.241 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.9, align 8
-  %.242 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.241, i64 0, i32 3
+  %.242 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.241, i64 0, i32 4
   %.243 = load i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)** %.242, align 8
   %.244 = tail call i1 %.243(%string.559062* nonnull %.1, %string.559062* %.238)
   br i1 %.244, label %.3.if, label %.3.endif.endif.endif.endi...endif.3
@@ -4033,7 +4044,7 @@ define i64 @string_to_kw_token(%string.559062* %.1) local_unnamed_addr {
   %68 = bitcast i8* %.249.repack69 to i64*
   store i64 3, i64* %68, align 8
   %.252 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.9, align 8
-  %.253 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.252, i64 0, i32 3
+  %.253 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.252, i64 0, i32 4
   %.254 = load i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)** %.253, align 8
   %.255 = tail call i1 %.254(%string.559062* nonnull %.1, %string.559062* %.249)
   br i1 %.255, label %.3.if, label %.3.endif.endif.endif.endi...endif.3.endif
@@ -4053,7 +4064,7 @@ define i64 @string_to_kw_token(%string.559062* %.1) local_unnamed_addr {
   %71 = bitcast i8* %.260.repack72 to i64*
   store i64 5, i64* %71, align 8
   %.263 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.9, align 8
-  %.264 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.263, i64 0, i32 3
+  %.264 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.263, i64 0, i32 4
   %.265 = load i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)** %.264, align 8
   %.266 = tail call i1 %.265(%string.559062* nonnull %.1, %string.559062* %.260)
   br i1 %.266, label %.3.if, label %.3.endif.endif.endif.endi...endif.3.endif.endif
@@ -4073,7 +4084,7 @@ define i64 @string_to_kw_token(%string.559062* %.1) local_unnamed_addr {
   %74 = bitcast i8* %.271.repack75 to i64*
   store i64 8, i64* %74, align 8
   %.274 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.9, align 8
-  %.275 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.274, i64 0, i32 3
+  %.275 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.274, i64 0, i32 4
   %.276 = load i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)** %.275, align 8
   %.277 = tail call i1 %.276(%string.559062* nonnull %.1, %string.559062* %.271)
   br i1 %.277, label %.3.if, label %.3.endif.endif.endif.endi...endif.3.endif.endif.endif
@@ -4093,7 +4104,7 @@ define i64 @string_to_kw_token(%string.559062* %.1) local_unnamed_addr {
   %77 = bitcast i8* %.282.repack78 to i64*
   store i64 6, i64* %77, align 8
   %.285 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.9, align 8
-  %.286 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.285, i64 0, i32 3
+  %.286 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.285, i64 0, i32 4
   %.287 = load i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)** %.286, align 8
   %.288 = tail call i1 %.287(%string.559062* nonnull %.1, %string.559062* %.282)
   br i1 %.288, label %.3.if, label %.3.endif.endif.endif.endi...endif.4
@@ -4113,7 +4124,7 @@ define i64 @string_to_kw_token(%string.559062* %.1) local_unnamed_addr {
   %80 = bitcast i8* %.293.repack81 to i64*
   store i64 6, i64* %80, align 8
   %.296 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.9, align 8
-  %.297 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.296, i64 0, i32 3
+  %.297 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.296, i64 0, i32 4
   %.298 = load i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)** %.297, align 8
   %.299 = tail call i1 %.298(%string.559062* nonnull %.1, %string.559062* %.293)
   br i1 %.299, label %.3.if, label %.3.endif.endif.endif.endi...endif.4.endif
@@ -4133,7 +4144,7 @@ define i64 @string_to_kw_token(%string.559062* %.1) local_unnamed_addr {
   %83 = bitcast i8* %.304.repack84 to i64*
   store i64 7, i64* %83, align 8
   %.307 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.9, align 8
-  %.308 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.307, i64 0, i32 3
+  %.308 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.307, i64 0, i32 4
   %.309 = load i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)** %.308, align 8
   %.310 = tail call i1 %.309(%string.559062* nonnull %.1, %string.559062* %.304)
   br i1 %.310, label %.3.if, label %.3.endif.endif.endif.endi...endif.4.endif.endif
@@ -4153,7 +4164,7 @@ define i64 @string_to_kw_token(%string.559062* %.1) local_unnamed_addr {
   %86 = bitcast i8* %.315.repack87 to i64*
   store i64 6, i64* %86, align 8
   %.318 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.9, align 8
-  %.319 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.318, i64 0, i32 3
+  %.319 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.318, i64 0, i32 4
   %.320 = load i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)** %.319, align 8
   %.321 = tail call i1 %.320(%string.559062* nonnull %.1, %string.559062* %.315)
   br i1 %.321, label %.3.if, label %.3.endif.endif.endif.endi...endif.4.endif.endif.endif
@@ -4173,7 +4184,7 @@ define i64 @string_to_kw_token(%string.559062* %.1) local_unnamed_addr {
   %89 = bitcast i8* %.326.repack90 to i64*
   store i64 9, i64* %89, align 8
   %.329 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.9, align 8
-  %.330 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.329, i64 0, i32 3
+  %.330 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.329, i64 0, i32 4
   %.331 = load i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)** %.330, align 8
   %.332 = tail call i1 %.331(%string.559062* nonnull %.1, %string.559062* %.326)
   br i1 %.332, label %.3.if, label %.3.endif.endif.endif.endi...endif.5
@@ -4193,7 +4204,7 @@ define i64 @string_to_kw_token(%string.559062* %.1) local_unnamed_addr {
   %92 = bitcast i8* %.337.repack93 to i64*
   store i64 2, i64* %92, align 8
   %.340 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.9, align 8
-  %.341 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.340, i64 0, i32 3
+  %.341 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.340, i64 0, i32 4
   %.342 = load i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)** %.341, align 8
   %.343 = tail call i1 %.342(%string.559062* nonnull %.1, %string.559062* %.337)
   br i1 %.343, label %.3.if, label %.3.endif.endif.endif.endi...endif.5.endif
@@ -4213,7 +4224,7 @@ define i64 @string_to_kw_token(%string.559062* %.1) local_unnamed_addr {
   %95 = bitcast i8* %.348.repack96 to i64*
   store i64 5, i64* %95, align 8
   %.351 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.9, align 8
-  %.352 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.351, i64 0, i32 3
+  %.352 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.351, i64 0, i32 4
   %.353 = load i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)** %.352, align 8
   %.354 = tail call i1 %.353(%string.559062* nonnull %.1, %string.559062* %.348)
   br i1 %.354, label %.3.if, label %.3.endif.endif.endif.endi...endif.5.endif.endif
@@ -4233,7 +4244,7 @@ define i64 @string_to_kw_token(%string.559062* %.1) local_unnamed_addr {
   %98 = bitcast i8* %.359.repack99 to i64*
   store i64 4, i64* %98, align 8
   %.362 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.9, align 8
-  %.363 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.362, i64 0, i32 3
+  %.363 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.362, i64 0, i32 4
   %.364 = load i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)** %.363, align 8
   %.365 = tail call i1 %.364(%string.559062* nonnull %.1, %string.559062* %.359)
   br i1 %.365, label %.3.if, label %.3.endif.endif.endif.endi...endif.5.endif.endif.endif
@@ -4253,7 +4264,7 @@ define i64 @string_to_kw_token(%string.559062* %.1) local_unnamed_addr {
   %101 = bitcast i8* %.370.repack102 to i64*
   store i64 3, i64* %101, align 8
   %.373 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.9, align 8
-  %.374 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.373, i64 0, i32 3
+  %.374 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.373, i64 0, i32 4
   %.375 = load i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)** %.374, align 8
   %.376 = tail call i1 %.375(%string.559062* nonnull %.1, %string.559062* %.370)
   br i1 %.376, label %.3.if, label %.3.endif.endif.endif.endi...endif.6
@@ -4273,7 +4284,7 @@ define i64 @string_to_kw_token(%string.559062* %.1) local_unnamed_addr {
   %104 = bitcast i8* %.381.repack105 to i64*
   store i64 2, i64* %104, align 8
   %.384 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.9, align 8
-  %.385 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.384, i64 0, i32 3
+  %.385 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.384, i64 0, i32 4
   %.386 = load i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)** %.385, align 8
   %.387 = tail call i1 %.386(%string.559062* nonnull %.1, %string.559062* %.381)
   %. = select i1 %.387, i64 86, i64 0
@@ -4412,7 +4423,7 @@ for.body.lr.ph:                                   ; preds = %.3
 for.body:                                         ; preds = %for.body.lr.ph, %for.incr
   %storemerge16 = phi i64 [ 0, %for.body.lr.ph ], [ %.125, %for.incr ]
   %.27 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.26, align 8
-  %.28 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.27, i64 0, i32 7
+  %.28 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.27, i64 0, i32 8
   %.29 = load i8 (%string.559062*, i64)*, i8 (%string.559062*, i64)** %.28, align 8
   %.31 = tail call i8 %.29(%string.559062* nonnull %.1, i64 %storemerge16)
   %.34 = icmp eq i8 %.31, 92
@@ -4449,7 +4460,7 @@ for.body.endif:                                   ; preds = %for.body.if.endif, 
 
 for.body.if.if:                                   ; preds = %for.body.if
   %.45 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.26, align 8
-  %.46 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.45, i64 0, i32 8
+  %.46 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.45, i64 0, i32 9
   %.47 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.46, align 8
   %.48 = tail call i8* %.47(%string.559062* nonnull %.1)
   %.50 = getelementptr inbounds i8, i8* %.48, i64 1
@@ -4463,7 +4474,7 @@ for.body.if.if:                                   ; preds = %for.body.if
 
 for.body.if.endif:                                ; preds = %for.body.if.if.endif.if, %for.body.if.if.endif, %for.body.if
   %.102 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.26, align 8
-  %.103 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.102, i64 0, i32 7
+  %.103 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.102, i64 0, i32 8
   %.104 = load i8 (%string.559062*, i64)*, i8 (%string.559062*, i64)** %.103, align 8
   %.106 = add nsw i64 %storemerge16, 1
   %.110 = tail call i8 %.104(%string.559062* nonnull %.1, i64 %.106)
@@ -4524,7 +4535,7 @@ for.body.if.if.endif.if.if:                       ; preds = %for.body.if.if.endi
 }
 
 ; Function Attrs: nofree norecurse nounwind writeonly
-define void @Token_constructor(%Token.559092* nocapture %.1, i64 %.2, %FloRange.559068* %.3) local_unnamed_addr #1 {
+define void @Token_constructor(%Token.559092* nocapture %.1, i64 %.2, %FloRange.559068* %.3) local_unnamed_addr #2 {
 .5:
   %.11 = getelementptr inbounds %Token.559092, %Token.559092* %.1, i64 0, i32 1
   store i64 %.2, i64* %.11, align 8
@@ -4534,7 +4545,7 @@ define void @Token_constructor(%Token.559092* nocapture %.1, i64 %.2, %FloRange.
 }
 
 ; Function Attrs: nofree norecurse nounwind writeonly
-define void @IntToken_constructor(%IntToken.559094* nocapture %.1, i64 %.2, %FloRange.559068* %.3) local_unnamed_addr #1 {
+define void @IntToken_constructor(%IntToken.559094* nocapture %.1, i64 %.2, %FloRange.559068* %.3) local_unnamed_addr #2 {
 .5:
   %.10 = bitcast %IntToken.559094* %.1 to %Token.559092*
   tail call void @Token_constructor(%Token.559092* %.10, i64 29, %FloRange.559068* %.3)
@@ -4544,7 +4555,7 @@ define void @IntToken_constructor(%IntToken.559094* nocapture %.1, i64 %.2, %Flo
 }
 
 ; Function Attrs: nofree norecurse nounwind writeonly
-define void @FloatToken_constructor(%FloatToken.559096* nocapture %.1, double %.2, %FloRange.559068* %.3) local_unnamed_addr #1 {
+define void @FloatToken_constructor(%FloatToken.559096* nocapture %.1, double %.2, %FloRange.559068* %.3) local_unnamed_addr #2 {
 .5:
   %.10 = bitcast %FloatToken.559096* %.1 to %Token.559092*
   tail call void @Token_constructor(%Token.559092* %.10, i64 30, %FloRange.559068* %.3)
@@ -4554,7 +4565,7 @@ define void @FloatToken_constructor(%FloatToken.559096* nocapture %.1, double %.
 }
 
 ; Function Attrs: nofree norecurse nounwind writeonly
-define void @CharToken_constructor(%CharToken.559098* nocapture %.1, i8 %.2, %FloRange.559068* %.3) local_unnamed_addr #1 {
+define void @CharToken_constructor(%CharToken.559098* nocapture %.1, i8 %.2, %FloRange.559068* %.3) local_unnamed_addr #2 {
 .5:
   %.10 = bitcast %CharToken.559098* %.1 to %Token.559092*
   tail call void @Token_constructor(%Token.559092* %.10, i64 33, %FloRange.559068* %.3)
@@ -4564,7 +4575,7 @@ define void @CharToken_constructor(%CharToken.559098* nocapture %.1, i8 %.2, %Fl
 }
 
 ; Function Attrs: nofree nounwind
-define void @"Array<int>_constructor"(%"Array<int>.559102"* nocapture %.1, i64 %.2) local_unnamed_addr #3 {
+define void @"Array<int>_constructor"(%"Array<int>.559102"* nocapture %.1, i64 %.2) local_unnamed_addr #4 {
 .4:
   %.8 = getelementptr inbounds %"Array<int>.559102", %"Array<int>.559102"* %.1, i64 0, i32 2
   store i64 0, i64* %.8, align 8
@@ -4579,7 +4590,7 @@ define void @"Array<int>_constructor"(%"Array<int>.559102"* nocapture %.1, i64 %
 }
 
 ; Function Attrs: nounwind
-define void @"Array<int>_resize"(%"Array<int>.559102"* nocapture %.1) #2 {
+define void @"Array<int>_resize"(%"Array<int>.559102"* nocapture %.1) #3 {
 .3:
   %.7 = getelementptr inbounds %"Array<int>.559102", %"Array<int>.559102"* %.1, i64 0, i32 3
   %.8 = load i64, i64* %.7, align 8
@@ -4811,7 +4822,7 @@ for.end:                                          ; preds = %for.cond, %for.body
 }
 
 ; Function Attrs: norecurse nounwind readonly
-define i64 @"Array<int>_find"(%"Array<int>.559102"* nocapture readonly %.1, i64 %.2) #4 {
+define i64 @"Array<int>_find"(%"Array<int>.559102"* nocapture readonly %.1, i64 %.2) #5 {
 .4:
   %.12 = getelementptr inbounds %"Array<int>.559102", %"Array<int>.559102"* %.1, i64 0, i32 2
   %.132 = load i64, i64* %.12, align 8
@@ -4841,7 +4852,7 @@ for.body.endif:                                   ; preds = %for.body
 }
 
 ; Function Attrs: nofree nounwind
-define void @"Array<Token>_constructor"(%"Array<Token>.559104"* nocapture %.1, i64 %.2) local_unnamed_addr #3 {
+define void @"Array<Token>_constructor"(%"Array<Token>.559104"* nocapture %.1, i64 %.2) local_unnamed_addr #4 {
 .4:
   %.8 = getelementptr inbounds %"Array<Token>.559104", %"Array<Token>.559104"* %.1, i64 0, i32 2
   store i64 0, i64* %.8, align 8
@@ -4856,7 +4867,7 @@ define void @"Array<Token>_constructor"(%"Array<Token>.559104"* nocapture %.1, i
 }
 
 ; Function Attrs: nounwind
-define void @"Array<Token>_resize"(%"Array<Token>.559104"* nocapture %.1) #2 {
+define void @"Array<Token>_resize"(%"Array<Token>.559104"* nocapture %.1) #3 {
 .3:
   %.7 = getelementptr inbounds %"Array<Token>.559104", %"Array<Token>.559104"* %.1, i64 0, i32 3
   %.8 = load i64, i64* %.7, align 8
@@ -5102,7 +5113,7 @@ for.end:                                          ; preds = %for.cond, %for.body
 }
 
 ; Function Attrs: norecurse nounwind readonly
-define i64 @"Array<Token>_find"(%"Array<Token>.559104"* nocapture readonly %.1, %Token.559092* %.2) #4 {
+define i64 @"Array<Token>_find"(%"Array<Token>.559104"* nocapture readonly %.1, %Token.559092* %.2) #5 {
 .4:
   %.12 = getelementptr inbounds %"Array<Token>.559104", %"Array<Token>.559104"* %.1, i64 0, i32 2
   %.133 = load i64, i64* %.12, align 8
@@ -5136,7 +5147,7 @@ for.body.endif:                                   ; preds = %for.body
 }
 
 ; Function Attrs: nofree nounwind
-define void @"Array<Array<Token>>_constructor"(%"Array<Array<Token>>.559103"* nocapture %.1, i64 %.2) local_unnamed_addr #3 {
+define void @"Array<Array<Token>>_constructor"(%"Array<Array<Token>>.559103"* nocapture %.1, i64 %.2) local_unnamed_addr #4 {
 .4:
   %.8 = getelementptr inbounds %"Array<Array<Token>>.559103", %"Array<Array<Token>>.559103"* %.1, i64 0, i32 2
   store i64 0, i64* %.8, align 8
@@ -5151,7 +5162,7 @@ define void @"Array<Array<Token>>_constructor"(%"Array<Array<Token>>.559103"* no
 }
 
 ; Function Attrs: nounwind
-define void @"Array<Array<Token>>_resize"(%"Array<Array<Token>>.559103"* nocapture %.1) #2 {
+define void @"Array<Array<Token>>_resize"(%"Array<Array<Token>>.559103"* nocapture %.1) #3 {
 .3:
   %.7 = getelementptr inbounds %"Array<Array<Token>>.559103", %"Array<Array<Token>>.559103"* %.1, i64 0, i32 3
   %.8 = load i64, i64* %.7, align 8
@@ -5431,7 +5442,7 @@ for.body.endif:                                   ; preds = %for.body
 }
 
 ; Function Attrs: nofree norecurse nounwind writeonly
-define void @StrToken_constructor(%StrToken.559100* nocapture %.1, %"Array<Array<Token>>.559103"* %.2, %"Array<int>.559102"* %.3, %string.559062* %.4, %FloRange.559068* %.5) local_unnamed_addr #1 {
+define void @StrToken_constructor(%StrToken.559100* nocapture %.1, %"Array<Array<Token>>.559103"* %.2, %"Array<int>.559102"* %.3, %string.559062* %.4, %FloRange.559068* %.5) local_unnamed_addr #2 {
 .7:
   %.14 = bitcast %StrToken.559100* %.1 to %Token.559092*
   tail call void @Token_constructor(%Token.559092* %.14, i64 32, %FloRange.559068* %.5)
@@ -5445,7 +5456,7 @@ define void @StrToken_constructor(%StrToken.559100* nocapture %.1, %"Array<Array
 }
 
 ; Function Attrs: nofree norecurse nounwind writeonly
-define void @IdentifierToken_constructor(%IdentifierToken.559108* nocapture %.1, %string.559062* %.2, %FloRange.559068* %.3) local_unnamed_addr #1 {
+define void @IdentifierToken_constructor(%IdentifierToken.559108* nocapture %.1, %string.559062* %.2, %FloRange.559068* %.3) local_unnamed_addr #2 {
 .5:
   %.10 = bitcast %IdentifierToken.559108* %.1 to %Token.559092*
   tail call void @Token_constructor(%Token.559092* %.10, i64 51, %FloRange.559068* %.3)
@@ -5455,7 +5466,7 @@ define void @IdentifierToken_constructor(%IdentifierToken.559108* nocapture %.1,
 }
 
 ; Function Attrs: nofree norecurse nounwind writeonly
-define void @Lexer_constructor(%Lexer.559110* nocapture %.1) local_unnamed_addr #1 {
+define void @Lexer_constructor(%Lexer.559110* nocapture %.1) local_unnamed_addr #2 {
 .3:
   %.7 = getelementptr inbounds %Lexer.559110, %Lexer.559110* %.1, i64 0, i32 4
   store i64 -1, i64* %.7, align 8
@@ -5467,7 +5478,7 @@ define void @Lexer_constructor(%Lexer.559110* nocapture %.1) local_unnamed_addr 
 }
 
 ; Function Attrs: norecurse nounwind readonly
-define i1 @Lexer_eof(%Lexer.559110* nocapture readonly %.1) #4 {
+define i1 @Lexer_eof(%Lexer.559110* nocapture readonly %.1) #5 {
 .3:
   %.6 = getelementptr inbounds %Lexer.559110, %Lexer.559110* %.1, i64 0, i32 4
   %.7 = load i64, i64* %.6, align 8
@@ -5494,7 +5505,7 @@ define i8 @Lexer_peek(%Lexer.559110* nocapture readonly %.1, i64 %.2) {
 .4.if:                                            ; preds = %.4
   %.22 = getelementptr inbounds %string.559062, %string.559062* %.14, i64 0, i32 0
   %.23 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.22, align 8
-  %.24 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.23, i64 0, i32 7
+  %.24 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.23, i64 0, i32 8
   %.25 = load i8 (%string.559062*, i64)*, i8 (%string.559062*, i64)** %.24, align 8
   %.31 = tail call i8 %.25(%string.559062* %.14, i64 %.11)
   ret i8 %.31
@@ -5527,7 +5538,7 @@ define void @Lexer_advance(%Lexer.559110* %.1) {
   %.16 = load %string.559062*, %string.559062** %.15, align 8
   %.17 = getelementptr inbounds %string.559062, %string.559062* %.16, i64 0, i32 0
   %.18 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.17, align 8
-  %.19 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.18, i64 0, i32 7
+  %.19 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.18, i64 0, i32 8
   %.20 = load i8 (%string.559062*, i64)*, i8 (%string.559062*, i64)** %.19, align 8
   %.22 = getelementptr inbounds %Lexer.559110, %Lexer.559110* %.1, i64 0, i32 4
   %.23 = load i64, i64* %.22, align 8
@@ -5547,7 +5558,7 @@ define void @Lexer_advance(%Lexer.559110* %.1) {
 }
 
 ; Function Attrs: nofree nounwind
-define noalias %FloRange.559068* @Lexer_get_range(%Lexer.559110* nocapture readonly %.1, i64 %.2) #3 {
+define noalias %FloRange.559068* @Lexer_get_range(%Lexer.559110* nocapture readonly %.1, i64 %.2) #4 {
 .4:
   %.8 = getelementptr inbounds %Lexer.559110, %Lexer.559110* %.1, i64 0, i32 4
   %.9 = load i64, i64* %.8, align 8
@@ -6423,14 +6434,14 @@ while.exit:                                       ; preds = %while.entry, %while
   %.154 = load %string.559062*, %string.559062** %.153, align 8
   %.155 = getelementptr inbounds %string.559062, %string.559062* %.154, i64 0, i32 0
   %.156 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.155, align 8
-  %.157 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.156, i64 0, i32 6
+  %.157 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.156, i64 0, i32 7
   %.158 = load %string.559062* (%string.559062*, i64, i64)*, %string.559062* (%string.559062*, i64, i64)** %.157, align 8
   %.160 = getelementptr inbounds %FloRange.559068, %FloRange.559068* %.150, i64 0, i32 1
   %.161 = load i64, i64* %.160, align 8
   %.163 = tail call %string.559062* %.158(%string.559062* %.154, i64 %.161, i64 %length.1)
   %.168 = getelementptr inbounds %string.559062, %string.559062* %.163, i64 0, i32 0
   %.169 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.168, align 8
-  %.170 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.169, i64 0, i32 10
+  %.170 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.169, i64 0, i32 11
   %.171 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.170, align 8
   %.172 = tail call i8* %.171(%string.559062* %.163)
   br i1 %is_float.1, label %true_block, label %false_block
@@ -6536,7 +6547,7 @@ while.exit:                                       ; preds = %while.entry, %.3
   %.70 = load %string.559062*, %string.559062** %.69, align 8
   %.71 = getelementptr inbounds %string.559062, %string.559062* %.70, i64 0, i32 0
   %.72 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.71, align 8
-  %.73 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.72, i64 0, i32 6
+  %.73 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.72, i64 0, i32 7
   %.74 = load %string.559062* (%string.559062*, i64, i64)*, %string.559062* (%string.559062*, i64, i64)** %.73, align 8
   %.77 = tail call %string.559062* %.74(%string.559062* %.70, i64 %.8, i64 %length.1)
   %.81 = load %Lexer_vtable_ty.559111*, %Lexer_vtable_ty.559111** %.11, align 8
@@ -7260,14 +7271,14 @@ define %Token.559092* @Lexer_lex_token(%Lexer.559110* %.1) {
   %.412 = load %string.559062*, %string.559062** %.411, align 8
   %.413 = getelementptr inbounds %string.559062, %string.559062* %.412, i64 0, i32 0
   %.414 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.413, align 8
-  %.415 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.414, i64 0, i32 6
+  %.415 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.414, i64 0, i32 7
   %.416 = load %string.559062* (%string.559062*, i64, i64)*, %string.559062* (%string.559062*, i64, i64)** %.415, align 8
   %.418 = getelementptr inbounds %Lexer.559110, %Lexer.559110* %.1, i64 0, i32 4
   %.419 = load i64, i64* %.418, align 8
   %.420 = tail call %string.559062* %.416(%string.559062* %.412, i64 %.419, i64 1)
   %.421 = getelementptr inbounds %string.559062, %string.559062* %.420, i64 0, i32 0
   %.422 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.421, align 8
-  %.423 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.422, i64 0, i32 10
+  %.423 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.422, i64 0, i32 11
   %.424 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.423, align 8
   %.425 = tail call i8* %.424(%string.559062* %.420)
   %.427 = tail call i64 (i8*, i64, i8*, ...) @snprintf(i8* null, i64 0, i8* getelementptr inbounds ([24 x i8], [24 x i8]* @str.59, i64 0, i64 0), i8* %.425)
@@ -7396,7 +7407,7 @@ declare double @atof(i8* nocapture) local_unnamed_addr #8
 declare i32 @atoi(i8* nocapture) local_unnamed_addr #8
 
 ; Function Attrs: nofree nounwind
-define noalias %string.559062* @token_str(i64 %.1) local_unnamed_addr #3 {
+define noalias %string.559062* @token_str(i64 %.1) local_unnamed_addr #4 {
 .3:
   switch i64 %.1, label %.3.endif.endif.endif.endi...endif.16.endif [
     i64 1, label %.3.if
@@ -8693,7 +8704,7 @@ define %string.559062* @token_value(%Token.559092* nocapture readonly %.1, %stri
 .4:
   %.8 = getelementptr inbounds %string.559062, %string.559062* %.2, i64 0, i32 0
   %.9 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.8, align 8
-  %.10 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.9, i64 0, i32 6
+  %.10 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.9, i64 0, i32 7
   %.11 = load %string.559062* (%string.559062*, i64, i64)*, %string.559062* (%string.559062*, i64, i64)** %.10, align 8
   %.13 = getelementptr inbounds %Token.559092, %Token.559092* %.1, i64 0, i32 2
   %.14 = load %FloRange.559068*, %FloRange.559068** %.13, align 8
@@ -8756,7 +8767,7 @@ for.body:                                         ; preds = %for.body.lr.ph, %fo
   %.35 = tail call %string.559062* @token_str(i64 %.34)
   %.36 = getelementptr inbounds %string.559062, %string.559062* %.35, i64 0, i32 0
   %.37 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.36, align 8
-  %.38 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.37, i64 0, i32 10
+  %.38 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.37, i64 0, i32 11
   %.39 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.38, align 8
   %.40 = tail call i8* %.39(%string.559062* %.35)
   %.42 = tail call i64 (i8*, i64, i8*, ...) @snprintf(i8* null, i64 0, i8* getelementptr inbounds ([12 x i8], [12 x i8]* @str.138, i64 0, i64 0), i8* %.40)
@@ -8826,7 +8837,7 @@ for.body.if:                                      ; preds = %for.body
   %.92 = tail call %string.559062* @token_value(%Token.559092* %.26, %string.559062* %.2)
   %.93 = getelementptr inbounds %string.559062, %string.559062* %.92, i64 0, i32 0
   %.94 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.93, align 8
-  %.95 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.94, i64 0, i32 10
+  %.95 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.94, i64 0, i32 11
   %.96 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.95, align 8
   %.97 = tail call i8* %.96(%string.559062* %.92)
   %.99 = tail call i64 (i8*, i64, i8*, ...) @snprintf(i8* null, i64 0, i8* getelementptr inbounds ([12 x i8], [12 x i8]* @str.140, i64 0, i64 0), i8* %.97)
@@ -8873,7 +8884,7 @@ for.body.endif:                                   ; preds = %for.body, %for.body
 }
 
 ; Function Attrs: nofree norecurse nounwind writeonly
-define void @Node_constructor(%Node.559112* nocapture %.1, %FloRange.559068* %.2) local_unnamed_addr #1 {
+define void @Node_constructor(%Node.559112* nocapture %.1, %FloRange.559068* %.2) local_unnamed_addr #2 {
 .4:
   %.9 = getelementptr inbounds %Node.559112, %Node.559112* %.1, i64 0, i32 1
   store %FloRange.559068* %.2, %FloRange.559068** %.9, align 8
@@ -8881,7 +8892,7 @@ define void @Node_constructor(%Node.559112* nocapture %.1, %FloRange.559068* %.2
 }
 
 ; Function Attrs: nofree norecurse nounwind writeonly
-define void @TypeNode_constructor(%TypeNode.559114* nocapture %.1, i64 %.2, %FloRange.559068* %.3) local_unnamed_addr #1 {
+define void @TypeNode_constructor(%TypeNode.559114* nocapture %.1, i64 %.2, %FloRange.559068* %.3) local_unnamed_addr #2 {
 .5:
   %.10 = bitcast %TypeNode.559114* %.1 to %Node.559112*
   tail call void @Node_constructor(%Node.559112* %.10, %FloRange.559068* %.3)
@@ -8891,7 +8902,7 @@ define void @TypeNode_constructor(%TypeNode.559114* nocapture %.1, i64 %.2, %Flo
 }
 
 ; Function Attrs: nofree nounwind
-define void @"Array<TypeNode>_constructor"(%"Array<TypeNode>.559118"* nocapture %.1, i64 %.2) local_unnamed_addr #3 {
+define void @"Array<TypeNode>_constructor"(%"Array<TypeNode>.559118"* nocapture %.1, i64 %.2) local_unnamed_addr #4 {
 .4:
   %.8 = getelementptr inbounds %"Array<TypeNode>.559118", %"Array<TypeNode>.559118"* %.1, i64 0, i32 2
   store i64 0, i64* %.8, align 8
@@ -8906,7 +8917,7 @@ define void @"Array<TypeNode>_constructor"(%"Array<TypeNode>.559118"* nocapture 
 }
 
 ; Function Attrs: nounwind
-define void @"Array<TypeNode>_resize"(%"Array<TypeNode>.559118"* nocapture %.1) #2 {
+define void @"Array<TypeNode>_resize"(%"Array<TypeNode>.559118"* nocapture %.1) #3 {
 .3:
   %.7 = getelementptr inbounds %"Array<TypeNode>.559118", %"Array<TypeNode>.559118"* %.1, i64 0, i32 3
   %.8 = load i64, i64* %.7, align 8
@@ -9152,7 +9163,7 @@ for.end:                                          ; preds = %for.cond, %for.body
 }
 
 ; Function Attrs: norecurse nounwind readonly
-define i64 @"Array<TypeNode>_find"(%"Array<TypeNode>.559118"* nocapture readonly %.1, %TypeNode.559114* %.2) #4 {
+define i64 @"Array<TypeNode>_find"(%"Array<TypeNode>.559118"* nocapture readonly %.1, %TypeNode.559114* %.2) #5 {
 .4:
   %.12 = getelementptr inbounds %"Array<TypeNode>.559118", %"Array<TypeNode>.559118"* %.1, i64 0, i32 2
   %.133 = load i64, i64* %.12, align 8
@@ -9186,7 +9197,7 @@ for.body.endif:                                   ; preds = %for.body
 }
 
 ; Function Attrs: nofree nounwind
-define void @RecordTypeNode_constructor(%RecordTypeNode.559116* nocapture %.1, %IdentifierToken.559108* %.2, %FloRange.559068* %.3) local_unnamed_addr #3 {
+define void @RecordTypeNode_constructor(%RecordTypeNode.559116* nocapture %.1, %IdentifierToken.559108* %.2, %FloRange.559068* %.3) local_unnamed_addr #4 {
 .5:
   %.10 = bitcast %RecordTypeNode.559116* %.1 to %TypeNode.559114*
   tail call void @TypeNode_constructor(%TypeNode.559114* %.10, i64 18, %FloRange.559068* %.3)
@@ -9212,7 +9223,7 @@ define void @RecordTypeNode_constructor(%RecordTypeNode.559116* nocapture %.1, %
 }
 
 ; Function Attrs: nofree nounwind
-define void @FunctionTypeNode_constructor(%FunctionTypeNode.559120* nocapture %.1, %FloRange.559068* %.2) local_unnamed_addr #3 {
+define void @FunctionTypeNode_constructor(%FunctionTypeNode.559120* nocapture %.1, %FloRange.559068* %.2) local_unnamed_addr #4 {
 .4:
   %.8 = bitcast %FunctionTypeNode.559120* %.1 to %TypeNode.559114*
   tail call void @TypeNode_constructor(%TypeNode.559114* %.8, i64 17, %FloRange.559068* %.2)
@@ -9236,7 +9247,7 @@ define void @FunctionTypeNode_constructor(%FunctionTypeNode.559120* nocapture %.
 }
 
 ; Function Attrs: nofree norecurse nounwind writeonly
-define void @PointerTypeNode_constructor(%PointerTypeNode.559122* nocapture %.1, %TypeNode.559114* %.2, %FloRange.559068* %.3) local_unnamed_addr #1 {
+define void @PointerTypeNode_constructor(%PointerTypeNode.559122* nocapture %.1, %TypeNode.559114* %.2, %FloRange.559068* %.3) local_unnamed_addr #2 {
 .5:
   %.10 = bitcast %PointerTypeNode.559122* %.1 to %TypeNode.559114*
   tail call void @TypeNode_constructor(%TypeNode.559114* %.10, i64 15, %FloRange.559068* %.3)
@@ -9246,7 +9257,7 @@ define void @PointerTypeNode_constructor(%PointerTypeNode.559122* nocapture %.1,
 }
 
 ; Function Attrs: nofree norecurse nounwind writeonly
-define void @StatementNode_constructor(%StatementNode.559124* nocapture %.1, i64 %.2, %FloRange.559068* %.3) local_unnamed_addr #1 {
+define void @StatementNode_constructor(%StatementNode.559124* nocapture %.1, i64 %.2, %FloRange.559068* %.3) local_unnamed_addr #2 {
 .5:
   %.10 = bitcast %StatementNode.559124* %.1 to %Node.559112*
   tail call void @Node_constructor(%Node.559112* %.10, %FloRange.559068* %.3)
@@ -9256,7 +9267,7 @@ define void @StatementNode_constructor(%StatementNode.559124* nocapture %.1, i64
 }
 
 ; Function Attrs: nofree nounwind
-define void @"Array<StatementNode>_constructor"(%"Array<StatementNode>.559128"* nocapture %.1, i64 %.2) local_unnamed_addr #3 {
+define void @"Array<StatementNode>_constructor"(%"Array<StatementNode>.559128"* nocapture %.1, i64 %.2) local_unnamed_addr #4 {
 .4:
   %.8 = getelementptr inbounds %"Array<StatementNode>.559128", %"Array<StatementNode>.559128"* %.1, i64 0, i32 2
   store i64 0, i64* %.8, align 8
@@ -9271,7 +9282,7 @@ define void @"Array<StatementNode>_constructor"(%"Array<StatementNode>.559128"* 
 }
 
 ; Function Attrs: nounwind
-define void @"Array<StatementNode>_resize"(%"Array<StatementNode>.559128"* nocapture %.1) #2 {
+define void @"Array<StatementNode>_resize"(%"Array<StatementNode>.559128"* nocapture %.1) #3 {
 .3:
   %.7 = getelementptr inbounds %"Array<StatementNode>.559128", %"Array<StatementNode>.559128"* %.1, i64 0, i32 3
   %.8 = load i64, i64* %.7, align 8
@@ -9517,7 +9528,7 @@ for.end:                                          ; preds = %for.cond, %for.body
 }
 
 ; Function Attrs: norecurse nounwind readonly
-define i64 @"Array<StatementNode>_find"(%"Array<StatementNode>.559128"* nocapture readonly %.1, %StatementNode.559124* %.2) #4 {
+define i64 @"Array<StatementNode>_find"(%"Array<StatementNode>.559128"* nocapture readonly %.1, %StatementNode.559124* %.2) #5 {
 .4:
   %.12 = getelementptr inbounds %"Array<StatementNode>.559128", %"Array<StatementNode>.559128"* %.1, i64 0, i32 2
   %.133 = load i64, i64* %.12, align 8
@@ -9551,7 +9562,7 @@ for.body.endif:                                   ; preds = %for.body
 }
 
 ; Function Attrs: nofree nounwind
-define void @BlockNode_constructor(%BlockNode.559126* nocapture %.1, %FloRange.559068* %.2) local_unnamed_addr #3 {
+define void @BlockNode_constructor(%BlockNode.559126* nocapture %.1, %FloRange.559068* %.2) local_unnamed_addr #4 {
 .4:
   %.8 = bitcast %BlockNode.559126* %.1 to %Node.559112*
   tail call void @Node_constructor(%Node.559112* %.8, %FloRange.559068* %.2)
@@ -9575,7 +9586,7 @@ define void @BlockNode_constructor(%BlockNode.559126* nocapture %.1, %FloRange.5
 }
 
 ; Function Attrs: nofree norecurse nounwind writeonly
-define void @ExpressionNode_constructor(%ExpressionNode.559130* nocapture %.1, i64 %.2, %FloRange.559068* %.3) local_unnamed_addr #1 {
+define void @ExpressionNode_constructor(%ExpressionNode.559130* nocapture %.1, i64 %.2, %FloRange.559068* %.3) local_unnamed_addr #2 {
 .5:
   %.10 = bitcast %ExpressionNode.559130* %.1 to %StatementNode.559124*
   tail call void @StatementNode_constructor(%StatementNode.559124* %.10, i64 8, %FloRange.559068* %.3)
@@ -9585,7 +9596,7 @@ define void @ExpressionNode_constructor(%ExpressionNode.559130* nocapture %.1, i
 }
 
 ; Function Attrs: nofree norecurse nounwind writeonly
-define void @ArrayTypeNode_constructor(%ArrayTypeNode.559132* nocapture %.1, %TypeNode.559114* %.2, %ExpressionNode.559130* %.3, %FloRange.559068* %.4) local_unnamed_addr #1 {
+define void @ArrayTypeNode_constructor(%ArrayTypeNode.559132* nocapture %.1, %TypeNode.559114* %.2, %ExpressionNode.559130* %.3, %FloRange.559068* %.4) local_unnamed_addr #2 {
 .6:
   %.12 = bitcast %ArrayTypeNode.559132* %.1 to %TypeNode.559114*
   tail call void @TypeNode_constructor(%TypeNode.559114* %.12, i64 16, %FloRange.559068* %.4)
@@ -9633,7 +9644,7 @@ define void @CharExpressionNode_constructor(%CharExpressionNode.559138* nocaptur
 }
 
 ; Function Attrs: nofree nounwind
-define void @"Array<ExpressionNode>_constructor"(%"Array<ExpressionNode>.559142"* nocapture %.1, i64 %.2) local_unnamed_addr #3 {
+define void @"Array<ExpressionNode>_constructor"(%"Array<ExpressionNode>.559142"* nocapture %.1, i64 %.2) local_unnamed_addr #4 {
 .4:
   %.8 = getelementptr inbounds %"Array<ExpressionNode>.559142", %"Array<ExpressionNode>.559142"* %.1, i64 0, i32 2
   store i64 0, i64* %.8, align 8
@@ -9648,7 +9659,7 @@ define void @"Array<ExpressionNode>_constructor"(%"Array<ExpressionNode>.559142"
 }
 
 ; Function Attrs: nounwind
-define void @"Array<ExpressionNode>_resize"(%"Array<ExpressionNode>.559142"* nocapture %.1) #2 {
+define void @"Array<ExpressionNode>_resize"(%"Array<ExpressionNode>.559142"* nocapture %.1) #3 {
 .3:
   %.7 = getelementptr inbounds %"Array<ExpressionNode>.559142", %"Array<ExpressionNode>.559142"* %.1, i64 0, i32 3
   %.8 = load i64, i64* %.7, align 8
@@ -9894,7 +9905,7 @@ for.end:                                          ; preds = %for.cond, %for.body
 }
 
 ; Function Attrs: norecurse nounwind readonly
-define i64 @"Array<ExpressionNode>_find"(%"Array<ExpressionNode>.559142"* nocapture readonly %.1, %ExpressionNode.559130* %.2) #4 {
+define i64 @"Array<ExpressionNode>_find"(%"Array<ExpressionNode>.559142"* nocapture readonly %.1, %ExpressionNode.559130* %.2) #5 {
 .4:
   %.12 = getelementptr inbounds %"Array<ExpressionNode>.559142", %"Array<ExpressionNode>.559142"* %.1, i64 0, i32 2
   %.133 = load i64, i64* %.12, align 8
@@ -9954,7 +9965,7 @@ define void @VarAccessExpressionNode_constructor(%VarAccessExpressionNode.559144
 }
 
 ; Function Attrs: nofree nounwind
-define void @ArrayExpressionNode_constructor(%ArrayExpressionNode.559146* nocapture %.1, %FloRange.559068* %.2) local_unnamed_addr #3 {
+define void @ArrayExpressionNode_constructor(%ArrayExpressionNode.559146* nocapture %.1, %FloRange.559068* %.2) local_unnamed_addr #4 {
 .4:
   %.8 = bitcast %ArrayExpressionNode.559146* %.1 to %ExpressionNode.559130*
   tail call void @ExpressionNode_constructor(%ExpressionNode.559130* %.8, i64 6, %FloRange.559068* %.2)
@@ -9978,7 +9989,7 @@ define void @ArrayExpressionNode_constructor(%ArrayExpressionNode.559146* nocapt
 }
 
 ; Function Attrs: nofree nounwind
-define void @NewExpressionNode_constructor(%NewExpressionNode.559148* nocapture %.1, %TypeNode.559114* %.2, %FloRange.559068* %.3) local_unnamed_addr #3 {
+define void @NewExpressionNode_constructor(%NewExpressionNode.559148* nocapture %.1, %TypeNode.559114* %.2, %FloRange.559068* %.3) local_unnamed_addr #4 {
 .5:
   %.10 = bitcast %NewExpressionNode.559148* %.1 to %ExpressionNode.559130*
   %.13 = getelementptr inbounds %NewExpressionNode.559148, %NewExpressionNode.559148* %.1, i64 0, i32 4
@@ -10006,7 +10017,7 @@ define void @NewExpressionNode_constructor(%NewExpressionNode.559148* nocapture 
 }
 
 ; Function Attrs: nofree norecurse nounwind writeonly
-define void @ExpressionIndexNode_constructor(%ExpressionIndexNode.559150* nocapture %.1, %ExpressionNode.559130* %.2, %ExpressionNode.559130* %.3, %FloRange.559068* %.4) local_unnamed_addr #1 {
+define void @ExpressionIndexNode_constructor(%ExpressionIndexNode.559150* nocapture %.1, %ExpressionNode.559130* %.2, %ExpressionNode.559130* %.3, %FloRange.559068* %.4) local_unnamed_addr #2 {
 .6:
   %.12 = bitcast %ExpressionIndexNode.559150* %.1 to %ExpressionNode.559130*
   %.15 = getelementptr inbounds %ExpressionIndexNode.559150, %ExpressionIndexNode.559150* %.1, i64 0, i32 4
@@ -10018,7 +10029,7 @@ define void @ExpressionIndexNode_constructor(%ExpressionIndexNode.559150* nocapt
 }
 
 ; Function Attrs: nofree norecurse nounwind writeonly
-define void @MemberExpressionNode_constructor(%MemberExpressionNode.559152* nocapture %.1, %ExpressionNode.559130* %.2, %IdentifierToken.559108* %.3, %FloRange.559068* %.4) local_unnamed_addr #1 {
+define void @MemberExpressionNode_constructor(%MemberExpressionNode.559152* nocapture %.1, %ExpressionNode.559130* %.2, %IdentifierToken.559108* %.3, %FloRange.559068* %.4) local_unnamed_addr #2 {
 .6:
   %.12 = bitcast %MemberExpressionNode.559152* %.1 to %ExpressionNode.559130*
   tail call void @ExpressionNode_constructor(%ExpressionNode.559130* %.12, i64 12, %FloRange.559068* %.4)
@@ -10030,7 +10041,7 @@ define void @MemberExpressionNode_constructor(%MemberExpressionNode.559152* noca
 }
 
 ; Function Attrs: nofree nounwind
-define void @CallExpressionNode_constructor(%CallExpressionNode.559154* nocapture %.1, %ExpressionNode.559130* %.2, %FloRange.559068* %.3) local_unnamed_addr #3 {
+define void @CallExpressionNode_constructor(%CallExpressionNode.559154* nocapture %.1, %ExpressionNode.559130* %.2, %FloRange.559068* %.3) local_unnamed_addr #4 {
 .5:
   %.10 = bitcast %CallExpressionNode.559154* %.1 to %ExpressionNode.559130*
   tail call void @ExpressionNode_constructor(%ExpressionNode.559130* %.10, i64 14, %FloRange.559068* %.3)
@@ -10056,7 +10067,7 @@ define void @CallExpressionNode_constructor(%CallExpressionNode.559154* nocaptur
 }
 
 ; Function Attrs: nofree nounwind
-define void @TypeCastExpressionNode_constructor(%TypeCastExpressionNode.559156* nocapture %.1, %ExpressionNode.559130* %.2, %TypeNode.559114* %.3) local_unnamed_addr #3 {
+define void @TypeCastExpressionNode_constructor(%TypeCastExpressionNode.559156* nocapture %.1, %ExpressionNode.559130* %.2, %TypeNode.559114* %.3) local_unnamed_addr #4 {
 .5:
   %.10 = bitcast %TypeCastExpressionNode.559156* %.1 to %ExpressionNode.559130*
   %.12 = getelementptr inbounds %ExpressionNode.559130, %ExpressionNode.559130* %.2, i64 0, i32 1
@@ -10073,7 +10084,7 @@ define void @TypeCastExpressionNode_constructor(%TypeCastExpressionNode.559156* 
 }
 
 ; Function Attrs: nofree nounwind
-define void @BinaryExpressionNode_constructor(%BinaryExpressionNode.559158* nocapture %.1, %ExpressionNode.559130* %.2, i64 %.3, %ExpressionNode.559130* %.4) local_unnamed_addr #3 {
+define void @BinaryExpressionNode_constructor(%BinaryExpressionNode.559158* nocapture %.1, %ExpressionNode.559130* %.2, i64 %.3, %ExpressionNode.559130* %.4) local_unnamed_addr #4 {
 .6:
   %.12 = bitcast %BinaryExpressionNode.559158* %.1 to %ExpressionNode.559130*
   %.14 = getelementptr inbounds %ExpressionNode.559130, %ExpressionNode.559130* %.2, i64 0, i32 1
@@ -10092,7 +10103,7 @@ define void @BinaryExpressionNode_constructor(%BinaryExpressionNode.559158* noca
 }
 
 ; Function Attrs: nofree nounwind
-define void @TernaryExpressionNode_constructor(%TernaryExpressionNode.559160* nocapture %.1, %ExpressionNode.559130* %.2, %ExpressionNode.559130* %.3, %ExpressionNode.559130* %.4) local_unnamed_addr #3 {
+define void @TernaryExpressionNode_constructor(%TernaryExpressionNode.559160* nocapture %.1, %ExpressionNode.559130* %.2, %ExpressionNode.559130* %.3, %ExpressionNode.559130* %.4) local_unnamed_addr #4 {
 .6:
   %.12 = bitcast %TernaryExpressionNode.559160* %.1 to %ExpressionNode.559130*
   %.14 = getelementptr inbounds %ExpressionNode.559130, %ExpressionNode.559130* %.2, i64 0, i32 1
@@ -10117,7 +10128,7 @@ define void @TernaryExpressionNode_constructor(%TernaryExpressionNode.559160* no
 }
 
 ; Function Attrs: nofree norecurse nounwind writeonly
-define void @UnaryExpressionNode_constructor(%UnaryExpressionNode.559162* nocapture %.1, i64 %.2, %ExpressionNode.559130* %.3, %FloRange.559068* %.4) local_unnamed_addr #1 {
+define void @UnaryExpressionNode_constructor(%UnaryExpressionNode.559162* nocapture %.1, i64 %.2, %ExpressionNode.559130* %.3, %FloRange.559068* %.4) local_unnamed_addr #2 {
 .6:
   %.12 = bitcast %UnaryExpressionNode.559162* %.1 to %ExpressionNode.559130*
   %.15 = getelementptr inbounds %UnaryExpressionNode.559162, %UnaryExpressionNode.559162* %.1, i64 0, i32 4
@@ -10129,7 +10140,7 @@ define void @UnaryExpressionNode_constructor(%UnaryExpressionNode.559162* nocapt
 }
 
 ; Function Attrs: nofree norecurse nounwind writeonly
-define void @IfStatementNode_constructor(%IfStatementNode.559164* nocapture %.1, %FloRange.559068* %.2) local_unnamed_addr #1 {
+define void @IfStatementNode_constructor(%IfStatementNode.559164* nocapture %.1, %FloRange.559068* %.2) local_unnamed_addr #2 {
 .4:
   %.8 = bitcast %IfStatementNode.559164* %.1 to %StatementNode.559124*
   tail call void @StatementNode_constructor(%StatementNode.559124* %.8, i64 0, %FloRange.559068* %.2)
@@ -10139,7 +10150,7 @@ define void @IfStatementNode_constructor(%IfStatementNode.559164* nocapture %.1,
 }
 
 ; Function Attrs: nofree norecurse nounwind writeonly
-define void @WhileStatementNode_constructor(%WhileStatementNode.559166* nocapture %.1, %FloRange.559068* %.2) local_unnamed_addr #1 {
+define void @WhileStatementNode_constructor(%WhileStatementNode.559166* nocapture %.1, %FloRange.559068* %.2) local_unnamed_addr #2 {
 .4:
   %.8 = bitcast %WhileStatementNode.559166* %.1 to %StatementNode.559124*
   tail call void @StatementNode_constructor(%StatementNode.559124* %.8, i64 4, %FloRange.559068* %.2)
@@ -10147,7 +10158,7 @@ define void @WhileStatementNode_constructor(%WhileStatementNode.559166* nocaptur
 }
 
 ; Function Attrs: nofree norecurse nounwind writeonly
-define void @ForStatementNode_constructor(%ForStatementNode.559168* nocapture %.1, %FloRange.559068* %.2) local_unnamed_addr #1 {
+define void @ForStatementNode_constructor(%ForStatementNode.559168* nocapture %.1, %FloRange.559068* %.2) local_unnamed_addr #2 {
 .4:
   %.8 = bitcast %ForStatementNode.559168* %.1 to %StatementNode.559124*
   %.10 = getelementptr inbounds %ForStatementNode.559168, %ForStatementNode.559168* %.1, i64 0, i32 3
@@ -10160,7 +10171,7 @@ define void @ForStatementNode_constructor(%ForStatementNode.559168* nocapture %.
 }
 
 ; Function Attrs: nofree norecurse nounwind writeonly
-define void @ReturnStatementNode_constructor(%ReturnStatementNode.559170* nocapture %.1, %FloRange.559068* %.2) local_unnamed_addr #1 {
+define void @ReturnStatementNode_constructor(%ReturnStatementNode.559170* nocapture %.1, %FloRange.559068* %.2) local_unnamed_addr #2 {
 .4:
   %.8 = bitcast %ReturnStatementNode.559170* %.1 to %StatementNode.559124*
   %.10 = getelementptr inbounds %ReturnStatementNode.559170, %ReturnStatementNode.559170* %.1, i64 0, i32 3
@@ -10170,7 +10181,7 @@ define void @ReturnStatementNode_constructor(%ReturnStatementNode.559170* nocapt
 }
 
 ; Function Attrs: nofree norecurse nounwind writeonly
-define void @VarDeclarationStatement_constructor(%VarDeclarationStatement.559172* nocapture %.1, %FloRange.559068* %.2) local_unnamed_addr #1 {
+define void @VarDeclarationStatement_constructor(%VarDeclarationStatement.559172* nocapture %.1, %FloRange.559068* %.2) local_unnamed_addr #2 {
 .4:
   %.8 = bitcast %VarDeclarationStatement.559172* %.1 to %StatementNode.559124*
   tail call void @StatementNode_constructor(%StatementNode.559124* %.8, i64 1, %FloRange.559068* %.2)
@@ -10181,7 +10192,7 @@ define void @VarDeclarationStatement_constructor(%VarDeclarationStatement.559172
 }
 
 ; Function Attrs: nofree norecurse nounwind writeonly
-define void @ConstDeclarationStatement_constructor(%ConstDeclarationStatement.559174* nocapture %.1, %FloRange.559068* %.2) local_unnamed_addr #1 {
+define void @ConstDeclarationStatement_constructor(%ConstDeclarationStatement.559174* nocapture %.1, %FloRange.559068* %.2) local_unnamed_addr #2 {
 .4:
   %.8 = bitcast %ConstDeclarationStatement.559174* %.1 to %StatementNode.559124*
   tail call void @StatementNode_constructor(%StatementNode.559124* %.8, i64 2, %FloRange.559068* %.2)
@@ -10191,7 +10202,7 @@ define void @ConstDeclarationStatement_constructor(%ConstDeclarationStatement.55
 }
 
 ; Function Attrs: nofree norecurse nounwind writeonly
-define void @ArgNode_constructor(%ArgNode.559176* nocapture %.1, %IdentifierToken.559108* %.2) local_unnamed_addr #1 {
+define void @ArgNode_constructor(%ArgNode.559176* nocapture %.1, %IdentifierToken.559108* %.2) local_unnamed_addr #2 {
 .4:
   %.9 = getelementptr inbounds %ArgNode.559176, %ArgNode.559176* %.1, i64 0, i32 1
   store %IdentifierToken.559108* %.2, %IdentifierToken.559108** %.9, align 8
@@ -10202,7 +10213,7 @@ define void @ArgNode_constructor(%ArgNode.559176* nocapture %.1, %IdentifierToke
 }
 
 ; Function Attrs: nofree nounwind
-define void @"Array<ArgNode>_constructor"(%"Array<ArgNode>.559180"* nocapture %.1, i64 %.2) local_unnamed_addr #3 {
+define void @"Array<ArgNode>_constructor"(%"Array<ArgNode>.559180"* nocapture %.1, i64 %.2) local_unnamed_addr #4 {
 .4:
   %.8 = getelementptr inbounds %"Array<ArgNode>.559180", %"Array<ArgNode>.559180"* %.1, i64 0, i32 2
   store i64 0, i64* %.8, align 8
@@ -10217,7 +10228,7 @@ define void @"Array<ArgNode>_constructor"(%"Array<ArgNode>.559180"* nocapture %.
 }
 
 ; Function Attrs: nounwind
-define void @"Array<ArgNode>_resize"(%"Array<ArgNode>.559180"* nocapture %.1) #2 {
+define void @"Array<ArgNode>_resize"(%"Array<ArgNode>.559180"* nocapture %.1) #3 {
 .3:
   %.7 = getelementptr inbounds %"Array<ArgNode>.559180", %"Array<ArgNode>.559180"* %.1, i64 0, i32 3
   %.8 = load i64, i64* %.7, align 8
@@ -10463,7 +10474,7 @@ for.end:                                          ; preds = %for.cond, %for.body
 }
 
 ; Function Attrs: norecurse nounwind readonly
-define i64 @"Array<ArgNode>_find"(%"Array<ArgNode>.559180"* nocapture readonly %.1, %ArgNode.559176* %.2) #4 {
+define i64 @"Array<ArgNode>_find"(%"Array<ArgNode>.559180"* nocapture readonly %.1, %ArgNode.559176* %.2) #5 {
 .4:
   %.12 = getelementptr inbounds %"Array<ArgNode>.559180", %"Array<ArgNode>.559180"* %.1, i64 0, i32 2
   %.133 = load i64, i64* %.12, align 8
@@ -10497,7 +10508,7 @@ for.body.endif:                                   ; preds = %for.body
 }
 
 ; Function Attrs: nofree nounwind
-define void @FunctionDeclarationNode_constructor(%FunctionDeclarationNode.559178* nocapture %.1) local_unnamed_addr #3 {
+define void @FunctionDeclarationNode_constructor(%FunctionDeclarationNode.559178* nocapture %.1) local_unnamed_addr #4 {
 .3:
   %.7 = tail call dereferenceable_or_null(64) i8* @malloc(i64 64)
   %.9 = tail call dereferenceable_or_null(32) i8* @malloc(i64 32)
@@ -10521,7 +10532,7 @@ define void @FunctionDeclarationNode_constructor(%FunctionDeclarationNode.559178
 }
 
 ; Function Attrs: nofree nounwind
-define void @MethodNode_constructor(%MethodNode.559182* nocapture %.1, %IdentifierToken.559108* %.2) local_unnamed_addr #3 {
+define void @MethodNode_constructor(%MethodNode.559182* nocapture %.1, %IdentifierToken.559108* %.2) local_unnamed_addr #4 {
 .4:
   %.9 = getelementptr inbounds %MethodNode.559182, %MethodNode.559182* %.1, i64 0, i32 1
   store %IdentifierToken.559108* %.2, %IdentifierToken.559108** %.9, align 8
@@ -10549,7 +10560,7 @@ define void @MethodNode_constructor(%MethodNode.559182* nocapture %.1, %Identifi
 }
 
 ; Function Attrs: nofree norecurse nounwind writeonly
-define void @FieldNode_constructor(%FieldNode.559184* nocapture %.1, %IdentifierToken.559108* %.2) local_unnamed_addr #1 {
+define void @FieldNode_constructor(%FieldNode.559184* nocapture %.1, %IdentifierToken.559108* %.2) local_unnamed_addr #2 {
 .4:
   %.9 = getelementptr inbounds %FieldNode.559184, %FieldNode.559184* %.1, i64 0, i32 1
   store %IdentifierToken.559108* %.2, %IdentifierToken.559108** %.9, align 8
@@ -10559,7 +10570,7 @@ define void @FieldNode_constructor(%FieldNode.559184* nocapture %.1, %Identifier
 }
 
 ; Function Attrs: nofree norecurse nounwind writeonly
-define void @GenericParameterNode_constructor(%GenericParameterNode.559186* nocapture %.1, %IdentifierToken.559108* %.2) local_unnamed_addr #1 {
+define void @GenericParameterNode_constructor(%GenericParameterNode.559186* nocapture %.1, %IdentifierToken.559108* %.2) local_unnamed_addr #2 {
 .4:
   %.9 = getelementptr inbounds %GenericParameterNode.559186, %GenericParameterNode.559186* %.1, i64 0, i32 1
   store %IdentifierToken.559108* %.2, %IdentifierToken.559108** %.9, align 8
@@ -10567,7 +10578,7 @@ define void @GenericParameterNode_constructor(%GenericParameterNode.559186* noca
 }
 
 ; Function Attrs: nofree nounwind
-define void @"Array<GenericParameterNode>_constructor"(%"Array<GenericParameterNode>.559190"* nocapture %.1, i64 %.2) local_unnamed_addr #3 {
+define void @"Array<GenericParameterNode>_constructor"(%"Array<GenericParameterNode>.559190"* nocapture %.1, i64 %.2) local_unnamed_addr #4 {
 .4:
   %.8 = getelementptr inbounds %"Array<GenericParameterNode>.559190", %"Array<GenericParameterNode>.559190"* %.1, i64 0, i32 2
   store i64 0, i64* %.8, align 8
@@ -10582,7 +10593,7 @@ define void @"Array<GenericParameterNode>_constructor"(%"Array<GenericParameterN
 }
 
 ; Function Attrs: nounwind
-define void @"Array<GenericParameterNode>_resize"(%"Array<GenericParameterNode>.559190"* nocapture %.1) #2 {
+define void @"Array<GenericParameterNode>_resize"(%"Array<GenericParameterNode>.559190"* nocapture %.1) #3 {
 .3:
   %.7 = getelementptr inbounds %"Array<GenericParameterNode>.559190", %"Array<GenericParameterNode>.559190"* %.1, i64 0, i32 3
   %.8 = load i64, i64* %.7, align 8
@@ -10828,7 +10839,7 @@ for.end:                                          ; preds = %for.cond, %for.body
 }
 
 ; Function Attrs: norecurse nounwind readonly
-define i64 @"Array<GenericParameterNode>_find"(%"Array<GenericParameterNode>.559190"* nocapture readonly %.1, %GenericParameterNode.559186* %.2) #4 {
+define i64 @"Array<GenericParameterNode>_find"(%"Array<GenericParameterNode>.559190"* nocapture readonly %.1, %GenericParameterNode.559186* %.2) #5 {
 .4:
   %.12 = getelementptr inbounds %"Array<GenericParameterNode>.559190", %"Array<GenericParameterNode>.559190"* %.1, i64 0, i32 2
   %.133 = load i64, i64* %.12, align 8
@@ -10862,7 +10873,7 @@ for.body.endif:                                   ; preds = %for.body
 }
 
 ; Function Attrs: nofree nounwind
-define void @"Array<FieldNode>_constructor"(%"Array<FieldNode>.559191"* nocapture %.1, i64 %.2) local_unnamed_addr #3 {
+define void @"Array<FieldNode>_constructor"(%"Array<FieldNode>.559191"* nocapture %.1, i64 %.2) local_unnamed_addr #4 {
 .4:
   %.8 = getelementptr inbounds %"Array<FieldNode>.559191", %"Array<FieldNode>.559191"* %.1, i64 0, i32 2
   store i64 0, i64* %.8, align 8
@@ -10877,7 +10888,7 @@ define void @"Array<FieldNode>_constructor"(%"Array<FieldNode>.559191"* nocaptur
 }
 
 ; Function Attrs: nounwind
-define void @"Array<FieldNode>_resize"(%"Array<FieldNode>.559191"* nocapture %.1) #2 {
+define void @"Array<FieldNode>_resize"(%"Array<FieldNode>.559191"* nocapture %.1) #3 {
 .3:
   %.7 = getelementptr inbounds %"Array<FieldNode>.559191", %"Array<FieldNode>.559191"* %.1, i64 0, i32 3
   %.8 = load i64, i64* %.7, align 8
@@ -11123,7 +11134,7 @@ for.end:                                          ; preds = %for.cond, %for.body
 }
 
 ; Function Attrs: norecurse nounwind readonly
-define i64 @"Array<FieldNode>_find"(%"Array<FieldNode>.559191"* nocapture readonly %.1, %FieldNode.559184* %.2) #4 {
+define i64 @"Array<FieldNode>_find"(%"Array<FieldNode>.559191"* nocapture readonly %.1, %FieldNode.559184* %.2) #5 {
 .4:
   %.12 = getelementptr inbounds %"Array<FieldNode>.559191", %"Array<FieldNode>.559191"* %.1, i64 0, i32 2
   %.133 = load i64, i64* %.12, align 8
@@ -11157,7 +11168,7 @@ for.body.endif:                                   ; preds = %for.body
 }
 
 ; Function Attrs: nofree nounwind
-define void @"Array<MethodNode>_constructor"(%"Array<MethodNode>.559192"* nocapture %.1, i64 %.2) local_unnamed_addr #3 {
+define void @"Array<MethodNode>_constructor"(%"Array<MethodNode>.559192"* nocapture %.1, i64 %.2) local_unnamed_addr #4 {
 .4:
   %.8 = getelementptr inbounds %"Array<MethodNode>.559192", %"Array<MethodNode>.559192"* %.1, i64 0, i32 2
   store i64 0, i64* %.8, align 8
@@ -11172,7 +11183,7 @@ define void @"Array<MethodNode>_constructor"(%"Array<MethodNode>.559192"* nocapt
 }
 
 ; Function Attrs: nounwind
-define void @"Array<MethodNode>_resize"(%"Array<MethodNode>.559192"* nocapture %.1) #2 {
+define void @"Array<MethodNode>_resize"(%"Array<MethodNode>.559192"* nocapture %.1) #3 {
 .3:
   %.7 = getelementptr inbounds %"Array<MethodNode>.559192", %"Array<MethodNode>.559192"* %.1, i64 0, i32 3
   %.8 = load i64, i64* %.7, align 8
@@ -11418,7 +11429,7 @@ for.end:                                          ; preds = %for.cond, %for.body
 }
 
 ; Function Attrs: norecurse nounwind readonly
-define i64 @"Array<MethodNode>_find"(%"Array<MethodNode>.559192"* nocapture readonly %.1, %MethodNode.559182* %.2) #4 {
+define i64 @"Array<MethodNode>_find"(%"Array<MethodNode>.559192"* nocapture readonly %.1, %MethodNode.559182* %.2) #5 {
 .4:
   %.12 = getelementptr inbounds %"Array<MethodNode>.559192", %"Array<MethodNode>.559192"* %.1, i64 0, i32 2
   %.133 = load i64, i64* %.12, align 8
@@ -11452,7 +11463,7 @@ for.body.endif:                                   ; preds = %for.body
 }
 
 ; Function Attrs: nofree nounwind
-define void @ClassDeclarationNode_constructor(%ClassDeclarationNode.559188* nocapture %.1, %IdentifierToken.559108* %.2) local_unnamed_addr #3 {
+define void @ClassDeclarationNode_constructor(%ClassDeclarationNode.559188* nocapture %.1, %IdentifierToken.559108* %.2) local_unnamed_addr #4 {
 .4:
   %.9 = getelementptr inbounds %ClassDeclarationNode.559188, %ClassDeclarationNode.559188* %.1, i64 0, i32 1
   store %IdentifierToken.559108* %.2, %IdentifierToken.559108** %.9, align 8
@@ -11510,7 +11521,7 @@ define void @ClassDeclarationNode_constructor(%ClassDeclarationNode.559188* noca
 }
 
 ; Function Attrs: nofree norecurse nounwind writeonly
-define void @EnumNodeField_constructor(%EnumNodeField.559196* nocapture %.1, %IdentifierToken.559108* %.2) local_unnamed_addr #1 {
+define void @EnumNodeField_constructor(%EnumNodeField.559196* nocapture %.1, %IdentifierToken.559108* %.2) local_unnamed_addr #2 {
 .4:
   %.9 = getelementptr inbounds %EnumNodeField.559196, %EnumNodeField.559196* %.1, i64 0, i32 1
   store %IdentifierToken.559108* %.2, %IdentifierToken.559108** %.9, align 8
@@ -11520,7 +11531,7 @@ define void @EnumNodeField_constructor(%EnumNodeField.559196* nocapture %.1, %Id
 }
 
 ; Function Attrs: nofree nounwind
-define void @"Array<EnumNodeField>_constructor"(%"Array<EnumNodeField>.559200"* nocapture %.1, i64 %.2) local_unnamed_addr #3 {
+define void @"Array<EnumNodeField>_constructor"(%"Array<EnumNodeField>.559200"* nocapture %.1, i64 %.2) local_unnamed_addr #4 {
 .4:
   %.8 = getelementptr inbounds %"Array<EnumNodeField>.559200", %"Array<EnumNodeField>.559200"* %.1, i64 0, i32 2
   store i64 0, i64* %.8, align 8
@@ -11535,7 +11546,7 @@ define void @"Array<EnumNodeField>_constructor"(%"Array<EnumNodeField>.559200"* 
 }
 
 ; Function Attrs: nounwind
-define void @"Array<EnumNodeField>_resize"(%"Array<EnumNodeField>.559200"* nocapture %.1) #2 {
+define void @"Array<EnumNodeField>_resize"(%"Array<EnumNodeField>.559200"* nocapture %.1) #3 {
 .3:
   %.7 = getelementptr inbounds %"Array<EnumNodeField>.559200", %"Array<EnumNodeField>.559200"* %.1, i64 0, i32 3
   %.8 = load i64, i64* %.7, align 8
@@ -11781,7 +11792,7 @@ for.end:                                          ; preds = %for.cond, %for.body
 }
 
 ; Function Attrs: norecurse nounwind readonly
-define i64 @"Array<EnumNodeField>_find"(%"Array<EnumNodeField>.559200"* nocapture readonly %.1, %EnumNodeField.559196* %.2) #4 {
+define i64 @"Array<EnumNodeField>_find"(%"Array<EnumNodeField>.559200"* nocapture readonly %.1, %EnumNodeField.559196* %.2) #5 {
 .4:
   %.12 = getelementptr inbounds %"Array<EnumNodeField>.559200", %"Array<EnumNodeField>.559200"* %.1, i64 0, i32 2
   %.133 = load i64, i64* %.12, align 8
@@ -11815,7 +11826,7 @@ for.body.endif:                                   ; preds = %for.body
 }
 
 ; Function Attrs: nofree nounwind
-define void @EnumNode_constructor(%EnumNode.559198* nocapture %.1, %IdentifierToken.559108* %.2) local_unnamed_addr #3 {
+define void @EnumNode_constructor(%EnumNode.559198* nocapture %.1, %IdentifierToken.559108* %.2) local_unnamed_addr #4 {
 .4:
   %.9 = getelementptr inbounds %EnumNode.559198, %EnumNode.559198* %.1, i64 0, i32 1
   store %IdentifierToken.559108* %.2, %IdentifierToken.559108** %.9, align 8
@@ -11841,7 +11852,7 @@ define void @EnumNode_constructor(%EnumNode.559198* nocapture %.1, %IdentifierTo
 }
 
 ; Function Attrs: nofree nounwind
-define void @"Array<IdentifierToken>_constructor"(%"Array<IdentifierToken>.559204"* nocapture %.1, i64 %.2) local_unnamed_addr #3 {
+define void @"Array<IdentifierToken>_constructor"(%"Array<IdentifierToken>.559204"* nocapture %.1, i64 %.2) local_unnamed_addr #4 {
 .4:
   %.8 = getelementptr inbounds %"Array<IdentifierToken>.559204", %"Array<IdentifierToken>.559204"* %.1, i64 0, i32 2
   store i64 0, i64* %.8, align 8
@@ -11856,7 +11867,7 @@ define void @"Array<IdentifierToken>_constructor"(%"Array<IdentifierToken>.55920
 }
 
 ; Function Attrs: nounwind
-define void @"Array<IdentifierToken>_resize"(%"Array<IdentifierToken>.559204"* nocapture %.1) #2 {
+define void @"Array<IdentifierToken>_resize"(%"Array<IdentifierToken>.559204"* nocapture %.1) #3 {
 .3:
   %.7 = getelementptr inbounds %"Array<IdentifierToken>.559204", %"Array<IdentifierToken>.559204"* %.1, i64 0, i32 3
   %.8 = load i64, i64* %.7, align 8
@@ -12102,7 +12113,7 @@ for.end:                                          ; preds = %for.cond, %for.body
 }
 
 ; Function Attrs: norecurse nounwind readonly
-define i64 @"Array<IdentifierToken>_find"(%"Array<IdentifierToken>.559204"* nocapture readonly %.1, %IdentifierToken.559108* %.2) #4 {
+define i64 @"Array<IdentifierToken>_find"(%"Array<IdentifierToken>.559204"* nocapture readonly %.1, %IdentifierToken.559108* %.2) #5 {
 .4:
   %.12 = getelementptr inbounds %"Array<IdentifierToken>.559204", %"Array<IdentifierToken>.559204"* %.1, i64 0, i32 2
   %.133 = load i64, i64* %.12, align 8
@@ -12136,7 +12147,7 @@ for.body.endif:                                   ; preds = %for.body
 }
 
 ; Function Attrs: nofree nounwind
-define void @ImportNode_constructor(%ImportNode.559202* nocapture %.1) local_unnamed_addr #3 {
+define void @ImportNode_constructor(%ImportNode.559202* nocapture %.1) local_unnamed_addr #4 {
 .3:
   %.7 = tail call dereferenceable_or_null(64) i8* @malloc(i64 64)
   %.9 = tail call dereferenceable_or_null(32) i8* @malloc(i64 32)
@@ -12158,7 +12169,7 @@ define void @ImportNode_constructor(%ImportNode.559202* nocapture %.1) local_unn
 }
 
 ; Function Attrs: nofree norecurse nounwind writeonly
-define void @TypeAliasNode_constructor(%TypeAliasNode.559206* nocapture %.1, %IdentifierToken.559108* %.2) local_unnamed_addr #1 {
+define void @TypeAliasNode_constructor(%TypeAliasNode.559206* nocapture %.1, %IdentifierToken.559108* %.2) local_unnamed_addr #2 {
 .4:
   %.9 = getelementptr inbounds %TypeAliasNode.559206, %TypeAliasNode.559206* %.1, i64 0, i32 1
   store %IdentifierToken.559108* %.2, %IdentifierToken.559108** %.9, align 8
@@ -12166,7 +12177,7 @@ define void @TypeAliasNode_constructor(%TypeAliasNode.559206* nocapture %.1, %Id
 }
 
 ; Function Attrs: nofree nounwind
-define void @"Array<FunctionDeclarationNode>_constructor"(%"Array<FunctionDeclarationNode>.559210"* nocapture %.1, i64 %.2) local_unnamed_addr #3 {
+define void @"Array<FunctionDeclarationNode>_constructor"(%"Array<FunctionDeclarationNode>.559210"* nocapture %.1, i64 %.2) local_unnamed_addr #4 {
 .4:
   %.8 = getelementptr inbounds %"Array<FunctionDeclarationNode>.559210", %"Array<FunctionDeclarationNode>.559210"* %.1, i64 0, i32 2
   store i64 0, i64* %.8, align 8
@@ -12181,7 +12192,7 @@ define void @"Array<FunctionDeclarationNode>_constructor"(%"Array<FunctionDeclar
 }
 
 ; Function Attrs: nounwind
-define void @"Array<FunctionDeclarationNode>_resize"(%"Array<FunctionDeclarationNode>.559210"* nocapture %.1) #2 {
+define void @"Array<FunctionDeclarationNode>_resize"(%"Array<FunctionDeclarationNode>.559210"* nocapture %.1) #3 {
 .3:
   %.7 = getelementptr inbounds %"Array<FunctionDeclarationNode>.559210", %"Array<FunctionDeclarationNode>.559210"* %.1, i64 0, i32 3
   %.8 = load i64, i64* %.7, align 8
@@ -12427,7 +12438,7 @@ for.end:                                          ; preds = %for.cond, %for.body
 }
 
 ; Function Attrs: norecurse nounwind readonly
-define i64 @"Array<FunctionDeclarationNode>_find"(%"Array<FunctionDeclarationNode>.559210"* nocapture readonly %.1, %FunctionDeclarationNode.559178* %.2) #4 {
+define i64 @"Array<FunctionDeclarationNode>_find"(%"Array<FunctionDeclarationNode>.559210"* nocapture readonly %.1, %FunctionDeclarationNode.559178* %.2) #5 {
 .4:
   %.12 = getelementptr inbounds %"Array<FunctionDeclarationNode>.559210", %"Array<FunctionDeclarationNode>.559210"* %.1, i64 0, i32 2
   %.133 = load i64, i64* %.12, align 8
@@ -12461,7 +12472,7 @@ for.body.endif:                                   ; preds = %for.body
 }
 
 ; Function Attrs: nofree nounwind
-define void @"Array<ClassDeclarationNode>_constructor"(%"Array<ClassDeclarationNode>.559211"* nocapture %.1, i64 %.2) local_unnamed_addr #3 {
+define void @"Array<ClassDeclarationNode>_constructor"(%"Array<ClassDeclarationNode>.559211"* nocapture %.1, i64 %.2) local_unnamed_addr #4 {
 .4:
   %.8 = getelementptr inbounds %"Array<ClassDeclarationNode>.559211", %"Array<ClassDeclarationNode>.559211"* %.1, i64 0, i32 2
   store i64 0, i64* %.8, align 8
@@ -12476,7 +12487,7 @@ define void @"Array<ClassDeclarationNode>_constructor"(%"Array<ClassDeclarationN
 }
 
 ; Function Attrs: nounwind
-define void @"Array<ClassDeclarationNode>_resize"(%"Array<ClassDeclarationNode>.559211"* nocapture %.1) #2 {
+define void @"Array<ClassDeclarationNode>_resize"(%"Array<ClassDeclarationNode>.559211"* nocapture %.1) #3 {
 .3:
   %.7 = getelementptr inbounds %"Array<ClassDeclarationNode>.559211", %"Array<ClassDeclarationNode>.559211"* %.1, i64 0, i32 3
   %.8 = load i64, i64* %.7, align 8
@@ -12722,7 +12733,7 @@ for.end:                                          ; preds = %for.cond, %for.body
 }
 
 ; Function Attrs: norecurse nounwind readonly
-define i64 @"Array<ClassDeclarationNode>_find"(%"Array<ClassDeclarationNode>.559211"* nocapture readonly %.1, %ClassDeclarationNode.559188* %.2) #4 {
+define i64 @"Array<ClassDeclarationNode>_find"(%"Array<ClassDeclarationNode>.559211"* nocapture readonly %.1, %ClassDeclarationNode.559188* %.2) #5 {
 .4:
   %.12 = getelementptr inbounds %"Array<ClassDeclarationNode>.559211", %"Array<ClassDeclarationNode>.559211"* %.1, i64 0, i32 2
   %.133 = load i64, i64* %.12, align 8
@@ -12756,7 +12767,7 @@ for.body.endif:                                   ; preds = %for.body
 }
 
 ; Function Attrs: nofree nounwind
-define void @"Array<EnumNode>_constructor"(%"Array<EnumNode>.559212"* nocapture %.1, i64 %.2) local_unnamed_addr #3 {
+define void @"Array<EnumNode>_constructor"(%"Array<EnumNode>.559212"* nocapture %.1, i64 %.2) local_unnamed_addr #4 {
 .4:
   %.8 = getelementptr inbounds %"Array<EnumNode>.559212", %"Array<EnumNode>.559212"* %.1, i64 0, i32 2
   store i64 0, i64* %.8, align 8
@@ -12771,7 +12782,7 @@ define void @"Array<EnumNode>_constructor"(%"Array<EnumNode>.559212"* nocapture 
 }
 
 ; Function Attrs: nounwind
-define void @"Array<EnumNode>_resize"(%"Array<EnumNode>.559212"* nocapture %.1) #2 {
+define void @"Array<EnumNode>_resize"(%"Array<EnumNode>.559212"* nocapture %.1) #3 {
 .3:
   %.7 = getelementptr inbounds %"Array<EnumNode>.559212", %"Array<EnumNode>.559212"* %.1, i64 0, i32 3
   %.8 = load i64, i64* %.7, align 8
@@ -13017,7 +13028,7 @@ for.end:                                          ; preds = %for.cond, %for.body
 }
 
 ; Function Attrs: norecurse nounwind readonly
-define i64 @"Array<EnumNode>_find"(%"Array<EnumNode>.559212"* nocapture readonly %.1, %EnumNode.559198* %.2) #4 {
+define i64 @"Array<EnumNode>_find"(%"Array<EnumNode>.559212"* nocapture readonly %.1, %EnumNode.559198* %.2) #5 {
 .4:
   %.12 = getelementptr inbounds %"Array<EnumNode>.559212", %"Array<EnumNode>.559212"* %.1, i64 0, i32 2
   %.133 = load i64, i64* %.12, align 8
@@ -13051,7 +13062,7 @@ for.body.endif:                                   ; preds = %for.body
 }
 
 ; Function Attrs: nofree nounwind
-define void @"Array<ImportNode>_constructor"(%"Array<ImportNode>.559213"* nocapture %.1, i64 %.2) local_unnamed_addr #3 {
+define void @"Array<ImportNode>_constructor"(%"Array<ImportNode>.559213"* nocapture %.1, i64 %.2) local_unnamed_addr #4 {
 .4:
   %.8 = getelementptr inbounds %"Array<ImportNode>.559213", %"Array<ImportNode>.559213"* %.1, i64 0, i32 2
   store i64 0, i64* %.8, align 8
@@ -13066,7 +13077,7 @@ define void @"Array<ImportNode>_constructor"(%"Array<ImportNode>.559213"* nocapt
 }
 
 ; Function Attrs: nounwind
-define void @"Array<ImportNode>_resize"(%"Array<ImportNode>.559213"* nocapture %.1) #2 {
+define void @"Array<ImportNode>_resize"(%"Array<ImportNode>.559213"* nocapture %.1) #3 {
 .3:
   %.7 = getelementptr inbounds %"Array<ImportNode>.559213", %"Array<ImportNode>.559213"* %.1, i64 0, i32 3
   %.8 = load i64, i64* %.7, align 8
@@ -13312,7 +13323,7 @@ for.end:                                          ; preds = %for.cond, %for.body
 }
 
 ; Function Attrs: norecurse nounwind readonly
-define i64 @"Array<ImportNode>_find"(%"Array<ImportNode>.559213"* nocapture readonly %.1, %ImportNode.559202* %.2) #4 {
+define i64 @"Array<ImportNode>_find"(%"Array<ImportNode>.559213"* nocapture readonly %.1, %ImportNode.559202* %.2) #5 {
 .4:
   %.12 = getelementptr inbounds %"Array<ImportNode>.559213", %"Array<ImportNode>.559213"* %.1, i64 0, i32 2
   %.133 = load i64, i64* %.12, align 8
@@ -13346,7 +13357,7 @@ for.body.endif:                                   ; preds = %for.body
 }
 
 ; Function Attrs: nofree nounwind
-define void @"Array<ConstDeclarationStatement>_constructor"(%"Array<ConstDeclarationStatement>.559214"* nocapture %.1, i64 %.2) local_unnamed_addr #3 {
+define void @"Array<ConstDeclarationStatement>_constructor"(%"Array<ConstDeclarationStatement>.559214"* nocapture %.1, i64 %.2) local_unnamed_addr #4 {
 .4:
   %.8 = getelementptr inbounds %"Array<ConstDeclarationStatement>.559214", %"Array<ConstDeclarationStatement>.559214"* %.1, i64 0, i32 2
   store i64 0, i64* %.8, align 8
@@ -13361,7 +13372,7 @@ define void @"Array<ConstDeclarationStatement>_constructor"(%"Array<ConstDeclara
 }
 
 ; Function Attrs: nounwind
-define void @"Array<ConstDeclarationStatement>_resize"(%"Array<ConstDeclarationStatement>.559214"* nocapture %.1) #2 {
+define void @"Array<ConstDeclarationStatement>_resize"(%"Array<ConstDeclarationStatement>.559214"* nocapture %.1) #3 {
 .3:
   %.7 = getelementptr inbounds %"Array<ConstDeclarationStatement>.559214", %"Array<ConstDeclarationStatement>.559214"* %.1, i64 0, i32 3
   %.8 = load i64, i64* %.7, align 8
@@ -13607,7 +13618,7 @@ for.end:                                          ; preds = %for.cond, %for.body
 }
 
 ; Function Attrs: norecurse nounwind readonly
-define i64 @"Array<ConstDeclarationStatement>_find"(%"Array<ConstDeclarationStatement>.559214"* nocapture readonly %.1, %ConstDeclarationStatement.559174* %.2) #4 {
+define i64 @"Array<ConstDeclarationStatement>_find"(%"Array<ConstDeclarationStatement>.559214"* nocapture readonly %.1, %ConstDeclarationStatement.559174* %.2) #5 {
 .4:
   %.12 = getelementptr inbounds %"Array<ConstDeclarationStatement>.559214", %"Array<ConstDeclarationStatement>.559214"* %.1, i64 0, i32 2
   %.133 = load i64, i64* %.12, align 8
@@ -13641,7 +13652,7 @@ for.body.endif:                                   ; preds = %for.body
 }
 
 ; Function Attrs: nofree nounwind
-define void @"Array<VarDeclarationStatement>_constructor"(%"Array<VarDeclarationStatement>.559215"* nocapture %.1, i64 %.2) local_unnamed_addr #3 {
+define void @"Array<VarDeclarationStatement>_constructor"(%"Array<VarDeclarationStatement>.559215"* nocapture %.1, i64 %.2) local_unnamed_addr #4 {
 .4:
   %.8 = getelementptr inbounds %"Array<VarDeclarationStatement>.559215", %"Array<VarDeclarationStatement>.559215"* %.1, i64 0, i32 2
   store i64 0, i64* %.8, align 8
@@ -13656,7 +13667,7 @@ define void @"Array<VarDeclarationStatement>_constructor"(%"Array<VarDeclaration
 }
 
 ; Function Attrs: nounwind
-define void @"Array<VarDeclarationStatement>_resize"(%"Array<VarDeclarationStatement>.559215"* nocapture %.1) #2 {
+define void @"Array<VarDeclarationStatement>_resize"(%"Array<VarDeclarationStatement>.559215"* nocapture %.1) #3 {
 .3:
   %.7 = getelementptr inbounds %"Array<VarDeclarationStatement>.559215", %"Array<VarDeclarationStatement>.559215"* %.1, i64 0, i32 3
   %.8 = load i64, i64* %.7, align 8
@@ -13902,7 +13913,7 @@ for.end:                                          ; preds = %for.cond, %for.body
 }
 
 ; Function Attrs: norecurse nounwind readonly
-define i64 @"Array<VarDeclarationStatement>_find"(%"Array<VarDeclarationStatement>.559215"* nocapture readonly %.1, %VarDeclarationStatement.559172* %.2) #4 {
+define i64 @"Array<VarDeclarationStatement>_find"(%"Array<VarDeclarationStatement>.559215"* nocapture readonly %.1, %VarDeclarationStatement.559172* %.2) #5 {
 .4:
   %.12 = getelementptr inbounds %"Array<VarDeclarationStatement>.559215", %"Array<VarDeclarationStatement>.559215"* %.1, i64 0, i32 2
   %.133 = load i64, i64* %.12, align 8
@@ -13936,7 +13947,7 @@ for.body.endif:                                   ; preds = %for.body
 }
 
 ; Function Attrs: nofree nounwind
-define void @"Array<TypeAliasNode>_constructor"(%"Array<TypeAliasNode>.559216"* nocapture %.1, i64 %.2) local_unnamed_addr #3 {
+define void @"Array<TypeAliasNode>_constructor"(%"Array<TypeAliasNode>.559216"* nocapture %.1, i64 %.2) local_unnamed_addr #4 {
 .4:
   %.8 = getelementptr inbounds %"Array<TypeAliasNode>.559216", %"Array<TypeAliasNode>.559216"* %.1, i64 0, i32 2
   store i64 0, i64* %.8, align 8
@@ -13951,7 +13962,7 @@ define void @"Array<TypeAliasNode>_constructor"(%"Array<TypeAliasNode>.559216"* 
 }
 
 ; Function Attrs: nounwind
-define void @"Array<TypeAliasNode>_resize"(%"Array<TypeAliasNode>.559216"* nocapture %.1) #2 {
+define void @"Array<TypeAliasNode>_resize"(%"Array<TypeAliasNode>.559216"* nocapture %.1) #3 {
 .3:
   %.7 = getelementptr inbounds %"Array<TypeAliasNode>.559216", %"Array<TypeAliasNode>.559216"* %.1, i64 0, i32 3
   %.8 = load i64, i64* %.7, align 8
@@ -14197,7 +14208,7 @@ for.end:                                          ; preds = %for.cond, %for.body
 }
 
 ; Function Attrs: norecurse nounwind readonly
-define i64 @"Array<TypeAliasNode>_find"(%"Array<TypeAliasNode>.559216"* nocapture readonly %.1, %TypeAliasNode.559206* %.2) #4 {
+define i64 @"Array<TypeAliasNode>_find"(%"Array<TypeAliasNode>.559216"* nocapture readonly %.1, %TypeAliasNode.559206* %.2) #5 {
 .4:
   %.12 = getelementptr inbounds %"Array<TypeAliasNode>.559216", %"Array<TypeAliasNode>.559216"* %.1, i64 0, i32 2
   %.133 = load i64, i64* %.12, align 8
@@ -14231,7 +14242,7 @@ for.body.endif:                                   ; preds = %for.body
 }
 
 ; Function Attrs: nofree nounwind
-define void @ModuleAST_constructor(%ModuleAST.559208* nocapture %.1) local_unnamed_addr #3 {
+define void @ModuleAST_constructor(%ModuleAST.559208* nocapture %.1) local_unnamed_addr #4 {
 .3:
   %.7 = tail call dereferenceable_or_null(64) i8* @malloc(i64 64)
   %.9 = tail call dereferenceable_or_null(32) i8* @malloc(i64 32)
@@ -14349,7 +14360,7 @@ define void @ModuleAST_constructor(%ModuleAST.559208* nocapture %.1) local_unnam
 }
 
 ; Function Attrs: nofree norecurse nounwind writeonly
-define void @Parser_constructor(%Parser.559224* nocapture %.1) local_unnamed_addr #1 {
+define void @Parser_constructor(%Parser.559224* nocapture %.1) local_unnamed_addr #2 {
 .3:
   %.7 = getelementptr inbounds %Parser.559224, %Parser.559224* %.1, i64 0, i32 4
   store i64 -1, i64* %.7, align 8
@@ -14357,7 +14368,7 @@ define void @Parser_constructor(%Parser.559224* nocapture %.1) local_unnamed_add
 }
 
 ; Function Attrs: norecurse nounwind readonly
-define i1 @Parser_can_parse(%Parser.559224* nocapture readonly %.1) #4 {
+define i1 @Parser_can_parse(%Parser.559224* nocapture readonly %.1) #5 {
 .3:
   %.6 = getelementptr inbounds %Parser.559224, %Parser.559224* %.1, i64 0, i32 3
   %.7 = load %Token.559092*, %Token.559092** %.6, align 8
@@ -15883,7 +15894,7 @@ define %ExpressionNode.559130* @Parser_parse_unary_expression_post(%Parser.55922
 }
 
 ; Function Attrs: norecurse nounwind readonly
-define i64 @Parser_is_unary_op(%Parser.559224* nocapture readonly %.1) #4 {
+define i64 @Parser_is_unary_op(%Parser.559224* nocapture readonly %.1) #5 {
 .3:
   %.6 = getelementptr inbounds %Parser.559224, %Parser.559224* %.1, i64 0, i32 3
   %.7 = load %Token.559092*, %Token.559092** %.6, align 8
@@ -15955,7 +15966,7 @@ define %ExpressionNode.559130* @Parser_parse_unary_expression_pre(%Parser.559224
 }
 
 ; Function Attrs: norecurse nounwind readonly
-define i64 @Parser_is_term_expr_op(%Parser.559224* nocapture readonly %.1) #4 {
+define i64 @Parser_is_term_expr_op(%Parser.559224* nocapture readonly %.1) #5 {
 .3:
   %.6 = getelementptr inbounds %Parser.559224, %Parser.559224* %.1, i64 0, i32 3
   %.7 = load %Token.559092*, %Token.559092** %.6, align 8
@@ -16043,7 +16054,7 @@ while.exit:                                       ; preds = %while.exit.loopexit
 }
 
 ; Function Attrs: norecurse nounwind readonly
-define i64 @Parser_is_arith_expr_op(%Parser.559224* nocapture readonly %.1) #4 {
+define i64 @Parser_is_arith_expr_op(%Parser.559224* nocapture readonly %.1) #5 {
 .3:
   %.6 = getelementptr inbounds %Parser.559224, %Parser.559224* %.1, i64 0, i32 3
   %.7 = load %Token.559092*, %Token.559092** %.6, align 8
@@ -16114,7 +16125,7 @@ while.exit:                                       ; preds = %while.exit.loopexit
 }
 
 ; Function Attrs: norecurse nounwind readonly
-define i64 @Parser_is_bitshift_expr_op(%Parser.559224* nocapture readonly %.1) #4 {
+define i64 @Parser_is_bitshift_expr_op(%Parser.559224* nocapture readonly %.1) #5 {
 .3:
   %.6 = getelementptr inbounds %Parser.559224, %Parser.559224* %.1, i64 0, i32 3
   %.7 = load %Token.559092*, %Token.559092** %.6, align 8
@@ -16198,7 +16209,7 @@ while.exit:                                       ; preds = %while.exit.loopexit
 }
 
 ; Function Attrs: norecurse nounwind readonly
-define i64 @Parser_is_comp_expr_op(%Parser.559224* nocapture readonly %.1) #4 {
+define i64 @Parser_is_comp_expr_op(%Parser.559224* nocapture readonly %.1) #5 {
 .3:
   %.6 = getelementptr inbounds %Parser.559224, %Parser.559224* %.1, i64 0, i32 3
   %.7 = load %Token.559092*, %Token.559092** %.6, align 8
@@ -16325,7 +16336,7 @@ while.exit:                                       ; preds = %while.exit.loopexit
 }
 
 ; Function Attrs: norecurse nounwind readonly
-define i64 @Parser_is_logic_expr_op(%Parser.559224* nocapture readonly %.1) #4 {
+define i64 @Parser_is_logic_expr_op(%Parser.559224* nocapture readonly %.1) #5 {
 .3:
   %.6 = getelementptr inbounds %Parser.559224, %Parser.559224* %.1, i64 0, i32 3
   %.7 = load %Token.559092*, %Token.559092** %.6, align 8
@@ -16521,7 +16532,7 @@ define %ExpressionNode.559130* @Parser_parse_ternary_expression(%Parser.559224* 
 }
 
 ; Function Attrs: norecurse nounwind readonly
-define i64 @Parser_is_assign_op(%Parser.559224* nocapture readonly %.1) #4 {
+define i64 @Parser_is_assign_op(%Parser.559224* nocapture readonly %.1) #5 {
 .3:
   %.6 = getelementptr inbounds %Parser.559224, %Parser.559224* %.1, i64 0, i32 3
   %.7 = load %Token.559092*, %Token.559092** %.6, align 8
@@ -17430,7 +17441,7 @@ define noalias %ArgNode.559176* @Parser_parse_arg(%Parser.559224* %.1) {
   %.107 = load %string.559062*, %string.559062** %.106, align 8
   %.108 = getelementptr inbounds %string.559062, %string.559062* %.107, i64 0, i32 0
   %.109 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.108, align 8
-  %.110 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.109, i64 0, i32 10
+  %.110 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.109, i64 0, i32 11
   %.111 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.110, align 8
   %.112 = tail call i8* %.111(%string.559062* %.107)
   %.114 = tail call i64 (i8*, i64, i8*, ...) @snprintf(i8* null, i64 0, i8* getelementptr inbounds ([29 x i8], [29 x i8]* @str.158, i64 0, i64 0), i8* %.112)
@@ -17669,7 +17680,7 @@ define noalias %MethodNode.559182* @Parser_parse_method(%Parser.559224* %.1) {
   store i64 4, i64* %3, align 8
   %.40 = getelementptr inbounds %string.559062, %string.559062* %.36, i64 0, i32 0
   %.41 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.40, align 8
-  %.42 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.41, i64 0, i32 3
+  %.42 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.41, i64 0, i32 4
   %.43 = load i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)** %.42, align 8
   %.44 = tail call i1 %.43(%string.559062* %.36, %string.559062* %.38)
   br i1 %.44, label %.3.if.if, label %.3.endif
@@ -17783,7 +17794,7 @@ define noalias %MethodNode.559182* @Parser_parse_method(%Parser.559224* %.1) {
 }
 
 ; Function Attrs: norecurse nounwind readonly
-define i64 @Parser_parse_access_modifier(%Parser.559224* nocapture readonly %.1) #4 {
+define i64 @Parser_parse_access_modifier(%Parser.559224* nocapture readonly %.1) #5 {
 .3:
   %.6 = getelementptr inbounds %Parser.559224, %Parser.559224* %.1, i64 0, i32 3
   %.7 = load %Token.559092*, %Token.559092** %.6, align 8
@@ -18573,7 +18584,7 @@ while.entry.else.else.else.else.else.else:        ; preds = %while.entry
   store i64 4, i64* %10, align 8
   %.195 = getelementptr inbounds %string.559062, %string.559062* %.191, i64 0, i32 0
   %.196 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.195, align 8
-  %.197 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.196, i64 0, i32 3
+  %.197 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.196, i64 0, i32 4
   %.198 = load i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)** %.197, align 8
   %.199 = tail call i1 %.198(%string.559062* %.191, %string.559062* %.193)
   %.200 = and i1 %.185, %.199
@@ -18614,7 +18625,7 @@ while.entry.else.else.else.else.else.else.else:   ; preds = %while.entry.else.el
 }
 
 ; Function Attrs: nofree norecurse nounwind writeonly
-define void @Type_constructor(%Type.559226* nocapture %.1, i64 %.2) local_unnamed_addr #1 {
+define void @Type_constructor(%Type.559226* nocapture %.1, i64 %.2) local_unnamed_addr #2 {
 .4:
   %.9 = getelementptr inbounds %Type.559226, %Type.559226* %.1, i64 0, i32 1
   store i64 %.2, i64* %.9, align 8
@@ -18622,7 +18633,7 @@ define void @Type_constructor(%Type.559226* nocapture %.1, i64 %.2) local_unname
 }
 
 ; Function Attrs: nofree nounwind
-define noalias %Type.559226* @Type_unknown() local_unnamed_addr #3 {
+define noalias %Type.559226* @Type_unknown() local_unnamed_addr #4 {
 .2:
   %.3 = tail call dereferenceable_or_null(16) i8* @malloc(i64 16)
   %.4 = bitcast i8* %.3 to %Type.559226*
@@ -18633,7 +18644,7 @@ define noalias %Type.559226* @Type_unknown() local_unnamed_addr #3 {
 }
 
 ; Function Attrs: nofree norecurse nounwind writeonly
-define void @BooleanType_constructor(%BooleanType.559228* nocapture %.1) local_unnamed_addr #1 {
+define void @BooleanType_constructor(%BooleanType.559228* nocapture %.1) local_unnamed_addr #2 {
 .3:
   %.6 = bitcast %BooleanType.559228* %.1 to %Type.559226*
   tail call void @Type_constructor(%Type.559226* %.6, i64 0)
@@ -18641,7 +18652,7 @@ define void @BooleanType_constructor(%BooleanType.559228* nocapture %.1) local_u
 }
 
 ; Function Attrs: nofree norecurse nounwind writeonly
-define void @PointerType_constructor(%PointerType.559230* nocapture %.1, %Type.559226* %.2) local_unnamed_addr #1 {
+define void @PointerType_constructor(%PointerType.559230* nocapture %.1, %Type.559226* %.2) local_unnamed_addr #2 {
 .4:
   %.8 = bitcast %PointerType.559230* %.1 to %Type.559226*
   tail call void @Type_constructor(%Type.559226* %.8, i64 15)
@@ -18651,7 +18662,7 @@ define void @PointerType_constructor(%PointerType.559230* nocapture %.1, %Type.5
 }
 
 ; Function Attrs: nofree nounwind
-define void @"Array<Type>_constructor"(%"Array<Type>.559234"* nocapture %.1, i64 %.2) local_unnamed_addr #3 {
+define void @"Array<Type>_constructor"(%"Array<Type>.559234"* nocapture %.1, i64 %.2) local_unnamed_addr #4 {
 .4:
   %.8 = getelementptr inbounds %"Array<Type>.559234", %"Array<Type>.559234"* %.1, i64 0, i32 2
   store i64 0, i64* %.8, align 8
@@ -18666,7 +18677,7 @@ define void @"Array<Type>_constructor"(%"Array<Type>.559234"* nocapture %.1, i64
 }
 
 ; Function Attrs: nounwind
-define void @"Array<Type>_resize"(%"Array<Type>.559234"* nocapture %.1) #2 {
+define void @"Array<Type>_resize"(%"Array<Type>.559234"* nocapture %.1) #3 {
 .3:
   %.7 = getelementptr inbounds %"Array<Type>.559234", %"Array<Type>.559234"* %.1, i64 0, i32 3
   %.8 = load i64, i64* %.7, align 8
@@ -18912,7 +18923,7 @@ for.end:                                          ; preds = %for.cond, %for.body
 }
 
 ; Function Attrs: norecurse nounwind readonly
-define i64 @"Array<Type>_find"(%"Array<Type>.559234"* nocapture readonly %.1, %Type.559226* %.2) #4 {
+define i64 @"Array<Type>_find"(%"Array<Type>.559234"* nocapture readonly %.1, %Type.559226* %.2) #5 {
 .4:
   %.12 = getelementptr inbounds %"Array<Type>.559234", %"Array<Type>.559234"* %.1, i64 0, i32 2
   %.133 = load i64, i64* %.12, align 8
@@ -18946,7 +18957,7 @@ for.body.endif:                                   ; preds = %for.body
 }
 
 ; Function Attrs: nofree norecurse nounwind writeonly
-define void @FunctionType_constructor(%FunctionType.559232* nocapture %.1, %"Array<Type>.559234"* %.2, %Type.559226* %.3) local_unnamed_addr #1 {
+define void @FunctionType_constructor(%FunctionType.559232* nocapture %.1, %"Array<Type>.559234"* %.2, %Type.559226* %.3) local_unnamed_addr #2 {
 .5:
   %.10 = bitcast %FunctionType.559232* %.1 to %Type.559226*
   tail call void @Type_constructor(%Type.559226* %.10, i64 17)
@@ -18958,7 +18969,7 @@ define void @FunctionType_constructor(%FunctionType.559232* nocapture %.1, %"Arr
 }
 
 ; Function Attrs: nofree norecurse nounwind writeonly
-define void @Statement_constructor(%Statement.559238* nocapture %.1, i64 %.2) local_unnamed_addr #1 {
+define void @Statement_constructor(%Statement.559238* nocapture %.1, i64 %.2) local_unnamed_addr #2 {
 .4:
   %.9 = getelementptr inbounds %Statement.559238, %Statement.559238* %.1, i64 0, i32 1
   store i64 %.2, i64* %.9, align 8
@@ -18966,7 +18977,7 @@ define void @Statement_constructor(%Statement.559238* nocapture %.1, i64 %.2) lo
 }
 
 ; Function Attrs: nofree norecurse nounwind writeonly
-define void @TypeId_constructor(%TypeId.559240* nocapture %.1, i64 %.2, i64 %.3, i64 %.4) local_unnamed_addr #1 {
+define void @TypeId_constructor(%TypeId.559240* nocapture %.1, i64 %.2, i64 %.3, i64 %.4) local_unnamed_addr #2 {
 .6:
   %.13 = getelementptr inbounds %TypeId.559240, %TypeId.559240* %.1, i64 0, i32 1
   store i64 %.2, i64* %.13, align 8
@@ -18978,7 +18989,7 @@ define void @TypeId_constructor(%TypeId.559240* nocapture %.1, i64 %.2, i64 %.3,
 }
 
 ; Function Attrs: nofree norecurse nounwind writeonly
-define void @ClassId_constructor(%ClassId.559242* nocapture %.1, i64 %.2, i64 %.3) local_unnamed_addr #1 {
+define void @ClassId_constructor(%ClassId.559242* nocapture %.1, i64 %.2, i64 %.3) local_unnamed_addr #2 {
 .5:
   %.10 = bitcast %ClassId.559242* %.1 to %TypeId.559240*
   tail call void @TypeId_constructor(%TypeId.559240* %.10, i64 %.2, i64 0, i64 %.3)
@@ -18986,7 +18997,7 @@ define void @ClassId_constructor(%ClassId.559242* nocapture %.1, i64 %.2, i64 %.
 }
 
 ; Function Attrs: nofree norecurse nounwind writeonly
-define void @EnumId_constructor(%EnumId.559244* nocapture %.1, i64 %.2, i64 %.3) local_unnamed_addr #1 {
+define void @EnumId_constructor(%EnumId.559244* nocapture %.1, i64 %.2, i64 %.3) local_unnamed_addr #2 {
 .5:
   %.10 = bitcast %EnumId.559244* %.1 to %TypeId.559240*
   tail call void @TypeId_constructor(%TypeId.559240* %.10, i64 %.2, i64 1, i64 %.3)
@@ -18994,7 +19005,7 @@ define void @EnumId_constructor(%EnumId.559244* nocapture %.1, i64 %.2, i64 %.3)
 }
 
 ; Function Attrs: nofree norecurse nounwind writeonly
-define void @Expression_constructor(%Expression.559246* nocapture %.1, i64 %.2) local_unnamed_addr #1 {
+define void @Expression_constructor(%Expression.559246* nocapture %.1, i64 %.2) local_unnamed_addr #2 {
 .4:
   %.8 = bitcast %Expression.559246* %.1 to %Statement.559238*
   tail call void @Statement_constructor(%Statement.559238* %.8, i64 8)
@@ -19006,7 +19017,7 @@ define void @Expression_constructor(%Expression.559246* nocapture %.1, i64 %.2) 
 }
 
 ; Function Attrs: nofree norecurse nounwind writeonly
-define void @ArrayType_constructor(%ArrayType.559248* nocapture %.1, %Type.559226* %.2, i64 %.3) local_unnamed_addr #1 {
+define void @ArrayType_constructor(%ArrayType.559248* nocapture %.1, %Type.559226* %.2, i64 %.3) local_unnamed_addr #2 {
 .5:
   %.10 = bitcast %ArrayType.559248* %.1 to %Type.559226*
   tail call void @Type_constructor(%Type.559226* %.10, i64 16)
@@ -19018,7 +19029,7 @@ define void @ArrayType_constructor(%ArrayType.559248* nocapture %.1, %Type.55922
 }
 
 ; Function Attrs: nofree norecurse nounwind writeonly
-define void @GenericType_constructor(%GenericType.559250* nocapture %.1, %string.559062* %.2, %"Array<Type>.559234"* %.3, %Type.559226* %.4) local_unnamed_addr #1 {
+define void @GenericType_constructor(%GenericType.559250* nocapture %.1, %string.559062* %.2, %"Array<Type>.559234"* %.3, %Type.559226* %.4) local_unnamed_addr #2 {
 .6:
   %.12 = bitcast %GenericType.559250* %.1 to %Type.559226*
   tail call void @Type_constructor(%Type.559226* %.12, i64 20)
@@ -19032,7 +19043,7 @@ define void @GenericType_constructor(%GenericType.559250* nocapture %.1, %string
 }
 
 ; Function Attrs: nofree norecurse nounwind writeonly
-define void @ObjectType_constructor(%ObjectType.559252* nocapture %.1, %ClassId.559242* %.2) local_unnamed_addr #1 {
+define void @ObjectType_constructor(%ObjectType.559252* nocapture %.1, %ClassId.559242* %.2) local_unnamed_addr #2 {
 .4:
   %.8 = bitcast %ObjectType.559252* %.1 to %Type.559226*
   tail call void @Type_constructor(%Type.559226* %.8, i64 13)
@@ -19042,7 +19053,7 @@ define void @ObjectType_constructor(%ObjectType.559252* nocapture %.1, %ClassId.
 }
 
 ; Function Attrs: nofree norecurse nounwind writeonly
-define void @EnumType_constructor(%EnumType.559254* nocapture %.1, %EnumId.559244* %.2) local_unnamed_addr #1 {
+define void @EnumType_constructor(%EnumType.559254* nocapture %.1, %EnumId.559244* %.2) local_unnamed_addr #2 {
 .4:
   %.8 = bitcast %EnumType.559254* %.1 to %Type.559226*
   tail call void @Type_constructor(%Type.559226* %.8, i64 14)
@@ -19052,7 +19063,7 @@ define void @EnumType_constructor(%EnumType.559254* nocapture %.1, %EnumId.55924
 }
 
 ; Function Attrs: nofree nounwind
-define void @IntExpression_constructor(%IntExpression.559256* nocapture %.1, i64 %.2) local_unnamed_addr #3 {
+define void @IntExpression_constructor(%IntExpression.559256* nocapture %.1, i64 %.2) local_unnamed_addr #4 {
 .4:
   %.8 = bitcast %IntExpression.559256* %.1 to %Expression.559246*
   tail call void @Expression_constructor(%Expression.559246* %.8, i64 0)
@@ -19072,7 +19083,7 @@ define void @IntExpression_constructor(%IntExpression.559256* nocapture %.1, i64
 }
 
 ; Function Attrs: nofree nounwind
-define void @BooleanExpression_constructor(%BooleanExpression.559258* nocapture %.1, i1 %.2) local_unnamed_addr #3 {
+define void @BooleanExpression_constructor(%BooleanExpression.559258* nocapture %.1, i1 %.2) local_unnamed_addr #4 {
 .4:
   %.8 = bitcast %BooleanExpression.559258* %.1 to %Expression.559246*
   tail call void @Expression_constructor(%Expression.559246* %.8, i64 4)
@@ -19092,7 +19103,7 @@ define void @BooleanExpression_constructor(%BooleanExpression.559258* nocapture 
 }
 
 ; Function Attrs: nofree nounwind
-define void @FloatExpression_constructor(%FloatExpression.559260* nocapture %.1, double %.2) local_unnamed_addr #3 {
+define void @FloatExpression_constructor(%FloatExpression.559260* nocapture %.1, double %.2) local_unnamed_addr #4 {
 .4:
   %.8 = bitcast %FloatExpression.559260* %.1 to %Expression.559246*
   tail call void @Expression_constructor(%Expression.559246* %.8, i64 1)
@@ -19112,7 +19123,7 @@ define void @FloatExpression_constructor(%FloatExpression.559260* nocapture %.1,
 }
 
 ; Function Attrs: nofree nounwind
-define void @"Array<Expression>_constructor"(%"Array<Expression>.559264"* nocapture %.1, i64 %.2) local_unnamed_addr #3 {
+define void @"Array<Expression>_constructor"(%"Array<Expression>.559264"* nocapture %.1, i64 %.2) local_unnamed_addr #4 {
 .4:
   %.8 = getelementptr inbounds %"Array<Expression>.559264", %"Array<Expression>.559264"* %.1, i64 0, i32 2
   store i64 0, i64* %.8, align 8
@@ -19127,7 +19138,7 @@ define void @"Array<Expression>_constructor"(%"Array<Expression>.559264"* nocapt
 }
 
 ; Function Attrs: nounwind
-define void @"Array<Expression>_resize"(%"Array<Expression>.559264"* nocapture %.1) #2 {
+define void @"Array<Expression>_resize"(%"Array<Expression>.559264"* nocapture %.1) #3 {
 .3:
   %.7 = getelementptr inbounds %"Array<Expression>.559264", %"Array<Expression>.559264"* %.1, i64 0, i32 3
   %.8 = load i64, i64* %.7, align 8
@@ -19373,7 +19384,7 @@ for.end:                                          ; preds = %for.cond, %for.body
 }
 
 ; Function Attrs: norecurse nounwind readonly
-define i64 @"Array<Expression>_find"(%"Array<Expression>.559264"* nocapture readonly %.1, %Expression.559246* %.2) #4 {
+define i64 @"Array<Expression>_find"(%"Array<Expression>.559264"* nocapture readonly %.1, %Expression.559246* %.2) #5 {
 .4:
   %.12 = getelementptr inbounds %"Array<Expression>.559264", %"Array<Expression>.559264"* %.1, i64 0, i32 2
   %.133 = load i64, i64* %.12, align 8
@@ -19407,7 +19418,7 @@ for.body.endif:                                   ; preds = %for.body
 }
 
 ; Function Attrs: nofree norecurse nounwind writeonly
-define void @StringExpression_constructor(%StringExpression.559262* nocapture %.1, %string.559062* %.2, %"Array<int>.559102"* %.3, %"Array<Expression>.559264"* %.4, %Type.559226* %.5) local_unnamed_addr #1 {
+define void @StringExpression_constructor(%StringExpression.559262* nocapture %.1, %string.559062* %.2, %"Array<int>.559102"* %.3, %"Array<Expression>.559264"* %.4, %Type.559226* %.5) local_unnamed_addr #2 {
 .7:
   %.14 = bitcast %StringExpression.559262* %.1 to %Expression.559246*
   tail call void @Expression_constructor(%Expression.559246* %.14, i64 2)
@@ -19425,7 +19436,7 @@ define void @StringExpression_constructor(%StringExpression.559262* nocapture %.
 }
 
 ; Function Attrs: nofree norecurse nounwind writeonly
-define void @NullExpression_constructor(%NullExpression.559266* nocapture %.1, %Type.559226* %.2) local_unnamed_addr #1 {
+define void @NullExpression_constructor(%NullExpression.559266* nocapture %.1, %Type.559226* %.2) local_unnamed_addr #2 {
 .4:
   %.8 = bitcast %NullExpression.559266* %.1 to %Expression.559246*
   tail call void @Expression_constructor(%Expression.559246* %.8, i64 5)
@@ -19471,7 +19482,7 @@ define void @ArrayExpression_constructor(%ArrayExpression.559268* nocapture %.1,
 }
 
 ; Function Attrs: nofree norecurse nounwind writeonly
-define void @BinaryExpression_constructor(%BinaryExpression.559270* nocapture %.1, %Expression.559246* %.2, i64 %.3, %Expression.559246* %.4, %Type.559226* %.5, i1 %.6) local_unnamed_addr #1 {
+define void @BinaryExpression_constructor(%BinaryExpression.559270* nocapture %.1, %Expression.559246* %.2, i64 %.3, %Expression.559246* %.4, %Type.559226* %.5, i1 %.6) local_unnamed_addr #2 {
 .8:
   %.16 = bitcast %BinaryExpression.559270* %.1 to %Expression.559246*
   tail call void @Expression_constructor(%Expression.559246* %.16, i64 8)
@@ -19489,7 +19500,7 @@ define void @BinaryExpression_constructor(%BinaryExpression.559270* nocapture %.
 }
 
 ; Function Attrs: nofree norecurse nounwind writeonly
-define void @UnaryExpression_constructor(%UnaryExpression.559272* nocapture %.1, i64 %.2, %Expression.559246* %.3, %Type.559226* %.4, i1 %.5) local_unnamed_addr #1 {
+define void @UnaryExpression_constructor(%UnaryExpression.559272* nocapture %.1, i64 %.2, %Expression.559246* %.3, %Type.559226* %.4, i1 %.5) local_unnamed_addr #2 {
 .7:
   %.14 = bitcast %UnaryExpression.559272* %.1 to %Expression.559246*
   tail call void @Expression_constructor(%Expression.559246* %.14, i64 9)
@@ -19541,7 +19552,7 @@ define void @TypeCastExpression_constructor(%TypeCastExpression.559276* nocaptur
 }
 
 ; Function Attrs: nofree norecurse nounwind writeonly
-define void @NewExpression_constructor(%NewExpression.559278* nocapture %.1, %Type.559226* %.2, %Type.559226* %.3, %"Array<Expression>.559264"* %.4, i1 %.5) local_unnamed_addr #1 {
+define void @NewExpression_constructor(%NewExpression.559278* nocapture %.1, %Type.559226* %.2, %Type.559226* %.3, %"Array<Expression>.559264"* %.4, i1 %.5) local_unnamed_addr #2 {
 .7:
   %.14 = bitcast %NewExpression.559278* %.1 to %Expression.559246*
   tail call void @Expression_constructor(%Expression.559246* %.14, i64 11)
@@ -19557,7 +19568,7 @@ define void @NewExpression_constructor(%NewExpression.559278* nocapture %.1, %Ty
 }
 
 ; Function Attrs: nofree norecurse nounwind writeonly
-define void @IndexExpression_constructor(%IndexExpression.559280* nocapture %.1, %Expression.559246* %.2, %Expression.559246* %.3, %Type.559226* %.4) local_unnamed_addr #1 {
+define void @IndexExpression_constructor(%IndexExpression.559280* nocapture %.1, %Expression.559246* %.2, %Expression.559246* %.3, %Type.559226* %.4) local_unnamed_addr #2 {
 .6:
   %.12 = bitcast %IndexExpression.559280* %.1 to %Expression.559246*
   tail call void @Expression_constructor(%Expression.559246* %.12, i64 13)
@@ -19571,7 +19582,7 @@ define void @IndexExpression_constructor(%IndexExpression.559280* nocapture %.1,
 }
 
 ; Function Attrs: nofree norecurse nounwind writeonly
-define void @CallExpression_constructor(%CallExpression.559282* nocapture %.1, %Expression.559246* %.2, %"Array<Expression>.559264"* %.3, %Type.559226* %.4) local_unnamed_addr #1 {
+define void @CallExpression_constructor(%CallExpression.559282* nocapture %.1, %Expression.559246* %.2, %"Array<Expression>.559264"* %.3, %Type.559226* %.4) local_unnamed_addr #2 {
 .6:
   %.12 = bitcast %CallExpression.559282* %.1 to %Expression.559246*
   tail call void @Expression_constructor(%Expression.559246* %.12, i64 14)
@@ -19585,7 +19596,7 @@ define void @CallExpression_constructor(%CallExpression.559282* nocapture %.1, %
 }
 
 ; Function Attrs: nofree nounwind
-define void @IntrinsicCall_constructor(%IntrinsicCall.559284* nocapture %.1, i64 %.2) local_unnamed_addr #3 {
+define void @IntrinsicCall_constructor(%IntrinsicCall.559284* nocapture %.1, i64 %.2) local_unnamed_addr #4 {
 .4:
   %.8 = bitcast %IntrinsicCall.559284* %.1 to %Expression.559246*
   tail call void @Expression_constructor(%Expression.559246* %.8, i64 16)
@@ -19614,7 +19625,7 @@ define void @IntrinsicCall_constructor(%IntrinsicCall.559284* nocapture %.1, i64
 }
 
 ; Function Attrs: nofree norecurse nounwind writeonly
-define void @VarId_constructor(%VarId.559286* nocapture %.1, i64 %.2, i64 %.3, i64 %.4) local_unnamed_addr #1 {
+define void @VarId_constructor(%VarId.559286* nocapture %.1, i64 %.2, i64 %.3, i64 %.4) local_unnamed_addr #2 {
 .6:
   %.13 = getelementptr inbounds %VarId.559286, %VarId.559286* %.1, i64 0, i32 1
   store i64 %.2, i64* %.13, align 8
@@ -19638,7 +19649,7 @@ define void @ClassVarId_constructor(%ClassVarId.559288* nocapture %.1, %ClassId.
 }
 
 ; Function Attrs: nofree nounwind
-define noalias %ClassId.559242* @ClassVarId_to_classId(%ClassVarId.559288* nocapture readonly %.1) #3 {
+define noalias %ClassId.559242* @ClassVarId_to_classId(%ClassVarId.559288* nocapture readonly %.1) #4 {
 .3:
   %.8 = getelementptr inbounds %ClassVarId.559288, %ClassVarId.559288* %.1, i64 0, i32 2
   %.9 = load i64, i64* %.8, align 8
@@ -19665,7 +19676,7 @@ define void @EnumVarId_constructor(%EnumVarId.559290* nocapture %.1, %EnumId.559
 }
 
 ; Function Attrs: nofree nounwind
-define noalias %EnumId.559244* @EnumVarId_to_enumId(%EnumVarId.559290* nocapture readonly %.1) #3 {
+define noalias %EnumId.559244* @EnumVarId_to_enumId(%EnumVarId.559290* nocapture readonly %.1) #4 {
 .3:
   %.8 = getelementptr inbounds %EnumVarId.559290, %EnumVarId.559290* %.1, i64 0, i32 2
   %.9 = load i64, i64* %.8, align 8
@@ -19680,7 +19691,7 @@ define noalias %EnumId.559244* @EnumVarId_to_enumId(%EnumVarId.559290* nocapture
 }
 
 ; Function Attrs: nofree norecurse nounwind writeonly
-define void @ConstId_constructor(%ConstId.559292* nocapture %.1, i64 %.2, i64 %.3) local_unnamed_addr #1 {
+define void @ConstId_constructor(%ConstId.559292* nocapture %.1, i64 %.2, i64 %.3) local_unnamed_addr #2 {
 .5:
   %.10 = bitcast %ConstId.559292* %.1 to %VarId.559286*
   tail call void @VarId_constructor(%VarId.559286* %.10, i64 2, i64 %.2, i64 %.3)
@@ -19688,7 +19699,7 @@ define void @ConstId_constructor(%ConstId.559292* nocapture %.1, i64 %.2, i64 %.
 }
 
 ; Function Attrs: nofree norecurse nounwind writeonly
-define void @PropId_constructor(%PropId.559294* nocapture %.1, i64 %.2, %TypeId.559240* %.3, i64 %.4) local_unnamed_addr #1 {
+define void @PropId_constructor(%PropId.559294* nocapture %.1, i64 %.2, %TypeId.559240* %.3, i64 %.4) local_unnamed_addr #2 {
 .6:
   %.13 = getelementptr inbounds %PropId.559294, %PropId.559294* %.1, i64 0, i32 1
   store i64 %.2, i64* %.13, align 8
@@ -19700,7 +19711,7 @@ define void @PropId_constructor(%PropId.559294* nocapture %.1, i64 %.2, %TypeId.
 }
 
 ; Function Attrs: nofree norecurse nounwind writeonly
-define void @MemberExpression_constructor(%MemberExpression.559296* nocapture %.1, %Expression.559246* %.2, %PropId.559294* %.3, %Type.559226* %.4) local_unnamed_addr #1 {
+define void @MemberExpression_constructor(%MemberExpression.559296* nocapture %.1, %Expression.559246* %.2, %PropId.559294* %.3, %Type.559226* %.4) local_unnamed_addr #2 {
 .6:
   %.12 = bitcast %MemberExpression.559296* %.1 to %Expression.559246*
   tail call void @Expression_constructor(%Expression.559246* %.12, i64 12)
@@ -19731,7 +19742,7 @@ define void @VarAccessExpression_constructor(%VarAccessExpression.559298* nocapt
 }
 
 ; Function Attrs: nofree nounwind
-define void @"Array<Statement>_constructor"(%"Array<Statement>.559302"* nocapture %.1, i64 %.2) local_unnamed_addr #3 {
+define void @"Array<Statement>_constructor"(%"Array<Statement>.559302"* nocapture %.1, i64 %.2) local_unnamed_addr #4 {
 .4:
   %.8 = getelementptr inbounds %"Array<Statement>.559302", %"Array<Statement>.559302"* %.1, i64 0, i32 2
   store i64 0, i64* %.8, align 8
@@ -19746,7 +19757,7 @@ define void @"Array<Statement>_constructor"(%"Array<Statement>.559302"* nocaptur
 }
 
 ; Function Attrs: nounwind
-define void @"Array<Statement>_resize"(%"Array<Statement>.559302"* nocapture %.1) #2 {
+define void @"Array<Statement>_resize"(%"Array<Statement>.559302"* nocapture %.1) #3 {
 .3:
   %.7 = getelementptr inbounds %"Array<Statement>.559302", %"Array<Statement>.559302"* %.1, i64 0, i32 3
   %.8 = load i64, i64* %.7, align 8
@@ -19992,7 +20003,7 @@ for.end:                                          ; preds = %for.cond, %for.body
 }
 
 ; Function Attrs: norecurse nounwind readonly
-define i64 @"Array<Statement>_find"(%"Array<Statement>.559302"* nocapture readonly %.1, %Statement.559238* %.2) #4 {
+define i64 @"Array<Statement>_find"(%"Array<Statement>.559302"* nocapture readonly %.1, %Statement.559238* %.2) #5 {
 .4:
   %.12 = getelementptr inbounds %"Array<Statement>.559302", %"Array<Statement>.559302"* %.1, i64 0, i32 2
   %.133 = load i64, i64* %.12, align 8
@@ -20026,7 +20037,7 @@ for.body.endif:                                   ; preds = %for.body
 }
 
 ; Function Attrs: nofree nounwind
-define void @Block_constructor(%Block.559300* nocapture %.1) local_unnamed_addr #3 {
+define void @Block_constructor(%Block.559300* nocapture %.1) local_unnamed_addr #4 {
 .3:
   %.7 = tail call dereferenceable_or_null(64) i8* @malloc(i64 64)
   %.9 = tail call dereferenceable_or_null(32) i8* @malloc(i64 32)
@@ -20054,7 +20065,7 @@ define void @Block_constructor(%Block.559300* nocapture %.1) local_unnamed_addr 
 }
 
 ; Function Attrs: nofree norecurse nounwind writeonly
-define void @IfStatement_constructor(%IfStatement.559304* nocapture %.1, %Expression.559246* %.2, %Block.559300* %.3, %Block.559300* %.4) local_unnamed_addr #1 {
+define void @IfStatement_constructor(%IfStatement.559304* nocapture %.1, %Expression.559246* %.2, %Block.559300* %.3, %Block.559300* %.4) local_unnamed_addr #2 {
 .6:
   %.12 = bitcast %IfStatement.559304* %.1 to %Statement.559238*
   tail call void @Statement_constructor(%Statement.559238* %.12, i64 0)
@@ -20068,7 +20079,7 @@ define void @IfStatement_constructor(%IfStatement.559304* nocapture %.1, %Expres
 }
 
 ; Function Attrs: nofree norecurse nounwind writeonly
-define void @VarDeclaration_constructor(%VarDeclaration.559306* nocapture %.1, %string.559062* %.2, %VarId.559286* %.3) local_unnamed_addr #1 {
+define void @VarDeclaration_constructor(%VarDeclaration.559306* nocapture %.1, %string.559062* %.2, %VarId.559286* %.3) local_unnamed_addr #2 {
 .5:
   %.10 = bitcast %VarDeclaration.559306* %.1 to %Statement.559238*
   tail call void @Statement_constructor(%Statement.559238* %.10, i64 1)
@@ -20082,7 +20093,7 @@ define void @VarDeclaration_constructor(%VarDeclaration.559306* nocapture %.1, %
 }
 
 ; Function Attrs: nofree norecurse nounwind writeonly
-define void @ConstDeclaration_constructor(%ConstDeclaration.559308* nocapture %.1, %string.559062* %.2, %ConstId.559292* %.3) local_unnamed_addr #1 {
+define void @ConstDeclaration_constructor(%ConstDeclaration.559308* nocapture %.1, %string.559062* %.2, %ConstId.559292* %.3) local_unnamed_addr #2 {
 .5:
   %.10 = bitcast %ConstDeclaration.559308* %.1 to %Statement.559238*
   tail call void @Statement_constructor(%Statement.559238* %.10, i64 2)
@@ -20096,7 +20107,7 @@ define void @ConstDeclaration_constructor(%ConstDeclaration.559308* nocapture %.
 }
 
 ; Function Attrs: nofree norecurse nounwind writeonly
-define void @ForStatement_constructor(%ForStatement.559310* nocapture %.1) local_unnamed_addr #1 {
+define void @ForStatement_constructor(%ForStatement.559310* nocapture %.1) local_unnamed_addr #2 {
 .3:
   %.6 = bitcast %ForStatement.559310* %.1 to %Statement.559238*
   tail call void @Statement_constructor(%Statement.559238* %.6, i64 3)
@@ -20107,7 +20118,7 @@ define void @ForStatement_constructor(%ForStatement.559310* nocapture %.1) local
 }
 
 ; Function Attrs: nofree norecurse nounwind writeonly
-define void @WhileStatement_constructor(%WhileStatement.559312* nocapture %.1, %Expression.559246* %.2, %Block.559300* %.3) local_unnamed_addr #1 {
+define void @WhileStatement_constructor(%WhileStatement.559312* nocapture %.1, %Expression.559246* %.2, %Block.559300* %.3) local_unnamed_addr #2 {
 .5:
   %.10 = bitcast %WhileStatement.559312* %.1 to %Statement.559238*
   tail call void @Statement_constructor(%Statement.559238* %.10, i64 4)
@@ -20119,7 +20130,7 @@ define void @WhileStatement_constructor(%WhileStatement.559312* nocapture %.1, %
 }
 
 ; Function Attrs: nofree norecurse nounwind writeonly
-define void @ReturnStatement_constructor(%ReturnStatement.559314* nocapture %.1) local_unnamed_addr #1 {
+define void @ReturnStatement_constructor(%ReturnStatement.559314* nocapture %.1) local_unnamed_addr #2 {
 .3:
   %.6 = bitcast %ReturnStatement.559314* %.1 to %Statement.559238*
   tail call void @Statement_constructor(%Statement.559238* %.6, i64 7)
@@ -20129,7 +20140,7 @@ define void @ReturnStatement_constructor(%ReturnStatement.559314* nocapture %.1)
 }
 
 ; Function Attrs: norecurse nounwind readonly
-define i1 @is_numeric(%Type.559226* nocapture readonly %.1) local_unnamed_addr #4 {
+define i1 @is_numeric(%Type.559226* nocapture readonly %.1) local_unnamed_addr #5 {
 .3:
   %.6 = getelementptr inbounds %Type.559226, %Type.559226* %.1, i64 0, i32 1
   %.7 = load i64, i64* %.6, align 8
@@ -20139,7 +20150,7 @@ define i1 @is_numeric(%Type.559226* nocapture readonly %.1) local_unnamed_addr #
 }
 
 ; Function Attrs: norecurse nounwind readonly
-define i1 @is_float(%Type.559226* nocapture readonly %.1) local_unnamed_addr #4 {
+define i1 @is_float(%Type.559226* nocapture readonly %.1) local_unnamed_addr #5 {
 .3:
   %.6 = getelementptr inbounds %Type.559226, %Type.559226* %.1, i64 0, i32 1
   %.7 = load i64, i64* %.6, align 8
@@ -20149,7 +20160,7 @@ define i1 @is_float(%Type.559226* nocapture readonly %.1) local_unnamed_addr #4 
 }
 
 ; Function Attrs: norecurse nounwind readonly
-define i1 @is_int(%Type.559226* nocapture readonly %.1) local_unnamed_addr #4 {
+define i1 @is_int(%Type.559226* nocapture readonly %.1) local_unnamed_addr #5 {
 .3:
   %.6 = getelementptr inbounds %Type.559226, %Type.559226* %.1, i64 0, i32 1
   %.7 = load i64, i64* %.6, align 8
@@ -20159,7 +20170,7 @@ define i1 @is_int(%Type.559226* nocapture readonly %.1) local_unnamed_addr #4 {
 }
 
 ; Function Attrs: norecurse nounwind readonly
-define i1 @is_bool(%Type.559226* nocapture readonly %.1) local_unnamed_addr #4 {
+define i1 @is_bool(%Type.559226* nocapture readonly %.1) local_unnamed_addr #5 {
 .3:
   %.6 = getelementptr inbounds %Type.559226, %Type.559226* %.1, i64 0, i32 1
   %.7 = load i64, i64* %.6, align 8
@@ -20168,7 +20179,7 @@ define i1 @is_bool(%Type.559226* nocapture readonly %.1) local_unnamed_addr #4 {
 }
 
 ; Function Attrs: norecurse nounwind readonly
-define i1 @is_i8_ptr(%Type.559226* nocapture readonly %.1) local_unnamed_addr #4 {
+define i1 @is_i8_ptr(%Type.559226* nocapture readonly %.1) local_unnamed_addr #5 {
 .3:
   %.6 = getelementptr inbounds %Type.559226, %Type.559226* %.1, i64 0, i32 1
   %.7 = load i64, i64* %.6, align 8
@@ -20213,7 +20224,7 @@ define i1 @is_object(%Type.559226* nocapture readonly %.1) local_unnamed_addr #1
 }
 
 ; Function Attrs: norecurse nounwind readonly
-define i1 @is_pointer(%Type.559226* nocapture readonly %.1) local_unnamed_addr #4 {
+define i1 @is_pointer(%Type.559226* nocapture readonly %.1) local_unnamed_addr #5 {
 .3:
   %.6 = getelementptr inbounds %Type.559226, %Type.559226* %.1, i64 0, i32 1
   %.7 = load i64, i64* %.6, align 8
@@ -20222,7 +20233,7 @@ define i1 @is_pointer(%Type.559226* nocapture readonly %.1) local_unnamed_addr #
 }
 
 ; Function Attrs: norecurse nounwind readonly
-define i1 @is_null(%Expression.559246* nocapture readonly %.1) local_unnamed_addr #4 {
+define i1 @is_null(%Expression.559246* nocapture readonly %.1) local_unnamed_addr #5 {
 .3:
   %.6 = getelementptr inbounds %Expression.559246, %Expression.559246* %.1, i64 0, i32 3
   %.7 = load i64, i64* %.6, align 8
@@ -20231,7 +20242,7 @@ define i1 @is_null(%Expression.559246* nocapture readonly %.1) local_unnamed_add
 }
 
 ; Function Attrs: nofree nounwind
-define noalias %Expression.559246* @cast_exp_to_type(%Expression.559246* %.1, %Type.559226* %.2) local_unnamed_addr #3 {
+define noalias %Expression.559246* @cast_exp_to_type(%Expression.559246* %.1, %Type.559226* %.2) local_unnamed_addr #4 {
 .4:
   %.9 = tail call dereferenceable_or_null(48) i8* @malloc(i64 48)
   %.10 = bitcast i8* %.9 to %TypeCastExpression.559276*
@@ -20243,7 +20254,7 @@ define noalias %Expression.559246* @cast_exp_to_type(%Expression.559246* %.1, %T
 }
 
 ; Function Attrs: norecurse nounwind readonly
-define %Type.559226* @max_type(%Type.559226* readonly %.1, %Type.559226* readonly %.2) local_unnamed_addr #4 {
+define %Type.559226* @max_type(%Type.559226* readonly %.1, %Type.559226* readonly %.2) local_unnamed_addr #5 {
 .4:
   %.8 = getelementptr inbounds %Type.559226, %Type.559226* %.1, i64 0, i32 1
   %.9 = load i64, i64* %.8, align 8
@@ -20255,7 +20266,7 @@ define %Type.559226* @max_type(%Type.559226* readonly %.1, %Type.559226* readonl
 }
 
 ; Function Attrs: nofree nounwind
-define void @check_cast_lower_bits(%Expression.559246** nocapture %.1, %Expression.559246** nocapture %.2) local_unnamed_addr #3 {
+define void @check_cast_lower_bits(%Expression.559246** nocapture %.1, %Expression.559246** nocapture %.2) local_unnamed_addr #4 {
 .4:
   %.9 = load %Expression.559246*, %Expression.559246** %.1, align 8
   %.10 = getelementptr inbounds %Expression.559246, %Expression.559246* %.9, i64 0, i32 4
@@ -20309,7 +20320,7 @@ define void @check_cast_lower_bits(%Expression.559246** nocapture %.1, %Expressi
 }
 
 ; Function Attrs: norecurse nounwind readonly
-define i1 @check_is_var(%Expression.559246* nocapture readonly %.1) local_unnamed_addr #4 {
+define i1 @check_is_var(%Expression.559246* nocapture readonly %.1) local_unnamed_addr #5 {
 .3:
   %.6 = getelementptr inbounds %Expression.559246, %Expression.559246* %.1, i64 0, i32 3
   %.7 = load i64, i64* %.6, align 8
@@ -20635,7 +20646,7 @@ end.1:                                            ; preds = %false_block.1, %tru
 }
 
 ; Function Attrs: nofree nounwind
-define noalias %string.559062* @dump_bin_op(i64 %.1) local_unnamed_addr #3 {
+define noalias %string.559062* @dump_bin_op(i64 %.1) local_unnamed_addr #4 {
 .3:
   switch i64 %.1, label %.3.endif.endif.endif.endi...endif.2.endif [
     i64 1, label %.3.if
@@ -20981,7 +20992,7 @@ define noalias %string.559062* @dump_bin_op(i64 %.1) local_unnamed_addr #3 {
 }
 
 ; Function Attrs: nofree nounwind
-define noalias %string.559062* @dump_unary_op(i64 %.1) local_unnamed_addr #3 {
+define noalias %string.559062* @dump_unary_op(i64 %.1) local_unnamed_addr #4 {
 .3:
   switch i64 %.1, label %.3.endif.endif.endif.endif.endif.endif [
     i64 1, label %.3.if
@@ -21106,7 +21117,7 @@ define noalias %string.559062* @dump_unary_op(i64 %.1) local_unnamed_addr #3 {
 }
 
 ; Function Attrs: nofree nounwind
-define noalias %string.559062* @dump_access(i64 %.1) local_unnamed_addr #3 {
+define noalias %string.559062* @dump_access(i64 %.1) local_unnamed_addr #4 {
 .3:
   switch i64 %.1, label %.3.endif.endif [
     i64 1, label %.3.if
@@ -21210,7 +21221,7 @@ define i64 @lower_bin_assign_op(i64 %.1) local_unnamed_addr #7 {
 }
 
 ; Function Attrs: nofree norecurse nounwind writeonly
-define void @ScopeId_constructor(%ScopeId.559316* nocapture %.1, i64 %.2, i64 %.3) local_unnamed_addr #1 {
+define void @ScopeId_constructor(%ScopeId.559316* nocapture %.1, i64 %.2, i64 %.3) local_unnamed_addr #2 {
 .5:
   %.11 = getelementptr inbounds %ScopeId.559316, %ScopeId.559316* %.1, i64 0, i32 1
   store i64 %.2, i64* %.11, align 8
@@ -21220,7 +21231,7 @@ define void @ScopeId_constructor(%ScopeId.559316* nocapture %.1, i64 %.2, i64 %.
 }
 
 ; Function Attrs: nofree norecurse nounwind writeonly
-define void @"Bucket<string, VarId>_constructor"(%"Bucket<string, VarId>.559325"* nocapture %.1) local_unnamed_addr #1 {
+define void @"Bucket<string, VarId>_constructor"(%"Bucket<string, VarId>.559325"* nocapture %.1) local_unnamed_addr #2 {
 .3:
   %.6 = getelementptr inbounds %"Bucket<string, VarId>.559325", %"Bucket<string, VarId>.559325"* %.1, i64 0, i32 3
   store i1 true, i1* %.6, align 1
@@ -21228,7 +21239,7 @@ define void @"Bucket<string, VarId>_constructor"(%"Bucket<string, VarId>.559325"
 }
 
 ; Function Attrs: nofree norecurse nounwind writeonly
-define void @"Bucket<string, VarId>_set"(%"Bucket<string, VarId>.559325"* nocapture %.1, %string.559062* %.2, %VarId.559286* %.3) #1 {
+define void @"Bucket<string, VarId>_set"(%"Bucket<string, VarId>.559325"* nocapture %.1, %string.559062* %.2, %VarId.559286* %.3) #2 {
 .5:
   %.10 = getelementptr inbounds %"Bucket<string, VarId>.559325", %"Bucket<string, VarId>.559325"* %.1, i64 0, i32 3
   store i1 false, i1* %.10, align 1
@@ -21240,7 +21251,7 @@ define void @"Bucket<string, VarId>_set"(%"Bucket<string, VarId>.559325"* nocapt
 }
 
 ; Function Attrs: nofree nounwind
-define void @"Map<string, VarId>_constructor"(%"Map<string, VarId>.559320"* nocapture %.1) local_unnamed_addr #3 {
+define void @"Map<string, VarId>_constructor"(%"Map<string, VarId>.559320"* nocapture %.1) local_unnamed_addr #4 {
 .3:
   %.9 = tail call dereferenceable_or_null(2048) i8* @malloc(i64 2048)
   %.11 = getelementptr inbounds %"Map<string, VarId>.559320", %"Map<string, VarId>.559320"* %.1, i64 0, i32 1
@@ -21293,7 +21304,7 @@ for.body:                                         ; preds = %for.body.lr.ph, %fo
   %hash.05 = phi i64 [ 0, %for.body.lr.ph ], [ %.29, %for.body ]
   %storemerge4 = phi i64 [ 0, %for.body.lr.ph ], [ %.35, %for.body ]
   %.23 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.22, align 8
-  %.24 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.23, i64 0, i32 7
+  %.24 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.23, i64 0, i32 8
   %.25 = load i8 (%string.559062*, i64)*, i8 (%string.559062*, i64)** %.24, align 8
   %.27 = tail call i8 %.25(%string.559062* nonnull %.2, i64 %storemerge4)
   %.20 = shl i64 %hash.05, 1
@@ -21443,7 +21454,7 @@ while.entry:                                      ; preds = %.5.endif, %while.en
   %.56 = load %string.559062*, %string.559062** %.55, align 8
   %.58 = getelementptr inbounds %string.559062, %string.559062* %.56, i64 0, i32 0
   %.59 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.58, align 8
-  %.60 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.59, i64 0, i32 3
+  %.60 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.59, i64 0, i32 4
   %.61 = load i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)** %.60, align 8
   %.62 = tail call i1 %.61(%string.559062* %.56, %string.559062* %.2)
   br i1 %.62, label %while.entry.while.exit.loopexit_crit_edge, label %while.entry.endif
@@ -21504,7 +21515,7 @@ while.entry:                                      ; preds = %.4, %while.entry.el
   %.36 = load %string.559062*, %string.559062** %.35, align 8
   %.38 = getelementptr inbounds %string.559062, %string.559062* %.36, i64 0, i32 0
   %.39 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.38, align 8
-  %.40 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.39, i64 0, i32 3
+  %.40 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.39, i64 0, i32 4
   %.41 = load i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)** %.40, align 8
   %.42 = tail call i1 %.41(%string.559062* %.36, %string.559062* %.2)
   br i1 %.42, label %while.exit, label %while.entry.else
@@ -21538,7 +21549,7 @@ while.exit.endif:                                 ; preds = %while.entry.else, %
 }
 
 ; Function Attrs: nofree nounwind
-define void @"Array<Bucket<string, VarId>>_constructor"(%"Array<Bucket<string, VarId>>.559327"* nocapture %.1, i64 %.2) local_unnamed_addr #3 {
+define void @"Array<Bucket<string, VarId>>_constructor"(%"Array<Bucket<string, VarId>>.559327"* nocapture %.1, i64 %.2) local_unnamed_addr #4 {
 .4:
   %.8 = getelementptr inbounds %"Array<Bucket<string, VarId>>.559327", %"Array<Bucket<string, VarId>>.559327"* %.1, i64 0, i32 2
   store i64 0, i64* %.8, align 8
@@ -21553,7 +21564,7 @@ define void @"Array<Bucket<string, VarId>>_constructor"(%"Array<Bucket<string, V
 }
 
 ; Function Attrs: nounwind
-define void @"Array<Bucket<string, VarId>>_resize"(%"Array<Bucket<string, VarId>>.559327"* nocapture %.1) #2 {
+define void @"Array<Bucket<string, VarId>>_resize"(%"Array<Bucket<string, VarId>>.559327"* nocapture %.1) #3 {
 .3:
   %.7 = getelementptr inbounds %"Array<Bucket<string, VarId>>.559327", %"Array<Bucket<string, VarId>>.559327"* %.1, i64 0, i32 3
   %.8 = load i64, i64* %.7, align 8
@@ -21799,7 +21810,7 @@ for.end:                                          ; preds = %for.cond, %for.body
 }
 
 ; Function Attrs: norecurse nounwind readonly
-define i64 @"Array<Bucket<string, VarId>>_find"(%"Array<Bucket<string, VarId>>.559327"* nocapture readonly %.1, %"Bucket<string, VarId>.559325"* %.2) #4 {
+define i64 @"Array<Bucket<string, VarId>>_find"(%"Array<Bucket<string, VarId>>.559327"* nocapture readonly %.1, %"Bucket<string, VarId>.559325"* %.2) #5 {
 .4:
   %.12 = getelementptr inbounds %"Array<Bucket<string, VarId>>.559327", %"Array<Bucket<string, VarId>>.559327"* %.1, i64 0, i32 2
   %.133 = load i64, i64* %.12, align 8
@@ -21886,7 +21897,7 @@ for.body.endif:                                   ; preds = %for.body, %for.body
 }
 
 ; Function Attrs: nofree norecurse nounwind writeonly
-define void @"Bucket<string, ClassId>_constructor"(%"Bucket<string, ClassId>.559330"* nocapture %.1) local_unnamed_addr #1 {
+define void @"Bucket<string, ClassId>_constructor"(%"Bucket<string, ClassId>.559330"* nocapture %.1) local_unnamed_addr #2 {
 .3:
   %.6 = getelementptr inbounds %"Bucket<string, ClassId>.559330", %"Bucket<string, ClassId>.559330"* %.1, i64 0, i32 3
   store i1 true, i1* %.6, align 1
@@ -21894,7 +21905,7 @@ define void @"Bucket<string, ClassId>_constructor"(%"Bucket<string, ClassId>.559
 }
 
 ; Function Attrs: nofree norecurse nounwind writeonly
-define void @"Bucket<string, ClassId>_set"(%"Bucket<string, ClassId>.559330"* nocapture %.1, %string.559062* %.2, %ClassId.559242* %.3) #1 {
+define void @"Bucket<string, ClassId>_set"(%"Bucket<string, ClassId>.559330"* nocapture %.1, %string.559062* %.2, %ClassId.559242* %.3) #2 {
 .5:
   %.10 = getelementptr inbounds %"Bucket<string, ClassId>.559330", %"Bucket<string, ClassId>.559330"* %.1, i64 0, i32 3
   store i1 false, i1* %.10, align 1
@@ -21906,7 +21917,7 @@ define void @"Bucket<string, ClassId>_set"(%"Bucket<string, ClassId>.559330"* no
 }
 
 ; Function Attrs: nofree nounwind
-define void @"Map<string, ClassId>_constructor"(%"Map<string, ClassId>.559321"* nocapture %.1) local_unnamed_addr #3 {
+define void @"Map<string, ClassId>_constructor"(%"Map<string, ClassId>.559321"* nocapture %.1) local_unnamed_addr #4 {
 .3:
   %.9 = tail call dereferenceable_or_null(2048) i8* @malloc(i64 2048)
   %.11 = getelementptr inbounds %"Map<string, ClassId>.559321", %"Map<string, ClassId>.559321"* %.1, i64 0, i32 1
@@ -21959,7 +21970,7 @@ for.body:                                         ; preds = %for.body.lr.ph, %fo
   %hash.05 = phi i64 [ 0, %for.body.lr.ph ], [ %.29, %for.body ]
   %storemerge4 = phi i64 [ 0, %for.body.lr.ph ], [ %.35, %for.body ]
   %.23 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.22, align 8
-  %.24 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.23, i64 0, i32 7
+  %.24 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.23, i64 0, i32 8
   %.25 = load i8 (%string.559062*, i64)*, i8 (%string.559062*, i64)** %.24, align 8
   %.27 = tail call i8 %.25(%string.559062* nonnull %.2, i64 %storemerge4)
   %.20 = shl i64 %hash.05, 1
@@ -22109,7 +22120,7 @@ while.entry:                                      ; preds = %.5.endif, %while.en
   %.56 = load %string.559062*, %string.559062** %.55, align 8
   %.58 = getelementptr inbounds %string.559062, %string.559062* %.56, i64 0, i32 0
   %.59 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.58, align 8
-  %.60 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.59, i64 0, i32 3
+  %.60 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.59, i64 0, i32 4
   %.61 = load i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)** %.60, align 8
   %.62 = tail call i1 %.61(%string.559062* %.56, %string.559062* %.2)
   br i1 %.62, label %while.entry.while.exit.loopexit_crit_edge, label %while.entry.endif
@@ -22170,7 +22181,7 @@ while.entry:                                      ; preds = %.4, %while.entry.el
   %.36 = load %string.559062*, %string.559062** %.35, align 8
   %.38 = getelementptr inbounds %string.559062, %string.559062* %.36, i64 0, i32 0
   %.39 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.38, align 8
-  %.40 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.39, i64 0, i32 3
+  %.40 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.39, i64 0, i32 4
   %.41 = load i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)** %.40, align 8
   %.42 = tail call i1 %.41(%string.559062* %.36, %string.559062* %.2)
   br i1 %.42, label %while.exit, label %while.entry.else
@@ -22204,7 +22215,7 @@ while.exit.endif:                                 ; preds = %while.entry.else, %
 }
 
 ; Function Attrs: nofree nounwind
-define void @"Array<Bucket<string, ClassId>>_constructor"(%"Array<Bucket<string, ClassId>>.559332"* nocapture %.1, i64 %.2) local_unnamed_addr #3 {
+define void @"Array<Bucket<string, ClassId>>_constructor"(%"Array<Bucket<string, ClassId>>.559332"* nocapture %.1, i64 %.2) local_unnamed_addr #4 {
 .4:
   %.8 = getelementptr inbounds %"Array<Bucket<string, ClassId>>.559332", %"Array<Bucket<string, ClassId>>.559332"* %.1, i64 0, i32 2
   store i64 0, i64* %.8, align 8
@@ -22219,7 +22230,7 @@ define void @"Array<Bucket<string, ClassId>>_constructor"(%"Array<Bucket<string,
 }
 
 ; Function Attrs: nounwind
-define void @"Array<Bucket<string, ClassId>>_resize"(%"Array<Bucket<string, ClassId>>.559332"* nocapture %.1) #2 {
+define void @"Array<Bucket<string, ClassId>>_resize"(%"Array<Bucket<string, ClassId>>.559332"* nocapture %.1) #3 {
 .3:
   %.7 = getelementptr inbounds %"Array<Bucket<string, ClassId>>.559332", %"Array<Bucket<string, ClassId>>.559332"* %.1, i64 0, i32 3
   %.8 = load i64, i64* %.7, align 8
@@ -22465,7 +22476,7 @@ for.end:                                          ; preds = %for.cond, %for.body
 }
 
 ; Function Attrs: norecurse nounwind readonly
-define i64 @"Array<Bucket<string, ClassId>>_find"(%"Array<Bucket<string, ClassId>>.559332"* nocapture readonly %.1, %"Bucket<string, ClassId>.559330"* %.2) #4 {
+define i64 @"Array<Bucket<string, ClassId>>_find"(%"Array<Bucket<string, ClassId>>.559332"* nocapture readonly %.1, %"Bucket<string, ClassId>.559330"* %.2) #5 {
 .4:
   %.12 = getelementptr inbounds %"Array<Bucket<string, ClassId>>.559332", %"Array<Bucket<string, ClassId>>.559332"* %.1, i64 0, i32 2
   %.133 = load i64, i64* %.12, align 8
@@ -22552,7 +22563,7 @@ for.body.endif:                                   ; preds = %for.body, %for.body
 }
 
 ; Function Attrs: nofree norecurse nounwind writeonly
-define void @"Bucket<string, EnumId>_constructor"(%"Bucket<string, EnumId>.559335"* nocapture %.1) local_unnamed_addr #1 {
+define void @"Bucket<string, EnumId>_constructor"(%"Bucket<string, EnumId>.559335"* nocapture %.1) local_unnamed_addr #2 {
 .3:
   %.6 = getelementptr inbounds %"Bucket<string, EnumId>.559335", %"Bucket<string, EnumId>.559335"* %.1, i64 0, i32 3
   store i1 true, i1* %.6, align 1
@@ -22560,7 +22571,7 @@ define void @"Bucket<string, EnumId>_constructor"(%"Bucket<string, EnumId>.55933
 }
 
 ; Function Attrs: nofree norecurse nounwind writeonly
-define void @"Bucket<string, EnumId>_set"(%"Bucket<string, EnumId>.559335"* nocapture %.1, %string.559062* %.2, %EnumId.559244* %.3) #1 {
+define void @"Bucket<string, EnumId>_set"(%"Bucket<string, EnumId>.559335"* nocapture %.1, %string.559062* %.2, %EnumId.559244* %.3) #2 {
 .5:
   %.10 = getelementptr inbounds %"Bucket<string, EnumId>.559335", %"Bucket<string, EnumId>.559335"* %.1, i64 0, i32 3
   store i1 false, i1* %.10, align 1
@@ -22572,7 +22583,7 @@ define void @"Bucket<string, EnumId>_set"(%"Bucket<string, EnumId>.559335"* noca
 }
 
 ; Function Attrs: nofree nounwind
-define void @"Map<string, EnumId>_constructor"(%"Map<string, EnumId>.559322"* nocapture %.1) local_unnamed_addr #3 {
+define void @"Map<string, EnumId>_constructor"(%"Map<string, EnumId>.559322"* nocapture %.1) local_unnamed_addr #4 {
 .3:
   %.9 = tail call dereferenceable_or_null(2048) i8* @malloc(i64 2048)
   %.11 = getelementptr inbounds %"Map<string, EnumId>.559322", %"Map<string, EnumId>.559322"* %.1, i64 0, i32 1
@@ -22625,7 +22636,7 @@ for.body:                                         ; preds = %for.body.lr.ph, %fo
   %hash.05 = phi i64 [ 0, %for.body.lr.ph ], [ %.29, %for.body ]
   %storemerge4 = phi i64 [ 0, %for.body.lr.ph ], [ %.35, %for.body ]
   %.23 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.22, align 8
-  %.24 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.23, i64 0, i32 7
+  %.24 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.23, i64 0, i32 8
   %.25 = load i8 (%string.559062*, i64)*, i8 (%string.559062*, i64)** %.24, align 8
   %.27 = tail call i8 %.25(%string.559062* nonnull %.2, i64 %storemerge4)
   %.20 = shl i64 %hash.05, 1
@@ -22775,7 +22786,7 @@ while.entry:                                      ; preds = %.5.endif, %while.en
   %.56 = load %string.559062*, %string.559062** %.55, align 8
   %.58 = getelementptr inbounds %string.559062, %string.559062* %.56, i64 0, i32 0
   %.59 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.58, align 8
-  %.60 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.59, i64 0, i32 3
+  %.60 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.59, i64 0, i32 4
   %.61 = load i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)** %.60, align 8
   %.62 = tail call i1 %.61(%string.559062* %.56, %string.559062* %.2)
   br i1 %.62, label %while.entry.while.exit.loopexit_crit_edge, label %while.entry.endif
@@ -22836,7 +22847,7 @@ while.entry:                                      ; preds = %.4, %while.entry.el
   %.36 = load %string.559062*, %string.559062** %.35, align 8
   %.38 = getelementptr inbounds %string.559062, %string.559062* %.36, i64 0, i32 0
   %.39 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.38, align 8
-  %.40 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.39, i64 0, i32 3
+  %.40 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.39, i64 0, i32 4
   %.41 = load i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)** %.40, align 8
   %.42 = tail call i1 %.41(%string.559062* %.36, %string.559062* %.2)
   br i1 %.42, label %while.exit, label %while.entry.else
@@ -22870,7 +22881,7 @@ while.exit.endif:                                 ; preds = %while.entry.else, %
 }
 
 ; Function Attrs: nofree nounwind
-define void @"Array<Bucket<string, EnumId>>_constructor"(%"Array<Bucket<string, EnumId>>.559337"* nocapture %.1, i64 %.2) local_unnamed_addr #3 {
+define void @"Array<Bucket<string, EnumId>>_constructor"(%"Array<Bucket<string, EnumId>>.559337"* nocapture %.1, i64 %.2) local_unnamed_addr #4 {
 .4:
   %.8 = getelementptr inbounds %"Array<Bucket<string, EnumId>>.559337", %"Array<Bucket<string, EnumId>>.559337"* %.1, i64 0, i32 2
   store i64 0, i64* %.8, align 8
@@ -22885,7 +22896,7 @@ define void @"Array<Bucket<string, EnumId>>_constructor"(%"Array<Bucket<string, 
 }
 
 ; Function Attrs: nounwind
-define void @"Array<Bucket<string, EnumId>>_resize"(%"Array<Bucket<string, EnumId>>.559337"* nocapture %.1) #2 {
+define void @"Array<Bucket<string, EnumId>>_resize"(%"Array<Bucket<string, EnumId>>.559337"* nocapture %.1) #3 {
 .3:
   %.7 = getelementptr inbounds %"Array<Bucket<string, EnumId>>.559337", %"Array<Bucket<string, EnumId>>.559337"* %.1, i64 0, i32 3
   %.8 = load i64, i64* %.7, align 8
@@ -23131,7 +23142,7 @@ for.end:                                          ; preds = %for.cond, %for.body
 }
 
 ; Function Attrs: norecurse nounwind readonly
-define i64 @"Array<Bucket<string, EnumId>>_find"(%"Array<Bucket<string, EnumId>>.559337"* nocapture readonly %.1, %"Bucket<string, EnumId>.559335"* %.2) #4 {
+define i64 @"Array<Bucket<string, EnumId>>_find"(%"Array<Bucket<string, EnumId>>.559337"* nocapture readonly %.1, %"Bucket<string, EnumId>.559335"* %.2) #5 {
 .4:
   %.12 = getelementptr inbounds %"Array<Bucket<string, EnumId>>.559337", %"Array<Bucket<string, EnumId>>.559337"* %.1, i64 0, i32 2
   %.133 = load i64, i64* %.12, align 8
@@ -23218,7 +23229,7 @@ for.body.endif:                                   ; preds = %for.body, %for.body
 }
 
 ; Function Attrs: nofree norecurse nounwind writeonly
-define void @"Bucket<string, Type>_constructor"(%"Bucket<string, Type>.559340"* nocapture %.1) local_unnamed_addr #1 {
+define void @"Bucket<string, Type>_constructor"(%"Bucket<string, Type>.559340"* nocapture %.1) local_unnamed_addr #2 {
 .3:
   %.6 = getelementptr inbounds %"Bucket<string, Type>.559340", %"Bucket<string, Type>.559340"* %.1, i64 0, i32 3
   store i1 true, i1* %.6, align 1
@@ -23226,7 +23237,7 @@ define void @"Bucket<string, Type>_constructor"(%"Bucket<string, Type>.559340"* 
 }
 
 ; Function Attrs: nofree norecurse nounwind writeonly
-define void @"Bucket<string, Type>_set"(%"Bucket<string, Type>.559340"* nocapture %.1, %string.559062* %.2, %Type.559226* %.3) #1 {
+define void @"Bucket<string, Type>_set"(%"Bucket<string, Type>.559340"* nocapture %.1, %string.559062* %.2, %Type.559226* %.3) #2 {
 .5:
   %.10 = getelementptr inbounds %"Bucket<string, Type>.559340", %"Bucket<string, Type>.559340"* %.1, i64 0, i32 3
   store i1 false, i1* %.10, align 1
@@ -23238,7 +23249,7 @@ define void @"Bucket<string, Type>_set"(%"Bucket<string, Type>.559340"* nocaptur
 }
 
 ; Function Attrs: nofree nounwind
-define void @"Map<string, Type>_constructor"(%"Map<string, Type>.559323"* nocapture %.1) local_unnamed_addr #3 {
+define void @"Map<string, Type>_constructor"(%"Map<string, Type>.559323"* nocapture %.1) local_unnamed_addr #4 {
 .3:
   %.9 = tail call dereferenceable_or_null(2048) i8* @malloc(i64 2048)
   %.11 = getelementptr inbounds %"Map<string, Type>.559323", %"Map<string, Type>.559323"* %.1, i64 0, i32 1
@@ -23291,7 +23302,7 @@ for.body:                                         ; preds = %for.body.lr.ph, %fo
   %hash.05 = phi i64 [ 0, %for.body.lr.ph ], [ %.29, %for.body ]
   %storemerge4 = phi i64 [ 0, %for.body.lr.ph ], [ %.35, %for.body ]
   %.23 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.22, align 8
-  %.24 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.23, i64 0, i32 7
+  %.24 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.23, i64 0, i32 8
   %.25 = load i8 (%string.559062*, i64)*, i8 (%string.559062*, i64)** %.24, align 8
   %.27 = tail call i8 %.25(%string.559062* nonnull %.2, i64 %storemerge4)
   %.20 = shl i64 %hash.05, 1
@@ -23441,7 +23452,7 @@ while.entry:                                      ; preds = %.5.endif, %while.en
   %.56 = load %string.559062*, %string.559062** %.55, align 8
   %.58 = getelementptr inbounds %string.559062, %string.559062* %.56, i64 0, i32 0
   %.59 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.58, align 8
-  %.60 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.59, i64 0, i32 3
+  %.60 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.59, i64 0, i32 4
   %.61 = load i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)** %.60, align 8
   %.62 = tail call i1 %.61(%string.559062* %.56, %string.559062* %.2)
   br i1 %.62, label %while.entry.while.exit.loopexit_crit_edge, label %while.entry.endif
@@ -23502,7 +23513,7 @@ while.entry:                                      ; preds = %.4, %while.entry.el
   %.36 = load %string.559062*, %string.559062** %.35, align 8
   %.38 = getelementptr inbounds %string.559062, %string.559062* %.36, i64 0, i32 0
   %.39 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.38, align 8
-  %.40 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.39, i64 0, i32 3
+  %.40 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.39, i64 0, i32 4
   %.41 = load i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)** %.40, align 8
   %.42 = tail call i1 %.41(%string.559062* %.36, %string.559062* %.2)
   br i1 %.42, label %while.exit, label %while.entry.else
@@ -23536,7 +23547,7 @@ while.exit.endif:                                 ; preds = %while.entry.else, %
 }
 
 ; Function Attrs: nofree nounwind
-define void @"Array<Bucket<string, Type>>_constructor"(%"Array<Bucket<string, Type>>.559342"* nocapture %.1, i64 %.2) local_unnamed_addr #3 {
+define void @"Array<Bucket<string, Type>>_constructor"(%"Array<Bucket<string, Type>>.559342"* nocapture %.1, i64 %.2) local_unnamed_addr #4 {
 .4:
   %.8 = getelementptr inbounds %"Array<Bucket<string, Type>>.559342", %"Array<Bucket<string, Type>>.559342"* %.1, i64 0, i32 2
   store i64 0, i64* %.8, align 8
@@ -23551,7 +23562,7 @@ define void @"Array<Bucket<string, Type>>_constructor"(%"Array<Bucket<string, Ty
 }
 
 ; Function Attrs: nounwind
-define void @"Array<Bucket<string, Type>>_resize"(%"Array<Bucket<string, Type>>.559342"* nocapture %.1) #2 {
+define void @"Array<Bucket<string, Type>>_resize"(%"Array<Bucket<string, Type>>.559342"* nocapture %.1) #3 {
 .3:
   %.7 = getelementptr inbounds %"Array<Bucket<string, Type>>.559342", %"Array<Bucket<string, Type>>.559342"* %.1, i64 0, i32 3
   %.8 = load i64, i64* %.7, align 8
@@ -23797,7 +23808,7 @@ for.end:                                          ; preds = %for.cond, %for.body
 }
 
 ; Function Attrs: norecurse nounwind readonly
-define i64 @"Array<Bucket<string, Type>>_find"(%"Array<Bucket<string, Type>>.559342"* nocapture readonly %.1, %"Bucket<string, Type>.559340"* %.2) #4 {
+define i64 @"Array<Bucket<string, Type>>_find"(%"Array<Bucket<string, Type>>.559342"* nocapture readonly %.1, %"Bucket<string, Type>.559340"* %.2) #5 {
 .4:
   %.12 = getelementptr inbounds %"Array<Bucket<string, Type>>.559342", %"Array<Bucket<string, Type>>.559342"* %.1, i64 0, i32 2
   %.133 = load i64, i64* %.12, align 8
@@ -23884,7 +23895,7 @@ for.body.endif:                                   ; preds = %for.body, %for.body
 }
 
 ; Function Attrs: nofree nounwind
-define void @Scope_constructor(%Scope.559318* nocapture %.1, i64 %.2, i64 %.3) local_unnamed_addr #3 {
+define void @Scope_constructor(%Scope.559318* nocapture %.1, i64 %.2, i64 %.3) local_unnamed_addr #4 {
 .5:
   %.12 = tail call dereferenceable_or_null(24) i8* @malloc(i64 24)
   %.13 = bitcast i8* %.12 to %ScopeId.559316*
@@ -23940,7 +23951,7 @@ define void @Scope_constructor(%Scope.559318* nocapture %.1, i64 %.2, i64 %.3) l
 }
 
 ; Function Attrs: nofree norecurse nounwind writeonly
-define void @FunctionArg_constructor(%FunctionArg.559344* nocapture %.1) local_unnamed_addr #1 {
+define void @FunctionArg_constructor(%FunctionArg.559344* nocapture %.1) local_unnamed_addr #2 {
 .3:
   %.6 = bitcast %FunctionArg.559344* %.1 to %Expression.559246*
   tail call void @Expression_constructor(%Expression.559246* %.6, i64 7)
@@ -23948,7 +23959,7 @@ define void @FunctionArg_constructor(%FunctionArg.559344* nocapture %.1) local_u
 }
 
 ; Function Attrs: nofree nounwind
-define void @"Array<FunctionArg>_constructor"(%"Array<FunctionArg>.559348"* nocapture %.1, i64 %.2) local_unnamed_addr #3 {
+define void @"Array<FunctionArg>_constructor"(%"Array<FunctionArg>.559348"* nocapture %.1, i64 %.2) local_unnamed_addr #4 {
 .4:
   %.8 = getelementptr inbounds %"Array<FunctionArg>.559348", %"Array<FunctionArg>.559348"* %.1, i64 0, i32 2
   store i64 0, i64* %.8, align 8
@@ -23963,7 +23974,7 @@ define void @"Array<FunctionArg>_constructor"(%"Array<FunctionArg>.559348"* noca
 }
 
 ; Function Attrs: nounwind
-define void @"Array<FunctionArg>_resize"(%"Array<FunctionArg>.559348"* nocapture %.1) #2 {
+define void @"Array<FunctionArg>_resize"(%"Array<FunctionArg>.559348"* nocapture %.1) #3 {
 .3:
   %.7 = getelementptr inbounds %"Array<FunctionArg>.559348", %"Array<FunctionArg>.559348"* %.1, i64 0, i32 3
   %.8 = load i64, i64* %.7, align 8
@@ -24209,7 +24220,7 @@ for.end:                                          ; preds = %for.cond, %for.body
 }
 
 ; Function Attrs: norecurse nounwind readonly
-define i64 @"Array<FunctionArg>_find"(%"Array<FunctionArg>.559348"* nocapture readonly %.1, %FunctionArg.559344* %.2) #4 {
+define i64 @"Array<FunctionArg>_find"(%"Array<FunctionArg>.559348"* nocapture readonly %.1, %FunctionArg.559344* %.2) #5 {
 .4:
   %.12 = getelementptr inbounds %"Array<FunctionArg>.559348", %"Array<FunctionArg>.559348"* %.1, i64 0, i32 2
   %.133 = load i64, i64* %.12, align 8
@@ -24243,7 +24254,7 @@ for.body.endif:                                   ; preds = %for.body
 }
 
 ; Function Attrs: nofree norecurse nounwind writeonly
-define void @Function_constructor(%Function.559346* nocapture %.1) local_unnamed_addr #1 {
+define void @Function_constructor(%Function.559346* nocapture %.1) local_unnamed_addr #2 {
 .3:
   %.6 = getelementptr inbounds %Function.559346, %Function.559346* %.1, i64 0, i32 7
   store i1 false, i1* %.6, align 1
@@ -24251,7 +24262,7 @@ define void @Function_constructor(%Function.559346* nocapture %.1) local_unnamed
 }
 
 ; Function Attrs: nofree norecurse nounwind writeonly
-define void @Var_constructor(%Var.559350* nocapture %.1, %Expression.559246* %.2, %Type.559226* %.3) local_unnamed_addr #1 {
+define void @Var_constructor(%Var.559350* nocapture %.1, %Expression.559246* %.2, %Type.559226* %.3) local_unnamed_addr #2 {
 .5:
   %.11 = getelementptr inbounds %Var.559350, %Var.559350* %.1, i64 0, i32 3
   store %Expression.559246* %.2, %Expression.559246** %.11, align 8
@@ -24261,7 +24272,7 @@ define void @Var_constructor(%Var.559350* nocapture %.1, %Expression.559246* %.2
 }
 
 ; Function Attrs: nofree norecurse nounwind writeonly
-define void @Const_constructor(%Const.559352* nocapture %.1, %Expression.559246* %.2, %Type.559226* %.3) local_unnamed_addr #1 {
+define void @Const_constructor(%Const.559352* nocapture %.1, %Expression.559246* %.2, %Type.559226* %.3) local_unnamed_addr #2 {
 .5:
   %.11 = getelementptr inbounds %Const.559352, %Const.559352* %.1, i64 0, i32 3
   store %Expression.559246* %.2, %Expression.559246** %.11, align 8
@@ -24271,7 +24282,7 @@ define void @Const_constructor(%Const.559352* nocapture %.1, %Expression.559246*
 }
 
 ; Function Attrs: nofree norecurse nounwind writeonly
-define void @ClassField_constructor(%ClassField.559354* nocapture %.1) local_unnamed_addr #1 {
+define void @ClassField_constructor(%ClassField.559354* nocapture %.1) local_unnamed_addr #2 {
 .3:
   %.6 = getelementptr inbounds %ClassField.559354, %ClassField.559354* %.1, i64 0, i32 2
   store i1 false, i1* %.6, align 1
@@ -24279,7 +24290,7 @@ define void @ClassField_constructor(%ClassField.559354* nocapture %.1) local_unn
 }
 
 ; Function Attrs: nofree norecurse nounwind writeonly
-define void @ClassMethod_constructor(%ClassMethod.559356* nocapture %.1) local_unnamed_addr #1 {
+define void @ClassMethod_constructor(%ClassMethod.559356* nocapture %.1) local_unnamed_addr #2 {
 .3:
   %.6 = getelementptr inbounds %ClassMethod.559356, %ClassMethod.559356* %.1, i64 0, i32 8
   store i1 false, i1* %.6, align 1
@@ -24287,7 +24298,7 @@ define void @ClassMethod_constructor(%ClassMethod.559356* nocapture %.1) local_u
 }
 
 ; Function Attrs: nofree nounwind
-define void @"Array<ClassField>_constructor"(%"Array<ClassField>.559360"* nocapture %.1, i64 %.2) local_unnamed_addr #3 {
+define void @"Array<ClassField>_constructor"(%"Array<ClassField>.559360"* nocapture %.1, i64 %.2) local_unnamed_addr #4 {
 .4:
   %.8 = getelementptr inbounds %"Array<ClassField>.559360", %"Array<ClassField>.559360"* %.1, i64 0, i32 2
   store i64 0, i64* %.8, align 8
@@ -24302,7 +24313,7 @@ define void @"Array<ClassField>_constructor"(%"Array<ClassField>.559360"* nocapt
 }
 
 ; Function Attrs: nounwind
-define void @"Array<ClassField>_resize"(%"Array<ClassField>.559360"* nocapture %.1) #2 {
+define void @"Array<ClassField>_resize"(%"Array<ClassField>.559360"* nocapture %.1) #3 {
 .3:
   %.7 = getelementptr inbounds %"Array<ClassField>.559360", %"Array<ClassField>.559360"* %.1, i64 0, i32 3
   %.8 = load i64, i64* %.7, align 8
@@ -24548,7 +24559,7 @@ for.end:                                          ; preds = %for.cond, %for.body
 }
 
 ; Function Attrs: norecurse nounwind readonly
-define i64 @"Array<ClassField>_find"(%"Array<ClassField>.559360"* nocapture readonly %.1, %ClassField.559354* %.2) #4 {
+define i64 @"Array<ClassField>_find"(%"Array<ClassField>.559360"* nocapture readonly %.1, %ClassField.559354* %.2) #5 {
 .4:
   %.12 = getelementptr inbounds %"Array<ClassField>.559360", %"Array<ClassField>.559360"* %.1, i64 0, i32 2
   %.133 = load i64, i64* %.12, align 8
@@ -24582,7 +24593,7 @@ for.body.endif:                                   ; preds = %for.body
 }
 
 ; Function Attrs: nofree nounwind
-define void @"Array<ClassMethod>_constructor"(%"Array<ClassMethod>.559361"* nocapture %.1, i64 %.2) local_unnamed_addr #3 {
+define void @"Array<ClassMethod>_constructor"(%"Array<ClassMethod>.559361"* nocapture %.1, i64 %.2) local_unnamed_addr #4 {
 .4:
   %.8 = getelementptr inbounds %"Array<ClassMethod>.559361", %"Array<ClassMethod>.559361"* %.1, i64 0, i32 2
   store i64 0, i64* %.8, align 8
@@ -24597,7 +24608,7 @@ define void @"Array<ClassMethod>_constructor"(%"Array<ClassMethod>.559361"* noca
 }
 
 ; Function Attrs: nounwind
-define void @"Array<ClassMethod>_resize"(%"Array<ClassMethod>.559361"* nocapture %.1) #2 {
+define void @"Array<ClassMethod>_resize"(%"Array<ClassMethod>.559361"* nocapture %.1) #3 {
 .3:
   %.7 = getelementptr inbounds %"Array<ClassMethod>.559361", %"Array<ClassMethod>.559361"* %.1, i64 0, i32 3
   %.8 = load i64, i64* %.7, align 8
@@ -24843,7 +24854,7 @@ for.end:                                          ; preds = %for.cond, %for.body
 }
 
 ; Function Attrs: norecurse nounwind readonly
-define i64 @"Array<ClassMethod>_find"(%"Array<ClassMethod>.559361"* nocapture readonly %.1, %ClassMethod.559356* %.2) #4 {
+define i64 @"Array<ClassMethod>_find"(%"Array<ClassMethod>.559361"* nocapture readonly %.1, %ClassMethod.559356* %.2) #5 {
 .4:
   %.12 = getelementptr inbounds %"Array<ClassMethod>.559361", %"Array<ClassMethod>.559361"* %.1, i64 0, i32 2
   %.133 = load i64, i64* %.12, align 8
@@ -24877,7 +24888,7 @@ for.body.endif:                                   ; preds = %for.body
 }
 
 ; Function Attrs: nofree norecurse nounwind writeonly
-define void @"Bucket<string, PropId>_constructor"(%"Bucket<string, PropId>.559366"* nocapture %.1) local_unnamed_addr #1 {
+define void @"Bucket<string, PropId>_constructor"(%"Bucket<string, PropId>.559366"* nocapture %.1) local_unnamed_addr #2 {
 .3:
   %.6 = getelementptr inbounds %"Bucket<string, PropId>.559366", %"Bucket<string, PropId>.559366"* %.1, i64 0, i32 3
   store i1 true, i1* %.6, align 1
@@ -24885,7 +24896,7 @@ define void @"Bucket<string, PropId>_constructor"(%"Bucket<string, PropId>.55936
 }
 
 ; Function Attrs: nofree norecurse nounwind writeonly
-define void @"Bucket<string, PropId>_set"(%"Bucket<string, PropId>.559366"* nocapture %.1, %string.559062* %.2, %PropId.559294* %.3) #1 {
+define void @"Bucket<string, PropId>_set"(%"Bucket<string, PropId>.559366"* nocapture %.1, %string.559062* %.2, %PropId.559294* %.3) #2 {
 .5:
   %.10 = getelementptr inbounds %"Bucket<string, PropId>.559366", %"Bucket<string, PropId>.559366"* %.1, i64 0, i32 3
   store i1 false, i1* %.10, align 1
@@ -24897,7 +24908,7 @@ define void @"Bucket<string, PropId>_set"(%"Bucket<string, PropId>.559366"* noca
 }
 
 ; Function Attrs: nofree nounwind
-define void @"Map<string, PropId>_constructor"(%"Map<string, PropId>.559362"* nocapture %.1) local_unnamed_addr #3 {
+define void @"Map<string, PropId>_constructor"(%"Map<string, PropId>.559362"* nocapture %.1) local_unnamed_addr #4 {
 .3:
   %.9 = tail call dereferenceable_or_null(2048) i8* @malloc(i64 2048)
   %.11 = getelementptr inbounds %"Map<string, PropId>.559362", %"Map<string, PropId>.559362"* %.1, i64 0, i32 1
@@ -24950,7 +24961,7 @@ for.body:                                         ; preds = %for.body.lr.ph, %fo
   %hash.05 = phi i64 [ 0, %for.body.lr.ph ], [ %.29, %for.body ]
   %storemerge4 = phi i64 [ 0, %for.body.lr.ph ], [ %.35, %for.body ]
   %.23 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.22, align 8
-  %.24 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.23, i64 0, i32 7
+  %.24 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.23, i64 0, i32 8
   %.25 = load i8 (%string.559062*, i64)*, i8 (%string.559062*, i64)** %.24, align 8
   %.27 = tail call i8 %.25(%string.559062* nonnull %.2, i64 %storemerge4)
   %.20 = shl i64 %hash.05, 1
@@ -25100,7 +25111,7 @@ while.entry:                                      ; preds = %.5.endif, %while.en
   %.56 = load %string.559062*, %string.559062** %.55, align 8
   %.58 = getelementptr inbounds %string.559062, %string.559062* %.56, i64 0, i32 0
   %.59 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.58, align 8
-  %.60 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.59, i64 0, i32 3
+  %.60 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.59, i64 0, i32 4
   %.61 = load i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)** %.60, align 8
   %.62 = tail call i1 %.61(%string.559062* %.56, %string.559062* %.2)
   br i1 %.62, label %while.entry.while.exit.loopexit_crit_edge, label %while.entry.endif
@@ -25161,7 +25172,7 @@ while.entry:                                      ; preds = %.4, %while.entry.el
   %.36 = load %string.559062*, %string.559062** %.35, align 8
   %.38 = getelementptr inbounds %string.559062, %string.559062* %.36, i64 0, i32 0
   %.39 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.38, align 8
-  %.40 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.39, i64 0, i32 3
+  %.40 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.39, i64 0, i32 4
   %.41 = load i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)** %.40, align 8
   %.42 = tail call i1 %.41(%string.559062* %.36, %string.559062* %.2)
   br i1 %.42, label %while.exit, label %while.entry.else
@@ -25195,7 +25206,7 @@ while.exit.endif:                                 ; preds = %while.entry.else, %
 }
 
 ; Function Attrs: nofree nounwind
-define void @"Array<Bucket<string, PropId>>_constructor"(%"Array<Bucket<string, PropId>>.559368"* nocapture %.1, i64 %.2) local_unnamed_addr #3 {
+define void @"Array<Bucket<string, PropId>>_constructor"(%"Array<Bucket<string, PropId>>.559368"* nocapture %.1, i64 %.2) local_unnamed_addr #4 {
 .4:
   %.8 = getelementptr inbounds %"Array<Bucket<string, PropId>>.559368", %"Array<Bucket<string, PropId>>.559368"* %.1, i64 0, i32 2
   store i64 0, i64* %.8, align 8
@@ -25210,7 +25221,7 @@ define void @"Array<Bucket<string, PropId>>_constructor"(%"Array<Bucket<string, 
 }
 
 ; Function Attrs: nounwind
-define void @"Array<Bucket<string, PropId>>_resize"(%"Array<Bucket<string, PropId>>.559368"* nocapture %.1) #2 {
+define void @"Array<Bucket<string, PropId>>_resize"(%"Array<Bucket<string, PropId>>.559368"* nocapture %.1) #3 {
 .3:
   %.7 = getelementptr inbounds %"Array<Bucket<string, PropId>>.559368", %"Array<Bucket<string, PropId>>.559368"* %.1, i64 0, i32 3
   %.8 = load i64, i64* %.7, align 8
@@ -25456,7 +25467,7 @@ for.end:                                          ; preds = %for.cond, %for.body
 }
 
 ; Function Attrs: norecurse nounwind readonly
-define i64 @"Array<Bucket<string, PropId>>_find"(%"Array<Bucket<string, PropId>>.559368"* nocapture readonly %.1, %"Bucket<string, PropId>.559366"* %.2) #4 {
+define i64 @"Array<Bucket<string, PropId>>_find"(%"Array<Bucket<string, PropId>>.559368"* nocapture readonly %.1, %"Bucket<string, PropId>.559366"* %.2) #5 {
 .4:
   %.12 = getelementptr inbounds %"Array<Bucket<string, PropId>>.559368", %"Array<Bucket<string, PropId>>.559368"* %.1, i64 0, i32 2
   %.133 = load i64, i64* %.12, align 8
@@ -25543,7 +25554,7 @@ for.body.endif:                                   ; preds = %for.body, %for.body
 }
 
 ; Function Attrs: nofree nounwind
-define void @Class_constructor(%Class.559358* nocapture %.1) local_unnamed_addr #3 {
+define void @Class_constructor(%Class.559358* nocapture %.1) local_unnamed_addr #4 {
 .3:
   %.6 = getelementptr inbounds %Class.559358, %Class.559358* %.1, i64 0, i32 4
   store %PropId.559294* null, %PropId.559294** %.6, align 8
@@ -25588,7 +25599,7 @@ define void @Class_constructor(%Class.559358* nocapture %.1) local_unnamed_addr 
 }
 
 ; Function Attrs: nofree norecurse nounwind writeonly
-define void @EnumField_constructor(%EnumField.559370* nocapture %.1, %string.559062* %.2) local_unnamed_addr #1 {
+define void @EnumField_constructor(%EnumField.559370* nocapture %.1, %string.559062* %.2) local_unnamed_addr #2 {
 .4:
   %.9 = getelementptr inbounds %EnumField.559370, %EnumField.559370* %.1, i64 0, i32 2
   store %string.559062* %.2, %string.559062** %.9, align 8
@@ -25596,7 +25607,7 @@ define void @EnumField_constructor(%EnumField.559370* nocapture %.1, %string.559
 }
 
 ; Function Attrs: nofree nounwind
-define void @"Array<EnumField>_constructor"(%"Array<EnumField>.559374"* nocapture %.1, i64 %.2) local_unnamed_addr #3 {
+define void @"Array<EnumField>_constructor"(%"Array<EnumField>.559374"* nocapture %.1, i64 %.2) local_unnamed_addr #4 {
 .4:
   %.8 = getelementptr inbounds %"Array<EnumField>.559374", %"Array<EnumField>.559374"* %.1, i64 0, i32 2
   store i64 0, i64* %.8, align 8
@@ -25611,7 +25622,7 @@ define void @"Array<EnumField>_constructor"(%"Array<EnumField>.559374"* nocaptur
 }
 
 ; Function Attrs: nounwind
-define void @"Array<EnumField>_resize"(%"Array<EnumField>.559374"* nocapture %.1) #2 {
+define void @"Array<EnumField>_resize"(%"Array<EnumField>.559374"* nocapture %.1) #3 {
 .3:
   %.7 = getelementptr inbounds %"Array<EnumField>.559374", %"Array<EnumField>.559374"* %.1, i64 0, i32 3
   %.8 = load i64, i64* %.7, align 8
@@ -25857,7 +25868,7 @@ for.end:                                          ; preds = %for.cond, %for.body
 }
 
 ; Function Attrs: norecurse nounwind readonly
-define i64 @"Array<EnumField>_find"(%"Array<EnumField>.559374"* nocapture readonly %.1, %EnumField.559370* %.2) #4 {
+define i64 @"Array<EnumField>_find"(%"Array<EnumField>.559374"* nocapture readonly %.1, %EnumField.559370* %.2) #5 {
 .4:
   %.12 = getelementptr inbounds %"Array<EnumField>.559374", %"Array<EnumField>.559374"* %.1, i64 0, i32 2
   %.133 = load i64, i64* %.12, align 8
@@ -25891,7 +25902,7 @@ for.body.endif:                                   ; preds = %for.body
 }
 
 ; Function Attrs: nofree nounwind
-define void @Enum_constructor(%Enum.559372* nocapture %.1) local_unnamed_addr #3 {
+define void @Enum_constructor(%Enum.559372* nocapture %.1) local_unnamed_addr #4 {
 .3:
   %.7 = tail call dereferenceable_or_null(64) i8* @malloc(i64 64)
   %.9 = tail call dereferenceable_or_null(32) i8* @malloc(i64 32)
@@ -25913,7 +25924,7 @@ define void @Enum_constructor(%Enum.559372* nocapture %.1) local_unnamed_addr #3
 }
 
 ; Function Attrs: nofree nounwind
-define void @"Array<Var>_constructor"(%"Array<Var>.559378"* nocapture %.1, i64 %.2) local_unnamed_addr #3 {
+define void @"Array<Var>_constructor"(%"Array<Var>.559378"* nocapture %.1, i64 %.2) local_unnamed_addr #4 {
 .4:
   %.8 = getelementptr inbounds %"Array<Var>.559378", %"Array<Var>.559378"* %.1, i64 0, i32 2
   store i64 0, i64* %.8, align 8
@@ -25928,7 +25939,7 @@ define void @"Array<Var>_constructor"(%"Array<Var>.559378"* nocapture %.1, i64 %
 }
 
 ; Function Attrs: nounwind
-define void @"Array<Var>_resize"(%"Array<Var>.559378"* nocapture %.1) #2 {
+define void @"Array<Var>_resize"(%"Array<Var>.559378"* nocapture %.1) #3 {
 .3:
   %.7 = getelementptr inbounds %"Array<Var>.559378", %"Array<Var>.559378"* %.1, i64 0, i32 3
   %.8 = load i64, i64* %.7, align 8
@@ -26174,7 +26185,7 @@ for.end:                                          ; preds = %for.cond, %for.body
 }
 
 ; Function Attrs: norecurse nounwind readonly
-define i64 @"Array<Var>_find"(%"Array<Var>.559378"* nocapture readonly %.1, %Var.559350* %.2) #4 {
+define i64 @"Array<Var>_find"(%"Array<Var>.559378"* nocapture readonly %.1, %Var.559350* %.2) #5 {
 .4:
   %.12 = getelementptr inbounds %"Array<Var>.559378", %"Array<Var>.559378"* %.1, i64 0, i32 2
   %.133 = load i64, i64* %.12, align 8
@@ -26208,7 +26219,7 @@ for.body.endif:                                   ; preds = %for.body
 }
 
 ; Function Attrs: nofree nounwind
-define void @"Array<Const>_constructor"(%"Array<Const>.559379"* nocapture %.1, i64 %.2) local_unnamed_addr #3 {
+define void @"Array<Const>_constructor"(%"Array<Const>.559379"* nocapture %.1, i64 %.2) local_unnamed_addr #4 {
 .4:
   %.8 = getelementptr inbounds %"Array<Const>.559379", %"Array<Const>.559379"* %.1, i64 0, i32 2
   store i64 0, i64* %.8, align 8
@@ -26223,7 +26234,7 @@ define void @"Array<Const>_constructor"(%"Array<Const>.559379"* nocapture %.1, i
 }
 
 ; Function Attrs: nounwind
-define void @"Array<Const>_resize"(%"Array<Const>.559379"* nocapture %.1) #2 {
+define void @"Array<Const>_resize"(%"Array<Const>.559379"* nocapture %.1) #3 {
 .3:
   %.7 = getelementptr inbounds %"Array<Const>.559379", %"Array<Const>.559379"* %.1, i64 0, i32 3
   %.8 = load i64, i64* %.7, align 8
@@ -26469,7 +26480,7 @@ for.end:                                          ; preds = %for.cond, %for.body
 }
 
 ; Function Attrs: norecurse nounwind readonly
-define i64 @"Array<Const>_find"(%"Array<Const>.559379"* nocapture readonly %.1, %Const.559352* %.2) #4 {
+define i64 @"Array<Const>_find"(%"Array<Const>.559379"* nocapture readonly %.1, %Const.559352* %.2) #5 {
 .4:
   %.12 = getelementptr inbounds %"Array<Const>.559379", %"Array<Const>.559379"* %.1, i64 0, i32 2
   %.133 = load i64, i64* %.12, align 8
@@ -26503,7 +26514,7 @@ for.body.endif:                                   ; preds = %for.body
 }
 
 ; Function Attrs: nofree nounwind
-define void @"Array<Class>_constructor"(%"Array<Class>.559380"* nocapture %.1, i64 %.2) local_unnamed_addr #3 {
+define void @"Array<Class>_constructor"(%"Array<Class>.559380"* nocapture %.1, i64 %.2) local_unnamed_addr #4 {
 .4:
   %.8 = getelementptr inbounds %"Array<Class>.559380", %"Array<Class>.559380"* %.1, i64 0, i32 2
   store i64 0, i64* %.8, align 8
@@ -26518,7 +26529,7 @@ define void @"Array<Class>_constructor"(%"Array<Class>.559380"* nocapture %.1, i
 }
 
 ; Function Attrs: nounwind
-define void @"Array<Class>_resize"(%"Array<Class>.559380"* nocapture %.1) #2 {
+define void @"Array<Class>_resize"(%"Array<Class>.559380"* nocapture %.1) #3 {
 .3:
   %.7 = getelementptr inbounds %"Array<Class>.559380", %"Array<Class>.559380"* %.1, i64 0, i32 3
   %.8 = load i64, i64* %.7, align 8
@@ -26764,7 +26775,7 @@ for.end:                                          ; preds = %for.cond, %for.body
 }
 
 ; Function Attrs: norecurse nounwind readonly
-define i64 @"Array<Class>_find"(%"Array<Class>.559380"* nocapture readonly %.1, %Class.559358* %.2) #4 {
+define i64 @"Array<Class>_find"(%"Array<Class>.559380"* nocapture readonly %.1, %Class.559358* %.2) #5 {
 .4:
   %.12 = getelementptr inbounds %"Array<Class>.559380", %"Array<Class>.559380"* %.1, i64 0, i32 2
   %.133 = load i64, i64* %.12, align 8
@@ -26798,7 +26809,7 @@ for.body.endif:                                   ; preds = %for.body
 }
 
 ; Function Attrs: nofree nounwind
-define void @"Array<Function>_constructor"(%"Array<Function>.559381"* nocapture %.1, i64 %.2) local_unnamed_addr #3 {
+define void @"Array<Function>_constructor"(%"Array<Function>.559381"* nocapture %.1, i64 %.2) local_unnamed_addr #4 {
 .4:
   %.8 = getelementptr inbounds %"Array<Function>.559381", %"Array<Function>.559381"* %.1, i64 0, i32 2
   store i64 0, i64* %.8, align 8
@@ -26813,7 +26824,7 @@ define void @"Array<Function>_constructor"(%"Array<Function>.559381"* nocapture 
 }
 
 ; Function Attrs: nounwind
-define void @"Array<Function>_resize"(%"Array<Function>.559381"* nocapture %.1) #2 {
+define void @"Array<Function>_resize"(%"Array<Function>.559381"* nocapture %.1) #3 {
 .3:
   %.7 = getelementptr inbounds %"Array<Function>.559381", %"Array<Function>.559381"* %.1, i64 0, i32 3
   %.8 = load i64, i64* %.7, align 8
@@ -27059,7 +27070,7 @@ for.end:                                          ; preds = %for.cond, %for.body
 }
 
 ; Function Attrs: norecurse nounwind readonly
-define i64 @"Array<Function>_find"(%"Array<Function>.559381"* nocapture readonly %.1, %Function.559346* %.2) #4 {
+define i64 @"Array<Function>_find"(%"Array<Function>.559381"* nocapture readonly %.1, %Function.559346* %.2) #5 {
 .4:
   %.12 = getelementptr inbounds %"Array<Function>.559381", %"Array<Function>.559381"* %.1, i64 0, i32 2
   %.133 = load i64, i64* %.12, align 8
@@ -27093,7 +27104,7 @@ for.body.endif:                                   ; preds = %for.body
 }
 
 ; Function Attrs: nofree nounwind
-define void @"Array<Enum>_constructor"(%"Array<Enum>.559382"* nocapture %.1, i64 %.2) local_unnamed_addr #3 {
+define void @"Array<Enum>_constructor"(%"Array<Enum>.559382"* nocapture %.1, i64 %.2) local_unnamed_addr #4 {
 .4:
   %.8 = getelementptr inbounds %"Array<Enum>.559382", %"Array<Enum>.559382"* %.1, i64 0, i32 2
   store i64 0, i64* %.8, align 8
@@ -27108,7 +27119,7 @@ define void @"Array<Enum>_constructor"(%"Array<Enum>.559382"* nocapture %.1, i64
 }
 
 ; Function Attrs: nounwind
-define void @"Array<Enum>_resize"(%"Array<Enum>.559382"* nocapture %.1) #2 {
+define void @"Array<Enum>_resize"(%"Array<Enum>.559382"* nocapture %.1) #3 {
 .3:
   %.7 = getelementptr inbounds %"Array<Enum>.559382", %"Array<Enum>.559382"* %.1, i64 0, i32 3
   %.8 = load i64, i64* %.7, align 8
@@ -27354,7 +27365,7 @@ for.end:                                          ; preds = %for.cond, %for.body
 }
 
 ; Function Attrs: norecurse nounwind readonly
-define i64 @"Array<Enum>_find"(%"Array<Enum>.559382"* nocapture readonly %.1, %Enum.559372* %.2) #4 {
+define i64 @"Array<Enum>_find"(%"Array<Enum>.559382"* nocapture readonly %.1, %Enum.559372* %.2) #5 {
 .4:
   %.12 = getelementptr inbounds %"Array<Enum>.559382", %"Array<Enum>.559382"* %.1, i64 0, i32 2
   %.133 = load i64, i64* %.12, align 8
@@ -27388,7 +27399,7 @@ for.body.endif:                                   ; preds = %for.body
 }
 
 ; Function Attrs: nofree nounwind
-define void @"Array<Scope>_constructor"(%"Array<Scope>.559383"* nocapture %.1, i64 %.2) local_unnamed_addr #3 {
+define void @"Array<Scope>_constructor"(%"Array<Scope>.559383"* nocapture %.1, i64 %.2) local_unnamed_addr #4 {
 .4:
   %.8 = getelementptr inbounds %"Array<Scope>.559383", %"Array<Scope>.559383"* %.1, i64 0, i32 2
   store i64 0, i64* %.8, align 8
@@ -27403,7 +27414,7 @@ define void @"Array<Scope>_constructor"(%"Array<Scope>.559383"* nocapture %.1, i
 }
 
 ; Function Attrs: nounwind
-define void @"Array<Scope>_resize"(%"Array<Scope>.559383"* nocapture %.1) #2 {
+define void @"Array<Scope>_resize"(%"Array<Scope>.559383"* nocapture %.1) #3 {
 .3:
   %.7 = getelementptr inbounds %"Array<Scope>.559383", %"Array<Scope>.559383"* %.1, i64 0, i32 3
   %.8 = load i64, i64* %.7, align 8
@@ -27649,7 +27660,7 @@ for.end:                                          ; preds = %for.cond, %for.body
 }
 
 ; Function Attrs: norecurse nounwind readonly
-define i64 @"Array<Scope>_find"(%"Array<Scope>.559383"* nocapture readonly %.1, %Scope.559318* %.2) #4 {
+define i64 @"Array<Scope>_find"(%"Array<Scope>.559383"* nocapture readonly %.1, %Scope.559318* %.2) #5 {
 .4:
   %.12 = getelementptr inbounds %"Array<Scope>.559383", %"Array<Scope>.559383"* %.1, i64 0, i32 2
   %.133 = load i64, i64* %.12, align 8
@@ -27683,7 +27694,7 @@ for.body.endif:                                   ; preds = %for.body
 }
 
 ; Function Attrs: nofree nounwind
-define void @"Array<ConstDeclaration>_constructor"(%"Array<ConstDeclaration>.559384"* nocapture %.1, i64 %.2) local_unnamed_addr #3 {
+define void @"Array<ConstDeclaration>_constructor"(%"Array<ConstDeclaration>.559384"* nocapture %.1, i64 %.2) local_unnamed_addr #4 {
 .4:
   %.8 = getelementptr inbounds %"Array<ConstDeclaration>.559384", %"Array<ConstDeclaration>.559384"* %.1, i64 0, i32 2
   store i64 0, i64* %.8, align 8
@@ -27698,7 +27709,7 @@ define void @"Array<ConstDeclaration>_constructor"(%"Array<ConstDeclaration>.559
 }
 
 ; Function Attrs: nounwind
-define void @"Array<ConstDeclaration>_resize"(%"Array<ConstDeclaration>.559384"* nocapture %.1) #2 {
+define void @"Array<ConstDeclaration>_resize"(%"Array<ConstDeclaration>.559384"* nocapture %.1) #3 {
 .3:
   %.7 = getelementptr inbounds %"Array<ConstDeclaration>.559384", %"Array<ConstDeclaration>.559384"* %.1, i64 0, i32 3
   %.8 = load i64, i64* %.7, align 8
@@ -27944,7 +27955,7 @@ for.end:                                          ; preds = %for.cond, %for.body
 }
 
 ; Function Attrs: norecurse nounwind readonly
-define i64 @"Array<ConstDeclaration>_find"(%"Array<ConstDeclaration>.559384"* nocapture readonly %.1, %ConstDeclaration.559308* %.2) #4 {
+define i64 @"Array<ConstDeclaration>_find"(%"Array<ConstDeclaration>.559384"* nocapture readonly %.1, %ConstDeclaration.559308* %.2) #5 {
 .4:
   %.12 = getelementptr inbounds %"Array<ConstDeclaration>.559384", %"Array<ConstDeclaration>.559384"* %.1, i64 0, i32 2
   %.133 = load i64, i64* %.12, align 8
@@ -27978,7 +27989,7 @@ for.body.endif:                                   ; preds = %for.body
 }
 
 ; Function Attrs: nofree nounwind
-define void @"Array<VarDeclaration>_constructor"(%"Array<VarDeclaration>.559385"* nocapture %.1, i64 %.2) local_unnamed_addr #3 {
+define void @"Array<VarDeclaration>_constructor"(%"Array<VarDeclaration>.559385"* nocapture %.1, i64 %.2) local_unnamed_addr #4 {
 .4:
   %.8 = getelementptr inbounds %"Array<VarDeclaration>.559385", %"Array<VarDeclaration>.559385"* %.1, i64 0, i32 2
   store i64 0, i64* %.8, align 8
@@ -27993,7 +28004,7 @@ define void @"Array<VarDeclaration>_constructor"(%"Array<VarDeclaration>.559385"
 }
 
 ; Function Attrs: nounwind
-define void @"Array<VarDeclaration>_resize"(%"Array<VarDeclaration>.559385"* nocapture %.1) #2 {
+define void @"Array<VarDeclaration>_resize"(%"Array<VarDeclaration>.559385"* nocapture %.1) #3 {
 .3:
   %.7 = getelementptr inbounds %"Array<VarDeclaration>.559385", %"Array<VarDeclaration>.559385"* %.1, i64 0, i32 3
   %.8 = load i64, i64* %.7, align 8
@@ -28239,7 +28250,7 @@ for.end:                                          ; preds = %for.cond, %for.body
 }
 
 ; Function Attrs: norecurse nounwind readonly
-define i64 @"Array<VarDeclaration>_find"(%"Array<VarDeclaration>.559385"* nocapture readonly %.1, %VarDeclaration.559306* %.2) #4 {
+define i64 @"Array<VarDeclaration>_find"(%"Array<VarDeclaration>.559385"* nocapture readonly %.1, %VarDeclaration.559306* %.2) #5 {
 .4:
   %.12 = getelementptr inbounds %"Array<VarDeclaration>.559385", %"Array<VarDeclaration>.559385"* %.1, i64 0, i32 2
   %.133 = load i64, i64* %.12, align 8
@@ -28273,7 +28284,7 @@ for.body.endif:                                   ; preds = %for.body
 }
 
 ; Function Attrs: nofree nounwind
-define void @Module_constructor(%Module.559376* nocapture %.1, %string.559062* %.2) local_unnamed_addr #3 {
+define void @Module_constructor(%Module.559376* nocapture %.1, %string.559062* %.2) local_unnamed_addr #4 {
 .4:
   %.9 = getelementptr inbounds %Module.559376, %Module.559376* %.1, i64 0, i32 2
   store %string.559062* %.2, %string.559062** %.9, align 8
@@ -28409,7 +28420,7 @@ define void @Module_constructor(%Module.559376* nocapture %.1, %string.559062* %
 }
 
 ; Function Attrs: nofree nounwind
-define void @"Array<Module>_constructor"(%"Array<Module>.559396"* nocapture %.1, i64 %.2) local_unnamed_addr #3 {
+define void @"Array<Module>_constructor"(%"Array<Module>.559396"* nocapture %.1, i64 %.2) local_unnamed_addr #4 {
 .4:
   %.8 = getelementptr inbounds %"Array<Module>.559396", %"Array<Module>.559396"* %.1, i64 0, i32 2
   store i64 0, i64* %.8, align 8
@@ -28424,7 +28435,7 @@ define void @"Array<Module>_constructor"(%"Array<Module>.559396"* nocapture %.1,
 }
 
 ; Function Attrs: nounwind
-define void @"Array<Module>_resize"(%"Array<Module>.559396"* nocapture %.1) #2 {
+define void @"Array<Module>_resize"(%"Array<Module>.559396"* nocapture %.1) #3 {
 .3:
   %.7 = getelementptr inbounds %"Array<Module>.559396", %"Array<Module>.559396"* %.1, i64 0, i32 3
   %.8 = load i64, i64* %.7, align 8
@@ -28670,7 +28681,7 @@ for.end:                                          ; preds = %for.cond, %for.body
 }
 
 ; Function Attrs: norecurse nounwind readonly
-define i64 @"Array<Module>_find"(%"Array<Module>.559396"* nocapture readonly %.1, %Module.559376* %.2) #4 {
+define i64 @"Array<Module>_find"(%"Array<Module>.559396"* nocapture readonly %.1, %Module.559376* %.2) #5 {
 .4:
   %.12 = getelementptr inbounds %"Array<Module>.559396", %"Array<Module>.559396"* %.1, i64 0, i32 2
   %.133 = load i64, i64* %.12, align 8
@@ -28704,7 +28715,7 @@ for.body.endif:                                   ; preds = %for.body
 }
 
 ; Function Attrs: nofree nounwind
-define void @Program_constructor(%Program.559394* nocapture %.1) local_unnamed_addr #3 {
+define void @Program_constructor(%Program.559394* nocapture %.1) local_unnamed_addr #4 {
 .3:
   %.6 = getelementptr inbounds %Program.559394, %Program.559394* %.1, i64 0, i32 1
   store i1 false, i1* %.6, align 1
@@ -29113,7 +29124,7 @@ define i1 @is_buitin(%Program.559394* nocapture readonly %.1, %Type.559226* noca
   %.20 = load %string.559062*, %string.559062** %.19, align 8
   %.22 = getelementptr inbounds %string.559062, %string.559062* %.20, i64 0, i32 0
   %.23 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.22, align 8
-  %.24 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.23, i64 0, i32 3
+  %.24 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.23, i64 0, i32 4
   %.25 = load i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)** %.24, align 8
   %.26 = tail call i1 %.25(%string.559062* %.20, %string.559062* %.3)
   %.28 = getelementptr inbounds %Class.559358, %Class.559358* %.16, i64 0, i32 1
@@ -29142,7 +29153,7 @@ define i1 @is_operator_overload_name(%string.559062* %.1) local_unnamed_addr {
   store i64 6, i64* %2, align 8
   %.9 = getelementptr inbounds %string.559062, %string.559062* %.1, i64 0, i32 0
   %.10 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.9, align 8
-  %.11 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.10, i64 0, i32 3
+  %.11 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.10, i64 0, i32 4
   %.12 = load i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)** %.11, align 8
   %.13 = tail call i1 %.12(%string.559062* %.1, %string.559062* %.7)
   br i1 %.13, label %.3.if, label %.3.endif
@@ -29165,7 +29176,7 @@ define i1 @is_operator_overload_name(%string.559062* %.1) local_unnamed_addr {
   %5 = bitcast i8* %.18.repack6 to i64*
   store i64 7, i64* %5, align 8
   %.21 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.9, align 8
-  %.22 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.21, i64 0, i32 3
+  %.22 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.21, i64 0, i32 4
   %.23 = load i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)** %.22, align 8
   %.24 = tail call i1 %.23(%string.559062* nonnull %.1, %string.559062* %.18)
   br i1 %.24, label %.3.if, label %.3.endif.endif
@@ -29185,7 +29196,7 @@ define i1 @is_operator_overload_name(%string.559062* %.1) local_unnamed_addr {
   %8 = bitcast i8* %.29.repack9 to i64*
   store i64 7, i64* %8, align 8
   %.32 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.9, align 8
-  %.33 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.32, i64 0, i32 3
+  %.33 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.32, i64 0, i32 4
   %.34 = load i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)** %.33, align 8
   %.35 = tail call i1 %.34(%string.559062* nonnull %.1, %string.559062* %.29)
   br i1 %.35, label %.3.if, label %.3.endif.endif.endif
@@ -29205,7 +29216,7 @@ define i1 @is_operator_overload_name(%string.559062* %.1) local_unnamed_addr {
   %11 = bitcast i8* %.40.repack12 to i64*
   store i64 7, i64* %11, align 8
   %.43 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.9, align 8
-  %.44 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.43, i64 0, i32 3
+  %.44 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.43, i64 0, i32 4
   %.45 = load i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)** %.44, align 8
   %.46 = tail call i1 %.45(%string.559062* nonnull %.1, %string.559062* %.40)
   br i1 %.46, label %.3.if, label %.3.endif.endif.endif.endif
@@ -29225,7 +29236,7 @@ define i1 @is_operator_overload_name(%string.559062* %.1) local_unnamed_addr {
   %14 = bitcast i8* %.51.repack15 to i64*
   store i64 7, i64* %14, align 8
   %.54 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.9, align 8
-  %.55 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.54, i64 0, i32 3
+  %.55 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.54, i64 0, i32 4
   %.56 = load i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)** %.55, align 8
   %.57 = tail call i1 %.56(%string.559062* nonnull %.1, %string.559062* %.51)
   br i1 %.57, label %.3.if, label %.3.endif.endif.endif.endif.endif
@@ -29245,7 +29256,7 @@ define i1 @is_operator_overload_name(%string.559062* %.1) local_unnamed_addr {
   %17 = bitcast i8* %.62.repack18 to i64*
   store i64 6, i64* %17, align 8
   %.65 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.9, align 8
-  %.66 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.65, i64 0, i32 3
+  %.66 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.65, i64 0, i32 4
   %.67 = load i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)** %.66, align 8
   %.68 = tail call i1 %.67(%string.559062* nonnull %.1, %string.559062* %.62)
   br i1 %.68, label %.3.if, label %.3.endif.endif.endif.endif.endif.endif
@@ -29265,7 +29276,7 @@ define i1 @is_operator_overload_name(%string.559062* %.1) local_unnamed_addr {
   %20 = bitcast i8* %.73.repack21 to i64*
   store i64 8, i64* %20, align 8
   %.76 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.9, align 8
-  %.77 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.76, i64 0, i32 3
+  %.77 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.76, i64 0, i32 4
   %.78 = load i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)** %.77, align 8
   %.79 = tail call i1 %.78(%string.559062* nonnull %.1, %string.559062* %.73)
   br i1 %.79, label %.3.if, label %.3.endif.endif.endif.endif.endif.endif.endif
@@ -29285,7 +29296,7 @@ define i1 @is_operator_overload_name(%string.559062* %.1) local_unnamed_addr {
   %23 = bitcast i8* %.84.repack24 to i64*
   store i64 8, i64* %23, align 8
   %.87 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.9, align 8
-  %.88 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.87, i64 0, i32 3
+  %.88 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.87, i64 0, i32 4
   %.89 = load i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)** %.88, align 8
   %.90 = tail call i1 %.89(%string.559062* nonnull %.1, %string.559062* %.84)
   br i1 %.90, label %.3.if, label %.3.endif.endif.endif.endif.endif.endif.endif.endif
@@ -29305,7 +29316,7 @@ define i1 @is_operator_overload_name(%string.559062* %.1) local_unnamed_addr {
   %26 = bitcast i8* %.95.repack27 to i64*
   store i64 8, i64* %26, align 8
   %.98 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.9, align 8
-  %.99 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.98, i64 0, i32 3
+  %.99 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.98, i64 0, i32 4
   %.100 = load i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)** %.99, align 8
   %.101 = tail call i1 %.100(%string.559062* nonnull %.1, %string.559062* %.95)
   br i1 %.101, label %.3.if, label %.3.endif.endif.endif.endif.endif.endif.endif.endif.endif
@@ -29325,7 +29336,7 @@ define i1 @is_operator_overload_name(%string.559062* %.1) local_unnamed_addr {
   %29 = bitcast i8* %.106.repack30 to i64*
   store i64 8, i64* %29, align 8
   %.109 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.9, align 8
-  %.110 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.109, i64 0, i32 3
+  %.110 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.109, i64 0, i32 4
   %.111 = load i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)** %.110, align 8
   %.112 = tail call i1 %.111(%string.559062* nonnull %.1, %string.559062* %.106)
   br i1 %.112, label %.3.if, label %.3.endif.endif.endif.endi...endif
@@ -29345,7 +29356,7 @@ define i1 @is_operator_overload_name(%string.559062* %.1) local_unnamed_addr {
   %32 = bitcast i8* %.117.repack33 to i64*
   store i64 7, i64* %32, align 8
   %.120 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.9, align 8
-  %.121 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.120, i64 0, i32 3
+  %.121 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.120, i64 0, i32 4
   %.122 = load i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)** %.121, align 8
   %.123 = tail call i1 %.122(%string.559062* nonnull %.1, %string.559062* %.117)
   br i1 %.123, label %.3.if, label %.3.endif.endif.endif.endi...endif.endif
@@ -29365,7 +29376,7 @@ define i1 @is_operator_overload_name(%string.559062* %.1) local_unnamed_addr {
   %35 = bitcast i8* %.128.repack36 to i64*
   store i64 8, i64* %35, align 8
   %.131 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.9, align 8
-  %.132 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.131, i64 0, i32 3
+  %.132 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.131, i64 0, i32 4
   %.133 = load i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)** %.132, align 8
   %.134 = tail call i1 %.133(%string.559062* nonnull %.1, %string.559062* %.128)
   br i1 %.134, label %.3.if, label %.3.endif.endif.endif.endi...endif.endif.endif
@@ -29385,7 +29396,7 @@ define i1 @is_operator_overload_name(%string.559062* %.1) local_unnamed_addr {
   %38 = bitcast i8* %.139.repack39 to i64*
   store i64 8, i64* %38, align 8
   %.142 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.9, align 8
-  %.143 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.142, i64 0, i32 3
+  %.143 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.142, i64 0, i32 4
   %.144 = load i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)** %.143, align 8
   %.145 = tail call i1 %.144(%string.559062* nonnull %.1, %string.559062* %.139)
   br i1 %.145, label %.3.if, label %.3.endif.endif.endif.endi...endif.endif.endif.endif
@@ -29405,7 +29416,7 @@ define i1 @is_operator_overload_name(%string.559062* %.1) local_unnamed_addr {
   %41 = bitcast i8* %.150.repack42 to i64*
   store i64 11, i64* %41, align 8
   %.153 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.9, align 8
-  %.154 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.153, i64 0, i32 3
+  %.154 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.153, i64 0, i32 4
   %.155 = load i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)** %.154, align 8
   %.156 = tail call i1 %.155(%string.559062* nonnull %.1, %string.559062* %.150)
   br i1 %.156, label %.3.if, label %.3.endif.endif.endif.endi...endif.1
@@ -29425,7 +29436,7 @@ define i1 @is_operator_overload_name(%string.559062* %.1) local_unnamed_addr {
   %44 = bitcast i8* %.161.repack45 to i64*
   store i64 11, i64* %44, align 8
   %.164 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.9, align 8
-  %.165 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.164, i64 0, i32 3
+  %.165 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.164, i64 0, i32 4
   %.166 = load i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)** %.165, align 8
   %.167 = tail call i1 %.166(%string.559062* nonnull %.1, %string.559062* %.161)
   br i1 %.167, label %.3.if, label %.3.endif.endif.endif.endi...endif.1.endif
@@ -29445,7 +29456,7 @@ define i1 @is_operator_overload_name(%string.559062* %.1) local_unnamed_addr {
   %47 = bitcast i8* %.172.repack48 to i64*
   store i64 6, i64* %47, align 8
   %.175 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.9, align 8
-  %.176 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.175, i64 0, i32 3
+  %.176 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.175, i64 0, i32 4
   %.177 = load i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)** %.176, align 8
   %.178 = tail call i1 %.177(%string.559062* nonnull %.1, %string.559062* %.172)
   br i1 %.178, label %.3.if, label %.3.endif.endif.endif.endi...endif.1.endif.endif
@@ -29465,7 +29476,7 @@ define i1 @is_operator_overload_name(%string.559062* %.1) local_unnamed_addr {
   %50 = bitcast i8* %.183.repack51 to i64*
   store i64 6, i64* %50, align 8
   %.186 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.9, align 8
-  %.187 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.186, i64 0, i32 3
+  %.187 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.186, i64 0, i32 4
   %.188 = load i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)** %.187, align 8
   %.189 = tail call i1 %.188(%string.559062* nonnull %.1, %string.559062* %.183)
   br i1 %.189, label %.3.if, label %.3.endif.endif.endif.endi...endif.1.endif.endif.endif
@@ -29485,7 +29496,7 @@ define i1 @is_operator_overload_name(%string.559062* %.1) local_unnamed_addr {
   %53 = bitcast i8* %.194.repack54 to i64*
   store i64 7, i64* %53, align 8
   %.197 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.9, align 8
-  %.198 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.197, i64 0, i32 3
+  %.198 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.197, i64 0, i32 4
   %.199 = load i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)** %.198, align 8
   %.200 = tail call i1 %.199(%string.559062* nonnull %.1, %string.559062* %.194)
   br i1 %.200, label %.3.if, label %.3.endif.endif.endif.endi...endif.2
@@ -29505,7 +29516,7 @@ define i1 @is_operator_overload_name(%string.559062* %.1) local_unnamed_addr {
   %56 = bitcast i8* %.205.repack57 to i64*
   store i64 7, i64* %56, align 8
   %.208 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.9, align 8
-  %.209 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.208, i64 0, i32 3
+  %.209 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.208, i64 0, i32 4
   %.210 = load i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)** %.209, align 8
   %.211 = tail call i1 %.210(%string.559062* nonnull %.1, %string.559062* %.205)
   br i1 %.211, label %.3.if, label %.3.endif.endif.endif.endi...endif.2.endif
@@ -29525,7 +29536,7 @@ define i1 @is_operator_overload_name(%string.559062* %.1) local_unnamed_addr {
   %59 = bitcast i8* %.216.repack60 to i64*
   store i64 6, i64* %59, align 8
   %.219 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.9, align 8
-  %.220 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.219, i64 0, i32 3
+  %.220 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.219, i64 0, i32 4
   %.221 = load i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)** %.220, align 8
   %.222 = tail call i1 %.221(%string.559062* nonnull %.1, %string.559062* %.216)
   br i1 %.222, label %.3.if, label %.3.endif.endif.endif.endi...endif.2.endif.endif
@@ -29545,7 +29556,7 @@ define i1 @is_operator_overload_name(%string.559062* %.1) local_unnamed_addr {
   %62 = bitcast i8* %.227.repack63 to i64*
   store i64 6, i64* %62, align 8
   %.230 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.9, align 8
-  %.231 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.230, i64 0, i32 3
+  %.231 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.230, i64 0, i32 4
   %.232 = load i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)** %.231, align 8
   %.233 = tail call i1 %.232(%string.559062* nonnull %.1, %string.559062* %.227)
   br i1 %.233, label %.3.if, label %.3.endif.endif.endif.endi...endif.2.endif.endif.endif
@@ -29565,7 +29576,7 @@ define i1 @is_operator_overload_name(%string.559062* %.1) local_unnamed_addr {
   %65 = bitcast i8* %.238.repack66 to i64*
   store i64 6, i64* %65, align 8
   %.241 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.9, align 8
-  %.242 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.241, i64 0, i32 3
+  %.242 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.241, i64 0, i32 4
   %.243 = load i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)** %.242, align 8
   %.244 = tail call i1 %.243(%string.559062* nonnull %.1, %string.559062* %.238)
   br i1 %.244, label %.3.if, label %.3.endif.endif.endif.endi...endif.3
@@ -29585,7 +29596,7 @@ define i1 @is_operator_overload_name(%string.559062* %.1) local_unnamed_addr {
   %68 = bitcast i8* %.249.repack69 to i64*
   store i64 6, i64* %68, align 8
   %.252 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.9, align 8
-  %.253 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.252, i64 0, i32 3
+  %.253 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.252, i64 0, i32 4
   %.254 = load i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)** %.253, align 8
   %.255 = tail call i1 %.254(%string.559062* nonnull %.1, %string.559062* %.249)
   br i1 %.255, label %.3.if, label %.3.endif.endif.endif.endi...endif.3.endif
@@ -29605,7 +29616,7 @@ define i1 @is_operator_overload_name(%string.559062* %.1) local_unnamed_addr {
   %71 = bitcast i8* %.260.repack72 to i64*
   store i64 6, i64* %71, align 8
   %.263 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.9, align 8
-  %.264 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.263, i64 0, i32 3
+  %.264 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.263, i64 0, i32 4
   %.265 = load i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)** %.264, align 8
   %.266 = tail call i1 %.265(%string.559062* nonnull %.1, %string.559062* %.260)
   br i1 %.266, label %.3.if, label %.3.endif.endif.endif.endi...endif.3.endif.endif
@@ -29625,7 +29636,7 @@ define i1 @is_operator_overload_name(%string.559062* %.1) local_unnamed_addr {
   %74 = bitcast i8* %.271.repack75 to i64*
   store i64 6, i64* %74, align 8
   %.274 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.9, align 8
-  %.275 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.274, i64 0, i32 3
+  %.275 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.274, i64 0, i32 4
   %.276 = load i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)** %.275, align 8
   %.277 = tail call i1 %.276(%string.559062* nonnull %.1, %string.559062* %.271)
   br i1 %.277, label %.3.if, label %.3.endif.endif.endif.endi...endif.3.endif.endif.endif
@@ -29645,7 +29656,7 @@ define i1 @is_operator_overload_name(%string.559062* %.1) local_unnamed_addr {
   %77 = bitcast i8* %.282.repack78 to i64*
   store i64 7, i64* %77, align 8
   %.285 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.9, align 8
-  %.286 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.285, i64 0, i32 3
+  %.286 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.285, i64 0, i32 4
   %.287 = load i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)** %.286, align 8
   %.288 = tail call i1 %.287(%string.559062* nonnull %.1, %string.559062* %.282)
   br i1 %.288, label %.3.if, label %.3.endif.endif.endif.endi...endif.4
@@ -29665,7 +29676,7 @@ define i1 @is_operator_overload_name(%string.559062* %.1) local_unnamed_addr {
   %80 = bitcast i8* %.293.repack81 to i64*
   store i64 7, i64* %80, align 8
   %.296 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.9, align 8
-  %.297 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.296, i64 0, i32 3
+  %.297 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.296, i64 0, i32 4
   %.298 = load i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)** %.297, align 8
   %.299 = tail call i1 %.298(%string.559062* nonnull %.1, %string.559062* %.293)
   br i1 %.299, label %.3.if, label %.3.endif.endif.endif.endi...endif.4.endif
@@ -29685,7 +29696,7 @@ define i1 @is_operator_overload_name(%string.559062* %.1) local_unnamed_addr {
   %83 = bitcast i8* %.304.repack84 to i64*
   store i64 8, i64* %83, align 8
   %.307 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.9, align 8
-  %.308 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.307, i64 0, i32 3
+  %.308 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.307, i64 0, i32 4
   %.309 = load i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)** %.308, align 8
   %.310 = tail call i1 %.309(%string.559062* nonnull %.1, %string.559062* %.304)
   br i1 %.310, label %.3.if, label %.3.endif.endif.endif.endi...endif.4.endif.endif
@@ -29705,14 +29716,14 @@ define i1 @is_operator_overload_name(%string.559062* %.1) local_unnamed_addr {
   %86 = bitcast i8* %.315.repack87 to i64*
   store i64 8, i64* %86, align 8
   %.318 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.9, align 8
-  %.319 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.318, i64 0, i32 3
+  %.319 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.318, i64 0, i32 4
   %.320 = load i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)** %.319, align 8
   %.321 = tail call i1 %.320(%string.559062* nonnull %.1, %string.559062* %.315)
   ret i1 %.321
 }
 
 ; Function Attrs: nofree nounwind
-define noalias %string.559062* @bin_op_to_op_overload_name(i64 %.1) local_unnamed_addr #3 {
+define noalias %string.559062* @bin_op_to_op_overload_name(i64 %.1) local_unnamed_addr #4 {
 .3:
   switch i64 %.1, label %.3.endif.endif.endif.endi...endif.4.endif.endif [
     i64 1, label %.3.if
@@ -30398,7 +30409,7 @@ define i64 @evaluate_const_int_expression(%Program.559394* %.1, %Expression.5592
 }
 
 ; Function Attrs: nofree norecurse nounwind writeonly
-define void @Generic_constructor(%Generic.559398* nocapture %.1, i64 %.2, %ClassDeclarationNode.559188* %.3) local_unnamed_addr #1 {
+define void @Generic_constructor(%Generic.559398* nocapture %.1, i64 %.2, %ClassDeclarationNode.559188* %.3) local_unnamed_addr #2 {
 .5:
   %.11 = getelementptr inbounds %Generic.559398, %Generic.559398* %.1, i64 0, i32 1
   store i64 %.2, i64* %.11, align 8
@@ -30408,7 +30419,7 @@ define void @Generic_constructor(%Generic.559398* nocapture %.1, i64 %.2, %Class
 }
 
 ; Function Attrs: nofree norecurse nounwind writeonly
-define void @"Bucket<string, Generic>_constructor"(%"Bucket<string, Generic>.559404"* nocapture %.1) local_unnamed_addr #1 {
+define void @"Bucket<string, Generic>_constructor"(%"Bucket<string, Generic>.559404"* nocapture %.1) local_unnamed_addr #2 {
 .3:
   %.6 = getelementptr inbounds %"Bucket<string, Generic>.559404", %"Bucket<string, Generic>.559404"* %.1, i64 0, i32 3
   store i1 true, i1* %.6, align 1
@@ -30416,7 +30427,7 @@ define void @"Bucket<string, Generic>_constructor"(%"Bucket<string, Generic>.559
 }
 
 ; Function Attrs: nofree norecurse nounwind writeonly
-define void @"Bucket<string, Generic>_set"(%"Bucket<string, Generic>.559404"* nocapture %.1, %string.559062* %.2, %Generic.559398* %.3) #1 {
+define void @"Bucket<string, Generic>_set"(%"Bucket<string, Generic>.559404"* nocapture %.1, %string.559062* %.2, %Generic.559398* %.3) #2 {
 .5:
   %.10 = getelementptr inbounds %"Bucket<string, Generic>.559404", %"Bucket<string, Generic>.559404"* %.1, i64 0, i32 3
   store i1 false, i1* %.10, align 1
@@ -30428,7 +30439,7 @@ define void @"Bucket<string, Generic>_set"(%"Bucket<string, Generic>.559404"* no
 }
 
 ; Function Attrs: nofree nounwind
-define void @"Map<string, Generic>_constructor"(%"Map<string, Generic>.559402"* nocapture %.1) local_unnamed_addr #3 {
+define void @"Map<string, Generic>_constructor"(%"Map<string, Generic>.559402"* nocapture %.1) local_unnamed_addr #4 {
 .3:
   %.9 = tail call dereferenceable_or_null(2048) i8* @malloc(i64 2048)
   %.11 = getelementptr inbounds %"Map<string, Generic>.559402", %"Map<string, Generic>.559402"* %.1, i64 0, i32 1
@@ -30481,7 +30492,7 @@ for.body:                                         ; preds = %for.body.lr.ph, %fo
   %hash.05 = phi i64 [ 0, %for.body.lr.ph ], [ %.29, %for.body ]
   %storemerge4 = phi i64 [ 0, %for.body.lr.ph ], [ %.35, %for.body ]
   %.23 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.22, align 8
-  %.24 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.23, i64 0, i32 7
+  %.24 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.23, i64 0, i32 8
   %.25 = load i8 (%string.559062*, i64)*, i8 (%string.559062*, i64)** %.24, align 8
   %.27 = tail call i8 %.25(%string.559062* nonnull %.2, i64 %storemerge4)
   %.20 = shl i64 %hash.05, 1
@@ -30631,7 +30642,7 @@ while.entry:                                      ; preds = %.5.endif, %while.en
   %.56 = load %string.559062*, %string.559062** %.55, align 8
   %.58 = getelementptr inbounds %string.559062, %string.559062* %.56, i64 0, i32 0
   %.59 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.58, align 8
-  %.60 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.59, i64 0, i32 3
+  %.60 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.59, i64 0, i32 4
   %.61 = load i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)** %.60, align 8
   %.62 = tail call i1 %.61(%string.559062* %.56, %string.559062* %.2)
   br i1 %.62, label %while.entry.while.exit.loopexit_crit_edge, label %while.entry.endif
@@ -30692,7 +30703,7 @@ while.entry:                                      ; preds = %.4, %while.entry.el
   %.36 = load %string.559062*, %string.559062** %.35, align 8
   %.38 = getelementptr inbounds %string.559062, %string.559062* %.36, i64 0, i32 0
   %.39 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.38, align 8
-  %.40 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.39, i64 0, i32 3
+  %.40 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.39, i64 0, i32 4
   %.41 = load i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)** %.40, align 8
   %.42 = tail call i1 %.41(%string.559062* %.36, %string.559062* %.2)
   br i1 %.42, label %while.exit, label %while.entry.else
@@ -30726,7 +30737,7 @@ while.exit.endif:                                 ; preds = %while.entry.else, %
 }
 
 ; Function Attrs: nofree nounwind
-define void @"Array<Bucket<string, Generic>>_constructor"(%"Array<Bucket<string, Generic>>.559406"* nocapture %.1, i64 %.2) local_unnamed_addr #3 {
+define void @"Array<Bucket<string, Generic>>_constructor"(%"Array<Bucket<string, Generic>>.559406"* nocapture %.1, i64 %.2) local_unnamed_addr #4 {
 .4:
   %.8 = getelementptr inbounds %"Array<Bucket<string, Generic>>.559406", %"Array<Bucket<string, Generic>>.559406"* %.1, i64 0, i32 2
   store i64 0, i64* %.8, align 8
@@ -30741,7 +30752,7 @@ define void @"Array<Bucket<string, Generic>>_constructor"(%"Array<Bucket<string,
 }
 
 ; Function Attrs: nounwind
-define void @"Array<Bucket<string, Generic>>_resize"(%"Array<Bucket<string, Generic>>.559406"* nocapture %.1) #2 {
+define void @"Array<Bucket<string, Generic>>_resize"(%"Array<Bucket<string, Generic>>.559406"* nocapture %.1) #3 {
 .3:
   %.7 = getelementptr inbounds %"Array<Bucket<string, Generic>>.559406", %"Array<Bucket<string, Generic>>.559406"* %.1, i64 0, i32 3
   %.8 = load i64, i64* %.7, align 8
@@ -30987,7 +30998,7 @@ for.end:                                          ; preds = %for.cond, %for.body
 }
 
 ; Function Attrs: norecurse nounwind readonly
-define i64 @"Array<Bucket<string, Generic>>_find"(%"Array<Bucket<string, Generic>>.559406"* nocapture readonly %.1, %"Bucket<string, Generic>.559404"* %.2) #4 {
+define i64 @"Array<Bucket<string, Generic>>_find"(%"Array<Bucket<string, Generic>>.559406"* nocapture readonly %.1, %"Bucket<string, Generic>.559404"* %.2) #5 {
 .4:
   %.12 = getelementptr inbounds %"Array<Bucket<string, Generic>>.559406", %"Array<Bucket<string, Generic>>.559406"* %.1, i64 0, i32 2
   %.133 = load i64, i64* %.12, align 8
@@ -31074,7 +31085,7 @@ for.body.endif:                                   ; preds = %for.body, %for.body
 }
 
 ; Function Attrs: nofree nounwind
-define void @TypeChecker_constructor(%TypeChecker.559400* nocapture %.1) local_unnamed_addr #3 {
+define void @TypeChecker_constructor(%TypeChecker.559400* nocapture %.1) local_unnamed_addr #4 {
 .3:
   %.7 = getelementptr inbounds %TypeChecker.559400, %TypeChecker.559400* %.1, i64 0, i32 2
   store i64 -1, i64* %.7, align 8
@@ -31453,7 +31464,7 @@ for.body:                                         ; preds = %for.body.lr.ph, %fo
   %.275 = load %string.559062*, %string.559062** %20, align 8
   %.276 = getelementptr inbounds %string.559062, %string.559062* %.272, i64 0, i32 0
   %.277 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.276, align 8
-  %.278 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.277, i64 0, i32 3
+  %.278 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.277, i64 0, i32 4
   %.279 = load i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)** %.278, align 8
   %.280 = tail call i1 %.279(%string.559062* %.272, %string.559062* %.275)
   br i1 %.280, label %.5.endif.endif.endif.endif.endif.endif.if.endif, label %.5.if
@@ -31576,12 +31587,12 @@ for.end:                                          ; preds = %for.body.endif, %.4
   %.95 = tail call %string.559062* %.42.lcssa(%TypeChecker.559400* nonnull %.1, %Type.559226* %.94)
   %.96 = getelementptr inbounds %string.559062, %string.559062* %.37.lcssa, i64 0, i32 0
   %.97 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.96, align 8
-  %.98 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.97, i64 0, i32 10
+  %.98 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.97, i64 0, i32 11
   %.99 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.98, align 8
   %.100 = tail call i8* %.99(%string.559062* %.37.lcssa)
   %.101 = getelementptr inbounds %string.559062, %string.559062* %.95, i64 0, i32 0
   %.102 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.101, align 8
-  %.103 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.102, i64 0, i32 10
+  %.103 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.102, i64 0, i32 11
   %.104 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.103, align 8
   %.105 = tail call i8* %.104(%string.559062* %.95)
   %.107 = tail call i64 (i8*, i64, i8*, ...) @snprintf(i8* null, i64 0, i8* getelementptr inbounds ([11 x i8], [11 x i8]* @str.221, i64 0, i64 0), i8* %.100, i8* %.105)
@@ -31649,7 +31660,7 @@ for.body.endif:                                   ; preds = %for.body.if, %for.b
   %.137 = tail call %string.559062* %.132(%TypeChecker.559400* %.1, %Type.559226* %.136)
   %.138 = getelementptr inbounds %string.559062, %string.559062* %.137, i64 0, i32 0
   %.139 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.138, align 8
-  %.140 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.139, i64 0, i32 10
+  %.140 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.139, i64 0, i32 11
   %.141 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.140, align 8
   %.142 = tail call i8* %.141(%string.559062* %.137)
   %.144 = tail call i64 (i8*, i64, i8*, ...) @snprintf(i8* null, i64 0, i8* getelementptr inbounds ([4 x i8], [4 x i8]* @str.222, i64 0, i64 0), i8* %.142)
@@ -31703,7 +31714,7 @@ for.body.endif:                                   ; preds = %for.body.if, %for.b
   %.208 = load i64, i64* %16, align 8
   %.209 = getelementptr inbounds %string.559062, %string.559062* %.205, i64 0, i32 0
   %.210 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.209, align 8
-  %.211 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.210, i64 0, i32 10
+  %.211 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.210, i64 0, i32 11
   %.212 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.211, align 8
   %.213 = tail call i8* %.212(%string.559062* %.205)
   %.215 = tail call i64 (i8*, i64, i8*, ...) @snprintf(i8* null, i64 0, i8* getelementptr inbounds ([7 x i8], [7 x i8]* @str.223, i64 0, i64 0), i8* %.213, i64 %.208)
@@ -32238,7 +32249,7 @@ define void @TypeChecker_error(%TypeChecker.559400* nocapture readonly %.1, i64 
 }
 
 ; Function Attrs: norecurse nounwind readonly
-define i1 @TypeChecker_has_errored(%TypeChecker.559400* nocapture readonly %.1) #4 {
+define i1 @TypeChecker_has_errored(%TypeChecker.559400* nocapture readonly %.1) #5 {
 .3:
   %.6 = getelementptr inbounds %TypeChecker.559400, %TypeChecker.559400* %.1, i64 0, i32 7
   %.7 = load %Compiler.559080*, %Compiler.559080** %.6, align 8
@@ -32635,7 +32646,7 @@ for.body.3.if:                                    ; preds = %for.body.3
   %.286 = load void (%TypeChecker.559400*, i64, %string.559062*, %FloRange.559068*)*, void (%TypeChecker.559400*, i64, %string.559062*, %FloRange.559068*)** %.285, align 8
   %.288 = getelementptr inbounds %string.559062, %string.559062* %.26925117, i64 0, i32 0
   %.289 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.288, align 8
-  %.290 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.289, i64 0, i32 10
+  %.290 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.289, i64 0, i32 11
   %.291 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.290, align 8
   %.292 = tail call i8* %.291(%string.559062* %.26925117)
   %.294 = tail call i64 (i8*, i64, i8*, ...) @snprintf(i8* null, i64 0, i8* getelementptr inbounds ([68 x i8], [68 x i8]* @str.228, i64 0, i64 0), i8* %.292)
@@ -33010,12 +33021,12 @@ for.end:                                          ; preds = %end, %.5.endif.endi
   %.221 = phi %string.559062* [ %6, %.5.endif.endif ], [ %.195, %end ]
   %.222 = getelementptr inbounds %string.559062, %string.559062* %.2, i64 0, i32 0
   %.223 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.222, align 8
-  %.224 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.223, i64 0, i32 10
+  %.224 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.223, i64 0, i32 11
   %.225 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.224, align 8
   %.226 = tail call i8* %.225(%string.559062* %.2)
   %.227 = getelementptr inbounds %string.559062, %string.559062* %.221, i64 0, i32 0
   %.228 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.227, align 8
-  %.229 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.228, i64 0, i32 10
+  %.229 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.228, i64 0, i32 11
   %.230 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.229, align 8
   %.231 = tail call i8* %.230(%string.559062* %.221)
   %.233 = tail call i64 (i8*, i64, i8*, ...) @snprintf(i8* null, i64 0, i8* getelementptr inbounds ([6 x i8], [6 x i8]* @str.231, i64 0, i64 0), i8* %.226, i8* %.231)
@@ -33058,7 +33069,7 @@ end:                                              ; preds = %for.body, %true_blo
   %.169 = tail call %string.559062* %.167(%TypeChecker.559400* nonnull %.1, %Type.559226* %.160)
   %.170 = getelementptr inbounds %string.559062, %string.559062* %.169, i64 0, i32 0
   %.171 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.170, align 8
-  %.172 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.171, i64 0, i32 10
+  %.172 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.171, i64 0, i32 11
   %.173 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.172, align 8
   %.174 = tail call i8* %.173(%string.559062* %.169)
   %.176 = tail call i64 (i8*, i64, i8*, ...) @snprintf(i8* null, i64 0, i8* getelementptr inbounds ([4 x i8], [4 x i8]* @str.230, i64 0, i64 0), i8* %.174)
@@ -33636,12 +33647,12 @@ for.body.endif.if.else.if:                        ; preds = %for.body.endif.if.e
   %.147 = tail call %string.559062* %.141(%TypeChecker.559400* nonnull %.1, %Type.559226* %.146)
   %.148 = getelementptr inbounds %string.559062, %string.559062* %.136, i64 0, i32 0
   %.149 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.148, align 8
-  %.150 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.149, i64 0, i32 10
+  %.150 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.149, i64 0, i32 11
   %.151 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.150, align 8
   %.152 = tail call i8* %.151(%string.559062* %.136)
   %.153 = getelementptr inbounds %string.559062, %string.559062* %.147, i64 0, i32 0
   %.154 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.153, align 8
-  %.155 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.154, i64 0, i32 10
+  %.155 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.154, i64 0, i32 11
   %.156 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.155, align 8
   %.157 = tail call i8* %.156(%string.559062* %.147)
   %.159 = tail call i64 (i8*, i64, i8*, ...) @snprintf(i8* null, i64 0, i8* getelementptr inbounds ([56 x i8], [56 x i8]* @str.233, i64 0, i64 0), i8* %.152, i8* %.157)
@@ -34106,12 +34117,12 @@ for.body.endif.endif.endif.endif.endif.else:      ; preds = %for.body.endif.endi
   %.237 = load void (%TypeChecker.559400*, i64, %string.559062*, %FloRange.559068*)*, void (%TypeChecker.559400*, i64, %string.559062*, %FloRange.559068*)** %.236, align 8
   %.240 = getelementptr inbounds %string.559062, %string.559062* %.95218, i64 0, i32 0
   %.241 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.240, align 8
-  %.242 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.241, i64 0, i32 10
+  %.242 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.241, i64 0, i32 11
   %.243 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.242, align 8
   %.244 = tail call i8* %.243(%string.559062* %.95218)
   %.245 = getelementptr inbounds %string.559062, %string.559062* %.35117, i64 0, i32 0
   %.246 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.245, align 8
-  %.247 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.246, i64 0, i32 10
+  %.247 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.246, i64 0, i32 11
   %.248 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.247, align 8
   %.249 = tail call i8* %.248(%string.559062* %.35117)
   %.251 = tail call i64 (i8*, i64, i8*, ...) @snprintf(i8* null, i64 0, i8* getelementptr inbounds ([28 x i8], [28 x i8]* @str.235, i64 0, i64 0), i8* %.244, i8* %.249)
@@ -34154,7 +34165,7 @@ define %Module.559376* @TypeChecker_lex_and_parse_typecheck_file(%TypeChecker.55
   %.20 = icmp ne i32 %.18, 0
   %.22 = getelementptr inbounds %string.559062, %string.559062* %.2, i64 0, i32 0
   %.23 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.22, align 8
-  %.24 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.23, i64 0, i32 12
+  %.24 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.23, i64 0, i32 13
   %.25 = load i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)** %.24, align 8
   %.26 = tail call dereferenceable_or_null(32) i8* @malloc(i64 32)
   %.27 = bitcast i8* %.26 to %string.559062*
@@ -34228,7 +34239,7 @@ define %Module.559376* @TypeChecker_lex_and_parse_typecheck_file(%TypeChecker.55
   %.92 = getelementptr inbounds %TypeChecker_vtable_ty.559401, %TypeChecker_vtable_ty.559401* %.91, i64 0, i32 16
   %.93 = load void (%TypeChecker.559400*, i64, %string.559062*, %FloRange.559068*)*, void (%TypeChecker.559400*, i64, %string.559062*, %FloRange.559068*)** %.92, align 8
   %.96 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.22, align 8
-  %.97 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.96, i64 0, i32 10
+  %.97 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.96, i64 0, i32 11
   %.98 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.97, align 8
   %.99 = tail call i8* %.98(%string.559062* nonnull %.2)
   %.101 = tail call i64 (i8*, i64, i8*, ...) @snprintf(i8* null, i64 0, i8* getelementptr inbounds ([32 x i8], [32 x i8]* @str.237, i64 0, i64 0), i8* %.99)
@@ -34350,7 +34361,7 @@ define void @TypeChecker_declare_enum_within_module(%TypeChecker.559400* %.1, %E
   %.45 = load void (%TypeChecker.559400*, i64, %string.559062*, %FloRange.559068*)*, void (%TypeChecker.559400*, i64, %string.559062*, %FloRange.559068*)** %.44, align 8
   %.47 = getelementptr inbounds %string.559062, %string.559062* %.17, i64 0, i32 0
   %.48 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.47, align 8
-  %.49 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.48, i64 0, i32 10
+  %.49 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.48, i64 0, i32 11
   %.50 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.49, align 8
   %.51 = tail call i8* %.50(%string.559062* %.17)
   %.53 = tail call i64 (i8*, i64, i8*, ...) @snprintf(i8* null, i64 0, i8* getelementptr inbounds ([68 x i8], [68 x i8]* @str.228, i64 0, i64 0), i8* %.51)
@@ -34491,7 +34502,7 @@ define void @TypeChecker_declare_class_within_module(%TypeChecker.559400* %.1, %
   %.41 = load void (%TypeChecker.559400*, i64, %string.559062*, %FloRange.559068*)*, void (%TypeChecker.559400*, i64, %string.559062*, %FloRange.559068*)** %.40, align 8
   %.43 = getelementptr inbounds %string.559062, %string.559062* %.11, i64 0, i32 0
   %.44 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.43, align 8
-  %.45 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.44, i64 0, i32 10
+  %.45 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.44, i64 0, i32 11
   %.46 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.45, align 8
   %.47 = tail call i8* %.46(%string.559062* %.11)
   %.49 = tail call i64 (i8*, i64, i8*, ...) @snprintf(i8* null, i64 0, i8* getelementptr inbounds ([68 x i8], [68 x i8]* @str.228, i64 0, i64 0), i8* %.47)
@@ -34691,7 +34702,7 @@ define void @TypeChecker_declare_function_within_module(%TypeChecker.559400* %.1
   %.41 = load void (%TypeChecker.559400*, i64, %string.559062*, %FloRange.559068*)*, void (%TypeChecker.559400*, i64, %string.559062*, %FloRange.559068*)** %.40, align 8
   %.43 = getelementptr inbounds %string.559062, %string.559062* %.23, i64 0, i32 0
   %.44 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.43, align 8
-  %.45 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.44, i64 0, i32 10
+  %.45 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.44, i64 0, i32 11
   %.46 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.45, align 8
   %.47 = tail call i8* %.46(%string.559062* %.23)
   %.49 = tail call i64 (i8*, i64, i8*, ...) @snprintf(i8* null, i64 0, i8* getelementptr inbounds ([37 x i8], [37 x i8]* @str.238, i64 0, i64 0), i8* %.47)
@@ -34732,7 +34743,7 @@ define void @TypeChecker_declare_function_within_module(%TypeChecker.559400* %.1
   %.86 = load void (%TypeChecker.559400*, i64, %string.559062*, %FloRange.559068*)*, void (%TypeChecker.559400*, i64, %string.559062*, %FloRange.559068*)** %.85, align 8
   %.88 = getelementptr inbounds %string.559062, %string.559062* %.23, i64 0, i32 0
   %.89 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.88, align 8
-  %.90 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.89, i64 0, i32 10
+  %.90 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.89, i64 0, i32 11
   %.91 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.90, align 8
   %.92 = tail call i8* %.91(%string.559062* %.23)
   %.94 = tail call i64 (i8*, i64, i8*, ...) @snprintf(i8* null, i64 0, i8* getelementptr inbounds ([48 x i8], [48 x i8]* @str.239, i64 0, i64 0), i8* %.92)
@@ -34914,7 +34925,7 @@ for.body.lr.ph:                                   ; preds = %.5.endif
   %.49 = tail call %string.559062* %.47(%TypeChecker.559400* nonnull %.1, %Type.559226* %.32)
   %.50 = getelementptr inbounds %string.559062, %string.559062* %.49, i64 0, i32 0
   %.51 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.50, align 8
-  %.52 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.51, i64 0, i32 10
+  %.52 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.51, i64 0, i32 11
   %.53 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.52, align 8
   %.54 = tail call i8* %.53(%string.559062* %.49)
   %.56 = tail call i64 (i8*, i64, i8*, ...) @snprintf(i8* null, i64 0, i8* getelementptr inbounds ([53 x i8], [53 x i8]* @str.240, i64 0, i64 0), i8* %.54)
@@ -35077,12 +35088,12 @@ for.body.if.endif.if:                             ; preds = %for.body.if.endif
   %.205 = tail call %string.559062* %.199(%TypeChecker.559400* nonnull %.1, %Type.559226* %.204)
   %.206 = getelementptr inbounds %string.559062, %string.559062* %.194, i64 0, i32 0
   %.207 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.206, align 8
-  %.208 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.207, i64 0, i32 10
+  %.208 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.207, i64 0, i32 11
   %.209 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.208, align 8
   %.210 = tail call i8* %.209(%string.559062* %.194)
   %.211 = getelementptr inbounds %string.559062, %string.559062* %.205, i64 0, i32 0
   %.212 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.211, align 8
-  %.213 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.212, i64 0, i32 10
+  %.213 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.212, i64 0, i32 11
   %.214 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.213, align 8
   %.215 = tail call i8* %.214(%string.559062* %.205)
   %.217 = tail call i64 (i8*, i64, i8*, ...) @snprintf(i8* null, i64 0, i8* getelementptr inbounds ([36 x i8], [36 x i8]* @str.242, i64 0, i64 0), i8* %.210, i8* %.215)
@@ -35272,12 +35283,12 @@ for.body.endif.endif.if.if:                       ; preds = %for.body.endif.endi
   %.156 = load %string.559062*, %string.559062** %.155, align 8
   %.157 = getelementptr inbounds %string.559062, %string.559062* %.153, i64 0, i32 0
   %.158 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.157, align 8
-  %.159 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.158, i64 0, i32 10
+  %.159 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.158, i64 0, i32 11
   %.160 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.159, align 8
   %.161 = tail call i8* %.160(%string.559062* %.153)
   %.162 = getelementptr inbounds %string.559062, %string.559062* %.156, i64 0, i32 0
   %.163 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.162, align 8
-  %.164 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.163, i64 0, i32 10
+  %.164 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.163, i64 0, i32 11
   %.165 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.164, align 8
   %.166 = tail call i8* %.165(%string.559062* %.156)
   %.168 = tail call i64 (i8*, i64, i8*, ...) @snprintf(i8* null, i64 0, i8* getelementptr inbounds ([36 x i8], [36 x i8]* @str.244, i64 0, i64 0), i8* %.161, i8* %.166)
@@ -35328,17 +35339,17 @@ for.body.endif.endif.if.endif.if:                 ; preds = %for.body.endif.endi
   %.231 = tail call %string.559062* %.229(%TypeChecker.559400* nonnull %.1, %Type.559226* %.194)
   %.232 = getelementptr inbounds %string.559062, %string.559062* %.221, i64 0, i32 0
   %.233 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.232, align 8
-  %.234 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.233, i64 0, i32 10
+  %.234 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.233, i64 0, i32 11
   %.235 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.234, align 8
   %.236 = tail call i8* %.235(%string.559062* %.221)
   %.237 = getelementptr inbounds %string.559062, %string.559062* %.224, i64 0, i32 0
   %.238 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.237, align 8
-  %.239 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.238, i64 0, i32 10
+  %.239 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.238, i64 0, i32 11
   %.240 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.239, align 8
   %.241 = tail call i8* %.240(%string.559062* %.224)
   %.242 = getelementptr inbounds %string.559062, %string.559062* %.231, i64 0, i32 0
   %.243 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.242, align 8
-  %.244 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.243, i64 0, i32 10
+  %.244 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.243, i64 0, i32 11
   %.245 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.244, align 8
   %.246 = tail call i8* %.245(%string.559062* %.231)
   %.248 = tail call i64 (i8*, i64, i8*, ...) @snprintf(i8* null, i64 0, i8* getelementptr inbounds ([89 x i8], [89 x i8]* @str.245, i64 0, i64 0), i8* %.236, i8* %.241, i8* %.246)
@@ -35380,17 +35391,17 @@ for.body.endif.endif.if.endif.endif.if:           ; preds = %for.body.endif.endi
   %.288 = tail call %string.559062* @dump_access(i64 %.200)
   %.289 = getelementptr inbounds %string.559062, %string.559062* %.283, i64 0, i32 0
   %.290 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.289, align 8
-  %.291 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.290, i64 0, i32 10
+  %.291 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.290, i64 0, i32 11
   %.292 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.291, align 8
   %.293 = tail call i8* %.292(%string.559062* %.283)
   %.294 = getelementptr inbounds %string.559062, %string.559062* %.286, i64 0, i32 0
   %.295 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.294, align 8
-  %.296 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.295, i64 0, i32 10
+  %.296 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.295, i64 0, i32 11
   %.297 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.296, align 8
   %.298 = tail call i8* %.297(%string.559062* %.286)
   %.299 = getelementptr inbounds %string.559062, %string.559062* %.288, i64 0, i32 0
   %.300 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.299, align 8
-  %.301 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.300, i64 0, i32 10
+  %.301 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.300, i64 0, i32 11
   %.302 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.301, align 8
   %.303 = tail call i8* %.302(%string.559062* %.288)
   %.305 = tail call i64 (i8*, i64, i8*, ...) @snprintf(i8* null, i64 0, i8* getelementptr inbounds ([49 x i8], [49 x i8]* @str.246, i64 0, i64 0), i8* %.293, i8* %.298, i8* %.303)
@@ -35490,12 +35501,12 @@ for.body.endif.endif.endif.if.endif.if:           ; preds = %for.body.endif.endi
   %.398 = tail call %string.559062* %.392(%TypeChecker.559400* nonnull %.1, %Type.559226* %.397)
   %.399 = getelementptr inbounds %string.559062, %string.559062* %.387, i64 0, i32 0
   %.400 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.399, align 8
-  %.401 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.400, i64 0, i32 10
+  %.401 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.400, i64 0, i32 11
   %.402 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.401, align 8
   %.403 = tail call i8* %.402(%string.559062* %.387)
   %.404 = getelementptr inbounds %string.559062, %string.559062* %.398, i64 0, i32 0
   %.405 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.404, align 8
-  %.406 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.405, i64 0, i32 10
+  %.406 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.405, i64 0, i32 11
   %.407 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.406, align 8
   %.408 = tail call i8* %.407(%string.559062* %.398)
   %.410 = tail call i64 (i8*, i64, i8*, ...) @snprintf(i8* null, i64 0, i8* getelementptr inbounds ([68 x i8], [68 x i8]* @str.247, i64 0, i64 0), i8* %.403, i8* %.408)
@@ -35664,7 +35675,7 @@ for.body.if:                                      ; preds = %for.body
   store i64 11, i64* %17, align 8
   %.86 = getelementptr inbounds %string.559062, %string.559062* %14, i64 0, i32 0
   %.87 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.86, align 8
-  %.88 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.87, i64 0, i32 3
+  %.88 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.87, i64 0, i32 4
   %.89 = load i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)** %.88, align 8
   %.90 = tail call i1 %.89(%string.559062* %14, %string.559062* %.84)
   %. = select i1 %.90, i64 2, i64 1
@@ -35721,7 +35732,7 @@ end.if:                                           ; preds = %for.body.if
   %.107 = getelementptr inbounds %TypeChecker_vtable_ty.559401, %TypeChecker_vtable_ty.559401* %.106, i64 0, i32 16
   %.108 = load void (%TypeChecker.559400*, i64, %string.559062*, %FloRange.559068*)*, void (%TypeChecker.559400*, i64, %string.559062*, %FloRange.559068*)** %.107, align 8
   %.117 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.86.le132, align 8
-  %.118 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.117, i64 0, i32 10
+  %.118 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.117, i64 0, i32 11
   %.119 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.118, align 8
   %.120 = tail call i8* %.119(%string.559062* nonnull %23)
   %.122 = tail call i64 (i8*, i64, i8*, ...) @snprintf(i8* null, i64 0, i8* getelementptr inbounds ([65 x i8], [65 x i8]* @str.249, i64 0, i64 0), i64 %., i8* %.120, i64 %.100)
@@ -35759,7 +35770,7 @@ end.endif.if:                                     ; preds = %end.endif
   %.151 = getelementptr inbounds %TypeChecker_vtable_ty.559401, %TypeChecker_vtable_ty.559401* %.150, i64 0, i32 16
   %.152 = load void (%TypeChecker.559400*, i64, %string.559062*, %FloRange.559068*)*, void (%TypeChecker.559400*, i64, %string.559062*, %FloRange.559068*)** %.151, align 8
   %.155 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.86.le, align 8
-  %.156 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.155, i64 0, i32 10
+  %.156 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.155, i64 0, i32 11
   %.157 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.156, align 8
   %.158 = tail call i8* %.157(%string.559062* nonnull %27)
   %.160 = tail call i64 (i8*, i64, i8*, ...) @snprintf(i8* null, i64 0, i8* getelementptr inbounds ([45 x i8], [45 x i8]* @str.250, i64 0, i64 0), i8* %.158)
@@ -35822,12 +35833,12 @@ for.body.endif.if.if:                             ; preds = %for.body.endif.if
   %.252 = load %string.559062*, %string.559062** %.251, align 8
   %.253 = getelementptr inbounds %string.559062, %string.559062* %35, i64 0, i32 0
   %.254 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.253, align 8
-  %.255 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.254, i64 0, i32 10
+  %.255 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.254, i64 0, i32 11
   %.256 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.255, align 8
   %.257 = tail call i8* %.256(%string.559062* %35)
   %.258 = getelementptr inbounds %string.559062, %string.559062* %.252, i64 0, i32 0
   %.259 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.258, align 8
-  %.260 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.259, i64 0, i32 10
+  %.260 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.259, i64 0, i32 11
   %.261 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.260, align 8
   %.262 = tail call i8* %.261(%string.559062* %.252)
   %.264 = tail call i64 (i8*, i64, i8*, ...) @snprintf(i8* null, i64 0, i8* getelementptr inbounds ([37 x i8], [37 x i8]* @str.251, i64 0, i64 0), i8* %.257, i8* %.262)
@@ -35878,17 +35889,17 @@ for.body.endif.if.endif.if:                       ; preds = %for.body.endif.if.e
   %.326 = tail call %string.559062* %.324(%TypeChecker.559400* nonnull %.1, %Type.559226* %.290)
   %.327 = getelementptr inbounds %string.559062, %string.559062* %40, i64 0, i32 0
   %.328 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.327, align 8
-  %.329 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.328, i64 0, i32 10
+  %.329 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.328, i64 0, i32 11
   %.330 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.329, align 8
   %.331 = tail call i8* %.330(%string.559062* %40)
   %.332 = getelementptr inbounds %string.559062, %string.559062* %.319, i64 0, i32 0
   %.333 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.332, align 8
-  %.334 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.333, i64 0, i32 10
+  %.334 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.333, i64 0, i32 11
   %.335 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.334, align 8
   %.336 = tail call i8* %.335(%string.559062* %.319)
   %.337 = getelementptr inbounds %string.559062, %string.559062* %.326, i64 0, i32 0
   %.338 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.337, align 8
-  %.339 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.338, i64 0, i32 10
+  %.339 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.338, i64 0, i32 11
   %.340 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.339, align 8
   %.341 = tail call i8* %.340(%string.559062* %.326)
   %.343 = tail call i64 (i8*, i64, i8*, ...) @snprintf(i8* null, i64 0, i8* getelementptr inbounds ([91 x i8], [91 x i8]* @str.252, i64 0, i64 0), i8* %.331, i8* %.336, i8* %.341)
@@ -35929,17 +35940,17 @@ for.body.endif.if.endif.endif.if:                 ; preds = %for.body.endif.if.e
   %.381 = tail call %string.559062* @dump_access(i64 %.296)
   %.382 = getelementptr inbounds %string.559062, %string.559062* %44, i64 0, i32 0
   %.383 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.382, align 8
-  %.384 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.383, i64 0, i32 10
+  %.384 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.383, i64 0, i32 11
   %.385 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.384, align 8
   %.386 = tail call i8* %.385(%string.559062* %44)
   %.387 = getelementptr inbounds %string.559062, %string.559062* %.379, i64 0, i32 0
   %.388 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.387, align 8
-  %.389 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.388, i64 0, i32 10
+  %.389 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.388, i64 0, i32 11
   %.390 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.389, align 8
   %.391 = tail call i8* %.390(%string.559062* %.379)
   %.392 = getelementptr inbounds %string.559062, %string.559062* %.381, i64 0, i32 0
   %.393 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.392, align 8
-  %.394 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.393, i64 0, i32 10
+  %.394 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.393, i64 0, i32 11
   %.395 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.394, align 8
   %.396 = tail call i8* %.395(%string.559062* %.381)
   %.398 = tail call i64 (i8*, i64, i8*, ...) @snprintf(i8* null, i64 0, i8* getelementptr inbounds ([50 x i8], [50 x i8]* @str.253, i64 0, i64 0), i8* %.386, i8* %.391, i8* %.396)
@@ -35991,7 +36002,7 @@ for.body.endif.endif.else:                        ; preds = %for.body.endif.endi
   store i64 11, i64* %50, align 8
   %.516 = getelementptr inbounds %string.559062, %string.559062* %.512, i64 0, i32 0
   %.517 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.516, align 8
-  %.518 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.517, i64 0, i32 3
+  %.518 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.517, i64 0, i32 4
   %.519 = load i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)** %.518, align 8
   %.520 = tail call i1 %.519(%string.559062* %.512, %string.559062* %.514)
   br i1 %.520, label %for.body.endif.endif.else.if, label %for.body.endif.endif.else.else
@@ -36059,7 +36070,7 @@ for.body.endif.endif.if.endif:                    ; preds = %for.body.endif.endi
   store i64 11, i64* %58, align 8
   %.476 = getelementptr inbounds %string.559062, %string.559062* %.472, i64 0, i32 0
   %.477 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.476, align 8
-  %.478 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.477, i64 0, i32 3
+  %.478 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.477, i64 0, i32 4
   %.479 = load i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)** %.478, align 8
   %.480 = tail call i1 %.479(%string.559062* %.472, %string.559062* %.474)
   br i1 %.480, label %for.body.endif.endif.if.endif.if, label %for.body.endif.endif.if.endif.endif
@@ -36260,7 +36271,7 @@ define void @TypeChecker_add_inherited_props_to_class(%TypeChecker.559400* %.1, 
   %.28 = tail call %string.559062* %.26(%TypeChecker.559400* %.1, %Type.559226* %.11)
   %.29 = getelementptr inbounds %string.559062, %string.559062* %.28, i64 0, i32 0
   %.30 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.29, align 8
-  %.31 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.30, i64 0, i32 10
+  %.31 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.30, i64 0, i32 11
   %.32 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.31, align 8
   %.33 = tail call i8* %.32(%string.559062* %.28)
   %.35 = tail call i64 (i8*, i64, i8*, ...) @snprintf(i8* null, i64 0, i8* getelementptr inbounds ([42 x i8], [42 x i8]* @str.260, i64 0, i64 0), i8* %.33)
@@ -36522,7 +36533,7 @@ for.body.if.if.if:                                ; preds = %for.body.if.if
   %.155 = load void (%TypeChecker.559400*, i64, %string.559062*, %FloRange.559068*)*, void (%TypeChecker.559400*, i64, %string.559062*, %FloRange.559068*)** %.154, align 8
   %.157 = getelementptr inbounds %string.559062, %string.559062* %.1271329, i64 0, i32 0
   %.158 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.157, align 8
-  %.159 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.158, i64 0, i32 10
+  %.159 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.158, i64 0, i32 11
   %.160 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.159, align 8
   %.161 = tail call i8* %.160(%string.559062* %.1271329)
   %.163 = tail call i64 (i8*, i64, i8*, ...) @snprintf(i8* null, i64 0, i8* getelementptr inbounds ([81 x i8], [81 x i8]* @str.261, i64 0, i64 0), i8* %.161)
@@ -37171,7 +37182,7 @@ for.end.1.endif.endif.if:                         ; preds = %for.end.1.endif.end
   %.402 = load %string.559062*, %string.559062** %.386, align 8
   %.403 = getelementptr inbounds %string.559062, %string.559062* %.402, i64 0, i32 0
   %.404 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.403, align 8
-  %.405 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.404, i64 0, i32 10
+  %.405 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.404, i64 0, i32 11
   %.406 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.405, align 8
   %.407 = tail call i8* %.406(%string.559062* %.402)
   %.409 = tail call i64 (i8*, i64, i8*, ...) @snprintf(i8* null, i64 0, i8* getelementptr inbounds ([20 x i8], [20 x i8]* @str.267, i64 0, i64 0), i8* %.407)
@@ -37272,7 +37283,7 @@ define %ArrayExpression.559268* @TypeChecker_check_array_expression(%TypeChecker
   store i64 5, i64* %11, align 8
   %.65 = getelementptr inbounds %string.559062, %string.559062* %.61, i64 0, i32 0
   %.66 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.65, align 8
-  %.67 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.66, i64 0, i32 3
+  %.67 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.66, i64 0, i32 4
   %.68 = load i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)** %.67, align 8
   %.69 = tail call i1 %.68(%string.559062* %.61, %string.559062* %.63)
   %.70 = and i1 %.58, %.69
@@ -37409,12 +37420,12 @@ for.body.endif.else:                              ; preds = %for.body.endif
   %.227 = tail call %string.559062* %.223(%TypeChecker.559400* nonnull %.1, %Type.559226* %.226)
   %.228 = getelementptr inbounds %string.559062, %string.559062* %.218, i64 0, i32 0
   %.229 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.228, align 8
-  %.230 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.229, i64 0, i32 10
+  %.230 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.229, i64 0, i32 11
   %.231 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.230, align 8
   %.232 = tail call i8* %.231(%string.559062* %.218)
   %.233 = getelementptr inbounds %string.559062, %string.559062* %.227, i64 0, i32 0
   %.234 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.233, align 8
-  %.235 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.234, i64 0, i32 10
+  %.235 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.234, i64 0, i32 11
   %.236 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.235, align 8
   %.237 = tail call i8* %.236(%string.559062* %.227)
   %.239 = tail call i64 (i8*, i64, i8*, ...) @snprintf(i8* null, i64 0, i8* getelementptr inbounds ([48 x i8], [48 x i8]* @str.268, i64 0, i64 0), i8* %.232, i8* %.237)
@@ -37545,7 +37556,7 @@ define noalias %Expression.559246* @TypeChecker_check_var_access_expr(%TypeCheck
   store i64 4, i64* %2, align 8
   %.19 = getelementptr inbounds %string.559062, %string.559062* %.13, i64 0, i32 0
   %.20 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.19, align 8
-  %.21 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.20, i64 0, i32 3
+  %.21 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.20, i64 0, i32 4
   %.22 = load i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)** %.21, align 8
   %.23 = tail call i1 %.22(%string.559062* %.13, %string.559062* %.17)
   br i1 %.23, label %.5.if, label %.5.endif
@@ -37574,7 +37585,7 @@ define noalias %Expression.559246* @TypeChecker_check_var_access_expr(%TypeCheck
   %5 = bitcast i8* %.34.repack6 to i64*
   store i64 5, i64* %5, align 8
   %.37 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.19, align 8
-  %.38 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.37, i64 0, i32 3
+  %.38 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.37, i64 0, i32 4
   %.39 = load i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)** %.38, align 8
   %.40 = tail call i1 %.39(%string.559062* %.13, %string.559062* %.34)
   br i1 %.40, label %.5.endif.if, label %.5.endif.endif
@@ -37603,7 +37614,7 @@ define noalias %Expression.559246* @TypeChecker_check_var_access_expr(%TypeCheck
   %8 = bitcast i8* %.51.repack9 to i64*
   store i64 4, i64* %8, align 8
   %.54 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.19, align 8
-  %.55 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.54, i64 0, i32 3
+  %.55 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.54, i64 0, i32 4
   %.56 = load i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)** %.55, align 8
   %.57 = tail call i1 %.56(%string.559062* nonnull %.13, %string.559062* %.51)
   br i1 %.57, label %.5.endif.endif.if, label %.5.endif.endif.endif
@@ -37647,7 +37658,7 @@ define noalias %Expression.559246* @TypeChecker_check_var_access_expr(%TypeCheck
   %.167 = getelementptr inbounds %TypeChecker_vtable_ty.559401, %TypeChecker_vtable_ty.559401* %.166, i64 0, i32 16
   %.168 = load void (%TypeChecker.559400*, i64, %string.559062*, %FloRange.559068*)*, void (%TypeChecker.559400*, i64, %string.559062*, %FloRange.559068*)** %.167, align 8
   %.171 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.19, align 8
-  %.172 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.171, i64 0, i32 10
+  %.172 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.171, i64 0, i32 11
   %.173 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.172, align 8
   %.174 = tail call i8* %.173(%string.559062* nonnull %.13)
   %.176 = tail call i64 (i8*, i64, i8*, ...) @snprintf(i8* null, i64 0, i8* getelementptr inbounds ([24 x i8], [24 x i8]* @str.269, i64 0, i64 0), i8* %.174)
@@ -37848,12 +37859,12 @@ define %Expression.559246* @TypeChecker_check_assignment(%TypeChecker.559400* %.
   %.138 = tail call %string.559062* %.134(%TypeChecker.559400* nonnull %.1, %Type.559226* %.137)
   %.139 = getelementptr inbounds %string.559062, %string.559062* %.129, i64 0, i32 0
   %.140 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.139, align 8
-  %.141 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.140, i64 0, i32 10
+  %.141 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.140, i64 0, i32 11
   %.142 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.141, align 8
   %.143 = tail call i8* %.142(%string.559062* %.129)
   %.144 = getelementptr inbounds %string.559062, %string.559062* %.138, i64 0, i32 0
   %.145 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.144, align 8
-  %.146 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.145, i64 0, i32 10
+  %.146 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.145, i64 0, i32 11
   %.147 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.146, align 8
   %.148 = tail call i8* %.147(%string.559062* %.138)
   %.150 = tail call i64 (i8*, i64, i8*, ...) @snprintf(i8* null, i64 0, i8* getelementptr inbounds ([52 x i8], [52 x i8]* @str.272, i64 0, i64 0), i8* %.143, i8* %.148)
@@ -37961,12 +37972,12 @@ define noalias %Expression.559246* @TypeChecker_check_object_bin_assign(%TypeChe
   %.109 = tail call %string.559062* %.105(%TypeChecker.559400* nonnull %.1, %Type.559226* %.108)
   %.110 = getelementptr inbounds %string.559062, %string.559062* %.100, i64 0, i32 0
   %.111 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.110, align 8
-  %.112 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.111, i64 0, i32 10
+  %.112 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.111, i64 0, i32 11
   %.113 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.112, align 8
   %.114 = tail call i8* %.113(%string.559062* %.100)
   %.115 = getelementptr inbounds %string.559062, %string.559062* %.109, i64 0, i32 0
   %.116 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.115, align 8
-  %.117 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.116, i64 0, i32 10
+  %.117 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.116, i64 0, i32 11
   %.118 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.117, align 8
   %.119 = tail call i8* %.118(%string.559062* %.109)
   %.121 = tail call i64 (i8*, i64, i8*, ...) @snprintf(i8* null, i64 0, i8* getelementptr inbounds ([37 x i8], [37 x i8]* @str.273, i64 0, i64 0), i8* %.114, i8* %.119)
@@ -38046,7 +38057,7 @@ define noalias %Expression.559246* @TypeChecker_check_object_binary_expr(%TypeCh
   %.29 = tail call %string.559062* @dump_bin_op(i64 %.13)
   %.30 = getelementptr inbounds %string.559062, %string.559062* %.29, i64 0, i32 0
   %.31 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.30, align 8
-  %.32 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.31, i64 0, i32 10
+  %.32 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.31, i64 0, i32 11
   %.33 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.32, align 8
   %.34 = tail call i8* %.33(%string.559062* %.29)
   %.36 = tail call i64 (i8*, i64, i8*, ...) @snprintf(i8* null, i64 0, i8* getelementptr inbounds ([55 x i8], [55 x i8]* @str.274, i64 0, i64 0), i8* %.34)
@@ -38141,17 +38152,17 @@ define noalias %Expression.559246* @TypeChecker_check_object_binary_expr(%TypeCh
   %.121 = load %string.559062*, %string.559062** %.120, align 8
   %.123 = getelementptr inbounds %string.559062, %string.559062* %.118, i64 0, i32 0
   %.124 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.123, align 8
-  %.125 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.124, i64 0, i32 10
+  %.125 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.124, i64 0, i32 11
   %.126 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.125, align 8
   %.127 = tail call i8* %.126(%string.559062* %.118)
   %.128 = getelementptr inbounds %string.559062, %string.559062* %.121, i64 0, i32 0
   %.129 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.128, align 8
-  %.130 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.129, i64 0, i32 10
+  %.130 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.129, i64 0, i32 11
   %.131 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.130, align 8
   %.132 = tail call i8* %.131(%string.559062* %.121)
   %.133 = getelementptr inbounds %string.559062, %string.559062* %.16, i64 0, i32 0
   %.134 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.133, align 8
-  %.135 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.134, i64 0, i32 10
+  %.135 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.134, i64 0, i32 11
   %.136 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.135, align 8
   %.137 = tail call i8* %.136(%string.559062* %.16)
   %.139 = tail call i64 (i8*, i64, i8*, ...) @snprintf(i8* null, i64 0, i8* getelementptr inbounds ([108 x i8], [108 x i8]* @str.275, i64 0, i64 0), i8* %.127, i8* %.132, i8* %.137)
@@ -38233,12 +38244,12 @@ define noalias %Expression.559246* @TypeChecker_check_object_binary_expr(%TypeCh
   %.249 = tail call %string.559062* %.245(%TypeChecker.559400* nonnull %.1, %Type.559226* %.248)
   %.250 = getelementptr inbounds %string.559062, %string.559062* %.240, i64 0, i32 0
   %.251 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.250, align 8
-  %.252 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.251, i64 0, i32 10
+  %.252 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.251, i64 0, i32 11
   %.253 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.252, align 8
   %.254 = tail call i8* %.253(%string.559062* %.240)
   %.255 = getelementptr inbounds %string.559062, %string.559062* %.249, i64 0, i32 0
   %.256 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.255, align 8
-  %.257 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.256, i64 0, i32 10
+  %.257 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.256, i64 0, i32 11
   %.258 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.257, align 8
   %.259 = tail call i8* %.258(%string.559062* %.249)
   %.261 = tail call i64 (i8*, i64, i8*, ...) @snprintf(i8* null, i64 0, i8* getelementptr inbounds ([37 x i8], [37 x i8]* @str.273, i64 0, i64 0), i8* %.254, i8* %.259)
@@ -38344,7 +38355,7 @@ define noalias %Expression.559246* @TypeChecker_check_object_setitem_expr(%TypeC
   %.46 = load %string.559062*, %string.559062** %.45, align 8
   %.47 = getelementptr inbounds %string.559062, %string.559062* %.46, i64 0, i32 0
   %.48 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.47, align 8
-  %.49 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.48, i64 0, i32 10
+  %.49 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.48, i64 0, i32 11
   %.50 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.49, align 8
   %.51 = tail call i8* %.50(%string.559062* %.46)
   %.53 = tail call i64 (i8*, i64, i8*, ...) @snprintf(i8* null, i64 0, i8* getelementptr inbounds ([114 x i8], [114 x i8]* @str.276, i64 0, i64 0), i8* %.51)
@@ -38427,12 +38438,12 @@ define noalias %Expression.559246* @TypeChecker_check_object_setitem_expr(%TypeC
   %.149 = tail call %string.559062* %.145(%TypeChecker.559400* nonnull %.1, %Type.559226* %.148)
   %.150 = getelementptr inbounds %string.559062, %string.559062* %.140, i64 0, i32 0
   %.151 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.150, align 8
-  %.152 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.151, i64 0, i32 10
+  %.152 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.151, i64 0, i32 11
   %.153 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.152, align 8
   %.154 = tail call i8* %.153(%string.559062* %.140)
   %.155 = getelementptr inbounds %string.559062, %string.559062* %.149, i64 0, i32 0
   %.156 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.155, align 8
-  %.157 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.156, i64 0, i32 10
+  %.157 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.156, i64 0, i32 11
   %.158 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.157, align 8
   %.159 = tail call i8* %.158(%string.559062* %.149)
   %.161 = tail call i64 (i8*, i64, i8*, ...) @snprintf(i8* null, i64 0, i8* getelementptr inbounds ([37 x i8], [37 x i8]* @str.273, i64 0, i64 0), i8* %.154, i8* %.159)
@@ -38493,12 +38504,12 @@ define noalias %Expression.559246* @TypeChecker_check_object_setitem_expr(%TypeC
   %.234 = tail call %string.559062* %.230(%TypeChecker.559400* nonnull %.1, %Type.559226* %.233)
   %.235 = getelementptr inbounds %string.559062, %string.559062* %.225, i64 0, i32 0
   %.236 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.235, align 8
-  %.237 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.236, i64 0, i32 10
+  %.237 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.236, i64 0, i32 11
   %.238 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.237, align 8
   %.239 = tail call i8* %.238(%string.559062* %.225)
   %.240 = getelementptr inbounds %string.559062, %string.559062* %.234, i64 0, i32 0
   %.241 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.240, align 8
-  %.242 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.241, i64 0, i32 10
+  %.242 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.241, i64 0, i32 11
   %.243 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.242, align 8
   %.244 = tail call i8* %.243(%string.559062* %.234)
   %.246 = tail call i64 (i8*, i64, i8*, ...) @snprintf(i8* null, i64 0, i8* getelementptr inbounds ([37 x i8], [37 x i8]* @str.273, i64 0, i64 0), i8* %.239, i8* %.244)
@@ -38975,17 +38986,17 @@ define %BinaryExpression.559270* @TypeChecker_check_bin_expr(%TypeChecker.559400
   %.490 = tail call %string.559062* %.486(%TypeChecker.559400* nonnull %.1, %Type.559226* %.489)
   %.491 = getelementptr inbounds %string.559062, %string.559062* %.472, i64 0, i32 0
   %.492 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.491, align 8
-  %.493 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.492, i64 0, i32 10
+  %.493 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.492, i64 0, i32 11
   %.494 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.493, align 8
   %.495 = tail call i8* %.494(%string.559062* %.472)
   %.496 = getelementptr inbounds %string.559062, %string.559062* %.481, i64 0, i32 0
   %.497 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.496, align 8
-  %.498 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.497, i64 0, i32 10
+  %.498 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.497, i64 0, i32 11
   %.499 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.498, align 8
   %.500 = tail call i8* %.499(%string.559062* %.481)
   %.501 = getelementptr inbounds %string.559062, %string.559062* %.490, i64 0, i32 0
   %.502 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.501, align 8
-  %.503 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.502, i64 0, i32 10
+  %.503 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.502, i64 0, i32 11
   %.504 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.503, align 8
   %.505 = tail call i8* %.504(%string.559062* %.490)
   %.507 = tail call i64 (i8*, i64, i8*, ...) @snprintf(i8* null, i64 0, i8* getelementptr inbounds ([58 x i8], [58 x i8]* @str.278, i64 0, i64 0), i8* %.495, i8* %.500, i8* %.505)
@@ -39093,7 +39104,7 @@ define noalias %UnaryExpression.559272* @TypeChecker_check_unary_expr(%TypeCheck
   %.99 = tail call %string.559062* @dump_unary_op(i64 %.11)
   %.100 = getelementptr inbounds %string.559062, %string.559062* %.99, i64 0, i32 0
   %.101 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.100, align 8
-  %.102 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.101, i64 0, i32 10
+  %.102 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.101, i64 0, i32 11
   %.103 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.102, align 8
   %.104 = tail call i8* %.103(%string.559062* %.99)
   %.106 = tail call i64 (i8*, i64, i8*, ...) @snprintf(i8* null, i64 0, i8* getelementptr inbounds ([39 x i8], [39 x i8]* @str.279, i64 0, i64 0), i8* %.104)
@@ -39142,12 +39153,12 @@ define noalias %UnaryExpression.559272* @TypeChecker_check_unary_expr(%TypeCheck
   %.175 = tail call %string.559062* %.173(%TypeChecker.559400* nonnull %.1, %Type.559226* %.3414)
   %.176 = getelementptr inbounds %string.559062, %string.559062* %.168, i64 0, i32 0
   %.177 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.176, align 8
-  %.178 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.177, i64 0, i32 10
+  %.178 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.177, i64 0, i32 11
   %.179 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.178, align 8
   %.180 = tail call i8* %.179(%string.559062* %.168)
   %.181 = getelementptr inbounds %string.559062, %string.559062* %.175, i64 0, i32 0
   %.182 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.181, align 8
-  %.183 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.182, i64 0, i32 10
+  %.183 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.182, i64 0, i32 11
   %.184 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.183, align 8
   %.185 = tail call i8* %.184(%string.559062* %.175)
   %.187 = tail call i64 (i8*, i64, i8*, ...) @snprintf(i8* null, i64 0, i8* getelementptr inbounds ([40 x i8], [40 x i8]* @str.280, i64 0, i64 0), i8* %.180, i8* %.185)
@@ -39396,12 +39407,12 @@ define noalias %Expression.559246* @TypeChecker_check_typecast_expr(%TypeChecker
   %.238 = tail call %string.559062* %.236(%TypeChecker.559400* nonnull %.1, %Type.559226* nonnull %.30)
   %.239 = getelementptr inbounds %string.559062, %string.559062* %.231, i64 0, i32 0
   %.240 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.239, align 8
-  %.241 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.240, i64 0, i32 10
+  %.241 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.240, i64 0, i32 11
   %.242 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.241, align 8
   %.243 = tail call i8* %.242(%string.559062* %.231)
   %.244 = getelementptr inbounds %string.559062, %string.559062* %.238, i64 0, i32 0
   %.245 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.244, align 8
-  %.246 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.245, i64 0, i32 10
+  %.246 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.245, i64 0, i32 11
   %.247 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.246, align 8
   %.248 = tail call i8* %.247(%string.559062* %.238)
   %.250 = tail call i64 (i8*, i64, i8*, ...) @snprintf(i8* null, i64 0, i8* getelementptr inbounds ([30 x i8], [30 x i8]* @str.282, i64 0, i64 0), i8* %.243, i8* %.248)
@@ -39561,12 +39572,12 @@ define noalias %string.559062* @TypeChecker_check_constructor_call(%TypeChecker.
   %.137 = tail call %string.559062* %.127(%TypeChecker.559400* nonnull %.1, %Type.559226* %.136)
   %.139 = getelementptr inbounds %string.559062, %string.559062* %.122, i64 0, i32 0
   %.140 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.139, align 8
-  %.141 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.140, i64 0, i32 10
+  %.141 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.140, i64 0, i32 11
   %.142 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.141, align 8
   %.143 = tail call i8* %.142(%string.559062* %.122)
   %.144 = getelementptr inbounds %string.559062, %string.559062* %.137, i64 0, i32 0
   %.145 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.144, align 8
-  %.146 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.145, i64 0, i32 10
+  %.146 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.145, i64 0, i32 11
   %.147 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.146, align 8
   %.148 = tail call i8* %.147(%string.559062* %.137)
   %.150 = tail call i64 (i8*, i64, i8*, ...) @snprintf(i8* null, i64 0, i8* getelementptr inbounds ([71 x i8], [71 x i8]* @str.285, i64 0, i64 0), i8* %.143, i8* %.148, i64 %.73)
@@ -39754,7 +39765,7 @@ define noalias %NewExpression.559278* @TypeChecker_check_new_expr(%TypeChecker.5
   %.175 = tail call %string.559062* %.173(%TypeChecker.559400* nonnull %.1, %Type.559226* %.131)
   %.179 = getelementptr inbounds %string.559062, %string.559062* %.175, i64 0, i32 0
   %.180 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.179, align 8
-  %.181 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.180, i64 0, i32 10
+  %.181 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.180, i64 0, i32 11
   %.182 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.181, align 8
   %.183 = tail call i8* %.182(%string.559062* %.175)
   %.184 = tail call dereferenceable_or_null(32) i8* @malloc(i64 32)
@@ -39763,7 +39774,7 @@ define noalias %NewExpression.559278* @TypeChecker_check_new_expr(%TypeChecker.5
   store %string_vtable_ty.559063* @string_vtable_data, %string_vtable_ty.559063** %.186, align 8
   tail call void @string_constructor(%string.559062* %.185, i8* getelementptr inbounds ([6 x i8], [6 x i8]* @str.288, i64 0, i64 0), i64 5)
   %.190 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.186, align 8
-  %.191 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.190, i64 0, i32 10
+  %.191 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.190, i64 0, i32 11
   %.192 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.191, align 8
   %.193 = tail call i8* %.192(%string.559062* %.185)
   %.195 = tail call i64 (i8*, i64, i8*, ...) @snprintf(i8* null, i64 0, i8* getelementptr inbounds ([74 x i8], [74 x i8]* @str.287, i64 0, i64 0), i8* %.183, i8* %.193)
@@ -39882,12 +39893,12 @@ define noalias %string.559062* @TypeChecker_check_member_access(%TypeChecker.559
   %.109 = load %string.559062*, %string.559062** %.108, align 8
   %.110 = getelementptr inbounds %string.559062, %string.559062* %member_name.0, i64 0, i32 0
   %.111 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.110, align 8
-  %.112 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.111, i64 0, i32 10
+  %.112 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.111, i64 0, i32 11
   %.113 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.112, align 8
   %.114 = tail call i8* %.113(%string.559062* %member_name.0)
   %.115 = getelementptr inbounds %string.559062, %string.559062* %.109, i64 0, i32 0
   %.116 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.115, align 8
-  %.117 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.116, i64 0, i32 10
+  %.117 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.116, i64 0, i32 11
   %.118 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.117, align 8
   %.119 = tail call i8* %.118(%string.559062* %.109)
   %.121 = tail call i64 (i8*, i64, i8*, ...) @snprintf(i8* null, i64 0, i8* getelementptr inbounds ([76 x i8], [76 x i8]* @str.289, i64 0, i64 0), i8* %.114, i8* %.119)
@@ -39915,17 +39926,17 @@ define noalias %string.559062* @TypeChecker_check_member_access(%TypeChecker.559
   %.147 = load %string.559062*, %string.559062** %.146, align 8
   %.148 = getelementptr inbounds %string.559062, %string.559062* %member_name.0, i64 0, i32 0
   %.149 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.148, align 8
-  %.150 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.149, i64 0, i32 10
+  %.150 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.149, i64 0, i32 11
   %.151 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.150, align 8
   %.152 = tail call i8* %.151(%string.559062* %member_name.0)
   %.153 = getelementptr inbounds %string.559062, %string.559062* %.144, i64 0, i32 0
   %.154 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.153, align 8
-  %.155 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.154, i64 0, i32 10
+  %.155 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.154, i64 0, i32 11
   %.156 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.155, align 8
   %.157 = tail call i8* %.156(%string.559062* %.144)
   %.158 = getelementptr inbounds %string.559062, %string.559062* %.147, i64 0, i32 0
   %.159 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.158, align 8
-  %.160 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.159, i64 0, i32 10
+  %.160 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.159, i64 0, i32 11
   %.161 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.160, align 8
   %.162 = tail call i8* %.161(%string.559062* %.147)
   %.164 = tail call i64 (i8*, i64, i8*, ...) @snprintf(i8* null, i64 0, i8* getelementptr inbounds ([71 x i8], [71 x i8]* @str.290, i64 0, i64 0), i8* %.152, i8* %.157, i8* %.162)
@@ -40041,12 +40052,12 @@ while.exit.if:                                    ; preds = %while.exit
   %.90 = load %string.559062*, %string.559062** %.89, align 8
   %.91 = getelementptr inbounds %string.559062, %string.559062* %.361136, i64 0, i32 0
   %.92 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.91, align 8
-  %.93 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.92, i64 0, i32 10
+  %.93 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.92, i64 0, i32 11
   %.94 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.93, align 8
   %.95 = tail call i8* %.94(%string.559062* %.361136)
   %.96 = getelementptr inbounds %string.559062, %string.559062* %.90, i64 0, i32 0
   %.97 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.96, align 8
-  %.98 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.97, i64 0, i32 10
+  %.98 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.97, i64 0, i32 11
   %.99 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.98, align 8
   %.100 = tail call i8* %.99(%string.559062* %.90)
   %.102 = tail call i64 (i8*, i64, i8*, ...) @snprintf(i8* null, i64 0, i8* getelementptr inbounds ([52 x i8], [52 x i8]* @str.291, i64 0, i64 0), i8* %.95, i8* %.100)
@@ -40150,12 +40161,12 @@ while.exit.endif.endif:                           ; preds = %while.exit.endif
   %.203 = load %string.559062*, %string.559062** %.202, align 8
   %.204 = getelementptr inbounds %string.559062, %string.559062* %.361136, i64 0, i32 0
   %.205 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.204, align 8
-  %.206 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.205, i64 0, i32 10
+  %.206 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.205, i64 0, i32 11
   %.207 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.206, align 8
   %.208 = tail call i8* %.207(%string.559062* %.361136)
   %.209 = getelementptr inbounds %string.559062, %string.559062* %.203, i64 0, i32 0
   %.210 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.209, align 8
-  %.211 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.210, i64 0, i32 10
+  %.211 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.210, i64 0, i32 11
   %.212 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.211, align 8
   %.213 = tail call i8* %.212(%string.559062* %.203)
   %.215 = tail call i64 (i8*, i64, i8*, ...) @snprintf(i8* null, i64 0, i8* getelementptr inbounds ([50 x i8], [50 x i8]* @str.292, i64 0, i64 0), i8* %.208, i8* %.213)
@@ -40214,12 +40225,12 @@ while.exit.endif.endif:                           ; preds = %while.exit.endif
   %.301 = load %string.559062*, %string.559062** %.300, align 8
   %.302 = getelementptr inbounds %string.559062, %string.559062* %.361136, i64 0, i32 0
   %.303 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.302, align 8
-  %.304 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.303, i64 0, i32 10
+  %.304 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.303, i64 0, i32 11
   %.305 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.304, align 8
   %.306 = tail call i8* %.305(%string.559062* %.361136)
   %.307 = getelementptr inbounds %string.559062, %string.559062* %.301, i64 0, i32 0
   %.308 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.307, align 8
-  %.309 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.308, i64 0, i32 10
+  %.309 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.308, i64 0, i32 11
   %.310 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.309, align 8
   %.311 = tail call i8* %.310(%string.559062* %.301)
   %.313 = tail call i64 (i8*, i64, i8*, ...) @snprintf(i8* null, i64 0, i8* getelementptr inbounds ([40 x i8], [40 x i8]* @str.293, i64 0, i64 0), i8* %.306, i8* %.311)
@@ -40272,7 +40283,7 @@ while.exit.endif.endif:                           ; preds = %while.exit.endif
   store i64 9, i64* %21, align 8
   %.355 = getelementptr inbounds %string.559062, %string.559062* %.361136, i64 0, i32 0
   %.356 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.355, align 8
-  %.357 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.356, i64 0, i32 3
+  %.357 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.356, i64 0, i32 4
   %.358 = load i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)** %.357, align 8
   %.359 = tail call i1 %.358(%string.559062* %.361136, %string.559062* %.353)
   br i1 %.359, label %.5.endif.else.else.if.endif, label %.5.endif.else.else.if.else
@@ -40287,12 +40298,12 @@ while.exit.endif.endif:                           ; preds = %while.exit.endif
   %.482 = tail call %string.559062* %.478(%TypeChecker.559400* nonnull %.1, %Type.559226* %.481)
   %.483 = getelementptr inbounds %string.559062, %string.559062* %.361136, i64 0, i32 0
   %.484 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.483, align 8
-  %.485 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.484, i64 0, i32 10
+  %.485 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.484, i64 0, i32 11
   %.486 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.485, align 8
   %.487 = tail call i8* %.486(%string.559062* %.361136)
   %.488 = getelementptr inbounds %string.559062, %string.559062* %.482, i64 0, i32 0
   %.489 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.488, align 8
-  %.490 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.489, i64 0, i32 10
+  %.490 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.489, i64 0, i32 11
   %.491 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.490, align 8
   %.492 = tail call i8* %.491(%string.559062* %.482)
   %.494 = tail call i64 (i8*, i64, i8*, ...) @snprintf(i8* null, i64 0, i8* getelementptr inbounds ([38 x i8], [38 x i8]* @str.300, i64 0, i64 0), i8* %.487, i8* %.492)
@@ -40333,7 +40344,7 @@ while.exit.endif.endif:                           ; preds = %while.exit.endif
   %27 = bitcast i8* %.365.repack17 to i64*
   store i64 9, i64* %27, align 8
   %.368 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.355, align 8
-  %.369 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.368, i64 0, i32 3
+  %.369 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.368, i64 0, i32 4
   %.370 = load i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)** %.369, align 8
   %.371 = tail call i1 %.370(%string.559062* nonnull %.361136, %string.559062* %.365)
   br i1 %.371, label %.5.endif.else.else.if.endif, label %.5.endif.else.else.if.else.else
@@ -40371,7 +40382,7 @@ while.exit.endif.endif:                           ; preds = %while.exit.endif
   %32 = bitcast i8* %.377.repack20 to i64*
   store i64 9, i64* %32, align 8
   %.380 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.355, align 8
-  %.381 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.380, i64 0, i32 3
+  %.381 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.380, i64 0, i32 4
   %.382 = load i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)** %.381, align 8
   %.383 = tail call i1 %.382(%string.559062* nonnull %.361136, %string.559062* %.377)
   br i1 %.383, label %.5.endif.else.else.if.endif, label %.5.endif.else.else.if.else.else.else
@@ -40391,7 +40402,7 @@ while.exit.endif.endif:                           ; preds = %while.exit.endif
   %35 = bitcast i8* %.389.repack23 to i64*
   store i64 6, i64* %35, align 8
   %.392 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.355, align 8
-  %.393 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.392, i64 0, i32 3
+  %.393 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.392, i64 0, i32 4
   %.394 = load i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)** %.393, align 8
   %.395 = tail call i1 %.394(%string.559062* nonnull %.361136, %string.559062* %.389)
   br i1 %.395, label %.5.endif.else.else.if.endif, label %.5.endif.else.else.if.else.else.else.else
@@ -40411,7 +40422,7 @@ while.exit.endif.endif:                           ; preds = %while.exit.endif
   %38 = bitcast i8* %.401.repack26 to i64*
   store i64 7, i64* %38, align 8
   %.404 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.355, align 8
-  %.405 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.404, i64 0, i32 3
+  %.405 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.404, i64 0, i32 4
   %.406 = load i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)** %.405, align 8
   %.407 = tail call i1 %.406(%string.559062* nonnull %.361136, %string.559062* %.401)
   br i1 %.407, label %.5.endif.else.else.if.endif, label %.5.endif.else.else.if.else.else.else.else.else
@@ -40421,7 +40432,7 @@ while.exit.endif.endif:                           ; preds = %while.exit.endif
   %.414 = getelementptr inbounds %TypeChecker_vtable_ty.559401, %TypeChecker_vtable_ty.559401* %.413, i64 0, i32 16
   %.415 = load void (%TypeChecker.559400*, i64, %string.559062*, %FloRange.559068*)*, void (%TypeChecker.559400*, i64, %string.559062*, %FloRange.559068*)** %.414, align 8
   %.418 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.355, align 8
-  %.419 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.418, i64 0, i32 10
+  %.419 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.418, i64 0, i32 11
   %.420 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.419, align 8
   %.421 = tail call i8* %.420(%string.559062* nonnull %.361136)
   %.423 = tail call i64 (i8*, i64, i8*, ...) @snprintf(i8* null, i64 0, i8* getelementptr inbounds ([28 x i8], [28 x i8]* @str.299, i64 0, i64 0), i8* %.421)
@@ -40516,12 +40527,12 @@ define noalias %TernaryExpression.559274* @TypeChecker_check_ternary_expr(%TypeC
   %.101 = tail call %string.559062* %.99(%TypeChecker.559400* nonnull %.1, %Type.559226* %.7124)
   %.102 = getelementptr inbounds %string.559062, %string.559062* %.94, i64 0, i32 0
   %.103 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.102, align 8
-  %.104 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.103, i64 0, i32 10
+  %.104 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.103, i64 0, i32 11
   %.105 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.104, align 8
   %.106 = tail call i8* %.105(%string.559062* %.94)
   %.107 = getelementptr inbounds %string.559062, %string.559062* %.101, i64 0, i32 0
   %.108 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.107, align 8
-  %.109 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.108, i64 0, i32 10
+  %.109 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.108, i64 0, i32 11
   %.110 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.109, align 8
   %.111 = tail call i8* %.110(%string.559062* %.101)
   %.113 = tail call i64 (i8*, i64, i8*, ...) @snprintf(i8* null, i64 0, i8* getelementptr inbounds ([53 x i8], [53 x i8]* @str.301, i64 0, i64 0), i8* %.106, i8* %.111)
@@ -40596,7 +40607,7 @@ define noalias %Expression.559246* @TypeChecker_check_object_index_expr(%TypeChe
   %.41 = load %string.559062*, %string.559062** %.40, align 8
   %.42 = getelementptr inbounds %string.559062, %string.559062* %.41, i64 0, i32 0
   %.43 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.42, align 8
-  %.44 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.43, i64 0, i32 10
+  %.44 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.43, i64 0, i32 11
   %.45 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.44, align 8
   %.46 = tail call i8* %.45(%string.559062* %.41)
   %.48 = tail call i64 (i8*, i64, i8*, ...) @snprintf(i8* null, i64 0, i8* getelementptr inbounds ([122 x i8], [122 x i8]* @str.302, i64 0, i64 0), i8* %.46)
@@ -40661,12 +40672,12 @@ define noalias %Expression.559246* @TypeChecker_check_object_index_expr(%TypeChe
   %.127 = tail call %string.559062* %.123(%TypeChecker.559400* nonnull %.1, %Type.559226* %.126)
   %.128 = getelementptr inbounds %string.559062, %string.559062* %.118, i64 0, i32 0
   %.129 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.128, align 8
-  %.130 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.129, i64 0, i32 10
+  %.130 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.129, i64 0, i32 11
   %.131 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.130, align 8
   %.132 = tail call i8* %.131(%string.559062* %.118)
   %.133 = getelementptr inbounds %string.559062, %string.559062* %.127, i64 0, i32 0
   %.134 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.133, align 8
-  %.135 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.134, i64 0, i32 10
+  %.135 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.134, i64 0, i32 11
   %.136 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.135, align 8
   %.137 = tail call i8* %.136(%string.559062* %.127)
   %.139 = tail call i64 (i8*, i64, i8*, ...) @snprintf(i8* null, i64 0, i8* getelementptr inbounds ([37 x i8], [37 x i8]* @str.273, i64 0, i64 0), i8* %.132, i8* %.137)
@@ -40841,7 +40852,7 @@ define %IndexExpression.559280* @TypeChecker_check_index_expr(%TypeChecker.55940
   %.118 = tail call %string.559062* %.116(%TypeChecker.559400* nonnull %.1, %Type.559226* %.85.cast)
   %.119 = getelementptr inbounds %string.559062, %string.559062* %.118, i64 0, i32 0
   %.120 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.119, align 8
-  %.121 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.120, i64 0, i32 10
+  %.121 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.120, i64 0, i32 11
   %.122 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.121, align 8
   %.123 = tail call i8* %.122(%string.559062* %.118)
   %.125 = tail call i64 (i8*, i64, i8*, ...) @snprintf(i8* null, i64 0, i8* getelementptr inbounds ([39 x i8], [39 x i8]* @str.304, i64 0, i64 0), i8* %.123)
@@ -41136,7 +41147,7 @@ define %CallExpression.559282* @TypeChecker_check_call_expr(%TypeChecker.559400*
   %.71 = tail call %string.559062* %.67(%TypeChecker.559400* nonnull %.1, %Type.559226* %.34)
   %.72 = getelementptr inbounds %string.559062, %string.559062* %.71, i64 0, i32 0
   %.73 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.72, align 8
-  %.74 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.73, i64 0, i32 10
+  %.74 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.73, i64 0, i32 11
   %.75 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.74, align 8
   %.76 = tail call i8* %.75(%string.559062* %.71)
   %.78 = tail call i64 (i8*, i64, i8*, ...) @snprintf(i8* null, i64 0, i8* getelementptr inbounds ([47 x i8], [47 x i8]* @str.305, i64 0, i64 0), i8* %.76)
@@ -41260,12 +41271,12 @@ define %CallExpression.559282* @TypeChecker_check_call_expr(%TypeChecker.559400*
   %.218 = tail call %string.559062* %.208(%TypeChecker.559400* nonnull %.1, %Type.559226* %.217)
   %.219 = getelementptr inbounds %string.559062, %string.559062* %.203, i64 0, i32 0
   %.220 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.219, align 8
-  %.221 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.220, i64 0, i32 10
+  %.221 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.220, i64 0, i32 11
   %.222 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.221, align 8
   %.223 = tail call i8* %.222(%string.559062* %.203)
   %.224 = getelementptr inbounds %string.559062, %string.559062* %.218, i64 0, i32 0
   %.225 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.224, align 8
-  %.226 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.225, i64 0, i32 10
+  %.226 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.225, i64 0, i32 11
   %.227 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.226, align 8
   %.228 = tail call i8* %.227(%string.559062* %.218)
   %.230 = tail call i64 (i8*, i64, i8*, ...) @snprintf(i8* null, i64 0, i8* getelementptr inbounds ([63 x i8], [63 x i8]* @str.307, i64 0, i64 0), i8* %.223, i8* %.228)
@@ -41441,7 +41452,7 @@ for.end.if:                                       ; preds = %for.end
   %.125 = tail call %string.559062* %.114(%TypeChecker.559400* %.1, %Type.559226* %.124)
   %.126 = getelementptr inbounds %string.559062, %string.559062* %.125, i64 0, i32 0
   %.127 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.126, align 8
-  %.128 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.127, i64 0, i32 10
+  %.128 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.127, i64 0, i32 11
   %.129 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.128, align 8
   %.130 = tail call i8* %.129(%string.559062* %.125)
   %.132 = tail call i64 (i8*, i64, i8*, ...) @snprintf(i8* null, i64 0, i8* getelementptr inbounds ([66 x i8], [66 x i8]* @str.308, i64 0, i64 0), i8* %.130)
@@ -41552,7 +41563,7 @@ for.end.endif.if.endif.if:                        ; preds = %for.end.endif.if.en
   %.241 = tail call %string.559062* %.230(%TypeChecker.559400* %.1, %Type.559226* %.240)
   %.242 = getelementptr inbounds %string.559062, %string.559062* %.241, i64 0, i32 0
   %.243 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.242, align 8
-  %.244 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.243, i64 0, i32 10
+  %.244 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.243, i64 0, i32 11
   %.245 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.244, align 8
   %.246 = tail call i8* %.245(%string.559062* %.241)
   %.248 = tail call i64 (i8*, i64, i8*, ...) @snprintf(i8* null, i64 0, i8* getelementptr inbounds ([63 x i8], [63 x i8]* @str.310, i64 0, i64 0), i8* %.246)
@@ -41678,12 +41689,12 @@ for.end.endif.else.if.endif.endif.if:             ; preds = %for.end.endif.else.
   %.389 = tail call %string.559062* %.378(%TypeChecker.559400* nonnull %.1, %Type.559226* %.388)
   %.390 = getelementptr inbounds %string.559062, %string.559062* %.373, i64 0, i32 0
   %.391 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.390, align 8
-  %.392 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.391, i64 0, i32 10
+  %.392 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.391, i64 0, i32 11
   %.393 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.392, align 8
   %.394 = tail call i8* %.393(%string.559062* %.373)
   %.395 = getelementptr inbounds %string.559062, %string.559062* %.389, i64 0, i32 0
   %.396 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.395, align 8
-  %.397 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.396, i64 0, i32 10
+  %.397 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.396, i64 0, i32 11
   %.398 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.397, align 8
   %.399 = tail call i8* %.398(%string.559062* %.389)
   %.401 = tail call i64 (i8*, i64, i8*, ...) @snprintf(i8* null, i64 0, i8* getelementptr inbounds ([66 x i8], [66 x i8]* @str.312, i64 0, i64 0), i8* %.394, i8* %.399)
@@ -41743,7 +41754,7 @@ for.end.endif.else.if.endif.endif.endif.if:       ; preds = %for.end.endif.else.
   %.461 = tail call %string.559062* %.450(%TypeChecker.559400* nonnull %.1, %Type.559226* %.460)
   %.462 = getelementptr inbounds %string.559062, %string.559062* %.461, i64 0, i32 0
   %.463 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.462, align 8
-  %.464 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.463, i64 0, i32 10
+  %.464 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.463, i64 0, i32 11
   %.465 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.464, align 8
   %.466 = tail call i8* %.465(%string.559062* %.461)
   %.468 = tail call i64 (i8*, i64, i8*, ...) @snprintf(i8* null, i64 0, i8* getelementptr inbounds ([63 x i8], [63 x i8]* @str.310, i64 0, i64 0), i8* %.466)
@@ -41789,7 +41800,7 @@ for.end.endif.else.if.endif.endif.endif.endif.if: ; preds = %for.end.endif.else.
 }
 
 ; Function Attrs: nofree nounwind
-define noalias %IntExpression.559256* @TypeChecker_check_int_expression(%TypeChecker.559400* nocapture readnone %.1, %Type.559226* %.2, %IntExpressionNode.559134* nocapture readonly %.3) #3 {
+define noalias %IntExpression.559256* @TypeChecker_check_int_expression(%TypeChecker.559400* nocapture readnone %.1, %Type.559226* %.2, %IntExpressionNode.559134* nocapture readonly %.3) #4 {
 .5:
   %.10 = getelementptr inbounds %IntExpressionNode.559134, %IntExpressionNode.559134* %.3, i64 0, i32 4
   %.11 = load %IntToken.559094*, %IntToken.559094** %.10, align 8
@@ -41814,7 +41825,7 @@ define noalias %IntExpression.559256* @TypeChecker_check_int_expression(%TypeChe
 }
 
 ; Function Attrs: nofree nounwind
-define noalias %FloatExpression.559260* @TypeChecker_check_float_expression(%TypeChecker.559400* nocapture readnone %.1, %Type.559226* %.2, %FloatExpressionNode.559136* nocapture readonly %.3) #3 {
+define noalias %FloatExpression.559260* @TypeChecker_check_float_expression(%TypeChecker.559400* nocapture readnone %.1, %Type.559226* %.2, %FloatExpressionNode.559136* nocapture readonly %.3) #4 {
 .5:
   %.10 = getelementptr inbounds %FloatExpressionNode.559136, %FloatExpressionNode.559136* %.3, i64 0, i32 4
   %.11 = load %FloatToken.559096*, %FloatToken.559096** %.10, align 8
@@ -41839,7 +41850,7 @@ define noalias %FloatExpression.559260* @TypeChecker_check_float_expression(%Typ
 }
 
 ; Function Attrs: nofree nounwind
-define noalias %IntExpression.559256* @TypeChecker_check_char_expression(%TypeChecker.559400* nocapture readnone %.1, %CharExpressionNode.559138* nocapture readonly %.2) #3 {
+define noalias %IntExpression.559256* @TypeChecker_check_char_expression(%TypeChecker.559400* nocapture readnone %.1, %CharExpressionNode.559138* nocapture readonly %.2) #4 {
 .4:
   %.8 = getelementptr inbounds %CharExpressionNode.559138, %CharExpressionNode.559138* %.2, i64 0, i32 4
   %.9 = load %CharToken.559098*, %CharToken.559098** %.8, align 8
@@ -42211,7 +42222,7 @@ define noalias %VarDeclaration.559306* @TypeChecker_check_var_declaration(%TypeC
   %.25 = load void (%TypeChecker.559400*, i64, %string.559062*, %FloRange.559068*)*, void (%TypeChecker.559400*, i64, %string.559062*, %FloRange.559068*)** %.24, align 8
   %.27 = getelementptr inbounds %string.559062, %string.559062* %.11, i64 0, i32 0
   %.28 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.27, align 8
-  %.29 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.28, i64 0, i32 10
+  %.29 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.28, i64 0, i32 11
   %.30 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.29, align 8
   %.31 = tail call i8* %.30(%string.559062* %.11)
   %.33 = tail call i64 (i8*, i64, i8*, ...) @snprintf(i8* null, i64 0, i8* getelementptr inbounds ([37 x i8], [37 x i8]* @str.238, i64 0, i64 0), i8* %.31)
@@ -42290,7 +42301,7 @@ end.endif.if:                                     ; preds = %end.endif
   %.107 = load void (%TypeChecker.559400*, i64, %string.559062*, %FloRange.559068*)*, void (%TypeChecker.559400*, i64, %string.559062*, %FloRange.559068*)** %.106, align 8
   %.109 = getelementptr inbounds %string.559062, %string.559062* %.11, i64 0, i32 0
   %.110 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.109, align 8
-  %.111 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.110, i64 0, i32 10
+  %.111 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.110, i64 0, i32 11
   %.112 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.111, align 8
   %.113 = tail call i8* %.112(%string.559062* %.11)
   %.115 = tail call i64 (i8*, i64, i8*, ...) @snprintf(i8* null, i64 0, i8* getelementptr inbounds ([26 x i8], [26 x i8]* @str.313, i64 0, i64 0), i8* %.113)
@@ -42412,12 +42423,12 @@ end.1.endif.if.endif.if:                          ; preds = %end.1.endif.if.endi
   %.231 = tail call %string.559062* %.227(%TypeChecker.559400* nonnull %.1, %Type.559226* %.230)
   %.232 = getelementptr inbounds %string.559062, %string.559062* %.222, i64 0, i32 0
   %.233 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.232, align 8
-  %.234 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.233, i64 0, i32 10
+  %.234 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.233, i64 0, i32 11
   %.235 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.234, align 8
   %.236 = tail call i8* %.235(%string.559062* %.222)
   %.237 = getelementptr inbounds %string.559062, %string.559062* %.231, i64 0, i32 0
   %.238 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.237, align 8
-  %.239 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.238, i64 0, i32 10
+  %.239 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.238, i64 0, i32 11
   %.240 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.239, align 8
   %.241 = tail call i8* %.240(%string.559062* %.231)
   %.243 = tail call i64 (i8*, i64, i8*, ...) @snprintf(i8* null, i64 0, i8* getelementptr inbounds ([61 x i8], [61 x i8]* @str.315, i64 0, i64 0), i8* %.236, i8* %.241)
@@ -42456,7 +42467,7 @@ end.1.endif.endif.if:                             ; preds = %end.1.endif.endif
   %.291 = load void (%TypeChecker.559400*, i64, %string.559062*, %FloRange.559068*)*, void (%TypeChecker.559400*, i64, %string.559062*, %FloRange.559068*)** %.290, align 8
   %.293 = getelementptr inbounds %string.559062, %string.559062* %.11, i64 0, i32 0
   %.294 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.293, align 8
-  %.295 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.294, i64 0, i32 10
+  %.295 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.294, i64 0, i32 11
   %.296 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.295, align 8
   %.297 = tail call i8* %.296(%string.559062* %.11)
   %.299 = tail call i64 (i8*, i64, i8*, ...) @snprintf(i8* null, i64 0, i8* getelementptr inbounds ([57 x i8], [57 x i8]* @str.316, i64 0, i64 0), i8* %.297)
@@ -42530,7 +42541,7 @@ define noalias %ConstDeclaration.559308* @TypeChecker_check_const_declaration(%T
   %.45 = load void (%TypeChecker.559400*, i64, %string.559062*, %FloRange.559068*)*, void (%TypeChecker.559400*, i64, %string.559062*, %FloRange.559068*)** %.44, align 8
   %.47 = getelementptr inbounds %string.559062, %string.559062* %.11, i64 0, i32 0
   %.48 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.47, align 8
-  %.49 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.48, i64 0, i32 10
+  %.49 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.48, i64 0, i32 11
   %.50 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.49, align 8
   %.51 = tail call i8* %.50(%string.559062* %.11)
   %.53 = tail call i64 (i8*, i64, i8*, ...) @snprintf(i8* null, i64 0, i8* getelementptr inbounds ([37 x i8], [37 x i8]* @str.238, i64 0, i64 0), i8* %.51)
@@ -42684,12 +42695,12 @@ end.endif.endif.endif.endif.if:                   ; preds = %end.endif.endif.end
   %.197 = tail call %string.559062* %.193(%TypeChecker.559400* nonnull %.1, %Type.559226* %.196)
   %.198 = getelementptr inbounds %string.559062, %string.559062* %.188, i64 0, i32 0
   %.199 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.198, align 8
-  %.200 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.199, i64 0, i32 10
+  %.200 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.199, i64 0, i32 11
   %.201 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.200, align 8
   %.202 = tail call i8* %.201(%string.559062* %.188)
   %.203 = getelementptr inbounds %string.559062, %string.559062* %.197, i64 0, i32 0
   %.204 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.203, align 8
-  %.205 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.204, i64 0, i32 10
+  %.205 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.204, i64 0, i32 11
   %.206 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.205, align 8
   %.207 = tail call i8* %.206(%string.559062* %.197)
   %.209 = tail call i64 (i8*, i64, i8*, ...) @snprintf(i8* null, i64 0, i8* getelementptr inbounds ([61 x i8], [61 x i8]* @str.315, i64 0, i64 0), i8* %.202, i8* %.207)
@@ -43016,12 +43027,12 @@ define noalias %ReturnStatement.559314* @TypeChecker_check_can_return(%TypeCheck
   %.98 = tail call %string.559062* %.94(%TypeChecker.559400* nonnull %.1, %Type.559226* %.97)
   %.99 = getelementptr inbounds %string.559062, %string.559062* %.89, i64 0, i32 0
   %.100 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.99, align 8
-  %.101 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.100, i64 0, i32 10
+  %.101 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.100, i64 0, i32 11
   %.102 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.101, align 8
   %.103 = tail call i8* %.102(%string.559062* %.89)
   %.104 = getelementptr inbounds %string.559062, %string.559062* %.98, i64 0, i32 0
   %.105 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.104, align 8
-  %.106 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.105, i64 0, i32 10
+  %.106 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.105, i64 0, i32 11
   %.107 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.106, align 8
   %.108 = tail call i8* %.107(%string.559062* %.98)
   %.110 = tail call i64 (i8*, i64, i8*, ...) @snprintf(i8* null, i64 0, i8* getelementptr inbounds ([57 x i8], [57 x i8]* @str.321, i64 0, i64 0), i8* %.103, i8* %.108)
@@ -43641,7 +43652,7 @@ define void @GeneratedModule_check_errors(%GeneratedModule.559436* nocapture rea
   tail call void @LLVMDisposeMessage(i8* %.19)
   %.22 = getelementptr inbounds %string.559062, %string.559062* %.15, i64 0, i32 0
   %.23 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.22, align 8
-  %.24 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.23, i64 0, i32 10
+  %.24 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.23, i64 0, i32 11
   %.25 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.24, align 8
   %.26 = tail call i8* %.25(%string.559062* %.15)
   %.28 = tail call i64 (i8*, i64, i8*, ...) @snprintf(i8* null, i64 0, i8* getelementptr inbounds ([10 x i8], [10 x i8]* @str.324, i64 0, i64 0), i8* %.26)
@@ -43780,7 +43791,7 @@ define %LLVMTargetMachineRef.559430* @GeneratedModule_create_target_machine(%Gen
   %.18 = getelementptr inbounds %string.559062, %string.559062* %.2, i64 0, i32 0
   call void @llvm.memset.p0i8.i64(i8* nonnull align 8 dereferenceable(16) %.14, i8 0, i64 16, i1 false)
   %.19 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.18, align 8
-  %.20 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.19, i64 0, i32 3
+  %.20 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.19, i64 0, i32 4
   %.21 = load i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)** %.20, align 8
   %.22 = tail call i1 %.21(%string.559062* %.2, %string.559062* %.9)
   br i1 %.22, label %true_block, label %false_block
@@ -43791,7 +43802,7 @@ true_block:                                       ; preds = %.4
 
 false_block:                                      ; preds = %.4
   %.28 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.18, align 8
-  %.29 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.28, i64 0, i32 10
+  %.29 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.28, i64 0, i32 11
   %.30 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.29, align 8
   %.31 = tail call i8* %.30(%string.559062* nonnull %.2)
   br label %end
@@ -43836,7 +43847,7 @@ define void @GeneratedModule_write_object(%GeneratedModule.559436* %.1, %string.
   %.32 = load %LLVMModuleRef.559410*, %LLVMModuleRef.559410** %.18, align 8
   %.34 = getelementptr inbounds %string.559062, %string.559062* %.2, i64 0, i32 0
   %.35 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.34, align 8
-  %.36 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.35, i64 0, i32 10
+  %.36 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.35, i64 0, i32 11
   %.37 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.36, align 8
   %.38 = tail call i8* %.37(%string.559062* %.2)
   %.40 = getelementptr inbounds %GeneratedModule.559436, %GeneratedModule.559436* %.1, i64 0, i32 2
@@ -43880,7 +43891,7 @@ define void @GeneratedModule_llvm_shutdown(%GeneratedModule.559436* nocapture re
 }
 
 ; Function Attrs: nofree norecurse nounwind writeonly
-define void @IntrinsicResult_constructor(%IntrinsicResult.559438* nocapture %.1) local_unnamed_addr #1 {
+define void @IntrinsicResult_constructor(%IntrinsicResult.559438* nocapture %.1) local_unnamed_addr #2 {
 .3:
   %.6 = getelementptr inbounds %IntrinsicResult.559438, %IntrinsicResult.559438* %.1, i64 0, i32 1
   %0 = bitcast %LLVMValueRef.559412** %.6 to i8*
@@ -43889,7 +43900,7 @@ define void @IntrinsicResult_constructor(%IntrinsicResult.559438* nocapture %.1)
 }
 
 ; Function Attrs: nofree norecurse nounwind writeonly
-define void @"Bucket<string, int>_constructor"(%"Bucket<string, int>.559445"* nocapture %.1) local_unnamed_addr #1 {
+define void @"Bucket<string, int>_constructor"(%"Bucket<string, int>.559445"* nocapture %.1) local_unnamed_addr #2 {
 .3:
   %.6 = getelementptr inbounds %"Bucket<string, int>.559445", %"Bucket<string, int>.559445"* %.1, i64 0, i32 3
   store i1 true, i1* %.6, align 1
@@ -43897,7 +43908,7 @@ define void @"Bucket<string, int>_constructor"(%"Bucket<string, int>.559445"* no
 }
 
 ; Function Attrs: nofree norecurse nounwind writeonly
-define void @"Bucket<string, int>_set"(%"Bucket<string, int>.559445"* nocapture %.1, %string.559062* %.2, i64 %.3) #1 {
+define void @"Bucket<string, int>_set"(%"Bucket<string, int>.559445"* nocapture %.1, %string.559062* %.2, i64 %.3) #2 {
 .5:
   %.10 = getelementptr inbounds %"Bucket<string, int>.559445", %"Bucket<string, int>.559445"* %.1, i64 0, i32 3
   store i1 false, i1* %.10, align 1
@@ -43909,7 +43920,7 @@ define void @"Bucket<string, int>_set"(%"Bucket<string, int>.559445"* nocapture 
 }
 
 ; Function Attrs: nofree nounwind
-define void @"Map<string, int>_constructor"(%"Map<string, int>.559442"* nocapture %.1) local_unnamed_addr #3 {
+define void @"Map<string, int>_constructor"(%"Map<string, int>.559442"* nocapture %.1) local_unnamed_addr #4 {
 .3:
   %.9 = tail call dereferenceable_or_null(2048) i8* @malloc(i64 2048)
   %.11 = getelementptr inbounds %"Map<string, int>.559442", %"Map<string, int>.559442"* %.1, i64 0, i32 1
@@ -43962,7 +43973,7 @@ for.body:                                         ; preds = %for.body.lr.ph, %fo
   %hash.05 = phi i64 [ 0, %for.body.lr.ph ], [ %.29, %for.body ]
   %storemerge4 = phi i64 [ 0, %for.body.lr.ph ], [ %.35, %for.body ]
   %.23 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.22, align 8
-  %.24 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.23, i64 0, i32 7
+  %.24 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.23, i64 0, i32 8
   %.25 = load i8 (%string.559062*, i64)*, i8 (%string.559062*, i64)** %.24, align 8
   %.27 = tail call i8 %.25(%string.559062* nonnull %.2, i64 %storemerge4)
   %.20 = shl i64 %hash.05, 1
@@ -44112,7 +44123,7 @@ while.entry:                                      ; preds = %.5.endif, %while.en
   %.56 = load %string.559062*, %string.559062** %.55, align 8
   %.58 = getelementptr inbounds %string.559062, %string.559062* %.56, i64 0, i32 0
   %.59 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.58, align 8
-  %.60 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.59, i64 0, i32 3
+  %.60 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.59, i64 0, i32 4
   %.61 = load i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)** %.60, align 8
   %.62 = tail call i1 %.61(%string.559062* %.56, %string.559062* %.2)
   br i1 %.62, label %while.entry.while.exit.loopexit_crit_edge, label %while.entry.endif
@@ -44173,7 +44184,7 @@ while.entry:                                      ; preds = %.4, %while.entry.el
   %.36 = load %string.559062*, %string.559062** %.35, align 8
   %.38 = getelementptr inbounds %string.559062, %string.559062* %.36, i64 0, i32 0
   %.39 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.38, align 8
-  %.40 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.39, i64 0, i32 3
+  %.40 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.39, i64 0, i32 4
   %.41 = load i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)** %.40, align 8
   %.42 = tail call i1 %.41(%string.559062* %.36, %string.559062* %.2)
   br i1 %.42, label %while.exit, label %while.entry.else
@@ -44207,7 +44218,7 @@ while.exit.endif:                                 ; preds = %while.entry.else, %
 }
 
 ; Function Attrs: nofree nounwind
-define void @"Array<Bucket<string, int>>_constructor"(%"Array<Bucket<string, int>>.559447"* nocapture %.1, i64 %.2) local_unnamed_addr #3 {
+define void @"Array<Bucket<string, int>>_constructor"(%"Array<Bucket<string, int>>.559447"* nocapture %.1, i64 %.2) local_unnamed_addr #4 {
 .4:
   %.8 = getelementptr inbounds %"Array<Bucket<string, int>>.559447", %"Array<Bucket<string, int>>.559447"* %.1, i64 0, i32 2
   store i64 0, i64* %.8, align 8
@@ -44222,7 +44233,7 @@ define void @"Array<Bucket<string, int>>_constructor"(%"Array<Bucket<string, int
 }
 
 ; Function Attrs: nounwind
-define void @"Array<Bucket<string, int>>_resize"(%"Array<Bucket<string, int>>.559447"* nocapture %.1) #2 {
+define void @"Array<Bucket<string, int>>_resize"(%"Array<Bucket<string, int>>.559447"* nocapture %.1) #3 {
 .3:
   %.7 = getelementptr inbounds %"Array<Bucket<string, int>>.559447", %"Array<Bucket<string, int>>.559447"* %.1, i64 0, i32 3
   %.8 = load i64, i64* %.7, align 8
@@ -44468,7 +44479,7 @@ for.end:                                          ; preds = %for.cond, %for.body
 }
 
 ; Function Attrs: norecurse nounwind readonly
-define i64 @"Array<Bucket<string, int>>_find"(%"Array<Bucket<string, int>>.559447"* nocapture readonly %.1, %"Bucket<string, int>.559445"* %.2) #4 {
+define i64 @"Array<Bucket<string, int>>_find"(%"Array<Bucket<string, int>>.559447"* nocapture readonly %.1, %"Bucket<string, int>.559445"* %.2) #5 {
 .4:
   %.12 = getelementptr inbounds %"Array<Bucket<string, int>>.559447", %"Array<Bucket<string, int>>.559447"* %.1, i64 0, i32 2
   %.133 = load i64, i64* %.12, align 8
@@ -44555,7 +44566,7 @@ for.body.endif:                                   ; preds = %for.body, %for.body
 }
 
 ; Function Attrs: nofree norecurse nounwind writeonly
-define void @"Bucket<string, LLVMValueRef>_constructor"(%"Bucket<string, LLVMValueRef>.559450"* nocapture %.1) local_unnamed_addr #1 {
+define void @"Bucket<string, LLVMValueRef>_constructor"(%"Bucket<string, LLVMValueRef>.559450"* nocapture %.1) local_unnamed_addr #2 {
 .3:
   %.6 = getelementptr inbounds %"Bucket<string, LLVMValueRef>.559450", %"Bucket<string, LLVMValueRef>.559450"* %.1, i64 0, i32 3
   store i1 true, i1* %.6, align 1
@@ -44563,7 +44574,7 @@ define void @"Bucket<string, LLVMValueRef>_constructor"(%"Bucket<string, LLVMVal
 }
 
 ; Function Attrs: nofree norecurse nounwind writeonly
-define void @"Bucket<string, LLVMValueRef>_set"(%"Bucket<string, LLVMValueRef>.559450"* nocapture %.1, %string.559062* %.2, %LLVMValueRef.559412* %.3) #1 {
+define void @"Bucket<string, LLVMValueRef>_set"(%"Bucket<string, LLVMValueRef>.559450"* nocapture %.1, %string.559062* %.2, %LLVMValueRef.559412* %.3) #2 {
 .5:
   %.10 = getelementptr inbounds %"Bucket<string, LLVMValueRef>.559450", %"Bucket<string, LLVMValueRef>.559450"* %.1, i64 0, i32 3
   store i1 false, i1* %.10, align 1
@@ -44575,7 +44586,7 @@ define void @"Bucket<string, LLVMValueRef>_set"(%"Bucket<string, LLVMValueRef>.5
 }
 
 ; Function Attrs: nofree nounwind
-define void @"Map<string, LLVMValueRef>_constructor"(%"Map<string, LLVMValueRef>.559443"* nocapture %.1) local_unnamed_addr #3 {
+define void @"Map<string, LLVMValueRef>_constructor"(%"Map<string, LLVMValueRef>.559443"* nocapture %.1) local_unnamed_addr #4 {
 .3:
   %.9 = tail call dereferenceable_or_null(2048) i8* @malloc(i64 2048)
   %.11 = getelementptr inbounds %"Map<string, LLVMValueRef>.559443", %"Map<string, LLVMValueRef>.559443"* %.1, i64 0, i32 1
@@ -44628,7 +44639,7 @@ for.body:                                         ; preds = %for.body.lr.ph, %fo
   %hash.05 = phi i64 [ 0, %for.body.lr.ph ], [ %.29, %for.body ]
   %storemerge4 = phi i64 [ 0, %for.body.lr.ph ], [ %.35, %for.body ]
   %.23 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.22, align 8
-  %.24 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.23, i64 0, i32 7
+  %.24 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.23, i64 0, i32 8
   %.25 = load i8 (%string.559062*, i64)*, i8 (%string.559062*, i64)** %.24, align 8
   %.27 = tail call i8 %.25(%string.559062* nonnull %.2, i64 %storemerge4)
   %.20 = shl i64 %hash.05, 1
@@ -44778,7 +44789,7 @@ while.entry:                                      ; preds = %.5.endif, %while.en
   %.56 = load %string.559062*, %string.559062** %.55, align 8
   %.58 = getelementptr inbounds %string.559062, %string.559062* %.56, i64 0, i32 0
   %.59 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.58, align 8
-  %.60 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.59, i64 0, i32 3
+  %.60 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.59, i64 0, i32 4
   %.61 = load i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)** %.60, align 8
   %.62 = tail call i1 %.61(%string.559062* %.56, %string.559062* %.2)
   br i1 %.62, label %while.entry.while.exit.loopexit_crit_edge, label %while.entry.endif
@@ -44839,7 +44850,7 @@ while.entry:                                      ; preds = %.4, %while.entry.el
   %.36 = load %string.559062*, %string.559062** %.35, align 8
   %.38 = getelementptr inbounds %string.559062, %string.559062* %.36, i64 0, i32 0
   %.39 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.38, align 8
-  %.40 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.39, i64 0, i32 3
+  %.40 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.39, i64 0, i32 4
   %.41 = load i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)** %.40, align 8
   %.42 = tail call i1 %.41(%string.559062* %.36, %string.559062* %.2)
   br i1 %.42, label %while.exit, label %while.entry.else
@@ -44873,7 +44884,7 @@ while.exit.endif:                                 ; preds = %while.entry.else, %
 }
 
 ; Function Attrs: nofree nounwind
-define void @"Array<Bucket<string, LLVMValueRef>>_constructor"(%"Array<Bucket<string, LLVMValueRef>>.559452"* nocapture %.1, i64 %.2) local_unnamed_addr #3 {
+define void @"Array<Bucket<string, LLVMValueRef>>_constructor"(%"Array<Bucket<string, LLVMValueRef>>.559452"* nocapture %.1, i64 %.2) local_unnamed_addr #4 {
 .4:
   %.8 = getelementptr inbounds %"Array<Bucket<string, LLVMValueRef>>.559452", %"Array<Bucket<string, LLVMValueRef>>.559452"* %.1, i64 0, i32 2
   store i64 0, i64* %.8, align 8
@@ -44888,7 +44899,7 @@ define void @"Array<Bucket<string, LLVMValueRef>>_constructor"(%"Array<Bucket<st
 }
 
 ; Function Attrs: nounwind
-define void @"Array<Bucket<string, LLVMValueRef>>_resize"(%"Array<Bucket<string, LLVMValueRef>>.559452"* nocapture %.1) #2 {
+define void @"Array<Bucket<string, LLVMValueRef>>_resize"(%"Array<Bucket<string, LLVMValueRef>>.559452"* nocapture %.1) #3 {
 .3:
   %.7 = getelementptr inbounds %"Array<Bucket<string, LLVMValueRef>>.559452", %"Array<Bucket<string, LLVMValueRef>>.559452"* %.1, i64 0, i32 3
   %.8 = load i64, i64* %.7, align 8
@@ -45134,7 +45145,7 @@ for.end:                                          ; preds = %for.cond, %for.body
 }
 
 ; Function Attrs: norecurse nounwind readonly
-define i64 @"Array<Bucket<string, LLVMValueRef>>_find"(%"Array<Bucket<string, LLVMValueRef>>.559452"* nocapture readonly %.1, %"Bucket<string, LLVMValueRef>.559450"* %.2) #4 {
+define i64 @"Array<Bucket<string, LLVMValueRef>>_find"(%"Array<Bucket<string, LLVMValueRef>>.559452"* nocapture readonly %.1, %"Bucket<string, LLVMValueRef>.559450"* %.2) #5 {
 .4:
   %.12 = getelementptr inbounds %"Array<Bucket<string, LLVMValueRef>>.559452", %"Array<Bucket<string, LLVMValueRef>>.559452"* %.1, i64 0, i32 2
   %.133 = load i64, i64* %.12, align 8
@@ -45221,7 +45232,7 @@ for.body.endif:                                   ; preds = %for.body, %for.body
 }
 
 ; Function Attrs: nofree nounwind
-define void @CGClassType_constructor(%CGClassType.559440* nocapture %.1) local_unnamed_addr #3 {
+define void @CGClassType_constructor(%CGClassType.559440* nocapture %.1) local_unnamed_addr #4 {
 .3:
   %.6 = tail call dereferenceable_or_null(32) i8* @malloc(i64 32)
   %.7 = bitcast i8* %.6 to %"Map<string, int>.559442"*
@@ -45254,7 +45265,7 @@ define void @CGClassType_constructor(%CGClassType.559440* nocapture %.1) local_u
 }
 
 ; Function Attrs: nofree nounwind
-define void @CGEnumType_constructor(%CGEnumType.559454* nocapture %.1) local_unnamed_addr #3 {
+define void @CGEnumType_constructor(%CGEnumType.559454* nocapture %.1) local_unnamed_addr #4 {
 .3:
   %.6 = tail call dereferenceable_or_null(32) i8* @malloc(i64 32)
   %.7 = bitcast i8* %.6 to %"Map<string, LLVMValueRef>.559443"*
@@ -45268,7 +45279,7 @@ define void @CGEnumType_constructor(%CGEnumType.559454* nocapture %.1) local_unn
 }
 
 ; Function Attrs: nofree nounwind
-define void @"Array<LLVMTypeRef>_constructor"(%"Array<LLVMTypeRef>.559456"* nocapture %.1, i64 %.2) local_unnamed_addr #3 {
+define void @"Array<LLVMTypeRef>_constructor"(%"Array<LLVMTypeRef>.559456"* nocapture %.1, i64 %.2) local_unnamed_addr #4 {
 .4:
   %.8 = getelementptr inbounds %"Array<LLVMTypeRef>.559456", %"Array<LLVMTypeRef>.559456"* %.1, i64 0, i32 2
   store i64 0, i64* %.8, align 8
@@ -45283,7 +45294,7 @@ define void @"Array<LLVMTypeRef>_constructor"(%"Array<LLVMTypeRef>.559456"* noca
 }
 
 ; Function Attrs: nounwind
-define void @"Array<LLVMTypeRef>_resize"(%"Array<LLVMTypeRef>.559456"* nocapture %.1) #2 {
+define void @"Array<LLVMTypeRef>_resize"(%"Array<LLVMTypeRef>.559456"* nocapture %.1) #3 {
 .3:
   %.7 = getelementptr inbounds %"Array<LLVMTypeRef>.559456", %"Array<LLVMTypeRef>.559456"* %.1, i64 0, i32 3
   %.8 = load i64, i64* %.7, align 8
@@ -45529,7 +45540,7 @@ for.end:                                          ; preds = %for.cond, %for.body
 }
 
 ; Function Attrs: norecurse nounwind readonly
-define i64 @"Array<LLVMTypeRef>_find"(%"Array<LLVMTypeRef>.559456"* nocapture readonly %.1, %LLVMTypeRef.559411* %.2) #4 {
+define i64 @"Array<LLVMTypeRef>_find"(%"Array<LLVMTypeRef>.559456"* nocapture readonly %.1, %LLVMTypeRef.559411* %.2) #5 {
 .4:
   %.12 = getelementptr inbounds %"Array<LLVMTypeRef>.559456", %"Array<LLVMTypeRef>.559456"* %.1, i64 0, i32 2
   %.133 = load i64, i64* %.12, align 8
@@ -45579,7 +45590,7 @@ define noalias %IntrinsicResult.559438* @get_intrinsic(%LLVMModuleRef.559410* %.
   store %LLVMTypeRef.559411* %.28, %LLVMTypeRef.559411** %0, align 8
   %.32 = getelementptr inbounds %string.559062, %string.559062* %.2, i64 0, i32 0
   %.33 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.32, align 8
-  %.34 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.33, i64 0, i32 10
+  %.34 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.33, i64 0, i32 11
   %.35 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.34, align 8
   %.36 = tail call i8* %.35(%string.559062* %.2)
   %.40 = tail call %LLVMValueRef.559412* @LLVMGetNamedFunction(%LLVMModuleRef.559410* %.1, i8* %.36)
@@ -45601,7 +45612,7 @@ define noalias %IntrinsicResult.559438* @get_intrinsic(%LLVMModuleRef.559410* %.
 }
 
 ; Function Attrs: norecurse nounwind readonly
-define i1 @is_terminated(%Block.559300* nocapture readonly %.1) local_unnamed_addr #4 {
+define i1 @is_terminated(%Block.559300* nocapture readonly %.1) local_unnamed_addr #5 {
 .3:
   %.6 = getelementptr inbounds %Block.559300, %Block.559300* %.1, i64 0, i32 2
   %.7 = load i1, i1* %.6, align 1
@@ -45710,7 +45721,7 @@ define noalias %string.559062* @create_prop_key(%PropId.559294* nocapture readon
   %.14 = load i64, i64* %.13, align 8
   %.15 = getelementptr inbounds %string.559062, %string.559062* %.8, i64 0, i32 0
   %.16 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.15, align 8
-  %.17 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.16, i64 0, i32 10
+  %.17 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.16, i64 0, i32 11
   %.18 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.17, align 8
   %.19 = tail call i8* %.18(%string.559062* %.8)
   %.21 = tail call i64 (i8*, i64, i8*, ...) @snprintf(i8* null, i64 0, i8* getelementptr inbounds ([9 x i8], [9 x i8]* @str.330, i64 0, i64 0), i8* %.19, i64 %.11, i64 %.14)
@@ -45759,7 +45770,7 @@ for.end:                                          ; preds = %for.body, %.4
 }
 
 ; Function Attrs: nofree nounwind
-define void @"Array<LLVMValueRef>_constructor"(%"Array<LLVMValueRef>.559458"* nocapture %.1, i64 %.2) local_unnamed_addr #3 {
+define void @"Array<LLVMValueRef>_constructor"(%"Array<LLVMValueRef>.559458"* nocapture %.1, i64 %.2) local_unnamed_addr #4 {
 .4:
   %.8 = getelementptr inbounds %"Array<LLVMValueRef>.559458", %"Array<LLVMValueRef>.559458"* %.1, i64 0, i32 2
   store i64 0, i64* %.8, align 8
@@ -45774,7 +45785,7 @@ define void @"Array<LLVMValueRef>_constructor"(%"Array<LLVMValueRef>.559458"* no
 }
 
 ; Function Attrs: nounwind
-define void @"Array<LLVMValueRef>_resize"(%"Array<LLVMValueRef>.559458"* nocapture %.1) #2 {
+define void @"Array<LLVMValueRef>_resize"(%"Array<LLVMValueRef>.559458"* nocapture %.1) #3 {
 .3:
   %.7 = getelementptr inbounds %"Array<LLVMValueRef>.559458", %"Array<LLVMValueRef>.559458"* %.1, i64 0, i32 3
   %.8 = load i64, i64* %.7, align 8
@@ -46020,7 +46031,7 @@ for.end:                                          ; preds = %for.cond, %for.body
 }
 
 ; Function Attrs: norecurse nounwind readonly
-define i64 @"Array<LLVMValueRef>_find"(%"Array<LLVMValueRef>.559458"* nocapture readonly %.1, %LLVMValueRef.559412* %.2) #4 {
+define i64 @"Array<LLVMValueRef>_find"(%"Array<LLVMValueRef>.559458"* nocapture readonly %.1, %LLVMValueRef.559412* %.2) #5 {
 .4:
   %.12 = getelementptr inbounds %"Array<LLVMValueRef>.559458", %"Array<LLVMValueRef>.559458"* %.1, i64 0, i32 2
   %.133 = load i64, i64* %.12, align 8
@@ -46079,7 +46090,7 @@ for.end:                                          ; preds = %for.body, %.4
 }
 
 ; Function Attrs: nofree nounwind
-define noalias %string.559062* @get_format_from_type(%Type.559226* nocapture readonly %.1) local_unnamed_addr #3 {
+define noalias %string.559062* @get_format_from_type(%Type.559226* nocapture readonly %.1) local_unnamed_addr #4 {
 .3:
   %.6 = tail call i1 @is_int(%Type.559226* %.1)
   %.9 = getelementptr inbounds %Type.559226, %Type.559226* %.1, i64 0, i32 1
@@ -46207,7 +46218,7 @@ define noalias %string.559062* @get_format_from_type(%Type.559226* nocapture rea
 }
 
 ; Function Attrs: nofree norecurse nounwind writeonly
-define void @"Bucket<string, CGClassType>_constructor"(%"Bucket<string, CGClassType>.559465"* nocapture %.1) local_unnamed_addr #1 {
+define void @"Bucket<string, CGClassType>_constructor"(%"Bucket<string, CGClassType>.559465"* nocapture %.1) local_unnamed_addr #2 {
 .3:
   %.6 = getelementptr inbounds %"Bucket<string, CGClassType>.559465", %"Bucket<string, CGClassType>.559465"* %.1, i64 0, i32 3
   store i1 true, i1* %.6, align 1
@@ -46215,7 +46226,7 @@ define void @"Bucket<string, CGClassType>_constructor"(%"Bucket<string, CGClassT
 }
 
 ; Function Attrs: nofree norecurse nounwind writeonly
-define void @"Bucket<string, CGClassType>_set"(%"Bucket<string, CGClassType>.559465"* nocapture %.1, %string.559062* %.2, %CGClassType.559440* %.3) #1 {
+define void @"Bucket<string, CGClassType>_set"(%"Bucket<string, CGClassType>.559465"* nocapture %.1, %string.559062* %.2, %CGClassType.559440* %.3) #2 {
 .5:
   %.10 = getelementptr inbounds %"Bucket<string, CGClassType>.559465", %"Bucket<string, CGClassType>.559465"* %.1, i64 0, i32 3
   store i1 false, i1* %.10, align 1
@@ -46227,7 +46238,7 @@ define void @"Bucket<string, CGClassType>_set"(%"Bucket<string, CGClassType>.559
 }
 
 ; Function Attrs: nofree nounwind
-define void @"Map<string, CGClassType>_constructor"(%"Map<string, CGClassType>.559462"* nocapture %.1) local_unnamed_addr #3 {
+define void @"Map<string, CGClassType>_constructor"(%"Map<string, CGClassType>.559462"* nocapture %.1) local_unnamed_addr #4 {
 .3:
   %.9 = tail call dereferenceable_or_null(2048) i8* @malloc(i64 2048)
   %.11 = getelementptr inbounds %"Map<string, CGClassType>.559462", %"Map<string, CGClassType>.559462"* %.1, i64 0, i32 1
@@ -46280,7 +46291,7 @@ for.body:                                         ; preds = %for.body.lr.ph, %fo
   %hash.05 = phi i64 [ 0, %for.body.lr.ph ], [ %.29, %for.body ]
   %storemerge4 = phi i64 [ 0, %for.body.lr.ph ], [ %.35, %for.body ]
   %.23 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.22, align 8
-  %.24 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.23, i64 0, i32 7
+  %.24 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.23, i64 0, i32 8
   %.25 = load i8 (%string.559062*, i64)*, i8 (%string.559062*, i64)** %.24, align 8
   %.27 = tail call i8 %.25(%string.559062* nonnull %.2, i64 %storemerge4)
   %.20 = shl i64 %hash.05, 1
@@ -46430,7 +46441,7 @@ while.entry:                                      ; preds = %.5.endif, %while.en
   %.56 = load %string.559062*, %string.559062** %.55, align 8
   %.58 = getelementptr inbounds %string.559062, %string.559062* %.56, i64 0, i32 0
   %.59 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.58, align 8
-  %.60 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.59, i64 0, i32 3
+  %.60 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.59, i64 0, i32 4
   %.61 = load i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)** %.60, align 8
   %.62 = tail call i1 %.61(%string.559062* %.56, %string.559062* %.2)
   br i1 %.62, label %while.entry.while.exit.loopexit_crit_edge, label %while.entry.endif
@@ -46491,7 +46502,7 @@ while.entry:                                      ; preds = %.4, %while.entry.el
   %.36 = load %string.559062*, %string.559062** %.35, align 8
   %.38 = getelementptr inbounds %string.559062, %string.559062* %.36, i64 0, i32 0
   %.39 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.38, align 8
-  %.40 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.39, i64 0, i32 3
+  %.40 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.39, i64 0, i32 4
   %.41 = load i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)** %.40, align 8
   %.42 = tail call i1 %.41(%string.559062* %.36, %string.559062* %.2)
   br i1 %.42, label %while.exit, label %while.entry.else
@@ -46525,7 +46536,7 @@ while.exit.endif:                                 ; preds = %while.entry.else, %
 }
 
 ; Function Attrs: nofree nounwind
-define void @"Array<Bucket<string, CGClassType>>_constructor"(%"Array<Bucket<string, CGClassType>>.559467"* nocapture %.1, i64 %.2) local_unnamed_addr #3 {
+define void @"Array<Bucket<string, CGClassType>>_constructor"(%"Array<Bucket<string, CGClassType>>.559467"* nocapture %.1, i64 %.2) local_unnamed_addr #4 {
 .4:
   %.8 = getelementptr inbounds %"Array<Bucket<string, CGClassType>>.559467", %"Array<Bucket<string, CGClassType>>.559467"* %.1, i64 0, i32 2
   store i64 0, i64* %.8, align 8
@@ -46540,7 +46551,7 @@ define void @"Array<Bucket<string, CGClassType>>_constructor"(%"Array<Bucket<str
 }
 
 ; Function Attrs: nounwind
-define void @"Array<Bucket<string, CGClassType>>_resize"(%"Array<Bucket<string, CGClassType>>.559467"* nocapture %.1) #2 {
+define void @"Array<Bucket<string, CGClassType>>_resize"(%"Array<Bucket<string, CGClassType>>.559467"* nocapture %.1) #3 {
 .3:
   %.7 = getelementptr inbounds %"Array<Bucket<string, CGClassType>>.559467", %"Array<Bucket<string, CGClassType>>.559467"* %.1, i64 0, i32 3
   %.8 = load i64, i64* %.7, align 8
@@ -46786,7 +46797,7 @@ for.end:                                          ; preds = %for.cond, %for.body
 }
 
 ; Function Attrs: norecurse nounwind readonly
-define i64 @"Array<Bucket<string, CGClassType>>_find"(%"Array<Bucket<string, CGClassType>>.559467"* nocapture readonly %.1, %"Bucket<string, CGClassType>.559465"* %.2) #4 {
+define i64 @"Array<Bucket<string, CGClassType>>_find"(%"Array<Bucket<string, CGClassType>>.559467"* nocapture readonly %.1, %"Bucket<string, CGClassType>.559465"* %.2) #5 {
 .4:
   %.12 = getelementptr inbounds %"Array<Bucket<string, CGClassType>>.559467", %"Array<Bucket<string, CGClassType>>.559467"* %.1, i64 0, i32 2
   %.133 = load i64, i64* %.12, align 8
@@ -46873,7 +46884,7 @@ for.body.endif:                                   ; preds = %for.body, %for.body
 }
 
 ; Function Attrs: nofree norecurse nounwind writeonly
-define void @"Bucket<string, CGEnumType>_constructor"(%"Bucket<string, CGEnumType>.559470"* nocapture %.1) local_unnamed_addr #1 {
+define void @"Bucket<string, CGEnumType>_constructor"(%"Bucket<string, CGEnumType>.559470"* nocapture %.1) local_unnamed_addr #2 {
 .3:
   %.6 = getelementptr inbounds %"Bucket<string, CGEnumType>.559470", %"Bucket<string, CGEnumType>.559470"* %.1, i64 0, i32 3
   store i1 true, i1* %.6, align 1
@@ -46881,7 +46892,7 @@ define void @"Bucket<string, CGEnumType>_constructor"(%"Bucket<string, CGEnumTyp
 }
 
 ; Function Attrs: nofree norecurse nounwind writeonly
-define void @"Bucket<string, CGEnumType>_set"(%"Bucket<string, CGEnumType>.559470"* nocapture %.1, %string.559062* %.2, %CGEnumType.559454* %.3) #1 {
+define void @"Bucket<string, CGEnumType>_set"(%"Bucket<string, CGEnumType>.559470"* nocapture %.1, %string.559062* %.2, %CGEnumType.559454* %.3) #2 {
 .5:
   %.10 = getelementptr inbounds %"Bucket<string, CGEnumType>.559470", %"Bucket<string, CGEnumType>.559470"* %.1, i64 0, i32 3
   store i1 false, i1* %.10, align 1
@@ -46893,7 +46904,7 @@ define void @"Bucket<string, CGEnumType>_set"(%"Bucket<string, CGEnumType>.55947
 }
 
 ; Function Attrs: nofree nounwind
-define void @"Map<string, CGEnumType>_constructor"(%"Map<string, CGEnumType>.559463"* nocapture %.1) local_unnamed_addr #3 {
+define void @"Map<string, CGEnumType>_constructor"(%"Map<string, CGEnumType>.559463"* nocapture %.1) local_unnamed_addr #4 {
 .3:
   %.9 = tail call dereferenceable_or_null(2048) i8* @malloc(i64 2048)
   %.11 = getelementptr inbounds %"Map<string, CGEnumType>.559463", %"Map<string, CGEnumType>.559463"* %.1, i64 0, i32 1
@@ -46946,7 +46957,7 @@ for.body:                                         ; preds = %for.body.lr.ph, %fo
   %hash.05 = phi i64 [ 0, %for.body.lr.ph ], [ %.29, %for.body ]
   %storemerge4 = phi i64 [ 0, %for.body.lr.ph ], [ %.35, %for.body ]
   %.23 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.22, align 8
-  %.24 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.23, i64 0, i32 7
+  %.24 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.23, i64 0, i32 8
   %.25 = load i8 (%string.559062*, i64)*, i8 (%string.559062*, i64)** %.24, align 8
   %.27 = tail call i8 %.25(%string.559062* nonnull %.2, i64 %storemerge4)
   %.20 = shl i64 %hash.05, 1
@@ -47096,7 +47107,7 @@ while.entry:                                      ; preds = %.5.endif, %while.en
   %.56 = load %string.559062*, %string.559062** %.55, align 8
   %.58 = getelementptr inbounds %string.559062, %string.559062* %.56, i64 0, i32 0
   %.59 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.58, align 8
-  %.60 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.59, i64 0, i32 3
+  %.60 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.59, i64 0, i32 4
   %.61 = load i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)** %.60, align 8
   %.62 = tail call i1 %.61(%string.559062* %.56, %string.559062* %.2)
   br i1 %.62, label %while.entry.while.exit.loopexit_crit_edge, label %while.entry.endif
@@ -47157,7 +47168,7 @@ while.entry:                                      ; preds = %.4, %while.entry.el
   %.36 = load %string.559062*, %string.559062** %.35, align 8
   %.38 = getelementptr inbounds %string.559062, %string.559062* %.36, i64 0, i32 0
   %.39 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.38, align 8
-  %.40 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.39, i64 0, i32 3
+  %.40 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.39, i64 0, i32 4
   %.41 = load i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)** %.40, align 8
   %.42 = tail call i1 %.41(%string.559062* %.36, %string.559062* %.2)
   br i1 %.42, label %while.exit, label %while.entry.else
@@ -47191,7 +47202,7 @@ while.exit.endif:                                 ; preds = %while.entry.else, %
 }
 
 ; Function Attrs: nofree nounwind
-define void @"Array<Bucket<string, CGEnumType>>_constructor"(%"Array<Bucket<string, CGEnumType>>.559472"* nocapture %.1, i64 %.2) local_unnamed_addr #3 {
+define void @"Array<Bucket<string, CGEnumType>>_constructor"(%"Array<Bucket<string, CGEnumType>>.559472"* nocapture %.1, i64 %.2) local_unnamed_addr #4 {
 .4:
   %.8 = getelementptr inbounds %"Array<Bucket<string, CGEnumType>>.559472", %"Array<Bucket<string, CGEnumType>>.559472"* %.1, i64 0, i32 2
   store i64 0, i64* %.8, align 8
@@ -47206,7 +47217,7 @@ define void @"Array<Bucket<string, CGEnumType>>_constructor"(%"Array<Bucket<stri
 }
 
 ; Function Attrs: nounwind
-define void @"Array<Bucket<string, CGEnumType>>_resize"(%"Array<Bucket<string, CGEnumType>>.559472"* nocapture %.1) #2 {
+define void @"Array<Bucket<string, CGEnumType>>_resize"(%"Array<Bucket<string, CGEnumType>>.559472"* nocapture %.1) #3 {
 .3:
   %.7 = getelementptr inbounds %"Array<Bucket<string, CGEnumType>>.559472", %"Array<Bucket<string, CGEnumType>>.559472"* %.1, i64 0, i32 3
   %.8 = load i64, i64* %.7, align 8
@@ -47452,7 +47463,7 @@ for.end:                                          ; preds = %for.cond, %for.body
 }
 
 ; Function Attrs: norecurse nounwind readonly
-define i64 @"Array<Bucket<string, CGEnumType>>_find"(%"Array<Bucket<string, CGEnumType>>.559472"* nocapture readonly %.1, %"Bucket<string, CGEnumType>.559470"* %.2) #4 {
+define i64 @"Array<Bucket<string, CGEnumType>>_find"(%"Array<Bucket<string, CGEnumType>>.559472"* nocapture readonly %.1, %"Bucket<string, CGEnumType>.559470"* %.2) #5 {
 .4:
   %.12 = getelementptr inbounds %"Array<Bucket<string, CGEnumType>>.559472", %"Array<Bucket<string, CGEnumType>>.559472"* %.1, i64 0, i32 2
   %.133 = load i64, i64* %.12, align 8
@@ -47539,7 +47550,7 @@ for.body.endif:                                   ; preds = %for.body, %for.body
 }
 
 ; Function Attrs: nofree nounwind
-define void @CodeGen_constructor(%CodeGen.559460* nocapture %.1) local_unnamed_addr #3 {
+define void @CodeGen_constructor(%CodeGen.559460* nocapture %.1) local_unnamed_addr #4 {
 .3:
   %.6 = tail call dereferenceable_or_null(32) i8* @malloc(i64 32)
   %.7 = bitcast i8* %.6 to %"Map<string, LLVMValueRef>.559443"*
@@ -47605,7 +47616,7 @@ define %GeneratedModule.559436* @CodeGen_codegen(%CodeGen.559460* %.1, %Program.
   %.33 = load %string.559062*, %string.559062** %.32, align 8
   %.34 = getelementptr inbounds %string.559062, %string.559062* %.33, i64 0, i32 0
   %.35 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.34, align 8
-  %.36 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.35, i64 0, i32 10
+  %.36 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.35, i64 0, i32 11
   %.37 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.36, align 8
   %.38 = tail call i8* %.37(%string.559062* %.33)
   %.41 = load %LLVMContextRef.559409*, %LLVMContextRef.559409** %.28, align 8
@@ -48572,7 +48583,7 @@ define %LLVMValueRef.559412* @CodeGen_createGlobalLLVMString(%CodeGen.559460* no
 .5.if:                                            ; preds = %.5
   %.26 = getelementptr inbounds %string.559062, %string.559062* %.3, i64 0, i32 0
   %.27 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.26, align 8
-  %.28 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.27, i64 0, i32 10
+  %.28 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.27, i64 0, i32 11
   %.29 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.28, align 8
   %.30 = tail call i8* %.29(%string.559062* %.3)
   %.31 = tail call %LLVMValueRef.559412* @LLVMBuildGlobalString(%LLVMBuilderRef.559417* %.2, i8* %.30, i8* getelementptr inbounds ([1 x i8], [1 x i8]* @str.135, i64 0, i64 0))
@@ -48794,7 +48805,7 @@ define %LLVMValueRef.559412* @CodeGen_get_string_val(%CodeGen.559460* %.1, %LLVM
   %.73 = load %string.559062*, %string.559062** %.72, align 8
   %.74 = getelementptr inbounds %string.559062, %string.559062* %.73, i64 0, i32 0
   %.75 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.74, align 8
-  %.76 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.75, i64 0, i32 10
+  %.76 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.75, i64 0, i32 11
   %.77 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.76, align 8
   %.78 = tail call i8* %.77(%string.559062* %.73)
   %.80 = tail call i64 (i8*, i64, i8*, ...) @snprintf(i8* null, i64 0, i8* getelementptr inbounds ([6 x i8], [6 x i8]* @str.345, i64 0, i64 0), i8* %.78)
@@ -48904,12 +48915,12 @@ for.body:                                         ; preds = %for.body.lr.ph, %fo
   %.200 = tail call %string.559062* @get_format_from_type(%Type.559226* %.162)
   %.201 = getelementptr inbounds %string.559062, %string.559062* %.198, i64 0, i32 0
   %.202 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.201, align 8
-  %.203 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.202, i64 0, i32 10
+  %.203 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.202, i64 0, i32 11
   %.204 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.203, align 8
   %.205 = tail call i8* %.204(%string.559062* %.198)
   %.206 = getelementptr inbounds %string.559062, %string.559062* %.200, i64 0, i32 0
   %.207 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.206, align 8
-  %.208 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.207, i64 0, i32 10
+  %.208 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.207, i64 0, i32 11
   %.209 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.208, align 8
   %.210 = tail call i8* %.209(%string.559062* %.200)
   %.212 = tail call i64 (i8*, i64, i8*, ...) @snprintf(i8* null, i64 0, i8* getelementptr inbounds ([13 x i8], [13 x i8]* @str.347, i64 0, i64 0), i8* %.205, i8* %.210)
@@ -49024,7 +49035,7 @@ define %LLVMValueRef.559412* @CodeGen_codegen_string(%CodeGen.559460* %.1, %LLVM
   tail call void @StringBuilder_constructor(%StringBuilder.559064* %.38, i64 %.36)
   %.44 = getelementptr inbounds %string.559062, %string.559062* %.11, i64 0, i32 0
   %.45 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.44, align 8
-  %.46 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.45, i64 0, i32 8
+  %.46 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.45, i64 0, i32 9
   %.47 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.46, align 8
   %.48 = tail call i8* %.47(%string.559062* %.11)
   %.57 = getelementptr inbounds %StringExpression.559262, %StringExpression.559262* %.3, i64 0, i32 7
@@ -50189,7 +50200,7 @@ define %LLVMValueRef.559412* @CodeGen_codegen_pow_expr(%CodeGen.559460* %.1, %LL
   %.20 = tail call %string.559062* @dump_type(%Type.559226* %.3, i1 true)
   %.21 = getelementptr inbounds %string.559062, %string.559062* %.20, i64 0, i32 0
   %.22 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.21, align 8
-  %.23 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.22, i64 0, i32 10
+  %.23 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.22, i64 0, i32 11
   %.24 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.23, align 8
   %.25 = tail call i8* %.24(%string.559062* %.20)
   %.27 = tail call i64 (i8*, i64, i8*, ...) @snprintf(i8* null, i64 0, i8* getelementptr inbounds ([12 x i8], [12 x i8]* @str.358, i64 0, i64 0), i8* %.25)
@@ -50424,7 +50435,7 @@ end.2:                                            ; preds = %.5.endif.endif.endi
   %.594 = load i64, i64* %.214, align 8
   %.595 = getelementptr inbounds %string.559062, %string.559062* %.591, i64 0, i32 0
   %.596 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.595, align 8
-  %.597 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.596, i64 0, i32 10
+  %.597 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.596, i64 0, i32 11
   %.598 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.597, align 8
   %.599 = tail call i8* %.598(%string.559062* %.591)
   %.601 = tail call i64 (i8*, i64, i8*, ...) @snprintf(i8* null, i64 0, i8* getelementptr inbounds ([23 x i8], [23 x i8]* @str.359, i64 0, i64 0), i64 %.589, i8* %.599, i64 %.594)
@@ -52433,7 +52444,7 @@ define void @CodeGen_codegen_var_declaration(%CodeGen.559460* %.1, %LLVMBuilderR
   %.37 = load %string.559062*, %string.559062** %.36, align 8
   %.38 = getelementptr inbounds %string.559062, %string.559062* %.37, i64 0, i32 0
   %.39 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.38, align 8
-  %.40 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.39, i64 0, i32 10
+  %.40 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.39, i64 0, i32 11
   %.41 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.40, align 8
   %.42 = tail call i8* %.41(%string.559062* %.37)
   %.46 = getelementptr inbounds %VarDeclaration.559306, %VarDeclaration.559306* %.3, i64 0, i32 4
@@ -52494,7 +52505,7 @@ define void @CodeGen_codegen_const_declaration(%CodeGen.559460* %.1, %LLVMBuilde
   %.33 = load %string.559062*, %string.559062** %.32, align 8
   %.34 = getelementptr inbounds %string.559062, %string.559062* %.33, i64 0, i32 0
   %.35 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.34, align 8
-  %.36 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.35, i64 0, i32 10
+  %.36 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.35, i64 0, i32 11
   %.37 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.36, align 8
   %.38 = tail call i8* %.37(%string.559062* %.33)
   %.42 = getelementptr inbounds %ConstDeclaration.559308, %ConstDeclaration.559308* %.3, i64 0, i32 4
@@ -52707,7 +52718,7 @@ define void @CodeGen_codegen_function(%CodeGen.559460* %.1, %Function.559346* no
   %.9 = load %string.559062*, %string.559062** %.8, align 8
   %.10 = getelementptr inbounds %string.559062, %string.559062* %.9, i64 0, i32 0
   %.11 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.10, align 8
-  %.12 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.11, i64 0, i32 10
+  %.12 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.11, i64 0, i32 11
   %.13 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.12, align 8
   %.14 = tail call i8* %.13(%string.559062* %.9)
   %.17 = getelementptr inbounds %CodeGen.559460, %CodeGen.559460* %.1, i64 0, i32 1
@@ -52768,7 +52779,7 @@ for.body:                                         ; preds = %.4.endif, %for.body
   %.98 = load %string.559062*, %string.559062** %.97, align 8
   %.99 = getelementptr inbounds %string.559062, %string.559062* %.98, i64 0, i32 0
   %.100 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.99, align 8
-  %.101 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.100, i64 0, i32 10
+  %.101 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.100, i64 0, i32 11
   %.102 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.101, align 8
   %.103 = tail call i8* %.102(%string.559062* %.98)
   %.104 = tail call %LLVMValueRef.559412* @LLVMBuildAlloca(%LLVMBuilderRef.559417* %.52, %LLVMTypeRef.559411* %.95, i8* %.103)
@@ -52882,7 +52893,7 @@ for.body.endif:                                   ; preds = %for.body
   store i64 11, i64* %5, align 8
   %.65 = getelementptr inbounds %string.559062, %string.559062* %.61, i64 0, i32 0
   %.66 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.65, align 8
-  %.67 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.66, i64 0, i32 3
+  %.67 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.66, i64 0, i32 4
   %.68 = load i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)** %.67, align 8
   %.69 = call i1 %.68(%string.559062* %.61, %string.559062* %.63)
   %.73 = load %LLVMModuleRef.559410*, %LLVMModuleRef.559410** %.72, align 8
@@ -52890,12 +52901,12 @@ for.body.endif:                                   ; preds = %for.body
   %.79 = load %string.559062*, %string.559062** %.60, align 8
   %.80 = getelementptr inbounds %string.559062, %string.559062* %.76, i64 0, i32 0
   %.81 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.80, align 8
-  %.82 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.81, i64 0, i32 10
+  %.82 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.81, i64 0, i32 11
   %.83 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.82, align 8
   %.84 = call i8* %.83(%string.559062* %.76)
   %.85 = getelementptr inbounds %string.559062, %string.559062* %.79, i64 0, i32 0
   %.86 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.85, align 8
-  %.87 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.86, i64 0, i32 10
+  %.87 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.86, i64 0, i32 11
   %.88 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.87, align 8
   %.89 = call i8* %.88(%string.559062* %.79)
   %.91 = call i64 (i8*, i64, i8*, ...) @snprintf(i8* null, i64 0, i8* getelementptr inbounds ([6 x i8], [6 x i8]* @str.231, i64 0, i64 0), i8* %.84, i8* %.89)
@@ -52915,7 +52926,7 @@ for.body.endif:                                   ; preds = %for.body
   %.104 = getelementptr inbounds i8, i8* %.96, i64 24
   %8 = bitcast i8* %.104 to i64*
   store i64 %.91, i64* %8, align 8
-  %.109 = load i8* (%string.559062*)*, i8* (%string.559062*)** getelementptr inbounds (%string_vtable_ty.559063, %string_vtable_ty.559063* @string_vtable_data, i64 0, i32 10), align 16
+  %.109 = load i8* (%string.559062*)*, i8* (%string.559062*)** getelementptr inbounds (%string_vtable_ty.559063, %string_vtable_ty.559063* @string_vtable_data, i64 0, i32 11), align 8
   %.110 = call i8* %.109(%string.559062* %.97)
   %.111 = call %LLVMValueRef.559412* @LLVMGetNamedFunction(%LLVMModuleRef.559410* %.73, i8* %.110)
   %.115 = load %LLVMContextRef.559409*, %LLVMContextRef.559409** %.114, align 8
@@ -53076,7 +53087,7 @@ for.body.1:                                       ; preds = %for.entry.1, %for.b
   %.323 = load %string.559062*, %string.559062** %.322, align 8
   %.324 = getelementptr inbounds %string.559062, %string.559062* %.323, i64 0, i32 0
   %.325 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.324, align 8
-  %.326 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.325, i64 0, i32 10
+  %.326 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.325, i64 0, i32 11
   %.327 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.326, align 8
   %.328 = call i8* %.327(%string.559062* %.323)
   %.329 = call %LLVMValueRef.559412* @LLVMBuildAlloca(%LLVMBuilderRef.559417* %.122, %LLVMTypeRef.559411* %.320, i8* %.328)
@@ -53114,7 +53125,7 @@ define %LLVMValueRef.559412* @CodeGen_declare_method(%CodeGen.559460* nocapture 
   %.11 = load %LLVMModuleRef.559410*, %LLVMModuleRef.559410** %.10, align 8
   %.13 = getelementptr inbounds %string.559062, %string.559062* %.2, i64 0, i32 0
   %.14 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.13, align 8
-  %.15 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.14, i64 0, i32 10
+  %.15 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.14, i64 0, i32 11
   %.16 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.15, align 8
   %.17 = tail call i8* %.16(%string.559062* %.2)
   %.19 = tail call %LLVMValueRef.559412* @LLVMAddFunction(%LLVMModuleRef.559410* %.11, i8* %.17, %LLVMTypeRef.559411* %.3)
@@ -53169,12 +53180,12 @@ for.body:                                         ; preds = %for.body.lr.ph, %fo
   %.66 = load %string.559062*, %string.559062** %.65, align 8
   %.68 = getelementptr inbounds %string.559062, %string.559062* %.66, i64 0, i32 0
   %.69 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.68, align 8
-  %.70 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.69, i64 0, i32 10
+  %.70 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.69, i64 0, i32 11
   %.71 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.70, align 8
   %.72 = tail call i8* %.71(%string.559062* %.66)
   %.73 = getelementptr inbounds %string.559062, %string.559062* %.5428, i64 0, i32 0
   %.74 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.73, align 8
-  %.75 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.74, i64 0, i32 10
+  %.75 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.74, i64 0, i32 11
   %.76 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.75, align 8
   %.77 = tail call i8* %.76(%string.559062* %.5428)
   %.79 = tail call i64 (i8*, i64, i8*, ...) @snprintf(i8* null, i64 0, i8* getelementptr inbounds ([6 x i8], [6 x i8]* @str.231, i64 0, i64 0), i8* %.72, i8* %.77)
@@ -53211,7 +53222,7 @@ for.body.if:                                      ; preds = %for.body
 
 for.body.else:                                    ; preds = %for.body
   %.113 = load %LLVMModuleRef.559410*, %LLVMModuleRef.559410** %.112, align 8
-  %.119 = load i8* (%string.559062*)*, i8* (%string.559062*)** getelementptr inbounds (%string_vtable_ty.559063, %string_vtable_ty.559063* @string_vtable_data, i64 0, i32 10), align 16
+  %.119 = load i8* (%string.559062*)*, i8* (%string.559062*)** getelementptr inbounds (%string_vtable_ty.559063, %string_vtable_ty.559063* @string_vtable_data, i64 0, i32 11), align 8
   %.120 = tail call i8* %.119(%string.559062* %3)
   %.121 = tail call %LLVMValueRef.559412* @LLVMAddGlobal(%LLVMModuleRef.559410* %.113, %LLVMTypeRef.559411* %.62, i8* %.120)
   %.125 = load %CodeGen_vtable_ty.559461*, %CodeGen_vtable_ty.559461** %.57, align 8
@@ -53429,12 +53440,12 @@ for.body.else.else:                               ; preds = %for.body.else
   %.326 = load %string.559062*, %string.559062** %.325, align 8
   %.328 = getelementptr inbounds %string.559062, %string.559062* %.326, i64 0, i32 0
   %.329 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.328, align 8
-  %.330 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.329, i64 0, i32 10
+  %.330 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.329, i64 0, i32 11
   %.331 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.330, align 8
   %.332 = tail call i8* %.331(%string.559062* %.326)
   %.333 = getelementptr inbounds %string.559062, %string.559062* %.100437, i64 0, i32 0
   %.334 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.333, align 8
-  %.335 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.334, i64 0, i32 10
+  %.335 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.334, i64 0, i32 11
   %.336 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.335, align 8
   %.337 = tail call i8* %.336(%string.559062* %.100437)
   %.339 = tail call i64 (i8*, i64, i8*, ...) @snprintf(i8* null, i64 0, i8* getelementptr inbounds ([6 x i8], [6 x i8]* @str.231, i64 0, i64 0), i8* %.332, i8* %.337)
@@ -53454,7 +53465,7 @@ for.body.else.else:                               ; preds = %for.body.else
   %.352 = getelementptr inbounds i8, i8* %.344, i64 24
   %19 = bitcast i8* %.352 to i64*
   store i64 %.339, i64* %19, align 8
-  %.357 = load i8* (%string.559062*)*, i8* (%string.559062*)** getelementptr inbounds (%string_vtable_ty.559063, %string_vtable_ty.559063* @string_vtable_data, i64 0, i32 10), align 16
+  %.357 = load i8* (%string.559062*)*, i8* (%string.559062*)** getelementptr inbounds (%string_vtable_ty.559063, %string_vtable_ty.559063* @string_vtable_data, i64 0, i32 11), align 8
   %.358 = tail call i8* %.357(%string.559062* %.345)
   %.359 = tail call %LLVMValueRef.559412* @LLVMGetNamedFunction(%LLVMModuleRef.559410* %.323, i8* %.358)
   %20 = ptrtoint %LLVMValueRef.559412* %.359 to i64
@@ -53531,12 +53542,12 @@ for.end.1.if:                                     ; preds = %for.end.1
   %.255 = load %string.559062*, %string.559062** %.254, align 8
   %.257 = getelementptr inbounds %string.559062, %string.559062* %.255, i64 0, i32 0
   %.258 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.257, align 8
-  %.259 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.258, i64 0, i32 10
+  %.259 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.258, i64 0, i32 11
   %.260 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.259, align 8
   %.261 = tail call i8* %.260(%string.559062* %.255)
   %.262 = getelementptr inbounds %string.559062, %string.559062* %.100437, i64 0, i32 0
   %.263 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.262, align 8
-  %.264 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.263, i64 0, i32 10
+  %.264 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.263, i64 0, i32 11
   %.265 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.264, align 8
   %.266 = tail call i8* %.265(%string.559062* %.100437)
   %.268 = tail call i64 (i8*, i64, i8*, ...) @snprintf(i8* null, i64 0, i8* getelementptr inbounds ([6 x i8], [6 x i8]* @str.231, i64 0, i64 0), i8* %.261, i8* %.266)
@@ -53579,11 +53590,11 @@ for.body.else.else.if:                            ; preds = %for.body.else.else
   %.368 = load %string.559062*, %string.559062** %.325, align 8
   %.370 = getelementptr inbounds %string.559062, %string.559062* %.368, i64 0, i32 0
   %.371 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.370, align 8
-  %.372 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.371, i64 0, i32 10
+  %.372 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.371, i64 0, i32 11
   %.373 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.372, align 8
   %.374 = tail call i8* %.373(%string.559062* %.368)
   %.376 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.333, align 8
-  %.377 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.376, i64 0, i32 10
+  %.377 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.376, i64 0, i32 11
   %.378 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.377, align 8
   %.379 = tail call i8* %.378(%string.559062* nonnull %.100437)
   %.381 = tail call i64 (i8*, i64, i8*, ...) @snprintf(i8* null, i64 0, i8* getelementptr inbounds ([76 x i8], [76 x i8]* @str.380, i64 0, i64 0), i8* %.374, i8* %.379)
@@ -53640,7 +53651,7 @@ for.end.if.if:                                    ; preds = %for.end.if
   %.484 = load %string.559062*, %string.559062** %.483, align 8
   %.485 = getelementptr inbounds %string.559062, %string.559062* %.484, i64 0, i32 0
   %.486 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.485, align 8
-  %.487 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.486, i64 0, i32 10
+  %.487 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.486, i64 0, i32 11
   %.488 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.487, align 8
   %.489 = tail call i8* %.488(%string.559062* %.484)
   %.491 = tail call i64 (i8*, i64, i8*, ...) @snprintf(i8* null, i64 0, i8* getelementptr inbounds ([9 x i8], [9 x i8]* @str.381, i64 0, i64 0), i8* %.489)
@@ -53660,7 +53671,7 @@ for.end.if.if:                                    ; preds = %for.end.if
   %.504 = getelementptr inbounds i8, i8* %.496, i64 24
   %32 = bitcast i8* %.504 to i64*
   store i64 %.491, i64* %32, align 8
-  %.509 = load i8* (%string.559062*)*, i8* (%string.559062*)** getelementptr inbounds (%string_vtable_ty.559063, %string_vtable_ty.559063* @string_vtable_data, i64 0, i32 10), align 16
+  %.509 = load i8* (%string.559062*)*, i8* (%string.559062*)** getelementptr inbounds (%string_vtable_ty.559063, %string_vtable_ty.559063* @string_vtable_data, i64 0, i32 11), align 8
   %.510 = tail call i8* %.509(%string.559062* %.497)
   %.511 = tail call %LLVMValueRef.559412* @LLVMAddGlobal(%LLVMModuleRef.559410* %.480, %LLVMTypeRef.559411* %.470, i8* %.510)
   %.512 = getelementptr inbounds %CGClassType.559440, %CGClassType.559440* %.2, i64 0, i32 5
@@ -53727,7 +53738,7 @@ define void @CodeGen_declare_class(%CodeGen.559460* %.1, %Class.559358* %.2) {
   %.19 = load %string.559062*, %string.559062** %.18, align 8
   %.20 = getelementptr inbounds %string.559062, %string.559062* %.19, i64 0, i32 0
   %.21 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.20, align 8
-  %.22 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.21, i64 0, i32 10
+  %.22 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.21, i64 0, i32 11
   %.23 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.22, align 8
   %.24 = tail call i8* %.23(%string.559062* %.19)
   %.25 = tail call %LLVMTypeRef.559411* @LLVMStructCreateNamed(%LLVMContextRef.559409* %.16, i8* %.24)
@@ -53858,7 +53869,7 @@ for.end:                                          ; preds = %for.body, %.4.if
   %.179 = load %string.559062*, %string.559062** %.18, align 8
   %.180 = getelementptr inbounds %string.559062, %string.559062* %.179, i64 0, i32 0
   %.181 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.180, align 8
-  %.182 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.181, i64 0, i32 10
+  %.182 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.181, i64 0, i32 11
   %.183 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.182, align 8
   %.184 = tail call i8* %.183(%string.559062* %.179)
   %.186 = tail call i64 (i8*, i64, i8*, ...) @snprintf(i8* null, i64 0, i8* getelementptr inbounds ([15 x i8], [15 x i8]* @str.382, i64 0, i64 0), i8* %.184)
@@ -53979,7 +53990,7 @@ for.end:                                          ; preds = %for.body, %for.entr
 }
 
 ; Function Attrs: nofree nounwind
-define void @"Arraymain.flo_constructor"(%"Arraymain.flo.559474"* nocapture %.1, i64 %.2) local_unnamed_addr #3 {
+define void @"Arraymain.flo_constructor"(%"Arraymain.flo.559474"* nocapture %.1, i64 %.2) local_unnamed_addr #4 {
 .4:
   %.8 = getelementptr inbounds %"Arraymain.flo.559474", %"Arraymain.flo.559474"* %.1, i64 0, i32 2
   store i64 0, i64* %.8, align 8
@@ -53994,7 +54005,7 @@ define void @"Arraymain.flo_constructor"(%"Arraymain.flo.559474"* nocapture %.1,
 }
 
 ; Function Attrs: nounwind
-define void @"Arraymain.flo_resize"(%"Arraymain.flo.559474"* nocapture %.1) #2 {
+define void @"Arraymain.flo_resize"(%"Arraymain.flo.559474"* nocapture %.1) #3 {
 .3:
   %.7 = getelementptr inbounds %"Arraymain.flo.559474", %"Arraymain.flo.559474"* %.1, i64 0, i32 3
   %.8 = load i64, i64* %.7, align 8
@@ -54197,7 +54208,7 @@ for.body:                                         ; preds = %for.body.lr.ph, %fo
   %.38 = tail call %string.559062* %.37(%"Arraymain.flo.559474"* nonnull %.2, i64 %storemerge3)
   %.39 = getelementptr inbounds %string.559062, %string.559062* %.31, i64 0, i32 0
   %.40 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.39, align 8
-  %.41 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.40, i64 0, i32 3
+  %.41 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.40, i64 0, i32 4
   %.42 = load i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)** %.41, align 8
   %.43 = tail call i1 %.42(%string.559062* %.31, %string.559062* %.38)
   %.51 = add nuw nsw i64 %storemerge3, 1
@@ -54228,7 +54239,7 @@ for.body:                                         ; preds = %for.body.lr.ph, %fo
   %.22 = tail call %string.559062* %.21(%"Arraymain.flo.559474"* nonnull %.1, i64 %storemerge4)
   %.24 = getelementptr inbounds %string.559062, %string.559062* %.22, i64 0, i32 0
   %.25 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.24, align 8
-  %.26 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.25, i64 0, i32 3
+  %.26 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.25, i64 0, i32 4
   %.27 = load i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)** %.26, align 8
   %.28 = tail call i1 %.27(%string.559062* %.22, %string.559062* %.2)
   %.35 = add nuw nsw i64 %storemerge4, 1
@@ -54257,7 +54268,7 @@ for.body:                                         ; preds = %for.body.lr.ph, %fo
   %.21 = load %string.559062*, %string.559062** %.20, align 8
   %.23 = getelementptr inbounds %string.559062, %string.559062* %.21, i64 0, i32 0
   %.24 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.23, align 8
-  %.25 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.24, i64 0, i32 3
+  %.25 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.24, i64 0, i32 4
   %.26 = load i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)** %.25, align 8
   %.27 = tail call i1 %.26(%string.559062* %.21, %string.559062* %.2)
   br i1 %.27, label %for.end, label %for.body.endif
@@ -54313,7 +54324,7 @@ define void @help(%string.559062* %.1) local_unnamed_addr {
 .3:
   %.6 = getelementptr inbounds %string.559062, %string.559062* %.1, i64 0, i32 0
   %.7 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.6, align 8
-  %.8 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.7, i64 0, i32 10
+  %.8 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.7, i64 0, i32 11
   %.9 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.8, align 8
   %.10 = tail call i8* %.9(%string.559062* %.1)
   %.12 = tail call i64 (i8*, i64, i8*, ...) @snprintf(i8* null, i64 0, i8* getelementptr inbounds ([28 x i8], [28 x i8]* @str.383, i64 0, i64 0), i8* %.10)
@@ -54517,7 +54528,7 @@ define %string.559062* @flag_value_or(%"Arraymain.flo.559474"* %.1, %string.5590
 .5.if.else:                                       ; preds = %.5.if
   %.40 = getelementptr inbounds %string.559062, %string.559062* %.2, i64 0, i32 0
   %.41 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.40, align 8
-  %.42 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.41, i64 0, i32 10
+  %.42 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.41, i64 0, i32 11
   %.43 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.42, align 8
   %.44 = tail call i8* %.43(%string.559062* %.2)
   %.46 = tail call i64 (i8*, i64, i8*, ...) @snprintf(i8* null, i64 0, i8* getelementptr inbounds ([35 x i8], [35 x i8]* @str.394, i64 0, i64 0), i8* %.44)
@@ -54710,7 +54721,7 @@ define i64 @main(i64 %.1, i8** nocapture readonly %.2) local_unnamed_addr {
   %.98 = getelementptr inbounds %string.559062, %string.559062* %.85, i64 0, i32 0
   call void @llvm.memset.p0i8.i64(i8* nonnull align 8 dereferenceable(16) %.94, i8 0, i64 16, i1 false)
   %.99 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.98, align 8
-  %.100 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.99, i64 0, i32 3
+  %.100 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.99, i64 0, i32 4
   %.101 = load i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)** %.100, align 8
   %.102 = tail call i1 %.101(%string.559062* %.85, %string.559062* %.89)
   br i1 %.102, label %.4.if.endif.endif.endif, label %.4.if.endif.endif.if.if
@@ -54738,7 +54749,7 @@ define i64 @main(i64 %.1, i8** nocapture readonly %.2) local_unnamed_addr {
 .4.if.endif.endif.endif.if:                       ; preds = %.4.if.endif.endif.endif
   %.132 = getelementptr inbounds %string.559062, %string.559062* %.57, i64 0, i32 0
   %.133 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.132, align 8
-  %.134 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.133, i64 0, i32 10
+  %.134 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.133, i64 0, i32 11
   %.135 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.134, align 8
   %.136 = tail call i8* %.135(%string.559062* %.57)
   %.138 = tail call i64 (i8*, i64, i8*, ...) @snprintf(i8* null, i64 0, i8* getelementptr inbounds ([32 x i8], [32 x i8]* @str.237, i64 0, i64 0), i8* %.136)
@@ -54881,7 +54892,7 @@ define i64 @main(i64 %.1, i8** nocapture readonly %.2) local_unnamed_addr {
   %.269 = tail call %string.559062* @flag_value_or(%"Arraymain.flo.559474"* nonnull %.13, %string.559062* %.264, %string.559062* %.267)
   %.270 = getelementptr inbounds %string.559062, %string.559062* %.269, i64 0, i32 0
   %.271 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.270, align 8
-  %.272 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.271, i64 0, i32 10
+  %.272 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.271, i64 0, i32 11
   %.273 = load i8* (%string.559062*)*, i8* (%string.559062*)** %.272, align 8
   %.274 = tail call i8* %.273(%string.559062* %.269)
   %.275 = tail call i32 @atoi(i8* %.274)
@@ -55003,12 +55014,12 @@ define i64 @main(i64 %.1, i8** nocapture readonly %.2) local_unnamed_addr {
 declare void @llvm.memset.p0i8.i64(i8* nocapture writeonly, i8, i64, i1 immarg) #11
 
 attributes #0 = { argmemonly nofree nounwind readonly }
-attributes #1 = { nofree norecurse nounwind writeonly }
-attributes #2 = { nounwind }
-attributes #3 = { nofree nounwind }
-attributes #4 = { norecurse nounwind readonly }
-attributes #5 = { argmemonly nounwind willreturn }
-attributes #6 = { nofree }
+attributes #1 = { nofree }
+attributes #2 = { nofree norecurse nounwind writeonly }
+attributes #3 = { nounwind }
+attributes #4 = { nofree nounwind }
+attributes #5 = { norecurse nounwind readonly }
+attributes #6 = { argmemonly nounwind willreturn }
 attributes #7 = { norecurse nounwind readnone }
 attributes #8 = { nofree nounwind readonly }
 attributes #9 = { nofree norecurse nounwind }

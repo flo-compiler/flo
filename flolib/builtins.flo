@@ -1,5 +1,6 @@
 /*@extern*/
 fnc strlen(str: i8*): int
+fnc write(res: int, buf: i8*, len: int)
 
 const STDOUT = 1
 // ----- string -------
@@ -31,6 +32,9 @@ class string {
         let new_buffer = new i8*(1)
         new_buffer[0] = this.buffer[index]
         return new string(new_buffer, 2)
+    }
+    public __ne__(this, other: string): bool {
+        return !(this.__eq__(other))
     }
     public __eq__(this, other: string): bool {
         if this.length != other.length return false
@@ -67,7 +71,7 @@ class string {
     public replace(this, val: string, repl: string): string {
         let idx = this.find(val)
         if idx >= 0 {
-            let nlen = (this.length - val.length) + repl.length
+            let nlen = this.length - val.length + repl.length
             let nbuff = new i8*(nlen)
             nbuff.copy_from(this.buffer, idx)
             (&nbuff[idx]).copy_from(repl.buffer, repl.length)
@@ -213,7 +217,6 @@ class Array <T> {
         return -1
     }
 }
-fnc write(res: int, buf: i8*, len: int)
 fnc print(str: string){
     write(STDOUT, str.get_bytes(), str.length)
 }
