@@ -1225,13 +1225,15 @@ define %string.558456* @string_replace(%string.558456* %.1, %string.558456* %.2,
   %.39 = load i8*, i8** %.38, align 8
   tail call void @llvm.memcpy.p0i8.p0i8.i64(i8* align 1 %.34, i8* align 1 %.39, i64 %.15, i1 false)
   %.44 = getelementptr inbounds i8, i8* %.34, i64 %.15
-  %.48 = getelementptr inbounds %string.558456, %string.558456* %.3, i64 0, i32 1
-  %.49 = load i8*, i8** %.48, align 8
-  tail call void @llvm.memcpy.p0i8.p0i8.i64(i8* align 1 %.44, i8* align 1 %.49, i64 %.29, i1 false)
-  %.58 = getelementptr inbounds i8, i8* %.44, i64 %.29
-  %.65 = getelementptr inbounds i8, i8* %.39, i64 %.15
-  %.69 = getelementptr inbounds i8, i8* %.65, i64 %.25
-  tail call void @llvm.memcpy.p0i8.p0i8.i64(i8* align 1 %.58, i8* align 1 %.69, i64 %.26, i1 false)
+  %.46 = getelementptr inbounds %string.558456, %string.558456* %.3, i64 0, i32 1
+  %.47 = load i8*, i8** %.46, align 8
+  tail call void @llvm.memcpy.p0i8.p0i8.i64(i8* align 1 %.44, i8* align 1 %.47, i64 %.29, i1 false)
+  %.57 = add i64 %.29, %.15
+  %.58 = getelementptr inbounds i8, i8* %.34, i64 %.57
+  %.66 = add i64 %.25, %.15
+  %.67 = getelementptr inbounds i8, i8* %.39, i64 %.66
+  %.76 = sub i64 %.22, %.66
+  tail call void @llvm.memcpy.p0i8.p0i8.i64(i8* align 1 %.58, i8* align 1 %.67, i64 %.76, i1 false)
   %.80 = tail call dereferenceable_or_null(32) i8* @malloc(i64 32)
   %.81 = bitcast i8* %.80 to %string.558456*
   %.82 = bitcast i8* %.80 to %string_vtable_ty.558457**
