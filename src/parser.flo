@@ -615,6 +615,18 @@ class Parser {
         }
         return expression
     }
+    private parse_unary_expression_post(this): ExpressionNode {
+        let expression = this.parse_lhs_expression_allow_call()
+        let op = UnaryOp.UNDEF
+        let current_token = this.current_token
+        if current_token.ttype == TokType.PLUS_PLUS
+            op = UnaryOp.POSTINCR
+        else if current_token.ttype == TokType.MINUS_MINUS
+            op = UnaryOp.POSTDECR
+        else return expression
+        this.advance()
+        return new UnaryExpressionNode(op, expression, FloRange.merge(expression.range, current_token.range))
+    }
     private is_unary_op(this): UnaryOp {
         let token_type = this.current_token.ttype
         if token_type == TokType.PLUS_PLUS 
@@ -623,25 +635,16 @@ class Parser {
             return UnaryOp.PREDECR
         if token_type == TokType.MINUS 
             return UnaryOp.NEG
-        if token_type == TokType.NOT 
-            return UnaryOp.NOT
         if token_type == TokType.AMP 
             return UnaryOp.ADDROF
         return UnaryOp.UNDEF
     }
-    private parse_unary_expression(this): ExpressionNode {
+    private parse_unary_expression_pre(this): ExpressionNode {
         let start_range = this.current_token.range
         let op = this.is_unary_op()
-        if (op != UnaryOp.UNDEF) this.advance()
-        let expression = this.parse_lhs_expression_allow_call()
-        if (op == UnaryOp.UNDEF) {
-           if this.current_token.ttype == TokType.PLUS_PLUS
-                op = UnaryOp.POSTINCR
-           if this.current_token.ttype == TokType.MINUS_MINUS
-                op = UnaryOp.POSTDECR
-            if op != UnaryOp.UNDEF this.advance()
-        }
-        if op == UnaryOp.UNDEF return expression
+        if (op == UnaryOp.UNDEF) return this.parse_unary_expression_post()
+        this.advance()
+        let expression = this.parse_unary_expression_pre()
         return new UnaryExpressionNode(op, expression, FloRange.merge(start_range, expression.range))
     }
     private is_term_expr_op(this): BinaryOp {
@@ -657,12 +660,14 @@ class Parser {
         return BinaryOp.UNDEF
     }
     private parse_term_expression(this): ExpressionNode {
-        let left = this.parse_unary_expression()
+        let unary = this.parse_unary_expression_pre()
         let op = this.is_term_expr_op()
-        if op == BinaryOp.UNDEF or !this.can_parse()
-            return left
-        this.advance()
-        return new BinaryExpressionNode(left, op, this.parse_term_expression())
+        while op != BinaryOp.UNDEF and this.can_parse(){
+            this.advance()
+            unary = new BinaryExpressionNode(unary, op, this.parse_unary_expression_pre())
+            op = this.is_term_expr_op()
+        }
+        return unary
     }
     private is_arith_expr_op(this): BinaryOp {
         let token_type = this.current_token.ttype
@@ -673,12 +678,14 @@ class Parser {
         return BinaryOp.UNDEF
     }
     private parse_arithmetic_expression(this): ExpressionNode {
-        let left = this.parse_term_expression()
+        let term = this.parse_term_expression()
         let op = this.is_arith_expr_op()
-        if op == BinaryOp.UNDEF or !this.can_parse()
-            return left
-        this.advance()
-        return new BinaryExpressionNode(left, op, this.parse_arithmetic_expression())
+        while op != BinaryOp.UNDEF and this.can_parse() {
+            this.advance()
+            term = new BinaryExpressionNode(term, op, this.parse_term_expression())
+            op = this.is_arith_expr_op()
+        }
+        return term
     }
     private is_bitshift_expr_op(this): BinaryOp {
         let token_type = this.current_token.ttype
@@ -686,15 +693,19 @@ class Parser {
             return BinaryOp.SL
         if token_type == TokType.SR
             return BinaryOp.SR
+        if token_type == TokType.XOR_KW
+            return BinaryOp.XOR
         return BinaryOp.UNDEF
     }
     private parse_bitshift_expression(this): ExpressionNode {
-        let left = this.parse_arithmetic_expression()
+        let arith = this.parse_arithmetic_expression()
         let op = this.is_bitshift_expr_op()
-        if op == BinaryOp.UNDEF or !this.can_parse()
-            return left
-        this.advance()
-        return new BinaryExpressionNode(left, op, this.parse_bitshift_expression())
+        while op != BinaryOp.UNDEF and this.can_parse() {
+            this.advance()
+            arith = new BinaryExpressionNode(arith, op, this.parse_arithmetic_expression())
+            op = this.is_bitshift_expr_op()
+        }
+        return arith
     }
     private is_comp_expr_op(this): BinaryOp {
         let token_type = this.current_token.ttype
@@ -713,30 +724,38 @@ class Parser {
         return BinaryOp.UNDEF
     }
     private parse_comparasion_expression(this): ExpressionNode {
-        let left = this.parse_bitshift_expression()
+        let start_range = this.current_token.range
+        if this.current_token.ttype == TokType.NOT {
+            this.advance()
+            let comp_val = this.parse_comparasion_expression()
+            return new UnaryExpressionNode(UnaryOp.NOT, comp_val, FloRange.merge(start_range, comp_val.range))
+        }
+        let bit = this.parse_bitshift_expression()
         let op = this.is_comp_expr_op()
-        if op == BinaryOp.UNDEF or !this.can_parse()
-            return left
-        this.advance()
-        return new BinaryExpressionNode(left, op, this.parse_comparasion_expression())
+        while op != BinaryOp.UNDEF and this.can_parse() {
+            this.advance()
+            bit = new BinaryExpressionNode(bit, op, this.parse_bitshift_expression())
+            op = this.is_comp_expr_op()
+        }
+        return bit
     }
-    private is_bit_expr_op(this): BinaryOp {
+    private is_logic_expr_op(this): BinaryOp {
         let token_type = this.current_token.ttype
         if token_type == TokType.OR_KW
             return BinaryOp.OR
         if token_type == TokType.AND_KW
             return BinaryOp.AND
-        if token_type == TokType.XOR_KW
-            return BinaryOp.XOR
         return BinaryOp.UNDEF
     }
     private parse_bit_expression(this): ExpressionNode {
-        let left = this.parse_comparasion_expression()
-        let op = this.is_bit_expr_op()
-        if op == BinaryOp.UNDEF or !this.can_parse()
-            return left
-        this.advance()
-        return new BinaryExpressionNode(left, op, this.parse_bit_expression())
+        let cmp = this.parse_comparasion_expression()
+        let op = this.is_logic_expr_op()
+        while op != BinaryOp.UNDEF and this.can_parse() {
+            this.advance()
+            cmp = new BinaryExpressionNode(cmp, op, this.parse_comparasion_expression())
+            op = this.is_logic_expr_op()
+        }
+        return cmp
     }
     private parse_range_expression(this): ExpressionNode {
         let left = this.parse_bit_expression()
@@ -747,7 +766,7 @@ class Parser {
     }
     private parse_typecast_expression(this): ExpressionNode {
         let left = this.parse_range_expression()
-         if this.current_token.ttype != TokType.AS_KW 
+        if this.current_token.ttype != TokType.AS_KW 
             return left
         this.advance()
         let node = new TypeCastExpressionNode(left, this.parse_type())

@@ -1,0 +1,5 @@
+fnc main(): int {
+    let x = 10
+    println("x = \"x\" and is $x")
+    return 0
+}
