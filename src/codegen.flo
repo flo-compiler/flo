@@ -360,14 +360,14 @@ class CodeGen {
         let str_ty = this.codegen_type(string_exp.value_type, false)
         if is_object(string_exp.value_type) {
             if LLVMIsGlobalConstant(str) {
-                let func = LLVMGetNamedFunction(this.module, "string_from_cstring")
+                let func = LLVMGetNamedFunction(this.module, "string_from_bytes")
                 if func == null {
-                    panic("Could not find function 'string.from_cstring' in program")
+                    panic("Could not find function 'string.from_bytes' in program")
                 }
-                let args = [str]
-                let arg_types = [LLVMTypeOf(str)]
-                let fnc_ty = LLVMFunctionType(LLVMPointerType(str_ty), &arg_types[0], 1, false) 
-                return LLVMBuildCall2(builder, fnc_ty, func, &args[0], 1, "")
+                let args = [str, str_len]
+                let arg_types = [LLVMTypeOf(str), LLVMTypeOf(str_len)]
+                let fnc_ty = LLVMFunctionType(LLVMPointerType(str_ty), &arg_types[0], 2, false) 
+                return LLVMBuildCall2(builder, fnc_ty, func, &args[0], 2, "")
             }
             let self = LLVMBuildMalloc(builder, str_ty, "")
             this.build_constructor_call(builder, string_exp.value_type as ObjectType, [self, str, str_len])

@@ -99,6 +99,11 @@ class string {
         buf.copy_from(str, len)
         return new string(buf, len)
     }
+    public from_bytes(bytes: i8*, len: int): string {
+        let buf = new i8*(len)
+        buf.copy_from(bytes, len)
+        return new string(buf, len)
+    }
 }
 class StringBuilder {
     private buffer: i8*
