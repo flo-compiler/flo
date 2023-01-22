@@ -1,4 +1,4 @@
-import STDIN, nanosleep, write, read in "@flo/sys/lib"
+import STDIN, nanosleep, read in "@flo/sys/lib"
 fnc input(): string {
     let size = -1
     let buffer = new i8*(1)
