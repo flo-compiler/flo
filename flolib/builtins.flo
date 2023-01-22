@@ -67,13 +67,11 @@ class string {
     public replace(this, val: string, repl: string): string {
         let idx = this.find(val)
         if idx >= 0 {
-            let nlen = this.length - val.length + repl.length
+            let nlen = (this.length - val.length) + repl.length
             let nbuff = new i8*(nlen)
             nbuff.copy_from(this.buffer, idx)
-            let wbuff = nbuff + idx
-            wbuff.copy_from(repl.buffer, repl.length)
-            wbuff += repl.length
-            wbuff.copy_from(this.buffer + idx + val.length, this.length - val.length)
+            (&nbuff[idx]).copy_from(repl.buffer, repl.length)
+            (&nbuff[idx + repl.length]).copy_from(&this.buffer[idx + val.length], this.length - (idx + val.length))
             return new string(nbuff, nlen)
         } 
         return this
