@@ -21,8 +21,10 @@ class string {
         return new string(new_buffer, new_str_len)   
     }
     public __adda__(this, other: string): string {
-        this.buffer = this.buffer.resize(this.length + other.length)
+        let new_length = this.length + other.length
+        this.buffer = this.buffer.resize(new_length)
         (this.buffer + this.length).copy_from(other.buffer, other.length)
+        this.length = new_length
         return this
     }
     public __getitem__(this, index: int): string {

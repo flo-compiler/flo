@@ -357,8 +357,19 @@ class CodeGen {
         str_value = fmt_str_builder.get_string()
         let str_len: LLVMValueRef = this.createLLVMInt(str_value.length)
         let str = call_args.length > 0 ? this.codegen_safe_fmt_string(builder, str_value, call_args, &str_len) : this.createGlobalLLVMString(builder, str_value)
+        let str_ty = this.codegen_type(string_exp.value_type, false)
         if is_object(string_exp.value_type) {
-            let self = LLVMBuildMalloc(builder, this.codegen_type(string_exp.value_type, false), "")
+            if LLVMIsGlobalConstant(str) {
+                let func = LLVMGetNamedFunction(this.module, "string_from_cstring")
+                if func == null {
+                    panic("Could not find function 'string.from_cstring' in program")
+                }
+                let args = [str]
+                let arg_types = [LLVMTypeOf(str)]
+                let fnc_ty = LLVMFunctionType(LLVMPointerType(str_ty), &arg_types[0], 1, false) 
+                return LLVMBuildCall2(builder, fnc_ty, func, &args[0], 1, "")
+            }
+            let self = LLVMBuildMalloc(builder, str_ty, "")
             this.build_constructor_call(builder, string_exp.value_type as ObjectType, [self, str, str_len])
             return self
         }
