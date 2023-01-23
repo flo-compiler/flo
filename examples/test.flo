@@ -1,5 +1,11 @@
+class SimpleClass {
+    v: int
+    constructor(this){
+        this.v = 5
+    }
+}
 fnc main(): int {
-    let x = "string1"
-    let y = "string1"
-    return x != y ? 1 : 0
+    let val: SimpleClass()
+    val.v *= 2
+    return 0
 }

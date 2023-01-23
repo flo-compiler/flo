@@ -2703,85 +2703,87 @@ for.end.thread:                                   ; preds = %.4
 
 define void @"Map<string, FileId>_resize"(%"Map<string, FileId>.559084"* %.1) {
 .3:
-  %.10 = getelementptr inbounds %"Map<string, FileId>.559084", %"Map<string, FileId>.559084"* %.1, i64 0, i32 0
-  %.11 = load %"Map<string, FileId>_vtable_ty.559087"*, %"Map<string, FileId>_vtable_ty.559087"** %.10, align 8
-  %.12 = getelementptr inbounds %"Map<string, FileId>_vtable_ty.559087", %"Map<string, FileId>_vtable_ty.559087"* %.11, i64 0, i32 4
-  %.13 = load %"Array<Bucket<string, FileId>>.559090"* (%"Map<string, FileId>.559084"*)*, %"Array<Bucket<string, FileId>>.559090"* (%"Map<string, FileId>.559084"*)** %.12, align 8
-  %.14 = tail call %"Array<Bucket<string, FileId>>.559090"* %.13(%"Map<string, FileId>.559084"* %.1)
-  %.18 = getelementptr inbounds %"Map<string, FileId>.559084", %"Map<string, FileId>.559084"* %.1, i64 0, i32 3
-  %.19 = load i64, i64* %.18, align 8
-  %.20 = shl i64 %.19, 1
-  store i64 %.20, i64* %.18, align 8
-  %.25 = getelementptr inbounds %"Map<string, FileId>.559084", %"Map<string, FileId>.559084"* %.1, i64 0, i32 1
-  %0 = bitcast %"Bucket<string, FileId>.559088"*** %.25 to i8**
-  %.261 = load i8*, i8** %0, align 8
-  %.30 = shl i64 %.19, 4
-  %.32 = tail call i8* @realloc(i8* %.261, i64 %.30)
-  store i8* %.32, i8** %0, align 8
-  %.4210 = load i64, i64* %.18, align 8
-  %.4311 = icmp sgt i64 %.4210, 0
-  br i1 %.4311, label %for.body.preheader, label %for.cond.1.preheader
+  %.6 = getelementptr inbounds %"Map<string, FileId>.559084", %"Map<string, FileId>.559084"* %.1, i64 0, i32 0
+  %.7 = load %"Map<string, FileId>_vtable_ty.559087"*, %"Map<string, FileId>_vtable_ty.559087"** %.6, align 8
+  %.8 = getelementptr inbounds %"Map<string, FileId>_vtable_ty.559087", %"Map<string, FileId>_vtable_ty.559087"* %.7, i64 0, i32 4
+  %.9 = load %"Array<Bucket<string, FileId>>.559090"* (%"Map<string, FileId>.559084"*)*, %"Array<Bucket<string, FileId>>.559090"* (%"Map<string, FileId>.559084"*)** %.8, align 8
+  %.10 = tail call %"Array<Bucket<string, FileId>>.559090"* %.9(%"Map<string, FileId>.559084"* %.1)
+  %.14 = getelementptr inbounds %"Map<string, FileId>.559084", %"Map<string, FileId>.559084"* %.1, i64 0, i32 3
+  %.15 = load i64, i64* %.14, align 8
+  %.16 = shl i64 %.15, 1
+  store i64 %.16, i64* %.14, align 8
+  %.20 = getelementptr inbounds %"Map<string, FileId>.559084", %"Map<string, FileId>.559084"* %.1, i64 0, i32 2
+  store i64 0, i64* %.20, align 8
+  %.24 = getelementptr inbounds %"Map<string, FileId>.559084", %"Map<string, FileId>.559084"* %.1, i64 0, i32 1
+  %0 = bitcast %"Bucket<string, FileId>.559088"*** %.24 to i8**
+  %.251 = load i8*, i8** %0, align 8
+  %.29 = shl i64 %.15, 4
+  %.31 = tail call i8* @realloc(i8* %.251, i64 %.29)
+  store i8* %.31, i8** %0, align 8
+  %.4110 = load i64, i64* %.14, align 8
+  %.4211 = icmp sgt i64 %.4110, 0
+  br i1 %.4211, label %for.body.preheader, label %for.cond.1.preheader
 
 for.body.preheader:                               ; preds = %.3
-  %.4914 = tail call dereferenceable_or_null(32) i8* @malloc(i64 32)
-  %.5015 = bitcast i8* %.4914 to %"Bucket<string, FileId>.559088"*
-  %.5116 = bitcast i8* %.4914 to %"Bucket<string, FileId>_vtable_ty.559089"**
-  store %"Bucket<string, FileId>_vtable_ty.559089"* @"Bucket<string, FileId>_vtable_data", %"Bucket<string, FileId>_vtable_ty.559089"** %.5116, align 8
-  tail call void @"Bucket<string, FileId>_constructor"(%"Bucket<string, FileId>.559088"* %.5015)
-  %1 = bitcast i8* %.32 to i8**
-  store i8* %.4914, i8** %1, align 8
-  %.4217 = load i64, i64* %.18, align 8
-  %.4318 = icmp sgt i64 %.4217, 1
-  br i1 %.4318, label %for.body.for.body_crit_edge, label %for.cond.1.preheader
+  %.4814 = tail call dereferenceable_or_null(32) i8* @malloc(i64 32)
+  %.4915 = bitcast i8* %.4814 to %"Bucket<string, FileId>.559088"*
+  %.5016 = bitcast i8* %.4814 to %"Bucket<string, FileId>_vtable_ty.559089"**
+  store %"Bucket<string, FileId>_vtable_ty.559089"* @"Bucket<string, FileId>_vtable_data", %"Bucket<string, FileId>_vtable_ty.559089"** %.5016, align 8
+  tail call void @"Bucket<string, FileId>_constructor"(%"Bucket<string, FileId>.559088"* %.4915)
+  %1 = bitcast i8* %.31 to i8**
+  store i8* %.4814, i8** %1, align 8
+  %.4117 = load i64, i64* %.14, align 8
+  %.4218 = icmp sgt i64 %.4117, 1
+  br i1 %.4218, label %for.body.for.body_crit_edge, label %for.cond.1.preheader
 
 for.cond.1.preheader:                             ; preds = %for.body.for.body_crit_edge, %for.body.preheader, %.3
-  %.68 = getelementptr inbounds %"Array<Bucket<string, FileId>>.559090", %"Array<Bucket<string, FileId>>.559090"* %.14, i64 0, i32 2
-  %.697 = load i64, i64* %.68, align 8
-  %.708 = icmp sgt i64 %.697, 0
-  br i1 %.708, label %for.body.1.lr.ph, label %for.end.1
+  %.67 = getelementptr inbounds %"Array<Bucket<string, FileId>>.559090", %"Array<Bucket<string, FileId>>.559090"* %.10, i64 0, i32 2
+  %.687 = load i64, i64* %.67, align 8
+  %.698 = icmp sgt i64 %.687, 0
+  br i1 %.698, label %for.body.1.lr.ph, label %for.end.1
 
 for.body.1.lr.ph:                                 ; preds = %for.cond.1.preheader
-  %.79 = getelementptr inbounds %"Array<Bucket<string, FileId>>.559090", %"Array<Bucket<string, FileId>>.559090"* %.14, i64 0, i32 0
+  %.78 = getelementptr inbounds %"Array<Bucket<string, FileId>>.559090", %"Array<Bucket<string, FileId>>.559090"* %.10, i64 0, i32 0
   br label %for.body.1
 
 for.body.for.body_crit_edge:                      ; preds = %for.body.preheader, %for.body.for.body_crit_edge
-  %.6019 = phi i64 [ %.60, %for.body.for.body_crit_edge ], [ 1, %for.body.preheader ]
-  %.48.pre = load %"Bucket<string, FileId>.559088"**, %"Bucket<string, FileId>.559088"*** %.25, align 8
-  %.49 = tail call dereferenceable_or_null(32) i8* @malloc(i64 32)
-  %.50 = bitcast i8* %.49 to %"Bucket<string, FileId>.559088"*
-  %.51 = bitcast i8* %.49 to %"Bucket<string, FileId>_vtable_ty.559089"**
-  store %"Bucket<string, FileId>_vtable_ty.559089"* @"Bucket<string, FileId>_vtable_data", %"Bucket<string, FileId>_vtable_ty.559089"** %.51, align 8
-  tail call void @"Bucket<string, FileId>_constructor"(%"Bucket<string, FileId>.559088"* %.50)
-  %.54 = getelementptr inbounds %"Bucket<string, FileId>.559088"*, %"Bucket<string, FileId>.559088"** %.48.pre, i64 %.6019
-  %2 = bitcast %"Bucket<string, FileId>.559088"** %.54 to i8**
-  store i8* %.49, i8** %2, align 8
-  %.60 = add nuw nsw i64 %.6019, 1
-  %.42 = load i64, i64* %.18, align 8
-  %.43 = icmp slt i64 %.60, %.42
-  br i1 %.43, label %for.body.for.body_crit_edge, label %for.cond.1.preheader
+  %.5919 = phi i64 [ %.59, %for.body.for.body_crit_edge ], [ 1, %for.body.preheader ]
+  %.47.pre = load %"Bucket<string, FileId>.559088"**, %"Bucket<string, FileId>.559088"*** %.24, align 8
+  %.48 = tail call dereferenceable_or_null(32) i8* @malloc(i64 32)
+  %.49 = bitcast i8* %.48 to %"Bucket<string, FileId>.559088"*
+  %.50 = bitcast i8* %.48 to %"Bucket<string, FileId>_vtable_ty.559089"**
+  store %"Bucket<string, FileId>_vtable_ty.559089"* @"Bucket<string, FileId>_vtable_data", %"Bucket<string, FileId>_vtable_ty.559089"** %.50, align 8
+  tail call void @"Bucket<string, FileId>_constructor"(%"Bucket<string, FileId>.559088"* %.49)
+  %.53 = getelementptr inbounds %"Bucket<string, FileId>.559088"*, %"Bucket<string, FileId>.559088"** %.47.pre, i64 %.5919
+  %2 = bitcast %"Bucket<string, FileId>.559088"** %.53 to i8**
+  store i8* %.48, i8** %2, align 8
+  %.59 = add nuw nsw i64 %.5919, 1
+  %.41 = load i64, i64* %.14, align 8
+  %.42 = icmp slt i64 %.59, %.41
+  br i1 %.42, label %for.body.for.body_crit_edge, label %for.cond.1.preheader
 
 for.body.1:                                       ; preds = %for.body.1.lr.ph, %for.body.1
-  %storemerge29 = phi i64 [ 0, %for.body.1.lr.ph ], [ %.100, %for.body.1 ]
-  %.74 = load %"Map<string, FileId>_vtable_ty.559087"*, %"Map<string, FileId>_vtable_ty.559087"** %.10, align 8
-  %.75 = getelementptr inbounds %"Map<string, FileId>_vtable_ty.559087", %"Map<string, FileId>_vtable_ty.559087"* %.74, i64 0, i32 2
-  %.76 = load void (%"Map<string, FileId>.559084"*, %string.559062*, %FileId.559076*)*, void (%"Map<string, FileId>.559084"*, %string.559062*, %FileId.559076*)** %.75, align 8
-  %.80 = load %"Array<Bucket<string, FileId>>_vtable_ty.559091"*, %"Array<Bucket<string, FileId>>_vtable_ty.559091"** %.79, align 8
-  %.81 = getelementptr inbounds %"Array<Bucket<string, FileId>>_vtable_ty.559091", %"Array<Bucket<string, FileId>>_vtable_ty.559091"* %.80, i64 0, i32 5
-  %.82 = load %"Bucket<string, FileId>.559088"* (%"Array<Bucket<string, FileId>>.559090"*, i64)*, %"Bucket<string, FileId>.559088"* (%"Array<Bucket<string, FileId>>.559090"*, i64)** %.81, align 8
-  %.83 = tail call %"Bucket<string, FileId>.559088"* %.82(%"Array<Bucket<string, FileId>>.559090"* nonnull %.14, i64 %storemerge29)
-  %.84 = getelementptr inbounds %"Bucket<string, FileId>.559088", %"Bucket<string, FileId>.559088"* %.83, i64 0, i32 1
-  %.85 = load %string.559062*, %string.559062** %.84, align 8
-  %.89 = load %"Array<Bucket<string, FileId>>_vtable_ty.559091"*, %"Array<Bucket<string, FileId>>_vtable_ty.559091"** %.79, align 8
-  %.90 = getelementptr inbounds %"Array<Bucket<string, FileId>>_vtable_ty.559091", %"Array<Bucket<string, FileId>>_vtable_ty.559091"* %.89, i64 0, i32 5
-  %.91 = load %"Bucket<string, FileId>.559088"* (%"Array<Bucket<string, FileId>>.559090"*, i64)*, %"Bucket<string, FileId>.559088"* (%"Array<Bucket<string, FileId>>.559090"*, i64)** %.90, align 8
-  %.92 = tail call %"Bucket<string, FileId>.559088"* %.91(%"Array<Bucket<string, FileId>>.559090"* nonnull %.14, i64 %storemerge29)
-  %.93 = getelementptr inbounds %"Bucket<string, FileId>.559088", %"Bucket<string, FileId>.559088"* %.92, i64 0, i32 2
-  %.94 = load %FileId.559076*, %FileId.559076** %.93, align 8
-  tail call void %.76(%"Map<string, FileId>.559084"* nonnull %.1, %string.559062* %.85, %FileId.559076* %.94)
-  %.100 = add nuw nsw i64 %storemerge29, 1
-  %.69 = load i64, i64* %.68, align 8
-  %.70 = icmp slt i64 %.100, %.69
-  br i1 %.70, label %for.body.1, label %for.end.1
+  %storemerge29 = phi i64 [ 0, %for.body.1.lr.ph ], [ %.99, %for.body.1 ]
+  %.73 = load %"Map<string, FileId>_vtable_ty.559087"*, %"Map<string, FileId>_vtable_ty.559087"** %.6, align 8
+  %.74 = getelementptr inbounds %"Map<string, FileId>_vtable_ty.559087", %"Map<string, FileId>_vtable_ty.559087"* %.73, i64 0, i32 2
+  %.75 = load void (%"Map<string, FileId>.559084"*, %string.559062*, %FileId.559076*)*, void (%"Map<string, FileId>.559084"*, %string.559062*, %FileId.559076*)** %.74, align 8
+  %.79 = load %"Array<Bucket<string, FileId>>_vtable_ty.559091"*, %"Array<Bucket<string, FileId>>_vtable_ty.559091"** %.78, align 8
+  %.80 = getelementptr inbounds %"Array<Bucket<string, FileId>>_vtable_ty.559091", %"Array<Bucket<string, FileId>>_vtable_ty.559091"* %.79, i64 0, i32 5
+  %.81 = load %"Bucket<string, FileId>.559088"* (%"Array<Bucket<string, FileId>>.559090"*, i64)*, %"Bucket<string, FileId>.559088"* (%"Array<Bucket<string, FileId>>.559090"*, i64)** %.80, align 8
+  %.82 = tail call %"Bucket<string, FileId>.559088"* %.81(%"Array<Bucket<string, FileId>>.559090"* nonnull %.10, i64 %storemerge29)
+  %.83 = getelementptr inbounds %"Bucket<string, FileId>.559088", %"Bucket<string, FileId>.559088"* %.82, i64 0, i32 1
+  %.84 = load %string.559062*, %string.559062** %.83, align 8
+  %.88 = load %"Array<Bucket<string, FileId>>_vtable_ty.559091"*, %"Array<Bucket<string, FileId>>_vtable_ty.559091"** %.78, align 8
+  %.89 = getelementptr inbounds %"Array<Bucket<string, FileId>>_vtable_ty.559091", %"Array<Bucket<string, FileId>>_vtable_ty.559091"* %.88, i64 0, i32 5
+  %.90 = load %"Bucket<string, FileId>.559088"* (%"Array<Bucket<string, FileId>>.559090"*, i64)*, %"Bucket<string, FileId>.559088"* (%"Array<Bucket<string, FileId>>.559090"*, i64)** %.89, align 8
+  %.91 = tail call %"Bucket<string, FileId>.559088"* %.90(%"Array<Bucket<string, FileId>>.559090"* nonnull %.10, i64 %storemerge29)
+  %.92 = getelementptr inbounds %"Bucket<string, FileId>.559088", %"Bucket<string, FileId>.559088"* %.91, i64 0, i32 2
+  %.93 = load %FileId.559076*, %FileId.559076** %.92, align 8
+  tail call void %.75(%"Map<string, FileId>.559084"* nonnull %.1, %string.559062* %.84, %FileId.559076* %.93)
+  %.99 = add nuw nsw i64 %storemerge29, 1
+  %.68 = load i64, i64* %.67, align 8
+  %.69 = icmp slt i64 %.99, %.68
+  br i1 %.69, label %for.body.1, label %for.end.1
 
 for.end.1:                                        ; preds = %for.body.1, %for.cond.1.preheader
   ret void
@@ -2796,74 +2798,74 @@ define void @"Map<string, FileId>_set"(%"Map<string, FileId>.559084"* %.1, %stri
   %.15 = load i64, i64* %.14, align 8
   %.16 = sitofp i64 %.15 to double
   %.17 = fdiv double %.12, %.16
-  %.18 = fcmp ogt double %.17, 7.500000e-01
-  br i1 %.18, label %.5.if, label %.5.endif
+  %.20 = fcmp ogt double %.17, 7.500000e-01
+  br i1 %.20, label %.5.if, label %.5.endif
 
 .5.if:                                            ; preds = %.5
-  %.21 = getelementptr inbounds %"Map<string, FileId>.559084", %"Map<string, FileId>.559084"* %.1, i64 0, i32 0
-  %.22 = load %"Map<string, FileId>_vtable_ty.559087"*, %"Map<string, FileId>_vtable_ty.559087"** %.21, align 8
-  %.23 = getelementptr inbounds %"Map<string, FileId>_vtable_ty.559087", %"Map<string, FileId>_vtable_ty.559087"* %.22, i64 0, i32 1
-  %.24 = load void (%"Map<string, FileId>.559084"*)*, void (%"Map<string, FileId>.559084"*)** %.23, align 8
-  tail call void %.24(%"Map<string, FileId>.559084"* nonnull %.1)
+  %.23 = getelementptr inbounds %"Map<string, FileId>.559084", %"Map<string, FileId>.559084"* %.1, i64 0, i32 0
+  %.24 = load %"Map<string, FileId>_vtable_ty.559087"*, %"Map<string, FileId>_vtable_ty.559087"** %.23, align 8
+  %.25 = getelementptr inbounds %"Map<string, FileId>_vtable_ty.559087", %"Map<string, FileId>_vtable_ty.559087"* %.24, i64 0, i32 1
+  %.26 = load void (%"Map<string, FileId>.559084"*)*, void (%"Map<string, FileId>.559084"*)** %.25, align 8
+  tail call void %.26(%"Map<string, FileId>.559084"* nonnull %.1)
   br label %.5.endif
 
 .5.endif:                                         ; preds = %.5.if, %.5
-  %.28 = getelementptr inbounds %"Map<string, FileId>.559084", %"Map<string, FileId>.559084"* %.1, i64 0, i32 0
-  %.29 = load %"Map<string, FileId>_vtable_ty.559087"*, %"Map<string, FileId>_vtable_ty.559087"** %.28, align 8
-  %.30 = getelementptr inbounds %"Map<string, FileId>_vtable_ty.559087", %"Map<string, FileId>_vtable_ty.559087"* %.29, i64 0, i32 0
-  %.31 = load i64 (%"Map<string, FileId>.559084"*, %string.559062*)*, i64 (%"Map<string, FileId>.559084"*, %string.559062*)** %.30, align 8
-  %.33 = tail call i64 %.31(%"Map<string, FileId>.559084"* nonnull %.1, %string.559062* %.2)
-  %.36 = load i64, i64* %.14, align 8
-  %.37 = srem i64 %.33, %.36
-  %.41 = getelementptr inbounds %"Map<string, FileId>.559084", %"Map<string, FileId>.559084"* %.1, i64 0, i32 1
-  %.42 = load %"Bucket<string, FileId>.559088"**, %"Bucket<string, FileId>.559088"*** %.41, align 8
-  %.43 = getelementptr inbounds %"Bucket<string, FileId>.559088"*, %"Bucket<string, FileId>.559088"** %.42, i64 %.37
-  %.44 = load %"Bucket<string, FileId>.559088"*, %"Bucket<string, FileId>.559088"** %.43, align 8
-  %.45 = getelementptr inbounds %"Bucket<string, FileId>.559088", %"Bucket<string, FileId>.559088"* %.44, i64 0, i32 3
-  %.46 = load i1, i1* %.45, align 1
-  br i1 %.46, label %while.exit, label %while.entry
+  %.30 = getelementptr inbounds %"Map<string, FileId>.559084", %"Map<string, FileId>.559084"* %.1, i64 0, i32 0
+  %.31 = load %"Map<string, FileId>_vtable_ty.559087"*, %"Map<string, FileId>_vtable_ty.559087"** %.30, align 8
+  %.32 = getelementptr inbounds %"Map<string, FileId>_vtable_ty.559087", %"Map<string, FileId>_vtable_ty.559087"* %.31, i64 0, i32 0
+  %.33 = load i64 (%"Map<string, FileId>.559084"*, %string.559062*)*, i64 (%"Map<string, FileId>.559084"*, %string.559062*)** %.32, align 8
+  %.35 = tail call i64 %.33(%"Map<string, FileId>.559084"* nonnull %.1, %string.559062* %.2)
+  %.38 = load i64, i64* %.14, align 8
+  %.39 = srem i64 %.35, %.38
+  %.43 = getelementptr inbounds %"Map<string, FileId>.559084", %"Map<string, FileId>.559084"* %.1, i64 0, i32 1
+  %.44 = load %"Bucket<string, FileId>.559088"**, %"Bucket<string, FileId>.559088"*** %.43, align 8
+  %.45 = getelementptr inbounds %"Bucket<string, FileId>.559088"*, %"Bucket<string, FileId>.559088"** %.44, i64 %.39
+  %.46 = load %"Bucket<string, FileId>.559088"*, %"Bucket<string, FileId>.559088"** %.45, align 8
+  %.47 = getelementptr inbounds %"Bucket<string, FileId>.559088", %"Bucket<string, FileId>.559088"* %.46, i64 0, i32 3
+  %.48 = load i1, i1* %.47, align 1
+  br i1 %.48, label %while.exit, label %while.entry
 
 while.entry:                                      ; preds = %.5.endif, %while.entry.endif
-  %.54 = phi %"Bucket<string, FileId>.559088"* [ %.77, %while.entry.endif ], [ %.44, %.5.endif ]
-  %.701 = phi i64 [ %.70, %while.entry.endif ], [ %.37, %.5.endif ]
-  %.55 = getelementptr inbounds %"Bucket<string, FileId>.559088", %"Bucket<string, FileId>.559088"* %.54, i64 0, i32 1
-  %.56 = load %string.559062*, %string.559062** %.55, align 8
-  %.58 = getelementptr inbounds %string.559062, %string.559062* %.56, i64 0, i32 0
-  %.59 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.58, align 8
-  %.60 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.59, i64 0, i32 4
-  %.61 = load i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)** %.60, align 8
-  %.62 = tail call i1 %.61(%string.559062* %.56, %string.559062* %.2)
-  br i1 %.62, label %while.entry.while.exit.loopexit_crit_edge, label %while.entry.endif
+  %.56 = phi %"Bucket<string, FileId>.559088"* [ %.79, %while.entry.endif ], [ %.46, %.5.endif ]
+  %.721 = phi i64 [ %.72, %while.entry.endif ], [ %.39, %.5.endif ]
+  %.57 = getelementptr inbounds %"Bucket<string, FileId>.559088", %"Bucket<string, FileId>.559088"* %.56, i64 0, i32 1
+  %.58 = load %string.559062*, %string.559062** %.57, align 8
+  %.60 = getelementptr inbounds %string.559062, %string.559062* %.58, i64 0, i32 0
+  %.61 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.60, align 8
+  %.62 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.61, i64 0, i32 4
+  %.63 = load i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)** %.62, align 8
+  %.64 = tail call i1 %.63(%string.559062* %.58, %string.559062* %.2)
+  br i1 %.64, label %while.entry.while.exit.loopexit_crit_edge, label %while.entry.endif
 
 while.entry.while.exit.loopexit_crit_edge:        ; preds = %while.entry
-  %.92.pre.pre = load %"Bucket<string, FileId>.559088"**, %"Bucket<string, FileId>.559088"*** %.41, align 8
+  %.94.pre.pre = load %"Bucket<string, FileId>.559088"**, %"Bucket<string, FileId>.559088"*** %.43, align 8
   br label %while.exit
 
 while.exit:                                       ; preds = %while.entry.endif, %while.entry.while.exit.loopexit_crit_edge, %.5.endif
-  %.92 = phi %"Bucket<string, FileId>.559088"** [ %.42, %.5.endif ], [ %.92.pre.pre, %while.entry.while.exit.loopexit_crit_edge ], [ %.75, %while.entry.endif ]
-  %.89 = phi i64 [ %.37, %.5.endif ], [ %.701, %while.entry.while.exit.loopexit_crit_edge ], [ %.70, %while.entry.endif ]
-  %.84 = load i64, i64* %.10, align 8
-  %.85 = add i64 %.84, 1
-  store i64 %.85, i64* %.10, align 8
-  %.93 = getelementptr inbounds %"Bucket<string, FileId>.559088"*, %"Bucket<string, FileId>.559088"** %.92, i64 %.89
-  %.94 = load %"Bucket<string, FileId>.559088"*, %"Bucket<string, FileId>.559088"** %.93, align 8
-  %.95 = getelementptr inbounds %"Bucket<string, FileId>.559088", %"Bucket<string, FileId>.559088"* %.94, i64 0, i32 0
-  %.96 = load %"Bucket<string, FileId>_vtable_ty.559089"*, %"Bucket<string, FileId>_vtable_ty.559089"** %.95, align 8
-  %.97 = getelementptr inbounds %"Bucket<string, FileId>_vtable_ty.559089", %"Bucket<string, FileId>_vtable_ty.559089"* %.96, i64 0, i32 0
-  %.98 = load void (%"Bucket<string, FileId>.559088"*, %string.559062*, %FileId.559076*)*, void (%"Bucket<string, FileId>.559088"*, %string.559062*, %FileId.559076*)** %.97, align 8
-  tail call void %.98(%"Bucket<string, FileId>.559088"* %.94, %string.559062* %.2, %FileId.559076* %.3)
+  %.94 = phi %"Bucket<string, FileId>.559088"** [ %.44, %.5.endif ], [ %.94.pre.pre, %while.entry.while.exit.loopexit_crit_edge ], [ %.77, %while.entry.endif ]
+  %.91 = phi i64 [ %.39, %.5.endif ], [ %.721, %while.entry.while.exit.loopexit_crit_edge ], [ %.72, %while.entry.endif ]
+  %.86 = load i64, i64* %.10, align 8
+  %.87 = add i64 %.86, 1
+  store i64 %.87, i64* %.10, align 8
+  %.95 = getelementptr inbounds %"Bucket<string, FileId>.559088"*, %"Bucket<string, FileId>.559088"** %.94, i64 %.91
+  %.96 = load %"Bucket<string, FileId>.559088"*, %"Bucket<string, FileId>.559088"** %.95, align 8
+  %.97 = getelementptr inbounds %"Bucket<string, FileId>.559088", %"Bucket<string, FileId>.559088"* %.96, i64 0, i32 0
+  %.98 = load %"Bucket<string, FileId>_vtable_ty.559089"*, %"Bucket<string, FileId>_vtable_ty.559089"** %.97, align 8
+  %.99 = getelementptr inbounds %"Bucket<string, FileId>_vtable_ty.559089", %"Bucket<string, FileId>_vtable_ty.559089"* %.98, i64 0, i32 0
+  %.100 = load void (%"Bucket<string, FileId>.559088"*, %string.559062*, %FileId.559076*)*, void (%"Bucket<string, FileId>.559088"*, %string.559062*, %FileId.559076*)** %.99, align 8
+  tail call void %.100(%"Bucket<string, FileId>.559088"* %.96, %string.559062* %.2, %FileId.559076* %.3)
   ret void
 
 while.entry.endif:                                ; preds = %while.entry
-  %.66 = add i64 %.701, 1
-  %.69 = load i64, i64* %.14, align 8
-  %.70 = srem i64 %.66, %.69
-  %.75 = load %"Bucket<string, FileId>.559088"**, %"Bucket<string, FileId>.559088"*** %.41, align 8
-  %.76 = getelementptr inbounds %"Bucket<string, FileId>.559088"*, %"Bucket<string, FileId>.559088"** %.75, i64 %.70
-  %.77 = load %"Bucket<string, FileId>.559088"*, %"Bucket<string, FileId>.559088"** %.76, align 8
-  %.78 = getelementptr inbounds %"Bucket<string, FileId>.559088", %"Bucket<string, FileId>.559088"* %.77, i64 0, i32 3
-  %.79 = load i1, i1* %.78, align 1
-  br i1 %.79, label %while.exit, label %while.entry
+  %.68 = add i64 %.721, 1
+  %.71 = load i64, i64* %.14, align 8
+  %.72 = srem i64 %.68, %.71
+  %.77 = load %"Bucket<string, FileId>.559088"**, %"Bucket<string, FileId>.559088"*** %.43, align 8
+  %.78 = getelementptr inbounds %"Bucket<string, FileId>.559088"*, %"Bucket<string, FileId>.559088"** %.77, i64 %.72
+  %.79 = load %"Bucket<string, FileId>.559088"*, %"Bucket<string, FileId>.559088"** %.78, align 8
+  %.80 = getelementptr inbounds %"Bucket<string, FileId>.559088", %"Bucket<string, FileId>.559088"* %.79, i64 0, i32 3
+  %.81 = load i1, i1* %.80, align 1
+  br i1 %.81, label %while.exit, label %while.entry
 }
 
 define %FileId.559076* @"Map<string, FileId>_get"(%"Map<string, FileId>.559084"* %.1, %string.559062* %.2) {
@@ -21327,85 +21329,87 @@ for.end.thread:                                   ; preds = %.4
 
 define void @"Map<string, VarId>_resize"(%"Map<string, VarId>.559320"* %.1) {
 .3:
-  %.10 = getelementptr inbounds %"Map<string, VarId>.559320", %"Map<string, VarId>.559320"* %.1, i64 0, i32 0
-  %.11 = load %"Map<string, VarId>_vtable_ty.559324"*, %"Map<string, VarId>_vtable_ty.559324"** %.10, align 8
-  %.12 = getelementptr inbounds %"Map<string, VarId>_vtable_ty.559324", %"Map<string, VarId>_vtable_ty.559324"* %.11, i64 0, i32 4
-  %.13 = load %"Array<Bucket<string, VarId>>.559327"* (%"Map<string, VarId>.559320"*)*, %"Array<Bucket<string, VarId>>.559327"* (%"Map<string, VarId>.559320"*)** %.12, align 8
-  %.14 = tail call %"Array<Bucket<string, VarId>>.559327"* %.13(%"Map<string, VarId>.559320"* %.1)
-  %.18 = getelementptr inbounds %"Map<string, VarId>.559320", %"Map<string, VarId>.559320"* %.1, i64 0, i32 3
-  %.19 = load i64, i64* %.18, align 8
-  %.20 = shl i64 %.19, 1
-  store i64 %.20, i64* %.18, align 8
-  %.25 = getelementptr inbounds %"Map<string, VarId>.559320", %"Map<string, VarId>.559320"* %.1, i64 0, i32 1
-  %0 = bitcast %"Bucket<string, VarId>.559325"*** %.25 to i8**
-  %.261 = load i8*, i8** %0, align 8
-  %.30 = shl i64 %.19, 4
-  %.32 = tail call i8* @realloc(i8* %.261, i64 %.30)
-  store i8* %.32, i8** %0, align 8
-  %.4210 = load i64, i64* %.18, align 8
-  %.4311 = icmp sgt i64 %.4210, 0
-  br i1 %.4311, label %for.body.preheader, label %for.cond.1.preheader
+  %.6 = getelementptr inbounds %"Map<string, VarId>.559320", %"Map<string, VarId>.559320"* %.1, i64 0, i32 0
+  %.7 = load %"Map<string, VarId>_vtable_ty.559324"*, %"Map<string, VarId>_vtable_ty.559324"** %.6, align 8
+  %.8 = getelementptr inbounds %"Map<string, VarId>_vtable_ty.559324", %"Map<string, VarId>_vtable_ty.559324"* %.7, i64 0, i32 4
+  %.9 = load %"Array<Bucket<string, VarId>>.559327"* (%"Map<string, VarId>.559320"*)*, %"Array<Bucket<string, VarId>>.559327"* (%"Map<string, VarId>.559320"*)** %.8, align 8
+  %.10 = tail call %"Array<Bucket<string, VarId>>.559327"* %.9(%"Map<string, VarId>.559320"* %.1)
+  %.14 = getelementptr inbounds %"Map<string, VarId>.559320", %"Map<string, VarId>.559320"* %.1, i64 0, i32 3
+  %.15 = load i64, i64* %.14, align 8
+  %.16 = shl i64 %.15, 1
+  store i64 %.16, i64* %.14, align 8
+  %.20 = getelementptr inbounds %"Map<string, VarId>.559320", %"Map<string, VarId>.559320"* %.1, i64 0, i32 2
+  store i64 0, i64* %.20, align 8
+  %.24 = getelementptr inbounds %"Map<string, VarId>.559320", %"Map<string, VarId>.559320"* %.1, i64 0, i32 1
+  %0 = bitcast %"Bucket<string, VarId>.559325"*** %.24 to i8**
+  %.251 = load i8*, i8** %0, align 8
+  %.29 = shl i64 %.15, 4
+  %.31 = tail call i8* @realloc(i8* %.251, i64 %.29)
+  store i8* %.31, i8** %0, align 8
+  %.4110 = load i64, i64* %.14, align 8
+  %.4211 = icmp sgt i64 %.4110, 0
+  br i1 %.4211, label %for.body.preheader, label %for.cond.1.preheader
 
 for.body.preheader:                               ; preds = %.3
-  %.4914 = tail call dereferenceable_or_null(32) i8* @malloc(i64 32)
-  %.5015 = bitcast i8* %.4914 to %"Bucket<string, VarId>.559325"*
-  %.5116 = bitcast i8* %.4914 to %"Bucket<string, VarId>_vtable_ty.559326"**
-  store %"Bucket<string, VarId>_vtable_ty.559326"* @"Bucket<string, VarId>_vtable_data", %"Bucket<string, VarId>_vtable_ty.559326"** %.5116, align 8
-  tail call void @"Bucket<string, VarId>_constructor"(%"Bucket<string, VarId>.559325"* %.5015)
-  %1 = bitcast i8* %.32 to i8**
-  store i8* %.4914, i8** %1, align 8
-  %.4217 = load i64, i64* %.18, align 8
-  %.4318 = icmp sgt i64 %.4217, 1
-  br i1 %.4318, label %for.body.for.body_crit_edge, label %for.cond.1.preheader
+  %.4814 = tail call dereferenceable_or_null(32) i8* @malloc(i64 32)
+  %.4915 = bitcast i8* %.4814 to %"Bucket<string, VarId>.559325"*
+  %.5016 = bitcast i8* %.4814 to %"Bucket<string, VarId>_vtable_ty.559326"**
+  store %"Bucket<string, VarId>_vtable_ty.559326"* @"Bucket<string, VarId>_vtable_data", %"Bucket<string, VarId>_vtable_ty.559326"** %.5016, align 8
+  tail call void @"Bucket<string, VarId>_constructor"(%"Bucket<string, VarId>.559325"* %.4915)
+  %1 = bitcast i8* %.31 to i8**
+  store i8* %.4814, i8** %1, align 8
+  %.4117 = load i64, i64* %.14, align 8
+  %.4218 = icmp sgt i64 %.4117, 1
+  br i1 %.4218, label %for.body.for.body_crit_edge, label %for.cond.1.preheader
 
 for.cond.1.preheader:                             ; preds = %for.body.for.body_crit_edge, %for.body.preheader, %.3
-  %.68 = getelementptr inbounds %"Array<Bucket<string, VarId>>.559327", %"Array<Bucket<string, VarId>>.559327"* %.14, i64 0, i32 2
-  %.697 = load i64, i64* %.68, align 8
-  %.708 = icmp sgt i64 %.697, 0
-  br i1 %.708, label %for.body.1.lr.ph, label %for.end.1
+  %.67 = getelementptr inbounds %"Array<Bucket<string, VarId>>.559327", %"Array<Bucket<string, VarId>>.559327"* %.10, i64 0, i32 2
+  %.687 = load i64, i64* %.67, align 8
+  %.698 = icmp sgt i64 %.687, 0
+  br i1 %.698, label %for.body.1.lr.ph, label %for.end.1
 
 for.body.1.lr.ph:                                 ; preds = %for.cond.1.preheader
-  %.79 = getelementptr inbounds %"Array<Bucket<string, VarId>>.559327", %"Array<Bucket<string, VarId>>.559327"* %.14, i64 0, i32 0
+  %.78 = getelementptr inbounds %"Array<Bucket<string, VarId>>.559327", %"Array<Bucket<string, VarId>>.559327"* %.10, i64 0, i32 0
   br label %for.body.1
 
 for.body.for.body_crit_edge:                      ; preds = %for.body.preheader, %for.body.for.body_crit_edge
-  %.6019 = phi i64 [ %.60, %for.body.for.body_crit_edge ], [ 1, %for.body.preheader ]
-  %.48.pre = load %"Bucket<string, VarId>.559325"**, %"Bucket<string, VarId>.559325"*** %.25, align 8
-  %.49 = tail call dereferenceable_or_null(32) i8* @malloc(i64 32)
-  %.50 = bitcast i8* %.49 to %"Bucket<string, VarId>.559325"*
-  %.51 = bitcast i8* %.49 to %"Bucket<string, VarId>_vtable_ty.559326"**
-  store %"Bucket<string, VarId>_vtable_ty.559326"* @"Bucket<string, VarId>_vtable_data", %"Bucket<string, VarId>_vtable_ty.559326"** %.51, align 8
-  tail call void @"Bucket<string, VarId>_constructor"(%"Bucket<string, VarId>.559325"* %.50)
-  %.54 = getelementptr inbounds %"Bucket<string, VarId>.559325"*, %"Bucket<string, VarId>.559325"** %.48.pre, i64 %.6019
-  %2 = bitcast %"Bucket<string, VarId>.559325"** %.54 to i8**
-  store i8* %.49, i8** %2, align 8
-  %.60 = add nuw nsw i64 %.6019, 1
-  %.42 = load i64, i64* %.18, align 8
-  %.43 = icmp slt i64 %.60, %.42
-  br i1 %.43, label %for.body.for.body_crit_edge, label %for.cond.1.preheader
+  %.5919 = phi i64 [ %.59, %for.body.for.body_crit_edge ], [ 1, %for.body.preheader ]
+  %.47.pre = load %"Bucket<string, VarId>.559325"**, %"Bucket<string, VarId>.559325"*** %.24, align 8
+  %.48 = tail call dereferenceable_or_null(32) i8* @malloc(i64 32)
+  %.49 = bitcast i8* %.48 to %"Bucket<string, VarId>.559325"*
+  %.50 = bitcast i8* %.48 to %"Bucket<string, VarId>_vtable_ty.559326"**
+  store %"Bucket<string, VarId>_vtable_ty.559326"* @"Bucket<string, VarId>_vtable_data", %"Bucket<string, VarId>_vtable_ty.559326"** %.50, align 8
+  tail call void @"Bucket<string, VarId>_constructor"(%"Bucket<string, VarId>.559325"* %.49)
+  %.53 = getelementptr inbounds %"Bucket<string, VarId>.559325"*, %"Bucket<string, VarId>.559325"** %.47.pre, i64 %.5919
+  %2 = bitcast %"Bucket<string, VarId>.559325"** %.53 to i8**
+  store i8* %.48, i8** %2, align 8
+  %.59 = add nuw nsw i64 %.5919, 1
+  %.41 = load i64, i64* %.14, align 8
+  %.42 = icmp slt i64 %.59, %.41
+  br i1 %.42, label %for.body.for.body_crit_edge, label %for.cond.1.preheader
 
 for.body.1:                                       ; preds = %for.body.1.lr.ph, %for.body.1
-  %storemerge29 = phi i64 [ 0, %for.body.1.lr.ph ], [ %.100, %for.body.1 ]
-  %.74 = load %"Map<string, VarId>_vtable_ty.559324"*, %"Map<string, VarId>_vtable_ty.559324"** %.10, align 8
-  %.75 = getelementptr inbounds %"Map<string, VarId>_vtable_ty.559324", %"Map<string, VarId>_vtable_ty.559324"* %.74, i64 0, i32 2
-  %.76 = load void (%"Map<string, VarId>.559320"*, %string.559062*, %VarId.559286*)*, void (%"Map<string, VarId>.559320"*, %string.559062*, %VarId.559286*)** %.75, align 8
-  %.80 = load %"Array<Bucket<string, VarId>>_vtable_ty.559328"*, %"Array<Bucket<string, VarId>>_vtable_ty.559328"** %.79, align 8
-  %.81 = getelementptr inbounds %"Array<Bucket<string, VarId>>_vtable_ty.559328", %"Array<Bucket<string, VarId>>_vtable_ty.559328"* %.80, i64 0, i32 5
-  %.82 = load %"Bucket<string, VarId>.559325"* (%"Array<Bucket<string, VarId>>.559327"*, i64)*, %"Bucket<string, VarId>.559325"* (%"Array<Bucket<string, VarId>>.559327"*, i64)** %.81, align 8
-  %.83 = tail call %"Bucket<string, VarId>.559325"* %.82(%"Array<Bucket<string, VarId>>.559327"* nonnull %.14, i64 %storemerge29)
-  %.84 = getelementptr inbounds %"Bucket<string, VarId>.559325", %"Bucket<string, VarId>.559325"* %.83, i64 0, i32 1
-  %.85 = load %string.559062*, %string.559062** %.84, align 8
-  %.89 = load %"Array<Bucket<string, VarId>>_vtable_ty.559328"*, %"Array<Bucket<string, VarId>>_vtable_ty.559328"** %.79, align 8
-  %.90 = getelementptr inbounds %"Array<Bucket<string, VarId>>_vtable_ty.559328", %"Array<Bucket<string, VarId>>_vtable_ty.559328"* %.89, i64 0, i32 5
-  %.91 = load %"Bucket<string, VarId>.559325"* (%"Array<Bucket<string, VarId>>.559327"*, i64)*, %"Bucket<string, VarId>.559325"* (%"Array<Bucket<string, VarId>>.559327"*, i64)** %.90, align 8
-  %.92 = tail call %"Bucket<string, VarId>.559325"* %.91(%"Array<Bucket<string, VarId>>.559327"* nonnull %.14, i64 %storemerge29)
-  %.93 = getelementptr inbounds %"Bucket<string, VarId>.559325", %"Bucket<string, VarId>.559325"* %.92, i64 0, i32 2
-  %.94 = load %VarId.559286*, %VarId.559286** %.93, align 8
-  tail call void %.76(%"Map<string, VarId>.559320"* nonnull %.1, %string.559062* %.85, %VarId.559286* %.94)
-  %.100 = add nuw nsw i64 %storemerge29, 1
-  %.69 = load i64, i64* %.68, align 8
-  %.70 = icmp slt i64 %.100, %.69
-  br i1 %.70, label %for.body.1, label %for.end.1
+  %storemerge29 = phi i64 [ 0, %for.body.1.lr.ph ], [ %.99, %for.body.1 ]
+  %.73 = load %"Map<string, VarId>_vtable_ty.559324"*, %"Map<string, VarId>_vtable_ty.559324"** %.6, align 8
+  %.74 = getelementptr inbounds %"Map<string, VarId>_vtable_ty.559324", %"Map<string, VarId>_vtable_ty.559324"* %.73, i64 0, i32 2
+  %.75 = load void (%"Map<string, VarId>.559320"*, %string.559062*, %VarId.559286*)*, void (%"Map<string, VarId>.559320"*, %string.559062*, %VarId.559286*)** %.74, align 8
+  %.79 = load %"Array<Bucket<string, VarId>>_vtable_ty.559328"*, %"Array<Bucket<string, VarId>>_vtable_ty.559328"** %.78, align 8
+  %.80 = getelementptr inbounds %"Array<Bucket<string, VarId>>_vtable_ty.559328", %"Array<Bucket<string, VarId>>_vtable_ty.559328"* %.79, i64 0, i32 5
+  %.81 = load %"Bucket<string, VarId>.559325"* (%"Array<Bucket<string, VarId>>.559327"*, i64)*, %"Bucket<string, VarId>.559325"* (%"Array<Bucket<string, VarId>>.559327"*, i64)** %.80, align 8
+  %.82 = tail call %"Bucket<string, VarId>.559325"* %.81(%"Array<Bucket<string, VarId>>.559327"* nonnull %.10, i64 %storemerge29)
+  %.83 = getelementptr inbounds %"Bucket<string, VarId>.559325", %"Bucket<string, VarId>.559325"* %.82, i64 0, i32 1
+  %.84 = load %string.559062*, %string.559062** %.83, align 8
+  %.88 = load %"Array<Bucket<string, VarId>>_vtable_ty.559328"*, %"Array<Bucket<string, VarId>>_vtable_ty.559328"** %.78, align 8
+  %.89 = getelementptr inbounds %"Array<Bucket<string, VarId>>_vtable_ty.559328", %"Array<Bucket<string, VarId>>_vtable_ty.559328"* %.88, i64 0, i32 5
+  %.90 = load %"Bucket<string, VarId>.559325"* (%"Array<Bucket<string, VarId>>.559327"*, i64)*, %"Bucket<string, VarId>.559325"* (%"Array<Bucket<string, VarId>>.559327"*, i64)** %.89, align 8
+  %.91 = tail call %"Bucket<string, VarId>.559325"* %.90(%"Array<Bucket<string, VarId>>.559327"* nonnull %.10, i64 %storemerge29)
+  %.92 = getelementptr inbounds %"Bucket<string, VarId>.559325", %"Bucket<string, VarId>.559325"* %.91, i64 0, i32 2
+  %.93 = load %VarId.559286*, %VarId.559286** %.92, align 8
+  tail call void %.75(%"Map<string, VarId>.559320"* nonnull %.1, %string.559062* %.84, %VarId.559286* %.93)
+  %.99 = add nuw nsw i64 %storemerge29, 1
+  %.68 = load i64, i64* %.67, align 8
+  %.69 = icmp slt i64 %.99, %.68
+  br i1 %.69, label %for.body.1, label %for.end.1
 
 for.end.1:                                        ; preds = %for.body.1, %for.cond.1.preheader
   ret void
@@ -21420,74 +21424,74 @@ define void @"Map<string, VarId>_set"(%"Map<string, VarId>.559320"* %.1, %string
   %.15 = load i64, i64* %.14, align 8
   %.16 = sitofp i64 %.15 to double
   %.17 = fdiv double %.12, %.16
-  %.18 = fcmp ogt double %.17, 7.500000e-01
-  br i1 %.18, label %.5.if, label %.5.endif
+  %.20 = fcmp ogt double %.17, 7.500000e-01
+  br i1 %.20, label %.5.if, label %.5.endif
 
 .5.if:                                            ; preds = %.5
-  %.21 = getelementptr inbounds %"Map<string, VarId>.559320", %"Map<string, VarId>.559320"* %.1, i64 0, i32 0
-  %.22 = load %"Map<string, VarId>_vtable_ty.559324"*, %"Map<string, VarId>_vtable_ty.559324"** %.21, align 8
-  %.23 = getelementptr inbounds %"Map<string, VarId>_vtable_ty.559324", %"Map<string, VarId>_vtable_ty.559324"* %.22, i64 0, i32 1
-  %.24 = load void (%"Map<string, VarId>.559320"*)*, void (%"Map<string, VarId>.559320"*)** %.23, align 8
-  tail call void %.24(%"Map<string, VarId>.559320"* nonnull %.1)
+  %.23 = getelementptr inbounds %"Map<string, VarId>.559320", %"Map<string, VarId>.559320"* %.1, i64 0, i32 0
+  %.24 = load %"Map<string, VarId>_vtable_ty.559324"*, %"Map<string, VarId>_vtable_ty.559324"** %.23, align 8
+  %.25 = getelementptr inbounds %"Map<string, VarId>_vtable_ty.559324", %"Map<string, VarId>_vtable_ty.559324"* %.24, i64 0, i32 1
+  %.26 = load void (%"Map<string, VarId>.559320"*)*, void (%"Map<string, VarId>.559320"*)** %.25, align 8
+  tail call void %.26(%"Map<string, VarId>.559320"* nonnull %.1)
   br label %.5.endif
 
 .5.endif:                                         ; preds = %.5.if, %.5
-  %.28 = getelementptr inbounds %"Map<string, VarId>.559320", %"Map<string, VarId>.559320"* %.1, i64 0, i32 0
-  %.29 = load %"Map<string, VarId>_vtable_ty.559324"*, %"Map<string, VarId>_vtable_ty.559324"** %.28, align 8
-  %.30 = getelementptr inbounds %"Map<string, VarId>_vtable_ty.559324", %"Map<string, VarId>_vtable_ty.559324"* %.29, i64 0, i32 0
-  %.31 = load i64 (%"Map<string, VarId>.559320"*, %string.559062*)*, i64 (%"Map<string, VarId>.559320"*, %string.559062*)** %.30, align 8
-  %.33 = tail call i64 %.31(%"Map<string, VarId>.559320"* nonnull %.1, %string.559062* %.2)
-  %.36 = load i64, i64* %.14, align 8
-  %.37 = srem i64 %.33, %.36
-  %.41 = getelementptr inbounds %"Map<string, VarId>.559320", %"Map<string, VarId>.559320"* %.1, i64 0, i32 1
-  %.42 = load %"Bucket<string, VarId>.559325"**, %"Bucket<string, VarId>.559325"*** %.41, align 8
-  %.43 = getelementptr inbounds %"Bucket<string, VarId>.559325"*, %"Bucket<string, VarId>.559325"** %.42, i64 %.37
-  %.44 = load %"Bucket<string, VarId>.559325"*, %"Bucket<string, VarId>.559325"** %.43, align 8
-  %.45 = getelementptr inbounds %"Bucket<string, VarId>.559325", %"Bucket<string, VarId>.559325"* %.44, i64 0, i32 3
-  %.46 = load i1, i1* %.45, align 1
-  br i1 %.46, label %while.exit, label %while.entry
+  %.30 = getelementptr inbounds %"Map<string, VarId>.559320", %"Map<string, VarId>.559320"* %.1, i64 0, i32 0
+  %.31 = load %"Map<string, VarId>_vtable_ty.559324"*, %"Map<string, VarId>_vtable_ty.559324"** %.30, align 8
+  %.32 = getelementptr inbounds %"Map<string, VarId>_vtable_ty.559324", %"Map<string, VarId>_vtable_ty.559324"* %.31, i64 0, i32 0
+  %.33 = load i64 (%"Map<string, VarId>.559320"*, %string.559062*)*, i64 (%"Map<string, VarId>.559320"*, %string.559062*)** %.32, align 8
+  %.35 = tail call i64 %.33(%"Map<string, VarId>.559320"* nonnull %.1, %string.559062* %.2)
+  %.38 = load i64, i64* %.14, align 8
+  %.39 = srem i64 %.35, %.38
+  %.43 = getelementptr inbounds %"Map<string, VarId>.559320", %"Map<string, VarId>.559320"* %.1, i64 0, i32 1
+  %.44 = load %"Bucket<string, VarId>.559325"**, %"Bucket<string, VarId>.559325"*** %.43, align 8
+  %.45 = getelementptr inbounds %"Bucket<string, VarId>.559325"*, %"Bucket<string, VarId>.559325"** %.44, i64 %.39
+  %.46 = load %"Bucket<string, VarId>.559325"*, %"Bucket<string, VarId>.559325"** %.45, align 8
+  %.47 = getelementptr inbounds %"Bucket<string, VarId>.559325", %"Bucket<string, VarId>.559325"* %.46, i64 0, i32 3
+  %.48 = load i1, i1* %.47, align 1
+  br i1 %.48, label %while.exit, label %while.entry
 
 while.entry:                                      ; preds = %.5.endif, %while.entry.endif
-  %.54 = phi %"Bucket<string, VarId>.559325"* [ %.77, %while.entry.endif ], [ %.44, %.5.endif ]
-  %.701 = phi i64 [ %.70, %while.entry.endif ], [ %.37, %.5.endif ]
-  %.55 = getelementptr inbounds %"Bucket<string, VarId>.559325", %"Bucket<string, VarId>.559325"* %.54, i64 0, i32 1
-  %.56 = load %string.559062*, %string.559062** %.55, align 8
-  %.58 = getelementptr inbounds %string.559062, %string.559062* %.56, i64 0, i32 0
-  %.59 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.58, align 8
-  %.60 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.59, i64 0, i32 4
-  %.61 = load i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)** %.60, align 8
-  %.62 = tail call i1 %.61(%string.559062* %.56, %string.559062* %.2)
-  br i1 %.62, label %while.entry.while.exit.loopexit_crit_edge, label %while.entry.endif
+  %.56 = phi %"Bucket<string, VarId>.559325"* [ %.79, %while.entry.endif ], [ %.46, %.5.endif ]
+  %.721 = phi i64 [ %.72, %while.entry.endif ], [ %.39, %.5.endif ]
+  %.57 = getelementptr inbounds %"Bucket<string, VarId>.559325", %"Bucket<string, VarId>.559325"* %.56, i64 0, i32 1
+  %.58 = load %string.559062*, %string.559062** %.57, align 8
+  %.60 = getelementptr inbounds %string.559062, %string.559062* %.58, i64 0, i32 0
+  %.61 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.60, align 8
+  %.62 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.61, i64 0, i32 4
+  %.63 = load i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)** %.62, align 8
+  %.64 = tail call i1 %.63(%string.559062* %.58, %string.559062* %.2)
+  br i1 %.64, label %while.entry.while.exit.loopexit_crit_edge, label %while.entry.endif
 
 while.entry.while.exit.loopexit_crit_edge:        ; preds = %while.entry
-  %.92.pre.pre = load %"Bucket<string, VarId>.559325"**, %"Bucket<string, VarId>.559325"*** %.41, align 8
+  %.94.pre.pre = load %"Bucket<string, VarId>.559325"**, %"Bucket<string, VarId>.559325"*** %.43, align 8
   br label %while.exit
 
 while.exit:                                       ; preds = %while.entry.endif, %while.entry.while.exit.loopexit_crit_edge, %.5.endif
-  %.92 = phi %"Bucket<string, VarId>.559325"** [ %.42, %.5.endif ], [ %.92.pre.pre, %while.entry.while.exit.loopexit_crit_edge ], [ %.75, %while.entry.endif ]
-  %.89 = phi i64 [ %.37, %.5.endif ], [ %.701, %while.entry.while.exit.loopexit_crit_edge ], [ %.70, %while.entry.endif ]
-  %.84 = load i64, i64* %.10, align 8
-  %.85 = add i64 %.84, 1
-  store i64 %.85, i64* %.10, align 8
-  %.93 = getelementptr inbounds %"Bucket<string, VarId>.559325"*, %"Bucket<string, VarId>.559325"** %.92, i64 %.89
-  %.94 = load %"Bucket<string, VarId>.559325"*, %"Bucket<string, VarId>.559325"** %.93, align 8
-  %.95 = getelementptr inbounds %"Bucket<string, VarId>.559325", %"Bucket<string, VarId>.559325"* %.94, i64 0, i32 0
-  %.96 = load %"Bucket<string, VarId>_vtable_ty.559326"*, %"Bucket<string, VarId>_vtable_ty.559326"** %.95, align 8
-  %.97 = getelementptr inbounds %"Bucket<string, VarId>_vtable_ty.559326", %"Bucket<string, VarId>_vtable_ty.559326"* %.96, i64 0, i32 0
-  %.98 = load void (%"Bucket<string, VarId>.559325"*, %string.559062*, %VarId.559286*)*, void (%"Bucket<string, VarId>.559325"*, %string.559062*, %VarId.559286*)** %.97, align 8
-  tail call void %.98(%"Bucket<string, VarId>.559325"* %.94, %string.559062* %.2, %VarId.559286* %.3)
+  %.94 = phi %"Bucket<string, VarId>.559325"** [ %.44, %.5.endif ], [ %.94.pre.pre, %while.entry.while.exit.loopexit_crit_edge ], [ %.77, %while.entry.endif ]
+  %.91 = phi i64 [ %.39, %.5.endif ], [ %.721, %while.entry.while.exit.loopexit_crit_edge ], [ %.72, %while.entry.endif ]
+  %.86 = load i64, i64* %.10, align 8
+  %.87 = add i64 %.86, 1
+  store i64 %.87, i64* %.10, align 8
+  %.95 = getelementptr inbounds %"Bucket<string, VarId>.559325"*, %"Bucket<string, VarId>.559325"** %.94, i64 %.91
+  %.96 = load %"Bucket<string, VarId>.559325"*, %"Bucket<string, VarId>.559325"** %.95, align 8
+  %.97 = getelementptr inbounds %"Bucket<string, VarId>.559325", %"Bucket<string, VarId>.559325"* %.96, i64 0, i32 0
+  %.98 = load %"Bucket<string, VarId>_vtable_ty.559326"*, %"Bucket<string, VarId>_vtable_ty.559326"** %.97, align 8
+  %.99 = getelementptr inbounds %"Bucket<string, VarId>_vtable_ty.559326", %"Bucket<string, VarId>_vtable_ty.559326"* %.98, i64 0, i32 0
+  %.100 = load void (%"Bucket<string, VarId>.559325"*, %string.559062*, %VarId.559286*)*, void (%"Bucket<string, VarId>.559325"*, %string.559062*, %VarId.559286*)** %.99, align 8
+  tail call void %.100(%"Bucket<string, VarId>.559325"* %.96, %string.559062* %.2, %VarId.559286* %.3)
   ret void
 
 while.entry.endif:                                ; preds = %while.entry
-  %.66 = add i64 %.701, 1
-  %.69 = load i64, i64* %.14, align 8
-  %.70 = srem i64 %.66, %.69
-  %.75 = load %"Bucket<string, VarId>.559325"**, %"Bucket<string, VarId>.559325"*** %.41, align 8
-  %.76 = getelementptr inbounds %"Bucket<string, VarId>.559325"*, %"Bucket<string, VarId>.559325"** %.75, i64 %.70
-  %.77 = load %"Bucket<string, VarId>.559325"*, %"Bucket<string, VarId>.559325"** %.76, align 8
-  %.78 = getelementptr inbounds %"Bucket<string, VarId>.559325", %"Bucket<string, VarId>.559325"* %.77, i64 0, i32 3
-  %.79 = load i1, i1* %.78, align 1
-  br i1 %.79, label %while.exit, label %while.entry
+  %.68 = add i64 %.721, 1
+  %.71 = load i64, i64* %.14, align 8
+  %.72 = srem i64 %.68, %.71
+  %.77 = load %"Bucket<string, VarId>.559325"**, %"Bucket<string, VarId>.559325"*** %.43, align 8
+  %.78 = getelementptr inbounds %"Bucket<string, VarId>.559325"*, %"Bucket<string, VarId>.559325"** %.77, i64 %.72
+  %.79 = load %"Bucket<string, VarId>.559325"*, %"Bucket<string, VarId>.559325"** %.78, align 8
+  %.80 = getelementptr inbounds %"Bucket<string, VarId>.559325", %"Bucket<string, VarId>.559325"* %.79, i64 0, i32 3
+  %.81 = load i1, i1* %.80, align 1
+  br i1 %.81, label %while.exit, label %while.entry
 }
 
 define %VarId.559286* @"Map<string, VarId>_get"(%"Map<string, VarId>.559320"* %.1, %string.559062* %.2) {
@@ -21993,85 +21997,87 @@ for.end.thread:                                   ; preds = %.4
 
 define void @"Map<string, ClassId>_resize"(%"Map<string, ClassId>.559321"* %.1) {
 .3:
-  %.10 = getelementptr inbounds %"Map<string, ClassId>.559321", %"Map<string, ClassId>.559321"* %.1, i64 0, i32 0
-  %.11 = load %"Map<string, ClassId>_vtable_ty.559329"*, %"Map<string, ClassId>_vtable_ty.559329"** %.10, align 8
-  %.12 = getelementptr inbounds %"Map<string, ClassId>_vtable_ty.559329", %"Map<string, ClassId>_vtable_ty.559329"* %.11, i64 0, i32 4
-  %.13 = load %"Array<Bucket<string, ClassId>>.559332"* (%"Map<string, ClassId>.559321"*)*, %"Array<Bucket<string, ClassId>>.559332"* (%"Map<string, ClassId>.559321"*)** %.12, align 8
-  %.14 = tail call %"Array<Bucket<string, ClassId>>.559332"* %.13(%"Map<string, ClassId>.559321"* %.1)
-  %.18 = getelementptr inbounds %"Map<string, ClassId>.559321", %"Map<string, ClassId>.559321"* %.1, i64 0, i32 3
-  %.19 = load i64, i64* %.18, align 8
-  %.20 = shl i64 %.19, 1
-  store i64 %.20, i64* %.18, align 8
-  %.25 = getelementptr inbounds %"Map<string, ClassId>.559321", %"Map<string, ClassId>.559321"* %.1, i64 0, i32 1
-  %0 = bitcast %"Bucket<string, ClassId>.559330"*** %.25 to i8**
-  %.261 = load i8*, i8** %0, align 8
-  %.30 = shl i64 %.19, 4
-  %.32 = tail call i8* @realloc(i8* %.261, i64 %.30)
-  store i8* %.32, i8** %0, align 8
-  %.4210 = load i64, i64* %.18, align 8
-  %.4311 = icmp sgt i64 %.4210, 0
-  br i1 %.4311, label %for.body.preheader, label %for.cond.1.preheader
+  %.6 = getelementptr inbounds %"Map<string, ClassId>.559321", %"Map<string, ClassId>.559321"* %.1, i64 0, i32 0
+  %.7 = load %"Map<string, ClassId>_vtable_ty.559329"*, %"Map<string, ClassId>_vtable_ty.559329"** %.6, align 8
+  %.8 = getelementptr inbounds %"Map<string, ClassId>_vtable_ty.559329", %"Map<string, ClassId>_vtable_ty.559329"* %.7, i64 0, i32 4
+  %.9 = load %"Array<Bucket<string, ClassId>>.559332"* (%"Map<string, ClassId>.559321"*)*, %"Array<Bucket<string, ClassId>>.559332"* (%"Map<string, ClassId>.559321"*)** %.8, align 8
+  %.10 = tail call %"Array<Bucket<string, ClassId>>.559332"* %.9(%"Map<string, ClassId>.559321"* %.1)
+  %.14 = getelementptr inbounds %"Map<string, ClassId>.559321", %"Map<string, ClassId>.559321"* %.1, i64 0, i32 3
+  %.15 = load i64, i64* %.14, align 8
+  %.16 = shl i64 %.15, 1
+  store i64 %.16, i64* %.14, align 8
+  %.20 = getelementptr inbounds %"Map<string, ClassId>.559321", %"Map<string, ClassId>.559321"* %.1, i64 0, i32 2
+  store i64 0, i64* %.20, align 8
+  %.24 = getelementptr inbounds %"Map<string, ClassId>.559321", %"Map<string, ClassId>.559321"* %.1, i64 0, i32 1
+  %0 = bitcast %"Bucket<string, ClassId>.559330"*** %.24 to i8**
+  %.251 = load i8*, i8** %0, align 8
+  %.29 = shl i64 %.15, 4
+  %.31 = tail call i8* @realloc(i8* %.251, i64 %.29)
+  store i8* %.31, i8** %0, align 8
+  %.4110 = load i64, i64* %.14, align 8
+  %.4211 = icmp sgt i64 %.4110, 0
+  br i1 %.4211, label %for.body.preheader, label %for.cond.1.preheader
 
 for.body.preheader:                               ; preds = %.3
-  %.4914 = tail call dereferenceable_or_null(32) i8* @malloc(i64 32)
-  %.5015 = bitcast i8* %.4914 to %"Bucket<string, ClassId>.559330"*
-  %.5116 = bitcast i8* %.4914 to %"Bucket<string, ClassId>_vtable_ty.559331"**
-  store %"Bucket<string, ClassId>_vtable_ty.559331"* @"Bucket<string, ClassId>_vtable_data", %"Bucket<string, ClassId>_vtable_ty.559331"** %.5116, align 8
-  tail call void @"Bucket<string, ClassId>_constructor"(%"Bucket<string, ClassId>.559330"* %.5015)
-  %1 = bitcast i8* %.32 to i8**
-  store i8* %.4914, i8** %1, align 8
-  %.4217 = load i64, i64* %.18, align 8
-  %.4318 = icmp sgt i64 %.4217, 1
-  br i1 %.4318, label %for.body.for.body_crit_edge, label %for.cond.1.preheader
+  %.4814 = tail call dereferenceable_or_null(32) i8* @malloc(i64 32)
+  %.4915 = bitcast i8* %.4814 to %"Bucket<string, ClassId>.559330"*
+  %.5016 = bitcast i8* %.4814 to %"Bucket<string, ClassId>_vtable_ty.559331"**
+  store %"Bucket<string, ClassId>_vtable_ty.559331"* @"Bucket<string, ClassId>_vtable_data", %"Bucket<string, ClassId>_vtable_ty.559331"** %.5016, align 8
+  tail call void @"Bucket<string, ClassId>_constructor"(%"Bucket<string, ClassId>.559330"* %.4915)
+  %1 = bitcast i8* %.31 to i8**
+  store i8* %.4814, i8** %1, align 8
+  %.4117 = load i64, i64* %.14, align 8
+  %.4218 = icmp sgt i64 %.4117, 1
+  br i1 %.4218, label %for.body.for.body_crit_edge, label %for.cond.1.preheader
 
 for.cond.1.preheader:                             ; preds = %for.body.for.body_crit_edge, %for.body.preheader, %.3
-  %.68 = getelementptr inbounds %"Array<Bucket<string, ClassId>>.559332", %"Array<Bucket<string, ClassId>>.559332"* %.14, i64 0, i32 2
-  %.697 = load i64, i64* %.68, align 8
-  %.708 = icmp sgt i64 %.697, 0
-  br i1 %.708, label %for.body.1.lr.ph, label %for.end.1
+  %.67 = getelementptr inbounds %"Array<Bucket<string, ClassId>>.559332", %"Array<Bucket<string, ClassId>>.559332"* %.10, i64 0, i32 2
+  %.687 = load i64, i64* %.67, align 8
+  %.698 = icmp sgt i64 %.687, 0
+  br i1 %.698, label %for.body.1.lr.ph, label %for.end.1
 
 for.body.1.lr.ph:                                 ; preds = %for.cond.1.preheader
-  %.79 = getelementptr inbounds %"Array<Bucket<string, ClassId>>.559332", %"Array<Bucket<string, ClassId>>.559332"* %.14, i64 0, i32 0
+  %.78 = getelementptr inbounds %"Array<Bucket<string, ClassId>>.559332", %"Array<Bucket<string, ClassId>>.559332"* %.10, i64 0, i32 0
   br label %for.body.1
 
 for.body.for.body_crit_edge:                      ; preds = %for.body.preheader, %for.body.for.body_crit_edge
-  %.6019 = phi i64 [ %.60, %for.body.for.body_crit_edge ], [ 1, %for.body.preheader ]
-  %.48.pre = load %"Bucket<string, ClassId>.559330"**, %"Bucket<string, ClassId>.559330"*** %.25, align 8
-  %.49 = tail call dereferenceable_or_null(32) i8* @malloc(i64 32)
-  %.50 = bitcast i8* %.49 to %"Bucket<string, ClassId>.559330"*
-  %.51 = bitcast i8* %.49 to %"Bucket<string, ClassId>_vtable_ty.559331"**
-  store %"Bucket<string, ClassId>_vtable_ty.559331"* @"Bucket<string, ClassId>_vtable_data", %"Bucket<string, ClassId>_vtable_ty.559331"** %.51, align 8
-  tail call void @"Bucket<string, ClassId>_constructor"(%"Bucket<string, ClassId>.559330"* %.50)
-  %.54 = getelementptr inbounds %"Bucket<string, ClassId>.559330"*, %"Bucket<string, ClassId>.559330"** %.48.pre, i64 %.6019
-  %2 = bitcast %"Bucket<string, ClassId>.559330"** %.54 to i8**
-  store i8* %.49, i8** %2, align 8
-  %.60 = add nuw nsw i64 %.6019, 1
-  %.42 = load i64, i64* %.18, align 8
-  %.43 = icmp slt i64 %.60, %.42
-  br i1 %.43, label %for.body.for.body_crit_edge, label %for.cond.1.preheader
+  %.5919 = phi i64 [ %.59, %for.body.for.body_crit_edge ], [ 1, %for.body.preheader ]
+  %.47.pre = load %"Bucket<string, ClassId>.559330"**, %"Bucket<string, ClassId>.559330"*** %.24, align 8
+  %.48 = tail call dereferenceable_or_null(32) i8* @malloc(i64 32)
+  %.49 = bitcast i8* %.48 to %"Bucket<string, ClassId>.559330"*
+  %.50 = bitcast i8* %.48 to %"Bucket<string, ClassId>_vtable_ty.559331"**
+  store %"Bucket<string, ClassId>_vtable_ty.559331"* @"Bucket<string, ClassId>_vtable_data", %"Bucket<string, ClassId>_vtable_ty.559331"** %.50, align 8
+  tail call void @"Bucket<string, ClassId>_constructor"(%"Bucket<string, ClassId>.559330"* %.49)
+  %.53 = getelementptr inbounds %"Bucket<string, ClassId>.559330"*, %"Bucket<string, ClassId>.559330"** %.47.pre, i64 %.5919
+  %2 = bitcast %"Bucket<string, ClassId>.559330"** %.53 to i8**
+  store i8* %.48, i8** %2, align 8
+  %.59 = add nuw nsw i64 %.5919, 1
+  %.41 = load i64, i64* %.14, align 8
+  %.42 = icmp slt i64 %.59, %.41
+  br i1 %.42, label %for.body.for.body_crit_edge, label %for.cond.1.preheader
 
 for.body.1:                                       ; preds = %for.body.1.lr.ph, %for.body.1
-  %storemerge29 = phi i64 [ 0, %for.body.1.lr.ph ], [ %.100, %for.body.1 ]
-  %.74 = load %"Map<string, ClassId>_vtable_ty.559329"*, %"Map<string, ClassId>_vtable_ty.559329"** %.10, align 8
-  %.75 = getelementptr inbounds %"Map<string, ClassId>_vtable_ty.559329", %"Map<string, ClassId>_vtable_ty.559329"* %.74, i64 0, i32 2
-  %.76 = load void (%"Map<string, ClassId>.559321"*, %string.559062*, %ClassId.559242*)*, void (%"Map<string, ClassId>.559321"*, %string.559062*, %ClassId.559242*)** %.75, align 8
-  %.80 = load %"Array<Bucket<string, ClassId>>_vtable_ty.559333"*, %"Array<Bucket<string, ClassId>>_vtable_ty.559333"** %.79, align 8
-  %.81 = getelementptr inbounds %"Array<Bucket<string, ClassId>>_vtable_ty.559333", %"Array<Bucket<string, ClassId>>_vtable_ty.559333"* %.80, i64 0, i32 5
-  %.82 = load %"Bucket<string, ClassId>.559330"* (%"Array<Bucket<string, ClassId>>.559332"*, i64)*, %"Bucket<string, ClassId>.559330"* (%"Array<Bucket<string, ClassId>>.559332"*, i64)** %.81, align 8
-  %.83 = tail call %"Bucket<string, ClassId>.559330"* %.82(%"Array<Bucket<string, ClassId>>.559332"* nonnull %.14, i64 %storemerge29)
-  %.84 = getelementptr inbounds %"Bucket<string, ClassId>.559330", %"Bucket<string, ClassId>.559330"* %.83, i64 0, i32 1
-  %.85 = load %string.559062*, %string.559062** %.84, align 8
-  %.89 = load %"Array<Bucket<string, ClassId>>_vtable_ty.559333"*, %"Array<Bucket<string, ClassId>>_vtable_ty.559333"** %.79, align 8
-  %.90 = getelementptr inbounds %"Array<Bucket<string, ClassId>>_vtable_ty.559333", %"Array<Bucket<string, ClassId>>_vtable_ty.559333"* %.89, i64 0, i32 5
-  %.91 = load %"Bucket<string, ClassId>.559330"* (%"Array<Bucket<string, ClassId>>.559332"*, i64)*, %"Bucket<string, ClassId>.559330"* (%"Array<Bucket<string, ClassId>>.559332"*, i64)** %.90, align 8
-  %.92 = tail call %"Bucket<string, ClassId>.559330"* %.91(%"Array<Bucket<string, ClassId>>.559332"* nonnull %.14, i64 %storemerge29)
-  %.93 = getelementptr inbounds %"Bucket<string, ClassId>.559330", %"Bucket<string, ClassId>.559330"* %.92, i64 0, i32 2
-  %.94 = load %ClassId.559242*, %ClassId.559242** %.93, align 8
-  tail call void %.76(%"Map<string, ClassId>.559321"* nonnull %.1, %string.559062* %.85, %ClassId.559242* %.94)
-  %.100 = add nuw nsw i64 %storemerge29, 1
-  %.69 = load i64, i64* %.68, align 8
-  %.70 = icmp slt i64 %.100, %.69
-  br i1 %.70, label %for.body.1, label %for.end.1
+  %storemerge29 = phi i64 [ 0, %for.body.1.lr.ph ], [ %.99, %for.body.1 ]
+  %.73 = load %"Map<string, ClassId>_vtable_ty.559329"*, %"Map<string, ClassId>_vtable_ty.559329"** %.6, align 8
+  %.74 = getelementptr inbounds %"Map<string, ClassId>_vtable_ty.559329", %"Map<string, ClassId>_vtable_ty.559329"* %.73, i64 0, i32 2
+  %.75 = load void (%"Map<string, ClassId>.559321"*, %string.559062*, %ClassId.559242*)*, void (%"Map<string, ClassId>.559321"*, %string.559062*, %ClassId.559242*)** %.74, align 8
+  %.79 = load %"Array<Bucket<string, ClassId>>_vtable_ty.559333"*, %"Array<Bucket<string, ClassId>>_vtable_ty.559333"** %.78, align 8
+  %.80 = getelementptr inbounds %"Array<Bucket<string, ClassId>>_vtable_ty.559333", %"Array<Bucket<string, ClassId>>_vtable_ty.559333"* %.79, i64 0, i32 5
+  %.81 = load %"Bucket<string, ClassId>.559330"* (%"Array<Bucket<string, ClassId>>.559332"*, i64)*, %"Bucket<string, ClassId>.559330"* (%"Array<Bucket<string, ClassId>>.559332"*, i64)** %.80, align 8
+  %.82 = tail call %"Bucket<string, ClassId>.559330"* %.81(%"Array<Bucket<string, ClassId>>.559332"* nonnull %.10, i64 %storemerge29)
+  %.83 = getelementptr inbounds %"Bucket<string, ClassId>.559330", %"Bucket<string, ClassId>.559330"* %.82, i64 0, i32 1
+  %.84 = load %string.559062*, %string.559062** %.83, align 8
+  %.88 = load %"Array<Bucket<string, ClassId>>_vtable_ty.559333"*, %"Array<Bucket<string, ClassId>>_vtable_ty.559333"** %.78, align 8
+  %.89 = getelementptr inbounds %"Array<Bucket<string, ClassId>>_vtable_ty.559333", %"Array<Bucket<string, ClassId>>_vtable_ty.559333"* %.88, i64 0, i32 5
+  %.90 = load %"Bucket<string, ClassId>.559330"* (%"Array<Bucket<string, ClassId>>.559332"*, i64)*, %"Bucket<string, ClassId>.559330"* (%"Array<Bucket<string, ClassId>>.559332"*, i64)** %.89, align 8
+  %.91 = tail call %"Bucket<string, ClassId>.559330"* %.90(%"Array<Bucket<string, ClassId>>.559332"* nonnull %.10, i64 %storemerge29)
+  %.92 = getelementptr inbounds %"Bucket<string, ClassId>.559330", %"Bucket<string, ClassId>.559330"* %.91, i64 0, i32 2
+  %.93 = load %ClassId.559242*, %ClassId.559242** %.92, align 8
+  tail call void %.75(%"Map<string, ClassId>.559321"* nonnull %.1, %string.559062* %.84, %ClassId.559242* %.93)
+  %.99 = add nuw nsw i64 %storemerge29, 1
+  %.68 = load i64, i64* %.67, align 8
+  %.69 = icmp slt i64 %.99, %.68
+  br i1 %.69, label %for.body.1, label %for.end.1
 
 for.end.1:                                        ; preds = %for.body.1, %for.cond.1.preheader
   ret void
@@ -22086,74 +22092,74 @@ define void @"Map<string, ClassId>_set"(%"Map<string, ClassId>.559321"* %.1, %st
   %.15 = load i64, i64* %.14, align 8
   %.16 = sitofp i64 %.15 to double
   %.17 = fdiv double %.12, %.16
-  %.18 = fcmp ogt double %.17, 7.500000e-01
-  br i1 %.18, label %.5.if, label %.5.endif
+  %.20 = fcmp ogt double %.17, 7.500000e-01
+  br i1 %.20, label %.5.if, label %.5.endif
 
 .5.if:                                            ; preds = %.5
-  %.21 = getelementptr inbounds %"Map<string, ClassId>.559321", %"Map<string, ClassId>.559321"* %.1, i64 0, i32 0
-  %.22 = load %"Map<string, ClassId>_vtable_ty.559329"*, %"Map<string, ClassId>_vtable_ty.559329"** %.21, align 8
-  %.23 = getelementptr inbounds %"Map<string, ClassId>_vtable_ty.559329", %"Map<string, ClassId>_vtable_ty.559329"* %.22, i64 0, i32 1
-  %.24 = load void (%"Map<string, ClassId>.559321"*)*, void (%"Map<string, ClassId>.559321"*)** %.23, align 8
-  tail call void %.24(%"Map<string, ClassId>.559321"* nonnull %.1)
+  %.23 = getelementptr inbounds %"Map<string, ClassId>.559321", %"Map<string, ClassId>.559321"* %.1, i64 0, i32 0
+  %.24 = load %"Map<string, ClassId>_vtable_ty.559329"*, %"Map<string, ClassId>_vtable_ty.559329"** %.23, align 8
+  %.25 = getelementptr inbounds %"Map<string, ClassId>_vtable_ty.559329", %"Map<string, ClassId>_vtable_ty.559329"* %.24, i64 0, i32 1
+  %.26 = load void (%"Map<string, ClassId>.559321"*)*, void (%"Map<string, ClassId>.559321"*)** %.25, align 8
+  tail call void %.26(%"Map<string, ClassId>.559321"* nonnull %.1)
   br label %.5.endif
 
 .5.endif:                                         ; preds = %.5.if, %.5
-  %.28 = getelementptr inbounds %"Map<string, ClassId>.559321", %"Map<string, ClassId>.559321"* %.1, i64 0, i32 0
-  %.29 = load %"Map<string, ClassId>_vtable_ty.559329"*, %"Map<string, ClassId>_vtable_ty.559329"** %.28, align 8
-  %.30 = getelementptr inbounds %"Map<string, ClassId>_vtable_ty.559329", %"Map<string, ClassId>_vtable_ty.559329"* %.29, i64 0, i32 0
-  %.31 = load i64 (%"Map<string, ClassId>.559321"*, %string.559062*)*, i64 (%"Map<string, ClassId>.559321"*, %string.559062*)** %.30, align 8
-  %.33 = tail call i64 %.31(%"Map<string, ClassId>.559321"* nonnull %.1, %string.559062* %.2)
-  %.36 = load i64, i64* %.14, align 8
-  %.37 = srem i64 %.33, %.36
-  %.41 = getelementptr inbounds %"Map<string, ClassId>.559321", %"Map<string, ClassId>.559321"* %.1, i64 0, i32 1
-  %.42 = load %"Bucket<string, ClassId>.559330"**, %"Bucket<string, ClassId>.559330"*** %.41, align 8
-  %.43 = getelementptr inbounds %"Bucket<string, ClassId>.559330"*, %"Bucket<string, ClassId>.559330"** %.42, i64 %.37
-  %.44 = load %"Bucket<string, ClassId>.559330"*, %"Bucket<string, ClassId>.559330"** %.43, align 8
-  %.45 = getelementptr inbounds %"Bucket<string, ClassId>.559330", %"Bucket<string, ClassId>.559330"* %.44, i64 0, i32 3
-  %.46 = load i1, i1* %.45, align 1
-  br i1 %.46, label %while.exit, label %while.entry
+  %.30 = getelementptr inbounds %"Map<string, ClassId>.559321", %"Map<string, ClassId>.559321"* %.1, i64 0, i32 0
+  %.31 = load %"Map<string, ClassId>_vtable_ty.559329"*, %"Map<string, ClassId>_vtable_ty.559329"** %.30, align 8
+  %.32 = getelementptr inbounds %"Map<string, ClassId>_vtable_ty.559329", %"Map<string, ClassId>_vtable_ty.559329"* %.31, i64 0, i32 0
+  %.33 = load i64 (%"Map<string, ClassId>.559321"*, %string.559062*)*, i64 (%"Map<string, ClassId>.559321"*, %string.559062*)** %.32, align 8
+  %.35 = tail call i64 %.33(%"Map<string, ClassId>.559321"* nonnull %.1, %string.559062* %.2)
+  %.38 = load i64, i64* %.14, align 8
+  %.39 = srem i64 %.35, %.38
+  %.43 = getelementptr inbounds %"Map<string, ClassId>.559321", %"Map<string, ClassId>.559321"* %.1, i64 0, i32 1
+  %.44 = load %"Bucket<string, ClassId>.559330"**, %"Bucket<string, ClassId>.559330"*** %.43, align 8
+  %.45 = getelementptr inbounds %"Bucket<string, ClassId>.559330"*, %"Bucket<string, ClassId>.559330"** %.44, i64 %.39
+  %.46 = load %"Bucket<string, ClassId>.559330"*, %"Bucket<string, ClassId>.559330"** %.45, align 8
+  %.47 = getelementptr inbounds %"Bucket<string, ClassId>.559330", %"Bucket<string, ClassId>.559330"* %.46, i64 0, i32 3
+  %.48 = load i1, i1* %.47, align 1
+  br i1 %.48, label %while.exit, label %while.entry
 
 while.entry:                                      ; preds = %.5.endif, %while.entry.endif
-  %.54 = phi %"Bucket<string, ClassId>.559330"* [ %.77, %while.entry.endif ], [ %.44, %.5.endif ]
-  %.701 = phi i64 [ %.70, %while.entry.endif ], [ %.37, %.5.endif ]
-  %.55 = getelementptr inbounds %"Bucket<string, ClassId>.559330", %"Bucket<string, ClassId>.559330"* %.54, i64 0, i32 1
-  %.56 = load %string.559062*, %string.559062** %.55, align 8
-  %.58 = getelementptr inbounds %string.559062, %string.559062* %.56, i64 0, i32 0
-  %.59 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.58, align 8
-  %.60 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.59, i64 0, i32 4
-  %.61 = load i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)** %.60, align 8
-  %.62 = tail call i1 %.61(%string.559062* %.56, %string.559062* %.2)
-  br i1 %.62, label %while.entry.while.exit.loopexit_crit_edge, label %while.entry.endif
+  %.56 = phi %"Bucket<string, ClassId>.559330"* [ %.79, %while.entry.endif ], [ %.46, %.5.endif ]
+  %.721 = phi i64 [ %.72, %while.entry.endif ], [ %.39, %.5.endif ]
+  %.57 = getelementptr inbounds %"Bucket<string, ClassId>.559330", %"Bucket<string, ClassId>.559330"* %.56, i64 0, i32 1
+  %.58 = load %string.559062*, %string.559062** %.57, align 8
+  %.60 = getelementptr inbounds %string.559062, %string.559062* %.58, i64 0, i32 0
+  %.61 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.60, align 8
+  %.62 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.61, i64 0, i32 4
+  %.63 = load i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)** %.62, align 8
+  %.64 = tail call i1 %.63(%string.559062* %.58, %string.559062* %.2)
+  br i1 %.64, label %while.entry.while.exit.loopexit_crit_edge, label %while.entry.endif
 
 while.entry.while.exit.loopexit_crit_edge:        ; preds = %while.entry
-  %.92.pre.pre = load %"Bucket<string, ClassId>.559330"**, %"Bucket<string, ClassId>.559330"*** %.41, align 8
+  %.94.pre.pre = load %"Bucket<string, ClassId>.559330"**, %"Bucket<string, ClassId>.559330"*** %.43, align 8
   br label %while.exit
 
 while.exit:                                       ; preds = %while.entry.endif, %while.entry.while.exit.loopexit_crit_edge, %.5.endif
-  %.92 = phi %"Bucket<string, ClassId>.559330"** [ %.42, %.5.endif ], [ %.92.pre.pre, %while.entry.while.exit.loopexit_crit_edge ], [ %.75, %while.entry.endif ]
-  %.89 = phi i64 [ %.37, %.5.endif ], [ %.701, %while.entry.while.exit.loopexit_crit_edge ], [ %.70, %while.entry.endif ]
-  %.84 = load i64, i64* %.10, align 8
-  %.85 = add i64 %.84, 1
-  store i64 %.85, i64* %.10, align 8
-  %.93 = getelementptr inbounds %"Bucket<string, ClassId>.559330"*, %"Bucket<string, ClassId>.559330"** %.92, i64 %.89
-  %.94 = load %"Bucket<string, ClassId>.559330"*, %"Bucket<string, ClassId>.559330"** %.93, align 8
-  %.95 = getelementptr inbounds %"Bucket<string, ClassId>.559330", %"Bucket<string, ClassId>.559330"* %.94, i64 0, i32 0
-  %.96 = load %"Bucket<string, ClassId>_vtable_ty.559331"*, %"Bucket<string, ClassId>_vtable_ty.559331"** %.95, align 8
-  %.97 = getelementptr inbounds %"Bucket<string, ClassId>_vtable_ty.559331", %"Bucket<string, ClassId>_vtable_ty.559331"* %.96, i64 0, i32 0
-  %.98 = load void (%"Bucket<string, ClassId>.559330"*, %string.559062*, %ClassId.559242*)*, void (%"Bucket<string, ClassId>.559330"*, %string.559062*, %ClassId.559242*)** %.97, align 8
-  tail call void %.98(%"Bucket<string, ClassId>.559330"* %.94, %string.559062* %.2, %ClassId.559242* %.3)
+  %.94 = phi %"Bucket<string, ClassId>.559330"** [ %.44, %.5.endif ], [ %.94.pre.pre, %while.entry.while.exit.loopexit_crit_edge ], [ %.77, %while.entry.endif ]
+  %.91 = phi i64 [ %.39, %.5.endif ], [ %.721, %while.entry.while.exit.loopexit_crit_edge ], [ %.72, %while.entry.endif ]
+  %.86 = load i64, i64* %.10, align 8
+  %.87 = add i64 %.86, 1
+  store i64 %.87, i64* %.10, align 8
+  %.95 = getelementptr inbounds %"Bucket<string, ClassId>.559330"*, %"Bucket<string, ClassId>.559330"** %.94, i64 %.91
+  %.96 = load %"Bucket<string, ClassId>.559330"*, %"Bucket<string, ClassId>.559330"** %.95, align 8
+  %.97 = getelementptr inbounds %"Bucket<string, ClassId>.559330", %"Bucket<string, ClassId>.559330"* %.96, i64 0, i32 0
+  %.98 = load %"Bucket<string, ClassId>_vtable_ty.559331"*, %"Bucket<string, ClassId>_vtable_ty.559331"** %.97, align 8
+  %.99 = getelementptr inbounds %"Bucket<string, ClassId>_vtable_ty.559331", %"Bucket<string, ClassId>_vtable_ty.559331"* %.98, i64 0, i32 0
+  %.100 = load void (%"Bucket<string, ClassId>.559330"*, %string.559062*, %ClassId.559242*)*, void (%"Bucket<string, ClassId>.559330"*, %string.559062*, %ClassId.559242*)** %.99, align 8
+  tail call void %.100(%"Bucket<string, ClassId>.559330"* %.96, %string.559062* %.2, %ClassId.559242* %.3)
   ret void
 
 while.entry.endif:                                ; preds = %while.entry
-  %.66 = add i64 %.701, 1
-  %.69 = load i64, i64* %.14, align 8
-  %.70 = srem i64 %.66, %.69
-  %.75 = load %"Bucket<string, ClassId>.559330"**, %"Bucket<string, ClassId>.559330"*** %.41, align 8
-  %.76 = getelementptr inbounds %"Bucket<string, ClassId>.559330"*, %"Bucket<string, ClassId>.559330"** %.75, i64 %.70
-  %.77 = load %"Bucket<string, ClassId>.559330"*, %"Bucket<string, ClassId>.559330"** %.76, align 8
-  %.78 = getelementptr inbounds %"Bucket<string, ClassId>.559330", %"Bucket<string, ClassId>.559330"* %.77, i64 0, i32 3
-  %.79 = load i1, i1* %.78, align 1
-  br i1 %.79, label %while.exit, label %while.entry
+  %.68 = add i64 %.721, 1
+  %.71 = load i64, i64* %.14, align 8
+  %.72 = srem i64 %.68, %.71
+  %.77 = load %"Bucket<string, ClassId>.559330"**, %"Bucket<string, ClassId>.559330"*** %.43, align 8
+  %.78 = getelementptr inbounds %"Bucket<string, ClassId>.559330"*, %"Bucket<string, ClassId>.559330"** %.77, i64 %.72
+  %.79 = load %"Bucket<string, ClassId>.559330"*, %"Bucket<string, ClassId>.559330"** %.78, align 8
+  %.80 = getelementptr inbounds %"Bucket<string, ClassId>.559330", %"Bucket<string, ClassId>.559330"* %.79, i64 0, i32 3
+  %.81 = load i1, i1* %.80, align 1
+  br i1 %.81, label %while.exit, label %while.entry
 }
 
 define %ClassId.559242* @"Map<string, ClassId>_get"(%"Map<string, ClassId>.559321"* %.1, %string.559062* %.2) {
@@ -22659,85 +22665,87 @@ for.end.thread:                                   ; preds = %.4
 
 define void @"Map<string, EnumId>_resize"(%"Map<string, EnumId>.559322"* %.1) {
 .3:
-  %.10 = getelementptr inbounds %"Map<string, EnumId>.559322", %"Map<string, EnumId>.559322"* %.1, i64 0, i32 0
-  %.11 = load %"Map<string, EnumId>_vtable_ty.559334"*, %"Map<string, EnumId>_vtable_ty.559334"** %.10, align 8
-  %.12 = getelementptr inbounds %"Map<string, EnumId>_vtable_ty.559334", %"Map<string, EnumId>_vtable_ty.559334"* %.11, i64 0, i32 4
-  %.13 = load %"Array<Bucket<string, EnumId>>.559337"* (%"Map<string, EnumId>.559322"*)*, %"Array<Bucket<string, EnumId>>.559337"* (%"Map<string, EnumId>.559322"*)** %.12, align 8
-  %.14 = tail call %"Array<Bucket<string, EnumId>>.559337"* %.13(%"Map<string, EnumId>.559322"* %.1)
-  %.18 = getelementptr inbounds %"Map<string, EnumId>.559322", %"Map<string, EnumId>.559322"* %.1, i64 0, i32 3
-  %.19 = load i64, i64* %.18, align 8
-  %.20 = shl i64 %.19, 1
-  store i64 %.20, i64* %.18, align 8
-  %.25 = getelementptr inbounds %"Map<string, EnumId>.559322", %"Map<string, EnumId>.559322"* %.1, i64 0, i32 1
-  %0 = bitcast %"Bucket<string, EnumId>.559335"*** %.25 to i8**
-  %.261 = load i8*, i8** %0, align 8
-  %.30 = shl i64 %.19, 4
-  %.32 = tail call i8* @realloc(i8* %.261, i64 %.30)
-  store i8* %.32, i8** %0, align 8
-  %.4210 = load i64, i64* %.18, align 8
-  %.4311 = icmp sgt i64 %.4210, 0
-  br i1 %.4311, label %for.body.preheader, label %for.cond.1.preheader
+  %.6 = getelementptr inbounds %"Map<string, EnumId>.559322", %"Map<string, EnumId>.559322"* %.1, i64 0, i32 0
+  %.7 = load %"Map<string, EnumId>_vtable_ty.559334"*, %"Map<string, EnumId>_vtable_ty.559334"** %.6, align 8
+  %.8 = getelementptr inbounds %"Map<string, EnumId>_vtable_ty.559334", %"Map<string, EnumId>_vtable_ty.559334"* %.7, i64 0, i32 4
+  %.9 = load %"Array<Bucket<string, EnumId>>.559337"* (%"Map<string, EnumId>.559322"*)*, %"Array<Bucket<string, EnumId>>.559337"* (%"Map<string, EnumId>.559322"*)** %.8, align 8
+  %.10 = tail call %"Array<Bucket<string, EnumId>>.559337"* %.9(%"Map<string, EnumId>.559322"* %.1)
+  %.14 = getelementptr inbounds %"Map<string, EnumId>.559322", %"Map<string, EnumId>.559322"* %.1, i64 0, i32 3
+  %.15 = load i64, i64* %.14, align 8
+  %.16 = shl i64 %.15, 1
+  store i64 %.16, i64* %.14, align 8
+  %.20 = getelementptr inbounds %"Map<string, EnumId>.559322", %"Map<string, EnumId>.559322"* %.1, i64 0, i32 2
+  store i64 0, i64* %.20, align 8
+  %.24 = getelementptr inbounds %"Map<string, EnumId>.559322", %"Map<string, EnumId>.559322"* %.1, i64 0, i32 1
+  %0 = bitcast %"Bucket<string, EnumId>.559335"*** %.24 to i8**
+  %.251 = load i8*, i8** %0, align 8
+  %.29 = shl i64 %.15, 4
+  %.31 = tail call i8* @realloc(i8* %.251, i64 %.29)
+  store i8* %.31, i8** %0, align 8
+  %.4110 = load i64, i64* %.14, align 8
+  %.4211 = icmp sgt i64 %.4110, 0
+  br i1 %.4211, label %for.body.preheader, label %for.cond.1.preheader
 
 for.body.preheader:                               ; preds = %.3
-  %.4914 = tail call dereferenceable_or_null(32) i8* @malloc(i64 32)
-  %.5015 = bitcast i8* %.4914 to %"Bucket<string, EnumId>.559335"*
-  %.5116 = bitcast i8* %.4914 to %"Bucket<string, EnumId>_vtable_ty.559336"**
-  store %"Bucket<string, EnumId>_vtable_ty.559336"* @"Bucket<string, EnumId>_vtable_data", %"Bucket<string, EnumId>_vtable_ty.559336"** %.5116, align 8
-  tail call void @"Bucket<string, EnumId>_constructor"(%"Bucket<string, EnumId>.559335"* %.5015)
-  %1 = bitcast i8* %.32 to i8**
-  store i8* %.4914, i8** %1, align 8
-  %.4217 = load i64, i64* %.18, align 8
-  %.4318 = icmp sgt i64 %.4217, 1
-  br i1 %.4318, label %for.body.for.body_crit_edge, label %for.cond.1.preheader
+  %.4814 = tail call dereferenceable_or_null(32) i8* @malloc(i64 32)
+  %.4915 = bitcast i8* %.4814 to %"Bucket<string, EnumId>.559335"*
+  %.5016 = bitcast i8* %.4814 to %"Bucket<string, EnumId>_vtable_ty.559336"**
+  store %"Bucket<string, EnumId>_vtable_ty.559336"* @"Bucket<string, EnumId>_vtable_data", %"Bucket<string, EnumId>_vtable_ty.559336"** %.5016, align 8
+  tail call void @"Bucket<string, EnumId>_constructor"(%"Bucket<string, EnumId>.559335"* %.4915)
+  %1 = bitcast i8* %.31 to i8**
+  store i8* %.4814, i8** %1, align 8
+  %.4117 = load i64, i64* %.14, align 8
+  %.4218 = icmp sgt i64 %.4117, 1
+  br i1 %.4218, label %for.body.for.body_crit_edge, label %for.cond.1.preheader
 
 for.cond.1.preheader:                             ; preds = %for.body.for.body_crit_edge, %for.body.preheader, %.3
-  %.68 = getelementptr inbounds %"Array<Bucket<string, EnumId>>.559337", %"Array<Bucket<string, EnumId>>.559337"* %.14, i64 0, i32 2
-  %.697 = load i64, i64* %.68, align 8
-  %.708 = icmp sgt i64 %.697, 0
-  br i1 %.708, label %for.body.1.lr.ph, label %for.end.1
+  %.67 = getelementptr inbounds %"Array<Bucket<string, EnumId>>.559337", %"Array<Bucket<string, EnumId>>.559337"* %.10, i64 0, i32 2
+  %.687 = load i64, i64* %.67, align 8
+  %.698 = icmp sgt i64 %.687, 0
+  br i1 %.698, label %for.body.1.lr.ph, label %for.end.1
 
 for.body.1.lr.ph:                                 ; preds = %for.cond.1.preheader
-  %.79 = getelementptr inbounds %"Array<Bucket<string, EnumId>>.559337", %"Array<Bucket<string, EnumId>>.559337"* %.14, i64 0, i32 0
+  %.78 = getelementptr inbounds %"Array<Bucket<string, EnumId>>.559337", %"Array<Bucket<string, EnumId>>.559337"* %.10, i64 0, i32 0
   br label %for.body.1
 
 for.body.for.body_crit_edge:                      ; preds = %for.body.preheader, %for.body.for.body_crit_edge
-  %.6019 = phi i64 [ %.60, %for.body.for.body_crit_edge ], [ 1, %for.body.preheader ]
-  %.48.pre = load %"Bucket<string, EnumId>.559335"**, %"Bucket<string, EnumId>.559335"*** %.25, align 8
-  %.49 = tail call dereferenceable_or_null(32) i8* @malloc(i64 32)
-  %.50 = bitcast i8* %.49 to %"Bucket<string, EnumId>.559335"*
-  %.51 = bitcast i8* %.49 to %"Bucket<string, EnumId>_vtable_ty.559336"**
-  store %"Bucket<string, EnumId>_vtable_ty.559336"* @"Bucket<string, EnumId>_vtable_data", %"Bucket<string, EnumId>_vtable_ty.559336"** %.51, align 8
-  tail call void @"Bucket<string, EnumId>_constructor"(%"Bucket<string, EnumId>.559335"* %.50)
-  %.54 = getelementptr inbounds %"Bucket<string, EnumId>.559335"*, %"Bucket<string, EnumId>.559335"** %.48.pre, i64 %.6019
-  %2 = bitcast %"Bucket<string, EnumId>.559335"** %.54 to i8**
-  store i8* %.49, i8** %2, align 8
-  %.60 = add nuw nsw i64 %.6019, 1
-  %.42 = load i64, i64* %.18, align 8
-  %.43 = icmp slt i64 %.60, %.42
-  br i1 %.43, label %for.body.for.body_crit_edge, label %for.cond.1.preheader
+  %.5919 = phi i64 [ %.59, %for.body.for.body_crit_edge ], [ 1, %for.body.preheader ]
+  %.47.pre = load %"Bucket<string, EnumId>.559335"**, %"Bucket<string, EnumId>.559335"*** %.24, align 8
+  %.48 = tail call dereferenceable_or_null(32) i8* @malloc(i64 32)
+  %.49 = bitcast i8* %.48 to %"Bucket<string, EnumId>.559335"*
+  %.50 = bitcast i8* %.48 to %"Bucket<string, EnumId>_vtable_ty.559336"**
+  store %"Bucket<string, EnumId>_vtable_ty.559336"* @"Bucket<string, EnumId>_vtable_data", %"Bucket<string, EnumId>_vtable_ty.559336"** %.50, align 8
+  tail call void @"Bucket<string, EnumId>_constructor"(%"Bucket<string, EnumId>.559335"* %.49)
+  %.53 = getelementptr inbounds %"Bucket<string, EnumId>.559335"*, %"Bucket<string, EnumId>.559335"** %.47.pre, i64 %.5919
+  %2 = bitcast %"Bucket<string, EnumId>.559335"** %.53 to i8**
+  store i8* %.48, i8** %2, align 8
+  %.59 = add nuw nsw i64 %.5919, 1
+  %.41 = load i64, i64* %.14, align 8
+  %.42 = icmp slt i64 %.59, %.41
+  br i1 %.42, label %for.body.for.body_crit_edge, label %for.cond.1.preheader
 
 for.body.1:                                       ; preds = %for.body.1.lr.ph, %for.body.1
-  %storemerge29 = phi i64 [ 0, %for.body.1.lr.ph ], [ %.100, %for.body.1 ]
-  %.74 = load %"Map<string, EnumId>_vtable_ty.559334"*, %"Map<string, EnumId>_vtable_ty.559334"** %.10, align 8
-  %.75 = getelementptr inbounds %"Map<string, EnumId>_vtable_ty.559334", %"Map<string, EnumId>_vtable_ty.559334"* %.74, i64 0, i32 2
-  %.76 = load void (%"Map<string, EnumId>.559322"*, %string.559062*, %EnumId.559244*)*, void (%"Map<string, EnumId>.559322"*, %string.559062*, %EnumId.559244*)** %.75, align 8
-  %.80 = load %"Array<Bucket<string, EnumId>>_vtable_ty.559338"*, %"Array<Bucket<string, EnumId>>_vtable_ty.559338"** %.79, align 8
-  %.81 = getelementptr inbounds %"Array<Bucket<string, EnumId>>_vtable_ty.559338", %"Array<Bucket<string, EnumId>>_vtable_ty.559338"* %.80, i64 0, i32 5
-  %.82 = load %"Bucket<string, EnumId>.559335"* (%"Array<Bucket<string, EnumId>>.559337"*, i64)*, %"Bucket<string, EnumId>.559335"* (%"Array<Bucket<string, EnumId>>.559337"*, i64)** %.81, align 8
-  %.83 = tail call %"Bucket<string, EnumId>.559335"* %.82(%"Array<Bucket<string, EnumId>>.559337"* nonnull %.14, i64 %storemerge29)
-  %.84 = getelementptr inbounds %"Bucket<string, EnumId>.559335", %"Bucket<string, EnumId>.559335"* %.83, i64 0, i32 1
-  %.85 = load %string.559062*, %string.559062** %.84, align 8
-  %.89 = load %"Array<Bucket<string, EnumId>>_vtable_ty.559338"*, %"Array<Bucket<string, EnumId>>_vtable_ty.559338"** %.79, align 8
-  %.90 = getelementptr inbounds %"Array<Bucket<string, EnumId>>_vtable_ty.559338", %"Array<Bucket<string, EnumId>>_vtable_ty.559338"* %.89, i64 0, i32 5
-  %.91 = load %"Bucket<string, EnumId>.559335"* (%"Array<Bucket<string, EnumId>>.559337"*, i64)*, %"Bucket<string, EnumId>.559335"* (%"Array<Bucket<string, EnumId>>.559337"*, i64)** %.90, align 8
-  %.92 = tail call %"Bucket<string, EnumId>.559335"* %.91(%"Array<Bucket<string, EnumId>>.559337"* nonnull %.14, i64 %storemerge29)
-  %.93 = getelementptr inbounds %"Bucket<string, EnumId>.559335", %"Bucket<string, EnumId>.559335"* %.92, i64 0, i32 2
-  %.94 = load %EnumId.559244*, %EnumId.559244** %.93, align 8
-  tail call void %.76(%"Map<string, EnumId>.559322"* nonnull %.1, %string.559062* %.85, %EnumId.559244* %.94)
-  %.100 = add nuw nsw i64 %storemerge29, 1
-  %.69 = load i64, i64* %.68, align 8
-  %.70 = icmp slt i64 %.100, %.69
-  br i1 %.70, label %for.body.1, label %for.end.1
+  %storemerge29 = phi i64 [ 0, %for.body.1.lr.ph ], [ %.99, %for.body.1 ]
+  %.73 = load %"Map<string, EnumId>_vtable_ty.559334"*, %"Map<string, EnumId>_vtable_ty.559334"** %.6, align 8
+  %.74 = getelementptr inbounds %"Map<string, EnumId>_vtable_ty.559334", %"Map<string, EnumId>_vtable_ty.559334"* %.73, i64 0, i32 2
+  %.75 = load void (%"Map<string, EnumId>.559322"*, %string.559062*, %EnumId.559244*)*, void (%"Map<string, EnumId>.559322"*, %string.559062*, %EnumId.559244*)** %.74, align 8
+  %.79 = load %"Array<Bucket<string, EnumId>>_vtable_ty.559338"*, %"Array<Bucket<string, EnumId>>_vtable_ty.559338"** %.78, align 8
+  %.80 = getelementptr inbounds %"Array<Bucket<string, EnumId>>_vtable_ty.559338", %"Array<Bucket<string, EnumId>>_vtable_ty.559338"* %.79, i64 0, i32 5
+  %.81 = load %"Bucket<string, EnumId>.559335"* (%"Array<Bucket<string, EnumId>>.559337"*, i64)*, %"Bucket<string, EnumId>.559335"* (%"Array<Bucket<string, EnumId>>.559337"*, i64)** %.80, align 8
+  %.82 = tail call %"Bucket<string, EnumId>.559335"* %.81(%"Array<Bucket<string, EnumId>>.559337"* nonnull %.10, i64 %storemerge29)
+  %.83 = getelementptr inbounds %"Bucket<string, EnumId>.559335", %"Bucket<string, EnumId>.559335"* %.82, i64 0, i32 1
+  %.84 = load %string.559062*, %string.559062** %.83, align 8
+  %.88 = load %"Array<Bucket<string, EnumId>>_vtable_ty.559338"*, %"Array<Bucket<string, EnumId>>_vtable_ty.559338"** %.78, align 8
+  %.89 = getelementptr inbounds %"Array<Bucket<string, EnumId>>_vtable_ty.559338", %"Array<Bucket<string, EnumId>>_vtable_ty.559338"* %.88, i64 0, i32 5
+  %.90 = load %"Bucket<string, EnumId>.559335"* (%"Array<Bucket<string, EnumId>>.559337"*, i64)*, %"Bucket<string, EnumId>.559335"* (%"Array<Bucket<string, EnumId>>.559337"*, i64)** %.89, align 8
+  %.91 = tail call %"Bucket<string, EnumId>.559335"* %.90(%"Array<Bucket<string, EnumId>>.559337"* nonnull %.10, i64 %storemerge29)
+  %.92 = getelementptr inbounds %"Bucket<string, EnumId>.559335", %"Bucket<string, EnumId>.559335"* %.91, i64 0, i32 2
+  %.93 = load %EnumId.559244*, %EnumId.559244** %.92, align 8
+  tail call void %.75(%"Map<string, EnumId>.559322"* nonnull %.1, %string.559062* %.84, %EnumId.559244* %.93)
+  %.99 = add nuw nsw i64 %storemerge29, 1
+  %.68 = load i64, i64* %.67, align 8
+  %.69 = icmp slt i64 %.99, %.68
+  br i1 %.69, label %for.body.1, label %for.end.1
 
 for.end.1:                                        ; preds = %for.body.1, %for.cond.1.preheader
   ret void
@@ -22752,74 +22760,74 @@ define void @"Map<string, EnumId>_set"(%"Map<string, EnumId>.559322"* %.1, %stri
   %.15 = load i64, i64* %.14, align 8
   %.16 = sitofp i64 %.15 to double
   %.17 = fdiv double %.12, %.16
-  %.18 = fcmp ogt double %.17, 7.500000e-01
-  br i1 %.18, label %.5.if, label %.5.endif
+  %.20 = fcmp ogt double %.17, 7.500000e-01
+  br i1 %.20, label %.5.if, label %.5.endif
 
 .5.if:                                            ; preds = %.5
-  %.21 = getelementptr inbounds %"Map<string, EnumId>.559322", %"Map<string, EnumId>.559322"* %.1, i64 0, i32 0
-  %.22 = load %"Map<string, EnumId>_vtable_ty.559334"*, %"Map<string, EnumId>_vtable_ty.559334"** %.21, align 8
-  %.23 = getelementptr inbounds %"Map<string, EnumId>_vtable_ty.559334", %"Map<string, EnumId>_vtable_ty.559334"* %.22, i64 0, i32 1
-  %.24 = load void (%"Map<string, EnumId>.559322"*)*, void (%"Map<string, EnumId>.559322"*)** %.23, align 8
-  tail call void %.24(%"Map<string, EnumId>.559322"* nonnull %.1)
+  %.23 = getelementptr inbounds %"Map<string, EnumId>.559322", %"Map<string, EnumId>.559322"* %.1, i64 0, i32 0
+  %.24 = load %"Map<string, EnumId>_vtable_ty.559334"*, %"Map<string, EnumId>_vtable_ty.559334"** %.23, align 8
+  %.25 = getelementptr inbounds %"Map<string, EnumId>_vtable_ty.559334", %"Map<string, EnumId>_vtable_ty.559334"* %.24, i64 0, i32 1
+  %.26 = load void (%"Map<string, EnumId>.559322"*)*, void (%"Map<string, EnumId>.559322"*)** %.25, align 8
+  tail call void %.26(%"Map<string, EnumId>.559322"* nonnull %.1)
   br label %.5.endif
 
 .5.endif:                                         ; preds = %.5.if, %.5
-  %.28 = getelementptr inbounds %"Map<string, EnumId>.559322", %"Map<string, EnumId>.559322"* %.1, i64 0, i32 0
-  %.29 = load %"Map<string, EnumId>_vtable_ty.559334"*, %"Map<string, EnumId>_vtable_ty.559334"** %.28, align 8
-  %.30 = getelementptr inbounds %"Map<string, EnumId>_vtable_ty.559334", %"Map<string, EnumId>_vtable_ty.559334"* %.29, i64 0, i32 0
-  %.31 = load i64 (%"Map<string, EnumId>.559322"*, %string.559062*)*, i64 (%"Map<string, EnumId>.559322"*, %string.559062*)** %.30, align 8
-  %.33 = tail call i64 %.31(%"Map<string, EnumId>.559322"* nonnull %.1, %string.559062* %.2)
-  %.36 = load i64, i64* %.14, align 8
-  %.37 = srem i64 %.33, %.36
-  %.41 = getelementptr inbounds %"Map<string, EnumId>.559322", %"Map<string, EnumId>.559322"* %.1, i64 0, i32 1
-  %.42 = load %"Bucket<string, EnumId>.559335"**, %"Bucket<string, EnumId>.559335"*** %.41, align 8
-  %.43 = getelementptr inbounds %"Bucket<string, EnumId>.559335"*, %"Bucket<string, EnumId>.559335"** %.42, i64 %.37
-  %.44 = load %"Bucket<string, EnumId>.559335"*, %"Bucket<string, EnumId>.559335"** %.43, align 8
-  %.45 = getelementptr inbounds %"Bucket<string, EnumId>.559335", %"Bucket<string, EnumId>.559335"* %.44, i64 0, i32 3
-  %.46 = load i1, i1* %.45, align 1
-  br i1 %.46, label %while.exit, label %while.entry
+  %.30 = getelementptr inbounds %"Map<string, EnumId>.559322", %"Map<string, EnumId>.559322"* %.1, i64 0, i32 0
+  %.31 = load %"Map<string, EnumId>_vtable_ty.559334"*, %"Map<string, EnumId>_vtable_ty.559334"** %.30, align 8
+  %.32 = getelementptr inbounds %"Map<string, EnumId>_vtable_ty.559334", %"Map<string, EnumId>_vtable_ty.559334"* %.31, i64 0, i32 0
+  %.33 = load i64 (%"Map<string, EnumId>.559322"*, %string.559062*)*, i64 (%"Map<string, EnumId>.559322"*, %string.559062*)** %.32, align 8
+  %.35 = tail call i64 %.33(%"Map<string, EnumId>.559322"* nonnull %.1, %string.559062* %.2)
+  %.38 = load i64, i64* %.14, align 8
+  %.39 = srem i64 %.35, %.38
+  %.43 = getelementptr inbounds %"Map<string, EnumId>.559322", %"Map<string, EnumId>.559322"* %.1, i64 0, i32 1
+  %.44 = load %"Bucket<string, EnumId>.559335"**, %"Bucket<string, EnumId>.559335"*** %.43, align 8
+  %.45 = getelementptr inbounds %"Bucket<string, EnumId>.559335"*, %"Bucket<string, EnumId>.559335"** %.44, i64 %.39
+  %.46 = load %"Bucket<string, EnumId>.559335"*, %"Bucket<string, EnumId>.559335"** %.45, align 8
+  %.47 = getelementptr inbounds %"Bucket<string, EnumId>.559335", %"Bucket<string, EnumId>.559335"* %.46, i64 0, i32 3
+  %.48 = load i1, i1* %.47, align 1
+  br i1 %.48, label %while.exit, label %while.entry
 
 while.entry:                                      ; preds = %.5.endif, %while.entry.endif
-  %.54 = phi %"Bucket<string, EnumId>.559335"* [ %.77, %while.entry.endif ], [ %.44, %.5.endif ]
-  %.701 = phi i64 [ %.70, %while.entry.endif ], [ %.37, %.5.endif ]
-  %.55 = getelementptr inbounds %"Bucket<string, EnumId>.559335", %"Bucket<string, EnumId>.559335"* %.54, i64 0, i32 1
-  %.56 = load %string.559062*, %string.559062** %.55, align 8
-  %.58 = getelementptr inbounds %string.559062, %string.559062* %.56, i64 0, i32 0
-  %.59 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.58, align 8
-  %.60 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.59, i64 0, i32 4
-  %.61 = load i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)** %.60, align 8
-  %.62 = tail call i1 %.61(%string.559062* %.56, %string.559062* %.2)
-  br i1 %.62, label %while.entry.while.exit.loopexit_crit_edge, label %while.entry.endif
+  %.56 = phi %"Bucket<string, EnumId>.559335"* [ %.79, %while.entry.endif ], [ %.46, %.5.endif ]
+  %.721 = phi i64 [ %.72, %while.entry.endif ], [ %.39, %.5.endif ]
+  %.57 = getelementptr inbounds %"Bucket<string, EnumId>.559335", %"Bucket<string, EnumId>.559335"* %.56, i64 0, i32 1
+  %.58 = load %string.559062*, %string.559062** %.57, align 8
+  %.60 = getelementptr inbounds %string.559062, %string.559062* %.58, i64 0, i32 0
+  %.61 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.60, align 8
+  %.62 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.61, i64 0, i32 4
+  %.63 = load i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)** %.62, align 8
+  %.64 = tail call i1 %.63(%string.559062* %.58, %string.559062* %.2)
+  br i1 %.64, label %while.entry.while.exit.loopexit_crit_edge, label %while.entry.endif
 
 while.entry.while.exit.loopexit_crit_edge:        ; preds = %while.entry
-  %.92.pre.pre = load %"Bucket<string, EnumId>.559335"**, %"Bucket<string, EnumId>.559335"*** %.41, align 8
+  %.94.pre.pre = load %"Bucket<string, EnumId>.559335"**, %"Bucket<string, EnumId>.559335"*** %.43, align 8
   br label %while.exit
 
 while.exit:                                       ; preds = %while.entry.endif, %while.entry.while.exit.loopexit_crit_edge, %.5.endif
-  %.92 = phi %"Bucket<string, EnumId>.559335"** [ %.42, %.5.endif ], [ %.92.pre.pre, %while.entry.while.exit.loopexit_crit_edge ], [ %.75, %while.entry.endif ]
-  %.89 = phi i64 [ %.37, %.5.endif ], [ %.701, %while.entry.while.exit.loopexit_crit_edge ], [ %.70, %while.entry.endif ]
-  %.84 = load i64, i64* %.10, align 8
-  %.85 = add i64 %.84, 1
-  store i64 %.85, i64* %.10, align 8
-  %.93 = getelementptr inbounds %"Bucket<string, EnumId>.559335"*, %"Bucket<string, EnumId>.559335"** %.92, i64 %.89
-  %.94 = load %"Bucket<string, EnumId>.559335"*, %"Bucket<string, EnumId>.559335"** %.93, align 8
-  %.95 = getelementptr inbounds %"Bucket<string, EnumId>.559335", %"Bucket<string, EnumId>.559335"* %.94, i64 0, i32 0
-  %.96 = load %"Bucket<string, EnumId>_vtable_ty.559336"*, %"Bucket<string, EnumId>_vtable_ty.559336"** %.95, align 8
-  %.97 = getelementptr inbounds %"Bucket<string, EnumId>_vtable_ty.559336", %"Bucket<string, EnumId>_vtable_ty.559336"* %.96, i64 0, i32 0
-  %.98 = load void (%"Bucket<string, EnumId>.559335"*, %string.559062*, %EnumId.559244*)*, void (%"Bucket<string, EnumId>.559335"*, %string.559062*, %EnumId.559244*)** %.97, align 8
-  tail call void %.98(%"Bucket<string, EnumId>.559335"* %.94, %string.559062* %.2, %EnumId.559244* %.3)
+  %.94 = phi %"Bucket<string, EnumId>.559335"** [ %.44, %.5.endif ], [ %.94.pre.pre, %while.entry.while.exit.loopexit_crit_edge ], [ %.77, %while.entry.endif ]
+  %.91 = phi i64 [ %.39, %.5.endif ], [ %.721, %while.entry.while.exit.loopexit_crit_edge ], [ %.72, %while.entry.endif ]
+  %.86 = load i64, i64* %.10, align 8
+  %.87 = add i64 %.86, 1
+  store i64 %.87, i64* %.10, align 8
+  %.95 = getelementptr inbounds %"Bucket<string, EnumId>.559335"*, %"Bucket<string, EnumId>.559335"** %.94, i64 %.91
+  %.96 = load %"Bucket<string, EnumId>.559335"*, %"Bucket<string, EnumId>.559335"** %.95, align 8
+  %.97 = getelementptr inbounds %"Bucket<string, EnumId>.559335", %"Bucket<string, EnumId>.559335"* %.96, i64 0, i32 0
+  %.98 = load %"Bucket<string, EnumId>_vtable_ty.559336"*, %"Bucket<string, EnumId>_vtable_ty.559336"** %.97, align 8
+  %.99 = getelementptr inbounds %"Bucket<string, EnumId>_vtable_ty.559336", %"Bucket<string, EnumId>_vtable_ty.559336"* %.98, i64 0, i32 0
+  %.100 = load void (%"Bucket<string, EnumId>.559335"*, %string.559062*, %EnumId.559244*)*, void (%"Bucket<string, EnumId>.559335"*, %string.559062*, %EnumId.559244*)** %.99, align 8
+  tail call void %.100(%"Bucket<string, EnumId>.559335"* %.96, %string.559062* %.2, %EnumId.559244* %.3)
   ret void
 
 while.entry.endif:                                ; preds = %while.entry
-  %.66 = add i64 %.701, 1
-  %.69 = load i64, i64* %.14, align 8
-  %.70 = srem i64 %.66, %.69
-  %.75 = load %"Bucket<string, EnumId>.559335"**, %"Bucket<string, EnumId>.559335"*** %.41, align 8
-  %.76 = getelementptr inbounds %"Bucket<string, EnumId>.559335"*, %"Bucket<string, EnumId>.559335"** %.75, i64 %.70
-  %.77 = load %"Bucket<string, EnumId>.559335"*, %"Bucket<string, EnumId>.559335"** %.76, align 8
-  %.78 = getelementptr inbounds %"Bucket<string, EnumId>.559335", %"Bucket<string, EnumId>.559335"* %.77, i64 0, i32 3
-  %.79 = load i1, i1* %.78, align 1
-  br i1 %.79, label %while.exit, label %while.entry
+  %.68 = add i64 %.721, 1
+  %.71 = load i64, i64* %.14, align 8
+  %.72 = srem i64 %.68, %.71
+  %.77 = load %"Bucket<string, EnumId>.559335"**, %"Bucket<string, EnumId>.559335"*** %.43, align 8
+  %.78 = getelementptr inbounds %"Bucket<string, EnumId>.559335"*, %"Bucket<string, EnumId>.559335"** %.77, i64 %.72
+  %.79 = load %"Bucket<string, EnumId>.559335"*, %"Bucket<string, EnumId>.559335"** %.78, align 8
+  %.80 = getelementptr inbounds %"Bucket<string, EnumId>.559335", %"Bucket<string, EnumId>.559335"* %.79, i64 0, i32 3
+  %.81 = load i1, i1* %.80, align 1
+  br i1 %.81, label %while.exit, label %while.entry
 }
 
 define %EnumId.559244* @"Map<string, EnumId>_get"(%"Map<string, EnumId>.559322"* %.1, %string.559062* %.2) {
@@ -23325,85 +23333,87 @@ for.end.thread:                                   ; preds = %.4
 
 define void @"Map<string, Type>_resize"(%"Map<string, Type>.559323"* %.1) {
 .3:
-  %.10 = getelementptr inbounds %"Map<string, Type>.559323", %"Map<string, Type>.559323"* %.1, i64 0, i32 0
-  %.11 = load %"Map<string, Type>_vtable_ty.559339"*, %"Map<string, Type>_vtable_ty.559339"** %.10, align 8
-  %.12 = getelementptr inbounds %"Map<string, Type>_vtable_ty.559339", %"Map<string, Type>_vtable_ty.559339"* %.11, i64 0, i32 4
-  %.13 = load %"Array<Bucket<string, Type>>.559342"* (%"Map<string, Type>.559323"*)*, %"Array<Bucket<string, Type>>.559342"* (%"Map<string, Type>.559323"*)** %.12, align 8
-  %.14 = tail call %"Array<Bucket<string, Type>>.559342"* %.13(%"Map<string, Type>.559323"* %.1)
-  %.18 = getelementptr inbounds %"Map<string, Type>.559323", %"Map<string, Type>.559323"* %.1, i64 0, i32 3
-  %.19 = load i64, i64* %.18, align 8
-  %.20 = shl i64 %.19, 1
-  store i64 %.20, i64* %.18, align 8
-  %.25 = getelementptr inbounds %"Map<string, Type>.559323", %"Map<string, Type>.559323"* %.1, i64 0, i32 1
-  %0 = bitcast %"Bucket<string, Type>.559340"*** %.25 to i8**
-  %.261 = load i8*, i8** %0, align 8
-  %.30 = shl i64 %.19, 4
-  %.32 = tail call i8* @realloc(i8* %.261, i64 %.30)
-  store i8* %.32, i8** %0, align 8
-  %.4210 = load i64, i64* %.18, align 8
-  %.4311 = icmp sgt i64 %.4210, 0
-  br i1 %.4311, label %for.body.preheader, label %for.cond.1.preheader
+  %.6 = getelementptr inbounds %"Map<string, Type>.559323", %"Map<string, Type>.559323"* %.1, i64 0, i32 0
+  %.7 = load %"Map<string, Type>_vtable_ty.559339"*, %"Map<string, Type>_vtable_ty.559339"** %.6, align 8
+  %.8 = getelementptr inbounds %"Map<string, Type>_vtable_ty.559339", %"Map<string, Type>_vtable_ty.559339"* %.7, i64 0, i32 4
+  %.9 = load %"Array<Bucket<string, Type>>.559342"* (%"Map<string, Type>.559323"*)*, %"Array<Bucket<string, Type>>.559342"* (%"Map<string, Type>.559323"*)** %.8, align 8
+  %.10 = tail call %"Array<Bucket<string, Type>>.559342"* %.9(%"Map<string, Type>.559323"* %.1)
+  %.14 = getelementptr inbounds %"Map<string, Type>.559323", %"Map<string, Type>.559323"* %.1, i64 0, i32 3
+  %.15 = load i64, i64* %.14, align 8
+  %.16 = shl i64 %.15, 1
+  store i64 %.16, i64* %.14, align 8
+  %.20 = getelementptr inbounds %"Map<string, Type>.559323", %"Map<string, Type>.559323"* %.1, i64 0, i32 2
+  store i64 0, i64* %.20, align 8
+  %.24 = getelementptr inbounds %"Map<string, Type>.559323", %"Map<string, Type>.559323"* %.1, i64 0, i32 1
+  %0 = bitcast %"Bucket<string, Type>.559340"*** %.24 to i8**
+  %.251 = load i8*, i8** %0, align 8
+  %.29 = shl i64 %.15, 4
+  %.31 = tail call i8* @realloc(i8* %.251, i64 %.29)
+  store i8* %.31, i8** %0, align 8
+  %.4110 = load i64, i64* %.14, align 8
+  %.4211 = icmp sgt i64 %.4110, 0
+  br i1 %.4211, label %for.body.preheader, label %for.cond.1.preheader
 
 for.body.preheader:                               ; preds = %.3
-  %.4914 = tail call dereferenceable_or_null(32) i8* @malloc(i64 32)
-  %.5015 = bitcast i8* %.4914 to %"Bucket<string, Type>.559340"*
-  %.5116 = bitcast i8* %.4914 to %"Bucket<string, Type>_vtable_ty.559341"**
-  store %"Bucket<string, Type>_vtable_ty.559341"* @"Bucket<string, Type>_vtable_data", %"Bucket<string, Type>_vtable_ty.559341"** %.5116, align 8
-  tail call void @"Bucket<string, Type>_constructor"(%"Bucket<string, Type>.559340"* %.5015)
-  %1 = bitcast i8* %.32 to i8**
-  store i8* %.4914, i8** %1, align 8
-  %.4217 = load i64, i64* %.18, align 8
-  %.4318 = icmp sgt i64 %.4217, 1
-  br i1 %.4318, label %for.body.for.body_crit_edge, label %for.cond.1.preheader
+  %.4814 = tail call dereferenceable_or_null(32) i8* @malloc(i64 32)
+  %.4915 = bitcast i8* %.4814 to %"Bucket<string, Type>.559340"*
+  %.5016 = bitcast i8* %.4814 to %"Bucket<string, Type>_vtable_ty.559341"**
+  store %"Bucket<string, Type>_vtable_ty.559341"* @"Bucket<string, Type>_vtable_data", %"Bucket<string, Type>_vtable_ty.559341"** %.5016, align 8
+  tail call void @"Bucket<string, Type>_constructor"(%"Bucket<string, Type>.559340"* %.4915)
+  %1 = bitcast i8* %.31 to i8**
+  store i8* %.4814, i8** %1, align 8
+  %.4117 = load i64, i64* %.14, align 8
+  %.4218 = icmp sgt i64 %.4117, 1
+  br i1 %.4218, label %for.body.for.body_crit_edge, label %for.cond.1.preheader
 
 for.cond.1.preheader:                             ; preds = %for.body.for.body_crit_edge, %for.body.preheader, %.3
-  %.68 = getelementptr inbounds %"Array<Bucket<string, Type>>.559342", %"Array<Bucket<string, Type>>.559342"* %.14, i64 0, i32 2
-  %.697 = load i64, i64* %.68, align 8
-  %.708 = icmp sgt i64 %.697, 0
-  br i1 %.708, label %for.body.1.lr.ph, label %for.end.1
+  %.67 = getelementptr inbounds %"Array<Bucket<string, Type>>.559342", %"Array<Bucket<string, Type>>.559342"* %.10, i64 0, i32 2
+  %.687 = load i64, i64* %.67, align 8
+  %.698 = icmp sgt i64 %.687, 0
+  br i1 %.698, label %for.body.1.lr.ph, label %for.end.1
 
 for.body.1.lr.ph:                                 ; preds = %for.cond.1.preheader
-  %.79 = getelementptr inbounds %"Array<Bucket<string, Type>>.559342", %"Array<Bucket<string, Type>>.559342"* %.14, i64 0, i32 0
+  %.78 = getelementptr inbounds %"Array<Bucket<string, Type>>.559342", %"Array<Bucket<string, Type>>.559342"* %.10, i64 0, i32 0
   br label %for.body.1
 
 for.body.for.body_crit_edge:                      ; preds = %for.body.preheader, %for.body.for.body_crit_edge
-  %.6019 = phi i64 [ %.60, %for.body.for.body_crit_edge ], [ 1, %for.body.preheader ]
-  %.48.pre = load %"Bucket<string, Type>.559340"**, %"Bucket<string, Type>.559340"*** %.25, align 8
-  %.49 = tail call dereferenceable_or_null(32) i8* @malloc(i64 32)
-  %.50 = bitcast i8* %.49 to %"Bucket<string, Type>.559340"*
-  %.51 = bitcast i8* %.49 to %"Bucket<string, Type>_vtable_ty.559341"**
-  store %"Bucket<string, Type>_vtable_ty.559341"* @"Bucket<string, Type>_vtable_data", %"Bucket<string, Type>_vtable_ty.559341"** %.51, align 8
-  tail call void @"Bucket<string, Type>_constructor"(%"Bucket<string, Type>.559340"* %.50)
-  %.54 = getelementptr inbounds %"Bucket<string, Type>.559340"*, %"Bucket<string, Type>.559340"** %.48.pre, i64 %.6019
-  %2 = bitcast %"Bucket<string, Type>.559340"** %.54 to i8**
-  store i8* %.49, i8** %2, align 8
-  %.60 = add nuw nsw i64 %.6019, 1
-  %.42 = load i64, i64* %.18, align 8
-  %.43 = icmp slt i64 %.60, %.42
-  br i1 %.43, label %for.body.for.body_crit_edge, label %for.cond.1.preheader
+  %.5919 = phi i64 [ %.59, %for.body.for.body_crit_edge ], [ 1, %for.body.preheader ]
+  %.47.pre = load %"Bucket<string, Type>.559340"**, %"Bucket<string, Type>.559340"*** %.24, align 8
+  %.48 = tail call dereferenceable_or_null(32) i8* @malloc(i64 32)
+  %.49 = bitcast i8* %.48 to %"Bucket<string, Type>.559340"*
+  %.50 = bitcast i8* %.48 to %"Bucket<string, Type>_vtable_ty.559341"**
+  store %"Bucket<string, Type>_vtable_ty.559341"* @"Bucket<string, Type>_vtable_data", %"Bucket<string, Type>_vtable_ty.559341"** %.50, align 8
+  tail call void @"Bucket<string, Type>_constructor"(%"Bucket<string, Type>.559340"* %.49)
+  %.53 = getelementptr inbounds %"Bucket<string, Type>.559340"*, %"Bucket<string, Type>.559340"** %.47.pre, i64 %.5919
+  %2 = bitcast %"Bucket<string, Type>.559340"** %.53 to i8**
+  store i8* %.48, i8** %2, align 8
+  %.59 = add nuw nsw i64 %.5919, 1
+  %.41 = load i64, i64* %.14, align 8
+  %.42 = icmp slt i64 %.59, %.41
+  br i1 %.42, label %for.body.for.body_crit_edge, label %for.cond.1.preheader
 
 for.body.1:                                       ; preds = %for.body.1.lr.ph, %for.body.1
-  %storemerge29 = phi i64 [ 0, %for.body.1.lr.ph ], [ %.100, %for.body.1 ]
-  %.74 = load %"Map<string, Type>_vtable_ty.559339"*, %"Map<string, Type>_vtable_ty.559339"** %.10, align 8
-  %.75 = getelementptr inbounds %"Map<string, Type>_vtable_ty.559339", %"Map<string, Type>_vtable_ty.559339"* %.74, i64 0, i32 2
-  %.76 = load void (%"Map<string, Type>.559323"*, %string.559062*, %Type.559226*)*, void (%"Map<string, Type>.559323"*, %string.559062*, %Type.559226*)** %.75, align 8
-  %.80 = load %"Array<Bucket<string, Type>>_vtable_ty.559343"*, %"Array<Bucket<string, Type>>_vtable_ty.559343"** %.79, align 8
-  %.81 = getelementptr inbounds %"Array<Bucket<string, Type>>_vtable_ty.559343", %"Array<Bucket<string, Type>>_vtable_ty.559343"* %.80, i64 0, i32 5
-  %.82 = load %"Bucket<string, Type>.559340"* (%"Array<Bucket<string, Type>>.559342"*, i64)*, %"Bucket<string, Type>.559340"* (%"Array<Bucket<string, Type>>.559342"*, i64)** %.81, align 8
-  %.83 = tail call %"Bucket<string, Type>.559340"* %.82(%"Array<Bucket<string, Type>>.559342"* nonnull %.14, i64 %storemerge29)
-  %.84 = getelementptr inbounds %"Bucket<string, Type>.559340", %"Bucket<string, Type>.559340"* %.83, i64 0, i32 1
-  %.85 = load %string.559062*, %string.559062** %.84, align 8
-  %.89 = load %"Array<Bucket<string, Type>>_vtable_ty.559343"*, %"Array<Bucket<string, Type>>_vtable_ty.559343"** %.79, align 8
-  %.90 = getelementptr inbounds %"Array<Bucket<string, Type>>_vtable_ty.559343", %"Array<Bucket<string, Type>>_vtable_ty.559343"* %.89, i64 0, i32 5
-  %.91 = load %"Bucket<string, Type>.559340"* (%"Array<Bucket<string, Type>>.559342"*, i64)*, %"Bucket<string, Type>.559340"* (%"Array<Bucket<string, Type>>.559342"*, i64)** %.90, align 8
-  %.92 = tail call %"Bucket<string, Type>.559340"* %.91(%"Array<Bucket<string, Type>>.559342"* nonnull %.14, i64 %storemerge29)
-  %.93 = getelementptr inbounds %"Bucket<string, Type>.559340", %"Bucket<string, Type>.559340"* %.92, i64 0, i32 2
-  %.94 = load %Type.559226*, %Type.559226** %.93, align 8
-  tail call void %.76(%"Map<string, Type>.559323"* nonnull %.1, %string.559062* %.85, %Type.559226* %.94)
-  %.100 = add nuw nsw i64 %storemerge29, 1
-  %.69 = load i64, i64* %.68, align 8
-  %.70 = icmp slt i64 %.100, %.69
-  br i1 %.70, label %for.body.1, label %for.end.1
+  %storemerge29 = phi i64 [ 0, %for.body.1.lr.ph ], [ %.99, %for.body.1 ]
+  %.73 = load %"Map<string, Type>_vtable_ty.559339"*, %"Map<string, Type>_vtable_ty.559339"** %.6, align 8
+  %.74 = getelementptr inbounds %"Map<string, Type>_vtable_ty.559339", %"Map<string, Type>_vtable_ty.559339"* %.73, i64 0, i32 2
+  %.75 = load void (%"Map<string, Type>.559323"*, %string.559062*, %Type.559226*)*, void (%"Map<string, Type>.559323"*, %string.559062*, %Type.559226*)** %.74, align 8
+  %.79 = load %"Array<Bucket<string, Type>>_vtable_ty.559343"*, %"Array<Bucket<string, Type>>_vtable_ty.559343"** %.78, align 8
+  %.80 = getelementptr inbounds %"Array<Bucket<string, Type>>_vtable_ty.559343", %"Array<Bucket<string, Type>>_vtable_ty.559343"* %.79, i64 0, i32 5
+  %.81 = load %"Bucket<string, Type>.559340"* (%"Array<Bucket<string, Type>>.559342"*, i64)*, %"Bucket<string, Type>.559340"* (%"Array<Bucket<string, Type>>.559342"*, i64)** %.80, align 8
+  %.82 = tail call %"Bucket<string, Type>.559340"* %.81(%"Array<Bucket<string, Type>>.559342"* nonnull %.10, i64 %storemerge29)
+  %.83 = getelementptr inbounds %"Bucket<string, Type>.559340", %"Bucket<string, Type>.559340"* %.82, i64 0, i32 1
+  %.84 = load %string.559062*, %string.559062** %.83, align 8
+  %.88 = load %"Array<Bucket<string, Type>>_vtable_ty.559343"*, %"Array<Bucket<string, Type>>_vtable_ty.559343"** %.78, align 8
+  %.89 = getelementptr inbounds %"Array<Bucket<string, Type>>_vtable_ty.559343", %"Array<Bucket<string, Type>>_vtable_ty.559343"* %.88, i64 0, i32 5
+  %.90 = load %"Bucket<string, Type>.559340"* (%"Array<Bucket<string, Type>>.559342"*, i64)*, %"Bucket<string, Type>.559340"* (%"Array<Bucket<string, Type>>.559342"*, i64)** %.89, align 8
+  %.91 = tail call %"Bucket<string, Type>.559340"* %.90(%"Array<Bucket<string, Type>>.559342"* nonnull %.10, i64 %storemerge29)
+  %.92 = getelementptr inbounds %"Bucket<string, Type>.559340", %"Bucket<string, Type>.559340"* %.91, i64 0, i32 2
+  %.93 = load %Type.559226*, %Type.559226** %.92, align 8
+  tail call void %.75(%"Map<string, Type>.559323"* nonnull %.1, %string.559062* %.84, %Type.559226* %.93)
+  %.99 = add nuw nsw i64 %storemerge29, 1
+  %.68 = load i64, i64* %.67, align 8
+  %.69 = icmp slt i64 %.99, %.68
+  br i1 %.69, label %for.body.1, label %for.end.1
 
 for.end.1:                                        ; preds = %for.body.1, %for.cond.1.preheader
   ret void
@@ -23418,74 +23428,74 @@ define void @"Map<string, Type>_set"(%"Map<string, Type>.559323"* %.1, %string.5
   %.15 = load i64, i64* %.14, align 8
   %.16 = sitofp i64 %.15 to double
   %.17 = fdiv double %.12, %.16
-  %.18 = fcmp ogt double %.17, 7.500000e-01
-  br i1 %.18, label %.5.if, label %.5.endif
+  %.20 = fcmp ogt double %.17, 7.500000e-01
+  br i1 %.20, label %.5.if, label %.5.endif
 
 .5.if:                                            ; preds = %.5
-  %.21 = getelementptr inbounds %"Map<string, Type>.559323", %"Map<string, Type>.559323"* %.1, i64 0, i32 0
-  %.22 = load %"Map<string, Type>_vtable_ty.559339"*, %"Map<string, Type>_vtable_ty.559339"** %.21, align 8
-  %.23 = getelementptr inbounds %"Map<string, Type>_vtable_ty.559339", %"Map<string, Type>_vtable_ty.559339"* %.22, i64 0, i32 1
-  %.24 = load void (%"Map<string, Type>.559323"*)*, void (%"Map<string, Type>.559323"*)** %.23, align 8
-  tail call void %.24(%"Map<string, Type>.559323"* nonnull %.1)
+  %.23 = getelementptr inbounds %"Map<string, Type>.559323", %"Map<string, Type>.559323"* %.1, i64 0, i32 0
+  %.24 = load %"Map<string, Type>_vtable_ty.559339"*, %"Map<string, Type>_vtable_ty.559339"** %.23, align 8
+  %.25 = getelementptr inbounds %"Map<string, Type>_vtable_ty.559339", %"Map<string, Type>_vtable_ty.559339"* %.24, i64 0, i32 1
+  %.26 = load void (%"Map<string, Type>.559323"*)*, void (%"Map<string, Type>.559323"*)** %.25, align 8
+  tail call void %.26(%"Map<string, Type>.559323"* nonnull %.1)
   br label %.5.endif
 
 .5.endif:                                         ; preds = %.5.if, %.5
-  %.28 = getelementptr inbounds %"Map<string, Type>.559323", %"Map<string, Type>.559323"* %.1, i64 0, i32 0
-  %.29 = load %"Map<string, Type>_vtable_ty.559339"*, %"Map<string, Type>_vtable_ty.559339"** %.28, align 8
-  %.30 = getelementptr inbounds %"Map<string, Type>_vtable_ty.559339", %"Map<string, Type>_vtable_ty.559339"* %.29, i64 0, i32 0
-  %.31 = load i64 (%"Map<string, Type>.559323"*, %string.559062*)*, i64 (%"Map<string, Type>.559323"*, %string.559062*)** %.30, align 8
-  %.33 = tail call i64 %.31(%"Map<string, Type>.559323"* nonnull %.1, %string.559062* %.2)
-  %.36 = load i64, i64* %.14, align 8
-  %.37 = srem i64 %.33, %.36
-  %.41 = getelementptr inbounds %"Map<string, Type>.559323", %"Map<string, Type>.559323"* %.1, i64 0, i32 1
-  %.42 = load %"Bucket<string, Type>.559340"**, %"Bucket<string, Type>.559340"*** %.41, align 8
-  %.43 = getelementptr inbounds %"Bucket<string, Type>.559340"*, %"Bucket<string, Type>.559340"** %.42, i64 %.37
-  %.44 = load %"Bucket<string, Type>.559340"*, %"Bucket<string, Type>.559340"** %.43, align 8
-  %.45 = getelementptr inbounds %"Bucket<string, Type>.559340", %"Bucket<string, Type>.559340"* %.44, i64 0, i32 3
-  %.46 = load i1, i1* %.45, align 1
-  br i1 %.46, label %while.exit, label %while.entry
+  %.30 = getelementptr inbounds %"Map<string, Type>.559323", %"Map<string, Type>.559323"* %.1, i64 0, i32 0
+  %.31 = load %"Map<string, Type>_vtable_ty.559339"*, %"Map<string, Type>_vtable_ty.559339"** %.30, align 8
+  %.32 = getelementptr inbounds %"Map<string, Type>_vtable_ty.559339", %"Map<string, Type>_vtable_ty.559339"* %.31, i64 0, i32 0
+  %.33 = load i64 (%"Map<string, Type>.559323"*, %string.559062*)*, i64 (%"Map<string, Type>.559323"*, %string.559062*)** %.32, align 8
+  %.35 = tail call i64 %.33(%"Map<string, Type>.559323"* nonnull %.1, %string.559062* %.2)
+  %.38 = load i64, i64* %.14, align 8
+  %.39 = srem i64 %.35, %.38
+  %.43 = getelementptr inbounds %"Map<string, Type>.559323", %"Map<string, Type>.559323"* %.1, i64 0, i32 1
+  %.44 = load %"Bucket<string, Type>.559340"**, %"Bucket<string, Type>.559340"*** %.43, align 8
+  %.45 = getelementptr inbounds %"Bucket<string, Type>.559340"*, %"Bucket<string, Type>.559340"** %.44, i64 %.39
+  %.46 = load %"Bucket<string, Type>.559340"*, %"Bucket<string, Type>.559340"** %.45, align 8
+  %.47 = getelementptr inbounds %"Bucket<string, Type>.559340", %"Bucket<string, Type>.559340"* %.46, i64 0, i32 3
+  %.48 = load i1, i1* %.47, align 1
+  br i1 %.48, label %while.exit, label %while.entry
 
 while.entry:                                      ; preds = %.5.endif, %while.entry.endif
-  %.54 = phi %"Bucket<string, Type>.559340"* [ %.77, %while.entry.endif ], [ %.44, %.5.endif ]
-  %.701 = phi i64 [ %.70, %while.entry.endif ], [ %.37, %.5.endif ]
-  %.55 = getelementptr inbounds %"Bucket<string, Type>.559340", %"Bucket<string, Type>.559340"* %.54, i64 0, i32 1
-  %.56 = load %string.559062*, %string.559062** %.55, align 8
-  %.58 = getelementptr inbounds %string.559062, %string.559062* %.56, i64 0, i32 0
-  %.59 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.58, align 8
-  %.60 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.59, i64 0, i32 4
-  %.61 = load i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)** %.60, align 8
-  %.62 = tail call i1 %.61(%string.559062* %.56, %string.559062* %.2)
-  br i1 %.62, label %while.entry.while.exit.loopexit_crit_edge, label %while.entry.endif
+  %.56 = phi %"Bucket<string, Type>.559340"* [ %.79, %while.entry.endif ], [ %.46, %.5.endif ]
+  %.721 = phi i64 [ %.72, %while.entry.endif ], [ %.39, %.5.endif ]
+  %.57 = getelementptr inbounds %"Bucket<string, Type>.559340", %"Bucket<string, Type>.559340"* %.56, i64 0, i32 1
+  %.58 = load %string.559062*, %string.559062** %.57, align 8
+  %.60 = getelementptr inbounds %string.559062, %string.559062* %.58, i64 0, i32 0
+  %.61 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.60, align 8
+  %.62 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.61, i64 0, i32 4
+  %.63 = load i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)** %.62, align 8
+  %.64 = tail call i1 %.63(%string.559062* %.58, %string.559062* %.2)
+  br i1 %.64, label %while.entry.while.exit.loopexit_crit_edge, label %while.entry.endif
 
 while.entry.while.exit.loopexit_crit_edge:        ; preds = %while.entry
-  %.92.pre.pre = load %"Bucket<string, Type>.559340"**, %"Bucket<string, Type>.559340"*** %.41, align 8
+  %.94.pre.pre = load %"Bucket<string, Type>.559340"**, %"Bucket<string, Type>.559340"*** %.43, align 8
   br label %while.exit
 
 while.exit:                                       ; preds = %while.entry.endif, %while.entry.while.exit.loopexit_crit_edge, %.5.endif
-  %.92 = phi %"Bucket<string, Type>.559340"** [ %.42, %.5.endif ], [ %.92.pre.pre, %while.entry.while.exit.loopexit_crit_edge ], [ %.75, %while.entry.endif ]
-  %.89 = phi i64 [ %.37, %.5.endif ], [ %.701, %while.entry.while.exit.loopexit_crit_edge ], [ %.70, %while.entry.endif ]
-  %.84 = load i64, i64* %.10, align 8
-  %.85 = add i64 %.84, 1
-  store i64 %.85, i64* %.10, align 8
-  %.93 = getelementptr inbounds %"Bucket<string, Type>.559340"*, %"Bucket<string, Type>.559340"** %.92, i64 %.89
-  %.94 = load %"Bucket<string, Type>.559340"*, %"Bucket<string, Type>.559340"** %.93, align 8
-  %.95 = getelementptr inbounds %"Bucket<string, Type>.559340", %"Bucket<string, Type>.559340"* %.94, i64 0, i32 0
-  %.96 = load %"Bucket<string, Type>_vtable_ty.559341"*, %"Bucket<string, Type>_vtable_ty.559341"** %.95, align 8
-  %.97 = getelementptr inbounds %"Bucket<string, Type>_vtable_ty.559341", %"Bucket<string, Type>_vtable_ty.559341"* %.96, i64 0, i32 0
-  %.98 = load void (%"Bucket<string, Type>.559340"*, %string.559062*, %Type.559226*)*, void (%"Bucket<string, Type>.559340"*, %string.559062*, %Type.559226*)** %.97, align 8
-  tail call void %.98(%"Bucket<string, Type>.559340"* %.94, %string.559062* %.2, %Type.559226* %.3)
+  %.94 = phi %"Bucket<string, Type>.559340"** [ %.44, %.5.endif ], [ %.94.pre.pre, %while.entry.while.exit.loopexit_crit_edge ], [ %.77, %while.entry.endif ]
+  %.91 = phi i64 [ %.39, %.5.endif ], [ %.721, %while.entry.while.exit.loopexit_crit_edge ], [ %.72, %while.entry.endif ]
+  %.86 = load i64, i64* %.10, align 8
+  %.87 = add i64 %.86, 1
+  store i64 %.87, i64* %.10, align 8
+  %.95 = getelementptr inbounds %"Bucket<string, Type>.559340"*, %"Bucket<string, Type>.559340"** %.94, i64 %.91
+  %.96 = load %"Bucket<string, Type>.559340"*, %"Bucket<string, Type>.559340"** %.95, align 8
+  %.97 = getelementptr inbounds %"Bucket<string, Type>.559340", %"Bucket<string, Type>.559340"* %.96, i64 0, i32 0
+  %.98 = load %"Bucket<string, Type>_vtable_ty.559341"*, %"Bucket<string, Type>_vtable_ty.559341"** %.97, align 8
+  %.99 = getelementptr inbounds %"Bucket<string, Type>_vtable_ty.559341", %"Bucket<string, Type>_vtable_ty.559341"* %.98, i64 0, i32 0
+  %.100 = load void (%"Bucket<string, Type>.559340"*, %string.559062*, %Type.559226*)*, void (%"Bucket<string, Type>.559340"*, %string.559062*, %Type.559226*)** %.99, align 8
+  tail call void %.100(%"Bucket<string, Type>.559340"* %.96, %string.559062* %.2, %Type.559226* %.3)
   ret void
 
 while.entry.endif:                                ; preds = %while.entry
-  %.66 = add i64 %.701, 1
-  %.69 = load i64, i64* %.14, align 8
-  %.70 = srem i64 %.66, %.69
-  %.75 = load %"Bucket<string, Type>.559340"**, %"Bucket<string, Type>.559340"*** %.41, align 8
-  %.76 = getelementptr inbounds %"Bucket<string, Type>.559340"*, %"Bucket<string, Type>.559340"** %.75, i64 %.70
-  %.77 = load %"Bucket<string, Type>.559340"*, %"Bucket<string, Type>.559340"** %.76, align 8
-  %.78 = getelementptr inbounds %"Bucket<string, Type>.559340", %"Bucket<string, Type>.559340"* %.77, i64 0, i32 3
-  %.79 = load i1, i1* %.78, align 1
-  br i1 %.79, label %while.exit, label %while.entry
+  %.68 = add i64 %.721, 1
+  %.71 = load i64, i64* %.14, align 8
+  %.72 = srem i64 %.68, %.71
+  %.77 = load %"Bucket<string, Type>.559340"**, %"Bucket<string, Type>.559340"*** %.43, align 8
+  %.78 = getelementptr inbounds %"Bucket<string, Type>.559340"*, %"Bucket<string, Type>.559340"** %.77, i64 %.72
+  %.79 = load %"Bucket<string, Type>.559340"*, %"Bucket<string, Type>.559340"** %.78, align 8
+  %.80 = getelementptr inbounds %"Bucket<string, Type>.559340", %"Bucket<string, Type>.559340"* %.79, i64 0, i32 3
+  %.81 = load i1, i1* %.80, align 1
+  br i1 %.81, label %while.exit, label %while.entry
 }
 
 define %Type.559226* @"Map<string, Type>_get"(%"Map<string, Type>.559323"* %.1, %string.559062* %.2) {
@@ -24984,85 +24994,87 @@ for.end.thread:                                   ; preds = %.4
 
 define void @"Map<string, PropId>_resize"(%"Map<string, PropId>.559362"* %.1) {
 .3:
-  %.10 = getelementptr inbounds %"Map<string, PropId>.559362", %"Map<string, PropId>.559362"* %.1, i64 0, i32 0
-  %.11 = load %"Map<string, PropId>_vtable_ty.559365"*, %"Map<string, PropId>_vtable_ty.559365"** %.10, align 8
-  %.12 = getelementptr inbounds %"Map<string, PropId>_vtable_ty.559365", %"Map<string, PropId>_vtable_ty.559365"* %.11, i64 0, i32 4
-  %.13 = load %"Array<Bucket<string, PropId>>.559368"* (%"Map<string, PropId>.559362"*)*, %"Array<Bucket<string, PropId>>.559368"* (%"Map<string, PropId>.559362"*)** %.12, align 8
-  %.14 = tail call %"Array<Bucket<string, PropId>>.559368"* %.13(%"Map<string, PropId>.559362"* %.1)
-  %.18 = getelementptr inbounds %"Map<string, PropId>.559362", %"Map<string, PropId>.559362"* %.1, i64 0, i32 3
-  %.19 = load i64, i64* %.18, align 8
-  %.20 = shl i64 %.19, 1
-  store i64 %.20, i64* %.18, align 8
-  %.25 = getelementptr inbounds %"Map<string, PropId>.559362", %"Map<string, PropId>.559362"* %.1, i64 0, i32 1
-  %0 = bitcast %"Bucket<string, PropId>.559366"*** %.25 to i8**
-  %.261 = load i8*, i8** %0, align 8
-  %.30 = shl i64 %.19, 4
-  %.32 = tail call i8* @realloc(i8* %.261, i64 %.30)
-  store i8* %.32, i8** %0, align 8
-  %.4210 = load i64, i64* %.18, align 8
-  %.4311 = icmp sgt i64 %.4210, 0
-  br i1 %.4311, label %for.body.preheader, label %for.cond.1.preheader
+  %.6 = getelementptr inbounds %"Map<string, PropId>.559362", %"Map<string, PropId>.559362"* %.1, i64 0, i32 0
+  %.7 = load %"Map<string, PropId>_vtable_ty.559365"*, %"Map<string, PropId>_vtable_ty.559365"** %.6, align 8
+  %.8 = getelementptr inbounds %"Map<string, PropId>_vtable_ty.559365", %"Map<string, PropId>_vtable_ty.559365"* %.7, i64 0, i32 4
+  %.9 = load %"Array<Bucket<string, PropId>>.559368"* (%"Map<string, PropId>.559362"*)*, %"Array<Bucket<string, PropId>>.559368"* (%"Map<string, PropId>.559362"*)** %.8, align 8
+  %.10 = tail call %"Array<Bucket<string, PropId>>.559368"* %.9(%"Map<string, PropId>.559362"* %.1)
+  %.14 = getelementptr inbounds %"Map<string, PropId>.559362", %"Map<string, PropId>.559362"* %.1, i64 0, i32 3
+  %.15 = load i64, i64* %.14, align 8
+  %.16 = shl i64 %.15, 1
+  store i64 %.16, i64* %.14, align 8
+  %.20 = getelementptr inbounds %"Map<string, PropId>.559362", %"Map<string, PropId>.559362"* %.1, i64 0, i32 2
+  store i64 0, i64* %.20, align 8
+  %.24 = getelementptr inbounds %"Map<string, PropId>.559362", %"Map<string, PropId>.559362"* %.1, i64 0, i32 1
+  %0 = bitcast %"Bucket<string, PropId>.559366"*** %.24 to i8**
+  %.251 = load i8*, i8** %0, align 8
+  %.29 = shl i64 %.15, 4
+  %.31 = tail call i8* @realloc(i8* %.251, i64 %.29)
+  store i8* %.31, i8** %0, align 8
+  %.4110 = load i64, i64* %.14, align 8
+  %.4211 = icmp sgt i64 %.4110, 0
+  br i1 %.4211, label %for.body.preheader, label %for.cond.1.preheader
 
 for.body.preheader:                               ; preds = %.3
-  %.4914 = tail call dereferenceable_or_null(32) i8* @malloc(i64 32)
-  %.5015 = bitcast i8* %.4914 to %"Bucket<string, PropId>.559366"*
-  %.5116 = bitcast i8* %.4914 to %"Bucket<string, PropId>_vtable_ty.559367"**
-  store %"Bucket<string, PropId>_vtable_ty.559367"* @"Bucket<string, PropId>_vtable_data", %"Bucket<string, PropId>_vtable_ty.559367"** %.5116, align 8
-  tail call void @"Bucket<string, PropId>_constructor"(%"Bucket<string, PropId>.559366"* %.5015)
-  %1 = bitcast i8* %.32 to i8**
-  store i8* %.4914, i8** %1, align 8
-  %.4217 = load i64, i64* %.18, align 8
-  %.4318 = icmp sgt i64 %.4217, 1
-  br i1 %.4318, label %for.body.for.body_crit_edge, label %for.cond.1.preheader
+  %.4814 = tail call dereferenceable_or_null(32) i8* @malloc(i64 32)
+  %.4915 = bitcast i8* %.4814 to %"Bucket<string, PropId>.559366"*
+  %.5016 = bitcast i8* %.4814 to %"Bucket<string, PropId>_vtable_ty.559367"**
+  store %"Bucket<string, PropId>_vtable_ty.559367"* @"Bucket<string, PropId>_vtable_data", %"Bucket<string, PropId>_vtable_ty.559367"** %.5016, align 8
+  tail call void @"Bucket<string, PropId>_constructor"(%"Bucket<string, PropId>.559366"* %.4915)
+  %1 = bitcast i8* %.31 to i8**
+  store i8* %.4814, i8** %1, align 8
+  %.4117 = load i64, i64* %.14, align 8
+  %.4218 = icmp sgt i64 %.4117, 1
+  br i1 %.4218, label %for.body.for.body_crit_edge, label %for.cond.1.preheader
 
 for.cond.1.preheader:                             ; preds = %for.body.for.body_crit_edge, %for.body.preheader, %.3
-  %.68 = getelementptr inbounds %"Array<Bucket<string, PropId>>.559368", %"Array<Bucket<string, PropId>>.559368"* %.14, i64 0, i32 2
-  %.697 = load i64, i64* %.68, align 8
-  %.708 = icmp sgt i64 %.697, 0
-  br i1 %.708, label %for.body.1.lr.ph, label %for.end.1
+  %.67 = getelementptr inbounds %"Array<Bucket<string, PropId>>.559368", %"Array<Bucket<string, PropId>>.559368"* %.10, i64 0, i32 2
+  %.687 = load i64, i64* %.67, align 8
+  %.698 = icmp sgt i64 %.687, 0
+  br i1 %.698, label %for.body.1.lr.ph, label %for.end.1
 
 for.body.1.lr.ph:                                 ; preds = %for.cond.1.preheader
-  %.79 = getelementptr inbounds %"Array<Bucket<string, PropId>>.559368", %"Array<Bucket<string, PropId>>.559368"* %.14, i64 0, i32 0
+  %.78 = getelementptr inbounds %"Array<Bucket<string, PropId>>.559368", %"Array<Bucket<string, PropId>>.559368"* %.10, i64 0, i32 0
   br label %for.body.1
 
 for.body.for.body_crit_edge:                      ; preds = %for.body.preheader, %for.body.for.body_crit_edge
-  %.6019 = phi i64 [ %.60, %for.body.for.body_crit_edge ], [ 1, %for.body.preheader ]
-  %.48.pre = load %"Bucket<string, PropId>.559366"**, %"Bucket<string, PropId>.559366"*** %.25, align 8
-  %.49 = tail call dereferenceable_or_null(32) i8* @malloc(i64 32)
-  %.50 = bitcast i8* %.49 to %"Bucket<string, PropId>.559366"*
-  %.51 = bitcast i8* %.49 to %"Bucket<string, PropId>_vtable_ty.559367"**
-  store %"Bucket<string, PropId>_vtable_ty.559367"* @"Bucket<string, PropId>_vtable_data", %"Bucket<string, PropId>_vtable_ty.559367"** %.51, align 8
-  tail call void @"Bucket<string, PropId>_constructor"(%"Bucket<string, PropId>.559366"* %.50)
-  %.54 = getelementptr inbounds %"Bucket<string, PropId>.559366"*, %"Bucket<string, PropId>.559366"** %.48.pre, i64 %.6019
-  %2 = bitcast %"Bucket<string, PropId>.559366"** %.54 to i8**
-  store i8* %.49, i8** %2, align 8
-  %.60 = add nuw nsw i64 %.6019, 1
-  %.42 = load i64, i64* %.18, align 8
-  %.43 = icmp slt i64 %.60, %.42
-  br i1 %.43, label %for.body.for.body_crit_edge, label %for.cond.1.preheader
+  %.5919 = phi i64 [ %.59, %for.body.for.body_crit_edge ], [ 1, %for.body.preheader ]
+  %.47.pre = load %"Bucket<string, PropId>.559366"**, %"Bucket<string, PropId>.559366"*** %.24, align 8
+  %.48 = tail call dereferenceable_or_null(32) i8* @malloc(i64 32)
+  %.49 = bitcast i8* %.48 to %"Bucket<string, PropId>.559366"*
+  %.50 = bitcast i8* %.48 to %"Bucket<string, PropId>_vtable_ty.559367"**
+  store %"Bucket<string, PropId>_vtable_ty.559367"* @"Bucket<string, PropId>_vtable_data", %"Bucket<string, PropId>_vtable_ty.559367"** %.50, align 8
+  tail call void @"Bucket<string, PropId>_constructor"(%"Bucket<string, PropId>.559366"* %.49)
+  %.53 = getelementptr inbounds %"Bucket<string, PropId>.559366"*, %"Bucket<string, PropId>.559366"** %.47.pre, i64 %.5919
+  %2 = bitcast %"Bucket<string, PropId>.559366"** %.53 to i8**
+  store i8* %.48, i8** %2, align 8
+  %.59 = add nuw nsw i64 %.5919, 1
+  %.41 = load i64, i64* %.14, align 8
+  %.42 = icmp slt i64 %.59, %.41
+  br i1 %.42, label %for.body.for.body_crit_edge, label %for.cond.1.preheader
 
 for.body.1:                                       ; preds = %for.body.1.lr.ph, %for.body.1
-  %storemerge29 = phi i64 [ 0, %for.body.1.lr.ph ], [ %.100, %for.body.1 ]
-  %.74 = load %"Map<string, PropId>_vtable_ty.559365"*, %"Map<string, PropId>_vtable_ty.559365"** %.10, align 8
-  %.75 = getelementptr inbounds %"Map<string, PropId>_vtable_ty.559365", %"Map<string, PropId>_vtable_ty.559365"* %.74, i64 0, i32 2
-  %.76 = load void (%"Map<string, PropId>.559362"*, %string.559062*, %PropId.559294*)*, void (%"Map<string, PropId>.559362"*, %string.559062*, %PropId.559294*)** %.75, align 8
-  %.80 = load %"Array<Bucket<string, PropId>>_vtable_ty.559369"*, %"Array<Bucket<string, PropId>>_vtable_ty.559369"** %.79, align 8
-  %.81 = getelementptr inbounds %"Array<Bucket<string, PropId>>_vtable_ty.559369", %"Array<Bucket<string, PropId>>_vtable_ty.559369"* %.80, i64 0, i32 5
-  %.82 = load %"Bucket<string, PropId>.559366"* (%"Array<Bucket<string, PropId>>.559368"*, i64)*, %"Bucket<string, PropId>.559366"* (%"Array<Bucket<string, PropId>>.559368"*, i64)** %.81, align 8
-  %.83 = tail call %"Bucket<string, PropId>.559366"* %.82(%"Array<Bucket<string, PropId>>.559368"* nonnull %.14, i64 %storemerge29)
-  %.84 = getelementptr inbounds %"Bucket<string, PropId>.559366", %"Bucket<string, PropId>.559366"* %.83, i64 0, i32 1
-  %.85 = load %string.559062*, %string.559062** %.84, align 8
-  %.89 = load %"Array<Bucket<string, PropId>>_vtable_ty.559369"*, %"Array<Bucket<string, PropId>>_vtable_ty.559369"** %.79, align 8
-  %.90 = getelementptr inbounds %"Array<Bucket<string, PropId>>_vtable_ty.559369", %"Array<Bucket<string, PropId>>_vtable_ty.559369"* %.89, i64 0, i32 5
-  %.91 = load %"Bucket<string, PropId>.559366"* (%"Array<Bucket<string, PropId>>.559368"*, i64)*, %"Bucket<string, PropId>.559366"* (%"Array<Bucket<string, PropId>>.559368"*, i64)** %.90, align 8
-  %.92 = tail call %"Bucket<string, PropId>.559366"* %.91(%"Array<Bucket<string, PropId>>.559368"* nonnull %.14, i64 %storemerge29)
-  %.93 = getelementptr inbounds %"Bucket<string, PropId>.559366", %"Bucket<string, PropId>.559366"* %.92, i64 0, i32 2
-  %.94 = load %PropId.559294*, %PropId.559294** %.93, align 8
-  tail call void %.76(%"Map<string, PropId>.559362"* nonnull %.1, %string.559062* %.85, %PropId.559294* %.94)
-  %.100 = add nuw nsw i64 %storemerge29, 1
-  %.69 = load i64, i64* %.68, align 8
-  %.70 = icmp slt i64 %.100, %.69
-  br i1 %.70, label %for.body.1, label %for.end.1
+  %storemerge29 = phi i64 [ 0, %for.body.1.lr.ph ], [ %.99, %for.body.1 ]
+  %.73 = load %"Map<string, PropId>_vtable_ty.559365"*, %"Map<string, PropId>_vtable_ty.559365"** %.6, align 8
+  %.74 = getelementptr inbounds %"Map<string, PropId>_vtable_ty.559365", %"Map<string, PropId>_vtable_ty.559365"* %.73, i64 0, i32 2
+  %.75 = load void (%"Map<string, PropId>.559362"*, %string.559062*, %PropId.559294*)*, void (%"Map<string, PropId>.559362"*, %string.559062*, %PropId.559294*)** %.74, align 8
+  %.79 = load %"Array<Bucket<string, PropId>>_vtable_ty.559369"*, %"Array<Bucket<string, PropId>>_vtable_ty.559369"** %.78, align 8
+  %.80 = getelementptr inbounds %"Array<Bucket<string, PropId>>_vtable_ty.559369", %"Array<Bucket<string, PropId>>_vtable_ty.559369"* %.79, i64 0, i32 5
+  %.81 = load %"Bucket<string, PropId>.559366"* (%"Array<Bucket<string, PropId>>.559368"*, i64)*, %"Bucket<string, PropId>.559366"* (%"Array<Bucket<string, PropId>>.559368"*, i64)** %.80, align 8
+  %.82 = tail call %"Bucket<string, PropId>.559366"* %.81(%"Array<Bucket<string, PropId>>.559368"* nonnull %.10, i64 %storemerge29)
+  %.83 = getelementptr inbounds %"Bucket<string, PropId>.559366", %"Bucket<string, PropId>.559366"* %.82, i64 0, i32 1
+  %.84 = load %string.559062*, %string.559062** %.83, align 8
+  %.88 = load %"Array<Bucket<string, PropId>>_vtable_ty.559369"*, %"Array<Bucket<string, PropId>>_vtable_ty.559369"** %.78, align 8
+  %.89 = getelementptr inbounds %"Array<Bucket<string, PropId>>_vtable_ty.559369", %"Array<Bucket<string, PropId>>_vtable_ty.559369"* %.88, i64 0, i32 5
+  %.90 = load %"Bucket<string, PropId>.559366"* (%"Array<Bucket<string, PropId>>.559368"*, i64)*, %"Bucket<string, PropId>.559366"* (%"Array<Bucket<string, PropId>>.559368"*, i64)** %.89, align 8
+  %.91 = tail call %"Bucket<string, PropId>.559366"* %.90(%"Array<Bucket<string, PropId>>.559368"* nonnull %.10, i64 %storemerge29)
+  %.92 = getelementptr inbounds %"Bucket<string, PropId>.559366", %"Bucket<string, PropId>.559366"* %.91, i64 0, i32 2
+  %.93 = load %PropId.559294*, %PropId.559294** %.92, align 8
+  tail call void %.75(%"Map<string, PropId>.559362"* nonnull %.1, %string.559062* %.84, %PropId.559294* %.93)
+  %.99 = add nuw nsw i64 %storemerge29, 1
+  %.68 = load i64, i64* %.67, align 8
+  %.69 = icmp slt i64 %.99, %.68
+  br i1 %.69, label %for.body.1, label %for.end.1
 
 for.end.1:                                        ; preds = %for.body.1, %for.cond.1.preheader
   ret void
@@ -25077,74 +25089,74 @@ define void @"Map<string, PropId>_set"(%"Map<string, PropId>.559362"* %.1, %stri
   %.15 = load i64, i64* %.14, align 8
   %.16 = sitofp i64 %.15 to double
   %.17 = fdiv double %.12, %.16
-  %.18 = fcmp ogt double %.17, 7.500000e-01
-  br i1 %.18, label %.5.if, label %.5.endif
+  %.20 = fcmp ogt double %.17, 7.500000e-01
+  br i1 %.20, label %.5.if, label %.5.endif
 
 .5.if:                                            ; preds = %.5
-  %.21 = getelementptr inbounds %"Map<string, PropId>.559362", %"Map<string, PropId>.559362"* %.1, i64 0, i32 0
-  %.22 = load %"Map<string, PropId>_vtable_ty.559365"*, %"Map<string, PropId>_vtable_ty.559365"** %.21, align 8
-  %.23 = getelementptr inbounds %"Map<string, PropId>_vtable_ty.559365", %"Map<string, PropId>_vtable_ty.559365"* %.22, i64 0, i32 1
-  %.24 = load void (%"Map<string, PropId>.559362"*)*, void (%"Map<string, PropId>.559362"*)** %.23, align 8
-  tail call void %.24(%"Map<string, PropId>.559362"* nonnull %.1)
+  %.23 = getelementptr inbounds %"Map<string, PropId>.559362", %"Map<string, PropId>.559362"* %.1, i64 0, i32 0
+  %.24 = load %"Map<string, PropId>_vtable_ty.559365"*, %"Map<string, PropId>_vtable_ty.559365"** %.23, align 8
+  %.25 = getelementptr inbounds %"Map<string, PropId>_vtable_ty.559365", %"Map<string, PropId>_vtable_ty.559365"* %.24, i64 0, i32 1
+  %.26 = load void (%"Map<string, PropId>.559362"*)*, void (%"Map<string, PropId>.559362"*)** %.25, align 8
+  tail call void %.26(%"Map<string, PropId>.559362"* nonnull %.1)
   br label %.5.endif
 
 .5.endif:                                         ; preds = %.5.if, %.5
-  %.28 = getelementptr inbounds %"Map<string, PropId>.559362", %"Map<string, PropId>.559362"* %.1, i64 0, i32 0
-  %.29 = load %"Map<string, PropId>_vtable_ty.559365"*, %"Map<string, PropId>_vtable_ty.559365"** %.28, align 8
-  %.30 = getelementptr inbounds %"Map<string, PropId>_vtable_ty.559365", %"Map<string, PropId>_vtable_ty.559365"* %.29, i64 0, i32 0
-  %.31 = load i64 (%"Map<string, PropId>.559362"*, %string.559062*)*, i64 (%"Map<string, PropId>.559362"*, %string.559062*)** %.30, align 8
-  %.33 = tail call i64 %.31(%"Map<string, PropId>.559362"* nonnull %.1, %string.559062* %.2)
-  %.36 = load i64, i64* %.14, align 8
-  %.37 = srem i64 %.33, %.36
-  %.41 = getelementptr inbounds %"Map<string, PropId>.559362", %"Map<string, PropId>.559362"* %.1, i64 0, i32 1
-  %.42 = load %"Bucket<string, PropId>.559366"**, %"Bucket<string, PropId>.559366"*** %.41, align 8
-  %.43 = getelementptr inbounds %"Bucket<string, PropId>.559366"*, %"Bucket<string, PropId>.559366"** %.42, i64 %.37
-  %.44 = load %"Bucket<string, PropId>.559366"*, %"Bucket<string, PropId>.559366"** %.43, align 8
-  %.45 = getelementptr inbounds %"Bucket<string, PropId>.559366", %"Bucket<string, PropId>.559366"* %.44, i64 0, i32 3
-  %.46 = load i1, i1* %.45, align 1
-  br i1 %.46, label %while.exit, label %while.entry
+  %.30 = getelementptr inbounds %"Map<string, PropId>.559362", %"Map<string, PropId>.559362"* %.1, i64 0, i32 0
+  %.31 = load %"Map<string, PropId>_vtable_ty.559365"*, %"Map<string, PropId>_vtable_ty.559365"** %.30, align 8
+  %.32 = getelementptr inbounds %"Map<string, PropId>_vtable_ty.559365", %"Map<string, PropId>_vtable_ty.559365"* %.31, i64 0, i32 0
+  %.33 = load i64 (%"Map<string, PropId>.559362"*, %string.559062*)*, i64 (%"Map<string, PropId>.559362"*, %string.559062*)** %.32, align 8
+  %.35 = tail call i64 %.33(%"Map<string, PropId>.559362"* nonnull %.1, %string.559062* %.2)
+  %.38 = load i64, i64* %.14, align 8
+  %.39 = srem i64 %.35, %.38
+  %.43 = getelementptr inbounds %"Map<string, PropId>.559362", %"Map<string, PropId>.559362"* %.1, i64 0, i32 1
+  %.44 = load %"Bucket<string, PropId>.559366"**, %"Bucket<string, PropId>.559366"*** %.43, align 8
+  %.45 = getelementptr inbounds %"Bucket<string, PropId>.559366"*, %"Bucket<string, PropId>.559366"** %.44, i64 %.39
+  %.46 = load %"Bucket<string, PropId>.559366"*, %"Bucket<string, PropId>.559366"** %.45, align 8
+  %.47 = getelementptr inbounds %"Bucket<string, PropId>.559366", %"Bucket<string, PropId>.559366"* %.46, i64 0, i32 3
+  %.48 = load i1, i1* %.47, align 1
+  br i1 %.48, label %while.exit, label %while.entry
 
 while.entry:                                      ; preds = %.5.endif, %while.entry.endif
-  %.54 = phi %"Bucket<string, PropId>.559366"* [ %.77, %while.entry.endif ], [ %.44, %.5.endif ]
-  %.701 = phi i64 [ %.70, %while.entry.endif ], [ %.37, %.5.endif ]
-  %.55 = getelementptr inbounds %"Bucket<string, PropId>.559366", %"Bucket<string, PropId>.559366"* %.54, i64 0, i32 1
-  %.56 = load %string.559062*, %string.559062** %.55, align 8
-  %.58 = getelementptr inbounds %string.559062, %string.559062* %.56, i64 0, i32 0
-  %.59 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.58, align 8
-  %.60 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.59, i64 0, i32 4
-  %.61 = load i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)** %.60, align 8
-  %.62 = tail call i1 %.61(%string.559062* %.56, %string.559062* %.2)
-  br i1 %.62, label %while.entry.while.exit.loopexit_crit_edge, label %while.entry.endif
+  %.56 = phi %"Bucket<string, PropId>.559366"* [ %.79, %while.entry.endif ], [ %.46, %.5.endif ]
+  %.721 = phi i64 [ %.72, %while.entry.endif ], [ %.39, %.5.endif ]
+  %.57 = getelementptr inbounds %"Bucket<string, PropId>.559366", %"Bucket<string, PropId>.559366"* %.56, i64 0, i32 1
+  %.58 = load %string.559062*, %string.559062** %.57, align 8
+  %.60 = getelementptr inbounds %string.559062, %string.559062* %.58, i64 0, i32 0
+  %.61 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.60, align 8
+  %.62 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.61, i64 0, i32 4
+  %.63 = load i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)** %.62, align 8
+  %.64 = tail call i1 %.63(%string.559062* %.58, %string.559062* %.2)
+  br i1 %.64, label %while.entry.while.exit.loopexit_crit_edge, label %while.entry.endif
 
 while.entry.while.exit.loopexit_crit_edge:        ; preds = %while.entry
-  %.92.pre.pre = load %"Bucket<string, PropId>.559366"**, %"Bucket<string, PropId>.559366"*** %.41, align 8
+  %.94.pre.pre = load %"Bucket<string, PropId>.559366"**, %"Bucket<string, PropId>.559366"*** %.43, align 8
   br label %while.exit
 
 while.exit:                                       ; preds = %while.entry.endif, %while.entry.while.exit.loopexit_crit_edge, %.5.endif
-  %.92 = phi %"Bucket<string, PropId>.559366"** [ %.42, %.5.endif ], [ %.92.pre.pre, %while.entry.while.exit.loopexit_crit_edge ], [ %.75, %while.entry.endif ]
-  %.89 = phi i64 [ %.37, %.5.endif ], [ %.701, %while.entry.while.exit.loopexit_crit_edge ], [ %.70, %while.entry.endif ]
-  %.84 = load i64, i64* %.10, align 8
-  %.85 = add i64 %.84, 1
-  store i64 %.85, i64* %.10, align 8
-  %.93 = getelementptr inbounds %"Bucket<string, PropId>.559366"*, %"Bucket<string, PropId>.559366"** %.92, i64 %.89
-  %.94 = load %"Bucket<string, PropId>.559366"*, %"Bucket<string, PropId>.559366"** %.93, align 8
-  %.95 = getelementptr inbounds %"Bucket<string, PropId>.559366", %"Bucket<string, PropId>.559366"* %.94, i64 0, i32 0
-  %.96 = load %"Bucket<string, PropId>_vtable_ty.559367"*, %"Bucket<string, PropId>_vtable_ty.559367"** %.95, align 8
-  %.97 = getelementptr inbounds %"Bucket<string, PropId>_vtable_ty.559367", %"Bucket<string, PropId>_vtable_ty.559367"* %.96, i64 0, i32 0
-  %.98 = load void (%"Bucket<string, PropId>.559366"*, %string.559062*, %PropId.559294*)*, void (%"Bucket<string, PropId>.559366"*, %string.559062*, %PropId.559294*)** %.97, align 8
-  tail call void %.98(%"Bucket<string, PropId>.559366"* %.94, %string.559062* %.2, %PropId.559294* %.3)
+  %.94 = phi %"Bucket<string, PropId>.559366"** [ %.44, %.5.endif ], [ %.94.pre.pre, %while.entry.while.exit.loopexit_crit_edge ], [ %.77, %while.entry.endif ]
+  %.91 = phi i64 [ %.39, %.5.endif ], [ %.721, %while.entry.while.exit.loopexit_crit_edge ], [ %.72, %while.entry.endif ]
+  %.86 = load i64, i64* %.10, align 8
+  %.87 = add i64 %.86, 1
+  store i64 %.87, i64* %.10, align 8
+  %.95 = getelementptr inbounds %"Bucket<string, PropId>.559366"*, %"Bucket<string, PropId>.559366"** %.94, i64 %.91
+  %.96 = load %"Bucket<string, PropId>.559366"*, %"Bucket<string, PropId>.559366"** %.95, align 8
+  %.97 = getelementptr inbounds %"Bucket<string, PropId>.559366", %"Bucket<string, PropId>.559366"* %.96, i64 0, i32 0
+  %.98 = load %"Bucket<string, PropId>_vtable_ty.559367"*, %"Bucket<string, PropId>_vtable_ty.559367"** %.97, align 8
+  %.99 = getelementptr inbounds %"Bucket<string, PropId>_vtable_ty.559367", %"Bucket<string, PropId>_vtable_ty.559367"* %.98, i64 0, i32 0
+  %.100 = load void (%"Bucket<string, PropId>.559366"*, %string.559062*, %PropId.559294*)*, void (%"Bucket<string, PropId>.559366"*, %string.559062*, %PropId.559294*)** %.99, align 8
+  tail call void %.100(%"Bucket<string, PropId>.559366"* %.96, %string.559062* %.2, %PropId.559294* %.3)
   ret void
 
 while.entry.endif:                                ; preds = %while.entry
-  %.66 = add i64 %.701, 1
-  %.69 = load i64, i64* %.14, align 8
-  %.70 = srem i64 %.66, %.69
-  %.75 = load %"Bucket<string, PropId>.559366"**, %"Bucket<string, PropId>.559366"*** %.41, align 8
-  %.76 = getelementptr inbounds %"Bucket<string, PropId>.559366"*, %"Bucket<string, PropId>.559366"** %.75, i64 %.70
-  %.77 = load %"Bucket<string, PropId>.559366"*, %"Bucket<string, PropId>.559366"** %.76, align 8
-  %.78 = getelementptr inbounds %"Bucket<string, PropId>.559366", %"Bucket<string, PropId>.559366"* %.77, i64 0, i32 3
-  %.79 = load i1, i1* %.78, align 1
-  br i1 %.79, label %while.exit, label %while.entry
+  %.68 = add i64 %.721, 1
+  %.71 = load i64, i64* %.14, align 8
+  %.72 = srem i64 %.68, %.71
+  %.77 = load %"Bucket<string, PropId>.559366"**, %"Bucket<string, PropId>.559366"*** %.43, align 8
+  %.78 = getelementptr inbounds %"Bucket<string, PropId>.559366"*, %"Bucket<string, PropId>.559366"** %.77, i64 %.72
+  %.79 = load %"Bucket<string, PropId>.559366"*, %"Bucket<string, PropId>.559366"** %.78, align 8
+  %.80 = getelementptr inbounds %"Bucket<string, PropId>.559366", %"Bucket<string, PropId>.559366"* %.79, i64 0, i32 3
+  %.81 = load i1, i1* %.80, align 1
+  br i1 %.81, label %while.exit, label %while.entry
 }
 
 define %PropId.559294* @"Map<string, PropId>_get"(%"Map<string, PropId>.559362"* %.1, %string.559062* %.2) {
@@ -30515,85 +30527,87 @@ for.end.thread:                                   ; preds = %.4
 
 define void @"Map<string, Generic>_resize"(%"Map<string, Generic>.559402"* %.1) {
 .3:
-  %.10 = getelementptr inbounds %"Map<string, Generic>.559402", %"Map<string, Generic>.559402"* %.1, i64 0, i32 0
-  %.11 = load %"Map<string, Generic>_vtable_ty.559403"*, %"Map<string, Generic>_vtable_ty.559403"** %.10, align 8
-  %.12 = getelementptr inbounds %"Map<string, Generic>_vtable_ty.559403", %"Map<string, Generic>_vtable_ty.559403"* %.11, i64 0, i32 4
-  %.13 = load %"Array<Bucket<string, Generic>>.559406"* (%"Map<string, Generic>.559402"*)*, %"Array<Bucket<string, Generic>>.559406"* (%"Map<string, Generic>.559402"*)** %.12, align 8
-  %.14 = tail call %"Array<Bucket<string, Generic>>.559406"* %.13(%"Map<string, Generic>.559402"* %.1)
-  %.18 = getelementptr inbounds %"Map<string, Generic>.559402", %"Map<string, Generic>.559402"* %.1, i64 0, i32 3
-  %.19 = load i64, i64* %.18, align 8
-  %.20 = shl i64 %.19, 1
-  store i64 %.20, i64* %.18, align 8
-  %.25 = getelementptr inbounds %"Map<string, Generic>.559402", %"Map<string, Generic>.559402"* %.1, i64 0, i32 1
-  %0 = bitcast %"Bucket<string, Generic>.559404"*** %.25 to i8**
-  %.261 = load i8*, i8** %0, align 8
-  %.30 = shl i64 %.19, 4
-  %.32 = tail call i8* @realloc(i8* %.261, i64 %.30)
-  store i8* %.32, i8** %0, align 8
-  %.4210 = load i64, i64* %.18, align 8
-  %.4311 = icmp sgt i64 %.4210, 0
-  br i1 %.4311, label %for.body.preheader, label %for.cond.1.preheader
+  %.6 = getelementptr inbounds %"Map<string, Generic>.559402", %"Map<string, Generic>.559402"* %.1, i64 0, i32 0
+  %.7 = load %"Map<string, Generic>_vtable_ty.559403"*, %"Map<string, Generic>_vtable_ty.559403"** %.6, align 8
+  %.8 = getelementptr inbounds %"Map<string, Generic>_vtable_ty.559403", %"Map<string, Generic>_vtable_ty.559403"* %.7, i64 0, i32 4
+  %.9 = load %"Array<Bucket<string, Generic>>.559406"* (%"Map<string, Generic>.559402"*)*, %"Array<Bucket<string, Generic>>.559406"* (%"Map<string, Generic>.559402"*)** %.8, align 8
+  %.10 = tail call %"Array<Bucket<string, Generic>>.559406"* %.9(%"Map<string, Generic>.559402"* %.1)
+  %.14 = getelementptr inbounds %"Map<string, Generic>.559402", %"Map<string, Generic>.559402"* %.1, i64 0, i32 3
+  %.15 = load i64, i64* %.14, align 8
+  %.16 = shl i64 %.15, 1
+  store i64 %.16, i64* %.14, align 8
+  %.20 = getelementptr inbounds %"Map<string, Generic>.559402", %"Map<string, Generic>.559402"* %.1, i64 0, i32 2
+  store i64 0, i64* %.20, align 8
+  %.24 = getelementptr inbounds %"Map<string, Generic>.559402", %"Map<string, Generic>.559402"* %.1, i64 0, i32 1
+  %0 = bitcast %"Bucket<string, Generic>.559404"*** %.24 to i8**
+  %.251 = load i8*, i8** %0, align 8
+  %.29 = shl i64 %.15, 4
+  %.31 = tail call i8* @realloc(i8* %.251, i64 %.29)
+  store i8* %.31, i8** %0, align 8
+  %.4110 = load i64, i64* %.14, align 8
+  %.4211 = icmp sgt i64 %.4110, 0
+  br i1 %.4211, label %for.body.preheader, label %for.cond.1.preheader
 
 for.body.preheader:                               ; preds = %.3
-  %.4914 = tail call dereferenceable_or_null(32) i8* @malloc(i64 32)
-  %.5015 = bitcast i8* %.4914 to %"Bucket<string, Generic>.559404"*
-  %.5116 = bitcast i8* %.4914 to %"Bucket<string, Generic>_vtable_ty.559405"**
-  store %"Bucket<string, Generic>_vtable_ty.559405"* @"Bucket<string, Generic>_vtable_data", %"Bucket<string, Generic>_vtable_ty.559405"** %.5116, align 8
-  tail call void @"Bucket<string, Generic>_constructor"(%"Bucket<string, Generic>.559404"* %.5015)
-  %1 = bitcast i8* %.32 to i8**
-  store i8* %.4914, i8** %1, align 8
-  %.4217 = load i64, i64* %.18, align 8
-  %.4318 = icmp sgt i64 %.4217, 1
-  br i1 %.4318, label %for.body.for.body_crit_edge, label %for.cond.1.preheader
+  %.4814 = tail call dereferenceable_or_null(32) i8* @malloc(i64 32)
+  %.4915 = bitcast i8* %.4814 to %"Bucket<string, Generic>.559404"*
+  %.5016 = bitcast i8* %.4814 to %"Bucket<string, Generic>_vtable_ty.559405"**
+  store %"Bucket<string, Generic>_vtable_ty.559405"* @"Bucket<string, Generic>_vtable_data", %"Bucket<string, Generic>_vtable_ty.559405"** %.5016, align 8
+  tail call void @"Bucket<string, Generic>_constructor"(%"Bucket<string, Generic>.559404"* %.4915)
+  %1 = bitcast i8* %.31 to i8**
+  store i8* %.4814, i8** %1, align 8
+  %.4117 = load i64, i64* %.14, align 8
+  %.4218 = icmp sgt i64 %.4117, 1
+  br i1 %.4218, label %for.body.for.body_crit_edge, label %for.cond.1.preheader
 
 for.cond.1.preheader:                             ; preds = %for.body.for.body_crit_edge, %for.body.preheader, %.3
-  %.68 = getelementptr inbounds %"Array<Bucket<string, Generic>>.559406", %"Array<Bucket<string, Generic>>.559406"* %.14, i64 0, i32 2
-  %.697 = load i64, i64* %.68, align 8
-  %.708 = icmp sgt i64 %.697, 0
-  br i1 %.708, label %for.body.1.lr.ph, label %for.end.1
+  %.67 = getelementptr inbounds %"Array<Bucket<string, Generic>>.559406", %"Array<Bucket<string, Generic>>.559406"* %.10, i64 0, i32 2
+  %.687 = load i64, i64* %.67, align 8
+  %.698 = icmp sgt i64 %.687, 0
+  br i1 %.698, label %for.body.1.lr.ph, label %for.end.1
 
 for.body.1.lr.ph:                                 ; preds = %for.cond.1.preheader
-  %.79 = getelementptr inbounds %"Array<Bucket<string, Generic>>.559406", %"Array<Bucket<string, Generic>>.559406"* %.14, i64 0, i32 0
+  %.78 = getelementptr inbounds %"Array<Bucket<string, Generic>>.559406", %"Array<Bucket<string, Generic>>.559406"* %.10, i64 0, i32 0
   br label %for.body.1
 
 for.body.for.body_crit_edge:                      ; preds = %for.body.preheader, %for.body.for.body_crit_edge
-  %.6019 = phi i64 [ %.60, %for.body.for.body_crit_edge ], [ 1, %for.body.preheader ]
-  %.48.pre = load %"Bucket<string, Generic>.559404"**, %"Bucket<string, Generic>.559404"*** %.25, align 8
-  %.49 = tail call dereferenceable_or_null(32) i8* @malloc(i64 32)
-  %.50 = bitcast i8* %.49 to %"Bucket<string, Generic>.559404"*
-  %.51 = bitcast i8* %.49 to %"Bucket<string, Generic>_vtable_ty.559405"**
-  store %"Bucket<string, Generic>_vtable_ty.559405"* @"Bucket<string, Generic>_vtable_data", %"Bucket<string, Generic>_vtable_ty.559405"** %.51, align 8
-  tail call void @"Bucket<string, Generic>_constructor"(%"Bucket<string, Generic>.559404"* %.50)
-  %.54 = getelementptr inbounds %"Bucket<string, Generic>.559404"*, %"Bucket<string, Generic>.559404"** %.48.pre, i64 %.6019
-  %2 = bitcast %"Bucket<string, Generic>.559404"** %.54 to i8**
-  store i8* %.49, i8** %2, align 8
-  %.60 = add nuw nsw i64 %.6019, 1
-  %.42 = load i64, i64* %.18, align 8
-  %.43 = icmp slt i64 %.60, %.42
-  br i1 %.43, label %for.body.for.body_crit_edge, label %for.cond.1.preheader
+  %.5919 = phi i64 [ %.59, %for.body.for.body_crit_edge ], [ 1, %for.body.preheader ]
+  %.47.pre = load %"Bucket<string, Generic>.559404"**, %"Bucket<string, Generic>.559404"*** %.24, align 8
+  %.48 = tail call dereferenceable_or_null(32) i8* @malloc(i64 32)
+  %.49 = bitcast i8* %.48 to %"Bucket<string, Generic>.559404"*
+  %.50 = bitcast i8* %.48 to %"Bucket<string, Generic>_vtable_ty.559405"**
+  store %"Bucket<string, Generic>_vtable_ty.559405"* @"Bucket<string, Generic>_vtable_data", %"Bucket<string, Generic>_vtable_ty.559405"** %.50, align 8
+  tail call void @"Bucket<string, Generic>_constructor"(%"Bucket<string, Generic>.559404"* %.49)
+  %.53 = getelementptr inbounds %"Bucket<string, Generic>.559404"*, %"Bucket<string, Generic>.559404"** %.47.pre, i64 %.5919
+  %2 = bitcast %"Bucket<string, Generic>.559404"** %.53 to i8**
+  store i8* %.48, i8** %2, align 8
+  %.59 = add nuw nsw i64 %.5919, 1
+  %.41 = load i64, i64* %.14, align 8
+  %.42 = icmp slt i64 %.59, %.41
+  br i1 %.42, label %for.body.for.body_crit_edge, label %for.cond.1.preheader
 
 for.body.1:                                       ; preds = %for.body.1.lr.ph, %for.body.1
-  %storemerge29 = phi i64 [ 0, %for.body.1.lr.ph ], [ %.100, %for.body.1 ]
-  %.74 = load %"Map<string, Generic>_vtable_ty.559403"*, %"Map<string, Generic>_vtable_ty.559403"** %.10, align 8
-  %.75 = getelementptr inbounds %"Map<string, Generic>_vtable_ty.559403", %"Map<string, Generic>_vtable_ty.559403"* %.74, i64 0, i32 2
-  %.76 = load void (%"Map<string, Generic>.559402"*, %string.559062*, %Generic.559398*)*, void (%"Map<string, Generic>.559402"*, %string.559062*, %Generic.559398*)** %.75, align 8
-  %.80 = load %"Array<Bucket<string, Generic>>_vtable_ty.559407"*, %"Array<Bucket<string, Generic>>_vtable_ty.559407"** %.79, align 8
-  %.81 = getelementptr inbounds %"Array<Bucket<string, Generic>>_vtable_ty.559407", %"Array<Bucket<string, Generic>>_vtable_ty.559407"* %.80, i64 0, i32 5
-  %.82 = load %"Bucket<string, Generic>.559404"* (%"Array<Bucket<string, Generic>>.559406"*, i64)*, %"Bucket<string, Generic>.559404"* (%"Array<Bucket<string, Generic>>.559406"*, i64)** %.81, align 8
-  %.83 = tail call %"Bucket<string, Generic>.559404"* %.82(%"Array<Bucket<string, Generic>>.559406"* nonnull %.14, i64 %storemerge29)
-  %.84 = getelementptr inbounds %"Bucket<string, Generic>.559404", %"Bucket<string, Generic>.559404"* %.83, i64 0, i32 1
-  %.85 = load %string.559062*, %string.559062** %.84, align 8
-  %.89 = load %"Array<Bucket<string, Generic>>_vtable_ty.559407"*, %"Array<Bucket<string, Generic>>_vtable_ty.559407"** %.79, align 8
-  %.90 = getelementptr inbounds %"Array<Bucket<string, Generic>>_vtable_ty.559407", %"Array<Bucket<string, Generic>>_vtable_ty.559407"* %.89, i64 0, i32 5
-  %.91 = load %"Bucket<string, Generic>.559404"* (%"Array<Bucket<string, Generic>>.559406"*, i64)*, %"Bucket<string, Generic>.559404"* (%"Array<Bucket<string, Generic>>.559406"*, i64)** %.90, align 8
-  %.92 = tail call %"Bucket<string, Generic>.559404"* %.91(%"Array<Bucket<string, Generic>>.559406"* nonnull %.14, i64 %storemerge29)
-  %.93 = getelementptr inbounds %"Bucket<string, Generic>.559404", %"Bucket<string, Generic>.559404"* %.92, i64 0, i32 2
-  %.94 = load %Generic.559398*, %Generic.559398** %.93, align 8
-  tail call void %.76(%"Map<string, Generic>.559402"* nonnull %.1, %string.559062* %.85, %Generic.559398* %.94)
-  %.100 = add nuw nsw i64 %storemerge29, 1
-  %.69 = load i64, i64* %.68, align 8
-  %.70 = icmp slt i64 %.100, %.69
-  br i1 %.70, label %for.body.1, label %for.end.1
+  %storemerge29 = phi i64 [ 0, %for.body.1.lr.ph ], [ %.99, %for.body.1 ]
+  %.73 = load %"Map<string, Generic>_vtable_ty.559403"*, %"Map<string, Generic>_vtable_ty.559403"** %.6, align 8
+  %.74 = getelementptr inbounds %"Map<string, Generic>_vtable_ty.559403", %"Map<string, Generic>_vtable_ty.559403"* %.73, i64 0, i32 2
+  %.75 = load void (%"Map<string, Generic>.559402"*, %string.559062*, %Generic.559398*)*, void (%"Map<string, Generic>.559402"*, %string.559062*, %Generic.559398*)** %.74, align 8
+  %.79 = load %"Array<Bucket<string, Generic>>_vtable_ty.559407"*, %"Array<Bucket<string, Generic>>_vtable_ty.559407"** %.78, align 8
+  %.80 = getelementptr inbounds %"Array<Bucket<string, Generic>>_vtable_ty.559407", %"Array<Bucket<string, Generic>>_vtable_ty.559407"* %.79, i64 0, i32 5
+  %.81 = load %"Bucket<string, Generic>.559404"* (%"Array<Bucket<string, Generic>>.559406"*, i64)*, %"Bucket<string, Generic>.559404"* (%"Array<Bucket<string, Generic>>.559406"*, i64)** %.80, align 8
+  %.82 = tail call %"Bucket<string, Generic>.559404"* %.81(%"Array<Bucket<string, Generic>>.559406"* nonnull %.10, i64 %storemerge29)
+  %.83 = getelementptr inbounds %"Bucket<string, Generic>.559404", %"Bucket<string, Generic>.559404"* %.82, i64 0, i32 1
+  %.84 = load %string.559062*, %string.559062** %.83, align 8
+  %.88 = load %"Array<Bucket<string, Generic>>_vtable_ty.559407"*, %"Array<Bucket<string, Generic>>_vtable_ty.559407"** %.78, align 8
+  %.89 = getelementptr inbounds %"Array<Bucket<string, Generic>>_vtable_ty.559407", %"Array<Bucket<string, Generic>>_vtable_ty.559407"* %.88, i64 0, i32 5
+  %.90 = load %"Bucket<string, Generic>.559404"* (%"Array<Bucket<string, Generic>>.559406"*, i64)*, %"Bucket<string, Generic>.559404"* (%"Array<Bucket<string, Generic>>.559406"*, i64)** %.89, align 8
+  %.91 = tail call %"Bucket<string, Generic>.559404"* %.90(%"Array<Bucket<string, Generic>>.559406"* nonnull %.10, i64 %storemerge29)
+  %.92 = getelementptr inbounds %"Bucket<string, Generic>.559404", %"Bucket<string, Generic>.559404"* %.91, i64 0, i32 2
+  %.93 = load %Generic.559398*, %Generic.559398** %.92, align 8
+  tail call void %.75(%"Map<string, Generic>.559402"* nonnull %.1, %string.559062* %.84, %Generic.559398* %.93)
+  %.99 = add nuw nsw i64 %storemerge29, 1
+  %.68 = load i64, i64* %.67, align 8
+  %.69 = icmp slt i64 %.99, %.68
+  br i1 %.69, label %for.body.1, label %for.end.1
 
 for.end.1:                                        ; preds = %for.body.1, %for.cond.1.preheader
   ret void
@@ -30608,74 +30622,74 @@ define void @"Map<string, Generic>_set"(%"Map<string, Generic>.559402"* %.1, %st
   %.15 = load i64, i64* %.14, align 8
   %.16 = sitofp i64 %.15 to double
   %.17 = fdiv double %.12, %.16
-  %.18 = fcmp ogt double %.17, 7.500000e-01
-  br i1 %.18, label %.5.if, label %.5.endif
+  %.20 = fcmp ogt double %.17, 7.500000e-01
+  br i1 %.20, label %.5.if, label %.5.endif
 
 .5.if:                                            ; preds = %.5
-  %.21 = getelementptr inbounds %"Map<string, Generic>.559402", %"Map<string, Generic>.559402"* %.1, i64 0, i32 0
-  %.22 = load %"Map<string, Generic>_vtable_ty.559403"*, %"Map<string, Generic>_vtable_ty.559403"** %.21, align 8
-  %.23 = getelementptr inbounds %"Map<string, Generic>_vtable_ty.559403", %"Map<string, Generic>_vtable_ty.559403"* %.22, i64 0, i32 1
-  %.24 = load void (%"Map<string, Generic>.559402"*)*, void (%"Map<string, Generic>.559402"*)** %.23, align 8
-  tail call void %.24(%"Map<string, Generic>.559402"* nonnull %.1)
+  %.23 = getelementptr inbounds %"Map<string, Generic>.559402", %"Map<string, Generic>.559402"* %.1, i64 0, i32 0
+  %.24 = load %"Map<string, Generic>_vtable_ty.559403"*, %"Map<string, Generic>_vtable_ty.559403"** %.23, align 8
+  %.25 = getelementptr inbounds %"Map<string, Generic>_vtable_ty.559403", %"Map<string, Generic>_vtable_ty.559403"* %.24, i64 0, i32 1
+  %.26 = load void (%"Map<string, Generic>.559402"*)*, void (%"Map<string, Generic>.559402"*)** %.25, align 8
+  tail call void %.26(%"Map<string, Generic>.559402"* nonnull %.1)
   br label %.5.endif
 
 .5.endif:                                         ; preds = %.5.if, %.5
-  %.28 = getelementptr inbounds %"Map<string, Generic>.559402", %"Map<string, Generic>.559402"* %.1, i64 0, i32 0
-  %.29 = load %"Map<string, Generic>_vtable_ty.559403"*, %"Map<string, Generic>_vtable_ty.559403"** %.28, align 8
-  %.30 = getelementptr inbounds %"Map<string, Generic>_vtable_ty.559403", %"Map<string, Generic>_vtable_ty.559403"* %.29, i64 0, i32 0
-  %.31 = load i64 (%"Map<string, Generic>.559402"*, %string.559062*)*, i64 (%"Map<string, Generic>.559402"*, %string.559062*)** %.30, align 8
-  %.33 = tail call i64 %.31(%"Map<string, Generic>.559402"* nonnull %.1, %string.559062* %.2)
-  %.36 = load i64, i64* %.14, align 8
-  %.37 = srem i64 %.33, %.36
-  %.41 = getelementptr inbounds %"Map<string, Generic>.559402", %"Map<string, Generic>.559402"* %.1, i64 0, i32 1
-  %.42 = load %"Bucket<string, Generic>.559404"**, %"Bucket<string, Generic>.559404"*** %.41, align 8
-  %.43 = getelementptr inbounds %"Bucket<string, Generic>.559404"*, %"Bucket<string, Generic>.559404"** %.42, i64 %.37
-  %.44 = load %"Bucket<string, Generic>.559404"*, %"Bucket<string, Generic>.559404"** %.43, align 8
-  %.45 = getelementptr inbounds %"Bucket<string, Generic>.559404", %"Bucket<string, Generic>.559404"* %.44, i64 0, i32 3
-  %.46 = load i1, i1* %.45, align 1
-  br i1 %.46, label %while.exit, label %while.entry
+  %.30 = getelementptr inbounds %"Map<string, Generic>.559402", %"Map<string, Generic>.559402"* %.1, i64 0, i32 0
+  %.31 = load %"Map<string, Generic>_vtable_ty.559403"*, %"Map<string, Generic>_vtable_ty.559403"** %.30, align 8
+  %.32 = getelementptr inbounds %"Map<string, Generic>_vtable_ty.559403", %"Map<string, Generic>_vtable_ty.559403"* %.31, i64 0, i32 0
+  %.33 = load i64 (%"Map<string, Generic>.559402"*, %string.559062*)*, i64 (%"Map<string, Generic>.559402"*, %string.559062*)** %.32, align 8
+  %.35 = tail call i64 %.33(%"Map<string, Generic>.559402"* nonnull %.1, %string.559062* %.2)
+  %.38 = load i64, i64* %.14, align 8
+  %.39 = srem i64 %.35, %.38
+  %.43 = getelementptr inbounds %"Map<string, Generic>.559402", %"Map<string, Generic>.559402"* %.1, i64 0, i32 1
+  %.44 = load %"Bucket<string, Generic>.559404"**, %"Bucket<string, Generic>.559404"*** %.43, align 8
+  %.45 = getelementptr inbounds %"Bucket<string, Generic>.559404"*, %"Bucket<string, Generic>.559404"** %.44, i64 %.39
+  %.46 = load %"Bucket<string, Generic>.559404"*, %"Bucket<string, Generic>.559404"** %.45, align 8
+  %.47 = getelementptr inbounds %"Bucket<string, Generic>.559404", %"Bucket<string, Generic>.559404"* %.46, i64 0, i32 3
+  %.48 = load i1, i1* %.47, align 1
+  br i1 %.48, label %while.exit, label %while.entry
 
 while.entry:                                      ; preds = %.5.endif, %while.entry.endif
-  %.54 = phi %"Bucket<string, Generic>.559404"* [ %.77, %while.entry.endif ], [ %.44, %.5.endif ]
-  %.701 = phi i64 [ %.70, %while.entry.endif ], [ %.37, %.5.endif ]
-  %.55 = getelementptr inbounds %"Bucket<string, Generic>.559404", %"Bucket<string, Generic>.559404"* %.54, i64 0, i32 1
-  %.56 = load %string.559062*, %string.559062** %.55, align 8
-  %.58 = getelementptr inbounds %string.559062, %string.559062* %.56, i64 0, i32 0
-  %.59 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.58, align 8
-  %.60 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.59, i64 0, i32 4
-  %.61 = load i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)** %.60, align 8
-  %.62 = tail call i1 %.61(%string.559062* %.56, %string.559062* %.2)
-  br i1 %.62, label %while.entry.while.exit.loopexit_crit_edge, label %while.entry.endif
+  %.56 = phi %"Bucket<string, Generic>.559404"* [ %.79, %while.entry.endif ], [ %.46, %.5.endif ]
+  %.721 = phi i64 [ %.72, %while.entry.endif ], [ %.39, %.5.endif ]
+  %.57 = getelementptr inbounds %"Bucket<string, Generic>.559404", %"Bucket<string, Generic>.559404"* %.56, i64 0, i32 1
+  %.58 = load %string.559062*, %string.559062** %.57, align 8
+  %.60 = getelementptr inbounds %string.559062, %string.559062* %.58, i64 0, i32 0
+  %.61 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.60, align 8
+  %.62 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.61, i64 0, i32 4
+  %.63 = load i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)** %.62, align 8
+  %.64 = tail call i1 %.63(%string.559062* %.58, %string.559062* %.2)
+  br i1 %.64, label %while.entry.while.exit.loopexit_crit_edge, label %while.entry.endif
 
 while.entry.while.exit.loopexit_crit_edge:        ; preds = %while.entry
-  %.92.pre.pre = load %"Bucket<string, Generic>.559404"**, %"Bucket<string, Generic>.559404"*** %.41, align 8
+  %.94.pre.pre = load %"Bucket<string, Generic>.559404"**, %"Bucket<string, Generic>.559404"*** %.43, align 8
   br label %while.exit
 
 while.exit:                                       ; preds = %while.entry.endif, %while.entry.while.exit.loopexit_crit_edge, %.5.endif
-  %.92 = phi %"Bucket<string, Generic>.559404"** [ %.42, %.5.endif ], [ %.92.pre.pre, %while.entry.while.exit.loopexit_crit_edge ], [ %.75, %while.entry.endif ]
-  %.89 = phi i64 [ %.37, %.5.endif ], [ %.701, %while.entry.while.exit.loopexit_crit_edge ], [ %.70, %while.entry.endif ]
-  %.84 = load i64, i64* %.10, align 8
-  %.85 = add i64 %.84, 1
-  store i64 %.85, i64* %.10, align 8
-  %.93 = getelementptr inbounds %"Bucket<string, Generic>.559404"*, %"Bucket<string, Generic>.559404"** %.92, i64 %.89
-  %.94 = load %"Bucket<string, Generic>.559404"*, %"Bucket<string, Generic>.559404"** %.93, align 8
-  %.95 = getelementptr inbounds %"Bucket<string, Generic>.559404", %"Bucket<string, Generic>.559404"* %.94, i64 0, i32 0
-  %.96 = load %"Bucket<string, Generic>_vtable_ty.559405"*, %"Bucket<string, Generic>_vtable_ty.559405"** %.95, align 8
-  %.97 = getelementptr inbounds %"Bucket<string, Generic>_vtable_ty.559405", %"Bucket<string, Generic>_vtable_ty.559405"* %.96, i64 0, i32 0
-  %.98 = load void (%"Bucket<string, Generic>.559404"*, %string.559062*, %Generic.559398*)*, void (%"Bucket<string, Generic>.559404"*, %string.559062*, %Generic.559398*)** %.97, align 8
-  tail call void %.98(%"Bucket<string, Generic>.559404"* %.94, %string.559062* %.2, %Generic.559398* %.3)
+  %.94 = phi %"Bucket<string, Generic>.559404"** [ %.44, %.5.endif ], [ %.94.pre.pre, %while.entry.while.exit.loopexit_crit_edge ], [ %.77, %while.entry.endif ]
+  %.91 = phi i64 [ %.39, %.5.endif ], [ %.721, %while.entry.while.exit.loopexit_crit_edge ], [ %.72, %while.entry.endif ]
+  %.86 = load i64, i64* %.10, align 8
+  %.87 = add i64 %.86, 1
+  store i64 %.87, i64* %.10, align 8
+  %.95 = getelementptr inbounds %"Bucket<string, Generic>.559404"*, %"Bucket<string, Generic>.559404"** %.94, i64 %.91
+  %.96 = load %"Bucket<string, Generic>.559404"*, %"Bucket<string, Generic>.559404"** %.95, align 8
+  %.97 = getelementptr inbounds %"Bucket<string, Generic>.559404", %"Bucket<string, Generic>.559404"* %.96, i64 0, i32 0
+  %.98 = load %"Bucket<string, Generic>_vtable_ty.559405"*, %"Bucket<string, Generic>_vtable_ty.559405"** %.97, align 8
+  %.99 = getelementptr inbounds %"Bucket<string, Generic>_vtable_ty.559405", %"Bucket<string, Generic>_vtable_ty.559405"* %.98, i64 0, i32 0
+  %.100 = load void (%"Bucket<string, Generic>.559404"*, %string.559062*, %Generic.559398*)*, void (%"Bucket<string, Generic>.559404"*, %string.559062*, %Generic.559398*)** %.99, align 8
+  tail call void %.100(%"Bucket<string, Generic>.559404"* %.96, %string.559062* %.2, %Generic.559398* %.3)
   ret void
 
 while.entry.endif:                                ; preds = %while.entry
-  %.66 = add i64 %.701, 1
-  %.69 = load i64, i64* %.14, align 8
-  %.70 = srem i64 %.66, %.69
-  %.75 = load %"Bucket<string, Generic>.559404"**, %"Bucket<string, Generic>.559404"*** %.41, align 8
-  %.76 = getelementptr inbounds %"Bucket<string, Generic>.559404"*, %"Bucket<string, Generic>.559404"** %.75, i64 %.70
-  %.77 = load %"Bucket<string, Generic>.559404"*, %"Bucket<string, Generic>.559404"** %.76, align 8
-  %.78 = getelementptr inbounds %"Bucket<string, Generic>.559404", %"Bucket<string, Generic>.559404"* %.77, i64 0, i32 3
-  %.79 = load i1, i1* %.78, align 1
-  br i1 %.79, label %while.exit, label %while.entry
+  %.68 = add i64 %.721, 1
+  %.71 = load i64, i64* %.14, align 8
+  %.72 = srem i64 %.68, %.71
+  %.77 = load %"Bucket<string, Generic>.559404"**, %"Bucket<string, Generic>.559404"*** %.43, align 8
+  %.78 = getelementptr inbounds %"Bucket<string, Generic>.559404"*, %"Bucket<string, Generic>.559404"** %.77, i64 %.72
+  %.79 = load %"Bucket<string, Generic>.559404"*, %"Bucket<string, Generic>.559404"** %.78, align 8
+  %.80 = getelementptr inbounds %"Bucket<string, Generic>.559404", %"Bucket<string, Generic>.559404"* %.79, i64 0, i32 3
+  %.81 = load i1, i1* %.80, align 1
+  br i1 %.81, label %while.exit, label %while.entry
 }
 
 define %Generic.559398* @"Map<string, Generic>_get"(%"Map<string, Generic>.559402"* %.1, %string.559062* %.2) {
@@ -43996,85 +44010,87 @@ for.end.thread:                                   ; preds = %.4
 
 define void @"Map<string, int>_resize"(%"Map<string, int>.559442"* %.1) {
 .3:
-  %.10 = getelementptr inbounds %"Map<string, int>.559442", %"Map<string, int>.559442"* %.1, i64 0, i32 0
-  %.11 = load %"Map<string, int>_vtable_ty.559444"*, %"Map<string, int>_vtable_ty.559444"** %.10, align 8
-  %.12 = getelementptr inbounds %"Map<string, int>_vtable_ty.559444", %"Map<string, int>_vtable_ty.559444"* %.11, i64 0, i32 4
-  %.13 = load %"Array<Bucket<string, int>>.559447"* (%"Map<string, int>.559442"*)*, %"Array<Bucket<string, int>>.559447"* (%"Map<string, int>.559442"*)** %.12, align 8
-  %.14 = tail call %"Array<Bucket<string, int>>.559447"* %.13(%"Map<string, int>.559442"* %.1)
-  %.18 = getelementptr inbounds %"Map<string, int>.559442", %"Map<string, int>.559442"* %.1, i64 0, i32 3
-  %.19 = load i64, i64* %.18, align 8
-  %.20 = shl i64 %.19, 1
-  store i64 %.20, i64* %.18, align 8
-  %.25 = getelementptr inbounds %"Map<string, int>.559442", %"Map<string, int>.559442"* %.1, i64 0, i32 1
-  %0 = bitcast %"Bucket<string, int>.559445"*** %.25 to i8**
-  %.261 = load i8*, i8** %0, align 8
-  %.30 = shl i64 %.19, 4
-  %.32 = tail call i8* @realloc(i8* %.261, i64 %.30)
-  store i8* %.32, i8** %0, align 8
-  %.4210 = load i64, i64* %.18, align 8
-  %.4311 = icmp sgt i64 %.4210, 0
-  br i1 %.4311, label %for.body.preheader, label %for.cond.1.preheader
+  %.6 = getelementptr inbounds %"Map<string, int>.559442", %"Map<string, int>.559442"* %.1, i64 0, i32 0
+  %.7 = load %"Map<string, int>_vtable_ty.559444"*, %"Map<string, int>_vtable_ty.559444"** %.6, align 8
+  %.8 = getelementptr inbounds %"Map<string, int>_vtable_ty.559444", %"Map<string, int>_vtable_ty.559444"* %.7, i64 0, i32 4
+  %.9 = load %"Array<Bucket<string, int>>.559447"* (%"Map<string, int>.559442"*)*, %"Array<Bucket<string, int>>.559447"* (%"Map<string, int>.559442"*)** %.8, align 8
+  %.10 = tail call %"Array<Bucket<string, int>>.559447"* %.9(%"Map<string, int>.559442"* %.1)
+  %.14 = getelementptr inbounds %"Map<string, int>.559442", %"Map<string, int>.559442"* %.1, i64 0, i32 3
+  %.15 = load i64, i64* %.14, align 8
+  %.16 = shl i64 %.15, 1
+  store i64 %.16, i64* %.14, align 8
+  %.20 = getelementptr inbounds %"Map<string, int>.559442", %"Map<string, int>.559442"* %.1, i64 0, i32 2
+  store i64 0, i64* %.20, align 8
+  %.24 = getelementptr inbounds %"Map<string, int>.559442", %"Map<string, int>.559442"* %.1, i64 0, i32 1
+  %0 = bitcast %"Bucket<string, int>.559445"*** %.24 to i8**
+  %.251 = load i8*, i8** %0, align 8
+  %.29 = shl i64 %.15, 4
+  %.31 = tail call i8* @realloc(i8* %.251, i64 %.29)
+  store i8* %.31, i8** %0, align 8
+  %.4110 = load i64, i64* %.14, align 8
+  %.4211 = icmp sgt i64 %.4110, 0
+  br i1 %.4211, label %for.body.preheader, label %for.cond.1.preheader
 
 for.body.preheader:                               ; preds = %.3
-  %.4914 = tail call dereferenceable_or_null(32) i8* @malloc(i64 32)
-  %.5015 = bitcast i8* %.4914 to %"Bucket<string, int>.559445"*
-  %.5116 = bitcast i8* %.4914 to %"Bucket<string, int>_vtable_ty.559446"**
-  store %"Bucket<string, int>_vtable_ty.559446"* @"Bucket<string, int>_vtable_data", %"Bucket<string, int>_vtable_ty.559446"** %.5116, align 8
-  tail call void @"Bucket<string, int>_constructor"(%"Bucket<string, int>.559445"* %.5015)
-  %1 = bitcast i8* %.32 to i8**
-  store i8* %.4914, i8** %1, align 8
-  %.4217 = load i64, i64* %.18, align 8
-  %.4318 = icmp sgt i64 %.4217, 1
-  br i1 %.4318, label %for.body.for.body_crit_edge, label %for.cond.1.preheader
+  %.4814 = tail call dereferenceable_or_null(32) i8* @malloc(i64 32)
+  %.4915 = bitcast i8* %.4814 to %"Bucket<string, int>.559445"*
+  %.5016 = bitcast i8* %.4814 to %"Bucket<string, int>_vtable_ty.559446"**
+  store %"Bucket<string, int>_vtable_ty.559446"* @"Bucket<string, int>_vtable_data", %"Bucket<string, int>_vtable_ty.559446"** %.5016, align 8
+  tail call void @"Bucket<string, int>_constructor"(%"Bucket<string, int>.559445"* %.4915)
+  %1 = bitcast i8* %.31 to i8**
+  store i8* %.4814, i8** %1, align 8
+  %.4117 = load i64, i64* %.14, align 8
+  %.4218 = icmp sgt i64 %.4117, 1
+  br i1 %.4218, label %for.body.for.body_crit_edge, label %for.cond.1.preheader
 
 for.cond.1.preheader:                             ; preds = %for.body.for.body_crit_edge, %for.body.preheader, %.3
-  %.68 = getelementptr inbounds %"Array<Bucket<string, int>>.559447", %"Array<Bucket<string, int>>.559447"* %.14, i64 0, i32 2
-  %.697 = load i64, i64* %.68, align 8
-  %.708 = icmp sgt i64 %.697, 0
-  br i1 %.708, label %for.body.1.lr.ph, label %for.end.1
+  %.67 = getelementptr inbounds %"Array<Bucket<string, int>>.559447", %"Array<Bucket<string, int>>.559447"* %.10, i64 0, i32 2
+  %.687 = load i64, i64* %.67, align 8
+  %.698 = icmp sgt i64 %.687, 0
+  br i1 %.698, label %for.body.1.lr.ph, label %for.end.1
 
 for.body.1.lr.ph:                                 ; preds = %for.cond.1.preheader
-  %.79 = getelementptr inbounds %"Array<Bucket<string, int>>.559447", %"Array<Bucket<string, int>>.559447"* %.14, i64 0, i32 0
+  %.78 = getelementptr inbounds %"Array<Bucket<string, int>>.559447", %"Array<Bucket<string, int>>.559447"* %.10, i64 0, i32 0
   br label %for.body.1
 
 for.body.for.body_crit_edge:                      ; preds = %for.body.preheader, %for.body.for.body_crit_edge
-  %.6019 = phi i64 [ %.60, %for.body.for.body_crit_edge ], [ 1, %for.body.preheader ]
-  %.48.pre = load %"Bucket<string, int>.559445"**, %"Bucket<string, int>.559445"*** %.25, align 8
-  %.49 = tail call dereferenceable_or_null(32) i8* @malloc(i64 32)
-  %.50 = bitcast i8* %.49 to %"Bucket<string, int>.559445"*
-  %.51 = bitcast i8* %.49 to %"Bucket<string, int>_vtable_ty.559446"**
-  store %"Bucket<string, int>_vtable_ty.559446"* @"Bucket<string, int>_vtable_data", %"Bucket<string, int>_vtable_ty.559446"** %.51, align 8
-  tail call void @"Bucket<string, int>_constructor"(%"Bucket<string, int>.559445"* %.50)
-  %.54 = getelementptr inbounds %"Bucket<string, int>.559445"*, %"Bucket<string, int>.559445"** %.48.pre, i64 %.6019
-  %2 = bitcast %"Bucket<string, int>.559445"** %.54 to i8**
-  store i8* %.49, i8** %2, align 8
-  %.60 = add nuw nsw i64 %.6019, 1
-  %.42 = load i64, i64* %.18, align 8
-  %.43 = icmp slt i64 %.60, %.42
-  br i1 %.43, label %for.body.for.body_crit_edge, label %for.cond.1.preheader
+  %.5919 = phi i64 [ %.59, %for.body.for.body_crit_edge ], [ 1, %for.body.preheader ]
+  %.47.pre = load %"Bucket<string, int>.559445"**, %"Bucket<string, int>.559445"*** %.24, align 8
+  %.48 = tail call dereferenceable_or_null(32) i8* @malloc(i64 32)
+  %.49 = bitcast i8* %.48 to %"Bucket<string, int>.559445"*
+  %.50 = bitcast i8* %.48 to %"Bucket<string, int>_vtable_ty.559446"**
+  store %"Bucket<string, int>_vtable_ty.559446"* @"Bucket<string, int>_vtable_data", %"Bucket<string, int>_vtable_ty.559446"** %.50, align 8
+  tail call void @"Bucket<string, int>_constructor"(%"Bucket<string, int>.559445"* %.49)
+  %.53 = getelementptr inbounds %"Bucket<string, int>.559445"*, %"Bucket<string, int>.559445"** %.47.pre, i64 %.5919
+  %2 = bitcast %"Bucket<string, int>.559445"** %.53 to i8**
+  store i8* %.48, i8** %2, align 8
+  %.59 = add nuw nsw i64 %.5919, 1
+  %.41 = load i64, i64* %.14, align 8
+  %.42 = icmp slt i64 %.59, %.41
+  br i1 %.42, label %for.body.for.body_crit_edge, label %for.cond.1.preheader
 
 for.body.1:                                       ; preds = %for.body.1.lr.ph, %for.body.1
-  %storemerge29 = phi i64 [ 0, %for.body.1.lr.ph ], [ %.100, %for.body.1 ]
-  %.74 = load %"Map<string, int>_vtable_ty.559444"*, %"Map<string, int>_vtable_ty.559444"** %.10, align 8
-  %.75 = getelementptr inbounds %"Map<string, int>_vtable_ty.559444", %"Map<string, int>_vtable_ty.559444"* %.74, i64 0, i32 2
-  %.76 = load void (%"Map<string, int>.559442"*, %string.559062*, i64)*, void (%"Map<string, int>.559442"*, %string.559062*, i64)** %.75, align 8
-  %.80 = load %"Array<Bucket<string, int>>_vtable_ty.559448"*, %"Array<Bucket<string, int>>_vtable_ty.559448"** %.79, align 8
-  %.81 = getelementptr inbounds %"Array<Bucket<string, int>>_vtable_ty.559448", %"Array<Bucket<string, int>>_vtable_ty.559448"* %.80, i64 0, i32 5
-  %.82 = load %"Bucket<string, int>.559445"* (%"Array<Bucket<string, int>>.559447"*, i64)*, %"Bucket<string, int>.559445"* (%"Array<Bucket<string, int>>.559447"*, i64)** %.81, align 8
-  %.83 = tail call %"Bucket<string, int>.559445"* %.82(%"Array<Bucket<string, int>>.559447"* nonnull %.14, i64 %storemerge29)
-  %.84 = getelementptr inbounds %"Bucket<string, int>.559445", %"Bucket<string, int>.559445"* %.83, i64 0, i32 1
-  %.85 = load %string.559062*, %string.559062** %.84, align 8
-  %.89 = load %"Array<Bucket<string, int>>_vtable_ty.559448"*, %"Array<Bucket<string, int>>_vtable_ty.559448"** %.79, align 8
-  %.90 = getelementptr inbounds %"Array<Bucket<string, int>>_vtable_ty.559448", %"Array<Bucket<string, int>>_vtable_ty.559448"* %.89, i64 0, i32 5
-  %.91 = load %"Bucket<string, int>.559445"* (%"Array<Bucket<string, int>>.559447"*, i64)*, %"Bucket<string, int>.559445"* (%"Array<Bucket<string, int>>.559447"*, i64)** %.90, align 8
-  %.92 = tail call %"Bucket<string, int>.559445"* %.91(%"Array<Bucket<string, int>>.559447"* nonnull %.14, i64 %storemerge29)
-  %.93 = getelementptr inbounds %"Bucket<string, int>.559445", %"Bucket<string, int>.559445"* %.92, i64 0, i32 2
-  %.94 = load i64, i64* %.93, align 8
-  tail call void %.76(%"Map<string, int>.559442"* nonnull %.1, %string.559062* %.85, i64 %.94)
-  %.100 = add nuw nsw i64 %storemerge29, 1
-  %.69 = load i64, i64* %.68, align 8
-  %.70 = icmp slt i64 %.100, %.69
-  br i1 %.70, label %for.body.1, label %for.end.1
+  %storemerge29 = phi i64 [ 0, %for.body.1.lr.ph ], [ %.99, %for.body.1 ]
+  %.73 = load %"Map<string, int>_vtable_ty.559444"*, %"Map<string, int>_vtable_ty.559444"** %.6, align 8
+  %.74 = getelementptr inbounds %"Map<string, int>_vtable_ty.559444", %"Map<string, int>_vtable_ty.559444"* %.73, i64 0, i32 2
+  %.75 = load void (%"Map<string, int>.559442"*, %string.559062*, i64)*, void (%"Map<string, int>.559442"*, %string.559062*, i64)** %.74, align 8
+  %.79 = load %"Array<Bucket<string, int>>_vtable_ty.559448"*, %"Array<Bucket<string, int>>_vtable_ty.559448"** %.78, align 8
+  %.80 = getelementptr inbounds %"Array<Bucket<string, int>>_vtable_ty.559448", %"Array<Bucket<string, int>>_vtable_ty.559448"* %.79, i64 0, i32 5
+  %.81 = load %"Bucket<string, int>.559445"* (%"Array<Bucket<string, int>>.559447"*, i64)*, %"Bucket<string, int>.559445"* (%"Array<Bucket<string, int>>.559447"*, i64)** %.80, align 8
+  %.82 = tail call %"Bucket<string, int>.559445"* %.81(%"Array<Bucket<string, int>>.559447"* nonnull %.10, i64 %storemerge29)
+  %.83 = getelementptr inbounds %"Bucket<string, int>.559445", %"Bucket<string, int>.559445"* %.82, i64 0, i32 1
+  %.84 = load %string.559062*, %string.559062** %.83, align 8
+  %.88 = load %"Array<Bucket<string, int>>_vtable_ty.559448"*, %"Array<Bucket<string, int>>_vtable_ty.559448"** %.78, align 8
+  %.89 = getelementptr inbounds %"Array<Bucket<string, int>>_vtable_ty.559448", %"Array<Bucket<string, int>>_vtable_ty.559448"* %.88, i64 0, i32 5
+  %.90 = load %"Bucket<string, int>.559445"* (%"Array<Bucket<string, int>>.559447"*, i64)*, %"Bucket<string, int>.559445"* (%"Array<Bucket<string, int>>.559447"*, i64)** %.89, align 8
+  %.91 = tail call %"Bucket<string, int>.559445"* %.90(%"Array<Bucket<string, int>>.559447"* nonnull %.10, i64 %storemerge29)
+  %.92 = getelementptr inbounds %"Bucket<string, int>.559445", %"Bucket<string, int>.559445"* %.91, i64 0, i32 2
+  %.93 = load i64, i64* %.92, align 8
+  tail call void %.75(%"Map<string, int>.559442"* nonnull %.1, %string.559062* %.84, i64 %.93)
+  %.99 = add nuw nsw i64 %storemerge29, 1
+  %.68 = load i64, i64* %.67, align 8
+  %.69 = icmp slt i64 %.99, %.68
+  br i1 %.69, label %for.body.1, label %for.end.1
 
 for.end.1:                                        ; preds = %for.body.1, %for.cond.1.preheader
   ret void
@@ -44089,74 +44105,74 @@ define void @"Map<string, int>_set"(%"Map<string, int>.559442"* %.1, %string.559
   %.15 = load i64, i64* %.14, align 8
   %.16 = sitofp i64 %.15 to double
   %.17 = fdiv double %.12, %.16
-  %.18 = fcmp ogt double %.17, 7.500000e-01
-  br i1 %.18, label %.5.if, label %.5.endif
+  %.20 = fcmp ogt double %.17, 7.500000e-01
+  br i1 %.20, label %.5.if, label %.5.endif
 
 .5.if:                                            ; preds = %.5
-  %.21 = getelementptr inbounds %"Map<string, int>.559442", %"Map<string, int>.559442"* %.1, i64 0, i32 0
-  %.22 = load %"Map<string, int>_vtable_ty.559444"*, %"Map<string, int>_vtable_ty.559444"** %.21, align 8
-  %.23 = getelementptr inbounds %"Map<string, int>_vtable_ty.559444", %"Map<string, int>_vtable_ty.559444"* %.22, i64 0, i32 1
-  %.24 = load void (%"Map<string, int>.559442"*)*, void (%"Map<string, int>.559442"*)** %.23, align 8
-  tail call void %.24(%"Map<string, int>.559442"* nonnull %.1)
+  %.23 = getelementptr inbounds %"Map<string, int>.559442", %"Map<string, int>.559442"* %.1, i64 0, i32 0
+  %.24 = load %"Map<string, int>_vtable_ty.559444"*, %"Map<string, int>_vtable_ty.559444"** %.23, align 8
+  %.25 = getelementptr inbounds %"Map<string, int>_vtable_ty.559444", %"Map<string, int>_vtable_ty.559444"* %.24, i64 0, i32 1
+  %.26 = load void (%"Map<string, int>.559442"*)*, void (%"Map<string, int>.559442"*)** %.25, align 8
+  tail call void %.26(%"Map<string, int>.559442"* nonnull %.1)
   br label %.5.endif
 
 .5.endif:                                         ; preds = %.5.if, %.5
-  %.28 = getelementptr inbounds %"Map<string, int>.559442", %"Map<string, int>.559442"* %.1, i64 0, i32 0
-  %.29 = load %"Map<string, int>_vtable_ty.559444"*, %"Map<string, int>_vtable_ty.559444"** %.28, align 8
-  %.30 = getelementptr inbounds %"Map<string, int>_vtable_ty.559444", %"Map<string, int>_vtable_ty.559444"* %.29, i64 0, i32 0
-  %.31 = load i64 (%"Map<string, int>.559442"*, %string.559062*)*, i64 (%"Map<string, int>.559442"*, %string.559062*)** %.30, align 8
-  %.33 = tail call i64 %.31(%"Map<string, int>.559442"* nonnull %.1, %string.559062* %.2)
-  %.36 = load i64, i64* %.14, align 8
-  %.37 = srem i64 %.33, %.36
-  %.41 = getelementptr inbounds %"Map<string, int>.559442", %"Map<string, int>.559442"* %.1, i64 0, i32 1
-  %.42 = load %"Bucket<string, int>.559445"**, %"Bucket<string, int>.559445"*** %.41, align 8
-  %.43 = getelementptr inbounds %"Bucket<string, int>.559445"*, %"Bucket<string, int>.559445"** %.42, i64 %.37
-  %.44 = load %"Bucket<string, int>.559445"*, %"Bucket<string, int>.559445"** %.43, align 8
-  %.45 = getelementptr inbounds %"Bucket<string, int>.559445", %"Bucket<string, int>.559445"* %.44, i64 0, i32 3
-  %.46 = load i1, i1* %.45, align 1
-  br i1 %.46, label %while.exit, label %while.entry
+  %.30 = getelementptr inbounds %"Map<string, int>.559442", %"Map<string, int>.559442"* %.1, i64 0, i32 0
+  %.31 = load %"Map<string, int>_vtable_ty.559444"*, %"Map<string, int>_vtable_ty.559444"** %.30, align 8
+  %.32 = getelementptr inbounds %"Map<string, int>_vtable_ty.559444", %"Map<string, int>_vtable_ty.559444"* %.31, i64 0, i32 0
+  %.33 = load i64 (%"Map<string, int>.559442"*, %string.559062*)*, i64 (%"Map<string, int>.559442"*, %string.559062*)** %.32, align 8
+  %.35 = tail call i64 %.33(%"Map<string, int>.559442"* nonnull %.1, %string.559062* %.2)
+  %.38 = load i64, i64* %.14, align 8
+  %.39 = srem i64 %.35, %.38
+  %.43 = getelementptr inbounds %"Map<string, int>.559442", %"Map<string, int>.559442"* %.1, i64 0, i32 1
+  %.44 = load %"Bucket<string, int>.559445"**, %"Bucket<string, int>.559445"*** %.43, align 8
+  %.45 = getelementptr inbounds %"Bucket<string, int>.559445"*, %"Bucket<string, int>.559445"** %.44, i64 %.39
+  %.46 = load %"Bucket<string, int>.559445"*, %"Bucket<string, int>.559445"** %.45, align 8
+  %.47 = getelementptr inbounds %"Bucket<string, int>.559445", %"Bucket<string, int>.559445"* %.46, i64 0, i32 3
+  %.48 = load i1, i1* %.47, align 1
+  br i1 %.48, label %while.exit, label %while.entry
 
 while.entry:                                      ; preds = %.5.endif, %while.entry.endif
-  %.54 = phi %"Bucket<string, int>.559445"* [ %.77, %while.entry.endif ], [ %.44, %.5.endif ]
-  %.701 = phi i64 [ %.70, %while.entry.endif ], [ %.37, %.5.endif ]
-  %.55 = getelementptr inbounds %"Bucket<string, int>.559445", %"Bucket<string, int>.559445"* %.54, i64 0, i32 1
-  %.56 = load %string.559062*, %string.559062** %.55, align 8
-  %.58 = getelementptr inbounds %string.559062, %string.559062* %.56, i64 0, i32 0
-  %.59 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.58, align 8
-  %.60 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.59, i64 0, i32 4
-  %.61 = load i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)** %.60, align 8
-  %.62 = tail call i1 %.61(%string.559062* %.56, %string.559062* %.2)
-  br i1 %.62, label %while.entry.while.exit.loopexit_crit_edge, label %while.entry.endif
+  %.56 = phi %"Bucket<string, int>.559445"* [ %.79, %while.entry.endif ], [ %.46, %.5.endif ]
+  %.721 = phi i64 [ %.72, %while.entry.endif ], [ %.39, %.5.endif ]
+  %.57 = getelementptr inbounds %"Bucket<string, int>.559445", %"Bucket<string, int>.559445"* %.56, i64 0, i32 1
+  %.58 = load %string.559062*, %string.559062** %.57, align 8
+  %.60 = getelementptr inbounds %string.559062, %string.559062* %.58, i64 0, i32 0
+  %.61 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.60, align 8
+  %.62 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.61, i64 0, i32 4
+  %.63 = load i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)** %.62, align 8
+  %.64 = tail call i1 %.63(%string.559062* %.58, %string.559062* %.2)
+  br i1 %.64, label %while.entry.while.exit.loopexit_crit_edge, label %while.entry.endif
 
 while.entry.while.exit.loopexit_crit_edge:        ; preds = %while.entry
-  %.92.pre.pre = load %"Bucket<string, int>.559445"**, %"Bucket<string, int>.559445"*** %.41, align 8
+  %.94.pre.pre = load %"Bucket<string, int>.559445"**, %"Bucket<string, int>.559445"*** %.43, align 8
   br label %while.exit
 
 while.exit:                                       ; preds = %while.entry.endif, %while.entry.while.exit.loopexit_crit_edge, %.5.endif
-  %.92 = phi %"Bucket<string, int>.559445"** [ %.42, %.5.endif ], [ %.92.pre.pre, %while.entry.while.exit.loopexit_crit_edge ], [ %.75, %while.entry.endif ]
-  %.89 = phi i64 [ %.37, %.5.endif ], [ %.701, %while.entry.while.exit.loopexit_crit_edge ], [ %.70, %while.entry.endif ]
-  %.84 = load i64, i64* %.10, align 8
-  %.85 = add i64 %.84, 1
-  store i64 %.85, i64* %.10, align 8
-  %.93 = getelementptr inbounds %"Bucket<string, int>.559445"*, %"Bucket<string, int>.559445"** %.92, i64 %.89
-  %.94 = load %"Bucket<string, int>.559445"*, %"Bucket<string, int>.559445"** %.93, align 8
-  %.95 = getelementptr inbounds %"Bucket<string, int>.559445", %"Bucket<string, int>.559445"* %.94, i64 0, i32 0
-  %.96 = load %"Bucket<string, int>_vtable_ty.559446"*, %"Bucket<string, int>_vtable_ty.559446"** %.95, align 8
-  %.97 = getelementptr inbounds %"Bucket<string, int>_vtable_ty.559446", %"Bucket<string, int>_vtable_ty.559446"* %.96, i64 0, i32 0
-  %.98 = load void (%"Bucket<string, int>.559445"*, %string.559062*, i64)*, void (%"Bucket<string, int>.559445"*, %string.559062*, i64)** %.97, align 8
-  tail call void %.98(%"Bucket<string, int>.559445"* %.94, %string.559062* %.2, i64 %.3)
+  %.94 = phi %"Bucket<string, int>.559445"** [ %.44, %.5.endif ], [ %.94.pre.pre, %while.entry.while.exit.loopexit_crit_edge ], [ %.77, %while.entry.endif ]
+  %.91 = phi i64 [ %.39, %.5.endif ], [ %.721, %while.entry.while.exit.loopexit_crit_edge ], [ %.72, %while.entry.endif ]
+  %.86 = load i64, i64* %.10, align 8
+  %.87 = add i64 %.86, 1
+  store i64 %.87, i64* %.10, align 8
+  %.95 = getelementptr inbounds %"Bucket<string, int>.559445"*, %"Bucket<string, int>.559445"** %.94, i64 %.91
+  %.96 = load %"Bucket<string, int>.559445"*, %"Bucket<string, int>.559445"** %.95, align 8
+  %.97 = getelementptr inbounds %"Bucket<string, int>.559445", %"Bucket<string, int>.559445"* %.96, i64 0, i32 0
+  %.98 = load %"Bucket<string, int>_vtable_ty.559446"*, %"Bucket<string, int>_vtable_ty.559446"** %.97, align 8
+  %.99 = getelementptr inbounds %"Bucket<string, int>_vtable_ty.559446", %"Bucket<string, int>_vtable_ty.559446"* %.98, i64 0, i32 0
+  %.100 = load void (%"Bucket<string, int>.559445"*, %string.559062*, i64)*, void (%"Bucket<string, int>.559445"*, %string.559062*, i64)** %.99, align 8
+  tail call void %.100(%"Bucket<string, int>.559445"* %.96, %string.559062* %.2, i64 %.3)
   ret void
 
 while.entry.endif:                                ; preds = %while.entry
-  %.66 = add i64 %.701, 1
-  %.69 = load i64, i64* %.14, align 8
-  %.70 = srem i64 %.66, %.69
-  %.75 = load %"Bucket<string, int>.559445"**, %"Bucket<string, int>.559445"*** %.41, align 8
-  %.76 = getelementptr inbounds %"Bucket<string, int>.559445"*, %"Bucket<string, int>.559445"** %.75, i64 %.70
-  %.77 = load %"Bucket<string, int>.559445"*, %"Bucket<string, int>.559445"** %.76, align 8
-  %.78 = getelementptr inbounds %"Bucket<string, int>.559445", %"Bucket<string, int>.559445"* %.77, i64 0, i32 3
-  %.79 = load i1, i1* %.78, align 1
-  br i1 %.79, label %while.exit, label %while.entry
+  %.68 = add i64 %.721, 1
+  %.71 = load i64, i64* %.14, align 8
+  %.72 = srem i64 %.68, %.71
+  %.77 = load %"Bucket<string, int>.559445"**, %"Bucket<string, int>.559445"*** %.43, align 8
+  %.78 = getelementptr inbounds %"Bucket<string, int>.559445"*, %"Bucket<string, int>.559445"** %.77, i64 %.72
+  %.79 = load %"Bucket<string, int>.559445"*, %"Bucket<string, int>.559445"** %.78, align 8
+  %.80 = getelementptr inbounds %"Bucket<string, int>.559445", %"Bucket<string, int>.559445"* %.79, i64 0, i32 3
+  %.81 = load i1, i1* %.80, align 1
+  br i1 %.81, label %while.exit, label %while.entry
 }
 
 define i64 @"Map<string, int>_get"(%"Map<string, int>.559442"* %.1, %string.559062* %.2) {
@@ -44662,85 +44678,87 @@ for.end.thread:                                   ; preds = %.4
 
 define void @"Map<string, LLVMValueRef>_resize"(%"Map<string, LLVMValueRef>.559443"* %.1) {
 .3:
-  %.10 = getelementptr inbounds %"Map<string, LLVMValueRef>.559443", %"Map<string, LLVMValueRef>.559443"* %.1, i64 0, i32 0
-  %.11 = load %"Map<string, LLVMValueRef>_vtable_ty.559449"*, %"Map<string, LLVMValueRef>_vtable_ty.559449"** %.10, align 8
-  %.12 = getelementptr inbounds %"Map<string, LLVMValueRef>_vtable_ty.559449", %"Map<string, LLVMValueRef>_vtable_ty.559449"* %.11, i64 0, i32 4
-  %.13 = load %"Array<Bucket<string, LLVMValueRef>>.559452"* (%"Map<string, LLVMValueRef>.559443"*)*, %"Array<Bucket<string, LLVMValueRef>>.559452"* (%"Map<string, LLVMValueRef>.559443"*)** %.12, align 8
-  %.14 = tail call %"Array<Bucket<string, LLVMValueRef>>.559452"* %.13(%"Map<string, LLVMValueRef>.559443"* %.1)
-  %.18 = getelementptr inbounds %"Map<string, LLVMValueRef>.559443", %"Map<string, LLVMValueRef>.559443"* %.1, i64 0, i32 3
-  %.19 = load i64, i64* %.18, align 8
-  %.20 = shl i64 %.19, 1
-  store i64 %.20, i64* %.18, align 8
-  %.25 = getelementptr inbounds %"Map<string, LLVMValueRef>.559443", %"Map<string, LLVMValueRef>.559443"* %.1, i64 0, i32 1
-  %0 = bitcast %"Bucket<string, LLVMValueRef>.559450"*** %.25 to i8**
-  %.261 = load i8*, i8** %0, align 8
-  %.30 = shl i64 %.19, 4
-  %.32 = tail call i8* @realloc(i8* %.261, i64 %.30)
-  store i8* %.32, i8** %0, align 8
-  %.4210 = load i64, i64* %.18, align 8
-  %.4311 = icmp sgt i64 %.4210, 0
-  br i1 %.4311, label %for.body.preheader, label %for.cond.1.preheader
+  %.6 = getelementptr inbounds %"Map<string, LLVMValueRef>.559443", %"Map<string, LLVMValueRef>.559443"* %.1, i64 0, i32 0
+  %.7 = load %"Map<string, LLVMValueRef>_vtable_ty.559449"*, %"Map<string, LLVMValueRef>_vtable_ty.559449"** %.6, align 8
+  %.8 = getelementptr inbounds %"Map<string, LLVMValueRef>_vtable_ty.559449", %"Map<string, LLVMValueRef>_vtable_ty.559449"* %.7, i64 0, i32 4
+  %.9 = load %"Array<Bucket<string, LLVMValueRef>>.559452"* (%"Map<string, LLVMValueRef>.559443"*)*, %"Array<Bucket<string, LLVMValueRef>>.559452"* (%"Map<string, LLVMValueRef>.559443"*)** %.8, align 8
+  %.10 = tail call %"Array<Bucket<string, LLVMValueRef>>.559452"* %.9(%"Map<string, LLVMValueRef>.559443"* %.1)
+  %.14 = getelementptr inbounds %"Map<string, LLVMValueRef>.559443", %"Map<string, LLVMValueRef>.559443"* %.1, i64 0, i32 3
+  %.15 = load i64, i64* %.14, align 8
+  %.16 = shl i64 %.15, 1
+  store i64 %.16, i64* %.14, align 8
+  %.20 = getelementptr inbounds %"Map<string, LLVMValueRef>.559443", %"Map<string, LLVMValueRef>.559443"* %.1, i64 0, i32 2
+  store i64 0, i64* %.20, align 8
+  %.24 = getelementptr inbounds %"Map<string, LLVMValueRef>.559443", %"Map<string, LLVMValueRef>.559443"* %.1, i64 0, i32 1
+  %0 = bitcast %"Bucket<string, LLVMValueRef>.559450"*** %.24 to i8**
+  %.251 = load i8*, i8** %0, align 8
+  %.29 = shl i64 %.15, 4
+  %.31 = tail call i8* @realloc(i8* %.251, i64 %.29)
+  store i8* %.31, i8** %0, align 8
+  %.4110 = load i64, i64* %.14, align 8
+  %.4211 = icmp sgt i64 %.4110, 0
+  br i1 %.4211, label %for.body.preheader, label %for.cond.1.preheader
 
 for.body.preheader:                               ; preds = %.3
-  %.4914 = tail call dereferenceable_or_null(32) i8* @malloc(i64 32)
-  %.5015 = bitcast i8* %.4914 to %"Bucket<string, LLVMValueRef>.559450"*
-  %.5116 = bitcast i8* %.4914 to %"Bucket<string, LLVMValueRef>_vtable_ty.559451"**
-  store %"Bucket<string, LLVMValueRef>_vtable_ty.559451"* @"Bucket<string, LLVMValueRef>_vtable_data", %"Bucket<string, LLVMValueRef>_vtable_ty.559451"** %.5116, align 8
-  tail call void @"Bucket<string, LLVMValueRef>_constructor"(%"Bucket<string, LLVMValueRef>.559450"* %.5015)
-  %1 = bitcast i8* %.32 to i8**
-  store i8* %.4914, i8** %1, align 8
-  %.4217 = load i64, i64* %.18, align 8
-  %.4318 = icmp sgt i64 %.4217, 1
-  br i1 %.4318, label %for.body.for.body_crit_edge, label %for.cond.1.preheader
+  %.4814 = tail call dereferenceable_or_null(32) i8* @malloc(i64 32)
+  %.4915 = bitcast i8* %.4814 to %"Bucket<string, LLVMValueRef>.559450"*
+  %.5016 = bitcast i8* %.4814 to %"Bucket<string, LLVMValueRef>_vtable_ty.559451"**
+  store %"Bucket<string, LLVMValueRef>_vtable_ty.559451"* @"Bucket<string, LLVMValueRef>_vtable_data", %"Bucket<string, LLVMValueRef>_vtable_ty.559451"** %.5016, align 8
+  tail call void @"Bucket<string, LLVMValueRef>_constructor"(%"Bucket<string, LLVMValueRef>.559450"* %.4915)
+  %1 = bitcast i8* %.31 to i8**
+  store i8* %.4814, i8** %1, align 8
+  %.4117 = load i64, i64* %.14, align 8
+  %.4218 = icmp sgt i64 %.4117, 1
+  br i1 %.4218, label %for.body.for.body_crit_edge, label %for.cond.1.preheader
 
 for.cond.1.preheader:                             ; preds = %for.body.for.body_crit_edge, %for.body.preheader, %.3
-  %.68 = getelementptr inbounds %"Array<Bucket<string, LLVMValueRef>>.559452", %"Array<Bucket<string, LLVMValueRef>>.559452"* %.14, i64 0, i32 2
-  %.697 = load i64, i64* %.68, align 8
-  %.708 = icmp sgt i64 %.697, 0
-  br i1 %.708, label %for.body.1.lr.ph, label %for.end.1
+  %.67 = getelementptr inbounds %"Array<Bucket<string, LLVMValueRef>>.559452", %"Array<Bucket<string, LLVMValueRef>>.559452"* %.10, i64 0, i32 2
+  %.687 = load i64, i64* %.67, align 8
+  %.698 = icmp sgt i64 %.687, 0
+  br i1 %.698, label %for.body.1.lr.ph, label %for.end.1
 
 for.body.1.lr.ph:                                 ; preds = %for.cond.1.preheader
-  %.79 = getelementptr inbounds %"Array<Bucket<string, LLVMValueRef>>.559452", %"Array<Bucket<string, LLVMValueRef>>.559452"* %.14, i64 0, i32 0
+  %.78 = getelementptr inbounds %"Array<Bucket<string, LLVMValueRef>>.559452", %"Array<Bucket<string, LLVMValueRef>>.559452"* %.10, i64 0, i32 0
   br label %for.body.1
 
 for.body.for.body_crit_edge:                      ; preds = %for.body.preheader, %for.body.for.body_crit_edge
-  %.6019 = phi i64 [ %.60, %for.body.for.body_crit_edge ], [ 1, %for.body.preheader ]
-  %.48.pre = load %"Bucket<string, LLVMValueRef>.559450"**, %"Bucket<string, LLVMValueRef>.559450"*** %.25, align 8
-  %.49 = tail call dereferenceable_or_null(32) i8* @malloc(i64 32)
-  %.50 = bitcast i8* %.49 to %"Bucket<string, LLVMValueRef>.559450"*
-  %.51 = bitcast i8* %.49 to %"Bucket<string, LLVMValueRef>_vtable_ty.559451"**
-  store %"Bucket<string, LLVMValueRef>_vtable_ty.559451"* @"Bucket<string, LLVMValueRef>_vtable_data", %"Bucket<string, LLVMValueRef>_vtable_ty.559451"** %.51, align 8
-  tail call void @"Bucket<string, LLVMValueRef>_constructor"(%"Bucket<string, LLVMValueRef>.559450"* %.50)
-  %.54 = getelementptr inbounds %"Bucket<string, LLVMValueRef>.559450"*, %"Bucket<string, LLVMValueRef>.559450"** %.48.pre, i64 %.6019
-  %2 = bitcast %"Bucket<string, LLVMValueRef>.559450"** %.54 to i8**
-  store i8* %.49, i8** %2, align 8
-  %.60 = add nuw nsw i64 %.6019, 1
-  %.42 = load i64, i64* %.18, align 8
-  %.43 = icmp slt i64 %.60, %.42
-  br i1 %.43, label %for.body.for.body_crit_edge, label %for.cond.1.preheader
+  %.5919 = phi i64 [ %.59, %for.body.for.body_crit_edge ], [ 1, %for.body.preheader ]
+  %.47.pre = load %"Bucket<string, LLVMValueRef>.559450"**, %"Bucket<string, LLVMValueRef>.559450"*** %.24, align 8
+  %.48 = tail call dereferenceable_or_null(32) i8* @malloc(i64 32)
+  %.49 = bitcast i8* %.48 to %"Bucket<string, LLVMValueRef>.559450"*
+  %.50 = bitcast i8* %.48 to %"Bucket<string, LLVMValueRef>_vtable_ty.559451"**
+  store %"Bucket<string, LLVMValueRef>_vtable_ty.559451"* @"Bucket<string, LLVMValueRef>_vtable_data", %"Bucket<string, LLVMValueRef>_vtable_ty.559451"** %.50, align 8
+  tail call void @"Bucket<string, LLVMValueRef>_constructor"(%"Bucket<string, LLVMValueRef>.559450"* %.49)
+  %.53 = getelementptr inbounds %"Bucket<string, LLVMValueRef>.559450"*, %"Bucket<string, LLVMValueRef>.559450"** %.47.pre, i64 %.5919
+  %2 = bitcast %"Bucket<string, LLVMValueRef>.559450"** %.53 to i8**
+  store i8* %.48, i8** %2, align 8
+  %.59 = add nuw nsw i64 %.5919, 1
+  %.41 = load i64, i64* %.14, align 8
+  %.42 = icmp slt i64 %.59, %.41
+  br i1 %.42, label %for.body.for.body_crit_edge, label %for.cond.1.preheader
 
 for.body.1:                                       ; preds = %for.body.1.lr.ph, %for.body.1
-  %storemerge29 = phi i64 [ 0, %for.body.1.lr.ph ], [ %.100, %for.body.1 ]
-  %.74 = load %"Map<string, LLVMValueRef>_vtable_ty.559449"*, %"Map<string, LLVMValueRef>_vtable_ty.559449"** %.10, align 8
-  %.75 = getelementptr inbounds %"Map<string, LLVMValueRef>_vtable_ty.559449", %"Map<string, LLVMValueRef>_vtable_ty.559449"* %.74, i64 0, i32 2
-  %.76 = load void (%"Map<string, LLVMValueRef>.559443"*, %string.559062*, %LLVMValueRef.559412*)*, void (%"Map<string, LLVMValueRef>.559443"*, %string.559062*, %LLVMValueRef.559412*)** %.75, align 8
-  %.80 = load %"Array<Bucket<string, LLVMValueRef>>_vtable_ty.559453"*, %"Array<Bucket<string, LLVMValueRef>>_vtable_ty.559453"** %.79, align 8
-  %.81 = getelementptr inbounds %"Array<Bucket<string, LLVMValueRef>>_vtable_ty.559453", %"Array<Bucket<string, LLVMValueRef>>_vtable_ty.559453"* %.80, i64 0, i32 5
-  %.82 = load %"Bucket<string, LLVMValueRef>.559450"* (%"Array<Bucket<string, LLVMValueRef>>.559452"*, i64)*, %"Bucket<string, LLVMValueRef>.559450"* (%"Array<Bucket<string, LLVMValueRef>>.559452"*, i64)** %.81, align 8
-  %.83 = tail call %"Bucket<string, LLVMValueRef>.559450"* %.82(%"Array<Bucket<string, LLVMValueRef>>.559452"* nonnull %.14, i64 %storemerge29)
-  %.84 = getelementptr inbounds %"Bucket<string, LLVMValueRef>.559450", %"Bucket<string, LLVMValueRef>.559450"* %.83, i64 0, i32 1
-  %.85 = load %string.559062*, %string.559062** %.84, align 8
-  %.89 = load %"Array<Bucket<string, LLVMValueRef>>_vtable_ty.559453"*, %"Array<Bucket<string, LLVMValueRef>>_vtable_ty.559453"** %.79, align 8
-  %.90 = getelementptr inbounds %"Array<Bucket<string, LLVMValueRef>>_vtable_ty.559453", %"Array<Bucket<string, LLVMValueRef>>_vtable_ty.559453"* %.89, i64 0, i32 5
-  %.91 = load %"Bucket<string, LLVMValueRef>.559450"* (%"Array<Bucket<string, LLVMValueRef>>.559452"*, i64)*, %"Bucket<string, LLVMValueRef>.559450"* (%"Array<Bucket<string, LLVMValueRef>>.559452"*, i64)** %.90, align 8
-  %.92 = tail call %"Bucket<string, LLVMValueRef>.559450"* %.91(%"Array<Bucket<string, LLVMValueRef>>.559452"* nonnull %.14, i64 %storemerge29)
-  %.93 = getelementptr inbounds %"Bucket<string, LLVMValueRef>.559450", %"Bucket<string, LLVMValueRef>.559450"* %.92, i64 0, i32 2
-  %.94 = load %LLVMValueRef.559412*, %LLVMValueRef.559412** %.93, align 8
-  tail call void %.76(%"Map<string, LLVMValueRef>.559443"* nonnull %.1, %string.559062* %.85, %LLVMValueRef.559412* %.94)
-  %.100 = add nuw nsw i64 %storemerge29, 1
-  %.69 = load i64, i64* %.68, align 8
-  %.70 = icmp slt i64 %.100, %.69
-  br i1 %.70, label %for.body.1, label %for.end.1
+  %storemerge29 = phi i64 [ 0, %for.body.1.lr.ph ], [ %.99, %for.body.1 ]
+  %.73 = load %"Map<string, LLVMValueRef>_vtable_ty.559449"*, %"Map<string, LLVMValueRef>_vtable_ty.559449"** %.6, align 8
+  %.74 = getelementptr inbounds %"Map<string, LLVMValueRef>_vtable_ty.559449", %"Map<string, LLVMValueRef>_vtable_ty.559449"* %.73, i64 0, i32 2
+  %.75 = load void (%"Map<string, LLVMValueRef>.559443"*, %string.559062*, %LLVMValueRef.559412*)*, void (%"Map<string, LLVMValueRef>.559443"*, %string.559062*, %LLVMValueRef.559412*)** %.74, align 8
+  %.79 = load %"Array<Bucket<string, LLVMValueRef>>_vtable_ty.559453"*, %"Array<Bucket<string, LLVMValueRef>>_vtable_ty.559453"** %.78, align 8
+  %.80 = getelementptr inbounds %"Array<Bucket<string, LLVMValueRef>>_vtable_ty.559453", %"Array<Bucket<string, LLVMValueRef>>_vtable_ty.559453"* %.79, i64 0, i32 5
+  %.81 = load %"Bucket<string, LLVMValueRef>.559450"* (%"Array<Bucket<string, LLVMValueRef>>.559452"*, i64)*, %"Bucket<string, LLVMValueRef>.559450"* (%"Array<Bucket<string, LLVMValueRef>>.559452"*, i64)** %.80, align 8
+  %.82 = tail call %"Bucket<string, LLVMValueRef>.559450"* %.81(%"Array<Bucket<string, LLVMValueRef>>.559452"* nonnull %.10, i64 %storemerge29)
+  %.83 = getelementptr inbounds %"Bucket<string, LLVMValueRef>.559450", %"Bucket<string, LLVMValueRef>.559450"* %.82, i64 0, i32 1
+  %.84 = load %string.559062*, %string.559062** %.83, align 8
+  %.88 = load %"Array<Bucket<string, LLVMValueRef>>_vtable_ty.559453"*, %"Array<Bucket<string, LLVMValueRef>>_vtable_ty.559453"** %.78, align 8
+  %.89 = getelementptr inbounds %"Array<Bucket<string, LLVMValueRef>>_vtable_ty.559453", %"Array<Bucket<string, LLVMValueRef>>_vtable_ty.559453"* %.88, i64 0, i32 5
+  %.90 = load %"Bucket<string, LLVMValueRef>.559450"* (%"Array<Bucket<string, LLVMValueRef>>.559452"*, i64)*, %"Bucket<string, LLVMValueRef>.559450"* (%"Array<Bucket<string, LLVMValueRef>>.559452"*, i64)** %.89, align 8
+  %.91 = tail call %"Bucket<string, LLVMValueRef>.559450"* %.90(%"Array<Bucket<string, LLVMValueRef>>.559452"* nonnull %.10, i64 %storemerge29)
+  %.92 = getelementptr inbounds %"Bucket<string, LLVMValueRef>.559450", %"Bucket<string, LLVMValueRef>.559450"* %.91, i64 0, i32 2
+  %.93 = load %LLVMValueRef.559412*, %LLVMValueRef.559412** %.92, align 8
+  tail call void %.75(%"Map<string, LLVMValueRef>.559443"* nonnull %.1, %string.559062* %.84, %LLVMValueRef.559412* %.93)
+  %.99 = add nuw nsw i64 %storemerge29, 1
+  %.68 = load i64, i64* %.67, align 8
+  %.69 = icmp slt i64 %.99, %.68
+  br i1 %.69, label %for.body.1, label %for.end.1
 
 for.end.1:                                        ; preds = %for.body.1, %for.cond.1.preheader
   ret void
@@ -44755,74 +44773,74 @@ define void @"Map<string, LLVMValueRef>_set"(%"Map<string, LLVMValueRef>.559443"
   %.15 = load i64, i64* %.14, align 8
   %.16 = sitofp i64 %.15 to double
   %.17 = fdiv double %.12, %.16
-  %.18 = fcmp ogt double %.17, 7.500000e-01
-  br i1 %.18, label %.5.if, label %.5.endif
+  %.20 = fcmp ogt double %.17, 7.500000e-01
+  br i1 %.20, label %.5.if, label %.5.endif
 
 .5.if:                                            ; preds = %.5
-  %.21 = getelementptr inbounds %"Map<string, LLVMValueRef>.559443", %"Map<string, LLVMValueRef>.559443"* %.1, i64 0, i32 0
-  %.22 = load %"Map<string, LLVMValueRef>_vtable_ty.559449"*, %"Map<string, LLVMValueRef>_vtable_ty.559449"** %.21, align 8
-  %.23 = getelementptr inbounds %"Map<string, LLVMValueRef>_vtable_ty.559449", %"Map<string, LLVMValueRef>_vtable_ty.559449"* %.22, i64 0, i32 1
-  %.24 = load void (%"Map<string, LLVMValueRef>.559443"*)*, void (%"Map<string, LLVMValueRef>.559443"*)** %.23, align 8
-  tail call void %.24(%"Map<string, LLVMValueRef>.559443"* nonnull %.1)
+  %.23 = getelementptr inbounds %"Map<string, LLVMValueRef>.559443", %"Map<string, LLVMValueRef>.559443"* %.1, i64 0, i32 0
+  %.24 = load %"Map<string, LLVMValueRef>_vtable_ty.559449"*, %"Map<string, LLVMValueRef>_vtable_ty.559449"** %.23, align 8
+  %.25 = getelementptr inbounds %"Map<string, LLVMValueRef>_vtable_ty.559449", %"Map<string, LLVMValueRef>_vtable_ty.559449"* %.24, i64 0, i32 1
+  %.26 = load void (%"Map<string, LLVMValueRef>.559443"*)*, void (%"Map<string, LLVMValueRef>.559443"*)** %.25, align 8
+  tail call void %.26(%"Map<string, LLVMValueRef>.559443"* nonnull %.1)
   br label %.5.endif
 
 .5.endif:                                         ; preds = %.5.if, %.5
-  %.28 = getelementptr inbounds %"Map<string, LLVMValueRef>.559443", %"Map<string, LLVMValueRef>.559443"* %.1, i64 0, i32 0
-  %.29 = load %"Map<string, LLVMValueRef>_vtable_ty.559449"*, %"Map<string, LLVMValueRef>_vtable_ty.559449"** %.28, align 8
-  %.30 = getelementptr inbounds %"Map<string, LLVMValueRef>_vtable_ty.559449", %"Map<string, LLVMValueRef>_vtable_ty.559449"* %.29, i64 0, i32 0
-  %.31 = load i64 (%"Map<string, LLVMValueRef>.559443"*, %string.559062*)*, i64 (%"Map<string, LLVMValueRef>.559443"*, %string.559062*)** %.30, align 8
-  %.33 = tail call i64 %.31(%"Map<string, LLVMValueRef>.559443"* nonnull %.1, %string.559062* %.2)
-  %.36 = load i64, i64* %.14, align 8
-  %.37 = srem i64 %.33, %.36
-  %.41 = getelementptr inbounds %"Map<string, LLVMValueRef>.559443", %"Map<string, LLVMValueRef>.559443"* %.1, i64 0, i32 1
-  %.42 = load %"Bucket<string, LLVMValueRef>.559450"**, %"Bucket<string, LLVMValueRef>.559450"*** %.41, align 8
-  %.43 = getelementptr inbounds %"Bucket<string, LLVMValueRef>.559450"*, %"Bucket<string, LLVMValueRef>.559450"** %.42, i64 %.37
-  %.44 = load %"Bucket<string, LLVMValueRef>.559450"*, %"Bucket<string, LLVMValueRef>.559450"** %.43, align 8
-  %.45 = getelementptr inbounds %"Bucket<string, LLVMValueRef>.559450", %"Bucket<string, LLVMValueRef>.559450"* %.44, i64 0, i32 3
-  %.46 = load i1, i1* %.45, align 1
-  br i1 %.46, label %while.exit, label %while.entry
+  %.30 = getelementptr inbounds %"Map<string, LLVMValueRef>.559443", %"Map<string, LLVMValueRef>.559443"* %.1, i64 0, i32 0
+  %.31 = load %"Map<string, LLVMValueRef>_vtable_ty.559449"*, %"Map<string, LLVMValueRef>_vtable_ty.559449"** %.30, align 8
+  %.32 = getelementptr inbounds %"Map<string, LLVMValueRef>_vtable_ty.559449", %"Map<string, LLVMValueRef>_vtable_ty.559449"* %.31, i64 0, i32 0
+  %.33 = load i64 (%"Map<string, LLVMValueRef>.559443"*, %string.559062*)*, i64 (%"Map<string, LLVMValueRef>.559443"*, %string.559062*)** %.32, align 8
+  %.35 = tail call i64 %.33(%"Map<string, LLVMValueRef>.559443"* nonnull %.1, %string.559062* %.2)
+  %.38 = load i64, i64* %.14, align 8
+  %.39 = srem i64 %.35, %.38
+  %.43 = getelementptr inbounds %"Map<string, LLVMValueRef>.559443", %"Map<string, LLVMValueRef>.559443"* %.1, i64 0, i32 1
+  %.44 = load %"Bucket<string, LLVMValueRef>.559450"**, %"Bucket<string, LLVMValueRef>.559450"*** %.43, align 8
+  %.45 = getelementptr inbounds %"Bucket<string, LLVMValueRef>.559450"*, %"Bucket<string, LLVMValueRef>.559450"** %.44, i64 %.39
+  %.46 = load %"Bucket<string, LLVMValueRef>.559450"*, %"Bucket<string, LLVMValueRef>.559450"** %.45, align 8
+  %.47 = getelementptr inbounds %"Bucket<string, LLVMValueRef>.559450", %"Bucket<string, LLVMValueRef>.559450"* %.46, i64 0, i32 3
+  %.48 = load i1, i1* %.47, align 1
+  br i1 %.48, label %while.exit, label %while.entry
 
 while.entry:                                      ; preds = %.5.endif, %while.entry.endif
-  %.54 = phi %"Bucket<string, LLVMValueRef>.559450"* [ %.77, %while.entry.endif ], [ %.44, %.5.endif ]
-  %.701 = phi i64 [ %.70, %while.entry.endif ], [ %.37, %.5.endif ]
-  %.55 = getelementptr inbounds %"Bucket<string, LLVMValueRef>.559450", %"Bucket<string, LLVMValueRef>.559450"* %.54, i64 0, i32 1
-  %.56 = load %string.559062*, %string.559062** %.55, align 8
-  %.58 = getelementptr inbounds %string.559062, %string.559062* %.56, i64 0, i32 0
-  %.59 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.58, align 8
-  %.60 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.59, i64 0, i32 4
-  %.61 = load i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)** %.60, align 8
-  %.62 = tail call i1 %.61(%string.559062* %.56, %string.559062* %.2)
-  br i1 %.62, label %while.entry.while.exit.loopexit_crit_edge, label %while.entry.endif
+  %.56 = phi %"Bucket<string, LLVMValueRef>.559450"* [ %.79, %while.entry.endif ], [ %.46, %.5.endif ]
+  %.721 = phi i64 [ %.72, %while.entry.endif ], [ %.39, %.5.endif ]
+  %.57 = getelementptr inbounds %"Bucket<string, LLVMValueRef>.559450", %"Bucket<string, LLVMValueRef>.559450"* %.56, i64 0, i32 1
+  %.58 = load %string.559062*, %string.559062** %.57, align 8
+  %.60 = getelementptr inbounds %string.559062, %string.559062* %.58, i64 0, i32 0
+  %.61 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.60, align 8
+  %.62 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.61, i64 0, i32 4
+  %.63 = load i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)** %.62, align 8
+  %.64 = tail call i1 %.63(%string.559062* %.58, %string.559062* %.2)
+  br i1 %.64, label %while.entry.while.exit.loopexit_crit_edge, label %while.entry.endif
 
 while.entry.while.exit.loopexit_crit_edge:        ; preds = %while.entry
-  %.92.pre.pre = load %"Bucket<string, LLVMValueRef>.559450"**, %"Bucket<string, LLVMValueRef>.559450"*** %.41, align 8
+  %.94.pre.pre = load %"Bucket<string, LLVMValueRef>.559450"**, %"Bucket<string, LLVMValueRef>.559450"*** %.43, align 8
   br label %while.exit
 
 while.exit:                                       ; preds = %while.entry.endif, %while.entry.while.exit.loopexit_crit_edge, %.5.endif
-  %.92 = phi %"Bucket<string, LLVMValueRef>.559450"** [ %.42, %.5.endif ], [ %.92.pre.pre, %while.entry.while.exit.loopexit_crit_edge ], [ %.75, %while.entry.endif ]
-  %.89 = phi i64 [ %.37, %.5.endif ], [ %.701, %while.entry.while.exit.loopexit_crit_edge ], [ %.70, %while.entry.endif ]
-  %.84 = load i64, i64* %.10, align 8
-  %.85 = add i64 %.84, 1
-  store i64 %.85, i64* %.10, align 8
-  %.93 = getelementptr inbounds %"Bucket<string, LLVMValueRef>.559450"*, %"Bucket<string, LLVMValueRef>.559450"** %.92, i64 %.89
-  %.94 = load %"Bucket<string, LLVMValueRef>.559450"*, %"Bucket<string, LLVMValueRef>.559450"** %.93, align 8
-  %.95 = getelementptr inbounds %"Bucket<string, LLVMValueRef>.559450", %"Bucket<string, LLVMValueRef>.559450"* %.94, i64 0, i32 0
-  %.96 = load %"Bucket<string, LLVMValueRef>_vtable_ty.559451"*, %"Bucket<string, LLVMValueRef>_vtable_ty.559451"** %.95, align 8
-  %.97 = getelementptr inbounds %"Bucket<string, LLVMValueRef>_vtable_ty.559451", %"Bucket<string, LLVMValueRef>_vtable_ty.559451"* %.96, i64 0, i32 0
-  %.98 = load void (%"Bucket<string, LLVMValueRef>.559450"*, %string.559062*, %LLVMValueRef.559412*)*, void (%"Bucket<string, LLVMValueRef>.559450"*, %string.559062*, %LLVMValueRef.559412*)** %.97, align 8
-  tail call void %.98(%"Bucket<string, LLVMValueRef>.559450"* %.94, %string.559062* %.2, %LLVMValueRef.559412* %.3)
+  %.94 = phi %"Bucket<string, LLVMValueRef>.559450"** [ %.44, %.5.endif ], [ %.94.pre.pre, %while.entry.while.exit.loopexit_crit_edge ], [ %.77, %while.entry.endif ]
+  %.91 = phi i64 [ %.39, %.5.endif ], [ %.721, %while.entry.while.exit.loopexit_crit_edge ], [ %.72, %while.entry.endif ]
+  %.86 = load i64, i64* %.10, align 8
+  %.87 = add i64 %.86, 1
+  store i64 %.87, i64* %.10, align 8
+  %.95 = getelementptr inbounds %"Bucket<string, LLVMValueRef>.559450"*, %"Bucket<string, LLVMValueRef>.559450"** %.94, i64 %.91
+  %.96 = load %"Bucket<string, LLVMValueRef>.559450"*, %"Bucket<string, LLVMValueRef>.559450"** %.95, align 8
+  %.97 = getelementptr inbounds %"Bucket<string, LLVMValueRef>.559450", %"Bucket<string, LLVMValueRef>.559450"* %.96, i64 0, i32 0
+  %.98 = load %"Bucket<string, LLVMValueRef>_vtable_ty.559451"*, %"Bucket<string, LLVMValueRef>_vtable_ty.559451"** %.97, align 8
+  %.99 = getelementptr inbounds %"Bucket<string, LLVMValueRef>_vtable_ty.559451", %"Bucket<string, LLVMValueRef>_vtable_ty.559451"* %.98, i64 0, i32 0
+  %.100 = load void (%"Bucket<string, LLVMValueRef>.559450"*, %string.559062*, %LLVMValueRef.559412*)*, void (%"Bucket<string, LLVMValueRef>.559450"*, %string.559062*, %LLVMValueRef.559412*)** %.99, align 8
+  tail call void %.100(%"Bucket<string, LLVMValueRef>.559450"* %.96, %string.559062* %.2, %LLVMValueRef.559412* %.3)
   ret void
 
 while.entry.endif:                                ; preds = %while.entry
-  %.66 = add i64 %.701, 1
-  %.69 = load i64, i64* %.14, align 8
-  %.70 = srem i64 %.66, %.69
-  %.75 = load %"Bucket<string, LLVMValueRef>.559450"**, %"Bucket<string, LLVMValueRef>.559450"*** %.41, align 8
-  %.76 = getelementptr inbounds %"Bucket<string, LLVMValueRef>.559450"*, %"Bucket<string, LLVMValueRef>.559450"** %.75, i64 %.70
-  %.77 = load %"Bucket<string, LLVMValueRef>.559450"*, %"Bucket<string, LLVMValueRef>.559450"** %.76, align 8
-  %.78 = getelementptr inbounds %"Bucket<string, LLVMValueRef>.559450", %"Bucket<string, LLVMValueRef>.559450"* %.77, i64 0, i32 3
-  %.79 = load i1, i1* %.78, align 1
-  br i1 %.79, label %while.exit, label %while.entry
+  %.68 = add i64 %.721, 1
+  %.71 = load i64, i64* %.14, align 8
+  %.72 = srem i64 %.68, %.71
+  %.77 = load %"Bucket<string, LLVMValueRef>.559450"**, %"Bucket<string, LLVMValueRef>.559450"*** %.43, align 8
+  %.78 = getelementptr inbounds %"Bucket<string, LLVMValueRef>.559450"*, %"Bucket<string, LLVMValueRef>.559450"** %.77, i64 %.72
+  %.79 = load %"Bucket<string, LLVMValueRef>.559450"*, %"Bucket<string, LLVMValueRef>.559450"** %.78, align 8
+  %.80 = getelementptr inbounds %"Bucket<string, LLVMValueRef>.559450", %"Bucket<string, LLVMValueRef>.559450"* %.79, i64 0, i32 3
+  %.81 = load i1, i1* %.80, align 1
+  br i1 %.81, label %while.exit, label %while.entry
 }
 
 define %LLVMValueRef.559412* @"Map<string, LLVMValueRef>_get"(%"Map<string, LLVMValueRef>.559443"* %.1, %string.559062* %.2) {
@@ -46314,85 +46332,87 @@ for.end.thread:                                   ; preds = %.4
 
 define void @"Map<string, CGClassType>_resize"(%"Map<string, CGClassType>.559462"* %.1) {
 .3:
-  %.10 = getelementptr inbounds %"Map<string, CGClassType>.559462", %"Map<string, CGClassType>.559462"* %.1, i64 0, i32 0
-  %.11 = load %"Map<string, CGClassType>_vtable_ty.559464"*, %"Map<string, CGClassType>_vtable_ty.559464"** %.10, align 8
-  %.12 = getelementptr inbounds %"Map<string, CGClassType>_vtable_ty.559464", %"Map<string, CGClassType>_vtable_ty.559464"* %.11, i64 0, i32 4
-  %.13 = load %"Array<Bucket<string, CGClassType>>.559467"* (%"Map<string, CGClassType>.559462"*)*, %"Array<Bucket<string, CGClassType>>.559467"* (%"Map<string, CGClassType>.559462"*)** %.12, align 8
-  %.14 = tail call %"Array<Bucket<string, CGClassType>>.559467"* %.13(%"Map<string, CGClassType>.559462"* %.1)
-  %.18 = getelementptr inbounds %"Map<string, CGClassType>.559462", %"Map<string, CGClassType>.559462"* %.1, i64 0, i32 3
-  %.19 = load i64, i64* %.18, align 8
-  %.20 = shl i64 %.19, 1
-  store i64 %.20, i64* %.18, align 8
-  %.25 = getelementptr inbounds %"Map<string, CGClassType>.559462", %"Map<string, CGClassType>.559462"* %.1, i64 0, i32 1
-  %0 = bitcast %"Bucket<string, CGClassType>.559465"*** %.25 to i8**
-  %.261 = load i8*, i8** %0, align 8
-  %.30 = shl i64 %.19, 4
-  %.32 = tail call i8* @realloc(i8* %.261, i64 %.30)
-  store i8* %.32, i8** %0, align 8
-  %.4210 = load i64, i64* %.18, align 8
-  %.4311 = icmp sgt i64 %.4210, 0
-  br i1 %.4311, label %for.body.preheader, label %for.cond.1.preheader
+  %.6 = getelementptr inbounds %"Map<string, CGClassType>.559462", %"Map<string, CGClassType>.559462"* %.1, i64 0, i32 0
+  %.7 = load %"Map<string, CGClassType>_vtable_ty.559464"*, %"Map<string, CGClassType>_vtable_ty.559464"** %.6, align 8
+  %.8 = getelementptr inbounds %"Map<string, CGClassType>_vtable_ty.559464", %"Map<string, CGClassType>_vtable_ty.559464"* %.7, i64 0, i32 4
+  %.9 = load %"Array<Bucket<string, CGClassType>>.559467"* (%"Map<string, CGClassType>.559462"*)*, %"Array<Bucket<string, CGClassType>>.559467"* (%"Map<string, CGClassType>.559462"*)** %.8, align 8
+  %.10 = tail call %"Array<Bucket<string, CGClassType>>.559467"* %.9(%"Map<string, CGClassType>.559462"* %.1)
+  %.14 = getelementptr inbounds %"Map<string, CGClassType>.559462", %"Map<string, CGClassType>.559462"* %.1, i64 0, i32 3
+  %.15 = load i64, i64* %.14, align 8
+  %.16 = shl i64 %.15, 1
+  store i64 %.16, i64* %.14, align 8
+  %.20 = getelementptr inbounds %"Map<string, CGClassType>.559462", %"Map<string, CGClassType>.559462"* %.1, i64 0, i32 2
+  store i64 0, i64* %.20, align 8
+  %.24 = getelementptr inbounds %"Map<string, CGClassType>.559462", %"Map<string, CGClassType>.559462"* %.1, i64 0, i32 1
+  %0 = bitcast %"Bucket<string, CGClassType>.559465"*** %.24 to i8**
+  %.251 = load i8*, i8** %0, align 8
+  %.29 = shl i64 %.15, 4
+  %.31 = tail call i8* @realloc(i8* %.251, i64 %.29)
+  store i8* %.31, i8** %0, align 8
+  %.4110 = load i64, i64* %.14, align 8
+  %.4211 = icmp sgt i64 %.4110, 0
+  br i1 %.4211, label %for.body.preheader, label %for.cond.1.preheader
 
 for.body.preheader:                               ; preds = %.3
-  %.4914 = tail call dereferenceable_or_null(32) i8* @malloc(i64 32)
-  %.5015 = bitcast i8* %.4914 to %"Bucket<string, CGClassType>.559465"*
-  %.5116 = bitcast i8* %.4914 to %"Bucket<string, CGClassType>_vtable_ty.559466"**
-  store %"Bucket<string, CGClassType>_vtable_ty.559466"* @"Bucket<string, CGClassType>_vtable_data", %"Bucket<string, CGClassType>_vtable_ty.559466"** %.5116, align 8
-  tail call void @"Bucket<string, CGClassType>_constructor"(%"Bucket<string, CGClassType>.559465"* %.5015)
-  %1 = bitcast i8* %.32 to i8**
-  store i8* %.4914, i8** %1, align 8
-  %.4217 = load i64, i64* %.18, align 8
-  %.4318 = icmp sgt i64 %.4217, 1
-  br i1 %.4318, label %for.body.for.body_crit_edge, label %for.cond.1.preheader
+  %.4814 = tail call dereferenceable_or_null(32) i8* @malloc(i64 32)
+  %.4915 = bitcast i8* %.4814 to %"Bucket<string, CGClassType>.559465"*
+  %.5016 = bitcast i8* %.4814 to %"Bucket<string, CGClassType>_vtable_ty.559466"**
+  store %"Bucket<string, CGClassType>_vtable_ty.559466"* @"Bucket<string, CGClassType>_vtable_data", %"Bucket<string, CGClassType>_vtable_ty.559466"** %.5016, align 8
+  tail call void @"Bucket<string, CGClassType>_constructor"(%"Bucket<string, CGClassType>.559465"* %.4915)
+  %1 = bitcast i8* %.31 to i8**
+  store i8* %.4814, i8** %1, align 8
+  %.4117 = load i64, i64* %.14, align 8
+  %.4218 = icmp sgt i64 %.4117, 1
+  br i1 %.4218, label %for.body.for.body_crit_edge, label %for.cond.1.preheader
 
 for.cond.1.preheader:                             ; preds = %for.body.for.body_crit_edge, %for.body.preheader, %.3
-  %.68 = getelementptr inbounds %"Array<Bucket<string, CGClassType>>.559467", %"Array<Bucket<string, CGClassType>>.559467"* %.14, i64 0, i32 2
-  %.697 = load i64, i64* %.68, align 8
-  %.708 = icmp sgt i64 %.697, 0
-  br i1 %.708, label %for.body.1.lr.ph, label %for.end.1
+  %.67 = getelementptr inbounds %"Array<Bucket<string, CGClassType>>.559467", %"Array<Bucket<string, CGClassType>>.559467"* %.10, i64 0, i32 2
+  %.687 = load i64, i64* %.67, align 8
+  %.698 = icmp sgt i64 %.687, 0
+  br i1 %.698, label %for.body.1.lr.ph, label %for.end.1
 
 for.body.1.lr.ph:                                 ; preds = %for.cond.1.preheader
-  %.79 = getelementptr inbounds %"Array<Bucket<string, CGClassType>>.559467", %"Array<Bucket<string, CGClassType>>.559467"* %.14, i64 0, i32 0
+  %.78 = getelementptr inbounds %"Array<Bucket<string, CGClassType>>.559467", %"Array<Bucket<string, CGClassType>>.559467"* %.10, i64 0, i32 0
   br label %for.body.1
 
 for.body.for.body_crit_edge:                      ; preds = %for.body.preheader, %for.body.for.body_crit_edge
-  %.6019 = phi i64 [ %.60, %for.body.for.body_crit_edge ], [ 1, %for.body.preheader ]
-  %.48.pre = load %"Bucket<string, CGClassType>.559465"**, %"Bucket<string, CGClassType>.559465"*** %.25, align 8
-  %.49 = tail call dereferenceable_or_null(32) i8* @malloc(i64 32)
-  %.50 = bitcast i8* %.49 to %"Bucket<string, CGClassType>.559465"*
-  %.51 = bitcast i8* %.49 to %"Bucket<string, CGClassType>_vtable_ty.559466"**
-  store %"Bucket<string, CGClassType>_vtable_ty.559466"* @"Bucket<string, CGClassType>_vtable_data", %"Bucket<string, CGClassType>_vtable_ty.559466"** %.51, align 8
-  tail call void @"Bucket<string, CGClassType>_constructor"(%"Bucket<string, CGClassType>.559465"* %.50)
-  %.54 = getelementptr inbounds %"Bucket<string, CGClassType>.559465"*, %"Bucket<string, CGClassType>.559465"** %.48.pre, i64 %.6019
-  %2 = bitcast %"Bucket<string, CGClassType>.559465"** %.54 to i8**
-  store i8* %.49, i8** %2, align 8
-  %.60 = add nuw nsw i64 %.6019, 1
-  %.42 = load i64, i64* %.18, align 8
-  %.43 = icmp slt i64 %.60, %.42
-  br i1 %.43, label %for.body.for.body_crit_edge, label %for.cond.1.preheader
+  %.5919 = phi i64 [ %.59, %for.body.for.body_crit_edge ], [ 1, %for.body.preheader ]
+  %.47.pre = load %"Bucket<string, CGClassType>.559465"**, %"Bucket<string, CGClassType>.559465"*** %.24, align 8
+  %.48 = tail call dereferenceable_or_null(32) i8* @malloc(i64 32)
+  %.49 = bitcast i8* %.48 to %"Bucket<string, CGClassType>.559465"*
+  %.50 = bitcast i8* %.48 to %"Bucket<string, CGClassType>_vtable_ty.559466"**
+  store %"Bucket<string, CGClassType>_vtable_ty.559466"* @"Bucket<string, CGClassType>_vtable_data", %"Bucket<string, CGClassType>_vtable_ty.559466"** %.50, align 8
+  tail call void @"Bucket<string, CGClassType>_constructor"(%"Bucket<string, CGClassType>.559465"* %.49)
+  %.53 = getelementptr inbounds %"Bucket<string, CGClassType>.559465"*, %"Bucket<string, CGClassType>.559465"** %.47.pre, i64 %.5919
+  %2 = bitcast %"Bucket<string, CGClassType>.559465"** %.53 to i8**
+  store i8* %.48, i8** %2, align 8
+  %.59 = add nuw nsw i64 %.5919, 1
+  %.41 = load i64, i64* %.14, align 8
+  %.42 = icmp slt i64 %.59, %.41
+  br i1 %.42, label %for.body.for.body_crit_edge, label %for.cond.1.preheader
 
 for.body.1:                                       ; preds = %for.body.1.lr.ph, %for.body.1
-  %storemerge29 = phi i64 [ 0, %for.body.1.lr.ph ], [ %.100, %for.body.1 ]
-  %.74 = load %"Map<string, CGClassType>_vtable_ty.559464"*, %"Map<string, CGClassType>_vtable_ty.559464"** %.10, align 8
-  %.75 = getelementptr inbounds %"Map<string, CGClassType>_vtable_ty.559464", %"Map<string, CGClassType>_vtable_ty.559464"* %.74, i64 0, i32 2
-  %.76 = load void (%"Map<string, CGClassType>.559462"*, %string.559062*, %CGClassType.559440*)*, void (%"Map<string, CGClassType>.559462"*, %string.559062*, %CGClassType.559440*)** %.75, align 8
-  %.80 = load %"Array<Bucket<string, CGClassType>>_vtable_ty.559468"*, %"Array<Bucket<string, CGClassType>>_vtable_ty.559468"** %.79, align 8
-  %.81 = getelementptr inbounds %"Array<Bucket<string, CGClassType>>_vtable_ty.559468", %"Array<Bucket<string, CGClassType>>_vtable_ty.559468"* %.80, i64 0, i32 5
-  %.82 = load %"Bucket<string, CGClassType>.559465"* (%"Array<Bucket<string, CGClassType>>.559467"*, i64)*, %"Bucket<string, CGClassType>.559465"* (%"Array<Bucket<string, CGClassType>>.559467"*, i64)** %.81, align 8
-  %.83 = tail call %"Bucket<string, CGClassType>.559465"* %.82(%"Array<Bucket<string, CGClassType>>.559467"* nonnull %.14, i64 %storemerge29)
-  %.84 = getelementptr inbounds %"Bucket<string, CGClassType>.559465", %"Bucket<string, CGClassType>.559465"* %.83, i64 0, i32 1
-  %.85 = load %string.559062*, %string.559062** %.84, align 8
-  %.89 = load %"Array<Bucket<string, CGClassType>>_vtable_ty.559468"*, %"Array<Bucket<string, CGClassType>>_vtable_ty.559468"** %.79, align 8
-  %.90 = getelementptr inbounds %"Array<Bucket<string, CGClassType>>_vtable_ty.559468", %"Array<Bucket<string, CGClassType>>_vtable_ty.559468"* %.89, i64 0, i32 5
-  %.91 = load %"Bucket<string, CGClassType>.559465"* (%"Array<Bucket<string, CGClassType>>.559467"*, i64)*, %"Bucket<string, CGClassType>.559465"* (%"Array<Bucket<string, CGClassType>>.559467"*, i64)** %.90, align 8
-  %.92 = tail call %"Bucket<string, CGClassType>.559465"* %.91(%"Array<Bucket<string, CGClassType>>.559467"* nonnull %.14, i64 %storemerge29)
-  %.93 = getelementptr inbounds %"Bucket<string, CGClassType>.559465", %"Bucket<string, CGClassType>.559465"* %.92, i64 0, i32 2
-  %.94 = load %CGClassType.559440*, %CGClassType.559440** %.93, align 8
-  tail call void %.76(%"Map<string, CGClassType>.559462"* nonnull %.1, %string.559062* %.85, %CGClassType.559440* %.94)
-  %.100 = add nuw nsw i64 %storemerge29, 1
-  %.69 = load i64, i64* %.68, align 8
-  %.70 = icmp slt i64 %.100, %.69
-  br i1 %.70, label %for.body.1, label %for.end.1
+  %storemerge29 = phi i64 [ 0, %for.body.1.lr.ph ], [ %.99, %for.body.1 ]
+  %.73 = load %"Map<string, CGClassType>_vtable_ty.559464"*, %"Map<string, CGClassType>_vtable_ty.559464"** %.6, align 8
+  %.74 = getelementptr inbounds %"Map<string, CGClassType>_vtable_ty.559464", %"Map<string, CGClassType>_vtable_ty.559464"* %.73, i64 0, i32 2
+  %.75 = load void (%"Map<string, CGClassType>.559462"*, %string.559062*, %CGClassType.559440*)*, void (%"Map<string, CGClassType>.559462"*, %string.559062*, %CGClassType.559440*)** %.74, align 8
+  %.79 = load %"Array<Bucket<string, CGClassType>>_vtable_ty.559468"*, %"Array<Bucket<string, CGClassType>>_vtable_ty.559468"** %.78, align 8
+  %.80 = getelementptr inbounds %"Array<Bucket<string, CGClassType>>_vtable_ty.559468", %"Array<Bucket<string, CGClassType>>_vtable_ty.559468"* %.79, i64 0, i32 5
+  %.81 = load %"Bucket<string, CGClassType>.559465"* (%"Array<Bucket<string, CGClassType>>.559467"*, i64)*, %"Bucket<string, CGClassType>.559465"* (%"Array<Bucket<string, CGClassType>>.559467"*, i64)** %.80, align 8
+  %.82 = tail call %"Bucket<string, CGClassType>.559465"* %.81(%"Array<Bucket<string, CGClassType>>.559467"* nonnull %.10, i64 %storemerge29)
+  %.83 = getelementptr inbounds %"Bucket<string, CGClassType>.559465", %"Bucket<string, CGClassType>.559465"* %.82, i64 0, i32 1
+  %.84 = load %string.559062*, %string.559062** %.83, align 8
+  %.88 = load %"Array<Bucket<string, CGClassType>>_vtable_ty.559468"*, %"Array<Bucket<string, CGClassType>>_vtable_ty.559468"** %.78, align 8
+  %.89 = getelementptr inbounds %"Array<Bucket<string, CGClassType>>_vtable_ty.559468", %"Array<Bucket<string, CGClassType>>_vtable_ty.559468"* %.88, i64 0, i32 5
+  %.90 = load %"Bucket<string, CGClassType>.559465"* (%"Array<Bucket<string, CGClassType>>.559467"*, i64)*, %"Bucket<string, CGClassType>.559465"* (%"Array<Bucket<string, CGClassType>>.559467"*, i64)** %.89, align 8
+  %.91 = tail call %"Bucket<string, CGClassType>.559465"* %.90(%"Array<Bucket<string, CGClassType>>.559467"* nonnull %.10, i64 %storemerge29)
+  %.92 = getelementptr inbounds %"Bucket<string, CGClassType>.559465", %"Bucket<string, CGClassType>.559465"* %.91, i64 0, i32 2
+  %.93 = load %CGClassType.559440*, %CGClassType.559440** %.92, align 8
+  tail call void %.75(%"Map<string, CGClassType>.559462"* nonnull %.1, %string.559062* %.84, %CGClassType.559440* %.93)
+  %.99 = add nuw nsw i64 %storemerge29, 1
+  %.68 = load i64, i64* %.67, align 8
+  %.69 = icmp slt i64 %.99, %.68
+  br i1 %.69, label %for.body.1, label %for.end.1
 
 for.end.1:                                        ; preds = %for.body.1, %for.cond.1.preheader
   ret void
@@ -46407,74 +46427,74 @@ define void @"Map<string, CGClassType>_set"(%"Map<string, CGClassType>.559462"* 
   %.15 = load i64, i64* %.14, align 8
   %.16 = sitofp i64 %.15 to double
   %.17 = fdiv double %.12, %.16
-  %.18 = fcmp ogt double %.17, 7.500000e-01
-  br i1 %.18, label %.5.if, label %.5.endif
+  %.20 = fcmp ogt double %.17, 7.500000e-01
+  br i1 %.20, label %.5.if, label %.5.endif
 
 .5.if:                                            ; preds = %.5
-  %.21 = getelementptr inbounds %"Map<string, CGClassType>.559462", %"Map<string, CGClassType>.559462"* %.1, i64 0, i32 0
-  %.22 = load %"Map<string, CGClassType>_vtable_ty.559464"*, %"Map<string, CGClassType>_vtable_ty.559464"** %.21, align 8
-  %.23 = getelementptr inbounds %"Map<string, CGClassType>_vtable_ty.559464", %"Map<string, CGClassType>_vtable_ty.559464"* %.22, i64 0, i32 1
-  %.24 = load void (%"Map<string, CGClassType>.559462"*)*, void (%"Map<string, CGClassType>.559462"*)** %.23, align 8
-  tail call void %.24(%"Map<string, CGClassType>.559462"* nonnull %.1)
+  %.23 = getelementptr inbounds %"Map<string, CGClassType>.559462", %"Map<string, CGClassType>.559462"* %.1, i64 0, i32 0
+  %.24 = load %"Map<string, CGClassType>_vtable_ty.559464"*, %"Map<string, CGClassType>_vtable_ty.559464"** %.23, align 8
+  %.25 = getelementptr inbounds %"Map<string, CGClassType>_vtable_ty.559464", %"Map<string, CGClassType>_vtable_ty.559464"* %.24, i64 0, i32 1
+  %.26 = load void (%"Map<string, CGClassType>.559462"*)*, void (%"Map<string, CGClassType>.559462"*)** %.25, align 8
+  tail call void %.26(%"Map<string, CGClassType>.559462"* nonnull %.1)
   br label %.5.endif
 
 .5.endif:                                         ; preds = %.5.if, %.5
-  %.28 = getelementptr inbounds %"Map<string, CGClassType>.559462", %"Map<string, CGClassType>.559462"* %.1, i64 0, i32 0
-  %.29 = load %"Map<string, CGClassType>_vtable_ty.559464"*, %"Map<string, CGClassType>_vtable_ty.559464"** %.28, align 8
-  %.30 = getelementptr inbounds %"Map<string, CGClassType>_vtable_ty.559464", %"Map<string, CGClassType>_vtable_ty.559464"* %.29, i64 0, i32 0
-  %.31 = load i64 (%"Map<string, CGClassType>.559462"*, %string.559062*)*, i64 (%"Map<string, CGClassType>.559462"*, %string.559062*)** %.30, align 8
-  %.33 = tail call i64 %.31(%"Map<string, CGClassType>.559462"* nonnull %.1, %string.559062* %.2)
-  %.36 = load i64, i64* %.14, align 8
-  %.37 = srem i64 %.33, %.36
-  %.41 = getelementptr inbounds %"Map<string, CGClassType>.559462", %"Map<string, CGClassType>.559462"* %.1, i64 0, i32 1
-  %.42 = load %"Bucket<string, CGClassType>.559465"**, %"Bucket<string, CGClassType>.559465"*** %.41, align 8
-  %.43 = getelementptr inbounds %"Bucket<string, CGClassType>.559465"*, %"Bucket<string, CGClassType>.559465"** %.42, i64 %.37
-  %.44 = load %"Bucket<string, CGClassType>.559465"*, %"Bucket<string, CGClassType>.559465"** %.43, align 8
-  %.45 = getelementptr inbounds %"Bucket<string, CGClassType>.559465", %"Bucket<string, CGClassType>.559465"* %.44, i64 0, i32 3
-  %.46 = load i1, i1* %.45, align 1
-  br i1 %.46, label %while.exit, label %while.entry
+  %.30 = getelementptr inbounds %"Map<string, CGClassType>.559462", %"Map<string, CGClassType>.559462"* %.1, i64 0, i32 0
+  %.31 = load %"Map<string, CGClassType>_vtable_ty.559464"*, %"Map<string, CGClassType>_vtable_ty.559464"** %.30, align 8
+  %.32 = getelementptr inbounds %"Map<string, CGClassType>_vtable_ty.559464", %"Map<string, CGClassType>_vtable_ty.559464"* %.31, i64 0, i32 0
+  %.33 = load i64 (%"Map<string, CGClassType>.559462"*, %string.559062*)*, i64 (%"Map<string, CGClassType>.559462"*, %string.559062*)** %.32, align 8
+  %.35 = tail call i64 %.33(%"Map<string, CGClassType>.559462"* nonnull %.1, %string.559062* %.2)
+  %.38 = load i64, i64* %.14, align 8
+  %.39 = srem i64 %.35, %.38
+  %.43 = getelementptr inbounds %"Map<string, CGClassType>.559462", %"Map<string, CGClassType>.559462"* %.1, i64 0, i32 1
+  %.44 = load %"Bucket<string, CGClassType>.559465"**, %"Bucket<string, CGClassType>.559465"*** %.43, align 8
+  %.45 = getelementptr inbounds %"Bucket<string, CGClassType>.559465"*, %"Bucket<string, CGClassType>.559465"** %.44, i64 %.39
+  %.46 = load %"Bucket<string, CGClassType>.559465"*, %"Bucket<string, CGClassType>.559465"** %.45, align 8
+  %.47 = getelementptr inbounds %"Bucket<string, CGClassType>.559465", %"Bucket<string, CGClassType>.559465"* %.46, i64 0, i32 3
+  %.48 = load i1, i1* %.47, align 1
+  br i1 %.48, label %while.exit, label %while.entry
 
 while.entry:                                      ; preds = %.5.endif, %while.entry.endif
-  %.54 = phi %"Bucket<string, CGClassType>.559465"* [ %.77, %while.entry.endif ], [ %.44, %.5.endif ]
-  %.701 = phi i64 [ %.70, %while.entry.endif ], [ %.37, %.5.endif ]
-  %.55 = getelementptr inbounds %"Bucket<string, CGClassType>.559465", %"Bucket<string, CGClassType>.559465"* %.54, i64 0, i32 1
-  %.56 = load %string.559062*, %string.559062** %.55, align 8
-  %.58 = getelementptr inbounds %string.559062, %string.559062* %.56, i64 0, i32 0
-  %.59 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.58, align 8
-  %.60 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.59, i64 0, i32 4
-  %.61 = load i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)** %.60, align 8
-  %.62 = tail call i1 %.61(%string.559062* %.56, %string.559062* %.2)
-  br i1 %.62, label %while.entry.while.exit.loopexit_crit_edge, label %while.entry.endif
+  %.56 = phi %"Bucket<string, CGClassType>.559465"* [ %.79, %while.entry.endif ], [ %.46, %.5.endif ]
+  %.721 = phi i64 [ %.72, %while.entry.endif ], [ %.39, %.5.endif ]
+  %.57 = getelementptr inbounds %"Bucket<string, CGClassType>.559465", %"Bucket<string, CGClassType>.559465"* %.56, i64 0, i32 1
+  %.58 = load %string.559062*, %string.559062** %.57, align 8
+  %.60 = getelementptr inbounds %string.559062, %string.559062* %.58, i64 0, i32 0
+  %.61 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.60, align 8
+  %.62 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.61, i64 0, i32 4
+  %.63 = load i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)** %.62, align 8
+  %.64 = tail call i1 %.63(%string.559062* %.58, %string.559062* %.2)
+  br i1 %.64, label %while.entry.while.exit.loopexit_crit_edge, label %while.entry.endif
 
 while.entry.while.exit.loopexit_crit_edge:        ; preds = %while.entry
-  %.92.pre.pre = load %"Bucket<string, CGClassType>.559465"**, %"Bucket<string, CGClassType>.559465"*** %.41, align 8
+  %.94.pre.pre = load %"Bucket<string, CGClassType>.559465"**, %"Bucket<string, CGClassType>.559465"*** %.43, align 8
   br label %while.exit
 
 while.exit:                                       ; preds = %while.entry.endif, %while.entry.while.exit.loopexit_crit_edge, %.5.endif
-  %.92 = phi %"Bucket<string, CGClassType>.559465"** [ %.42, %.5.endif ], [ %.92.pre.pre, %while.entry.while.exit.loopexit_crit_edge ], [ %.75, %while.entry.endif ]
-  %.89 = phi i64 [ %.37, %.5.endif ], [ %.701, %while.entry.while.exit.loopexit_crit_edge ], [ %.70, %while.entry.endif ]
-  %.84 = load i64, i64* %.10, align 8
-  %.85 = add i64 %.84, 1
-  store i64 %.85, i64* %.10, align 8
-  %.93 = getelementptr inbounds %"Bucket<string, CGClassType>.559465"*, %"Bucket<string, CGClassType>.559465"** %.92, i64 %.89
-  %.94 = load %"Bucket<string, CGClassType>.559465"*, %"Bucket<string, CGClassType>.559465"** %.93, align 8
-  %.95 = getelementptr inbounds %"Bucket<string, CGClassType>.559465", %"Bucket<string, CGClassType>.559465"* %.94, i64 0, i32 0
-  %.96 = load %"Bucket<string, CGClassType>_vtable_ty.559466"*, %"Bucket<string, CGClassType>_vtable_ty.559466"** %.95, align 8
-  %.97 = getelementptr inbounds %"Bucket<string, CGClassType>_vtable_ty.559466", %"Bucket<string, CGClassType>_vtable_ty.559466"* %.96, i64 0, i32 0
-  %.98 = load void (%"Bucket<string, CGClassType>.559465"*, %string.559062*, %CGClassType.559440*)*, void (%"Bucket<string, CGClassType>.559465"*, %string.559062*, %CGClassType.559440*)** %.97, align 8
-  tail call void %.98(%"Bucket<string, CGClassType>.559465"* %.94, %string.559062* %.2, %CGClassType.559440* %.3)
+  %.94 = phi %"Bucket<string, CGClassType>.559465"** [ %.44, %.5.endif ], [ %.94.pre.pre, %while.entry.while.exit.loopexit_crit_edge ], [ %.77, %while.entry.endif ]
+  %.91 = phi i64 [ %.39, %.5.endif ], [ %.721, %while.entry.while.exit.loopexit_crit_edge ], [ %.72, %while.entry.endif ]
+  %.86 = load i64, i64* %.10, align 8
+  %.87 = add i64 %.86, 1
+  store i64 %.87, i64* %.10, align 8
+  %.95 = getelementptr inbounds %"Bucket<string, CGClassType>.559465"*, %"Bucket<string, CGClassType>.559465"** %.94, i64 %.91
+  %.96 = load %"Bucket<string, CGClassType>.559465"*, %"Bucket<string, CGClassType>.559465"** %.95, align 8
+  %.97 = getelementptr inbounds %"Bucket<string, CGClassType>.559465", %"Bucket<string, CGClassType>.559465"* %.96, i64 0, i32 0
+  %.98 = load %"Bucket<string, CGClassType>_vtable_ty.559466"*, %"Bucket<string, CGClassType>_vtable_ty.559466"** %.97, align 8
+  %.99 = getelementptr inbounds %"Bucket<string, CGClassType>_vtable_ty.559466", %"Bucket<string, CGClassType>_vtable_ty.559466"* %.98, i64 0, i32 0
+  %.100 = load void (%"Bucket<string, CGClassType>.559465"*, %string.559062*, %CGClassType.559440*)*, void (%"Bucket<string, CGClassType>.559465"*, %string.559062*, %CGClassType.559440*)** %.99, align 8
+  tail call void %.100(%"Bucket<string, CGClassType>.559465"* %.96, %string.559062* %.2, %CGClassType.559440* %.3)
   ret void
 
 while.entry.endif:                                ; preds = %while.entry
-  %.66 = add i64 %.701, 1
-  %.69 = load i64, i64* %.14, align 8
-  %.70 = srem i64 %.66, %.69
-  %.75 = load %"Bucket<string, CGClassType>.559465"**, %"Bucket<string, CGClassType>.559465"*** %.41, align 8
-  %.76 = getelementptr inbounds %"Bucket<string, CGClassType>.559465"*, %"Bucket<string, CGClassType>.559465"** %.75, i64 %.70
-  %.77 = load %"Bucket<string, CGClassType>.559465"*, %"Bucket<string, CGClassType>.559465"** %.76, align 8
-  %.78 = getelementptr inbounds %"Bucket<string, CGClassType>.559465", %"Bucket<string, CGClassType>.559465"* %.77, i64 0, i32 3
-  %.79 = load i1, i1* %.78, align 1
-  br i1 %.79, label %while.exit, label %while.entry
+  %.68 = add i64 %.721, 1
+  %.71 = load i64, i64* %.14, align 8
+  %.72 = srem i64 %.68, %.71
+  %.77 = load %"Bucket<string, CGClassType>.559465"**, %"Bucket<string, CGClassType>.559465"*** %.43, align 8
+  %.78 = getelementptr inbounds %"Bucket<string, CGClassType>.559465"*, %"Bucket<string, CGClassType>.559465"** %.77, i64 %.72
+  %.79 = load %"Bucket<string, CGClassType>.559465"*, %"Bucket<string, CGClassType>.559465"** %.78, align 8
+  %.80 = getelementptr inbounds %"Bucket<string, CGClassType>.559465", %"Bucket<string, CGClassType>.559465"* %.79, i64 0, i32 3
+  %.81 = load i1, i1* %.80, align 1
+  br i1 %.81, label %while.exit, label %while.entry
 }
 
 define %CGClassType.559440* @"Map<string, CGClassType>_get"(%"Map<string, CGClassType>.559462"* %.1, %string.559062* %.2) {
@@ -46980,85 +47000,87 @@ for.end.thread:                                   ; preds = %.4
 
 define void @"Map<string, CGEnumType>_resize"(%"Map<string, CGEnumType>.559463"* %.1) {
 .3:
-  %.10 = getelementptr inbounds %"Map<string, CGEnumType>.559463", %"Map<string, CGEnumType>.559463"* %.1, i64 0, i32 0
-  %.11 = load %"Map<string, CGEnumType>_vtable_ty.559469"*, %"Map<string, CGEnumType>_vtable_ty.559469"** %.10, align 8
-  %.12 = getelementptr inbounds %"Map<string, CGEnumType>_vtable_ty.559469", %"Map<string, CGEnumType>_vtable_ty.559469"* %.11, i64 0, i32 4
-  %.13 = load %"Array<Bucket<string, CGEnumType>>.559472"* (%"Map<string, CGEnumType>.559463"*)*, %"Array<Bucket<string, CGEnumType>>.559472"* (%"Map<string, CGEnumType>.559463"*)** %.12, align 8
-  %.14 = tail call %"Array<Bucket<string, CGEnumType>>.559472"* %.13(%"Map<string, CGEnumType>.559463"* %.1)
-  %.18 = getelementptr inbounds %"Map<string, CGEnumType>.559463", %"Map<string, CGEnumType>.559463"* %.1, i64 0, i32 3
-  %.19 = load i64, i64* %.18, align 8
-  %.20 = shl i64 %.19, 1
-  store i64 %.20, i64* %.18, align 8
-  %.25 = getelementptr inbounds %"Map<string, CGEnumType>.559463", %"Map<string, CGEnumType>.559463"* %.1, i64 0, i32 1
-  %0 = bitcast %"Bucket<string, CGEnumType>.559470"*** %.25 to i8**
-  %.261 = load i8*, i8** %0, align 8
-  %.30 = shl i64 %.19, 4
-  %.32 = tail call i8* @realloc(i8* %.261, i64 %.30)
-  store i8* %.32, i8** %0, align 8
-  %.4210 = load i64, i64* %.18, align 8
-  %.4311 = icmp sgt i64 %.4210, 0
-  br i1 %.4311, label %for.body.preheader, label %for.cond.1.preheader
+  %.6 = getelementptr inbounds %"Map<string, CGEnumType>.559463", %"Map<string, CGEnumType>.559463"* %.1, i64 0, i32 0
+  %.7 = load %"Map<string, CGEnumType>_vtable_ty.559469"*, %"Map<string, CGEnumType>_vtable_ty.559469"** %.6, align 8
+  %.8 = getelementptr inbounds %"Map<string, CGEnumType>_vtable_ty.559469", %"Map<string, CGEnumType>_vtable_ty.559469"* %.7, i64 0, i32 4
+  %.9 = load %"Array<Bucket<string, CGEnumType>>.559472"* (%"Map<string, CGEnumType>.559463"*)*, %"Array<Bucket<string, CGEnumType>>.559472"* (%"Map<string, CGEnumType>.559463"*)** %.8, align 8
+  %.10 = tail call %"Array<Bucket<string, CGEnumType>>.559472"* %.9(%"Map<string, CGEnumType>.559463"* %.1)
+  %.14 = getelementptr inbounds %"Map<string, CGEnumType>.559463", %"Map<string, CGEnumType>.559463"* %.1, i64 0, i32 3
+  %.15 = load i64, i64* %.14, align 8
+  %.16 = shl i64 %.15, 1
+  store i64 %.16, i64* %.14, align 8
+  %.20 = getelementptr inbounds %"Map<string, CGEnumType>.559463", %"Map<string, CGEnumType>.559463"* %.1, i64 0, i32 2
+  store i64 0, i64* %.20, align 8
+  %.24 = getelementptr inbounds %"Map<string, CGEnumType>.559463", %"Map<string, CGEnumType>.559463"* %.1, i64 0, i32 1
+  %0 = bitcast %"Bucket<string, CGEnumType>.559470"*** %.24 to i8**
+  %.251 = load i8*, i8** %0, align 8
+  %.29 = shl i64 %.15, 4
+  %.31 = tail call i8* @realloc(i8* %.251, i64 %.29)
+  store i8* %.31, i8** %0, align 8
+  %.4110 = load i64, i64* %.14, align 8
+  %.4211 = icmp sgt i64 %.4110, 0
+  br i1 %.4211, label %for.body.preheader, label %for.cond.1.preheader
 
 for.body.preheader:                               ; preds = %.3
-  %.4914 = tail call dereferenceable_or_null(32) i8* @malloc(i64 32)
-  %.5015 = bitcast i8* %.4914 to %"Bucket<string, CGEnumType>.559470"*
-  %.5116 = bitcast i8* %.4914 to %"Bucket<string, CGEnumType>_vtable_ty.559471"**
-  store %"Bucket<string, CGEnumType>_vtable_ty.559471"* @"Bucket<string, CGEnumType>_vtable_data", %"Bucket<string, CGEnumType>_vtable_ty.559471"** %.5116, align 8
-  tail call void @"Bucket<string, CGEnumType>_constructor"(%"Bucket<string, CGEnumType>.559470"* %.5015)
-  %1 = bitcast i8* %.32 to i8**
-  store i8* %.4914, i8** %1, align 8
-  %.4217 = load i64, i64* %.18, align 8
-  %.4318 = icmp sgt i64 %.4217, 1
-  br i1 %.4318, label %for.body.for.body_crit_edge, label %for.cond.1.preheader
+  %.4814 = tail call dereferenceable_or_null(32) i8* @malloc(i64 32)
+  %.4915 = bitcast i8* %.4814 to %"Bucket<string, CGEnumType>.559470"*
+  %.5016 = bitcast i8* %.4814 to %"Bucket<string, CGEnumType>_vtable_ty.559471"**
+  store %"Bucket<string, CGEnumType>_vtable_ty.559471"* @"Bucket<string, CGEnumType>_vtable_data", %"Bucket<string, CGEnumType>_vtable_ty.559471"** %.5016, align 8
+  tail call void @"Bucket<string, CGEnumType>_constructor"(%"Bucket<string, CGEnumType>.559470"* %.4915)
+  %1 = bitcast i8* %.31 to i8**
+  store i8* %.4814, i8** %1, align 8
+  %.4117 = load i64, i64* %.14, align 8
+  %.4218 = icmp sgt i64 %.4117, 1
+  br i1 %.4218, label %for.body.for.body_crit_edge, label %for.cond.1.preheader
 
 for.cond.1.preheader:                             ; preds = %for.body.for.body_crit_edge, %for.body.preheader, %.3
-  %.68 = getelementptr inbounds %"Array<Bucket<string, CGEnumType>>.559472", %"Array<Bucket<string, CGEnumType>>.559472"* %.14, i64 0, i32 2
-  %.697 = load i64, i64* %.68, align 8
-  %.708 = icmp sgt i64 %.697, 0
-  br i1 %.708, label %for.body.1.lr.ph, label %for.end.1
+  %.67 = getelementptr inbounds %"Array<Bucket<string, CGEnumType>>.559472", %"Array<Bucket<string, CGEnumType>>.559472"* %.10, i64 0, i32 2
+  %.687 = load i64, i64* %.67, align 8
+  %.698 = icmp sgt i64 %.687, 0
+  br i1 %.698, label %for.body.1.lr.ph, label %for.end.1
 
 for.body.1.lr.ph:                                 ; preds = %for.cond.1.preheader
-  %.79 = getelementptr inbounds %"Array<Bucket<string, CGEnumType>>.559472", %"Array<Bucket<string, CGEnumType>>.559472"* %.14, i64 0, i32 0
+  %.78 = getelementptr inbounds %"Array<Bucket<string, CGEnumType>>.559472", %"Array<Bucket<string, CGEnumType>>.559472"* %.10, i64 0, i32 0
   br label %for.body.1
 
 for.body.for.body_crit_edge:                      ; preds = %for.body.preheader, %for.body.for.body_crit_edge
-  %.6019 = phi i64 [ %.60, %for.body.for.body_crit_edge ], [ 1, %for.body.preheader ]
-  %.48.pre = load %"Bucket<string, CGEnumType>.559470"**, %"Bucket<string, CGEnumType>.559470"*** %.25, align 8
-  %.49 = tail call dereferenceable_or_null(32) i8* @malloc(i64 32)
-  %.50 = bitcast i8* %.49 to %"Bucket<string, CGEnumType>.559470"*
-  %.51 = bitcast i8* %.49 to %"Bucket<string, CGEnumType>_vtable_ty.559471"**
-  store %"Bucket<string, CGEnumType>_vtable_ty.559471"* @"Bucket<string, CGEnumType>_vtable_data", %"Bucket<string, CGEnumType>_vtable_ty.559471"** %.51, align 8
-  tail call void @"Bucket<string, CGEnumType>_constructor"(%"Bucket<string, CGEnumType>.559470"* %.50)
-  %.54 = getelementptr inbounds %"Bucket<string, CGEnumType>.559470"*, %"Bucket<string, CGEnumType>.559470"** %.48.pre, i64 %.6019
-  %2 = bitcast %"Bucket<string, CGEnumType>.559470"** %.54 to i8**
-  store i8* %.49, i8** %2, align 8
-  %.60 = add nuw nsw i64 %.6019, 1
-  %.42 = load i64, i64* %.18, align 8
-  %.43 = icmp slt i64 %.60, %.42
-  br i1 %.43, label %for.body.for.body_crit_edge, label %for.cond.1.preheader
+  %.5919 = phi i64 [ %.59, %for.body.for.body_crit_edge ], [ 1, %for.body.preheader ]
+  %.47.pre = load %"Bucket<string, CGEnumType>.559470"**, %"Bucket<string, CGEnumType>.559470"*** %.24, align 8
+  %.48 = tail call dereferenceable_or_null(32) i8* @malloc(i64 32)
+  %.49 = bitcast i8* %.48 to %"Bucket<string, CGEnumType>.559470"*
+  %.50 = bitcast i8* %.48 to %"Bucket<string, CGEnumType>_vtable_ty.559471"**
+  store %"Bucket<string, CGEnumType>_vtable_ty.559471"* @"Bucket<string, CGEnumType>_vtable_data", %"Bucket<string, CGEnumType>_vtable_ty.559471"** %.50, align 8
+  tail call void @"Bucket<string, CGEnumType>_constructor"(%"Bucket<string, CGEnumType>.559470"* %.49)
+  %.53 = getelementptr inbounds %"Bucket<string, CGEnumType>.559470"*, %"Bucket<string, CGEnumType>.559470"** %.47.pre, i64 %.5919
+  %2 = bitcast %"Bucket<string, CGEnumType>.559470"** %.53 to i8**
+  store i8* %.48, i8** %2, align 8
+  %.59 = add nuw nsw i64 %.5919, 1
+  %.41 = load i64, i64* %.14, align 8
+  %.42 = icmp slt i64 %.59, %.41
+  br i1 %.42, label %for.body.for.body_crit_edge, label %for.cond.1.preheader
 
 for.body.1:                                       ; preds = %for.body.1.lr.ph, %for.body.1
-  %storemerge29 = phi i64 [ 0, %for.body.1.lr.ph ], [ %.100, %for.body.1 ]
-  %.74 = load %"Map<string, CGEnumType>_vtable_ty.559469"*, %"Map<string, CGEnumType>_vtable_ty.559469"** %.10, align 8
-  %.75 = getelementptr inbounds %"Map<string, CGEnumType>_vtable_ty.559469", %"Map<string, CGEnumType>_vtable_ty.559469"* %.74, i64 0, i32 2
-  %.76 = load void (%"Map<string, CGEnumType>.559463"*, %string.559062*, %CGEnumType.559454*)*, void (%"Map<string, CGEnumType>.559463"*, %string.559062*, %CGEnumType.559454*)** %.75, align 8
-  %.80 = load %"Array<Bucket<string, CGEnumType>>_vtable_ty.559473"*, %"Array<Bucket<string, CGEnumType>>_vtable_ty.559473"** %.79, align 8
-  %.81 = getelementptr inbounds %"Array<Bucket<string, CGEnumType>>_vtable_ty.559473", %"Array<Bucket<string, CGEnumType>>_vtable_ty.559473"* %.80, i64 0, i32 5
-  %.82 = load %"Bucket<string, CGEnumType>.559470"* (%"Array<Bucket<string, CGEnumType>>.559472"*, i64)*, %"Bucket<string, CGEnumType>.559470"* (%"Array<Bucket<string, CGEnumType>>.559472"*, i64)** %.81, align 8
-  %.83 = tail call %"Bucket<string, CGEnumType>.559470"* %.82(%"Array<Bucket<string, CGEnumType>>.559472"* nonnull %.14, i64 %storemerge29)
-  %.84 = getelementptr inbounds %"Bucket<string, CGEnumType>.559470", %"Bucket<string, CGEnumType>.559470"* %.83, i64 0, i32 1
-  %.85 = load %string.559062*, %string.559062** %.84, align 8
-  %.89 = load %"Array<Bucket<string, CGEnumType>>_vtable_ty.559473"*, %"Array<Bucket<string, CGEnumType>>_vtable_ty.559473"** %.79, align 8
-  %.90 = getelementptr inbounds %"Array<Bucket<string, CGEnumType>>_vtable_ty.559473", %"Array<Bucket<string, CGEnumType>>_vtable_ty.559473"* %.89, i64 0, i32 5
-  %.91 = load %"Bucket<string, CGEnumType>.559470"* (%"Array<Bucket<string, CGEnumType>>.559472"*, i64)*, %"Bucket<string, CGEnumType>.559470"* (%"Array<Bucket<string, CGEnumType>>.559472"*, i64)** %.90, align 8
-  %.92 = tail call %"Bucket<string, CGEnumType>.559470"* %.91(%"Array<Bucket<string, CGEnumType>>.559472"* nonnull %.14, i64 %storemerge29)
-  %.93 = getelementptr inbounds %"Bucket<string, CGEnumType>.559470", %"Bucket<string, CGEnumType>.559470"* %.92, i64 0, i32 2
-  %.94 = load %CGEnumType.559454*, %CGEnumType.559454** %.93, align 8
-  tail call void %.76(%"Map<string, CGEnumType>.559463"* nonnull %.1, %string.559062* %.85, %CGEnumType.559454* %.94)
-  %.100 = add nuw nsw i64 %storemerge29, 1
-  %.69 = load i64, i64* %.68, align 8
-  %.70 = icmp slt i64 %.100, %.69
-  br i1 %.70, label %for.body.1, label %for.end.1
+  %storemerge29 = phi i64 [ 0, %for.body.1.lr.ph ], [ %.99, %for.body.1 ]
+  %.73 = load %"Map<string, CGEnumType>_vtable_ty.559469"*, %"Map<string, CGEnumType>_vtable_ty.559469"** %.6, align 8
+  %.74 = getelementptr inbounds %"Map<string, CGEnumType>_vtable_ty.559469", %"Map<string, CGEnumType>_vtable_ty.559469"* %.73, i64 0, i32 2
+  %.75 = load void (%"Map<string, CGEnumType>.559463"*, %string.559062*, %CGEnumType.559454*)*, void (%"Map<string, CGEnumType>.559463"*, %string.559062*, %CGEnumType.559454*)** %.74, align 8
+  %.79 = load %"Array<Bucket<string, CGEnumType>>_vtable_ty.559473"*, %"Array<Bucket<string, CGEnumType>>_vtable_ty.559473"** %.78, align 8
+  %.80 = getelementptr inbounds %"Array<Bucket<string, CGEnumType>>_vtable_ty.559473", %"Array<Bucket<string, CGEnumType>>_vtable_ty.559473"* %.79, i64 0, i32 5
+  %.81 = load %"Bucket<string, CGEnumType>.559470"* (%"Array<Bucket<string, CGEnumType>>.559472"*, i64)*, %"Bucket<string, CGEnumType>.559470"* (%"Array<Bucket<string, CGEnumType>>.559472"*, i64)** %.80, align 8
+  %.82 = tail call %"Bucket<string, CGEnumType>.559470"* %.81(%"Array<Bucket<string, CGEnumType>>.559472"* nonnull %.10, i64 %storemerge29)
+  %.83 = getelementptr inbounds %"Bucket<string, CGEnumType>.559470", %"Bucket<string, CGEnumType>.559470"* %.82, i64 0, i32 1
+  %.84 = load %string.559062*, %string.559062** %.83, align 8
+  %.88 = load %"Array<Bucket<string, CGEnumType>>_vtable_ty.559473"*, %"Array<Bucket<string, CGEnumType>>_vtable_ty.559473"** %.78, align 8
+  %.89 = getelementptr inbounds %"Array<Bucket<string, CGEnumType>>_vtable_ty.559473", %"Array<Bucket<string, CGEnumType>>_vtable_ty.559473"* %.88, i64 0, i32 5
+  %.90 = load %"Bucket<string, CGEnumType>.559470"* (%"Array<Bucket<string, CGEnumType>>.559472"*, i64)*, %"Bucket<string, CGEnumType>.559470"* (%"Array<Bucket<string, CGEnumType>>.559472"*, i64)** %.89, align 8
+  %.91 = tail call %"Bucket<string, CGEnumType>.559470"* %.90(%"Array<Bucket<string, CGEnumType>>.559472"* nonnull %.10, i64 %storemerge29)
+  %.92 = getelementptr inbounds %"Bucket<string, CGEnumType>.559470", %"Bucket<string, CGEnumType>.559470"* %.91, i64 0, i32 2
+  %.93 = load %CGEnumType.559454*, %CGEnumType.559454** %.92, align 8
+  tail call void %.75(%"Map<string, CGEnumType>.559463"* nonnull %.1, %string.559062* %.84, %CGEnumType.559454* %.93)
+  %.99 = add nuw nsw i64 %storemerge29, 1
+  %.68 = load i64, i64* %.67, align 8
+  %.69 = icmp slt i64 %.99, %.68
+  br i1 %.69, label %for.body.1, label %for.end.1
 
 for.end.1:                                        ; preds = %for.body.1, %for.cond.1.preheader
   ret void
@@ -47073,74 +47095,74 @@ define void @"Map<string, CGEnumType>_set"(%"Map<string, CGEnumType>.559463"* %.
   %.15 = load i64, i64* %.14, align 8
   %.16 = sitofp i64 %.15 to double
   %.17 = fdiv double %.12, %.16
-  %.18 = fcmp ogt double %.17, 7.500000e-01
-  br i1 %.18, label %.5.if, label %.5.endif
+  %.20 = fcmp ogt double %.17, 7.500000e-01
+  br i1 %.20, label %.5.if, label %.5.endif
 
 .5.if:                                            ; preds = %.5
-  %.21 = getelementptr inbounds %"Map<string, CGEnumType>.559463", %"Map<string, CGEnumType>.559463"* %.1, i64 0, i32 0
-  %.22 = load %"Map<string, CGEnumType>_vtable_ty.559469"*, %"Map<string, CGEnumType>_vtable_ty.559469"** %.21, align 8
-  %.23 = getelementptr inbounds %"Map<string, CGEnumType>_vtable_ty.559469", %"Map<string, CGEnumType>_vtable_ty.559469"* %.22, i64 0, i32 1
-  %.24 = load void (%"Map<string, CGEnumType>.559463"*)*, void (%"Map<string, CGEnumType>.559463"*)** %.23, align 8
-  tail call void %.24(%"Map<string, CGEnumType>.559463"* nonnull %.1)
+  %.23 = getelementptr inbounds %"Map<string, CGEnumType>.559463", %"Map<string, CGEnumType>.559463"* %.1, i64 0, i32 0
+  %.24 = load %"Map<string, CGEnumType>_vtable_ty.559469"*, %"Map<string, CGEnumType>_vtable_ty.559469"** %.23, align 8
+  %.25 = getelementptr inbounds %"Map<string, CGEnumType>_vtable_ty.559469", %"Map<string, CGEnumType>_vtable_ty.559469"* %.24, i64 0, i32 1
+  %.26 = load void (%"Map<string, CGEnumType>.559463"*)*, void (%"Map<string, CGEnumType>.559463"*)** %.25, align 8
+  tail call void %.26(%"Map<string, CGEnumType>.559463"* nonnull %.1)
   br label %.5.endif
 
 .5.endif:                                         ; preds = %.5.if, %.5
-  %.28 = getelementptr inbounds %"Map<string, CGEnumType>.559463", %"Map<string, CGEnumType>.559463"* %.1, i64 0, i32 0
-  %.29 = load %"Map<string, CGEnumType>_vtable_ty.559469"*, %"Map<string, CGEnumType>_vtable_ty.559469"** %.28, align 8
-  %.30 = getelementptr inbounds %"Map<string, CGEnumType>_vtable_ty.559469", %"Map<string, CGEnumType>_vtable_ty.559469"* %.29, i64 0, i32 0
-  %.31 = load i64 (%"Map<string, CGEnumType>.559463"*, %string.559062*)*, i64 (%"Map<string, CGEnumType>.559463"*, %string.559062*)** %.30, align 8
-  %.33 = tail call i64 %.31(%"Map<string, CGEnumType>.559463"* nonnull %.1, %string.559062* %.2)
-  %.36 = load i64, i64* %.14, align 8
-  %.37 = srem i64 %.33, %.36
-  %.41 = getelementptr inbounds %"Map<string, CGEnumType>.559463", %"Map<string, CGEnumType>.559463"* %.1, i64 0, i32 1
-  %.42 = load %"Bucket<string, CGEnumType>.559470"**, %"Bucket<string, CGEnumType>.559470"*** %.41, align 8
-  %.43 = getelementptr inbounds %"Bucket<string, CGEnumType>.559470"*, %"Bucket<string, CGEnumType>.559470"** %.42, i64 %.37
-  %.44 = load %"Bucket<string, CGEnumType>.559470"*, %"Bucket<string, CGEnumType>.559470"** %.43, align 8
-  %.45 = getelementptr inbounds %"Bucket<string, CGEnumType>.559470", %"Bucket<string, CGEnumType>.559470"* %.44, i64 0, i32 3
-  %.46 = load i1, i1* %.45, align 1
-  br i1 %.46, label %while.exit, label %while.entry
+  %.30 = getelementptr inbounds %"Map<string, CGEnumType>.559463", %"Map<string, CGEnumType>.559463"* %.1, i64 0, i32 0
+  %.31 = load %"Map<string, CGEnumType>_vtable_ty.559469"*, %"Map<string, CGEnumType>_vtable_ty.559469"** %.30, align 8
+  %.32 = getelementptr inbounds %"Map<string, CGEnumType>_vtable_ty.559469", %"Map<string, CGEnumType>_vtable_ty.559469"* %.31, i64 0, i32 0
+  %.33 = load i64 (%"Map<string, CGEnumType>.559463"*, %string.559062*)*, i64 (%"Map<string, CGEnumType>.559463"*, %string.559062*)** %.32, align 8
+  %.35 = tail call i64 %.33(%"Map<string, CGEnumType>.559463"* nonnull %.1, %string.559062* %.2)
+  %.38 = load i64, i64* %.14, align 8
+  %.39 = srem i64 %.35, %.38
+  %.43 = getelementptr inbounds %"Map<string, CGEnumType>.559463", %"Map<string, CGEnumType>.559463"* %.1, i64 0, i32 1
+  %.44 = load %"Bucket<string, CGEnumType>.559470"**, %"Bucket<string, CGEnumType>.559470"*** %.43, align 8
+  %.45 = getelementptr inbounds %"Bucket<string, CGEnumType>.559470"*, %"Bucket<string, CGEnumType>.559470"** %.44, i64 %.39
+  %.46 = load %"Bucket<string, CGEnumType>.559470"*, %"Bucket<string, CGEnumType>.559470"** %.45, align 8
+  %.47 = getelementptr inbounds %"Bucket<string, CGEnumType>.559470", %"Bucket<string, CGEnumType>.559470"* %.46, i64 0, i32 3
+  %.48 = load i1, i1* %.47, align 1
+  br i1 %.48, label %while.exit, label %while.entry
 
 while.entry:                                      ; preds = %.5.endif, %while.entry.endif
-  %.54 = phi %"Bucket<string, CGEnumType>.559470"* [ %.77, %while.entry.endif ], [ %.44, %.5.endif ]
-  %.701 = phi i64 [ %.70, %while.entry.endif ], [ %.37, %.5.endif ]
-  %.55 = getelementptr inbounds %"Bucket<string, CGEnumType>.559470", %"Bucket<string, CGEnumType>.559470"* %.54, i64 0, i32 1
-  %.56 = load %string.559062*, %string.559062** %.55, align 8
-  %.58 = getelementptr inbounds %string.559062, %string.559062* %.56, i64 0, i32 0
-  %.59 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.58, align 8
-  %.60 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.59, i64 0, i32 4
-  %.61 = load i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)** %.60, align 8
-  %.62 = tail call i1 %.61(%string.559062* %.56, %string.559062* %.2)
-  br i1 %.62, label %while.entry.while.exit.loopexit_crit_edge, label %while.entry.endif
+  %.56 = phi %"Bucket<string, CGEnumType>.559470"* [ %.79, %while.entry.endif ], [ %.46, %.5.endif ]
+  %.721 = phi i64 [ %.72, %while.entry.endif ], [ %.39, %.5.endif ]
+  %.57 = getelementptr inbounds %"Bucket<string, CGEnumType>.559470", %"Bucket<string, CGEnumType>.559470"* %.56, i64 0, i32 1
+  %.58 = load %string.559062*, %string.559062** %.57, align 8
+  %.60 = getelementptr inbounds %string.559062, %string.559062* %.58, i64 0, i32 0
+  %.61 = load %string_vtable_ty.559063*, %string_vtable_ty.559063** %.60, align 8
+  %.62 = getelementptr inbounds %string_vtable_ty.559063, %string_vtable_ty.559063* %.61, i64 0, i32 4
+  %.63 = load i1 (%string.559062*, %string.559062*)*, i1 (%string.559062*, %string.559062*)** %.62, align 8
+  %.64 = tail call i1 %.63(%string.559062* %.58, %string.559062* %.2)
+  br i1 %.64, label %while.entry.while.exit.loopexit_crit_edge, label %while.entry.endif
 
 while.entry.while.exit.loopexit_crit_edge:        ; preds = %while.entry
-  %.92.pre.pre = load %"Bucket<string, CGEnumType>.559470"**, %"Bucket<string, CGEnumType>.559470"*** %.41, align 8
+  %.94.pre.pre = load %"Bucket<string, CGEnumType>.559470"**, %"Bucket<string, CGEnumType>.559470"*** %.43, align 8
   br label %while.exit
 
 while.exit:                                       ; preds = %while.entry.endif, %while.entry.while.exit.loopexit_crit_edge, %.5.endif
-  %.92 = phi %"Bucket<string, CGEnumType>.559470"** [ %.42, %.5.endif ], [ %.92.pre.pre, %while.entry.while.exit.loopexit_crit_edge ], [ %.75, %while.entry.endif ]
-  %.89 = phi i64 [ %.37, %.5.endif ], [ %.701, %while.entry.while.exit.loopexit_crit_edge ], [ %.70, %while.entry.endif ]
-  %.84 = load i64, i64* %.10, align 8
-  %.85 = add i64 %.84, 1
-  store i64 %.85, i64* %.10, align 8
-  %.93 = getelementptr inbounds %"Bucket<string, CGEnumType>.559470"*, %"Bucket<string, CGEnumType>.559470"** %.92, i64 %.89
-  %.94 = load %"Bucket<string, CGEnumType>.559470"*, %"Bucket<string, CGEnumType>.559470"** %.93, align 8
-  %.95 = getelementptr inbounds %"Bucket<string, CGEnumType>.559470", %"Bucket<string, CGEnumType>.559470"* %.94, i64 0, i32 0
-  %.96 = load %"Bucket<string, CGEnumType>_vtable_ty.559471"*, %"Bucket<string, CGEnumType>_vtable_ty.559471"** %.95, align 8
-  %.97 = getelementptr inbounds %"Bucket<string, CGEnumType>_vtable_ty.559471", %"Bucket<string, CGEnumType>_vtable_ty.559471"* %.96, i64 0, i32 0
-  %.98 = load void (%"Bucket<string, CGEnumType>.559470"*, %string.559062*, %CGEnumType.559454*)*, void (%"Bucket<string, CGEnumType>.559470"*, %string.559062*, %CGEnumType.559454*)** %.97, align 8
-  tail call void %.98(%"Bucket<string, CGEnumType>.559470"* %.94, %string.559062* %.2, %CGEnumType.559454* %.3)
+  %.94 = phi %"Bucket<string, CGEnumType>.559470"** [ %.44, %.5.endif ], [ %.94.pre.pre, %while.entry.while.exit.loopexit_crit_edge ], [ %.77, %while.entry.endif ]
+  %.91 = phi i64 [ %.39, %.5.endif ], [ %.721, %while.entry.while.exit.loopexit_crit_edge ], [ %.72, %while.entry.endif ]
+  %.86 = load i64, i64* %.10, align 8
+  %.87 = add i64 %.86, 1
+  store i64 %.87, i64* %.10, align 8
+  %.95 = getelementptr inbounds %"Bucket<string, CGEnumType>.559470"*, %"Bucket<string, CGEnumType>.559470"** %.94, i64 %.91
+  %.96 = load %"Bucket<string, CGEnumType>.559470"*, %"Bucket<string, CGEnumType>.559470"** %.95, align 8
+  %.97 = getelementptr inbounds %"Bucket<string, CGEnumType>.559470", %"Bucket<string, CGEnumType>.559470"* %.96, i64 0, i32 0
+  %.98 = load %"Bucket<string, CGEnumType>_vtable_ty.559471"*, %"Bucket<string, CGEnumType>_vtable_ty.559471"** %.97, align 8
+  %.99 = getelementptr inbounds %"Bucket<string, CGEnumType>_vtable_ty.559471", %"Bucket<string, CGEnumType>_vtable_ty.559471"* %.98, i64 0, i32 0
+  %.100 = load void (%"Bucket<string, CGEnumType>.559470"*, %string.559062*, %CGEnumType.559454*)*, void (%"Bucket<string, CGEnumType>.559470"*, %string.559062*, %CGEnumType.559454*)** %.99, align 8
+  tail call void %.100(%"Bucket<string, CGEnumType>.559470"* %.96, %string.559062* %.2, %CGEnumType.559454* %.3)
   ret void
 
 while.entry.endif:                                ; preds = %while.entry
-  %.66 = add i64 %.701, 1
-  %.69 = load i64, i64* %.14, align 8
-  %.70 = srem i64 %.66, %.69
-  %.75 = load %"Bucket<string, CGEnumType>.559470"**, %"Bucket<string, CGEnumType>.559470"*** %.41, align 8
-  %.76 = getelementptr inbounds %"Bucket<string, CGEnumType>.559470"*, %"Bucket<string, CGEnumType>.559470"** %.75, i64 %.70
-  %.77 = load %"Bucket<string, CGEnumType>.559470"*, %"Bucket<string, CGEnumType>.559470"** %.76, align 8
-  %.78 = getelementptr inbounds %"Bucket<string, CGEnumType>.559470", %"Bucket<string, CGEnumType>.559470"* %.77, i64 0, i32 3
-  %.79 = load i1, i1* %.78, align 1
-  br i1 %.79, label %while.exit, label %while.entry
+  %.68 = add i64 %.721, 1
+  %.71 = load i64, i64* %.14, align 8
+  %.72 = srem i64 %.68, %.71
+  %.77 = load %"Bucket<string, CGEnumType>.559470"**, %"Bucket<string, CGEnumType>.559470"*** %.43, align 8
+  %.78 = getelementptr inbounds %"Bucket<string, CGEnumType>.559470"*, %"Bucket<string, CGEnumType>.559470"** %.77, i64 %.72
+  %.79 = load %"Bucket<string, CGEnumType>.559470"*, %"Bucket<string, CGEnumType>.559470"** %.78, align 8
+  %.80 = getelementptr inbounds %"Bucket<string, CGEnumType>.559470", %"Bucket<string, CGEnumType>.559470"* %.79, i64 0, i32 3
+  %.81 = load i1, i1* %.80, align 1
+  br i1 %.81, label %while.exit, label %while.entry
 }
 
 define %CGEnumType.559454* @"Map<string, CGEnumType>_get"(%"Map<string, CGEnumType>.559463"* %.1, %string.559062* %.2) {
