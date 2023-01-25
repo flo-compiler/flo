@@ -1901,6 +1901,10 @@ class TypeChecker {
                 }
             }
         }
+        if element_type.kind == TypeKind.UNKNOWN {
+            this.error(ErrorKind.TYPE, "Cannot create array without type hint",  array_node.range)
+            return null
+        }
         if array_type.kind == TypeKind.UNKNOWN {
             array_type = new ArrayType(element_type, elements.length)
         }

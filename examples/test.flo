@@ -1,11 +1,8 @@
-class SimpleClass {
-    v: int
-    constructor(this){
-        this.v = 5
-    }
-}
 fnc main(): int {
-    let val: SimpleClass()
-    val.v *= 2
+    let string_a: string[] = []
+    for let i = 0; i < 6; i++ {
+        string_a << null
+    }
+    string_a[5] = "Hello"
     return 0
 }
