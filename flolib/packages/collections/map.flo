@@ -34,7 +34,7 @@ class Map<T, U> {
     }
     private resize(this){
         let buckets = this.get_buckets()
-        this.size = this.size * 2
+        this.size *= 2
         this.length = 0
         this.buckets = this.buckets.resize(this.size)
         for let i = 0; i < this.size; i++{

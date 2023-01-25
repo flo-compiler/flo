@@ -1,0 +1,5 @@
+//@expect: return_code=1
+fnc main(): int {
+    let x = []
+    return 0
+}
