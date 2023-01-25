@@ -541,26 +541,29 @@ fnc dump_access(visibility: ACCESS_ATTR): string {
         return "public"
     return "protected"
 }
-fnc lower_bin_assign_op(op: BinaryOp): BinaryOp {
+fnc lower_bin_assign_node(binary_node: BinaryExpressionNode): BinaryExpressionNode {
+    let op = binary_node.op
     if op == BinaryOp.ADD_ASSIGN
-        return BinaryOp.ADD
+        op = BinaryOp.ADD
     if op == BinaryOp.SUB_ASSIGN
-        return BinaryOp.SUB
+        op = BinaryOp.SUB
     if op == BinaryOp.MUL_ASSIGN
-        return BinaryOp.MUL
+        op = BinaryOp.MUL
     if op == BinaryOp.DIV_ASSIGN
-        return BinaryOp.DIV
+        op = BinaryOp.DIV
     if op == BinaryOp.MOD_ASSIGN
-        return BinaryOp.MOD
+        op = BinaryOp.MOD
     if op == BinaryOp.POW_ASSIGN
-        return BinaryOp.POW
+        op = BinaryOp.POW
     if op == BinaryOp.AND_ASSIGN
-        return BinaryOp.AND
+        op = BinaryOp.AND
     if op == BinaryOp.OR_ASSIGN
-        return BinaryOp.OR
+        op = BinaryOp.OR
     if op == BinaryOp.SL_ASSIGN
-        return BinaryOp.SL
-    return BinaryOp.SR
+        op = BinaryOp.SL
+    if op == BinaryOp.SR_ASSIGN
+        op = BinaryOp.SR
+    return new BinaryExpressionNode(binary_node.lhs, op, binary_node.rhs)
 }
 class ScopeId {
     module_id: int
@@ -1953,8 +1956,7 @@ class TypeChecker {
                 let exp = this.check_object_bin_assign(left, binary_node)
                 if exp != null or this.has_errored() return exp
             }
-            binary_node.op = lower_bin_assign_op(op)
-            right = this.check_bin_expr(left.value_type, binary_node)
+            right = this.check_bin_expr(left.value_type, lower_bin_assign_node(binary_node))
         }
         if left.value_type.kind == TypeKind.RECORD {
             this.error(ErrorKind.TYPE, "Cannot assign a value to a record", binary_node.range)
