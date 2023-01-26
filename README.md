@@ -292,7 +292,7 @@ let chef = new Chef("Cake")
 ```
 class ItalianChef(Chef) {
     constructor(this) {
-        this.super("Pasta")
+        super("Pasta")
     }
 }
 ```
