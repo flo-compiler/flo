@@ -111,6 +111,7 @@ class CodeGen {
         this.global_class_scope = new Map<string, CGClassType>()
         this.global_enum_scope = new Map<string, CGEnumType>()
         this.super_functions = new Map<string, LLVMValueRef>()
+        this.in_static_ctx = true
     }
     public codegen(this, program: Program): GeneratedModule{
         let module = program.modules[2]
@@ -119,7 +120,6 @@ class CodeGen {
         this.break_bb = null
         this.program_ctx = LLVMContextCreate()
         this.module = LLVMModuleCreateWithNameInContext(module.name.to_cstring(), this.program_ctx)
-        this.in_static_ctx = true
         for let i = 0; i < module.enums.length; ++i {
             this.declare_enum(module.enums[i])
         }
@@ -132,7 +132,6 @@ class CodeGen {
         for i = 0; i < module.global_vars.length; ++i {
             this.codegen_var_declaration(null, module.global_vars[i])
         }
-        this.in_static_ctx = false
         for i = 0; i < module.classes.length; ++i {
             this.codegen_class(module.classes[i])
         }
@@ -355,7 +354,7 @@ class CodeGen {
         }
         fmt_str_builder.add_bytes_length(chars, str_value.length - curr_ind)
         str_value = fmt_str_builder.get_string()
-        let str_len: LLVMValueRef = this.createLLVMInt(str_value.length)
+        let str_len = this.createLLVMInt(str_value.length)
         let str = call_args.length > 0 ? this.codegen_safe_fmt_string(builder, str_value, call_args, &str_len) : this.createGlobalLLVMString(builder, str_value)
         let str_ty = this.codegen_type(string_exp.value_type, false)
         if is_object(string_exp.value_type) {
@@ -768,9 +767,10 @@ class CodeGen {
             }
             func = this.codegen_expression(builder, call_exp.callee)
         }
-        for let i = 0; i < call_exp.args.length; i++ {
-            args << this.codegen_expression(builder, call_exp.args[i])
-            arg_types << this.codegen_type(call_exp.args[i].value_type)
+        for let i = 0; i < call_exp.args.length; i++ { 
+            let arg = this.codegen_expression(builder, call_exp.args[i])
+            args << arg
+            arg_types << LLVMTypeOf(arg)
         }
         let func_ty = LLVMFunctionType(this.codegen_type(call_exp.value_type), arg_types.buffer, arg_types.length, false)
         return LLVMBuildCall2(builder, func_ty, func, args.buffer, args.length, "")
@@ -897,8 +897,8 @@ class CodeGen {
             return this.codegen_null(expression as NullExpression)
         if expression.expr_kind == ExpressionKind.STRING
             return this.codegen_string(builder, expression as StringExpression)
-        if expression.expr_kind == ExpressionKind.ACCESS 
-              return this.codegen_var_access_exp(builder, expression as VarAccessExpression)
+        if expression.expr_kind == ExpressionKind.ACCESS
+            return this.codegen_var_access_exp(builder, expression as VarAccessExpression)
         if expression.expr_kind == ExpressionKind.BIN 
             return this.codegen_bin_exp(builder, expression as BinaryExpression)
         if expression.expr_kind == ExpressionKind.UNARY
@@ -1007,10 +1007,10 @@ class CodeGen {
     private build_constructor_call(this, builder: LLVMBuilderRef, obj_type: ObjectType, params: LLVMValueRef[]){
         let checked_class = get_class_from_type(this.program, obj_type)
         let constructor = this.get_or_codegen_class_from_typeid(obj_type.class_id).class_constructor
-        let constructor_id = checked_class.construct.id
         if constructor != null {
-            let construct_type = this.codegen_type(checked_class.methods[constructor_id].method_type, false)
-            LLVMBuildCall2(builder, construct_type, constructor, params.buffer, params.length, "")
+            LLVMBuildCall2(builder, LLVM_GetFunctionType(constructor), constructor, params.buffer, params.length, "")
+        } else {
+            panic("Could not find constructor for constructor call")
         }
     }
     private codegen_var_declaration(this, builder: LLVMBuilderRef, var_decl: VarDeclaration){
@@ -1071,9 +1071,12 @@ class CodeGen {
             this.codegen_expression(builder, statement as Expression)
     }
     private codegen_block(this, builder: LLVMBuilderRef, block: Block){
+        let was_instatic_ctx = this.in_static_ctx
+        this.in_static_ctx = false
         for let i = 0; i < block.statements.length; ++i {
             this.codegen_statement(builder, block.statements[i])
         }
+        this.in_static_ctx = was_instatic_ctx
     }
     private codegen_function(this, func: Function){
         let fn_name = func.name.to_cstring()
