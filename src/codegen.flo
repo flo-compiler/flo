@@ -53,17 +53,17 @@ fnc is_terminated(block: Block): bool {
     return block.returns or block.continues or block.breaks
 }
 fnc create_var_key(var_id: VarId): string {
-    return  "$(var_id.module_id);$(var_id.kind);$(var_id.id)"
+    return  "$(var_id.module_id);$(var_id.kind as int);$(var_id.id)"
 }
 fnc create_type_id_key(type_id: TypeId): string {
-    return "$(type_id.module_id);$(type_id.kind);$(type_id.id)"
+    return "$(type_id.module_id);$(type_id.kind as int);$(type_id.id)"
 }
 fnc create_type_key_from_var(var_id: VarId): string {
     let diff =  (var_id.kind as int) - (VarIdKind.CLASS as int)
     return "$(var_id.module_id);$diff;$(var_id.id)"
 }
 fnc create_prop_key(prop_id: PropId): string {
-    return "$(create_type_id_key(prop_id.type_id));$(prop_id.kind);$(prop_id.id)"
+    return "$(create_type_id_key(prop_id.type_id));$(prop_id.kind as int);$(prop_id.id)"
 }
 // These two functions will eventually become a generic function once we implement those.
 fnc resize_type_array(array: LLVMTypeRef[], amt: int){
