@@ -896,13 +896,12 @@ target triple = "x86_64-unknown-linux-gnu"
 @str.321 = private unnamed_addr constant [55 x i8] c"Function with void return type cannot return any value\00"
 @str.322 = private unnamed_addr constant [57 x i8] c"Expected return type of '%s' but got return type of '%s'\00"
 @str.323 = private unnamed_addr constant [33 x i8] c"Function return type is not void\00"
-@GeneratedModule_vtable_data = global %GeneratedModule_vtable_ty.560592 { void (%GeneratedModule.560591*)* @GeneratedModule_check_errors, void (%GeneratedModule.560591*, i64)* @GeneratedModule_run_passes, i64 (%GeneratedModule.560591*)* @GeneratedModule_exec, %LLVMTargetMachineRef.560585* (%GeneratedModule.560591*, %string.560217*)* @GeneratedModule_create_target_machine, void (%GeneratedModule.560591*, %string.560217*, %string.560217*)* @GeneratedModule_write_object, void (%GeneratedModule.560591*)* @GeneratedModule_print, void (%GeneratedModule.560591*)* @GeneratedModule_llvm_shutdown }
-@str.324 = private unnamed_addr constant [20 x i8] c"deficient-module.ll\00"
-@str.325 = private unnamed_addr constant [10 x i8] c"error: %s\00"
-@str.326 = private unnamed_addr constant [5 x i8] c"main\00"
-@str.327 = private unnamed_addr constant [49 x i8] c"Main function not found in module; can't execute\00"
-@str.328 = private unnamed_addr constant [8 x i8] c"generic\00"
-@str.329 = private unnamed_addr constant [10 x i8] c"output.ll\00"
+@GeneratedModule_vtable_data = global %GeneratedModule_vtable_ty.560592 { void (%GeneratedModule.560591*)* @GeneratedModule_print_errors, void (%GeneratedModule.560591*, i64)* @GeneratedModule_run_passes, i64 (%GeneratedModule.560591*)* @GeneratedModule_exec, %LLVMTargetMachineRef.560585* (%GeneratedModule.560591*, %string.560217*)* @GeneratedModule_create_target_machine, void (%GeneratedModule.560591*, %string.560217*, %string.560217*)* @GeneratedModule_write_object, void (%GeneratedModule.560591*)* @GeneratedModule_print, void (%GeneratedModule.560591*)* @GeneratedModule_llvm_shutdown }
+@str.324 = private unnamed_addr constant [10 x i8] c"error: %s\00"
+@str.325 = private unnamed_addr constant [5 x i8] c"main\00"
+@str.326 = private unnamed_addr constant [49 x i8] c"Main function not found in module; can't execute\00"
+@str.327 = private unnamed_addr constant [8 x i8] c"generic\00"
+@str.328 = private unnamed_addr constant [10 x i8] c"output.ll\00"
 @IntrinsicResult_vtable_data = global %IntrinsicResult_vtable_ty.560594 zeroinitializer
 @"Bucket<string, int>_vtable_data" = global %"Bucket<string, int>_vtable_ty.560601" { void (%"Bucket<string, int>.560600"*, %string.560217*, i64)* @"Bucket<string, int>_set" }
 @"Array<Bucket<string, int>>_vtable_data" = global %"Array<Bucket<string, int>>_vtable_ty.560603" { void (%"Array<Bucket<string, int>>.560602"*)* @"Array<Bucket<string, int>>_resize", void (%"Array<Bucket<string, int>>.560602"*, i64, i64)* @"Array<Bucket<string, int>>_swap", void (%"Array<Bucket<string, int>>.560602"*, %"Bucket<string, int>.560600"*)* @"Array<Bucket<string, int>>___sl__", void (%"Array<Bucket<string, int>>.560602"*, i64, %"Bucket<string, int>.560600"*)* @"Array<Bucket<string, int>>___setitem__", void (%"Array<Bucket<string, int>>.560602"*, %"Bucket<string, int>.560600"*)* @"Array<Bucket<string, int>>_append", %"Bucket<string, int>.560600"* (%"Array<Bucket<string, int>>.560602"*, i64)* @"Array<Bucket<string, int>>___getitem__", i1 (%"Array<Bucket<string, int>>.560602"*, %"Array<Bucket<string, int>>.560602"*)* @"Array<Bucket<string, int>>___eq__", i1 (%"Array<Bucket<string, int>>.560602"*, %"Bucket<string, int>.560600"*)* @"Array<Bucket<string, int>>___in__", i64 (%"Array<Bucket<string, int>>.560602"*, %"Bucket<string, int>.560600"*)* @"Array<Bucket<string, int>>_find" }
@@ -913,16 +912,16 @@ target triple = "x86_64-unknown-linux-gnu"
 @CGClassType_vtable_data = global %CGClassType_vtable_ty.560596 zeroinitializer
 @CGEnumType_vtable_data = global %CGEnumType_vtable_ty.560610 zeroinitializer
 @"Array<LLVMTypeRef>_vtable_data" = global %"Array<LLVMTypeRef>_vtable_ty.560612" { void (%"Array<LLVMTypeRef>.560611"*)* @"Array<LLVMTypeRef>_resize", void (%"Array<LLVMTypeRef>.560611"*, i64, i64)* @"Array<LLVMTypeRef>_swap", void (%"Array<LLVMTypeRef>.560611"*, %LLVMTypeRef.560566*)* @"Array<LLVMTypeRef>___sl__", void (%"Array<LLVMTypeRef>.560611"*, i64, %LLVMTypeRef.560566*)* @"Array<LLVMTypeRef>___setitem__", void (%"Array<LLVMTypeRef>.560611"*, %LLVMTypeRef.560566*)* @"Array<LLVMTypeRef>_append", %LLVMTypeRef.560566* (%"Array<LLVMTypeRef>.560611"*, i64)* @"Array<LLVMTypeRef>___getitem__", i1 (%"Array<LLVMTypeRef>.560611"*, %"Array<LLVMTypeRef>.560611"*)* @"Array<LLVMTypeRef>___eq__", i1 (%"Array<LLVMTypeRef>.560611"*, %LLVMTypeRef.560566*)* @"Array<LLVMTypeRef>___in__", i64 (%"Array<LLVMTypeRef>.560611"*, %LLVMTypeRef.560566*)* @"Array<LLVMTypeRef>_find" }
-@str.330 = private unnamed_addr constant [9 x i8] c"%d;%d;%d\00"
-@str.331 = private unnamed_addr constant [9 x i8] c"%s;%d;%d\00"
+@str.329 = private unnamed_addr constant [9 x i8] c"%d;%d;%d\00"
+@str.330 = private unnamed_addr constant [9 x i8] c"%s;%d;%d\00"
 @"Array<LLVMValueRef>_vtable_data" = global %"Array<LLVMValueRef>_vtable_ty.560614" { void (%"Array<LLVMValueRef>.560613"*)* @"Array<LLVMValueRef>_resize", void (%"Array<LLVMValueRef>.560613"*, i64, i64)* @"Array<LLVMValueRef>_swap", void (%"Array<LLVMValueRef>.560613"*, %LLVMValueRef.560567*)* @"Array<LLVMValueRef>___sl__", void (%"Array<LLVMValueRef>.560613"*, i64, %LLVMValueRef.560567*)* @"Array<LLVMValueRef>___setitem__", void (%"Array<LLVMValueRef>.560613"*, %LLVMValueRef.560567*)* @"Array<LLVMValueRef>_append", %LLVMValueRef.560567* (%"Array<LLVMValueRef>.560613"*, i64)* @"Array<LLVMValueRef>___getitem__", i1 (%"Array<LLVMValueRef>.560613"*, %"Array<LLVMValueRef>.560613"*)* @"Array<LLVMValueRef>___eq__", i1 (%"Array<LLVMValueRef>.560613"*, %LLVMValueRef.560567*)* @"Array<LLVMValueRef>___in__", i64 (%"Array<LLVMValueRef>.560613"*, %LLVMValueRef.560567*)* @"Array<LLVMValueRef>_find" }
-@str.332 = private unnamed_addr constant [4 x i8] c"lld\00"
-@str.333 = private unnamed_addr constant [3 x i8] c"ld\00"
-@str.334 = private unnamed_addr constant [3 x i8] c"%d\00"
-@str.335 = private unnamed_addr constant [3 x i8] c"%f\00"
-@str.336 = private unnamed_addr constant [4 x i8] c"%lf\00"
-@str.337 = private unnamed_addr constant [5 x i8] c"0x%X\00"
-@str.338 = private unnamed_addr constant [3 x i8] c"%s\00"
+@str.331 = private unnamed_addr constant [4 x i8] c"lld\00"
+@str.332 = private unnamed_addr constant [3 x i8] c"ld\00"
+@str.333 = private unnamed_addr constant [3 x i8] c"%d\00"
+@str.334 = private unnamed_addr constant [3 x i8] c"%f\00"
+@str.335 = private unnamed_addr constant [4 x i8] c"%lf\00"
+@str.336 = private unnamed_addr constant [5 x i8] c"0x%X\00"
+@str.337 = private unnamed_addr constant [3 x i8] c"%s\00"
 @"Bucket<string, CGClassType>_vtable_data" = global %"Bucket<string, CGClassType>_vtable_ty.560621" { void (%"Bucket<string, CGClassType>.560620"*, %string.560217*, %CGClassType.560595*)* @"Bucket<string, CGClassType>_set" }
 @"Array<Bucket<string, CGClassType>>_vtable_data" = global %"Array<Bucket<string, CGClassType>>_vtable_ty.560623" { void (%"Array<Bucket<string, CGClassType>>.560622"*)* @"Array<Bucket<string, CGClassType>>_resize", void (%"Array<Bucket<string, CGClassType>>.560622"*, i64, i64)* @"Array<Bucket<string, CGClassType>>_swap", void (%"Array<Bucket<string, CGClassType>>.560622"*, %"Bucket<string, CGClassType>.560620"*)* @"Array<Bucket<string, CGClassType>>___sl__", void (%"Array<Bucket<string, CGClassType>>.560622"*, i64, %"Bucket<string, CGClassType>.560620"*)* @"Array<Bucket<string, CGClassType>>___setitem__", void (%"Array<Bucket<string, CGClassType>>.560622"*, %"Bucket<string, CGClassType>.560620"*)* @"Array<Bucket<string, CGClassType>>_append", %"Bucket<string, CGClassType>.560620"* (%"Array<Bucket<string, CGClassType>>.560622"*, i64)* @"Array<Bucket<string, CGClassType>>___getitem__", i1 (%"Array<Bucket<string, CGClassType>>.560622"*, %"Array<Bucket<string, CGClassType>>.560622"*)* @"Array<Bucket<string, CGClassType>>___eq__", i1 (%"Array<Bucket<string, CGClassType>>.560622"*, %"Bucket<string, CGClassType>.560620"*)* @"Array<Bucket<string, CGClassType>>___in__", i64 (%"Array<Bucket<string, CGClassType>>.560622"*, %"Bucket<string, CGClassType>.560620"*)* @"Array<Bucket<string, CGClassType>>_find" }
 @"Map<string, CGClassType>_vtable_data" = global %"Map<string, CGClassType>_vtable_ty.560619" { i64 (%"Map<string, CGClassType>.560617"*, %string.560217*)* @"Map<string, CGClassType>_hash_fnc", void (%"Map<string, CGClassType>.560617"*)* @"Map<string, CGClassType>_resize", void (%"Map<string, CGClassType>.560617"*, %string.560217*, %CGClassType.560595*)* @"Map<string, CGClassType>_set", %CGClassType.560595* (%"Map<string, CGClassType>.560617"*, %string.560217*)* @"Map<string, CGClassType>_get", %"Array<Bucket<string, CGClassType>>.560622"* (%"Map<string, CGClassType>.560617"*)* @"Map<string, CGClassType>_get_buckets" }
@@ -930,79 +929,79 @@ target triple = "x86_64-unknown-linux-gnu"
 @"Array<Bucket<string, CGEnumType>>_vtable_data" = global %"Array<Bucket<string, CGEnumType>>_vtable_ty.560628" { void (%"Array<Bucket<string, CGEnumType>>.560627"*)* @"Array<Bucket<string, CGEnumType>>_resize", void (%"Array<Bucket<string, CGEnumType>>.560627"*, i64, i64)* @"Array<Bucket<string, CGEnumType>>_swap", void (%"Array<Bucket<string, CGEnumType>>.560627"*, %"Bucket<string, CGEnumType>.560625"*)* @"Array<Bucket<string, CGEnumType>>___sl__", void (%"Array<Bucket<string, CGEnumType>>.560627"*, i64, %"Bucket<string, CGEnumType>.560625"*)* @"Array<Bucket<string, CGEnumType>>___setitem__", void (%"Array<Bucket<string, CGEnumType>>.560627"*, %"Bucket<string, CGEnumType>.560625"*)* @"Array<Bucket<string, CGEnumType>>_append", %"Bucket<string, CGEnumType>.560625"* (%"Array<Bucket<string, CGEnumType>>.560627"*, i64)* @"Array<Bucket<string, CGEnumType>>___getitem__", i1 (%"Array<Bucket<string, CGEnumType>>.560627"*, %"Array<Bucket<string, CGEnumType>>.560627"*)* @"Array<Bucket<string, CGEnumType>>___eq__", i1 (%"Array<Bucket<string, CGEnumType>>.560627"*, %"Bucket<string, CGEnumType>.560625"*)* @"Array<Bucket<string, CGEnumType>>___in__", i64 (%"Array<Bucket<string, CGEnumType>>.560627"*, %"Bucket<string, CGEnumType>.560625"*)* @"Array<Bucket<string, CGEnumType>>_find" }
 @"Map<string, CGEnumType>_vtable_data" = global %"Map<string, CGEnumType>_vtable_ty.560624" { i64 (%"Map<string, CGEnumType>.560618"*, %string.560217*)* @"Map<string, CGEnumType>_hash_fnc", void (%"Map<string, CGEnumType>.560618"*)* @"Map<string, CGEnumType>_resize", void (%"Map<string, CGEnumType>.560618"*, %string.560217*, %CGEnumType.560609*)* @"Map<string, CGEnumType>_set", %CGEnumType.560609* (%"Map<string, CGEnumType>.560618"*, %string.560217*)* @"Map<string, CGEnumType>_get", %"Array<Bucket<string, CGEnumType>>.560627"* (%"Map<string, CGEnumType>.560618"*)* @"Map<string, CGEnumType>_get_buckets" }
 @CodeGen_vtable_data = global %CodeGen_vtable_ty.560616 { %GeneratedModule.560591* (%CodeGen.560615*, %Program.560549*)* @CodeGen_codegen, %LLVMValueRef.560567* (%CodeGen.560615*, %VarId.560441*)* @CodeGen_get_var_from_varid, %CGClassType.560595* (%CodeGen.560615*, %TypeId.560395*)* @CodeGen_get_class_from_typeid, %CGEnumType.560609* (%CodeGen.560615*, %TypeId.560395*)* @CodeGen_get_enum_from_typeid, void (%CodeGen.560615*, %TypeId.560395*, %CGClassType.560595*)* @CodeGen_add_class, void (%CodeGen.560615*, %TypeId.560395*, %CGEnumType.560609*)* @CodeGen_add_enum, void (%CodeGen.560615*, %VarId.560441*, %LLVMValueRef.560567*)* @CodeGen_add_var, %LLVMValueRef.560567* (%CodeGen.560615*, i1)* @CodeGen_createLLVMBool, %LLVMValueRef.560567* (%CodeGen.560615*, i64)* @CodeGen_createLLVMInt, %LLVMTypeRef.560566* (%CodeGen.560615*, %Type.560381*, i1)* @CodeGen_codegen_type, void (%CodeGen.560615*, %LLVMBuilderRef.560572*, %ReturnStatement.560469*)* @CodeGen_codegen_return_stmt, %LLVMValueRef.560567* (%CodeGen.560615*, %IntExpression.560411*)* @CodeGen_codegen_int, %LLVMValueRef.560567* (%CodeGen.560615*, %FloatExpression.560415*)* @CodeGen_codegen_float, %LLVMValueRef.560567* (%CodeGen.560615*, %BooleanExpression.560413*)* @CodeGen_codegen_bool, %LLVMValueRef.560567* (%CodeGen.560615*, %LLVMBuilderRef.560572*, %"Array<LLVMValueRef>.560613"*)* @CodeGen_codegen_atof_call, %LLVMValueRef.560567* (%CodeGen.560615*, %LLVMBuilderRef.560572*, %"Array<LLVMValueRef>.560613"*)* @CodeGen_codegen_atoi_call, %LLVMValueRef.560567* (%CodeGen.560615*, %LLVMBuilderRef.560572*, %"Array<LLVMValueRef>.560613"*)* @CodeGen_codegen_atol_call, %LLVMValueRef.560567* (%CodeGen.560615*, %LLVMBuilderRef.560572*, %"Array<LLVMValueRef>.560613"*)* @CodeGen_codegen_realloc_call, %LLVMValueRef.560567* (%CodeGen.560615*, %LLVMBuilderRef.560572*, %"Array<LLVMValueRef>.560613"*)* @CodeGen_codegen_memcmp_call, %LLVMValueRef.560567* (%CodeGen.560615*, %LLVMBuilderRef.560572*, %string.560217*)* @CodeGen_createGlobalLLVMString, %LLVMValueRef.560567* (%CodeGen.560615*, %LLVMBuilderRef.560572*, %string.560217*, %"Array<LLVMValueRef>.560613"*, %LLVMValueRef.560567**)* @CodeGen_codegen_safe_fmt_string, %LLVMValueRef.560567* (%CodeGen.560615*, %LLVMBuilderRef.560572*, %LLVMValueRef.560567*, %Type.560381*, i64)* @CodeGen_get_string_val, %LLVMValueRef.560567* (%CodeGen.560615*, %LLVMBuilderRef.560572*, %StringExpression.560417*)* @CodeGen_codegen_string, %LLVMValueRef.560567* (%CodeGen.560615*, %LLVMBuilderRef.560572*, %LLVMValueRef.560567*, %ArrayExpression.560423*)* @CodeGen_store_array_elements, %LLVMValueRef.560567* (%CodeGen.560615*, %LLVMBuilderRef.560572*, %ArrayExpression.560423*)* @CodeGen_codegen_array_exp, %LLVMValueRef.560567* (%CodeGen.560615*, %VarId.560441*)* @CodeGen_get_or_codegen_var, %CGClassType.560595* (%CodeGen.560615*, %Class.560513*)* @CodeGen_construct_class, %CGEnumType.560609* (%CodeGen.560615*, %Enum.560527*)* @CodeGen_construct_enum, %CGClassType.560595* (%CodeGen.560615*, %TypeId.560395*)* @CodeGen_get_or_codegen_class_from_typeid, %CGEnumType.560609* (%CodeGen.560615*, %TypeId.560395*)* @CodeGen_get_or_codegen_enum_from_typeid, %LLVMValueRef.560567* (%CodeGen.560615*, %LLVMBuilderRef.560572*, %VarAccessExpression.560453*)* @CodeGen_get_var_expr_mem, %LLVMValueRef.560567* (%CodeGen.560615*, %LLVMBuilderRef.560572*, %IndexExpression.560435*)* @CodeGen_get_index_expr_mem, %LLVMValueRef.560567* (%CodeGen.560615*, %LLVMBuilderRef.560572*, %MemberExpression.560451*, %LLVMValueRef.560567*)* @CodeGen_get_member_expr_mem, %LLVMValueRef.560567* (%CodeGen.560615*, %LLVMBuilderRef.560572*, %Expression.560401*)* @CodeGen_get_expr_mem, %LLVMValueRef.560567* (%CodeGen.560615*, %LLVMBuilderRef.560572*, %LLVMValueRef.560567*, %ObjectType.560407*, %string.560217*)* @CodeGen_get_member_mem_with_name, %LLVMValueRef.560567* (%CodeGen.560615*, %LLVMBuilderRef.560572*, %LLVMValueRef.560567*, %ObjectType.560407*, %string.560217*)* @CodeGen_get_member_with_name, %LLVMValueRef.560567* (%CodeGen.560615*, %LLVMBuilderRef.560572*, %GenericType.560405*, %ArrayExpression.560423*)* @CodeGen_codegen_builtin_array, %LLVMValueRef.560567* (%CodeGen.560615*, %LLVMBuilderRef.560572*, %LLVMValueRef.560567*, %Expression.560401*)* @CodeGen_store_expr_to_mem, %LLVMValueRef.560567* (%CodeGen.560615*, %LLVMBuilderRef.560572*, %BinaryExpression.560425*)* @CodeGen_codegen_assignment, %LLVMValueRef.560567* (%CodeGen.560615*, %LLVMBuilderRef.560572*, %Type.560381*, %LLVMValueRef.560567*, %LLVMValueRef.560567*)* @CodeGen_codegen_pow_expr, %LLVMValueRef.560567* (%CodeGen.560615*, %LLVMBuilderRef.560572*, %BinaryExpression.560425*)* @CodeGen_codegen_bin_exp, %LLVMValueRef.560567* (%CodeGen.560615*, %LLVMBuilderRef.560572*, %TypeCastExpression.560431*)* @CodeGen_codegen_typecast_exp, %LLVMValueRef.560567* (%CodeGen.560615*, %LLVMBuilderRef.560572*, %UnaryExpression.560427*)* @CodeGen_codegen_unary_exp, %LLVMValueRef.560567* (%CodeGen.560615*, %LLVMBuilderRef.560572*, %VarAccessExpression.560453*)* @CodeGen_codegen_var_access_exp, %LLVMValueRef.560567* (%CodeGen.560615*, %NullExpression.560421*)* @CodeGen_codegen_null, %LLVMValueRef.560567* (%CodeGen.560615*, %LLVMBuilderRef.560572*, %TernaryExpression.560429*)* @CodeGen_codegen_ternary_exp, %LLVMValueRef.560567* (%CodeGen.560615*, %LLVMBuilderRef.560572*, %CallExpression.560437*)* @CodeGen_codegen_call_exp, %LLVMValueRef.560567* (%CodeGen.560615*, %LLVMBuilderRef.560572*, %IndexExpression.560435*)* @CodeGen_codegen_index_exp, %LLVMValueRef.560567* (%CodeGen.560615*, %LLVMBuilderRef.560572*, %NewExpression.560433*)* @CodeGen_codegen_new_exp, %LLVMValueRef.560567* (%CodeGen.560615*, %LLVMBuilderRef.560572*, %MemberExpression.560451*, %LLVMValueRef.560567*)* @CodeGen_codegen_member_exp, %LLVMValueRef.560567* (%CodeGen.560615*, %LLVMBuilderRef.560572*, %LLVMValueRef.560567*)* @CodeGen_codegen_string_to_cstring, %LLVMValueRef.560567* (%CodeGen.560615*, %LLVMBuilderRef.560572*, %IntrinsicCall.560439*)* @CodeGen_codegen_intrinsic_exp, %LLVMValueRef.560567* (%CodeGen.560615*, %LLVMBuilderRef.560572*, %Expression.560401*)* @CodeGen_codegen_expression, void (%CodeGen.560615*, %LLVMBuilderRef.560572*, %IfStatement.560459*)* @CodeGen_codegen_if_stmt, void (%CodeGen.560615*, %LLVMBuilderRef.560572*, %ForStatement.560465*)* @CodeGen_codegen_for_stmt, void (%CodeGen.560615*, %LLVMBuilderRef.560572*, %WhileStatement.560467*)* @CodeGen_codegen_while_stmt, void (%CodeGen.560615*, %LLVMBuilderRef.560572*, %"Array<LLVMValueRef>.560613"*, %"Array<Expression>.560419"*)* @CodeGen_evaluate_expression_list, void (%CodeGen.560615*, %LLVMBuilderRef.560572*, %ObjectType.560407*, %"Array<LLVMValueRef>.560613"*)* @CodeGen_build_constructor_call, void (%CodeGen.560615*, %LLVMBuilderRef.560572*, %VarDeclaration.560461*)* @CodeGen_codegen_var_declaration, void (%CodeGen.560615*, %LLVMBuilderRef.560572*, %ConstDeclaration.560463*)* @CodeGen_codegen_const_declaration, void (%CodeGen.560615*, %LLVMBuilderRef.560572*, %Statement.560393*)* @CodeGen_codegen_statement, void (%CodeGen.560615*, %LLVMBuilderRef.560572*, %Block.560455*)* @CodeGen_codegen_block, void (%CodeGen.560615*, %Function.560501*)* @CodeGen_codegen_function, void (%CodeGen.560615*, %Class.560513*)* @CodeGen_codegen_class, %LLVMValueRef.560567* (%CodeGen.560615*, %string.560217*, %LLVMTypeRef.560566*)* @CodeGen_declare_method, void (%CodeGen.560615*, %CGClassType.560595*, %Class.560513*)* @CodeGen_declare_static_props, void (%CodeGen.560615*, %CGClassType.560595*, %Class.560513*, %"Array<LLVMTypeRef>.560611"*)* @CodeGen_declare_class_props, void (%CodeGen.560615*, %Class.560513*)* @CodeGen_declare_class, void (%CodeGen.560615*, %Enum.560527*)* @CodeGen_declare_enum }
-@str.339 = private unnamed_addr constant [33 x i8] c"Type could not be code generated\00"
-@str.340 = private unnamed_addr constant [5 x i8] c"atof\00"
-@str.341 = private unnamed_addr constant [5 x i8] c"atoi\00"
-@str.342 = private unnamed_addr constant [5 x i8] c"atol\00"
-@str.343 = private unnamed_addr constant [8 x i8] c"realloc\00"
-@str.344 = private unnamed_addr constant [7 x i8] c"memcmp\00"
-@str.345 = private unnamed_addr constant [9 x i8] c"asprintf\00"
-@str.346 = private unnamed_addr constant [6 x i8] c"%s {\0A\00"
-@str.347 = private unnamed_addr constant [7 x i8] c" ... }\00"
-@str.348 = private unnamed_addr constant [13 x i8] c" '%s': %s, \0A\00"
-@str.349 = private unnamed_addr constant [2 x i8] c"}\00"
-@str.350 = private unnamed_addr constant [11 x i8] c"<function>\00"
-@str.351 = private unnamed_addr constant [18 x i8] c"string_from_bytes\00"
-@str.352 = private unnamed_addr constant [55 x i8] c"Could not find function 'string.from_bytes' in program\00"
-@str.353 = private unnamed_addr constant [46 x i8] c"This should never happen! (get_expr_mem: var)\00"
-@str.354 = private unnamed_addr constant [9 x i8] c"arrayidx\00"
-@str.355 = private unnamed_addr constant [7 x i8] c"ptridx\00"
-@str.356 = private unnamed_addr constant [10 x i8] c"memberidx\00"
-@str.357 = private unnamed_addr constant [7 x i8] c"buffer\00"
-@str.358 = private unnamed_addr constant [7 x i8] c"length\00"
-@str.359 = private unnamed_addr constant [12 x i8] c"llvm.pow.%s\00"
-@str.360 = private unnamed_addr constant [23 x i8] c"Unknown case! %d %s %d\00"
-@str.361 = private unnamed_addr constant [11 x i8] c"incdec.ptr\00"
-@str.362 = private unnamed_addr constant [51 x i8] c"This should never happen; (codegen_var_access_exp)\00"
-@str.363 = private unnamed_addr constant [11 x i8] c"true_block\00"
-@str.364 = private unnamed_addr constant [12 x i8] c"false_block\00"
-@str.365 = private unnamed_addr constant [4 x i8] c"end\00"
-@str.366 = private unnamed_addr constant [8 x i8] c"ternary\00"
-@str.367 = private unnamed_addr constant [52 x i8] c"this should not happen; (codegen_member_exp); class\00"
-@str.368 = private unnamed_addr constant [60 x i8] c"This should never happen; (codegen_member_expr; class prop)\00"
-@str.369 = private unnamed_addr constant [51 x i8] c"this should not happen; (codegen_member_exp); enum\00"
-@str.370 = private unnamed_addr constant [11 x i8] c"to_cstring\00"
-@str.371 = private unnamed_addr constant [22 x i8] c"instrinsic not found!\00"
-@str.372 = private unnamed_addr constant [9 x i8] c"if.entry\00"
-@str.373 = private unnamed_addr constant [6 x i8] c"ifend\00"
-@str.374 = private unnamed_addr constant [10 x i8] c"for.entry\00"
-@str.375 = private unnamed_addr constant [9 x i8] c"for.cond\00"
-@str.376 = private unnamed_addr constant [9 x i8] c"for.body\00"
-@str.377 = private unnamed_addr constant [9 x i8] c"for.incr\00"
-@str.378 = private unnamed_addr constant [8 x i8] c"for.end\00"
-@str.379 = private unnamed_addr constant [12 x i8] c"while.entry\00"
-@str.380 = private unnamed_addr constant [10 x i8] c"while.end\00"
-@str.381 = private unnamed_addr constant [48 x i8] c"Could not find constructor for constructor call\00"
-@str.382 = private unnamed_addr constant [76 x i8] c"This should not happen: could not find function %s_%s (declare_class_props)\00"
-@str.383 = private unnamed_addr constant [9 x i8] c"VTable%s\00"
-@str.384 = private unnamed_addr constant [15 x i8] c"%s_constructor\00"
+@str.338 = private unnamed_addr constant [33 x i8] c"Type could not be code generated\00"
+@str.339 = private unnamed_addr constant [5 x i8] c"atof\00"
+@str.340 = private unnamed_addr constant [5 x i8] c"atoi\00"
+@str.341 = private unnamed_addr constant [5 x i8] c"atol\00"
+@str.342 = private unnamed_addr constant [8 x i8] c"realloc\00"
+@str.343 = private unnamed_addr constant [7 x i8] c"memcmp\00"
+@str.344 = private unnamed_addr constant [9 x i8] c"asprintf\00"
+@str.345 = private unnamed_addr constant [6 x i8] c"%s {\0A\00"
+@str.346 = private unnamed_addr constant [7 x i8] c" ... }\00"
+@str.347 = private unnamed_addr constant [13 x i8] c" '%s': %s, \0A\00"
+@str.348 = private unnamed_addr constant [2 x i8] c"}\00"
+@str.349 = private unnamed_addr constant [11 x i8] c"<function>\00"
+@str.350 = private unnamed_addr constant [18 x i8] c"string_from_bytes\00"
+@str.351 = private unnamed_addr constant [55 x i8] c"Could not find function 'string.from_bytes' in program\00"
+@str.352 = private unnamed_addr constant [46 x i8] c"This should never happen! (get_expr_mem: var)\00"
+@str.353 = private unnamed_addr constant [9 x i8] c"arrayidx\00"
+@str.354 = private unnamed_addr constant [7 x i8] c"ptridx\00"
+@str.355 = private unnamed_addr constant [10 x i8] c"memberidx\00"
+@str.356 = private unnamed_addr constant [7 x i8] c"buffer\00"
+@str.357 = private unnamed_addr constant [7 x i8] c"length\00"
+@str.358 = private unnamed_addr constant [12 x i8] c"llvm.pow.%s\00"
+@str.359 = private unnamed_addr constant [23 x i8] c"Unknown case! %d %s %d\00"
+@str.360 = private unnamed_addr constant [11 x i8] c"incdec.ptr\00"
+@str.361 = private unnamed_addr constant [51 x i8] c"This should never happen; (codegen_var_access_exp)\00"
+@str.362 = private unnamed_addr constant [11 x i8] c"true_block\00"
+@str.363 = private unnamed_addr constant [12 x i8] c"false_block\00"
+@str.364 = private unnamed_addr constant [4 x i8] c"end\00"
+@str.365 = private unnamed_addr constant [8 x i8] c"ternary\00"
+@str.366 = private unnamed_addr constant [52 x i8] c"this should not happen; (codegen_member_exp); class\00"
+@str.367 = private unnamed_addr constant [60 x i8] c"This should never happen; (codegen_member_expr; class prop)\00"
+@str.368 = private unnamed_addr constant [51 x i8] c"this should not happen; (codegen_member_exp); enum\00"
+@str.369 = private unnamed_addr constant [11 x i8] c"to_cstring\00"
+@str.370 = private unnamed_addr constant [22 x i8] c"instrinsic not found!\00"
+@str.371 = private unnamed_addr constant [9 x i8] c"if.entry\00"
+@str.372 = private unnamed_addr constant [6 x i8] c"ifend\00"
+@str.373 = private unnamed_addr constant [10 x i8] c"for.entry\00"
+@str.374 = private unnamed_addr constant [9 x i8] c"for.cond\00"
+@str.375 = private unnamed_addr constant [9 x i8] c"for.body\00"
+@str.376 = private unnamed_addr constant [9 x i8] c"for.incr\00"
+@str.377 = private unnamed_addr constant [8 x i8] c"for.end\00"
+@str.378 = private unnamed_addr constant [12 x i8] c"while.entry\00"
+@str.379 = private unnamed_addr constant [10 x i8] c"while.end\00"
+@str.380 = private unnamed_addr constant [48 x i8] c"Could not find constructor for constructor call\00"
+@str.381 = private unnamed_addr constant [76 x i8] c"This should not happen: could not find function %s_%s (declare_class_props)\00"
+@str.382 = private unnamed_addr constant [9 x i8] c"VTable%s\00"
+@str.383 = private unnamed_addr constant [15 x i8] c"%s_constructor\00"
 @"Arraymain.flo_vtable_data" = global %"Arraymain.flo_vtable_ty.560630" { void (%"Arraymain.flo.560629"*)* @"Arraymain.flo_resize", void (%"Arraymain.flo.560629"*, i64, i64)* @"Arraymain.flo_swap", void (%"Arraymain.flo.560629"*, %string.560217*)* @"Arraymain.flo___sl__", void (%"Arraymain.flo.560629"*, i64, %string.560217*)* @"Arraymain.flo___setitem__", void (%"Arraymain.flo.560629"*, %string.560217*)* @"Arraymain.flo_append", %string.560217* (%"Arraymain.flo.560629"*, i64)* @"Arraymain.flo___getitem__", i1 (%"Arraymain.flo.560629"*, %"Arraymain.flo.560629"*)* @"Arraymain.flo___eq__", i1 (%"Arraymain.flo.560629"*, %string.560217*)* @"Arraymain.flo___in__", i64 (%"Arraymain.flo.560629"*, %string.560217*)* @"Arraymain.flo_find" }
-@str.385 = private unnamed_addr constant [28 x i8] c"Usage: %s <path> [OPTIONS]\0A\00"
-@str.386 = private unnamed_addr constant [9 x i8] c"OPTIONS:\00"
-@str.387 = private unnamed_addr constant [38 x i8] c" -h, --help\09\09\09Show this help message.\00"
-@str.388 = private unnamed_addr constant [41 x i8] c" --print-tokens\09\09\09Print generated Tokens\00"
-@str.389 = private unnamed_addr constant [36 x i8] c" --print-ast\09\09\09Print generated AST.\00"
-@str.390 = private unnamed_addr constant [40 x i8] c" --emit-llvm\09\09\09Print generated LLVM-IR.\00"
-@str.391 = private unnamed_addr constant [43 x i8] c" -o <file>\09\09\09Place the output into <file>.\00"
-@str.392 = private unnamed_addr constant [46 x i8] c" -target\09\09\09Compile to specific target triple.\00"
-@str.393 = private unnamed_addr constant [33 x i8] c" -I\09\09\09Specify runtime directory.\00"
-@str.394 = private unnamed_addr constant [93 x i8] c" -O OPT_LEVEL\0A \09\09\09\09Specify the compiler's optimization level which is a\0A \09\09\09\09value from 0-3.\00"
-@str.395 = private unnamed_addr constant [31 x i8] c" -v, --version\09\09\09Show version.\00"
-@str.396 = private unnamed_addr constant [35 x i8] c"Missing value after '%s' argument.\00"
-@str.397 = private unnamed_addr constant [3 x i8] c"-v\00"
-@str.398 = private unnamed_addr constant [10 x i8] c"--version\00"
-@str.399 = private unnamed_addr constant [20 x i8] c"v0.01@test.selfhost\00"
-@str.400 = private unnamed_addr constant [3 x i8] c"-h\00"
-@str.401 = private unnamed_addr constant [7 x i8] c"--help\00"
-@str.402 = private unnamed_addr constant [3 x i8] c"-I\00"
-@str.403 = private unnamed_addr constant [15 x i8] c"--print-tokens\00"
-@str.404 = private unnamed_addr constant [3 x i8] c"-O\00"
-@str.405 = private unnamed_addr constant [2 x i8] c"1\00"
-@str.406 = private unnamed_addr constant [12 x i8] c"--emit-llvm\00"
-@str.407 = private unnamed_addr constant [3 x i8] c"-o\00"
-@str.408 = private unnamed_addr constant [4 x i8] c"a.o\00"
-@str.409 = private unnamed_addr constant [8 x i8] c"-target\00"
-@str.410 = private unnamed_addr constant [25 x i8] c"No input file specified.\00"
+@str.384 = private unnamed_addr constant [28 x i8] c"Usage: %s <path> [OPTIONS]\0A\00"
+@str.385 = private unnamed_addr constant [9 x i8] c"OPTIONS:\00"
+@str.386 = private unnamed_addr constant [38 x i8] c" -h, --help\09\09\09Show this help message.\00"
+@str.387 = private unnamed_addr constant [41 x i8] c" --print-tokens\09\09\09Print generated Tokens\00"
+@str.388 = private unnamed_addr constant [36 x i8] c" --print-ast\09\09\09Print generated AST.\00"
+@str.389 = private unnamed_addr constant [40 x i8] c" --emit-llvm\09\09\09Print generated LLVM-IR.\00"
+@str.390 = private unnamed_addr constant [43 x i8] c" -o <file>\09\09\09Place the output into <file>.\00"
+@str.391 = private unnamed_addr constant [46 x i8] c" -target\09\09\09Compile to specific target triple.\00"
+@str.392 = private unnamed_addr constant [33 x i8] c" -I\09\09\09Specify runtime directory.\00"
+@str.393 = private unnamed_addr constant [93 x i8] c" -O OPT_LEVEL\0A \09\09\09\09Specify the compiler's optimization level which is a\0A \09\09\09\09value from 0-3.\00"
+@str.394 = private unnamed_addr constant [31 x i8] c" -v, --version\09\09\09Show version.\00"
+@str.395 = private unnamed_addr constant [35 x i8] c"Missing value after '%s' argument.\00"
+@str.396 = private unnamed_addr constant [3 x i8] c"-v\00"
+@str.397 = private unnamed_addr constant [10 x i8] c"--version\00"
+@str.398 = private unnamed_addr constant [20 x i8] c"v0.01@test.selfhost\00"
+@str.399 = private unnamed_addr constant [3 x i8] c"-h\00"
+@str.400 = private unnamed_addr constant [7 x i8] c"--help\00"
+@str.401 = private unnamed_addr constant [3 x i8] c"-I\00"
+@str.402 = private unnamed_addr constant [15 x i8] c"--print-tokens\00"
+@str.403 = private unnamed_addr constant [3 x i8] c"-O\00"
+@str.404 = private unnamed_addr constant [2 x i8] c"1\00"
+@str.405 = private unnamed_addr constant [12 x i8] c"--emit-llvm\00"
+@str.406 = private unnamed_addr constant [3 x i8] c"-o\00"
+@str.407 = private unnamed_addr constant [4 x i8] c"a.o\00"
+@str.408 = private unnamed_addr constant [8 x i8] c"-target\00"
+@str.409 = private unnamed_addr constant [25 x i8] c"No input file specified.\00"
 
 ; Function Attrs: argmemonly nofree nounwind readonly
 declare i64 @strlen(i8* nocapture) local_unnamed_addr #0
@@ -43660,15 +43659,14 @@ define void @GeneratedModule_constructor(%GeneratedModule.560591* %.1, %LLVMModu
   br i1 %.19, label %.4.if, label %.4.endif
 
 .4.if:                                            ; preds = %.4
-  %.25 = tail call i1 @LLVMPrintModuleToFile(%LLVMModuleRef.560565* %.2, i8* getelementptr inbounds ([20 x i8], [20 x i8]* @str.324, i64 0, i64 0), i8** nonnull %.12)
+  %.22 = getelementptr inbounds %GeneratedModule.560591, %GeneratedModule.560591* %.1, i64 0, i32 0
+  %.23 = load %GeneratedModule_vtable_ty.560592*, %GeneratedModule_vtable_ty.560592** %.22, align 8
+  %.24 = getelementptr inbounds %GeneratedModule_vtable_ty.560592, %GeneratedModule_vtable_ty.560592* %.23, i64 0, i32 0
+  %.25 = load void (%GeneratedModule.560591*)*, void (%GeneratedModule.560591*)** %.24, align 8
+  tail call void %.25(%GeneratedModule.560591* nonnull %.1)
   br label %.4.endif
 
 .4.endif:                                         ; preds = %.4.if, %.4
-  %.28 = getelementptr inbounds %GeneratedModule.560591, %GeneratedModule.560591* %.1, i64 0, i32 0
-  %.29 = load %GeneratedModule_vtable_ty.560592*, %GeneratedModule_vtable_ty.560592** %.28, align 8
-  %.30 = getelementptr inbounds %GeneratedModule_vtable_ty.560592, %GeneratedModule_vtable_ty.560592* %.29, i64 0, i32 0
-  %.31 = load void (%GeneratedModule.560591*)*, void (%GeneratedModule.560591*)** %.30, align 8
-  tail call void %.31(%GeneratedModule.560591* nonnull %.1)
   tail call void @LLVM_InitializeAllTargetInfos()
   tail call void @LLVM_InitializeAllTargets()
   tail call void @LLVM_InitializeAllTargetMCs()
@@ -43677,44 +43675,36 @@ define void @GeneratedModule_constructor(%GeneratedModule.560591* %.1, %LLVMModu
   ret void
 }
 
-define void @GeneratedModule_check_errors(%GeneratedModule.560591* nocapture readonly %.1) {
+define void @GeneratedModule_print_errors(%GeneratedModule.560591* nocapture readonly %.1) {
 .3:
   %.6 = getelementptr inbounds %GeneratedModule.560591, %GeneratedModule.560591* %.1, i64 0, i32 2
   %.7 = load i8*, i8** %.6, align 8
-  %.9 = load i8, i8* %.7, align 1
-  %.10.not = icmp eq i8 %.9, 0
-  br i1 %.10.not, label %.3.endif, label %.3.if
-
-.3.if:                                            ; preds = %.3
-  %.15 = tail call %string.560217* @string_from_cstring(i8* nonnull %.7)
-  %.19 = load i8*, i8** %.6, align 8
-  tail call void @LLVMDisposeMessage(i8* %.19)
-  %.22 = getelementptr inbounds %string.560217, %string.560217* %.15, i64 0, i32 0
-  %.23 = load %string_vtable_ty.560218*, %string_vtable_ty.560218** %.22, align 8
-  %.24 = getelementptr inbounds %string_vtable_ty.560218, %string_vtable_ty.560218* %.23, i64 0, i32 11
-  %.25 = load i8* (%string.560217*)*, i8* (%string.560217*)** %.24, align 8
-  %.26 = tail call i8* %.25(%string.560217* %.15)
-  %.28 = tail call i64 (i8*, i64, i8*, ...) @snprintf(i8* null, i64 0, i8* getelementptr inbounds ([10 x i8], [10 x i8]* @str.325, i64 0, i64 0), i8* %.26)
-  %.29 = add i64 %.28, 1
-  %.31 = tail call i8* @malloc(i64 %.29)
-  %.32 = tail call i64 (i8*, i8*, ...) @sprintf(i8* %.31, i8* getelementptr inbounds ([10 x i8], [10 x i8]* @str.325, i64 0, i64 0), i8* %.26)
-  %.33 = tail call dereferenceable_or_null(32) i8* @malloc(i64 32)
-  %.34 = bitcast i8* %.33 to %string.560217*
-  %.35 = bitcast i8* %.33 to %string_vtable_ty.560218**
-  store %string_vtable_ty.560218* @string_vtable_data, %string_vtable_ty.560218** %.35, align 8
-  %.37 = getelementptr inbounds i8, i8* %.33, i64 8
-  %0 = bitcast i8* %.37 to i8**
-  store i8* %.31, i8** %0, align 8
-  %.39 = getelementptr inbounds i8, i8* %.33, i64 16
-  %1 = bitcast i8* %.39 to i64*
-  store i64 %.28, i64* %1, align 8
-  %.41 = getelementptr inbounds i8, i8* %.33, i64 24
-  %2 = bitcast i8* %.41 to i64*
-  store i64 %.28, i64* %2, align 8
-  tail call void @panic(%string.560217* %.34)
-  br label %.3.endif
-
-.3.endif:                                         ; preds = %.3, %.3.if
+  %.8 = tail call %string.560217* @string_from_cstring(i8* %.7)
+  %.12 = load i8*, i8** %.6, align 8
+  tail call void @LLVMDisposeMessage(i8* %.12)
+  %.15 = getelementptr inbounds %string.560217, %string.560217* %.8, i64 0, i32 0
+  %.16 = load %string_vtable_ty.560218*, %string_vtable_ty.560218** %.15, align 8
+  %.17 = getelementptr inbounds %string_vtable_ty.560218, %string_vtable_ty.560218* %.16, i64 0, i32 11
+  %.18 = load i8* (%string.560217*)*, i8* (%string.560217*)** %.17, align 8
+  %.19 = tail call i8* %.18(%string.560217* %.8)
+  %.21 = tail call i64 (i8*, i64, i8*, ...) @snprintf(i8* null, i64 0, i8* getelementptr inbounds ([10 x i8], [10 x i8]* @str.324, i64 0, i64 0), i8* %.19)
+  %.22 = add i64 %.21, 1
+  %.24 = tail call i8* @malloc(i64 %.22)
+  %.25 = tail call i64 (i8*, i8*, ...) @sprintf(i8* %.24, i8* getelementptr inbounds ([10 x i8], [10 x i8]* @str.324, i64 0, i64 0), i8* %.19)
+  %.26 = tail call dereferenceable_or_null(32) i8* @malloc(i64 32)
+  %.27 = bitcast i8* %.26 to %string.560217*
+  %.28 = bitcast i8* %.26 to %string_vtable_ty.560218**
+  store %string_vtable_ty.560218* @string_vtable_data, %string_vtable_ty.560218** %.28, align 8
+  %.30 = getelementptr inbounds i8, i8* %.26, i64 8
+  %0 = bitcast i8* %.30 to i8**
+  store i8* %.24, i8** %0, align 8
+  %.32 = getelementptr inbounds i8, i8* %.26, i64 16
+  %1 = bitcast i8* %.32 to i64*
+  store i64 %.21, i64* %1, align 8
+  %.34 = getelementptr inbounds i8, i8* %.26, i64 24
+  %2 = bitcast i8* %.34 to i64*
+  store i64 %.21, i64* %2, align 8
+  tail call void @panic(%string.560217* %.27)
   ret void
 }
 
@@ -43761,60 +43751,60 @@ define i64 @GeneratedModule_exec(%GeneratedModule.560591* %.1) {
   br i1 %.12, label %.3.if, label %.3.endif
 
 .3.if:                                            ; preds = %.3
-  %.16 = getelementptr inbounds %GeneratedModule.560591, %GeneratedModule.560591* %.1, i64 0, i32 0
-  %.17 = load %GeneratedModule_vtable_ty.560592*, %GeneratedModule_vtable_ty.560592** %.16, align 8
-  %.18 = getelementptr inbounds %GeneratedModule_vtable_ty.560592, %GeneratedModule_vtable_ty.560592* %.17, i64 0, i32 0
-  %.19 = load void (%GeneratedModule.560591*)*, void (%GeneratedModule.560591*)** %.18, align 8
-  call void %.19(%GeneratedModule.560591* nonnull %.1)
+  %.15 = getelementptr inbounds %GeneratedModule.560591, %GeneratedModule.560591* %.1, i64 0, i32 0
+  %.16 = load %GeneratedModule_vtable_ty.560592*, %GeneratedModule_vtable_ty.560592** %.15, align 8
+  %.17 = getelementptr inbounds %GeneratedModule_vtable_ty.560592, %GeneratedModule_vtable_ty.560592* %.16, i64 0, i32 0
+  %.18 = load void (%GeneratedModule.560591*)*, void (%GeneratedModule.560591*)** %.17, align 8
+  call void %.18(%GeneratedModule.560591* nonnull %.1)
   br label %.3.endif
 
 .3.endif:                                         ; preds = %.3.if, %.3
-  %.24 = load %LLVMModuleRef.560565*, %LLVMModuleRef.560565** %.8, align 8
-  %.25 = call %LLVMValueRef.560567* @LLVMGetNamedFunction(%LLVMModuleRef.560565* %.24, i8* getelementptr inbounds ([5 x i8], [5 x i8]* @str.326, i64 0, i64 0))
-  %0 = ptrtoint %LLVMValueRef.560567* %.25 to i64
-  %.28 = trunc i64 %0 to i32
-  %.30 = icmp eq i32 %.28, 0
-  br i1 %.30, label %.3.endif.if, label %.3.endif.endif
+  %.23 = load %LLVMModuleRef.560565*, %LLVMModuleRef.560565** %.8, align 8
+  %.24 = call %LLVMValueRef.560567* @LLVMGetNamedFunction(%LLVMModuleRef.560565* %.23, i8* getelementptr inbounds ([5 x i8], [5 x i8]* @str.325, i64 0, i64 0))
+  %0 = ptrtoint %LLVMValueRef.560567* %.24 to i64
+  %.27 = trunc i64 %0 to i32
+  %.29 = icmp eq i32 %.27, 0
+  br i1 %.29, label %.3.endif.if, label %.3.endif.endif
 
 .3.endif.if:                                      ; preds = %.3.endif
-  %.32 = call dereferenceable_or_null(32) i8* @malloc(i64 32)
-  %.33 = bitcast i8* %.32 to %string.560217*
-  %.33.repack = bitcast i8* %.32 to %string_vtable_ty.560218**
-  store %string_vtable_ty.560218* @string_vtable_data, %string_vtable_ty.560218** %.33.repack, align 8
-  %.33.repack1 = getelementptr inbounds i8, i8* %.32, i64 8
-  %1 = bitcast i8* %.33.repack1 to i8**
-  store i8* getelementptr inbounds ([49 x i8], [49 x i8]* @str.327, i64 0, i64 0), i8** %1, align 8
-  %.33.repack2 = getelementptr inbounds i8, i8* %.32, i64 16
-  %2 = bitcast i8* %.33.repack2 to i64*
+  %.31 = call dereferenceable_or_null(32) i8* @malloc(i64 32)
+  %.32 = bitcast i8* %.31 to %string.560217*
+  %.32.repack = bitcast i8* %.31 to %string_vtable_ty.560218**
+  store %string_vtable_ty.560218* @string_vtable_data, %string_vtable_ty.560218** %.32.repack, align 8
+  %.32.repack1 = getelementptr inbounds i8, i8* %.31, i64 8
+  %1 = bitcast i8* %.32.repack1 to i8**
+  store i8* getelementptr inbounds ([49 x i8], [49 x i8]* @str.326, i64 0, i64 0), i8** %1, align 8
+  %.32.repack2 = getelementptr inbounds i8, i8* %.31, i64 16
+  %2 = bitcast i8* %.32.repack2 to i64*
   store i64 48, i64* %2, align 8
-  %.33.repack3 = getelementptr inbounds i8, i8* %.32, i64 24
-  %3 = bitcast i8* %.33.repack3 to i64*
+  %.32.repack3 = getelementptr inbounds i8, i8* %.31, i64 24
+  %3 = bitcast i8* %.32.repack3 to i64*
   store i64 48, i64* %3, align 8
-  call void @println(%string.560217* %.33)
-  %.36 = load %LLVMExecutionEngineRef.560588*, %LLVMExecutionEngineRef.560588** %engine, align 8
-  call void @LLVMDisposeExecutionEngine(%LLVMExecutionEngineRef.560588* %.36)
+  call void @println(%string.560217* %.32)
+  %.35 = load %LLVMExecutionEngineRef.560588*, %LLVMExecutionEngineRef.560588** %engine, align 8
+  call void @LLVMDisposeExecutionEngine(%LLVMExecutionEngineRef.560588* %.35)
   ret i64 1
 
 .3.endif.endif:                                   ; preds = %.3.endif
-  %.39 = load %LLVMExecutionEngineRef.560588*, %LLVMExecutionEngineRef.560588** %engine, align 8
-  %.41 = call i64 @LLVMRunFunctionAsMain(%LLVMExecutionEngineRef.560588* %.39, %LLVMValueRef.560567* %.25, i64 0, i8* null, i8* null)
-  %.43 = load %LLVMExecutionEngineRef.560588*, %LLVMExecutionEngineRef.560588** %engine, align 8
-  %.46 = load %LLVMModuleRef.560565*, %LLVMModuleRef.560565** %.8, align 8
-  %.51 = call i1 @LLVMRemoveModule(%LLVMExecutionEngineRef.560588* %.43, %LLVMModuleRef.560565* %.46, %LLVMModuleRef.560565** nonnull %.8, i8** nonnull %.11)
-  br i1 %.51, label %.3.endif.endif.if, label %.3.endif.endif.endif
+  %.38 = load %LLVMExecutionEngineRef.560588*, %LLVMExecutionEngineRef.560588** %engine, align 8
+  %.40 = call i64 @LLVMRunFunctionAsMain(%LLVMExecutionEngineRef.560588* %.38, %LLVMValueRef.560567* %.24, i64 0, i8* null, i8* null)
+  %.42 = load %LLVMExecutionEngineRef.560588*, %LLVMExecutionEngineRef.560588** %engine, align 8
+  %.45 = load %LLVMModuleRef.560565*, %LLVMModuleRef.560565** %.8, align 8
+  %.50 = call i1 @LLVMRemoveModule(%LLVMExecutionEngineRef.560588* %.42, %LLVMModuleRef.560565* %.45, %LLVMModuleRef.560565** nonnull %.8, i8** nonnull %.11)
+  br i1 %.50, label %.3.endif.endif.if, label %.3.endif.endif.endif
 
 .3.endif.endif.if:                                ; preds = %.3.endif.endif
-  %.54 = getelementptr inbounds %GeneratedModule.560591, %GeneratedModule.560591* %.1, i64 0, i32 0
-  %.55 = load %GeneratedModule_vtable_ty.560592*, %GeneratedModule_vtable_ty.560592** %.54, align 8
-  %.56 = getelementptr inbounds %GeneratedModule_vtable_ty.560592, %GeneratedModule_vtable_ty.560592* %.55, i64 0, i32 0
-  %.57 = load void (%GeneratedModule.560591*)*, void (%GeneratedModule.560591*)** %.56, align 8
-  call void %.57(%GeneratedModule.560591* nonnull %.1)
+  %.53 = getelementptr inbounds %GeneratedModule.560591, %GeneratedModule.560591* %.1, i64 0, i32 0
+  %.54 = load %GeneratedModule_vtable_ty.560592*, %GeneratedModule_vtable_ty.560592** %.53, align 8
+  %.55 = getelementptr inbounds %GeneratedModule_vtable_ty.560592, %GeneratedModule_vtable_ty.560592* %.54, i64 0, i32 0
+  %.56 = load void (%GeneratedModule.560591*)*, void (%GeneratedModule.560591*)** %.55, align 8
+  call void %.56(%GeneratedModule.560591* nonnull %.1)
   br label %.3.endif.endif.endif
 
 .3.endif.endif.endif:                             ; preds = %.3.endif.endif.if, %.3.endif.endif
-  %.60 = load %LLVMExecutionEngineRef.560588*, %LLVMExecutionEngineRef.560588** %engine, align 8
-  call void @LLVMDisposeExecutionEngine(%LLVMExecutionEngineRef.560588* %.60)
-  ret i64 %.41
+  %.59 = load %LLVMExecutionEngineRef.560588*, %LLVMExecutionEngineRef.560588** %engine, align 8
+  call void @LLVMDisposeExecutionEngine(%LLVMExecutionEngineRef.560588* %.59)
+  ret i64 %.40
 }
 
 define %LLVMTargetMachineRef.560585* @GeneratedModule_create_target_machine(%GeneratedModule.560591* %.1, %string.560217* %.2) {
@@ -43855,18 +43845,18 @@ end:                                              ; preds = %false_block, %true_
   br i1 %.39, label %end.if, label %end.endif
 
 end.if:                                           ; preds = %end
-  %.43 = getelementptr inbounds %GeneratedModule.560591, %GeneratedModule.560591* %.1, i64 0, i32 0
-  %.44 = load %GeneratedModule_vtable_ty.560592*, %GeneratedModule_vtable_ty.560592** %.43, align 8
-  %.45 = getelementptr inbounds %GeneratedModule_vtable_ty.560592, %GeneratedModule_vtable_ty.560592* %.44, i64 0, i32 0
-  %.46 = load void (%GeneratedModule.560591*)*, void (%GeneratedModule.560591*)** %.45, align 8
-  call void %.46(%GeneratedModule.560591* %.1)
+  %.42 = getelementptr inbounds %GeneratedModule.560591, %GeneratedModule.560591* %.1, i64 0, i32 0
+  %.43 = load %GeneratedModule_vtable_ty.560592*, %GeneratedModule_vtable_ty.560592** %.42, align 8
+  %.44 = getelementptr inbounds %GeneratedModule_vtable_ty.560592, %GeneratedModule_vtable_ty.560592* %.43, i64 0, i32 0
+  %.45 = load void (%GeneratedModule.560591*)*, void (%GeneratedModule.560591*)** %.44, align 8
+  call void %.45(%GeneratedModule.560591* %.1)
   br label %end.endif
 
 end.endif:                                        ; preds = %end.if, %end
-  %.50 = load %LLVMTargetRef.560584*, %LLVMTargetRef.560584** %target, align 8
-  %.53 = call i8* @LLVMGetHostCPUFeatures()
-  %.54 = call %LLVMTargetMachineRef.560585* @LLVMCreateTargetMachine(%LLVMTargetRef.560584* %.50, i8* %.33, i8* getelementptr inbounds ([8 x i8], [8 x i8]* @str.328, i64 0, i64 0), i8* %.53, i64 3, i64 0, i64 0)
-  ret %LLVMTargetMachineRef.560585* %.54
+  %.49 = load %LLVMTargetRef.560584*, %LLVMTargetRef.560584** %target, align 8
+  %.52 = call i8* @LLVMGetHostCPUFeatures()
+  %.53 = call %LLVMTargetMachineRef.560585* @LLVMCreateTargetMachine(%LLVMTargetRef.560584* %.49, i8* %.33, i8* getelementptr inbounds ([8 x i8], [8 x i8]* @str.327, i64 0, i64 0), i8* %.52, i64 3, i64 0, i64 0)
+  ret %LLVMTargetMachineRef.560585* %.53
 }
 
 define void @GeneratedModule_write_object(%GeneratedModule.560591* %.1, %string.560217* %.2, %string.560217* %.3) {
@@ -43894,17 +43884,13 @@ define void @GeneratedModule_write_object(%GeneratedModule.560591* %.1, %string.
   br i1 %.41, label %.5.if, label %.5.endif
 
 .5.if:                                            ; preds = %.5
-  %.46 = load %GeneratedModule_vtable_ty.560592*, %GeneratedModule_vtable_ty.560592** %.10, align 8
-  %.47 = getelementptr inbounds %GeneratedModule_vtable_ty.560592, %GeneratedModule_vtable_ty.560592* %.46, i64 0, i32 0
-  %.48 = load void (%GeneratedModule.560591*)*, void (%GeneratedModule.560591*)** %.47, align 8
-  tail call void %.48(%GeneratedModule.560591* nonnull %.1)
+  %.45 = load %GeneratedModule_vtable_ty.560592*, %GeneratedModule_vtable_ty.560592** %.10, align 8
+  %.46 = getelementptr inbounds %GeneratedModule_vtable_ty.560592, %GeneratedModule_vtable_ty.560592* %.45, i64 0, i32 0
+  %.47 = load void (%GeneratedModule.560591*)*, void (%GeneratedModule.560591*)** %.46, align 8
+  tail call void %.47(%GeneratedModule.560591* nonnull %.1)
   br label %.5.endif
 
 .5.endif:                                         ; preds = %.5.if, %.5
-  %.53 = load %GeneratedModule_vtable_ty.560592*, %GeneratedModule_vtable_ty.560592** %.10, align 8
-  %.54 = getelementptr inbounds %GeneratedModule_vtable_ty.560592, %GeneratedModule_vtable_ty.560592* %.53, i64 0, i32 0
-  %.55 = load void (%GeneratedModule.560591*)*, void (%GeneratedModule.560591*)** %.54, align 8
-  tail call void %.55(%GeneratedModule.560591* nonnull %.1)
   tail call void @LLVMDisposeTargetMachine(%LLVMTargetMachineRef.560585* %.15)
   ret void
 }
@@ -43914,12 +43900,18 @@ define void @GeneratedModule_print(%GeneratedModule.560591* %.1) {
   %.6 = getelementptr inbounds %GeneratedModule.560591, %GeneratedModule.560591* %.1, i64 0, i32 1
   %.7 = load %LLVMModuleRef.560565*, %LLVMModuleRef.560565** %.6, align 8
   %.9 = getelementptr inbounds %GeneratedModule.560591, %GeneratedModule.560591* %.1, i64 0, i32 2
-  %.10 = tail call i1 @LLVMPrintModuleToFile(%LLVMModuleRef.560565* %.7, i8* getelementptr inbounds ([10 x i8], [10 x i8]* @str.329, i64 0, i64 0), i8** nonnull %.9)
-  %.12 = getelementptr inbounds %GeneratedModule.560591, %GeneratedModule.560591* %.1, i64 0, i32 0
-  %.13 = load %GeneratedModule_vtable_ty.560592*, %GeneratedModule_vtable_ty.560592** %.12, align 8
-  %.14 = getelementptr inbounds %GeneratedModule_vtable_ty.560592, %GeneratedModule_vtable_ty.560592* %.13, i64 0, i32 0
-  %.15 = load void (%GeneratedModule.560591*)*, void (%GeneratedModule.560591*)** %.14, align 8
-  tail call void %.15(%GeneratedModule.560591* %.1)
+  %.10 = tail call i1 @LLVMPrintModuleToFile(%LLVMModuleRef.560565* %.7, i8* getelementptr inbounds ([10 x i8], [10 x i8]* @str.328, i64 0, i64 0), i8** nonnull %.9)
+  br i1 %.10, label %.3.if, label %.3.endif
+
+.3.if:                                            ; preds = %.3
+  %.13 = getelementptr inbounds %GeneratedModule.560591, %GeneratedModule.560591* %.1, i64 0, i32 0
+  %.14 = load %GeneratedModule_vtable_ty.560592*, %GeneratedModule_vtable_ty.560592** %.13, align 8
+  %.15 = getelementptr inbounds %GeneratedModule_vtable_ty.560592, %GeneratedModule_vtable_ty.560592* %.14, i64 0, i32 0
+  %.16 = load void (%GeneratedModule.560591*)*, void (%GeneratedModule.560591*)** %.15, align 8
+  tail call void %.16(%GeneratedModule.560591* nonnull %.1)
+  br label %.3.endif
+
+.3.endif:                                         ; preds = %.3.if, %.3
   ret void
 }
 
@@ -45676,10 +45668,10 @@ define noalias %string.560217* @create_var_key(%VarId.560441* nocapture readonly
   %.10 = load i64, i64* %.9, align 8
   %.12 = getelementptr inbounds %VarId.560441, %VarId.560441* %.1, i64 0, i32 3
   %.13 = load i64, i64* %.12, align 8
-  %.15 = tail call i64 (i8*, i64, i8*, ...) @snprintf(i8* null, i64 0, i8* getelementptr inbounds ([9 x i8], [9 x i8]* @str.330, i64 0, i64 0), i64 %.7, i64 %.10, i64 %.13)
+  %.15 = tail call i64 (i8*, i64, i8*, ...) @snprintf(i8* null, i64 0, i8* getelementptr inbounds ([9 x i8], [9 x i8]* @str.329, i64 0, i64 0), i64 %.7, i64 %.10, i64 %.13)
   %.16 = add i64 %.15, 1
   %.18 = tail call i8* @malloc(i64 %.16)
-  %.19 = tail call i64 (i8*, i8*, ...) @sprintf(i8* %.18, i8* getelementptr inbounds ([9 x i8], [9 x i8]* @str.330, i64 0, i64 0), i64 %.7, i64 %.10, i64 %.13)
+  %.19 = tail call i64 (i8*, i8*, ...) @sprintf(i8* %.18, i8* getelementptr inbounds ([9 x i8], [9 x i8]* @str.329, i64 0, i64 0), i64 %.7, i64 %.10, i64 %.13)
   %.20 = tail call dereferenceable_or_null(32) i8* @malloc(i64 32)
   %.21 = bitcast i8* %.20 to %string.560217*
   %.22 = bitcast i8* %.20 to %string_vtable_ty.560218**
@@ -45704,10 +45696,10 @@ define noalias %string.560217* @create_type_id_key(%TypeId.560395* nocapture rea
   %.10 = load i64, i64* %.9, align 8
   %.12 = getelementptr inbounds %TypeId.560395, %TypeId.560395* %.1, i64 0, i32 3
   %.13 = load i64, i64* %.12, align 8
-  %.15 = tail call i64 (i8*, i64, i8*, ...) @snprintf(i8* null, i64 0, i8* getelementptr inbounds ([9 x i8], [9 x i8]* @str.330, i64 0, i64 0), i64 %.7, i64 %.10, i64 %.13)
+  %.15 = tail call i64 (i8*, i64, i8*, ...) @snprintf(i8* null, i64 0, i8* getelementptr inbounds ([9 x i8], [9 x i8]* @str.329, i64 0, i64 0), i64 %.7, i64 %.10, i64 %.13)
   %.16 = add i64 %.15, 1
   %.18 = tail call i8* @malloc(i64 %.16)
-  %.19 = tail call i64 (i8*, i8*, ...) @sprintf(i8* %.18, i8* getelementptr inbounds ([9 x i8], [9 x i8]* @str.330, i64 0, i64 0), i64 %.7, i64 %.10, i64 %.13)
+  %.19 = tail call i64 (i8*, i8*, ...) @sprintf(i8* %.18, i8* getelementptr inbounds ([9 x i8], [9 x i8]* @str.329, i64 0, i64 0), i64 %.7, i64 %.10, i64 %.13)
   %.20 = tail call dereferenceable_or_null(32) i8* @malloc(i64 32)
   %.21 = bitcast i8* %.20 to %string.560217*
   %.22 = bitcast i8* %.20 to %string_vtable_ty.560218**
@@ -45733,10 +45725,10 @@ define noalias %string.560217* @create_type_key_from_var(%VarId.560441* nocaptur
   %.12 = load i64, i64* %.11, align 8
   %.15 = getelementptr inbounds %VarId.560441, %VarId.560441* %.1, i64 0, i32 3
   %.16 = load i64, i64* %.15, align 8
-  %.18 = tail call i64 (i8*, i64, i8*, ...) @snprintf(i8* null, i64 0, i8* getelementptr inbounds ([9 x i8], [9 x i8]* @str.330, i64 0, i64 0), i64 %.12, i64 %.8, i64 %.16)
+  %.18 = tail call i64 (i8*, i64, i8*, ...) @snprintf(i8* null, i64 0, i8* getelementptr inbounds ([9 x i8], [9 x i8]* @str.329, i64 0, i64 0), i64 %.12, i64 %.8, i64 %.16)
   %.19 = add i64 %.18, 1
   %.21 = tail call i8* @malloc(i64 %.19)
-  %.22 = tail call i64 (i8*, i8*, ...) @sprintf(i8* %.21, i8* getelementptr inbounds ([9 x i8], [9 x i8]* @str.330, i64 0, i64 0), i64 %.12, i64 %.8, i64 %.16)
+  %.22 = tail call i64 (i8*, i8*, ...) @sprintf(i8* %.21, i8* getelementptr inbounds ([9 x i8], [9 x i8]* @str.329, i64 0, i64 0), i64 %.12, i64 %.8, i64 %.16)
   %.23 = tail call dereferenceable_or_null(32) i8* @malloc(i64 32)
   %.24 = bitcast i8* %.23 to %string.560217*
   %.25 = bitcast i8* %.23 to %string_vtable_ty.560218**
@@ -45767,10 +45759,10 @@ define noalias %string.560217* @create_prop_key(%PropId.560449* nocapture readon
   %.17 = getelementptr inbounds %string_vtable_ty.560218, %string_vtable_ty.560218* %.16, i64 0, i32 11
   %.18 = load i8* (%string.560217*)*, i8* (%string.560217*)** %.17, align 8
   %.19 = tail call i8* %.18(%string.560217* %.8)
-  %.21 = tail call i64 (i8*, i64, i8*, ...) @snprintf(i8* null, i64 0, i8* getelementptr inbounds ([9 x i8], [9 x i8]* @str.331, i64 0, i64 0), i8* %.19, i64 %.11, i64 %.14)
+  %.21 = tail call i64 (i8*, i64, i8*, ...) @snprintf(i8* null, i64 0, i8* getelementptr inbounds ([9 x i8], [9 x i8]* @str.330, i64 0, i64 0), i8* %.19, i64 %.11, i64 %.14)
   %.22 = add i64 %.21, 1
   %.24 = tail call i8* @malloc(i64 %.22)
-  %.25 = tail call i64 (i8*, i8*, ...) @sprintf(i8* %.24, i8* getelementptr inbounds ([9 x i8], [9 x i8]* @str.331, i64 0, i64 0), i8* %.19, i64 %.11, i64 %.14)
+  %.25 = tail call i64 (i8*, i8*, ...) @sprintf(i8* %.24, i8* getelementptr inbounds ([9 x i8], [9 x i8]* @str.330, i64 0, i64 0), i8* %.19, i64 %.11, i64 %.14)
   %.26 = tail call dereferenceable_or_null(32) i8* @malloc(i64 32)
   %.27 = bitcast i8* %.26 to %string.560217*
   %.28 = bitcast i8* %.26 to %string_vtable_ty.560218**
@@ -46158,7 +46150,7 @@ define noalias %string.560217* @get_format_from_type(%Type.560381* nocapture rea
   store %string_vtable_ty.560218* @string_vtable_data, %string_vtable_ty.560218** %.14.repack, align 8
   %.14.repack19 = getelementptr inbounds i8, i8* %.13, i64 8
   %1 = bitcast i8* %.14.repack19 to i8**
-  store i8* getelementptr inbounds ([4 x i8], [4 x i8]* @str.332, i64 0, i64 0), i8** %1, align 8
+  store i8* getelementptr inbounds ([4 x i8], [4 x i8]* @str.331, i64 0, i64 0), i8** %1, align 8
   %.14.repack20 = getelementptr inbounds i8, i8* %.13, i64 16
   %2 = bitcast i8* %.14.repack20 to i64*
   store i64 3, i64* %2, align 8
@@ -46178,7 +46170,7 @@ define noalias %string.560217* @get_format_from_type(%Type.560381* nocapture rea
   br i1 %.20, label %.3.if.endif.if, label %.3.if.endif.endif
 
 .3.if.endif.if:                                   ; preds = %.3.if.endif
-  store i8* getelementptr inbounds ([3 x i8], [3 x i8]* @str.333, i64 0, i64 0), i8** %4, align 8
+  store i8* getelementptr inbounds ([3 x i8], [3 x i8]* @str.332, i64 0, i64 0), i8** %4, align 8
   %.23.repack17 = getelementptr inbounds i8, i8* %.22, i64 16
   %5 = bitcast i8* %.23.repack17 to i64*
   store i64 2, i64* %5, align 8
@@ -46188,7 +46180,7 @@ define noalias %string.560217* @get_format_from_type(%Type.560381* nocapture rea
   ret %string.560217* %.23
 
 .3.if.endif.endif:                                ; preds = %.3.if.endif
-  store i8* getelementptr inbounds ([3 x i8], [3 x i8]* @str.334, i64 0, i64 0), i8** %4, align 8
+  store i8* getelementptr inbounds ([3 x i8], [3 x i8]* @str.333, i64 0, i64 0), i8** %4, align 8
   %.27.repack14 = getelementptr inbounds i8, i8* %.22, i64 16
   %7 = bitcast i8* %.27.repack14 to i64*
   store i64 2, i64* %7, align 8
@@ -46204,7 +46196,7 @@ define noalias %string.560217* @get_format_from_type(%Type.560381* nocapture rea
   store %string_vtable_ty.560218* @string_vtable_data, %string_vtable_ty.560218** %.41.repack, align 8
   %.41.repack10 = getelementptr inbounds i8, i8* %.40, i64 8
   %9 = bitcast i8* %.41.repack10 to i8**
-  store i8* getelementptr inbounds ([3 x i8], [3 x i8]* @str.335, i64 0, i64 0), i8** %9, align 8
+  store i8* getelementptr inbounds ([3 x i8], [3 x i8]* @str.334, i64 0, i64 0), i8** %9, align 8
   %.41.repack11 = getelementptr inbounds i8, i8* %.40, i64 16
   %10 = bitcast i8* %.41.repack11 to i64*
   store i64 2, i64* %10, align 8
@@ -46220,7 +46212,7 @@ define noalias %string.560217* @get_format_from_type(%Type.560381* nocapture rea
   store %string_vtable_ty.560218* @string_vtable_data, %string_vtable_ty.560218** %.55.repack, align 8
   %.55.repack7 = getelementptr inbounds i8, i8* %.54, i64 8
   %12 = bitcast i8* %.55.repack7 to i8**
-  store i8* getelementptr inbounds ([4 x i8], [4 x i8]* @str.336, i64 0, i64 0), i8** %12, align 8
+  store i8* getelementptr inbounds ([4 x i8], [4 x i8]* @str.335, i64 0, i64 0), i8** %12, align 8
   %.55.repack8 = getelementptr inbounds i8, i8* %.54, i64 16
   %13 = bitcast i8* %.55.repack8 to i64*
   store i64 3, i64* %13, align 8
@@ -46240,7 +46232,7 @@ define noalias %string.560217* @get_format_from_type(%Type.560381* nocapture rea
   br i1 %.59, label %.3.endif.endif.endif.if, label %.3.endif.endif.endif.endif
 
 .3.endif.endif.endif.if:                          ; preds = %.3.endif.endif.endif
-  store i8* getelementptr inbounds ([5 x i8], [5 x i8]* @str.337, i64 0, i64 0), i8** %15, align 8
+  store i8* getelementptr inbounds ([5 x i8], [5 x i8]* @str.336, i64 0, i64 0), i8** %15, align 8
   %.62.repack5 = getelementptr inbounds i8, i8* %.61, i64 16
   %16 = bitcast i8* %.62.repack5 to i64*
   store i64 4, i64* %16, align 8
@@ -46250,7 +46242,7 @@ define noalias %string.560217* @get_format_from_type(%Type.560381* nocapture rea
   ret %string.560217* %.62
 
 .3.endif.endif.endif.endif:                       ; preds = %.3.endif.endif.endif
-  store i8* getelementptr inbounds ([3 x i8], [3 x i8]* @str.338, i64 0, i64 0), i8** %15, align 8
+  store i8* getelementptr inbounds ([3 x i8], [3 x i8]* @str.337, i64 0, i64 0), i8** %15, align 8
   %.66.repack2 = getelementptr inbounds i8, i8* %.61, i64 16
   %18 = bitcast i8* %.66.repack2 to i64*
   store i64 2, i64* %18, align 8
@@ -48258,7 +48250,7 @@ true_block.1:                                     ; preds = %.5.endif.endif.endi
   store %string_vtable_ty.560218* @string_vtable_data, %string_vtable_ty.560218** %.339.repack, align 8
   %.339.repack1 = getelementptr inbounds i8, i8* %.338, i64 8
   %19 = bitcast i8* %.339.repack1 to i8**
-  store i8* getelementptr inbounds ([33 x i8], [33 x i8]* @str.339, i64 0, i64 0), i8** %19, align 8
+  store i8* getelementptr inbounds ([33 x i8], [33 x i8]* @str.338, i64 0, i64 0), i8** %19, align 8
   %.339.repack2 = getelementptr inbounds i8, i8* %.338, i64 16
   %20 = bitcast i8* %.339.repack2 to i64*
   store i64 32, i64* %20, align 8
@@ -48359,7 +48351,7 @@ define %LLVMValueRef.560567* @CodeGen_codegen_atof_call(%CodeGen.560615* nocaptu
   store %string_vtable_ty.560218* @string_vtable_data, %string_vtable_ty.560218** %.24.repack, align 8
   %.24.repack1 = getelementptr inbounds i8, i8* %.23, i64 8
   %0 = bitcast i8* %.24.repack1 to i8**
-  store i8* getelementptr inbounds ([5 x i8], [5 x i8]* @str.340, i64 0, i64 0), i8** %0, align 8
+  store i8* getelementptr inbounds ([5 x i8], [5 x i8]* @str.339, i64 0, i64 0), i8** %0, align 8
   %.24.repack2 = getelementptr inbounds i8, i8* %.23, i64 16
   %1 = bitcast i8* %.24.repack2 to i64*
   store i64 4, i64* %1, align 8
@@ -48411,7 +48403,7 @@ define %LLVMValueRef.560567* @CodeGen_codegen_atoi_call(%CodeGen.560615* nocaptu
   store %string_vtable_ty.560218* @string_vtable_data, %string_vtable_ty.560218** %.24.repack, align 8
   %.24.repack1 = getelementptr inbounds i8, i8* %.23, i64 8
   %0 = bitcast i8* %.24.repack1 to i8**
-  store i8* getelementptr inbounds ([5 x i8], [5 x i8]* @str.341, i64 0, i64 0), i8** %0, align 8
+  store i8* getelementptr inbounds ([5 x i8], [5 x i8]* @str.340, i64 0, i64 0), i8** %0, align 8
   %.24.repack2 = getelementptr inbounds i8, i8* %.23, i64 16
   %1 = bitcast i8* %.24.repack2 to i64*
   store i64 4, i64* %1, align 8
@@ -48463,7 +48455,7 @@ define %LLVMValueRef.560567* @CodeGen_codegen_atol_call(%CodeGen.560615* nocaptu
   store %string_vtable_ty.560218* @string_vtable_data, %string_vtable_ty.560218** %.24.repack, align 8
   %.24.repack1 = getelementptr inbounds i8, i8* %.23, i64 8
   %0 = bitcast i8* %.24.repack1 to i8**
-  store i8* getelementptr inbounds ([5 x i8], [5 x i8]* @str.342, i64 0, i64 0), i8** %0, align 8
+  store i8* getelementptr inbounds ([5 x i8], [5 x i8]* @str.341, i64 0, i64 0), i8** %0, align 8
   %.24.repack2 = getelementptr inbounds i8, i8* %.23, i64 16
   %1 = bitcast i8* %.24.repack2 to i64*
   store i64 4, i64* %1, align 8
@@ -48515,7 +48507,7 @@ define %LLVMValueRef.560567* @CodeGen_codegen_realloc_call(%CodeGen.560615* noca
   store %string_vtable_ty.560218* @string_vtable_data, %string_vtable_ty.560218** %.24.repack, align 8
   %.24.repack1 = getelementptr inbounds i8, i8* %.23, i64 8
   %0 = bitcast i8* %.24.repack1 to i8**
-  store i8* getelementptr inbounds ([8 x i8], [8 x i8]* @str.343, i64 0, i64 0), i8** %0, align 8
+  store i8* getelementptr inbounds ([8 x i8], [8 x i8]* @str.342, i64 0, i64 0), i8** %0, align 8
   %.24.repack2 = getelementptr inbounds i8, i8* %.23, i64 16
   %1 = bitcast i8* %.24.repack2 to i64*
   store i64 7, i64* %1, align 8
@@ -48570,7 +48562,7 @@ define %LLVMValueRef.560567* @CodeGen_codegen_memcmp_call(%CodeGen.560615* nocap
   store %string_vtable_ty.560218* @string_vtable_data, %string_vtable_ty.560218** %.24.repack, align 8
   %.24.repack1 = getelementptr inbounds i8, i8* %.23, i64 8
   %0 = bitcast i8* %.24.repack1 to i8**
-  store i8* getelementptr inbounds ([7 x i8], [7 x i8]* @str.344, i64 0, i64 0), i8** %0, align 8
+  store i8* getelementptr inbounds ([7 x i8], [7 x i8]* @str.343, i64 0, i64 0), i8** %0, align 8
   %.24.repack2 = getelementptr inbounds i8, i8* %.23, i64 16
   %1 = bitcast i8* %.24.repack2 to i64*
   store i64 6, i64* %1, align 8
@@ -48712,7 +48704,7 @@ for.end:                                          ; preds = %for.body, %.7
   store %string_vtable_ty.560218* @string_vtable_data, %string_vtable_ty.560218** %.92.repack, align 8
   %.92.repack1 = getelementptr inbounds i8, i8* %.91, i64 8
   %4 = bitcast i8* %.92.repack1 to i8**
-  store i8* getelementptr inbounds ([9 x i8], [9 x i8]* @str.345, i64 0, i64 0), i8** %4, align 8
+  store i8* getelementptr inbounds ([9 x i8], [9 x i8]* @str.344, i64 0, i64 0), i8** %4, align 8
   %.92.repack2 = getelementptr inbounds i8, i8* %.91, i64 16
   %5 = bitcast i8* %.92.repack2 to i64*
   store i64 8, i64* %5, align 8
@@ -48854,10 +48846,10 @@ define %LLVMValueRef.560567* @CodeGen_get_string_val(%CodeGen.560615* %.1, %LLVM
   %.76 = getelementptr inbounds %string_vtable_ty.560218, %string_vtable_ty.560218* %.75, i64 0, i32 11
   %.77 = load i8* (%string.560217*)*, i8* (%string.560217*)** %.76, align 8
   %.78 = tail call i8* %.77(%string.560217* %.73)
-  %.80 = tail call i64 (i8*, i64, i8*, ...) @snprintf(i8* null, i64 0, i8* getelementptr inbounds ([6 x i8], [6 x i8]* @str.346, i64 0, i64 0), i8* %.78)
+  %.80 = tail call i64 (i8*, i64, i8*, ...) @snprintf(i8* null, i64 0, i8* getelementptr inbounds ([6 x i8], [6 x i8]* @str.345, i64 0, i64 0), i8* %.78)
   %.81 = add i64 %.80, 1
   %.83 = tail call i8* @malloc(i64 %.81)
-  %.84 = tail call i64 (i8*, i8*, ...) @sprintf(i8* %.83, i8* getelementptr inbounds ([6 x i8], [6 x i8]* @str.346, i64 0, i64 0), i8* %.78)
+  %.84 = tail call i64 (i8*, i8*, ...) @sprintf(i8* %.83, i8* getelementptr inbounds ([6 x i8], [6 x i8]* @str.345, i64 0, i64 0), i8* %.78)
   %.85 = tail call dereferenceable_or_null(32) i8* @malloc(i64 32)
   %.87 = bitcast i8* %.85 to %string_vtable_ty.560218**
   store %string_vtable_ty.560218* @string_vtable_data, %string_vtable_ty.560218** %.87, align 8
@@ -48885,7 +48877,7 @@ define %LLVMValueRef.560567* @CodeGen_get_string_val(%CodeGen.560615* %.1, %LLVM
   store %string_vtable_ty.560218* @string_vtable_data, %string_vtable_ty.560218** %.107.repack, align 8
   %.107.repack10 = getelementptr inbounds i8, i8* %.106, i64 8
   %13 = bitcast i8* %.107.repack10 to i8**
-  store i8* getelementptr inbounds ([7 x i8], [7 x i8]* @str.347, i64 0, i64 0), i8** %13, align 8
+  store i8* getelementptr inbounds ([7 x i8], [7 x i8]* @str.346, i64 0, i64 0), i8** %13, align 8
   %.107.repack11 = getelementptr inbounds i8, i8* %.106, i64 16
   %14 = bitcast i8* %.107.repack11 to i64*
   store i64 6, i64* %14, align 8
@@ -48969,10 +48961,10 @@ for.body:                                         ; preds = %for.body.lr.ph, %fo
   %.208 = getelementptr inbounds %string_vtable_ty.560218, %string_vtable_ty.560218* %.207, i64 0, i32 11
   %.209 = load i8* (%string.560217*)*, i8* (%string.560217*)** %.208, align 8
   %.210 = tail call i8* %.209(%string.560217* %.200)
-  %.212 = tail call i64 (i8*, i64, i8*, ...) @snprintf(i8* null, i64 0, i8* getelementptr inbounds ([13 x i8], [13 x i8]* @str.348, i64 0, i64 0), i8* %.205, i8* %.210)
+  %.212 = tail call i64 (i8*, i64, i8*, ...) @snprintf(i8* null, i64 0, i8* getelementptr inbounds ([13 x i8], [13 x i8]* @str.347, i64 0, i64 0), i8* %.205, i8* %.210)
   %.213 = add i64 %.212, 1
   %.215 = tail call i8* @malloc(i64 %.213)
-  %.216 = tail call i64 (i8*, i8*, ...) @sprintf(i8* %.215, i8* getelementptr inbounds ([13 x i8], [13 x i8]* @str.348, i64 0, i64 0), i8* %.205, i8* %.210)
+  %.216 = tail call i64 (i8*, i8*, ...) @sprintf(i8* %.215, i8* getelementptr inbounds ([13 x i8], [13 x i8]* @str.347, i64 0, i64 0), i8* %.205, i8* %.210)
   %.217 = tail call dereferenceable_or_null(32) i8* @malloc(i64 32)
   %.218 = bitcast i8* %.217 to %string.560217*
   %.219 = bitcast i8* %.217 to %string_vtable_ty.560218**
@@ -49004,7 +48996,7 @@ for.end:                                          ; preds = %for.body, %.7.endif
   store %string_vtable_ty.560218* @string_vtable_data, %string_vtable_ty.560218** %.242.repack, align 8
   %.242.repack7 = getelementptr inbounds i8, i8* %.241, i64 8
   %23 = bitcast i8* %.242.repack7 to i8**
-  store i8* getelementptr inbounds ([2 x i8], [2 x i8]* @str.349, i64 0, i64 0), i8** %23, align 8
+  store i8* getelementptr inbounds ([2 x i8], [2 x i8]* @str.348, i64 0, i64 0), i8** %23, align 8
   %.242.repack8 = getelementptr inbounds i8, i8* %.241, i64 16
   %24 = bitcast i8* %.242.repack8 to i64*
   store i64 1, i64* %24, align 8
@@ -49034,7 +49026,7 @@ for.end:                                          ; preds = %for.body, %.7.endif
   store %string_vtable_ty.560218* @string_vtable_data, %string_vtable_ty.560218** %.272.repack, align 8
   %.272.repack1 = getelementptr inbounds i8, i8* %.271, i64 8
   %26 = bitcast i8* %.272.repack1 to i8**
-  store i8* getelementptr inbounds ([11 x i8], [11 x i8]* @str.350, i64 0, i64 0), i8** %26, align 8
+  store i8* getelementptr inbounds ([11 x i8], [11 x i8]* @str.349, i64 0, i64 0), i8** %26, align 8
   %.272.repack2 = getelementptr inbounds i8, i8* %.271, i64 16
   %27 = bitcast i8* %.272.repack2 to i64*
   store i64 10, i64* %27, align 8
@@ -49205,7 +49197,7 @@ end.endif:                                        ; preds = %end
 end.if.if:                                        ; preds = %end.if
   %.220 = getelementptr inbounds %CodeGen.560615, %CodeGen.560615* %.1, i64 0, i32 1
   %.221 = load %LLVMModuleRef.560565*, %LLVMModuleRef.560565** %.220, align 8
-  %.222 = call %LLVMValueRef.560567* @LLVMGetNamedFunction(%LLVMModuleRef.560565* %.221, i8* getelementptr inbounds ([18 x i8], [18 x i8]* @str.351, i64 0, i64 0))
+  %.222 = call %LLVMValueRef.560567* @LLVMGetNamedFunction(%LLVMModuleRef.560565* %.221, i8* getelementptr inbounds ([18 x i8], [18 x i8]* @str.350, i64 0, i64 0))
   %4 = ptrtoint %LLVMValueRef.560567* %.222 to i64
   %.225 = trunc i64 %4 to i32
   %.227 = icmp eq i32 %.225, 0
@@ -49253,7 +49245,7 @@ end.if.if.if:                                     ; preds = %end.if.if
   store %string_vtable_ty.560218* @string_vtable_data, %string_vtable_ty.560218** %.230.repack, align 8
   %.230.repack7 = getelementptr inbounds i8, i8* %.229, i64 8
   %14 = bitcast i8* %.230.repack7 to i8**
-  store i8* getelementptr inbounds ([55 x i8], [55 x i8]* @str.352, i64 0, i64 0), i8** %14, align 8
+  store i8* getelementptr inbounds ([55 x i8], [55 x i8]* @str.351, i64 0, i64 0), i8** %14, align 8
   %.230.repack8 = getelementptr inbounds i8, i8* %.229, i64 16
   %15 = bitcast i8* %.230.repack8 to i64*
   store i64 54, i64* %15, align 8
@@ -49728,7 +49720,7 @@ define %LLVMValueRef.560567* @CodeGen_get_var_expr_mem(%CodeGen.560615* %.1, %LL
   store %string_vtable_ty.560218* @string_vtable_data, %string_vtable_ty.560218** %.25.repack, align 8
   %.25.repack1 = getelementptr inbounds i8, i8* %.24, i64 8
   %1 = bitcast i8* %.25.repack1 to i8**
-  store i8* getelementptr inbounds ([46 x i8], [46 x i8]* @str.353, i64 0, i64 0), i8** %1, align 8
+  store i8* getelementptr inbounds ([46 x i8], [46 x i8]* @str.352, i64 0, i64 0), i8** %1, align 8
   %.25.repack2 = getelementptr inbounds i8, i8* %.24, i64 16
   %2 = bitcast i8* %.25.repack2 to i64*
   store i64 45, i64* %2, align 8
@@ -49790,7 +49782,7 @@ end.if:                                           ; preds = %end
   %.71 = load %LLVMValueRef.560567* (%CodeGen.560615*, %LLVMBuilderRef.560572*, %Expression.560401*)*, %LLVMValueRef.560567* (%CodeGen.560615*, %LLVMBuilderRef.560572*, %Expression.560401*)** %.70, align 8
   %.75 = load %Expression.560401*, %Expression.560401** %.21, align 8
   %.76 = tail call %LLVMValueRef.560567* %.71(%CodeGen.560615* nonnull %.1, %LLVMBuilderRef.560572* %.2, %Expression.560401* %.75)
-  %.83 = call %LLVMValueRef.560567* @LLVMBuildInBoundsGEP2(%LLVMBuilderRef.560572* %.2, %LLVMTypeRef.560566* %.46, %LLVMValueRef.560567* %.76, %LLVMValueRef.560567** nonnull %.63, i64 2, i8* getelementptr inbounds ([9 x i8], [9 x i8]* @str.354, i64 0, i64 0))
+  %.83 = call %LLVMValueRef.560567* @LLVMBuildInBoundsGEP2(%LLVMBuilderRef.560572* %.2, %LLVMTypeRef.560566* %.46, %LLVMValueRef.560567* %.76, %LLVMValueRef.560567** nonnull %.63, i64 2, i8* getelementptr inbounds ([9 x i8], [9 x i8]* @str.353, i64 0, i64 0))
   ret %LLVMValueRef.560567* %.83
 
 end.endif:                                        ; preds = %end
@@ -49802,7 +49794,7 @@ end.endif:                                        ; preds = %end
   %.92 = load %LLVMValueRef.560567* (%CodeGen.560615*, %LLVMBuilderRef.560572*, %Expression.560401*)*, %LLVMValueRef.560567* (%CodeGen.560615*, %LLVMBuilderRef.560572*, %Expression.560401*)** %.91, align 8
   %.96 = load %Expression.560401*, %Expression.560401** %.21, align 8
   %.97 = tail call %LLVMValueRef.560567* %.92(%CodeGen.560615* nonnull %.1, %LLVMBuilderRef.560572* %.2, %Expression.560401* %.96)
-  %.104 = call %LLVMValueRef.560567* @LLVMBuildInBoundsGEP2(%LLVMBuilderRef.560572* %.2, %LLVMTypeRef.560566* %.46, %LLVMValueRef.560567* %.97, %LLVMValueRef.560567** nonnull %.86, i64 1, i8* getelementptr inbounds ([7 x i8], [7 x i8]* @str.355, i64 0, i64 0))
+  %.104 = call %LLVMValueRef.560567* @LLVMBuildInBoundsGEP2(%LLVMBuilderRef.560572* %.2, %LLVMTypeRef.560566* %.46, %LLVMValueRef.560567* %.97, %LLVMValueRef.560567** nonnull %.86, i64 1, i8* getelementptr inbounds ([7 x i8], [7 x i8]* @str.354, i64 0, i64 0))
   ret %LLVMValueRef.560567* %.104
 }
 
@@ -49947,7 +49939,7 @@ define %LLVMValueRef.560567* @CodeGen_get_member_expr_mem(%CodeGen.560615* %.1, 
   %.186 = getelementptr inbounds i8, i8* %.77, i64 16
   %10 = bitcast i8* %.186 to i64*
   %.187 = load i64, i64* %10, align 8
-  %.188 = tail call %LLVMValueRef.560567* @LLVMBuildInBoundsGEP2(%LLVMBuilderRef.560572* %.2, %LLVMTypeRef.560566* %.38, %LLVMValueRef.560567* %ptr.1, %LLVMValueRef.560567** %.184, i64 %.187, i8* getelementptr inbounds ([10 x i8], [10 x i8]* @str.356, i64 0, i64 0))
+  %.188 = tail call %LLVMValueRef.560567* @LLVMBuildInBoundsGEP2(%LLVMBuilderRef.560572* %.2, %LLVMTypeRef.560566* %.38, %LLVMValueRef.560567* %ptr.1, %LLVMValueRef.560567** %.184, i64 %.187, i8* getelementptr inbounds ([10 x i8], [10 x i8]* @str.355, i64 0, i64 0))
   ret %LLVMValueRef.560567* %.188
 }
 
@@ -50115,7 +50107,7 @@ define %LLVMValueRef.560567* @CodeGen_codegen_builtin_array(%CodeGen.560615* %.1
   store %string_vtable_ty.560218* @string_vtable_data, %string_vtable_ty.560218** %.111.repack, align 8
   %.111.repack6 = getelementptr inbounds i8, i8* %.110, i64 8
   %6 = bitcast i8* %.111.repack6 to i8**
-  store i8* getelementptr inbounds ([7 x i8], [7 x i8]* @str.357, i64 0, i64 0), i8** %6, align 8
+  store i8* getelementptr inbounds ([7 x i8], [7 x i8]* @str.356, i64 0, i64 0), i8** %6, align 8
   %.111.repack7 = getelementptr inbounds i8, i8* %.110, i64 16
   %7 = bitcast i8* %.111.repack7 to i64*
   store i64 6, i64* %7, align 8
@@ -50138,7 +50130,7 @@ define %LLVMValueRef.560567* @CodeGen_codegen_builtin_array(%CodeGen.560615* %.1
   store %string_vtable_ty.560218* @string_vtable_data, %string_vtable_ty.560218** %.139.repack, align 8
   %.139.repack9 = getelementptr inbounds i8, i8* %.138, i64 8
   %9 = bitcast i8* %.139.repack9 to i8**
-  store i8* getelementptr inbounds ([7 x i8], [7 x i8]* @str.358, i64 0, i64 0), i8** %9, align 8
+  store i8* getelementptr inbounds ([7 x i8], [7 x i8]* @str.357, i64 0, i64 0), i8** %9, align 8
   %.139.repack10 = getelementptr inbounds i8, i8* %.138, i64 16
   %10 = bitcast i8* %.139.repack10 to i64*
   store i64 6, i64* %10, align 8
@@ -50249,10 +50241,10 @@ define %LLVMValueRef.560567* @CodeGen_codegen_pow_expr(%CodeGen.560615* %.1, %LL
   %.23 = getelementptr inbounds %string_vtable_ty.560218, %string_vtable_ty.560218* %.22, i64 0, i32 11
   %.24 = load i8* (%string.560217*)*, i8* (%string.560217*)** %.23, align 8
   %.25 = tail call i8* %.24(%string.560217* %.20)
-  %.27 = tail call i64 (i8*, i64, i8*, ...) @snprintf(i8* null, i64 0, i8* getelementptr inbounds ([12 x i8], [12 x i8]* @str.359, i64 0, i64 0), i8* %.25)
+  %.27 = tail call i64 (i8*, i64, i8*, ...) @snprintf(i8* null, i64 0, i8* getelementptr inbounds ([12 x i8], [12 x i8]* @str.358, i64 0, i64 0), i8* %.25)
   %.28 = add i64 %.27, 1
   %.30 = tail call i8* @malloc(i64 %.28)
-  %.31 = tail call i64 (i8*, i8*, ...) @sprintf(i8* %.30, i8* getelementptr inbounds ([12 x i8], [12 x i8]* @str.359, i64 0, i64 0), i8* %.25)
+  %.31 = tail call i64 (i8*, i8*, ...) @sprintf(i8* %.30, i8* getelementptr inbounds ([12 x i8], [12 x i8]* @str.358, i64 0, i64 0), i8* %.25)
   %.32 = tail call dereferenceable_or_null(32) i8* @malloc(i64 32)
   %.33 = bitcast i8* %.32 to %string.560217*
   %.34 = bitcast i8* %.32 to %string_vtable_ty.560218**
@@ -50484,10 +50476,10 @@ end.2:                                            ; preds = %.5.endif.endif.endi
   %.597 = getelementptr inbounds %string_vtable_ty.560218, %string_vtable_ty.560218* %.596, i64 0, i32 11
   %.598 = load i8* (%string.560217*)*, i8* (%string.560217*)** %.597, align 8
   %.599 = tail call i8* %.598(%string.560217* %.591)
-  %.601 = tail call i64 (i8*, i64, i8*, ...) @snprintf(i8* null, i64 0, i8* getelementptr inbounds ([23 x i8], [23 x i8]* @str.360, i64 0, i64 0), i64 %.589, i8* %.599, i64 %.594)
+  %.601 = tail call i64 (i8*, i64, i8*, ...) @snprintf(i8* null, i64 0, i8* getelementptr inbounds ([23 x i8], [23 x i8]* @str.359, i64 0, i64 0), i64 %.589, i8* %.599, i64 %.594)
   %.602 = add i64 %.601, 1
   %.604 = tail call i8* @malloc(i64 %.602)
-  %.605 = tail call i64 (i8*, i8*, ...) @sprintf(i8* %.604, i8* getelementptr inbounds ([23 x i8], [23 x i8]* @str.360, i64 0, i64 0), i64 %.589, i8* %.599, i64 %.594)
+  %.605 = tail call i64 (i8*, i8*, ...) @sprintf(i8* %.604, i8* getelementptr inbounds ([23 x i8], [23 x i8]* @str.359, i64 0, i64 0), i64 %.589, i8* %.599, i64 %.594)
   %.606 = tail call dereferenceable_or_null(32) i8* @malloc(i64 32)
   %.607 = bitcast i8* %.606 to %string.560217*
   %.608 = bitcast i8* %.606 to %string_vtable_ty.560218**
@@ -50958,7 +50950,7 @@ end.1.if:                                         ; preds = %.5.endif.endif.if.e
   %indices = alloca [1 x %LLVMValueRef.560567*], align 8
   %.134 = getelementptr inbounds [1 x %LLVMValueRef.560567*], [1 x %LLVMValueRef.560567*]* %indices, i64 0, i64 0
   store %LLVMValueRef.560567* %.133, %LLVMValueRef.560567** %.134, align 8
-  %.141 = call %LLVMValueRef.560567* @LLVMBuildInBoundsGEP2(%LLVMBuilderRef.560572* %.2, %LLVMTypeRef.560566* %.125, %LLVMValueRef.560567* %.24, %LLVMValueRef.560567** nonnull %.134, i64 1, i8* getelementptr inbounds ([11 x i8], [11 x i8]* @str.361, i64 0, i64 0))
+  %.141 = call %LLVMValueRef.560567* @LLVMBuildInBoundsGEP2(%LLVMBuilderRef.560572* %.2, %LLVMTypeRef.560566* %.125, %LLVMValueRef.560567* %.24, %LLVMValueRef.560567** nonnull %.134, i64 1, i8* getelementptr inbounds ([11 x i8], [11 x i8]* @str.360, i64 0, i64 0))
   br label %end.1.endif
 
 end.1.else:                                       ; preds = %.5.endif.endif.if.endif
@@ -51018,7 +51010,7 @@ define %LLVMValueRef.560567* @CodeGen_codegen_var_access_exp(%CodeGen.560615* %.
   store %string_vtable_ty.560218* @string_vtable_data, %string_vtable_ty.560218** %.35.repack, align 8
   %.35.repack1 = getelementptr inbounds i8, i8* %.34, i64 8
   %1 = bitcast i8* %.35.repack1 to i8**
-  store i8* getelementptr inbounds ([51 x i8], [51 x i8]* @str.362, i64 0, i64 0), i8** %1, align 8
+  store i8* getelementptr inbounds ([51 x i8], [51 x i8]* @str.361, i64 0, i64 0), i8** %1, align 8
   %.35.repack2 = getelementptr inbounds i8, i8* %.34, i64 16
   %2 = bitcast i8* %.35.repack2 to i64*
   store i64 50, i64* %2, align 8
@@ -51071,13 +51063,13 @@ define %LLVMValueRef.560567* @CodeGen_codegen_ternary_exp(%CodeGen.560615* %.1, 
   %.11 = load %LLVMContextRef.560564*, %LLVMContextRef.560564** %.10, align 8
   %.13 = getelementptr inbounds %CodeGen.560615, %CodeGen.560615* %.1, i64 0, i32 2
   %.14 = load %LLVMValueRef.560567*, %LLVMValueRef.560567** %.13, align 8
-  %.15 = tail call %LLVMBasicBlockRef.560568* @LLVMAppendBasicBlockInContext(%LLVMContextRef.560564* %.11, %LLVMValueRef.560567* %.14, i8* getelementptr inbounds ([11 x i8], [11 x i8]* @str.363, i64 0, i64 0))
+  %.15 = tail call %LLVMBasicBlockRef.560568* @LLVMAppendBasicBlockInContext(%LLVMContextRef.560564* %.11, %LLVMValueRef.560567* %.14, i8* getelementptr inbounds ([11 x i8], [11 x i8]* @str.362, i64 0, i64 0))
   %.19 = load %LLVMContextRef.560564*, %LLVMContextRef.560564** %.10, align 8
   %.22 = load %LLVMValueRef.560567*, %LLVMValueRef.560567** %.13, align 8
-  %.23 = tail call %LLVMBasicBlockRef.560568* @LLVMAppendBasicBlockInContext(%LLVMContextRef.560564* %.19, %LLVMValueRef.560567* %.22, i8* getelementptr inbounds ([12 x i8], [12 x i8]* @str.364, i64 0, i64 0))
+  %.23 = tail call %LLVMBasicBlockRef.560568* @LLVMAppendBasicBlockInContext(%LLVMContextRef.560564* %.19, %LLVMValueRef.560567* %.22, i8* getelementptr inbounds ([12 x i8], [12 x i8]* @str.363, i64 0, i64 0))
   %.27 = load %LLVMContextRef.560564*, %LLVMContextRef.560564** %.10, align 8
   %.30 = load %LLVMValueRef.560567*, %LLVMValueRef.560567** %.13, align 8
-  %.31 = tail call %LLVMBasicBlockRef.560568* @LLVMAppendBasicBlockInContext(%LLVMContextRef.560564* %.27, %LLVMValueRef.560567* %.30, i8* getelementptr inbounds ([4 x i8], [4 x i8]* @str.365, i64 0, i64 0))
+  %.31 = tail call %LLVMBasicBlockRef.560568* @LLVMAppendBasicBlockInContext(%LLVMContextRef.560564* %.27, %LLVMValueRef.560567* %.30, i8* getelementptr inbounds ([4 x i8], [4 x i8]* @str.364, i64 0, i64 0))
   %.34 = getelementptr inbounds %CodeGen.560615, %CodeGen.560615* %.1, i64 0, i32 0
   %.35 = load %CodeGen_vtable_ty.560616*, %CodeGen_vtable_ty.560616** %.34, align 8
   %.36 = getelementptr inbounds %CodeGen_vtable_ty.560616, %CodeGen_vtable_ty.560616* %.35, i64 0, i32 52
@@ -51110,7 +51102,7 @@ define %LLVMValueRef.560567* @CodeGen_codegen_ternary_exp(%CodeGen.560615* %.1, 
   %.95 = getelementptr inbounds %Expression.560401, %Expression.560401* %.94, i64 0, i32 4
   %.96 = load %Type.560381*, %Type.560381** %.95, align 8
   %.97 = tail call %LLVMTypeRef.560566* %.91(%CodeGen.560615* %.1, %Type.560381* %.96, i1 true)
-  %.98 = tail call %LLVMValueRef.560567* @LLVMBuildPhi(%LLVMBuilderRef.560572* %.2, %LLVMTypeRef.560566* %.97, i8* getelementptr inbounds ([8 x i8], [8 x i8]* @str.366, i64 0, i64 0))
+  %.98 = tail call %LLVMValueRef.560567* @LLVMBuildPhi(%LLVMBuilderRef.560572* %.2, %LLVMTypeRef.560566* %.97, i8* getelementptr inbounds ([8 x i8], [8 x i8]* @str.365, i64 0, i64 0))
   %incomming_vals = alloca [2 x %LLVMValueRef.560567*], align 8
   %.102 = getelementptr inbounds [2 x %LLVMValueRef.560567*], [2 x %LLVMValueRef.560567*]* %incomming_vals, i64 0, i64 0
   store %LLVMValueRef.560567* %.61, %LLVMValueRef.560567** %.102, align 8
@@ -51516,7 +51508,7 @@ define %LLVMValueRef.560567* @CodeGen_codegen_member_exp(%CodeGen.560615* %.1, %
   store %string_vtable_ty.560218* @string_vtable_data, %string_vtable_ty.560218** %.97.repack, align 8
   %.97.repack8 = getelementptr inbounds i8, i8* %.96, i64 8
   %3 = bitcast i8* %.97.repack8 to i8**
-  store i8* getelementptr inbounds ([52 x i8], [52 x i8]* @str.367, i64 0, i64 0), i8** %3, align 8
+  store i8* getelementptr inbounds ([52 x i8], [52 x i8]* @str.366, i64 0, i64 0), i8** %3, align 8
   %.97.repack9 = getelementptr inbounds i8, i8* %.96, i64 16
   %4 = bitcast i8* %.97.repack9 to i64*
   store i64 51, i64* %4, align 8
@@ -51546,7 +51538,7 @@ define %LLVMValueRef.560567* @CodeGen_codegen_member_exp(%CodeGen.560615* %.1, %
   store %string_vtable_ty.560218* @string_vtable_data, %string_vtable_ty.560218** %.117.repack, align 8
   %.117.repack5 = getelementptr inbounds i8, i8* %.116, i64 8
   %7 = bitcast i8* %.117.repack5 to i8**
-  store i8* getelementptr inbounds ([60 x i8], [60 x i8]* @str.368, i64 0, i64 0), i8** %7, align 8
+  store i8* getelementptr inbounds ([60 x i8], [60 x i8]* @str.367, i64 0, i64 0), i8** %7, align 8
   %.117.repack6 = getelementptr inbounds i8, i8* %.116, i64 16
   %8 = bitcast i8* %.117.repack6 to i64*
   store i64 59, i64* %8, align 8
@@ -51597,7 +51589,7 @@ define %LLVMValueRef.560567* @CodeGen_codegen_member_exp(%CodeGen.560615* %.1, %
   store %string_vtable_ty.560218* @string_vtable_data, %string_vtable_ty.560218** %.169.repack, align 8
   %.169.repack2 = getelementptr inbounds i8, i8* %.168, i64 8
   %11 = bitcast i8* %.169.repack2 to i8**
-  store i8* getelementptr inbounds ([51 x i8], [51 x i8]* @str.369, i64 0, i64 0), i8** %11, align 8
+  store i8* getelementptr inbounds ([51 x i8], [51 x i8]* @str.368, i64 0, i64 0), i8** %11, align 8
   %.169.repack3 = getelementptr inbounds i8, i8* %.168, i64 16
   %12 = bitcast i8* %.169.repack3 to i64*
   store i64 50, i64* %12, align 8
@@ -51668,7 +51660,7 @@ define %LLVMValueRef.560567* @CodeGen_codegen_string_to_cstring(%CodeGen.560615*
   store %string_vtable_ty.560218* @string_vtable_data, %string_vtable_ty.560218** %.49.repack, align 8
   %.49.repack4 = getelementptr inbounds i8, i8* %.48, i64 8
   %3 = bitcast i8* %.49.repack4 to i8**
-  store i8* getelementptr inbounds ([11 x i8], [11 x i8]* @str.370, i64 0, i64 0), i8** %3, align 8
+  store i8* getelementptr inbounds ([11 x i8], [11 x i8]* @str.369, i64 0, i64 0), i8** %3, align 8
   %.49.repack5 = getelementptr inbounds i8, i8* %.48, i64 16
   %4 = bitcast i8* %.49.repack5 to i64*
   store i64 10, i64* %4, align 8
@@ -51686,7 +51678,7 @@ define %LLVMValueRef.560567* @CodeGen_codegen_string_to_cstring(%CodeGen.560615*
   store %string_vtable_ty.560218* @string_vtable_data, %string_vtable_ty.560218** %.62.repack, align 8
   %.62.repack7 = getelementptr inbounds i8, i8* %.61, i64 8
   %6 = bitcast i8* %.62.repack7 to i8**
-  store i8* getelementptr inbounds ([11 x i8], [11 x i8]* @str.370, i64 0, i64 0), i8** %6, align 8
+  store i8* getelementptr inbounds ([11 x i8], [11 x i8]* @str.369, i64 0, i64 0), i8** %6, align 8
   %.62.repack8 = getelementptr inbounds i8, i8* %.61, i64 16
   %7 = bitcast i8* %.62.repack8 to i64*
   store i64 10, i64* %7, align 8
@@ -51951,7 +51943,7 @@ define %LLVMValueRef.560567* @CodeGen_codegen_intrinsic_exp(%CodeGen.560615* %.1
   store %string_vtable_ty.560218* @string_vtable_data, %string_vtable_ty.560218** %.320.repack, align 8
   %.320.repack2 = getelementptr inbounds i8, i8* %.319, i64 8
   %17 = bitcast i8* %.320.repack2 to i8**
-  store i8* getelementptr inbounds ([22 x i8], [22 x i8]* @str.371, i64 0, i64 0), i8** %17, align 8
+  store i8* getelementptr inbounds ([22 x i8], [22 x i8]* @str.370, i64 0, i64 0), i8** %17, align 8
   %.320.repack3 = getelementptr inbounds i8, i8* %.319, i64 16
   %18 = bitcast i8* %.320.repack3 to i64*
   store i64 21, i64* %18, align 8
@@ -52148,13 +52140,13 @@ define void @CodeGen_codegen_if_stmt(%CodeGen.560615* %.1, %LLVMBuilderRef.56057
   %.22 = load %LLVMContextRef.560564*, %LLVMContextRef.560564** %.21, align 8
   %.24 = getelementptr inbounds %CodeGen.560615, %CodeGen.560615* %.1, i64 0, i32 2
   %.25 = load %LLVMValueRef.560567*, %LLVMValueRef.560567** %.24, align 8
-  %.26 = tail call %LLVMBasicBlockRef.560568* @LLVMAppendBasicBlockInContext(%LLVMContextRef.560564* %.22, %LLVMValueRef.560567* %.25, i8* getelementptr inbounds ([9 x i8], [9 x i8]* @str.372, i64 0, i64 0))
+  %.26 = tail call %LLVMBasicBlockRef.560568* @LLVMAppendBasicBlockInContext(%LLVMContextRef.560564* %.22, %LLVMValueRef.560567* %.25, i8* getelementptr inbounds ([9 x i8], [9 x i8]* @str.371, i64 0, i64 0))
   %.30 = load %LLVMContextRef.560564*, %LLVMContextRef.560564** %.21, align 8
   %.33 = load %LLVMValueRef.560567*, %LLVMValueRef.560567** %.24, align 8
   %.34 = tail call %LLVMBasicBlockRef.560568* @LLVMAppendBasicBlockInContext(%LLVMContextRef.560564* %.30, %LLVMValueRef.560567* %.33, i8* getelementptr inbounds ([5 x i8], [5 x i8]* @str.26, i64 0, i64 0))
   %.38 = load %LLVMContextRef.560564*, %LLVMContextRef.560564** %.21, align 8
   %.41 = load %LLVMValueRef.560567*, %LLVMValueRef.560567** %.24, align 8
-  %.42 = tail call %LLVMBasicBlockRef.560568* @LLVMAppendBasicBlockInContext(%LLVMContextRef.560564* %.38, %LLVMValueRef.560567* %.41, i8* getelementptr inbounds ([6 x i8], [6 x i8]* @str.373, i64 0, i64 0))
+  %.42 = tail call %LLVMBasicBlockRef.560568* @LLVMAppendBasicBlockInContext(%LLVMContextRef.560564* %.38, %LLVMValueRef.560567* %.41, i8* getelementptr inbounds ([6 x i8], [6 x i8]* @str.372, i64 0, i64 0))
   %.48 = tail call %LLVMValueRef.560567* @LLVMBuildCondBr(%LLVMBuilderRef.560572* %.2, %LLVMValueRef.560567* %.18, %LLVMBasicBlockRef.560568* %.26, %LLVMBasicBlockRef.560568* %.34)
   tail call void @LLVMPositionBuilderAtEnd(%LLVMBuilderRef.560572* %.2, %LLVMBasicBlockRef.560568* %.26)
   %.54 = load %CodeGen_vtable_ty.560616*, %CodeGen_vtable_ty.560616** %.10, align 8
@@ -52212,7 +52204,7 @@ define void @CodeGen_codegen_for_stmt(%CodeGen.560615* %.1, %LLVMBuilderRef.5605
   %.11 = load %LLVMContextRef.560564*, %LLVMContextRef.560564** %.10, align 8
   %.13 = getelementptr inbounds %CodeGen.560615, %CodeGen.560615* %.1, i64 0, i32 2
   %.14 = load %LLVMValueRef.560567*, %LLVMValueRef.560567** %.13, align 8
-  %.15 = tail call %LLVMBasicBlockRef.560568* @LLVMAppendBasicBlockInContext(%LLVMContextRef.560564* %.11, %LLVMValueRef.560567* %.14, i8* getelementptr inbounds ([10 x i8], [10 x i8]* @str.374, i64 0, i64 0))
+  %.15 = tail call %LLVMBasicBlockRef.560568* @LLVMAppendBasicBlockInContext(%LLVMContextRef.560564* %.11, %LLVMValueRef.560567* %.14, i8* getelementptr inbounds ([10 x i8], [10 x i8]* @str.373, i64 0, i64 0))
   %.19 = tail call %LLVMValueRef.560567* @LLVMBuildBr(%LLVMBuilderRef.560572* %.2, %LLVMBasicBlockRef.560568* %.15)
   tail call void @LLVMPositionBuilderAtEnd(%LLVMBuilderRef.560572* %.2, %LLVMBasicBlockRef.560568* %.15)
   %.24 = getelementptr inbounds %ForStatement.560465, %ForStatement.560465* %.3, i64 0, i32 2
@@ -52234,16 +52226,16 @@ define void @CodeGen_codegen_for_stmt(%CodeGen.560615* %.1, %LLVMBuilderRef.5605
 .5.endif:                                         ; preds = %.5, %.5.if
   %.43 = load %LLVMContextRef.560564*, %LLVMContextRef.560564** %.10, align 8
   %.46 = load %LLVMValueRef.560567*, %LLVMValueRef.560567** %.13, align 8
-  %.47 = tail call %LLVMBasicBlockRef.560568* @LLVMAppendBasicBlockInContext(%LLVMContextRef.560564* %.43, %LLVMValueRef.560567* %.46, i8* getelementptr inbounds ([9 x i8], [9 x i8]* @str.375, i64 0, i64 0))
+  %.47 = tail call %LLVMBasicBlockRef.560568* @LLVMAppendBasicBlockInContext(%LLVMContextRef.560564* %.43, %LLVMValueRef.560567* %.46, i8* getelementptr inbounds ([9 x i8], [9 x i8]* @str.374, i64 0, i64 0))
   %.51 = load %LLVMContextRef.560564*, %LLVMContextRef.560564** %.10, align 8
   %.54 = load %LLVMValueRef.560567*, %LLVMValueRef.560567** %.13, align 8
-  %.55 = tail call %LLVMBasicBlockRef.560568* @LLVMAppendBasicBlockInContext(%LLVMContextRef.560564* %.51, %LLVMValueRef.560567* %.54, i8* getelementptr inbounds ([9 x i8], [9 x i8]* @str.376, i64 0, i64 0))
+  %.55 = tail call %LLVMBasicBlockRef.560568* @LLVMAppendBasicBlockInContext(%LLVMContextRef.560564* %.51, %LLVMValueRef.560567* %.54, i8* getelementptr inbounds ([9 x i8], [9 x i8]* @str.375, i64 0, i64 0))
   %.59 = load %LLVMContextRef.560564*, %LLVMContextRef.560564** %.10, align 8
   %.62 = load %LLVMValueRef.560567*, %LLVMValueRef.560567** %.13, align 8
-  %.63 = tail call %LLVMBasicBlockRef.560568* @LLVMAppendBasicBlockInContext(%LLVMContextRef.560564* %.59, %LLVMValueRef.560567* %.62, i8* getelementptr inbounds ([9 x i8], [9 x i8]* @str.377, i64 0, i64 0))
+  %.63 = tail call %LLVMBasicBlockRef.560568* @LLVMAppendBasicBlockInContext(%LLVMContextRef.560564* %.59, %LLVMValueRef.560567* %.62, i8* getelementptr inbounds ([9 x i8], [9 x i8]* @str.376, i64 0, i64 0))
   %.67 = load %LLVMContextRef.560564*, %LLVMContextRef.560564** %.10, align 8
   %.70 = load %LLVMValueRef.560567*, %LLVMValueRef.560567** %.13, align 8
-  %.71 = tail call %LLVMBasicBlockRef.560568* @LLVMAppendBasicBlockInContext(%LLVMContextRef.560564* %.67, %LLVMValueRef.560567* %.70, i8* getelementptr inbounds ([8 x i8], [8 x i8]* @str.378, i64 0, i64 0))
+  %.71 = tail call %LLVMBasicBlockRef.560568* @LLVMAppendBasicBlockInContext(%LLVMContextRef.560564* %.67, %LLVMValueRef.560567* %.70, i8* getelementptr inbounds ([8 x i8], [8 x i8]* @str.377, i64 0, i64 0))
   %.74 = getelementptr inbounds %CodeGen.560615, %CodeGen.560615* %.1, i64 0, i32 7
   %2 = bitcast %LLVMBasicBlockRef.560568** %.74 to i64*
   %.752 = load i64, i64* %2, align 8
@@ -52325,10 +52317,10 @@ define void @CodeGen_codegen_while_stmt(%CodeGen.560615* %.1, %LLVMBuilderRef.56
   %.11 = load %LLVMContextRef.560564*, %LLVMContextRef.560564** %.10, align 8
   %.13 = getelementptr inbounds %CodeGen.560615, %CodeGen.560615* %.1, i64 0, i32 2
   %.14 = load %LLVMValueRef.560567*, %LLVMValueRef.560567** %.13, align 8
-  %.15 = tail call %LLVMBasicBlockRef.560568* @LLVMAppendBasicBlockInContext(%LLVMContextRef.560564* %.11, %LLVMValueRef.560567* %.14, i8* getelementptr inbounds ([12 x i8], [12 x i8]* @str.379, i64 0, i64 0))
+  %.15 = tail call %LLVMBasicBlockRef.560568* @LLVMAppendBasicBlockInContext(%LLVMContextRef.560564* %.11, %LLVMValueRef.560567* %.14, i8* getelementptr inbounds ([12 x i8], [12 x i8]* @str.378, i64 0, i64 0))
   %.19 = load %LLVMContextRef.560564*, %LLVMContextRef.560564** %.10, align 8
   %.22 = load %LLVMValueRef.560567*, %LLVMValueRef.560567** %.13, align 8
-  %.23 = tail call %LLVMBasicBlockRef.560568* @LLVMAppendBasicBlockInContext(%LLVMContextRef.560564* %.19, %LLVMValueRef.560567* %.22, i8* getelementptr inbounds ([10 x i8], [10 x i8]* @str.380, i64 0, i64 0))
+  %.23 = tail call %LLVMBasicBlockRef.560568* @LLVMAppendBasicBlockInContext(%LLVMContextRef.560564* %.19, %LLVMValueRef.560567* %.22, i8* getelementptr inbounds ([10 x i8], [10 x i8]* @str.379, i64 0, i64 0))
   %.26 = getelementptr inbounds %CodeGen.560615, %CodeGen.560615* %.1, i64 0, i32 7
   %0 = bitcast %LLVMBasicBlockRef.560568** %.26 to i64*
   %.271 = load i64, i64* %0, align 8
@@ -52445,7 +52437,7 @@ define void @CodeGen_build_constructor_call(%CodeGen.560615* %.1, %LLVMBuilderRe
   store %string_vtable_ty.560218* @string_vtable_data, %string_vtable_ty.560218** %.49.repack, align 8
   %.49.repack2 = getelementptr inbounds i8, i8* %.48, i64 8
   %2 = bitcast i8* %.49.repack2 to i8**
-  store i8* getelementptr inbounds ([48 x i8], [48 x i8]* @str.381, i64 0, i64 0), i8** %2, align 8
+  store i8* getelementptr inbounds ([48 x i8], [48 x i8]* @str.380, i64 0, i64 0), i8** %2, align 8
   %.49.repack3 = getelementptr inbounds i8, i8* %.48, i64 16
   %3 = bitcast i8* %.49.repack3 to i64*
   store i64 47, i64* %3, align 8
@@ -53636,10 +53628,10 @@ for.body.else.else.if:                            ; preds = %for.body.else.else
   %.377 = getelementptr inbounds %string_vtable_ty.560218, %string_vtable_ty.560218* %.376, i64 0, i32 11
   %.378 = load i8* (%string.560217*)*, i8* (%string.560217*)** %.377, align 8
   %.379 = tail call i8* %.378(%string.560217* nonnull %.100437)
-  %.381 = tail call i64 (i8*, i64, i8*, ...) @snprintf(i8* null, i64 0, i8* getelementptr inbounds ([76 x i8], [76 x i8]* @str.382, i64 0, i64 0), i8* %.374, i8* %.379)
+  %.381 = tail call i64 (i8*, i64, i8*, ...) @snprintf(i8* null, i64 0, i8* getelementptr inbounds ([76 x i8], [76 x i8]* @str.381, i64 0, i64 0), i8* %.374, i8* %.379)
   %.382 = add i64 %.381, 1
   %.384 = tail call i8* @malloc(i64 %.382)
-  %.385 = tail call i64 (i8*, i8*, ...) @sprintf(i8* %.384, i8* getelementptr inbounds ([76 x i8], [76 x i8]* @str.382, i64 0, i64 0), i8* %.374, i8* %.379)
+  %.385 = tail call i64 (i8*, i8*, ...) @sprintf(i8* %.384, i8* getelementptr inbounds ([76 x i8], [76 x i8]* @str.381, i64 0, i64 0), i8* %.374, i8* %.379)
   %.386 = tail call dereferenceable_or_null(32) i8* @malloc(i64 32)
   %.387 = bitcast i8* %.386 to %string.560217*
   %.388 = bitcast i8* %.386 to %string_vtable_ty.560218**
@@ -53693,10 +53685,10 @@ for.end.if.if:                                    ; preds = %for.end.if
   %.487 = getelementptr inbounds %string_vtable_ty.560218, %string_vtable_ty.560218* %.486, i64 0, i32 11
   %.488 = load i8* (%string.560217*)*, i8* (%string.560217*)** %.487, align 8
   %.489 = tail call i8* %.488(%string.560217* %.484)
-  %.491 = tail call i64 (i8*, i64, i8*, ...) @snprintf(i8* null, i64 0, i8* getelementptr inbounds ([9 x i8], [9 x i8]* @str.383, i64 0, i64 0), i8* %.489)
+  %.491 = tail call i64 (i8*, i64, i8*, ...) @snprintf(i8* null, i64 0, i8* getelementptr inbounds ([9 x i8], [9 x i8]* @str.382, i64 0, i64 0), i8* %.489)
   %.492 = add i64 %.491, 1
   %.494 = tail call i8* @malloc(i64 %.492)
-  %.495 = tail call i64 (i8*, i8*, ...) @sprintf(i8* %.494, i8* getelementptr inbounds ([9 x i8], [9 x i8]* @str.383, i64 0, i64 0), i8* %.489)
+  %.495 = tail call i64 (i8*, i8*, ...) @sprintf(i8* %.494, i8* getelementptr inbounds ([9 x i8], [9 x i8]* @str.382, i64 0, i64 0), i8* %.489)
   %.496 = tail call dereferenceable_or_null(32) i8* @malloc(i64 32)
   %.497 = bitcast i8* %.496 to %string.560217*
   %.498 = bitcast i8* %.496 to %string_vtable_ty.560218**
@@ -53911,10 +53903,10 @@ for.end:                                          ; preds = %for.body, %.4.if
   %.182 = getelementptr inbounds %string_vtable_ty.560218, %string_vtable_ty.560218* %.181, i64 0, i32 11
   %.183 = load i8* (%string.560217*)*, i8* (%string.560217*)** %.182, align 8
   %.184 = tail call i8* %.183(%string.560217* %.179)
-  %.186 = tail call i64 (i8*, i64, i8*, ...) @snprintf(i8* null, i64 0, i8* getelementptr inbounds ([15 x i8], [15 x i8]* @str.384, i64 0, i64 0), i8* %.184)
+  %.186 = tail call i64 (i8*, i64, i8*, ...) @snprintf(i8* null, i64 0, i8* getelementptr inbounds ([15 x i8], [15 x i8]* @str.383, i64 0, i64 0), i8* %.184)
   %.187 = add i64 %.186, 1
   %.189 = tail call i8* @malloc(i64 %.187)
-  %.190 = tail call i64 (i8*, i8*, ...) @sprintf(i8* %.189, i8* getelementptr inbounds ([15 x i8], [15 x i8]* @str.384, i64 0, i64 0), i8* %.184)
+  %.190 = tail call i64 (i8*, i8*, ...) @sprintf(i8* %.189, i8* getelementptr inbounds ([15 x i8], [15 x i8]* @str.383, i64 0, i64 0), i8* %.184)
   %.191 = tail call dereferenceable_or_null(32) i8* @malloc(i64 32)
   %.192 = bitcast i8* %.191 to %string.560217*
   %.193 = bitcast i8* %.191 to %string_vtable_ty.560218**
@@ -54366,10 +54358,10 @@ define void @help(%string.560217* %.1) local_unnamed_addr {
   %.8 = getelementptr inbounds %string_vtable_ty.560218, %string_vtable_ty.560218* %.7, i64 0, i32 11
   %.9 = load i8* (%string.560217*)*, i8* (%string.560217*)** %.8, align 8
   %.10 = tail call i8* %.9(%string.560217* %.1)
-  %.12 = tail call i64 (i8*, i64, i8*, ...) @snprintf(i8* null, i64 0, i8* getelementptr inbounds ([28 x i8], [28 x i8]* @str.385, i64 0, i64 0), i8* %.10)
+  %.12 = tail call i64 (i8*, i64, i8*, ...) @snprintf(i8* null, i64 0, i8* getelementptr inbounds ([28 x i8], [28 x i8]* @str.384, i64 0, i64 0), i8* %.10)
   %.13 = add i64 %.12, 1
   %.15 = tail call i8* @malloc(i64 %.13)
-  %.16 = tail call i64 (i8*, i8*, ...) @sprintf(i8* %.15, i8* getelementptr inbounds ([28 x i8], [28 x i8]* @str.385, i64 0, i64 0), i8* %.10)
+  %.16 = tail call i64 (i8*, i8*, ...) @sprintf(i8* %.15, i8* getelementptr inbounds ([28 x i8], [28 x i8]* @str.384, i64 0, i64 0), i8* %.10)
   %.17 = tail call dereferenceable_or_null(32) i8* @malloc(i64 32)
   %.18 = bitcast i8* %.17 to %string.560217*
   %.19 = bitcast i8* %.17 to %string_vtable_ty.560218**
@@ -54390,7 +54382,7 @@ define void @help(%string.560217* %.1) local_unnamed_addr {
   store %string_vtable_ty.560218* @string_vtable_data, %string_vtable_ty.560218** %.29.repack, align 8
   %.29.repack1 = getelementptr inbounds i8, i8* %.28, i64 8
   %3 = bitcast i8* %.29.repack1 to i8**
-  store i8* getelementptr inbounds ([9 x i8], [9 x i8]* @str.386, i64 0, i64 0), i8** %3, align 8
+  store i8* getelementptr inbounds ([9 x i8], [9 x i8]* @str.385, i64 0, i64 0), i8** %3, align 8
   %.29.repack2 = getelementptr inbounds i8, i8* %.28, i64 16
   %4 = bitcast i8* %.29.repack2 to i64*
   store i64 8, i64* %4, align 8
@@ -54404,7 +54396,7 @@ define void @help(%string.560217* %.1) local_unnamed_addr {
   store %string_vtable_ty.560218* @string_vtable_data, %string_vtable_ty.560218** %.33.repack, align 8
   %.33.repack4 = getelementptr inbounds i8, i8* %.32, i64 8
   %6 = bitcast i8* %.33.repack4 to i8**
-  store i8* getelementptr inbounds ([38 x i8], [38 x i8]* @str.387, i64 0, i64 0), i8** %6, align 8
+  store i8* getelementptr inbounds ([38 x i8], [38 x i8]* @str.386, i64 0, i64 0), i8** %6, align 8
   %.33.repack5 = getelementptr inbounds i8, i8* %.32, i64 16
   %7 = bitcast i8* %.33.repack5 to i64*
   store i64 37, i64* %7, align 8
@@ -54418,7 +54410,7 @@ define void @help(%string.560217* %.1) local_unnamed_addr {
   store %string_vtable_ty.560218* @string_vtable_data, %string_vtable_ty.560218** %.37.repack, align 8
   %.37.repack7 = getelementptr inbounds i8, i8* %.36, i64 8
   %9 = bitcast i8* %.37.repack7 to i8**
-  store i8* getelementptr inbounds ([41 x i8], [41 x i8]* @str.388, i64 0, i64 0), i8** %9, align 8
+  store i8* getelementptr inbounds ([41 x i8], [41 x i8]* @str.387, i64 0, i64 0), i8** %9, align 8
   %.37.repack8 = getelementptr inbounds i8, i8* %.36, i64 16
   %10 = bitcast i8* %.37.repack8 to i64*
   store i64 40, i64* %10, align 8
@@ -54432,7 +54424,7 @@ define void @help(%string.560217* %.1) local_unnamed_addr {
   store %string_vtable_ty.560218* @string_vtable_data, %string_vtable_ty.560218** %.41.repack, align 8
   %.41.repack10 = getelementptr inbounds i8, i8* %.40, i64 8
   %12 = bitcast i8* %.41.repack10 to i8**
-  store i8* getelementptr inbounds ([36 x i8], [36 x i8]* @str.389, i64 0, i64 0), i8** %12, align 8
+  store i8* getelementptr inbounds ([36 x i8], [36 x i8]* @str.388, i64 0, i64 0), i8** %12, align 8
   %.41.repack11 = getelementptr inbounds i8, i8* %.40, i64 16
   %13 = bitcast i8* %.41.repack11 to i64*
   store i64 35, i64* %13, align 8
@@ -54446,7 +54438,7 @@ define void @help(%string.560217* %.1) local_unnamed_addr {
   store %string_vtable_ty.560218* @string_vtable_data, %string_vtable_ty.560218** %.45.repack, align 8
   %.45.repack13 = getelementptr inbounds i8, i8* %.44, i64 8
   %15 = bitcast i8* %.45.repack13 to i8**
-  store i8* getelementptr inbounds ([40 x i8], [40 x i8]* @str.390, i64 0, i64 0), i8** %15, align 8
+  store i8* getelementptr inbounds ([40 x i8], [40 x i8]* @str.389, i64 0, i64 0), i8** %15, align 8
   %.45.repack14 = getelementptr inbounds i8, i8* %.44, i64 16
   %16 = bitcast i8* %.45.repack14 to i64*
   store i64 39, i64* %16, align 8
@@ -54460,7 +54452,7 @@ define void @help(%string.560217* %.1) local_unnamed_addr {
   store %string_vtable_ty.560218* @string_vtable_data, %string_vtable_ty.560218** %.49.repack, align 8
   %.49.repack16 = getelementptr inbounds i8, i8* %.48, i64 8
   %18 = bitcast i8* %.49.repack16 to i8**
-  store i8* getelementptr inbounds ([43 x i8], [43 x i8]* @str.391, i64 0, i64 0), i8** %18, align 8
+  store i8* getelementptr inbounds ([43 x i8], [43 x i8]* @str.390, i64 0, i64 0), i8** %18, align 8
   %.49.repack17 = getelementptr inbounds i8, i8* %.48, i64 16
   %19 = bitcast i8* %.49.repack17 to i64*
   store i64 42, i64* %19, align 8
@@ -54474,7 +54466,7 @@ define void @help(%string.560217* %.1) local_unnamed_addr {
   store %string_vtable_ty.560218* @string_vtable_data, %string_vtable_ty.560218** %.53.repack, align 8
   %.53.repack19 = getelementptr inbounds i8, i8* %.52, i64 8
   %21 = bitcast i8* %.53.repack19 to i8**
-  store i8* getelementptr inbounds ([46 x i8], [46 x i8]* @str.392, i64 0, i64 0), i8** %21, align 8
+  store i8* getelementptr inbounds ([46 x i8], [46 x i8]* @str.391, i64 0, i64 0), i8** %21, align 8
   %.53.repack20 = getelementptr inbounds i8, i8* %.52, i64 16
   %22 = bitcast i8* %.53.repack20 to i64*
   store i64 45, i64* %22, align 8
@@ -54488,7 +54480,7 @@ define void @help(%string.560217* %.1) local_unnamed_addr {
   store %string_vtable_ty.560218* @string_vtable_data, %string_vtable_ty.560218** %.57.repack, align 8
   %.57.repack22 = getelementptr inbounds i8, i8* %.56, i64 8
   %24 = bitcast i8* %.57.repack22 to i8**
-  store i8* getelementptr inbounds ([33 x i8], [33 x i8]* @str.393, i64 0, i64 0), i8** %24, align 8
+  store i8* getelementptr inbounds ([33 x i8], [33 x i8]* @str.392, i64 0, i64 0), i8** %24, align 8
   %.57.repack23 = getelementptr inbounds i8, i8* %.56, i64 16
   %25 = bitcast i8* %.57.repack23 to i64*
   store i64 32, i64* %25, align 8
@@ -54502,7 +54494,7 @@ define void @help(%string.560217* %.1) local_unnamed_addr {
   store %string_vtable_ty.560218* @string_vtable_data, %string_vtable_ty.560218** %.61.repack, align 8
   %.61.repack25 = getelementptr inbounds i8, i8* %.60, i64 8
   %27 = bitcast i8* %.61.repack25 to i8**
-  store i8* getelementptr inbounds ([93 x i8], [93 x i8]* @str.394, i64 0, i64 0), i8** %27, align 8
+  store i8* getelementptr inbounds ([93 x i8], [93 x i8]* @str.393, i64 0, i64 0), i8** %27, align 8
   %.61.repack26 = getelementptr inbounds i8, i8* %.60, i64 16
   %28 = bitcast i8* %.61.repack26 to i64*
   store i64 92, i64* %28, align 8
@@ -54516,7 +54508,7 @@ define void @help(%string.560217* %.1) local_unnamed_addr {
   store %string_vtable_ty.560218* @string_vtable_data, %string_vtable_ty.560218** %.65.repack, align 8
   %.65.repack28 = getelementptr inbounds i8, i8* %.64, i64 8
   %30 = bitcast i8* %.65.repack28 to i8**
-  store i8* getelementptr inbounds ([31 x i8], [31 x i8]* @str.395, i64 0, i64 0), i8** %30, align 8
+  store i8* getelementptr inbounds ([31 x i8], [31 x i8]* @str.394, i64 0, i64 0), i8** %30, align 8
   %.65.repack29 = getelementptr inbounds i8, i8* %.64, i64 16
   %31 = bitcast i8* %.65.repack29 to i64*
   store i64 30, i64* %31, align 8
@@ -54570,10 +54562,10 @@ define %string.560217* @flag_value_or(%"Arraymain.flo.560629"* %.1, %string.5602
   %.42 = getelementptr inbounds %string_vtable_ty.560218, %string_vtable_ty.560218* %.41, i64 0, i32 11
   %.43 = load i8* (%string.560217*)*, i8* (%string.560217*)** %.42, align 8
   %.44 = tail call i8* %.43(%string.560217* %.2)
-  %.46 = tail call i64 (i8*, i64, i8*, ...) @snprintf(i8* null, i64 0, i8* getelementptr inbounds ([35 x i8], [35 x i8]* @str.396, i64 0, i64 0), i8* %.44)
+  %.46 = tail call i64 (i8*, i64, i8*, ...) @snprintf(i8* null, i64 0, i8* getelementptr inbounds ([35 x i8], [35 x i8]* @str.395, i64 0, i64 0), i8* %.44)
   %.47 = add i64 %.46, 1
   %.49 = tail call i8* @malloc(i64 %.47)
-  %.50 = tail call i64 (i8*, i8*, ...) @sprintf(i8* %.49, i8* getelementptr inbounds ([35 x i8], [35 x i8]* @str.396, i64 0, i64 0), i8* %.44)
+  %.50 = tail call i64 (i8*, i8*, ...) @sprintf(i8* %.49, i8* getelementptr inbounds ([35 x i8], [35 x i8]* @str.395, i64 0, i64 0), i8* %.44)
   %.51 = tail call dereferenceable_or_null(32) i8* @malloc(i64 32)
   %.52 = bitcast i8* %.51 to %string.560217*
   %.53 = bitcast i8* %.51 to %string_vtable_ty.560218**
@@ -54604,7 +54596,7 @@ define i64 @main(i64 %.1, i8** nocapture readonly %.2) local_unnamed_addr {
   store %string_vtable_ty.560218* @string_vtable_data, %string_vtable_ty.560218** %.17.repack, align 8
   %.17.repack4 = getelementptr inbounds i8, i8* %.16, i64 8
   %0 = bitcast i8* %.17.repack4 to i8**
-  store i8* getelementptr inbounds ([3 x i8], [3 x i8]* @str.397, i64 0, i64 0), i8** %0, align 8
+  store i8* getelementptr inbounds ([3 x i8], [3 x i8]* @str.396, i64 0, i64 0), i8** %0, align 8
   %.17.repack5 = getelementptr inbounds i8, i8* %.16, i64 16
   %1 = bitcast i8* %.17.repack5 to i64*
   store i64 2, i64* %1, align 8
@@ -54618,7 +54610,7 @@ define i64 @main(i64 %.1, i8** nocapture readonly %.2) local_unnamed_addr {
   store %string_vtable_ty.560218* @string_vtable_data, %string_vtable_ty.560218** %.22.repack, align 8
   %.22.repack7 = getelementptr inbounds i8, i8* %.21, i64 8
   %3 = bitcast i8* %.22.repack7 to i8**
-  store i8* getelementptr inbounds ([10 x i8], [10 x i8]* @str.398, i64 0, i64 0), i8** %3, align 8
+  store i8* getelementptr inbounds ([10 x i8], [10 x i8]* @str.397, i64 0, i64 0), i8** %3, align 8
   %.22.repack8 = getelementptr inbounds i8, i8* %.21, i64 16
   %4 = bitcast i8* %.22.repack8 to i64*
   store i64 9, i64* %4, align 8
@@ -54642,7 +54634,7 @@ define i64 @main(i64 %.1, i8** nocapture readonly %.2) local_unnamed_addr {
   store %string_vtable_ty.560218* @string_vtable_data, %string_vtable_ty.560218** %.344.repack, align 8
   %.344.repack1 = getelementptr inbounds i8, i8* %.343, i64 8
   %7 = bitcast i8* %.344.repack1 to i8**
-  store i8* getelementptr inbounds ([25 x i8], [25 x i8]* @str.410, i64 0, i64 0), i8** %7, align 8
+  store i8* getelementptr inbounds ([25 x i8], [25 x i8]* @str.409, i64 0, i64 0), i8** %7, align 8
   %.344.repack2 = getelementptr inbounds i8, i8* %.343, i64 16
   %8 = bitcast i8* %.344.repack2 to i64*
   store i64 24, i64* %8, align 8
@@ -54657,7 +54649,7 @@ define i64 @main(i64 %.1, i8** nocapture readonly %.2) local_unnamed_addr {
   ret i64 %merge
 
 .4.if.if:                                         ; preds = %.4.if
-  store i8* getelementptr inbounds ([20 x i8], [20 x i8]* @str.399, i64 0, i64 0), i8** %6, align 8
+  store i8* getelementptr inbounds ([20 x i8], [20 x i8]* @str.398, i64 0, i64 0), i8** %6, align 8
   %.28.repack47 = getelementptr inbounds i8, i8* %.27, i64 16
   %10 = bitcast i8* %.28.repack47 to i64*
   store i64 19, i64* %10, align 8
@@ -54668,7 +54660,7 @@ define i64 @main(i64 %.1, i8** nocapture readonly %.2) local_unnamed_addr {
   ret i64 0
 
 .4.if.endif:                                      ; preds = %.4.if
-  store i8* getelementptr inbounds ([3 x i8], [3 x i8]* @str.400, i64 0, i64 0), i8** %6, align 8
+  store i8* getelementptr inbounds ([3 x i8], [3 x i8]* @str.399, i64 0, i64 0), i8** %6, align 8
   %.34.repack11 = getelementptr inbounds i8, i8* %.27, i64 16
   %12 = bitcast i8* %.34.repack11 to i64*
   store i64 2, i64* %12, align 8
@@ -54682,7 +54674,7 @@ define i64 @main(i64 %.1, i8** nocapture readonly %.2) local_unnamed_addr {
   store %string_vtable_ty.560218* @string_vtable_data, %string_vtable_ty.560218** %.39.repack, align 8
   %.39.repack13 = getelementptr inbounds i8, i8* %.38, i64 8
   %14 = bitcast i8* %.39.repack13 to i8**
-  store i8* getelementptr inbounds ([7 x i8], [7 x i8]* @str.401, i64 0, i64 0), i8** %14, align 8
+  store i8* getelementptr inbounds ([7 x i8], [7 x i8]* @str.400, i64 0, i64 0), i8** %14, align 8
   %.39.repack14 = getelementptr inbounds i8, i8* %.38, i64 16
   %15 = bitcast i8* %.39.repack14 to i64*
   store i64 6, i64* %15, align 8
@@ -54715,7 +54707,7 @@ define i64 @main(i64 %.1, i8** nocapture readonly %.2) local_unnamed_addr {
   store %string_vtable_ty.560218* @string_vtable_data, %string_vtable_ty.560218** %.67.repack, align 8
   %.67.repack16 = getelementptr inbounds i8, i8* %.66, i64 8
   %17 = bitcast i8* %.67.repack16 to i8**
-  store i8* getelementptr inbounds ([3 x i8], [3 x i8]* @str.402, i64 0, i64 0), i8** %17, align 8
+  store i8* getelementptr inbounds ([3 x i8], [3 x i8]* @str.401, i64 0, i64 0), i8** %17, align 8
   %.67.repack17 = getelementptr inbounds i8, i8* %.66, i64 16
   %18 = bitcast i8* %.67.repack17 to i64*
   store i64 2, i64* %18, align 8
@@ -54732,7 +54724,7 @@ define i64 @main(i64 %.1, i8** nocapture readonly %.2) local_unnamed_addr {
   store %string_vtable_ty.560218* @string_vtable_data, %string_vtable_ty.560218** %.73.repack, align 8
   %.73.repack43 = getelementptr inbounds i8, i8* %.72, i64 8
   %20 = bitcast i8* %.73.repack43 to i8**
-  store i8* getelementptr inbounds ([3 x i8], [3 x i8]* @str.402, i64 0, i64 0), i8** %20, align 8
+  store i8* getelementptr inbounds ([3 x i8], [3 x i8]* @str.401, i64 0, i64 0), i8** %20, align 8
   %.73.repack44 = getelementptr inbounds i8, i8* %.72, i64 16
   %21 = bitcast i8* %.73.repack44 to i64*
   store i64 2, i64* %21, align 8
@@ -54840,7 +54832,7 @@ define i64 @main(i64 %.1, i8** nocapture readonly %.2) local_unnamed_addr {
   store %string_vtable_ty.560218* @string_vtable_data, %string_vtable_ty.560218** %.184.repack, align 8
   %.184.repack19 = getelementptr inbounds i8, i8* %.183, i64 8
   %30 = bitcast i8* %.184.repack19 to i8**
-  store i8* getelementptr inbounds ([15 x i8], [15 x i8]* @str.403, i64 0, i64 0), i8** %30, align 8
+  store i8* getelementptr inbounds ([15 x i8], [15 x i8]* @str.402, i64 0, i64 0), i8** %30, align 8
   %.184.repack20 = getelementptr inbounds i8, i8* %.183, i64 16
   %31 = bitcast i8* %.184.repack20 to i64*
   store i64 14, i64* %31, align 8
@@ -54908,7 +54900,7 @@ define i64 @main(i64 %.1, i8** nocapture readonly %.2) local_unnamed_addr {
   store %string_vtable_ty.560218* @string_vtable_data, %string_vtable_ty.560218** %.264.repack, align 8
   %.264.repack22 = getelementptr inbounds i8, i8* %.263, i64 8
   %33 = bitcast i8* %.264.repack22 to i8**
-  store i8* getelementptr inbounds ([3 x i8], [3 x i8]* @str.404, i64 0, i64 0), i8** %33, align 8
+  store i8* getelementptr inbounds ([3 x i8], [3 x i8]* @str.403, i64 0, i64 0), i8** %33, align 8
   %.264.repack23 = getelementptr inbounds i8, i8* %.263, i64 16
   %34 = bitcast i8* %.264.repack23 to i64*
   store i64 2, i64* %34, align 8
@@ -54921,7 +54913,7 @@ define i64 @main(i64 %.1, i8** nocapture readonly %.2) local_unnamed_addr {
   store %string_vtable_ty.560218* @string_vtable_data, %string_vtable_ty.560218** %.267.repack, align 8
   %.267.repack25 = getelementptr inbounds i8, i8* %.266, i64 8
   %36 = bitcast i8* %.267.repack25 to i8**
-  store i8* getelementptr inbounds ([2 x i8], [2 x i8]* @str.405, i64 0, i64 0), i8** %36, align 8
+  store i8* getelementptr inbounds ([2 x i8], [2 x i8]* @str.404, i64 0, i64 0), i8** %36, align 8
   %.267.repack26 = getelementptr inbounds i8, i8* %.266, i64 16
   %37 = bitcast i8* %.267.repack26 to i64*
   store i64 1, i64* %37, align 8
@@ -54943,7 +54935,7 @@ define i64 @main(i64 %.1, i8** nocapture readonly %.2) local_unnamed_addr {
   store %string_vtable_ty.560218* @string_vtable_data, %string_vtable_ty.560218** %.280.repack, align 8
   %.280.repack28 = getelementptr inbounds i8, i8* %.279, i64 8
   %39 = bitcast i8* %.280.repack28 to i8**
-  store i8* getelementptr inbounds ([12 x i8], [12 x i8]* @str.406, i64 0, i64 0), i8** %39, align 8
+  store i8* getelementptr inbounds ([12 x i8], [12 x i8]* @str.405, i64 0, i64 0), i8** %39, align 8
   %.280.repack29 = getelementptr inbounds i8, i8* %.279, i64 16
   %40 = bitcast i8* %.280.repack29 to i64*
   store i64 11, i64* %40, align 8
@@ -54967,7 +54959,7 @@ define i64 @main(i64 %.1, i8** nocapture readonly %.2) local_unnamed_addr {
   store %string_vtable_ty.560218* @string_vtable_data, %string_vtable_ty.560218** %.293.repack, align 8
   %.293.repack31 = getelementptr inbounds i8, i8* %.292, i64 8
   %42 = bitcast i8* %.293.repack31 to i8**
-  store i8* getelementptr inbounds ([3 x i8], [3 x i8]* @str.407, i64 0, i64 0), i8** %42, align 8
+  store i8* getelementptr inbounds ([3 x i8], [3 x i8]* @str.406, i64 0, i64 0), i8** %42, align 8
   %.293.repack32 = getelementptr inbounds i8, i8* %.292, i64 16
   %43 = bitcast i8* %.293.repack32 to i64*
   store i64 2, i64* %43, align 8
@@ -54995,7 +54987,7 @@ define i64 @main(i64 %.1, i8** nocapture readonly %.2) local_unnamed_addr {
   store %string_vtable_ty.560218* @string_vtable_data, %string_vtable_ty.560218** %.304.repack, align 8
   %.304.repack34 = getelementptr inbounds i8, i8* %.303, i64 8
   %45 = bitcast i8* %.304.repack34 to i8**
-  store i8* getelementptr inbounds ([3 x i8], [3 x i8]* @str.407, i64 0, i64 0), i8** %45, align 8
+  store i8* getelementptr inbounds ([3 x i8], [3 x i8]* @str.406, i64 0, i64 0), i8** %45, align 8
   %.304.repack35 = getelementptr inbounds i8, i8* %.303, i64 16
   %46 = bitcast i8* %.304.repack35 to i64*
   store i64 2, i64* %46, align 8
@@ -55008,7 +55000,7 @@ define i64 @main(i64 %.1, i8** nocapture readonly %.2) local_unnamed_addr {
   store %string_vtable_ty.560218* @string_vtable_data, %string_vtable_ty.560218** %.307.repack, align 8
   %.307.repack37 = getelementptr inbounds i8, i8* %.306, i64 8
   %48 = bitcast i8* %.307.repack37 to i8**
-  store i8* getelementptr inbounds ([4 x i8], [4 x i8]* @str.408, i64 0, i64 0), i8** %48, align 8
+  store i8* getelementptr inbounds ([4 x i8], [4 x i8]* @str.407, i64 0, i64 0), i8** %48, align 8
   %.307.repack38 = getelementptr inbounds i8, i8* %.306, i64 16
   %49 = bitcast i8* %.307.repack38 to i64*
   store i64 3, i64* %49, align 8
@@ -55022,7 +55014,7 @@ define i64 @main(i64 %.1, i8** nocapture readonly %.2) local_unnamed_addr {
   store %string_vtable_ty.560218* @string_vtable_data, %string_vtable_ty.560218** %.312.repack, align 8
   %.312.repack40 = getelementptr inbounds i8, i8* %.311, i64 8
   %51 = bitcast i8* %.312.repack40 to i8**
-  store i8* getelementptr inbounds ([8 x i8], [8 x i8]* @str.409, i64 0, i64 0), i8** %51, align 8
+  store i8* getelementptr inbounds ([8 x i8], [8 x i8]* @str.408, i64 0, i64 0), i8** %51, align 8
   %.312.repack41 = getelementptr inbounds i8, i8* %.311, i64 16
   %52 = bitcast i8* %.312.repack41 to i64*
   store i64 7, i64* %52, align 8
