@@ -11,17 +11,15 @@ FLO_INSTALL_PATH=~/flo
 
 define compile_and_link_fc
 	./$(1) src/main.flo -o $(1).o -O 3
-	$(CC) -c src/llvm/TargetInitializationMacros.c -o $(1).so
-	$(CC) -no-pie $(1).o $(1).so $(LDFLAGS) -o $(2)
-	rm -rf *.o *.so
+	$(CC) -no-pie $(1).o llvm-bind.so $(LDFLAGS) -o $(2)
 endef
 
 all: flo
 
-flo: src/*.flo
+flo: llvm-bind src/*.flo
 	$(call compile_and_link_fc,flo.py,$@)
 
-symlink: all
+install: check
 	cp -f flo $(FLO_INSTALL_PATH)
 	sudo ln -f $(FLO_INSTALL_PATH) /usr/bin/flo
 
@@ -31,9 +29,11 @@ bootstrap: stage1
 stage1: stage0
 	$(call compile_and_link_fc,$^,$@)
 
-stage0: bootstrap/flo.ll
-	$(CC) -c src/llvm/TargetInitializationMacros.c -o $@.so
-	$(CC) $^ $@.so $(LDFLAGS) -o $@
+stage0: bootstrap/flo.ll llvm-bind
+	$(CC) $< llvm-bind.so $(LDFLAGS) -o $@
+
+llvm-bind: src/llvm/FloLLVMBind.cpp
+	$(CC) -c src/llvm/FloLLVMBind.cpp -o $@.so
 
 check: flo
 	./runtests.py
