@@ -296,6 +296,8 @@ fnc LLVMSetCondition(Branch: LLVMValueRef, Cond: LLVMValueRef)
 fnc LLVMGetSwitchDefaultDest(SwitchInstr: LLVMValueRef): LLVMBasicBlockRef
 /* allocated values */
 fnc LLVMGetAllocatedType(Alloca: LLVMValueRef): LLVMTypeRef
+/* Added Special function bc LLVM_C sucks! */
+fnc LLVM_GetFunctionType(Func: LLVMValueRef): LLVMTypeRef
 /* get instructions values */
 fnc LLVMIsInBounds(GEP: LLVMValueRef): LLVMBool 
 fnc LLVMGetGEPSourceElementType(GEP: LLVMValueRef): LLVMTypeRef

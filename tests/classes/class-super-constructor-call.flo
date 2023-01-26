@@ -12,7 +12,8 @@ class ItalianChef(Chef) {
         super("Pasta")
     }
 }
-fnc main(){
+fnc main(): int {
     let chef: Chef = new ItalianChef()
     chef.print_specialty()
+    return 0
 }
