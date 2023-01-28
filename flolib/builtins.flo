@@ -159,13 +159,13 @@ class Array <T> {
     public buffer: T*
     public length: int
     private size: int
-    constructor(this, size = 8){
+    constructor(this, size: int){
         this.length = 0
         this.size = size
         this.buffer = new T*(size)
     }
     resize(this){
-        this.size = this.size * 2
+        this.size *= 2
         this.buffer = this.buffer.resize(this.size)
     }
     swap(this, i1: int, i2: int){

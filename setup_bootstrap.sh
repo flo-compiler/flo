@@ -1,2 +1,2 @@
-./flo.py src/main.flo -l -O 3
- mv main.ll bootstrap/flo.ll 
+./flo src/main.flo --emit-llvm -O 3
+ mv output.ll bootstrap/flo.ll 

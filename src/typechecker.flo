@@ -269,16 +269,16 @@ class ClassVarId(VarId){
     constructor(this, class_id: ClassId){
         super(VarIdKind.CLASS, class_id.module_id, class_id.id)
     }
-    public to_classId(this): ClassId {
-        return new ClassId(this.module_id, this.id)
+    public to_classId(var_id: VarId): ClassId {
+        return new ClassId(var_id.module_id, var_id.id)
     }
 }
 class EnumVarId(VarId){
     constructor(this, enum_id: EnumId){
         super(VarIdKind.ENUM, enum_id.module_id, enum_id.id)
     }
-    public to_enumId(this): EnumId {
-        return new EnumId(this.module_id, this.id)
+    public to_enumId(var_id: VarId): EnumId {
+        return new EnumId(var_id.module_id, var_id.id)
     }
 }
 class ConstId(VarId) {
@@ -1084,9 +1084,9 @@ class TypeChecker {
                 if value.kind == VarIdKind.VAR or value.kind == VarIdKind.CONST
                     this.add_imported_var_to_module(name, value)
                 if value.kind == VarIdKind.CLASS
-                    this.add_imported_class_to_module(name, (value as ClassVarId).to_classId())
+                    this.add_imported_class_to_module(name, ClassVarId.to_classId(value))
                 if value.kind == VarIdKind.ENUM
-                    this.add_imported_enum_to_module(name, (value as EnumVarId).to_enumId())
+                    this.add_imported_enum_to_module(name, EnumVarId.to_enumId(value))
             }
         }
         return value
@@ -2012,6 +2012,7 @@ class TypeChecker {
         let arg_type = method_type.arg_types[0]
         if right == null 
             right = this.check_expression(arg_type, binary_node.rhs)
+        if this.has_errored() return null
         if is_null(right) and (op == BinaryOp.EEQ or op == BinaryOp.NEQ) {
             return new BinaryExpression(left, op, right, new BooleanType())
         }
@@ -2218,6 +2219,7 @@ class TypeChecker {
     }
     private check_new_expr(this, new_expr_node: NewExpressionNode): NewExpression {
         let expr_ty = this.check_type(new_expr_node.parsed_type)
+        if this.has_errored() return null
         let value_type = expr_ty
         if value_type.kind == TypeKind.RESOLVED_GENERIC {
             value_type = (value_type as GenericType).instantiated_type
