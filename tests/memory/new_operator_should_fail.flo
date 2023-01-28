@@ -1,0 +1,4 @@
+//@expect: return_code=1
+fnc main(){
+    let name = new int(3)
+}

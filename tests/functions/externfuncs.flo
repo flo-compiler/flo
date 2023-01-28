@@ -1,7 +1,7 @@
-//@expect: return_code=181
-fnc main(){
+fnc main(): int {
     let y = malloc(2)
     free(y)
+    return 0
 }
 fnc malloc(amt: i32): i8*
 fnc free(ptr: i8*)

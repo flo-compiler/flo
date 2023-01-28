@@ -2245,6 +2245,9 @@ class TypeChecker {
                 return null
             }
             args << arg
+        } else {
+            this.error(ErrorKind.TYPE, "New operator expects either an a pointer or an object not a '$(this.dump_type(expr_ty))'", new_expr_node.range)
+            return null
         }
         return new NewExpression(value_type, expr_ty, args, new_expr_node.onheap)
     }   
