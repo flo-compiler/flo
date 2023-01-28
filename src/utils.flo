@@ -23,5 +23,5 @@ fnc change_print_color(color: COLORS) {
 fnc exit(code: int)
 fnc panic(message: string){
     println("Panic: $message")
-    exit(2)
+    exit(-1)
 }

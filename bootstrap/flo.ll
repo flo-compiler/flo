@@ -827,7 +827,7 @@ if.entry:                                         ; preds = %3
   %18 = load ptr, ptr %memberidx6, align 8
   %19 = load i64, ptr %memberidx3, align 4
   %20 = mul i64 %19, ptrtoint (ptr getelementptr (i8, ptr null, i32 1) to i64)
-  call void @llvm.memcpy.p0.p0.i64(ptr align 536870912 %ptridx, ptr align 8 %18, i64 %20, i1 false)
+  call void @llvm.memcpy.p0.p0.i64(ptr align 2147483648 %ptridx, ptr align 8 %18, i64 %20, i1 false)
   %21 = load i64, ptr %memberidx3, align 4
   %22 = add i64 %6, %21
   %23 = load ptr, ptr %nbuff, align 8
@@ -839,7 +839,7 @@ if.entry:                                         ; preds = %3
   %27 = load i64, ptr %memberidx1, align 4
   %28 = sub i64 %27, %25
   %29 = mul i64 %28, ptrtoint (ptr getelementptr (i8, ptr null, i32 1) to i64)
-  call void @llvm.memcpy.p0.p0.i64(ptr align 536870912 %ptridx9, ptr align 536870912 %ptridx14, i64 %29, i1 false)
+  call void @llvm.memcpy.p0.p0.i64(ptr align 2147483648 %ptridx9, ptr align 2147483648 %ptridx14, i64 %29, i1 false)
   %30 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%string, ptr null, i32 1) to i32))
   %31 = load ptr, ptr %nbuff, align 8
   %32 = load i64, ptr %nlen, align 4
@@ -891,7 +891,7 @@ define ptr @string___adda__(ptr %0, ptr %1) {
   %11 = load ptr, ptr %memberidx6, align 8
   %12 = load i64, ptr %memberidx1, align 4
   %13 = mul i64 %12, ptrtoint (ptr getelementptr (i8, ptr null, i32 1) to i64)
-  call void @llvm.memcpy.p0.p0.i64(ptr align 536870912 %10, ptr align 8 %11, i64 %13, i1 false)
+  call void @llvm.memcpy.p0.p0.i64(ptr align 2147483648 %10, ptr align 8 %11, i64 %13, i1 false)
   store i64 %5, ptr %memberidx, align 4
   ret ptr %0
 }
@@ -3209,7 +3209,7 @@ ifend:                                            ; preds = %while.entry
   %12 = getelementptr inbounds i8, ptr %10, i64 %11
   %13 = load i64, ptr %read_len, align 4
   %14 = mul i64 %13, ptrtoint (ptr getelementptr (i8, ptr null, i32 1) to i64)
-  call void @llvm.memcpy.p0.p0.i64(ptr align 536870912 %12, ptr align 536870912 %buffer, i64 %14, i1 false)
+  call void @llvm.memcpy.p0.p0.i64(ptr align 2147483648 %12, ptr align 2147483648 %buffer, i64 %14, i1 false)
   br label %while.entry
 }
 
@@ -21796,8 +21796,7 @@ if.entry33:                                       ; preds = %else14
   %56 = alloca ptr, align 8
   %57 = call i64 (ptr, ptr, ...) @asprintf(ptr %56, ptr @310, ptr %47, ptr %51, ptr %55)
   %58 = load ptr, ptr %56, align 8
-  %59 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%string, ptr null, i32 1) to i32))
-  call void @string_constructor(ptr %59, ptr %58, i64 %57)
+  %59 = call ptr @string_from_bytes(ptr %58, i64 %57)
   br label %common.ret
 }
 
@@ -21874,8 +21873,7 @@ if.entry11:                                       ; preds = %ifend8
   %30 = alloca ptr, align 8
   %31 = call i64 (ptr, ptr, ...) @asprintf(ptr %30, ptr @341, ptr %23, ptr %29)
   %32 = load ptr, ptr %30, align 8
-  %33 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%string, ptr null, i32 1) to i32))
-  call void @string_constructor(ptr %33, ptr %32, i64 %31)
+  %33 = call ptr @string_from_bytes(ptr %32, i64 %31)
   %34 = load ptr, ptr %3, align 8
   call void @TypeChecker_error(ptr %0, i64 5, ptr %33, ptr %34)
   br label %common.ret
@@ -22065,7 +22063,8 @@ if.entry38:                                       ; preds = %ifend34
   %72 = alloca ptr, align 8
   %73 = call i64 (ptr, ptr, ...) @asprintf(ptr %72, ptr @335, ptr %65, ptr %71)
   %74 = load ptr, ptr %72, align 8
-  %75 = call ptr @string_from_bytes(ptr %74, i64 %73)
+  %75 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%string, ptr null, i32 1) to i32))
+  call void @string_constructor(ptr %75, ptr %74, i64 %73)
   %76 = load ptr, ptr %1, align 8
   call void @TypeChecker_error(ptr %0, i64 5, ptr %75, ptr %76)
   br label %common.ret
@@ -22234,7 +22233,8 @@ if.entry29:                                       ; preds = %ifend25
   %59 = alloca ptr, align 8
   %60 = call i64 (ptr, ptr, ...) @asprintf(ptr %59, ptr @335, ptr %52, ptr %58)
   %61 = load ptr, ptr %59, align 8
-  %62 = call ptr @string_from_bytes(ptr %61, i64 %60)
+  %62 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%string, ptr null, i32 1) to i32))
+  call void @string_constructor(ptr %62, ptr %61, i64 %60)
   %63 = load ptr, ptr %1, align 8
   call void @TypeChecker_error(ptr %0, i64 5, ptr %62, ptr %63)
   br label %common.ret
@@ -23588,7 +23588,8 @@ if.entry24:                                       ; preds = %if.entry21
   %45 = alloca ptr, align 8
   %46 = call i64 (ptr, ptr, ...) @asprintf(ptr %45, ptr @326, i64 %42, i64 %44)
   %47 = load ptr, ptr %45, align 8
-  %48 = call ptr @string_from_bytes(ptr %47, i64 %46)
+  %48 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%string, ptr null, i32 1) to i32))
+  call void @string_constructor(ptr %48, ptr %47, i64 %46)
   %49 = load ptr, ptr %2, align 8
   call void @TypeChecker_error(ptr %0, i64 4, ptr %48, ptr %49)
   br label %common.ret
@@ -23622,8 +23623,7 @@ else25:                                           ; preds = %if.entry21
   %69 = alloca ptr, align 8
   %70 = call i64 (ptr, ptr, ...) @asprintf(ptr %69, ptr @327, ptr %58, ptr %68)
   %71 = load ptr, ptr %69, align 8
-  %72 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%string, ptr null, i32 1) to i32))
-  call void @string_constructor(ptr %72, ptr %71, i64 %70)
+  %72 = call ptr @string_from_bytes(ptr %71, i64 %70)
   %73 = load ptr, ptr %memberidx17, align 8
   %74 = load ptr, ptr %73, align 8
   %memberidx38 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %74, i32 0, i32 5
@@ -24919,8 +24919,7 @@ if.entry34:                                       ; preds = %ifend29
   %54 = alloca ptr, align 8
   %55 = call i64 (ptr, ptr, ...) @asprintf(ptr %54, ptr @308, ptr %47, ptr %53)
   %56 = load ptr, ptr %54, align 8
-  %57 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%string, ptr null, i32 1) to i32))
-  call void @string_constructor(ptr %57, ptr %56, i64 %55)
+  %57 = call ptr @string_from_bytes(ptr %56, i64 %55)
   %58 = load ptr, ptr %memberidx25, align 8
   %59 = load ptr, ptr %58, align 8
   %memberidx41 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %59, i32 0, i32 5
@@ -28036,8 +28035,7 @@ if.entry13:                                       ; preds = %while.end
   %45 = alloca ptr, align 8
   %46 = call i64 (ptr, ptr, ...) @asprintf(ptr %45, ptr @311, ptr %39, ptr %44)
   %47 = load ptr, ptr %45, align 8
-  %48 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%string, ptr null, i32 1) to i32))
-  call void @string_constructor(ptr %48, ptr %47, i64 %46)
+  %48 = call ptr @string_from_bytes(ptr %47, i64 %46)
   %49 = load ptr, ptr %memberidx2, align 8
   %memberidx20 = getelementptr inbounds %Token, ptr %49, i32 0, i32 1
   %50 = load ptr, ptr %memberidx20, align 8
@@ -28386,7 +28384,8 @@ if.entry21:                                       ; preds = %ifend17
   %40 = alloca ptr, align 8
   %41 = call i64 (ptr, ptr, ...) @asprintf(ptr %40, ptr @270, ptr %34, ptr %39)
   %42 = load ptr, ptr %40, align 8
-  %43 = call ptr @string_from_bytes(ptr %42, i64 %41)
+  %43 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%string, ptr null, i32 1) to i32))
+  call void @string_constructor(ptr %43, ptr %42, i64 %41)
   %44 = load ptr, ptr %3, align 8
   call void @TypeChecker_error(ptr %0, i64 5, ptr %43, ptr %44)
   br label %common.ret
@@ -28657,8 +28656,7 @@ else14:                                           ; preds = %if.entry10
   %54 = alloca ptr, align 8
   %55 = call i64 (ptr, ptr, ...) @asprintf(ptr %54, ptr @305, ptr %42, ptr %52, i64 %53)
   %56 = load ptr, ptr %54, align 8
-  %57 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%string, ptr null, i32 1) to i32))
-  call void @string_constructor(ptr %57, ptr %56, i64 %55)
+  %57 = call ptr @string_from_bytes(ptr %56, i64 %55)
   br label %common.ret
 }
 
@@ -28793,8 +28791,7 @@ if.entry16:                                       ; preds = %if.entry
   %58 = alloca ptr, align 8
   %59 = call i64 (ptr, ptr, ...) @asprintf(ptr %58, ptr @246, i64 %., ptr %54, i64 %57)
   %60 = load ptr, ptr %58, align 8
-  %61 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%string, ptr null, i32 1) to i32))
-  call void @string_constructor(ptr %61, ptr %60, i64 %59)
+  %61 = call ptr @string_from_bytes(ptr %60, i64 %59)
   %62 = load ptr, ptr %method_node, align 8
   %63 = load ptr, ptr %62, align 8
   %memberidx23 = getelementptr inbounds %Token, ptr %63, i32 0, i32 1
@@ -28912,7 +28909,8 @@ if.entry59:                                       ; preds = %ifend50
   %124 = alloca ptr, align 8
   %125 = call i64 (ptr, ptr, ...) @asprintf(ptr %124, ptr @249, ptr %114, ptr %118, ptr %123)
   %126 = load ptr, ptr %124, align 8
-  %127 = call ptr @string_from_bytes(ptr %126, i64 %125)
+  %127 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%string, ptr null, i32 1) to i32))
+  call void @string_constructor(ptr %127, ptr %126, i64 %125)
   %128 = load ptr, ptr %method_node, align 8
   %129 = load ptr, ptr %128, align 8
   %memberidx67 = getelementptr inbounds %Token, ptr %129, i32 0, i32 1
@@ -30306,8 +30304,7 @@ if.entry39:                                       ; preds = %ifend28
   %82 = alloca ptr, align 8
   %83 = call i64 (ptr, ptr, ...) @asprintf(ptr %82, ptr @330, ptr %81)
   %84 = load ptr, ptr %82, align 8
-  %85 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%string, ptr null, i32 1) to i32))
-  call void @string_constructor(ptr %85, ptr %84, i64 %83)
+  %85 = call ptr @string_from_bytes(ptr %84, i64 %83)
   %86 = load ptr, ptr %memberidx, align 8
   %87 = load ptr, ptr %86, align 8
   %memberidx47 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %87, i32 0, i32 5
@@ -30388,7 +30385,8 @@ if.entry71:                                       ; preds = %ifend66
   %127 = alloca ptr, align 8
   %128 = call i64 (ptr, ptr, ...) @asprintf(ptr %127, ptr @332, ptr %117, ptr %126)
   %129 = load ptr, ptr %127, align 8
-  %130 = call ptr @string_from_bytes(ptr %129, i64 %128)
+  %130 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%string, ptr null, i32 1) to i32))
+  call void @string_constructor(ptr %130, ptr %129, i64 %128)
   %131 = load ptr, ptr %memberidx, align 8
   %132 = load ptr, ptr %131, align 8
   %memberidx80 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %132, i32 0, i32 5
@@ -38601,7 +38599,7 @@ define void @panic(ptr %0) {
   %8 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%string, ptr null, i32 1) to i32))
   call void @string_constructor(ptr %8, ptr %7, i64 %6)
   call void @println(ptr %8)
-  call void @exit(i64 2)
+  call void @exit(i64 -1)
   ret void
 }
 

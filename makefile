@@ -16,27 +16,24 @@ endef
 
 all: flo
 
-flo: llvm-bind src/*.flo
-	$(call compile_and_link_fc,flo.py,$@)
+flo: stage1
+	$(call compile_and_link_fc,$^,$@)
+
+stage1: stage0
+	$(call compile_and_link_fc,$^,$@)
+
+stage0: bootstrap/flo.ll llvm-bind.so
+	$(CC) $< llvm-bind.so $(LDFLAGS) -o $@
+
+llvm-bind.so: src/llvm/FloLLVMBind.cpp
+	$(CC) -c $^ -o $@
+
+check: flo
+	./runtests.py
 
 install: check
 	cp -f flo $(FLO_INSTALL_PATH)
 	sudo ln -f $(FLO_INSTALL_PATH) /usr/bin/flo
 
-bootstrap: stage1
-	$(call compile_and_link_fc,$^,flo)
-
-stage1: stage0
-	$(call compile_and_link_fc,$^,$@)
-
-stage0: bootstrap/flo.ll llvm-bind
-	$(CC) $< llvm-bind.so $(LDFLAGS) -o $@
-
-llvm-bind: src/llvm/FloLLVMBind.cpp
-	$(CC) -c src/llvm/FloLLVMBind.cpp -o $@.so
-
-check: flo
-	./runtests.py
-
 clean:
-	rm -f flo stage0 stage1 *.so *.o
+	rm -f stage0 stage1 *.so *.o
