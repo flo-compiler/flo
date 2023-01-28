@@ -571,40 +571,41 @@ source_filename = "src/main.flo"
 @306 = private unnamed_addr constant [68 x i8] c"New operator expects 1 argument for pointers but got %d argument(s)\00", align 1
 @307 = private unnamed_addr constant [23 x i8] c"Type {\0A 'kind': %s, \0A}\00", align 1
 @308 = private unnamed_addr constant [74 x i8] c"New operator for pointers expects argument of type '%s' but got type '%s'\00", align 1
-@309 = private unnamed_addr constant [76 x i8] c"Property '%s' is defined as private and only accessible within the class %s\00", align 1
-@310 = private unnamed_addr constant [71 x i8] c"Property '%s' is defined as %s and only accessible within the class %s\00", align 1
-@311 = private unnamed_addr constant [52 x i8] c"Property '%s' doesn't exist in object of class '%s'\00", align 1
-@312 = private unnamed_addr constant [50 x i8] c"Property '%s' is not a static member in class '%s\00", align 1
-@313 = private unnamed_addr constant [40 x i8] c"'%s' is not an element of enum the '%s'\00", align 1
-@314 = private unnamed_addr constant [10 x i8] c"copy_from\00", align 1
-@315 = private unnamed_addr constant [10 x i8] c"move_from\00", align 1
-@316 = private unnamed_addr constant [10 x i8] c"fill_with\00", align 1
-@317 = private unnamed_addr constant [7 x i8] c"resize\00", align 1
-@318 = private unnamed_addr constant [8 x i8] c"compare\00", align 1
-@319 = private unnamed_addr constant [28 x i8] c"intrinsic %s is not defined\00", align 1
-@320 = private unnamed_addr constant [38 x i8] c"Cannot get property '%s' of type '%s'\00", align 1
-@321 = private unnamed_addr constant [53 x i8] c"Expected type '%s' from first case but got type '%s'\00", align 1
-@322 = private unnamed_addr constant [122 x i8] c"No operator overload for indexing operator on %s object please implement method __getitem__ to use indexing in this class\00", align 1
-@323 = private unnamed_addr constant [35 x i8] c"Expected an integer type for index\00", align 1
-@324 = private unnamed_addr constant [39 x i8] c"Cannot index into a value of type '%s'\00", align 1
-@325 = private unnamed_addr constant [47 x i8] c"Expected a function type for call but got '%s'\00", align 1
-@326 = private unnamed_addr constant [52 x i8] c"Expected %d argument(s) on function call but got %d\00", align 1
-@327 = private unnamed_addr constant [63 x i8] c"Expected type '%s' but got type '%s' as function call argument\00", align 1
-@328 = private unnamed_addr constant [66 x i8] c"Expected argument 1 to be of type to be of a pointer but got '%s'\00", align 1
-@329 = private unnamed_addr constant [49 x i8] c"Expected 2 arguments on function call but got %d\00", align 1
-@330 = private unnamed_addr constant [63 x i8] c"Expected an int of but got type '%s' as function call argument\00", align 1
-@331 = private unnamed_addr constant [49 x i8] c"Expected 3 arguments on function call but got %d\00", align 1
-@332 = private unnamed_addr constant [66 x i8] c"Expected type '%s' of but got type '%s' as function call argument\00", align 1
-@333 = private unnamed_addr constant [26 x i8] c"Variable '%s' has no type\00", align 1
-@334 = private unnamed_addr constant [70 x i8] c"Cannot declare a value as null without any type hint for future usage\00", align 1
-@335 = private unnamed_addr constant [61 x i8] c"Expected type '%s' but got type '%s' on variable declaration\00", align 1
-@336 = private unnamed_addr constant [57 x i8] c"Illegal re-declaration of already declared variable '%s'\00", align 1
-@337 = private unnamed_addr constant [49 x i8] c"Cannot assign a non-constant value to a constant\00", align 1
-@338 = private unnamed_addr constant [30 x i8] c"Illegal break outside of loop\00", align 1
-@339 = private unnamed_addr constant [33 x i8] c"Illegal continue outside of loop\00", align 1
-@340 = private unnamed_addr constant [55 x i8] c"Function with void return type cannot return any value\00", align 1
-@341 = private unnamed_addr constant [57 x i8] c"Expected return type of '%s' but got return type of '%s'\00", align 1
-@342 = private unnamed_addr constant [33 x i8] c"Function return type is not void\00", align 1
+@309 = private unnamed_addr constant [65 x i8] c"New operator expects either an a pointer or an object not a '%s'\00", align 1
+@310 = private unnamed_addr constant [76 x i8] c"Property '%s' is defined as private and only accessible within the class %s\00", align 1
+@311 = private unnamed_addr constant [71 x i8] c"Property '%s' is defined as %s and only accessible within the class %s\00", align 1
+@312 = private unnamed_addr constant [52 x i8] c"Property '%s' doesn't exist in object of class '%s'\00", align 1
+@313 = private unnamed_addr constant [50 x i8] c"Property '%s' is not a static member in class '%s\00", align 1
+@314 = private unnamed_addr constant [40 x i8] c"'%s' is not an element of enum the '%s'\00", align 1
+@315 = private unnamed_addr constant [10 x i8] c"copy_from\00", align 1
+@316 = private unnamed_addr constant [10 x i8] c"move_from\00", align 1
+@317 = private unnamed_addr constant [10 x i8] c"fill_with\00", align 1
+@318 = private unnamed_addr constant [7 x i8] c"resize\00", align 1
+@319 = private unnamed_addr constant [8 x i8] c"compare\00", align 1
+@320 = private unnamed_addr constant [28 x i8] c"intrinsic %s is not defined\00", align 1
+@321 = private unnamed_addr constant [38 x i8] c"Cannot get property '%s' of type '%s'\00", align 1
+@322 = private unnamed_addr constant [53 x i8] c"Expected type '%s' from first case but got type '%s'\00", align 1
+@323 = private unnamed_addr constant [122 x i8] c"No operator overload for indexing operator on %s object please implement method __getitem__ to use indexing in this class\00", align 1
+@324 = private unnamed_addr constant [35 x i8] c"Expected an integer type for index\00", align 1
+@325 = private unnamed_addr constant [39 x i8] c"Cannot index into a value of type '%s'\00", align 1
+@326 = private unnamed_addr constant [47 x i8] c"Expected a function type for call but got '%s'\00", align 1
+@327 = private unnamed_addr constant [52 x i8] c"Expected %d argument(s) on function call but got %d\00", align 1
+@328 = private unnamed_addr constant [63 x i8] c"Expected type '%s' but got type '%s' as function call argument\00", align 1
+@329 = private unnamed_addr constant [66 x i8] c"Expected argument 1 to be of type to be of a pointer but got '%s'\00", align 1
+@330 = private unnamed_addr constant [49 x i8] c"Expected 2 arguments on function call but got %d\00", align 1
+@331 = private unnamed_addr constant [63 x i8] c"Expected an int of but got type '%s' as function call argument\00", align 1
+@332 = private unnamed_addr constant [49 x i8] c"Expected 3 arguments on function call but got %d\00", align 1
+@333 = private unnamed_addr constant [66 x i8] c"Expected type '%s' of but got type '%s' as function call argument\00", align 1
+@334 = private unnamed_addr constant [26 x i8] c"Variable '%s' has no type\00", align 1
+@335 = private unnamed_addr constant [70 x i8] c"Cannot declare a value as null without any type hint for future usage\00", align 1
+@336 = private unnamed_addr constant [61 x i8] c"Expected type '%s' but got type '%s' on variable declaration\00", align 1
+@337 = private unnamed_addr constant [57 x i8] c"Illegal re-declaration of already declared variable '%s'\00", align 1
+@338 = private unnamed_addr constant [49 x i8] c"Cannot assign a non-constant value to a constant\00", align 1
+@339 = private unnamed_addr constant [30 x i8] c"Illegal break outside of loop\00", align 1
+@340 = private unnamed_addr constant [33 x i8] c"Illegal continue outside of loop\00", align 1
+@341 = private unnamed_addr constant [55 x i8] c"Function with void return type cannot return any value\00", align 1
+@342 = private unnamed_addr constant [57 x i8] c"Expected return type of '%s' but got return type of '%s'\00", align 1
+@343 = private unnamed_addr constant [33 x i8] c"Function return type is not void\00", align 1
 @VTableArray_LLVMValueRef_ = global <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }> <{ ptr @Array_LLVMValueRef__resize, ptr @Array_LLVMValueRef__swap, ptr @Array_LLVMValueRef____sl__, ptr @Array_LLVMValueRef____setitem__, ptr @Array_LLVMValueRef__append, ptr @Array_LLVMValueRef____getitem__, ptr @Array_LLVMValueRef____eq__, ptr @Array_LLVMValueRef____in__, ptr @Array_LLVMValueRef__find }>
 @VTableBucket_string_LLVMValueRef_ = global <{ ptr }> <{ ptr @Bucket_string_LLVMValueRef__set }>
 @VTableArray_Bucket_string_LLVMValueRef__ = global <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }> <{ ptr @Array_Bucket_string_LLVMValueRef___resize, ptr @Array_Bucket_string_LLVMValueRef___swap, ptr @Array_Bucket_string_LLVMValueRef_____sl__, ptr @Array_Bucket_string_LLVMValueRef_____setitem__, ptr @Array_Bucket_string_LLVMValueRef___append, ptr @Array_Bucket_string_LLVMValueRef_____getitem__, ptr @Array_Bucket_string_LLVMValueRef_____eq__, ptr @Array_Bucket_string_LLVMValueRef_____in__, ptr @Array_Bucket_string_LLVMValueRef___find }>
@@ -617,77 +618,77 @@ source_filename = "src/main.flo"
 @VTableMap_string_CGClassType_ = global <{ ptr, ptr, ptr }> <{ ptr @Map_string_CGClassType__set, ptr @Map_string_CGClassType__get, ptr @Map_string_CGClassType__get_buckets }>
 @VTableArray_LLVMTypeRef_ = global <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }> <{ ptr @Array_LLVMTypeRef__resize, ptr @Array_LLVMTypeRef__swap, ptr @Array_LLVMTypeRef____sl__, ptr @Array_LLVMTypeRef____setitem__, ptr @Array_LLVMTypeRef__append, ptr @Array_LLVMTypeRef____getitem__, ptr @Array_LLVMTypeRef____eq__, ptr @Array_LLVMTypeRef____in__, ptr @Array_LLVMTypeRef__find }>
 @VTableGeneratedModule = global <{ ptr, ptr, ptr, ptr, ptr }> <{ ptr @GeneratedModule_run_passes, ptr @GeneratedModule_exec, ptr @GeneratedModule_write_object, ptr @GeneratedModule_print, ptr @GeneratedModule_llvm_shutdown }>
-@343 = private unnamed_addr constant [10 x i8] c"Panic: %s\00", align 1
-@344 = private unnamed_addr constant [10 x i8] c"error: %s\00", align 1
-@345 = private unnamed_addr constant [5 x i8] c"main\00", align 1
-@346 = private unnamed_addr constant [49 x i8] c"Main function not found in module; can't execute\00", align 1
-@347 = private unnamed_addr constant [8 x i8] c"generic\00", align 1
-@348 = private unnamed_addr constant [10 x i8] c"output.ll\00", align 1
+@344 = private unnamed_addr constant [10 x i8] c"Panic: %s\00", align 1
+@345 = private unnamed_addr constant [10 x i8] c"error: %s\00", align 1
+@346 = private unnamed_addr constant [5 x i8] c"main\00", align 1
+@347 = private unnamed_addr constant [49 x i8] c"Main function not found in module; can't execute\00", align 1
+@348 = private unnamed_addr constant [8 x i8] c"generic\00", align 1
+@349 = private unnamed_addr constant [10 x i8] c"output.ll\00", align 1
 @VTableBucket_string_CGEnumType_ = global <{ ptr }> <{ ptr @Bucket_string_CGEnumType__set }>
 @VTableArray_Bucket_string_CGEnumType__ = global <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }> <{ ptr @Array_Bucket_string_CGEnumType___resize, ptr @Array_Bucket_string_CGEnumType___swap, ptr @Array_Bucket_string_CGEnumType_____sl__, ptr @Array_Bucket_string_CGEnumType_____setitem__, ptr @Array_Bucket_string_CGEnumType___append, ptr @Array_Bucket_string_CGEnumType_____getitem__, ptr @Array_Bucket_string_CGEnumType_____eq__, ptr @Array_Bucket_string_CGEnumType_____in__, ptr @Array_Bucket_string_CGEnumType___find }>
 @VTableMap_string_CGEnumType_ = global <{ ptr, ptr, ptr }> <{ ptr @Map_string_CGEnumType__set, ptr @Map_string_CGEnumType__get, ptr @Map_string_CGEnumType__get_buckets }>
 @VTableCodeGen = global <{ ptr }> <{ ptr @CodeGen_codegen }>
-@349 = private unnamed_addr constant [9 x i8] c"%d;%d;%d\00", align 1
-@350 = private unnamed_addr constant [33 x i8] c"Type could not be code generated\00", align 1
-@351 = private unnamed_addr constant [5 x i8] c"atof\00", align 1
-@352 = private unnamed_addr constant [5 x i8] c"atoi\00", align 1
-@353 = private unnamed_addr constant [5 x i8] c"atol\00", align 1
-@354 = private unnamed_addr constant [8 x i8] c"realloc\00", align 1
-@355 = private unnamed_addr constant [7 x i8] c"memcmp\00", align 1
-@356 = private unnamed_addr constant [9 x i8] c"asprintf\00", align 1
-@357 = private unnamed_addr constant [6 x i8] c"%s {\0A\00", align 1
-@358 = private unnamed_addr constant [7 x i8] c" ... }\00", align 1
-@359 = private unnamed_addr constant [4 x i8] c"lld\00", align 1
-@360 = private unnamed_addr constant [3 x i8] c"ld\00", align 1
-@361 = private unnamed_addr constant [3 x i8] c"%d\00", align 1
-@362 = private unnamed_addr constant [3 x i8] c"%f\00", align 1
-@363 = private unnamed_addr constant [4 x i8] c"%lf\00", align 1
-@364 = private unnamed_addr constant [5 x i8] c"0x%X\00", align 1
-@365 = private unnamed_addr constant [13 x i8] c" '%s': %s, \0A\00", align 1
-@366 = private unnamed_addr constant [2 x i8] c"}\00", align 1
-@367 = private unnamed_addr constant [11 x i8] c"<function>\00", align 1
-@368 = private unnamed_addr constant [18 x i8] c"string_from_bytes\00", align 1
-@369 = private unnamed_addr constant [55 x i8] c"Could not find function 'string.from_bytes' in program\00", align 1
-@370 = private unnamed_addr constant [46 x i8] c"This should never happen! (get_expr_mem: var)\00", align 1
-@371 = private unnamed_addr constant [9 x i8] c"arrayidx\00", align 1
-@372 = private unnamed_addr constant [7 x i8] c"ptridx\00", align 1
-@373 = private unnamed_addr constant [9 x i8] c"%s;%d;%d\00", align 1
-@374 = private unnamed_addr constant [10 x i8] c"memberidx\00", align 1
-@375 = private unnamed_addr constant [7 x i8] c"buffer\00", align 1
-@376 = private unnamed_addr constant [7 x i8] c"length\00", align 1
-@377 = private unnamed_addr constant [12 x i8] c"llvm.pow.%s\00", align 1
-@378 = private unnamed_addr constant [23 x i8] c"Unknown case! %s %s %s\00", align 1
-@379 = private unnamed_addr constant [11 x i8] c"incdec.ptr\00", align 1
-@380 = private unnamed_addr constant [51 x i8] c"This should never happen; (codegen_var_access_exp)\00", align 1
-@381 = private unnamed_addr constant [11 x i8] c"true_block\00", align 1
-@382 = private unnamed_addr constant [12 x i8] c"false_block\00", align 1
-@383 = private unnamed_addr constant [4 x i8] c"end\00", align 1
-@384 = private unnamed_addr constant [8 x i8] c"ternary\00", align 1
-@385 = private unnamed_addr constant [52 x i8] c"this should not happen; (codegen_member_exp); class\00", align 1
-@386 = private unnamed_addr constant [60 x i8] c"This should never happen; (codegen_member_expr; class prop)\00", align 1
-@387 = private unnamed_addr constant [51 x i8] c"this should not happen; (codegen_member_exp); enum\00", align 1
-@388 = private unnamed_addr constant [11 x i8] c"to_cstring\00", align 1
-@389 = private unnamed_addr constant [22 x i8] c"instrinsic not found!\00", align 1
-@390 = private unnamed_addr constant [9 x i8] c"if.entry\00", align 1
-@391 = private unnamed_addr constant [6 x i8] c"ifend\00", align 1
-@392 = private unnamed_addr constant [10 x i8] c"for.entry\00", align 1
-@393 = private unnamed_addr constant [9 x i8] c"for.cond\00", align 1
-@394 = private unnamed_addr constant [9 x i8] c"for.body\00", align 1
-@395 = private unnamed_addr constant [9 x i8] c"for.incr\00", align 1
-@396 = private unnamed_addr constant [8 x i8] c"for.end\00", align 1
-@397 = private unnamed_addr constant [12 x i8] c"while.entry\00", align 1
-@398 = private unnamed_addr constant [10 x i8] c"while.end\00", align 1
-@399 = private unnamed_addr constant [48 x i8] c"Could not find constructor for constructor call\00", align 1
-@400 = private unnamed_addr constant [76 x i8] c"This should not happen: could not find function %s_%s (declare_class_props)\00", align 1
-@401 = private unnamed_addr constant [9 x i8] c"VTable%s\00", align 1
-@402 = private unnamed_addr constant [15 x i8] c"%s_constructor\00", align 1
-@403 = private unnamed_addr constant [3 x i8] c"-O\00", align 1
-@404 = private unnamed_addr constant [2 x i8] c"1\00", align 1
-@405 = private unnamed_addr constant [12 x i8] c"--emit-llvm\00", align 1
-@406 = private unnamed_addr constant [3 x i8] c"-o\00", align 1
-@407 = private unnamed_addr constant [4 x i8] c"a.o\00", align 1
-@408 = private unnamed_addr constant [8 x i8] c"-target\00", align 1
-@409 = private unnamed_addr constant [25 x i8] c"No input file specified.\00", align 1
+@350 = private unnamed_addr constant [9 x i8] c"%d;%d;%d\00", align 1
+@351 = private unnamed_addr constant [33 x i8] c"Type could not be code generated\00", align 1
+@352 = private unnamed_addr constant [5 x i8] c"atof\00", align 1
+@353 = private unnamed_addr constant [5 x i8] c"atoi\00", align 1
+@354 = private unnamed_addr constant [5 x i8] c"atol\00", align 1
+@355 = private unnamed_addr constant [8 x i8] c"realloc\00", align 1
+@356 = private unnamed_addr constant [7 x i8] c"memcmp\00", align 1
+@357 = private unnamed_addr constant [9 x i8] c"asprintf\00", align 1
+@358 = private unnamed_addr constant [6 x i8] c"%s {\0A\00", align 1
+@359 = private unnamed_addr constant [7 x i8] c" ... }\00", align 1
+@360 = private unnamed_addr constant [4 x i8] c"lld\00", align 1
+@361 = private unnamed_addr constant [3 x i8] c"ld\00", align 1
+@362 = private unnamed_addr constant [3 x i8] c"%d\00", align 1
+@363 = private unnamed_addr constant [3 x i8] c"%f\00", align 1
+@364 = private unnamed_addr constant [4 x i8] c"%lf\00", align 1
+@365 = private unnamed_addr constant [5 x i8] c"0x%X\00", align 1
+@366 = private unnamed_addr constant [13 x i8] c" '%s': %s, \0A\00", align 1
+@367 = private unnamed_addr constant [2 x i8] c"}\00", align 1
+@368 = private unnamed_addr constant [11 x i8] c"<function>\00", align 1
+@369 = private unnamed_addr constant [18 x i8] c"string_from_bytes\00", align 1
+@370 = private unnamed_addr constant [55 x i8] c"Could not find function 'string.from_bytes' in program\00", align 1
+@371 = private unnamed_addr constant [46 x i8] c"This should never happen! (get_expr_mem: var)\00", align 1
+@372 = private unnamed_addr constant [9 x i8] c"arrayidx\00", align 1
+@373 = private unnamed_addr constant [7 x i8] c"ptridx\00", align 1
+@374 = private unnamed_addr constant [9 x i8] c"%s;%d;%d\00", align 1
+@375 = private unnamed_addr constant [10 x i8] c"memberidx\00", align 1
+@376 = private unnamed_addr constant [7 x i8] c"buffer\00", align 1
+@377 = private unnamed_addr constant [7 x i8] c"length\00", align 1
+@378 = private unnamed_addr constant [12 x i8] c"llvm.pow.%s\00", align 1
+@379 = private unnamed_addr constant [23 x i8] c"Unknown case! %s %s %s\00", align 1
+@380 = private unnamed_addr constant [11 x i8] c"incdec.ptr\00", align 1
+@381 = private unnamed_addr constant [51 x i8] c"This should never happen; (codegen_var_access_exp)\00", align 1
+@382 = private unnamed_addr constant [11 x i8] c"true_block\00", align 1
+@383 = private unnamed_addr constant [12 x i8] c"false_block\00", align 1
+@384 = private unnamed_addr constant [4 x i8] c"end\00", align 1
+@385 = private unnamed_addr constant [8 x i8] c"ternary\00", align 1
+@386 = private unnamed_addr constant [52 x i8] c"this should not happen; (codegen_member_exp); class\00", align 1
+@387 = private unnamed_addr constant [60 x i8] c"This should never happen; (codegen_member_expr; class prop)\00", align 1
+@388 = private unnamed_addr constant [51 x i8] c"this should not happen; (codegen_member_exp); enum\00", align 1
+@389 = private unnamed_addr constant [11 x i8] c"to_cstring\00", align 1
+@390 = private unnamed_addr constant [22 x i8] c"instrinsic not found!\00", align 1
+@391 = private unnamed_addr constant [9 x i8] c"if.entry\00", align 1
+@392 = private unnamed_addr constant [6 x i8] c"ifend\00", align 1
+@393 = private unnamed_addr constant [10 x i8] c"for.entry\00", align 1
+@394 = private unnamed_addr constant [9 x i8] c"for.cond\00", align 1
+@395 = private unnamed_addr constant [9 x i8] c"for.body\00", align 1
+@396 = private unnamed_addr constant [9 x i8] c"for.incr\00", align 1
+@397 = private unnamed_addr constant [8 x i8] c"for.end\00", align 1
+@398 = private unnamed_addr constant [12 x i8] c"while.entry\00", align 1
+@399 = private unnamed_addr constant [10 x i8] c"while.end\00", align 1
+@400 = private unnamed_addr constant [48 x i8] c"Could not find constructor for constructor call\00", align 1
+@401 = private unnamed_addr constant [76 x i8] c"This should not happen: could not find function %s_%s (declare_class_props)\00", align 1
+@402 = private unnamed_addr constant [9 x i8] c"VTable%s\00", align 1
+@403 = private unnamed_addr constant [15 x i8] c"%s_constructor\00", align 1
+@404 = private unnamed_addr constant [3 x i8] c"-O\00", align 1
+@405 = private unnamed_addr constant [2 x i8] c"1\00", align 1
+@406 = private unnamed_addr constant [12 x i8] c"--emit-llvm\00", align 1
+@407 = private unnamed_addr constant [3 x i8] c"-o\00", align 1
+@408 = private unnamed_addr constant [4 x i8] c"a.o\00", align 1
+@409 = private unnamed_addr constant [8 x i8] c"-target\00", align 1
+@410 = private unnamed_addr constant [25 x i8] c"No input file specified.\00", align 1
 
 define ptr @string_from_cstring(ptr %0) {
   %2 = call i64 @strlen(ptr %0)
@@ -1559,7 +1560,7 @@ common.ret:                                       ; preds = %ifend38, %ifend31, 
   ret i64 %common.ret.op
 
 else:                                             ; preds = %2
-  %11 = call ptr @string_from_bytes(ptr @409, i64 24)
+  %11 = call ptr @string_from_bytes(ptr @410, i64 24)
   call void @print_message_error(i64 4, ptr %11)
   br label %common.ret
 
@@ -1749,8 +1750,8 @@ ifend43:                                          ; preds = %ifend38
   %106 = load ptr, ptr %105, align 8
   %107 = load ptr, ptr %106, align 8
   %108 = load ptr, ptr %args, align 8
-  %109 = call ptr @string_from_bytes(ptr @403, i64 2)
-  %110 = call ptr @string_from_bytes(ptr @404, i64 1)
+  %109 = call ptr @string_from_bytes(ptr @404, i64 2)
+  %110 = call ptr @string_from_bytes(ptr @405, i64 1)
   %111 = call ptr @flag_value_or(ptr %108, ptr %109, ptr %110)
   %112 = load ptr, ptr %111, align 8
   %memberidx46 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %112, i32 0, i32 11
@@ -1760,7 +1761,7 @@ ifend43:                                          ; preds = %ifend38
   tail call void @free(ptr %114)
   call void %107(ptr %105, i64 %115)
   %116 = load ptr, ptr %args, align 8
-  %117 = call ptr @string_from_bytes(ptr @405, i64 11)
+  %117 = call ptr @string_from_bytes(ptr @406, i64 11)
   %118 = call i1 @flag(ptr %116, ptr %117)
   br i1 %118, label %if.entry47, label %else48
 
@@ -1774,7 +1775,7 @@ if.entry47:                                       ; preds = %ifend43
 
 else48:                                           ; preds = %ifend43
   %122 = load ptr, ptr %args, align 8
-  %123 = call ptr @string_from_bytes(ptr @406, i64 2)
+  %123 = call ptr @string_from_bytes(ptr @407, i64 2)
   %124 = call i1 @flag(ptr %122, ptr %123)
   br i1 %124, label %if.entry51, label %else52
 
@@ -1793,11 +1794,11 @@ if.entry51:                                       ; preds = %else48
   %memberidx54 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr }>, ptr %129, i32 0, i32 2
   %130 = load ptr, ptr %memberidx54, align 8
   %131 = load ptr, ptr %args, align 8
-  %132 = call ptr @string_from_bytes(ptr @406, i64 2)
-  %133 = call ptr @string_from_bytes(ptr @407, i64 3)
+  %132 = call ptr @string_from_bytes(ptr @407, i64 2)
+  %133 = call ptr @string_from_bytes(ptr @408, i64 3)
   %134 = call ptr @flag_value_or(ptr %131, ptr %132, ptr %133)
   %135 = load ptr, ptr %args, align 8
-  %136 = call ptr @string_from_bytes(ptr @408, i64 7)
+  %136 = call ptr @string_from_bytes(ptr @409, i64 7)
   %137 = call ptr @string_from_bytes(ptr @38, i64 0)
   %138 = call ptr @flag_value_or(ptr %135, ptr %136, ptr %137)
   call void %130(ptr %128, ptr %134, ptr %138)
@@ -21772,7 +21773,7 @@ if.entry27:                                       ; preds = %if.entry13
   %39 = load ptr, ptr %memberidx32, align 8
   %40 = call ptr %39(ptr %37)
   %41 = alloca ptr, align 8
-  %42 = call i64 (ptr, ptr, ...) @asprintf(ptr %41, ptr @309, ptr %36, ptr %40)
+  %42 = call i64 (ptr, ptr, ...) @asprintf(ptr %41, ptr @310, ptr %36, ptr %40)
   %43 = load ptr, ptr %41, align 8
   %44 = call ptr @string_from_bytes(ptr %43, i64 %42)
   br label %common.ret
@@ -21794,7 +21795,7 @@ if.entry33:                                       ; preds = %else14
   %54 = load ptr, ptr %memberidx39, align 8
   %55 = call ptr %54(ptr %52)
   %56 = alloca ptr, align 8
-  %57 = call i64 (ptr, ptr, ...) @asprintf(ptr %56, ptr @310, ptr %47, ptr %51, ptr %55)
+  %57 = call i64 (ptr, ptr, ...) @asprintf(ptr %56, ptr @311, ptr %47, ptr %51, ptr %55)
   %58 = load ptr, ptr %56, align 8
   %59 = call ptr @string_from_bytes(ptr %58, i64 %57)
   br label %common.ret
@@ -21843,7 +21844,7 @@ ifend4:                                           ; preds = %if.entry
   br i1 %13, label %if.entry6, label %ifend8
 
 if.entry6:                                        ; preds = %ifend4
-  %14 = call ptr @string_from_bytes(ptr @340, i64 54)
+  %14 = call ptr @string_from_bytes(ptr @341, i64 54)
   %15 = load ptr, ptr %3, align 8
   call void @TypeChecker_error(ptr %0, i64 5, ptr %14, ptr %15)
   br label %common.ret
@@ -21871,7 +21872,7 @@ if.entry11:                                       ; preds = %ifend8
   %28 = load ptr, ptr %memberidx16, align 8
   %29 = call ptr %28(ptr %26)
   %30 = alloca ptr, align 8
-  %31 = call i64 (ptr, ptr, ...) @asprintf(ptr %30, ptr @341, ptr %23, ptr %29)
+  %31 = call i64 (ptr, ptr, ...) @asprintf(ptr %30, ptr @342, ptr %23, ptr %29)
   %32 = load ptr, ptr %30, align 8
   %33 = call ptr @string_from_bytes(ptr %32, i64 %31)
   %34 = load ptr, ptr %3, align 8
@@ -21885,7 +21886,7 @@ ifend13:                                          ; preds = %ifend8
   br label %ifend
 
 if.entry20:                                       ; preds = %else
-  %36 = call ptr @string_from_bytes(ptr @342, i64 32)
+  %36 = call ptr @string_from_bytes(ptr @343, i64 32)
   %37 = load ptr, ptr %1, align 8
   call void @TypeChecker_error(ptr %0, i64 5, ptr %36, ptr %37)
   br label %common.ret
@@ -21979,7 +21980,7 @@ if.entry12:                                       ; preds = %ifend9
   %28 = load ptr, ptr %memberidx15, align 8
   %29 = call ptr %28(ptr %4)
   %30 = alloca ptr, align 8
-  %31 = call i64 (ptr, ptr, ...) @asprintf(ptr %30, ptr @333, ptr %29)
+  %31 = call i64 (ptr, ptr, ...) @asprintf(ptr %30, ptr @334, ptr %29)
   %32 = load ptr, ptr %30, align 8
   %33 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%string, ptr null, i32 1) to i32))
   call void @string_constructor(ptr %33, ptr %32, i64 %31)
@@ -22031,7 +22032,7 @@ ifend29:                                          ; preds = %if.entry46, %ifend4
   br i1 %52, label %if.entry52, label %ifend54
 
 if.entry32:                                       ; preds = %if.entry27
-  %53 = call ptr @string_from_bytes(ptr @334, i64 69)
+  %53 = call ptr @string_from_bytes(ptr @335, i64 69)
   %54 = load ptr, ptr %1, align 8
   call void @TypeChecker_error(ptr %0, i64 5, ptr %53, ptr %54)
   br label %common.ret
@@ -22061,7 +22062,7 @@ if.entry38:                                       ; preds = %ifend34
   %70 = load ptr, ptr %memberidx43, align 8
   %71 = call ptr %70(ptr %68)
   %72 = alloca ptr, align 8
-  %73 = call i64 (ptr, ptr, ...) @asprintf(ptr %72, ptr @335, ptr %65, ptr %71)
+  %73 = call i64 (ptr, ptr, ...) @asprintf(ptr %72, ptr @336, ptr %65, ptr %71)
   %74 = load ptr, ptr %72, align 8
   %75 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%string, ptr null, i32 1) to i32))
   call void @string_constructor(ptr %75, ptr %74, i64 %73)
@@ -22088,10 +22089,9 @@ if.entry52:                                       ; preds = %ifend29
   %83 = load ptr, ptr %memberidx55, align 8
   %84 = call ptr %83(ptr %4)
   %85 = alloca ptr, align 8
-  %86 = call i64 (ptr, ptr, ...) @asprintf(ptr %85, ptr @336, ptr %84)
+  %86 = call i64 (ptr, ptr, ...) @asprintf(ptr %85, ptr @337, ptr %84)
   %87 = load ptr, ptr %85, align 8
-  %88 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%string, ptr null, i32 1) to i32))
-  call void @string_constructor(ptr %88, ptr %87, i64 %86)
+  %88 = call ptr @string_from_bytes(ptr %87, i64 %86)
   %89 = load ptr, ptr %memberidx, align 8
   %memberidx57 = getelementptr inbounds %Token, ptr %89, i32 0, i32 1
   %90 = load ptr, ptr %memberidx57, align 8
@@ -22187,7 +22187,7 @@ ifend15:                                          ; preds = %ifend11
   br i1 %33, label %if.entry17, label %ifend19
 
 if.entry17:                                       ; preds = %ifend15
-  %34 = call ptr @string_from_bytes(ptr @337, i64 48)
+  %34 = call ptr @string_from_bytes(ptr @338, i64 48)
   %35 = load ptr, ptr %memberidx12, align 8
   %36 = load ptr, ptr %35, align 8
   call void @TypeChecker_error(ptr %0, i64 4, ptr %34, ptr %36)
@@ -22202,7 +22202,7 @@ ifend19:                                          ; preds = %ifend15
   br i1 %41, label %if.entry23, label %ifend25
 
 if.entry23:                                       ; preds = %ifend19
-  %42 = call ptr @string_from_bytes(ptr @334, i64 69)
+  %42 = call ptr @string_from_bytes(ptr @335, i64 69)
   %43 = load ptr, ptr %1, align 8
   call void @TypeChecker_error(ptr %0, i64 5, ptr %42, ptr %43)
   br label %common.ret
@@ -22231,7 +22231,7 @@ if.entry29:                                       ; preds = %ifend25
   %57 = load ptr, ptr %memberidx34, align 8
   %58 = call ptr %57(ptr %55)
   %59 = alloca ptr, align 8
-  %60 = call i64 (ptr, ptr, ...) @asprintf(ptr %59, ptr @335, ptr %52, ptr %58)
+  %60 = call i64 (ptr, ptr, ...) @asprintf(ptr %59, ptr @336, ptr %52, ptr %58)
   %61 = load ptr, ptr %59, align 8
   %62 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%string, ptr null, i32 1) to i32))
   call void @string_constructor(ptr %62, ptr %61, i64 %60)
@@ -23531,7 +23531,7 @@ if.entry9:                                        ; preds = %ifend6
   %18 = load ptr, ptr %memberidx13, align 8
   %19 = call ptr %18(ptr %16)
   %20 = alloca ptr, align 8
-  %21 = call i64 (ptr, ptr, ...) @asprintf(ptr %20, ptr @325, ptr %19)
+  %21 = call i64 (ptr, ptr, ...) @asprintf(ptr %20, ptr @326, ptr %19)
   %22 = load ptr, ptr %20, align 8
   %23 = call ptr @string_from_bytes(ptr %22, i64 %21)
   %24 = load ptr, ptr %memberidx, align 8
@@ -23586,10 +23586,9 @@ if.entry24:                                       ; preds = %if.entry21
   %memberidx29 = getelementptr inbounds %Array_Expression_, ptr %43, i32 0, i32 2
   %44 = load i64, ptr %memberidx29, align 4
   %45 = alloca ptr, align 8
-  %46 = call i64 (ptr, ptr, ...) @asprintf(ptr %45, ptr @326, i64 %42, i64 %44)
+  %46 = call i64 (ptr, ptr, ...) @asprintf(ptr %45, ptr @327, i64 %42, i64 %44)
   %47 = load ptr, ptr %45, align 8
-  %48 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%string, ptr null, i32 1) to i32))
-  call void @string_constructor(ptr %48, ptr %47, i64 %46)
+  %48 = call ptr @string_from_bytes(ptr %47, i64 %46)
   %49 = load ptr, ptr %2, align 8
   call void @TypeChecker_error(ptr %0, i64 4, ptr %48, ptr %49)
   br label %common.ret
@@ -23621,7 +23620,7 @@ else25:                                           ; preds = %if.entry21
   %67 = load ptr, ptr %memberidx36, align 8
   %68 = call ptr %67(ptr %65)
   %69 = alloca ptr, align 8
-  %70 = call i64 (ptr, ptr, ...) @asprintf(ptr %69, ptr @327, ptr %58, ptr %68)
+  %70 = call i64 (ptr, ptr, ...) @asprintf(ptr %69, ptr @328, ptr %58, ptr %68)
   %71 = load ptr, ptr %69, align 8
   %72 = call ptr @string_from_bytes(ptr %71, i64 %70)
   %73 = load ptr, ptr %memberidx17, align 8
@@ -23655,7 +23654,7 @@ common.ret:                                       ; preds = %ifend, %if.entry
   ret ptr %common.ret.op
 
 if.entry:                                         ; preds = %2
-  %5 = call ptr @string_from_bytes(ptr @338, i64 29)
+  %5 = call ptr @string_from_bytes(ptr @339, i64 29)
   %6 = load ptr, ptr %1, align 8
   call void @TypeChecker_error(ptr %0, i64 4, ptr %5, ptr %6)
   br label %common.ret
@@ -24798,8 +24797,8 @@ define ptr @TypeChecker_check_new_expr(ptr %0, ptr %1) {
   %5 = call i1 @TypeChecker_has_errored(ptr %0)
   br i1 %5, label %common.ret, label %ifend
 
-common.ret:                                       ; preds = %ifend4, %2, %if.entry34, %if.entry27, %if.entry17, %ifend13
-  %common.ret.op = phi ptr [ %20, %ifend13 ], [ null, %if.entry17 ], [ null, %if.entry27 ], [ null, %if.entry34 ], [ null, %2 ], [ null, %ifend4 ]
+common.ret:                                       ; preds = %ifend4, %2, %if.entry34, %if.entry27, %else23, %if.entry17, %ifend13
+  %common.ret.op = phi ptr [ %20, %ifend13 ], [ null, %if.entry17 ], [ null, %else23 ], [ null, %if.entry27 ], [ null, %if.entry34 ], [ null, %2 ], [ null, %ifend4 ]
   ret ptr %common.ret.op
 
 ifend:                                            ; preds = %2
@@ -24846,14 +24845,14 @@ if.entry11:                                       ; preds = %ifend10
 else12:                                           ; preds = %ifend10
   %18 = load i64, ptr %4, align 4
   %19 = icmp eq i64 %18, 15
-  br i1 %19, label %if.entry22, label %ifend13
+  br i1 %19, label %if.entry22, label %else23
 
-ifend13:                                          ; preds = %ifend36, %else12, %if.entry11
+ifend13:                                          ; preds = %if.entry11, %ifend36
   %20 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%NewExpression, ptr null, i32 1) to i32))
   %21 = load ptr, ptr %value_type, align 8
   %22 = load ptr, ptr %args, align 8
-  %memberidx44 = getelementptr inbounds %NewExpressionNode, ptr %1, i32 0, i32 4
-  %23 = load i1, ptr %memberidx44, align 1
+  %memberidx46 = getelementptr inbounds %NewExpressionNode, ptr %1, i32 0, i32 4
+  %23 = load i1, ptr %memberidx46, align 1
   call void @NewExpression_constructor(ptr %20, ptr %21, ptr %4, ptr %22, i1 %23)
   br label %common.ret
 
@@ -24872,70 +24871,85 @@ if.entry22:                                       ; preds = %else12
   %27 = icmp ne i64 %26, 1
   br i1 %27, label %if.entry27, label %ifend29
 
+else23:                                           ; preds = %else12
+  %28 = call ptr @TypeChecker_dump_type(ptr %0, ptr %4)
+  %29 = load ptr, ptr %28, align 8
+  %memberidx44 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %29, i32 0, i32 11
+  %30 = load ptr, ptr %memberidx44, align 8
+  %31 = call ptr %30(ptr %28)
+  %32 = alloca ptr, align 8
+  %33 = call i64 (ptr, ptr, ...) @asprintf(ptr %32, ptr @309, ptr %31)
+  %34 = load ptr, ptr %32, align 8
+  %35 = call ptr @string_from_bytes(ptr %34, i64 %33)
+  %36 = load ptr, ptr %1, align 8
+  call void @TypeChecker_error(ptr %0, i64 5, ptr %35, ptr %36)
+  br label %common.ret
+
 if.entry27:                                       ; preds = %if.entry22
-  %28 = alloca ptr, align 8
-  %29 = call i64 (ptr, ptr, ...) @asprintf(ptr %28, ptr @306, i64 %26)
-  %30 = load ptr, ptr %28, align 8
-  %31 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%string, ptr null, i32 1) to i32))
-  call void @string_constructor(ptr %31, ptr %30, i64 %29)
-  %32 = load ptr, ptr %1, align 8
-  call void @TypeChecker_error(ptr %0, i64 4, ptr %31, ptr %32)
+  %37 = alloca ptr, align 8
+  %38 = call i64 (ptr, ptr, ...) @asprintf(ptr %37, ptr @306, i64 %26)
+  %39 = load ptr, ptr %37, align 8
+  %40 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%string, ptr null, i32 1) to i32))
+  call void @string_constructor(ptr %40, ptr %39, i64 %38)
+  %41 = load ptr, ptr %1, align 8
+  call void @TypeChecker_error(ptr %0, i64 4, ptr %40, ptr %41)
   br label %common.ret
 
 ifend29:                                          ; preds = %if.entry22
   %int_ty = alloca ptr, align 8
-  %33 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%Type, ptr null, i32 1) to i32))
-  call void @Type_constructor(ptr %33, i64 7)
-  store ptr %33, ptr %int_ty, align 8
+  %42 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%Type, ptr null, i32 1) to i32))
+  call void @Type_constructor(ptr %42, i64 7)
+  store ptr %42, ptr %int_ty, align 8
   %arg = alloca ptr, align 8
-  %34 = load ptr, ptr %memberidx25, align 8
-  %35 = load ptr, ptr %34, align 8
-  %memberidx32 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %35, i32 0, i32 5
-  %36 = load ptr, ptr %memberidx32, align 8
-  %37 = call ptr %36(ptr %34, i64 0)
-  %38 = call ptr @TypeChecker_check_expression(ptr %0, ptr %33, ptr %37)
-  store ptr %38, ptr %arg, align 8
-  %39 = load ptr, ptr %int_ty, align 8
-  %memberidx33 = getelementptr inbounds %Expression, ptr %38, i32 0, i32 3
-  %40 = load ptr, ptr %memberidx33, align 8
-  %41 = call i1 @TypeChecker_types_are_eq(ptr %0, ptr %39, ptr %40)
-  %42 = xor i1 %41, true
-  br i1 %42, label %if.entry34, label %ifend36
+  %43 = load ptr, ptr %memberidx25, align 8
+  %44 = load ptr, ptr %43, align 8
+  %memberidx32 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %44, i32 0, i32 5
+  %45 = load ptr, ptr %memberidx32, align 8
+  %46 = call ptr %45(ptr %43, i64 0)
+  %47 = call ptr @TypeChecker_check_expression(ptr %0, ptr %42, ptr %46)
+  store ptr %47, ptr %arg, align 8
+  %48 = load ptr, ptr %int_ty, align 8
+  %memberidx33 = getelementptr inbounds %Expression, ptr %47, i32 0, i32 3
+  %49 = load ptr, ptr %memberidx33, align 8
+  %50 = call i1 @TypeChecker_types_are_eq(ptr %0, ptr %48, ptr %49)
+  %51 = xor i1 %50, true
+  br i1 %51, label %if.entry34, label %ifend36
 
 if.entry34:                                       ; preds = %ifend29
-  %43 = load ptr, ptr %int_ty, align 8
-  %44 = call ptr @TypeChecker_dump_type(ptr %0, ptr %43)
-  %45 = load ptr, ptr %44, align 8
-  %memberidx37 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %45, i32 0, i32 11
-  %46 = load ptr, ptr %memberidx37, align 8
-  %47 = call ptr %46(ptr %44)
-  %48 = load ptr, ptr %arg, align 8
-  %memberidx38 = getelementptr inbounds %Expression, ptr %48, i32 0, i32 3
-  %49 = load ptr, ptr %memberidx38, align 8
-  %50 = load i64, ptr %49, align 4
-  %51 = alloca ptr, align 8
-  %52 = call i64 (ptr, ptr, ...) @asprintf(ptr %51, ptr @307, i64 %50)
-  %53 = load ptr, ptr %51, align 8
-  %54 = alloca ptr, align 8
-  %55 = call i64 (ptr, ptr, ...) @asprintf(ptr %54, ptr @308, ptr %47, ptr %53)
-  %56 = load ptr, ptr %54, align 8
-  %57 = call ptr @string_from_bytes(ptr %56, i64 %55)
-  %58 = load ptr, ptr %memberidx25, align 8
-  %59 = load ptr, ptr %58, align 8
-  %memberidx41 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %59, i32 0, i32 5
-  %60 = load ptr, ptr %memberidx41, align 8
-  %61 = call ptr %60(ptr %58, i64 0)
-  %62 = load ptr, ptr %61, align 8
-  call void @TypeChecker_error(ptr %0, i64 4, ptr %57, ptr %62)
+  %52 = load ptr, ptr %int_ty, align 8
+  %53 = call ptr @TypeChecker_dump_type(ptr %0, ptr %52)
+  %54 = load ptr, ptr %53, align 8
+  %memberidx37 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %54, i32 0, i32 11
+  %55 = load ptr, ptr %memberidx37, align 8
+  %56 = call ptr %55(ptr %53)
+  %57 = load ptr, ptr %arg, align 8
+  %memberidx38 = getelementptr inbounds %Expression, ptr %57, i32 0, i32 3
+  %58 = load ptr, ptr %memberidx38, align 8
+  %59 = load i64, ptr %58, align 4
+  %60 = alloca ptr, align 8
+  %61 = call i64 (ptr, ptr, ...) @asprintf(ptr %60, ptr @307, i64 %59)
+  %62 = load ptr, ptr %60, align 8
+  %63 = alloca ptr, align 8
+  %64 = call i64 (ptr, ptr, ...) @asprintf(ptr %63, ptr @308, ptr %56, ptr %62)
+  %65 = load ptr, ptr %63, align 8
+  %66 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%string, ptr null, i32 1) to i32))
+  call void @string_constructor(ptr %66, ptr %65, i64 %64)
+  %67 = load ptr, ptr %memberidx25, align 8
+  %68 = load ptr, ptr %67, align 8
+  %memberidx41 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %68, i32 0, i32 5
+  %69 = load ptr, ptr %memberidx41, align 8
+  %70 = call ptr %69(ptr %67, i64 0)
+  %71 = load ptr, ptr %70, align 8
+  call void @TypeChecker_error(ptr %0, i64 4, ptr %66, ptr %71)
   br label %common.ret
 
 ifend36:                                          ; preds = %ifend29
-  %63 = load ptr, ptr %args, align 8
-  %64 = load ptr, ptr %63, align 8
-  %memberidx43 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %64, i32 0, i32 2
-  %65 = load ptr, ptr %memberidx43, align 8
-  %66 = load ptr, ptr %arg, align 8
-  call void %65(ptr %63, ptr %66)
+  %72 = load ptr, ptr %args, align 8
+  %73 = load ptr, ptr %72, align 8
+  %memberidx43 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %73, i32 0, i32 2
+  %74 = load ptr, ptr %memberidx43, align 8
+  %75 = load ptr, ptr %arg, align 8
+  call void %74(ptr %72, ptr %75)
   br label %ifend13
 }
 
@@ -25013,9 +25027,10 @@ if.entry11:                                       ; preds = %ifend9
   %28 = load ptr, ptr %memberidx15, align 8
   %29 = call ptr %28(ptr %26)
   %30 = alloca ptr, align 8
-  %31 = call i64 (ptr, ptr, ...) @asprintf(ptr %30, ptr @321, ptr %24, ptr %29)
+  %31 = call i64 (ptr, ptr, ...) @asprintf(ptr %30, ptr @322, ptr %24, ptr %29)
   %32 = load ptr, ptr %30, align 8
-  %33 = call ptr @string_from_bytes(ptr %32, i64 %31)
+  %33 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%string, ptr null, i32 1) to i32))
+  call void @string_constructor(ptr %33, ptr %32, i64 %31)
   %34 = load ptr, ptr %2, align 8
   call void @TypeChecker_error(ptr %0, i64 5, ptr %33, ptr %34)
   br label %common.ret
@@ -25555,7 +25570,8 @@ if.entry:                                         ; preds = %2
   %13 = alloca ptr, align 8
   %14 = call i64 (ptr, ptr, ...) @asprintf(ptr %13, ptr @197, ptr %12)
   %15 = load ptr, ptr %13, align 8
-  %16 = call ptr @string_from_bytes(ptr %15, i64 %14)
+  %16 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%string, ptr null, i32 1) to i32))
+  call void @string_constructor(ptr %16, ptr %15, i64 %14)
   %17 = load ptr, ptr %1, align 8
   %memberidx6 = getelementptr inbounds %Token, ptr %17, i32 0, i32 1
   %18 = load ptr, ptr %memberidx6, align 8
@@ -25995,7 +26011,7 @@ if.entry:                                         ; preds = %3
   %15 = load ptr, ptr %memberidx5, align 8
   %16 = call ptr %15(ptr %13)
   %17 = alloca ptr, align 8
-  %18 = call i64 (ptr, ptr, ...) @asprintf(ptr %17, ptr @322, ptr %16)
+  %18 = call i64 (ptr, ptr, ...) @asprintf(ptr %17, ptr @323, ptr %16)
   %19 = load ptr, ptr %17, align 8
   %20 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%string, ptr null, i32 1) to i32))
   call void @string_constructor(ptr %20, ptr %19, i64 %18)
@@ -26127,7 +26143,7 @@ ifend5:                                           ; preds = %ifend
   br i1 %17, label %if.entry7, label %ifend9
 
 if.entry7:                                        ; preds = %ifend5
-  %18 = call ptr @string_from_bytes(ptr @323, i64 34)
+  %18 = call ptr @string_from_bytes(ptr @324, i64 34)
   %19 = load ptr, ptr %memberidx2, align 8
   %20 = load ptr, ptr %19, align 8
   call void @TypeChecker_error(ptr %0, i64 5, ptr %18, ptr %20)
@@ -26174,7 +26190,7 @@ else20:                                           ; preds = %else15
   %33 = load ptr, ptr %memberidx23, align 8
   %34 = call ptr %33(ptr %31)
   %35 = alloca ptr, align 8
-  %36 = call i64 (ptr, ptr, ...) @asprintf(ptr %35, ptr @324, ptr %34)
+  %36 = call i64 (ptr, ptr, ...) @asprintf(ptr %35, ptr @325, ptr %34)
   %37 = load ptr, ptr %35, align 8
   %38 = call ptr @string_from_bytes(ptr %37, i64 %36)
   %39 = load ptr, ptr %2, align 8
@@ -26331,7 +26347,7 @@ common.ret:                                       ; preds = %ifend, %if.entry
   ret ptr %common.ret.op
 
 if.entry:                                         ; preds = %2
-  %5 = call ptr @string_from_bytes(ptr @339, i64 32)
+  %5 = call ptr @string_from_bytes(ptr @340, i64 32)
   %6 = load ptr, ptr %1, align 8
   call void @TypeChecker_error(ptr %0, i64 4, ptr %5, ptr %6)
   br label %common.ret
@@ -28033,7 +28049,7 @@ if.entry13:                                       ; preds = %while.end
   %43 = load ptr, ptr %memberidx18, align 8
   %44 = call ptr %43(ptr %41)
   %45 = alloca ptr, align 8
-  %46 = call i64 (ptr, ptr, ...) @asprintf(ptr %45, ptr @311, ptr %39, ptr %44)
+  %46 = call i64 (ptr, ptr, ...) @asprintf(ptr %45, ptr @312, ptr %39, ptr %44)
   %47 = load ptr, ptr %45, align 8
   %48 = call ptr @string_from_bytes(ptr %47, i64 %46)
   %49 = load ptr, ptr %memberidx2, align 8
@@ -28118,10 +28134,9 @@ if.entry38:                                       ; preds = %if.entry33
   %83 = load ptr, ptr %memberidx43, align 8
   %84 = call ptr %83(ptr %81)
   %85 = alloca ptr, align 8
-  %86 = call i64 (ptr, ptr, ...) @asprintf(ptr %85, ptr @312, ptr %79, ptr %84)
+  %86 = call i64 (ptr, ptr, ...) @asprintf(ptr %85, ptr @313, ptr %79, ptr %84)
   %87 = load ptr, ptr %85, align 8
-  %88 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%string, ptr null, i32 1) to i32))
-  call void @string_constructor(ptr %88, ptr %87, i64 %86)
+  %88 = call ptr @string_from_bytes(ptr %87, i64 %86)
   %89 = load ptr, ptr %memberidx2, align 8
   %memberidx45 = getelementptr inbounds %Token, ptr %89, i32 0, i32 1
   %90 = load ptr, ptr %memberidx45, align 8
@@ -28163,7 +28178,7 @@ if.entry54:                                       ; preds = %else34
   %105 = load ptr, ptr %memberidx59, align 8
   %106 = call ptr %105(ptr %103)
   %107 = alloca ptr, align 8
-  %108 = call i64 (ptr, ptr, ...) @asprintf(ptr %107, ptr @313, ptr %101, ptr %106)
+  %108 = call i64 (ptr, ptr, ...) @asprintf(ptr %107, ptr @314, ptr %101, ptr %106)
   %109 = load ptr, ptr %107, align 8
   %110 = call ptr @string_from_bytes(ptr %109, i64 %108)
   %111 = load ptr, ptr %memberidx2, align 8
@@ -28187,7 +28202,7 @@ if.entry63:                                       ; preds = %else29
   %117 = load ptr, ptr %116, align 8
   %memberidx66 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %117, i32 0, i32 4
   %118 = load ptr, ptr %memberidx66, align 8
-  %119 = call ptr @string_from_bytes(ptr @314, i64 9)
+  %119 = call ptr @string_from_bytes(ptr @315, i64 9)
   %120 = call i1 %118(ptr %116, ptr %119)
   br i1 %120, label %if.entry67, label %else68
 
@@ -28204,7 +28219,7 @@ else64:                                           ; preds = %else29
   %128 = load ptr, ptr %memberidx93, align 8
   %129 = call ptr %128(ptr %126)
   %130 = alloca ptr, align 8
-  %131 = call i64 (ptr, ptr, ...) @asprintf(ptr %130, ptr @320, ptr %124, ptr %129)
+  %131 = call i64 (ptr, ptr, ...) @asprintf(ptr %130, ptr @321, ptr %124, ptr %129)
   %132 = load ptr, ptr %130, align 8
   %133 = call ptr @string_from_bytes(ptr %132, i64 %131)
   %134 = load ptr, ptr %memberidx, align 8
@@ -28221,7 +28236,7 @@ else68:                                           ; preds = %if.entry63
   %137 = load ptr, ptr %136, align 8
   %memberidx70 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %137, i32 0, i32 4
   %138 = load ptr, ptr %memberidx70, align 8
-  %139 = call ptr @string_from_bytes(ptr @315, i64 9)
+  %139 = call ptr @string_from_bytes(ptr @316, i64 9)
   %140 = call i1 %138(ptr %136, ptr %139)
   br i1 %140, label %if.entry71, label %else72
 
@@ -28249,7 +28264,7 @@ else72:                                           ; preds = %else68
   %148 = load ptr, ptr %147, align 8
   %memberidx74 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %148, i32 0, i32 4
   %149 = load ptr, ptr %memberidx74, align 8
-  %150 = call ptr @string_from_bytes(ptr @316, i64 9)
+  %150 = call ptr @string_from_bytes(ptr @317, i64 9)
   %151 = call i1 %149(ptr %147, ptr %150)
   br i1 %151, label %if.entry75, label %else76
 
@@ -28262,7 +28277,7 @@ else76:                                           ; preds = %else72
   %153 = load ptr, ptr %152, align 8
   %memberidx78 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %153, i32 0, i32 4
   %154 = load ptr, ptr %memberidx78, align 8
-  %155 = call ptr @string_from_bytes(ptr @317, i64 6)
+  %155 = call ptr @string_from_bytes(ptr @318, i64 6)
   %156 = call i1 %154(ptr %152, ptr %155)
   br i1 %156, label %if.entry79, label %else80
 
@@ -28275,7 +28290,7 @@ else80:                                           ; preds = %else76
   %158 = load ptr, ptr %157, align 8
   %memberidx82 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %158, i32 0, i32 4
   %159 = load ptr, ptr %memberidx82, align 8
-  %160 = call ptr @string_from_bytes(ptr @318, i64 7)
+  %160 = call ptr @string_from_bytes(ptr @319, i64 7)
   %161 = call i1 %159(ptr %157, ptr %160)
   br i1 %161, label %if.entry83, label %else84
 
@@ -28290,7 +28305,7 @@ else84:                                           ; preds = %else80
   %164 = load ptr, ptr %memberidx86, align 8
   %165 = call ptr %164(ptr %162)
   %166 = alloca ptr, align 8
-  %167 = call i64 (ptr, ptr, ...) @asprintf(ptr %166, ptr @319, ptr %165)
+  %167 = call i64 (ptr, ptr, ...) @asprintf(ptr %166, ptr @320, ptr %165)
   %168 = load ptr, ptr %166, align 8
   %169 = call ptr @string_from_bytes(ptr %168, i64 %167)
   %170 = load ptr, ptr %memberidx2, align 8
@@ -28384,8 +28399,7 @@ if.entry21:                                       ; preds = %ifend17
   %40 = alloca ptr, align 8
   %41 = call i64 (ptr, ptr, ...) @asprintf(ptr %40, ptr @270, ptr %34, ptr %39)
   %42 = load ptr, ptr %40, align 8
-  %43 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%string, ptr null, i32 1) to i32))
-  call void @string_constructor(ptr %43, ptr %42, i64 %41)
+  %43 = call ptr @string_from_bytes(ptr %42, i64 %41)
   %44 = load ptr, ptr %3, align 8
   call void @TypeChecker_error(ptr %0, i64 5, ptr %43, ptr %44)
   br label %common.ret
@@ -28656,7 +28670,8 @@ else14:                                           ; preds = %if.entry10
   %54 = alloca ptr, align 8
   %55 = call i64 (ptr, ptr, ...) @asprintf(ptr %54, ptr @305, ptr %42, ptr %52, i64 %53)
   %56 = load ptr, ptr %54, align 8
-  %57 = call ptr @string_from_bytes(ptr %56, i64 %55)
+  %57 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%string, ptr null, i32 1) to i32))
+  call void @string_constructor(ptr %57, ptr %56, i64 %55)
   br label %common.ret
 }
 
@@ -30230,10 +30245,9 @@ if.entry12:                                       ; preds = %for.end
   %43 = load ptr, ptr %memberidx18, align 8
   %44 = call ptr %43(ptr %41)
   %45 = alloca ptr, align 8
-  %46 = call i64 (ptr, ptr, ...) @asprintf(ptr %45, ptr @328, ptr %44)
+  %46 = call i64 (ptr, ptr, ...) @asprintf(ptr %45, ptr @329, ptr %44)
   %47 = load ptr, ptr %45, align 8
-  %48 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%string, ptr null, i32 1) to i32))
-  call void @string_constructor(ptr %48, ptr %47, i64 %46)
+  %48 = call ptr @string_from_bytes(ptr %47, i64 %46)
   %memberidx19 = getelementptr inbounds %CallExpressionNode, ptr %2, i32 0, i32 3
   %49 = load ptr, ptr %memberidx19, align 8
   %50 = load ptr, ptr %49, align 8
@@ -30261,7 +30275,7 @@ ifend23:                                          ; preds = %if.entry95, %ifend8
 
 if.entry26:                                       ; preds = %if.entry21
   %57 = alloca ptr, align 8
-  %58 = call i64 (ptr, ptr, ...) @asprintf(ptr %57, ptr @329, i64 %53)
+  %58 = call i64 (ptr, ptr, ...) @asprintf(ptr %57, ptr @330, i64 %53)
   %59 = load ptr, ptr %57, align 8
   %60 = call ptr @string_from_bytes(ptr %59, i64 %58)
   %61 = load ptr, ptr %2, align 8
@@ -30302,9 +30316,10 @@ if.entry39:                                       ; preds = %ifend28
   %80 = load ptr, ptr %memberidx45, align 8
   %81 = call ptr %80(ptr %78)
   %82 = alloca ptr, align 8
-  %83 = call i64 (ptr, ptr, ...) @asprintf(ptr %82, ptr @330, ptr %81)
+  %83 = call i64 (ptr, ptr, ...) @asprintf(ptr %82, ptr @331, ptr %81)
   %84 = load ptr, ptr %82, align 8
-  %85 = call ptr @string_from_bytes(ptr %84, i64 %83)
+  %85 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%string, ptr null, i32 1) to i32))
+  call void @string_constructor(ptr %85, ptr %84, i64 %83)
   %86 = load ptr, ptr %memberidx, align 8
   %87 = load ptr, ptr %86, align 8
   %memberidx47 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %87, i32 0, i32 5
@@ -30323,7 +30338,7 @@ if.entry49:                                       ; preds = %else22
 
 if.entry54:                                       ; preds = %if.entry49
   %94 = alloca ptr, align 8
-  %95 = call i64 (ptr, ptr, ...) @asprintf(ptr %94, ptr @331, i64 %92)
+  %95 = call i64 (ptr, ptr, ...) @asprintf(ptr %94, ptr @332, i64 %92)
   %96 = load ptr, ptr %94, align 8
   %97 = call ptr @string_from_bytes(ptr %96, i64 %95)
   %98 = load ptr, ptr %2, align 8
@@ -30383,7 +30398,7 @@ if.entry71:                                       ; preds = %ifend66
   %125 = load ptr, ptr %memberidx78, align 8
   %126 = call ptr %125(ptr %123)
   %127 = alloca ptr, align 8
-  %128 = call i64 (ptr, ptr, ...) @asprintf(ptr %127, ptr @332, ptr %117, ptr %126)
+  %128 = call i64 (ptr, ptr, ...) @asprintf(ptr %127, ptr @333, ptr %117, ptr %126)
   %129 = load ptr, ptr %127, align 8
   %130 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%string, ptr null, i32 1) to i32))
   call void @string_constructor(ptr %130, ptr %129, i64 %128)
@@ -30422,9 +30437,10 @@ if.entry85:                                       ; preds = %ifend73
   %150 = load ptr, ptr %memberidx91, align 8
   %151 = call ptr %150(ptr %148)
   %152 = alloca ptr, align 8
-  %153 = call i64 (ptr, ptr, ...) @asprintf(ptr %152, ptr @330, ptr %151)
+  %153 = call i64 (ptr, ptr, ...) @asprintf(ptr %152, ptr @331, ptr %151)
   %154 = load ptr, ptr %152, align 8
-  %155 = call ptr @string_from_bytes(ptr %154, i64 %153)
+  %155 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%string, ptr null, i32 1) to i32))
+  call void @string_constructor(ptr %155, ptr %154, i64 %153)
   %156 = load ptr, ptr %memberidx, align 8
   %157 = load ptr, ptr %156, align 8
   %memberidx93 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %157, i32 0, i32 5
@@ -32647,7 +32663,7 @@ define ptr @CodeGen_codegen_atol_call(ptr %0, ptr %1, ptr %2) {
   %8 = call ptr @LLVMInt64TypeInContext(ptr %7)
   %memberidx2 = getelementptr inbounds %CodeGen, ptr %0, i32 0, i32 1
   %9 = load ptr, ptr %memberidx2, align 8
-  %10 = call ptr @string_from_bytes(ptr @353, i64 4)
+  %10 = call ptr @string_from_bytes(ptr @354, i64 4)
   %11 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%Array_LLVMTypeRef_, ptr null, i32 1) to i32))
   call void @Array_LLVMTypeRef__constructor(ptr %11, i64 ptrtoint (ptr getelementptr (ptr, ptr null, i32 1) to i64))
   %memberidx3 = getelementptr inbounds %Array_LLVMTypeRef_, ptr %11, i32 0, i32 1
@@ -32891,13 +32907,13 @@ define void @CodeGen_codegen_if_stmt(ptr %0, ptr %1, ptr %2) {
   %6 = load ptr, ptr %memberidx1, align 8
   %memberidx2 = getelementptr inbounds %CodeGen, ptr %0, i32 0, i32 2
   %7 = load ptr, ptr %memberidx2, align 8
-  %8 = call ptr @LLVMAppendBasicBlockInContext(ptr %6, ptr %7, ptr @390)
+  %8 = call ptr @LLVMAppendBasicBlockInContext(ptr %6, ptr %7, ptr @391)
   %9 = load ptr, ptr %memberidx1, align 8
   %10 = load ptr, ptr %memberidx2, align 8
   %11 = call ptr @LLVMAppendBasicBlockInContext(ptr %9, ptr %10, ptr @46)
   %12 = load ptr, ptr %memberidx1, align 8
   %13 = load ptr, ptr %memberidx2, align 8
-  %14 = call ptr @LLVMAppendBasicBlockInContext(ptr %12, ptr %13, ptr @391)
+  %14 = call ptr @LLVMAppendBasicBlockInContext(ptr %12, ptr %13, ptr @392)
   %15 = call ptr @LLVMBuildCondBr(ptr %1, ptr %5, ptr %8, ptr %11)
   call void @LLVMPositionBuilderAtEnd(ptr %1, ptr %8)
   %memberidx7 = getelementptr inbounds %IfStatement, ptr %2, i32 0, i32 2
@@ -33844,7 +33860,7 @@ if.entry103:                                      ; preds = %ifend91
   br i1 %90, label %if.entry107, label %ifend105
 
 ifend105:                                         ; preds = %if.entry103, %ifend91
-  %91 = call ptr @string_from_bytes(ptr @350, i64 32)
+  %91 = call ptr @string_from_bytes(ptr @351, i64 32)
   call void @panic(ptr %91)
   br label %common.ret
 
@@ -33872,7 +33888,7 @@ define ptr @CodeGen_codegen_var_access_exp(ptr %0, ptr %1, ptr %2) {
   br i1 %8, label %if.entry, label %ifend
 
 if.entry:                                         ; preds = %3
-  %9 = call ptr @string_from_bytes(ptr @380, i64 50)
+  %9 = call ptr @string_from_bytes(ptr @381, i64 50)
   call void @panic(ptr %9)
   br label %ifend
 
@@ -34682,7 +34698,7 @@ define ptr @CodeGen_codegen_atof_call(ptr %0, ptr %1, ptr %2) {
   %8 = call ptr @LLVMDoubleTypeInContext(ptr %7)
   %memberidx2 = getelementptr inbounds %CodeGen, ptr %0, i32 0, i32 1
   %9 = load ptr, ptr %memberidx2, align 8
-  %10 = call ptr @string_from_bytes(ptr @351, i64 4)
+  %10 = call ptr @string_from_bytes(ptr @352, i64 4)
   %11 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%Array_LLVMTypeRef_, ptr null, i32 1) to i32))
   call void @Array_LLVMTypeRef__constructor(ptr %11, i64 ptrtoint (ptr getelementptr (ptr, ptr null, i32 1) to i64))
   %memberidx3 = getelementptr inbounds %Array_LLVMTypeRef_, ptr %11, i32 0, i32 1
@@ -35058,9 +35074,9 @@ define ptr @CodeGen_codegen_string_to_cstring(ptr %0, ptr %1, ptr %2) {
   %18 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%ObjectType, ptr null, i32 1) to i32))
   call void @ObjectType_constructor(ptr %18, ptr %17)
   %19 = load ptr, ptr %memberidx, align 8
-  %20 = call ptr @string_from_bytes(ptr @388, i64 10)
+  %20 = call ptr @string_from_bytes(ptr @389, i64 10)
   %21 = call ptr @get_class_prop_type_with_name(ptr %19, ptr %18, ptr %20)
-  %22 = call ptr @string_from_bytes(ptr @388, i64 10)
+  %22 = call ptr @string_from_bytes(ptr @389, i64 10)
   %23 = call ptr @CodeGen_get_member_with_name(ptr %0, ptr %1, ptr %2, ptr %18, ptr %22)
   %args = alloca [1 x ptr], align 8
   store ptr %2, ptr %args, align 8
@@ -35801,7 +35817,7 @@ ifend6:                                           ; preds = %if.entry1
   %24 = load ptr, ptr %memberidx9, align 8
   %25 = call ptr %24(ptr %22)
   %26 = alloca ptr, align 8
-  %27 = call i64 (ptr, ptr, ...) @asprintf(ptr %26, ptr @357, ptr %25)
+  %27 = call i64 (ptr, ptr, ...) @asprintf(ptr %26, ptr @358, ptr %25)
   %28 = load ptr, ptr %26, align 8
   %29 = call ptr @string_from_bytes(ptr %28, i64 %27)
   store ptr %29, ptr %fmt_str, align 8
@@ -35811,7 +35827,7 @@ ifend6:                                           ; preds = %if.entry1
 if.entry10:                                       ; preds = %ifend6
   %31 = load ptr, ptr %29, align 8
   %32 = load ptr, ptr %31, align 8
-  %33 = call ptr @string_from_bytes(ptr @358, i64 6)
+  %33 = call ptr @string_from_bytes(ptr @359, i64 6)
   %34 = call ptr %32(ptr %29, ptr %33)
   %35 = call ptr @CodeGen_createGlobalLLVMString(ptr %0, ptr %1, ptr %34)
   br label %common.ret
@@ -35890,9 +35906,10 @@ for.body:                                         ; preds = %for.cond
   %72 = load ptr, ptr %memberidx27, align 8
   %73 = call ptr %72(ptr %70)
   %74 = alloca ptr, align 8
-  %75 = call i64 (ptr, ptr, ...) @asprintf(ptr %74, ptr @365, ptr %68, ptr %73)
+  %75 = call i64 (ptr, ptr, ...) @asprintf(ptr %74, ptr @366, ptr %68, ptr %73)
   %76 = load ptr, ptr %74, align 8
-  %77 = call ptr @string_from_bytes(ptr %76, i64 %75)
+  %77 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%string, ptr null, i32 1) to i32))
+  call void @string_constructor(ptr %77, ptr %76, i64 %75)
   %78 = call ptr %63(ptr %61, ptr %77)
   %79 = load i64, ptr %i, align 4
   %80 = add i64 %79, 1
@@ -35904,7 +35921,7 @@ for.end:                                          ; preds = %for.cond
   %82 = load ptr, ptr %81, align 8
   %memberidx28 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %82, i32 0, i32 1
   %83 = load ptr, ptr %memberidx28, align 8
-  %84 = call ptr @string_from_bytes(ptr @366, i64 1)
+  %84 = call ptr @string_from_bytes(ptr @367, i64 1)
   %85 = call ptr %83(ptr %81, ptr %84)
   %86 = load ptr, ptr %fmt_str, align 8
   %87 = load ptr, ptr %fmt_args, align 8
@@ -35912,7 +35929,7 @@ for.end:                                          ; preds = %for.cond
   br label %common.ret
 
 if.entry30:                                       ; preds = %ifend3
-  %89 = call ptr @string_from_bytes(ptr @367, i64 10)
+  %89 = call ptr @string_from_bytes(ptr @368, i64 10)
   %90 = call ptr @CodeGen_createGlobalLLVMString(ptr %0, ptr %1, ptr %89)
   br label %common.ret
 
@@ -35928,7 +35945,7 @@ define ptr @CodeGen_get_var_expr_mem(ptr %0, ptr %1, ptr %2) {
   br i1 %6, label %if.entry, label %ifend
 
 if.entry:                                         ; preds = %3
-  %7 = call ptr @string_from_bytes(ptr @370, i64 45)
+  %7 = call ptr @string_from_bytes(ptr @371, i64 45)
   call void @panic(ptr %7)
   br label %ifend
 
@@ -35978,7 +35995,7 @@ if.entry:                                         ; preds = %end
   %16 = load ptr, ptr %memberidx1, align 8
   %17 = call ptr @CodeGen_get_expr_mem(ptr %0, ptr %1, ptr %16)
   store ptr %17, ptr %ind_ptr, align 8
-  %18 = call ptr @LLVMBuildInBoundsGEP2(ptr %1, ptr %ternary, ptr %17, ptr %indices, i64 2, ptr @371)
+  %18 = call ptr @LLVMBuildInBoundsGEP2(ptr %1, ptr %ternary, ptr %17, ptr %indices, i64 2, ptr @372)
   br label %common.ret
 
 ifend:                                            ; preds = %end
@@ -35987,7 +36004,7 @@ ifend:                                            ; preds = %end
   %19 = load ptr, ptr %memberidx1, align 8
   %20 = call ptr @CodeGen_codegen_expression(ptr %0, ptr %1, ptr %19)
   store ptr %20, ptr %ind_ptr, align 8
-  %21 = call ptr @LLVMBuildInBoundsGEP2(ptr %1, ptr %ternary, ptr %20, ptr %indices_1, i64 1, ptr @372)
+  %21 = call ptr @LLVMBuildInBoundsGEP2(ptr %1, ptr %ternary, ptr %20, ptr %indices_1, i64 1, ptr @373)
   br label %common.ret
 }
 
@@ -36111,7 +36128,7 @@ ifend16:                                          ; preds = %else15, %if.entry14
   %62 = load ptr, ptr %memberidx29, align 8
   %memberidx30 = getelementptr inbounds %Array_LLVMValueRef_, ptr %61, i32 0, i32 2
   %63 = load i64, ptr %memberidx30, align 4
-  %64 = call ptr @LLVMBuildInBoundsGEP2(ptr %1, ptr %struct_type.0, ptr %ptr.1, ptr %62, i64 %63, ptr @374)
+  %64 = call ptr @LLVMBuildInBoundsGEP2(ptr %1, ptr %struct_type.0, ptr %ptr.1, ptr %62, i64 %63, ptr @375)
   br label %common.ret
 }
 
@@ -36190,12 +36207,12 @@ end:
   %memberidx6 = getelementptr inbounds %Array_LLVMValueRef_, ptr %17, i32 0, i32 2
   store i64 2, ptr %memberidx6, align 4
   call void @CodeGen_build_constructor_call(ptr %0, ptr %1, ptr %4, ptr %17)
-  %22 = call ptr @string_from_bytes(ptr @375, i64 6)
+  %22 = call ptr @string_from_bytes(ptr @376, i64 6)
   %23 = call ptr @CodeGen_get_member_mem_with_name(ptr %0, ptr %1, ptr %11, ptr %4, ptr %22)
   %24 = call ptr @LLVMPointerType(ptr %10, i64 0)
   %25 = call ptr @LLVMBuildLoad2(ptr %1, ptr %24, ptr %23, ptr @38)
   %26 = call ptr @CodeGen_store_array_elements(ptr %0, ptr %1, ptr %25, ptr %3)
-  %27 = call ptr @string_from_bytes(ptr @376, i64 6)
+  %27 = call ptr @string_from_bytes(ptr @377, i64 6)
   %28 = call ptr @CodeGen_get_member_mem_with_name(ptr %0, ptr %1, ptr %11, ptr %4, ptr %27)
   %29 = call ptr @LLVMBuildStore(ptr %1, ptr %16, ptr %28)
   ret ptr %11
@@ -36303,7 +36320,7 @@ for.end:                                          ; preds = %for.cond
   %42 = load ptr, ptr %memberidx25, align 8
   %43 = call ptr %42(ptr %40)
   %44 = alloca ptr, align 8
-  %45 = call i64 (ptr, ptr, ...) @asprintf(ptr %44, ptr @402, ptr %43)
+  %45 = call i64 (ptr, ptr, ...) @asprintf(ptr %44, ptr @403, ptr %43)
   %46 = load ptr, ptr %44, align 8
   %47 = call ptr @string_from_bytes(ptr %46, i64 %45)
   %48 = load ptr, ptr %constructor_llvm_method_type, align 8
@@ -36321,7 +36338,7 @@ define ptr @CodeGen_codegen_memcmp_call(ptr %0, ptr %1, ptr %2) {
   %8 = call ptr @LLVMIntTypeInContext(ptr %7, i64 64)
   %memberidx2 = getelementptr inbounds %CodeGen, ptr %0, i32 0, i32 1
   %9 = load ptr, ptr %memberidx2, align 8
-  %10 = call ptr @string_from_bytes(ptr @355, i64 6)
+  %10 = call ptr @string_from_bytes(ptr @356, i64 6)
   %11 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%Array_LLVMTypeRef_, ptr null, i32 1) to i32))
   call void @Array_LLVMTypeRef__constructor(ptr %11, i64 mul (i64 ptrtoint (ptr getelementptr (ptr, ptr null, i32 1) to i64), i64 3))
   %memberidx3 = getelementptr inbounds %Array_LLVMTypeRef_, ptr %11, i32 0, i32 1
@@ -36464,7 +36481,7 @@ define void @CodeGen_codegen_for_stmt(ptr %0, ptr %1, ptr %2) {
   %4 = load ptr, ptr %memberidx, align 8
   %memberidx1 = getelementptr inbounds %CodeGen, ptr %0, i32 0, i32 2
   %5 = load ptr, ptr %memberidx1, align 8
-  %6 = call ptr @LLVMAppendBasicBlockInContext(ptr %4, ptr %5, ptr @392)
+  %6 = call ptr @LLVMAppendBasicBlockInContext(ptr %4, ptr %5, ptr @393)
   %7 = call ptr @LLVMBuildBr(ptr %1, ptr %6)
   call void @LLVMPositionBuilderAtEnd(ptr %1, ptr %6)
   %memberidx2 = getelementptr inbounds %ForStatement, ptr %2, i32 0, i32 1
@@ -36480,22 +36497,22 @@ ifend:                                            ; preds = %3, %if.entry
   %for_cond_block = alloca ptr, align 8
   %10 = load ptr, ptr %memberidx, align 8
   %11 = load ptr, ptr %memberidx1, align 8
-  %12 = call ptr @LLVMAppendBasicBlockInContext(ptr %10, ptr %11, ptr @393)
+  %12 = call ptr @LLVMAppendBasicBlockInContext(ptr %10, ptr %11, ptr @394)
   store ptr %12, ptr %for_cond_block, align 8
   %for_body_block = alloca ptr, align 8
   %13 = load ptr, ptr %memberidx, align 8
   %14 = load ptr, ptr %memberidx1, align 8
-  %15 = call ptr @LLVMAppendBasicBlockInContext(ptr %13, ptr %14, ptr @394)
+  %15 = call ptr @LLVMAppendBasicBlockInContext(ptr %13, ptr %14, ptr @395)
   store ptr %15, ptr %for_body_block, align 8
   %for_incr_block = alloca ptr, align 8
   %16 = load ptr, ptr %memberidx, align 8
   %17 = load ptr, ptr %memberidx1, align 8
-  %18 = call ptr @LLVMAppendBasicBlockInContext(ptr %16, ptr %17, ptr @395)
+  %18 = call ptr @LLVMAppendBasicBlockInContext(ptr %16, ptr %17, ptr @396)
   store ptr %18, ptr %for_incr_block, align 8
   %for_end_block = alloca ptr, align 8
   %19 = load ptr, ptr %memberidx, align 8
   %20 = load ptr, ptr %memberidx1, align 8
-  %21 = call ptr @LLVMAppendBasicBlockInContext(ptr %19, ptr %20, ptr @396)
+  %21 = call ptr @LLVMAppendBasicBlockInContext(ptr %19, ptr %20, ptr @397)
   store ptr %21, ptr %for_end_block, align 8
   %prev_break_bb = alloca ptr, align 8
   %memberidx12 = getelementptr inbounds %CodeGen, ptr %0, i32 0, i32 7
@@ -36644,7 +36661,7 @@ ifend16:                                          ; preds = %ifend
   br i1 %29, label %if.entry32, label %common.ret
 
 if.entry17:                                       ; preds = %if.entry14
-  %30 = call ptr @string_from_bytes(ptr @385, i64 51)
+  %30 = call ptr @string_from_bytes(ptr @386, i64 51)
   call void @panic(ptr %30)
   br label %ifend19
 
@@ -36663,7 +36680,7 @@ ifend19:                                          ; preds = %if.entry14, %if.ent
   br i1 %37, label %if.entry22, label %ifend24
 
 if.entry22:                                       ; preds = %ifend19
-  %38 = call ptr @string_from_bytes(ptr @386, i64 59)
+  %38 = call ptr @string_from_bytes(ptr @387, i64 59)
   call void @panic(ptr %38)
   br label %ifend24
 
@@ -36693,7 +36710,7 @@ if.entry32:                                       ; preds = %ifend16
   br i1 %48, label %if.entry35, label %ifend37
 
 if.entry35:                                       ; preds = %if.entry32
-  %49 = call ptr @string_from_bytes(ptr @387, i64 50)
+  %49 = call ptr @string_from_bytes(ptr @388, i64 50)
   call void @panic(ptr %49)
   br label %ifend37
 
@@ -36718,7 +36735,7 @@ define ptr @CodeGen_codegen_atoi_call(ptr %0, ptr %1, ptr %2) {
   %8 = call ptr @LLVMInt32TypeInContext(ptr %7)
   %memberidx2 = getelementptr inbounds %CodeGen, ptr %0, i32 0, i32 1
   %9 = load ptr, ptr %memberidx2, align 8
-  %10 = call ptr @string_from_bytes(ptr @352, i64 4)
+  %10 = call ptr @string_from_bytes(ptr @353, i64 4)
   %11 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%Array_LLVMTypeRef_, ptr null, i32 1) to i32))
   call void @Array_LLVMTypeRef__constructor(ptr %11, i64 ptrtoint (ptr getelementptr (ptr, ptr null, i32 1) to i64))
   %memberidx3 = getelementptr inbounds %Array_LLVMTypeRef_, ptr %11, i32 0, i32 1
@@ -37509,7 +37526,7 @@ if.entry61:                                       ; preds = %else22
   %148 = load ptr, ptr %memberidx66, align 8
   %149 = call ptr %148(ptr %146)
   %150 = alloca ptr, align 8
-  %151 = call i64 (ptr, ptr, ...) @asprintf(ptr %150, ptr @400, ptr %145, ptr %149)
+  %151 = call i64 (ptr, ptr, ...) @asprintf(ptr %150, ptr @401, ptr %145, ptr %149)
   %152 = load ptr, ptr %150, align 8
   %153 = call ptr @string_from_bytes(ptr %152, i64 %151)
   call void @panic(ptr %153)
@@ -37561,7 +37578,7 @@ if.entry86:                                       ; preds = %if.entry79
   %173 = load ptr, ptr %memberidx92, align 8
   %174 = call ptr %173(ptr %171)
   %175 = alloca ptr, align 8
-  %176 = call i64 (ptr, ptr, ...) @asprintf(ptr %175, ptr @401, ptr %174)
+  %176 = call i64 (ptr, ptr, ...) @asprintf(ptr %175, ptr @402, ptr %174)
   %177 = load ptr, ptr %175, align 8
   %178 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%string, ptr null, i32 1) to i32))
   call void @string_constructor(ptr %178, ptr %177, i64 %176)
@@ -37796,10 +37813,10 @@ define void @CodeGen_codegen_while_stmt(ptr %0, ptr %1, ptr %2) {
   %4 = load ptr, ptr %memberidx, align 8
   %memberidx1 = getelementptr inbounds %CodeGen, ptr %0, i32 0, i32 2
   %5 = load ptr, ptr %memberidx1, align 8
-  %6 = call ptr @LLVMAppendBasicBlockInContext(ptr %4, ptr %5, ptr @397)
+  %6 = call ptr @LLVMAppendBasicBlockInContext(ptr %4, ptr %5, ptr @398)
   %7 = load ptr, ptr %memberidx, align 8
   %8 = load ptr, ptr %memberidx1, align 8
-  %9 = call ptr @LLVMAppendBasicBlockInContext(ptr %7, ptr %8, ptr @398)
+  %9 = call ptr @LLVMAppendBasicBlockInContext(ptr %7, ptr %8, ptr @399)
   %memberidx4 = getelementptr inbounds %CodeGen, ptr %0, i32 0, i32 7
   %10 = load ptr, ptr %memberidx4, align 8
   %memberidx5 = getelementptr inbounds %CodeGen, ptr %0, i32 0, i32 8
@@ -37946,7 +37963,7 @@ if.entry:                                         ; preds = %4
   br label %ifend
 
 else:                                             ; preds = %4
-  %15 = call ptr @string_from_bytes(ptr @399, i64 47)
+  %15 = call ptr @string_from_bytes(ptr @400, i64 47)
   call void @panic(ptr %15)
   br label %ifend
 
@@ -37998,7 +38015,7 @@ for.end:                                          ; preds = %for.cond
   %asprintf = alloca ptr, align 8
   %memberidx7 = getelementptr inbounds %CodeGen, ptr %0, i32 0, i32 1
   %23 = load ptr, ptr %memberidx7, align 8
-  %24 = call ptr @string_from_bytes(ptr @356, i64 8)
+  %24 = call ptr @string_from_bytes(ptr @357, i64 8)
   %25 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%Array_LLVMTypeRef_, ptr null, i32 1) to i32))
   call void @Array_LLVMTypeRef__constructor(ptr %25, i64 mul (i64 ptrtoint (ptr getelementptr (ptr, ptr null, i32 1) to i64), i64 2))
   %memberidx8 = getelementptr inbounds %Array_LLVMTypeRef_, ptr %25, i32 0, i32 1
@@ -38168,7 +38185,7 @@ if.entry24:                                       ; preds = %if.entry
   %func = alloca ptr, align 8
   %memberidx27 = getelementptr inbounds %CodeGen, ptr %0, i32 0, i32 1
   %61 = load ptr, ptr %memberidx27, align 8
-  %62 = call ptr @LLVMGetNamedFunction(ptr %61, ptr @368)
+  %62 = call ptr @LLVMGetNamedFunction(ptr %61, ptr @369)
   store ptr %62, ptr %func, align 8
   %63 = icmp eq ptr %62, null
   br i1 %63, label %if.entry28, label %ifend30
@@ -38198,7 +38215,7 @@ ifend26:                                          ; preds = %if.entry
   br label %common.ret
 
 if.entry28:                                       ; preds = %if.entry24
-  %75 = call ptr @string_from_bytes(ptr @369, i64 54)
+  %75 = call ptr @string_from_bytes(ptr @370, i64 54)
   call void @panic(ptr %75)
   br label %ifend30
 
@@ -38373,7 +38390,7 @@ define void @GeneratedModule_print_errors(ptr %0) {
   %6 = load ptr, ptr %memberidx2, align 8
   %7 = call ptr %6(ptr %3)
   %8 = alloca ptr, align 8
-  %9 = call i64 (ptr, ptr, ...) @asprintf(ptr %8, ptr @344, ptr %7)
+  %9 = call i64 (ptr, ptr, ...) @asprintf(ptr %8, ptr @345, ptr %7)
   %10 = load ptr, ptr %8, align 8
   %11 = call ptr @string_from_bytes(ptr %10, i64 %9)
   call void @panic(ptr %11)
@@ -38397,7 +38414,7 @@ if.entry:                                         ; preds = %1
 ifend:                                            ; preds = %1, %if.entry
   %main_fnc = alloca ptr, align 8
   %4 = load ptr, ptr %memberidx, align 8
-  %5 = call ptr @LLVMGetNamedFunction(ptr %4, ptr @345)
+  %5 = call ptr @LLVMGetNamedFunction(ptr %4, ptr @346)
   store ptr %5, ptr %main_fnc, align 8
   %6 = icmp eq ptr %5, null
   br i1 %6, label %if.entry4, label %ifend6
@@ -38407,7 +38424,7 @@ common.ret:                                       ; preds = %ifend14, %if.entry4
   ret i64 %common.ret.op
 
 if.entry4:                                        ; preds = %ifend
-  %7 = call ptr @string_from_bytes(ptr @346, i64 48)
+  %7 = call ptr @string_from_bytes(ptr @347, i64 48)
   call void @println(ptr %7)
   %8 = load ptr, ptr %engine, align 8
   call void @LLVMDisposeExecutionEngine(ptr %8)
@@ -38467,10 +38484,10 @@ if.entry:                                         ; preds = %end
 
 ifend:                                            ; preds = %end, %if.entry
   %CPU = alloca ptr, align 8
-  store ptr @347, ptr %CPU, align 8
+  store ptr @348, ptr %CPU, align 8
   %12 = load ptr, ptr %target, align 8
   %13 = call ptr @LLVMGetHostCPUFeatures()
-  %14 = call ptr @LLVMCreateTargetMachine(ptr %12, ptr %ternary, ptr @347, ptr %13, i64 3, i64 0, i64 0)
+  %14 = call ptr @LLVMCreateTargetMachine(ptr %12, ptr %ternary, ptr @348, ptr %13, i64 3, i64 0, i64 0)
   ret ptr %14
 }
 
@@ -38531,7 +38548,7 @@ define void @GeneratedModule_print(ptr %0) {
   %memberidx = getelementptr inbounds %GeneratedModule, ptr %0, i32 0, i32 1
   %2 = load ptr, ptr %memberidx, align 8
   %memberidx1 = getelementptr inbounds %GeneratedModule, ptr %0, i32 0, i32 2
-  %3 = call i1 @LLVMPrintModuleToFile(ptr %2, ptr @348, ptr %memberidx1)
+  %3 = call i1 @LLVMPrintModuleToFile(ptr %2, ptr @349, ptr %memberidx1)
   br i1 %3, label %if.entry, label %ifend
 
 if.entry:                                         ; preds = %1
@@ -38594,7 +38611,7 @@ define void @panic(ptr %0) {
   %3 = load ptr, ptr %memberidx, align 8
   %4 = call ptr %3(ptr %0)
   %5 = alloca ptr, align 8
-  %6 = call i64 (ptr, ptr, ...) @asprintf(ptr %5, ptr @343, ptr %4)
+  %6 = call i64 (ptr, ptr, ...) @asprintf(ptr %5, ptr @344, ptr %4)
   %7 = load ptr, ptr %5, align 8
   %8 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%string, ptr null, i32 1) to i32))
   call void @string_constructor(ptr %8, ptr %7, i64 %6)
@@ -39407,7 +39424,7 @@ define ptr @CodeGen_codegen_pow_expr(ptr %0, ptr %1, ptr %2, ptr %3, ptr %4) {
   %9 = load ptr, ptr %memberidx, align 8
   %10 = call ptr %9(ptr %7)
   %11 = alloca ptr, align 8
-  %12 = call i64 (ptr, ptr, ...) @asprintf(ptr %11, ptr @377, ptr %10)
+  %12 = call i64 (ptr, ptr, ...) @asprintf(ptr %11, ptr @378, ptr %10)
   %13 = load ptr, ptr %11, align 8
   %14 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%string, ptr null, i32 1) to i32))
   call void @string_constructor(ptr %14, ptr %13, i64 %12)
@@ -39629,7 +39646,7 @@ ifend48:                                          ; preds = %else172, %else126, 
   %87 = load ptr, ptr %rty, align 8
   %88 = load i64, ptr %87, align 4
   %89 = alloca ptr, align 8
-  %90 = call i64 (ptr, ptr, ...) @asprintf(ptr %89, ptr @378, i64 %82, ptr %86, i64 %88)
+  %90 = call i64 (ptr, ptr, ...) @asprintf(ptr %89, ptr @379, i64 %82, ptr %86, i64 %88)
   %91 = load ptr, ptr %89, align 8
   %92 = call ptr @string_from_bytes(ptr %91, i64 %90)
   call void @panic(ptr %92)
@@ -40199,7 +40216,7 @@ define ptr @CodeGen_codegen_realloc_call(ptr %0, ptr %1, ptr %2) {
   %8 = call ptr @LLVMIntTypeInContext(ptr %7, i64 64)
   %memberidx2 = getelementptr inbounds %CodeGen, ptr %0, i32 0, i32 1
   %9 = load ptr, ptr %memberidx2, align 8
-  %10 = call ptr @string_from_bytes(ptr @354, i64 7)
+  %10 = call ptr @string_from_bytes(ptr @355, i64 7)
   %11 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%Array_LLVMTypeRef_, ptr null, i32 1) to i32))
   call void @Array_LLVMTypeRef__constructor(ptr %11, i64 mul (i64 ptrtoint (ptr getelementptr (ptr, ptr null, i32 1) to i64), i64 2))
   %memberidx3 = getelementptr inbounds %Array_LLVMTypeRef_, ptr %11, i32 0, i32 1
@@ -40326,7 +40343,7 @@ if.entry25:                                       ; preds = %ifend18
   %35 = call ptr @CodeGen_createLLVMInt(ptr %0, i64 %34)
   store ptr %35, ptr %indices, align 8
   %36 = load ptr, ptr %alloc_ty, align 8
-  %37 = call ptr @LLVMBuildInBoundsGEP2(ptr %1, ptr %36, ptr %6, ptr %indices, i64 1, ptr @379)
+  %37 = call ptr @LLVMBuildInBoundsGEP2(ptr %1, ptr %36, ptr %6, ptr %indices, i64 1, ptr @380)
   store ptr %37, ptr %new_value, align 8
   br label %ifend27
 
@@ -40376,13 +40393,13 @@ define ptr @CodeGen_codegen_ternary_exp(ptr %0, ptr %1, ptr %2) {
   %4 = load ptr, ptr %memberidx, align 8
   %memberidx1 = getelementptr inbounds %CodeGen, ptr %0, i32 0, i32 2
   %5 = load ptr, ptr %memberidx1, align 8
-  %6 = call ptr @LLVMAppendBasicBlockInContext(ptr %4, ptr %5, ptr @381)
+  %6 = call ptr @LLVMAppendBasicBlockInContext(ptr %4, ptr %5, ptr @382)
   %7 = load ptr, ptr %memberidx, align 8
   %8 = load ptr, ptr %memberidx1, align 8
-  %9 = call ptr @LLVMAppendBasicBlockInContext(ptr %7, ptr %8, ptr @382)
+  %9 = call ptr @LLVMAppendBasicBlockInContext(ptr %7, ptr %8, ptr @383)
   %10 = load ptr, ptr %memberidx, align 8
   %11 = load ptr, ptr %memberidx1, align 8
-  %12 = call ptr @LLVMAppendBasicBlockInContext(ptr %10, ptr %11, ptr @383)
+  %12 = call ptr @LLVMAppendBasicBlockInContext(ptr %10, ptr %11, ptr @384)
   %memberidx6 = getelementptr inbounds %TernaryExpression, ptr %2, i32 0, i32 4
   %13 = load ptr, ptr %memberidx6, align 8
   %14 = call ptr @CodeGen_codegen_expression(ptr %0, ptr %1, ptr %13)
@@ -40402,7 +40419,7 @@ define ptr @CodeGen_codegen_ternary_exp(ptr %0, ptr %1, ptr %2) {
   %memberidx10 = getelementptr inbounds %Expression, ptr %22, i32 0, i32 3
   %23 = load ptr, ptr %memberidx10, align 8
   %24 = call ptr @CodeGen_codegen_type(ptr %0, ptr %23, i1 true)
-  %25 = call ptr @LLVMBuildPhi(ptr %1, ptr %24, ptr @384)
+  %25 = call ptr @LLVMBuildPhi(ptr %1, ptr %24, ptr @385)
   %incomming_vals = alloca [2 x ptr], align 8
   store ptr %17, ptr %incomming_vals, align 8
   %26 = getelementptr inbounds ptr, ptr %incomming_vals, i64 1
@@ -40703,7 +40720,7 @@ if.entry49:                                       ; preds = %ifend45
   br label %common.ret
 
 ifend51:                                          ; preds = %ifend45
-  %103 = call ptr @string_from_bytes(ptr @389, i64 21)
+  %103 = call ptr @string_from_bytes(ptr @390, i64 21)
   call void @panic(ptr %103)
   br label %common.ret
 }
@@ -40746,7 +40763,7 @@ define ptr @create_var_key(ptr %0) {
   %memberidx2 = getelementptr inbounds %VarId, ptr %0, i32 0, i32 2
   %4 = load i64, ptr %memberidx2, align 4
   %5 = alloca ptr, align 8
-  %6 = call i64 (ptr, ptr, ...) @asprintf(ptr %5, ptr @349, i64 %2, i64 %3, i64 %4)
+  %6 = call i64 (ptr, ptr, ...) @asprintf(ptr %5, ptr @350, i64 %2, i64 %3, i64 %4)
   %7 = load ptr, ptr %5, align 8
   %8 = call ptr @string_from_bytes(ptr %7, i64 %6)
   ret ptr %8
@@ -40759,7 +40776,7 @@ define ptr @create_type_id_key(ptr %0) {
   %memberidx2 = getelementptr inbounds %TypeId, ptr %0, i32 0, i32 2
   %4 = load i64, ptr %memberidx2, align 4
   %5 = alloca ptr, align 8
-  %6 = call i64 (ptr, ptr, ...) @asprintf(ptr %5, ptr @349, i64 %2, i64 %3, i64 %4)
+  %6 = call i64 (ptr, ptr, ...) @asprintf(ptr %5, ptr @350, i64 %2, i64 %3, i64 %4)
   %7 = load ptr, ptr %5, align 8
   %8 = call ptr @string_from_bytes(ptr %7, i64 %6)
   ret ptr %8
@@ -40879,7 +40896,7 @@ common.ret:                                       ; preds = %ifend20, %if.entry1
   ret ptr %common.ret.op
 
 if.entry1:                                        ; preds = %if.entry
-  %9 = call ptr @string_from_bytes(ptr @359, i64 3)
+  %9 = call ptr @string_from_bytes(ptr @360, i64 3)
   br label %common.ret
 
 ifend3:                                           ; preds = %if.entry
@@ -40887,15 +40904,15 @@ ifend3:                                           ; preds = %if.entry
   br i1 %10, label %if.entry5, label %ifend7
 
 if.entry5:                                        ; preds = %ifend3
-  %11 = call ptr @string_from_bytes(ptr @360, i64 2)
+  %11 = call ptr @string_from_bytes(ptr @361, i64 2)
   br label %common.ret
 
 ifend7:                                           ; preds = %ifend3
-  %12 = call ptr @string_from_bytes(ptr @361, i64 2)
+  %12 = call ptr @string_from_bytes(ptr @362, i64 2)
   br label %common.ret
 
 if.entry10:                                       ; preds = %ifend
-  %13 = call ptr @string_from_bytes(ptr @362, i64 2)
+  %13 = call ptr @string_from_bytes(ptr @363, i64 2)
   br label %common.ret
 
 ifend12:                                          ; preds = %ifend
@@ -40905,7 +40922,7 @@ ifend12:                                          ; preds = %ifend
   br i1 %16, label %if.entry15, label %ifend17
 
 if.entry15:                                       ; preds = %ifend12
-  %17 = call ptr @string_from_bytes(ptr @363, i64 3)
+  %17 = call ptr @string_from_bytes(ptr @364, i64 3)
   br label %common.ret
 
 ifend17:                                          ; preds = %ifend12
@@ -40913,7 +40930,7 @@ ifend17:                                          ; preds = %ifend12
   br i1 %18, label %if.entry18, label %ifend20
 
 if.entry18:                                       ; preds = %ifend17
-  %19 = call ptr @string_from_bytes(ptr @364, i64 4)
+  %19 = call ptr @string_from_bytes(ptr @365, i64 4)
   br label %common.ret
 
 ifend20:                                          ; preds = %ifend17
@@ -40945,7 +40962,7 @@ define ptr @create_prop_key(ptr %0) {
   %memberidx3 = getelementptr inbounds %PropId, ptr %0, i32 0, i32 2
   %8 = load i64, ptr %memberidx3, align 4
   %9 = alloca ptr, align 8
-  %10 = call i64 (ptr, ptr, ...) @asprintf(ptr %9, ptr @373, ptr %6, i64 %7, i64 %8)
+  %10 = call i64 (ptr, ptr, ...) @asprintf(ptr %9, ptr @374, ptr %6, i64 %7, i64 %8)
   %11 = load ptr, ptr %9, align 8
   %12 = call ptr @string_from_bytes(ptr %11, i64 %10)
   ret ptr %12

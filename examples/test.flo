@@ -1,14 +1,10 @@
-class NO {}
-fnc resize_array(arr: NO[], n: int){
-    for let i = arr.length; i <= n; i++ {
-        arr << null
+class Static {
+    name: string = null
+    init(){
+        Static.name = "Hello"
     }
 }
-fnc main(): int {
-    let arr: NO[] = []
-    for let i = 2; i <= 128; i*=2 {
-        resize_array(arr, i)
-        arr[i] = null
-    } 
-    return 0
+fnc main(){
+    Static.init()
+    println(Static.name)
 }

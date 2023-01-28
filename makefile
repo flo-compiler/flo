@@ -8,7 +8,6 @@ LDFLAGS=`$(LLVM_BIN_PATH)/llvm-config --ldflags --libs --system-libs`
 
 FLO_INSTALL_PATH=~/flo
 
-
 define compile_and_link_fc
 	./$(1) src/main.flo -o $(1).o -O 3
 	$(CC) -no-pie $(1).o llvm-bind.so $(LDFLAGS) -o $(2)
@@ -28,10 +27,10 @@ stage0: bootstrap/flo.ll llvm-bind.so
 llvm-bind.so: src/llvm/FloLLVMBind.cpp
 	$(CC) -c $^ -o $@
 
-check: flo
+check:
 	./runtests.py
 
-install: check
+install:
 	cp -f flo $(FLO_INSTALL_PATH)
 	sudo ln -f $(FLO_INSTALL_PATH) /usr/bin/flo
 
