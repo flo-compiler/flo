@@ -361,9 +361,10 @@ class ConstDeclaration (Statement) {
     }
 }
 class ForStatement (Statement) {
+    setup: Statement
     initialization: Statement
     condition: Expression
-    incr_decr: Expression
+    incr_decr: Statement
     block: Block
     constructor(this){
         super(StatementKind.FOR)
@@ -797,7 +798,7 @@ fnc is_class_prop_static(program: Program, prop_id: PropId): bool {
 fnc is_buitin(program: Program, ty: Type, name: string): bool {
     if !is_object(ty) return false
     let class_obj = get_class_from_type(program, ty)
-    return class_obj.name == name and class_obj.id.module_id == 0
+    return class_obj.name == name and class_obj.id.module_id == 1
 }
 fnc is_operator_overload_name(name: string): bool {
     if name == "__eq__" return true
@@ -933,9 +934,11 @@ class TypeChecker {
     }
     public check(module_ast: ModuleAST, compiler: Compiler, filename: string): Program {
         let typechecker: TypeChecker(compiler)
-        typechecker.load_builtins_module()
-        if typechecker.has_errored() return null
         typechecker.load_generic_module()
+        typechecker.load_builtins_module()
+        typechecker.switch_to_generic_module()
+        typechecker.import_all_from_module(typechecker.get_module(1))
+        if typechecker.has_errored() return null
         typechecker.check_module(module_ast, filename)
         return typechecker.program
     }
@@ -1153,11 +1156,9 @@ class TypeChecker {
     private load_generic_module(this){
         this.compiler.register_file("__generics__")
         this.check_module(new ModuleAST(), "__generics__")
-        this.switch_to_generic_module()
-        this.import_all_from_module(this.get_module(0))
     }
     private switch_to_generic_module(this){
-        let generic_module_id = 1
+        let generic_module_id = 0
         this.current_module = generic_module_id
         this.current_scope = this.get_module(generic_module_id).scopes[0].id
     }
@@ -1907,9 +1908,6 @@ class TypeChecker {
             this.error(ErrorKind.TYPE, "Cannot create array without type hint",  array_node.range)
             return null
         }
-        if array_type.kind == TypeKind.UNKNOWN {
-            array_type = new ArrayType(element_type, elements.length)
-        }
         if array_type.kind != TypeKind.ARRAY {
             let generic_array_type = this.create_generic_instance_in_module("Array", [element_type])
             if (generic_array_type != null) {
@@ -2148,8 +2146,8 @@ class TypeChecker {
     }
     private check_typecast_expr(this, type_expr_node: TypeCastExpressionNode): Expression {
         let exp = this.check_expression(Type.unknown(), type_expr_node.expression)
-        let val_ty = exp.value_type
         let dest_ty = this.check_type(type_expr_node.bound_type)
+        let val_ty = exp.value_type
         if this.has_errored() return null
         /* TODO:
             int to pointer.
@@ -2660,7 +2658,37 @@ class TypeChecker {
             if for_stmt_node.condition != null
                 for_stmt.condition = this.check_condition(for_stmt_node.condition)
             if for_stmt_node.incr_decr != null
-                for_stmt.incr_decr = this.check_expression(Type.unknown(), for_stmt_node.incr_decr)
+                for_stmt.incr_decr = this.check_statement(for_stmt_node.incr_decr)
+        } else {
+            let iterator = this.check_expression(Type.unknown(), for_stmt_node.iterator)
+            if this.has_errored() return null
+            let iterator_class = get_class_from_type(this.program, iterator.value_type)
+            let iter_prop_id = iterator_class.prop_map.get("__iter__")
+            if iter_prop_id == null {
+                this.error(ErrorKind.TYPE, "Iterator type has to have __iter__ as property", for_stmt_node.iterator.range)
+                return null
+            }
+            let iter_generator_type = get_class_prop_type(this.program, iter_prop_id) as FunctionType
+            let iteratable_type = iter_generator_type.return_type
+            //TODO: Check iteratable is an iteratable
+            let iterator_name =  "tmp_it"
+            let iter_call = new CallExpression(new MemberExpression(iterator, iter_prop_id, iter_generator_type), [], iteratable_type)
+            let iteratable_var_id = this.declare_var_within_current_scope(iterator_name, iter_call, iteratable_type).var_id
+            for_stmt.setup = new VarDeclaration(iterator_name, iteratable_var_id)
+
+            let iteratable_class = get_class_from_type(this.program, iteratable_type)
+            let done_prop_id = iteratable_class.prop_map.get("done")
+            let iteratable_load = new VarAccessExpression(iteratable_var_id, iteratable_type)
+            for_stmt.condition = new UnaryExpression(UnaryOp.NOT, new MemberExpression(iteratable_load, done_prop_id, new BooleanType()), new BooleanType())
+            
+            let iter_item_name =  for_stmt_node.it_name.value
+            let next_prop_id = iteratable_class.prop_map.get("__next__")
+            let next_prop_type = get_class_prop_type(this.program, next_prop_id) as FunctionType
+            let iter_item_type = next_prop_type.return_type
+            let next_item_call = new CallExpression(new MemberExpression(iteratable_load, next_prop_id, next_prop_type), [], iter_item_type)
+            let iter_item_var_id = this.declare_var_within_current_scope(iter_item_name, next_item_call, iter_item_type).var_id
+            for_stmt.initialization = new VarDeclaration(iter_item_name, iter_item_var_id)
+            for_stmt.incr_decr = new BinaryExpression(new VarAccessExpression(iter_item_var_id, iter_item_type), BinaryOp.ASSIGN, next_item_call, iter_item_type, false)
         }
         this.in_loop = true
         for_stmt.block = this.check_block(for_stmt_node.block)

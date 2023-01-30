@@ -213,7 +213,7 @@ class WhileStatementNode (StatementNode) {
 class ForStatementNode (StatementNode) {
     initialization: StatementNode
     condition: ExpressionNode
-    incr_decr: ExpressionNode
+    incr_decr: StatementNode
     iterator: ExpressionNode
     for_kind: ForKind
     it_name: IdentifierToken
@@ -857,7 +857,7 @@ class Parser {
             }
             this.eat(TokType.SEMICOL)
             if this.current_token.ttype != TokType.LBRACE {
-                for_node.incr_decr = this.parse_expression()
+                for_node.incr_decr = this.parse_statement()
             }
         } else {
             for_node.for_kind = ForKind.IN

@@ -4,22 +4,37 @@ source_filename = "src/main.flo"
 %string = type <{ ptr, ptr, i64, i64 }>
 %Array_string_ = type <{ ptr, ptr, i64, i64 }>
 %Range = type <{ ptr, i64, i64 }>
+%ArrayIterator_string_ = type <{ ptr, i1, i64, i64, ptr }>
+%Iterator_string_ = type <{ ptr, i1 }>
+%Iterator_int_ = type <{ ptr, i1 }>
+%RangeIterator_int_ = type <{ ptr, i1, i64, i64 }>
 %Compiler = type <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>
 %Array_FloError_ = type <{ ptr, ptr, i64, i64 }>
 %FloFile = type <{ ptr, ptr }>
 %FloRange = type <{ i64, i64, i64, i64 }>
 %FloError = type <{ i64, ptr, ptr }>
+%ArrayIterator_FloError_ = type <{ ptr, i1, i64, i64, ptr }>
+%Iterator_FloError_ = type <{ ptr, i1 }>
 %FileId = type <{ i64 }>
 %Array_FloFile_ = type <{ ptr, ptr, i64, i64 }>
+%ArrayIterator_FloFile_ = type <{ ptr, i1, i64, i64, ptr }>
+%Iterator_FloFile_ = type <{ ptr, i1 }>
 %Map_string_FileId_ = type <{ ptr, ptr, i64, i64 }>
 %Bucket_string_FileId_ = type <{ ptr, ptr, ptr, i1 }>
 %Array_Bucket_string_FileId__ = type <{ ptr, ptr, i64, i64 }>
+%ArrayIterator_Bucket_string_FileId__ = type <{ ptr, i1, i64, i64, ptr }>
+%Iterator_Bucket_string_FileId__ = type <{ ptr, i1 }>
 %File = type <{ ptr, i64 }>
 %Token = type <{ i64, ptr }>
 %Array_Token_ = type <{ ptr, ptr, i64, i64 }>
+%ArrayIterator_Token_ = type <{ ptr, i1, i64, i64, ptr }>
+%Iterator_Token_ = type <{ ptr, i1 }>
 %Lexer = type <{ i8, ptr, ptr, i64, i64, i64 }>
 %Array_Array_Token__ = type <{ ptr, ptr, i64, i64 }>
+%ArrayIterator_Array_Token__ = type <{ ptr, i1, i64, i64, ptr }>
+%Iterator_Array_Token__ = type <{ ptr, i1 }>
 %Array_int_ = type <{ ptr, ptr, i64, i64 }>
+%ArrayIterator_int_ = type <{ ptr, i1, i64, i64, ptr }>
 %StrToken = type <{ i64, ptr, ptr, ptr, ptr }>
 %StringBuilder = type <{ ptr, ptr, i64, ptr, i64 }>
 %IntToken = type <{ i64, ptr, i64 }>
@@ -27,39 +42,71 @@ source_filename = "src/main.flo"
 %CharToken = type <{ i64, ptr, i8 }>
 %FloatToken = type <{ i64, ptr, double }>
 %Array_IdentifierToken_ = type <{ ptr, ptr, i64, i64 }>
+%ArrayIterator_IdentifierToken_ = type <{ ptr, i1, i64, i64, ptr }>
+%Iterator_IdentifierToken_ = type <{ ptr, i1 }>
 %Array_ImportNode_ = type <{ ptr, ptr, i64, i64 }>
+%ArrayIterator_ImportNode_ = type <{ ptr, i1, i64, i64, ptr }>
+%Iterator_ImportNode_ = type <{ ptr, i1 }>
 %TypeNode = type <{ ptr, i64 }>
 %ExpressionNode = type <{ ptr, i64, i64 }>
 %StatementNode = type <{ ptr, i64 }>
 %VarDeclarationStatement = type <{ ptr, i64, ptr, ptr, ptr }>
 %Array_VarDeclarationStatement_ = type <{ ptr, ptr, i64, i64 }>
+%ArrayIterator_VarDeclarationStatement_ = type <{ ptr, i1, i64, i64, ptr }>
+%Iterator_VarDeclarationStatement_ = type <{ ptr, i1 }>
 %EnumNodeField = type <{ ptr, ptr }>
 %Array_EnumNodeField_ = type <{ ptr, ptr, i64, i64 }>
+%ArrayIterator_EnumNodeField_ = type <{ ptr, i1, i64, i64, ptr }>
+%Iterator_EnumNodeField_ = type <{ ptr, i1 }>
 %EnumNode = type <{ ptr, ptr, ptr }>
 %Array_EnumNode_ = type <{ ptr, ptr, i64, i64 }>
+%ArrayIterator_EnumNode_ = type <{ ptr, i1, i64, i64, ptr }>
+%Iterator_EnumNode_ = type <{ ptr, i1 }>
 %Array_TypeAliasNode_ = type <{ ptr, ptr, i64, i64 }>
+%ArrayIterator_TypeAliasNode_ = type <{ ptr, i1, i64, i64, ptr }>
+%Iterator_TypeAliasNode_ = type <{ ptr, i1 }>
 %ConstDeclarationStatement = type <{ ptr, i64, ptr, ptr, ptr }>
 %Array_ConstDeclarationStatement_ = type <{ ptr, ptr, i64, i64 }>
+%ArrayIterator_ConstDeclarationStatement_ = type <{ ptr, i1, i64, i64, ptr }>
+%Iterator_ConstDeclarationStatement_ = type <{ ptr, i1 }>
 %ArgNode = type <{ ptr, ptr, ptr }>
 %Array_ArgNode_ = type <{ ptr, ptr, i64, i64 }>
+%ArrayIterator_ArgNode_ = type <{ ptr, i1, i64, i64, ptr }>
+%Iterator_ArgNode_ = type <{ ptr, i1 }>
 %Array_StatementNode_ = type <{ ptr, ptr, i64, i64 }>
+%ArrayIterator_StatementNode_ = type <{ ptr, i1, i64, i64, ptr }>
+%Iterator_StatementNode_ = type <{ ptr, i1 }>
 %BlockNode = type <{ ptr, ptr }>
 %MethodNode = type <{ ptr, ptr, ptr, i64, ptr, i1, i1 }>
 %Array_MethodNode_ = type <{ ptr, ptr, i64, i64 }>
+%ArrayIterator_MethodNode_ = type <{ ptr, i1, i64, i64, ptr }>
+%Iterator_MethodNode_ = type <{ ptr, i1 }>
 %FieldNode = type <{ ptr, i64, ptr, ptr }>
 %Array_FieldNode_ = type <{ ptr, ptr, i64, i64 }>
+%ArrayIterator_FieldNode_ = type <{ ptr, i1, i64, i64, ptr }>
+%Iterator_FieldNode_ = type <{ ptr, i1 }>
 %Array_TypeNode_ = type <{ ptr, ptr, i64, i64 }>
+%ArrayIterator_TypeNode_ = type <{ ptr, i1, i64, i64, ptr }>
+%Iterator_TypeNode_ = type <{ ptr, i1 }>
 %RecordTypeNode = type <{ ptr, i64, ptr, ptr }>
 %Array_GenericParameterNode_ = type <{ ptr, ptr, i64, i64 }>
+%ArrayIterator_GenericParameterNode_ = type <{ ptr, i1, i64, i64, ptr }>
+%Iterator_GenericParameterNode_ = type <{ ptr, i1 }>
 %ClassDeclarationNode = type <{ ptr, ptr, ptr, ptr, ptr }>
 %Array_ClassDeclarationNode_ = type <{ ptr, ptr, i64, i64 }>
+%ArrayIterator_ClassDeclarationNode_ = type <{ ptr, i1, i64, i64, ptr }>
+%Iterator_ClassDeclarationNode_ = type <{ ptr, i1 }>
 %FunctionDeclarationNode = type <{ ptr, ptr, ptr, ptr, i1 }>
 %Array_FunctionDeclarationNode_ = type <{ ptr, ptr, i64, i64 }>
+%ArrayIterator_FunctionDeclarationNode_ = type <{ ptr, i1, i64, i64, ptr }>
+%Iterator_FunctionDeclarationNode_ = type <{ ptr, i1 }>
 %ModuleAST = type <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr }>
 %Parser = type <{ ptr, ptr, ptr, i64 }>
 %PointerTypeNode = type <{ ptr, i64, ptr }>
 %ArrayTypeNode = type <{ ptr, i64, ptr, ptr }>
 %Array_ExpressionNode_ = type <{ ptr, ptr, i64, i64 }>
+%ArrayIterator_ExpressionNode_ = type <{ ptr, i1, i64, i64, ptr }>
+%Iterator_ExpressionNode_ = type <{ ptr, i1 }>
 %StringExpressionNode = type <{ ptr, i64, i64, ptr, ptr }>
 %IfStatementNode = type <{ ptr, i64, ptr, ptr, ptr }>
 %WhileStatementNode = type <{ ptr, i64, ptr, ptr }>
@@ -87,51 +134,91 @@ source_filename = "src/main.flo"
 %Map_string_VarId_ = type <{ ptr, ptr, i64, i64 }>
 %Bucket_string_VarId_ = type <{ ptr, ptr, ptr, i1 }>
 %Array_Bucket_string_VarId__ = type <{ ptr, ptr, i64, i64 }>
+%ArrayIterator_Bucket_string_VarId__ = type <{ ptr, i1, i64, i64, ptr }>
+%Iterator_Bucket_string_VarId__ = type <{ ptr, i1 }>
 %TypeId = type <{ i64, i64, i64 }>
 %Map_string_EnumId_ = type <{ ptr, ptr, i64, i64 }>
 %Bucket_string_EnumId_ = type <{ ptr, ptr, ptr, i1 }>
 %Array_Bucket_string_EnumId__ = type <{ ptr, ptr, i64, i64 }>
+%ArrayIterator_Bucket_string_EnumId__ = type <{ ptr, i1, i64, i64, ptr }>
+%Iterator_Bucket_string_EnumId__ = type <{ ptr, i1 }>
 %Type = type <{ i64 }>
 %Map_string_Type_ = type <{ ptr, ptr, i64, i64 }>
 %Bucket_string_Type_ = type <{ ptr, ptr, ptr, i1 }>
 %Array_Bucket_string_Type__ = type <{ ptr, ptr, i64, i64 }>
+%ArrayIterator_Bucket_string_Type__ = type <{ ptr, i1, i64, i64, ptr }>
+%Iterator_Bucket_string_Type__ = type <{ ptr, i1 }>
 %Map_string_ClassId_ = type <{ ptr, ptr, i64, i64 }>
 %Bucket_string_ClassId_ = type <{ ptr, ptr, ptr, i1 }>
 %Array_Bucket_string_ClassId__ = type <{ ptr, ptr, i64, i64 }>
+%ArrayIterator_Bucket_string_ClassId__ = type <{ ptr, i1, i64, i64, ptr }>
+%Iterator_Bucket_string_ClassId__ = type <{ ptr, i1 }>
 %Scope = type <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr }>
 %Array_Scope_ = type <{ ptr, ptr, i64, i64 }>
+%ArrayIterator_Scope_ = type <{ ptr, i1, i64, i64, ptr }>
+%Iterator_Scope_ = type <{ ptr, i1 }>
 %VarDeclaration = type <{ i64, ptr, ptr, i1 }>
 %Array_VarDeclaration_ = type <{ ptr, ptr, i64, i64 }>
+%ArrayIterator_VarDeclaration_ = type <{ ptr, i1, i64, i64, ptr }>
+%Iterator_VarDeclaration_ = type <{ ptr, i1 }>
 %Expression = type <{ i64, i1, i64, ptr }>
 %Var = type <{ ptr, ptr, ptr }>
 %Array_Var_ = type <{ ptr, ptr, i64, i64 }>
+%ArrayIterator_Var_ = type <{ ptr, i1, i64, i64, ptr }>
+%Iterator_Var_ = type <{ ptr, i1 }>
 %ConstDeclaration = type <{ i64, ptr, ptr, i1 }>
 %Array_ConstDeclaration_ = type <{ ptr, ptr, i64, i64 }>
+%ArrayIterator_ConstDeclaration_ = type <{ ptr, i1, i64, i64, ptr }>
+%Iterator_ConstDeclaration_ = type <{ ptr, i1 }>
 %PropId = type <{ i64, ptr, i64 }>
 %Map_string_PropId_ = type <{ ptr, ptr, i64, i64 }>
 %Bucket_string_PropId_ = type <{ ptr, ptr, ptr, i1 }>
 %Array_Bucket_string_PropId__ = type <{ ptr, ptr, i64, i64 }>
+%ArrayIterator_Bucket_string_PropId__ = type <{ ptr, i1, i64, i64, ptr }>
+%Iterator_Bucket_string_PropId__ = type <{ ptr, i1 }>
 %EnumField = type <{ ptr, ptr, ptr }>
 %Array_EnumField_ = type <{ ptr, ptr, i64, i64 }>
+%ArrayIterator_EnumField_ = type <{ ptr, i1, i64, i64, ptr }>
+%Iterator_EnumField_ = type <{ ptr, i1 }>
 %Enum = type <{ ptr, ptr, ptr, ptr }>
 %Array_Enum_ = type <{ ptr, ptr, i64, i64 }>
+%ArrayIterator_Enum_ = type <{ ptr, i1, i64, i64, ptr }>
+%Iterator_Enum_ = type <{ ptr, i1 }>
 %Const = type <{ ptr, ptr, ptr }>
 %Array_Const_ = type <{ ptr, ptr, i64, i64 }>
+%ArrayIterator_Const_ = type <{ ptr, i1, i64, i64, ptr }>
+%Iterator_Const_ = type <{ ptr, i1 }>
 %Array_FunctionArg_ = type <{ ptr, ptr, i64, i64 }>
+%ArrayIterator_FunctionArg_ = type <{ ptr, i1, i64, i64, ptr }>
+%Iterator_FunctionArg_ = type <{ ptr, i1 }>
 %Array_Statement_ = type <{ ptr, ptr, i64, i64 }>
+%ArrayIterator_Statement_ = type <{ ptr, i1, i64, i64, ptr }>
+%Iterator_Statement_ = type <{ ptr, i1 }>
 %Block = type <{ ptr, i1, i1, i1 }>
 %Array_Type_ = type <{ ptr, ptr, i64, i64 }>
+%ArrayIterator_Type_ = type <{ ptr, i1, i64, i64, ptr }>
+%Iterator_Type_ = type <{ ptr, i1 }>
 %FunctionType = type <{ i64, ptr, ptr, i1 }>
 %ClassMethod = type <{ ptr, i1, i64, ptr, ptr, ptr, ptr, i1, ptr, i64 }>
 %Array_ClassMethod_ = type <{ ptr, ptr, i64, i64 }>
+%ArrayIterator_ClassMethod_ = type <{ ptr, i1, i64, i64, ptr }>
+%Iterator_ClassMethod_ = type <{ ptr, i1 }>
 %ClassField = type <{ ptr, i1, i64, ptr, ptr, ptr, i64 }>
 %Array_ClassField_ = type <{ ptr, ptr, i64, i64 }>
+%ArrayIterator_ClassField_ = type <{ ptr, i1, i64, i64, ptr }>
+%Iterator_ClassField_ = type <{ ptr, i1 }>
 %Class = type <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, i64, i64, i1 }>
 %Array_Class_ = type <{ ptr, ptr, i64, i64 }>
+%ArrayIterator_Class_ = type <{ ptr, i1, i64, i64, ptr }>
+%Iterator_Class_ = type <{ ptr, i1 }>
 %Function = type <{ ptr, ptr, ptr, ptr, ptr, ptr, i1 }>
 %Array_Function_ = type <{ ptr, ptr, i64, i64 }>
+%ArrayIterator_Function_ = type <{ ptr, i1, i64, i64, ptr }>
+%Iterator_Function_ = type <{ ptr, i1 }>
 %Module = type <{ i64, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>
 %Array_Module_ = type <{ ptr, ptr, i64, i64 }>
+%ArrayIterator_Module_ = type <{ ptr, i1, i64, i64, ptr }>
+%Iterator_Module_ = type <{ ptr, i1 }>
 %Program = type <{ i1, ptr }>
 %TypeChecker = type <{ ptr, i64, ptr, ptr, ptr, ptr, ptr, i1, i1, ptr }>
 %ConstId = type <{ i64, i64, i64 }>
@@ -141,6 +228,8 @@ source_filename = "src/main.flo"
 %Array_Expression_ = type <{ ptr, ptr, i64, i64 }>
 %IntrinsicCall = type <{ i64, i1, i64, ptr, i64, ptr }>
 %TypeCastExpression = type <{ i64, i1, i64, ptr, ptr }>
+%ArrayIterator_Expression_ = type <{ ptr, i1, i64, i64, ptr }>
+%Iterator_Expression_ = type <{ ptr, i1 }>
 %FunctionArg = type <{ i64, i1, i64, ptr, ptr, ptr, ptr }>
 %ReturnStatement = type <{ i64, ptr }>
 %ObjectType = type <{ i64, ptr }>
@@ -154,9 +243,10 @@ source_filename = "src/main.flo"
 %Statement = type <{ i64 }>
 %PointerType = type <{ i64, ptr }>
 %ArrayType = type <{ i64, ptr, i64 }>
-%ForStatement = type <{ i64, ptr, ptr, ptr, ptr }>
-%GenericType = type <{ i64, ptr, ptr, ptr }>
+%ForStatement = type <{ i64, ptr, ptr, ptr, ptr, ptr }>
+%VarAccessExpression = type <{ i64, i1, i64, ptr, ptr }>
 %UnaryExpression = type <{ i64, i1, i64, ptr, i64, ptr }>
+%GenericType = type <{ i64, ptr, ptr, ptr }>
 %TernaryExpression = type <{ i64, i1, i64, ptr, ptr, ptr, ptr }>
 %IfStatement = type <{ i64, ptr, ptr, ptr }>
 %Generic = type <{ i64, ptr }>
@@ -166,7 +256,8 @@ source_filename = "src/main.flo"
 %Map_string_Generic_ = type <{ ptr, ptr, i64, i64 }>
 %Bucket_string_Generic_ = type <{ ptr, ptr, ptr, i1 }>
 %Array_Bucket_string_Generic__ = type <{ ptr, ptr, i64, i64 }>
-%VarAccessExpression = type <{ i64, i1, i64, ptr, ptr }>
+%ArrayIterator_Bucket_string_Generic__ = type <{ ptr, i1, i64, i64, ptr }>
+%Iterator_Bucket_string_Generic__ = type <{ ptr, i1 }>
 %ArrayExpression = type <{ i64, i1, i64, ptr, ptr }>
 %IntExpression = type <{ i64, i1, i64, ptr, i64 }>
 %FloatExpression = type <{ i64, i1, i64, ptr, double }>
@@ -175,26 +266,40 @@ source_filename = "src/main.flo"
 %GeneratedModule = type <{ ptr, ptr, ptr }>
 %CodeGen = type <{ ptr, ptr, ptr, ptr, ptr, i1, ptr, ptr, ptr, ptr, ptr }>
 %Array_LLVMValueRef_ = type <{ ptr, ptr, i64, i64 }>
+%ArrayIterator_LLVMValueRef_ = type <{ ptr, i1, i64, i64, ptr }>
+%Iterator_LLVMValueRef_ = type <{ ptr, i1 }>
 %Array_LLVMTypeRef_ = type <{ ptr, ptr, i64, i64 }>
 %IntrinsicResult = type <{ ptr, ptr }>
 %Map_string_LLVMValueRef_ = type <{ ptr, ptr, i64, i64 }>
 %Bucket_string_LLVMValueRef_ = type <{ ptr, ptr, ptr, i1 }>
 %Array_Bucket_string_LLVMValueRef__ = type <{ ptr, ptr, i64, i64 }>
+%ArrayIterator_Bucket_string_LLVMValueRef__ = type <{ ptr, i1, i64, i64, ptr }>
+%Iterator_Bucket_string_LLVMValueRef__ = type <{ ptr, i1 }>
 %CGEnumType = type <{ ptr, ptr }>
 %Map_string_int_ = type <{ ptr, ptr, i64, i64 }>
 %Bucket_string_int_ = type <{ ptr, ptr, i64, i1 }>
 %Array_Bucket_string_int__ = type <{ ptr, ptr, i64, i64 }>
+%ArrayIterator_Bucket_string_int__ = type <{ ptr, i1, i64, i64, ptr }>
+%Iterator_Bucket_string_int__ = type <{ ptr, i1 }>
 %CGClassType = type <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr }>
 %Map_string_CGClassType_ = type <{ ptr, ptr, i64, i64 }>
 %Bucket_string_CGClassType_ = type <{ ptr, ptr, ptr, i1 }>
 %Array_Bucket_string_CGClassType__ = type <{ ptr, ptr, i64, i64 }>
+%ArrayIterator_Bucket_string_CGClassType__ = type <{ ptr, i1, i64, i64, ptr }>
+%Iterator_Bucket_string_CGClassType__ = type <{ ptr, i1 }>
+%ArrayIterator_LLVMTypeRef_ = type <{ ptr, i1, i64, i64, ptr }>
+%Iterator_LLVMTypeRef_ = type <{ ptr, i1 }>
 %Map_string_CGEnumType_ = type <{ ptr, ptr, i64, i64 }>
 %Bucket_string_CGEnumType_ = type <{ ptr, ptr, ptr, i1 }>
 %Array_Bucket_string_CGEnumType__ = type <{ ptr, ptr, i64, i64 }>
+%ArrayIterator_Bucket_string_CGEnumType__ = type <{ ptr, i1, i64, i64, ptr }>
+%Iterator_Bucket_string_CGEnumType__ = type <{ ptr, i1 }>
 
 @VTablestring = global <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }> <{ ptr @string___add__, ptr @string___adda__, ptr @string___getitem__, ptr @string___ne__, ptr @string___eq__, ptr @string_find, ptr @string___in__, ptr @string_substring, ptr @string_get_byte, ptr @string_get_bytes, ptr @string_replace, ptr @string_to_cstring, ptr @string_ends_with, ptr @string_starts_with }>
-@VTableArray_string_ = global <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }> <{ ptr @Array_string__resize, ptr @Array_string__swap, ptr @Array_string____sl__, ptr @Array_string____setitem__, ptr @Array_string__append, ptr @Array_string____getitem__, ptr @Array_string____eq__, ptr @Array_string____in__, ptr @Array_string__find }>
-@VTableRange = global <{ ptr }> <{ ptr @Range___in__ }>
+@VTableArrayIterator_string_ = global <{ ptr }> <{ ptr @ArrayIterator_string____next__ }>
+@VTableArray_string_ = global <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }> <{ ptr @Array_string__resize, ptr @Array_string__swap, ptr @Array_string____iter__, ptr @Array_string____sl__, ptr @Array_string____setitem__, ptr @Array_string__append, ptr @Array_string____getitem__, ptr @Array_string____eq__, ptr @Array_string____in__, ptr @Array_string__find }>
+@VTableRangeIterator_int_ = global <{ ptr }> <{ ptr @RangeIterator_int____next__ }>
+@VTableRange = global <{ ptr, ptr }> <{ ptr @Range___in__, ptr @Range___iter__ }>
 @STDOUT = constant i64 1
 @0 = private unnamed_addr constant [2 x i8] c"\0A\00", align 1
 @1 = private unnamed_addr constant [28 x i8] c"Usage: %s <path> [OPTIONS]\0A\00", align 1
@@ -222,469 +327,523 @@ source_filename = "src/main.flo"
 @23 = private unnamed_addr constant [20 x i8] c"v0.01@test.selfhost\00", align 1
 @24 = private unnamed_addr constant [3 x i8] c"-h\00", align 1
 @25 = private unnamed_addr constant [7 x i8] c"--help\00", align 1
-@VTableArray_FloError_ = global <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }> <{ ptr @Array_FloError__resize, ptr @Array_FloError__swap, ptr @Array_FloError____sl__, ptr @Array_FloError____setitem__, ptr @Array_FloError__append, ptr @Array_FloError____getitem__, ptr @Array_FloError____eq__, ptr @Array_FloError____in__, ptr @Array_FloError__find }>
-@VTableArray_FloFile_ = global <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }> <{ ptr @Array_FloFile__resize, ptr @Array_FloFile__swap, ptr @Array_FloFile____sl__, ptr @Array_FloFile____setitem__, ptr @Array_FloFile__append, ptr @Array_FloFile____getitem__, ptr @Array_FloFile____eq__, ptr @Array_FloFile____in__, ptr @Array_FloFile__find }>
+@VTableArrayIterator_FloError_ = global <{ ptr }> <{ ptr @ArrayIterator_FloError____next__ }>
+@VTableArray_FloError_ = global <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }> <{ ptr @Array_FloError__resize, ptr @Array_FloError__swap, ptr @Array_FloError____iter__, ptr @Array_FloError____sl__, ptr @Array_FloError____setitem__, ptr @Array_FloError__append, ptr @Array_FloError____getitem__, ptr @Array_FloError____eq__, ptr @Array_FloError____in__, ptr @Array_FloError__find }>
+@VTableArrayIterator_FloFile_ = global <{ ptr }> <{ ptr @ArrayIterator_FloFile____next__ }>
+@VTableArray_FloFile_ = global <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }> <{ ptr @Array_FloFile__resize, ptr @Array_FloFile__swap, ptr @Array_FloFile____iter__, ptr @Array_FloFile____sl__, ptr @Array_FloFile____setitem__, ptr @Array_FloFile__append, ptr @Array_FloFile____getitem__, ptr @Array_FloFile____eq__, ptr @Array_FloFile____in__, ptr @Array_FloFile__find }>
 @VTableBucket_string_FileId_ = global <{ ptr }> <{ ptr @Bucket_string_FileId__set }>
-@VTableArray_Bucket_string_FileId__ = global <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }> <{ ptr @Array_Bucket_string_FileId___resize, ptr @Array_Bucket_string_FileId___swap, ptr @Array_Bucket_string_FileId_____sl__, ptr @Array_Bucket_string_FileId_____setitem__, ptr @Array_Bucket_string_FileId___append, ptr @Array_Bucket_string_FileId_____getitem__, ptr @Array_Bucket_string_FileId_____eq__, ptr @Array_Bucket_string_FileId_____in__, ptr @Array_Bucket_string_FileId___find }>
+@VTableArrayIterator_Bucket_string_FileId__ = global <{ ptr }> <{ ptr @ArrayIterator_Bucket_string_FileId_____next__ }>
+@VTableArray_Bucket_string_FileId__ = global <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }> <{ ptr @Array_Bucket_string_FileId___resize, ptr @Array_Bucket_string_FileId___swap, ptr @Array_Bucket_string_FileId_____iter__, ptr @Array_Bucket_string_FileId_____sl__, ptr @Array_Bucket_string_FileId_____setitem__, ptr @Array_Bucket_string_FileId___append, ptr @Array_Bucket_string_FileId_____getitem__, ptr @Array_Bucket_string_FileId_____eq__, ptr @Array_Bucket_string_FileId_____in__, ptr @Array_Bucket_string_FileId___find }>
 @VTableMap_string_FileId_ = global <{ ptr, ptr, ptr }> <{ ptr @Map_string_FileId__set, ptr @Map_string_FileId__get, ptr @Map_string_FileId__get_buckets }>
 @26 = private unnamed_addr constant [3 x i8] c"%s\00", align 1
 @VTableCompiler = global <{ ptr, ptr, ptr, ptr, ptr }> <{ ptr @Compiler_set_std_path, ptr @Compiler_register_file, ptr @Compiler_set_current_file, ptr @Compiler_print_errors, ptr @Compiler_add_builtins }>
 @27 = private unnamed_addr constant [9 x i8] c"./flolib\00", align 1
 @28 = private unnamed_addr constant [6 x i8] c"%s/%s\00", align 1
-@29 = private unnamed_addr constant [13 x i8] c"builtins.flo\00", align 1
+@29 = private unnamed_addr constant [23 x i8] c"/builtins/builtins.flo\00", align 1
 @30 = private unnamed_addr constant [5 x i8] c"@flo\00", align 1
-@31 = private unnamed_addr constant [9 x i8] c"packages\00", align 1
-@32 = private unnamed_addr constant [5 x i8] c".flo\00", align 1
+@31 = private unnamed_addr constant [5 x i8] c".flo\00", align 1
 @VTableFile = global <{ ptr, ptr }> <{ ptr @File_read_all, ptr @File_close }>
-@33 = private unnamed_addr constant [2 x i8] c"r\00", align 1
+@32 = private unnamed_addr constant [2 x i8] c"r\00", align 1
 @F_OK = constant i64 0
-@34 = private unnamed_addr constant [19 x i8] c"File '%s', line %d\00", align 1
-@35 = private unnamed_addr constant [2 x i8] c" \00", align 1
-@36 = private unnamed_addr constant [2 x i8] c"^\00", align 1
-@37 = private unnamed_addr constant [3 x i8] c"-I\00", align 1
-@38 = private unnamed_addr constant [1 x i8] zeroinitializer, align 1
-@39 = private unnamed_addr constant [32 x i8] c"No such file or directory: '%s'\00", align 1
-@VTableArray_Token_ = global <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }> <{ ptr @Array_Token__resize, ptr @Array_Token__swap, ptr @Array_Token____sl__, ptr @Array_Token____setitem__, ptr @Array_Token__append, ptr @Array_Token____getitem__, ptr @Array_Token____eq__, ptr @Array_Token____in__, ptr @Array_Token__find }>
-@VTableArray_Array_Token__ = global <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }> <{ ptr @Array_Array_Token___resize, ptr @Array_Array_Token___swap, ptr @Array_Array_Token_____sl__, ptr @Array_Array_Token_____setitem__, ptr @Array_Array_Token___append, ptr @Array_Array_Token_____getitem__, ptr @Array_Array_Token_____eq__, ptr @Array_Array_Token_____in__, ptr @Array_Array_Token___find }>
-@VTableArray_int_ = global <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }> <{ ptr @Array_int__resize, ptr @Array_int__swap, ptr @Array_int____sl__, ptr @Array_int____setitem__, ptr @Array_int__append, ptr @Array_int____getitem__, ptr @Array_int____eq__, ptr @Array_int____in__, ptr @Array_int__find }>
-@40 = private unnamed_addr constant [4 x i8] c"and\00", align 1
-@41 = private unnamed_addr constant [3 x i8] c"or\00", align 1
-@42 = private unnamed_addr constant [4 x i8] c"xor\00", align 1
-@43 = private unnamed_addr constant [6 x i8] c"const\00", align 1
-@44 = private unnamed_addr constant [4 x i8] c"let\00", align 1
-@45 = private unnamed_addr constant [3 x i8] c"if\00", align 1
-@46 = private unnamed_addr constant [5 x i8] c"else\00", align 1
-@47 = private unnamed_addr constant [5 x i8] c"bool\00", align 1
-@48 = private unnamed_addr constant [3 x i8] c"i4\00", align 1
-@49 = private unnamed_addr constant [3 x i8] c"i8\00", align 1
-@50 = private unnamed_addr constant [4 x i8] c"i16\00", align 1
-@51 = private unnamed_addr constant [4 x i8] c"i32\00", align 1
-@52 = private unnamed_addr constant [4 x i8] c"i64\00", align 1
-@53 = private unnamed_addr constant [5 x i8] c"i128\00", align 1
-@54 = private unnamed_addr constant [4 x i8] c"int\00", align 1
-@55 = private unnamed_addr constant [4 x i8] c"f16\00", align 1
-@56 = private unnamed_addr constant [4 x i8] c"f32\00", align 1
-@57 = private unnamed_addr constant [4 x i8] c"f64\00", align 1
-@58 = private unnamed_addr constant [6 x i8] c"float\00", align 1
-@59 = private unnamed_addr constant [5 x i8] c"void\00", align 1
-@60 = private unnamed_addr constant [4 x i8] c"for\00", align 1
-@61 = private unnamed_addr constant [6 x i8] c"while\00", align 1
-@62 = private unnamed_addr constant [4 x i8] c"fnc\00", align 1
-@63 = private unnamed_addr constant [6 x i8] c"break\00", align 1
-@64 = private unnamed_addr constant [9 x i8] c"continue\00", align 1
-@65 = private unnamed_addr constant [7 x i8] c"return\00", align 1
-@66 = private unnamed_addr constant [7 x i8] c"import\00", align 1
-@67 = private unnamed_addr constant [8 x i8] c"private\00", align 1
-@68 = private unnamed_addr constant [7 x i8] c"public\00", align 1
-@69 = private unnamed_addr constant [10 x i8] c"protected\00", align 1
-@70 = private unnamed_addr constant [3 x i8] c"in\00", align 1
-@71 = private unnamed_addr constant [6 x i8] c"class\00", align 1
-@72 = private unnamed_addr constant [5 x i8] c"enum\00", align 1
-@73 = private unnamed_addr constant [4 x i8] c"new\00", align 1
-@74 = private unnamed_addr constant [3 x i8] c"as\00", align 1
+@33 = private unnamed_addr constant [19 x i8] c"File '%s', line %d\00", align 1
+@34 = private unnamed_addr constant [2 x i8] c" \00", align 1
+@35 = private unnamed_addr constant [2 x i8] c"^\00", align 1
+@36 = private unnamed_addr constant [3 x i8] c"-I\00", align 1
+@37 = private unnamed_addr constant [1 x i8] zeroinitializer, align 1
+@38 = private unnamed_addr constant [32 x i8] c"No such file or directory: '%s'\00", align 1
+@VTableArrayIterator_Token_ = global <{ ptr }> <{ ptr @ArrayIterator_Token____next__ }>
+@VTableArray_Token_ = global <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }> <{ ptr @Array_Token__resize, ptr @Array_Token__swap, ptr @Array_Token____iter__, ptr @Array_Token____sl__, ptr @Array_Token____setitem__, ptr @Array_Token__append, ptr @Array_Token____getitem__, ptr @Array_Token____eq__, ptr @Array_Token____in__, ptr @Array_Token__find }>
+@VTableArrayIterator_Array_Token__ = global <{ ptr }> <{ ptr @ArrayIterator_Array_Token_____next__ }>
+@VTableArray_Array_Token__ = global <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }> <{ ptr @Array_Array_Token___resize, ptr @Array_Array_Token___swap, ptr @Array_Array_Token_____iter__, ptr @Array_Array_Token_____sl__, ptr @Array_Array_Token_____setitem__, ptr @Array_Array_Token___append, ptr @Array_Array_Token_____getitem__, ptr @Array_Array_Token_____eq__, ptr @Array_Array_Token_____in__, ptr @Array_Array_Token___find }>
+@VTableArrayIterator_int_ = global <{ ptr }> <{ ptr @ArrayIterator_int____next__ }>
+@VTableArray_int_ = global <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }> <{ ptr @Array_int__resize, ptr @Array_int__swap, ptr @Array_int____iter__, ptr @Array_int____sl__, ptr @Array_int____setitem__, ptr @Array_int__append, ptr @Array_int____getitem__, ptr @Array_int____eq__, ptr @Array_int____in__, ptr @Array_int__find }>
+@39 = private unnamed_addr constant [4 x i8] c"and\00", align 1
+@40 = private unnamed_addr constant [3 x i8] c"or\00", align 1
+@41 = private unnamed_addr constant [4 x i8] c"xor\00", align 1
+@42 = private unnamed_addr constant [6 x i8] c"const\00", align 1
+@43 = private unnamed_addr constant [4 x i8] c"let\00", align 1
+@44 = private unnamed_addr constant [3 x i8] c"if\00", align 1
+@45 = private unnamed_addr constant [5 x i8] c"else\00", align 1
+@46 = private unnamed_addr constant [5 x i8] c"bool\00", align 1
+@47 = private unnamed_addr constant [3 x i8] c"i4\00", align 1
+@48 = private unnamed_addr constant [3 x i8] c"i8\00", align 1
+@49 = private unnamed_addr constant [4 x i8] c"i16\00", align 1
+@50 = private unnamed_addr constant [4 x i8] c"i32\00", align 1
+@51 = private unnamed_addr constant [4 x i8] c"i64\00", align 1
+@52 = private unnamed_addr constant [5 x i8] c"i128\00", align 1
+@53 = private unnamed_addr constant [4 x i8] c"int\00", align 1
+@54 = private unnamed_addr constant [4 x i8] c"f16\00", align 1
+@55 = private unnamed_addr constant [4 x i8] c"f32\00", align 1
+@56 = private unnamed_addr constant [4 x i8] c"f64\00", align 1
+@57 = private unnamed_addr constant [6 x i8] c"float\00", align 1
+@58 = private unnamed_addr constant [5 x i8] c"void\00", align 1
+@59 = private unnamed_addr constant [4 x i8] c"for\00", align 1
+@60 = private unnamed_addr constant [6 x i8] c"while\00", align 1
+@61 = private unnamed_addr constant [4 x i8] c"fnc\00", align 1
+@62 = private unnamed_addr constant [6 x i8] c"break\00", align 1
+@63 = private unnamed_addr constant [9 x i8] c"continue\00", align 1
+@64 = private unnamed_addr constant [7 x i8] c"return\00", align 1
+@65 = private unnamed_addr constant [7 x i8] c"import\00", align 1
+@66 = private unnamed_addr constant [8 x i8] c"private\00", align 1
+@67 = private unnamed_addr constant [7 x i8] c"public\00", align 1
+@68 = private unnamed_addr constant [10 x i8] c"protected\00", align 1
+@69 = private unnamed_addr constant [3 x i8] c"in\00", align 1
+@70 = private unnamed_addr constant [6 x i8] c"class\00", align 1
+@71 = private unnamed_addr constant [5 x i8] c"enum\00", align 1
+@72 = private unnamed_addr constant [4 x i8] c"new\00", align 1
+@73 = private unnamed_addr constant [3 x i8] c"as\00", align 1
 @VTableStringBuilder = global <{ ptr, ptr, ptr, ptr }> <{ ptr @StringBuilder_add_bytes_length, ptr @StringBuilder_append_string, ptr @StringBuilder_add_byte, ptr @StringBuilder_get_string }>
-@75 = private unnamed_addr constant [4 x i8] c"033\00", align 1
-@76 = private unnamed_addr constant [4 x i8] c"x1b\00", align 1
-@77 = private unnamed_addr constant [2 x i8] c"\1B\00", align 1
-@78 = private unnamed_addr constant [6 x i8] c"u001b\00", align 1
-@79 = private unnamed_addr constant [24 x i8] c"Illegal character: '%s'\00", align 1
-@80 = private unnamed_addr constant [15 x i8] c"--print-tokens\00", align 1
-@81 = private unnamed_addr constant [2 x i8] c"[\00", align 1
-@82 = private unnamed_addr constant [3 x i8] c" {\00", align 1
-@83 = private unnamed_addr constant [4 x i8] c"COL\00", align 1
-@84 = private unnamed_addr constant [8 x i8] c"SEMICOL\00", align 1
-@85 = private unnamed_addr constant [6 x i8] c"COMMA\00", align 1
-@86 = private unnamed_addr constant [5 x i8] c"PLUS\00", align 1
-@87 = private unnamed_addr constant [10 x i8] c"PLUS_PLUS\00", align 1
-@88 = private unnamed_addr constant [6 x i8] c"MINUS\00", align 1
-@89 = private unnamed_addr constant [12 x i8] c"MINUS_MINUS\00", align 1
-@90 = private unnamed_addr constant [5 x i8] c"MULT\00", align 1
-@91 = private unnamed_addr constant [4 x i8] c"DIV\00", align 1
-@92 = private unnamed_addr constant [5 x i8] c"LPAR\00", align 1
-@93 = private unnamed_addr constant [5 x i8] c"RPAR\00", align 1
-@94 = private unnamed_addr constant [4 x i8] c"MOD\00", align 1
-@95 = private unnamed_addr constant [7 x i8] c"LBRACE\00", align 1
-@96 = private unnamed_addr constant [7 x i8] c"RBRACE\00", align 1
-@97 = private unnamed_addr constant [9 x i8] c"LBRACKET\00", align 1
-@98 = private unnamed_addr constant [9 x i8] c"RBRACKET\00", align 1
-@99 = private unnamed_addr constant [4 x i8] c"INT\00", align 1
-@100 = private unnamed_addr constant [6 x i8] c"FLOAT\00", align 1
-@101 = private unnamed_addr constant [3 x i8] c"LN\00", align 1
-@102 = private unnamed_addr constant [4 x i8] c"STR\00", align 1
-@103 = private unnamed_addr constant [5 x i8] c"CHAR\00", align 1
-@104 = private unnamed_addr constant [4 x i8] c"POW\00", align 1
-@105 = private unnamed_addr constant [5 x i8] c"QUES\00", align 1
-@106 = private unnamed_addr constant [4 x i8] c"AMP\00", align 1
-@107 = private unnamed_addr constant [3 x i8] c"EQ\00", align 1
-@108 = private unnamed_addr constant [4 x i8] c"EEQ\00", align 1
-@109 = private unnamed_addr constant [4 x i8] c"NEQ\00", align 1
-@110 = private unnamed_addr constant [3 x i8] c"GT\00", align 1
-@111 = private unnamed_addr constant [3 x i8] c"LT\00", align 1
-@112 = private unnamed_addr constant [4 x i8] c"LTE\00", align 1
-@113 = private unnamed_addr constant [4 x i8] c"GTE\00", align 1
-@114 = private unnamed_addr constant [6 x i8] c"ARROW\00", align 1
-@115 = private unnamed_addr constant [4 x i8] c"EOF\00", align 1
-@116 = private unnamed_addr constant [4 x i8] c"NOT\00", align 1
-@117 = private unnamed_addr constant [3 x i8] c"SL\00", align 1
-@118 = private unnamed_addr constant [3 x i8] c"SR\00", align 1
-@119 = private unnamed_addr constant [4 x i8] c"DOT\00", align 1
-@120 = private unnamed_addr constant [8 x i8] c"DOT_DOT\00", align 1
-@121 = private unnamed_addr constant [12 x i8] c"DOT_DOT_DOT\00", align 1
-@122 = private unnamed_addr constant [10 x i8] c"IDENTIFER\00", align 1
-@123 = private unnamed_addr constant [7 x i8] c"AND_KW\00", align 1
-@124 = private unnamed_addr constant [6 x i8] c"OR_KW\00", align 1
-@125 = private unnamed_addr constant [7 x i8] c"XOR_KW\00", align 1
-@126 = private unnamed_addr constant [9 x i8] c"CONST_KW\00", align 1
-@127 = private unnamed_addr constant [6 x i8] c"IF_KW\00", align 1
-@128 = private unnamed_addr constant [8 x i8] c"ELSE_KW\00", align 1
-@129 = private unnamed_addr constant [8 x i8] c"BOOL_KW\00", align 1
-@130 = private unnamed_addr constant [6 x i8] c"I4_KW\00", align 1
-@131 = private unnamed_addr constant [6 x i8] c"I8_KW\00", align 1
-@132 = private unnamed_addr constant [7 x i8] c"I16_KW\00", align 1
-@133 = private unnamed_addr constant [7 x i8] c"I32_KW\00", align 1
-@134 = private unnamed_addr constant [7 x i8] c"I64_KW\00", align 1
-@135 = private unnamed_addr constant [8 x i8] c"I128_KW\00", align 1
-@136 = private unnamed_addr constant [7 x i8] c"INT_KW\00", align 1
-@137 = private unnamed_addr constant [7 x i8] c"F16_KW\00", align 1
-@138 = private unnamed_addr constant [7 x i8] c"F32_KW\00", align 1
-@139 = private unnamed_addr constant [7 x i8] c"F64_KW\00", align 1
-@140 = private unnamed_addr constant [9 x i8] c"FLOAT_KW\00", align 1
-@141 = private unnamed_addr constant [8 x i8] c"VOID_KW\00", align 1
-@142 = private unnamed_addr constant [7 x i8] c"FOR_KW\00", align 1
-@143 = private unnamed_addr constant [9 x i8] c"WHILE_KW\00", align 1
-@144 = private unnamed_addr constant [7 x i8] c"FNC_KW\00", align 1
-@145 = private unnamed_addr constant [9 x i8] c"BREAK_KW\00", align 1
-@146 = private unnamed_addr constant [12 x i8] c"CONTINUE_KW\00", align 1
-@147 = private unnamed_addr constant [10 x i8] c"RETURN_KW\00", align 1
-@148 = private unnamed_addr constant [10 x i8] c"IMPORT_KW\00", align 1
-@149 = private unnamed_addr constant [11 x i8] c"PRIVATE_KW\00", align 1
-@150 = private unnamed_addr constant [10 x i8] c"PUBLIC_KW\00", align 1
-@151 = private unnamed_addr constant [13 x i8] c"PROTECTED_KW\00", align 1
-@152 = private unnamed_addr constant [6 x i8] c"IN_KW\00", align 1
-@153 = private unnamed_addr constant [9 x i8] c"CLASS_KW\00", align 1
-@154 = private unnamed_addr constant [8 x i8] c"ENUM_KW\00", align 1
-@155 = private unnamed_addr constant [7 x i8] c"NEW_KW\00", align 1
-@156 = private unnamed_addr constant [6 x i8] c"AS_KW\00", align 1
-@157 = private unnamed_addr constant [7 x i8] c"LET_KW\00", align 1
-@158 = private unnamed_addr constant [12 x i8] c"  type: %s,\00", align 1
-@159 = private unnamed_addr constant [15 x i8] c"  range: %d-%d\00", align 1
-@160 = private unnamed_addr constant [12 x i8] c"  value: %s\00", align 1
-@161 = private unnamed_addr constant [12 x i8] c"  value: \\n\00", align 1
-@162 = private unnamed_addr constant [4 x i8] c" },\00", align 1
-@163 = private unnamed_addr constant [2 x i8] c"]\00", align 1
-@VTableArray_IdentifierToken_ = global <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }> <{ ptr @Array_IdentifierToken__resize, ptr @Array_IdentifierToken__swap, ptr @Array_IdentifierToken____sl__, ptr @Array_IdentifierToken____setitem__, ptr @Array_IdentifierToken__append, ptr @Array_IdentifierToken____getitem__, ptr @Array_IdentifierToken____eq__, ptr @Array_IdentifierToken____in__, ptr @Array_IdentifierToken__find }>
-@VTableArray_ImportNode_ = global <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }> <{ ptr @Array_ImportNode__resize, ptr @Array_ImportNode__swap, ptr @Array_ImportNode____sl__, ptr @Array_ImportNode____setitem__, ptr @Array_ImportNode__append, ptr @Array_ImportNode____getitem__, ptr @Array_ImportNode____eq__, ptr @Array_ImportNode____in__, ptr @Array_ImportNode__find }>
-@VTableArray_VarDeclarationStatement_ = global <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }> <{ ptr @Array_VarDeclarationStatement__resize, ptr @Array_VarDeclarationStatement__swap, ptr @Array_VarDeclarationStatement____sl__, ptr @Array_VarDeclarationStatement____setitem__, ptr @Array_VarDeclarationStatement__append, ptr @Array_VarDeclarationStatement____getitem__, ptr @Array_VarDeclarationStatement____eq__, ptr @Array_VarDeclarationStatement____in__, ptr @Array_VarDeclarationStatement__find }>
-@VTableArray_EnumNodeField_ = global <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }> <{ ptr @Array_EnumNodeField__resize, ptr @Array_EnumNodeField__swap, ptr @Array_EnumNodeField____sl__, ptr @Array_EnumNodeField____setitem__, ptr @Array_EnumNodeField__append, ptr @Array_EnumNodeField____getitem__, ptr @Array_EnumNodeField____eq__, ptr @Array_EnumNodeField____in__, ptr @Array_EnumNodeField__find }>
-@VTableArray_EnumNode_ = global <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }> <{ ptr @Array_EnumNode__resize, ptr @Array_EnumNode__swap, ptr @Array_EnumNode____sl__, ptr @Array_EnumNode____setitem__, ptr @Array_EnumNode__append, ptr @Array_EnumNode____getitem__, ptr @Array_EnumNode____eq__, ptr @Array_EnumNode____in__, ptr @Array_EnumNode__find }>
-@VTableArray_TypeAliasNode_ = global <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }> <{ ptr @Array_TypeAliasNode__resize, ptr @Array_TypeAliasNode__swap, ptr @Array_TypeAliasNode____sl__, ptr @Array_TypeAliasNode____setitem__, ptr @Array_TypeAliasNode__append, ptr @Array_TypeAliasNode____getitem__, ptr @Array_TypeAliasNode____eq__, ptr @Array_TypeAliasNode____in__, ptr @Array_TypeAliasNode__find }>
-@VTableArray_ConstDeclarationStatement_ = global <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }> <{ ptr @Array_ConstDeclarationStatement__resize, ptr @Array_ConstDeclarationStatement__swap, ptr @Array_ConstDeclarationStatement____sl__, ptr @Array_ConstDeclarationStatement____setitem__, ptr @Array_ConstDeclarationStatement__append, ptr @Array_ConstDeclarationStatement____getitem__, ptr @Array_ConstDeclarationStatement____eq__, ptr @Array_ConstDeclarationStatement____in__, ptr @Array_ConstDeclarationStatement__find }>
-@VTableArray_ArgNode_ = global <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }> <{ ptr @Array_ArgNode__resize, ptr @Array_ArgNode__swap, ptr @Array_ArgNode____sl__, ptr @Array_ArgNode____setitem__, ptr @Array_ArgNode__append, ptr @Array_ArgNode____getitem__, ptr @Array_ArgNode____eq__, ptr @Array_ArgNode____in__, ptr @Array_ArgNode__find }>
-@VTableArray_StatementNode_ = global <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }> <{ ptr @Array_StatementNode__resize, ptr @Array_StatementNode__swap, ptr @Array_StatementNode____sl__, ptr @Array_StatementNode____setitem__, ptr @Array_StatementNode__append, ptr @Array_StatementNode____getitem__, ptr @Array_StatementNode____eq__, ptr @Array_StatementNode____in__, ptr @Array_StatementNode__find }>
-@VTableArray_MethodNode_ = global <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }> <{ ptr @Array_MethodNode__resize, ptr @Array_MethodNode__swap, ptr @Array_MethodNode____sl__, ptr @Array_MethodNode____setitem__, ptr @Array_MethodNode__append, ptr @Array_MethodNode____getitem__, ptr @Array_MethodNode____eq__, ptr @Array_MethodNode____in__, ptr @Array_MethodNode__find }>
-@VTableArray_FieldNode_ = global <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }> <{ ptr @Array_FieldNode__resize, ptr @Array_FieldNode__swap, ptr @Array_FieldNode____sl__, ptr @Array_FieldNode____setitem__, ptr @Array_FieldNode__append, ptr @Array_FieldNode____getitem__, ptr @Array_FieldNode____eq__, ptr @Array_FieldNode____in__, ptr @Array_FieldNode__find }>
-@VTableArray_TypeNode_ = global <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }> <{ ptr @Array_TypeNode__resize, ptr @Array_TypeNode__swap, ptr @Array_TypeNode____sl__, ptr @Array_TypeNode____setitem__, ptr @Array_TypeNode__append, ptr @Array_TypeNode____getitem__, ptr @Array_TypeNode____eq__, ptr @Array_TypeNode____in__, ptr @Array_TypeNode__find }>
-@VTableArray_GenericParameterNode_ = global <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }> <{ ptr @Array_GenericParameterNode__resize, ptr @Array_GenericParameterNode__swap, ptr @Array_GenericParameterNode____sl__, ptr @Array_GenericParameterNode____setitem__, ptr @Array_GenericParameterNode__append, ptr @Array_GenericParameterNode____getitem__, ptr @Array_GenericParameterNode____eq__, ptr @Array_GenericParameterNode____in__, ptr @Array_GenericParameterNode__find }>
-@VTableArray_ClassDeclarationNode_ = global <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }> <{ ptr @Array_ClassDeclarationNode__resize, ptr @Array_ClassDeclarationNode__swap, ptr @Array_ClassDeclarationNode____sl__, ptr @Array_ClassDeclarationNode____setitem__, ptr @Array_ClassDeclarationNode__append, ptr @Array_ClassDeclarationNode____getitem__, ptr @Array_ClassDeclarationNode____eq__, ptr @Array_ClassDeclarationNode____in__, ptr @Array_ClassDeclarationNode__find }>
-@VTableArray_FunctionDeclarationNode_ = global <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }> <{ ptr @Array_FunctionDeclarationNode__resize, ptr @Array_FunctionDeclarationNode__swap, ptr @Array_FunctionDeclarationNode____sl__, ptr @Array_FunctionDeclarationNode____setitem__, ptr @Array_FunctionDeclarationNode__append, ptr @Array_FunctionDeclarationNode____getitem__, ptr @Array_FunctionDeclarationNode____eq__, ptr @Array_FunctionDeclarationNode____in__, ptr @Array_FunctionDeclarationNode__find }>
-@VTableArray_ExpressionNode_ = global <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }> <{ ptr @Array_ExpressionNode__resize, ptr @Array_ExpressionNode__swap, ptr @Array_ExpressionNode____sl__, ptr @Array_ExpressionNode____setitem__, ptr @Array_ExpressionNode__append, ptr @Array_ExpressionNode____getitem__, ptr @Array_ExpressionNode____eq__, ptr @Array_ExpressionNode____in__, ptr @Array_ExpressionNode__find }>
-@164 = private unnamed_addr constant [23 x i8] c"Expected an Identifier\00", align 1
-@165 = private unnamed_addr constant [13 x i8] c"Expected '='\00", align 1
-@166 = private unnamed_addr constant [13 x i8] c"Expected ':'\00", align 1
-@167 = private unnamed_addr constant [13 x i8] c"Expected '('\00", align 1
-@168 = private unnamed_addr constant [13 x i8] c"Expected ')'\00", align 1
-@169 = private unnamed_addr constant [13 x i8] c"Expected '{'\00", align 1
-@170 = private unnamed_addr constant [13 x i8] c"Expected '}'\00", align 1
-@171 = private unnamed_addr constant [13 x i8] c"Expected ','\00", align 1
-@172 = private unnamed_addr constant [13 x i8] c"Expected '<'\00", align 1
-@173 = private unnamed_addr constant [13 x i8] c"Expected '>'\00", align 1
-@174 = private unnamed_addr constant [14 x i8] c"Expected '=>'\00", align 1
-@175 = private unnamed_addr constant [27 x i8] c"Expected a type definition\00", align 1
-@176 = private unnamed_addr constant [6 x i8] c"Array\00", align 1
-@177 = private unnamed_addr constant [29 x i8] c"Expected an Expression value\00", align 1
-@178 = private unnamed_addr constant [29 x i8] c"'%s' has no type information\00", align 1
-@179 = private unnamed_addr constant [5 x i8] c"this\00", align 1
-@180 = private unnamed_addr constant [20 x i8] c"Expected ':' or '('\00", align 1
-@181 = private unnamed_addr constant [5 x i8] c"type\00", align 1
-@182 = private unnamed_addr constant [80 x i8] c"Illegal expression expected: 'fnc', 'class', 'enum', 'import', 'const' or 'let'\00", align 1
+@74 = private unnamed_addr constant [4 x i8] c"033\00", align 1
+@75 = private unnamed_addr constant [4 x i8] c"x1b\00", align 1
+@76 = private unnamed_addr constant [2 x i8] c"\1B\00", align 1
+@77 = private unnamed_addr constant [6 x i8] c"u001b\00", align 1
+@78 = private unnamed_addr constant [24 x i8] c"Illegal character: '%s'\00", align 1
+@79 = private unnamed_addr constant [15 x i8] c"--print-tokens\00", align 1
+@80 = private unnamed_addr constant [2 x i8] c"[\00", align 1
+@81 = private unnamed_addr constant [3 x i8] c" {\00", align 1
+@82 = private unnamed_addr constant [4 x i8] c"COL\00", align 1
+@83 = private unnamed_addr constant [8 x i8] c"SEMICOL\00", align 1
+@84 = private unnamed_addr constant [6 x i8] c"COMMA\00", align 1
+@85 = private unnamed_addr constant [5 x i8] c"PLUS\00", align 1
+@86 = private unnamed_addr constant [10 x i8] c"PLUS_PLUS\00", align 1
+@87 = private unnamed_addr constant [6 x i8] c"MINUS\00", align 1
+@88 = private unnamed_addr constant [12 x i8] c"MINUS_MINUS\00", align 1
+@89 = private unnamed_addr constant [5 x i8] c"MULT\00", align 1
+@90 = private unnamed_addr constant [4 x i8] c"DIV\00", align 1
+@91 = private unnamed_addr constant [5 x i8] c"LPAR\00", align 1
+@92 = private unnamed_addr constant [5 x i8] c"RPAR\00", align 1
+@93 = private unnamed_addr constant [4 x i8] c"MOD\00", align 1
+@94 = private unnamed_addr constant [7 x i8] c"LBRACE\00", align 1
+@95 = private unnamed_addr constant [7 x i8] c"RBRACE\00", align 1
+@96 = private unnamed_addr constant [9 x i8] c"LBRACKET\00", align 1
+@97 = private unnamed_addr constant [9 x i8] c"RBRACKET\00", align 1
+@98 = private unnamed_addr constant [4 x i8] c"INT\00", align 1
+@99 = private unnamed_addr constant [6 x i8] c"FLOAT\00", align 1
+@100 = private unnamed_addr constant [3 x i8] c"LN\00", align 1
+@101 = private unnamed_addr constant [4 x i8] c"STR\00", align 1
+@102 = private unnamed_addr constant [5 x i8] c"CHAR\00", align 1
+@103 = private unnamed_addr constant [4 x i8] c"POW\00", align 1
+@104 = private unnamed_addr constant [5 x i8] c"QUES\00", align 1
+@105 = private unnamed_addr constant [4 x i8] c"AMP\00", align 1
+@106 = private unnamed_addr constant [3 x i8] c"EQ\00", align 1
+@107 = private unnamed_addr constant [4 x i8] c"EEQ\00", align 1
+@108 = private unnamed_addr constant [4 x i8] c"NEQ\00", align 1
+@109 = private unnamed_addr constant [3 x i8] c"GT\00", align 1
+@110 = private unnamed_addr constant [3 x i8] c"LT\00", align 1
+@111 = private unnamed_addr constant [4 x i8] c"LTE\00", align 1
+@112 = private unnamed_addr constant [4 x i8] c"GTE\00", align 1
+@113 = private unnamed_addr constant [6 x i8] c"ARROW\00", align 1
+@114 = private unnamed_addr constant [4 x i8] c"EOF\00", align 1
+@115 = private unnamed_addr constant [4 x i8] c"NOT\00", align 1
+@116 = private unnamed_addr constant [3 x i8] c"SL\00", align 1
+@117 = private unnamed_addr constant [3 x i8] c"SR\00", align 1
+@118 = private unnamed_addr constant [4 x i8] c"DOT\00", align 1
+@119 = private unnamed_addr constant [8 x i8] c"DOT_DOT\00", align 1
+@120 = private unnamed_addr constant [12 x i8] c"DOT_DOT_DOT\00", align 1
+@121 = private unnamed_addr constant [10 x i8] c"IDENTIFER\00", align 1
+@122 = private unnamed_addr constant [7 x i8] c"AND_KW\00", align 1
+@123 = private unnamed_addr constant [6 x i8] c"OR_KW\00", align 1
+@124 = private unnamed_addr constant [7 x i8] c"XOR_KW\00", align 1
+@125 = private unnamed_addr constant [9 x i8] c"CONST_KW\00", align 1
+@126 = private unnamed_addr constant [6 x i8] c"IF_KW\00", align 1
+@127 = private unnamed_addr constant [8 x i8] c"ELSE_KW\00", align 1
+@128 = private unnamed_addr constant [8 x i8] c"BOOL_KW\00", align 1
+@129 = private unnamed_addr constant [6 x i8] c"I4_KW\00", align 1
+@130 = private unnamed_addr constant [6 x i8] c"I8_KW\00", align 1
+@131 = private unnamed_addr constant [7 x i8] c"I16_KW\00", align 1
+@132 = private unnamed_addr constant [7 x i8] c"I32_KW\00", align 1
+@133 = private unnamed_addr constant [7 x i8] c"I64_KW\00", align 1
+@134 = private unnamed_addr constant [8 x i8] c"I128_KW\00", align 1
+@135 = private unnamed_addr constant [7 x i8] c"INT_KW\00", align 1
+@136 = private unnamed_addr constant [7 x i8] c"F16_KW\00", align 1
+@137 = private unnamed_addr constant [7 x i8] c"F32_KW\00", align 1
+@138 = private unnamed_addr constant [7 x i8] c"F64_KW\00", align 1
+@139 = private unnamed_addr constant [9 x i8] c"FLOAT_KW\00", align 1
+@140 = private unnamed_addr constant [8 x i8] c"VOID_KW\00", align 1
+@141 = private unnamed_addr constant [7 x i8] c"FOR_KW\00", align 1
+@142 = private unnamed_addr constant [9 x i8] c"WHILE_KW\00", align 1
+@143 = private unnamed_addr constant [7 x i8] c"FNC_KW\00", align 1
+@144 = private unnamed_addr constant [9 x i8] c"BREAK_KW\00", align 1
+@145 = private unnamed_addr constant [12 x i8] c"CONTINUE_KW\00", align 1
+@146 = private unnamed_addr constant [10 x i8] c"RETURN_KW\00", align 1
+@147 = private unnamed_addr constant [10 x i8] c"IMPORT_KW\00", align 1
+@148 = private unnamed_addr constant [11 x i8] c"PRIVATE_KW\00", align 1
+@149 = private unnamed_addr constant [10 x i8] c"PUBLIC_KW\00", align 1
+@150 = private unnamed_addr constant [13 x i8] c"PROTECTED_KW\00", align 1
+@151 = private unnamed_addr constant [6 x i8] c"IN_KW\00", align 1
+@152 = private unnamed_addr constant [9 x i8] c"CLASS_KW\00", align 1
+@153 = private unnamed_addr constant [8 x i8] c"ENUM_KW\00", align 1
+@154 = private unnamed_addr constant [7 x i8] c"NEW_KW\00", align 1
+@155 = private unnamed_addr constant [6 x i8] c"AS_KW\00", align 1
+@156 = private unnamed_addr constant [7 x i8] c"LET_KW\00", align 1
+@157 = private unnamed_addr constant [12 x i8] c"  type: %s,\00", align 1
+@158 = private unnamed_addr constant [15 x i8] c"  range: %d-%d\00", align 1
+@159 = private unnamed_addr constant [12 x i8] c"  value: %s\00", align 1
+@160 = private unnamed_addr constant [12 x i8] c"  value: \\n\00", align 1
+@161 = private unnamed_addr constant [4 x i8] c" },\00", align 1
+@162 = private unnamed_addr constant [2 x i8] c"]\00", align 1
+@VTableArrayIterator_IdentifierToken_ = global <{ ptr }> <{ ptr @ArrayIterator_IdentifierToken____next__ }>
+@VTableArray_IdentifierToken_ = global <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }> <{ ptr @Array_IdentifierToken__resize, ptr @Array_IdentifierToken__swap, ptr @Array_IdentifierToken____iter__, ptr @Array_IdentifierToken____sl__, ptr @Array_IdentifierToken____setitem__, ptr @Array_IdentifierToken__append, ptr @Array_IdentifierToken____getitem__, ptr @Array_IdentifierToken____eq__, ptr @Array_IdentifierToken____in__, ptr @Array_IdentifierToken__find }>
+@VTableArrayIterator_ImportNode_ = global <{ ptr }> <{ ptr @ArrayIterator_ImportNode____next__ }>
+@VTableArray_ImportNode_ = global <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }> <{ ptr @Array_ImportNode__resize, ptr @Array_ImportNode__swap, ptr @Array_ImportNode____iter__, ptr @Array_ImportNode____sl__, ptr @Array_ImportNode____setitem__, ptr @Array_ImportNode__append, ptr @Array_ImportNode____getitem__, ptr @Array_ImportNode____eq__, ptr @Array_ImportNode____in__, ptr @Array_ImportNode__find }>
+@VTableArrayIterator_VarDeclarationStatement_ = global <{ ptr }> <{ ptr @ArrayIterator_VarDeclarationStatement____next__ }>
+@VTableArray_VarDeclarationStatement_ = global <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }> <{ ptr @Array_VarDeclarationStatement__resize, ptr @Array_VarDeclarationStatement__swap, ptr @Array_VarDeclarationStatement____iter__, ptr @Array_VarDeclarationStatement____sl__, ptr @Array_VarDeclarationStatement____setitem__, ptr @Array_VarDeclarationStatement__append, ptr @Array_VarDeclarationStatement____getitem__, ptr @Array_VarDeclarationStatement____eq__, ptr @Array_VarDeclarationStatement____in__, ptr @Array_VarDeclarationStatement__find }>
+@VTableArrayIterator_EnumNodeField_ = global <{ ptr }> <{ ptr @ArrayIterator_EnumNodeField____next__ }>
+@VTableArray_EnumNodeField_ = global <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }> <{ ptr @Array_EnumNodeField__resize, ptr @Array_EnumNodeField__swap, ptr @Array_EnumNodeField____iter__, ptr @Array_EnumNodeField____sl__, ptr @Array_EnumNodeField____setitem__, ptr @Array_EnumNodeField__append, ptr @Array_EnumNodeField____getitem__, ptr @Array_EnumNodeField____eq__, ptr @Array_EnumNodeField____in__, ptr @Array_EnumNodeField__find }>
+@VTableArrayIterator_EnumNode_ = global <{ ptr }> <{ ptr @ArrayIterator_EnumNode____next__ }>
+@VTableArray_EnumNode_ = global <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }> <{ ptr @Array_EnumNode__resize, ptr @Array_EnumNode__swap, ptr @Array_EnumNode____iter__, ptr @Array_EnumNode____sl__, ptr @Array_EnumNode____setitem__, ptr @Array_EnumNode__append, ptr @Array_EnumNode____getitem__, ptr @Array_EnumNode____eq__, ptr @Array_EnumNode____in__, ptr @Array_EnumNode__find }>
+@VTableArrayIterator_TypeAliasNode_ = global <{ ptr }> <{ ptr @ArrayIterator_TypeAliasNode____next__ }>
+@VTableArray_TypeAliasNode_ = global <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }> <{ ptr @Array_TypeAliasNode__resize, ptr @Array_TypeAliasNode__swap, ptr @Array_TypeAliasNode____iter__, ptr @Array_TypeAliasNode____sl__, ptr @Array_TypeAliasNode____setitem__, ptr @Array_TypeAliasNode__append, ptr @Array_TypeAliasNode____getitem__, ptr @Array_TypeAliasNode____eq__, ptr @Array_TypeAliasNode____in__, ptr @Array_TypeAliasNode__find }>
+@VTableArrayIterator_ConstDeclarationStatement_ = global <{ ptr }> <{ ptr @ArrayIterator_ConstDeclarationStatement____next__ }>
+@VTableArray_ConstDeclarationStatement_ = global <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }> <{ ptr @Array_ConstDeclarationStatement__resize, ptr @Array_ConstDeclarationStatement__swap, ptr @Array_ConstDeclarationStatement____iter__, ptr @Array_ConstDeclarationStatement____sl__, ptr @Array_ConstDeclarationStatement____setitem__, ptr @Array_ConstDeclarationStatement__append, ptr @Array_ConstDeclarationStatement____getitem__, ptr @Array_ConstDeclarationStatement____eq__, ptr @Array_ConstDeclarationStatement____in__, ptr @Array_ConstDeclarationStatement__find }>
+@VTableArrayIterator_ArgNode_ = global <{ ptr }> <{ ptr @ArrayIterator_ArgNode____next__ }>
+@VTableArray_ArgNode_ = global <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }> <{ ptr @Array_ArgNode__resize, ptr @Array_ArgNode__swap, ptr @Array_ArgNode____iter__, ptr @Array_ArgNode____sl__, ptr @Array_ArgNode____setitem__, ptr @Array_ArgNode__append, ptr @Array_ArgNode____getitem__, ptr @Array_ArgNode____eq__, ptr @Array_ArgNode____in__, ptr @Array_ArgNode__find }>
+@VTableArrayIterator_StatementNode_ = global <{ ptr }> <{ ptr @ArrayIterator_StatementNode____next__ }>
+@VTableArray_StatementNode_ = global <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }> <{ ptr @Array_StatementNode__resize, ptr @Array_StatementNode__swap, ptr @Array_StatementNode____iter__, ptr @Array_StatementNode____sl__, ptr @Array_StatementNode____setitem__, ptr @Array_StatementNode__append, ptr @Array_StatementNode____getitem__, ptr @Array_StatementNode____eq__, ptr @Array_StatementNode____in__, ptr @Array_StatementNode__find }>
+@VTableArrayIterator_MethodNode_ = global <{ ptr }> <{ ptr @ArrayIterator_MethodNode____next__ }>
+@VTableArray_MethodNode_ = global <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }> <{ ptr @Array_MethodNode__resize, ptr @Array_MethodNode__swap, ptr @Array_MethodNode____iter__, ptr @Array_MethodNode____sl__, ptr @Array_MethodNode____setitem__, ptr @Array_MethodNode__append, ptr @Array_MethodNode____getitem__, ptr @Array_MethodNode____eq__, ptr @Array_MethodNode____in__, ptr @Array_MethodNode__find }>
+@VTableArrayIterator_FieldNode_ = global <{ ptr }> <{ ptr @ArrayIterator_FieldNode____next__ }>
+@VTableArray_FieldNode_ = global <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }> <{ ptr @Array_FieldNode__resize, ptr @Array_FieldNode__swap, ptr @Array_FieldNode____iter__, ptr @Array_FieldNode____sl__, ptr @Array_FieldNode____setitem__, ptr @Array_FieldNode__append, ptr @Array_FieldNode____getitem__, ptr @Array_FieldNode____eq__, ptr @Array_FieldNode____in__, ptr @Array_FieldNode__find }>
+@VTableArrayIterator_TypeNode_ = global <{ ptr }> <{ ptr @ArrayIterator_TypeNode____next__ }>
+@VTableArray_TypeNode_ = global <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }> <{ ptr @Array_TypeNode__resize, ptr @Array_TypeNode__swap, ptr @Array_TypeNode____iter__, ptr @Array_TypeNode____sl__, ptr @Array_TypeNode____setitem__, ptr @Array_TypeNode__append, ptr @Array_TypeNode____getitem__, ptr @Array_TypeNode____eq__, ptr @Array_TypeNode____in__, ptr @Array_TypeNode__find }>
+@VTableArrayIterator_GenericParameterNode_ = global <{ ptr }> <{ ptr @ArrayIterator_GenericParameterNode____next__ }>
+@VTableArray_GenericParameterNode_ = global <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }> <{ ptr @Array_GenericParameterNode__resize, ptr @Array_GenericParameterNode__swap, ptr @Array_GenericParameterNode____iter__, ptr @Array_GenericParameterNode____sl__, ptr @Array_GenericParameterNode____setitem__, ptr @Array_GenericParameterNode__append, ptr @Array_GenericParameterNode____getitem__, ptr @Array_GenericParameterNode____eq__, ptr @Array_GenericParameterNode____in__, ptr @Array_GenericParameterNode__find }>
+@VTableArrayIterator_ClassDeclarationNode_ = global <{ ptr }> <{ ptr @ArrayIterator_ClassDeclarationNode____next__ }>
+@VTableArray_ClassDeclarationNode_ = global <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }> <{ ptr @Array_ClassDeclarationNode__resize, ptr @Array_ClassDeclarationNode__swap, ptr @Array_ClassDeclarationNode____iter__, ptr @Array_ClassDeclarationNode____sl__, ptr @Array_ClassDeclarationNode____setitem__, ptr @Array_ClassDeclarationNode__append, ptr @Array_ClassDeclarationNode____getitem__, ptr @Array_ClassDeclarationNode____eq__, ptr @Array_ClassDeclarationNode____in__, ptr @Array_ClassDeclarationNode__find }>
+@VTableArrayIterator_FunctionDeclarationNode_ = global <{ ptr }> <{ ptr @ArrayIterator_FunctionDeclarationNode____next__ }>
+@VTableArray_FunctionDeclarationNode_ = global <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }> <{ ptr @Array_FunctionDeclarationNode__resize, ptr @Array_FunctionDeclarationNode__swap, ptr @Array_FunctionDeclarationNode____iter__, ptr @Array_FunctionDeclarationNode____sl__, ptr @Array_FunctionDeclarationNode____setitem__, ptr @Array_FunctionDeclarationNode__append, ptr @Array_FunctionDeclarationNode____getitem__, ptr @Array_FunctionDeclarationNode____eq__, ptr @Array_FunctionDeclarationNode____in__, ptr @Array_FunctionDeclarationNode__find }>
+@VTableArrayIterator_ExpressionNode_ = global <{ ptr }> <{ ptr @ArrayIterator_ExpressionNode____next__ }>
+@VTableArray_ExpressionNode_ = global <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }> <{ ptr @Array_ExpressionNode__resize, ptr @Array_ExpressionNode__swap, ptr @Array_ExpressionNode____iter__, ptr @Array_ExpressionNode____sl__, ptr @Array_ExpressionNode____setitem__, ptr @Array_ExpressionNode__append, ptr @Array_ExpressionNode____getitem__, ptr @Array_ExpressionNode____eq__, ptr @Array_ExpressionNode____in__, ptr @Array_ExpressionNode__find }>
+@163 = private unnamed_addr constant [23 x i8] c"Expected an Identifier\00", align 1
+@164 = private unnamed_addr constant [13 x i8] c"Expected '='\00", align 1
+@165 = private unnamed_addr constant [13 x i8] c"Expected ':'\00", align 1
+@166 = private unnamed_addr constant [13 x i8] c"Expected '('\00", align 1
+@167 = private unnamed_addr constant [13 x i8] c"Expected ')'\00", align 1
+@168 = private unnamed_addr constant [13 x i8] c"Expected '{'\00", align 1
+@169 = private unnamed_addr constant [13 x i8] c"Expected '}'\00", align 1
+@170 = private unnamed_addr constant [13 x i8] c"Expected ','\00", align 1
+@171 = private unnamed_addr constant [13 x i8] c"Expected '<'\00", align 1
+@172 = private unnamed_addr constant [13 x i8] c"Expected '>'\00", align 1
+@173 = private unnamed_addr constant [14 x i8] c"Expected '=>'\00", align 1
+@174 = private unnamed_addr constant [27 x i8] c"Expected a type definition\00", align 1
+@175 = private unnamed_addr constant [6 x i8] c"Array\00", align 1
+@176 = private unnamed_addr constant [29 x i8] c"Expected an Expression value\00", align 1
+@177 = private unnamed_addr constant [29 x i8] c"'%s' has no type information\00", align 1
+@178 = private unnamed_addr constant [5 x i8] c"this\00", align 1
+@179 = private unnamed_addr constant [20 x i8] c"Expected ':' or '('\00", align 1
+@180 = private unnamed_addr constant [5 x i8] c"type\00", align 1
+@181 = private unnamed_addr constant [80 x i8] c"Illegal expression expected: 'fnc', 'class', 'enum', 'import', 'const' or 'let'\00", align 1
 @VTableBucket_string_VarId_ = global <{ ptr }> <{ ptr @Bucket_string_VarId__set }>
-@VTableArray_Bucket_string_VarId__ = global <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }> <{ ptr @Array_Bucket_string_VarId___resize, ptr @Array_Bucket_string_VarId___swap, ptr @Array_Bucket_string_VarId_____sl__, ptr @Array_Bucket_string_VarId_____setitem__, ptr @Array_Bucket_string_VarId___append, ptr @Array_Bucket_string_VarId_____getitem__, ptr @Array_Bucket_string_VarId_____eq__, ptr @Array_Bucket_string_VarId_____in__, ptr @Array_Bucket_string_VarId___find }>
+@VTableArrayIterator_Bucket_string_VarId__ = global <{ ptr }> <{ ptr @ArrayIterator_Bucket_string_VarId_____next__ }>
+@VTableArray_Bucket_string_VarId__ = global <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }> <{ ptr @Array_Bucket_string_VarId___resize, ptr @Array_Bucket_string_VarId___swap, ptr @Array_Bucket_string_VarId_____iter__, ptr @Array_Bucket_string_VarId_____sl__, ptr @Array_Bucket_string_VarId_____setitem__, ptr @Array_Bucket_string_VarId___append, ptr @Array_Bucket_string_VarId_____getitem__, ptr @Array_Bucket_string_VarId_____eq__, ptr @Array_Bucket_string_VarId_____in__, ptr @Array_Bucket_string_VarId___find }>
 @VTableMap_string_VarId_ = global <{ ptr, ptr, ptr }> <{ ptr @Map_string_VarId__set, ptr @Map_string_VarId__get, ptr @Map_string_VarId__get_buckets }>
 @VTableBucket_string_EnumId_ = global <{ ptr }> <{ ptr @Bucket_string_EnumId__set }>
-@VTableArray_Bucket_string_EnumId__ = global <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }> <{ ptr @Array_Bucket_string_EnumId___resize, ptr @Array_Bucket_string_EnumId___swap, ptr @Array_Bucket_string_EnumId_____sl__, ptr @Array_Bucket_string_EnumId_____setitem__, ptr @Array_Bucket_string_EnumId___append, ptr @Array_Bucket_string_EnumId_____getitem__, ptr @Array_Bucket_string_EnumId_____eq__, ptr @Array_Bucket_string_EnumId_____in__, ptr @Array_Bucket_string_EnumId___find }>
+@VTableArrayIterator_Bucket_string_EnumId__ = global <{ ptr }> <{ ptr @ArrayIterator_Bucket_string_EnumId_____next__ }>
+@VTableArray_Bucket_string_EnumId__ = global <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }> <{ ptr @Array_Bucket_string_EnumId___resize, ptr @Array_Bucket_string_EnumId___swap, ptr @Array_Bucket_string_EnumId_____iter__, ptr @Array_Bucket_string_EnumId_____sl__, ptr @Array_Bucket_string_EnumId_____setitem__, ptr @Array_Bucket_string_EnumId___append, ptr @Array_Bucket_string_EnumId_____getitem__, ptr @Array_Bucket_string_EnumId_____eq__, ptr @Array_Bucket_string_EnumId_____in__, ptr @Array_Bucket_string_EnumId___find }>
 @VTableMap_string_EnumId_ = global <{ ptr, ptr, ptr }> <{ ptr @Map_string_EnumId__set, ptr @Map_string_EnumId__get, ptr @Map_string_EnumId__get_buckets }>
 @VTableBucket_string_Type_ = global <{ ptr }> <{ ptr @Bucket_string_Type__set }>
-@VTableArray_Bucket_string_Type__ = global <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }> <{ ptr @Array_Bucket_string_Type___resize, ptr @Array_Bucket_string_Type___swap, ptr @Array_Bucket_string_Type_____sl__, ptr @Array_Bucket_string_Type_____setitem__, ptr @Array_Bucket_string_Type___append, ptr @Array_Bucket_string_Type_____getitem__, ptr @Array_Bucket_string_Type_____eq__, ptr @Array_Bucket_string_Type_____in__, ptr @Array_Bucket_string_Type___find }>
+@VTableArrayIterator_Bucket_string_Type__ = global <{ ptr }> <{ ptr @ArrayIterator_Bucket_string_Type_____next__ }>
+@VTableArray_Bucket_string_Type__ = global <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }> <{ ptr @Array_Bucket_string_Type___resize, ptr @Array_Bucket_string_Type___swap, ptr @Array_Bucket_string_Type_____iter__, ptr @Array_Bucket_string_Type_____sl__, ptr @Array_Bucket_string_Type_____setitem__, ptr @Array_Bucket_string_Type___append, ptr @Array_Bucket_string_Type_____getitem__, ptr @Array_Bucket_string_Type_____eq__, ptr @Array_Bucket_string_Type_____in__, ptr @Array_Bucket_string_Type___find }>
 @VTableMap_string_Type_ = global <{ ptr, ptr, ptr }> <{ ptr @Map_string_Type__set, ptr @Map_string_Type__get, ptr @Map_string_Type__get_buckets }>
 @VTableBucket_string_ClassId_ = global <{ ptr }> <{ ptr @Bucket_string_ClassId__set }>
-@VTableArray_Bucket_string_ClassId__ = global <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }> <{ ptr @Array_Bucket_string_ClassId___resize, ptr @Array_Bucket_string_ClassId___swap, ptr @Array_Bucket_string_ClassId_____sl__, ptr @Array_Bucket_string_ClassId_____setitem__, ptr @Array_Bucket_string_ClassId___append, ptr @Array_Bucket_string_ClassId_____getitem__, ptr @Array_Bucket_string_ClassId_____eq__, ptr @Array_Bucket_string_ClassId_____in__, ptr @Array_Bucket_string_ClassId___find }>
+@VTableArrayIterator_Bucket_string_ClassId__ = global <{ ptr }> <{ ptr @ArrayIterator_Bucket_string_ClassId_____next__ }>
+@VTableArray_Bucket_string_ClassId__ = global <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }> <{ ptr @Array_Bucket_string_ClassId___resize, ptr @Array_Bucket_string_ClassId___swap, ptr @Array_Bucket_string_ClassId_____iter__, ptr @Array_Bucket_string_ClassId_____sl__, ptr @Array_Bucket_string_ClassId_____setitem__, ptr @Array_Bucket_string_ClassId___append, ptr @Array_Bucket_string_ClassId_____getitem__, ptr @Array_Bucket_string_ClassId_____eq__, ptr @Array_Bucket_string_ClassId_____in__, ptr @Array_Bucket_string_ClassId___find }>
 @VTableMap_string_ClassId_ = global <{ ptr, ptr, ptr }> <{ ptr @Map_string_ClassId__set, ptr @Map_string_ClassId__get, ptr @Map_string_ClassId__get_buckets }>
-@VTableArray_Scope_ = global <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }> <{ ptr @Array_Scope__resize, ptr @Array_Scope__swap, ptr @Array_Scope____sl__, ptr @Array_Scope____setitem__, ptr @Array_Scope__append, ptr @Array_Scope____getitem__, ptr @Array_Scope____eq__, ptr @Array_Scope____in__, ptr @Array_Scope__find }>
-@VTableArray_VarDeclaration_ = global <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }> <{ ptr @Array_VarDeclaration__resize, ptr @Array_VarDeclaration__swap, ptr @Array_VarDeclaration____sl__, ptr @Array_VarDeclaration____setitem__, ptr @Array_VarDeclaration__append, ptr @Array_VarDeclaration____getitem__, ptr @Array_VarDeclaration____eq__, ptr @Array_VarDeclaration____in__, ptr @Array_VarDeclaration__find }>
-@VTableArray_Var_ = global <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }> <{ ptr @Array_Var__resize, ptr @Array_Var__swap, ptr @Array_Var____sl__, ptr @Array_Var____setitem__, ptr @Array_Var__append, ptr @Array_Var____getitem__, ptr @Array_Var____eq__, ptr @Array_Var____in__, ptr @Array_Var__find }>
-@VTableArray_ConstDeclaration_ = global <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }> <{ ptr @Array_ConstDeclaration__resize, ptr @Array_ConstDeclaration__swap, ptr @Array_ConstDeclaration____sl__, ptr @Array_ConstDeclaration____setitem__, ptr @Array_ConstDeclaration__append, ptr @Array_ConstDeclaration____getitem__, ptr @Array_ConstDeclaration____eq__, ptr @Array_ConstDeclaration____in__, ptr @Array_ConstDeclaration__find }>
+@VTableArrayIterator_Scope_ = global <{ ptr }> <{ ptr @ArrayIterator_Scope____next__ }>
+@VTableArray_Scope_ = global <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }> <{ ptr @Array_Scope__resize, ptr @Array_Scope__swap, ptr @Array_Scope____iter__, ptr @Array_Scope____sl__, ptr @Array_Scope____setitem__, ptr @Array_Scope__append, ptr @Array_Scope____getitem__, ptr @Array_Scope____eq__, ptr @Array_Scope____in__, ptr @Array_Scope__find }>
+@VTableArrayIterator_VarDeclaration_ = global <{ ptr }> <{ ptr @ArrayIterator_VarDeclaration____next__ }>
+@VTableArray_VarDeclaration_ = global <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }> <{ ptr @Array_VarDeclaration__resize, ptr @Array_VarDeclaration__swap, ptr @Array_VarDeclaration____iter__, ptr @Array_VarDeclaration____sl__, ptr @Array_VarDeclaration____setitem__, ptr @Array_VarDeclaration__append, ptr @Array_VarDeclaration____getitem__, ptr @Array_VarDeclaration____eq__, ptr @Array_VarDeclaration____in__, ptr @Array_VarDeclaration__find }>
+@VTableArrayIterator_Var_ = global <{ ptr }> <{ ptr @ArrayIterator_Var____next__ }>
+@VTableArray_Var_ = global <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }> <{ ptr @Array_Var__resize, ptr @Array_Var__swap, ptr @Array_Var____iter__, ptr @Array_Var____sl__, ptr @Array_Var____setitem__, ptr @Array_Var__append, ptr @Array_Var____getitem__, ptr @Array_Var____eq__, ptr @Array_Var____in__, ptr @Array_Var__find }>
+@VTableArrayIterator_ConstDeclaration_ = global <{ ptr }> <{ ptr @ArrayIterator_ConstDeclaration____next__ }>
+@VTableArray_ConstDeclaration_ = global <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }> <{ ptr @Array_ConstDeclaration__resize, ptr @Array_ConstDeclaration__swap, ptr @Array_ConstDeclaration____iter__, ptr @Array_ConstDeclaration____sl__, ptr @Array_ConstDeclaration____setitem__, ptr @Array_ConstDeclaration__append, ptr @Array_ConstDeclaration____getitem__, ptr @Array_ConstDeclaration____eq__, ptr @Array_ConstDeclaration____in__, ptr @Array_ConstDeclaration__find }>
 @VTableBucket_string_PropId_ = global <{ ptr }> <{ ptr @Bucket_string_PropId__set }>
-@VTableArray_Bucket_string_PropId__ = global <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }> <{ ptr @Array_Bucket_string_PropId___resize, ptr @Array_Bucket_string_PropId___swap, ptr @Array_Bucket_string_PropId_____sl__, ptr @Array_Bucket_string_PropId_____setitem__, ptr @Array_Bucket_string_PropId___append, ptr @Array_Bucket_string_PropId_____getitem__, ptr @Array_Bucket_string_PropId_____eq__, ptr @Array_Bucket_string_PropId_____in__, ptr @Array_Bucket_string_PropId___find }>
+@VTableArrayIterator_Bucket_string_PropId__ = global <{ ptr }> <{ ptr @ArrayIterator_Bucket_string_PropId_____next__ }>
+@VTableArray_Bucket_string_PropId__ = global <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }> <{ ptr @Array_Bucket_string_PropId___resize, ptr @Array_Bucket_string_PropId___swap, ptr @Array_Bucket_string_PropId_____iter__, ptr @Array_Bucket_string_PropId_____sl__, ptr @Array_Bucket_string_PropId_____setitem__, ptr @Array_Bucket_string_PropId___append, ptr @Array_Bucket_string_PropId_____getitem__, ptr @Array_Bucket_string_PropId_____eq__, ptr @Array_Bucket_string_PropId_____in__, ptr @Array_Bucket_string_PropId___find }>
 @VTableMap_string_PropId_ = global <{ ptr, ptr, ptr }> <{ ptr @Map_string_PropId__set, ptr @Map_string_PropId__get, ptr @Map_string_PropId__get_buckets }>
-@VTableArray_EnumField_ = global <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }> <{ ptr @Array_EnumField__resize, ptr @Array_EnumField__swap, ptr @Array_EnumField____sl__, ptr @Array_EnumField____setitem__, ptr @Array_EnumField__append, ptr @Array_EnumField____getitem__, ptr @Array_EnumField____eq__, ptr @Array_EnumField____in__, ptr @Array_EnumField__find }>
-@VTableArray_Enum_ = global <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }> <{ ptr @Array_Enum__resize, ptr @Array_Enum__swap, ptr @Array_Enum____sl__, ptr @Array_Enum____setitem__, ptr @Array_Enum__append, ptr @Array_Enum____getitem__, ptr @Array_Enum____eq__, ptr @Array_Enum____in__, ptr @Array_Enum__find }>
-@VTableArray_Const_ = global <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }> <{ ptr @Array_Const__resize, ptr @Array_Const__swap, ptr @Array_Const____sl__, ptr @Array_Const____setitem__, ptr @Array_Const__append, ptr @Array_Const____getitem__, ptr @Array_Const____eq__, ptr @Array_Const____in__, ptr @Array_Const__find }>
-@VTableArray_FunctionArg_ = global <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }> <{ ptr @Array_FunctionArg__resize, ptr @Array_FunctionArg__swap, ptr @Array_FunctionArg____sl__, ptr @Array_FunctionArg____setitem__, ptr @Array_FunctionArg__append, ptr @Array_FunctionArg____getitem__, ptr @Array_FunctionArg____eq__, ptr @Array_FunctionArg____in__, ptr @Array_FunctionArg__find }>
-@VTableArray_Statement_ = global <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }> <{ ptr @Array_Statement__resize, ptr @Array_Statement__swap, ptr @Array_Statement____sl__, ptr @Array_Statement____setitem__, ptr @Array_Statement__append, ptr @Array_Statement____getitem__, ptr @Array_Statement____eq__, ptr @Array_Statement____in__, ptr @Array_Statement__find }>
-@VTableArray_Type_ = global <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }> <{ ptr @Array_Type__resize, ptr @Array_Type__swap, ptr @Array_Type____sl__, ptr @Array_Type____setitem__, ptr @Array_Type__append, ptr @Array_Type____getitem__, ptr @Array_Type____eq__, ptr @Array_Type____in__, ptr @Array_Type__find }>
-@VTableArray_ClassMethod_ = global <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }> <{ ptr @Array_ClassMethod__resize, ptr @Array_ClassMethod__swap, ptr @Array_ClassMethod____sl__, ptr @Array_ClassMethod____setitem__, ptr @Array_ClassMethod__append, ptr @Array_ClassMethod____getitem__, ptr @Array_ClassMethod____eq__, ptr @Array_ClassMethod____in__, ptr @Array_ClassMethod__find }>
-@VTableArray_ClassField_ = global <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }> <{ ptr @Array_ClassField__resize, ptr @Array_ClassField__swap, ptr @Array_ClassField____sl__, ptr @Array_ClassField____setitem__, ptr @Array_ClassField__append, ptr @Array_ClassField____getitem__, ptr @Array_ClassField____eq__, ptr @Array_ClassField____in__, ptr @Array_ClassField__find }>
-@VTableArray_Class_ = global <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }> <{ ptr @Array_Class__resize, ptr @Array_Class__swap, ptr @Array_Class____sl__, ptr @Array_Class____setitem__, ptr @Array_Class__append, ptr @Array_Class____getitem__, ptr @Array_Class____eq__, ptr @Array_Class____in__, ptr @Array_Class__find }>
-@VTableArray_Function_ = global <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }> <{ ptr @Array_Function__resize, ptr @Array_Function__swap, ptr @Array_Function____sl__, ptr @Array_Function____setitem__, ptr @Array_Function__append, ptr @Array_Function____getitem__, ptr @Array_Function____eq__, ptr @Array_Function____in__, ptr @Array_Function__find }>
-@VTableArray_Module_ = global <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }> <{ ptr @Array_Module__resize, ptr @Array_Module__swap, ptr @Array_Module____sl__, ptr @Array_Module____setitem__, ptr @Array_Module__append, ptr @Array_Module____getitem__, ptr @Array_Module____eq__, ptr @Array_Module____in__, ptr @Array_Module__find }>
-@VTableArray_Expression_ = global <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }> <{ ptr @Array_Expression__resize, ptr @Array_Expression__swap, ptr @Array_Expression____sl__, ptr @Array_Expression____setitem__, ptr @Array_Expression__append, ptr @Array_Expression____getitem__, ptr @Array_Expression____eq__, ptr @Array_Expression____in__, ptr @Array_Expression__find }>
+@VTableArrayIterator_EnumField_ = global <{ ptr }> <{ ptr @ArrayIterator_EnumField____next__ }>
+@VTableArray_EnumField_ = global <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }> <{ ptr @Array_EnumField__resize, ptr @Array_EnumField__swap, ptr @Array_EnumField____iter__, ptr @Array_EnumField____sl__, ptr @Array_EnumField____setitem__, ptr @Array_EnumField__append, ptr @Array_EnumField____getitem__, ptr @Array_EnumField____eq__, ptr @Array_EnumField____in__, ptr @Array_EnumField__find }>
+@VTableArrayIterator_Enum_ = global <{ ptr }> <{ ptr @ArrayIterator_Enum____next__ }>
+@VTableArray_Enum_ = global <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }> <{ ptr @Array_Enum__resize, ptr @Array_Enum__swap, ptr @Array_Enum____iter__, ptr @Array_Enum____sl__, ptr @Array_Enum____setitem__, ptr @Array_Enum__append, ptr @Array_Enum____getitem__, ptr @Array_Enum____eq__, ptr @Array_Enum____in__, ptr @Array_Enum__find }>
+@VTableArrayIterator_Const_ = global <{ ptr }> <{ ptr @ArrayIterator_Const____next__ }>
+@VTableArray_Const_ = global <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }> <{ ptr @Array_Const__resize, ptr @Array_Const__swap, ptr @Array_Const____iter__, ptr @Array_Const____sl__, ptr @Array_Const____setitem__, ptr @Array_Const__append, ptr @Array_Const____getitem__, ptr @Array_Const____eq__, ptr @Array_Const____in__, ptr @Array_Const__find }>
+@VTableArrayIterator_FunctionArg_ = global <{ ptr }> <{ ptr @ArrayIterator_FunctionArg____next__ }>
+@VTableArray_FunctionArg_ = global <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }> <{ ptr @Array_FunctionArg__resize, ptr @Array_FunctionArg__swap, ptr @Array_FunctionArg____iter__, ptr @Array_FunctionArg____sl__, ptr @Array_FunctionArg____setitem__, ptr @Array_FunctionArg__append, ptr @Array_FunctionArg____getitem__, ptr @Array_FunctionArg____eq__, ptr @Array_FunctionArg____in__, ptr @Array_FunctionArg__find }>
+@VTableArrayIterator_Statement_ = global <{ ptr }> <{ ptr @ArrayIterator_Statement____next__ }>
+@VTableArray_Statement_ = global <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }> <{ ptr @Array_Statement__resize, ptr @Array_Statement__swap, ptr @Array_Statement____iter__, ptr @Array_Statement____sl__, ptr @Array_Statement____setitem__, ptr @Array_Statement__append, ptr @Array_Statement____getitem__, ptr @Array_Statement____eq__, ptr @Array_Statement____in__, ptr @Array_Statement__find }>
+@VTableArrayIterator_Type_ = global <{ ptr }> <{ ptr @ArrayIterator_Type____next__ }>
+@VTableArray_Type_ = global <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }> <{ ptr @Array_Type__resize, ptr @Array_Type__swap, ptr @Array_Type____iter__, ptr @Array_Type____sl__, ptr @Array_Type____setitem__, ptr @Array_Type__append, ptr @Array_Type____getitem__, ptr @Array_Type____eq__, ptr @Array_Type____in__, ptr @Array_Type__find }>
+@VTableArrayIterator_ClassMethod_ = global <{ ptr }> <{ ptr @ArrayIterator_ClassMethod____next__ }>
+@VTableArray_ClassMethod_ = global <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }> <{ ptr @Array_ClassMethod__resize, ptr @Array_ClassMethod__swap, ptr @Array_ClassMethod____iter__, ptr @Array_ClassMethod____sl__, ptr @Array_ClassMethod____setitem__, ptr @Array_ClassMethod__append, ptr @Array_ClassMethod____getitem__, ptr @Array_ClassMethod____eq__, ptr @Array_ClassMethod____in__, ptr @Array_ClassMethod__find }>
+@VTableArrayIterator_ClassField_ = global <{ ptr }> <{ ptr @ArrayIterator_ClassField____next__ }>
+@VTableArray_ClassField_ = global <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }> <{ ptr @Array_ClassField__resize, ptr @Array_ClassField__swap, ptr @Array_ClassField____iter__, ptr @Array_ClassField____sl__, ptr @Array_ClassField____setitem__, ptr @Array_ClassField__append, ptr @Array_ClassField____getitem__, ptr @Array_ClassField____eq__, ptr @Array_ClassField____in__, ptr @Array_ClassField__find }>
+@VTableArrayIterator_Class_ = global <{ ptr }> <{ ptr @ArrayIterator_Class____next__ }>
+@VTableArray_Class_ = global <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }> <{ ptr @Array_Class__resize, ptr @Array_Class__swap, ptr @Array_Class____iter__, ptr @Array_Class____sl__, ptr @Array_Class____setitem__, ptr @Array_Class__append, ptr @Array_Class____getitem__, ptr @Array_Class____eq__, ptr @Array_Class____in__, ptr @Array_Class__find }>
+@VTableArrayIterator_Function_ = global <{ ptr }> <{ ptr @ArrayIterator_Function____next__ }>
+@VTableArray_Function_ = global <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }> <{ ptr @Array_Function__resize, ptr @Array_Function__swap, ptr @Array_Function____iter__, ptr @Array_Function____sl__, ptr @Array_Function____setitem__, ptr @Array_Function__append, ptr @Array_Function____getitem__, ptr @Array_Function____eq__, ptr @Array_Function____in__, ptr @Array_Function__find }>
+@VTableArrayIterator_Module_ = global <{ ptr }> <{ ptr @ArrayIterator_Module____next__ }>
+@VTableArray_Module_ = global <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }> <{ ptr @Array_Module__resize, ptr @Array_Module__swap, ptr @Array_Module____iter__, ptr @Array_Module____sl__, ptr @Array_Module____setitem__, ptr @Array_Module__append, ptr @Array_Module____getitem__, ptr @Array_Module____eq__, ptr @Array_Module____in__, ptr @Array_Module__find }>
+@VTableArrayIterator_Expression_ = global <{ ptr }> <{ ptr @ArrayIterator_Expression____next__ }>
+@VTableArray_Expression_ = global <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }> <{ ptr @Array_Expression__resize, ptr @Array_Expression__swap, ptr @Array_Expression____iter__, ptr @Array_Expression____sl__, ptr @Array_Expression____setitem__, ptr @Array_Expression__append, ptr @Array_Expression____getitem__, ptr @Array_Expression____eq__, ptr @Array_Expression____in__, ptr @Array_Expression__find }>
 @VTableBucket_string_Generic_ = global <{ ptr }> <{ ptr @Bucket_string_Generic__set }>
-@VTableArray_Bucket_string_Generic__ = global <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }> <{ ptr @Array_Bucket_string_Generic___resize, ptr @Array_Bucket_string_Generic___swap, ptr @Array_Bucket_string_Generic_____sl__, ptr @Array_Bucket_string_Generic_____setitem__, ptr @Array_Bucket_string_Generic___append, ptr @Array_Bucket_string_Generic_____getitem__, ptr @Array_Bucket_string_Generic_____eq__, ptr @Array_Bucket_string_Generic_____in__, ptr @Array_Bucket_string_Generic___find }>
+@VTableArrayIterator_Bucket_string_Generic__ = global <{ ptr }> <{ ptr @ArrayIterator_Bucket_string_Generic_____next__ }>
+@VTableArray_Bucket_string_Generic__ = global <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }> <{ ptr @Array_Bucket_string_Generic___resize, ptr @Array_Bucket_string_Generic___swap, ptr @Array_Bucket_string_Generic_____iter__, ptr @Array_Bucket_string_Generic_____sl__, ptr @Array_Bucket_string_Generic_____setitem__, ptr @Array_Bucket_string_Generic___append, ptr @Array_Bucket_string_Generic_____getitem__, ptr @Array_Bucket_string_Generic_____eq__, ptr @Array_Bucket_string_Generic_____in__, ptr @Array_Bucket_string_Generic___find }>
 @VTableMap_string_Generic_ = global <{ ptr, ptr, ptr }> <{ ptr @Map_string_Generic__set, ptr @Map_string_Generic__get, ptr @Map_string_Generic__get_buckets }>
-@183 = private unnamed_addr constant [3 x i8] c", \00", align 1
-@184 = private unnamed_addr constant [11 x i8] c"(%s) => %s\00", align 1
-@185 = private unnamed_addr constant [4 x i8] c"%s*\00", align 1
-@186 = private unnamed_addr constant [7 x i8] c"%s[%d]\00", align 1
-@187 = private unnamed_addr constant [2 x i8] c"<\00", align 1
-@188 = private unnamed_addr constant [2 x i8] c">\00", align 1
+@182 = private unnamed_addr constant [3 x i8] c", \00", align 1
+@183 = private unnamed_addr constant [11 x i8] c"(%s) => %s\00", align 1
+@184 = private unnamed_addr constant [4 x i8] c"%s*\00", align 1
+@185 = private unnamed_addr constant [7 x i8] c"%s[%d]\00", align 1
+@186 = private unnamed_addr constant [2 x i8] c"<\00", align 1
+@187 = private unnamed_addr constant [2 x i8] c">\00", align 1
 @WORD_SIZE = constant i64 64
-@189 = private unnamed_addr constant [4 x i8] c"i%d\00", align 1
-@190 = private unnamed_addr constant [4 x i8] c"f%d\00", align 1
-@191 = private unnamed_addr constant [7 x i8] c"record\00", align 1
-@192 = private unnamed_addr constant [8 x i8] c"unknown\00", align 1
-@193 = private unnamed_addr constant [13 x i8] c"__generics__\00", align 1
-@194 = private unnamed_addr constant [5 x i8] c"true\00", align 1
-@195 = private unnamed_addr constant [6 x i8] c"false\00", align 1
-@196 = private unnamed_addr constant [5 x i8] c"null\00", align 1
-@197 = private unnamed_addr constant [68 x i8] c"Name '%s' has already been used for another type. consider renaming\00", align 1
-@198 = private unnamed_addr constant [41 x i8] c"Generic expects %d parameters but got %d\00", align 1
-@199 = private unnamed_addr constant [4 x i8] c"%s_\00", align 1
-@200 = private unnamed_addr constant [6 x i8] c"%s_%s\00", align 1
-@201 = private unnamed_addr constant [55 x i8] c"Initilializer for global variable has to be a constant\00", align 1
-@202 = private unnamed_addr constant [56 x i8] c"Expected type of '%s' but got type of '%s' on signature\00", align 1
-@203 = private unnamed_addr constant [52 x i8] c"Import statement path can't be a a formatted string\00", align 1
-@204 = private unnamed_addr constant [28 x i8] c"%s not found in module \22\22%s\00", align 1
-@205 = private unnamed_addr constant [2 x i8] c"@\00", align 1
-@206 = private unnamed_addr constant [37 x i8] c"Illegal re-declaration of const '%s'\00", align 1
-@207 = private unnamed_addr constant [48 x i8] c"Illegal re-declaration of type '%s' as function\00", align 1
-@208 = private unnamed_addr constant [53 x i8] c"Expected an int type for enum type but got type '%s'\00", align 1
-@209 = private unnamed_addr constant [38 x i8] c"Enum initializer has to be a constant\00", align 1
-@210 = private unnamed_addr constant [36 x i8] c"Expected type '%s' but got type '%s\00", align 1
-@211 = private unnamed_addr constant [7 x i8] c"__eq__\00", align 1
-@212 = private unnamed_addr constant [8 x i8] c"__add__\00", align 1
-@213 = private unnamed_addr constant [8 x i8] c"__sub__\00", align 1
-@214 = private unnamed_addr constant [8 x i8] c"__mul__\00", align 1
-@215 = private unnamed_addr constant [8 x i8] c"__div__\00", align 1
-@216 = private unnamed_addr constant [7 x i8] c"__or__\00", align 1
-@217 = private unnamed_addr constant [9 x i8] c"__adda__\00", align 1
-@218 = private unnamed_addr constant [9 x i8] c"__suba__\00", align 1
-@219 = private unnamed_addr constant [9 x i8] c"__mula__\00", align 1
-@220 = private unnamed_addr constant [9 x i8] c"__diva__\00", align 1
-@221 = private unnamed_addr constant [8 x i8] c"__ora__\00", align 1
-@222 = private unnamed_addr constant [9 x i8] c"__anda__\00", align 1
-@223 = private unnamed_addr constant [9 x i8] c"__xora__\00", align 1
-@224 = private unnamed_addr constant [12 x i8] c"__getitem__\00", align 1
-@225 = private unnamed_addr constant [12 x i8] c"__setitem__\00", align 1
-@226 = private unnamed_addr constant [7 x i8] c"__sl__\00", align 1
-@227 = private unnamed_addr constant [7 x i8] c"__sr__\00", align 1
-@228 = private unnamed_addr constant [8 x i8] c"__sla__\00", align 1
-@229 = private unnamed_addr constant [8 x i8] c"__sra__\00", align 1
-@230 = private unnamed_addr constant [7 x i8] c"__in__\00", align 1
-@231 = private unnamed_addr constant [7 x i8] c"__lt__\00", align 1
-@232 = private unnamed_addr constant [7 x i8] c"__lg__\00", align 1
-@233 = private unnamed_addr constant [7 x i8] c"__ne__\00", align 1
-@234 = private unnamed_addr constant [7 x i8] c"__le__\00", align 1
-@235 = private unnamed_addr constant [7 x i8] c"__ge__\00", align 1
-@236 = private unnamed_addr constant [8 x i8] c"__pow__\00", align 1
-@237 = private unnamed_addr constant [8 x i8] c"__mod__\00", align 1
-@238 = private unnamed_addr constant [9 x i8] c"__powa__\00", align 1
-@239 = private unnamed_addr constant [9 x i8] c"__moda__\00", align 1
-@240 = private unnamed_addr constant [76 x i8] c" is reserved only for operator overloads and cannot be used as a field name\00", align 1
-@241 = private unnamed_addr constant [36 x i8] c"Field %s in class %s already exists\00", align 1
-@242 = private unnamed_addr constant [89 x i8] c"Signature of inherited field %s in class %s does not match expected parent signature '%s\00", align 1
-@243 = private unnamed_addr constant [49 x i8] c"Expected inherited field %s in class %s to be %s\00", align 1
-@244 = private unnamed_addr constant [68 x i8] c"Expected type '%s' but got type '%s' on static field initialization\00", align 1
-@245 = private unnamed_addr constant [46 x i8] c"Static field initializer has to be a constant\00", align 1
-@246 = private unnamed_addr constant [65 x i8] c"Expected %d arguments for binary operator overload %s but got %d\00", align 1
-@247 = private unnamed_addr constant [45 x i8] c"Binary operator overload %s cannot be static\00", align 1
-@248 = private unnamed_addr constant [37 x i8] c"Method %s in class %s already exists\00", align 1
-@249 = private unnamed_addr constant [91 x i8] c"Signature of inherited method %s in class %s does not match expected parent signature '%s'\00", align 1
-@250 = private unnamed_addr constant [50 x i8] c"Expected inherited method %s in class %s to be %s\00", align 1
-@251 = private unnamed_addr constant [32 x i8] c"Static method can't be abstract\00", align 1
-@252 = private unnamed_addr constant [12 x i8] c"constructor\00", align 1
-@253 = private unnamed_addr constant [34 x i8] c"Class constructor can't be static\00", align 1
-@254 = private unnamed_addr constant [36 x i8] c"Class constructor can't be abstract\00", align 1
-@255 = private unnamed_addr constant [59 x i8] c"Can't have a abstract private method use protected instead\00", align 1
-@256 = private unnamed_addr constant [6 x i8] c"super\00", align 1
-@257 = private unnamed_addr constant [42 x i8] c"Can only inherit from class not type '%s'\00", align 1
-@258 = private unnamed_addr constant [81 x i8] c"Class with constructor must implement all it's methods missing %s implementation\00", align 1
-@259 = private unnamed_addr constant [39 x i8] c"Method missing ending return statement\00", align 1
-@260 = private unnamed_addr constant [41 x i8] c"Function missing ending return statement\00", align 1
-@261 = private unnamed_addr constant [17 x i8] c"length is an int\00", align 1
-@262 = private unnamed_addr constant [31 x i8] c"length is a non-constant value\00", align 1
-@263 = private unnamed_addr constant [32 x i8] c"length should be greater than 0\00", align 1
-@264 = private unnamed_addr constant [20 x i8] c"Undefined type '%s'\00", align 1
-@265 = private unnamed_addr constant [48 x i8] c"Expected element type of '%s' but got type '%s'\00", align 1
-@266 = private unnamed_addr constant [38 x i8] c"Cannot create array without type hint\00", align 1
-@267 = private unnamed_addr constant [24 x i8] c"Undefined variable '%s'\00", align 1
-@268 = private unnamed_addr constant [34 x i8] c"Cannot assign a value to a record\00", align 1
-@269 = private unnamed_addr constant [36 x i8] c"Cannot assign a value to a constant\00", align 1
-@270 = private unnamed_addr constant [52 x i8] c"Illegal assignment of variable of type '%s' to '%s'\00", align 1
-@271 = private unnamed_addr constant [7 x i8] c"__gt__\00", align 1
-@272 = private unnamed_addr constant [8 x i8] c"__and__\00", align 1
-@273 = private unnamed_addr constant [8 x i8] c"__xor__\00", align 1
-@274 = private unnamed_addr constant [37 x i8] c"Expected type '%s' but got type '%s'\00", align 1
-@275 = private unnamed_addr constant [2 x i8] c"+\00", align 1
-@276 = private unnamed_addr constant [2 x i8] c"-\00", align 1
-@277 = private unnamed_addr constant [2 x i8] c"*\00", align 1
-@278 = private unnamed_addr constant [2 x i8] c"/\00", align 1
-@279 = private unnamed_addr constant [2 x i8] c"%\00", align 1
-@280 = private unnamed_addr constant [3 x i8] c">=\00", align 1
-@281 = private unnamed_addr constant [3 x i8] c"<=\00", align 1
-@282 = private unnamed_addr constant [3 x i8] c"==\00", align 1
-@283 = private unnamed_addr constant [3 x i8] c"!=\00", align 1
-@284 = private unnamed_addr constant [3 x i8] c"<<\00", align 1
-@285 = private unnamed_addr constant [3 x i8] c">>\00", align 1
-@286 = private unnamed_addr constant [2 x i8] c"=\00", align 1
-@287 = private unnamed_addr constant [3 x i8] c"..\00", align 1
-@288 = private unnamed_addr constant [55 x i8] c"Unsupported binary operator overload for operator '%s'\00", align 1
-@289 = private unnamed_addr constant [108 x i8] c"No binary operator overload for '%s' in object of class '%s' please implement the method %s to support this\00", align 1
-@290 = private unnamed_addr constant [114 x i8] c"No operator overload for index set operator on %s object please implement method __setitem__ to use in this class\00", align 1
-@291 = private unnamed_addr constant [6 x i8] c"Range\00", align 1
-@292 = private unnamed_addr constant [58 x i8] c"Illegal binary operation '%s' between types '%s' and '%s'\00", align 1
-@293 = private unnamed_addr constant [8 x i8] c"++(pre)\00", align 1
-@294 = private unnamed_addr constant [8 x i8] c"--(pre)\00", align 1
-@295 = private unnamed_addr constant [9 x i8] c"(post)++\00", align 1
-@296 = private unnamed_addr constant [9 x i8] c"(post)--\00", align 1
-@297 = private unnamed_addr constant [2 x i8] c"!\00", align 1
-@298 = private unnamed_addr constant [2 x i8] c"&\00", align 1
-@299 = private unnamed_addr constant [39 x i8] c"Illegal unary operation %s on constant\00", align 1
-@300 = private unnamed_addr constant [40 x i8] c"Illegal unary operation %s on type '%s'\00", align 1
-@301 = private unnamed_addr constant [7 x i8] c"string\00", align 1
-@302 = private unnamed_addr constant [30 x i8] c"Cannot cast type '%s' to '%s'\00", align 1
-@303 = private unnamed_addr constant [45 x i8] c"Cannot construct an object of abstract class\00", align 1
-@304 = private unnamed_addr constant [55 x i8] c"Expected %d argument(s) on constructor call but got %d\00", align 1
-@305 = private unnamed_addr constant [71 x i8] c"Expected type '%s' but got type '%s' as constructor call argument (%d)\00", align 1
-@306 = private unnamed_addr constant [68 x i8] c"New operator expects 1 argument for pointers but got %d argument(s)\00", align 1
-@307 = private unnamed_addr constant [23 x i8] c"Type {\0A 'kind': %s, \0A}\00", align 1
-@308 = private unnamed_addr constant [74 x i8] c"New operator for pointers expects argument of type '%s' but got type '%s'\00", align 1
-@309 = private unnamed_addr constant [65 x i8] c"New operator expects either an a pointer or an object not a '%s'\00", align 1
-@310 = private unnamed_addr constant [76 x i8] c"Property '%s' is defined as private and only accessible within the class %s\00", align 1
-@311 = private unnamed_addr constant [71 x i8] c"Property '%s' is defined as %s and only accessible within the class %s\00", align 1
-@312 = private unnamed_addr constant [52 x i8] c"Property '%s' doesn't exist in object of class '%s'\00", align 1
-@313 = private unnamed_addr constant [50 x i8] c"Property '%s' is not a static member in class '%s\00", align 1
-@314 = private unnamed_addr constant [40 x i8] c"'%s' is not an element of enum the '%s'\00", align 1
-@315 = private unnamed_addr constant [10 x i8] c"copy_from\00", align 1
-@316 = private unnamed_addr constant [10 x i8] c"move_from\00", align 1
-@317 = private unnamed_addr constant [10 x i8] c"fill_with\00", align 1
-@318 = private unnamed_addr constant [7 x i8] c"resize\00", align 1
-@319 = private unnamed_addr constant [8 x i8] c"compare\00", align 1
-@320 = private unnamed_addr constant [28 x i8] c"intrinsic %s is not defined\00", align 1
-@321 = private unnamed_addr constant [38 x i8] c"Cannot get property '%s' of type '%s'\00", align 1
-@322 = private unnamed_addr constant [53 x i8] c"Expected type '%s' from first case but got type '%s'\00", align 1
-@323 = private unnamed_addr constant [122 x i8] c"No operator overload for indexing operator on %s object please implement method __getitem__ to use indexing in this class\00", align 1
-@324 = private unnamed_addr constant [35 x i8] c"Expected an integer type for index\00", align 1
-@325 = private unnamed_addr constant [39 x i8] c"Cannot index into a value of type '%s'\00", align 1
-@326 = private unnamed_addr constant [47 x i8] c"Expected a function type for call but got '%s'\00", align 1
-@327 = private unnamed_addr constant [52 x i8] c"Expected %d argument(s) on function call but got %d\00", align 1
-@328 = private unnamed_addr constant [63 x i8] c"Expected type '%s' but got type '%s' as function call argument\00", align 1
-@329 = private unnamed_addr constant [66 x i8] c"Expected argument 1 to be of type to be of a pointer but got '%s'\00", align 1
-@330 = private unnamed_addr constant [49 x i8] c"Expected 2 arguments on function call but got %d\00", align 1
-@331 = private unnamed_addr constant [63 x i8] c"Expected an int of but got type '%s' as function call argument\00", align 1
-@332 = private unnamed_addr constant [49 x i8] c"Expected 3 arguments on function call but got %d\00", align 1
-@333 = private unnamed_addr constant [66 x i8] c"Expected type '%s' of but got type '%s' as function call argument\00", align 1
-@334 = private unnamed_addr constant [26 x i8] c"Variable '%s' has no type\00", align 1
-@335 = private unnamed_addr constant [70 x i8] c"Cannot declare a value as null without any type hint for future usage\00", align 1
-@336 = private unnamed_addr constant [61 x i8] c"Expected type '%s' but got type '%s' on variable declaration\00", align 1
-@337 = private unnamed_addr constant [57 x i8] c"Illegal re-declaration of already declared variable '%s'\00", align 1
-@338 = private unnamed_addr constant [49 x i8] c"Cannot assign a non-constant value to a constant\00", align 1
-@339 = private unnamed_addr constant [30 x i8] c"Illegal break outside of loop\00", align 1
-@340 = private unnamed_addr constant [33 x i8] c"Illegal continue outside of loop\00", align 1
-@341 = private unnamed_addr constant [55 x i8] c"Function with void return type cannot return any value\00", align 1
-@342 = private unnamed_addr constant [57 x i8] c"Expected return type of '%s' but got return type of '%s'\00", align 1
-@343 = private unnamed_addr constant [33 x i8] c"Function return type is not void\00", align 1
+@188 = private unnamed_addr constant [4 x i8] c"i%d\00", align 1
+@189 = private unnamed_addr constant [4 x i8] c"f%d\00", align 1
+@190 = private unnamed_addr constant [7 x i8] c"record\00", align 1
+@191 = private unnamed_addr constant [8 x i8] c"unknown\00", align 1
+@192 = private unnamed_addr constant [13 x i8] c"__generics__\00", align 1
+@193 = private unnamed_addr constant [5 x i8] c"true\00", align 1
+@194 = private unnamed_addr constant [6 x i8] c"false\00", align 1
+@195 = private unnamed_addr constant [5 x i8] c"null\00", align 1
+@196 = private unnamed_addr constant [68 x i8] c"Name '%s' has already been used for another type. consider renaming\00", align 1
+@197 = private unnamed_addr constant [41 x i8] c"Generic expects %d parameters but got %d\00", align 1
+@198 = private unnamed_addr constant [4 x i8] c"%s_\00", align 1
+@199 = private unnamed_addr constant [6 x i8] c"%s_%s\00", align 1
+@200 = private unnamed_addr constant [55 x i8] c"Initilializer for global variable has to be a constant\00", align 1
+@201 = private unnamed_addr constant [56 x i8] c"Expected type of '%s' but got type of '%s' on signature\00", align 1
+@202 = private unnamed_addr constant [52 x i8] c"Import statement path can't be a a formatted string\00", align 1
+@203 = private unnamed_addr constant [28 x i8] c"%s not found in module \22\22%s\00", align 1
+@204 = private unnamed_addr constant [2 x i8] c"@\00", align 1
+@205 = private unnamed_addr constant [37 x i8] c"Illegal re-declaration of const '%s'\00", align 1
+@206 = private unnamed_addr constant [48 x i8] c"Illegal re-declaration of type '%s' as function\00", align 1
+@207 = private unnamed_addr constant [53 x i8] c"Expected an int type for enum type but got type '%s'\00", align 1
+@208 = private unnamed_addr constant [38 x i8] c"Enum initializer has to be a constant\00", align 1
+@209 = private unnamed_addr constant [36 x i8] c"Expected type '%s' but got type '%s\00", align 1
+@210 = private unnamed_addr constant [7 x i8] c"__eq__\00", align 1
+@211 = private unnamed_addr constant [8 x i8] c"__add__\00", align 1
+@212 = private unnamed_addr constant [8 x i8] c"__sub__\00", align 1
+@213 = private unnamed_addr constant [8 x i8] c"__mul__\00", align 1
+@214 = private unnamed_addr constant [8 x i8] c"__div__\00", align 1
+@215 = private unnamed_addr constant [7 x i8] c"__or__\00", align 1
+@216 = private unnamed_addr constant [9 x i8] c"__adda__\00", align 1
+@217 = private unnamed_addr constant [9 x i8] c"__suba__\00", align 1
+@218 = private unnamed_addr constant [9 x i8] c"__mula__\00", align 1
+@219 = private unnamed_addr constant [9 x i8] c"__diva__\00", align 1
+@220 = private unnamed_addr constant [8 x i8] c"__ora__\00", align 1
+@221 = private unnamed_addr constant [9 x i8] c"__anda__\00", align 1
+@222 = private unnamed_addr constant [9 x i8] c"__xora__\00", align 1
+@223 = private unnamed_addr constant [12 x i8] c"__getitem__\00", align 1
+@224 = private unnamed_addr constant [12 x i8] c"__setitem__\00", align 1
+@225 = private unnamed_addr constant [7 x i8] c"__sl__\00", align 1
+@226 = private unnamed_addr constant [7 x i8] c"__sr__\00", align 1
+@227 = private unnamed_addr constant [8 x i8] c"__sla__\00", align 1
+@228 = private unnamed_addr constant [8 x i8] c"__sra__\00", align 1
+@229 = private unnamed_addr constant [7 x i8] c"__in__\00", align 1
+@230 = private unnamed_addr constant [7 x i8] c"__lt__\00", align 1
+@231 = private unnamed_addr constant [7 x i8] c"__lg__\00", align 1
+@232 = private unnamed_addr constant [7 x i8] c"__ne__\00", align 1
+@233 = private unnamed_addr constant [7 x i8] c"__le__\00", align 1
+@234 = private unnamed_addr constant [7 x i8] c"__ge__\00", align 1
+@235 = private unnamed_addr constant [8 x i8] c"__pow__\00", align 1
+@236 = private unnamed_addr constant [8 x i8] c"__mod__\00", align 1
+@237 = private unnamed_addr constant [9 x i8] c"__powa__\00", align 1
+@238 = private unnamed_addr constant [9 x i8] c"__moda__\00", align 1
+@239 = private unnamed_addr constant [76 x i8] c" is reserved only for operator overloads and cannot be used as a field name\00", align 1
+@240 = private unnamed_addr constant [36 x i8] c"Field %s in class %s already exists\00", align 1
+@241 = private unnamed_addr constant [89 x i8] c"Signature of inherited field %s in class %s does not match expected parent signature '%s\00", align 1
+@242 = private unnamed_addr constant [49 x i8] c"Expected inherited field %s in class %s to be %s\00", align 1
+@243 = private unnamed_addr constant [68 x i8] c"Expected type '%s' but got type '%s' on static field initialization\00", align 1
+@244 = private unnamed_addr constant [46 x i8] c"Static field initializer has to be a constant\00", align 1
+@245 = private unnamed_addr constant [65 x i8] c"Expected %d arguments for binary operator overload %s but got %d\00", align 1
+@246 = private unnamed_addr constant [45 x i8] c"Binary operator overload %s cannot be static\00", align 1
+@247 = private unnamed_addr constant [37 x i8] c"Method %s in class %s already exists\00", align 1
+@248 = private unnamed_addr constant [91 x i8] c"Signature of inherited method %s in class %s does not match expected parent signature '%s'\00", align 1
+@249 = private unnamed_addr constant [50 x i8] c"Expected inherited method %s in class %s to be %s\00", align 1
+@250 = private unnamed_addr constant [32 x i8] c"Static method can't be abstract\00", align 1
+@251 = private unnamed_addr constant [12 x i8] c"constructor\00", align 1
+@252 = private unnamed_addr constant [34 x i8] c"Class constructor can't be static\00", align 1
+@253 = private unnamed_addr constant [36 x i8] c"Class constructor can't be abstract\00", align 1
+@254 = private unnamed_addr constant [59 x i8] c"Can't have a abstract private method use protected instead\00", align 1
+@255 = private unnamed_addr constant [6 x i8] c"super\00", align 1
+@256 = private unnamed_addr constant [42 x i8] c"Can only inherit from class not type '%s'\00", align 1
+@257 = private unnamed_addr constant [81 x i8] c"Class with constructor must implement all it's methods missing %s implementation\00", align 1
+@258 = private unnamed_addr constant [39 x i8] c"Method missing ending return statement\00", align 1
+@259 = private unnamed_addr constant [41 x i8] c"Function missing ending return statement\00", align 1
+@260 = private unnamed_addr constant [17 x i8] c"length is an int\00", align 1
+@261 = private unnamed_addr constant [31 x i8] c"length is a non-constant value\00", align 1
+@262 = private unnamed_addr constant [32 x i8] c"length should be greater than 0\00", align 1
+@263 = private unnamed_addr constant [20 x i8] c"Undefined type '%s'\00", align 1
+@264 = private unnamed_addr constant [48 x i8] c"Expected element type of '%s' but got type '%s'\00", align 1
+@265 = private unnamed_addr constant [38 x i8] c"Cannot create array without type hint\00", align 1
+@266 = private unnamed_addr constant [24 x i8] c"Undefined variable '%s'\00", align 1
+@267 = private unnamed_addr constant [34 x i8] c"Cannot assign a value to a record\00", align 1
+@268 = private unnamed_addr constant [36 x i8] c"Cannot assign a value to a constant\00", align 1
+@269 = private unnamed_addr constant [52 x i8] c"Illegal assignment of variable of type '%s' to '%s'\00", align 1
+@270 = private unnamed_addr constant [7 x i8] c"__gt__\00", align 1
+@271 = private unnamed_addr constant [8 x i8] c"__and__\00", align 1
+@272 = private unnamed_addr constant [8 x i8] c"__xor__\00", align 1
+@273 = private unnamed_addr constant [37 x i8] c"Expected type '%s' but got type '%s'\00", align 1
+@274 = private unnamed_addr constant [2 x i8] c"+\00", align 1
+@275 = private unnamed_addr constant [2 x i8] c"-\00", align 1
+@276 = private unnamed_addr constant [2 x i8] c"*\00", align 1
+@277 = private unnamed_addr constant [2 x i8] c"/\00", align 1
+@278 = private unnamed_addr constant [2 x i8] c"%\00", align 1
+@279 = private unnamed_addr constant [3 x i8] c">=\00", align 1
+@280 = private unnamed_addr constant [3 x i8] c"<=\00", align 1
+@281 = private unnamed_addr constant [3 x i8] c"==\00", align 1
+@282 = private unnamed_addr constant [3 x i8] c"!=\00", align 1
+@283 = private unnamed_addr constant [3 x i8] c"<<\00", align 1
+@284 = private unnamed_addr constant [3 x i8] c">>\00", align 1
+@285 = private unnamed_addr constant [2 x i8] c"=\00", align 1
+@286 = private unnamed_addr constant [3 x i8] c"..\00", align 1
+@287 = private unnamed_addr constant [55 x i8] c"Unsupported binary operator overload for operator '%s'\00", align 1
+@288 = private unnamed_addr constant [108 x i8] c"No binary operator overload for '%s' in object of class '%s' please implement the method %s to support this\00", align 1
+@289 = private unnamed_addr constant [114 x i8] c"No operator overload for index set operator on %s object please implement method __setitem__ to use in this class\00", align 1
+@290 = private unnamed_addr constant [6 x i8] c"Range\00", align 1
+@291 = private unnamed_addr constant [58 x i8] c"Illegal binary operation '%s' between types '%s' and '%s'\00", align 1
+@292 = private unnamed_addr constant [8 x i8] c"++(pre)\00", align 1
+@293 = private unnamed_addr constant [8 x i8] c"--(pre)\00", align 1
+@294 = private unnamed_addr constant [9 x i8] c"(post)++\00", align 1
+@295 = private unnamed_addr constant [9 x i8] c"(post)--\00", align 1
+@296 = private unnamed_addr constant [2 x i8] c"!\00", align 1
+@297 = private unnamed_addr constant [2 x i8] c"&\00", align 1
+@298 = private unnamed_addr constant [39 x i8] c"Illegal unary operation %s on constant\00", align 1
+@299 = private unnamed_addr constant [40 x i8] c"Illegal unary operation %s on type '%s'\00", align 1
+@300 = private unnamed_addr constant [7 x i8] c"string\00", align 1
+@301 = private unnamed_addr constant [30 x i8] c"Cannot cast type '%s' to '%s'\00", align 1
+@302 = private unnamed_addr constant [45 x i8] c"Cannot construct an object of abstract class\00", align 1
+@303 = private unnamed_addr constant [55 x i8] c"Expected %d argument(s) on constructor call but got %d\00", align 1
+@304 = private unnamed_addr constant [71 x i8] c"Expected type '%s' but got type '%s' as constructor call argument (%d)\00", align 1
+@305 = private unnamed_addr constant [68 x i8] c"New operator expects 1 argument for pointers but got %d argument(s)\00", align 1
+@306 = private unnamed_addr constant [23 x i8] c"Type {\0A 'kind': %s, \0A}\00", align 1
+@307 = private unnamed_addr constant [74 x i8] c"New operator for pointers expects argument of type '%s' but got type '%s'\00", align 1
+@308 = private unnamed_addr constant [65 x i8] c"New operator expects either an a pointer or an object not a '%s'\00", align 1
+@309 = private unnamed_addr constant [76 x i8] c"Property '%s' is defined as private and only accessible within the class %s\00", align 1
+@310 = private unnamed_addr constant [71 x i8] c"Property '%s' is defined as %s and only accessible within the class %s\00", align 1
+@311 = private unnamed_addr constant [52 x i8] c"Property '%s' doesn't exist in object of class '%s'\00", align 1
+@312 = private unnamed_addr constant [50 x i8] c"Property '%s' is not a static member in class '%s\00", align 1
+@313 = private unnamed_addr constant [40 x i8] c"'%s' is not an element of enum the '%s'\00", align 1
+@314 = private unnamed_addr constant [10 x i8] c"copy_from\00", align 1
+@315 = private unnamed_addr constant [10 x i8] c"move_from\00", align 1
+@316 = private unnamed_addr constant [10 x i8] c"fill_with\00", align 1
+@317 = private unnamed_addr constant [7 x i8] c"resize\00", align 1
+@318 = private unnamed_addr constant [8 x i8] c"compare\00", align 1
+@319 = private unnamed_addr constant [28 x i8] c"intrinsic %s is not defined\00", align 1
+@320 = private unnamed_addr constant [38 x i8] c"Cannot get property '%s' of type '%s'\00", align 1
+@321 = private unnamed_addr constant [53 x i8] c"Expected type '%s' from first case but got type '%s'\00", align 1
+@322 = private unnamed_addr constant [122 x i8] c"No operator overload for indexing operator on %s object please implement method __getitem__ to use indexing in this class\00", align 1
+@323 = private unnamed_addr constant [35 x i8] c"Expected an integer type for index\00", align 1
+@324 = private unnamed_addr constant [39 x i8] c"Cannot index into a value of type '%s'\00", align 1
+@325 = private unnamed_addr constant [47 x i8] c"Expected a function type for call but got '%s'\00", align 1
+@326 = private unnamed_addr constant [52 x i8] c"Expected %d argument(s) on function call but got %d\00", align 1
+@327 = private unnamed_addr constant [63 x i8] c"Expected type '%s' but got type '%s' as function call argument\00", align 1
+@328 = private unnamed_addr constant [66 x i8] c"Expected argument 1 to be of type to be of a pointer but got '%s'\00", align 1
+@329 = private unnamed_addr constant [49 x i8] c"Expected 2 arguments on function call but got %d\00", align 1
+@330 = private unnamed_addr constant [63 x i8] c"Expected an int of but got type '%s' as function call argument\00", align 1
+@331 = private unnamed_addr constant [49 x i8] c"Expected 3 arguments on function call but got %d\00", align 1
+@332 = private unnamed_addr constant [66 x i8] c"Expected type '%s' of but got type '%s' as function call argument\00", align 1
+@333 = private unnamed_addr constant [26 x i8] c"Variable '%s' has no type\00", align 1
+@334 = private unnamed_addr constant [70 x i8] c"Cannot declare a value as null without any type hint for future usage\00", align 1
+@335 = private unnamed_addr constant [61 x i8] c"Expected type '%s' but got type '%s' on variable declaration\00", align 1
+@336 = private unnamed_addr constant [57 x i8] c"Illegal re-declaration of already declared variable '%s'\00", align 1
+@337 = private unnamed_addr constant [49 x i8] c"Cannot assign a non-constant value to a constant\00", align 1
+@338 = private unnamed_addr constant [9 x i8] c"__iter__\00", align 1
+@339 = private unnamed_addr constant [47 x i8] c"Iterator type has to have __iter__ as property\00", align 1
+@340 = private unnamed_addr constant [7 x i8] c"tmp_it\00", align 1
+@341 = private unnamed_addr constant [5 x i8] c"done\00", align 1
+@342 = private unnamed_addr constant [9 x i8] c"__next__\00", align 1
+@343 = private unnamed_addr constant [30 x i8] c"Illegal break outside of loop\00", align 1
+@344 = private unnamed_addr constant [33 x i8] c"Illegal continue outside of loop\00", align 1
+@345 = private unnamed_addr constant [55 x i8] c"Function with void return type cannot return any value\00", align 1
+@346 = private unnamed_addr constant [57 x i8] c"Expected return type of '%s' but got return type of '%s'\00", align 1
+@347 = private unnamed_addr constant [33 x i8] c"Function return type is not void\00", align 1
 @VTableGeneratedModule = global <{ ptr, ptr, ptr, ptr, ptr }> <{ ptr @GeneratedModule_run_passes, ptr @GeneratedModule_exec, ptr @GeneratedModule_write_object, ptr @GeneratedModule_print, ptr @GeneratedModule_llvm_shutdown }>
-@344 = private unnamed_addr constant [10 x i8] c"Panic: %s\00", align 1
-@345 = private unnamed_addr constant [10 x i8] c"error: %s\00", align 1
-@346 = private unnamed_addr constant [5 x i8] c"main\00", align 1
-@347 = private unnamed_addr constant [49 x i8] c"Main function not found in module; can't execute\00", align 1
-@348 = private unnamed_addr constant [8 x i8] c"generic\00", align 1
-@349 = private unnamed_addr constant [10 x i8] c"output.ll\00", align 1
-@VTableArray_LLVMValueRef_ = global <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }> <{ ptr @Array_LLVMValueRef__resize, ptr @Array_LLVMValueRef__swap, ptr @Array_LLVMValueRef____sl__, ptr @Array_LLVMValueRef____setitem__, ptr @Array_LLVMValueRef__append, ptr @Array_LLVMValueRef____getitem__, ptr @Array_LLVMValueRef____eq__, ptr @Array_LLVMValueRef____in__, ptr @Array_LLVMValueRef__find }>
+@348 = private unnamed_addr constant [10 x i8] c"Panic: %s\00", align 1
+@349 = private unnamed_addr constant [10 x i8] c"error: %s\00", align 1
+@350 = private unnamed_addr constant [5 x i8] c"main\00", align 1
+@351 = private unnamed_addr constant [49 x i8] c"Main function not found in module; can't execute\00", align 1
+@352 = private unnamed_addr constant [8 x i8] c"generic\00", align 1
+@353 = private unnamed_addr constant [10 x i8] c"output.ll\00", align 1
+@VTableArrayIterator_LLVMValueRef_ = global <{ ptr }> <{ ptr @ArrayIterator_LLVMValueRef____next__ }>
+@VTableArray_LLVMValueRef_ = global <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }> <{ ptr @Array_LLVMValueRef__resize, ptr @Array_LLVMValueRef__swap, ptr @Array_LLVMValueRef____iter__, ptr @Array_LLVMValueRef____sl__, ptr @Array_LLVMValueRef____setitem__, ptr @Array_LLVMValueRef__append, ptr @Array_LLVMValueRef____getitem__, ptr @Array_LLVMValueRef____eq__, ptr @Array_LLVMValueRef____in__, ptr @Array_LLVMValueRef__find }>
 @VTableBucket_string_LLVMValueRef_ = global <{ ptr }> <{ ptr @Bucket_string_LLVMValueRef__set }>
-@VTableArray_Bucket_string_LLVMValueRef__ = global <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }> <{ ptr @Array_Bucket_string_LLVMValueRef___resize, ptr @Array_Bucket_string_LLVMValueRef___swap, ptr @Array_Bucket_string_LLVMValueRef_____sl__, ptr @Array_Bucket_string_LLVMValueRef_____setitem__, ptr @Array_Bucket_string_LLVMValueRef___append, ptr @Array_Bucket_string_LLVMValueRef_____getitem__, ptr @Array_Bucket_string_LLVMValueRef_____eq__, ptr @Array_Bucket_string_LLVMValueRef_____in__, ptr @Array_Bucket_string_LLVMValueRef___find }>
+@VTableArrayIterator_Bucket_string_LLVMValueRef__ = global <{ ptr }> <{ ptr @ArrayIterator_Bucket_string_LLVMValueRef_____next__ }>
+@VTableArray_Bucket_string_LLVMValueRef__ = global <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }> <{ ptr @Array_Bucket_string_LLVMValueRef___resize, ptr @Array_Bucket_string_LLVMValueRef___swap, ptr @Array_Bucket_string_LLVMValueRef_____iter__, ptr @Array_Bucket_string_LLVMValueRef_____sl__, ptr @Array_Bucket_string_LLVMValueRef_____setitem__, ptr @Array_Bucket_string_LLVMValueRef___append, ptr @Array_Bucket_string_LLVMValueRef_____getitem__, ptr @Array_Bucket_string_LLVMValueRef_____eq__, ptr @Array_Bucket_string_LLVMValueRef_____in__, ptr @Array_Bucket_string_LLVMValueRef___find }>
 @VTableMap_string_LLVMValueRef_ = global <{ ptr, ptr, ptr }> <{ ptr @Map_string_LLVMValueRef__set, ptr @Map_string_LLVMValueRef__get, ptr @Map_string_LLVMValueRef__get_buckets }>
 @VTableBucket_string_int_ = global <{ ptr }> <{ ptr @Bucket_string_int__set }>
-@VTableArray_Bucket_string_int__ = global <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }> <{ ptr @Array_Bucket_string_int___resize, ptr @Array_Bucket_string_int___swap, ptr @Array_Bucket_string_int_____sl__, ptr @Array_Bucket_string_int_____setitem__, ptr @Array_Bucket_string_int___append, ptr @Array_Bucket_string_int_____getitem__, ptr @Array_Bucket_string_int_____eq__, ptr @Array_Bucket_string_int_____in__, ptr @Array_Bucket_string_int___find }>
+@VTableArrayIterator_Bucket_string_int__ = global <{ ptr }> <{ ptr @ArrayIterator_Bucket_string_int_____next__ }>
+@VTableArray_Bucket_string_int__ = global <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }> <{ ptr @Array_Bucket_string_int___resize, ptr @Array_Bucket_string_int___swap, ptr @Array_Bucket_string_int_____iter__, ptr @Array_Bucket_string_int_____sl__, ptr @Array_Bucket_string_int_____setitem__, ptr @Array_Bucket_string_int___append, ptr @Array_Bucket_string_int_____getitem__, ptr @Array_Bucket_string_int_____eq__, ptr @Array_Bucket_string_int_____in__, ptr @Array_Bucket_string_int___find }>
 @VTableMap_string_int_ = global <{ ptr, ptr, ptr }> <{ ptr @Map_string_int__set, ptr @Map_string_int__get, ptr @Map_string_int__get_buckets }>
 @VTableBucket_string_CGClassType_ = global <{ ptr }> <{ ptr @Bucket_string_CGClassType__set }>
-@VTableArray_Bucket_string_CGClassType__ = global <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }> <{ ptr @Array_Bucket_string_CGClassType___resize, ptr @Array_Bucket_string_CGClassType___swap, ptr @Array_Bucket_string_CGClassType_____sl__, ptr @Array_Bucket_string_CGClassType_____setitem__, ptr @Array_Bucket_string_CGClassType___append, ptr @Array_Bucket_string_CGClassType_____getitem__, ptr @Array_Bucket_string_CGClassType_____eq__, ptr @Array_Bucket_string_CGClassType_____in__, ptr @Array_Bucket_string_CGClassType___find }>
+@VTableArrayIterator_Bucket_string_CGClassType__ = global <{ ptr }> <{ ptr @ArrayIterator_Bucket_string_CGClassType_____next__ }>
+@VTableArray_Bucket_string_CGClassType__ = global <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }> <{ ptr @Array_Bucket_string_CGClassType___resize, ptr @Array_Bucket_string_CGClassType___swap, ptr @Array_Bucket_string_CGClassType_____iter__, ptr @Array_Bucket_string_CGClassType_____sl__, ptr @Array_Bucket_string_CGClassType_____setitem__, ptr @Array_Bucket_string_CGClassType___append, ptr @Array_Bucket_string_CGClassType_____getitem__, ptr @Array_Bucket_string_CGClassType_____eq__, ptr @Array_Bucket_string_CGClassType_____in__, ptr @Array_Bucket_string_CGClassType___find }>
 @VTableMap_string_CGClassType_ = global <{ ptr, ptr, ptr }> <{ ptr @Map_string_CGClassType__set, ptr @Map_string_CGClassType__get, ptr @Map_string_CGClassType__get_buckets }>
-@VTableArray_LLVMTypeRef_ = global <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }> <{ ptr @Array_LLVMTypeRef__resize, ptr @Array_LLVMTypeRef__swap, ptr @Array_LLVMTypeRef____sl__, ptr @Array_LLVMTypeRef____setitem__, ptr @Array_LLVMTypeRef__append, ptr @Array_LLVMTypeRef____getitem__, ptr @Array_LLVMTypeRef____eq__, ptr @Array_LLVMTypeRef____in__, ptr @Array_LLVMTypeRef__find }>
+@VTableArrayIterator_LLVMTypeRef_ = global <{ ptr }> <{ ptr @ArrayIterator_LLVMTypeRef____next__ }>
+@VTableArray_LLVMTypeRef_ = global <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }> <{ ptr @Array_LLVMTypeRef__resize, ptr @Array_LLVMTypeRef__swap, ptr @Array_LLVMTypeRef____iter__, ptr @Array_LLVMTypeRef____sl__, ptr @Array_LLVMTypeRef____setitem__, ptr @Array_LLVMTypeRef__append, ptr @Array_LLVMTypeRef____getitem__, ptr @Array_LLVMTypeRef____eq__, ptr @Array_LLVMTypeRef____in__, ptr @Array_LLVMTypeRef__find }>
 @VTableBucket_string_CGEnumType_ = global <{ ptr }> <{ ptr @Bucket_string_CGEnumType__set }>
-@VTableArray_Bucket_string_CGEnumType__ = global <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }> <{ ptr @Array_Bucket_string_CGEnumType___resize, ptr @Array_Bucket_string_CGEnumType___swap, ptr @Array_Bucket_string_CGEnumType_____sl__, ptr @Array_Bucket_string_CGEnumType_____setitem__, ptr @Array_Bucket_string_CGEnumType___append, ptr @Array_Bucket_string_CGEnumType_____getitem__, ptr @Array_Bucket_string_CGEnumType_____eq__, ptr @Array_Bucket_string_CGEnumType_____in__, ptr @Array_Bucket_string_CGEnumType___find }>
+@VTableArrayIterator_Bucket_string_CGEnumType__ = global <{ ptr }> <{ ptr @ArrayIterator_Bucket_string_CGEnumType_____next__ }>
+@VTableArray_Bucket_string_CGEnumType__ = global <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }> <{ ptr @Array_Bucket_string_CGEnumType___resize, ptr @Array_Bucket_string_CGEnumType___swap, ptr @Array_Bucket_string_CGEnumType_____iter__, ptr @Array_Bucket_string_CGEnumType_____sl__, ptr @Array_Bucket_string_CGEnumType_____setitem__, ptr @Array_Bucket_string_CGEnumType___append, ptr @Array_Bucket_string_CGEnumType_____getitem__, ptr @Array_Bucket_string_CGEnumType_____eq__, ptr @Array_Bucket_string_CGEnumType_____in__, ptr @Array_Bucket_string_CGEnumType___find }>
 @VTableMap_string_CGEnumType_ = global <{ ptr, ptr, ptr }> <{ ptr @Map_string_CGEnumType__set, ptr @Map_string_CGEnumType__get, ptr @Map_string_CGEnumType__get_buckets }>
-@350 = private unnamed_addr constant [9 x i8] c"%d;%d;%d\00", align 1
-@351 = private unnamed_addr constant [33 x i8] c"Type could not be code generated\00", align 1
-@352 = private unnamed_addr constant [5 x i8] c"atof\00", align 1
-@353 = private unnamed_addr constant [5 x i8] c"atoi\00", align 1
-@354 = private unnamed_addr constant [5 x i8] c"atol\00", align 1
-@355 = private unnamed_addr constant [8 x i8] c"realloc\00", align 1
-@356 = private unnamed_addr constant [7 x i8] c"memcmp\00", align 1
-@357 = private unnamed_addr constant [9 x i8] c"asprintf\00", align 1
-@358 = private unnamed_addr constant [6 x i8] c"%s {\0A\00", align 1
-@359 = private unnamed_addr constant [7 x i8] c" ... }\00", align 1
-@360 = private unnamed_addr constant [4 x i8] c"lld\00", align 1
-@361 = private unnamed_addr constant [3 x i8] c"ld\00", align 1
-@362 = private unnamed_addr constant [3 x i8] c"%d\00", align 1
-@363 = private unnamed_addr constant [3 x i8] c"%f\00", align 1
-@364 = private unnamed_addr constant [4 x i8] c"%lf\00", align 1
-@365 = private unnamed_addr constant [5 x i8] c"0x%X\00", align 1
-@366 = private unnamed_addr constant [13 x i8] c" '%s': %s, \0A\00", align 1
-@367 = private unnamed_addr constant [2 x i8] c"}\00", align 1
-@368 = private unnamed_addr constant [11 x i8] c"<function>\00", align 1
-@369 = private unnamed_addr constant [18 x i8] c"string_from_bytes\00", align 1
-@370 = private unnamed_addr constant [55 x i8] c"Could not find function 'string.from_bytes' in program\00", align 1
-@371 = private unnamed_addr constant [46 x i8] c"This should never happen! (get_expr_mem: var)\00", align 1
-@372 = private unnamed_addr constant [9 x i8] c"arrayidx\00", align 1
-@373 = private unnamed_addr constant [7 x i8] c"ptridx\00", align 1
-@374 = private unnamed_addr constant [9 x i8] c"%s;%d;%d\00", align 1
-@375 = private unnamed_addr constant [10 x i8] c"memberidx\00", align 1
-@376 = private unnamed_addr constant [7 x i8] c"buffer\00", align 1
-@377 = private unnamed_addr constant [7 x i8] c"length\00", align 1
-@378 = private unnamed_addr constant [12 x i8] c"llvm.pow.%s\00", align 1
-@379 = private unnamed_addr constant [23 x i8] c"Unknown case! %s %s %s\00", align 1
-@380 = private unnamed_addr constant [11 x i8] c"incdec.ptr\00", align 1
-@381 = private unnamed_addr constant [51 x i8] c"This should never happen; (codegen_var_access_exp)\00", align 1
-@382 = private unnamed_addr constant [11 x i8] c"true_block\00", align 1
-@383 = private unnamed_addr constant [12 x i8] c"false_block\00", align 1
-@384 = private unnamed_addr constant [4 x i8] c"end\00", align 1
-@385 = private unnamed_addr constant [8 x i8] c"ternary\00", align 1
-@386 = private unnamed_addr constant [52 x i8] c"this should not happen; (codegen_member_exp); class\00", align 1
-@387 = private unnamed_addr constant [60 x i8] c"This should never happen; (codegen_member_expr; class prop)\00", align 1
-@388 = private unnamed_addr constant [51 x i8] c"this should not happen; (codegen_member_exp); enum\00", align 1
-@389 = private unnamed_addr constant [11 x i8] c"to_cstring\00", align 1
-@390 = private unnamed_addr constant [22 x i8] c"instrinsic not found!\00", align 1
-@391 = private unnamed_addr constant [9 x i8] c"if.entry\00", align 1
-@392 = private unnamed_addr constant [6 x i8] c"ifend\00", align 1
-@393 = private unnamed_addr constant [10 x i8] c"for.entry\00", align 1
-@394 = private unnamed_addr constant [9 x i8] c"for.cond\00", align 1
-@395 = private unnamed_addr constant [9 x i8] c"for.body\00", align 1
-@396 = private unnamed_addr constant [9 x i8] c"for.incr\00", align 1
-@397 = private unnamed_addr constant [8 x i8] c"for.end\00", align 1
-@398 = private unnamed_addr constant [12 x i8] c"while.entry\00", align 1
-@399 = private unnamed_addr constant [10 x i8] c"while.end\00", align 1
-@400 = private unnamed_addr constant [48 x i8] c"Could not find constructor for constructor call\00", align 1
-@401 = private unnamed_addr constant [76 x i8] c"This should not happen: could not find function %s_%s (declare_class_props)\00", align 1
-@402 = private unnamed_addr constant [9 x i8] c"VTable%s\00", align 1
-@403 = private unnamed_addr constant [15 x i8] c"%s_constructor\00", align 1
-@404 = private unnamed_addr constant [3 x i8] c"-O\00", align 1
-@405 = private unnamed_addr constant [2 x i8] c"1\00", align 1
-@406 = private unnamed_addr constant [12 x i8] c"--emit-llvm\00", align 1
-@407 = private unnamed_addr constant [3 x i8] c"-o\00", align 1
-@408 = private unnamed_addr constant [4 x i8] c"a.o\00", align 1
-@409 = private unnamed_addr constant [8 x i8] c"-target\00", align 1
-@410 = private unnamed_addr constant [25 x i8] c"No input file specified.\00", align 1
+@354 = private unnamed_addr constant [9 x i8] c"%d;%d;%d\00", align 1
+@355 = private unnamed_addr constant [33 x i8] c"Type could not be code generated\00", align 1
+@356 = private unnamed_addr constant [5 x i8] c"atof\00", align 1
+@357 = private unnamed_addr constant [5 x i8] c"atoi\00", align 1
+@358 = private unnamed_addr constant [5 x i8] c"atol\00", align 1
+@359 = private unnamed_addr constant [8 x i8] c"realloc\00", align 1
+@360 = private unnamed_addr constant [7 x i8] c"memcmp\00", align 1
+@361 = private unnamed_addr constant [9 x i8] c"asprintf\00", align 1
+@362 = private unnamed_addr constant [6 x i8] c"%s {\0A\00", align 1
+@363 = private unnamed_addr constant [7 x i8] c" ... }\00", align 1
+@364 = private unnamed_addr constant [4 x i8] c"lld\00", align 1
+@365 = private unnamed_addr constant [3 x i8] c"ld\00", align 1
+@366 = private unnamed_addr constant [3 x i8] c"%d\00", align 1
+@367 = private unnamed_addr constant [3 x i8] c"%f\00", align 1
+@368 = private unnamed_addr constant [4 x i8] c"%lf\00", align 1
+@369 = private unnamed_addr constant [5 x i8] c"0x%X\00", align 1
+@370 = private unnamed_addr constant [13 x i8] c" '%s': %s, \0A\00", align 1
+@371 = private unnamed_addr constant [2 x i8] c"}\00", align 1
+@372 = private unnamed_addr constant [11 x i8] c"<function>\00", align 1
+@373 = private unnamed_addr constant [18 x i8] c"string_from_bytes\00", align 1
+@374 = private unnamed_addr constant [55 x i8] c"Could not find function 'string.from_bytes' in program\00", align 1
+@375 = private unnamed_addr constant [46 x i8] c"This should never happen! (get_expr_mem: var)\00", align 1
+@376 = private unnamed_addr constant [9 x i8] c"arrayidx\00", align 1
+@377 = private unnamed_addr constant [7 x i8] c"ptridx\00", align 1
+@378 = private unnamed_addr constant [9 x i8] c"%s;%d;%d\00", align 1
+@379 = private unnamed_addr constant [10 x i8] c"memberidx\00", align 1
+@380 = private unnamed_addr constant [7 x i8] c"buffer\00", align 1
+@381 = private unnamed_addr constant [7 x i8] c"length\00", align 1
+@382 = private unnamed_addr constant [12 x i8] c"llvm.pow.%s\00", align 1
+@383 = private unnamed_addr constant [23 x i8] c"Unknown case! %s %s %s\00", align 1
+@384 = private unnamed_addr constant [11 x i8] c"incdec.ptr\00", align 1
+@385 = private unnamed_addr constant [51 x i8] c"This should never happen; (codegen_var_access_exp)\00", align 1
+@386 = private unnamed_addr constant [11 x i8] c"true_block\00", align 1
+@387 = private unnamed_addr constant [12 x i8] c"false_block\00", align 1
+@388 = private unnamed_addr constant [4 x i8] c"end\00", align 1
+@389 = private unnamed_addr constant [8 x i8] c"ternary\00", align 1
+@390 = private unnamed_addr constant [52 x i8] c"this should not happen; (codegen_member_exp); class\00", align 1
+@391 = private unnamed_addr constant [60 x i8] c"This should never happen; (codegen_member_expr; class prop)\00", align 1
+@392 = private unnamed_addr constant [51 x i8] c"this should not happen; (codegen_member_exp); enum\00", align 1
+@393 = private unnamed_addr constant [11 x i8] c"to_cstring\00", align 1
+@394 = private unnamed_addr constant [22 x i8] c"instrinsic not found!\00", align 1
+@395 = private unnamed_addr constant [9 x i8] c"if.entry\00", align 1
+@396 = private unnamed_addr constant [6 x i8] c"ifend\00", align 1
+@397 = private unnamed_addr constant [10 x i8] c"for.entry\00", align 1
+@398 = private unnamed_addr constant [9 x i8] c"for.cond\00", align 1
+@399 = private unnamed_addr constant [9 x i8] c"for.body\00", align 1
+@400 = private unnamed_addr constant [9 x i8] c"for.incr\00", align 1
+@401 = private unnamed_addr constant [8 x i8] c"for.end\00", align 1
+@402 = private unnamed_addr constant [12 x i8] c"while.entry\00", align 1
+@403 = private unnamed_addr constant [10 x i8] c"while.end\00", align 1
+@404 = private unnamed_addr constant [48 x i8] c"Could not find constructor for constructor call\00", align 1
+@405 = private unnamed_addr constant [76 x i8] c"This should not happen: could not find function %s_%s (declare_class_props)\00", align 1
+@406 = private unnamed_addr constant [9 x i8] c"VTable%s\00", align 1
+@407 = private unnamed_addr constant [15 x i8] c"%s_constructor\00", align 1
+@408 = private unnamed_addr constant [3 x i8] c"-O\00", align 1
+@409 = private unnamed_addr constant [2 x i8] c"1\00", align 1
+@410 = private unnamed_addr constant [12 x i8] c"--emit-llvm\00", align 1
+@411 = private unnamed_addr constant [3 x i8] c"-o\00", align 1
+@412 = private unnamed_addr constant [4 x i8] c"a.o\00", align 1
+@413 = private unnamed_addr constant [8 x i8] c"-target\00", align 1
+@414 = private unnamed_addr constant [25 x i8] c"No input file specified.\00", align 1
 
 define ptr @string_from_cstring(ptr %0) {
   %2 = call i64 @strlen(ptr %0)
@@ -1128,7 +1287,7 @@ ifend:                                            ; preds = %2, %if.entry
 
 define void @Array_string__append(ptr %0, ptr %1) {
   %3 = load ptr, ptr %0, align 8
-  %memberidx = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %3, i32 0, i32 2
+  %memberidx = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %3, i32 0, i32 3
   %4 = load ptr, ptr %memberidx, align 8
   call void %4(ptr %0, ptr %1)
   ret void
@@ -1173,6 +1332,46 @@ ifend:                                            ; preds = %3, %if.entry
   ret void
 }
 
+define ptr @ArrayIterator_string____next__(ptr %0) {
+  %memberidx = getelementptr inbounds %ArrayIterator_string_, ptr %0, i32 0, i32 2
+  %2 = load i64, ptr %memberidx, align 4
+  %3 = add i64 %2, 1
+  store i64 %3, ptr %memberidx, align 4
+  %memberidx2 = getelementptr inbounds %ArrayIterator_string_, ptr %0, i32 0, i32 4
+  %4 = load ptr, ptr %memberidx2, align 8
+  %ptridx = getelementptr inbounds ptr, ptr %4, i64 %2
+  %5 = load ptr, ptr %ptridx, align 8
+  %memberidx3 = getelementptr inbounds %Iterator_string_, ptr %0, i32 0, i32 1
+  %memberidx5 = getelementptr inbounds %ArrayIterator_string_, ptr %0, i32 0, i32 3
+  %6 = load i64, ptr %memberidx5, align 4
+  %7 = icmp sgt i64 %3, %6
+  store i1 %7, ptr %memberidx3, align 1
+  ret ptr %5
+}
+
+define void @ArrayIterator_string__constructor(ptr %0, ptr %1, i64 %2) {
+  store ptr @VTableArrayIterator_string_, ptr %0, align 8
+  %memberidx = getelementptr inbounds %Iterator_string_, ptr %0, i32 0, i32 1
+  store i1 false, ptr %memberidx, align 1
+  %memberidx1 = getelementptr inbounds %ArrayIterator_string_, ptr %0, i32 0, i32 2
+  store i64 0, ptr %memberidx1, align 4
+  %memberidx2 = getelementptr inbounds %ArrayIterator_string_, ptr %0, i32 0, i32 4
+  store ptr %1, ptr %memberidx2, align 8
+  %memberidx3 = getelementptr inbounds %ArrayIterator_string_, ptr %0, i32 0, i32 3
+  store i64 %2, ptr %memberidx3, align 4
+  ret void
+}
+
+define ptr @Array_string____iter__(ptr %0) {
+  %2 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%ArrayIterator_string_, ptr null, i32 1) to i32))
+  %memberidx = getelementptr inbounds %Array_string_, ptr %0, i32 0, i32 1
+  %3 = load ptr, ptr %memberidx, align 8
+  %memberidx1 = getelementptr inbounds %Array_string_, ptr %0, i32 0, i32 2
+  %4 = load i64, ptr %memberidx1, align 4
+  call void @ArrayIterator_string__constructor(ptr %2, ptr %3, i64 %4)
+  ret ptr %2
+}
+
 define void @Array_string____setitem__(ptr %0, i64 %1, ptr %2) {
   %4 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%Range, ptr null, i32 1) to i32))
   %memberidx = getelementptr inbounds %Array_string_, ptr %0, i32 0, i32 2
@@ -1195,25 +1394,11 @@ ifend:                                            ; preds = %3, %if.entry
 }
 
 define ptr @Array_string____getitem__(ptr %0, i64 %1) {
-  %3 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%Range, ptr null, i32 1) to i32))
-  %memberidx = getelementptr inbounds %Array_string_, ptr %0, i32 0, i32 2
-  %4 = load i64, ptr %memberidx, align 4
-  call void @Range_constructor(ptr %3, i64 0, i64 %4)
-  %5 = load ptr, ptr %3, align 8
-  %6 = load ptr, ptr %5, align 8
-  %7 = call i1 %6(ptr %3, i64 %1)
-  br i1 %7, label %if.entry, label %common.ret
-
-common.ret:                                       ; preds = %2, %if.entry
-  %common.ret.op = phi ptr [ %9, %if.entry ], [ null, %2 ]
-  ret ptr %common.ret.op
-
-if.entry:                                         ; preds = %2
-  %memberidx2 = getelementptr inbounds %Array_string_, ptr %0, i32 0, i32 1
-  %8 = load ptr, ptr %memberidx2, align 8
-  %ptridx = getelementptr inbounds ptr, ptr %8, i64 %1
-  %9 = load ptr, ptr %ptridx, align 8
-  br label %common.ret
+  %memberidx = getelementptr inbounds %Array_string_, ptr %0, i32 0, i32 1
+  %3 = load ptr, ptr %memberidx, align 8
+  %ptridx = getelementptr inbounds ptr, ptr %3, i64 %1
+  %4 = load ptr, ptr %ptridx, align 8
+  ret ptr %4
 }
 
 define i1 @Array_string____eq__(ptr %0, ptr %1) {
@@ -1241,14 +1426,14 @@ for.cond:                                         ; preds = %ifend8, %for.entry
 
 for.body:                                         ; preds = %for.cond
   %9 = load ptr, ptr %0, align 8
-  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %9, i32 0, i32 5
+  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %9, i32 0, i32 6
   %10 = load ptr, ptr %memberidx3, align 8
   %11 = call ptr %10(ptr %0, i64 %6)
   %12 = load ptr, ptr %11, align 8
   %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %12, i32 0, i32 3
   %13 = load ptr, ptr %memberidx4, align 8
   %14 = load ptr, ptr %1, align 8
-  %memberidx5 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %14, i32 0, i32 5
+  %memberidx5 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %14, i32 0, i32 6
   %15 = load ptr, ptr %memberidx5, align 8
   %16 = load i64, ptr %i, align 4
   %17 = call ptr %15(ptr %1, i64 %16)
@@ -1275,7 +1460,7 @@ for.cond:                                         ; preds = %ifend, %for.entry
 
 for.body:                                         ; preds = %for.cond
   %4 = load ptr, ptr %0, align 8
-  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %4, i32 0, i32 5
+  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %4, i32 0, i32 6
   %5 = load ptr, ptr %memberidx1, align 8
   %6 = call ptr %5(ptr %0, i64 %i.0)
   %7 = load ptr, ptr %6, align 8
@@ -1305,6 +1490,39 @@ define void @Array_string__constructor(ptr %0, i64 %1) {
   %4 = tail call ptr @malloc(i32 %mallocsize)
   store ptr %4, ptr %memberidx2, align 8
   ret void
+}
+
+define i64 @RangeIterator_int____next__(ptr %0) {
+  %memberidx = getelementptr inbounds %Iterator_int_, ptr %0, i32 0, i32 1
+  %memberidx1 = getelementptr inbounds %RangeIterator_int_, ptr %0, i32 0, i32 2
+  %2 = load i64, ptr %memberidx1, align 4
+  %memberidx2 = getelementptr inbounds %RangeIterator_int_, ptr %0, i32 0, i32 3
+  %3 = load i64, ptr %memberidx2, align 4
+  %4 = icmp sgt i64 %2, %3
+  store i1 %4, ptr %memberidx, align 1
+  %5 = load i64, ptr %memberidx1, align 4
+  %6 = add i64 %5, 1
+  store i64 %6, ptr %memberidx1, align 4
+  ret i64 %5
+}
+
+define void @RangeIterator_int__constructor(ptr %0, i64 %1, i64 %2) {
+  store ptr @VTableRangeIterator_int_, ptr %0, align 8
+  %memberidx = getelementptr inbounds %RangeIterator_int_, ptr %0, i32 0, i32 2
+  store i64 %1, ptr %memberidx, align 4
+  %memberidx1 = getelementptr inbounds %RangeIterator_int_, ptr %0, i32 0, i32 3
+  store i64 %2, ptr %memberidx1, align 4
+  ret void
+}
+
+define ptr @Range___iter__(ptr %0) {
+  %2 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%RangeIterator_int_, ptr null, i32 1) to i32))
+  %memberidx = getelementptr inbounds %Range, ptr %0, i32 0, i32 1
+  %3 = load i64, ptr %memberidx, align 4
+  %memberidx1 = getelementptr inbounds %Range, ptr %0, i32 0, i32 2
+  %4 = load i64, ptr %memberidx1, align 4
+  call void @RangeIterator_int__constructor(ptr %2, i64 %3, i64 %4)
+  ret ptr %2
 }
 
 define i1 @Range___in__(ptr %0, i64 %1) {
@@ -1343,7 +1561,7 @@ for.cond:                                         ; preds = %for.body, %for.entr
 
 for.body:                                         ; preds = %for.cond
   %4 = load ptr, ptr %2, align 8
-  %memberidx2 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %4, i32 0, i32 2
+  %memberidx2 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %4, i32 0, i32 3
   %5 = load ptr, ptr %memberidx2, align 8
   %ptridx = getelementptr inbounds ptr, ptr %1, i64 %i.0
   %6 = load ptr, ptr %ptridx, align 8
@@ -1412,7 +1630,7 @@ declare i64 @asprintf(ptr, ptr, ...)
 
 define i1 @flag(ptr %0, ptr %1) {
   %3 = load ptr, ptr %0, align 8
-  %memberidx = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %3, i32 0, i32 7
+  %memberidx = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %3, i32 0, i32 8
   %4 = load ptr, ptr %memberidx, align 8
   %5 = call i1 %4(ptr %0, ptr %1)
   ret i1 %5
@@ -1420,7 +1638,7 @@ define i1 @flag(ptr %0, ptr %1) {
 
 define ptr @flag_value_or(ptr %0, ptr %1, ptr %2) {
   %4 = load ptr, ptr %0, align 8
-  %memberidx = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %4, i32 0, i32 8
+  %memberidx = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %4, i32 0, i32 9
   %5 = load ptr, ptr %memberidx, align 8
   %6 = call i64 %5(ptr %0, ptr %1)
   %7 = icmp ne i64 %6, -1
@@ -1442,7 +1660,7 @@ ifend:                                            ; preds = %3, %else3
 
 if.entry2:                                        ; preds = %if.entry
   %11 = load ptr, ptr %0, align 8
-  %memberidx5 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %11, i32 0, i32 5
+  %memberidx5 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %11, i32 0, i32 6
   %12 = load ptr, ptr %memberidx5, align 8
   %13 = call ptr %12(ptr %0, i64 %9)
   br label %common.ret
@@ -1556,7 +1774,7 @@ common.ret:                                       ; preds = %ifend36, %ifend30, 
   ret i64 %common.ret.op
 
 else:                                             ; preds = %2
-  %11 = call ptr @string_from_bytes(ptr @410, i64 24)
+  %11 = call ptr @string_from_bytes(ptr @414, i64 24)
   call void @print_message_error(i64 4, ptr %11)
   br label %common.ret
 
@@ -1578,7 +1796,7 @@ ifend3:                                           ; preds = %if.entry
 if.entry4:                                        ; preds = %ifend3
   %20 = load ptr, ptr %args, align 8
   %21 = load ptr, ptr %20, align 8
-  %memberidx = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %21, i32 0, i32 5
+  %memberidx = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %21, i32 0, i32 6
   %22 = load ptr, ptr %memberidx, align 8
   %23 = call ptr %22(ptr %20, i64 0)
   call void @help(ptr %23)
@@ -1588,7 +1806,7 @@ ifend6:                                           ; preds = %ifend3
   %filename = alloca ptr, align 8
   %24 = load ptr, ptr %args, align 8
   %25 = load ptr, ptr %24, align 8
-  %memberidx7 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %25, i32 0, i32 5
+  %memberidx7 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %25, i32 0, i32 6
   %26 = load ptr, ptr %memberidx7, align 8
   %27 = call ptr %26(ptr %24, i64 1)
   store ptr %27, ptr %filename, align 8
@@ -1597,21 +1815,21 @@ ifend6:                                           ; preds = %ifend3
   call void @Compiler_constructor(ptr %28)
   store ptr %28, ptr %compiler, align 8
   %29 = load ptr, ptr %args, align 8
-  %30 = call ptr @string_from_bytes(ptr @37, i64 2)
+  %30 = call ptr @string_from_bytes(ptr @36, i64 2)
   %31 = call i1 @flag(ptr %29, ptr %30)
   br i1 %31, label %if.entry8, label %ifend10
 
 if.entry8:                                        ; preds = %ifend6
   %rt_path = alloca ptr, align 8
   %32 = load ptr, ptr %args, align 8
-  %33 = call ptr @string_from_bytes(ptr @37, i64 2)
-  %34 = call ptr @string_from_bytes(ptr @38, i64 0)
+  %33 = call ptr @string_from_bytes(ptr @36, i64 2)
+  %34 = call ptr @string_from_bytes(ptr @37, i64 0)
   %35 = call ptr @flag_value_or(ptr %32, ptr %33, ptr %34)
   store ptr %35, ptr %rt_path, align 8
   %36 = load ptr, ptr %35, align 8
   %memberidx11 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %36, i32 0, i32 3
   %37 = load ptr, ptr %memberidx11, align 8
-  %38 = call ptr @string_from_bytes(ptr @38, i64 0)
+  %38 = call ptr @string_from_bytes(ptr @37, i64 0)
   %39 = call i1 %37(ptr %35, ptr %38)
   br i1 %39, label %if.entry12, label %ifend10
 
@@ -1647,7 +1865,7 @@ if.entry18:                                       ; preds = %ifend10
   %56 = load ptr, ptr %memberidx21, align 8
   %57 = call ptr %56(ptr %54)
   %58 = alloca ptr, align 8
-  %59 = call i64 (ptr, ptr, ...) @asprintf(ptr %58, ptr @39, ptr %57)
+  %59 = call i64 (ptr, ptr, ...) @asprintf(ptr %58, ptr @38, ptr %57)
   %60 = load ptr, ptr %58, align 8
   %61 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%string, ptr null, i32 1) to i32))
   call void @string_constructor(ptr %61, ptr %60, i64 %59)
@@ -1672,7 +1890,7 @@ ifend20:                                          ; preds = %ifend10
 
 ifend27:                                          ; preds = %ifend20
   %70 = load ptr, ptr %args, align 8
-  %71 = call ptr @string_from_bytes(ptr @80, i64 14)
+  %71 = call ptr @string_from_bytes(ptr @79, i64 14)
   %72 = call i1 @flag(ptr %70, ptr %71)
   br i1 %72, label %if.entry28, label %ifend30
 
@@ -1721,8 +1939,8 @@ ifend40:                                          ; preds = %ifend36
   %94 = load ptr, ptr %93, align 8
   %95 = load ptr, ptr %94, align 8
   %96 = load ptr, ptr %args, align 8
-  %97 = call ptr @string_from_bytes(ptr @404, i64 2)
-  %98 = call ptr @string_from_bytes(ptr @405, i64 1)
+  %97 = call ptr @string_from_bytes(ptr @408, i64 2)
+  %98 = call ptr @string_from_bytes(ptr @409, i64 1)
   %99 = call ptr @flag_value_or(ptr %96, ptr %97, ptr %98)
   %100 = load ptr, ptr %99, align 8
   %memberidx42 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %100, i32 0, i32 11
@@ -1732,7 +1950,7 @@ ifend40:                                          ; preds = %ifend36
   tail call void @free(ptr %102)
   call void %95(ptr %93, i64 %103)
   %104 = load ptr, ptr %args, align 8
-  %105 = call ptr @string_from_bytes(ptr @406, i64 11)
+  %105 = call ptr @string_from_bytes(ptr @410, i64 11)
   %106 = call i1 @flag(ptr %104, ptr %105)
   br i1 %106, label %if.entry43, label %else44
 
@@ -1746,7 +1964,7 @@ if.entry43:                                       ; preds = %ifend40
 
 else44:                                           ; preds = %ifend40
   %110 = load ptr, ptr %args, align 8
-  %111 = call ptr @string_from_bytes(ptr @407, i64 2)
+  %111 = call ptr @string_from_bytes(ptr @411, i64 2)
   %112 = call i1 @flag(ptr %110, ptr %111)
   br i1 %112, label %if.entry47, label %else48
 
@@ -1765,12 +1983,12 @@ if.entry47:                                       ; preds = %else44
   %memberidx50 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr }>, ptr %117, i32 0, i32 2
   %118 = load ptr, ptr %memberidx50, align 8
   %119 = load ptr, ptr %args, align 8
-  %120 = call ptr @string_from_bytes(ptr @407, i64 2)
-  %121 = call ptr @string_from_bytes(ptr @408, i64 3)
+  %120 = call ptr @string_from_bytes(ptr @411, i64 2)
+  %121 = call ptr @string_from_bytes(ptr @412, i64 3)
   %122 = call ptr @flag_value_or(ptr %119, ptr %120, ptr %121)
   %123 = load ptr, ptr %args, align 8
-  %124 = call ptr @string_from_bytes(ptr @409, i64 7)
-  %125 = call ptr @string_from_bytes(ptr @38, i64 0)
+  %124 = call ptr @string_from_bytes(ptr @413, i64 7)
+  %125 = call ptr @string_from_bytes(ptr @37, i64 0)
   %126 = call ptr @flag_value_or(ptr %123, ptr %124, ptr %125)
   call void %118(ptr %116, ptr %122, ptr %126)
   br label %ifend45
@@ -1798,13 +2016,13 @@ common.ret:                                       ; preds = %1, %if.entry
 
 if.entry:                                         ; preds = %1
   %5 = load ptr, ptr %2, align 8
-  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %5, i32 0, i32 5
+  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %5, i32 0, i32 6
   %6 = load ptr, ptr %memberidx3, align 8
   %7 = call ptr %6(ptr %2, i64 0)
   %memberidx4 = getelementptr inbounds %Compiler, ptr %0, i32 0, i32 5
   %8 = load ptr, ptr %memberidx4, align 8
   %9 = load ptr, ptr %8, align 8
-  %memberidx5 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %9, i32 0, i32 5
+  %memberidx5 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %9, i32 0, i32 6
   %10 = load ptr, ptr %memberidx5, align 8
   %memberidx6 = getelementptr inbounds %Compiler, ptr %0, i32 0, i32 1
   %11 = load ptr, ptr %memberidx6, align 8
@@ -1822,7 +2040,7 @@ define void @Compiler_set_std_path(ptr %0, ptr %1) {
   %memberidx = getelementptr inbounds %Compiler, ptr %0, i32 0, i32 2
   store ptr %1, ptr %memberidx, align 8
   %memberidx1 = getelementptr inbounds %Compiler, ptr %0, i32 0, i32 4
-  %3 = call ptr @string_from_bytes(ptr @29, i64 12)
+  %3 = call ptr @string_from_bytes(ptr @29, i64 22)
   %4 = call ptr @Path_join(ptr %1, ptr %3)
   store ptr %4, ptr %memberidx1, align 8
   ret void
@@ -1932,7 +2150,7 @@ ifend:                                            ; preds = %2, %if.entry
 
 define void @Array_FloError__append(ptr %0, ptr %1) {
   %3 = load ptr, ptr %0, align 8
-  %memberidx = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %3, i32 0, i32 2
+  %memberidx = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %3, i32 0, i32 3
   %4 = load ptr, ptr %memberidx, align 8
   call void %4(ptr %0, ptr %1)
   ret void
@@ -1977,6 +2195,46 @@ ifend:                                            ; preds = %3, %if.entry
   ret void
 }
 
+define ptr @ArrayIterator_FloError____next__(ptr %0) {
+  %memberidx = getelementptr inbounds %ArrayIterator_FloError_, ptr %0, i32 0, i32 2
+  %2 = load i64, ptr %memberidx, align 4
+  %3 = add i64 %2, 1
+  store i64 %3, ptr %memberidx, align 4
+  %memberidx2 = getelementptr inbounds %ArrayIterator_FloError_, ptr %0, i32 0, i32 4
+  %4 = load ptr, ptr %memberidx2, align 8
+  %ptridx = getelementptr inbounds ptr, ptr %4, i64 %2
+  %5 = load ptr, ptr %ptridx, align 8
+  %memberidx3 = getelementptr inbounds %Iterator_FloError_, ptr %0, i32 0, i32 1
+  %memberidx5 = getelementptr inbounds %ArrayIterator_FloError_, ptr %0, i32 0, i32 3
+  %6 = load i64, ptr %memberidx5, align 4
+  %7 = icmp sgt i64 %3, %6
+  store i1 %7, ptr %memberidx3, align 1
+  ret ptr %5
+}
+
+define void @ArrayIterator_FloError__constructor(ptr %0, ptr %1, i64 %2) {
+  store ptr @VTableArrayIterator_FloError_, ptr %0, align 8
+  %memberidx = getelementptr inbounds %Iterator_FloError_, ptr %0, i32 0, i32 1
+  store i1 false, ptr %memberidx, align 1
+  %memberidx1 = getelementptr inbounds %ArrayIterator_FloError_, ptr %0, i32 0, i32 2
+  store i64 0, ptr %memberidx1, align 4
+  %memberidx2 = getelementptr inbounds %ArrayIterator_FloError_, ptr %0, i32 0, i32 4
+  store ptr %1, ptr %memberidx2, align 8
+  %memberidx3 = getelementptr inbounds %ArrayIterator_FloError_, ptr %0, i32 0, i32 3
+  store i64 %2, ptr %memberidx3, align 4
+  ret void
+}
+
+define ptr @Array_FloError____iter__(ptr %0) {
+  %2 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%ArrayIterator_FloError_, ptr null, i32 1) to i32))
+  %memberidx = getelementptr inbounds %Array_FloError_, ptr %0, i32 0, i32 1
+  %3 = load ptr, ptr %memberidx, align 8
+  %memberidx1 = getelementptr inbounds %Array_FloError_, ptr %0, i32 0, i32 2
+  %4 = load i64, ptr %memberidx1, align 4
+  call void @ArrayIterator_FloError__constructor(ptr %2, ptr %3, i64 %4)
+  ret ptr %2
+}
+
 define void @Array_FloError____setitem__(ptr %0, i64 %1, ptr %2) {
   %4 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%Range, ptr null, i32 1) to i32))
   %memberidx = getelementptr inbounds %Array_FloError_, ptr %0, i32 0, i32 2
@@ -1999,25 +2257,11 @@ ifend:                                            ; preds = %3, %if.entry
 }
 
 define ptr @Array_FloError____getitem__(ptr %0, i64 %1) {
-  %3 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%Range, ptr null, i32 1) to i32))
-  %memberidx = getelementptr inbounds %Array_FloError_, ptr %0, i32 0, i32 2
-  %4 = load i64, ptr %memberidx, align 4
-  call void @Range_constructor(ptr %3, i64 0, i64 %4)
-  %5 = load ptr, ptr %3, align 8
-  %6 = load ptr, ptr %5, align 8
-  %7 = call i1 %6(ptr %3, i64 %1)
-  br i1 %7, label %if.entry, label %common.ret
-
-common.ret:                                       ; preds = %2, %if.entry
-  %common.ret.op = phi ptr [ %9, %if.entry ], [ null, %2 ]
-  ret ptr %common.ret.op
-
-if.entry:                                         ; preds = %2
-  %memberidx2 = getelementptr inbounds %Array_FloError_, ptr %0, i32 0, i32 1
-  %8 = load ptr, ptr %memberidx2, align 8
-  %ptridx = getelementptr inbounds ptr, ptr %8, i64 %1
-  %9 = load ptr, ptr %ptridx, align 8
-  br label %common.ret
+  %memberidx = getelementptr inbounds %Array_FloError_, ptr %0, i32 0, i32 1
+  %3 = load ptr, ptr %memberidx, align 8
+  %ptridx = getelementptr inbounds ptr, ptr %3, i64 %1
+  %4 = load ptr, ptr %ptridx, align 8
+  ret ptr %4
 }
 
 define i1 @Array_FloError____eq__(ptr %0, ptr %1) {
@@ -2045,11 +2289,11 @@ for.cond:                                         ; preds = %ifend7, %for.entry
 
 for.body:                                         ; preds = %for.cond
   %9 = load ptr, ptr %0, align 8
-  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %9, i32 0, i32 5
+  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %9, i32 0, i32 6
   %10 = load ptr, ptr %memberidx3, align 8
   %11 = call ptr %10(ptr %0, i64 %6)
   %12 = load ptr, ptr %1, align 8
-  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %12, i32 0, i32 5
+  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %12, i32 0, i32 6
   %13 = load ptr, ptr %memberidx4, align 8
   %14 = load i64, ptr %i, align 4
   %15 = call ptr %13(ptr %1, i64 %14)
@@ -2076,7 +2320,7 @@ for.cond:                                         ; preds = %ifend, %for.entry
 
 for.body:                                         ; preds = %for.cond
   %4 = load ptr, ptr %0, align 8
-  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %4, i32 0, i32 5
+  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %4, i32 0, i32 6
   %5 = load ptr, ptr %memberidx1, align 8
   %6 = call ptr %5(ptr %0, i64 %i.0)
   %7 = icmp eq ptr %6, %1
@@ -2112,28 +2356,26 @@ define ptr @Compiler_find_module_path(ptr %0, ptr %1) {
   %5 = call ptr @string_from_bytes(ptr @30, i64 4)
   %memberidx1 = getelementptr inbounds %Compiler, ptr %0, i32 0, i32 2
   %6 = load ptr, ptr %memberidx1, align 8
-  %7 = call ptr @string_from_bytes(ptr @31, i64 8)
-  %8 = call ptr @Path_join(ptr %6, ptr %7)
-  %9 = call ptr %4(ptr %1, ptr %5, ptr %8)
-  %10 = load ptr, ptr %9, align 8
-  %memberidx2 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %10, i32 0, i32 12
-  %11 = load ptr, ptr %memberidx2, align 8
-  %12 = call ptr @string_from_bytes(ptr @32, i64 4)
-  %13 = call i1 %11(ptr %9, ptr %12)
-  %14 = xor i1 %13, true
-  br i1 %14, label %if.entry, label %ifend
+  %7 = call ptr %4(ptr %1, ptr %5, ptr %6)
+  %8 = load ptr, ptr %7, align 8
+  %memberidx2 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %8, i32 0, i32 12
+  %9 = load ptr, ptr %memberidx2, align 8
+  %10 = call ptr @string_from_bytes(ptr @31, i64 4)
+  %11 = call i1 %9(ptr %7, ptr %10)
+  %12 = xor i1 %11, true
+  br i1 %12, label %if.entry, label %ifend
 
 if.entry:                                         ; preds = %2
-  %15 = load ptr, ptr %9, align 8
-  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %15, i32 0, i32 1
-  %16 = load ptr, ptr %memberidx3, align 8
-  %17 = call ptr @string_from_bytes(ptr @32, i64 4)
-  %18 = call ptr %16(ptr %9, ptr %17)
+  %13 = load ptr, ptr %7, align 8
+  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %13, i32 0, i32 1
+  %14 = load ptr, ptr %memberidx3, align 8
+  %15 = call ptr @string_from_bytes(ptr @31, i64 4)
+  %16 = call ptr %14(ptr %7, ptr %15)
   br label %ifend
 
 ifend:                                            ; preds = %2, %if.entry
-  %19 = call ptr @Path_abspath(ptr %9)
-  ret ptr %19
+  %17 = call ptr @Path_abspath(ptr %7)
+  ret ptr %17
 }
 
 define void @FileId_constructor(ptr %0, i64 %1) {
@@ -2172,7 +2414,7 @@ ifend:                                            ; preds = %2
   call void %14(ptr %12, ptr %3, ptr %9)
   %15 = load ptr, ptr %memberidx2, align 8
   %16 = load ptr, ptr %15, align 8
-  %memberidx7 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %16, i32 0, i32 2
+  %memberidx7 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %16, i32 0, i32 3
   %17 = load ptr, ptr %memberidx7, align 8
   %18 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%FloFile, ptr null, i32 1) to i32))
   call void @FloFile_constructor(ptr %18, ptr %3, ptr %1)
@@ -2184,7 +2426,7 @@ define i1 @Compiler_set_current_file(ptr %0, ptr %1) {
   %memberidx = getelementptr inbounds %Compiler, ptr %0, i32 0, i32 5
   %3 = load ptr, ptr %memberidx, align 8
   %4 = load ptr, ptr %3, align 8
-  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %4, i32 0, i32 5
+  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %4, i32 0, i32 6
   %5 = load ptr, ptr %memberidx1, align 8
   %6 = load i64, ptr %1, align 4
   %7 = call ptr %5(ptr %3, i64 %6)
@@ -2295,7 +2537,7 @@ ifend:                                            ; preds = %2, %if.entry
 
 define void @Array_FloFile__append(ptr %0, ptr %1) {
   %3 = load ptr, ptr %0, align 8
-  %memberidx = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %3, i32 0, i32 2
+  %memberidx = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %3, i32 0, i32 3
   %4 = load ptr, ptr %memberidx, align 8
   call void %4(ptr %0, ptr %1)
   ret void
@@ -2340,6 +2582,46 @@ ifend:                                            ; preds = %3, %if.entry
   ret void
 }
 
+define ptr @ArrayIterator_FloFile____next__(ptr %0) {
+  %memberidx = getelementptr inbounds %ArrayIterator_FloFile_, ptr %0, i32 0, i32 2
+  %2 = load i64, ptr %memberidx, align 4
+  %3 = add i64 %2, 1
+  store i64 %3, ptr %memberidx, align 4
+  %memberidx2 = getelementptr inbounds %ArrayIterator_FloFile_, ptr %0, i32 0, i32 4
+  %4 = load ptr, ptr %memberidx2, align 8
+  %ptridx = getelementptr inbounds ptr, ptr %4, i64 %2
+  %5 = load ptr, ptr %ptridx, align 8
+  %memberidx3 = getelementptr inbounds %Iterator_FloFile_, ptr %0, i32 0, i32 1
+  %memberidx5 = getelementptr inbounds %ArrayIterator_FloFile_, ptr %0, i32 0, i32 3
+  %6 = load i64, ptr %memberidx5, align 4
+  %7 = icmp sgt i64 %3, %6
+  store i1 %7, ptr %memberidx3, align 1
+  ret ptr %5
+}
+
+define void @ArrayIterator_FloFile__constructor(ptr %0, ptr %1, i64 %2) {
+  store ptr @VTableArrayIterator_FloFile_, ptr %0, align 8
+  %memberidx = getelementptr inbounds %Iterator_FloFile_, ptr %0, i32 0, i32 1
+  store i1 false, ptr %memberidx, align 1
+  %memberidx1 = getelementptr inbounds %ArrayIterator_FloFile_, ptr %0, i32 0, i32 2
+  store i64 0, ptr %memberidx1, align 4
+  %memberidx2 = getelementptr inbounds %ArrayIterator_FloFile_, ptr %0, i32 0, i32 4
+  store ptr %1, ptr %memberidx2, align 8
+  %memberidx3 = getelementptr inbounds %ArrayIterator_FloFile_, ptr %0, i32 0, i32 3
+  store i64 %2, ptr %memberidx3, align 4
+  ret void
+}
+
+define ptr @Array_FloFile____iter__(ptr %0) {
+  %2 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%ArrayIterator_FloFile_, ptr null, i32 1) to i32))
+  %memberidx = getelementptr inbounds %Array_FloFile_, ptr %0, i32 0, i32 1
+  %3 = load ptr, ptr %memberidx, align 8
+  %memberidx1 = getelementptr inbounds %Array_FloFile_, ptr %0, i32 0, i32 2
+  %4 = load i64, ptr %memberidx1, align 4
+  call void @ArrayIterator_FloFile__constructor(ptr %2, ptr %3, i64 %4)
+  ret ptr %2
+}
+
 define void @Array_FloFile____setitem__(ptr %0, i64 %1, ptr %2) {
   %4 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%Range, ptr null, i32 1) to i32))
   %memberidx = getelementptr inbounds %Array_FloFile_, ptr %0, i32 0, i32 2
@@ -2362,25 +2644,11 @@ ifend:                                            ; preds = %3, %if.entry
 }
 
 define ptr @Array_FloFile____getitem__(ptr %0, i64 %1) {
-  %3 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%Range, ptr null, i32 1) to i32))
-  %memberidx = getelementptr inbounds %Array_FloFile_, ptr %0, i32 0, i32 2
-  %4 = load i64, ptr %memberidx, align 4
-  call void @Range_constructor(ptr %3, i64 0, i64 %4)
-  %5 = load ptr, ptr %3, align 8
-  %6 = load ptr, ptr %5, align 8
-  %7 = call i1 %6(ptr %3, i64 %1)
-  br i1 %7, label %if.entry, label %common.ret
-
-common.ret:                                       ; preds = %2, %if.entry
-  %common.ret.op = phi ptr [ %9, %if.entry ], [ null, %2 ]
-  ret ptr %common.ret.op
-
-if.entry:                                         ; preds = %2
-  %memberidx2 = getelementptr inbounds %Array_FloFile_, ptr %0, i32 0, i32 1
-  %8 = load ptr, ptr %memberidx2, align 8
-  %ptridx = getelementptr inbounds ptr, ptr %8, i64 %1
-  %9 = load ptr, ptr %ptridx, align 8
-  br label %common.ret
+  %memberidx = getelementptr inbounds %Array_FloFile_, ptr %0, i32 0, i32 1
+  %3 = load ptr, ptr %memberidx, align 8
+  %ptridx = getelementptr inbounds ptr, ptr %3, i64 %1
+  %4 = load ptr, ptr %ptridx, align 8
+  ret ptr %4
 }
 
 define i1 @Array_FloFile____eq__(ptr %0, ptr %1) {
@@ -2408,11 +2676,11 @@ for.cond:                                         ; preds = %ifend7, %for.entry
 
 for.body:                                         ; preds = %for.cond
   %9 = load ptr, ptr %0, align 8
-  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %9, i32 0, i32 5
+  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %9, i32 0, i32 6
   %10 = load ptr, ptr %memberidx3, align 8
   %11 = call ptr %10(ptr %0, i64 %6)
   %12 = load ptr, ptr %1, align 8
-  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %12, i32 0, i32 5
+  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %12, i32 0, i32 6
   %13 = load ptr, ptr %memberidx4, align 8
   %14 = load i64, ptr %i, align 4
   %15 = call ptr %13(ptr %1, i64 %14)
@@ -2439,7 +2707,7 @@ for.cond:                                         ; preds = %ifend, %for.entry
 
 for.body:                                         ; preds = %for.cond
   %4 = load ptr, ptr %0, align 8
-  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %4, i32 0, i32 5
+  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %4, i32 0, i32 6
   %5 = load ptr, ptr %memberidx1, align 8
   %6 = call ptr %5(ptr %0, i64 %i.0)
   %7 = icmp eq ptr %6, %1
@@ -2637,7 +2905,7 @@ ifend:                                            ; preds = %2, %if.entry
 
 define void @Array_Bucket_string_FileId___append(ptr %0, ptr %1) {
   %3 = load ptr, ptr %0, align 8
-  %memberidx = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %3, i32 0, i32 2
+  %memberidx = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %3, i32 0, i32 3
   %4 = load ptr, ptr %memberidx, align 8
   call void %4(ptr %0, ptr %1)
   ret void
@@ -2682,6 +2950,46 @@ ifend:                                            ; preds = %3, %if.entry
   ret void
 }
 
+define ptr @ArrayIterator_Bucket_string_FileId_____next__(ptr %0) {
+  %memberidx = getelementptr inbounds %ArrayIterator_Bucket_string_FileId__, ptr %0, i32 0, i32 2
+  %2 = load i64, ptr %memberidx, align 4
+  %3 = add i64 %2, 1
+  store i64 %3, ptr %memberidx, align 4
+  %memberidx2 = getelementptr inbounds %ArrayIterator_Bucket_string_FileId__, ptr %0, i32 0, i32 4
+  %4 = load ptr, ptr %memberidx2, align 8
+  %ptridx = getelementptr inbounds ptr, ptr %4, i64 %2
+  %5 = load ptr, ptr %ptridx, align 8
+  %memberidx3 = getelementptr inbounds %Iterator_Bucket_string_FileId__, ptr %0, i32 0, i32 1
+  %memberidx5 = getelementptr inbounds %ArrayIterator_Bucket_string_FileId__, ptr %0, i32 0, i32 3
+  %6 = load i64, ptr %memberidx5, align 4
+  %7 = icmp sgt i64 %3, %6
+  store i1 %7, ptr %memberidx3, align 1
+  ret ptr %5
+}
+
+define void @ArrayIterator_Bucket_string_FileId___constructor(ptr %0, ptr %1, i64 %2) {
+  store ptr @VTableArrayIterator_Bucket_string_FileId__, ptr %0, align 8
+  %memberidx = getelementptr inbounds %Iterator_Bucket_string_FileId__, ptr %0, i32 0, i32 1
+  store i1 false, ptr %memberidx, align 1
+  %memberidx1 = getelementptr inbounds %ArrayIterator_Bucket_string_FileId__, ptr %0, i32 0, i32 2
+  store i64 0, ptr %memberidx1, align 4
+  %memberidx2 = getelementptr inbounds %ArrayIterator_Bucket_string_FileId__, ptr %0, i32 0, i32 4
+  store ptr %1, ptr %memberidx2, align 8
+  %memberidx3 = getelementptr inbounds %ArrayIterator_Bucket_string_FileId__, ptr %0, i32 0, i32 3
+  store i64 %2, ptr %memberidx3, align 4
+  ret void
+}
+
+define ptr @Array_Bucket_string_FileId_____iter__(ptr %0) {
+  %2 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%ArrayIterator_Bucket_string_FileId__, ptr null, i32 1) to i32))
+  %memberidx = getelementptr inbounds %Array_Bucket_string_FileId__, ptr %0, i32 0, i32 1
+  %3 = load ptr, ptr %memberidx, align 8
+  %memberidx1 = getelementptr inbounds %Array_Bucket_string_FileId__, ptr %0, i32 0, i32 2
+  %4 = load i64, ptr %memberidx1, align 4
+  call void @ArrayIterator_Bucket_string_FileId___constructor(ptr %2, ptr %3, i64 %4)
+  ret ptr %2
+}
+
 define void @Array_Bucket_string_FileId_____setitem__(ptr %0, i64 %1, ptr %2) {
   %4 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%Range, ptr null, i32 1) to i32))
   %memberidx = getelementptr inbounds %Array_Bucket_string_FileId__, ptr %0, i32 0, i32 2
@@ -2704,25 +3012,11 @@ ifend:                                            ; preds = %3, %if.entry
 }
 
 define ptr @Array_Bucket_string_FileId_____getitem__(ptr %0, i64 %1) {
-  %3 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%Range, ptr null, i32 1) to i32))
-  %memberidx = getelementptr inbounds %Array_Bucket_string_FileId__, ptr %0, i32 0, i32 2
-  %4 = load i64, ptr %memberidx, align 4
-  call void @Range_constructor(ptr %3, i64 0, i64 %4)
-  %5 = load ptr, ptr %3, align 8
-  %6 = load ptr, ptr %5, align 8
-  %7 = call i1 %6(ptr %3, i64 %1)
-  br i1 %7, label %if.entry, label %common.ret
-
-common.ret:                                       ; preds = %2, %if.entry
-  %common.ret.op = phi ptr [ %9, %if.entry ], [ null, %2 ]
-  ret ptr %common.ret.op
-
-if.entry:                                         ; preds = %2
-  %memberidx2 = getelementptr inbounds %Array_Bucket_string_FileId__, ptr %0, i32 0, i32 1
-  %8 = load ptr, ptr %memberidx2, align 8
-  %ptridx = getelementptr inbounds ptr, ptr %8, i64 %1
-  %9 = load ptr, ptr %ptridx, align 8
-  br label %common.ret
+  %memberidx = getelementptr inbounds %Array_Bucket_string_FileId__, ptr %0, i32 0, i32 1
+  %3 = load ptr, ptr %memberidx, align 8
+  %ptridx = getelementptr inbounds ptr, ptr %3, i64 %1
+  %4 = load ptr, ptr %ptridx, align 8
+  ret ptr %4
 }
 
 define i1 @Array_Bucket_string_FileId_____eq__(ptr %0, ptr %1) {
@@ -2750,11 +3044,11 @@ for.cond:                                         ; preds = %ifend7, %for.entry
 
 for.body:                                         ; preds = %for.cond
   %9 = load ptr, ptr %0, align 8
-  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %9, i32 0, i32 5
+  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %9, i32 0, i32 6
   %10 = load ptr, ptr %memberidx3, align 8
   %11 = call ptr %10(ptr %0, i64 %6)
   %12 = load ptr, ptr %1, align 8
-  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %12, i32 0, i32 5
+  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %12, i32 0, i32 6
   %13 = load ptr, ptr %memberidx4, align 8
   %14 = load i64, ptr %i, align 4
   %15 = call ptr %13(ptr %1, i64 %14)
@@ -2781,7 +3075,7 @@ for.cond:                                         ; preds = %ifend, %for.entry
 
 for.body:                                         ; preds = %for.cond
   %4 = load ptr, ptr %0, align 8
-  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %4, i32 0, i32 5
+  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %4, i32 0, i32 6
   %5 = load ptr, ptr %memberidx1, align 8
   %6 = call ptr %5(ptr %0, i64 %i.0)
   %7 = icmp eq ptr %6, %1
@@ -2843,7 +3137,7 @@ for.end:                                          ; preds = %for.cond
 
 if.entry:                                         ; preds = %for.body
   %8 = load ptr, ptr %1, align 8
-  %memberidx5 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %8, i32 0, i32 2
+  %memberidx5 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %8, i32 0, i32 3
   %9 = load ptr, ptr %memberidx5, align 8
   call void %9(ptr %1, ptr %5)
   br label %ifend
@@ -2902,13 +3196,13 @@ for.body11:                                       ; preds = %for.cond10
   %17 = load ptr, ptr %0, align 8
   %18 = load ptr, ptr %17, align 8
   %19 = load ptr, ptr %3, align 8
-  %memberidx16 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %19, i32 0, i32 5
+  %memberidx16 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %19, i32 0, i32 6
   %20 = load ptr, ptr %memberidx16, align 8
   %21 = call ptr %20(ptr %3, i64 %i.1)
   %memberidx17 = getelementptr inbounds %Bucket_string_FileId_, ptr %21, i32 0, i32 1
   %22 = load ptr, ptr %memberidx17, align 8
   %23 = load ptr, ptr %3, align 8
-  %memberidx18 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %23, i32 0, i32 5
+  %memberidx18 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %23, i32 0, i32 6
   %24 = load ptr, ptr %memberidx18, align 8
   %25 = call ptr %24(ptr %3, i64 %i.1)
   %memberidx19 = getelementptr inbounds %Bucket_string_FileId_, ptr %25, i32 0, i32 2
@@ -3135,7 +3429,7 @@ define ptr @File_open_for_reading(ptr %0) {
   %memberidx = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %2, i32 0, i32 11
   %3 = load ptr, ptr %memberidx, align 8
   %4 = call ptr %3(ptr %0)
-  %5 = call i64 @fopen(ptr %4, ptr @33)
+  %5 = call i64 @fopen(ptr %4, ptr @32)
   %6 = icmp eq i64 %5, 0
   br i1 %6, label %common.ret, label %ifend
 
@@ -3221,7 +3515,7 @@ define void @print_error(ptr %0, ptr %1, ptr %2) {
   %memberidx4 = getelementptr inbounds %FloRange, ptr %9, i32 0, i32 3
   %10 = load i64, ptr %memberidx4, align 4
   %11 = alloca ptr, align 8
-  %12 = call i64 (ptr, ptr, ...) @asprintf(ptr %11, ptr @34, ptr %8, i64 %10)
+  %12 = call i64 (ptr, ptr, ...) @asprintf(ptr %11, ptr @33, ptr %8, i64 %10)
   %13 = load ptr, ptr %11, align 8
   %14 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%string, ptr null, i32 1) to i32))
   call void @string_constructor(ptr %14, ptr %13, i64 %12)
@@ -3258,7 +3552,7 @@ for.cond:                                         ; preds = %for.body, %for.entr
   br i1 %15, label %for.body, label %for.end
 
 for.body:                                         ; preds = %for.cond
-  %16 = call ptr @string_from_bytes(ptr @35, i64 1)
+  %16 = call ptr @string_from_bytes(ptr @34, i64 1)
   call void @print(ptr %16)
   %17 = add i64 %i.0, 1
   br label %for.cond
@@ -3273,7 +3567,7 @@ for.cond8:                                        ; preds = %for.body9, %for.end
   br i1 %18, label %for.body9, label %for.end11
 
 for.body9:                                        ; preds = %for.cond8
-  %19 = call ptr @string_from_bytes(ptr @36, i64 1)
+  %19 = call ptr @string_from_bytes(ptr @35, i64 1)
   call void @print(ptr %19)
   %20 = add i64 %i.1, 1
   br label %for.cond8
@@ -3393,7 +3687,7 @@ ifend:                                            ; preds = %2, %if.entry
 
 define void @Array_Token__append(ptr %0, ptr %1) {
   %3 = load ptr, ptr %0, align 8
-  %memberidx = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %3, i32 0, i32 2
+  %memberidx = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %3, i32 0, i32 3
   %4 = load ptr, ptr %memberidx, align 8
   call void %4(ptr %0, ptr %1)
   ret void
@@ -3438,6 +3732,46 @@ ifend:                                            ; preds = %3, %if.entry
   ret void
 }
 
+define ptr @ArrayIterator_Token____next__(ptr %0) {
+  %memberidx = getelementptr inbounds %ArrayIterator_Token_, ptr %0, i32 0, i32 2
+  %2 = load i64, ptr %memberidx, align 4
+  %3 = add i64 %2, 1
+  store i64 %3, ptr %memberidx, align 4
+  %memberidx2 = getelementptr inbounds %ArrayIterator_Token_, ptr %0, i32 0, i32 4
+  %4 = load ptr, ptr %memberidx2, align 8
+  %ptridx = getelementptr inbounds ptr, ptr %4, i64 %2
+  %5 = load ptr, ptr %ptridx, align 8
+  %memberidx3 = getelementptr inbounds %Iterator_Token_, ptr %0, i32 0, i32 1
+  %memberidx5 = getelementptr inbounds %ArrayIterator_Token_, ptr %0, i32 0, i32 3
+  %6 = load i64, ptr %memberidx5, align 4
+  %7 = icmp sgt i64 %3, %6
+  store i1 %7, ptr %memberidx3, align 1
+  ret ptr %5
+}
+
+define void @ArrayIterator_Token__constructor(ptr %0, ptr %1, i64 %2) {
+  store ptr @VTableArrayIterator_Token_, ptr %0, align 8
+  %memberidx = getelementptr inbounds %Iterator_Token_, ptr %0, i32 0, i32 1
+  store i1 false, ptr %memberidx, align 1
+  %memberidx1 = getelementptr inbounds %ArrayIterator_Token_, ptr %0, i32 0, i32 2
+  store i64 0, ptr %memberidx1, align 4
+  %memberidx2 = getelementptr inbounds %ArrayIterator_Token_, ptr %0, i32 0, i32 4
+  store ptr %1, ptr %memberidx2, align 8
+  %memberidx3 = getelementptr inbounds %ArrayIterator_Token_, ptr %0, i32 0, i32 3
+  store i64 %2, ptr %memberidx3, align 4
+  ret void
+}
+
+define ptr @Array_Token____iter__(ptr %0) {
+  %2 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%ArrayIterator_Token_, ptr null, i32 1) to i32))
+  %memberidx = getelementptr inbounds %Array_Token_, ptr %0, i32 0, i32 1
+  %3 = load ptr, ptr %memberidx, align 8
+  %memberidx1 = getelementptr inbounds %Array_Token_, ptr %0, i32 0, i32 2
+  %4 = load i64, ptr %memberidx1, align 4
+  call void @ArrayIterator_Token__constructor(ptr %2, ptr %3, i64 %4)
+  ret ptr %2
+}
+
 define void @Array_Token____setitem__(ptr %0, i64 %1, ptr %2) {
   %4 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%Range, ptr null, i32 1) to i32))
   %memberidx = getelementptr inbounds %Array_Token_, ptr %0, i32 0, i32 2
@@ -3460,25 +3794,11 @@ ifend:                                            ; preds = %3, %if.entry
 }
 
 define ptr @Array_Token____getitem__(ptr %0, i64 %1) {
-  %3 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%Range, ptr null, i32 1) to i32))
-  %memberidx = getelementptr inbounds %Array_Token_, ptr %0, i32 0, i32 2
-  %4 = load i64, ptr %memberidx, align 4
-  call void @Range_constructor(ptr %3, i64 0, i64 %4)
-  %5 = load ptr, ptr %3, align 8
-  %6 = load ptr, ptr %5, align 8
-  %7 = call i1 %6(ptr %3, i64 %1)
-  br i1 %7, label %if.entry, label %common.ret
-
-common.ret:                                       ; preds = %2, %if.entry
-  %common.ret.op = phi ptr [ %9, %if.entry ], [ null, %2 ]
-  ret ptr %common.ret.op
-
-if.entry:                                         ; preds = %2
-  %memberidx2 = getelementptr inbounds %Array_Token_, ptr %0, i32 0, i32 1
-  %8 = load ptr, ptr %memberidx2, align 8
-  %ptridx = getelementptr inbounds ptr, ptr %8, i64 %1
-  %9 = load ptr, ptr %ptridx, align 8
-  br label %common.ret
+  %memberidx = getelementptr inbounds %Array_Token_, ptr %0, i32 0, i32 1
+  %3 = load ptr, ptr %memberidx, align 8
+  %ptridx = getelementptr inbounds ptr, ptr %3, i64 %1
+  %4 = load ptr, ptr %ptridx, align 8
+  ret ptr %4
 }
 
 define i1 @Array_Token____eq__(ptr %0, ptr %1) {
@@ -3506,11 +3826,11 @@ for.cond:                                         ; preds = %ifend7, %for.entry
 
 for.body:                                         ; preds = %for.cond
   %9 = load ptr, ptr %0, align 8
-  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %9, i32 0, i32 5
+  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %9, i32 0, i32 6
   %10 = load ptr, ptr %memberidx3, align 8
   %11 = call ptr %10(ptr %0, i64 %6)
   %12 = load ptr, ptr %1, align 8
-  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %12, i32 0, i32 5
+  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %12, i32 0, i32 6
   %13 = load ptr, ptr %memberidx4, align 8
   %14 = load i64, ptr %i, align 4
   %15 = call ptr %13(ptr %1, i64 %14)
@@ -3537,7 +3857,7 @@ for.cond:                                         ; preds = %ifend, %for.entry
 
 for.body:                                         ; preds = %for.cond
   %4 = load ptr, ptr %0, align 8
-  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %4, i32 0, i32 5
+  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %4, i32 0, i32 6
   %5 = load ptr, ptr %memberidx1, align 8
   %6 = call ptr %5(ptr %0, i64 %i.0)
   %7 = icmp eq ptr %6, %1
@@ -3587,7 +3907,7 @@ define ptr @Lexer_tokenize(ptr %0, ptr %1) {
 
 while.entry:                                      ; preds = %while.entry, %2
   %11 = load ptr, ptr %4, align 8
-  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %11, i32 0, i32 2
+  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %11, i32 0, i32 3
   %12 = load ptr, ptr %memberidx4, align 8
   %13 = call ptr @Lexer_lex_token(ptr %3)
   call void %12(ptr %4, ptr %13)
@@ -3603,7 +3923,7 @@ while.entry:                                      ; preds = %while.entry, %2
 
 while.end:                                        ; preds = %while.entry, %2
   %20 = load ptr, ptr %4, align 8
-  %memberidx7 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %20, i32 0, i32 2
+  %memberidx7 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %20, i32 0, i32 3
   %21 = load ptr, ptr %memberidx7, align 8
   %22 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%Token, ptr null, i32 1) to i32))
   %23 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%FloRange, ptr null, i32 1) to i32))
@@ -3789,7 +4109,7 @@ for.body:                                         ; preds = %for.cond
   %ptridx = getelementptr inbounds ptr, ptr %4, i64 %i.0
   %5 = load ptr, ptr %ptridx, align 8
   %6 = load ptr, ptr %5, align 8
-  %memberidx2 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %6, i32 0, i32 6
+  %memberidx2 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %6, i32 0, i32 7
   %7 = load ptr, ptr %memberidx2, align 8
   %8 = call i1 %7(ptr %5, ptr %1)
   br i1 %8, label %if.entry, label %ifend
@@ -3846,7 +4166,7 @@ ifend:                                            ; preds = %2, %if.entry
 
 define void @Array_Array_Token___append(ptr %0, ptr %1) {
   %3 = load ptr, ptr %0, align 8
-  %memberidx = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %3, i32 0, i32 2
+  %memberidx = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %3, i32 0, i32 3
   %4 = load ptr, ptr %memberidx, align 8
   call void %4(ptr %0, ptr %1)
   ret void
@@ -3891,6 +4211,46 @@ ifend:                                            ; preds = %3, %if.entry
   ret void
 }
 
+define ptr @ArrayIterator_Array_Token_____next__(ptr %0) {
+  %memberidx = getelementptr inbounds %ArrayIterator_Array_Token__, ptr %0, i32 0, i32 2
+  %2 = load i64, ptr %memberidx, align 4
+  %3 = add i64 %2, 1
+  store i64 %3, ptr %memberidx, align 4
+  %memberidx2 = getelementptr inbounds %ArrayIterator_Array_Token__, ptr %0, i32 0, i32 4
+  %4 = load ptr, ptr %memberidx2, align 8
+  %ptridx = getelementptr inbounds ptr, ptr %4, i64 %2
+  %5 = load ptr, ptr %ptridx, align 8
+  %memberidx3 = getelementptr inbounds %Iterator_Array_Token__, ptr %0, i32 0, i32 1
+  %memberidx5 = getelementptr inbounds %ArrayIterator_Array_Token__, ptr %0, i32 0, i32 3
+  %6 = load i64, ptr %memberidx5, align 4
+  %7 = icmp sgt i64 %3, %6
+  store i1 %7, ptr %memberidx3, align 1
+  ret ptr %5
+}
+
+define void @ArrayIterator_Array_Token___constructor(ptr %0, ptr %1, i64 %2) {
+  store ptr @VTableArrayIterator_Array_Token__, ptr %0, align 8
+  %memberidx = getelementptr inbounds %Iterator_Array_Token__, ptr %0, i32 0, i32 1
+  store i1 false, ptr %memberidx, align 1
+  %memberidx1 = getelementptr inbounds %ArrayIterator_Array_Token__, ptr %0, i32 0, i32 2
+  store i64 0, ptr %memberidx1, align 4
+  %memberidx2 = getelementptr inbounds %ArrayIterator_Array_Token__, ptr %0, i32 0, i32 4
+  store ptr %1, ptr %memberidx2, align 8
+  %memberidx3 = getelementptr inbounds %ArrayIterator_Array_Token__, ptr %0, i32 0, i32 3
+  store i64 %2, ptr %memberidx3, align 4
+  ret void
+}
+
+define ptr @Array_Array_Token_____iter__(ptr %0) {
+  %2 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%ArrayIterator_Array_Token__, ptr null, i32 1) to i32))
+  %memberidx = getelementptr inbounds %Array_Array_Token__, ptr %0, i32 0, i32 1
+  %3 = load ptr, ptr %memberidx, align 8
+  %memberidx1 = getelementptr inbounds %Array_Array_Token__, ptr %0, i32 0, i32 2
+  %4 = load i64, ptr %memberidx1, align 4
+  call void @ArrayIterator_Array_Token___constructor(ptr %2, ptr %3, i64 %4)
+  ret ptr %2
+}
+
 define void @Array_Array_Token_____setitem__(ptr %0, i64 %1, ptr %2) {
   %4 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%Range, ptr null, i32 1) to i32))
   %memberidx = getelementptr inbounds %Array_Array_Token__, ptr %0, i32 0, i32 2
@@ -3913,25 +4273,11 @@ ifend:                                            ; preds = %3, %if.entry
 }
 
 define ptr @Array_Array_Token_____getitem__(ptr %0, i64 %1) {
-  %3 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%Range, ptr null, i32 1) to i32))
-  %memberidx = getelementptr inbounds %Array_Array_Token__, ptr %0, i32 0, i32 2
-  %4 = load i64, ptr %memberidx, align 4
-  call void @Range_constructor(ptr %3, i64 0, i64 %4)
-  %5 = load ptr, ptr %3, align 8
-  %6 = load ptr, ptr %5, align 8
-  %7 = call i1 %6(ptr %3, i64 %1)
-  br i1 %7, label %if.entry, label %common.ret
-
-common.ret:                                       ; preds = %2, %if.entry
-  %common.ret.op = phi ptr [ %9, %if.entry ], [ null, %2 ]
-  ret ptr %common.ret.op
-
-if.entry:                                         ; preds = %2
-  %memberidx2 = getelementptr inbounds %Array_Array_Token__, ptr %0, i32 0, i32 1
-  %8 = load ptr, ptr %memberidx2, align 8
-  %ptridx = getelementptr inbounds ptr, ptr %8, i64 %1
-  %9 = load ptr, ptr %ptridx, align 8
-  br label %common.ret
+  %memberidx = getelementptr inbounds %Array_Array_Token__, ptr %0, i32 0, i32 1
+  %3 = load ptr, ptr %memberidx, align 8
+  %ptridx = getelementptr inbounds ptr, ptr %3, i64 %1
+  %4 = load ptr, ptr %ptridx, align 8
+  ret ptr %4
 }
 
 define i1 @Array_Array_Token_____eq__(ptr %0, ptr %1) {
@@ -3959,11 +4305,11 @@ for.cond:                                         ; preds = %ifend7, %for.entry
 
 for.body:                                         ; preds = %for.cond
   %9 = load ptr, ptr %0, align 8
-  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %9, i32 0, i32 5
+  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %9, i32 0, i32 6
   %10 = load ptr, ptr %memberidx3, align 8
   %11 = call ptr %10(ptr %0, i64 %6)
   %12 = load ptr, ptr %1, align 8
-  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %12, i32 0, i32 5
+  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %12, i32 0, i32 6
   %13 = load ptr, ptr %memberidx4, align 8
   %14 = load i64, ptr %i, align 4
   %15 = call ptr %13(ptr %1, i64 %14)
@@ -3990,11 +4336,11 @@ for.cond:                                         ; preds = %ifend, %for.entry
 
 for.body:                                         ; preds = %for.cond
   %4 = load ptr, ptr %0, align 8
-  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %4, i32 0, i32 5
+  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %4, i32 0, i32 6
   %5 = load ptr, ptr %memberidx1, align 8
   %6 = call ptr %5(ptr %0, i64 %i.0)
   %7 = load ptr, ptr %6, align 8
-  %memberidx2 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %7, i32 0, i32 6
+  %memberidx2 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %7, i32 0, i32 7
   %8 = load ptr, ptr %memberidx2, align 8
   %9 = call i1 %8(ptr %6, ptr %1)
   br i1 %9, label %common.ret, label %ifend
@@ -4093,7 +4439,7 @@ ifend:                                            ; preds = %2, %if.entry
 
 define void @Array_int__append(ptr %0, i64 %1) {
   %3 = load ptr, ptr %0, align 8
-  %memberidx = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %3, i32 0, i32 2
+  %memberidx = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %3, i32 0, i32 3
   %4 = load ptr, ptr %memberidx, align 8
   call void %4(ptr %0, i64 %1)
   ret void
@@ -4138,6 +4484,46 @@ ifend:                                            ; preds = %3, %if.entry
   ret void
 }
 
+define i64 @ArrayIterator_int____next__(ptr %0) {
+  %memberidx = getelementptr inbounds %ArrayIterator_int_, ptr %0, i32 0, i32 2
+  %2 = load i64, ptr %memberidx, align 4
+  %3 = add i64 %2, 1
+  store i64 %3, ptr %memberidx, align 4
+  %memberidx2 = getelementptr inbounds %ArrayIterator_int_, ptr %0, i32 0, i32 4
+  %4 = load ptr, ptr %memberidx2, align 8
+  %ptridx = getelementptr inbounds i64, ptr %4, i64 %2
+  %5 = load i64, ptr %ptridx, align 4
+  %memberidx3 = getelementptr inbounds %Iterator_int_, ptr %0, i32 0, i32 1
+  %memberidx5 = getelementptr inbounds %ArrayIterator_int_, ptr %0, i32 0, i32 3
+  %6 = load i64, ptr %memberidx5, align 4
+  %7 = icmp sgt i64 %3, %6
+  store i1 %7, ptr %memberidx3, align 1
+  ret i64 %5
+}
+
+define void @ArrayIterator_int__constructor(ptr %0, ptr %1, i64 %2) {
+  store ptr @VTableArrayIterator_int_, ptr %0, align 8
+  %memberidx = getelementptr inbounds %Iterator_int_, ptr %0, i32 0, i32 1
+  store i1 false, ptr %memberidx, align 1
+  %memberidx1 = getelementptr inbounds %ArrayIterator_int_, ptr %0, i32 0, i32 2
+  store i64 0, ptr %memberidx1, align 4
+  %memberidx2 = getelementptr inbounds %ArrayIterator_int_, ptr %0, i32 0, i32 4
+  store ptr %1, ptr %memberidx2, align 8
+  %memberidx3 = getelementptr inbounds %ArrayIterator_int_, ptr %0, i32 0, i32 3
+  store i64 %2, ptr %memberidx3, align 4
+  ret void
+}
+
+define ptr @Array_int____iter__(ptr %0) {
+  %2 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%ArrayIterator_int_, ptr null, i32 1) to i32))
+  %memberidx = getelementptr inbounds %Array_int_, ptr %0, i32 0, i32 1
+  %3 = load ptr, ptr %memberidx, align 8
+  %memberidx1 = getelementptr inbounds %Array_int_, ptr %0, i32 0, i32 2
+  %4 = load i64, ptr %memberidx1, align 4
+  call void @ArrayIterator_int__constructor(ptr %2, ptr %3, i64 %4)
+  ret ptr %2
+}
+
 define void @Array_int____setitem__(ptr %0, i64 %1, i64 %2) {
   %4 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%Range, ptr null, i32 1) to i32))
   %memberidx = getelementptr inbounds %Array_int_, ptr %0, i32 0, i32 2
@@ -4160,25 +4546,11 @@ ifend:                                            ; preds = %3, %if.entry
 }
 
 define i64 @Array_int____getitem__(ptr %0, i64 %1) {
-  %3 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%Range, ptr null, i32 1) to i32))
-  %memberidx = getelementptr inbounds %Array_int_, ptr %0, i32 0, i32 2
-  %4 = load i64, ptr %memberidx, align 4
-  call void @Range_constructor(ptr %3, i64 0, i64 %4)
-  %5 = load ptr, ptr %3, align 8
-  %6 = load ptr, ptr %5, align 8
-  %7 = call i1 %6(ptr %3, i64 %1)
-  br i1 %7, label %if.entry, label %common.ret
-
-common.ret:                                       ; preds = %2, %if.entry
-  %common.ret.op = phi i64 [ %9, %if.entry ], [ 0, %2 ]
-  ret i64 %common.ret.op
-
-if.entry:                                         ; preds = %2
-  %memberidx2 = getelementptr inbounds %Array_int_, ptr %0, i32 0, i32 1
-  %8 = load ptr, ptr %memberidx2, align 8
-  %ptridx = getelementptr inbounds i64, ptr %8, i64 %1
-  %9 = load i64, ptr %ptridx, align 4
-  br label %common.ret
+  %memberidx = getelementptr inbounds %Array_int_, ptr %0, i32 0, i32 1
+  %3 = load ptr, ptr %memberidx, align 8
+  %ptridx = getelementptr inbounds i64, ptr %3, i64 %1
+  %4 = load i64, ptr %ptridx, align 4
+  ret i64 %4
 }
 
 define i1 @Array_int____eq__(ptr %0, ptr %1) {
@@ -4206,11 +4578,11 @@ for.cond:                                         ; preds = %ifend7, %for.entry
 
 for.body:                                         ; preds = %for.cond
   %9 = load ptr, ptr %0, align 8
-  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %9, i32 0, i32 5
+  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %9, i32 0, i32 6
   %10 = load ptr, ptr %memberidx3, align 8
   %11 = call i64 %10(ptr %0, i64 %6)
   %12 = load ptr, ptr %1, align 8
-  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %12, i32 0, i32 5
+  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %12, i32 0, i32 6
   %13 = load ptr, ptr %memberidx4, align 8
   %14 = load i64, ptr %i, align 4
   %15 = call i64 %13(ptr %1, i64 %14)
@@ -4237,7 +4609,7 @@ for.cond:                                         ; preds = %ifend, %for.entry
 
 for.body:                                         ; preds = %for.cond
   %4 = load ptr, ptr %0, align 8
-  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %4, i32 0, i32 5
+  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %4, i32 0, i32 6
   %5 = load ptr, ptr %memberidx1, align 8
   %6 = call i64 %5(ptr %0, i64 %i.0)
   %7 = icmp eq i64 %6, %1
@@ -4329,7 +4701,7 @@ ifend:                                            ; preds = %while.entry
 
 if.entry6:                                        ; preds = %ifend
   %21 = load ptr, ptr %3, align 8
-  %memberidx9 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %21, i32 0, i32 2
+  %memberidx9 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %21, i32 0, i32 3
   %22 = load ptr, ptr %memberidx9, align 8
   %23 = sub i64 %length.0, 2
   call void %22(ptr %3, i64 %23)
@@ -4374,7 +4746,7 @@ if.entry13:                                       ; preds = %if.entry6
 else14:                                           ; preds = %if.entry6
   %41 = load ptr, ptr %token_group, align 8
   %42 = load ptr, ptr %41, align 8
-  %memberidx29 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %42, i32 0, i32 2
+  %memberidx29 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %42, i32 0, i32 3
   %43 = load ptr, ptr %memberidx29, align 8
   %44 = call ptr @Lexer_lex_token(ptr %0)
   call void %43(ptr %41, ptr %44)
@@ -4384,7 +4756,7 @@ ifend15:                                          ; preds = %if.entry13, %ifend2
   call void @Lexer_advance(ptr %0)
   %45 = load ptr, ptr %token_group, align 8
   %46 = load ptr, ptr %45, align 8
-  %memberidx30 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %46, i32 0, i32 2
+  %memberidx30 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %46, i32 0, i32 3
   %47 = load ptr, ptr %memberidx30, align 8
   %48 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%Token, ptr null, i32 1) to i32))
   %49 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%FloRange, ptr null, i32 1) to i32))
@@ -4396,7 +4768,7 @@ ifend15:                                          ; preds = %if.entry13, %ifend2
   call void @Token_constructor(ptr %48, i64 44, ptr %49)
   call void %47(ptr %45, ptr %48)
   %52 = load ptr, ptr %2, align 8
-  %memberidx33 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %52, i32 0, i32 2
+  %memberidx33 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %52, i32 0, i32 3
   %53 = load ptr, ptr %memberidx33, align 8
   %54 = load ptr, ptr %token_group, align 8
   call void %53(ptr %2, ptr %54)
@@ -4427,7 +4799,7 @@ if.entry24:                                       ; preds = %ifend22
 ifend26:                                          ; preds = %ifend22, %if.entry24
   %63 = load ptr, ptr %token_group, align 8
   %64 = load ptr, ptr %63, align 8
-  %memberidx27 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %64, i32 0, i32 2
+  %memberidx27 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %64, i32 0, i32 3
   %65 = load ptr, ptr %memberidx27, align 8
   %66 = call ptr @Lexer_lex_token(ptr %0)
   call void %65(ptr %63, ptr %66)
@@ -5373,7 +5745,7 @@ ifend89:                                          ; preds = %ifend86
   %memberidx92 = getelementptr inbounds %Lexer, ptr %0, i32 0, i32 2
   %82 = load ptr, ptr %memberidx92, align 8
   %83 = load ptr, ptr %82, align 8
-  %memberidx93 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %83, i32 0, i32 2
+  %memberidx93 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %83, i32 0, i32 3
   %84 = load ptr, ptr %memberidx93, align 8
   %85 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%FloError, ptr null, i32 1) to i32))
   %memberidx94 = getelementptr inbounds %Lexer, ptr %0, i32 0, i32 1
@@ -5389,7 +5761,7 @@ ifend89:                                          ; preds = %ifend86
   %92 = load ptr, ptr %memberidx97, align 8
   %93 = call ptr %92(ptr %90)
   %94 = alloca ptr, align 8
-  %95 = call i64 (ptr, ptr, ...) @asprintf(ptr %94, ptr @79, ptr %93)
+  %95 = call i64 (ptr, ptr, ...) @asprintf(ptr %94, ptr @78, ptr %93)
   %96 = load ptr, ptr %94, align 8
   %97 = call ptr @string_from_bytes(ptr %96, i64 %95)
   %98 = call ptr @Lexer_get_range(ptr %0, i64 1)
@@ -5489,7 +5861,7 @@ define i64 @string_to_kw_token(ptr %0) {
   %2 = load ptr, ptr %0, align 8
   %memberidx = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %2, i32 0, i32 4
   %3 = load ptr, ptr %memberidx, align 8
-  %4 = call ptr @string_from_bytes(ptr @40, i64 3)
+  %4 = call ptr @string_from_bytes(ptr @39, i64 3)
   %5 = call i1 %3(ptr %0, ptr %4)
   br i1 %5, label %common.ret, label %ifend
 
@@ -5501,7 +5873,7 @@ ifend:                                            ; preds = %1
   %6 = load ptr, ptr %0, align 8
   %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %6, i32 0, i32 4
   %7 = load ptr, ptr %memberidx1, align 8
-  %8 = call ptr @string_from_bytes(ptr @41, i64 2)
+  %8 = call ptr @string_from_bytes(ptr @40, i64 2)
   %9 = call i1 %7(ptr %0, ptr %8)
   br i1 %9, label %common.ret, label %ifend4
 
@@ -5509,7 +5881,7 @@ ifend4:                                           ; preds = %ifend
   %10 = load ptr, ptr %0, align 8
   %memberidx5 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %10, i32 0, i32 4
   %11 = load ptr, ptr %memberidx5, align 8
-  %12 = call ptr @string_from_bytes(ptr @42, i64 3)
+  %12 = call ptr @string_from_bytes(ptr @41, i64 3)
   %13 = call i1 %11(ptr %0, ptr %12)
   br i1 %13, label %common.ret, label %ifend8
 
@@ -5517,7 +5889,7 @@ ifend8:                                           ; preds = %ifend4
   %14 = load ptr, ptr %0, align 8
   %memberidx9 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %14, i32 0, i32 4
   %15 = load ptr, ptr %memberidx9, align 8
-  %16 = call ptr @string_from_bytes(ptr @43, i64 5)
+  %16 = call ptr @string_from_bytes(ptr @42, i64 5)
   %17 = call i1 %15(ptr %0, ptr %16)
   br i1 %17, label %common.ret, label %ifend12
 
@@ -5525,7 +5897,7 @@ ifend12:                                          ; preds = %ifend8
   %18 = load ptr, ptr %0, align 8
   %memberidx13 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %18, i32 0, i32 4
   %19 = load ptr, ptr %memberidx13, align 8
-  %20 = call ptr @string_from_bytes(ptr @44, i64 3)
+  %20 = call ptr @string_from_bytes(ptr @43, i64 3)
   %21 = call i1 %19(ptr %0, ptr %20)
   br i1 %21, label %common.ret, label %ifend16
 
@@ -5533,7 +5905,7 @@ ifend16:                                          ; preds = %ifend12
   %22 = load ptr, ptr %0, align 8
   %memberidx17 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %22, i32 0, i32 4
   %23 = load ptr, ptr %memberidx17, align 8
-  %24 = call ptr @string_from_bytes(ptr @45, i64 2)
+  %24 = call ptr @string_from_bytes(ptr @44, i64 2)
   %25 = call i1 %23(ptr %0, ptr %24)
   br i1 %25, label %common.ret, label %ifend20
 
@@ -5541,7 +5913,7 @@ ifend20:                                          ; preds = %ifend16
   %26 = load ptr, ptr %0, align 8
   %memberidx21 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %26, i32 0, i32 4
   %27 = load ptr, ptr %memberidx21, align 8
-  %28 = call ptr @string_from_bytes(ptr @46, i64 4)
+  %28 = call ptr @string_from_bytes(ptr @45, i64 4)
   %29 = call i1 %27(ptr %0, ptr %28)
   br i1 %29, label %common.ret, label %ifend24
 
@@ -5549,7 +5921,7 @@ ifend24:                                          ; preds = %ifend20
   %30 = load ptr, ptr %0, align 8
   %memberidx25 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %30, i32 0, i32 4
   %31 = load ptr, ptr %memberidx25, align 8
-  %32 = call ptr @string_from_bytes(ptr @47, i64 4)
+  %32 = call ptr @string_from_bytes(ptr @46, i64 4)
   %33 = call i1 %31(ptr %0, ptr %32)
   br i1 %33, label %common.ret, label %ifend28
 
@@ -5557,7 +5929,7 @@ ifend28:                                          ; preds = %ifend24
   %34 = load ptr, ptr %0, align 8
   %memberidx29 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %34, i32 0, i32 4
   %35 = load ptr, ptr %memberidx29, align 8
-  %36 = call ptr @string_from_bytes(ptr @48, i64 2)
+  %36 = call ptr @string_from_bytes(ptr @47, i64 2)
   %37 = call i1 %35(ptr %0, ptr %36)
   br i1 %37, label %common.ret, label %ifend32
 
@@ -5565,7 +5937,7 @@ ifend32:                                          ; preds = %ifend28
   %38 = load ptr, ptr %0, align 8
   %memberidx33 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %38, i32 0, i32 4
   %39 = load ptr, ptr %memberidx33, align 8
-  %40 = call ptr @string_from_bytes(ptr @49, i64 2)
+  %40 = call ptr @string_from_bytes(ptr @48, i64 2)
   %41 = call i1 %39(ptr %0, ptr %40)
   br i1 %41, label %common.ret, label %ifend36
 
@@ -5573,7 +5945,7 @@ ifend36:                                          ; preds = %ifend32
   %42 = load ptr, ptr %0, align 8
   %memberidx37 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %42, i32 0, i32 4
   %43 = load ptr, ptr %memberidx37, align 8
-  %44 = call ptr @string_from_bytes(ptr @50, i64 3)
+  %44 = call ptr @string_from_bytes(ptr @49, i64 3)
   %45 = call i1 %43(ptr %0, ptr %44)
   br i1 %45, label %common.ret, label %ifend40
 
@@ -5581,7 +5953,7 @@ ifend40:                                          ; preds = %ifend36
   %46 = load ptr, ptr %0, align 8
   %memberidx41 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %46, i32 0, i32 4
   %47 = load ptr, ptr %memberidx41, align 8
-  %48 = call ptr @string_from_bytes(ptr @51, i64 3)
+  %48 = call ptr @string_from_bytes(ptr @50, i64 3)
   %49 = call i1 %47(ptr %0, ptr %48)
   br i1 %49, label %common.ret, label %ifend44
 
@@ -5589,7 +5961,7 @@ ifend44:                                          ; preds = %ifend40
   %50 = load ptr, ptr %0, align 8
   %memberidx45 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %50, i32 0, i32 4
   %51 = load ptr, ptr %memberidx45, align 8
-  %52 = call ptr @string_from_bytes(ptr @52, i64 3)
+  %52 = call ptr @string_from_bytes(ptr @51, i64 3)
   %53 = call i1 %51(ptr %0, ptr %52)
   br i1 %53, label %common.ret, label %ifend48
 
@@ -5597,7 +5969,7 @@ ifend48:                                          ; preds = %ifend44
   %54 = load ptr, ptr %0, align 8
   %memberidx49 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %54, i32 0, i32 4
   %55 = load ptr, ptr %memberidx49, align 8
-  %56 = call ptr @string_from_bytes(ptr @53, i64 4)
+  %56 = call ptr @string_from_bytes(ptr @52, i64 4)
   %57 = call i1 %55(ptr %0, ptr %56)
   br i1 %57, label %common.ret, label %ifend52
 
@@ -5605,7 +5977,7 @@ ifend52:                                          ; preds = %ifend48
   %58 = load ptr, ptr %0, align 8
   %memberidx53 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %58, i32 0, i32 4
   %59 = load ptr, ptr %memberidx53, align 8
-  %60 = call ptr @string_from_bytes(ptr @54, i64 3)
+  %60 = call ptr @string_from_bytes(ptr @53, i64 3)
   %61 = call i1 %59(ptr %0, ptr %60)
   br i1 %61, label %common.ret, label %ifend56
 
@@ -5613,7 +5985,7 @@ ifend56:                                          ; preds = %ifend52
   %62 = load ptr, ptr %0, align 8
   %memberidx57 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %62, i32 0, i32 4
   %63 = load ptr, ptr %memberidx57, align 8
-  %64 = call ptr @string_from_bytes(ptr @55, i64 3)
+  %64 = call ptr @string_from_bytes(ptr @54, i64 3)
   %65 = call i1 %63(ptr %0, ptr %64)
   br i1 %65, label %common.ret, label %ifend60
 
@@ -5621,7 +5993,7 @@ ifend60:                                          ; preds = %ifend56
   %66 = load ptr, ptr %0, align 8
   %memberidx61 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %66, i32 0, i32 4
   %67 = load ptr, ptr %memberidx61, align 8
-  %68 = call ptr @string_from_bytes(ptr @56, i64 3)
+  %68 = call ptr @string_from_bytes(ptr @55, i64 3)
   %69 = call i1 %67(ptr %0, ptr %68)
   br i1 %69, label %common.ret, label %ifend64
 
@@ -5629,7 +6001,7 @@ ifend64:                                          ; preds = %ifend60
   %70 = load ptr, ptr %0, align 8
   %memberidx65 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %70, i32 0, i32 4
   %71 = load ptr, ptr %memberidx65, align 8
-  %72 = call ptr @string_from_bytes(ptr @57, i64 3)
+  %72 = call ptr @string_from_bytes(ptr @56, i64 3)
   %73 = call i1 %71(ptr %0, ptr %72)
   br i1 %73, label %common.ret, label %ifend68
 
@@ -5637,7 +6009,7 @@ ifend68:                                          ; preds = %ifend64
   %74 = load ptr, ptr %0, align 8
   %memberidx69 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %74, i32 0, i32 4
   %75 = load ptr, ptr %memberidx69, align 8
-  %76 = call ptr @string_from_bytes(ptr @58, i64 5)
+  %76 = call ptr @string_from_bytes(ptr @57, i64 5)
   %77 = call i1 %75(ptr %0, ptr %76)
   br i1 %77, label %common.ret, label %ifend72
 
@@ -5645,7 +6017,7 @@ ifend72:                                          ; preds = %ifend68
   %78 = load ptr, ptr %0, align 8
   %memberidx73 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %78, i32 0, i32 4
   %79 = load ptr, ptr %memberidx73, align 8
-  %80 = call ptr @string_from_bytes(ptr @59, i64 4)
+  %80 = call ptr @string_from_bytes(ptr @58, i64 4)
   %81 = call i1 %79(ptr %0, ptr %80)
   br i1 %81, label %common.ret, label %ifend76
 
@@ -5653,7 +6025,7 @@ ifend76:                                          ; preds = %ifend72
   %82 = load ptr, ptr %0, align 8
   %memberidx77 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %82, i32 0, i32 4
   %83 = load ptr, ptr %memberidx77, align 8
-  %84 = call ptr @string_from_bytes(ptr @60, i64 3)
+  %84 = call ptr @string_from_bytes(ptr @59, i64 3)
   %85 = call i1 %83(ptr %0, ptr %84)
   br i1 %85, label %common.ret, label %ifend80
 
@@ -5661,7 +6033,7 @@ ifend80:                                          ; preds = %ifend76
   %86 = load ptr, ptr %0, align 8
   %memberidx81 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %86, i32 0, i32 4
   %87 = load ptr, ptr %memberidx81, align 8
-  %88 = call ptr @string_from_bytes(ptr @61, i64 5)
+  %88 = call ptr @string_from_bytes(ptr @60, i64 5)
   %89 = call i1 %87(ptr %0, ptr %88)
   br i1 %89, label %common.ret, label %ifend84
 
@@ -5669,7 +6041,7 @@ ifend84:                                          ; preds = %ifend80
   %90 = load ptr, ptr %0, align 8
   %memberidx85 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %90, i32 0, i32 4
   %91 = load ptr, ptr %memberidx85, align 8
-  %92 = call ptr @string_from_bytes(ptr @62, i64 3)
+  %92 = call ptr @string_from_bytes(ptr @61, i64 3)
   %93 = call i1 %91(ptr %0, ptr %92)
   br i1 %93, label %common.ret, label %ifend88
 
@@ -5677,7 +6049,7 @@ ifend88:                                          ; preds = %ifend84
   %94 = load ptr, ptr %0, align 8
   %memberidx89 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %94, i32 0, i32 4
   %95 = load ptr, ptr %memberidx89, align 8
-  %96 = call ptr @string_from_bytes(ptr @63, i64 5)
+  %96 = call ptr @string_from_bytes(ptr @62, i64 5)
   %97 = call i1 %95(ptr %0, ptr %96)
   br i1 %97, label %common.ret, label %ifend92
 
@@ -5685,7 +6057,7 @@ ifend92:                                          ; preds = %ifend88
   %98 = load ptr, ptr %0, align 8
   %memberidx93 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %98, i32 0, i32 4
   %99 = load ptr, ptr %memberidx93, align 8
-  %100 = call ptr @string_from_bytes(ptr @64, i64 8)
+  %100 = call ptr @string_from_bytes(ptr @63, i64 8)
   %101 = call i1 %99(ptr %0, ptr %100)
   br i1 %101, label %common.ret, label %ifend96
 
@@ -5693,7 +6065,7 @@ ifend96:                                          ; preds = %ifend92
   %102 = load ptr, ptr %0, align 8
   %memberidx97 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %102, i32 0, i32 4
   %103 = load ptr, ptr %memberidx97, align 8
-  %104 = call ptr @string_from_bytes(ptr @65, i64 6)
+  %104 = call ptr @string_from_bytes(ptr @64, i64 6)
   %105 = call i1 %103(ptr %0, ptr %104)
   br i1 %105, label %common.ret, label %ifend100
 
@@ -5701,7 +6073,7 @@ ifend100:                                         ; preds = %ifend96
   %106 = load ptr, ptr %0, align 8
   %memberidx101 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %106, i32 0, i32 4
   %107 = load ptr, ptr %memberidx101, align 8
-  %108 = call ptr @string_from_bytes(ptr @66, i64 6)
+  %108 = call ptr @string_from_bytes(ptr @65, i64 6)
   %109 = call i1 %107(ptr %0, ptr %108)
   br i1 %109, label %common.ret, label %ifend104
 
@@ -5709,7 +6081,7 @@ ifend104:                                         ; preds = %ifend100
   %110 = load ptr, ptr %0, align 8
   %memberidx105 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %110, i32 0, i32 4
   %111 = load ptr, ptr %memberidx105, align 8
-  %112 = call ptr @string_from_bytes(ptr @67, i64 7)
+  %112 = call ptr @string_from_bytes(ptr @66, i64 7)
   %113 = call i1 %111(ptr %0, ptr %112)
   br i1 %113, label %common.ret, label %ifend108
 
@@ -5717,7 +6089,7 @@ ifend108:                                         ; preds = %ifend104
   %114 = load ptr, ptr %0, align 8
   %memberidx109 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %114, i32 0, i32 4
   %115 = load ptr, ptr %memberidx109, align 8
-  %116 = call ptr @string_from_bytes(ptr @68, i64 6)
+  %116 = call ptr @string_from_bytes(ptr @67, i64 6)
   %117 = call i1 %115(ptr %0, ptr %116)
   br i1 %117, label %common.ret, label %ifend112
 
@@ -5725,7 +6097,7 @@ ifend112:                                         ; preds = %ifend108
   %118 = load ptr, ptr %0, align 8
   %memberidx113 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %118, i32 0, i32 4
   %119 = load ptr, ptr %memberidx113, align 8
-  %120 = call ptr @string_from_bytes(ptr @69, i64 9)
+  %120 = call ptr @string_from_bytes(ptr @68, i64 9)
   %121 = call i1 %119(ptr %0, ptr %120)
   br i1 %121, label %common.ret, label %ifend116
 
@@ -5733,7 +6105,7 @@ ifend116:                                         ; preds = %ifend112
   %122 = load ptr, ptr %0, align 8
   %memberidx117 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %122, i32 0, i32 4
   %123 = load ptr, ptr %memberidx117, align 8
-  %124 = call ptr @string_from_bytes(ptr @70, i64 2)
+  %124 = call ptr @string_from_bytes(ptr @69, i64 2)
   %125 = call i1 %123(ptr %0, ptr %124)
   br i1 %125, label %common.ret, label %ifend120
 
@@ -5741,7 +6113,7 @@ ifend120:                                         ; preds = %ifend116
   %126 = load ptr, ptr %0, align 8
   %memberidx121 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %126, i32 0, i32 4
   %127 = load ptr, ptr %memberidx121, align 8
-  %128 = call ptr @string_from_bytes(ptr @71, i64 5)
+  %128 = call ptr @string_from_bytes(ptr @70, i64 5)
   %129 = call i1 %127(ptr %0, ptr %128)
   br i1 %129, label %common.ret, label %ifend124
 
@@ -5749,7 +6121,7 @@ ifend124:                                         ; preds = %ifend120
   %130 = load ptr, ptr %0, align 8
   %memberidx125 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %130, i32 0, i32 4
   %131 = load ptr, ptr %memberidx125, align 8
-  %132 = call ptr @string_from_bytes(ptr @72, i64 4)
+  %132 = call ptr @string_from_bytes(ptr @71, i64 4)
   %133 = call i1 %131(ptr %0, ptr %132)
   br i1 %133, label %common.ret, label %ifend128
 
@@ -5757,7 +6129,7 @@ ifend128:                                         ; preds = %ifend124
   %134 = load ptr, ptr %0, align 8
   %memberidx129 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %134, i32 0, i32 4
   %135 = load ptr, ptr %memberidx129, align 8
-  %136 = call ptr @string_from_bytes(ptr @73, i64 3)
+  %136 = call ptr @string_from_bytes(ptr @72, i64 3)
   %137 = call i1 %135(ptr %0, ptr %136)
   br i1 %137, label %common.ret, label %ifend132
 
@@ -5765,7 +6137,7 @@ ifend132:                                         ; preds = %ifend128
   %138 = load ptr, ptr %0, align 8
   %memberidx133 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %138, i32 0, i32 4
   %139 = load ptr, ptr %memberidx133, align 8
-  %140 = call ptr @string_from_bytes(ptr @74, i64 2)
+  %140 = call ptr @string_from_bytes(ptr @73, i64 2)
   %141 = call i1 %139(ptr %0, ptr %140)
   %spec.select = select i1 %141, i64 86, i64 0
   br label %common.ret
@@ -5944,9 +6316,9 @@ if.entry4:                                        ; preds = %if.entry
   %20 = call ptr %19(ptr %0)
   %21 = getelementptr inbounds i8, ptr %20, i64 %i.0
   %22 = getelementptr inbounds i8, ptr %21, i64 1
-  %23 = call i64 @memcmp(ptr %22, ptr @75, i64 mul (i64 ptrtoint (ptr getelementptr (i8, ptr null, i32 1) to i64), i64 3))
+  %23 = call i64 @memcmp(ptr %22, ptr @74, i64 mul (i64 ptrtoint (ptr getelementptr (i8, ptr null, i32 1) to i64), i64 3))
   %24 = icmp eq i64 %23, 0
-  %25 = call i64 @memcmp(ptr %22, ptr @76, i64 mul (i64 ptrtoint (ptr getelementptr (i8, ptr null, i32 1) to i64), i64 3))
+  %25 = call i64 @memcmp(ptr %22, ptr @75, i64 mul (i64 ptrtoint (ptr getelementptr (i8, ptr null, i32 1) to i64), i64 3))
   %26 = icmp eq i64 %25, 0
   %27 = or i1 %24, %26
   br i1 %27, label %if.entry8, label %ifend10
@@ -5964,7 +6336,7 @@ if.entry8:                                        ; preds = %if.entry4
   %33 = load ptr, ptr %1, align 8
   %memberidx11 = getelementptr inbounds <{ ptr, ptr, ptr, ptr }>, ptr %33, i32 0, i32 1
   %34 = load ptr, ptr %memberidx11, align 8
-  %35 = call ptr @string_from_bytes(ptr @77, i64 1)
+  %35 = call ptr @string_from_bytes(ptr @76, i64 1)
   call void %34(ptr %1, ptr %35)
   br label %for.incr
 
@@ -5975,7 +6347,7 @@ ifend10:                                          ; preds = %if.entry4
   br i1 %38, label %if.entry13, label %ifend6
 
 if.entry13:                                       ; preds = %ifend10
-  %39 = call i64 @memcmp(ptr %22, ptr @78, i64 mul (i64 ptrtoint (ptr getelementptr (i8, ptr null, i32 1) to i64), i64 5))
+  %39 = call i64 @memcmp(ptr %22, ptr @77, i64 mul (i64 ptrtoint (ptr getelementptr (i8, ptr null, i32 1) to i64), i64 5))
   %40 = icmp eq i64 %39, 0
   br i1 %40, label %if.entry16, label %ifend6
 
@@ -5983,7 +6355,7 @@ if.entry16:                                       ; preds = %if.entry13
   %41 = load ptr, ptr %1, align 8
   %memberidx19 = getelementptr inbounds <{ ptr, ptr, ptr, ptr }>, ptr %41, i32 0, i32 1
   %42 = load ptr, ptr %memberidx19, align 8
-  %43 = call ptr @string_from_bytes(ptr @77, i64 1)
+  %43 = call ptr @string_from_bytes(ptr @76, i64 1)
   call void %42(ptr %1, ptr %43)
   %44 = add i64 %i.0, 5
   br label %for.incr
@@ -6040,7 +6412,7 @@ ifend27:                                          ; preds = %ifend24
 
 define void @print_tokens(ptr %0, ptr %1) {
 for.entry:
-  %2 = call ptr @string_from_bytes(ptr @81, i64 1)
+  %2 = call ptr @string_from_bytes(ptr @80, i64 1)
   call void @println(ptr %2)
   br label %for.cond
 
@@ -6054,11 +6426,11 @@ for.cond:                                         ; preds = %ifend, %for.entry
 for.body:                                         ; preds = %for.cond
   %token = alloca ptr, align 8
   %5 = load ptr, ptr %0, align 8
-  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %5, i32 0, i32 5
+  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %5, i32 0, i32 6
   %6 = load ptr, ptr %memberidx1, align 8
   %7 = call ptr %6(ptr %0, i64 %i.0)
   store ptr %7, ptr %token, align 8
-  %8 = call ptr @string_from_bytes(ptr @82, i64 2)
+  %8 = call ptr @string_from_bytes(ptr @81, i64 2)
   call void @println(ptr %8)
   %9 = load ptr, ptr %token, align 8
   %10 = load i64, ptr %9, align 4
@@ -6068,7 +6440,7 @@ for.body:                                         ; preds = %for.cond
   %13 = load ptr, ptr %memberidx3, align 8
   %14 = call ptr %13(ptr %11)
   %15 = alloca ptr, align 8
-  %16 = call i64 (ptr, ptr, ...) @asprintf(ptr %15, ptr @158, ptr %14)
+  %16 = call i64 (ptr, ptr, ...) @asprintf(ptr %15, ptr @157, ptr %14)
   %17 = load ptr, ptr %15, align 8
   %18 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%string, ptr null, i32 1) to i32))
   call void @string_constructor(ptr %18, ptr %17, i64 %16)
@@ -6080,7 +6452,7 @@ for.body:                                         ; preds = %for.cond
   %memberidx7 = getelementptr inbounds %FloRange, ptr %20, i32 0, i32 1
   %22 = load i64, ptr %memberidx7, align 4
   %23 = alloca ptr, align 8
-  %24 = call i64 (ptr, ptr, ...) @asprintf(ptr %23, ptr @159, i64 %21, i64 %22)
+  %24 = call i64 (ptr, ptr, ...) @asprintf(ptr %23, ptr @158, i64 %21, i64 %22)
   %25 = load ptr, ptr %23, align 8
   %26 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%string, ptr null, i32 1) to i32))
   call void @string_constructor(ptr %26, ptr %25, i64 %24)
@@ -6091,7 +6463,7 @@ for.body:                                         ; preds = %for.cond
   br i1 %29, label %if.entry, label %else
 
 for.end:                                          ; preds = %for.cond
-  %30 = call ptr @string_from_bytes(ptr @163, i64 1)
+  %30 = call ptr @string_from_bytes(ptr @162, i64 1)
   call void @println(ptr %30)
   ret void
 
@@ -6102,7 +6474,7 @@ if.entry:                                         ; preds = %for.body
   %33 = load ptr, ptr %memberidx9, align 8
   %34 = call ptr %33(ptr %31)
   %35 = alloca ptr, align 8
-  %36 = call i64 (ptr, ptr, ...) @asprintf(ptr %35, ptr @160, ptr %34)
+  %36 = call i64 (ptr, ptr, ...) @asprintf(ptr %35, ptr @159, ptr %34)
   %37 = load ptr, ptr %35, align 8
   %38 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%string, ptr null, i32 1) to i32))
   call void @string_constructor(ptr %38, ptr %37, i64 %36)
@@ -6110,12 +6482,12 @@ if.entry:                                         ; preds = %for.body
   br label %ifend
 
 else:                                             ; preds = %for.body
-  %39 = call ptr @string_from_bytes(ptr @161, i64 11)
+  %39 = call ptr @string_from_bytes(ptr @160, i64 11)
   call void @println(ptr %39)
   br label %ifend
 
 ifend:                                            ; preds = %else, %if.entry
-  %40 = call ptr @string_from_bytes(ptr @162, i64 3)
+  %40 = call ptr @string_from_bytes(ptr @161, i64 3)
   call void @println(ptr %40)
   %41 = add i64 %i.0, 1
   br label %for.cond
@@ -6130,7 +6502,7 @@ common.ret:                                       ; preds = %ifend222, %if.entry
   ret ptr %common.ret.op
 
 if.entry:                                         ; preds = %1
-  %3 = call ptr @string_from_bytes(ptr @83, i64 3)
+  %3 = call ptr @string_from_bytes(ptr @82, i64 3)
   br label %common.ret
 
 ifend:                                            ; preds = %1
@@ -6138,7 +6510,7 @@ ifend:                                            ; preds = %1
   br i1 %4, label %if.entry1, label %ifend3
 
 if.entry1:                                        ; preds = %ifend
-  %5 = call ptr @string_from_bytes(ptr @84, i64 7)
+  %5 = call ptr @string_from_bytes(ptr @83, i64 7)
   br label %common.ret
 
 ifend3:                                           ; preds = %ifend
@@ -6146,7 +6518,7 @@ ifend3:                                           ; preds = %ifend
   br i1 %6, label %if.entry4, label %ifend6
 
 if.entry4:                                        ; preds = %ifend3
-  %7 = call ptr @string_from_bytes(ptr @85, i64 5)
+  %7 = call ptr @string_from_bytes(ptr @84, i64 5)
   br label %common.ret
 
 ifend6:                                           ; preds = %ifend3
@@ -6154,7 +6526,7 @@ ifend6:                                           ; preds = %ifend3
   br i1 %8, label %if.entry7, label %ifend9
 
 if.entry7:                                        ; preds = %ifend6
-  %9 = call ptr @string_from_bytes(ptr @86, i64 4)
+  %9 = call ptr @string_from_bytes(ptr @85, i64 4)
   br label %common.ret
 
 ifend9:                                           ; preds = %ifend6
@@ -6162,7 +6534,7 @@ ifend9:                                           ; preds = %ifend6
   br i1 %10, label %if.entry10, label %ifend12
 
 if.entry10:                                       ; preds = %ifend9
-  %11 = call ptr @string_from_bytes(ptr @87, i64 9)
+  %11 = call ptr @string_from_bytes(ptr @86, i64 9)
   br label %common.ret
 
 ifend12:                                          ; preds = %ifend9
@@ -6170,7 +6542,7 @@ ifend12:                                          ; preds = %ifend9
   br i1 %12, label %if.entry13, label %ifend15
 
 if.entry13:                                       ; preds = %ifend12
-  %13 = call ptr @string_from_bytes(ptr @88, i64 5)
+  %13 = call ptr @string_from_bytes(ptr @87, i64 5)
   br label %common.ret
 
 ifend15:                                          ; preds = %ifend12
@@ -6178,7 +6550,7 @@ ifend15:                                          ; preds = %ifend12
   br i1 %14, label %if.entry16, label %ifend18
 
 if.entry16:                                       ; preds = %ifend15
-  %15 = call ptr @string_from_bytes(ptr @89, i64 11)
+  %15 = call ptr @string_from_bytes(ptr @88, i64 11)
   br label %common.ret
 
 ifend18:                                          ; preds = %ifend15
@@ -6186,7 +6558,7 @@ ifend18:                                          ; preds = %ifend15
   br i1 %16, label %if.entry19, label %ifend21
 
 if.entry19:                                       ; preds = %ifend18
-  %17 = call ptr @string_from_bytes(ptr @90, i64 4)
+  %17 = call ptr @string_from_bytes(ptr @89, i64 4)
   br label %common.ret
 
 ifend21:                                          ; preds = %ifend18
@@ -6194,7 +6566,7 @@ ifend21:                                          ; preds = %ifend18
   br i1 %18, label %if.entry22, label %ifend24
 
 if.entry22:                                       ; preds = %ifend21
-  %19 = call ptr @string_from_bytes(ptr @91, i64 3)
+  %19 = call ptr @string_from_bytes(ptr @90, i64 3)
   br label %common.ret
 
 ifend24:                                          ; preds = %ifend21
@@ -6202,7 +6574,7 @@ ifend24:                                          ; preds = %ifend21
   br i1 %20, label %if.entry25, label %ifend27
 
 if.entry25:                                       ; preds = %ifend24
-  %21 = call ptr @string_from_bytes(ptr @92, i64 4)
+  %21 = call ptr @string_from_bytes(ptr @91, i64 4)
   br label %common.ret
 
 ifend27:                                          ; preds = %ifend24
@@ -6210,7 +6582,7 @@ ifend27:                                          ; preds = %ifend24
   br i1 %22, label %if.entry28, label %ifend30
 
 if.entry28:                                       ; preds = %ifend27
-  %23 = call ptr @string_from_bytes(ptr @93, i64 4)
+  %23 = call ptr @string_from_bytes(ptr @92, i64 4)
   br label %common.ret
 
 ifend30:                                          ; preds = %ifend27
@@ -6218,7 +6590,7 @@ ifend30:                                          ; preds = %ifend27
   br i1 %24, label %if.entry31, label %ifend33
 
 if.entry31:                                       ; preds = %ifend30
-  %25 = call ptr @string_from_bytes(ptr @94, i64 3)
+  %25 = call ptr @string_from_bytes(ptr @93, i64 3)
   br label %common.ret
 
 ifend33:                                          ; preds = %ifend30
@@ -6226,7 +6598,7 @@ ifend33:                                          ; preds = %ifend30
   br i1 %26, label %if.entry34, label %ifend36
 
 if.entry34:                                       ; preds = %ifend33
-  %27 = call ptr @string_from_bytes(ptr @95, i64 6)
+  %27 = call ptr @string_from_bytes(ptr @94, i64 6)
   br label %common.ret
 
 ifend36:                                          ; preds = %ifend33
@@ -6234,7 +6606,7 @@ ifend36:                                          ; preds = %ifend33
   br i1 %28, label %if.entry37, label %ifend39
 
 if.entry37:                                       ; preds = %ifend36
-  %29 = call ptr @string_from_bytes(ptr @96, i64 6)
+  %29 = call ptr @string_from_bytes(ptr @95, i64 6)
   br label %common.ret
 
 ifend39:                                          ; preds = %ifend36
@@ -6242,7 +6614,7 @@ ifend39:                                          ; preds = %ifend36
   br i1 %30, label %if.entry40, label %ifend42
 
 if.entry40:                                       ; preds = %ifend39
-  %31 = call ptr @string_from_bytes(ptr @97, i64 8)
+  %31 = call ptr @string_from_bytes(ptr @96, i64 8)
   br label %common.ret
 
 ifend42:                                          ; preds = %ifend39
@@ -6250,7 +6622,7 @@ ifend42:                                          ; preds = %ifend39
   br i1 %32, label %if.entry43, label %ifend45
 
 if.entry43:                                       ; preds = %ifend42
-  %33 = call ptr @string_from_bytes(ptr @98, i64 8)
+  %33 = call ptr @string_from_bytes(ptr @97, i64 8)
   br label %common.ret
 
 ifend45:                                          ; preds = %ifend42
@@ -6258,7 +6630,7 @@ ifend45:                                          ; preds = %ifend42
   br i1 %34, label %if.entry46, label %ifend48
 
 if.entry46:                                       ; preds = %ifend45
-  %35 = call ptr @string_from_bytes(ptr @99, i64 3)
+  %35 = call ptr @string_from_bytes(ptr @98, i64 3)
   br label %common.ret
 
 ifend48:                                          ; preds = %ifend45
@@ -6266,7 +6638,7 @@ ifend48:                                          ; preds = %ifend45
   br i1 %36, label %if.entry49, label %ifend51
 
 if.entry49:                                       ; preds = %ifend48
-  %37 = call ptr @string_from_bytes(ptr @100, i64 5)
+  %37 = call ptr @string_from_bytes(ptr @99, i64 5)
   br label %common.ret
 
 ifend51:                                          ; preds = %ifend48
@@ -6274,7 +6646,7 @@ ifend51:                                          ; preds = %ifend48
   br i1 %38, label %if.entry52, label %ifend54
 
 if.entry52:                                       ; preds = %ifend51
-  %39 = call ptr @string_from_bytes(ptr @101, i64 2)
+  %39 = call ptr @string_from_bytes(ptr @100, i64 2)
   br label %common.ret
 
 ifend54:                                          ; preds = %ifend51
@@ -6282,7 +6654,7 @@ ifend54:                                          ; preds = %ifend51
   br i1 %40, label %if.entry55, label %ifend57
 
 if.entry55:                                       ; preds = %ifend54
-  %41 = call ptr @string_from_bytes(ptr @102, i64 3)
+  %41 = call ptr @string_from_bytes(ptr @101, i64 3)
   br label %common.ret
 
 ifend57:                                          ; preds = %ifend54
@@ -6290,7 +6662,7 @@ ifend57:                                          ; preds = %ifend54
   br i1 %42, label %if.entry58, label %ifend60
 
 if.entry58:                                       ; preds = %ifend57
-  %43 = call ptr @string_from_bytes(ptr @103, i64 4)
+  %43 = call ptr @string_from_bytes(ptr @102, i64 4)
   br label %common.ret
 
 ifend60:                                          ; preds = %ifend57
@@ -6298,7 +6670,7 @@ ifend60:                                          ; preds = %ifend57
   br i1 %44, label %if.entry61, label %ifend63
 
 if.entry61:                                       ; preds = %ifend60
-  %45 = call ptr @string_from_bytes(ptr @104, i64 3)
+  %45 = call ptr @string_from_bytes(ptr @103, i64 3)
   br label %common.ret
 
 ifend63:                                          ; preds = %ifend60
@@ -6306,7 +6678,7 @@ ifend63:                                          ; preds = %ifend60
   br i1 %46, label %if.entry64, label %ifend66
 
 if.entry64:                                       ; preds = %ifend63
-  %47 = call ptr @string_from_bytes(ptr @105, i64 4)
+  %47 = call ptr @string_from_bytes(ptr @104, i64 4)
   br label %common.ret
 
 ifend66:                                          ; preds = %ifend63
@@ -6314,7 +6686,7 @@ ifend66:                                          ; preds = %ifend63
   br i1 %48, label %if.entry67, label %ifend69
 
 if.entry67:                                       ; preds = %ifend66
-  %49 = call ptr @string_from_bytes(ptr @106, i64 3)
+  %49 = call ptr @string_from_bytes(ptr @105, i64 3)
   br label %common.ret
 
 ifend69:                                          ; preds = %ifend66
@@ -6322,7 +6694,7 @@ ifend69:                                          ; preds = %ifend66
   br i1 %50, label %if.entry70, label %ifend72
 
 if.entry70:                                       ; preds = %ifend69
-  %51 = call ptr @string_from_bytes(ptr @107, i64 2)
+  %51 = call ptr @string_from_bytes(ptr @106, i64 2)
   br label %common.ret
 
 ifend72:                                          ; preds = %ifend69
@@ -6330,7 +6702,7 @@ ifend72:                                          ; preds = %ifend69
   br i1 %52, label %if.entry73, label %ifend75
 
 if.entry73:                                       ; preds = %ifend72
-  %53 = call ptr @string_from_bytes(ptr @108, i64 3)
+  %53 = call ptr @string_from_bytes(ptr @107, i64 3)
   br label %common.ret
 
 ifend75:                                          ; preds = %ifend72
@@ -6338,7 +6710,7 @@ ifend75:                                          ; preds = %ifend72
   br i1 %54, label %if.entry76, label %ifend78
 
 if.entry76:                                       ; preds = %ifend75
-  %55 = call ptr @string_from_bytes(ptr @109, i64 3)
+  %55 = call ptr @string_from_bytes(ptr @108, i64 3)
   br label %common.ret
 
 ifend78:                                          ; preds = %ifend75
@@ -6346,7 +6718,7 @@ ifend78:                                          ; preds = %ifend75
   br i1 %56, label %if.entry79, label %ifend81
 
 if.entry79:                                       ; preds = %ifend78
-  %57 = call ptr @string_from_bytes(ptr @110, i64 2)
+  %57 = call ptr @string_from_bytes(ptr @109, i64 2)
   br label %common.ret
 
 ifend81:                                          ; preds = %ifend78
@@ -6354,7 +6726,7 @@ ifend81:                                          ; preds = %ifend78
   br i1 %58, label %if.entry82, label %ifend84
 
 if.entry82:                                       ; preds = %ifend81
-  %59 = call ptr @string_from_bytes(ptr @111, i64 2)
+  %59 = call ptr @string_from_bytes(ptr @110, i64 2)
   br label %common.ret
 
 ifend84:                                          ; preds = %ifend81
@@ -6362,7 +6734,7 @@ ifend84:                                          ; preds = %ifend81
   br i1 %60, label %if.entry85, label %ifend87
 
 if.entry85:                                       ; preds = %ifend84
-  %61 = call ptr @string_from_bytes(ptr @112, i64 3)
+  %61 = call ptr @string_from_bytes(ptr @111, i64 3)
   br label %common.ret
 
 ifend87:                                          ; preds = %ifend84
@@ -6370,7 +6742,7 @@ ifend87:                                          ; preds = %ifend84
   br i1 %62, label %if.entry88, label %ifend90
 
 if.entry88:                                       ; preds = %ifend87
-  %63 = call ptr @string_from_bytes(ptr @113, i64 3)
+  %63 = call ptr @string_from_bytes(ptr @112, i64 3)
   br label %common.ret
 
 ifend90:                                          ; preds = %ifend87
@@ -6378,7 +6750,7 @@ ifend90:                                          ; preds = %ifend87
   br i1 %64, label %if.entry91, label %ifend93
 
 if.entry91:                                       ; preds = %ifend90
-  %65 = call ptr @string_from_bytes(ptr @114, i64 5)
+  %65 = call ptr @string_from_bytes(ptr @113, i64 5)
   br label %common.ret
 
 ifend93:                                          ; preds = %ifend90
@@ -6386,7 +6758,7 @@ ifend93:                                          ; preds = %ifend90
   br i1 %66, label %if.entry94, label %ifend96
 
 if.entry94:                                       ; preds = %ifend93
-  %67 = call ptr @string_from_bytes(ptr @115, i64 3)
+  %67 = call ptr @string_from_bytes(ptr @114, i64 3)
   br label %common.ret
 
 ifend96:                                          ; preds = %ifend93
@@ -6394,7 +6766,7 @@ ifend96:                                          ; preds = %ifend93
   br i1 %68, label %if.entry97, label %ifend99
 
 if.entry97:                                       ; preds = %ifend96
-  %69 = call ptr @string_from_bytes(ptr @116, i64 3)
+  %69 = call ptr @string_from_bytes(ptr @115, i64 3)
   br label %common.ret
 
 ifend99:                                          ; preds = %ifend96
@@ -6402,7 +6774,7 @@ ifend99:                                          ; preds = %ifend96
   br i1 %70, label %if.entry100, label %ifend102
 
 if.entry100:                                      ; preds = %ifend99
-  %71 = call ptr @string_from_bytes(ptr @117, i64 2)
+  %71 = call ptr @string_from_bytes(ptr @116, i64 2)
   br label %common.ret
 
 ifend102:                                         ; preds = %ifend99
@@ -6410,7 +6782,7 @@ ifend102:                                         ; preds = %ifend99
   br i1 %72, label %if.entry103, label %ifend105
 
 if.entry103:                                      ; preds = %ifend102
-  %73 = call ptr @string_from_bytes(ptr @118, i64 2)
+  %73 = call ptr @string_from_bytes(ptr @117, i64 2)
   br label %common.ret
 
 ifend105:                                         ; preds = %ifend102
@@ -6418,7 +6790,7 @@ ifend105:                                         ; preds = %ifend102
   br i1 %74, label %if.entry106, label %ifend108
 
 if.entry106:                                      ; preds = %ifend105
-  %75 = call ptr @string_from_bytes(ptr @119, i64 3)
+  %75 = call ptr @string_from_bytes(ptr @118, i64 3)
   br label %common.ret
 
 ifend108:                                         ; preds = %ifend105
@@ -6426,7 +6798,7 @@ ifend108:                                         ; preds = %ifend105
   br i1 %76, label %if.entry109, label %ifend111
 
 if.entry109:                                      ; preds = %ifend108
-  %77 = call ptr @string_from_bytes(ptr @120, i64 7)
+  %77 = call ptr @string_from_bytes(ptr @119, i64 7)
   br label %common.ret
 
 ifend111:                                         ; preds = %ifend108
@@ -6434,7 +6806,7 @@ ifend111:                                         ; preds = %ifend108
   br i1 %78, label %if.entry112, label %ifend114
 
 if.entry112:                                      ; preds = %ifend111
-  %79 = call ptr @string_from_bytes(ptr @121, i64 11)
+  %79 = call ptr @string_from_bytes(ptr @120, i64 11)
   br label %common.ret
 
 ifend114:                                         ; preds = %ifend111
@@ -6442,7 +6814,7 @@ ifend114:                                         ; preds = %ifend111
   br i1 %80, label %if.entry115, label %ifend117
 
 if.entry115:                                      ; preds = %ifend114
-  %81 = call ptr @string_from_bytes(ptr @122, i64 9)
+  %81 = call ptr @string_from_bytes(ptr @121, i64 9)
   br label %common.ret
 
 ifend117:                                         ; preds = %ifend114
@@ -6450,7 +6822,7 @@ ifend117:                                         ; preds = %ifend114
   br i1 %82, label %if.entry118, label %ifend120
 
 if.entry118:                                      ; preds = %ifend117
-  %83 = call ptr @string_from_bytes(ptr @123, i64 6)
+  %83 = call ptr @string_from_bytes(ptr @122, i64 6)
   br label %common.ret
 
 ifend120:                                         ; preds = %ifend117
@@ -6458,7 +6830,7 @@ ifend120:                                         ; preds = %ifend117
   br i1 %84, label %if.entry121, label %ifend123
 
 if.entry121:                                      ; preds = %ifend120
-  %85 = call ptr @string_from_bytes(ptr @124, i64 5)
+  %85 = call ptr @string_from_bytes(ptr @123, i64 5)
   br label %common.ret
 
 ifend123:                                         ; preds = %ifend120
@@ -6466,7 +6838,7 @@ ifend123:                                         ; preds = %ifend120
   br i1 %86, label %if.entry124, label %ifend126
 
 if.entry124:                                      ; preds = %ifend123
-  %87 = call ptr @string_from_bytes(ptr @125, i64 6)
+  %87 = call ptr @string_from_bytes(ptr @124, i64 6)
   br label %common.ret
 
 ifend126:                                         ; preds = %ifend123
@@ -6474,7 +6846,7 @@ ifend126:                                         ; preds = %ifend123
   br i1 %88, label %if.entry127, label %ifend129
 
 if.entry127:                                      ; preds = %ifend126
-  %89 = call ptr @string_from_bytes(ptr @126, i64 8)
+  %89 = call ptr @string_from_bytes(ptr @125, i64 8)
   br label %common.ret
 
 ifend129:                                         ; preds = %ifend126
@@ -6482,7 +6854,7 @@ ifend129:                                         ; preds = %ifend126
   br i1 %90, label %if.entry130, label %ifend132
 
 if.entry130:                                      ; preds = %ifend129
-  %91 = call ptr @string_from_bytes(ptr @127, i64 5)
+  %91 = call ptr @string_from_bytes(ptr @126, i64 5)
   br label %common.ret
 
 ifend132:                                         ; preds = %ifend129
@@ -6490,7 +6862,7 @@ ifend132:                                         ; preds = %ifend129
   br i1 %92, label %if.entry133, label %ifend135
 
 if.entry133:                                      ; preds = %ifend132
-  %93 = call ptr @string_from_bytes(ptr @128, i64 7)
+  %93 = call ptr @string_from_bytes(ptr @127, i64 7)
   br label %common.ret
 
 ifend135:                                         ; preds = %ifend132
@@ -6498,7 +6870,7 @@ ifend135:                                         ; preds = %ifend132
   br i1 %94, label %if.entry136, label %ifend138
 
 if.entry136:                                      ; preds = %ifend135
-  %95 = call ptr @string_from_bytes(ptr @129, i64 7)
+  %95 = call ptr @string_from_bytes(ptr @128, i64 7)
   br label %common.ret
 
 ifend138:                                         ; preds = %ifend135
@@ -6506,7 +6878,7 @@ ifend138:                                         ; preds = %ifend135
   br i1 %96, label %if.entry139, label %ifend141
 
 if.entry139:                                      ; preds = %ifend138
-  %97 = call ptr @string_from_bytes(ptr @130, i64 5)
+  %97 = call ptr @string_from_bytes(ptr @129, i64 5)
   br label %common.ret
 
 ifend141:                                         ; preds = %ifend138
@@ -6514,7 +6886,7 @@ ifend141:                                         ; preds = %ifend138
   br i1 %98, label %if.entry142, label %ifend144
 
 if.entry142:                                      ; preds = %ifend141
-  %99 = call ptr @string_from_bytes(ptr @131, i64 5)
+  %99 = call ptr @string_from_bytes(ptr @130, i64 5)
   br label %common.ret
 
 ifend144:                                         ; preds = %ifend141
@@ -6522,7 +6894,7 @@ ifend144:                                         ; preds = %ifend141
   br i1 %100, label %if.entry145, label %ifend147
 
 if.entry145:                                      ; preds = %ifend144
-  %101 = call ptr @string_from_bytes(ptr @132, i64 6)
+  %101 = call ptr @string_from_bytes(ptr @131, i64 6)
   br label %common.ret
 
 ifend147:                                         ; preds = %ifend144
@@ -6530,7 +6902,7 @@ ifend147:                                         ; preds = %ifend144
   br i1 %102, label %if.entry148, label %ifend150
 
 if.entry148:                                      ; preds = %ifend147
-  %103 = call ptr @string_from_bytes(ptr @133, i64 6)
+  %103 = call ptr @string_from_bytes(ptr @132, i64 6)
   br label %common.ret
 
 ifend150:                                         ; preds = %ifend147
@@ -6538,7 +6910,7 @@ ifend150:                                         ; preds = %ifend147
   br i1 %104, label %if.entry151, label %ifend153
 
 if.entry151:                                      ; preds = %ifend150
-  %105 = call ptr @string_from_bytes(ptr @134, i64 6)
+  %105 = call ptr @string_from_bytes(ptr @133, i64 6)
   br label %common.ret
 
 ifend153:                                         ; preds = %ifend150
@@ -6546,7 +6918,7 @@ ifend153:                                         ; preds = %ifend150
   br i1 %106, label %if.entry154, label %ifend156
 
 if.entry154:                                      ; preds = %ifend153
-  %107 = call ptr @string_from_bytes(ptr @135, i64 7)
+  %107 = call ptr @string_from_bytes(ptr @134, i64 7)
   br label %common.ret
 
 ifend156:                                         ; preds = %ifend153
@@ -6554,7 +6926,7 @@ ifend156:                                         ; preds = %ifend153
   br i1 %108, label %if.entry157, label %ifend159
 
 if.entry157:                                      ; preds = %ifend156
-  %109 = call ptr @string_from_bytes(ptr @136, i64 6)
+  %109 = call ptr @string_from_bytes(ptr @135, i64 6)
   br label %common.ret
 
 ifend159:                                         ; preds = %ifend156
@@ -6562,7 +6934,7 @@ ifend159:                                         ; preds = %ifend156
   br i1 %110, label %if.entry160, label %ifend162
 
 if.entry160:                                      ; preds = %ifend159
-  %111 = call ptr @string_from_bytes(ptr @137, i64 6)
+  %111 = call ptr @string_from_bytes(ptr @136, i64 6)
   br label %common.ret
 
 ifend162:                                         ; preds = %ifend159
@@ -6570,7 +6942,7 @@ ifend162:                                         ; preds = %ifend159
   br i1 %112, label %if.entry163, label %ifend165
 
 if.entry163:                                      ; preds = %ifend162
-  %113 = call ptr @string_from_bytes(ptr @138, i64 6)
+  %113 = call ptr @string_from_bytes(ptr @137, i64 6)
   br label %common.ret
 
 ifend165:                                         ; preds = %ifend162
@@ -6578,7 +6950,7 @@ ifend165:                                         ; preds = %ifend162
   br i1 %114, label %if.entry166, label %ifend168
 
 if.entry166:                                      ; preds = %ifend165
-  %115 = call ptr @string_from_bytes(ptr @139, i64 6)
+  %115 = call ptr @string_from_bytes(ptr @138, i64 6)
   br label %common.ret
 
 ifend168:                                         ; preds = %ifend165
@@ -6586,7 +6958,7 @@ ifend168:                                         ; preds = %ifend165
   br i1 %116, label %if.entry169, label %ifend171
 
 if.entry169:                                      ; preds = %ifend168
-  %117 = call ptr @string_from_bytes(ptr @140, i64 8)
+  %117 = call ptr @string_from_bytes(ptr @139, i64 8)
   br label %common.ret
 
 ifend171:                                         ; preds = %ifend168
@@ -6594,7 +6966,7 @@ ifend171:                                         ; preds = %ifend168
   br i1 %118, label %if.entry172, label %ifend174
 
 if.entry172:                                      ; preds = %ifend171
-  %119 = call ptr @string_from_bytes(ptr @141, i64 7)
+  %119 = call ptr @string_from_bytes(ptr @140, i64 7)
   br label %common.ret
 
 ifend174:                                         ; preds = %ifend171
@@ -6602,7 +6974,7 @@ ifend174:                                         ; preds = %ifend171
   br i1 %120, label %if.entry175, label %ifend177
 
 if.entry175:                                      ; preds = %ifend174
-  %121 = call ptr @string_from_bytes(ptr @142, i64 6)
+  %121 = call ptr @string_from_bytes(ptr @141, i64 6)
   br label %common.ret
 
 ifend177:                                         ; preds = %ifend174
@@ -6610,7 +6982,7 @@ ifend177:                                         ; preds = %ifend174
   br i1 %122, label %if.entry178, label %ifend180
 
 if.entry178:                                      ; preds = %ifend177
-  %123 = call ptr @string_from_bytes(ptr @143, i64 8)
+  %123 = call ptr @string_from_bytes(ptr @142, i64 8)
   br label %common.ret
 
 ifend180:                                         ; preds = %ifend177
@@ -6618,7 +6990,7 @@ ifend180:                                         ; preds = %ifend177
   br i1 %124, label %if.entry181, label %ifend183
 
 if.entry181:                                      ; preds = %ifend180
-  %125 = call ptr @string_from_bytes(ptr @144, i64 6)
+  %125 = call ptr @string_from_bytes(ptr @143, i64 6)
   br label %common.ret
 
 ifend183:                                         ; preds = %ifend180
@@ -6626,7 +6998,7 @@ ifend183:                                         ; preds = %ifend180
   br i1 %126, label %if.entry184, label %ifend186
 
 if.entry184:                                      ; preds = %ifend183
-  %127 = call ptr @string_from_bytes(ptr @145, i64 8)
+  %127 = call ptr @string_from_bytes(ptr @144, i64 8)
   br label %common.ret
 
 ifend186:                                         ; preds = %ifend183
@@ -6634,7 +7006,7 @@ ifend186:                                         ; preds = %ifend183
   br i1 %128, label %if.entry187, label %ifend189
 
 if.entry187:                                      ; preds = %ifend186
-  %129 = call ptr @string_from_bytes(ptr @146, i64 11)
+  %129 = call ptr @string_from_bytes(ptr @145, i64 11)
   br label %common.ret
 
 ifend189:                                         ; preds = %ifend186
@@ -6642,7 +7014,7 @@ ifend189:                                         ; preds = %ifend186
   br i1 %130, label %if.entry190, label %ifend192
 
 if.entry190:                                      ; preds = %ifend189
-  %131 = call ptr @string_from_bytes(ptr @147, i64 9)
+  %131 = call ptr @string_from_bytes(ptr @146, i64 9)
   br label %common.ret
 
 ifend192:                                         ; preds = %ifend189
@@ -6650,7 +7022,7 @@ ifend192:                                         ; preds = %ifend189
   br i1 %132, label %if.entry193, label %ifend195
 
 if.entry193:                                      ; preds = %ifend192
-  %133 = call ptr @string_from_bytes(ptr @148, i64 9)
+  %133 = call ptr @string_from_bytes(ptr @147, i64 9)
   br label %common.ret
 
 ifend195:                                         ; preds = %ifend192
@@ -6658,7 +7030,7 @@ ifend195:                                         ; preds = %ifend192
   br i1 %134, label %if.entry196, label %ifend198
 
 if.entry196:                                      ; preds = %ifend195
-  %135 = call ptr @string_from_bytes(ptr @149, i64 10)
+  %135 = call ptr @string_from_bytes(ptr @148, i64 10)
   br label %common.ret
 
 ifend198:                                         ; preds = %ifend195
@@ -6666,7 +7038,7 @@ ifend198:                                         ; preds = %ifend195
   br i1 %136, label %if.entry199, label %ifend201
 
 if.entry199:                                      ; preds = %ifend198
-  %137 = call ptr @string_from_bytes(ptr @150, i64 9)
+  %137 = call ptr @string_from_bytes(ptr @149, i64 9)
   br label %common.ret
 
 ifend201:                                         ; preds = %ifend198
@@ -6674,7 +7046,7 @@ ifend201:                                         ; preds = %ifend198
   br i1 %138, label %if.entry202, label %ifend204
 
 if.entry202:                                      ; preds = %ifend201
-  %139 = call ptr @string_from_bytes(ptr @151, i64 12)
+  %139 = call ptr @string_from_bytes(ptr @150, i64 12)
   br label %common.ret
 
 ifend204:                                         ; preds = %ifend201
@@ -6682,7 +7054,7 @@ ifend204:                                         ; preds = %ifend201
   br i1 %140, label %if.entry205, label %ifend207
 
 if.entry205:                                      ; preds = %ifend204
-  %141 = call ptr @string_from_bytes(ptr @152, i64 5)
+  %141 = call ptr @string_from_bytes(ptr @151, i64 5)
   br label %common.ret
 
 ifend207:                                         ; preds = %ifend204
@@ -6690,7 +7062,7 @@ ifend207:                                         ; preds = %ifend204
   br i1 %142, label %if.entry208, label %ifend210
 
 if.entry208:                                      ; preds = %ifend207
-  %143 = call ptr @string_from_bytes(ptr @153, i64 8)
+  %143 = call ptr @string_from_bytes(ptr @152, i64 8)
   br label %common.ret
 
 ifend210:                                         ; preds = %ifend207
@@ -6698,7 +7070,7 @@ ifend210:                                         ; preds = %ifend207
   br i1 %144, label %if.entry211, label %ifend213
 
 if.entry211:                                      ; preds = %ifend210
-  %145 = call ptr @string_from_bytes(ptr @154, i64 7)
+  %145 = call ptr @string_from_bytes(ptr @153, i64 7)
   br label %common.ret
 
 ifend213:                                         ; preds = %ifend210
@@ -6706,7 +7078,7 @@ ifend213:                                         ; preds = %ifend210
   br i1 %146, label %if.entry214, label %ifend216
 
 if.entry214:                                      ; preds = %ifend213
-  %147 = call ptr @string_from_bytes(ptr @155, i64 6)
+  %147 = call ptr @string_from_bytes(ptr @154, i64 6)
   br label %common.ret
 
 ifend216:                                         ; preds = %ifend213
@@ -6714,7 +7086,7 @@ ifend216:                                         ; preds = %ifend213
   br i1 %148, label %if.entry217, label %ifend219
 
 if.entry217:                                      ; preds = %ifend216
-  %149 = call ptr @string_from_bytes(ptr @156, i64 5)
+  %149 = call ptr @string_from_bytes(ptr @155, i64 5)
   br label %common.ret
 
 ifend219:                                         ; preds = %ifend216
@@ -6722,11 +7094,11 @@ ifend219:                                         ; preds = %ifend216
   br i1 %150, label %if.entry220, label %ifend222
 
 if.entry220:                                      ; preds = %ifend219
-  %151 = call ptr @string_from_bytes(ptr @157, i64 6)
+  %151 = call ptr @string_from_bytes(ptr @156, i64 6)
   br label %common.ret
 
 ifend222:                                         ; preds = %ifend219
-  %152 = call ptr @string_from_bytes(ptr @38, i64 0)
+  %152 = call ptr @string_from_bytes(ptr @37, i64 0)
   br label %common.ret
 }
 
@@ -6815,7 +7187,7 @@ ifend:                                            ; preds = %2, %if.entry
 
 define void @Array_IdentifierToken__append(ptr %0, ptr %1) {
   %3 = load ptr, ptr %0, align 8
-  %memberidx = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %3, i32 0, i32 2
+  %memberidx = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %3, i32 0, i32 3
   %4 = load ptr, ptr %memberidx, align 8
   call void %4(ptr %0, ptr %1)
   ret void
@@ -6860,6 +7232,46 @@ ifend:                                            ; preds = %3, %if.entry
   ret void
 }
 
+define ptr @ArrayIterator_IdentifierToken____next__(ptr %0) {
+  %memberidx = getelementptr inbounds %ArrayIterator_IdentifierToken_, ptr %0, i32 0, i32 2
+  %2 = load i64, ptr %memberidx, align 4
+  %3 = add i64 %2, 1
+  store i64 %3, ptr %memberidx, align 4
+  %memberidx2 = getelementptr inbounds %ArrayIterator_IdentifierToken_, ptr %0, i32 0, i32 4
+  %4 = load ptr, ptr %memberidx2, align 8
+  %ptridx = getelementptr inbounds ptr, ptr %4, i64 %2
+  %5 = load ptr, ptr %ptridx, align 8
+  %memberidx3 = getelementptr inbounds %Iterator_IdentifierToken_, ptr %0, i32 0, i32 1
+  %memberidx5 = getelementptr inbounds %ArrayIterator_IdentifierToken_, ptr %0, i32 0, i32 3
+  %6 = load i64, ptr %memberidx5, align 4
+  %7 = icmp sgt i64 %3, %6
+  store i1 %7, ptr %memberidx3, align 1
+  ret ptr %5
+}
+
+define void @ArrayIterator_IdentifierToken__constructor(ptr %0, ptr %1, i64 %2) {
+  store ptr @VTableArrayIterator_IdentifierToken_, ptr %0, align 8
+  %memberidx = getelementptr inbounds %Iterator_IdentifierToken_, ptr %0, i32 0, i32 1
+  store i1 false, ptr %memberidx, align 1
+  %memberidx1 = getelementptr inbounds %ArrayIterator_IdentifierToken_, ptr %0, i32 0, i32 2
+  store i64 0, ptr %memberidx1, align 4
+  %memberidx2 = getelementptr inbounds %ArrayIterator_IdentifierToken_, ptr %0, i32 0, i32 4
+  store ptr %1, ptr %memberidx2, align 8
+  %memberidx3 = getelementptr inbounds %ArrayIterator_IdentifierToken_, ptr %0, i32 0, i32 3
+  store i64 %2, ptr %memberidx3, align 4
+  ret void
+}
+
+define ptr @Array_IdentifierToken____iter__(ptr %0) {
+  %2 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%ArrayIterator_IdentifierToken_, ptr null, i32 1) to i32))
+  %memberidx = getelementptr inbounds %Array_IdentifierToken_, ptr %0, i32 0, i32 1
+  %3 = load ptr, ptr %memberidx, align 8
+  %memberidx1 = getelementptr inbounds %Array_IdentifierToken_, ptr %0, i32 0, i32 2
+  %4 = load i64, ptr %memberidx1, align 4
+  call void @ArrayIterator_IdentifierToken__constructor(ptr %2, ptr %3, i64 %4)
+  ret ptr %2
+}
+
 define void @Array_IdentifierToken____setitem__(ptr %0, i64 %1, ptr %2) {
   %4 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%Range, ptr null, i32 1) to i32))
   %memberidx = getelementptr inbounds %Array_IdentifierToken_, ptr %0, i32 0, i32 2
@@ -6882,25 +7294,11 @@ ifend:                                            ; preds = %3, %if.entry
 }
 
 define ptr @Array_IdentifierToken____getitem__(ptr %0, i64 %1) {
-  %3 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%Range, ptr null, i32 1) to i32))
-  %memberidx = getelementptr inbounds %Array_IdentifierToken_, ptr %0, i32 0, i32 2
-  %4 = load i64, ptr %memberidx, align 4
-  call void @Range_constructor(ptr %3, i64 0, i64 %4)
-  %5 = load ptr, ptr %3, align 8
-  %6 = load ptr, ptr %5, align 8
-  %7 = call i1 %6(ptr %3, i64 %1)
-  br i1 %7, label %if.entry, label %common.ret
-
-common.ret:                                       ; preds = %2, %if.entry
-  %common.ret.op = phi ptr [ %9, %if.entry ], [ null, %2 ]
-  ret ptr %common.ret.op
-
-if.entry:                                         ; preds = %2
-  %memberidx2 = getelementptr inbounds %Array_IdentifierToken_, ptr %0, i32 0, i32 1
-  %8 = load ptr, ptr %memberidx2, align 8
-  %ptridx = getelementptr inbounds ptr, ptr %8, i64 %1
-  %9 = load ptr, ptr %ptridx, align 8
-  br label %common.ret
+  %memberidx = getelementptr inbounds %Array_IdentifierToken_, ptr %0, i32 0, i32 1
+  %3 = load ptr, ptr %memberidx, align 8
+  %ptridx = getelementptr inbounds ptr, ptr %3, i64 %1
+  %4 = load ptr, ptr %ptridx, align 8
+  ret ptr %4
 }
 
 define i1 @Array_IdentifierToken____eq__(ptr %0, ptr %1) {
@@ -6928,11 +7326,11 @@ for.cond:                                         ; preds = %ifend7, %for.entry
 
 for.body:                                         ; preds = %for.cond
   %9 = load ptr, ptr %0, align 8
-  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %9, i32 0, i32 5
+  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %9, i32 0, i32 6
   %10 = load ptr, ptr %memberidx3, align 8
   %11 = call ptr %10(ptr %0, i64 %6)
   %12 = load ptr, ptr %1, align 8
-  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %12, i32 0, i32 5
+  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %12, i32 0, i32 6
   %13 = load ptr, ptr %memberidx4, align 8
   %14 = load i64, ptr %i, align 4
   %15 = call ptr %13(ptr %1, i64 %14)
@@ -6959,7 +7357,7 @@ for.cond:                                         ; preds = %ifend, %for.entry
 
 for.body:                                         ; preds = %for.cond
   %4 = load ptr, ptr %0, align 8
-  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %4, i32 0, i32 5
+  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %4, i32 0, i32 6
   %5 = load ptr, ptr %memberidx1, align 8
   %6 = call ptr %5(ptr %0, i64 %i.0)
   %7 = icmp eq ptr %6, %1
@@ -7069,7 +7467,7 @@ ifend:                                            ; preds = %2, %if.entry
 
 define void @Array_ImportNode__append(ptr %0, ptr %1) {
   %3 = load ptr, ptr %0, align 8
-  %memberidx = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %3, i32 0, i32 2
+  %memberidx = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %3, i32 0, i32 3
   %4 = load ptr, ptr %memberidx, align 8
   call void %4(ptr %0, ptr %1)
   ret void
@@ -7114,6 +7512,46 @@ ifend:                                            ; preds = %3, %if.entry
   ret void
 }
 
+define ptr @ArrayIterator_ImportNode____next__(ptr %0) {
+  %memberidx = getelementptr inbounds %ArrayIterator_ImportNode_, ptr %0, i32 0, i32 2
+  %2 = load i64, ptr %memberidx, align 4
+  %3 = add i64 %2, 1
+  store i64 %3, ptr %memberidx, align 4
+  %memberidx2 = getelementptr inbounds %ArrayIterator_ImportNode_, ptr %0, i32 0, i32 4
+  %4 = load ptr, ptr %memberidx2, align 8
+  %ptridx = getelementptr inbounds ptr, ptr %4, i64 %2
+  %5 = load ptr, ptr %ptridx, align 8
+  %memberidx3 = getelementptr inbounds %Iterator_ImportNode_, ptr %0, i32 0, i32 1
+  %memberidx5 = getelementptr inbounds %ArrayIterator_ImportNode_, ptr %0, i32 0, i32 3
+  %6 = load i64, ptr %memberidx5, align 4
+  %7 = icmp sgt i64 %3, %6
+  store i1 %7, ptr %memberidx3, align 1
+  ret ptr %5
+}
+
+define void @ArrayIterator_ImportNode__constructor(ptr %0, ptr %1, i64 %2) {
+  store ptr @VTableArrayIterator_ImportNode_, ptr %0, align 8
+  %memberidx = getelementptr inbounds %Iterator_ImportNode_, ptr %0, i32 0, i32 1
+  store i1 false, ptr %memberidx, align 1
+  %memberidx1 = getelementptr inbounds %ArrayIterator_ImportNode_, ptr %0, i32 0, i32 2
+  store i64 0, ptr %memberidx1, align 4
+  %memberidx2 = getelementptr inbounds %ArrayIterator_ImportNode_, ptr %0, i32 0, i32 4
+  store ptr %1, ptr %memberidx2, align 8
+  %memberidx3 = getelementptr inbounds %ArrayIterator_ImportNode_, ptr %0, i32 0, i32 3
+  store i64 %2, ptr %memberidx3, align 4
+  ret void
+}
+
+define ptr @Array_ImportNode____iter__(ptr %0) {
+  %2 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%ArrayIterator_ImportNode_, ptr null, i32 1) to i32))
+  %memberidx = getelementptr inbounds %Array_ImportNode_, ptr %0, i32 0, i32 1
+  %3 = load ptr, ptr %memberidx, align 8
+  %memberidx1 = getelementptr inbounds %Array_ImportNode_, ptr %0, i32 0, i32 2
+  %4 = load i64, ptr %memberidx1, align 4
+  call void @ArrayIterator_ImportNode__constructor(ptr %2, ptr %3, i64 %4)
+  ret ptr %2
+}
+
 define void @Array_ImportNode____setitem__(ptr %0, i64 %1, ptr %2) {
   %4 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%Range, ptr null, i32 1) to i32))
   %memberidx = getelementptr inbounds %Array_ImportNode_, ptr %0, i32 0, i32 2
@@ -7136,25 +7574,11 @@ ifend:                                            ; preds = %3, %if.entry
 }
 
 define ptr @Array_ImportNode____getitem__(ptr %0, i64 %1) {
-  %3 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%Range, ptr null, i32 1) to i32))
-  %memberidx = getelementptr inbounds %Array_ImportNode_, ptr %0, i32 0, i32 2
-  %4 = load i64, ptr %memberidx, align 4
-  call void @Range_constructor(ptr %3, i64 0, i64 %4)
-  %5 = load ptr, ptr %3, align 8
-  %6 = load ptr, ptr %5, align 8
-  %7 = call i1 %6(ptr %3, i64 %1)
-  br i1 %7, label %if.entry, label %common.ret
-
-common.ret:                                       ; preds = %2, %if.entry
-  %common.ret.op = phi ptr [ %9, %if.entry ], [ null, %2 ]
-  ret ptr %common.ret.op
-
-if.entry:                                         ; preds = %2
-  %memberidx2 = getelementptr inbounds %Array_ImportNode_, ptr %0, i32 0, i32 1
-  %8 = load ptr, ptr %memberidx2, align 8
-  %ptridx = getelementptr inbounds ptr, ptr %8, i64 %1
-  %9 = load ptr, ptr %ptridx, align 8
-  br label %common.ret
+  %memberidx = getelementptr inbounds %Array_ImportNode_, ptr %0, i32 0, i32 1
+  %3 = load ptr, ptr %memberidx, align 8
+  %ptridx = getelementptr inbounds ptr, ptr %3, i64 %1
+  %4 = load ptr, ptr %ptridx, align 8
+  ret ptr %4
 }
 
 define i1 @Array_ImportNode____eq__(ptr %0, ptr %1) {
@@ -7182,11 +7606,11 @@ for.cond:                                         ; preds = %ifend7, %for.entry
 
 for.body:                                         ; preds = %for.cond
   %9 = load ptr, ptr %0, align 8
-  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %9, i32 0, i32 5
+  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %9, i32 0, i32 6
   %10 = load ptr, ptr %memberidx3, align 8
   %11 = call ptr %10(ptr %0, i64 %6)
   %12 = load ptr, ptr %1, align 8
-  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %12, i32 0, i32 5
+  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %12, i32 0, i32 6
   %13 = load ptr, ptr %memberidx4, align 8
   %14 = load i64, ptr %i, align 4
   %15 = call ptr %13(ptr %1, i64 %14)
@@ -7213,7 +7637,7 @@ for.cond:                                         ; preds = %ifend, %for.entry
 
 for.body:                                         ; preds = %for.cond
   %4 = load ptr, ptr %0, align 8
-  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %4, i32 0, i32 5
+  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %4, i32 0, i32 6
   %5 = load ptr, ptr %memberidx1, align 8
   %6 = call ptr %5(ptr %0, i64 %i.0)
   %7 = icmp eq ptr %6, %1
@@ -7348,7 +7772,7 @@ ifend:                                            ; preds = %2, %if.entry
 
 define void @Array_VarDeclarationStatement__append(ptr %0, ptr %1) {
   %3 = load ptr, ptr %0, align 8
-  %memberidx = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %3, i32 0, i32 2
+  %memberidx = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %3, i32 0, i32 3
   %4 = load ptr, ptr %memberidx, align 8
   call void %4(ptr %0, ptr %1)
   ret void
@@ -7393,6 +7817,46 @@ ifend:                                            ; preds = %3, %if.entry
   ret void
 }
 
+define ptr @ArrayIterator_VarDeclarationStatement____next__(ptr %0) {
+  %memberidx = getelementptr inbounds %ArrayIterator_VarDeclarationStatement_, ptr %0, i32 0, i32 2
+  %2 = load i64, ptr %memberidx, align 4
+  %3 = add i64 %2, 1
+  store i64 %3, ptr %memberidx, align 4
+  %memberidx2 = getelementptr inbounds %ArrayIterator_VarDeclarationStatement_, ptr %0, i32 0, i32 4
+  %4 = load ptr, ptr %memberidx2, align 8
+  %ptridx = getelementptr inbounds ptr, ptr %4, i64 %2
+  %5 = load ptr, ptr %ptridx, align 8
+  %memberidx3 = getelementptr inbounds %Iterator_VarDeclarationStatement_, ptr %0, i32 0, i32 1
+  %memberidx5 = getelementptr inbounds %ArrayIterator_VarDeclarationStatement_, ptr %0, i32 0, i32 3
+  %6 = load i64, ptr %memberidx5, align 4
+  %7 = icmp sgt i64 %3, %6
+  store i1 %7, ptr %memberidx3, align 1
+  ret ptr %5
+}
+
+define void @ArrayIterator_VarDeclarationStatement__constructor(ptr %0, ptr %1, i64 %2) {
+  store ptr @VTableArrayIterator_VarDeclarationStatement_, ptr %0, align 8
+  %memberidx = getelementptr inbounds %Iterator_VarDeclarationStatement_, ptr %0, i32 0, i32 1
+  store i1 false, ptr %memberidx, align 1
+  %memberidx1 = getelementptr inbounds %ArrayIterator_VarDeclarationStatement_, ptr %0, i32 0, i32 2
+  store i64 0, ptr %memberidx1, align 4
+  %memberidx2 = getelementptr inbounds %ArrayIterator_VarDeclarationStatement_, ptr %0, i32 0, i32 4
+  store ptr %1, ptr %memberidx2, align 8
+  %memberidx3 = getelementptr inbounds %ArrayIterator_VarDeclarationStatement_, ptr %0, i32 0, i32 3
+  store i64 %2, ptr %memberidx3, align 4
+  ret void
+}
+
+define ptr @Array_VarDeclarationStatement____iter__(ptr %0) {
+  %2 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%ArrayIterator_VarDeclarationStatement_, ptr null, i32 1) to i32))
+  %memberidx = getelementptr inbounds %Array_VarDeclarationStatement_, ptr %0, i32 0, i32 1
+  %3 = load ptr, ptr %memberidx, align 8
+  %memberidx1 = getelementptr inbounds %Array_VarDeclarationStatement_, ptr %0, i32 0, i32 2
+  %4 = load i64, ptr %memberidx1, align 4
+  call void @ArrayIterator_VarDeclarationStatement__constructor(ptr %2, ptr %3, i64 %4)
+  ret ptr %2
+}
+
 define void @Array_VarDeclarationStatement____setitem__(ptr %0, i64 %1, ptr %2) {
   %4 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%Range, ptr null, i32 1) to i32))
   %memberidx = getelementptr inbounds %Array_VarDeclarationStatement_, ptr %0, i32 0, i32 2
@@ -7415,25 +7879,11 @@ ifend:                                            ; preds = %3, %if.entry
 }
 
 define ptr @Array_VarDeclarationStatement____getitem__(ptr %0, i64 %1) {
-  %3 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%Range, ptr null, i32 1) to i32))
-  %memberidx = getelementptr inbounds %Array_VarDeclarationStatement_, ptr %0, i32 0, i32 2
-  %4 = load i64, ptr %memberidx, align 4
-  call void @Range_constructor(ptr %3, i64 0, i64 %4)
-  %5 = load ptr, ptr %3, align 8
-  %6 = load ptr, ptr %5, align 8
-  %7 = call i1 %6(ptr %3, i64 %1)
-  br i1 %7, label %if.entry, label %common.ret
-
-common.ret:                                       ; preds = %2, %if.entry
-  %common.ret.op = phi ptr [ %9, %if.entry ], [ null, %2 ]
-  ret ptr %common.ret.op
-
-if.entry:                                         ; preds = %2
-  %memberidx2 = getelementptr inbounds %Array_VarDeclarationStatement_, ptr %0, i32 0, i32 1
-  %8 = load ptr, ptr %memberidx2, align 8
-  %ptridx = getelementptr inbounds ptr, ptr %8, i64 %1
-  %9 = load ptr, ptr %ptridx, align 8
-  br label %common.ret
+  %memberidx = getelementptr inbounds %Array_VarDeclarationStatement_, ptr %0, i32 0, i32 1
+  %3 = load ptr, ptr %memberidx, align 8
+  %ptridx = getelementptr inbounds ptr, ptr %3, i64 %1
+  %4 = load ptr, ptr %ptridx, align 8
+  ret ptr %4
 }
 
 define i1 @Array_VarDeclarationStatement____eq__(ptr %0, ptr %1) {
@@ -7461,11 +7911,11 @@ for.cond:                                         ; preds = %ifend7, %for.entry
 
 for.body:                                         ; preds = %for.cond
   %9 = load ptr, ptr %0, align 8
-  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %9, i32 0, i32 5
+  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %9, i32 0, i32 6
   %10 = load ptr, ptr %memberidx3, align 8
   %11 = call ptr %10(ptr %0, i64 %6)
   %12 = load ptr, ptr %1, align 8
-  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %12, i32 0, i32 5
+  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %12, i32 0, i32 6
   %13 = load ptr, ptr %memberidx4, align 8
   %14 = load i64, ptr %i, align 4
   %15 = call ptr %13(ptr %1, i64 %14)
@@ -7492,7 +7942,7 @@ for.cond:                                         ; preds = %ifend, %for.entry
 
 for.body:                                         ; preds = %for.cond
   %4 = load ptr, ptr %0, align 8
-  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %4, i32 0, i32 5
+  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %4, i32 0, i32 6
   %5 = load ptr, ptr %memberidx1, align 8
   %6 = call ptr %5(ptr %0, i64 %i.0)
   %7 = icmp eq ptr %6, %1
@@ -7599,7 +8049,7 @@ ifend:                                            ; preds = %2, %if.entry
 
 define void @Array_EnumNodeField__append(ptr %0, ptr %1) {
   %3 = load ptr, ptr %0, align 8
-  %memberidx = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %3, i32 0, i32 2
+  %memberidx = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %3, i32 0, i32 3
   %4 = load ptr, ptr %memberidx, align 8
   call void %4(ptr %0, ptr %1)
   ret void
@@ -7644,6 +8094,46 @@ ifend:                                            ; preds = %3, %if.entry
   ret void
 }
 
+define ptr @ArrayIterator_EnumNodeField____next__(ptr %0) {
+  %memberidx = getelementptr inbounds %ArrayIterator_EnumNodeField_, ptr %0, i32 0, i32 2
+  %2 = load i64, ptr %memberidx, align 4
+  %3 = add i64 %2, 1
+  store i64 %3, ptr %memberidx, align 4
+  %memberidx2 = getelementptr inbounds %ArrayIterator_EnumNodeField_, ptr %0, i32 0, i32 4
+  %4 = load ptr, ptr %memberidx2, align 8
+  %ptridx = getelementptr inbounds ptr, ptr %4, i64 %2
+  %5 = load ptr, ptr %ptridx, align 8
+  %memberidx3 = getelementptr inbounds %Iterator_EnumNodeField_, ptr %0, i32 0, i32 1
+  %memberidx5 = getelementptr inbounds %ArrayIterator_EnumNodeField_, ptr %0, i32 0, i32 3
+  %6 = load i64, ptr %memberidx5, align 4
+  %7 = icmp sgt i64 %3, %6
+  store i1 %7, ptr %memberidx3, align 1
+  ret ptr %5
+}
+
+define void @ArrayIterator_EnumNodeField__constructor(ptr %0, ptr %1, i64 %2) {
+  store ptr @VTableArrayIterator_EnumNodeField_, ptr %0, align 8
+  %memberidx = getelementptr inbounds %Iterator_EnumNodeField_, ptr %0, i32 0, i32 1
+  store i1 false, ptr %memberidx, align 1
+  %memberidx1 = getelementptr inbounds %ArrayIterator_EnumNodeField_, ptr %0, i32 0, i32 2
+  store i64 0, ptr %memberidx1, align 4
+  %memberidx2 = getelementptr inbounds %ArrayIterator_EnumNodeField_, ptr %0, i32 0, i32 4
+  store ptr %1, ptr %memberidx2, align 8
+  %memberidx3 = getelementptr inbounds %ArrayIterator_EnumNodeField_, ptr %0, i32 0, i32 3
+  store i64 %2, ptr %memberidx3, align 4
+  ret void
+}
+
+define ptr @Array_EnumNodeField____iter__(ptr %0) {
+  %2 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%ArrayIterator_EnumNodeField_, ptr null, i32 1) to i32))
+  %memberidx = getelementptr inbounds %Array_EnumNodeField_, ptr %0, i32 0, i32 1
+  %3 = load ptr, ptr %memberidx, align 8
+  %memberidx1 = getelementptr inbounds %Array_EnumNodeField_, ptr %0, i32 0, i32 2
+  %4 = load i64, ptr %memberidx1, align 4
+  call void @ArrayIterator_EnumNodeField__constructor(ptr %2, ptr %3, i64 %4)
+  ret ptr %2
+}
+
 define void @Array_EnumNodeField____setitem__(ptr %0, i64 %1, ptr %2) {
   %4 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%Range, ptr null, i32 1) to i32))
   %memberidx = getelementptr inbounds %Array_EnumNodeField_, ptr %0, i32 0, i32 2
@@ -7666,25 +8156,11 @@ ifend:                                            ; preds = %3, %if.entry
 }
 
 define ptr @Array_EnumNodeField____getitem__(ptr %0, i64 %1) {
-  %3 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%Range, ptr null, i32 1) to i32))
-  %memberidx = getelementptr inbounds %Array_EnumNodeField_, ptr %0, i32 0, i32 2
-  %4 = load i64, ptr %memberidx, align 4
-  call void @Range_constructor(ptr %3, i64 0, i64 %4)
-  %5 = load ptr, ptr %3, align 8
-  %6 = load ptr, ptr %5, align 8
-  %7 = call i1 %6(ptr %3, i64 %1)
-  br i1 %7, label %if.entry, label %common.ret
-
-common.ret:                                       ; preds = %2, %if.entry
-  %common.ret.op = phi ptr [ %9, %if.entry ], [ null, %2 ]
-  ret ptr %common.ret.op
-
-if.entry:                                         ; preds = %2
-  %memberidx2 = getelementptr inbounds %Array_EnumNodeField_, ptr %0, i32 0, i32 1
-  %8 = load ptr, ptr %memberidx2, align 8
-  %ptridx = getelementptr inbounds ptr, ptr %8, i64 %1
-  %9 = load ptr, ptr %ptridx, align 8
-  br label %common.ret
+  %memberidx = getelementptr inbounds %Array_EnumNodeField_, ptr %0, i32 0, i32 1
+  %3 = load ptr, ptr %memberidx, align 8
+  %ptridx = getelementptr inbounds ptr, ptr %3, i64 %1
+  %4 = load ptr, ptr %ptridx, align 8
+  ret ptr %4
 }
 
 define i1 @Array_EnumNodeField____eq__(ptr %0, ptr %1) {
@@ -7712,11 +8188,11 @@ for.cond:                                         ; preds = %ifend7, %for.entry
 
 for.body:                                         ; preds = %for.cond
   %9 = load ptr, ptr %0, align 8
-  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %9, i32 0, i32 5
+  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %9, i32 0, i32 6
   %10 = load ptr, ptr %memberidx3, align 8
   %11 = call ptr %10(ptr %0, i64 %6)
   %12 = load ptr, ptr %1, align 8
-  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %12, i32 0, i32 5
+  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %12, i32 0, i32 6
   %13 = load ptr, ptr %memberidx4, align 8
   %14 = load i64, ptr %i, align 4
   %15 = call ptr %13(ptr %1, i64 %14)
@@ -7743,7 +8219,7 @@ for.cond:                                         ; preds = %ifend, %for.entry
 
 for.body:                                         ; preds = %for.cond
   %4 = load ptr, ptr %0, align 8
-  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %4, i32 0, i32 5
+  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %4, i32 0, i32 6
   %5 = load ptr, ptr %memberidx1, align 8
   %6 = call ptr %5(ptr %0, i64 %i.0)
   %7 = icmp eq ptr %6, %1
@@ -7857,7 +8333,7 @@ ifend:                                            ; preds = %2, %if.entry
 
 define void @Array_EnumNode__append(ptr %0, ptr %1) {
   %3 = load ptr, ptr %0, align 8
-  %memberidx = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %3, i32 0, i32 2
+  %memberidx = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %3, i32 0, i32 3
   %4 = load ptr, ptr %memberidx, align 8
   call void %4(ptr %0, ptr %1)
   ret void
@@ -7902,6 +8378,46 @@ ifend:                                            ; preds = %3, %if.entry
   ret void
 }
 
+define ptr @ArrayIterator_EnumNode____next__(ptr %0) {
+  %memberidx = getelementptr inbounds %ArrayIterator_EnumNode_, ptr %0, i32 0, i32 2
+  %2 = load i64, ptr %memberidx, align 4
+  %3 = add i64 %2, 1
+  store i64 %3, ptr %memberidx, align 4
+  %memberidx2 = getelementptr inbounds %ArrayIterator_EnumNode_, ptr %0, i32 0, i32 4
+  %4 = load ptr, ptr %memberidx2, align 8
+  %ptridx = getelementptr inbounds ptr, ptr %4, i64 %2
+  %5 = load ptr, ptr %ptridx, align 8
+  %memberidx3 = getelementptr inbounds %Iterator_EnumNode_, ptr %0, i32 0, i32 1
+  %memberidx5 = getelementptr inbounds %ArrayIterator_EnumNode_, ptr %0, i32 0, i32 3
+  %6 = load i64, ptr %memberidx5, align 4
+  %7 = icmp sgt i64 %3, %6
+  store i1 %7, ptr %memberidx3, align 1
+  ret ptr %5
+}
+
+define void @ArrayIterator_EnumNode__constructor(ptr %0, ptr %1, i64 %2) {
+  store ptr @VTableArrayIterator_EnumNode_, ptr %0, align 8
+  %memberidx = getelementptr inbounds %Iterator_EnumNode_, ptr %0, i32 0, i32 1
+  store i1 false, ptr %memberidx, align 1
+  %memberidx1 = getelementptr inbounds %ArrayIterator_EnumNode_, ptr %0, i32 0, i32 2
+  store i64 0, ptr %memberidx1, align 4
+  %memberidx2 = getelementptr inbounds %ArrayIterator_EnumNode_, ptr %0, i32 0, i32 4
+  store ptr %1, ptr %memberidx2, align 8
+  %memberidx3 = getelementptr inbounds %ArrayIterator_EnumNode_, ptr %0, i32 0, i32 3
+  store i64 %2, ptr %memberidx3, align 4
+  ret void
+}
+
+define ptr @Array_EnumNode____iter__(ptr %0) {
+  %2 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%ArrayIterator_EnumNode_, ptr null, i32 1) to i32))
+  %memberidx = getelementptr inbounds %Array_EnumNode_, ptr %0, i32 0, i32 1
+  %3 = load ptr, ptr %memberidx, align 8
+  %memberidx1 = getelementptr inbounds %Array_EnumNode_, ptr %0, i32 0, i32 2
+  %4 = load i64, ptr %memberidx1, align 4
+  call void @ArrayIterator_EnumNode__constructor(ptr %2, ptr %3, i64 %4)
+  ret ptr %2
+}
+
 define void @Array_EnumNode____setitem__(ptr %0, i64 %1, ptr %2) {
   %4 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%Range, ptr null, i32 1) to i32))
   %memberidx = getelementptr inbounds %Array_EnumNode_, ptr %0, i32 0, i32 2
@@ -7924,25 +8440,11 @@ ifend:                                            ; preds = %3, %if.entry
 }
 
 define ptr @Array_EnumNode____getitem__(ptr %0, i64 %1) {
-  %3 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%Range, ptr null, i32 1) to i32))
-  %memberidx = getelementptr inbounds %Array_EnumNode_, ptr %0, i32 0, i32 2
-  %4 = load i64, ptr %memberidx, align 4
-  call void @Range_constructor(ptr %3, i64 0, i64 %4)
-  %5 = load ptr, ptr %3, align 8
-  %6 = load ptr, ptr %5, align 8
-  %7 = call i1 %6(ptr %3, i64 %1)
-  br i1 %7, label %if.entry, label %common.ret
-
-common.ret:                                       ; preds = %2, %if.entry
-  %common.ret.op = phi ptr [ %9, %if.entry ], [ null, %2 ]
-  ret ptr %common.ret.op
-
-if.entry:                                         ; preds = %2
-  %memberidx2 = getelementptr inbounds %Array_EnumNode_, ptr %0, i32 0, i32 1
-  %8 = load ptr, ptr %memberidx2, align 8
-  %ptridx = getelementptr inbounds ptr, ptr %8, i64 %1
-  %9 = load ptr, ptr %ptridx, align 8
-  br label %common.ret
+  %memberidx = getelementptr inbounds %Array_EnumNode_, ptr %0, i32 0, i32 1
+  %3 = load ptr, ptr %memberidx, align 8
+  %ptridx = getelementptr inbounds ptr, ptr %3, i64 %1
+  %4 = load ptr, ptr %ptridx, align 8
+  ret ptr %4
 }
 
 define i1 @Array_EnumNode____eq__(ptr %0, ptr %1) {
@@ -7970,11 +8472,11 @@ for.cond:                                         ; preds = %ifend7, %for.entry
 
 for.body:                                         ; preds = %for.cond
   %9 = load ptr, ptr %0, align 8
-  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %9, i32 0, i32 5
+  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %9, i32 0, i32 6
   %10 = load ptr, ptr %memberidx3, align 8
   %11 = call ptr %10(ptr %0, i64 %6)
   %12 = load ptr, ptr %1, align 8
-  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %12, i32 0, i32 5
+  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %12, i32 0, i32 6
   %13 = load ptr, ptr %memberidx4, align 8
   %14 = load i64, ptr %i, align 4
   %15 = call ptr %13(ptr %1, i64 %14)
@@ -8001,7 +8503,7 @@ for.cond:                                         ; preds = %ifend, %for.entry
 
 for.body:                                         ; preds = %for.cond
   %4 = load ptr, ptr %0, align 8
-  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %4, i32 0, i32 5
+  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %4, i32 0, i32 6
   %5 = load ptr, ptr %memberidx1, align 8
   %6 = call ptr %5(ptr %0, i64 %i.0)
   %7 = icmp eq ptr %6, %1
@@ -8106,7 +8608,7 @@ ifend:                                            ; preds = %2, %if.entry
 
 define void @Array_TypeAliasNode__append(ptr %0, ptr %1) {
   %3 = load ptr, ptr %0, align 8
-  %memberidx = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %3, i32 0, i32 2
+  %memberidx = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %3, i32 0, i32 3
   %4 = load ptr, ptr %memberidx, align 8
   call void %4(ptr %0, ptr %1)
   ret void
@@ -8151,6 +8653,46 @@ ifend:                                            ; preds = %3, %if.entry
   ret void
 }
 
+define ptr @ArrayIterator_TypeAliasNode____next__(ptr %0) {
+  %memberidx = getelementptr inbounds %ArrayIterator_TypeAliasNode_, ptr %0, i32 0, i32 2
+  %2 = load i64, ptr %memberidx, align 4
+  %3 = add i64 %2, 1
+  store i64 %3, ptr %memberidx, align 4
+  %memberidx2 = getelementptr inbounds %ArrayIterator_TypeAliasNode_, ptr %0, i32 0, i32 4
+  %4 = load ptr, ptr %memberidx2, align 8
+  %ptridx = getelementptr inbounds ptr, ptr %4, i64 %2
+  %5 = load ptr, ptr %ptridx, align 8
+  %memberidx3 = getelementptr inbounds %Iterator_TypeAliasNode_, ptr %0, i32 0, i32 1
+  %memberidx5 = getelementptr inbounds %ArrayIterator_TypeAliasNode_, ptr %0, i32 0, i32 3
+  %6 = load i64, ptr %memberidx5, align 4
+  %7 = icmp sgt i64 %3, %6
+  store i1 %7, ptr %memberidx3, align 1
+  ret ptr %5
+}
+
+define void @ArrayIterator_TypeAliasNode__constructor(ptr %0, ptr %1, i64 %2) {
+  store ptr @VTableArrayIterator_TypeAliasNode_, ptr %0, align 8
+  %memberidx = getelementptr inbounds %Iterator_TypeAliasNode_, ptr %0, i32 0, i32 1
+  store i1 false, ptr %memberidx, align 1
+  %memberidx1 = getelementptr inbounds %ArrayIterator_TypeAliasNode_, ptr %0, i32 0, i32 2
+  store i64 0, ptr %memberidx1, align 4
+  %memberidx2 = getelementptr inbounds %ArrayIterator_TypeAliasNode_, ptr %0, i32 0, i32 4
+  store ptr %1, ptr %memberidx2, align 8
+  %memberidx3 = getelementptr inbounds %ArrayIterator_TypeAliasNode_, ptr %0, i32 0, i32 3
+  store i64 %2, ptr %memberidx3, align 4
+  ret void
+}
+
+define ptr @Array_TypeAliasNode____iter__(ptr %0) {
+  %2 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%ArrayIterator_TypeAliasNode_, ptr null, i32 1) to i32))
+  %memberidx = getelementptr inbounds %Array_TypeAliasNode_, ptr %0, i32 0, i32 1
+  %3 = load ptr, ptr %memberidx, align 8
+  %memberidx1 = getelementptr inbounds %Array_TypeAliasNode_, ptr %0, i32 0, i32 2
+  %4 = load i64, ptr %memberidx1, align 4
+  call void @ArrayIterator_TypeAliasNode__constructor(ptr %2, ptr %3, i64 %4)
+  ret ptr %2
+}
+
 define void @Array_TypeAliasNode____setitem__(ptr %0, i64 %1, ptr %2) {
   %4 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%Range, ptr null, i32 1) to i32))
   %memberidx = getelementptr inbounds %Array_TypeAliasNode_, ptr %0, i32 0, i32 2
@@ -8173,25 +8715,11 @@ ifend:                                            ; preds = %3, %if.entry
 }
 
 define ptr @Array_TypeAliasNode____getitem__(ptr %0, i64 %1) {
-  %3 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%Range, ptr null, i32 1) to i32))
-  %memberidx = getelementptr inbounds %Array_TypeAliasNode_, ptr %0, i32 0, i32 2
-  %4 = load i64, ptr %memberidx, align 4
-  call void @Range_constructor(ptr %3, i64 0, i64 %4)
-  %5 = load ptr, ptr %3, align 8
-  %6 = load ptr, ptr %5, align 8
-  %7 = call i1 %6(ptr %3, i64 %1)
-  br i1 %7, label %if.entry, label %common.ret
-
-common.ret:                                       ; preds = %2, %if.entry
-  %common.ret.op = phi ptr [ %9, %if.entry ], [ null, %2 ]
-  ret ptr %common.ret.op
-
-if.entry:                                         ; preds = %2
-  %memberidx2 = getelementptr inbounds %Array_TypeAliasNode_, ptr %0, i32 0, i32 1
-  %8 = load ptr, ptr %memberidx2, align 8
-  %ptridx = getelementptr inbounds ptr, ptr %8, i64 %1
-  %9 = load ptr, ptr %ptridx, align 8
-  br label %common.ret
+  %memberidx = getelementptr inbounds %Array_TypeAliasNode_, ptr %0, i32 0, i32 1
+  %3 = load ptr, ptr %memberidx, align 8
+  %ptridx = getelementptr inbounds ptr, ptr %3, i64 %1
+  %4 = load ptr, ptr %ptridx, align 8
+  ret ptr %4
 }
 
 define i1 @Array_TypeAliasNode____eq__(ptr %0, ptr %1) {
@@ -8219,11 +8747,11 @@ for.cond:                                         ; preds = %ifend7, %for.entry
 
 for.body:                                         ; preds = %for.cond
   %9 = load ptr, ptr %0, align 8
-  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %9, i32 0, i32 5
+  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %9, i32 0, i32 6
   %10 = load ptr, ptr %memberidx3, align 8
   %11 = call ptr %10(ptr %0, i64 %6)
   %12 = load ptr, ptr %1, align 8
-  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %12, i32 0, i32 5
+  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %12, i32 0, i32 6
   %13 = load ptr, ptr %memberidx4, align 8
   %14 = load i64, ptr %i, align 4
   %15 = call ptr %13(ptr %1, i64 %14)
@@ -8250,7 +8778,7 @@ for.cond:                                         ; preds = %ifend, %for.entry
 
 for.body:                                         ; preds = %for.cond
   %4 = load ptr, ptr %0, align 8
-  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %4, i32 0, i32 5
+  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %4, i32 0, i32 6
   %5 = load ptr, ptr %memberidx1, align 8
   %6 = call ptr %5(ptr %0, i64 %i.0)
   %7 = icmp eq ptr %6, %1
@@ -8357,7 +8885,7 @@ ifend:                                            ; preds = %2, %if.entry
 
 define void @Array_ConstDeclarationStatement__append(ptr %0, ptr %1) {
   %3 = load ptr, ptr %0, align 8
-  %memberidx = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %3, i32 0, i32 2
+  %memberidx = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %3, i32 0, i32 3
   %4 = load ptr, ptr %memberidx, align 8
   call void %4(ptr %0, ptr %1)
   ret void
@@ -8402,6 +8930,46 @@ ifend:                                            ; preds = %3, %if.entry
   ret void
 }
 
+define ptr @ArrayIterator_ConstDeclarationStatement____next__(ptr %0) {
+  %memberidx = getelementptr inbounds %ArrayIterator_ConstDeclarationStatement_, ptr %0, i32 0, i32 2
+  %2 = load i64, ptr %memberidx, align 4
+  %3 = add i64 %2, 1
+  store i64 %3, ptr %memberidx, align 4
+  %memberidx2 = getelementptr inbounds %ArrayIterator_ConstDeclarationStatement_, ptr %0, i32 0, i32 4
+  %4 = load ptr, ptr %memberidx2, align 8
+  %ptridx = getelementptr inbounds ptr, ptr %4, i64 %2
+  %5 = load ptr, ptr %ptridx, align 8
+  %memberidx3 = getelementptr inbounds %Iterator_ConstDeclarationStatement_, ptr %0, i32 0, i32 1
+  %memberidx5 = getelementptr inbounds %ArrayIterator_ConstDeclarationStatement_, ptr %0, i32 0, i32 3
+  %6 = load i64, ptr %memberidx5, align 4
+  %7 = icmp sgt i64 %3, %6
+  store i1 %7, ptr %memberidx3, align 1
+  ret ptr %5
+}
+
+define void @ArrayIterator_ConstDeclarationStatement__constructor(ptr %0, ptr %1, i64 %2) {
+  store ptr @VTableArrayIterator_ConstDeclarationStatement_, ptr %0, align 8
+  %memberidx = getelementptr inbounds %Iterator_ConstDeclarationStatement_, ptr %0, i32 0, i32 1
+  store i1 false, ptr %memberidx, align 1
+  %memberidx1 = getelementptr inbounds %ArrayIterator_ConstDeclarationStatement_, ptr %0, i32 0, i32 2
+  store i64 0, ptr %memberidx1, align 4
+  %memberidx2 = getelementptr inbounds %ArrayIterator_ConstDeclarationStatement_, ptr %0, i32 0, i32 4
+  store ptr %1, ptr %memberidx2, align 8
+  %memberidx3 = getelementptr inbounds %ArrayIterator_ConstDeclarationStatement_, ptr %0, i32 0, i32 3
+  store i64 %2, ptr %memberidx3, align 4
+  ret void
+}
+
+define ptr @Array_ConstDeclarationStatement____iter__(ptr %0) {
+  %2 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%ArrayIterator_ConstDeclarationStatement_, ptr null, i32 1) to i32))
+  %memberidx = getelementptr inbounds %Array_ConstDeclarationStatement_, ptr %0, i32 0, i32 1
+  %3 = load ptr, ptr %memberidx, align 8
+  %memberidx1 = getelementptr inbounds %Array_ConstDeclarationStatement_, ptr %0, i32 0, i32 2
+  %4 = load i64, ptr %memberidx1, align 4
+  call void @ArrayIterator_ConstDeclarationStatement__constructor(ptr %2, ptr %3, i64 %4)
+  ret ptr %2
+}
+
 define void @Array_ConstDeclarationStatement____setitem__(ptr %0, i64 %1, ptr %2) {
   %4 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%Range, ptr null, i32 1) to i32))
   %memberidx = getelementptr inbounds %Array_ConstDeclarationStatement_, ptr %0, i32 0, i32 2
@@ -8424,25 +8992,11 @@ ifend:                                            ; preds = %3, %if.entry
 }
 
 define ptr @Array_ConstDeclarationStatement____getitem__(ptr %0, i64 %1) {
-  %3 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%Range, ptr null, i32 1) to i32))
-  %memberidx = getelementptr inbounds %Array_ConstDeclarationStatement_, ptr %0, i32 0, i32 2
-  %4 = load i64, ptr %memberidx, align 4
-  call void @Range_constructor(ptr %3, i64 0, i64 %4)
-  %5 = load ptr, ptr %3, align 8
-  %6 = load ptr, ptr %5, align 8
-  %7 = call i1 %6(ptr %3, i64 %1)
-  br i1 %7, label %if.entry, label %common.ret
-
-common.ret:                                       ; preds = %2, %if.entry
-  %common.ret.op = phi ptr [ %9, %if.entry ], [ null, %2 ]
-  ret ptr %common.ret.op
-
-if.entry:                                         ; preds = %2
-  %memberidx2 = getelementptr inbounds %Array_ConstDeclarationStatement_, ptr %0, i32 0, i32 1
-  %8 = load ptr, ptr %memberidx2, align 8
-  %ptridx = getelementptr inbounds ptr, ptr %8, i64 %1
-  %9 = load ptr, ptr %ptridx, align 8
-  br label %common.ret
+  %memberidx = getelementptr inbounds %Array_ConstDeclarationStatement_, ptr %0, i32 0, i32 1
+  %3 = load ptr, ptr %memberidx, align 8
+  %ptridx = getelementptr inbounds ptr, ptr %3, i64 %1
+  %4 = load ptr, ptr %ptridx, align 8
+  ret ptr %4
 }
 
 define i1 @Array_ConstDeclarationStatement____eq__(ptr %0, ptr %1) {
@@ -8470,11 +9024,11 @@ for.cond:                                         ; preds = %ifend7, %for.entry
 
 for.body:                                         ; preds = %for.cond
   %9 = load ptr, ptr %0, align 8
-  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %9, i32 0, i32 5
+  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %9, i32 0, i32 6
   %10 = load ptr, ptr %memberidx3, align 8
   %11 = call ptr %10(ptr %0, i64 %6)
   %12 = load ptr, ptr %1, align 8
-  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %12, i32 0, i32 5
+  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %12, i32 0, i32 6
   %13 = load ptr, ptr %memberidx4, align 8
   %14 = load i64, ptr %i, align 4
   %15 = call ptr %13(ptr %1, i64 %14)
@@ -8501,7 +9055,7 @@ for.cond:                                         ; preds = %ifend, %for.entry
 
 for.body:                                         ; preds = %for.cond
   %4 = load ptr, ptr %0, align 8
-  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %4, i32 0, i32 5
+  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %4, i32 0, i32 6
   %5 = load ptr, ptr %memberidx1, align 8
   %6 = call ptr %5(ptr %0, i64 %i.0)
   %7 = icmp eq ptr %6, %1
@@ -8610,7 +9164,7 @@ ifend:                                            ; preds = %2, %if.entry
 
 define void @Array_ArgNode__append(ptr %0, ptr %1) {
   %3 = load ptr, ptr %0, align 8
-  %memberidx = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %3, i32 0, i32 2
+  %memberidx = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %3, i32 0, i32 3
   %4 = load ptr, ptr %memberidx, align 8
   call void %4(ptr %0, ptr %1)
   ret void
@@ -8655,6 +9209,46 @@ ifend:                                            ; preds = %3, %if.entry
   ret void
 }
 
+define ptr @ArrayIterator_ArgNode____next__(ptr %0) {
+  %memberidx = getelementptr inbounds %ArrayIterator_ArgNode_, ptr %0, i32 0, i32 2
+  %2 = load i64, ptr %memberidx, align 4
+  %3 = add i64 %2, 1
+  store i64 %3, ptr %memberidx, align 4
+  %memberidx2 = getelementptr inbounds %ArrayIterator_ArgNode_, ptr %0, i32 0, i32 4
+  %4 = load ptr, ptr %memberidx2, align 8
+  %ptridx = getelementptr inbounds ptr, ptr %4, i64 %2
+  %5 = load ptr, ptr %ptridx, align 8
+  %memberidx3 = getelementptr inbounds %Iterator_ArgNode_, ptr %0, i32 0, i32 1
+  %memberidx5 = getelementptr inbounds %ArrayIterator_ArgNode_, ptr %0, i32 0, i32 3
+  %6 = load i64, ptr %memberidx5, align 4
+  %7 = icmp sgt i64 %3, %6
+  store i1 %7, ptr %memberidx3, align 1
+  ret ptr %5
+}
+
+define void @ArrayIterator_ArgNode__constructor(ptr %0, ptr %1, i64 %2) {
+  store ptr @VTableArrayIterator_ArgNode_, ptr %0, align 8
+  %memberidx = getelementptr inbounds %Iterator_ArgNode_, ptr %0, i32 0, i32 1
+  store i1 false, ptr %memberidx, align 1
+  %memberidx1 = getelementptr inbounds %ArrayIterator_ArgNode_, ptr %0, i32 0, i32 2
+  store i64 0, ptr %memberidx1, align 4
+  %memberidx2 = getelementptr inbounds %ArrayIterator_ArgNode_, ptr %0, i32 0, i32 4
+  store ptr %1, ptr %memberidx2, align 8
+  %memberidx3 = getelementptr inbounds %ArrayIterator_ArgNode_, ptr %0, i32 0, i32 3
+  store i64 %2, ptr %memberidx3, align 4
+  ret void
+}
+
+define ptr @Array_ArgNode____iter__(ptr %0) {
+  %2 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%ArrayIterator_ArgNode_, ptr null, i32 1) to i32))
+  %memberidx = getelementptr inbounds %Array_ArgNode_, ptr %0, i32 0, i32 1
+  %3 = load ptr, ptr %memberidx, align 8
+  %memberidx1 = getelementptr inbounds %Array_ArgNode_, ptr %0, i32 0, i32 2
+  %4 = load i64, ptr %memberidx1, align 4
+  call void @ArrayIterator_ArgNode__constructor(ptr %2, ptr %3, i64 %4)
+  ret ptr %2
+}
+
 define void @Array_ArgNode____setitem__(ptr %0, i64 %1, ptr %2) {
   %4 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%Range, ptr null, i32 1) to i32))
   %memberidx = getelementptr inbounds %Array_ArgNode_, ptr %0, i32 0, i32 2
@@ -8677,25 +9271,11 @@ ifend:                                            ; preds = %3, %if.entry
 }
 
 define ptr @Array_ArgNode____getitem__(ptr %0, i64 %1) {
-  %3 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%Range, ptr null, i32 1) to i32))
-  %memberidx = getelementptr inbounds %Array_ArgNode_, ptr %0, i32 0, i32 2
-  %4 = load i64, ptr %memberidx, align 4
-  call void @Range_constructor(ptr %3, i64 0, i64 %4)
-  %5 = load ptr, ptr %3, align 8
-  %6 = load ptr, ptr %5, align 8
-  %7 = call i1 %6(ptr %3, i64 %1)
-  br i1 %7, label %if.entry, label %common.ret
-
-common.ret:                                       ; preds = %2, %if.entry
-  %common.ret.op = phi ptr [ %9, %if.entry ], [ null, %2 ]
-  ret ptr %common.ret.op
-
-if.entry:                                         ; preds = %2
-  %memberidx2 = getelementptr inbounds %Array_ArgNode_, ptr %0, i32 0, i32 1
-  %8 = load ptr, ptr %memberidx2, align 8
-  %ptridx = getelementptr inbounds ptr, ptr %8, i64 %1
-  %9 = load ptr, ptr %ptridx, align 8
-  br label %common.ret
+  %memberidx = getelementptr inbounds %Array_ArgNode_, ptr %0, i32 0, i32 1
+  %3 = load ptr, ptr %memberidx, align 8
+  %ptridx = getelementptr inbounds ptr, ptr %3, i64 %1
+  %4 = load ptr, ptr %ptridx, align 8
+  ret ptr %4
 }
 
 define i1 @Array_ArgNode____eq__(ptr %0, ptr %1) {
@@ -8723,11 +9303,11 @@ for.cond:                                         ; preds = %ifend7, %for.entry
 
 for.body:                                         ; preds = %for.cond
   %9 = load ptr, ptr %0, align 8
-  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %9, i32 0, i32 5
+  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %9, i32 0, i32 6
   %10 = load ptr, ptr %memberidx3, align 8
   %11 = call ptr %10(ptr %0, i64 %6)
   %12 = load ptr, ptr %1, align 8
-  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %12, i32 0, i32 5
+  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %12, i32 0, i32 6
   %13 = load ptr, ptr %memberidx4, align 8
   %14 = load i64, ptr %i, align 4
   %15 = call ptr %13(ptr %1, i64 %14)
@@ -8754,7 +9334,7 @@ for.cond:                                         ; preds = %ifend, %for.entry
 
 for.body:                                         ; preds = %for.cond
   %4 = load ptr, ptr %0, align 8
-  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %4, i32 0, i32 5
+  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %4, i32 0, i32 6
   %5 = load ptr, ptr %memberidx1, align 8
   %6 = call ptr %5(ptr %0, i64 %i.0)
   %7 = icmp eq ptr %6, %1
@@ -8854,7 +9434,7 @@ ifend:                                            ; preds = %2, %if.entry
 
 define void @Array_StatementNode__append(ptr %0, ptr %1) {
   %3 = load ptr, ptr %0, align 8
-  %memberidx = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %3, i32 0, i32 2
+  %memberidx = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %3, i32 0, i32 3
   %4 = load ptr, ptr %memberidx, align 8
   call void %4(ptr %0, ptr %1)
   ret void
@@ -8899,6 +9479,46 @@ ifend:                                            ; preds = %3, %if.entry
   ret void
 }
 
+define ptr @ArrayIterator_StatementNode____next__(ptr %0) {
+  %memberidx = getelementptr inbounds %ArrayIterator_StatementNode_, ptr %0, i32 0, i32 2
+  %2 = load i64, ptr %memberidx, align 4
+  %3 = add i64 %2, 1
+  store i64 %3, ptr %memberidx, align 4
+  %memberidx2 = getelementptr inbounds %ArrayIterator_StatementNode_, ptr %0, i32 0, i32 4
+  %4 = load ptr, ptr %memberidx2, align 8
+  %ptridx = getelementptr inbounds ptr, ptr %4, i64 %2
+  %5 = load ptr, ptr %ptridx, align 8
+  %memberidx3 = getelementptr inbounds %Iterator_StatementNode_, ptr %0, i32 0, i32 1
+  %memberidx5 = getelementptr inbounds %ArrayIterator_StatementNode_, ptr %0, i32 0, i32 3
+  %6 = load i64, ptr %memberidx5, align 4
+  %7 = icmp sgt i64 %3, %6
+  store i1 %7, ptr %memberidx3, align 1
+  ret ptr %5
+}
+
+define void @ArrayIterator_StatementNode__constructor(ptr %0, ptr %1, i64 %2) {
+  store ptr @VTableArrayIterator_StatementNode_, ptr %0, align 8
+  %memberidx = getelementptr inbounds %Iterator_StatementNode_, ptr %0, i32 0, i32 1
+  store i1 false, ptr %memberidx, align 1
+  %memberidx1 = getelementptr inbounds %ArrayIterator_StatementNode_, ptr %0, i32 0, i32 2
+  store i64 0, ptr %memberidx1, align 4
+  %memberidx2 = getelementptr inbounds %ArrayIterator_StatementNode_, ptr %0, i32 0, i32 4
+  store ptr %1, ptr %memberidx2, align 8
+  %memberidx3 = getelementptr inbounds %ArrayIterator_StatementNode_, ptr %0, i32 0, i32 3
+  store i64 %2, ptr %memberidx3, align 4
+  ret void
+}
+
+define ptr @Array_StatementNode____iter__(ptr %0) {
+  %2 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%ArrayIterator_StatementNode_, ptr null, i32 1) to i32))
+  %memberidx = getelementptr inbounds %Array_StatementNode_, ptr %0, i32 0, i32 1
+  %3 = load ptr, ptr %memberidx, align 8
+  %memberidx1 = getelementptr inbounds %Array_StatementNode_, ptr %0, i32 0, i32 2
+  %4 = load i64, ptr %memberidx1, align 4
+  call void @ArrayIterator_StatementNode__constructor(ptr %2, ptr %3, i64 %4)
+  ret ptr %2
+}
+
 define void @Array_StatementNode____setitem__(ptr %0, i64 %1, ptr %2) {
   %4 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%Range, ptr null, i32 1) to i32))
   %memberidx = getelementptr inbounds %Array_StatementNode_, ptr %0, i32 0, i32 2
@@ -8921,25 +9541,11 @@ ifend:                                            ; preds = %3, %if.entry
 }
 
 define ptr @Array_StatementNode____getitem__(ptr %0, i64 %1) {
-  %3 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%Range, ptr null, i32 1) to i32))
-  %memberidx = getelementptr inbounds %Array_StatementNode_, ptr %0, i32 0, i32 2
-  %4 = load i64, ptr %memberidx, align 4
-  call void @Range_constructor(ptr %3, i64 0, i64 %4)
-  %5 = load ptr, ptr %3, align 8
-  %6 = load ptr, ptr %5, align 8
-  %7 = call i1 %6(ptr %3, i64 %1)
-  br i1 %7, label %if.entry, label %common.ret
-
-common.ret:                                       ; preds = %2, %if.entry
-  %common.ret.op = phi ptr [ %9, %if.entry ], [ null, %2 ]
-  ret ptr %common.ret.op
-
-if.entry:                                         ; preds = %2
-  %memberidx2 = getelementptr inbounds %Array_StatementNode_, ptr %0, i32 0, i32 1
-  %8 = load ptr, ptr %memberidx2, align 8
-  %ptridx = getelementptr inbounds ptr, ptr %8, i64 %1
-  %9 = load ptr, ptr %ptridx, align 8
-  br label %common.ret
+  %memberidx = getelementptr inbounds %Array_StatementNode_, ptr %0, i32 0, i32 1
+  %3 = load ptr, ptr %memberidx, align 8
+  %ptridx = getelementptr inbounds ptr, ptr %3, i64 %1
+  %4 = load ptr, ptr %ptridx, align 8
+  ret ptr %4
 }
 
 define i1 @Array_StatementNode____eq__(ptr %0, ptr %1) {
@@ -8967,11 +9573,11 @@ for.cond:                                         ; preds = %ifend7, %for.entry
 
 for.body:                                         ; preds = %for.cond
   %9 = load ptr, ptr %0, align 8
-  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %9, i32 0, i32 5
+  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %9, i32 0, i32 6
   %10 = load ptr, ptr %memberidx3, align 8
   %11 = call ptr %10(ptr %0, i64 %6)
   %12 = load ptr, ptr %1, align 8
-  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %12, i32 0, i32 5
+  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %12, i32 0, i32 6
   %13 = load ptr, ptr %memberidx4, align 8
   %14 = load i64, ptr %i, align 4
   %15 = call ptr %13(ptr %1, i64 %14)
@@ -8998,7 +9604,7 @@ for.cond:                                         ; preds = %ifend, %for.entry
 
 for.body:                                         ; preds = %for.cond
   %4 = load ptr, ptr %0, align 8
-  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %4, i32 0, i32 5
+  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %4, i32 0, i32 6
   %5 = load ptr, ptr %memberidx1, align 8
   %6 = call ptr %5(ptr %0, i64 %i.0)
   %7 = icmp eq ptr %6, %1
@@ -9126,7 +9732,7 @@ ifend:                                            ; preds = %2, %if.entry
 
 define void @Array_MethodNode__append(ptr %0, ptr %1) {
   %3 = load ptr, ptr %0, align 8
-  %memberidx = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %3, i32 0, i32 2
+  %memberidx = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %3, i32 0, i32 3
   %4 = load ptr, ptr %memberidx, align 8
   call void %4(ptr %0, ptr %1)
   ret void
@@ -9171,6 +9777,46 @@ ifend:                                            ; preds = %3, %if.entry
   ret void
 }
 
+define ptr @ArrayIterator_MethodNode____next__(ptr %0) {
+  %memberidx = getelementptr inbounds %ArrayIterator_MethodNode_, ptr %0, i32 0, i32 2
+  %2 = load i64, ptr %memberidx, align 4
+  %3 = add i64 %2, 1
+  store i64 %3, ptr %memberidx, align 4
+  %memberidx2 = getelementptr inbounds %ArrayIterator_MethodNode_, ptr %0, i32 0, i32 4
+  %4 = load ptr, ptr %memberidx2, align 8
+  %ptridx = getelementptr inbounds ptr, ptr %4, i64 %2
+  %5 = load ptr, ptr %ptridx, align 8
+  %memberidx3 = getelementptr inbounds %Iterator_MethodNode_, ptr %0, i32 0, i32 1
+  %memberidx5 = getelementptr inbounds %ArrayIterator_MethodNode_, ptr %0, i32 0, i32 3
+  %6 = load i64, ptr %memberidx5, align 4
+  %7 = icmp sgt i64 %3, %6
+  store i1 %7, ptr %memberidx3, align 1
+  ret ptr %5
+}
+
+define void @ArrayIterator_MethodNode__constructor(ptr %0, ptr %1, i64 %2) {
+  store ptr @VTableArrayIterator_MethodNode_, ptr %0, align 8
+  %memberidx = getelementptr inbounds %Iterator_MethodNode_, ptr %0, i32 0, i32 1
+  store i1 false, ptr %memberidx, align 1
+  %memberidx1 = getelementptr inbounds %ArrayIterator_MethodNode_, ptr %0, i32 0, i32 2
+  store i64 0, ptr %memberidx1, align 4
+  %memberidx2 = getelementptr inbounds %ArrayIterator_MethodNode_, ptr %0, i32 0, i32 4
+  store ptr %1, ptr %memberidx2, align 8
+  %memberidx3 = getelementptr inbounds %ArrayIterator_MethodNode_, ptr %0, i32 0, i32 3
+  store i64 %2, ptr %memberidx3, align 4
+  ret void
+}
+
+define ptr @Array_MethodNode____iter__(ptr %0) {
+  %2 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%ArrayIterator_MethodNode_, ptr null, i32 1) to i32))
+  %memberidx = getelementptr inbounds %Array_MethodNode_, ptr %0, i32 0, i32 1
+  %3 = load ptr, ptr %memberidx, align 8
+  %memberidx1 = getelementptr inbounds %Array_MethodNode_, ptr %0, i32 0, i32 2
+  %4 = load i64, ptr %memberidx1, align 4
+  call void @ArrayIterator_MethodNode__constructor(ptr %2, ptr %3, i64 %4)
+  ret ptr %2
+}
+
 define void @Array_MethodNode____setitem__(ptr %0, i64 %1, ptr %2) {
   %4 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%Range, ptr null, i32 1) to i32))
   %memberidx = getelementptr inbounds %Array_MethodNode_, ptr %0, i32 0, i32 2
@@ -9193,25 +9839,11 @@ ifend:                                            ; preds = %3, %if.entry
 }
 
 define ptr @Array_MethodNode____getitem__(ptr %0, i64 %1) {
-  %3 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%Range, ptr null, i32 1) to i32))
-  %memberidx = getelementptr inbounds %Array_MethodNode_, ptr %0, i32 0, i32 2
-  %4 = load i64, ptr %memberidx, align 4
-  call void @Range_constructor(ptr %3, i64 0, i64 %4)
-  %5 = load ptr, ptr %3, align 8
-  %6 = load ptr, ptr %5, align 8
-  %7 = call i1 %6(ptr %3, i64 %1)
-  br i1 %7, label %if.entry, label %common.ret
-
-common.ret:                                       ; preds = %2, %if.entry
-  %common.ret.op = phi ptr [ %9, %if.entry ], [ null, %2 ]
-  ret ptr %common.ret.op
-
-if.entry:                                         ; preds = %2
-  %memberidx2 = getelementptr inbounds %Array_MethodNode_, ptr %0, i32 0, i32 1
-  %8 = load ptr, ptr %memberidx2, align 8
-  %ptridx = getelementptr inbounds ptr, ptr %8, i64 %1
-  %9 = load ptr, ptr %ptridx, align 8
-  br label %common.ret
+  %memberidx = getelementptr inbounds %Array_MethodNode_, ptr %0, i32 0, i32 1
+  %3 = load ptr, ptr %memberidx, align 8
+  %ptridx = getelementptr inbounds ptr, ptr %3, i64 %1
+  %4 = load ptr, ptr %ptridx, align 8
+  ret ptr %4
 }
 
 define i1 @Array_MethodNode____eq__(ptr %0, ptr %1) {
@@ -9239,11 +9871,11 @@ for.cond:                                         ; preds = %ifend7, %for.entry
 
 for.body:                                         ; preds = %for.cond
   %9 = load ptr, ptr %0, align 8
-  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %9, i32 0, i32 5
+  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %9, i32 0, i32 6
   %10 = load ptr, ptr %memberidx3, align 8
   %11 = call ptr %10(ptr %0, i64 %6)
   %12 = load ptr, ptr %1, align 8
-  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %12, i32 0, i32 5
+  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %12, i32 0, i32 6
   %13 = load ptr, ptr %memberidx4, align 8
   %14 = load i64, ptr %i, align 4
   %15 = call ptr %13(ptr %1, i64 %14)
@@ -9270,7 +9902,7 @@ for.cond:                                         ; preds = %ifend, %for.entry
 
 for.body:                                         ; preds = %for.cond
   %4 = load ptr, ptr %0, align 8
-  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %4, i32 0, i32 5
+  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %4, i32 0, i32 6
   %5 = load ptr, ptr %memberidx1, align 8
   %6 = call ptr %5(ptr %0, i64 %i.0)
   %7 = icmp eq ptr %6, %1
@@ -9377,7 +10009,7 @@ ifend:                                            ; preds = %2, %if.entry
 
 define void @Array_FieldNode__append(ptr %0, ptr %1) {
   %3 = load ptr, ptr %0, align 8
-  %memberidx = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %3, i32 0, i32 2
+  %memberidx = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %3, i32 0, i32 3
   %4 = load ptr, ptr %memberidx, align 8
   call void %4(ptr %0, ptr %1)
   ret void
@@ -9422,6 +10054,46 @@ ifend:                                            ; preds = %3, %if.entry
   ret void
 }
 
+define ptr @ArrayIterator_FieldNode____next__(ptr %0) {
+  %memberidx = getelementptr inbounds %ArrayIterator_FieldNode_, ptr %0, i32 0, i32 2
+  %2 = load i64, ptr %memberidx, align 4
+  %3 = add i64 %2, 1
+  store i64 %3, ptr %memberidx, align 4
+  %memberidx2 = getelementptr inbounds %ArrayIterator_FieldNode_, ptr %0, i32 0, i32 4
+  %4 = load ptr, ptr %memberidx2, align 8
+  %ptridx = getelementptr inbounds ptr, ptr %4, i64 %2
+  %5 = load ptr, ptr %ptridx, align 8
+  %memberidx3 = getelementptr inbounds %Iterator_FieldNode_, ptr %0, i32 0, i32 1
+  %memberidx5 = getelementptr inbounds %ArrayIterator_FieldNode_, ptr %0, i32 0, i32 3
+  %6 = load i64, ptr %memberidx5, align 4
+  %7 = icmp sgt i64 %3, %6
+  store i1 %7, ptr %memberidx3, align 1
+  ret ptr %5
+}
+
+define void @ArrayIterator_FieldNode__constructor(ptr %0, ptr %1, i64 %2) {
+  store ptr @VTableArrayIterator_FieldNode_, ptr %0, align 8
+  %memberidx = getelementptr inbounds %Iterator_FieldNode_, ptr %0, i32 0, i32 1
+  store i1 false, ptr %memberidx, align 1
+  %memberidx1 = getelementptr inbounds %ArrayIterator_FieldNode_, ptr %0, i32 0, i32 2
+  store i64 0, ptr %memberidx1, align 4
+  %memberidx2 = getelementptr inbounds %ArrayIterator_FieldNode_, ptr %0, i32 0, i32 4
+  store ptr %1, ptr %memberidx2, align 8
+  %memberidx3 = getelementptr inbounds %ArrayIterator_FieldNode_, ptr %0, i32 0, i32 3
+  store i64 %2, ptr %memberidx3, align 4
+  ret void
+}
+
+define ptr @Array_FieldNode____iter__(ptr %0) {
+  %2 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%ArrayIterator_FieldNode_, ptr null, i32 1) to i32))
+  %memberidx = getelementptr inbounds %Array_FieldNode_, ptr %0, i32 0, i32 1
+  %3 = load ptr, ptr %memberidx, align 8
+  %memberidx1 = getelementptr inbounds %Array_FieldNode_, ptr %0, i32 0, i32 2
+  %4 = load i64, ptr %memberidx1, align 4
+  call void @ArrayIterator_FieldNode__constructor(ptr %2, ptr %3, i64 %4)
+  ret ptr %2
+}
+
 define void @Array_FieldNode____setitem__(ptr %0, i64 %1, ptr %2) {
   %4 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%Range, ptr null, i32 1) to i32))
   %memberidx = getelementptr inbounds %Array_FieldNode_, ptr %0, i32 0, i32 2
@@ -9444,25 +10116,11 @@ ifend:                                            ; preds = %3, %if.entry
 }
 
 define ptr @Array_FieldNode____getitem__(ptr %0, i64 %1) {
-  %3 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%Range, ptr null, i32 1) to i32))
-  %memberidx = getelementptr inbounds %Array_FieldNode_, ptr %0, i32 0, i32 2
-  %4 = load i64, ptr %memberidx, align 4
-  call void @Range_constructor(ptr %3, i64 0, i64 %4)
-  %5 = load ptr, ptr %3, align 8
-  %6 = load ptr, ptr %5, align 8
-  %7 = call i1 %6(ptr %3, i64 %1)
-  br i1 %7, label %if.entry, label %common.ret
-
-common.ret:                                       ; preds = %2, %if.entry
-  %common.ret.op = phi ptr [ %9, %if.entry ], [ null, %2 ]
-  ret ptr %common.ret.op
-
-if.entry:                                         ; preds = %2
-  %memberidx2 = getelementptr inbounds %Array_FieldNode_, ptr %0, i32 0, i32 1
-  %8 = load ptr, ptr %memberidx2, align 8
-  %ptridx = getelementptr inbounds ptr, ptr %8, i64 %1
-  %9 = load ptr, ptr %ptridx, align 8
-  br label %common.ret
+  %memberidx = getelementptr inbounds %Array_FieldNode_, ptr %0, i32 0, i32 1
+  %3 = load ptr, ptr %memberidx, align 8
+  %ptridx = getelementptr inbounds ptr, ptr %3, i64 %1
+  %4 = load ptr, ptr %ptridx, align 8
+  ret ptr %4
 }
 
 define i1 @Array_FieldNode____eq__(ptr %0, ptr %1) {
@@ -9490,11 +10148,11 @@ for.cond:                                         ; preds = %ifend7, %for.entry
 
 for.body:                                         ; preds = %for.cond
   %9 = load ptr, ptr %0, align 8
-  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %9, i32 0, i32 5
+  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %9, i32 0, i32 6
   %10 = load ptr, ptr %memberidx3, align 8
   %11 = call ptr %10(ptr %0, i64 %6)
   %12 = load ptr, ptr %1, align 8
-  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %12, i32 0, i32 5
+  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %12, i32 0, i32 6
   %13 = load ptr, ptr %memberidx4, align 8
   %14 = load i64, ptr %i, align 4
   %15 = call ptr %13(ptr %1, i64 %14)
@@ -9521,7 +10179,7 @@ for.cond:                                         ; preds = %ifend, %for.entry
 
 for.body:                                         ; preds = %for.cond
   %4 = load ptr, ptr %0, align 8
-  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %4, i32 0, i32 5
+  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %4, i32 0, i32 6
   %5 = load ptr, ptr %memberidx1, align 8
   %6 = call ptr %5(ptr %0, i64 %i.0)
   %7 = icmp eq ptr %6, %1
@@ -9621,7 +10279,7 @@ ifend:                                            ; preds = %2, %if.entry
 
 define void @Array_TypeNode__append(ptr %0, ptr %1) {
   %3 = load ptr, ptr %0, align 8
-  %memberidx = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %3, i32 0, i32 2
+  %memberidx = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %3, i32 0, i32 3
   %4 = load ptr, ptr %memberidx, align 8
   call void %4(ptr %0, ptr %1)
   ret void
@@ -9666,6 +10324,46 @@ ifend:                                            ; preds = %3, %if.entry
   ret void
 }
 
+define ptr @ArrayIterator_TypeNode____next__(ptr %0) {
+  %memberidx = getelementptr inbounds %ArrayIterator_TypeNode_, ptr %0, i32 0, i32 2
+  %2 = load i64, ptr %memberidx, align 4
+  %3 = add i64 %2, 1
+  store i64 %3, ptr %memberidx, align 4
+  %memberidx2 = getelementptr inbounds %ArrayIterator_TypeNode_, ptr %0, i32 0, i32 4
+  %4 = load ptr, ptr %memberidx2, align 8
+  %ptridx = getelementptr inbounds ptr, ptr %4, i64 %2
+  %5 = load ptr, ptr %ptridx, align 8
+  %memberidx3 = getelementptr inbounds %Iterator_TypeNode_, ptr %0, i32 0, i32 1
+  %memberidx5 = getelementptr inbounds %ArrayIterator_TypeNode_, ptr %0, i32 0, i32 3
+  %6 = load i64, ptr %memberidx5, align 4
+  %7 = icmp sgt i64 %3, %6
+  store i1 %7, ptr %memberidx3, align 1
+  ret ptr %5
+}
+
+define void @ArrayIterator_TypeNode__constructor(ptr %0, ptr %1, i64 %2) {
+  store ptr @VTableArrayIterator_TypeNode_, ptr %0, align 8
+  %memberidx = getelementptr inbounds %Iterator_TypeNode_, ptr %0, i32 0, i32 1
+  store i1 false, ptr %memberidx, align 1
+  %memberidx1 = getelementptr inbounds %ArrayIterator_TypeNode_, ptr %0, i32 0, i32 2
+  store i64 0, ptr %memberidx1, align 4
+  %memberidx2 = getelementptr inbounds %ArrayIterator_TypeNode_, ptr %0, i32 0, i32 4
+  store ptr %1, ptr %memberidx2, align 8
+  %memberidx3 = getelementptr inbounds %ArrayIterator_TypeNode_, ptr %0, i32 0, i32 3
+  store i64 %2, ptr %memberidx3, align 4
+  ret void
+}
+
+define ptr @Array_TypeNode____iter__(ptr %0) {
+  %2 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%ArrayIterator_TypeNode_, ptr null, i32 1) to i32))
+  %memberidx = getelementptr inbounds %Array_TypeNode_, ptr %0, i32 0, i32 1
+  %3 = load ptr, ptr %memberidx, align 8
+  %memberidx1 = getelementptr inbounds %Array_TypeNode_, ptr %0, i32 0, i32 2
+  %4 = load i64, ptr %memberidx1, align 4
+  call void @ArrayIterator_TypeNode__constructor(ptr %2, ptr %3, i64 %4)
+  ret ptr %2
+}
+
 define void @Array_TypeNode____setitem__(ptr %0, i64 %1, ptr %2) {
   %4 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%Range, ptr null, i32 1) to i32))
   %memberidx = getelementptr inbounds %Array_TypeNode_, ptr %0, i32 0, i32 2
@@ -9688,25 +10386,11 @@ ifend:                                            ; preds = %3, %if.entry
 }
 
 define ptr @Array_TypeNode____getitem__(ptr %0, i64 %1) {
-  %3 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%Range, ptr null, i32 1) to i32))
-  %memberidx = getelementptr inbounds %Array_TypeNode_, ptr %0, i32 0, i32 2
-  %4 = load i64, ptr %memberidx, align 4
-  call void @Range_constructor(ptr %3, i64 0, i64 %4)
-  %5 = load ptr, ptr %3, align 8
-  %6 = load ptr, ptr %5, align 8
-  %7 = call i1 %6(ptr %3, i64 %1)
-  br i1 %7, label %if.entry, label %common.ret
-
-common.ret:                                       ; preds = %2, %if.entry
-  %common.ret.op = phi ptr [ %9, %if.entry ], [ null, %2 ]
-  ret ptr %common.ret.op
-
-if.entry:                                         ; preds = %2
-  %memberidx2 = getelementptr inbounds %Array_TypeNode_, ptr %0, i32 0, i32 1
-  %8 = load ptr, ptr %memberidx2, align 8
-  %ptridx = getelementptr inbounds ptr, ptr %8, i64 %1
-  %9 = load ptr, ptr %ptridx, align 8
-  br label %common.ret
+  %memberidx = getelementptr inbounds %Array_TypeNode_, ptr %0, i32 0, i32 1
+  %3 = load ptr, ptr %memberidx, align 8
+  %ptridx = getelementptr inbounds ptr, ptr %3, i64 %1
+  %4 = load ptr, ptr %ptridx, align 8
+  ret ptr %4
 }
 
 define i1 @Array_TypeNode____eq__(ptr %0, ptr %1) {
@@ -9734,11 +10418,11 @@ for.cond:                                         ; preds = %ifend7, %for.entry
 
 for.body:                                         ; preds = %for.cond
   %9 = load ptr, ptr %0, align 8
-  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %9, i32 0, i32 5
+  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %9, i32 0, i32 6
   %10 = load ptr, ptr %memberidx3, align 8
   %11 = call ptr %10(ptr %0, i64 %6)
   %12 = load ptr, ptr %1, align 8
-  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %12, i32 0, i32 5
+  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %12, i32 0, i32 6
   %13 = load ptr, ptr %memberidx4, align 8
   %14 = load i64, ptr %i, align 4
   %15 = call ptr %13(ptr %1, i64 %14)
@@ -9765,7 +10449,7 @@ for.cond:                                         ; preds = %ifend, %for.entry
 
 for.body:                                         ; preds = %for.cond
   %4 = load ptr, ptr %0, align 8
-  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %4, i32 0, i32 5
+  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %4, i32 0, i32 6
   %5 = load ptr, ptr %memberidx1, align 8
   %6 = call ptr %5(ptr %0, i64 %i.0)
   %7 = icmp eq ptr %6, %1
@@ -9884,7 +10568,7 @@ ifend:                                            ; preds = %2, %if.entry
 
 define void @Array_GenericParameterNode__append(ptr %0, ptr %1) {
   %3 = load ptr, ptr %0, align 8
-  %memberidx = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %3, i32 0, i32 2
+  %memberidx = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %3, i32 0, i32 3
   %4 = load ptr, ptr %memberidx, align 8
   call void %4(ptr %0, ptr %1)
   ret void
@@ -9929,6 +10613,46 @@ ifend:                                            ; preds = %3, %if.entry
   ret void
 }
 
+define ptr @ArrayIterator_GenericParameterNode____next__(ptr %0) {
+  %memberidx = getelementptr inbounds %ArrayIterator_GenericParameterNode_, ptr %0, i32 0, i32 2
+  %2 = load i64, ptr %memberidx, align 4
+  %3 = add i64 %2, 1
+  store i64 %3, ptr %memberidx, align 4
+  %memberidx2 = getelementptr inbounds %ArrayIterator_GenericParameterNode_, ptr %0, i32 0, i32 4
+  %4 = load ptr, ptr %memberidx2, align 8
+  %ptridx = getelementptr inbounds ptr, ptr %4, i64 %2
+  %5 = load ptr, ptr %ptridx, align 8
+  %memberidx3 = getelementptr inbounds %Iterator_GenericParameterNode_, ptr %0, i32 0, i32 1
+  %memberidx5 = getelementptr inbounds %ArrayIterator_GenericParameterNode_, ptr %0, i32 0, i32 3
+  %6 = load i64, ptr %memberidx5, align 4
+  %7 = icmp sgt i64 %3, %6
+  store i1 %7, ptr %memberidx3, align 1
+  ret ptr %5
+}
+
+define void @ArrayIterator_GenericParameterNode__constructor(ptr %0, ptr %1, i64 %2) {
+  store ptr @VTableArrayIterator_GenericParameterNode_, ptr %0, align 8
+  %memberidx = getelementptr inbounds %Iterator_GenericParameterNode_, ptr %0, i32 0, i32 1
+  store i1 false, ptr %memberidx, align 1
+  %memberidx1 = getelementptr inbounds %ArrayIterator_GenericParameterNode_, ptr %0, i32 0, i32 2
+  store i64 0, ptr %memberidx1, align 4
+  %memberidx2 = getelementptr inbounds %ArrayIterator_GenericParameterNode_, ptr %0, i32 0, i32 4
+  store ptr %1, ptr %memberidx2, align 8
+  %memberidx3 = getelementptr inbounds %ArrayIterator_GenericParameterNode_, ptr %0, i32 0, i32 3
+  store i64 %2, ptr %memberidx3, align 4
+  ret void
+}
+
+define ptr @Array_GenericParameterNode____iter__(ptr %0) {
+  %2 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%ArrayIterator_GenericParameterNode_, ptr null, i32 1) to i32))
+  %memberidx = getelementptr inbounds %Array_GenericParameterNode_, ptr %0, i32 0, i32 1
+  %3 = load ptr, ptr %memberidx, align 8
+  %memberidx1 = getelementptr inbounds %Array_GenericParameterNode_, ptr %0, i32 0, i32 2
+  %4 = load i64, ptr %memberidx1, align 4
+  call void @ArrayIterator_GenericParameterNode__constructor(ptr %2, ptr %3, i64 %4)
+  ret ptr %2
+}
+
 define void @Array_GenericParameterNode____setitem__(ptr %0, i64 %1, ptr %2) {
   %4 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%Range, ptr null, i32 1) to i32))
   %memberidx = getelementptr inbounds %Array_GenericParameterNode_, ptr %0, i32 0, i32 2
@@ -9951,25 +10675,11 @@ ifend:                                            ; preds = %3, %if.entry
 }
 
 define ptr @Array_GenericParameterNode____getitem__(ptr %0, i64 %1) {
-  %3 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%Range, ptr null, i32 1) to i32))
-  %memberidx = getelementptr inbounds %Array_GenericParameterNode_, ptr %0, i32 0, i32 2
-  %4 = load i64, ptr %memberidx, align 4
-  call void @Range_constructor(ptr %3, i64 0, i64 %4)
-  %5 = load ptr, ptr %3, align 8
-  %6 = load ptr, ptr %5, align 8
-  %7 = call i1 %6(ptr %3, i64 %1)
-  br i1 %7, label %if.entry, label %common.ret
-
-common.ret:                                       ; preds = %2, %if.entry
-  %common.ret.op = phi ptr [ %9, %if.entry ], [ null, %2 ]
-  ret ptr %common.ret.op
-
-if.entry:                                         ; preds = %2
-  %memberidx2 = getelementptr inbounds %Array_GenericParameterNode_, ptr %0, i32 0, i32 1
-  %8 = load ptr, ptr %memberidx2, align 8
-  %ptridx = getelementptr inbounds ptr, ptr %8, i64 %1
-  %9 = load ptr, ptr %ptridx, align 8
-  br label %common.ret
+  %memberidx = getelementptr inbounds %Array_GenericParameterNode_, ptr %0, i32 0, i32 1
+  %3 = load ptr, ptr %memberidx, align 8
+  %ptridx = getelementptr inbounds ptr, ptr %3, i64 %1
+  %4 = load ptr, ptr %ptridx, align 8
+  ret ptr %4
 }
 
 define i1 @Array_GenericParameterNode____eq__(ptr %0, ptr %1) {
@@ -9997,11 +10707,11 @@ for.cond:                                         ; preds = %ifend7, %for.entry
 
 for.body:                                         ; preds = %for.cond
   %9 = load ptr, ptr %0, align 8
-  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %9, i32 0, i32 5
+  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %9, i32 0, i32 6
   %10 = load ptr, ptr %memberidx3, align 8
   %11 = call ptr %10(ptr %0, i64 %6)
   %12 = load ptr, ptr %1, align 8
-  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %12, i32 0, i32 5
+  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %12, i32 0, i32 6
   %13 = load ptr, ptr %memberidx4, align 8
   %14 = load i64, ptr %i, align 4
   %15 = call ptr %13(ptr %1, i64 %14)
@@ -10028,7 +10738,7 @@ for.cond:                                         ; preds = %ifend, %for.entry
 
 for.body:                                         ; preds = %for.cond
   %4 = load ptr, ptr %0, align 8
-  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %4, i32 0, i32 5
+  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %4, i32 0, i32 6
   %5 = load ptr, ptr %memberidx1, align 8
   %6 = call ptr %5(ptr %0, i64 %i.0)
   %7 = icmp eq ptr %6, %1
@@ -10156,7 +10866,7 @@ ifend:                                            ; preds = %2, %if.entry
 
 define void @Array_ClassDeclarationNode__append(ptr %0, ptr %1) {
   %3 = load ptr, ptr %0, align 8
-  %memberidx = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %3, i32 0, i32 2
+  %memberidx = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %3, i32 0, i32 3
   %4 = load ptr, ptr %memberidx, align 8
   call void %4(ptr %0, ptr %1)
   ret void
@@ -10201,6 +10911,46 @@ ifend:                                            ; preds = %3, %if.entry
   ret void
 }
 
+define ptr @ArrayIterator_ClassDeclarationNode____next__(ptr %0) {
+  %memberidx = getelementptr inbounds %ArrayIterator_ClassDeclarationNode_, ptr %0, i32 0, i32 2
+  %2 = load i64, ptr %memberidx, align 4
+  %3 = add i64 %2, 1
+  store i64 %3, ptr %memberidx, align 4
+  %memberidx2 = getelementptr inbounds %ArrayIterator_ClassDeclarationNode_, ptr %0, i32 0, i32 4
+  %4 = load ptr, ptr %memberidx2, align 8
+  %ptridx = getelementptr inbounds ptr, ptr %4, i64 %2
+  %5 = load ptr, ptr %ptridx, align 8
+  %memberidx3 = getelementptr inbounds %Iterator_ClassDeclarationNode_, ptr %0, i32 0, i32 1
+  %memberidx5 = getelementptr inbounds %ArrayIterator_ClassDeclarationNode_, ptr %0, i32 0, i32 3
+  %6 = load i64, ptr %memberidx5, align 4
+  %7 = icmp sgt i64 %3, %6
+  store i1 %7, ptr %memberidx3, align 1
+  ret ptr %5
+}
+
+define void @ArrayIterator_ClassDeclarationNode__constructor(ptr %0, ptr %1, i64 %2) {
+  store ptr @VTableArrayIterator_ClassDeclarationNode_, ptr %0, align 8
+  %memberidx = getelementptr inbounds %Iterator_ClassDeclarationNode_, ptr %0, i32 0, i32 1
+  store i1 false, ptr %memberidx, align 1
+  %memberidx1 = getelementptr inbounds %ArrayIterator_ClassDeclarationNode_, ptr %0, i32 0, i32 2
+  store i64 0, ptr %memberidx1, align 4
+  %memberidx2 = getelementptr inbounds %ArrayIterator_ClassDeclarationNode_, ptr %0, i32 0, i32 4
+  store ptr %1, ptr %memberidx2, align 8
+  %memberidx3 = getelementptr inbounds %ArrayIterator_ClassDeclarationNode_, ptr %0, i32 0, i32 3
+  store i64 %2, ptr %memberidx3, align 4
+  ret void
+}
+
+define ptr @Array_ClassDeclarationNode____iter__(ptr %0) {
+  %2 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%ArrayIterator_ClassDeclarationNode_, ptr null, i32 1) to i32))
+  %memberidx = getelementptr inbounds %Array_ClassDeclarationNode_, ptr %0, i32 0, i32 1
+  %3 = load ptr, ptr %memberidx, align 8
+  %memberidx1 = getelementptr inbounds %Array_ClassDeclarationNode_, ptr %0, i32 0, i32 2
+  %4 = load i64, ptr %memberidx1, align 4
+  call void @ArrayIterator_ClassDeclarationNode__constructor(ptr %2, ptr %3, i64 %4)
+  ret ptr %2
+}
+
 define void @Array_ClassDeclarationNode____setitem__(ptr %0, i64 %1, ptr %2) {
   %4 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%Range, ptr null, i32 1) to i32))
   %memberidx = getelementptr inbounds %Array_ClassDeclarationNode_, ptr %0, i32 0, i32 2
@@ -10223,25 +10973,11 @@ ifend:                                            ; preds = %3, %if.entry
 }
 
 define ptr @Array_ClassDeclarationNode____getitem__(ptr %0, i64 %1) {
-  %3 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%Range, ptr null, i32 1) to i32))
-  %memberidx = getelementptr inbounds %Array_ClassDeclarationNode_, ptr %0, i32 0, i32 2
-  %4 = load i64, ptr %memberidx, align 4
-  call void @Range_constructor(ptr %3, i64 0, i64 %4)
-  %5 = load ptr, ptr %3, align 8
-  %6 = load ptr, ptr %5, align 8
-  %7 = call i1 %6(ptr %3, i64 %1)
-  br i1 %7, label %if.entry, label %common.ret
-
-common.ret:                                       ; preds = %2, %if.entry
-  %common.ret.op = phi ptr [ %9, %if.entry ], [ null, %2 ]
-  ret ptr %common.ret.op
-
-if.entry:                                         ; preds = %2
-  %memberidx2 = getelementptr inbounds %Array_ClassDeclarationNode_, ptr %0, i32 0, i32 1
-  %8 = load ptr, ptr %memberidx2, align 8
-  %ptridx = getelementptr inbounds ptr, ptr %8, i64 %1
-  %9 = load ptr, ptr %ptridx, align 8
-  br label %common.ret
+  %memberidx = getelementptr inbounds %Array_ClassDeclarationNode_, ptr %0, i32 0, i32 1
+  %3 = load ptr, ptr %memberidx, align 8
+  %ptridx = getelementptr inbounds ptr, ptr %3, i64 %1
+  %4 = load ptr, ptr %ptridx, align 8
+  ret ptr %4
 }
 
 define i1 @Array_ClassDeclarationNode____eq__(ptr %0, ptr %1) {
@@ -10269,11 +11005,11 @@ for.cond:                                         ; preds = %ifend7, %for.entry
 
 for.body:                                         ; preds = %for.cond
   %9 = load ptr, ptr %0, align 8
-  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %9, i32 0, i32 5
+  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %9, i32 0, i32 6
   %10 = load ptr, ptr %memberidx3, align 8
   %11 = call ptr %10(ptr %0, i64 %6)
   %12 = load ptr, ptr %1, align 8
-  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %12, i32 0, i32 5
+  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %12, i32 0, i32 6
   %13 = load ptr, ptr %memberidx4, align 8
   %14 = load i64, ptr %i, align 4
   %15 = call ptr %13(ptr %1, i64 %14)
@@ -10300,7 +11036,7 @@ for.cond:                                         ; preds = %ifend, %for.entry
 
 for.body:                                         ; preds = %for.cond
   %4 = load ptr, ptr %0, align 8
-  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %4, i32 0, i32 5
+  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %4, i32 0, i32 6
   %5 = load ptr, ptr %memberidx1, align 8
   %6 = call ptr %5(ptr %0, i64 %i.0)
   %7 = icmp eq ptr %6, %1
@@ -10413,7 +11149,7 @@ ifend:                                            ; preds = %2, %if.entry
 
 define void @Array_FunctionDeclarationNode__append(ptr %0, ptr %1) {
   %3 = load ptr, ptr %0, align 8
-  %memberidx = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %3, i32 0, i32 2
+  %memberidx = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %3, i32 0, i32 3
   %4 = load ptr, ptr %memberidx, align 8
   call void %4(ptr %0, ptr %1)
   ret void
@@ -10458,6 +11194,46 @@ ifend:                                            ; preds = %3, %if.entry
   ret void
 }
 
+define ptr @ArrayIterator_FunctionDeclarationNode____next__(ptr %0) {
+  %memberidx = getelementptr inbounds %ArrayIterator_FunctionDeclarationNode_, ptr %0, i32 0, i32 2
+  %2 = load i64, ptr %memberidx, align 4
+  %3 = add i64 %2, 1
+  store i64 %3, ptr %memberidx, align 4
+  %memberidx2 = getelementptr inbounds %ArrayIterator_FunctionDeclarationNode_, ptr %0, i32 0, i32 4
+  %4 = load ptr, ptr %memberidx2, align 8
+  %ptridx = getelementptr inbounds ptr, ptr %4, i64 %2
+  %5 = load ptr, ptr %ptridx, align 8
+  %memberidx3 = getelementptr inbounds %Iterator_FunctionDeclarationNode_, ptr %0, i32 0, i32 1
+  %memberidx5 = getelementptr inbounds %ArrayIterator_FunctionDeclarationNode_, ptr %0, i32 0, i32 3
+  %6 = load i64, ptr %memberidx5, align 4
+  %7 = icmp sgt i64 %3, %6
+  store i1 %7, ptr %memberidx3, align 1
+  ret ptr %5
+}
+
+define void @ArrayIterator_FunctionDeclarationNode__constructor(ptr %0, ptr %1, i64 %2) {
+  store ptr @VTableArrayIterator_FunctionDeclarationNode_, ptr %0, align 8
+  %memberidx = getelementptr inbounds %Iterator_FunctionDeclarationNode_, ptr %0, i32 0, i32 1
+  store i1 false, ptr %memberidx, align 1
+  %memberidx1 = getelementptr inbounds %ArrayIterator_FunctionDeclarationNode_, ptr %0, i32 0, i32 2
+  store i64 0, ptr %memberidx1, align 4
+  %memberidx2 = getelementptr inbounds %ArrayIterator_FunctionDeclarationNode_, ptr %0, i32 0, i32 4
+  store ptr %1, ptr %memberidx2, align 8
+  %memberidx3 = getelementptr inbounds %ArrayIterator_FunctionDeclarationNode_, ptr %0, i32 0, i32 3
+  store i64 %2, ptr %memberidx3, align 4
+  ret void
+}
+
+define ptr @Array_FunctionDeclarationNode____iter__(ptr %0) {
+  %2 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%ArrayIterator_FunctionDeclarationNode_, ptr null, i32 1) to i32))
+  %memberidx = getelementptr inbounds %Array_FunctionDeclarationNode_, ptr %0, i32 0, i32 1
+  %3 = load ptr, ptr %memberidx, align 8
+  %memberidx1 = getelementptr inbounds %Array_FunctionDeclarationNode_, ptr %0, i32 0, i32 2
+  %4 = load i64, ptr %memberidx1, align 4
+  call void @ArrayIterator_FunctionDeclarationNode__constructor(ptr %2, ptr %3, i64 %4)
+  ret ptr %2
+}
+
 define void @Array_FunctionDeclarationNode____setitem__(ptr %0, i64 %1, ptr %2) {
   %4 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%Range, ptr null, i32 1) to i32))
   %memberidx = getelementptr inbounds %Array_FunctionDeclarationNode_, ptr %0, i32 0, i32 2
@@ -10480,25 +11256,11 @@ ifend:                                            ; preds = %3, %if.entry
 }
 
 define ptr @Array_FunctionDeclarationNode____getitem__(ptr %0, i64 %1) {
-  %3 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%Range, ptr null, i32 1) to i32))
-  %memberidx = getelementptr inbounds %Array_FunctionDeclarationNode_, ptr %0, i32 0, i32 2
-  %4 = load i64, ptr %memberidx, align 4
-  call void @Range_constructor(ptr %3, i64 0, i64 %4)
-  %5 = load ptr, ptr %3, align 8
-  %6 = load ptr, ptr %5, align 8
-  %7 = call i1 %6(ptr %3, i64 %1)
-  br i1 %7, label %if.entry, label %common.ret
-
-common.ret:                                       ; preds = %2, %if.entry
-  %common.ret.op = phi ptr [ %9, %if.entry ], [ null, %2 ]
-  ret ptr %common.ret.op
-
-if.entry:                                         ; preds = %2
-  %memberidx2 = getelementptr inbounds %Array_FunctionDeclarationNode_, ptr %0, i32 0, i32 1
-  %8 = load ptr, ptr %memberidx2, align 8
-  %ptridx = getelementptr inbounds ptr, ptr %8, i64 %1
-  %9 = load ptr, ptr %ptridx, align 8
-  br label %common.ret
+  %memberidx = getelementptr inbounds %Array_FunctionDeclarationNode_, ptr %0, i32 0, i32 1
+  %3 = load ptr, ptr %memberidx, align 8
+  %ptridx = getelementptr inbounds ptr, ptr %3, i64 %1
+  %4 = load ptr, ptr %ptridx, align 8
+  ret ptr %4
 }
 
 define i1 @Array_FunctionDeclarationNode____eq__(ptr %0, ptr %1) {
@@ -10526,11 +11288,11 @@ for.cond:                                         ; preds = %ifend7, %for.entry
 
 for.body:                                         ; preds = %for.cond
   %9 = load ptr, ptr %0, align 8
-  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %9, i32 0, i32 5
+  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %9, i32 0, i32 6
   %10 = load ptr, ptr %memberidx3, align 8
   %11 = call ptr %10(ptr %0, i64 %6)
   %12 = load ptr, ptr %1, align 8
-  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %12, i32 0, i32 5
+  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %12, i32 0, i32 6
   %13 = load ptr, ptr %memberidx4, align 8
   %14 = load i64, ptr %i, align 4
   %15 = call ptr %13(ptr %1, i64 %14)
@@ -10557,7 +11319,7 @@ for.cond:                                         ; preds = %ifend, %for.entry
 
 for.body:                                         ; preds = %for.cond
   %4 = load ptr, ptr %0, align 8
-  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %4, i32 0, i32 5
+  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %4, i32 0, i32 6
   %5 = load ptr, ptr %memberidx1, align 8
   %6 = call ptr %5(ptr %0, i64 %i.0)
   %7 = icmp eq ptr %6, %1
@@ -10662,7 +11424,7 @@ if.entry:                                         ; preds = %while.entry
   call void @Parser_advance(ptr %3)
   %9 = load ptr, ptr %4, align 8
   %10 = load ptr, ptr %9, align 8
-  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %10, i32 0, i32 2
+  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %10, i32 0, i32 3
   %11 = load ptr, ptr %memberidx3, align 8
   %12 = call ptr @Parser_parse_function(ptr %3)
   call void %11(ptr %9, ptr %12)
@@ -10681,7 +11443,7 @@ if.entry6:                                        ; preds = %else
   %memberidx9 = getelementptr inbounds %ModuleAST, ptr %4, i32 0, i32 1
   %15 = load ptr, ptr %memberidx9, align 8
   %16 = load ptr, ptr %15, align 8
-  %memberidx10 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %16, i32 0, i32 2
+  %memberidx10 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %16, i32 0, i32 3
   %17 = load ptr, ptr %memberidx10, align 8
   %18 = call ptr @Parser_parse_class(ptr %3)
   call void %17(ptr %15, ptr %18)
@@ -10695,7 +11457,7 @@ if.entry13:                                       ; preds = %else7
   %memberidx16 = getelementptr inbounds %ModuleAST, ptr %4, i32 0, i32 2
   %20 = load ptr, ptr %memberidx16, align 8
   %21 = load ptr, ptr %20, align 8
-  %memberidx17 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %21, i32 0, i32 2
+  %memberidx17 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %21, i32 0, i32 3
   %22 = load ptr, ptr %memberidx17, align 8
   %23 = call ptr @Parser_parse_enum(ptr %3)
   call void %22(ptr %20, ptr %23)
@@ -10709,7 +11471,7 @@ if.entry20:                                       ; preds = %else14
   %memberidx23 = getelementptr inbounds %ModuleAST, ptr %4, i32 0, i32 3
   %25 = load ptr, ptr %memberidx23, align 8
   %26 = load ptr, ptr %25, align 8
-  %memberidx24 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %26, i32 0, i32 2
+  %memberidx24 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %26, i32 0, i32 3
   %27 = load ptr, ptr %memberidx24, align 8
   %28 = call ptr @Parser_parse_import(ptr %3)
   call void %27(ptr %25, ptr %28)
@@ -10723,7 +11485,7 @@ if.entry27:                                       ; preds = %else21
   %memberidx30 = getelementptr inbounds %ModuleAST, ptr %4, i32 0, i32 4
   %30 = load ptr, ptr %memberidx30, align 8
   %31 = load ptr, ptr %30, align 8
-  %memberidx31 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %31, i32 0, i32 2
+  %memberidx31 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %31, i32 0, i32 3
   %32 = load ptr, ptr %memberidx31, align 8
   %33 = call ptr @Parser_parse_const_declaration_statement(ptr %3)
   call void %32(ptr %30, ptr %33)
@@ -10737,7 +11499,7 @@ if.entry34:                                       ; preds = %else28
   %memberidx37 = getelementptr inbounds %ModuleAST, ptr %4, i32 0, i32 5
   %35 = load ptr, ptr %memberidx37, align 8
   %36 = load ptr, ptr %35, align 8
-  %memberidx38 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %36, i32 0, i32 2
+  %memberidx38 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %36, i32 0, i32 3
   %37 = load ptr, ptr %memberidx38, align 8
   %38 = call ptr @Parser_parse_variable_declaration_statement(ptr %3)
   call void %37(ptr %35, ptr %38)
@@ -10750,7 +11512,7 @@ else35:                                           ; preds = %else28
   %41 = load ptr, ptr %40, align 8
   %memberidx43 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %41, i32 0, i32 4
   %42 = load ptr, ptr %memberidx43, align 8
-  %43 = call ptr @string_from_bytes(ptr @181, i64 4)
+  %43 = call ptr @string_from_bytes(ptr @180, i64 4)
   %44 = call i1 %42(ptr %40, ptr %43)
   %45 = and i1 %39, %44
   br i1 %45, label %if.entry44, label %else45
@@ -10759,14 +11521,14 @@ if.entry44:                                       ; preds = %else35
   %memberidx47 = getelementptr inbounds %ModuleAST, ptr %4, i32 0, i32 6
   %46 = load ptr, ptr %memberidx47, align 8
   %47 = load ptr, ptr %46, align 8
-  %memberidx48 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %47, i32 0, i32 2
+  %memberidx48 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %47, i32 0, i32 3
   %48 = load ptr, ptr %memberidx48, align 8
   %49 = call ptr @Parser_parse_type_alias(ptr %3)
   call void %48(ptr %46, ptr %49)
   br label %ifend
 
 else45:                                           ; preds = %else35
-  %50 = call ptr @string_from_bytes(ptr @182, i64 79)
+  %50 = call ptr @string_from_bytes(ptr @181, i64 79)
   call void @Parser_error(ptr %3, ptr %50)
   br label %ifend
 }
@@ -10840,7 +11602,7 @@ define void @Parser_advance(ptr %0) {
 if.entry:                                         ; preds = %1
   %memberidx3 = getelementptr inbounds %Parser, ptr %0, i32 0, i32 2
   %6 = load ptr, ptr %3, align 8
-  %memberidx5 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %6, i32 0, i32 5
+  %memberidx5 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %6, i32 0, i32 6
   %7 = load ptr, ptr %memberidx5, align 8
   %8 = add i64 %2, 1
   store i64 %8, ptr %memberidx, align 4
@@ -10879,7 +11641,7 @@ else:                                             ; preds = %1
   %memberidx10 = getelementptr inbounds %BlockNode, ptr %2, i32 0, i32 1
   %13 = load ptr, ptr %memberidx10, align 8
   %14 = load ptr, ptr %13, align 8
-  %memberidx11 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %14, i32 0, i32 2
+  %memberidx11 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %14, i32 0, i32 3
   %15 = load ptr, ptr %memberidx11, align 8
   %16 = call ptr @Parser_parse_statement(ptr %0)
   call void %15(ptr %13, ptr %16)
@@ -10892,7 +11654,7 @@ while.entry:                                      ; preds = %while.entry, %if.en
   %memberidx6 = getelementptr inbounds %BlockNode, ptr %2, i32 0, i32 1
   %17 = load ptr, ptr %memberidx6, align 8
   %18 = load ptr, ptr %17, align 8
-  %memberidx7 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %18, i32 0, i32 2
+  %memberidx7 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %18, i32 0, i32 3
   %19 = load ptr, ptr %memberidx7, align 8
   %20 = call ptr @Parser_parse_statement(ptr %0)
   call void %19(ptr %17, ptr %20)
@@ -11028,7 +11790,7 @@ if.entry20:                                       ; preds = %if.entry15
   %rec_node = alloca ptr, align 8
   %37 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%RecordTypeNode, ptr null, i32 1) to i32))
   %38 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%IdentifierToken, ptr null, i32 1) to i32))
-  %39 = call ptr @string_from_bytes(ptr @176, i64 5)
+  %39 = call ptr @string_from_bytes(ptr @175, i64 5)
   %40 = load ptr, ptr %memberidx, align 8
   %memberidx24 = getelementptr inbounds %Token, ptr %40, i32 0, i32 1
   %41 = load ptr, ptr %memberidx24, align 8
@@ -11041,7 +11803,7 @@ if.entry20:                                       ; preds = %if.entry15
   %memberidx27 = getelementptr inbounds %RecordTypeNode, ptr %37, i32 0, i32 3
   %44 = load ptr, ptr %memberidx27, align 8
   %45 = load ptr, ptr %44, align 8
-  %memberidx28 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %45, i32 0, i32 2
+  %memberidx28 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %45, i32 0, i32 3
   %46 = load ptr, ptr %memberidx28, align 8
   call void %46(ptr %44, ptr %type_node.1)
   %47 = load ptr, ptr %rec_node, align 8
@@ -11209,14 +11971,14 @@ common.ret:                                       ; preds = %ifend, %if.entry
 
 if.entry:                                         ; preds = %2
   %8 = load ptr, ptr %5, align 8
-  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %8, i32 0, i32 5
+  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %8, i32 0, i32 6
   %9 = load ptr, ptr %memberidx4, align 8
   %10 = call ptr %9(ptr %5, i64 %4)
   br label %common.ret
 
 ifend:                                            ; preds = %2
   %11 = load ptr, ptr %5, align 8
-  %memberidx6 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %11, i32 0, i32 5
+  %memberidx6 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %11, i32 0, i32 6
   %12 = load ptr, ptr %memberidx6, align 8
   %13 = sub i64 %6, 1
   %14 = call ptr %12(ptr %5, i64 %13)
@@ -11294,7 +12056,7 @@ ifend:                                            ; preds = %2, %if.entry
 
 define void @Array_ExpressionNode__append(ptr %0, ptr %1) {
   %3 = load ptr, ptr %0, align 8
-  %memberidx = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %3, i32 0, i32 2
+  %memberidx = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %3, i32 0, i32 3
   %4 = load ptr, ptr %memberidx, align 8
   call void %4(ptr %0, ptr %1)
   ret void
@@ -11339,6 +12101,46 @@ ifend:                                            ; preds = %3, %if.entry
   ret void
 }
 
+define ptr @ArrayIterator_ExpressionNode____next__(ptr %0) {
+  %memberidx = getelementptr inbounds %ArrayIterator_ExpressionNode_, ptr %0, i32 0, i32 2
+  %2 = load i64, ptr %memberidx, align 4
+  %3 = add i64 %2, 1
+  store i64 %3, ptr %memberidx, align 4
+  %memberidx2 = getelementptr inbounds %ArrayIterator_ExpressionNode_, ptr %0, i32 0, i32 4
+  %4 = load ptr, ptr %memberidx2, align 8
+  %ptridx = getelementptr inbounds ptr, ptr %4, i64 %2
+  %5 = load ptr, ptr %ptridx, align 8
+  %memberidx3 = getelementptr inbounds %Iterator_ExpressionNode_, ptr %0, i32 0, i32 1
+  %memberidx5 = getelementptr inbounds %ArrayIterator_ExpressionNode_, ptr %0, i32 0, i32 3
+  %6 = load i64, ptr %memberidx5, align 4
+  %7 = icmp sgt i64 %3, %6
+  store i1 %7, ptr %memberidx3, align 1
+  ret ptr %5
+}
+
+define void @ArrayIterator_ExpressionNode__constructor(ptr %0, ptr %1, i64 %2) {
+  store ptr @VTableArrayIterator_ExpressionNode_, ptr %0, align 8
+  %memberidx = getelementptr inbounds %Iterator_ExpressionNode_, ptr %0, i32 0, i32 1
+  store i1 false, ptr %memberidx, align 1
+  %memberidx1 = getelementptr inbounds %ArrayIterator_ExpressionNode_, ptr %0, i32 0, i32 2
+  store i64 0, ptr %memberidx1, align 4
+  %memberidx2 = getelementptr inbounds %ArrayIterator_ExpressionNode_, ptr %0, i32 0, i32 4
+  store ptr %1, ptr %memberidx2, align 8
+  %memberidx3 = getelementptr inbounds %ArrayIterator_ExpressionNode_, ptr %0, i32 0, i32 3
+  store i64 %2, ptr %memberidx3, align 4
+  ret void
+}
+
+define ptr @Array_ExpressionNode____iter__(ptr %0) {
+  %2 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%ArrayIterator_ExpressionNode_, ptr null, i32 1) to i32))
+  %memberidx = getelementptr inbounds %Array_ExpressionNode_, ptr %0, i32 0, i32 1
+  %3 = load ptr, ptr %memberidx, align 8
+  %memberidx1 = getelementptr inbounds %Array_ExpressionNode_, ptr %0, i32 0, i32 2
+  %4 = load i64, ptr %memberidx1, align 4
+  call void @ArrayIterator_ExpressionNode__constructor(ptr %2, ptr %3, i64 %4)
+  ret ptr %2
+}
+
 define void @Array_ExpressionNode____setitem__(ptr %0, i64 %1, ptr %2) {
   %4 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%Range, ptr null, i32 1) to i32))
   %memberidx = getelementptr inbounds %Array_ExpressionNode_, ptr %0, i32 0, i32 2
@@ -11361,25 +12163,11 @@ ifend:                                            ; preds = %3, %if.entry
 }
 
 define ptr @Array_ExpressionNode____getitem__(ptr %0, i64 %1) {
-  %3 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%Range, ptr null, i32 1) to i32))
-  %memberidx = getelementptr inbounds %Array_ExpressionNode_, ptr %0, i32 0, i32 2
-  %4 = load i64, ptr %memberidx, align 4
-  call void @Range_constructor(ptr %3, i64 0, i64 %4)
-  %5 = load ptr, ptr %3, align 8
-  %6 = load ptr, ptr %5, align 8
-  %7 = call i1 %6(ptr %3, i64 %1)
-  br i1 %7, label %if.entry, label %common.ret
-
-common.ret:                                       ; preds = %2, %if.entry
-  %common.ret.op = phi ptr [ %9, %if.entry ], [ null, %2 ]
-  ret ptr %common.ret.op
-
-if.entry:                                         ; preds = %2
-  %memberidx2 = getelementptr inbounds %Array_ExpressionNode_, ptr %0, i32 0, i32 1
-  %8 = load ptr, ptr %memberidx2, align 8
-  %ptridx = getelementptr inbounds ptr, ptr %8, i64 %1
-  %9 = load ptr, ptr %ptridx, align 8
-  br label %common.ret
+  %memberidx = getelementptr inbounds %Array_ExpressionNode_, ptr %0, i32 0, i32 1
+  %3 = load ptr, ptr %memberidx, align 8
+  %ptridx = getelementptr inbounds ptr, ptr %3, i64 %1
+  %4 = load ptr, ptr %ptridx, align 8
+  ret ptr %4
 }
 
 define i1 @Array_ExpressionNode____eq__(ptr %0, ptr %1) {
@@ -11407,11 +12195,11 @@ for.cond:                                         ; preds = %ifend7, %for.entry
 
 for.body:                                         ; preds = %for.cond
   %9 = load ptr, ptr %0, align 8
-  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %9, i32 0, i32 5
+  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %9, i32 0, i32 6
   %10 = load ptr, ptr %memberidx3, align 8
   %11 = call ptr %10(ptr %0, i64 %6)
   %12 = load ptr, ptr %1, align 8
-  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %12, i32 0, i32 5
+  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %12, i32 0, i32 6
   %13 = load ptr, ptr %memberidx4, align 8
   %14 = load i64, ptr %i, align 4
   %15 = call ptr %13(ptr %1, i64 %14)
@@ -11438,7 +12226,7 @@ for.cond:                                         ; preds = %ifend, %for.entry
 
 for.body:                                         ; preds = %for.cond
   %4 = load ptr, ptr %0, align 8
-  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %4, i32 0, i32 5
+  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %4, i32 0, i32 6
   %5 = load ptr, ptr %memberidx1, align 8
   %6 = call ptr %5(ptr %0, i64 %i.0)
   %7 = icmp eq ptr %6, %1
@@ -11470,7 +12258,7 @@ define void @Array_ExpressionNode__constructor(ptr %0, i64 %1) {
 define void @Parser_parse_expression_list(ptr %0, ptr %1) {
   call void @Parser_new_lines(ptr %0)
   %3 = load ptr, ptr %1, align 8
-  %memberidx = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %3, i32 0, i32 2
+  %memberidx = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %3, i32 0, i32 3
   %4 = load ptr, ptr %memberidx, align 8
   %5 = call ptr @Parser_parse_expression(ptr %0)
   call void %4(ptr %1, ptr %5)
@@ -11487,7 +12275,7 @@ while.entry:                                      ; preds = %while.entry, %2
   call void @Parser_advance(ptr %0)
   call void @Parser_new_lines(ptr %0)
   %11 = load ptr, ptr %1, align 8
-  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %11, i32 0, i32 2
+  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %11, i32 0, i32 3
   %12 = load ptr, ptr %memberidx3, align 8
   %13 = call ptr @Parser_parse_expression(ptr %0)
   call void %12(ptr %1, ptr %13)
@@ -11542,7 +12330,7 @@ for.cond:                                         ; preds = %for.body, %for.entr
 for.body:                                         ; preds = %for.cond
   %10 = load ptr, ptr %memberidx3, align 8
   %11 = load ptr, ptr %10, align 8
-  %memberidx7 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %11, i32 0, i32 5
+  %memberidx7 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %11, i32 0, i32 6
   %12 = load ptr, ptr %memberidx7, align 8
   %13 = call ptr %12(ptr %10, i64 %i.0)
   store ptr %13, ptr %2, align 8
@@ -11550,7 +12338,7 @@ for.body:                                         ; preds = %for.cond
   store i64 -1, ptr %memberidx8, align 4
   call void @Parser_advance(ptr %2)
   %14 = load ptr, ptr %4, align 8
-  %memberidx9 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %14, i32 0, i32 2
+  %memberidx9 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %14, i32 0, i32 3
   %15 = load ptr, ptr %memberidx9, align 8
   %16 = call ptr @Parser_parse_expression(ptr %2)
   call void %15(ptr %4, ptr %16)
@@ -11688,7 +12476,7 @@ else68:                                           ; preds = %else62
   br i1 %19, label %if.entry73, label %ifend
 
 if.entry73:                                       ; preds = %else68
-  %20 = call ptr @string_from_bytes(ptr @175, i64 26)
+  %20 = call ptr @string_from_bytes(ptr @174, i64 26)
   call void @Parser_error(ptr %0, ptr %20)
   br label %ifend
 }
@@ -11843,7 +12631,7 @@ ifend13:                                          ; preds = %ifend7, %if.entry11
 
 if.entry17:                                       ; preds = %ifend13
   %memberidx20 = getelementptr inbounds %ForStatementNode, ptr %2, i32 0, i32 4
-  %29 = call ptr @Parser_parse_expression(ptr %0)
+  %29 = call ptr @Parser_parse_statement(ptr %0)
   store ptr %29, ptr %memberidx20, align 8
   br label %ifend
 
@@ -12078,7 +12866,7 @@ ifend38:                                          ; preds = %else32
 
 define void @Parser_parse_args(ptr %0, ptr %1) {
   %3 = load ptr, ptr %1, align 8
-  %memberidx = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %3, i32 0, i32 2
+  %memberidx = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %3, i32 0, i32 3
   %4 = load ptr, ptr %memberidx, align 8
   %5 = call ptr @Parser_parse_arg(ptr %0)
   call void %4(ptr %1, ptr %5)
@@ -12093,7 +12881,7 @@ define void @Parser_parse_args(ptr %0, ptr %1) {
 while.entry:                                      ; preds = %while.entry, %2
   %11 = call ptr @Parser_eat(ptr %0, i64 3)
   %12 = load ptr, ptr %1, align 8
-  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %12, i32 0, i32 2
+  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %12, i32 0, i32 3
   %13 = load ptr, ptr %memberidx3, align 8
   %14 = call ptr @Parser_parse_arg(ptr %0)
   call void %13(ptr %1, ptr %14)
@@ -12178,7 +12966,7 @@ define ptr @Parser_parse_type_alias(ptr %0) {
 
 define void @Parser_parse_type_list(ptr %0, ptr %1) {
   %3 = load ptr, ptr %1, align 8
-  %memberidx = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %3, i32 0, i32 2
+  %memberidx = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %3, i32 0, i32 3
   %4 = load ptr, ptr %memberidx, align 8
   %5 = call ptr @Parser_parse_type(ptr %0)
   call void %4(ptr %1, ptr %5)
@@ -12193,7 +12981,7 @@ define void @Parser_parse_type_list(ptr %0, ptr %1) {
 while.entry:                                      ; preds = %while.entry, %2
   call void @Parser_advance(ptr %0)
   %11 = load ptr, ptr %1, align 8
-  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %11, i32 0, i32 2
+  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %11, i32 0, i32 3
   %12 = load ptr, ptr %memberidx3, align 8
   %13 = call ptr @Parser_parse_type(ptr %0)
   call void %12(ptr %1, ptr %13)
@@ -12336,7 +13124,7 @@ if.entry34:                                       ; preds = %else30
   br label %common.ret
 
 else35:                                           ; preds = %else30
-  %26 = call ptr @string_from_bytes(ptr @177, i64 28)
+  %26 = call ptr @string_from_bytes(ptr @176, i64 28)
   call void @Parser_error(ptr %0, ptr %26)
   %27 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%ExpressionNode, ptr null, i32 1) to i32))
   %28 = load ptr, ptr %memberidx, align 8
@@ -12411,14 +13199,14 @@ if.entry17:                                       ; preds = %ifend13
   %24 = load ptr, ptr %memberidx22, align 8
   %25 = call ptr %24(ptr %22)
   %26 = alloca ptr, align 8
-  %27 = call i64 (ptr, ptr, ...) @asprintf(ptr %26, ptr @178, ptr %25)
+  %27 = call i64 (ptr, ptr, ...) @asprintf(ptr %26, ptr @177, ptr %25)
   %28 = load ptr, ptr %26, align 8
   %29 = call ptr @string_from_bytes(ptr %28, i64 %27)
   call void @Parser_error(ptr %0, ptr %29)
   %memberidx23 = getelementptr inbounds %Parser, ptr %0, i32 0, i32 1
   %30 = load ptr, ptr %memberidx23, align 8
   %31 = load ptr, ptr %30, align 8
-  %memberidx24 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %31, i32 0, i32 5
+  %memberidx24 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %31, i32 0, i32 6
   %32 = load ptr, ptr %memberidx24, align 8
   %memberidx26 = getelementptr inbounds %Array_FloError_, ptr %30, i32 0, i32 2
   %33 = load i64, ptr %memberidx26, align 4
@@ -12586,7 +13374,7 @@ ifend9:                                           ; preds = %while.entry, %if.en
   %memberidx11 = getelementptr inbounds %EnumNode, ptr %2, i32 0, i32 1
   %21 = load ptr, ptr %memberidx11, align 8
   %22 = load ptr, ptr %21, align 8
-  %memberidx12 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %22, i32 0, i32 2
+  %memberidx12 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %22, i32 0, i32 3
   %23 = load ptr, ptr %memberidx12, align 8
   %24 = load ptr, ptr %enum_field, align 8
   call void %23(ptr %21, ptr %24)
@@ -12683,7 +13471,7 @@ ifend11:                                          ; preds = %if.entry3, %if.entr
   %memberidx14 = getelementptr inbounds %ClassDeclarationNode, ptr %1, i32 0, i32 3
   %35 = load ptr, ptr %memberidx14, align 8
   %36 = load ptr, ptr %35, align 8
-  %memberidx15 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %36, i32 0, i32 2
+  %memberidx15 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %36, i32 0, i32 3
   %37 = load ptr, ptr %memberidx15, align 8
   %38 = load ptr, ptr %field, align 8
   call void %37(ptr %35, ptr %38)
@@ -12699,14 +13487,14 @@ if.entry17:                                       ; preds = %else4
   %memberidx21 = getelementptr inbounds %ClassDeclarationNode, ptr %1, i32 0, i32 4
   %41 = load ptr, ptr %memberidx21, align 8
   %42 = load ptr, ptr %41, align 8
-  %memberidx22 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %42, i32 0, i32 2
+  %memberidx22 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %42, i32 0, i32 3
   %43 = load ptr, ptr %memberidx22, align 8
   %44 = load ptr, ptr %method, align 8
   call void %43(ptr %41, ptr %44)
   br label %ifend5
 
 else18:                                           ; preds = %else4
-  %45 = call ptr @string_from_bytes(ptr @180, i64 19)
+  %45 = call ptr @string_from_bytes(ptr @179, i64 19)
   call void @Parser_error(ptr %0, ptr %45)
   br label %common.ret
 }
@@ -12728,7 +13516,7 @@ if.entry:                                         ; preds = %1
   %9 = load ptr, ptr %8, align 8
   %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %9, i32 0, i32 4
   %10 = load ptr, ptr %memberidx4, align 8
-  %11 = call ptr @string_from_bytes(ptr @179, i64 4)
+  %11 = call ptr @string_from_bytes(ptr @178, i64 4)
   %12 = call i1 %10(ptr %8, ptr %11)
   br i1 %12, label %if.entry5, label %ifend
 
@@ -12851,7 +13639,7 @@ ifend:                                            ; preds = %1, %if.entry
 define void @Parser_parse_generic_parameters(ptr %0, ptr %1) {
   call void @Parser_advance(ptr %0)
   %3 = load ptr, ptr %1, align 8
-  %memberidx = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %3, i32 0, i32 2
+  %memberidx = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %3, i32 0, i32 3
   %4 = load ptr, ptr %memberidx, align 8
   %5 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%GenericParameterNode, ptr null, i32 1) to i32))
   %6 = call ptr @Parser_eat(ptr %0, i64 51)
@@ -12868,7 +13656,7 @@ define void @Parser_parse_generic_parameters(ptr %0, ptr %1) {
 while.entry:                                      ; preds = %while.entry, %2
   call void @Parser_advance(ptr %0)
   %12 = load ptr, ptr %1, align 8
-  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %12, i32 0, i32 2
+  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %12, i32 0, i32 3
   %13 = load ptr, ptr %memberidx3, align 8
   %14 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%GenericParameterNode, ptr null, i32 1) to i32))
   %15 = call ptr @Parser_eat(ptr %0, i64 51)
@@ -12961,7 +13749,7 @@ define ptr @Parser_parse_import(ptr %0) {
 if.entry:                                         ; preds = %1
   %6 = load ptr, ptr %2, align 8
   %7 = load ptr, ptr %6, align 8
-  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %7, i32 0, i32 2
+  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %7, i32 0, i32 3
   %8 = load ptr, ptr %memberidx3, align 8
   call void %8(ptr %6, ptr %3)
   call void @Parser_advance(ptr %0)
@@ -12982,7 +13770,7 @@ while.entry:                                      ; preds = %while.entry, %if.en
   call void @Parser_advance(ptr %0)
   %15 = load ptr, ptr %2, align 8
   %16 = load ptr, ptr %15, align 8
-  %memberidx8 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %16, i32 0, i32 2
+  %memberidx8 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %16, i32 0, i32 3
   %17 = load ptr, ptr %memberidx8, align 8
   %18 = call ptr @Parser_eat(ptr %0, i64 51)
   call void %17(ptr %15, ptr %18)
@@ -13018,7 +13806,7 @@ else:                                             ; preds = %2
   br i1 %6, label %if.entry2, label %else3
 
 if.entry2:                                        ; preds = %else
-  %7 = call ptr @string_from_bytes(ptr @164, i64 22)
+  %7 = call ptr @string_from_bytes(ptr @163, i64 22)
   call void @Parser_error(ptr %0, ptr %7)
   br label %ifend4
 
@@ -13034,7 +13822,7 @@ ifend4:                                           ; preds = %if.entry32, %else30
   br label %common.ret
 
 if.entry5:                                        ; preds = %else3
-  %11 = call ptr @string_from_bytes(ptr @165, i64 12)
+  %11 = call ptr @string_from_bytes(ptr @164, i64 12)
   call void @Parser_error(ptr %0, ptr %11)
   br label %ifend4
 
@@ -13043,7 +13831,7 @@ else6:                                            ; preds = %else3
   br i1 %12, label %if.entry8, label %else9
 
 if.entry8:                                        ; preds = %else6
-  %13 = call ptr @string_from_bytes(ptr @166, i64 12)
+  %13 = call ptr @string_from_bytes(ptr @165, i64 12)
   call void @Parser_error(ptr %0, ptr %13)
   br label %ifend4
 
@@ -13052,7 +13840,7 @@ else9:                                            ; preds = %else6
   br i1 %14, label %if.entry11, label %else12
 
 if.entry11:                                       ; preds = %else9
-  %15 = call ptr @string_from_bytes(ptr @167, i64 12)
+  %15 = call ptr @string_from_bytes(ptr @166, i64 12)
   call void @Parser_error(ptr %0, ptr %15)
   br label %ifend4
 
@@ -13061,7 +13849,7 @@ else12:                                           ; preds = %else9
   br i1 %16, label %if.entry14, label %else15
 
 if.entry14:                                       ; preds = %else12
-  %17 = call ptr @string_from_bytes(ptr @168, i64 12)
+  %17 = call ptr @string_from_bytes(ptr @167, i64 12)
   call void @Parser_error(ptr %0, ptr %17)
   br label %ifend4
 
@@ -13070,7 +13858,7 @@ else15:                                           ; preds = %else12
   br i1 %18, label %if.entry17, label %else18
 
 if.entry17:                                       ; preds = %else15
-  %19 = call ptr @string_from_bytes(ptr @169, i64 12)
+  %19 = call ptr @string_from_bytes(ptr @168, i64 12)
   call void @Parser_error(ptr %0, ptr %19)
   br label %ifend4
 
@@ -13079,7 +13867,7 @@ else18:                                           ; preds = %else15
   br i1 %20, label %if.entry20, label %else21
 
 if.entry20:                                       ; preds = %else18
-  %21 = call ptr @string_from_bytes(ptr @170, i64 12)
+  %21 = call ptr @string_from_bytes(ptr @169, i64 12)
   call void @Parser_error(ptr %0, ptr %21)
   br label %ifend4
 
@@ -13088,7 +13876,7 @@ else21:                                           ; preds = %else18
   br i1 %22, label %if.entry23, label %else24
 
 if.entry23:                                       ; preds = %else21
-  %23 = call ptr @string_from_bytes(ptr @171, i64 12)
+  %23 = call ptr @string_from_bytes(ptr @170, i64 12)
   call void @Parser_error(ptr %0, ptr %23)
   br label %ifend4
 
@@ -13097,7 +13885,7 @@ else24:                                           ; preds = %else21
   br i1 %24, label %if.entry26, label %else27
 
 if.entry26:                                       ; preds = %else24
-  %25 = call ptr @string_from_bytes(ptr @172, i64 12)
+  %25 = call ptr @string_from_bytes(ptr @171, i64 12)
   call void @Parser_error(ptr %0, ptr %25)
   br label %ifend4
 
@@ -13106,7 +13894,7 @@ else27:                                           ; preds = %else24
   br i1 %26, label %if.entry29, label %else30
 
 if.entry29:                                       ; preds = %else27
-  %27 = call ptr @string_from_bytes(ptr @173, i64 12)
+  %27 = call ptr @string_from_bytes(ptr @172, i64 12)
   call void @Parser_error(ptr %0, ptr %27)
   br label %ifend4
 
@@ -13115,7 +13903,7 @@ else30:                                           ; preds = %else27
   br i1 %28, label %if.entry32, label %ifend4
 
 if.entry32:                                       ; preds = %else30
-  %29 = call ptr @string_from_bytes(ptr @174, i64 13)
+  %29 = call ptr @string_from_bytes(ptr @173, i64 13)
   call void @Parser_error(ptr %0, ptr %29)
   br label %ifend4
 }
@@ -13619,7 +14407,7 @@ define void @Parser_error(ptr %0, ptr %1) {
   %memberidx = getelementptr inbounds %Parser, ptr %0, i32 0, i32 1
   %3 = load ptr, ptr %memberidx, align 8
   %4 = load ptr, ptr %3, align 8
-  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %4, i32 0, i32 2
+  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %4, i32 0, i32 3
   %5 = load ptr, ptr %memberidx1, align 8
   %6 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%FloError, ptr null, i32 1) to i32))
   %memberidx2 = getelementptr inbounds %Parser, ptr %0, i32 0, i32 2
@@ -13934,7 +14722,7 @@ ifend:                                            ; preds = %2, %if.entry
 
 define void @Array_Bucket_string_VarId___append(ptr %0, ptr %1) {
   %3 = load ptr, ptr %0, align 8
-  %memberidx = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %3, i32 0, i32 2
+  %memberidx = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %3, i32 0, i32 3
   %4 = load ptr, ptr %memberidx, align 8
   call void %4(ptr %0, ptr %1)
   ret void
@@ -13979,6 +14767,46 @@ ifend:                                            ; preds = %3, %if.entry
   ret void
 }
 
+define ptr @ArrayIterator_Bucket_string_VarId_____next__(ptr %0) {
+  %memberidx = getelementptr inbounds %ArrayIterator_Bucket_string_VarId__, ptr %0, i32 0, i32 2
+  %2 = load i64, ptr %memberidx, align 4
+  %3 = add i64 %2, 1
+  store i64 %3, ptr %memberidx, align 4
+  %memberidx2 = getelementptr inbounds %ArrayIterator_Bucket_string_VarId__, ptr %0, i32 0, i32 4
+  %4 = load ptr, ptr %memberidx2, align 8
+  %ptridx = getelementptr inbounds ptr, ptr %4, i64 %2
+  %5 = load ptr, ptr %ptridx, align 8
+  %memberidx3 = getelementptr inbounds %Iterator_Bucket_string_VarId__, ptr %0, i32 0, i32 1
+  %memberidx5 = getelementptr inbounds %ArrayIterator_Bucket_string_VarId__, ptr %0, i32 0, i32 3
+  %6 = load i64, ptr %memberidx5, align 4
+  %7 = icmp sgt i64 %3, %6
+  store i1 %7, ptr %memberidx3, align 1
+  ret ptr %5
+}
+
+define void @ArrayIterator_Bucket_string_VarId___constructor(ptr %0, ptr %1, i64 %2) {
+  store ptr @VTableArrayIterator_Bucket_string_VarId__, ptr %0, align 8
+  %memberidx = getelementptr inbounds %Iterator_Bucket_string_VarId__, ptr %0, i32 0, i32 1
+  store i1 false, ptr %memberidx, align 1
+  %memberidx1 = getelementptr inbounds %ArrayIterator_Bucket_string_VarId__, ptr %0, i32 0, i32 2
+  store i64 0, ptr %memberidx1, align 4
+  %memberidx2 = getelementptr inbounds %ArrayIterator_Bucket_string_VarId__, ptr %0, i32 0, i32 4
+  store ptr %1, ptr %memberidx2, align 8
+  %memberidx3 = getelementptr inbounds %ArrayIterator_Bucket_string_VarId__, ptr %0, i32 0, i32 3
+  store i64 %2, ptr %memberidx3, align 4
+  ret void
+}
+
+define ptr @Array_Bucket_string_VarId_____iter__(ptr %0) {
+  %2 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%ArrayIterator_Bucket_string_VarId__, ptr null, i32 1) to i32))
+  %memberidx = getelementptr inbounds %Array_Bucket_string_VarId__, ptr %0, i32 0, i32 1
+  %3 = load ptr, ptr %memberidx, align 8
+  %memberidx1 = getelementptr inbounds %Array_Bucket_string_VarId__, ptr %0, i32 0, i32 2
+  %4 = load i64, ptr %memberidx1, align 4
+  call void @ArrayIterator_Bucket_string_VarId___constructor(ptr %2, ptr %3, i64 %4)
+  ret ptr %2
+}
+
 define void @Array_Bucket_string_VarId_____setitem__(ptr %0, i64 %1, ptr %2) {
   %4 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%Range, ptr null, i32 1) to i32))
   %memberidx = getelementptr inbounds %Array_Bucket_string_VarId__, ptr %0, i32 0, i32 2
@@ -14001,25 +14829,11 @@ ifend:                                            ; preds = %3, %if.entry
 }
 
 define ptr @Array_Bucket_string_VarId_____getitem__(ptr %0, i64 %1) {
-  %3 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%Range, ptr null, i32 1) to i32))
-  %memberidx = getelementptr inbounds %Array_Bucket_string_VarId__, ptr %0, i32 0, i32 2
-  %4 = load i64, ptr %memberidx, align 4
-  call void @Range_constructor(ptr %3, i64 0, i64 %4)
-  %5 = load ptr, ptr %3, align 8
-  %6 = load ptr, ptr %5, align 8
-  %7 = call i1 %6(ptr %3, i64 %1)
-  br i1 %7, label %if.entry, label %common.ret
-
-common.ret:                                       ; preds = %2, %if.entry
-  %common.ret.op = phi ptr [ %9, %if.entry ], [ null, %2 ]
-  ret ptr %common.ret.op
-
-if.entry:                                         ; preds = %2
-  %memberidx2 = getelementptr inbounds %Array_Bucket_string_VarId__, ptr %0, i32 0, i32 1
-  %8 = load ptr, ptr %memberidx2, align 8
-  %ptridx = getelementptr inbounds ptr, ptr %8, i64 %1
-  %9 = load ptr, ptr %ptridx, align 8
-  br label %common.ret
+  %memberidx = getelementptr inbounds %Array_Bucket_string_VarId__, ptr %0, i32 0, i32 1
+  %3 = load ptr, ptr %memberidx, align 8
+  %ptridx = getelementptr inbounds ptr, ptr %3, i64 %1
+  %4 = load ptr, ptr %ptridx, align 8
+  ret ptr %4
 }
 
 define i1 @Array_Bucket_string_VarId_____eq__(ptr %0, ptr %1) {
@@ -14047,11 +14861,11 @@ for.cond:                                         ; preds = %ifend7, %for.entry
 
 for.body:                                         ; preds = %for.cond
   %9 = load ptr, ptr %0, align 8
-  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %9, i32 0, i32 5
+  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %9, i32 0, i32 6
   %10 = load ptr, ptr %memberidx3, align 8
   %11 = call ptr %10(ptr %0, i64 %6)
   %12 = load ptr, ptr %1, align 8
-  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %12, i32 0, i32 5
+  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %12, i32 0, i32 6
   %13 = load ptr, ptr %memberidx4, align 8
   %14 = load i64, ptr %i, align 4
   %15 = call ptr %13(ptr %1, i64 %14)
@@ -14078,7 +14892,7 @@ for.cond:                                         ; preds = %ifend, %for.entry
 
 for.body:                                         ; preds = %for.cond
   %4 = load ptr, ptr %0, align 8
-  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %4, i32 0, i32 5
+  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %4, i32 0, i32 6
   %5 = load ptr, ptr %memberidx1, align 8
   %6 = call ptr %5(ptr %0, i64 %i.0)
   %7 = icmp eq ptr %6, %1
@@ -14140,7 +14954,7 @@ for.end:                                          ; preds = %for.cond
 
 if.entry:                                         ; preds = %for.body
   %8 = load ptr, ptr %1, align 8
-  %memberidx5 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %8, i32 0, i32 2
+  %memberidx5 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %8, i32 0, i32 3
   %9 = load ptr, ptr %memberidx5, align 8
   call void %9(ptr %1, ptr %5)
   br label %ifend
@@ -14199,13 +15013,13 @@ for.body11:                                       ; preds = %for.cond10
   %17 = load ptr, ptr %0, align 8
   %18 = load ptr, ptr %17, align 8
   %19 = load ptr, ptr %3, align 8
-  %memberidx16 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %19, i32 0, i32 5
+  %memberidx16 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %19, i32 0, i32 6
   %20 = load ptr, ptr %memberidx16, align 8
   %21 = call ptr %20(ptr %3, i64 %i.1)
   %memberidx17 = getelementptr inbounds %Bucket_string_VarId_, ptr %21, i32 0, i32 1
   %22 = load ptr, ptr %memberidx17, align 8
   %23 = load ptr, ptr %3, align 8
-  %memberidx18 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %23, i32 0, i32 5
+  %memberidx18 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %23, i32 0, i32 6
   %24 = load ptr, ptr %memberidx18, align 8
   %25 = call ptr %24(ptr %3, i64 %i.1)
   %memberidx19 = getelementptr inbounds %Bucket_string_VarId_, ptr %25, i32 0, i32 2
@@ -14518,7 +15332,7 @@ ifend:                                            ; preds = %2, %if.entry
 
 define void @Array_Bucket_string_EnumId___append(ptr %0, ptr %1) {
   %3 = load ptr, ptr %0, align 8
-  %memberidx = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %3, i32 0, i32 2
+  %memberidx = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %3, i32 0, i32 3
   %4 = load ptr, ptr %memberidx, align 8
   call void %4(ptr %0, ptr %1)
   ret void
@@ -14563,6 +15377,46 @@ ifend:                                            ; preds = %3, %if.entry
   ret void
 }
 
+define ptr @ArrayIterator_Bucket_string_EnumId_____next__(ptr %0) {
+  %memberidx = getelementptr inbounds %ArrayIterator_Bucket_string_EnumId__, ptr %0, i32 0, i32 2
+  %2 = load i64, ptr %memberidx, align 4
+  %3 = add i64 %2, 1
+  store i64 %3, ptr %memberidx, align 4
+  %memberidx2 = getelementptr inbounds %ArrayIterator_Bucket_string_EnumId__, ptr %0, i32 0, i32 4
+  %4 = load ptr, ptr %memberidx2, align 8
+  %ptridx = getelementptr inbounds ptr, ptr %4, i64 %2
+  %5 = load ptr, ptr %ptridx, align 8
+  %memberidx3 = getelementptr inbounds %Iterator_Bucket_string_EnumId__, ptr %0, i32 0, i32 1
+  %memberidx5 = getelementptr inbounds %ArrayIterator_Bucket_string_EnumId__, ptr %0, i32 0, i32 3
+  %6 = load i64, ptr %memberidx5, align 4
+  %7 = icmp sgt i64 %3, %6
+  store i1 %7, ptr %memberidx3, align 1
+  ret ptr %5
+}
+
+define void @ArrayIterator_Bucket_string_EnumId___constructor(ptr %0, ptr %1, i64 %2) {
+  store ptr @VTableArrayIterator_Bucket_string_EnumId__, ptr %0, align 8
+  %memberidx = getelementptr inbounds %Iterator_Bucket_string_EnumId__, ptr %0, i32 0, i32 1
+  store i1 false, ptr %memberidx, align 1
+  %memberidx1 = getelementptr inbounds %ArrayIterator_Bucket_string_EnumId__, ptr %0, i32 0, i32 2
+  store i64 0, ptr %memberidx1, align 4
+  %memberidx2 = getelementptr inbounds %ArrayIterator_Bucket_string_EnumId__, ptr %0, i32 0, i32 4
+  store ptr %1, ptr %memberidx2, align 8
+  %memberidx3 = getelementptr inbounds %ArrayIterator_Bucket_string_EnumId__, ptr %0, i32 0, i32 3
+  store i64 %2, ptr %memberidx3, align 4
+  ret void
+}
+
+define ptr @Array_Bucket_string_EnumId_____iter__(ptr %0) {
+  %2 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%ArrayIterator_Bucket_string_EnumId__, ptr null, i32 1) to i32))
+  %memberidx = getelementptr inbounds %Array_Bucket_string_EnumId__, ptr %0, i32 0, i32 1
+  %3 = load ptr, ptr %memberidx, align 8
+  %memberidx1 = getelementptr inbounds %Array_Bucket_string_EnumId__, ptr %0, i32 0, i32 2
+  %4 = load i64, ptr %memberidx1, align 4
+  call void @ArrayIterator_Bucket_string_EnumId___constructor(ptr %2, ptr %3, i64 %4)
+  ret ptr %2
+}
+
 define void @Array_Bucket_string_EnumId_____setitem__(ptr %0, i64 %1, ptr %2) {
   %4 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%Range, ptr null, i32 1) to i32))
   %memberidx = getelementptr inbounds %Array_Bucket_string_EnumId__, ptr %0, i32 0, i32 2
@@ -14585,25 +15439,11 @@ ifend:                                            ; preds = %3, %if.entry
 }
 
 define ptr @Array_Bucket_string_EnumId_____getitem__(ptr %0, i64 %1) {
-  %3 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%Range, ptr null, i32 1) to i32))
-  %memberidx = getelementptr inbounds %Array_Bucket_string_EnumId__, ptr %0, i32 0, i32 2
-  %4 = load i64, ptr %memberidx, align 4
-  call void @Range_constructor(ptr %3, i64 0, i64 %4)
-  %5 = load ptr, ptr %3, align 8
-  %6 = load ptr, ptr %5, align 8
-  %7 = call i1 %6(ptr %3, i64 %1)
-  br i1 %7, label %if.entry, label %common.ret
-
-common.ret:                                       ; preds = %2, %if.entry
-  %common.ret.op = phi ptr [ %9, %if.entry ], [ null, %2 ]
-  ret ptr %common.ret.op
-
-if.entry:                                         ; preds = %2
-  %memberidx2 = getelementptr inbounds %Array_Bucket_string_EnumId__, ptr %0, i32 0, i32 1
-  %8 = load ptr, ptr %memberidx2, align 8
-  %ptridx = getelementptr inbounds ptr, ptr %8, i64 %1
-  %9 = load ptr, ptr %ptridx, align 8
-  br label %common.ret
+  %memberidx = getelementptr inbounds %Array_Bucket_string_EnumId__, ptr %0, i32 0, i32 1
+  %3 = load ptr, ptr %memberidx, align 8
+  %ptridx = getelementptr inbounds ptr, ptr %3, i64 %1
+  %4 = load ptr, ptr %ptridx, align 8
+  ret ptr %4
 }
 
 define i1 @Array_Bucket_string_EnumId_____eq__(ptr %0, ptr %1) {
@@ -14631,11 +15471,11 @@ for.cond:                                         ; preds = %ifend7, %for.entry
 
 for.body:                                         ; preds = %for.cond
   %9 = load ptr, ptr %0, align 8
-  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %9, i32 0, i32 5
+  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %9, i32 0, i32 6
   %10 = load ptr, ptr %memberidx3, align 8
   %11 = call ptr %10(ptr %0, i64 %6)
   %12 = load ptr, ptr %1, align 8
-  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %12, i32 0, i32 5
+  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %12, i32 0, i32 6
   %13 = load ptr, ptr %memberidx4, align 8
   %14 = load i64, ptr %i, align 4
   %15 = call ptr %13(ptr %1, i64 %14)
@@ -14662,7 +15502,7 @@ for.cond:                                         ; preds = %ifend, %for.entry
 
 for.body:                                         ; preds = %for.cond
   %4 = load ptr, ptr %0, align 8
-  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %4, i32 0, i32 5
+  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %4, i32 0, i32 6
   %5 = load ptr, ptr %memberidx1, align 8
   %6 = call ptr %5(ptr %0, i64 %i.0)
   %7 = icmp eq ptr %6, %1
@@ -14724,7 +15564,7 @@ for.end:                                          ; preds = %for.cond
 
 if.entry:                                         ; preds = %for.body
   %8 = load ptr, ptr %1, align 8
-  %memberidx5 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %8, i32 0, i32 2
+  %memberidx5 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %8, i32 0, i32 3
   %9 = load ptr, ptr %memberidx5, align 8
   call void %9(ptr %1, ptr %5)
   br label %ifend
@@ -14783,13 +15623,13 @@ for.body11:                                       ; preds = %for.cond10
   %17 = load ptr, ptr %0, align 8
   %18 = load ptr, ptr %17, align 8
   %19 = load ptr, ptr %3, align 8
-  %memberidx16 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %19, i32 0, i32 5
+  %memberidx16 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %19, i32 0, i32 6
   %20 = load ptr, ptr %memberidx16, align 8
   %21 = call ptr %20(ptr %3, i64 %i.1)
   %memberidx17 = getelementptr inbounds %Bucket_string_EnumId_, ptr %21, i32 0, i32 1
   %22 = load ptr, ptr %memberidx17, align 8
   %23 = load ptr, ptr %3, align 8
-  %memberidx18 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %23, i32 0, i32 5
+  %memberidx18 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %23, i32 0, i32 6
   %24 = load ptr, ptr %memberidx18, align 8
   %25 = call ptr %24(ptr %3, i64 %i.1)
   %memberidx19 = getelementptr inbounds %Bucket_string_EnumId_, ptr %25, i32 0, i32 2
@@ -15099,7 +15939,7 @@ ifend:                                            ; preds = %2, %if.entry
 
 define void @Array_Bucket_string_Type___append(ptr %0, ptr %1) {
   %3 = load ptr, ptr %0, align 8
-  %memberidx = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %3, i32 0, i32 2
+  %memberidx = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %3, i32 0, i32 3
   %4 = load ptr, ptr %memberidx, align 8
   call void %4(ptr %0, ptr %1)
   ret void
@@ -15144,6 +15984,46 @@ ifend:                                            ; preds = %3, %if.entry
   ret void
 }
 
+define ptr @ArrayIterator_Bucket_string_Type_____next__(ptr %0) {
+  %memberidx = getelementptr inbounds %ArrayIterator_Bucket_string_Type__, ptr %0, i32 0, i32 2
+  %2 = load i64, ptr %memberidx, align 4
+  %3 = add i64 %2, 1
+  store i64 %3, ptr %memberidx, align 4
+  %memberidx2 = getelementptr inbounds %ArrayIterator_Bucket_string_Type__, ptr %0, i32 0, i32 4
+  %4 = load ptr, ptr %memberidx2, align 8
+  %ptridx = getelementptr inbounds ptr, ptr %4, i64 %2
+  %5 = load ptr, ptr %ptridx, align 8
+  %memberidx3 = getelementptr inbounds %Iterator_Bucket_string_Type__, ptr %0, i32 0, i32 1
+  %memberidx5 = getelementptr inbounds %ArrayIterator_Bucket_string_Type__, ptr %0, i32 0, i32 3
+  %6 = load i64, ptr %memberidx5, align 4
+  %7 = icmp sgt i64 %3, %6
+  store i1 %7, ptr %memberidx3, align 1
+  ret ptr %5
+}
+
+define void @ArrayIterator_Bucket_string_Type___constructor(ptr %0, ptr %1, i64 %2) {
+  store ptr @VTableArrayIterator_Bucket_string_Type__, ptr %0, align 8
+  %memberidx = getelementptr inbounds %Iterator_Bucket_string_Type__, ptr %0, i32 0, i32 1
+  store i1 false, ptr %memberidx, align 1
+  %memberidx1 = getelementptr inbounds %ArrayIterator_Bucket_string_Type__, ptr %0, i32 0, i32 2
+  store i64 0, ptr %memberidx1, align 4
+  %memberidx2 = getelementptr inbounds %ArrayIterator_Bucket_string_Type__, ptr %0, i32 0, i32 4
+  store ptr %1, ptr %memberidx2, align 8
+  %memberidx3 = getelementptr inbounds %ArrayIterator_Bucket_string_Type__, ptr %0, i32 0, i32 3
+  store i64 %2, ptr %memberidx3, align 4
+  ret void
+}
+
+define ptr @Array_Bucket_string_Type_____iter__(ptr %0) {
+  %2 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%ArrayIterator_Bucket_string_Type__, ptr null, i32 1) to i32))
+  %memberidx = getelementptr inbounds %Array_Bucket_string_Type__, ptr %0, i32 0, i32 1
+  %3 = load ptr, ptr %memberidx, align 8
+  %memberidx1 = getelementptr inbounds %Array_Bucket_string_Type__, ptr %0, i32 0, i32 2
+  %4 = load i64, ptr %memberidx1, align 4
+  call void @ArrayIterator_Bucket_string_Type___constructor(ptr %2, ptr %3, i64 %4)
+  ret ptr %2
+}
+
 define void @Array_Bucket_string_Type_____setitem__(ptr %0, i64 %1, ptr %2) {
   %4 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%Range, ptr null, i32 1) to i32))
   %memberidx = getelementptr inbounds %Array_Bucket_string_Type__, ptr %0, i32 0, i32 2
@@ -15166,25 +16046,11 @@ ifend:                                            ; preds = %3, %if.entry
 }
 
 define ptr @Array_Bucket_string_Type_____getitem__(ptr %0, i64 %1) {
-  %3 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%Range, ptr null, i32 1) to i32))
-  %memberidx = getelementptr inbounds %Array_Bucket_string_Type__, ptr %0, i32 0, i32 2
-  %4 = load i64, ptr %memberidx, align 4
-  call void @Range_constructor(ptr %3, i64 0, i64 %4)
-  %5 = load ptr, ptr %3, align 8
-  %6 = load ptr, ptr %5, align 8
-  %7 = call i1 %6(ptr %3, i64 %1)
-  br i1 %7, label %if.entry, label %common.ret
-
-common.ret:                                       ; preds = %2, %if.entry
-  %common.ret.op = phi ptr [ %9, %if.entry ], [ null, %2 ]
-  ret ptr %common.ret.op
-
-if.entry:                                         ; preds = %2
-  %memberidx2 = getelementptr inbounds %Array_Bucket_string_Type__, ptr %0, i32 0, i32 1
-  %8 = load ptr, ptr %memberidx2, align 8
-  %ptridx = getelementptr inbounds ptr, ptr %8, i64 %1
-  %9 = load ptr, ptr %ptridx, align 8
-  br label %common.ret
+  %memberidx = getelementptr inbounds %Array_Bucket_string_Type__, ptr %0, i32 0, i32 1
+  %3 = load ptr, ptr %memberidx, align 8
+  %ptridx = getelementptr inbounds ptr, ptr %3, i64 %1
+  %4 = load ptr, ptr %ptridx, align 8
+  ret ptr %4
 }
 
 define i1 @Array_Bucket_string_Type_____eq__(ptr %0, ptr %1) {
@@ -15212,11 +16078,11 @@ for.cond:                                         ; preds = %ifend7, %for.entry
 
 for.body:                                         ; preds = %for.cond
   %9 = load ptr, ptr %0, align 8
-  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %9, i32 0, i32 5
+  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %9, i32 0, i32 6
   %10 = load ptr, ptr %memberidx3, align 8
   %11 = call ptr %10(ptr %0, i64 %6)
   %12 = load ptr, ptr %1, align 8
-  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %12, i32 0, i32 5
+  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %12, i32 0, i32 6
   %13 = load ptr, ptr %memberidx4, align 8
   %14 = load i64, ptr %i, align 4
   %15 = call ptr %13(ptr %1, i64 %14)
@@ -15243,7 +16109,7 @@ for.cond:                                         ; preds = %ifend, %for.entry
 
 for.body:                                         ; preds = %for.cond
   %4 = load ptr, ptr %0, align 8
-  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %4, i32 0, i32 5
+  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %4, i32 0, i32 6
   %5 = load ptr, ptr %memberidx1, align 8
   %6 = call ptr %5(ptr %0, i64 %i.0)
   %7 = icmp eq ptr %6, %1
@@ -15305,7 +16171,7 @@ for.end:                                          ; preds = %for.cond
 
 if.entry:                                         ; preds = %for.body
   %8 = load ptr, ptr %1, align 8
-  %memberidx5 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %8, i32 0, i32 2
+  %memberidx5 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %8, i32 0, i32 3
   %9 = load ptr, ptr %memberidx5, align 8
   call void %9(ptr %1, ptr %5)
   br label %ifend
@@ -15364,13 +16230,13 @@ for.body11:                                       ; preds = %for.cond10
   %17 = load ptr, ptr %0, align 8
   %18 = load ptr, ptr %17, align 8
   %19 = load ptr, ptr %3, align 8
-  %memberidx16 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %19, i32 0, i32 5
+  %memberidx16 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %19, i32 0, i32 6
   %20 = load ptr, ptr %memberidx16, align 8
   %21 = call ptr %20(ptr %3, i64 %i.1)
   %memberidx17 = getelementptr inbounds %Bucket_string_Type_, ptr %21, i32 0, i32 1
   %22 = load ptr, ptr %memberidx17, align 8
   %23 = load ptr, ptr %3, align 8
-  %memberidx18 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %23, i32 0, i32 5
+  %memberidx18 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %23, i32 0, i32 6
   %24 = load ptr, ptr %memberidx18, align 8
   %25 = call ptr %24(ptr %3, i64 %i.1)
   %memberidx19 = getelementptr inbounds %Bucket_string_Type_, ptr %25, i32 0, i32 2
@@ -15674,7 +16540,7 @@ ifend:                                            ; preds = %2, %if.entry
 
 define void @Array_Bucket_string_ClassId___append(ptr %0, ptr %1) {
   %3 = load ptr, ptr %0, align 8
-  %memberidx = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %3, i32 0, i32 2
+  %memberidx = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %3, i32 0, i32 3
   %4 = load ptr, ptr %memberidx, align 8
   call void %4(ptr %0, ptr %1)
   ret void
@@ -15719,6 +16585,46 @@ ifend:                                            ; preds = %3, %if.entry
   ret void
 }
 
+define ptr @ArrayIterator_Bucket_string_ClassId_____next__(ptr %0) {
+  %memberidx = getelementptr inbounds %ArrayIterator_Bucket_string_ClassId__, ptr %0, i32 0, i32 2
+  %2 = load i64, ptr %memberidx, align 4
+  %3 = add i64 %2, 1
+  store i64 %3, ptr %memberidx, align 4
+  %memberidx2 = getelementptr inbounds %ArrayIterator_Bucket_string_ClassId__, ptr %0, i32 0, i32 4
+  %4 = load ptr, ptr %memberidx2, align 8
+  %ptridx = getelementptr inbounds ptr, ptr %4, i64 %2
+  %5 = load ptr, ptr %ptridx, align 8
+  %memberidx3 = getelementptr inbounds %Iterator_Bucket_string_ClassId__, ptr %0, i32 0, i32 1
+  %memberidx5 = getelementptr inbounds %ArrayIterator_Bucket_string_ClassId__, ptr %0, i32 0, i32 3
+  %6 = load i64, ptr %memberidx5, align 4
+  %7 = icmp sgt i64 %3, %6
+  store i1 %7, ptr %memberidx3, align 1
+  ret ptr %5
+}
+
+define void @ArrayIterator_Bucket_string_ClassId___constructor(ptr %0, ptr %1, i64 %2) {
+  store ptr @VTableArrayIterator_Bucket_string_ClassId__, ptr %0, align 8
+  %memberidx = getelementptr inbounds %Iterator_Bucket_string_ClassId__, ptr %0, i32 0, i32 1
+  store i1 false, ptr %memberidx, align 1
+  %memberidx1 = getelementptr inbounds %ArrayIterator_Bucket_string_ClassId__, ptr %0, i32 0, i32 2
+  store i64 0, ptr %memberidx1, align 4
+  %memberidx2 = getelementptr inbounds %ArrayIterator_Bucket_string_ClassId__, ptr %0, i32 0, i32 4
+  store ptr %1, ptr %memberidx2, align 8
+  %memberidx3 = getelementptr inbounds %ArrayIterator_Bucket_string_ClassId__, ptr %0, i32 0, i32 3
+  store i64 %2, ptr %memberidx3, align 4
+  ret void
+}
+
+define ptr @Array_Bucket_string_ClassId_____iter__(ptr %0) {
+  %2 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%ArrayIterator_Bucket_string_ClassId__, ptr null, i32 1) to i32))
+  %memberidx = getelementptr inbounds %Array_Bucket_string_ClassId__, ptr %0, i32 0, i32 1
+  %3 = load ptr, ptr %memberidx, align 8
+  %memberidx1 = getelementptr inbounds %Array_Bucket_string_ClassId__, ptr %0, i32 0, i32 2
+  %4 = load i64, ptr %memberidx1, align 4
+  call void @ArrayIterator_Bucket_string_ClassId___constructor(ptr %2, ptr %3, i64 %4)
+  ret ptr %2
+}
+
 define void @Array_Bucket_string_ClassId_____setitem__(ptr %0, i64 %1, ptr %2) {
   %4 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%Range, ptr null, i32 1) to i32))
   %memberidx = getelementptr inbounds %Array_Bucket_string_ClassId__, ptr %0, i32 0, i32 2
@@ -15741,25 +16647,11 @@ ifend:                                            ; preds = %3, %if.entry
 }
 
 define ptr @Array_Bucket_string_ClassId_____getitem__(ptr %0, i64 %1) {
-  %3 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%Range, ptr null, i32 1) to i32))
-  %memberidx = getelementptr inbounds %Array_Bucket_string_ClassId__, ptr %0, i32 0, i32 2
-  %4 = load i64, ptr %memberidx, align 4
-  call void @Range_constructor(ptr %3, i64 0, i64 %4)
-  %5 = load ptr, ptr %3, align 8
-  %6 = load ptr, ptr %5, align 8
-  %7 = call i1 %6(ptr %3, i64 %1)
-  br i1 %7, label %if.entry, label %common.ret
-
-common.ret:                                       ; preds = %2, %if.entry
-  %common.ret.op = phi ptr [ %9, %if.entry ], [ null, %2 ]
-  ret ptr %common.ret.op
-
-if.entry:                                         ; preds = %2
-  %memberidx2 = getelementptr inbounds %Array_Bucket_string_ClassId__, ptr %0, i32 0, i32 1
-  %8 = load ptr, ptr %memberidx2, align 8
-  %ptridx = getelementptr inbounds ptr, ptr %8, i64 %1
-  %9 = load ptr, ptr %ptridx, align 8
-  br label %common.ret
+  %memberidx = getelementptr inbounds %Array_Bucket_string_ClassId__, ptr %0, i32 0, i32 1
+  %3 = load ptr, ptr %memberidx, align 8
+  %ptridx = getelementptr inbounds ptr, ptr %3, i64 %1
+  %4 = load ptr, ptr %ptridx, align 8
+  ret ptr %4
 }
 
 define i1 @Array_Bucket_string_ClassId_____eq__(ptr %0, ptr %1) {
@@ -15787,11 +16679,11 @@ for.cond:                                         ; preds = %ifend7, %for.entry
 
 for.body:                                         ; preds = %for.cond
   %9 = load ptr, ptr %0, align 8
-  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %9, i32 0, i32 5
+  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %9, i32 0, i32 6
   %10 = load ptr, ptr %memberidx3, align 8
   %11 = call ptr %10(ptr %0, i64 %6)
   %12 = load ptr, ptr %1, align 8
-  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %12, i32 0, i32 5
+  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %12, i32 0, i32 6
   %13 = load ptr, ptr %memberidx4, align 8
   %14 = load i64, ptr %i, align 4
   %15 = call ptr %13(ptr %1, i64 %14)
@@ -15818,7 +16710,7 @@ for.cond:                                         ; preds = %ifend, %for.entry
 
 for.body:                                         ; preds = %for.cond
   %4 = load ptr, ptr %0, align 8
-  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %4, i32 0, i32 5
+  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %4, i32 0, i32 6
   %5 = load ptr, ptr %memberidx1, align 8
   %6 = call ptr %5(ptr %0, i64 %i.0)
   %7 = icmp eq ptr %6, %1
@@ -15880,7 +16772,7 @@ for.end:                                          ; preds = %for.cond
 
 if.entry:                                         ; preds = %for.body
   %8 = load ptr, ptr %1, align 8
-  %memberidx5 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %8, i32 0, i32 2
+  %memberidx5 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %8, i32 0, i32 3
   %9 = load ptr, ptr %memberidx5, align 8
   call void %9(ptr %1, ptr %5)
   br label %ifend
@@ -15939,13 +16831,13 @@ for.body11:                                       ; preds = %for.cond10
   %17 = load ptr, ptr %0, align 8
   %18 = load ptr, ptr %17, align 8
   %19 = load ptr, ptr %3, align 8
-  %memberidx16 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %19, i32 0, i32 5
+  %memberidx16 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %19, i32 0, i32 6
   %20 = load ptr, ptr %memberidx16, align 8
   %21 = call ptr %20(ptr %3, i64 %i.1)
   %memberidx17 = getelementptr inbounds %Bucket_string_ClassId_, ptr %21, i32 0, i32 1
   %22 = load ptr, ptr %memberidx17, align 8
   %23 = load ptr, ptr %3, align 8
-  %memberidx18 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %23, i32 0, i32 5
+  %memberidx18 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %23, i32 0, i32 6
   %24 = load ptr, ptr %memberidx18, align 8
   %25 = call ptr %24(ptr %3, i64 %i.1)
   %memberidx19 = getelementptr inbounds %Bucket_string_ClassId_, ptr %25, i32 0, i32 2
@@ -16185,7 +17077,7 @@ ifend:                                            ; preds = %2, %if.entry
 
 define void @Array_Scope__append(ptr %0, ptr %1) {
   %3 = load ptr, ptr %0, align 8
-  %memberidx = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %3, i32 0, i32 2
+  %memberidx = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %3, i32 0, i32 3
   %4 = load ptr, ptr %memberidx, align 8
   call void %4(ptr %0, ptr %1)
   ret void
@@ -16230,6 +17122,46 @@ ifend:                                            ; preds = %3, %if.entry
   ret void
 }
 
+define ptr @ArrayIterator_Scope____next__(ptr %0) {
+  %memberidx = getelementptr inbounds %ArrayIterator_Scope_, ptr %0, i32 0, i32 2
+  %2 = load i64, ptr %memberidx, align 4
+  %3 = add i64 %2, 1
+  store i64 %3, ptr %memberidx, align 4
+  %memberidx2 = getelementptr inbounds %ArrayIterator_Scope_, ptr %0, i32 0, i32 4
+  %4 = load ptr, ptr %memberidx2, align 8
+  %ptridx = getelementptr inbounds ptr, ptr %4, i64 %2
+  %5 = load ptr, ptr %ptridx, align 8
+  %memberidx3 = getelementptr inbounds %Iterator_Scope_, ptr %0, i32 0, i32 1
+  %memberidx5 = getelementptr inbounds %ArrayIterator_Scope_, ptr %0, i32 0, i32 3
+  %6 = load i64, ptr %memberidx5, align 4
+  %7 = icmp sgt i64 %3, %6
+  store i1 %7, ptr %memberidx3, align 1
+  ret ptr %5
+}
+
+define void @ArrayIterator_Scope__constructor(ptr %0, ptr %1, i64 %2) {
+  store ptr @VTableArrayIterator_Scope_, ptr %0, align 8
+  %memberidx = getelementptr inbounds %Iterator_Scope_, ptr %0, i32 0, i32 1
+  store i1 false, ptr %memberidx, align 1
+  %memberidx1 = getelementptr inbounds %ArrayIterator_Scope_, ptr %0, i32 0, i32 2
+  store i64 0, ptr %memberidx1, align 4
+  %memberidx2 = getelementptr inbounds %ArrayIterator_Scope_, ptr %0, i32 0, i32 4
+  store ptr %1, ptr %memberidx2, align 8
+  %memberidx3 = getelementptr inbounds %ArrayIterator_Scope_, ptr %0, i32 0, i32 3
+  store i64 %2, ptr %memberidx3, align 4
+  ret void
+}
+
+define ptr @Array_Scope____iter__(ptr %0) {
+  %2 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%ArrayIterator_Scope_, ptr null, i32 1) to i32))
+  %memberidx = getelementptr inbounds %Array_Scope_, ptr %0, i32 0, i32 1
+  %3 = load ptr, ptr %memberidx, align 8
+  %memberidx1 = getelementptr inbounds %Array_Scope_, ptr %0, i32 0, i32 2
+  %4 = load i64, ptr %memberidx1, align 4
+  call void @ArrayIterator_Scope__constructor(ptr %2, ptr %3, i64 %4)
+  ret ptr %2
+}
+
 define void @Array_Scope____setitem__(ptr %0, i64 %1, ptr %2) {
   %4 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%Range, ptr null, i32 1) to i32))
   %memberidx = getelementptr inbounds %Array_Scope_, ptr %0, i32 0, i32 2
@@ -16252,25 +17184,11 @@ ifend:                                            ; preds = %3, %if.entry
 }
 
 define ptr @Array_Scope____getitem__(ptr %0, i64 %1) {
-  %3 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%Range, ptr null, i32 1) to i32))
-  %memberidx = getelementptr inbounds %Array_Scope_, ptr %0, i32 0, i32 2
-  %4 = load i64, ptr %memberidx, align 4
-  call void @Range_constructor(ptr %3, i64 0, i64 %4)
-  %5 = load ptr, ptr %3, align 8
-  %6 = load ptr, ptr %5, align 8
-  %7 = call i1 %6(ptr %3, i64 %1)
-  br i1 %7, label %if.entry, label %common.ret
-
-common.ret:                                       ; preds = %2, %if.entry
-  %common.ret.op = phi ptr [ %9, %if.entry ], [ null, %2 ]
-  ret ptr %common.ret.op
-
-if.entry:                                         ; preds = %2
-  %memberidx2 = getelementptr inbounds %Array_Scope_, ptr %0, i32 0, i32 1
-  %8 = load ptr, ptr %memberidx2, align 8
-  %ptridx = getelementptr inbounds ptr, ptr %8, i64 %1
-  %9 = load ptr, ptr %ptridx, align 8
-  br label %common.ret
+  %memberidx = getelementptr inbounds %Array_Scope_, ptr %0, i32 0, i32 1
+  %3 = load ptr, ptr %memberidx, align 8
+  %ptridx = getelementptr inbounds ptr, ptr %3, i64 %1
+  %4 = load ptr, ptr %ptridx, align 8
+  ret ptr %4
 }
 
 define i1 @Array_Scope____eq__(ptr %0, ptr %1) {
@@ -16298,11 +17216,11 @@ for.cond:                                         ; preds = %ifend7, %for.entry
 
 for.body:                                         ; preds = %for.cond
   %9 = load ptr, ptr %0, align 8
-  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %9, i32 0, i32 5
+  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %9, i32 0, i32 6
   %10 = load ptr, ptr %memberidx3, align 8
   %11 = call ptr %10(ptr %0, i64 %6)
   %12 = load ptr, ptr %1, align 8
-  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %12, i32 0, i32 5
+  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %12, i32 0, i32 6
   %13 = load ptr, ptr %memberidx4, align 8
   %14 = load i64, ptr %i, align 4
   %15 = call ptr %13(ptr %1, i64 %14)
@@ -16329,7 +17247,7 @@ for.cond:                                         ; preds = %ifend, %for.entry
 
 for.body:                                         ; preds = %for.cond
   %4 = load ptr, ptr %0, align 8
-  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %4, i32 0, i32 5
+  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %4, i32 0, i32 6
   %5 = load ptr, ptr %memberidx1, align 8
   %6 = call ptr %5(ptr %0, i64 %i.0)
   %7 = icmp eq ptr %6, %1
@@ -16445,7 +17363,7 @@ ifend:                                            ; preds = %2, %if.entry
 
 define void @Array_VarDeclaration__append(ptr %0, ptr %1) {
   %3 = load ptr, ptr %0, align 8
-  %memberidx = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %3, i32 0, i32 2
+  %memberidx = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %3, i32 0, i32 3
   %4 = load ptr, ptr %memberidx, align 8
   call void %4(ptr %0, ptr %1)
   ret void
@@ -16490,6 +17408,46 @@ ifend:                                            ; preds = %3, %if.entry
   ret void
 }
 
+define ptr @ArrayIterator_VarDeclaration____next__(ptr %0) {
+  %memberidx = getelementptr inbounds %ArrayIterator_VarDeclaration_, ptr %0, i32 0, i32 2
+  %2 = load i64, ptr %memberidx, align 4
+  %3 = add i64 %2, 1
+  store i64 %3, ptr %memberidx, align 4
+  %memberidx2 = getelementptr inbounds %ArrayIterator_VarDeclaration_, ptr %0, i32 0, i32 4
+  %4 = load ptr, ptr %memberidx2, align 8
+  %ptridx = getelementptr inbounds ptr, ptr %4, i64 %2
+  %5 = load ptr, ptr %ptridx, align 8
+  %memberidx3 = getelementptr inbounds %Iterator_VarDeclaration_, ptr %0, i32 0, i32 1
+  %memberidx5 = getelementptr inbounds %ArrayIterator_VarDeclaration_, ptr %0, i32 0, i32 3
+  %6 = load i64, ptr %memberidx5, align 4
+  %7 = icmp sgt i64 %3, %6
+  store i1 %7, ptr %memberidx3, align 1
+  ret ptr %5
+}
+
+define void @ArrayIterator_VarDeclaration__constructor(ptr %0, ptr %1, i64 %2) {
+  store ptr @VTableArrayIterator_VarDeclaration_, ptr %0, align 8
+  %memberidx = getelementptr inbounds %Iterator_VarDeclaration_, ptr %0, i32 0, i32 1
+  store i1 false, ptr %memberidx, align 1
+  %memberidx1 = getelementptr inbounds %ArrayIterator_VarDeclaration_, ptr %0, i32 0, i32 2
+  store i64 0, ptr %memberidx1, align 4
+  %memberidx2 = getelementptr inbounds %ArrayIterator_VarDeclaration_, ptr %0, i32 0, i32 4
+  store ptr %1, ptr %memberidx2, align 8
+  %memberidx3 = getelementptr inbounds %ArrayIterator_VarDeclaration_, ptr %0, i32 0, i32 3
+  store i64 %2, ptr %memberidx3, align 4
+  ret void
+}
+
+define ptr @Array_VarDeclaration____iter__(ptr %0) {
+  %2 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%ArrayIterator_VarDeclaration_, ptr null, i32 1) to i32))
+  %memberidx = getelementptr inbounds %Array_VarDeclaration_, ptr %0, i32 0, i32 1
+  %3 = load ptr, ptr %memberidx, align 8
+  %memberidx1 = getelementptr inbounds %Array_VarDeclaration_, ptr %0, i32 0, i32 2
+  %4 = load i64, ptr %memberidx1, align 4
+  call void @ArrayIterator_VarDeclaration__constructor(ptr %2, ptr %3, i64 %4)
+  ret ptr %2
+}
+
 define void @Array_VarDeclaration____setitem__(ptr %0, i64 %1, ptr %2) {
   %4 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%Range, ptr null, i32 1) to i32))
   %memberidx = getelementptr inbounds %Array_VarDeclaration_, ptr %0, i32 0, i32 2
@@ -16512,25 +17470,11 @@ ifend:                                            ; preds = %3, %if.entry
 }
 
 define ptr @Array_VarDeclaration____getitem__(ptr %0, i64 %1) {
-  %3 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%Range, ptr null, i32 1) to i32))
-  %memberidx = getelementptr inbounds %Array_VarDeclaration_, ptr %0, i32 0, i32 2
-  %4 = load i64, ptr %memberidx, align 4
-  call void @Range_constructor(ptr %3, i64 0, i64 %4)
-  %5 = load ptr, ptr %3, align 8
-  %6 = load ptr, ptr %5, align 8
-  %7 = call i1 %6(ptr %3, i64 %1)
-  br i1 %7, label %if.entry, label %common.ret
-
-common.ret:                                       ; preds = %2, %if.entry
-  %common.ret.op = phi ptr [ %9, %if.entry ], [ null, %2 ]
-  ret ptr %common.ret.op
-
-if.entry:                                         ; preds = %2
-  %memberidx2 = getelementptr inbounds %Array_VarDeclaration_, ptr %0, i32 0, i32 1
-  %8 = load ptr, ptr %memberidx2, align 8
-  %ptridx = getelementptr inbounds ptr, ptr %8, i64 %1
-  %9 = load ptr, ptr %ptridx, align 8
-  br label %common.ret
+  %memberidx = getelementptr inbounds %Array_VarDeclaration_, ptr %0, i32 0, i32 1
+  %3 = load ptr, ptr %memberidx, align 8
+  %ptridx = getelementptr inbounds ptr, ptr %3, i64 %1
+  %4 = load ptr, ptr %ptridx, align 8
+  ret ptr %4
 }
 
 define i1 @Array_VarDeclaration____eq__(ptr %0, ptr %1) {
@@ -16558,11 +17502,11 @@ for.cond:                                         ; preds = %ifend7, %for.entry
 
 for.body:                                         ; preds = %for.cond
   %9 = load ptr, ptr %0, align 8
-  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %9, i32 0, i32 5
+  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %9, i32 0, i32 6
   %10 = load ptr, ptr %memberidx3, align 8
   %11 = call ptr %10(ptr %0, i64 %6)
   %12 = load ptr, ptr %1, align 8
-  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %12, i32 0, i32 5
+  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %12, i32 0, i32 6
   %13 = load ptr, ptr %memberidx4, align 8
   %14 = load i64, ptr %i, align 4
   %15 = call ptr %13(ptr %1, i64 %14)
@@ -16589,7 +17533,7 @@ for.cond:                                         ; preds = %ifend, %for.entry
 
 for.body:                                         ; preds = %for.cond
   %4 = load ptr, ptr %0, align 8
-  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %4, i32 0, i32 5
+  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %4, i32 0, i32 6
   %5 = load ptr, ptr %memberidx1, align 8
   %6 = call ptr %5(ptr %0, i64 %i.0)
   %7 = icmp eq ptr %6, %1
@@ -16705,7 +17649,7 @@ ifend:                                            ; preds = %2, %if.entry
 
 define void @Array_Var__append(ptr %0, ptr %1) {
   %3 = load ptr, ptr %0, align 8
-  %memberidx = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %3, i32 0, i32 2
+  %memberidx = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %3, i32 0, i32 3
   %4 = load ptr, ptr %memberidx, align 8
   call void %4(ptr %0, ptr %1)
   ret void
@@ -16750,6 +17694,46 @@ ifend:                                            ; preds = %3, %if.entry
   ret void
 }
 
+define ptr @ArrayIterator_Var____next__(ptr %0) {
+  %memberidx = getelementptr inbounds %ArrayIterator_Var_, ptr %0, i32 0, i32 2
+  %2 = load i64, ptr %memberidx, align 4
+  %3 = add i64 %2, 1
+  store i64 %3, ptr %memberidx, align 4
+  %memberidx2 = getelementptr inbounds %ArrayIterator_Var_, ptr %0, i32 0, i32 4
+  %4 = load ptr, ptr %memberidx2, align 8
+  %ptridx = getelementptr inbounds ptr, ptr %4, i64 %2
+  %5 = load ptr, ptr %ptridx, align 8
+  %memberidx3 = getelementptr inbounds %Iterator_Var_, ptr %0, i32 0, i32 1
+  %memberidx5 = getelementptr inbounds %ArrayIterator_Var_, ptr %0, i32 0, i32 3
+  %6 = load i64, ptr %memberidx5, align 4
+  %7 = icmp sgt i64 %3, %6
+  store i1 %7, ptr %memberidx3, align 1
+  ret ptr %5
+}
+
+define void @ArrayIterator_Var__constructor(ptr %0, ptr %1, i64 %2) {
+  store ptr @VTableArrayIterator_Var_, ptr %0, align 8
+  %memberidx = getelementptr inbounds %Iterator_Var_, ptr %0, i32 0, i32 1
+  store i1 false, ptr %memberidx, align 1
+  %memberidx1 = getelementptr inbounds %ArrayIterator_Var_, ptr %0, i32 0, i32 2
+  store i64 0, ptr %memberidx1, align 4
+  %memberidx2 = getelementptr inbounds %ArrayIterator_Var_, ptr %0, i32 0, i32 4
+  store ptr %1, ptr %memberidx2, align 8
+  %memberidx3 = getelementptr inbounds %ArrayIterator_Var_, ptr %0, i32 0, i32 3
+  store i64 %2, ptr %memberidx3, align 4
+  ret void
+}
+
+define ptr @Array_Var____iter__(ptr %0) {
+  %2 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%ArrayIterator_Var_, ptr null, i32 1) to i32))
+  %memberidx = getelementptr inbounds %Array_Var_, ptr %0, i32 0, i32 1
+  %3 = load ptr, ptr %memberidx, align 8
+  %memberidx1 = getelementptr inbounds %Array_Var_, ptr %0, i32 0, i32 2
+  %4 = load i64, ptr %memberidx1, align 4
+  call void @ArrayIterator_Var__constructor(ptr %2, ptr %3, i64 %4)
+  ret ptr %2
+}
+
 define void @Array_Var____setitem__(ptr %0, i64 %1, ptr %2) {
   %4 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%Range, ptr null, i32 1) to i32))
   %memberidx = getelementptr inbounds %Array_Var_, ptr %0, i32 0, i32 2
@@ -16772,25 +17756,11 @@ ifend:                                            ; preds = %3, %if.entry
 }
 
 define ptr @Array_Var____getitem__(ptr %0, i64 %1) {
-  %3 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%Range, ptr null, i32 1) to i32))
-  %memberidx = getelementptr inbounds %Array_Var_, ptr %0, i32 0, i32 2
-  %4 = load i64, ptr %memberidx, align 4
-  call void @Range_constructor(ptr %3, i64 0, i64 %4)
-  %5 = load ptr, ptr %3, align 8
-  %6 = load ptr, ptr %5, align 8
-  %7 = call i1 %6(ptr %3, i64 %1)
-  br i1 %7, label %if.entry, label %common.ret
-
-common.ret:                                       ; preds = %2, %if.entry
-  %common.ret.op = phi ptr [ %9, %if.entry ], [ null, %2 ]
-  ret ptr %common.ret.op
-
-if.entry:                                         ; preds = %2
-  %memberidx2 = getelementptr inbounds %Array_Var_, ptr %0, i32 0, i32 1
-  %8 = load ptr, ptr %memberidx2, align 8
-  %ptridx = getelementptr inbounds ptr, ptr %8, i64 %1
-  %9 = load ptr, ptr %ptridx, align 8
-  br label %common.ret
+  %memberidx = getelementptr inbounds %Array_Var_, ptr %0, i32 0, i32 1
+  %3 = load ptr, ptr %memberidx, align 8
+  %ptridx = getelementptr inbounds ptr, ptr %3, i64 %1
+  %4 = load ptr, ptr %ptridx, align 8
+  ret ptr %4
 }
 
 define i1 @Array_Var____eq__(ptr %0, ptr %1) {
@@ -16818,11 +17788,11 @@ for.cond:                                         ; preds = %ifend7, %for.entry
 
 for.body:                                         ; preds = %for.cond
   %9 = load ptr, ptr %0, align 8
-  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %9, i32 0, i32 5
+  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %9, i32 0, i32 6
   %10 = load ptr, ptr %memberidx3, align 8
   %11 = call ptr %10(ptr %0, i64 %6)
   %12 = load ptr, ptr %1, align 8
-  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %12, i32 0, i32 5
+  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %12, i32 0, i32 6
   %13 = load ptr, ptr %memberidx4, align 8
   %14 = load i64, ptr %i, align 4
   %15 = call ptr %13(ptr %1, i64 %14)
@@ -16849,7 +17819,7 @@ for.cond:                                         ; preds = %ifend, %for.entry
 
 for.body:                                         ; preds = %for.cond
   %4 = load ptr, ptr %0, align 8
-  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %4, i32 0, i32 5
+  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %4, i32 0, i32 6
   %5 = load ptr, ptr %memberidx1, align 8
   %6 = call ptr %5(ptr %0, i64 %i.0)
   %7 = icmp eq ptr %6, %1
@@ -16965,7 +17935,7 @@ ifend:                                            ; preds = %2, %if.entry
 
 define void @Array_ConstDeclaration__append(ptr %0, ptr %1) {
   %3 = load ptr, ptr %0, align 8
-  %memberidx = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %3, i32 0, i32 2
+  %memberidx = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %3, i32 0, i32 3
   %4 = load ptr, ptr %memberidx, align 8
   call void %4(ptr %0, ptr %1)
   ret void
@@ -17010,6 +17980,46 @@ ifend:                                            ; preds = %3, %if.entry
   ret void
 }
 
+define ptr @ArrayIterator_ConstDeclaration____next__(ptr %0) {
+  %memberidx = getelementptr inbounds %ArrayIterator_ConstDeclaration_, ptr %0, i32 0, i32 2
+  %2 = load i64, ptr %memberidx, align 4
+  %3 = add i64 %2, 1
+  store i64 %3, ptr %memberidx, align 4
+  %memberidx2 = getelementptr inbounds %ArrayIterator_ConstDeclaration_, ptr %0, i32 0, i32 4
+  %4 = load ptr, ptr %memberidx2, align 8
+  %ptridx = getelementptr inbounds ptr, ptr %4, i64 %2
+  %5 = load ptr, ptr %ptridx, align 8
+  %memberidx3 = getelementptr inbounds %Iterator_ConstDeclaration_, ptr %0, i32 0, i32 1
+  %memberidx5 = getelementptr inbounds %ArrayIterator_ConstDeclaration_, ptr %0, i32 0, i32 3
+  %6 = load i64, ptr %memberidx5, align 4
+  %7 = icmp sgt i64 %3, %6
+  store i1 %7, ptr %memberidx3, align 1
+  ret ptr %5
+}
+
+define void @ArrayIterator_ConstDeclaration__constructor(ptr %0, ptr %1, i64 %2) {
+  store ptr @VTableArrayIterator_ConstDeclaration_, ptr %0, align 8
+  %memberidx = getelementptr inbounds %Iterator_ConstDeclaration_, ptr %0, i32 0, i32 1
+  store i1 false, ptr %memberidx, align 1
+  %memberidx1 = getelementptr inbounds %ArrayIterator_ConstDeclaration_, ptr %0, i32 0, i32 2
+  store i64 0, ptr %memberidx1, align 4
+  %memberidx2 = getelementptr inbounds %ArrayIterator_ConstDeclaration_, ptr %0, i32 0, i32 4
+  store ptr %1, ptr %memberidx2, align 8
+  %memberidx3 = getelementptr inbounds %ArrayIterator_ConstDeclaration_, ptr %0, i32 0, i32 3
+  store i64 %2, ptr %memberidx3, align 4
+  ret void
+}
+
+define ptr @Array_ConstDeclaration____iter__(ptr %0) {
+  %2 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%ArrayIterator_ConstDeclaration_, ptr null, i32 1) to i32))
+  %memberidx = getelementptr inbounds %Array_ConstDeclaration_, ptr %0, i32 0, i32 1
+  %3 = load ptr, ptr %memberidx, align 8
+  %memberidx1 = getelementptr inbounds %Array_ConstDeclaration_, ptr %0, i32 0, i32 2
+  %4 = load i64, ptr %memberidx1, align 4
+  call void @ArrayIterator_ConstDeclaration__constructor(ptr %2, ptr %3, i64 %4)
+  ret ptr %2
+}
+
 define void @Array_ConstDeclaration____setitem__(ptr %0, i64 %1, ptr %2) {
   %4 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%Range, ptr null, i32 1) to i32))
   %memberidx = getelementptr inbounds %Array_ConstDeclaration_, ptr %0, i32 0, i32 2
@@ -17032,25 +18042,11 @@ ifend:                                            ; preds = %3, %if.entry
 }
 
 define ptr @Array_ConstDeclaration____getitem__(ptr %0, i64 %1) {
-  %3 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%Range, ptr null, i32 1) to i32))
-  %memberidx = getelementptr inbounds %Array_ConstDeclaration_, ptr %0, i32 0, i32 2
-  %4 = load i64, ptr %memberidx, align 4
-  call void @Range_constructor(ptr %3, i64 0, i64 %4)
-  %5 = load ptr, ptr %3, align 8
-  %6 = load ptr, ptr %5, align 8
-  %7 = call i1 %6(ptr %3, i64 %1)
-  br i1 %7, label %if.entry, label %common.ret
-
-common.ret:                                       ; preds = %2, %if.entry
-  %common.ret.op = phi ptr [ %9, %if.entry ], [ null, %2 ]
-  ret ptr %common.ret.op
-
-if.entry:                                         ; preds = %2
-  %memberidx2 = getelementptr inbounds %Array_ConstDeclaration_, ptr %0, i32 0, i32 1
-  %8 = load ptr, ptr %memberidx2, align 8
-  %ptridx = getelementptr inbounds ptr, ptr %8, i64 %1
-  %9 = load ptr, ptr %ptridx, align 8
-  br label %common.ret
+  %memberidx = getelementptr inbounds %Array_ConstDeclaration_, ptr %0, i32 0, i32 1
+  %3 = load ptr, ptr %memberidx, align 8
+  %ptridx = getelementptr inbounds ptr, ptr %3, i64 %1
+  %4 = load ptr, ptr %ptridx, align 8
+  ret ptr %4
 }
 
 define i1 @Array_ConstDeclaration____eq__(ptr %0, ptr %1) {
@@ -17078,11 +18074,11 @@ for.cond:                                         ; preds = %ifend7, %for.entry
 
 for.body:                                         ; preds = %for.cond
   %9 = load ptr, ptr %0, align 8
-  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %9, i32 0, i32 5
+  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %9, i32 0, i32 6
   %10 = load ptr, ptr %memberidx3, align 8
   %11 = call ptr %10(ptr %0, i64 %6)
   %12 = load ptr, ptr %1, align 8
-  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %12, i32 0, i32 5
+  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %12, i32 0, i32 6
   %13 = load ptr, ptr %memberidx4, align 8
   %14 = load i64, ptr %i, align 4
   %15 = call ptr %13(ptr %1, i64 %14)
@@ -17109,7 +18105,7 @@ for.cond:                                         ; preds = %ifend, %for.entry
 
 for.body:                                         ; preds = %for.cond
   %4 = load ptr, ptr %0, align 8
-  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %4, i32 0, i32 5
+  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %4, i32 0, i32 6
   %5 = load ptr, ptr %memberidx1, align 8
   %6 = call ptr %5(ptr %0, i64 %i.0)
   %7 = icmp eq ptr %6, %1
@@ -17306,7 +18302,7 @@ ifend:                                            ; preds = %2, %if.entry
 
 define void @Array_Bucket_string_PropId___append(ptr %0, ptr %1) {
   %3 = load ptr, ptr %0, align 8
-  %memberidx = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %3, i32 0, i32 2
+  %memberidx = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %3, i32 0, i32 3
   %4 = load ptr, ptr %memberidx, align 8
   call void %4(ptr %0, ptr %1)
   ret void
@@ -17351,6 +18347,46 @@ ifend:                                            ; preds = %3, %if.entry
   ret void
 }
 
+define ptr @ArrayIterator_Bucket_string_PropId_____next__(ptr %0) {
+  %memberidx = getelementptr inbounds %ArrayIterator_Bucket_string_PropId__, ptr %0, i32 0, i32 2
+  %2 = load i64, ptr %memberidx, align 4
+  %3 = add i64 %2, 1
+  store i64 %3, ptr %memberidx, align 4
+  %memberidx2 = getelementptr inbounds %ArrayIterator_Bucket_string_PropId__, ptr %0, i32 0, i32 4
+  %4 = load ptr, ptr %memberidx2, align 8
+  %ptridx = getelementptr inbounds ptr, ptr %4, i64 %2
+  %5 = load ptr, ptr %ptridx, align 8
+  %memberidx3 = getelementptr inbounds %Iterator_Bucket_string_PropId__, ptr %0, i32 0, i32 1
+  %memberidx5 = getelementptr inbounds %ArrayIterator_Bucket_string_PropId__, ptr %0, i32 0, i32 3
+  %6 = load i64, ptr %memberidx5, align 4
+  %7 = icmp sgt i64 %3, %6
+  store i1 %7, ptr %memberidx3, align 1
+  ret ptr %5
+}
+
+define void @ArrayIterator_Bucket_string_PropId___constructor(ptr %0, ptr %1, i64 %2) {
+  store ptr @VTableArrayIterator_Bucket_string_PropId__, ptr %0, align 8
+  %memberidx = getelementptr inbounds %Iterator_Bucket_string_PropId__, ptr %0, i32 0, i32 1
+  store i1 false, ptr %memberidx, align 1
+  %memberidx1 = getelementptr inbounds %ArrayIterator_Bucket_string_PropId__, ptr %0, i32 0, i32 2
+  store i64 0, ptr %memberidx1, align 4
+  %memberidx2 = getelementptr inbounds %ArrayIterator_Bucket_string_PropId__, ptr %0, i32 0, i32 4
+  store ptr %1, ptr %memberidx2, align 8
+  %memberidx3 = getelementptr inbounds %ArrayIterator_Bucket_string_PropId__, ptr %0, i32 0, i32 3
+  store i64 %2, ptr %memberidx3, align 4
+  ret void
+}
+
+define ptr @Array_Bucket_string_PropId_____iter__(ptr %0) {
+  %2 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%ArrayIterator_Bucket_string_PropId__, ptr null, i32 1) to i32))
+  %memberidx = getelementptr inbounds %Array_Bucket_string_PropId__, ptr %0, i32 0, i32 1
+  %3 = load ptr, ptr %memberidx, align 8
+  %memberidx1 = getelementptr inbounds %Array_Bucket_string_PropId__, ptr %0, i32 0, i32 2
+  %4 = load i64, ptr %memberidx1, align 4
+  call void @ArrayIterator_Bucket_string_PropId___constructor(ptr %2, ptr %3, i64 %4)
+  ret ptr %2
+}
+
 define void @Array_Bucket_string_PropId_____setitem__(ptr %0, i64 %1, ptr %2) {
   %4 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%Range, ptr null, i32 1) to i32))
   %memberidx = getelementptr inbounds %Array_Bucket_string_PropId__, ptr %0, i32 0, i32 2
@@ -17373,25 +18409,11 @@ ifend:                                            ; preds = %3, %if.entry
 }
 
 define ptr @Array_Bucket_string_PropId_____getitem__(ptr %0, i64 %1) {
-  %3 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%Range, ptr null, i32 1) to i32))
-  %memberidx = getelementptr inbounds %Array_Bucket_string_PropId__, ptr %0, i32 0, i32 2
-  %4 = load i64, ptr %memberidx, align 4
-  call void @Range_constructor(ptr %3, i64 0, i64 %4)
-  %5 = load ptr, ptr %3, align 8
-  %6 = load ptr, ptr %5, align 8
-  %7 = call i1 %6(ptr %3, i64 %1)
-  br i1 %7, label %if.entry, label %common.ret
-
-common.ret:                                       ; preds = %2, %if.entry
-  %common.ret.op = phi ptr [ %9, %if.entry ], [ null, %2 ]
-  ret ptr %common.ret.op
-
-if.entry:                                         ; preds = %2
-  %memberidx2 = getelementptr inbounds %Array_Bucket_string_PropId__, ptr %0, i32 0, i32 1
-  %8 = load ptr, ptr %memberidx2, align 8
-  %ptridx = getelementptr inbounds ptr, ptr %8, i64 %1
-  %9 = load ptr, ptr %ptridx, align 8
-  br label %common.ret
+  %memberidx = getelementptr inbounds %Array_Bucket_string_PropId__, ptr %0, i32 0, i32 1
+  %3 = load ptr, ptr %memberidx, align 8
+  %ptridx = getelementptr inbounds ptr, ptr %3, i64 %1
+  %4 = load ptr, ptr %ptridx, align 8
+  ret ptr %4
 }
 
 define i1 @Array_Bucket_string_PropId_____eq__(ptr %0, ptr %1) {
@@ -17419,11 +18441,11 @@ for.cond:                                         ; preds = %ifend7, %for.entry
 
 for.body:                                         ; preds = %for.cond
   %9 = load ptr, ptr %0, align 8
-  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %9, i32 0, i32 5
+  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %9, i32 0, i32 6
   %10 = load ptr, ptr %memberidx3, align 8
   %11 = call ptr %10(ptr %0, i64 %6)
   %12 = load ptr, ptr %1, align 8
-  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %12, i32 0, i32 5
+  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %12, i32 0, i32 6
   %13 = load ptr, ptr %memberidx4, align 8
   %14 = load i64, ptr %i, align 4
   %15 = call ptr %13(ptr %1, i64 %14)
@@ -17450,7 +18472,7 @@ for.cond:                                         ; preds = %ifend, %for.entry
 
 for.body:                                         ; preds = %for.cond
   %4 = load ptr, ptr %0, align 8
-  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %4, i32 0, i32 5
+  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %4, i32 0, i32 6
   %5 = load ptr, ptr %memberidx1, align 8
   %6 = call ptr %5(ptr %0, i64 %i.0)
   %7 = icmp eq ptr %6, %1
@@ -17512,7 +18534,7 @@ for.end:                                          ; preds = %for.cond
 
 if.entry:                                         ; preds = %for.body
   %8 = load ptr, ptr %1, align 8
-  %memberidx5 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %8, i32 0, i32 2
+  %memberidx5 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %8, i32 0, i32 3
   %9 = load ptr, ptr %memberidx5, align 8
   call void %9(ptr %1, ptr %5)
   br label %ifend
@@ -17571,13 +18593,13 @@ for.body11:                                       ; preds = %for.cond10
   %17 = load ptr, ptr %0, align 8
   %18 = load ptr, ptr %17, align 8
   %19 = load ptr, ptr %3, align 8
-  %memberidx16 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %19, i32 0, i32 5
+  %memberidx16 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %19, i32 0, i32 6
   %20 = load ptr, ptr %memberidx16, align 8
   %21 = call ptr %20(ptr %3, i64 %i.1)
   %memberidx17 = getelementptr inbounds %Bucket_string_PropId_, ptr %21, i32 0, i32 1
   %22 = load ptr, ptr %memberidx17, align 8
   %23 = load ptr, ptr %3, align 8
-  %memberidx18 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %23, i32 0, i32 5
+  %memberidx18 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %23, i32 0, i32 6
   %24 = load ptr, ptr %memberidx18, align 8
   %25 = call ptr %24(ptr %3, i64 %i.1)
   %memberidx19 = getelementptr inbounds %Bucket_string_PropId_, ptr %25, i32 0, i32 2
@@ -17794,7 +18816,7 @@ ifend:                                            ; preds = %2, %if.entry
 
 define void @Array_EnumField__append(ptr %0, ptr %1) {
   %3 = load ptr, ptr %0, align 8
-  %memberidx = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %3, i32 0, i32 2
+  %memberidx = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %3, i32 0, i32 3
   %4 = load ptr, ptr %memberidx, align 8
   call void %4(ptr %0, ptr %1)
   ret void
@@ -17839,6 +18861,46 @@ ifend:                                            ; preds = %3, %if.entry
   ret void
 }
 
+define ptr @ArrayIterator_EnumField____next__(ptr %0) {
+  %memberidx = getelementptr inbounds %ArrayIterator_EnumField_, ptr %0, i32 0, i32 2
+  %2 = load i64, ptr %memberidx, align 4
+  %3 = add i64 %2, 1
+  store i64 %3, ptr %memberidx, align 4
+  %memberidx2 = getelementptr inbounds %ArrayIterator_EnumField_, ptr %0, i32 0, i32 4
+  %4 = load ptr, ptr %memberidx2, align 8
+  %ptridx = getelementptr inbounds ptr, ptr %4, i64 %2
+  %5 = load ptr, ptr %ptridx, align 8
+  %memberidx3 = getelementptr inbounds %Iterator_EnumField_, ptr %0, i32 0, i32 1
+  %memberidx5 = getelementptr inbounds %ArrayIterator_EnumField_, ptr %0, i32 0, i32 3
+  %6 = load i64, ptr %memberidx5, align 4
+  %7 = icmp sgt i64 %3, %6
+  store i1 %7, ptr %memberidx3, align 1
+  ret ptr %5
+}
+
+define void @ArrayIterator_EnumField__constructor(ptr %0, ptr %1, i64 %2) {
+  store ptr @VTableArrayIterator_EnumField_, ptr %0, align 8
+  %memberidx = getelementptr inbounds %Iterator_EnumField_, ptr %0, i32 0, i32 1
+  store i1 false, ptr %memberidx, align 1
+  %memberidx1 = getelementptr inbounds %ArrayIterator_EnumField_, ptr %0, i32 0, i32 2
+  store i64 0, ptr %memberidx1, align 4
+  %memberidx2 = getelementptr inbounds %ArrayIterator_EnumField_, ptr %0, i32 0, i32 4
+  store ptr %1, ptr %memberidx2, align 8
+  %memberidx3 = getelementptr inbounds %ArrayIterator_EnumField_, ptr %0, i32 0, i32 3
+  store i64 %2, ptr %memberidx3, align 4
+  ret void
+}
+
+define ptr @Array_EnumField____iter__(ptr %0) {
+  %2 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%ArrayIterator_EnumField_, ptr null, i32 1) to i32))
+  %memberidx = getelementptr inbounds %Array_EnumField_, ptr %0, i32 0, i32 1
+  %3 = load ptr, ptr %memberidx, align 8
+  %memberidx1 = getelementptr inbounds %Array_EnumField_, ptr %0, i32 0, i32 2
+  %4 = load i64, ptr %memberidx1, align 4
+  call void @ArrayIterator_EnumField__constructor(ptr %2, ptr %3, i64 %4)
+  ret ptr %2
+}
+
 define void @Array_EnumField____setitem__(ptr %0, i64 %1, ptr %2) {
   %4 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%Range, ptr null, i32 1) to i32))
   %memberidx = getelementptr inbounds %Array_EnumField_, ptr %0, i32 0, i32 2
@@ -17861,25 +18923,11 @@ ifend:                                            ; preds = %3, %if.entry
 }
 
 define ptr @Array_EnumField____getitem__(ptr %0, i64 %1) {
-  %3 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%Range, ptr null, i32 1) to i32))
-  %memberidx = getelementptr inbounds %Array_EnumField_, ptr %0, i32 0, i32 2
-  %4 = load i64, ptr %memberidx, align 4
-  call void @Range_constructor(ptr %3, i64 0, i64 %4)
-  %5 = load ptr, ptr %3, align 8
-  %6 = load ptr, ptr %5, align 8
-  %7 = call i1 %6(ptr %3, i64 %1)
-  br i1 %7, label %if.entry, label %common.ret
-
-common.ret:                                       ; preds = %2, %if.entry
-  %common.ret.op = phi ptr [ %9, %if.entry ], [ null, %2 ]
-  ret ptr %common.ret.op
-
-if.entry:                                         ; preds = %2
-  %memberidx2 = getelementptr inbounds %Array_EnumField_, ptr %0, i32 0, i32 1
-  %8 = load ptr, ptr %memberidx2, align 8
-  %ptridx = getelementptr inbounds ptr, ptr %8, i64 %1
-  %9 = load ptr, ptr %ptridx, align 8
-  br label %common.ret
+  %memberidx = getelementptr inbounds %Array_EnumField_, ptr %0, i32 0, i32 1
+  %3 = load ptr, ptr %memberidx, align 8
+  %ptridx = getelementptr inbounds ptr, ptr %3, i64 %1
+  %4 = load ptr, ptr %ptridx, align 8
+  ret ptr %4
 }
 
 define i1 @Array_EnumField____eq__(ptr %0, ptr %1) {
@@ -17907,11 +18955,11 @@ for.cond:                                         ; preds = %ifend7, %for.entry
 
 for.body:                                         ; preds = %for.cond
   %9 = load ptr, ptr %0, align 8
-  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %9, i32 0, i32 5
+  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %9, i32 0, i32 6
   %10 = load ptr, ptr %memberidx3, align 8
   %11 = call ptr %10(ptr %0, i64 %6)
   %12 = load ptr, ptr %1, align 8
-  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %12, i32 0, i32 5
+  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %12, i32 0, i32 6
   %13 = load ptr, ptr %memberidx4, align 8
   %14 = load i64, ptr %i, align 4
   %15 = call ptr %13(ptr %1, i64 %14)
@@ -17938,7 +18986,7 @@ for.cond:                                         ; preds = %ifend, %for.entry
 
 for.body:                                         ; preds = %for.cond
   %4 = load ptr, ptr %0, align 8
-  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %4, i32 0, i32 5
+  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %4, i32 0, i32 6
   %5 = load ptr, ptr %memberidx1, align 8
   %6 = call ptr %5(ptr %0, i64 %i.0)
   %7 = icmp eq ptr %6, %1
@@ -18049,7 +19097,7 @@ ifend:                                            ; preds = %2, %if.entry
 
 define void @Array_Enum__append(ptr %0, ptr %1) {
   %3 = load ptr, ptr %0, align 8
-  %memberidx = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %3, i32 0, i32 2
+  %memberidx = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %3, i32 0, i32 3
   %4 = load ptr, ptr %memberidx, align 8
   call void %4(ptr %0, ptr %1)
   ret void
@@ -18094,6 +19142,46 @@ ifend:                                            ; preds = %3, %if.entry
   ret void
 }
 
+define ptr @ArrayIterator_Enum____next__(ptr %0) {
+  %memberidx = getelementptr inbounds %ArrayIterator_Enum_, ptr %0, i32 0, i32 2
+  %2 = load i64, ptr %memberidx, align 4
+  %3 = add i64 %2, 1
+  store i64 %3, ptr %memberidx, align 4
+  %memberidx2 = getelementptr inbounds %ArrayIterator_Enum_, ptr %0, i32 0, i32 4
+  %4 = load ptr, ptr %memberidx2, align 8
+  %ptridx = getelementptr inbounds ptr, ptr %4, i64 %2
+  %5 = load ptr, ptr %ptridx, align 8
+  %memberidx3 = getelementptr inbounds %Iterator_Enum_, ptr %0, i32 0, i32 1
+  %memberidx5 = getelementptr inbounds %ArrayIterator_Enum_, ptr %0, i32 0, i32 3
+  %6 = load i64, ptr %memberidx5, align 4
+  %7 = icmp sgt i64 %3, %6
+  store i1 %7, ptr %memberidx3, align 1
+  ret ptr %5
+}
+
+define void @ArrayIterator_Enum__constructor(ptr %0, ptr %1, i64 %2) {
+  store ptr @VTableArrayIterator_Enum_, ptr %0, align 8
+  %memberidx = getelementptr inbounds %Iterator_Enum_, ptr %0, i32 0, i32 1
+  store i1 false, ptr %memberidx, align 1
+  %memberidx1 = getelementptr inbounds %ArrayIterator_Enum_, ptr %0, i32 0, i32 2
+  store i64 0, ptr %memberidx1, align 4
+  %memberidx2 = getelementptr inbounds %ArrayIterator_Enum_, ptr %0, i32 0, i32 4
+  store ptr %1, ptr %memberidx2, align 8
+  %memberidx3 = getelementptr inbounds %ArrayIterator_Enum_, ptr %0, i32 0, i32 3
+  store i64 %2, ptr %memberidx3, align 4
+  ret void
+}
+
+define ptr @Array_Enum____iter__(ptr %0) {
+  %2 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%ArrayIterator_Enum_, ptr null, i32 1) to i32))
+  %memberidx = getelementptr inbounds %Array_Enum_, ptr %0, i32 0, i32 1
+  %3 = load ptr, ptr %memberidx, align 8
+  %memberidx1 = getelementptr inbounds %Array_Enum_, ptr %0, i32 0, i32 2
+  %4 = load i64, ptr %memberidx1, align 4
+  call void @ArrayIterator_Enum__constructor(ptr %2, ptr %3, i64 %4)
+  ret ptr %2
+}
+
 define void @Array_Enum____setitem__(ptr %0, i64 %1, ptr %2) {
   %4 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%Range, ptr null, i32 1) to i32))
   %memberidx = getelementptr inbounds %Array_Enum_, ptr %0, i32 0, i32 2
@@ -18116,25 +19204,11 @@ ifend:                                            ; preds = %3, %if.entry
 }
 
 define ptr @Array_Enum____getitem__(ptr %0, i64 %1) {
-  %3 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%Range, ptr null, i32 1) to i32))
-  %memberidx = getelementptr inbounds %Array_Enum_, ptr %0, i32 0, i32 2
-  %4 = load i64, ptr %memberidx, align 4
-  call void @Range_constructor(ptr %3, i64 0, i64 %4)
-  %5 = load ptr, ptr %3, align 8
-  %6 = load ptr, ptr %5, align 8
-  %7 = call i1 %6(ptr %3, i64 %1)
-  br i1 %7, label %if.entry, label %common.ret
-
-common.ret:                                       ; preds = %2, %if.entry
-  %common.ret.op = phi ptr [ %9, %if.entry ], [ null, %2 ]
-  ret ptr %common.ret.op
-
-if.entry:                                         ; preds = %2
-  %memberidx2 = getelementptr inbounds %Array_Enum_, ptr %0, i32 0, i32 1
-  %8 = load ptr, ptr %memberidx2, align 8
-  %ptridx = getelementptr inbounds ptr, ptr %8, i64 %1
-  %9 = load ptr, ptr %ptridx, align 8
-  br label %common.ret
+  %memberidx = getelementptr inbounds %Array_Enum_, ptr %0, i32 0, i32 1
+  %3 = load ptr, ptr %memberidx, align 8
+  %ptridx = getelementptr inbounds ptr, ptr %3, i64 %1
+  %4 = load ptr, ptr %ptridx, align 8
+  ret ptr %4
 }
 
 define i1 @Array_Enum____eq__(ptr %0, ptr %1) {
@@ -18162,11 +19236,11 @@ for.cond:                                         ; preds = %ifend7, %for.entry
 
 for.body:                                         ; preds = %for.cond
   %9 = load ptr, ptr %0, align 8
-  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %9, i32 0, i32 5
+  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %9, i32 0, i32 6
   %10 = load ptr, ptr %memberidx3, align 8
   %11 = call ptr %10(ptr %0, i64 %6)
   %12 = load ptr, ptr %1, align 8
-  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %12, i32 0, i32 5
+  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %12, i32 0, i32 6
   %13 = load ptr, ptr %memberidx4, align 8
   %14 = load i64, ptr %i, align 4
   %15 = call ptr %13(ptr %1, i64 %14)
@@ -18193,7 +19267,7 @@ for.cond:                                         ; preds = %ifend, %for.entry
 
 for.body:                                         ; preds = %for.cond
   %4 = load ptr, ptr %0, align 8
-  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %4, i32 0, i32 5
+  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %4, i32 0, i32 6
   %5 = load ptr, ptr %memberidx1, align 8
   %6 = call ptr %5(ptr %0, i64 %i.0)
   %7 = icmp eq ptr %6, %1
@@ -18300,7 +19374,7 @@ ifend:                                            ; preds = %2, %if.entry
 
 define void @Array_Const__append(ptr %0, ptr %1) {
   %3 = load ptr, ptr %0, align 8
-  %memberidx = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %3, i32 0, i32 2
+  %memberidx = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %3, i32 0, i32 3
   %4 = load ptr, ptr %memberidx, align 8
   call void %4(ptr %0, ptr %1)
   ret void
@@ -18345,6 +19419,46 @@ ifend:                                            ; preds = %3, %if.entry
   ret void
 }
 
+define ptr @ArrayIterator_Const____next__(ptr %0) {
+  %memberidx = getelementptr inbounds %ArrayIterator_Const_, ptr %0, i32 0, i32 2
+  %2 = load i64, ptr %memberidx, align 4
+  %3 = add i64 %2, 1
+  store i64 %3, ptr %memberidx, align 4
+  %memberidx2 = getelementptr inbounds %ArrayIterator_Const_, ptr %0, i32 0, i32 4
+  %4 = load ptr, ptr %memberidx2, align 8
+  %ptridx = getelementptr inbounds ptr, ptr %4, i64 %2
+  %5 = load ptr, ptr %ptridx, align 8
+  %memberidx3 = getelementptr inbounds %Iterator_Const_, ptr %0, i32 0, i32 1
+  %memberidx5 = getelementptr inbounds %ArrayIterator_Const_, ptr %0, i32 0, i32 3
+  %6 = load i64, ptr %memberidx5, align 4
+  %7 = icmp sgt i64 %3, %6
+  store i1 %7, ptr %memberidx3, align 1
+  ret ptr %5
+}
+
+define void @ArrayIterator_Const__constructor(ptr %0, ptr %1, i64 %2) {
+  store ptr @VTableArrayIterator_Const_, ptr %0, align 8
+  %memberidx = getelementptr inbounds %Iterator_Const_, ptr %0, i32 0, i32 1
+  store i1 false, ptr %memberidx, align 1
+  %memberidx1 = getelementptr inbounds %ArrayIterator_Const_, ptr %0, i32 0, i32 2
+  store i64 0, ptr %memberidx1, align 4
+  %memberidx2 = getelementptr inbounds %ArrayIterator_Const_, ptr %0, i32 0, i32 4
+  store ptr %1, ptr %memberidx2, align 8
+  %memberidx3 = getelementptr inbounds %ArrayIterator_Const_, ptr %0, i32 0, i32 3
+  store i64 %2, ptr %memberidx3, align 4
+  ret void
+}
+
+define ptr @Array_Const____iter__(ptr %0) {
+  %2 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%ArrayIterator_Const_, ptr null, i32 1) to i32))
+  %memberidx = getelementptr inbounds %Array_Const_, ptr %0, i32 0, i32 1
+  %3 = load ptr, ptr %memberidx, align 8
+  %memberidx1 = getelementptr inbounds %Array_Const_, ptr %0, i32 0, i32 2
+  %4 = load i64, ptr %memberidx1, align 4
+  call void @ArrayIterator_Const__constructor(ptr %2, ptr %3, i64 %4)
+  ret ptr %2
+}
+
 define void @Array_Const____setitem__(ptr %0, i64 %1, ptr %2) {
   %4 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%Range, ptr null, i32 1) to i32))
   %memberidx = getelementptr inbounds %Array_Const_, ptr %0, i32 0, i32 2
@@ -18367,25 +19481,11 @@ ifend:                                            ; preds = %3, %if.entry
 }
 
 define ptr @Array_Const____getitem__(ptr %0, i64 %1) {
-  %3 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%Range, ptr null, i32 1) to i32))
-  %memberidx = getelementptr inbounds %Array_Const_, ptr %0, i32 0, i32 2
-  %4 = load i64, ptr %memberidx, align 4
-  call void @Range_constructor(ptr %3, i64 0, i64 %4)
-  %5 = load ptr, ptr %3, align 8
-  %6 = load ptr, ptr %5, align 8
-  %7 = call i1 %6(ptr %3, i64 %1)
-  br i1 %7, label %if.entry, label %common.ret
-
-common.ret:                                       ; preds = %2, %if.entry
-  %common.ret.op = phi ptr [ %9, %if.entry ], [ null, %2 ]
-  ret ptr %common.ret.op
-
-if.entry:                                         ; preds = %2
-  %memberidx2 = getelementptr inbounds %Array_Const_, ptr %0, i32 0, i32 1
-  %8 = load ptr, ptr %memberidx2, align 8
-  %ptridx = getelementptr inbounds ptr, ptr %8, i64 %1
-  %9 = load ptr, ptr %ptridx, align 8
-  br label %common.ret
+  %memberidx = getelementptr inbounds %Array_Const_, ptr %0, i32 0, i32 1
+  %3 = load ptr, ptr %memberidx, align 8
+  %ptridx = getelementptr inbounds ptr, ptr %3, i64 %1
+  %4 = load ptr, ptr %ptridx, align 8
+  ret ptr %4
 }
 
 define i1 @Array_Const____eq__(ptr %0, ptr %1) {
@@ -18413,11 +19513,11 @@ for.cond:                                         ; preds = %ifend7, %for.entry
 
 for.body:                                         ; preds = %for.cond
   %9 = load ptr, ptr %0, align 8
-  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %9, i32 0, i32 5
+  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %9, i32 0, i32 6
   %10 = load ptr, ptr %memberidx3, align 8
   %11 = call ptr %10(ptr %0, i64 %6)
   %12 = load ptr, ptr %1, align 8
-  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %12, i32 0, i32 5
+  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %12, i32 0, i32 6
   %13 = load ptr, ptr %memberidx4, align 8
   %14 = load i64, ptr %i, align 4
   %15 = call ptr %13(ptr %1, i64 %14)
@@ -18444,7 +19544,7 @@ for.cond:                                         ; preds = %ifend, %for.entry
 
 for.body:                                         ; preds = %for.cond
   %4 = load ptr, ptr %0, align 8
-  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %4, i32 0, i32 5
+  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %4, i32 0, i32 6
   %5 = load ptr, ptr %memberidx1, align 8
   %6 = call ptr %5(ptr %0, i64 %i.0)
   %7 = icmp eq ptr %6, %1
@@ -18549,7 +19649,7 @@ ifend:                                            ; preds = %2, %if.entry
 
 define void @Array_FunctionArg__append(ptr %0, ptr %1) {
   %3 = load ptr, ptr %0, align 8
-  %memberidx = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %3, i32 0, i32 2
+  %memberidx = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %3, i32 0, i32 3
   %4 = load ptr, ptr %memberidx, align 8
   call void %4(ptr %0, ptr %1)
   ret void
@@ -18594,6 +19694,46 @@ ifend:                                            ; preds = %3, %if.entry
   ret void
 }
 
+define ptr @ArrayIterator_FunctionArg____next__(ptr %0) {
+  %memberidx = getelementptr inbounds %ArrayIterator_FunctionArg_, ptr %0, i32 0, i32 2
+  %2 = load i64, ptr %memberidx, align 4
+  %3 = add i64 %2, 1
+  store i64 %3, ptr %memberidx, align 4
+  %memberidx2 = getelementptr inbounds %ArrayIterator_FunctionArg_, ptr %0, i32 0, i32 4
+  %4 = load ptr, ptr %memberidx2, align 8
+  %ptridx = getelementptr inbounds ptr, ptr %4, i64 %2
+  %5 = load ptr, ptr %ptridx, align 8
+  %memberidx3 = getelementptr inbounds %Iterator_FunctionArg_, ptr %0, i32 0, i32 1
+  %memberidx5 = getelementptr inbounds %ArrayIterator_FunctionArg_, ptr %0, i32 0, i32 3
+  %6 = load i64, ptr %memberidx5, align 4
+  %7 = icmp sgt i64 %3, %6
+  store i1 %7, ptr %memberidx3, align 1
+  ret ptr %5
+}
+
+define void @ArrayIterator_FunctionArg__constructor(ptr %0, ptr %1, i64 %2) {
+  store ptr @VTableArrayIterator_FunctionArg_, ptr %0, align 8
+  %memberidx = getelementptr inbounds %Iterator_FunctionArg_, ptr %0, i32 0, i32 1
+  store i1 false, ptr %memberidx, align 1
+  %memberidx1 = getelementptr inbounds %ArrayIterator_FunctionArg_, ptr %0, i32 0, i32 2
+  store i64 0, ptr %memberidx1, align 4
+  %memberidx2 = getelementptr inbounds %ArrayIterator_FunctionArg_, ptr %0, i32 0, i32 4
+  store ptr %1, ptr %memberidx2, align 8
+  %memberidx3 = getelementptr inbounds %ArrayIterator_FunctionArg_, ptr %0, i32 0, i32 3
+  store i64 %2, ptr %memberidx3, align 4
+  ret void
+}
+
+define ptr @Array_FunctionArg____iter__(ptr %0) {
+  %2 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%ArrayIterator_FunctionArg_, ptr null, i32 1) to i32))
+  %memberidx = getelementptr inbounds %Array_FunctionArg_, ptr %0, i32 0, i32 1
+  %3 = load ptr, ptr %memberidx, align 8
+  %memberidx1 = getelementptr inbounds %Array_FunctionArg_, ptr %0, i32 0, i32 2
+  %4 = load i64, ptr %memberidx1, align 4
+  call void @ArrayIterator_FunctionArg__constructor(ptr %2, ptr %3, i64 %4)
+  ret ptr %2
+}
+
 define void @Array_FunctionArg____setitem__(ptr %0, i64 %1, ptr %2) {
   %4 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%Range, ptr null, i32 1) to i32))
   %memberidx = getelementptr inbounds %Array_FunctionArg_, ptr %0, i32 0, i32 2
@@ -18616,25 +19756,11 @@ ifend:                                            ; preds = %3, %if.entry
 }
 
 define ptr @Array_FunctionArg____getitem__(ptr %0, i64 %1) {
-  %3 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%Range, ptr null, i32 1) to i32))
-  %memberidx = getelementptr inbounds %Array_FunctionArg_, ptr %0, i32 0, i32 2
-  %4 = load i64, ptr %memberidx, align 4
-  call void @Range_constructor(ptr %3, i64 0, i64 %4)
-  %5 = load ptr, ptr %3, align 8
-  %6 = load ptr, ptr %5, align 8
-  %7 = call i1 %6(ptr %3, i64 %1)
-  br i1 %7, label %if.entry, label %common.ret
-
-common.ret:                                       ; preds = %2, %if.entry
-  %common.ret.op = phi ptr [ %9, %if.entry ], [ null, %2 ]
-  ret ptr %common.ret.op
-
-if.entry:                                         ; preds = %2
-  %memberidx2 = getelementptr inbounds %Array_FunctionArg_, ptr %0, i32 0, i32 1
-  %8 = load ptr, ptr %memberidx2, align 8
-  %ptridx = getelementptr inbounds ptr, ptr %8, i64 %1
-  %9 = load ptr, ptr %ptridx, align 8
-  br label %common.ret
+  %memberidx = getelementptr inbounds %Array_FunctionArg_, ptr %0, i32 0, i32 1
+  %3 = load ptr, ptr %memberidx, align 8
+  %ptridx = getelementptr inbounds ptr, ptr %3, i64 %1
+  %4 = load ptr, ptr %ptridx, align 8
+  ret ptr %4
 }
 
 define i1 @Array_FunctionArg____eq__(ptr %0, ptr %1) {
@@ -18662,11 +19788,11 @@ for.cond:                                         ; preds = %ifend7, %for.entry
 
 for.body:                                         ; preds = %for.cond
   %9 = load ptr, ptr %0, align 8
-  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %9, i32 0, i32 5
+  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %9, i32 0, i32 6
   %10 = load ptr, ptr %memberidx3, align 8
   %11 = call ptr %10(ptr %0, i64 %6)
   %12 = load ptr, ptr %1, align 8
-  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %12, i32 0, i32 5
+  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %12, i32 0, i32 6
   %13 = load ptr, ptr %memberidx4, align 8
   %14 = load i64, ptr %i, align 4
   %15 = call ptr %13(ptr %1, i64 %14)
@@ -18693,7 +19819,7 @@ for.cond:                                         ; preds = %ifend, %for.entry
 
 for.body:                                         ; preds = %for.cond
   %4 = load ptr, ptr %0, align 8
-  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %4, i32 0, i32 5
+  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %4, i32 0, i32 6
   %5 = load ptr, ptr %memberidx1, align 8
   %6 = call ptr %5(ptr %0, i64 %i.0)
   %7 = icmp eq ptr %6, %1
@@ -18793,7 +19919,7 @@ ifend:                                            ; preds = %2, %if.entry
 
 define void @Array_Statement__append(ptr %0, ptr %1) {
   %3 = load ptr, ptr %0, align 8
-  %memberidx = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %3, i32 0, i32 2
+  %memberidx = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %3, i32 0, i32 3
   %4 = load ptr, ptr %memberidx, align 8
   call void %4(ptr %0, ptr %1)
   ret void
@@ -18838,6 +19964,46 @@ ifend:                                            ; preds = %3, %if.entry
   ret void
 }
 
+define ptr @ArrayIterator_Statement____next__(ptr %0) {
+  %memberidx = getelementptr inbounds %ArrayIterator_Statement_, ptr %0, i32 0, i32 2
+  %2 = load i64, ptr %memberidx, align 4
+  %3 = add i64 %2, 1
+  store i64 %3, ptr %memberidx, align 4
+  %memberidx2 = getelementptr inbounds %ArrayIterator_Statement_, ptr %0, i32 0, i32 4
+  %4 = load ptr, ptr %memberidx2, align 8
+  %ptridx = getelementptr inbounds ptr, ptr %4, i64 %2
+  %5 = load ptr, ptr %ptridx, align 8
+  %memberidx3 = getelementptr inbounds %Iterator_Statement_, ptr %0, i32 0, i32 1
+  %memberidx5 = getelementptr inbounds %ArrayIterator_Statement_, ptr %0, i32 0, i32 3
+  %6 = load i64, ptr %memberidx5, align 4
+  %7 = icmp sgt i64 %3, %6
+  store i1 %7, ptr %memberidx3, align 1
+  ret ptr %5
+}
+
+define void @ArrayIterator_Statement__constructor(ptr %0, ptr %1, i64 %2) {
+  store ptr @VTableArrayIterator_Statement_, ptr %0, align 8
+  %memberidx = getelementptr inbounds %Iterator_Statement_, ptr %0, i32 0, i32 1
+  store i1 false, ptr %memberidx, align 1
+  %memberidx1 = getelementptr inbounds %ArrayIterator_Statement_, ptr %0, i32 0, i32 2
+  store i64 0, ptr %memberidx1, align 4
+  %memberidx2 = getelementptr inbounds %ArrayIterator_Statement_, ptr %0, i32 0, i32 4
+  store ptr %1, ptr %memberidx2, align 8
+  %memberidx3 = getelementptr inbounds %ArrayIterator_Statement_, ptr %0, i32 0, i32 3
+  store i64 %2, ptr %memberidx3, align 4
+  ret void
+}
+
+define ptr @Array_Statement____iter__(ptr %0) {
+  %2 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%ArrayIterator_Statement_, ptr null, i32 1) to i32))
+  %memberidx = getelementptr inbounds %Array_Statement_, ptr %0, i32 0, i32 1
+  %3 = load ptr, ptr %memberidx, align 8
+  %memberidx1 = getelementptr inbounds %Array_Statement_, ptr %0, i32 0, i32 2
+  %4 = load i64, ptr %memberidx1, align 4
+  call void @ArrayIterator_Statement__constructor(ptr %2, ptr %3, i64 %4)
+  ret ptr %2
+}
+
 define void @Array_Statement____setitem__(ptr %0, i64 %1, ptr %2) {
   %4 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%Range, ptr null, i32 1) to i32))
   %memberidx = getelementptr inbounds %Array_Statement_, ptr %0, i32 0, i32 2
@@ -18860,25 +20026,11 @@ ifend:                                            ; preds = %3, %if.entry
 }
 
 define ptr @Array_Statement____getitem__(ptr %0, i64 %1) {
-  %3 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%Range, ptr null, i32 1) to i32))
-  %memberidx = getelementptr inbounds %Array_Statement_, ptr %0, i32 0, i32 2
-  %4 = load i64, ptr %memberidx, align 4
-  call void @Range_constructor(ptr %3, i64 0, i64 %4)
-  %5 = load ptr, ptr %3, align 8
-  %6 = load ptr, ptr %5, align 8
-  %7 = call i1 %6(ptr %3, i64 %1)
-  br i1 %7, label %if.entry, label %common.ret
-
-common.ret:                                       ; preds = %2, %if.entry
-  %common.ret.op = phi ptr [ %9, %if.entry ], [ null, %2 ]
-  ret ptr %common.ret.op
-
-if.entry:                                         ; preds = %2
-  %memberidx2 = getelementptr inbounds %Array_Statement_, ptr %0, i32 0, i32 1
-  %8 = load ptr, ptr %memberidx2, align 8
-  %ptridx = getelementptr inbounds ptr, ptr %8, i64 %1
-  %9 = load ptr, ptr %ptridx, align 8
-  br label %common.ret
+  %memberidx = getelementptr inbounds %Array_Statement_, ptr %0, i32 0, i32 1
+  %3 = load ptr, ptr %memberidx, align 8
+  %ptridx = getelementptr inbounds ptr, ptr %3, i64 %1
+  %4 = load ptr, ptr %ptridx, align 8
+  ret ptr %4
 }
 
 define i1 @Array_Statement____eq__(ptr %0, ptr %1) {
@@ -18906,11 +20058,11 @@ for.cond:                                         ; preds = %ifend7, %for.entry
 
 for.body:                                         ; preds = %for.cond
   %9 = load ptr, ptr %0, align 8
-  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %9, i32 0, i32 5
+  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %9, i32 0, i32 6
   %10 = load ptr, ptr %memberidx3, align 8
   %11 = call ptr %10(ptr %0, i64 %6)
   %12 = load ptr, ptr %1, align 8
-  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %12, i32 0, i32 5
+  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %12, i32 0, i32 6
   %13 = load ptr, ptr %memberidx4, align 8
   %14 = load i64, ptr %i, align 4
   %15 = call ptr %13(ptr %1, i64 %14)
@@ -18937,7 +20089,7 @@ for.cond:                                         ; preds = %ifend, %for.entry
 
 for.body:                                         ; preds = %for.cond
   %4 = load ptr, ptr %0, align 8
-  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %4, i32 0, i32 5
+  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %4, i32 0, i32 6
   %5 = load ptr, ptr %memberidx1, align 8
   %6 = call ptr %5(ptr %0, i64 %i.0)
   %7 = icmp eq ptr %6, %1
@@ -19053,7 +20205,7 @@ ifend:                                            ; preds = %2, %if.entry
 
 define void @Array_Type__append(ptr %0, ptr %1) {
   %3 = load ptr, ptr %0, align 8
-  %memberidx = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %3, i32 0, i32 2
+  %memberidx = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %3, i32 0, i32 3
   %4 = load ptr, ptr %memberidx, align 8
   call void %4(ptr %0, ptr %1)
   ret void
@@ -19098,6 +20250,46 @@ ifend:                                            ; preds = %3, %if.entry
   ret void
 }
 
+define ptr @ArrayIterator_Type____next__(ptr %0) {
+  %memberidx = getelementptr inbounds %ArrayIterator_Type_, ptr %0, i32 0, i32 2
+  %2 = load i64, ptr %memberidx, align 4
+  %3 = add i64 %2, 1
+  store i64 %3, ptr %memberidx, align 4
+  %memberidx2 = getelementptr inbounds %ArrayIterator_Type_, ptr %0, i32 0, i32 4
+  %4 = load ptr, ptr %memberidx2, align 8
+  %ptridx = getelementptr inbounds ptr, ptr %4, i64 %2
+  %5 = load ptr, ptr %ptridx, align 8
+  %memberidx3 = getelementptr inbounds %Iterator_Type_, ptr %0, i32 0, i32 1
+  %memberidx5 = getelementptr inbounds %ArrayIterator_Type_, ptr %0, i32 0, i32 3
+  %6 = load i64, ptr %memberidx5, align 4
+  %7 = icmp sgt i64 %3, %6
+  store i1 %7, ptr %memberidx3, align 1
+  ret ptr %5
+}
+
+define void @ArrayIterator_Type__constructor(ptr %0, ptr %1, i64 %2) {
+  store ptr @VTableArrayIterator_Type_, ptr %0, align 8
+  %memberidx = getelementptr inbounds %Iterator_Type_, ptr %0, i32 0, i32 1
+  store i1 false, ptr %memberidx, align 1
+  %memberidx1 = getelementptr inbounds %ArrayIterator_Type_, ptr %0, i32 0, i32 2
+  store i64 0, ptr %memberidx1, align 4
+  %memberidx2 = getelementptr inbounds %ArrayIterator_Type_, ptr %0, i32 0, i32 4
+  store ptr %1, ptr %memberidx2, align 8
+  %memberidx3 = getelementptr inbounds %ArrayIterator_Type_, ptr %0, i32 0, i32 3
+  store i64 %2, ptr %memberidx3, align 4
+  ret void
+}
+
+define ptr @Array_Type____iter__(ptr %0) {
+  %2 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%ArrayIterator_Type_, ptr null, i32 1) to i32))
+  %memberidx = getelementptr inbounds %Array_Type_, ptr %0, i32 0, i32 1
+  %3 = load ptr, ptr %memberidx, align 8
+  %memberidx1 = getelementptr inbounds %Array_Type_, ptr %0, i32 0, i32 2
+  %4 = load i64, ptr %memberidx1, align 4
+  call void @ArrayIterator_Type__constructor(ptr %2, ptr %3, i64 %4)
+  ret ptr %2
+}
+
 define void @Array_Type____setitem__(ptr %0, i64 %1, ptr %2) {
   %4 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%Range, ptr null, i32 1) to i32))
   %memberidx = getelementptr inbounds %Array_Type_, ptr %0, i32 0, i32 2
@@ -19120,25 +20312,11 @@ ifend:                                            ; preds = %3, %if.entry
 }
 
 define ptr @Array_Type____getitem__(ptr %0, i64 %1) {
-  %3 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%Range, ptr null, i32 1) to i32))
-  %memberidx = getelementptr inbounds %Array_Type_, ptr %0, i32 0, i32 2
-  %4 = load i64, ptr %memberidx, align 4
-  call void @Range_constructor(ptr %3, i64 0, i64 %4)
-  %5 = load ptr, ptr %3, align 8
-  %6 = load ptr, ptr %5, align 8
-  %7 = call i1 %6(ptr %3, i64 %1)
-  br i1 %7, label %if.entry, label %common.ret
-
-common.ret:                                       ; preds = %2, %if.entry
-  %common.ret.op = phi ptr [ %9, %if.entry ], [ null, %2 ]
-  ret ptr %common.ret.op
-
-if.entry:                                         ; preds = %2
-  %memberidx2 = getelementptr inbounds %Array_Type_, ptr %0, i32 0, i32 1
-  %8 = load ptr, ptr %memberidx2, align 8
-  %ptridx = getelementptr inbounds ptr, ptr %8, i64 %1
-  %9 = load ptr, ptr %ptridx, align 8
-  br label %common.ret
+  %memberidx = getelementptr inbounds %Array_Type_, ptr %0, i32 0, i32 1
+  %3 = load ptr, ptr %memberidx, align 8
+  %ptridx = getelementptr inbounds ptr, ptr %3, i64 %1
+  %4 = load ptr, ptr %ptridx, align 8
+  ret ptr %4
 }
 
 define i1 @Array_Type____eq__(ptr %0, ptr %1) {
@@ -19166,11 +20344,11 @@ for.cond:                                         ; preds = %ifend7, %for.entry
 
 for.body:                                         ; preds = %for.cond
   %9 = load ptr, ptr %0, align 8
-  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %9, i32 0, i32 5
+  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %9, i32 0, i32 6
   %10 = load ptr, ptr %memberidx3, align 8
   %11 = call ptr %10(ptr %0, i64 %6)
   %12 = load ptr, ptr %1, align 8
-  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %12, i32 0, i32 5
+  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %12, i32 0, i32 6
   %13 = load ptr, ptr %memberidx4, align 8
   %14 = load i64, ptr %i, align 4
   %15 = call ptr %13(ptr %1, i64 %14)
@@ -19197,7 +20375,7 @@ for.cond:                                         ; preds = %ifend, %for.entry
 
 for.body:                                         ; preds = %for.cond
   %4 = load ptr, ptr %0, align 8
-  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %4, i32 0, i32 5
+  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %4, i32 0, i32 6
   %5 = load ptr, ptr %memberidx1, align 8
   %6 = call ptr %5(ptr %0, i64 %i.0)
   %7 = icmp eq ptr %6, %1
@@ -19312,7 +20490,7 @@ ifend:                                            ; preds = %2, %if.entry
 
 define void @Array_ClassMethod__append(ptr %0, ptr %1) {
   %3 = load ptr, ptr %0, align 8
-  %memberidx = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %3, i32 0, i32 2
+  %memberidx = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %3, i32 0, i32 3
   %4 = load ptr, ptr %memberidx, align 8
   call void %4(ptr %0, ptr %1)
   ret void
@@ -19357,6 +20535,46 @@ ifend:                                            ; preds = %3, %if.entry
   ret void
 }
 
+define ptr @ArrayIterator_ClassMethod____next__(ptr %0) {
+  %memberidx = getelementptr inbounds %ArrayIterator_ClassMethod_, ptr %0, i32 0, i32 2
+  %2 = load i64, ptr %memberidx, align 4
+  %3 = add i64 %2, 1
+  store i64 %3, ptr %memberidx, align 4
+  %memberidx2 = getelementptr inbounds %ArrayIterator_ClassMethod_, ptr %0, i32 0, i32 4
+  %4 = load ptr, ptr %memberidx2, align 8
+  %ptridx = getelementptr inbounds ptr, ptr %4, i64 %2
+  %5 = load ptr, ptr %ptridx, align 8
+  %memberidx3 = getelementptr inbounds %Iterator_ClassMethod_, ptr %0, i32 0, i32 1
+  %memberidx5 = getelementptr inbounds %ArrayIterator_ClassMethod_, ptr %0, i32 0, i32 3
+  %6 = load i64, ptr %memberidx5, align 4
+  %7 = icmp sgt i64 %3, %6
+  store i1 %7, ptr %memberidx3, align 1
+  ret ptr %5
+}
+
+define void @ArrayIterator_ClassMethod__constructor(ptr %0, ptr %1, i64 %2) {
+  store ptr @VTableArrayIterator_ClassMethod_, ptr %0, align 8
+  %memberidx = getelementptr inbounds %Iterator_ClassMethod_, ptr %0, i32 0, i32 1
+  store i1 false, ptr %memberidx, align 1
+  %memberidx1 = getelementptr inbounds %ArrayIterator_ClassMethod_, ptr %0, i32 0, i32 2
+  store i64 0, ptr %memberidx1, align 4
+  %memberidx2 = getelementptr inbounds %ArrayIterator_ClassMethod_, ptr %0, i32 0, i32 4
+  store ptr %1, ptr %memberidx2, align 8
+  %memberidx3 = getelementptr inbounds %ArrayIterator_ClassMethod_, ptr %0, i32 0, i32 3
+  store i64 %2, ptr %memberidx3, align 4
+  ret void
+}
+
+define ptr @Array_ClassMethod____iter__(ptr %0) {
+  %2 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%ArrayIterator_ClassMethod_, ptr null, i32 1) to i32))
+  %memberidx = getelementptr inbounds %Array_ClassMethod_, ptr %0, i32 0, i32 1
+  %3 = load ptr, ptr %memberidx, align 8
+  %memberidx1 = getelementptr inbounds %Array_ClassMethod_, ptr %0, i32 0, i32 2
+  %4 = load i64, ptr %memberidx1, align 4
+  call void @ArrayIterator_ClassMethod__constructor(ptr %2, ptr %3, i64 %4)
+  ret ptr %2
+}
+
 define void @Array_ClassMethod____setitem__(ptr %0, i64 %1, ptr %2) {
   %4 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%Range, ptr null, i32 1) to i32))
   %memberidx = getelementptr inbounds %Array_ClassMethod_, ptr %0, i32 0, i32 2
@@ -19379,25 +20597,11 @@ ifend:                                            ; preds = %3, %if.entry
 }
 
 define ptr @Array_ClassMethod____getitem__(ptr %0, i64 %1) {
-  %3 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%Range, ptr null, i32 1) to i32))
-  %memberidx = getelementptr inbounds %Array_ClassMethod_, ptr %0, i32 0, i32 2
-  %4 = load i64, ptr %memberidx, align 4
-  call void @Range_constructor(ptr %3, i64 0, i64 %4)
-  %5 = load ptr, ptr %3, align 8
-  %6 = load ptr, ptr %5, align 8
-  %7 = call i1 %6(ptr %3, i64 %1)
-  br i1 %7, label %if.entry, label %common.ret
-
-common.ret:                                       ; preds = %2, %if.entry
-  %common.ret.op = phi ptr [ %9, %if.entry ], [ null, %2 ]
-  ret ptr %common.ret.op
-
-if.entry:                                         ; preds = %2
-  %memberidx2 = getelementptr inbounds %Array_ClassMethod_, ptr %0, i32 0, i32 1
-  %8 = load ptr, ptr %memberidx2, align 8
-  %ptridx = getelementptr inbounds ptr, ptr %8, i64 %1
-  %9 = load ptr, ptr %ptridx, align 8
-  br label %common.ret
+  %memberidx = getelementptr inbounds %Array_ClassMethod_, ptr %0, i32 0, i32 1
+  %3 = load ptr, ptr %memberidx, align 8
+  %ptridx = getelementptr inbounds ptr, ptr %3, i64 %1
+  %4 = load ptr, ptr %ptridx, align 8
+  ret ptr %4
 }
 
 define i1 @Array_ClassMethod____eq__(ptr %0, ptr %1) {
@@ -19425,11 +20629,11 @@ for.cond:                                         ; preds = %ifend7, %for.entry
 
 for.body:                                         ; preds = %for.cond
   %9 = load ptr, ptr %0, align 8
-  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %9, i32 0, i32 5
+  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %9, i32 0, i32 6
   %10 = load ptr, ptr %memberidx3, align 8
   %11 = call ptr %10(ptr %0, i64 %6)
   %12 = load ptr, ptr %1, align 8
-  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %12, i32 0, i32 5
+  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %12, i32 0, i32 6
   %13 = load ptr, ptr %memberidx4, align 8
   %14 = load i64, ptr %i, align 4
   %15 = call ptr %13(ptr %1, i64 %14)
@@ -19456,7 +20660,7 @@ for.cond:                                         ; preds = %ifend, %for.entry
 
 for.body:                                         ; preds = %for.cond
   %4 = load ptr, ptr %0, align 8
-  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %4, i32 0, i32 5
+  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %4, i32 0, i32 6
   %5 = load ptr, ptr %memberidx1, align 8
   %6 = call ptr %5(ptr %0, i64 %i.0)
   %7 = icmp eq ptr %6, %1
@@ -19562,7 +20766,7 @@ ifend:                                            ; preds = %2, %if.entry
 
 define void @Array_ClassField__append(ptr %0, ptr %1) {
   %3 = load ptr, ptr %0, align 8
-  %memberidx = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %3, i32 0, i32 2
+  %memberidx = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %3, i32 0, i32 3
   %4 = load ptr, ptr %memberidx, align 8
   call void %4(ptr %0, ptr %1)
   ret void
@@ -19607,6 +20811,46 @@ ifend:                                            ; preds = %3, %if.entry
   ret void
 }
 
+define ptr @ArrayIterator_ClassField____next__(ptr %0) {
+  %memberidx = getelementptr inbounds %ArrayIterator_ClassField_, ptr %0, i32 0, i32 2
+  %2 = load i64, ptr %memberidx, align 4
+  %3 = add i64 %2, 1
+  store i64 %3, ptr %memberidx, align 4
+  %memberidx2 = getelementptr inbounds %ArrayIterator_ClassField_, ptr %0, i32 0, i32 4
+  %4 = load ptr, ptr %memberidx2, align 8
+  %ptridx = getelementptr inbounds ptr, ptr %4, i64 %2
+  %5 = load ptr, ptr %ptridx, align 8
+  %memberidx3 = getelementptr inbounds %Iterator_ClassField_, ptr %0, i32 0, i32 1
+  %memberidx5 = getelementptr inbounds %ArrayIterator_ClassField_, ptr %0, i32 0, i32 3
+  %6 = load i64, ptr %memberidx5, align 4
+  %7 = icmp sgt i64 %3, %6
+  store i1 %7, ptr %memberidx3, align 1
+  ret ptr %5
+}
+
+define void @ArrayIterator_ClassField__constructor(ptr %0, ptr %1, i64 %2) {
+  store ptr @VTableArrayIterator_ClassField_, ptr %0, align 8
+  %memberidx = getelementptr inbounds %Iterator_ClassField_, ptr %0, i32 0, i32 1
+  store i1 false, ptr %memberidx, align 1
+  %memberidx1 = getelementptr inbounds %ArrayIterator_ClassField_, ptr %0, i32 0, i32 2
+  store i64 0, ptr %memberidx1, align 4
+  %memberidx2 = getelementptr inbounds %ArrayIterator_ClassField_, ptr %0, i32 0, i32 4
+  store ptr %1, ptr %memberidx2, align 8
+  %memberidx3 = getelementptr inbounds %ArrayIterator_ClassField_, ptr %0, i32 0, i32 3
+  store i64 %2, ptr %memberidx3, align 4
+  ret void
+}
+
+define ptr @Array_ClassField____iter__(ptr %0) {
+  %2 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%ArrayIterator_ClassField_, ptr null, i32 1) to i32))
+  %memberidx = getelementptr inbounds %Array_ClassField_, ptr %0, i32 0, i32 1
+  %3 = load ptr, ptr %memberidx, align 8
+  %memberidx1 = getelementptr inbounds %Array_ClassField_, ptr %0, i32 0, i32 2
+  %4 = load i64, ptr %memberidx1, align 4
+  call void @ArrayIterator_ClassField__constructor(ptr %2, ptr %3, i64 %4)
+  ret ptr %2
+}
+
 define void @Array_ClassField____setitem__(ptr %0, i64 %1, ptr %2) {
   %4 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%Range, ptr null, i32 1) to i32))
   %memberidx = getelementptr inbounds %Array_ClassField_, ptr %0, i32 0, i32 2
@@ -19629,25 +20873,11 @@ ifend:                                            ; preds = %3, %if.entry
 }
 
 define ptr @Array_ClassField____getitem__(ptr %0, i64 %1) {
-  %3 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%Range, ptr null, i32 1) to i32))
-  %memberidx = getelementptr inbounds %Array_ClassField_, ptr %0, i32 0, i32 2
-  %4 = load i64, ptr %memberidx, align 4
-  call void @Range_constructor(ptr %3, i64 0, i64 %4)
-  %5 = load ptr, ptr %3, align 8
-  %6 = load ptr, ptr %5, align 8
-  %7 = call i1 %6(ptr %3, i64 %1)
-  br i1 %7, label %if.entry, label %common.ret
-
-common.ret:                                       ; preds = %2, %if.entry
-  %common.ret.op = phi ptr [ %9, %if.entry ], [ null, %2 ]
-  ret ptr %common.ret.op
-
-if.entry:                                         ; preds = %2
-  %memberidx2 = getelementptr inbounds %Array_ClassField_, ptr %0, i32 0, i32 1
-  %8 = load ptr, ptr %memberidx2, align 8
-  %ptridx = getelementptr inbounds ptr, ptr %8, i64 %1
-  %9 = load ptr, ptr %ptridx, align 8
-  br label %common.ret
+  %memberidx = getelementptr inbounds %Array_ClassField_, ptr %0, i32 0, i32 1
+  %3 = load ptr, ptr %memberidx, align 8
+  %ptridx = getelementptr inbounds ptr, ptr %3, i64 %1
+  %4 = load ptr, ptr %ptridx, align 8
+  ret ptr %4
 }
 
 define i1 @Array_ClassField____eq__(ptr %0, ptr %1) {
@@ -19675,11 +20905,11 @@ for.cond:                                         ; preds = %ifend7, %for.entry
 
 for.body:                                         ; preds = %for.cond
   %9 = load ptr, ptr %0, align 8
-  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %9, i32 0, i32 5
+  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %9, i32 0, i32 6
   %10 = load ptr, ptr %memberidx3, align 8
   %11 = call ptr %10(ptr %0, i64 %6)
   %12 = load ptr, ptr %1, align 8
-  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %12, i32 0, i32 5
+  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %12, i32 0, i32 6
   %13 = load ptr, ptr %memberidx4, align 8
   %14 = load i64, ptr %i, align 4
   %15 = call ptr %13(ptr %1, i64 %14)
@@ -19706,7 +20936,7 @@ for.cond:                                         ; preds = %ifend, %for.entry
 
 for.body:                                         ; preds = %for.cond
   %4 = load ptr, ptr %0, align 8
-  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %4, i32 0, i32 5
+  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %4, i32 0, i32 6
   %5 = load ptr, ptr %memberidx1, align 8
   %6 = call ptr %5(ptr %0, i64 %i.0)
   %7 = icmp eq ptr %6, %1
@@ -19832,7 +21062,7 @@ ifend:                                            ; preds = %2, %if.entry
 
 define void @Array_Class__append(ptr %0, ptr %1) {
   %3 = load ptr, ptr %0, align 8
-  %memberidx = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %3, i32 0, i32 2
+  %memberidx = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %3, i32 0, i32 3
   %4 = load ptr, ptr %memberidx, align 8
   call void %4(ptr %0, ptr %1)
   ret void
@@ -19877,6 +21107,46 @@ ifend:                                            ; preds = %3, %if.entry
   ret void
 }
 
+define ptr @ArrayIterator_Class____next__(ptr %0) {
+  %memberidx = getelementptr inbounds %ArrayIterator_Class_, ptr %0, i32 0, i32 2
+  %2 = load i64, ptr %memberidx, align 4
+  %3 = add i64 %2, 1
+  store i64 %3, ptr %memberidx, align 4
+  %memberidx2 = getelementptr inbounds %ArrayIterator_Class_, ptr %0, i32 0, i32 4
+  %4 = load ptr, ptr %memberidx2, align 8
+  %ptridx = getelementptr inbounds ptr, ptr %4, i64 %2
+  %5 = load ptr, ptr %ptridx, align 8
+  %memberidx3 = getelementptr inbounds %Iterator_Class_, ptr %0, i32 0, i32 1
+  %memberidx5 = getelementptr inbounds %ArrayIterator_Class_, ptr %0, i32 0, i32 3
+  %6 = load i64, ptr %memberidx5, align 4
+  %7 = icmp sgt i64 %3, %6
+  store i1 %7, ptr %memberidx3, align 1
+  ret ptr %5
+}
+
+define void @ArrayIterator_Class__constructor(ptr %0, ptr %1, i64 %2) {
+  store ptr @VTableArrayIterator_Class_, ptr %0, align 8
+  %memberidx = getelementptr inbounds %Iterator_Class_, ptr %0, i32 0, i32 1
+  store i1 false, ptr %memberidx, align 1
+  %memberidx1 = getelementptr inbounds %ArrayIterator_Class_, ptr %0, i32 0, i32 2
+  store i64 0, ptr %memberidx1, align 4
+  %memberidx2 = getelementptr inbounds %ArrayIterator_Class_, ptr %0, i32 0, i32 4
+  store ptr %1, ptr %memberidx2, align 8
+  %memberidx3 = getelementptr inbounds %ArrayIterator_Class_, ptr %0, i32 0, i32 3
+  store i64 %2, ptr %memberidx3, align 4
+  ret void
+}
+
+define ptr @Array_Class____iter__(ptr %0) {
+  %2 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%ArrayIterator_Class_, ptr null, i32 1) to i32))
+  %memberidx = getelementptr inbounds %Array_Class_, ptr %0, i32 0, i32 1
+  %3 = load ptr, ptr %memberidx, align 8
+  %memberidx1 = getelementptr inbounds %Array_Class_, ptr %0, i32 0, i32 2
+  %4 = load i64, ptr %memberidx1, align 4
+  call void @ArrayIterator_Class__constructor(ptr %2, ptr %3, i64 %4)
+  ret ptr %2
+}
+
 define void @Array_Class____setitem__(ptr %0, i64 %1, ptr %2) {
   %4 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%Range, ptr null, i32 1) to i32))
   %memberidx = getelementptr inbounds %Array_Class_, ptr %0, i32 0, i32 2
@@ -19899,25 +21169,11 @@ ifend:                                            ; preds = %3, %if.entry
 }
 
 define ptr @Array_Class____getitem__(ptr %0, i64 %1) {
-  %3 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%Range, ptr null, i32 1) to i32))
-  %memberidx = getelementptr inbounds %Array_Class_, ptr %0, i32 0, i32 2
-  %4 = load i64, ptr %memberidx, align 4
-  call void @Range_constructor(ptr %3, i64 0, i64 %4)
-  %5 = load ptr, ptr %3, align 8
-  %6 = load ptr, ptr %5, align 8
-  %7 = call i1 %6(ptr %3, i64 %1)
-  br i1 %7, label %if.entry, label %common.ret
-
-common.ret:                                       ; preds = %2, %if.entry
-  %common.ret.op = phi ptr [ %9, %if.entry ], [ null, %2 ]
-  ret ptr %common.ret.op
-
-if.entry:                                         ; preds = %2
-  %memberidx2 = getelementptr inbounds %Array_Class_, ptr %0, i32 0, i32 1
-  %8 = load ptr, ptr %memberidx2, align 8
-  %ptridx = getelementptr inbounds ptr, ptr %8, i64 %1
-  %9 = load ptr, ptr %ptridx, align 8
-  br label %common.ret
+  %memberidx = getelementptr inbounds %Array_Class_, ptr %0, i32 0, i32 1
+  %3 = load ptr, ptr %memberidx, align 8
+  %ptridx = getelementptr inbounds ptr, ptr %3, i64 %1
+  %4 = load ptr, ptr %ptridx, align 8
+  ret ptr %4
 }
 
 define i1 @Array_Class____eq__(ptr %0, ptr %1) {
@@ -19945,11 +21201,11 @@ for.cond:                                         ; preds = %ifend7, %for.entry
 
 for.body:                                         ; preds = %for.cond
   %9 = load ptr, ptr %0, align 8
-  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %9, i32 0, i32 5
+  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %9, i32 0, i32 6
   %10 = load ptr, ptr %memberidx3, align 8
   %11 = call ptr %10(ptr %0, i64 %6)
   %12 = load ptr, ptr %1, align 8
-  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %12, i32 0, i32 5
+  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %12, i32 0, i32 6
   %13 = load ptr, ptr %memberidx4, align 8
   %14 = load i64, ptr %i, align 4
   %15 = call ptr %13(ptr %1, i64 %14)
@@ -19976,7 +21232,7 @@ for.cond:                                         ; preds = %ifend, %for.entry
 
 for.body:                                         ; preds = %for.cond
   %4 = load ptr, ptr %0, align 8
-  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %4, i32 0, i32 5
+  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %4, i32 0, i32 6
   %5 = load ptr, ptr %memberidx1, align 8
   %6 = call ptr %5(ptr %0, i64 %i.0)
   %7 = icmp eq ptr %6, %1
@@ -20082,7 +21338,7 @@ ifend:                                            ; preds = %2, %if.entry
 
 define void @Array_Function__append(ptr %0, ptr %1) {
   %3 = load ptr, ptr %0, align 8
-  %memberidx = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %3, i32 0, i32 2
+  %memberidx = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %3, i32 0, i32 3
   %4 = load ptr, ptr %memberidx, align 8
   call void %4(ptr %0, ptr %1)
   ret void
@@ -20127,6 +21383,46 @@ ifend:                                            ; preds = %3, %if.entry
   ret void
 }
 
+define ptr @ArrayIterator_Function____next__(ptr %0) {
+  %memberidx = getelementptr inbounds %ArrayIterator_Function_, ptr %0, i32 0, i32 2
+  %2 = load i64, ptr %memberidx, align 4
+  %3 = add i64 %2, 1
+  store i64 %3, ptr %memberidx, align 4
+  %memberidx2 = getelementptr inbounds %ArrayIterator_Function_, ptr %0, i32 0, i32 4
+  %4 = load ptr, ptr %memberidx2, align 8
+  %ptridx = getelementptr inbounds ptr, ptr %4, i64 %2
+  %5 = load ptr, ptr %ptridx, align 8
+  %memberidx3 = getelementptr inbounds %Iterator_Function_, ptr %0, i32 0, i32 1
+  %memberidx5 = getelementptr inbounds %ArrayIterator_Function_, ptr %0, i32 0, i32 3
+  %6 = load i64, ptr %memberidx5, align 4
+  %7 = icmp sgt i64 %3, %6
+  store i1 %7, ptr %memberidx3, align 1
+  ret ptr %5
+}
+
+define void @ArrayIterator_Function__constructor(ptr %0, ptr %1, i64 %2) {
+  store ptr @VTableArrayIterator_Function_, ptr %0, align 8
+  %memberidx = getelementptr inbounds %Iterator_Function_, ptr %0, i32 0, i32 1
+  store i1 false, ptr %memberidx, align 1
+  %memberidx1 = getelementptr inbounds %ArrayIterator_Function_, ptr %0, i32 0, i32 2
+  store i64 0, ptr %memberidx1, align 4
+  %memberidx2 = getelementptr inbounds %ArrayIterator_Function_, ptr %0, i32 0, i32 4
+  store ptr %1, ptr %memberidx2, align 8
+  %memberidx3 = getelementptr inbounds %ArrayIterator_Function_, ptr %0, i32 0, i32 3
+  store i64 %2, ptr %memberidx3, align 4
+  ret void
+}
+
+define ptr @Array_Function____iter__(ptr %0) {
+  %2 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%ArrayIterator_Function_, ptr null, i32 1) to i32))
+  %memberidx = getelementptr inbounds %Array_Function_, ptr %0, i32 0, i32 1
+  %3 = load ptr, ptr %memberidx, align 8
+  %memberidx1 = getelementptr inbounds %Array_Function_, ptr %0, i32 0, i32 2
+  %4 = load i64, ptr %memberidx1, align 4
+  call void @ArrayIterator_Function__constructor(ptr %2, ptr %3, i64 %4)
+  ret ptr %2
+}
+
 define void @Array_Function____setitem__(ptr %0, i64 %1, ptr %2) {
   %4 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%Range, ptr null, i32 1) to i32))
   %memberidx = getelementptr inbounds %Array_Function_, ptr %0, i32 0, i32 2
@@ -20149,25 +21445,11 @@ ifend:                                            ; preds = %3, %if.entry
 }
 
 define ptr @Array_Function____getitem__(ptr %0, i64 %1) {
-  %3 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%Range, ptr null, i32 1) to i32))
-  %memberidx = getelementptr inbounds %Array_Function_, ptr %0, i32 0, i32 2
-  %4 = load i64, ptr %memberidx, align 4
-  call void @Range_constructor(ptr %3, i64 0, i64 %4)
-  %5 = load ptr, ptr %3, align 8
-  %6 = load ptr, ptr %5, align 8
-  %7 = call i1 %6(ptr %3, i64 %1)
-  br i1 %7, label %if.entry, label %common.ret
-
-common.ret:                                       ; preds = %2, %if.entry
-  %common.ret.op = phi ptr [ %9, %if.entry ], [ null, %2 ]
-  ret ptr %common.ret.op
-
-if.entry:                                         ; preds = %2
-  %memberidx2 = getelementptr inbounds %Array_Function_, ptr %0, i32 0, i32 1
-  %8 = load ptr, ptr %memberidx2, align 8
-  %ptridx = getelementptr inbounds ptr, ptr %8, i64 %1
-  %9 = load ptr, ptr %ptridx, align 8
-  br label %common.ret
+  %memberidx = getelementptr inbounds %Array_Function_, ptr %0, i32 0, i32 1
+  %3 = load ptr, ptr %memberidx, align 8
+  %ptridx = getelementptr inbounds ptr, ptr %3, i64 %1
+  %4 = load ptr, ptr %ptridx, align 8
+  ret ptr %4
 }
 
 define i1 @Array_Function____eq__(ptr %0, ptr %1) {
@@ -20195,11 +21477,11 @@ for.cond:                                         ; preds = %ifend7, %for.entry
 
 for.body:                                         ; preds = %for.cond
   %9 = load ptr, ptr %0, align 8
-  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %9, i32 0, i32 5
+  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %9, i32 0, i32 6
   %10 = load ptr, ptr %memberidx3, align 8
   %11 = call ptr %10(ptr %0, i64 %6)
   %12 = load ptr, ptr %1, align 8
-  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %12, i32 0, i32 5
+  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %12, i32 0, i32 6
   %13 = load ptr, ptr %memberidx4, align 8
   %14 = load i64, ptr %i, align 4
   %15 = call ptr %13(ptr %1, i64 %14)
@@ -20226,7 +21508,7 @@ for.cond:                                         ; preds = %ifend, %for.entry
 
 for.body:                                         ; preds = %for.cond
   %4 = load ptr, ptr %0, align 8
-  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %4, i32 0, i32 5
+  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %4, i32 0, i32 6
   %5 = load ptr, ptr %memberidx1, align 8
   %6 = call ptr %5(ptr %0, i64 %i.0)
   %7 = icmp eq ptr %6, %1
@@ -20394,7 +21676,7 @@ ifend:                                            ; preds = %2, %if.entry
 
 define void @Array_Module__append(ptr %0, ptr %1) {
   %3 = load ptr, ptr %0, align 8
-  %memberidx = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %3, i32 0, i32 2
+  %memberidx = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %3, i32 0, i32 3
   %4 = load ptr, ptr %memberidx, align 8
   call void %4(ptr %0, ptr %1)
   ret void
@@ -20439,6 +21721,46 @@ ifend:                                            ; preds = %3, %if.entry
   ret void
 }
 
+define ptr @ArrayIterator_Module____next__(ptr %0) {
+  %memberidx = getelementptr inbounds %ArrayIterator_Module_, ptr %0, i32 0, i32 2
+  %2 = load i64, ptr %memberidx, align 4
+  %3 = add i64 %2, 1
+  store i64 %3, ptr %memberidx, align 4
+  %memberidx2 = getelementptr inbounds %ArrayIterator_Module_, ptr %0, i32 0, i32 4
+  %4 = load ptr, ptr %memberidx2, align 8
+  %ptridx = getelementptr inbounds ptr, ptr %4, i64 %2
+  %5 = load ptr, ptr %ptridx, align 8
+  %memberidx3 = getelementptr inbounds %Iterator_Module_, ptr %0, i32 0, i32 1
+  %memberidx5 = getelementptr inbounds %ArrayIterator_Module_, ptr %0, i32 0, i32 3
+  %6 = load i64, ptr %memberidx5, align 4
+  %7 = icmp sgt i64 %3, %6
+  store i1 %7, ptr %memberidx3, align 1
+  ret ptr %5
+}
+
+define void @ArrayIterator_Module__constructor(ptr %0, ptr %1, i64 %2) {
+  store ptr @VTableArrayIterator_Module_, ptr %0, align 8
+  %memberidx = getelementptr inbounds %Iterator_Module_, ptr %0, i32 0, i32 1
+  store i1 false, ptr %memberidx, align 1
+  %memberidx1 = getelementptr inbounds %ArrayIterator_Module_, ptr %0, i32 0, i32 2
+  store i64 0, ptr %memberidx1, align 4
+  %memberidx2 = getelementptr inbounds %ArrayIterator_Module_, ptr %0, i32 0, i32 4
+  store ptr %1, ptr %memberidx2, align 8
+  %memberidx3 = getelementptr inbounds %ArrayIterator_Module_, ptr %0, i32 0, i32 3
+  store i64 %2, ptr %memberidx3, align 4
+  ret void
+}
+
+define ptr @Array_Module____iter__(ptr %0) {
+  %2 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%ArrayIterator_Module_, ptr null, i32 1) to i32))
+  %memberidx = getelementptr inbounds %Array_Module_, ptr %0, i32 0, i32 1
+  %3 = load ptr, ptr %memberidx, align 8
+  %memberidx1 = getelementptr inbounds %Array_Module_, ptr %0, i32 0, i32 2
+  %4 = load i64, ptr %memberidx1, align 4
+  call void @ArrayIterator_Module__constructor(ptr %2, ptr %3, i64 %4)
+  ret ptr %2
+}
+
 define void @Array_Module____setitem__(ptr %0, i64 %1, ptr %2) {
   %4 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%Range, ptr null, i32 1) to i32))
   %memberidx = getelementptr inbounds %Array_Module_, ptr %0, i32 0, i32 2
@@ -20461,25 +21783,11 @@ ifend:                                            ; preds = %3, %if.entry
 }
 
 define ptr @Array_Module____getitem__(ptr %0, i64 %1) {
-  %3 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%Range, ptr null, i32 1) to i32))
-  %memberidx = getelementptr inbounds %Array_Module_, ptr %0, i32 0, i32 2
-  %4 = load i64, ptr %memberidx, align 4
-  call void @Range_constructor(ptr %3, i64 0, i64 %4)
-  %5 = load ptr, ptr %3, align 8
-  %6 = load ptr, ptr %5, align 8
-  %7 = call i1 %6(ptr %3, i64 %1)
-  br i1 %7, label %if.entry, label %common.ret
-
-common.ret:                                       ; preds = %2, %if.entry
-  %common.ret.op = phi ptr [ %9, %if.entry ], [ null, %2 ]
-  ret ptr %common.ret.op
-
-if.entry:                                         ; preds = %2
-  %memberidx2 = getelementptr inbounds %Array_Module_, ptr %0, i32 0, i32 1
-  %8 = load ptr, ptr %memberidx2, align 8
-  %ptridx = getelementptr inbounds ptr, ptr %8, i64 %1
-  %9 = load ptr, ptr %ptridx, align 8
-  br label %common.ret
+  %memberidx = getelementptr inbounds %Array_Module_, ptr %0, i32 0, i32 1
+  %3 = load ptr, ptr %memberidx, align 8
+  %ptridx = getelementptr inbounds ptr, ptr %3, i64 %1
+  %4 = load ptr, ptr %ptridx, align 8
+  ret ptr %4
 }
 
 define i1 @Array_Module____eq__(ptr %0, ptr %1) {
@@ -20507,11 +21815,11 @@ for.cond:                                         ; preds = %ifend7, %for.entry
 
 for.body:                                         ; preds = %for.cond
   %9 = load ptr, ptr %0, align 8
-  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %9, i32 0, i32 5
+  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %9, i32 0, i32 6
   %10 = load ptr, ptr %memberidx3, align 8
   %11 = call ptr %10(ptr %0, i64 %6)
   %12 = load ptr, ptr %1, align 8
-  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %12, i32 0, i32 5
+  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %12, i32 0, i32 6
   %13 = load ptr, ptr %memberidx4, align 8
   %14 = load i64, ptr %i, align 4
   %15 = call ptr %13(ptr %1, i64 %14)
@@ -20538,7 +21846,7 @@ for.cond:                                         ; preds = %ifend, %for.entry
 
 for.body:                                         ; preds = %for.cond
   %4 = load ptr, ptr %0, align 8
-  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %4, i32 0, i32 5
+  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %4, i32 0, i32 6
   %5 = load ptr, ptr %memberidx1, align 8
   %6 = call ptr %5(ptr %0, i64 %i.0)
   %7 = icmp eq ptr %6, %1
@@ -20582,18 +21890,21 @@ define void @Program_constructor(ptr %0) {
 define ptr @TypeChecker_check(ptr %0, ptr %1, ptr %2) {
   %4 = alloca %TypeChecker, align 8
   call void @TypeChecker_constructor(ptr %4, ptr %1)
+  call void @TypeChecker_load_generic_module(ptr %4)
   call void @TypeChecker_load_builtins_module(ptr %4)
-  %5 = call i1 @TypeChecker_has_errored(ptr %4)
-  br i1 %5, label %common.ret, label %ifend
+  call void @TypeChecker_switch_to_generic_module(ptr %4)
+  %5 = call ptr @TypeChecker_get_module(ptr %4, i64 1)
+  call void @TypeChecker_import_all_from_module(ptr %4, ptr %5)
+  %6 = call i1 @TypeChecker_has_errored(ptr %4)
+  br i1 %6, label %common.ret, label %ifend
 
 common.ret:                                       ; preds = %3, %ifend
-  %common.ret.op = phi ptr [ %7, %ifend ], [ null, %3 ]
+  %common.ret.op = phi ptr [ %8, %ifend ], [ null, %3 ]
   ret ptr %common.ret.op
 
 ifend:                                            ; preds = %3
-  call void @TypeChecker_load_generic_module(ptr %4)
-  %6 = call ptr @TypeChecker_check_module(ptr %4, ptr %0, ptr %2)
-  %7 = load ptr, ptr %4, align 8
+  %7 = call ptr @TypeChecker_check_module(ptr %4, ptr %0, ptr %2)
+  %8 = load ptr, ptr %4, align 8
   br label %common.ret
 }
 
@@ -20612,27 +21923,24 @@ define void @TypeChecker_load_generic_module(ptr %0) {
   %3 = load ptr, ptr %2, align 8
   %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr }>, ptr %3, i32 0, i32 1
   %4 = load ptr, ptr %memberidx1, align 8
-  %5 = call ptr @string_from_bytes(ptr @193, i64 12)
+  %5 = call ptr @string_from_bytes(ptr @192, i64 12)
   %6 = call ptr %4(ptr %2, ptr %5)
   %7 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%ModuleAST, ptr null, i32 1) to i32))
   call void @ModuleAST_constructor(ptr %7)
-  %8 = call ptr @string_from_bytes(ptr @193, i64 12)
+  %8 = call ptr @string_from_bytes(ptr @192, i64 12)
   %9 = call ptr @TypeChecker_check_module(ptr %0, ptr %7, ptr %8)
-  call void @TypeChecker_switch_to_generic_module(ptr %0)
-  %10 = call ptr @TypeChecker_get_module(ptr %0, i64 0)
-  call void @TypeChecker_import_all_from_module(ptr %0, ptr %10)
   ret void
 }
 
 define void @TypeChecker_switch_to_generic_module(ptr %0) {
   %memberidx = getelementptr inbounds %TypeChecker, ptr %0, i32 0, i32 1
-  store i64 1, ptr %memberidx, align 4
+  store i64 0, ptr %memberidx, align 4
   %memberidx1 = getelementptr inbounds %TypeChecker, ptr %0, i32 0, i32 5
-  %2 = call ptr @TypeChecker_get_module(ptr %0, i64 1)
+  %2 = call ptr @TypeChecker_get_module(ptr %0, i64 0)
   %memberidx2 = getelementptr inbounds %Module, ptr %2, i32 0, i32 7
   %3 = load ptr, ptr %memberidx2, align 8
   %4 = load ptr, ptr %3, align 8
-  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %4, i32 0, i32 5
+  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %4, i32 0, i32 6
   %5 = load ptr, ptr %memberidx3, align 8
   %6 = call ptr %5(ptr %3, i64 0)
   %7 = load ptr, ptr %6, align 8
@@ -20660,7 +21968,7 @@ for.entry:
   %memberidx8 = getelementptr inbounds %Program, ptr %9, i32 0, i32 1
   %10 = load ptr, ptr %memberidx8, align 8
   %11 = load ptr, ptr %10, align 8
-  %memberidx9 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %11, i32 0, i32 2
+  %memberidx9 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %11, i32 0, i32 3
   %12 = load ptr, ptr %memberidx9, align 8
   call void %12(ptr %10, ptr %5)
   %13 = call ptr @TypeChecker_create_scope(ptr %0)
@@ -20670,17 +21978,17 @@ for.entry:
   %15 = load ptr, ptr %memberidx10, align 8
   %16 = load ptr, ptr %15, align 8
   %17 = load ptr, ptr %16, align 8
-  %18 = call ptr @string_from_bytes(ptr @194, i64 4)
+  %18 = call ptr @string_from_bytes(ptr @193, i64 4)
   call void %17(ptr %15, ptr %18, ptr %14)
   %19 = load ptr, ptr %memberidx10, align 8
   %20 = load ptr, ptr %19, align 8
   %21 = load ptr, ptr %20, align 8
-  %22 = call ptr @string_from_bytes(ptr @195, i64 5)
+  %22 = call ptr @string_from_bytes(ptr @194, i64 5)
   call void %21(ptr %19, ptr %22, ptr %14)
   %23 = load ptr, ptr %memberidx10, align 8
   %24 = load ptr, ptr %23, align 8
   %25 = load ptr, ptr %24, align 8
-  %26 = call ptr @string_from_bytes(ptr @196, i64 4)
+  %26 = call ptr @string_from_bytes(ptr @195, i64 4)
   call void %25(ptr %23, ptr %26, ptr %14)
   %27 = load ptr, ptr %13, align 8
   store ptr %27, ptr %memberidx2, align 8
@@ -20703,7 +22011,7 @@ for.cond:                                         ; preds = %ifend, %for.entry
 
 for.body:                                         ; preds = %for.cond
   %31 = load ptr, ptr %28, align 8
-  %memberidx24 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %31, i32 0, i32 5
+  %memberidx24 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %31, i32 0, i32 6
   %32 = load ptr, ptr %memberidx24, align 8
   %33 = call ptr %32(ptr %28, i64 %i.0)
   call void @TypeChecker_check_module_import(ptr %0, ptr %33)
@@ -20732,7 +22040,7 @@ for.cond26:                                       ; preds = %for.body27, %for.en
 
 for.body27:                                       ; preds = %for.cond26
   %39 = load ptr, ptr %36, align 8
-  %memberidx33 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %39, i32 0, i32 5
+  %memberidx33 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %39, i32 0, i32 6
   %40 = load ptr, ptr %memberidx33, align 8
   %41 = call ptr %40(ptr %36, i64 %i.1)
   call void @TypeChecker_declare_enum_within_module(ptr %0, ptr %41)
@@ -20753,7 +22061,7 @@ for.cond35:                                       ; preds = %for.body36, %for.en
 
 for.body36:                                       ; preds = %for.cond35
   %46 = load ptr, ptr %43, align 8
-  %memberidx42 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %46, i32 0, i32 5
+  %memberidx42 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %46, i32 0, i32 6
   %47 = load ptr, ptr %memberidx42, align 8
   %48 = call ptr %47(ptr %43, i64 %i.2)
   call void @TypeChecker_declare_class_within_module(ptr %0, ptr %48)
@@ -20779,7 +22087,7 @@ for.cond47:                                       ; preds = %ifend61, %for.entry
 for.body48:                                       ; preds = %for.cond47
   %type_alias_node = alloca ptr, align 8
   %54 = load ptr, ptr %51, align 8
-  %memberidx54 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %54, i32 0, i32 5
+  %memberidx54 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %54, i32 0, i32 6
   %55 = load ptr, ptr %memberidx54, align 8
   %56 = call ptr %55(ptr %51, i64 %i.3)
   store ptr %56, ptr %type_alias_node, align 8
@@ -20808,7 +22116,7 @@ if.entry59:                                       ; preds = %for.body48
   %67 = load ptr, ptr %memberidx62, align 8
   %68 = call ptr %67(ptr %65)
   %69 = alloca ptr, align 8
-  %70 = call i64 (ptr, ptr, ...) @asprintf(ptr %69, ptr @197, ptr %68)
+  %70 = call i64 (ptr, ptr, ...) @asprintf(ptr %69, ptr @196, ptr %68)
   %71 = load ptr, ptr %69, align 8
   %72 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%string, ptr null, i32 1) to i32))
   call void @string_constructor(ptr %72, ptr %71, i64 %70)
@@ -20844,7 +22152,7 @@ for.cond68:                                       ; preds = %for.body69, %for.en
 
 for.body69:                                       ; preds = %for.cond68
   %85 = load ptr, ptr %82, align 8
-  %memberidx75 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %85, i32 0, i32 5
+  %memberidx75 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %85, i32 0, i32 6
   %86 = load ptr, ptr %memberidx75, align 8
   %87 = call ptr %86(ptr %82, i64 %i.4)
   call void @TypeChecker_declare_global_const(ptr %0, ptr %87)
@@ -20865,7 +22173,7 @@ for.cond77:                                       ; preds = %for.body78, %for.en
 
 for.body78:                                       ; preds = %for.cond77
   %92 = load ptr, ptr %89, align 8
-  %memberidx84 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %92, i32 0, i32 5
+  %memberidx84 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %92, i32 0, i32 6
   %93 = load ptr, ptr %memberidx84, align 8
   %94 = call ptr %93(ptr %89, i64 %i.5)
   call void @TypeChecker_declare_global_var(ptr %0, ptr %94)
@@ -20885,7 +22193,7 @@ for.cond86:                                       ; preds = %for.body87, %for.en
 
 for.body87:                                       ; preds = %for.cond86
   %99 = load ptr, ptr %96, align 8
-  %memberidx93 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %99, i32 0, i32 5
+  %memberidx93 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %99, i32 0, i32 6
   %100 = load ptr, ptr %memberidx93, align 8
   %101 = call ptr %100(ptr %96, i64 %i.6)
   call void @TypeChecker_declare_function_within_module(ptr %0, ptr %101)
@@ -20911,12 +22219,12 @@ for.body99:                                       ; preds = %for.cond98
   %memberidx104 = getelementptr inbounds %Module, ptr %5, i32 0, i32 6
   %107 = load ptr, ptr %memberidx104, align 8
   %108 = load ptr, ptr %107, align 8
-  %memberidx105 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %108, i32 0, i32 5
+  %memberidx105 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %108, i32 0, i32 6
   %109 = load ptr, ptr %memberidx105, align 8
   %110 = call ptr %109(ptr %107, i64 %i.7)
   %111 = load ptr, ptr %memberidx30, align 8
   %112 = load ptr, ptr %111, align 8
-  %memberidx107 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %112, i32 0, i32 5
+  %memberidx107 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %112, i32 0, i32 6
   %113 = load ptr, ptr %memberidx107, align 8
   %114 = call ptr %113(ptr %111, i64 %i.7)
   call void @TypeChecker_check_enum_body(ptr %0, ptr %110, ptr %114)
@@ -20936,7 +22244,7 @@ for.cond109:                                      ; preds = %for.body110, %for.e
 
 for.body110:                                      ; preds = %for.cond109
   %119 = load ptr, ptr %116, align 8
-  %memberidx116 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %119, i32 0, i32 5
+  %memberidx116 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %119, i32 0, i32 6
   %120 = load ptr, ptr %memberidx116, align 8
   %121 = call ptr %120(ptr %116, i64 %i.8)
   call void @TypeChecker_check_class_body(ptr %0, ptr %121)
@@ -20958,12 +22266,12 @@ for.body119:                                      ; preds = %for.cond118
   %memberidx124 = getelementptr inbounds %Module, ptr %5, i32 0, i32 5
   %126 = load ptr, ptr %memberidx124, align 8
   %127 = load ptr, ptr %126, align 8
-  %memberidx125 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %127, i32 0, i32 5
+  %memberidx125 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %127, i32 0, i32 6
   %128 = load ptr, ptr %memberidx125, align 8
   %129 = call ptr %128(ptr %126, i64 %i.9)
   %130 = load ptr, ptr %1, align 8
   %131 = load ptr, ptr %130, align 8
-  %memberidx127 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %131, i32 0, i32 5
+  %memberidx127 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %131, i32 0, i32 6
   %132 = load ptr, ptr %memberidx127, align 8
   %133 = call ptr %132(ptr %130, i64 %i.9)
   call void @TypeChecker_check_function_body(ptr %0, ptr %129, ptr %133)
@@ -21059,7 +22367,7 @@ for.entry:
   %memberidx = getelementptr inbounds %Module, ptr %1, i32 0, i32 7
   %2 = load ptr, ptr %memberidx, align 8
   %3 = load ptr, ptr %2, align 8
-  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %3, i32 0, i32 5
+  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %3, i32 0, i32 6
   %4 = load ptr, ptr %memberidx1, align 8
   %5 = call ptr %4(ptr %2, i64 0)
   br label %for.cond
@@ -21076,7 +22384,7 @@ for.cond:                                         ; preds = %for.body, %for.entr
 for.body:                                         ; preds = %for.cond
   %var_ = alloca ptr, align 8
   %9 = load ptr, ptr %6, align 8
-  %memberidx5 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %9, i32 0, i32 5
+  %memberidx5 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %9, i32 0, i32 6
   %10 = load ptr, ptr %memberidx5, align 8
   %11 = call ptr %10(ptr %6, i64 %i.0)
   store ptr %11, ptr %var_, align 8
@@ -21103,7 +22411,7 @@ for.cond9:                                        ; preds = %for.body10, %for.en
 for.body10:                                       ; preds = %for.cond9
   %const_ = alloca ptr, align 8
   %18 = load ptr, ptr %15, align 8
-  %memberidx16 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %18, i32 0, i32 5
+  %memberidx16 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %18, i32 0, i32 6
   %19 = load ptr, ptr %memberidx16, align 8
   %20 = call ptr %19(ptr %15, i64 %i.1)
   store ptr %20, ptr %const_, align 8
@@ -21130,7 +22438,7 @@ for.cond20:                                       ; preds = %for.body21, %for.en
 for.body21:                                       ; preds = %for.cond20
   %function = alloca ptr, align 8
   %27 = load ptr, ptr %24, align 8
-  %memberidx27 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %27, i32 0, i32 5
+  %memberidx27 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %27, i32 0, i32 6
   %28 = load ptr, ptr %memberidx27, align 8
   %29 = call ptr %28(ptr %24, i64 %i.2)
   store ptr %29, ptr %function, align 8
@@ -21156,7 +22464,7 @@ for.cond31:                                       ; preds = %for.body32, %for.en
 for.body32:                                       ; preds = %for.cond31
   %class_ = alloca ptr, align 8
   %36 = load ptr, ptr %33, align 8
-  %memberidx38 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %36, i32 0, i32 5
+  %memberidx38 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %36, i32 0, i32 6
   %37 = load ptr, ptr %memberidx38, align 8
   %38 = call ptr %37(ptr %33, i64 %i.3)
   store ptr %38, ptr %class_, align 8
@@ -21182,7 +22490,7 @@ for.cond42:                                       ; preds = %for.body43, %for.en
 for.body43:                                       ; preds = %for.cond42
   %enum_ = alloca ptr, align 8
   %45 = load ptr, ptr %42, align 8
-  %memberidx49 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %45, i32 0, i32 5
+  %memberidx49 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %45, i32 0, i32 6
   %46 = load ptr, ptr %memberidx49, align 8
   %47 = call ptr %46(ptr %42, i64 %i.4)
   store ptr %47, ptr %enum_, align 8
@@ -21215,7 +22523,7 @@ for.cond55:                                       ; preds = %for.body56, %for.en
 for.body56:                                       ; preds = %for.cond55
   %type_bucket = alloca ptr, align 8
   %58 = load ptr, ptr %55, align 8
-  %memberidx60 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %58, i32 0, i32 5
+  %memberidx60 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %58, i32 0, i32 6
   %59 = load ptr, ptr %memberidx60, align 8
   %60 = call ptr %59(ptr %55, i64 %i.5)
   store ptr %60, ptr %type_bucket, align 8
@@ -21236,11 +22544,11 @@ define ptr @TypeChecker_check_typecast_expr(ptr %0, ptr %1) {
   %memberidx = getelementptr inbounds %TypeCastExpressionNode, ptr %1, i32 0, i32 3
   %4 = load ptr, ptr %memberidx, align 8
   %5 = call ptr @TypeChecker_check_expression(ptr %0, ptr %3, ptr %4)
-  %memberidx1 = getelementptr inbounds %Expression, ptr %5, i32 0, i32 3
+  %memberidx1 = getelementptr inbounds %TypeCastExpressionNode, ptr %1, i32 0, i32 4
   %6 = load ptr, ptr %memberidx1, align 8
-  %memberidx2 = getelementptr inbounds %TypeCastExpressionNode, ptr %1, i32 0, i32 4
-  %7 = load ptr, ptr %memberidx2, align 8
-  %8 = call ptr @TypeChecker_check_type(ptr %0, ptr %7)
+  %7 = call ptr @TypeChecker_check_type(ptr %0, ptr %6)
+  %memberidx2 = getelementptr inbounds %Expression, ptr %5, i32 0, i32 3
+  %8 = load ptr, ptr %memberidx2, align 8
   %9 = call i1 @TypeChecker_has_errored(ptr %0)
   br i1 %9, label %common.ret, label %ifend
 
@@ -21250,13 +22558,13 @@ common.ret:                                       ; preds = %2, %ifend45, %if.en
 
 ifend:                                            ; preds = %2
   %10 = load ptr, ptr %0, align 8
-  %11 = call ptr @string_from_bytes(ptr @301, i64 6)
-  %12 = call i1 @is_buitin(ptr %10, ptr %8, ptr %11)
+  %11 = call ptr @string_from_bytes(ptr @300, i64 6)
+  %12 = call i1 @is_buitin(ptr %10, ptr %7, ptr %11)
   br i1 %12, label %if.entry4, label %ifend6
 
 if.entry4:                                        ; preds = %ifend
   %13 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%StringExpression, ptr null, i32 1) to i32))
-  %14 = call ptr @string_from_bytes(ptr @38, i64 0)
+  %14 = call ptr @string_from_bytes(ptr @37, i64 0)
   %15 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%Array_int_, ptr null, i32 1) to i32))
   call void @Array_int__constructor(ptr %15, i64 ptrtoint (ptr getelementptr (i64, ptr null, i32 1) to i64))
   %memberidx7 = getelementptr inbounds %Array_int_, ptr %15, i32 0, i32 1
@@ -21271,14 +22579,14 @@ if.entry4:                                        ; preds = %ifend
   store ptr %5, ptr %18, align 8
   %memberidx10 = getelementptr inbounds %Array_Expression_, ptr %17, i32 0, i32 2
   store i64 1, ptr %memberidx10, align 4
-  call void @StringExpression_constructor(ptr %13, ptr %14, ptr %15, ptr %17, ptr %8)
+  call void @StringExpression_constructor(ptr %13, ptr %14, ptr %15, ptr %17, ptr %7)
   br label %common.ret
 
 ifend6:                                           ; preds = %ifend
   %is_valid_cast = alloca i1, align 1
   store i1 false, ptr %is_valid_cast, align 1
-  %19 = call i1 @is_numeric(ptr %8)
-  %20 = call i1 @is_numeric(ptr %6)
+  %19 = call i1 @is_numeric(ptr %7)
+  %20 = call i1 @is_numeric(ptr %8)
   %21 = and i1 %19, %20
   br i1 %21, label %if.entry11, label %ifend13
 
@@ -21287,8 +22595,8 @@ if.entry11:                                       ; preds = %ifend6
   br label %ifend13
 
 ifend13:                                          ; preds = %ifend6, %if.entry11
-  %22 = call i1 @is_int(ptr %8)
-  %23 = load i64, ptr %6, align 4
+  %22 = call i1 @is_int(ptr %7)
+  %23 = load i64, ptr %8, align 4
   %24 = icmp eq i64 %23, 14
   %25 = and i1 %22, %24
   br i1 %25, label %if.entry15, label %ifend17
@@ -21298,8 +22606,8 @@ if.entry15:                                       ; preds = %ifend13
   br label %ifend17
 
 ifend17:                                          ; preds = %ifend13, %if.entry15
-  %26 = call i1 @is_int(ptr %6)
-  %27 = load i64, ptr %8, align 4
+  %26 = call i1 @is_int(ptr %8)
+  %27 = load i64, ptr %7, align 4
   %28 = icmp eq i64 %27, 14
   %29 = and i1 %26, %28
   br i1 %29, label %if.entry19, label %ifend21
@@ -21309,23 +22617,23 @@ if.entry19:                                       ; preds = %ifend17
   br label %ifend21
 
 ifend21:                                          ; preds = %ifend17, %if.entry19
-  %30 = call i1 @is_numeric(ptr %8)
+  %30 = call i1 @is_numeric(ptr %7)
   %31 = load ptr, ptr %0, align 8
-  %32 = call ptr @string_from_bytes(ptr @301, i64 6)
-  %33 = call i1 @is_buitin(ptr %31, ptr %6, ptr %32)
+  %32 = call ptr @string_from_bytes(ptr @300, i64 6)
+  %33 = call i1 @is_buitin(ptr %31, ptr %8, ptr %32)
   %34 = and i1 %30, %33
   br i1 %34, label %if.entry23, label %ifend25
 
 if.entry23:                                       ; preds = %ifend21
   %call = alloca ptr, align 8
   store ptr null, ptr %call, align 8
-  %35 = call i1 @is_float(ptr %8)
+  %35 = call i1 @is_float(ptr %7)
   br i1 %35, label %if.entry26, label %else27
 
 ifend25:                                          ; preds = %ifend21, %ifend28
   %exp.0 = phi ptr [ %46, %ifend28 ], [ %5, %ifend21 ]
-  %36 = call i1 @is_object(ptr %8)
-  %37 = call i1 @is_object(ptr %6)
+  %36 = call i1 @is_object(ptr %7)
+  %37 = call i1 @is_object(ptr %8)
   %38 = and i1 %36, %37
   br i1 %38, label %if.entry37, label %ifend39
 
@@ -21336,7 +22644,7 @@ if.entry26:                                       ; preds = %if.entry23
   br label %ifend28
 
 else27:                                           ; preds = %if.entry23
-  %40 = load i64, ptr %8, align 4
+  %40 = load i64, ptr %7, align 4
   %41 = icmp slt i64 %40, 5
   %42 = icmp eq i64 %40, 7
   br i1 %41, label %if.entry31, label %else32
@@ -21373,8 +22681,8 @@ if.entry37:                                       ; preds = %ifend25
   br label %ifend39
 
 ifend39:                                          ; preds = %ifend25, %if.entry37
-  %49 = call i1 @is_pointer(ptr %8)
-  %50 = call i1 @is_pointer(ptr %6)
+  %49 = call i1 @is_pointer(ptr %7)
+  %50 = call i1 @is_pointer(ptr %8)
   %51 = and i1 %49, %50
   br i1 %51, label %if.entry40, label %ifend42
 
@@ -21388,18 +22696,18 @@ ifend42:                                          ; preds = %ifend39, %if.entry4
   br i1 %53, label %if.entry43, label %ifend45
 
 if.entry43:                                       ; preds = %ifend42
-  %54 = call ptr @TypeChecker_dump_type(ptr %0, ptr %6)
+  %54 = call ptr @TypeChecker_dump_type(ptr %0, ptr %8)
   %55 = load ptr, ptr %54, align 8
   %memberidx46 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %55, i32 0, i32 11
   %56 = load ptr, ptr %memberidx46, align 8
   %57 = call ptr %56(ptr %54)
-  %58 = call ptr @TypeChecker_dump_type(ptr %0, ptr %8)
+  %58 = call ptr @TypeChecker_dump_type(ptr %0, ptr %7)
   %59 = load ptr, ptr %58, align 8
   %memberidx47 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %59, i32 0, i32 11
   %60 = load ptr, ptr %memberidx47, align 8
   %61 = call ptr %60(ptr %58)
   %62 = alloca ptr, align 8
-  %63 = call i64 (ptr, ptr, ...) @asprintf(ptr %62, ptr @302, ptr %57, ptr %61)
+  %63 = call i64 (ptr, ptr, ...) @asprintf(ptr %62, ptr @301, ptr %57, ptr %61)
   %64 = load ptr, ptr %62, align 8
   %65 = call ptr @string_from_bytes(ptr %64, i64 %63)
   %66 = load ptr, ptr %1, align 8
@@ -21408,7 +22716,7 @@ if.entry43:                                       ; preds = %ifend42
 
 ifend45:                                          ; preds = %ifend42
   %67 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%TypeCastExpression, ptr null, i32 1) to i32))
-  call void @TypeCastExpression_constructor(ptr %67, ptr %exp.0, ptr %8)
+  call void @TypeCastExpression_constructor(ptr %67, ptr %exp.0, ptr %7)
   br label %common.ret
 }
 
@@ -21483,7 +22791,7 @@ ifend:                                            ; preds = %2, %if.entry
 
 define void @Array_Expression__append(ptr %0, ptr %1) {
   %3 = load ptr, ptr %0, align 8
-  %memberidx = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %3, i32 0, i32 2
+  %memberidx = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %3, i32 0, i32 3
   %4 = load ptr, ptr %memberidx, align 8
   call void %4(ptr %0, ptr %1)
   ret void
@@ -21528,6 +22836,46 @@ ifend:                                            ; preds = %3, %if.entry
   ret void
 }
 
+define ptr @ArrayIterator_Expression____next__(ptr %0) {
+  %memberidx = getelementptr inbounds %ArrayIterator_Expression_, ptr %0, i32 0, i32 2
+  %2 = load i64, ptr %memberidx, align 4
+  %3 = add i64 %2, 1
+  store i64 %3, ptr %memberidx, align 4
+  %memberidx2 = getelementptr inbounds %ArrayIterator_Expression_, ptr %0, i32 0, i32 4
+  %4 = load ptr, ptr %memberidx2, align 8
+  %ptridx = getelementptr inbounds ptr, ptr %4, i64 %2
+  %5 = load ptr, ptr %ptridx, align 8
+  %memberidx3 = getelementptr inbounds %Iterator_Expression_, ptr %0, i32 0, i32 1
+  %memberidx5 = getelementptr inbounds %ArrayIterator_Expression_, ptr %0, i32 0, i32 3
+  %6 = load i64, ptr %memberidx5, align 4
+  %7 = icmp sgt i64 %3, %6
+  store i1 %7, ptr %memberidx3, align 1
+  ret ptr %5
+}
+
+define void @ArrayIterator_Expression__constructor(ptr %0, ptr %1, i64 %2) {
+  store ptr @VTableArrayIterator_Expression_, ptr %0, align 8
+  %memberidx = getelementptr inbounds %Iterator_Expression_, ptr %0, i32 0, i32 1
+  store i1 false, ptr %memberidx, align 1
+  %memberidx1 = getelementptr inbounds %ArrayIterator_Expression_, ptr %0, i32 0, i32 2
+  store i64 0, ptr %memberidx1, align 4
+  %memberidx2 = getelementptr inbounds %ArrayIterator_Expression_, ptr %0, i32 0, i32 4
+  store ptr %1, ptr %memberidx2, align 8
+  %memberidx3 = getelementptr inbounds %ArrayIterator_Expression_, ptr %0, i32 0, i32 3
+  store i64 %2, ptr %memberidx3, align 4
+  ret void
+}
+
+define ptr @Array_Expression____iter__(ptr %0) {
+  %2 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%ArrayIterator_Expression_, ptr null, i32 1) to i32))
+  %memberidx = getelementptr inbounds %Array_Expression_, ptr %0, i32 0, i32 1
+  %3 = load ptr, ptr %memberidx, align 8
+  %memberidx1 = getelementptr inbounds %Array_Expression_, ptr %0, i32 0, i32 2
+  %4 = load i64, ptr %memberidx1, align 4
+  call void @ArrayIterator_Expression__constructor(ptr %2, ptr %3, i64 %4)
+  ret ptr %2
+}
+
 define void @Array_Expression____setitem__(ptr %0, i64 %1, ptr %2) {
   %4 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%Range, ptr null, i32 1) to i32))
   %memberidx = getelementptr inbounds %Array_Expression_, ptr %0, i32 0, i32 2
@@ -21550,25 +22898,11 @@ ifend:                                            ; preds = %3, %if.entry
 }
 
 define ptr @Array_Expression____getitem__(ptr %0, i64 %1) {
-  %3 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%Range, ptr null, i32 1) to i32))
-  %memberidx = getelementptr inbounds %Array_Expression_, ptr %0, i32 0, i32 2
-  %4 = load i64, ptr %memberidx, align 4
-  call void @Range_constructor(ptr %3, i64 0, i64 %4)
-  %5 = load ptr, ptr %3, align 8
-  %6 = load ptr, ptr %5, align 8
-  %7 = call i1 %6(ptr %3, i64 %1)
-  br i1 %7, label %if.entry, label %common.ret
-
-common.ret:                                       ; preds = %2, %if.entry
-  %common.ret.op = phi ptr [ %9, %if.entry ], [ null, %2 ]
-  ret ptr %common.ret.op
-
-if.entry:                                         ; preds = %2
-  %memberidx2 = getelementptr inbounds %Array_Expression_, ptr %0, i32 0, i32 1
-  %8 = load ptr, ptr %memberidx2, align 8
-  %ptridx = getelementptr inbounds ptr, ptr %8, i64 %1
-  %9 = load ptr, ptr %ptridx, align 8
-  br label %common.ret
+  %memberidx = getelementptr inbounds %Array_Expression_, ptr %0, i32 0, i32 1
+  %3 = load ptr, ptr %memberidx, align 8
+  %ptridx = getelementptr inbounds ptr, ptr %3, i64 %1
+  %4 = load ptr, ptr %ptridx, align 8
+  ret ptr %4
 }
 
 define i1 @Array_Expression____eq__(ptr %0, ptr %1) {
@@ -21596,11 +22930,11 @@ for.cond:                                         ; preds = %ifend7, %for.entry
 
 for.body:                                         ; preds = %for.cond
   %9 = load ptr, ptr %0, align 8
-  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %9, i32 0, i32 5
+  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %9, i32 0, i32 6
   %10 = load ptr, ptr %memberidx3, align 8
   %11 = call ptr %10(ptr %0, i64 %6)
   %12 = load ptr, ptr %1, align 8
-  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %12, i32 0, i32 5
+  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %12, i32 0, i32 6
   %13 = load ptr, ptr %memberidx4, align 8
   %14 = load i64, ptr %i, align 4
   %15 = call ptr %13(ptr %1, i64 %14)
@@ -21627,7 +22961,7 @@ for.cond:                                         ; preds = %ifend, %for.entry
 
 for.body:                                         ; preds = %for.cond
   %4 = load ptr, ptr %0, align 8
-  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %4, i32 0, i32 5
+  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %4, i32 0, i32 6
   %5 = load ptr, ptr %memberidx1, align 8
   %6 = call ptr %5(ptr %0, i64 %i.0)
   %7 = icmp eq ptr %6, %1
@@ -21689,7 +23023,7 @@ for.end:                                          ; preds = %for.cond
 
 true_block:                                       ; preds = %for.body
   %13 = load ptr, ptr %7, align 8
-  %memberidx6 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %13, i32 0, i32 5
+  %memberidx6 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %13, i32 0, i32 6
   %14 = load ptr, ptr %memberidx6, align 8
   %15 = call ptr %14(ptr %7, i64 %i.0)
   br label %end
@@ -21702,10 +23036,10 @@ end:                                              ; preds = %false_block, %true_
   %ternary = phi ptr [ %15, %true_block ], [ %16, %false_block ]
   store ptr %ternary, ptr %expected_type, align 8
   %17 = load ptr, ptr %4, align 8
-  %memberidx7 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %17, i32 0, i32 2
+  %memberidx7 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %17, i32 0, i32 3
   %18 = load ptr, ptr %memberidx7, align 8
   %19 = load ptr, ptr %3, align 8
-  %memberidx8 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %19, i32 0, i32 5
+  %memberidx8 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %19, i32 0, i32 6
   %20 = load ptr, ptr %memberidx8, align 8
   %21 = call ptr %20(ptr %3, i64 %i.0)
   %22 = call ptr @TypeChecker_check_expression(ptr %0, ptr %ternary, ptr %21)
@@ -21741,7 +23075,7 @@ for.cond16:                                       ; preds = %ifend25, %for.entry
 for.body17:                                       ; preds = %for.cond16
   %arg = alloca ptr, align 8
   %29 = load ptr, ptr %2, align 8
-  %memberidx21 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %29, i32 0, i32 5
+  %memberidx21 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %29, i32 0, i32 6
   %30 = load ptr, ptr %memberidx21, align 8
   %31 = call ptr %30(ptr %2, i64 %i.1)
   store ptr %31, ptr %arg, align 8
@@ -21752,7 +23086,7 @@ for.body17:                                       ; preds = %for.cond16
 
 if.entry23:                                       ; preds = %for.body17
   %34 = load ptr, ptr %4, align 8
-  %memberidx26 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %34, i32 0, i32 2
+  %memberidx26 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %34, i32 0, i32 3
   %35 = load ptr, ptr %memberidx26, align 8
   call void %35(ptr %4, ptr %32)
   br label %ifend25
@@ -21776,7 +23110,7 @@ if.entry:                                         ; preds = %3
   %9 = load ptr, ptr %memberidx1, align 8
   %10 = call ptr %9(ptr %7)
   %11 = alloca ptr, align 8
-  %12 = call i64 (ptr, ptr, ...) @asprintf(ptr %11, ptr @257, ptr %10)
+  %12 = call i64 (ptr, ptr, ...) @asprintf(ptr %11, ptr @256, ptr %10)
   %13 = load ptr, ptr %11, align 8
   %14 = call ptr @string_from_bytes(ptr %13, i64 %12)
   %memberidx2 = getelementptr inbounds %ClassDeclarationNode, ptr %2, i32 0, i32 2
@@ -21813,7 +23147,7 @@ for.cond:                                         ; preds = %for.incr, %ifend
 for.body:                                         ; preds = %for.cond
   %parent_prop_name = alloca ptr, align 8
   %27 = load ptr, ptr %24, align 8
-  %memberidx8 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %27, i32 0, i32 5
+  %memberidx8 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %27, i32 0, i32 6
   %28 = load ptr, ptr %memberidx8, align 8
   %29 = call ptr %28(ptr %24, i64 %23)
   %memberidx9 = getelementptr inbounds %Bucket_string_PropId_, ptr %29, i32 0, i32 1
@@ -21822,7 +23156,7 @@ for.body:                                         ; preds = %for.cond
   %parent_prop_id = alloca ptr, align 8
   %31 = load ptr, ptr %parent_bucket_props, align 8
   %32 = load ptr, ptr %31, align 8
-  %memberidx10 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %32, i32 0, i32 5
+  %memberidx10 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %32, i32 0, i32 6
   %33 = load ptr, ptr %memberidx10, align 8
   %34 = load i64, ptr %i, align 4
   %35 = call ptr %33(ptr %31, i64 %34)
@@ -21915,7 +23249,7 @@ ifend36:                                          ; preds = %ifend30, %if.entry3
 define ptr @TypeChecker_check_member_access(ptr %0, ptr %1) {
   %3 = load ptr, ptr %0, align 8
   %4 = call ptr @get_class_from_prop_id(ptr %3, ptr %1)
-  %5 = call ptr @string_from_bytes(ptr @38, i64 0)
+  %5 = call ptr @string_from_bytes(ptr @37, i64 0)
   %6 = load i64, ptr %1, align 4
   %7 = icmp eq i64 %6, 0
   br i1 %7, label %if.entry, label %else
@@ -21925,7 +23259,7 @@ if.entry:                                         ; preds = %2
   %memberidx2 = getelementptr inbounds %Class, ptr %4, i32 0, i32 5
   %8 = load ptr, ptr %memberidx2, align 8
   %9 = load ptr, ptr %8, align 8
-  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %9, i32 0, i32 5
+  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %9, i32 0, i32 6
   %10 = load ptr, ptr %memberidx3, align 8
   %memberidx4 = getelementptr inbounds %PropId, ptr %1, i32 0, i32 2
   %11 = load i64, ptr %memberidx4, align 4
@@ -21942,7 +23276,7 @@ else:                                             ; preds = %2
   %memberidx7 = getelementptr inbounds %Class, ptr %4, i32 0, i32 4
   %15 = load ptr, ptr %memberidx7, align 8
   %16 = load ptr, ptr %15, align 8
-  %memberidx8 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %16, i32 0, i32 5
+  %memberidx8 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %16, i32 0, i32 6
   %17 = load ptr, ptr %memberidx8, align 8
   %memberidx9 = getelementptr inbounds %PropId, ptr %1, i32 0, i32 2
   %18 = load i64, ptr %memberidx9, align 4
@@ -21997,7 +23331,7 @@ if.entry27:                                       ; preds = %if.entry13
   %39 = load ptr, ptr %memberidx32, align 8
   %40 = call ptr %39(ptr %37)
   %41 = alloca ptr, align 8
-  %42 = call i64 (ptr, ptr, ...) @asprintf(ptr %41, ptr @310, ptr %36, ptr %40)
+  %42 = call i64 (ptr, ptr, ...) @asprintf(ptr %41, ptr @309, ptr %36, ptr %40)
   %43 = load ptr, ptr %41, align 8
   %44 = call ptr @string_from_bytes(ptr %43, i64 %42)
   br label %common.ret
@@ -22019,9 +23353,10 @@ if.entry33:                                       ; preds = %else14
   %54 = load ptr, ptr %memberidx39, align 8
   %55 = call ptr %54(ptr %52)
   %56 = alloca ptr, align 8
-  %57 = call i64 (ptr, ptr, ...) @asprintf(ptr %56, ptr @311, ptr %47, ptr %51, ptr %55)
+  %57 = call i64 (ptr, ptr, ...) @asprintf(ptr %56, ptr @310, ptr %47, ptr %51, ptr %55)
   %58 = load ptr, ptr %56, align 8
-  %59 = call ptr @string_from_bytes(ptr %58, i64 %57)
+  %59 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%string, ptr null, i32 1) to i32))
+  call void @string_constructor(ptr %59, ptr %58, i64 %57)
   br label %common.ret
 }
 
@@ -22068,7 +23403,7 @@ ifend4:                                           ; preds = %if.entry
   br i1 %13, label %if.entry6, label %ifend8
 
 if.entry6:                                        ; preds = %ifend4
-  %14 = call ptr @string_from_bytes(ptr @341, i64 54)
+  %14 = call ptr @string_from_bytes(ptr @345, i64 54)
   %15 = load ptr, ptr %3, align 8
   call void @TypeChecker_error(ptr %0, i64 5, ptr %14, ptr %15)
   br label %common.ret
@@ -22096,10 +23431,9 @@ if.entry11:                                       ; preds = %ifend8
   %28 = load ptr, ptr %memberidx16, align 8
   %29 = call ptr %28(ptr %26)
   %30 = alloca ptr, align 8
-  %31 = call i64 (ptr, ptr, ...) @asprintf(ptr %30, ptr @342, ptr %23, ptr %29)
+  %31 = call i64 (ptr, ptr, ...) @asprintf(ptr %30, ptr @346, ptr %23, ptr %29)
   %32 = load ptr, ptr %30, align 8
-  %33 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%string, ptr null, i32 1) to i32))
-  call void @string_constructor(ptr %33, ptr %32, i64 %31)
+  %33 = call ptr @string_from_bytes(ptr %32, i64 %31)
   %34 = load ptr, ptr %3, align 8
   call void @TypeChecker_error(ptr %0, i64 5, ptr %33, ptr %34)
   br label %common.ret
@@ -22111,7 +23445,7 @@ ifend13:                                          ; preds = %ifend8
   br label %ifend
 
 if.entry20:                                       ; preds = %else
-  %36 = call ptr @string_from_bytes(ptr @343, i64 32)
+  %36 = call ptr @string_from_bytes(ptr @347, i64 32)
   %37 = load ptr, ptr %1, align 8
   call void @TypeChecker_error(ptr %0, i64 5, ptr %36, ptr %37)
   br label %common.ret
@@ -22132,7 +23466,7 @@ ifend:                                            ; preds = %2
   %memberidx1 = getelementptr inbounds %Module, ptr %5, i32 0, i32 8
   %6 = load ptr, ptr %memberidx1, align 8
   %7 = load ptr, ptr %6, align 8
-  %memberidx2 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %7, i32 0, i32 2
+  %memberidx2 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %7, i32 0, i32 3
   %8 = load ptr, ptr %memberidx2, align 8
   call void %8(ptr %6, ptr %3)
   br label %common.ret
@@ -22156,7 +23490,7 @@ if.entry:                                         ; preds = %2
   %7 = load ptr, ptr %memberidx2, align 8
   %8 = call ptr %7(ptr %4)
   %9 = alloca ptr, align 8
-  %10 = call i64 (ptr, ptr, ...) @asprintf(ptr %9, ptr @206, ptr %8)
+  %10 = call i64 (ptr, ptr, ...) @asprintf(ptr %9, ptr @205, ptr %8)
   %11 = load ptr, ptr %9, align 8
   %12 = call ptr @string_from_bytes(ptr %11, i64 %10)
   %13 = load ptr, ptr %memberidx, align 8
@@ -22205,7 +23539,7 @@ if.entry12:                                       ; preds = %ifend9
   %28 = load ptr, ptr %memberidx15, align 8
   %29 = call ptr %28(ptr %4)
   %30 = alloca ptr, align 8
-  %31 = call i64 (ptr, ptr, ...) @asprintf(ptr %30, ptr @334, ptr %29)
+  %31 = call i64 (ptr, ptr, ...) @asprintf(ptr %30, ptr @333, ptr %29)
   %32 = load ptr, ptr %30, align 8
   %33 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%string, ptr null, i32 1) to i32))
   call void @string_constructor(ptr %33, ptr %32, i64 %31)
@@ -22257,7 +23591,7 @@ ifend29:                                          ; preds = %if.entry46, %ifend4
   br i1 %52, label %if.entry52, label %ifend54
 
 if.entry32:                                       ; preds = %if.entry27
-  %53 = call ptr @string_from_bytes(ptr @335, i64 69)
+  %53 = call ptr @string_from_bytes(ptr @334, i64 69)
   %54 = load ptr, ptr %1, align 8
   call void @TypeChecker_error(ptr %0, i64 5, ptr %53, ptr %54)
   br label %common.ret
@@ -22287,7 +23621,7 @@ if.entry38:                                       ; preds = %ifend34
   %70 = load ptr, ptr %memberidx43, align 8
   %71 = call ptr %70(ptr %68)
   %72 = alloca ptr, align 8
-  %73 = call i64 (ptr, ptr, ...) @asprintf(ptr %72, ptr @336, ptr %65, ptr %71)
+  %73 = call i64 (ptr, ptr, ...) @asprintf(ptr %72, ptr @335, ptr %65, ptr %71)
   %74 = load ptr, ptr %72, align 8
   %75 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%string, ptr null, i32 1) to i32))
   call void @string_constructor(ptr %75, ptr %74, i64 %73)
@@ -22314,10 +23648,9 @@ if.entry52:                                       ; preds = %ifend29
   %83 = load ptr, ptr %memberidx55, align 8
   %84 = call ptr %83(ptr %4)
   %85 = alloca ptr, align 8
-  %86 = call i64 (ptr, ptr, ...) @asprintf(ptr %85, ptr @337, ptr %84)
+  %86 = call i64 (ptr, ptr, ...) @asprintf(ptr %85, ptr @336, ptr %84)
   %87 = load ptr, ptr %85, align 8
-  %88 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%string, ptr null, i32 1) to i32))
-  call void @string_constructor(ptr %88, ptr %87, i64 %86)
+  %88 = call ptr @string_from_bytes(ptr %87, i64 %86)
   %89 = load ptr, ptr %memberidx, align 8
   %memberidx57 = getelementptr inbounds %Token, ptr %89, i32 0, i32 1
   %90 = load ptr, ptr %memberidx57, align 8
@@ -22365,7 +23698,7 @@ if.entry:                                         ; preds = %2
   %14 = load ptr, ptr %memberidx4, align 8
   %15 = call ptr %14(ptr %4)
   %16 = alloca ptr, align 8
-  %17 = call i64 (ptr, ptr, ...) @asprintf(ptr %16, ptr @206, ptr %15)
+  %17 = call i64 (ptr, ptr, ...) @asprintf(ptr %16, ptr @205, ptr %15)
   %18 = load ptr, ptr %16, align 8
   %19 = call ptr @string_from_bytes(ptr %18, i64 %17)
   %20 = load ptr, ptr %memberidx, align 8
@@ -22413,7 +23746,7 @@ ifend15:                                          ; preds = %ifend11
   br i1 %33, label %if.entry17, label %ifend19
 
 if.entry17:                                       ; preds = %ifend15
-  %34 = call ptr @string_from_bytes(ptr @338, i64 48)
+  %34 = call ptr @string_from_bytes(ptr @337, i64 48)
   %35 = load ptr, ptr %memberidx12, align 8
   %36 = load ptr, ptr %35, align 8
   call void @TypeChecker_error(ptr %0, i64 4, ptr %34, ptr %36)
@@ -22428,7 +23761,7 @@ ifend19:                                          ; preds = %ifend15
   br i1 %41, label %if.entry23, label %ifend25
 
 if.entry23:                                       ; preds = %ifend19
-  %42 = call ptr @string_from_bytes(ptr @335, i64 69)
+  %42 = call ptr @string_from_bytes(ptr @334, i64 69)
   %43 = load ptr, ptr %1, align 8
   call void @TypeChecker_error(ptr %0, i64 5, ptr %42, ptr %43)
   br label %common.ret
@@ -22457,10 +23790,9 @@ if.entry29:                                       ; preds = %ifend25
   %57 = load ptr, ptr %memberidx34, align 8
   %58 = call ptr %57(ptr %55)
   %59 = alloca ptr, align 8
-  %60 = call i64 (ptr, ptr, ...) @asprintf(ptr %59, ptr @336, ptr %52, ptr %58)
+  %60 = call i64 (ptr, ptr, ...) @asprintf(ptr %59, ptr @335, ptr %52, ptr %58)
   %61 = load ptr, ptr %59, align 8
-  %62 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%string, ptr null, i32 1) to i32))
-  call void @string_constructor(ptr %62, ptr %61, i64 %60)
+  %62 = call ptr @string_from_bytes(ptr %61, i64 %60)
   %63 = load ptr, ptr %1, align 8
   call void @TypeChecker_error(ptr %0, i64 5, ptr %62, ptr %63)
   br label %common.ret
@@ -22556,13 +23888,13 @@ if.entry12:                                       ; preds = %while.end
   %memberidx18 = getelementptr inbounds %Program, ptr %25, i32 0, i32 1
   %26 = load ptr, ptr %memberidx18, align 8
   %27 = load ptr, ptr %26, align 8
-  %memberidx19 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %27, i32 0, i32 5
+  %memberidx19 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %27, i32 0, i32 6
   %28 = load ptr, ptr %memberidx19, align 8
   %29 = call ptr %28(ptr %26, i64 0)
   %memberidx20 = getelementptr inbounds %Module, ptr %29, i32 0, i32 7
   %30 = load ptr, ptr %memberidx20, align 8
   %31 = load ptr, ptr %30, align 8
-  %memberidx21 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %31, i32 0, i32 5
+  %memberidx21 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %31, i32 0, i32 6
   %32 = load ptr, ptr %memberidx21, align 8
   %33 = call ptr %32(ptr %30, i64 0)
   %34 = load ptr, ptr %33, align 8
@@ -22705,13 +24037,13 @@ if.entry20:                                       ; preds = %if.entry13
   %memberidx26 = getelementptr inbounds %Program, ptr %30, i32 0, i32 1
   %31 = load ptr, ptr %memberidx26, align 8
   %32 = load ptr, ptr %31, align 8
-  %memberidx27 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %32, i32 0, i32 5
+  %memberidx27 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %32, i32 0, i32 6
   %33 = load ptr, ptr %memberidx27, align 8
   %34 = call ptr %33(ptr %31, i64 0)
   %memberidx28 = getelementptr inbounds %Module, ptr %34, i32 0, i32 7
   %35 = load ptr, ptr %memberidx28, align 8
   %36 = load ptr, ptr %35, align 8
-  %memberidx29 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %36, i32 0, i32 5
+  %memberidx29 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %36, i32 0, i32 6
   %37 = load ptr, ptr %memberidx29, align 8
   %38 = call ptr %37(ptr %35, i64 0)
   %39 = load ptr, ptr %38, align 8
@@ -22780,7 +24112,7 @@ define ptr @TypeChecker_declare_var_within_current_scope(ptr %0, ptr %1, ptr %2,
   store ptr %8, ptr %memberidx3, align 8
   %12 = load ptr, ptr %memberidx1, align 8
   %13 = load ptr, ptr %12, align 8
-  %memberidx5 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %13, i32 0, i32 2
+  %memberidx5 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %13, i32 0, i32 3
   %14 = load ptr, ptr %memberidx5, align 8
   call void %14(ptr %12, ptr %5)
   %memberidx6 = getelementptr inbounds %Scope, ptr %7, i32 0, i32 1
@@ -22808,7 +24140,7 @@ define ptr @TypeChecker_declare_const_within_current_scope(ptr %0, ptr %1, ptr %
   store ptr %8, ptr %memberidx3, align 8
   %12 = load ptr, ptr %memberidx1, align 8
   %13 = load ptr, ptr %12, align 8
-  %memberidx5 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %13, i32 0, i32 2
+  %memberidx5 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %13, i32 0, i32 3
   %14 = load ptr, ptr %memberidx5, align 8
   call void %14(ptr %12, ptr %5)
   %memberidx6 = getelementptr inbounds %Scope, ptr %7, i32 0, i32 1
@@ -22831,7 +24163,7 @@ define ptr @TypeChecker_check_object_setitem_expr(ptr %0, ptr %1, ptr %2) {
   %9 = load ptr, ptr %8, align 8
   %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr }>, ptr %9, i32 0, i32 1
   %10 = load ptr, ptr %memberidx4, align 8
-  %11 = call ptr @string_from_bytes(ptr @225, i64 11)
+  %11 = call ptr @string_from_bytes(ptr @224, i64 11)
   %12 = call ptr %10(ptr %8, ptr %11)
   %13 = icmp eq ptr %12, null
   br i1 %13, label %if.entry, label %ifend
@@ -22848,10 +24180,9 @@ if.entry:                                         ; preds = %3
   %16 = load ptr, ptr %memberidx6, align 8
   %17 = call ptr %16(ptr %14)
   %18 = alloca ptr, align 8
-  %19 = call i64 (ptr, ptr, ...) @asprintf(ptr %18, ptr @290, ptr %17)
+  %19 = call i64 (ptr, ptr, ...) @asprintf(ptr %18, ptr @289, ptr %17)
   %20 = load ptr, ptr %18, align 8
-  %21 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%string, ptr null, i32 1) to i32))
-  call void @string_constructor(ptr %21, ptr %20, i64 %19)
+  %21 = call ptr @string_from_bytes(ptr %20, i64 %19)
   %22 = load ptr, ptr %4, align 8
   call void @TypeChecker_error(ptr %0, i64 4, ptr %21, ptr %22)
   br label %common.ret
@@ -22865,7 +24196,7 @@ ifend:                                            ; preds = %3
   %memberidx9 = getelementptr inbounds %FunctionType, ptr %24, i32 0, i32 1
   %25 = load ptr, ptr %memberidx9, align 8
   %26 = load ptr, ptr %25, align 8
-  %memberidx10 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %26, i32 0, i32 5
+  %memberidx10 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %26, i32 0, i32 6
   %27 = load ptr, ptr %memberidx10, align 8
   %28 = call ptr %27(ptr %25, i64 0)
   store ptr %28, ptr %arg1_type, align 8
@@ -22874,7 +24205,7 @@ ifend:                                            ; preds = %3
   %memberidx11 = getelementptr inbounds %FunctionType, ptr %29, i32 0, i32 1
   %30 = load ptr, ptr %memberidx11, align 8
   %31 = load ptr, ptr %30, align 8
-  %memberidx12 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %31, i32 0, i32 5
+  %memberidx12 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %31, i32 0, i32 6
   %32 = load ptr, ptr %memberidx12, align 8
   %33 = call ptr %32(ptr %30, i64 1)
   store ptr %33, ptr %arg2_type, align 8
@@ -22911,7 +24242,7 @@ if.entry18:                                       ; preds = %ifend15
   %51 = load ptr, ptr %memberidx23, align 8
   %52 = call ptr %51(ptr %49)
   %53 = alloca ptr, align 8
-  %54 = call i64 (ptr, ptr, ...) @asprintf(ptr %53, ptr @274, ptr %46, ptr %52)
+  %54 = call i64 (ptr, ptr, ...) @asprintf(ptr %53, ptr @273, ptr %46, ptr %52)
   %55 = load ptr, ptr %53, align 8
   %56 = call ptr @string_from_bytes(ptr %55, i64 %54)
   %57 = load ptr, ptr %memberidx16, align 8
@@ -22954,7 +24285,7 @@ if.entry31:                                       ; preds = %ifend29
   %77 = load ptr, ptr %memberidx36, align 8
   %78 = call ptr %77(ptr %75)
   %79 = alloca ptr, align 8
-  %80 = call i64 (ptr, ptr, ...) @asprintf(ptr %79, ptr @274, ptr %72, ptr %78)
+  %80 = call i64 (ptr, ptr, ...) @asprintf(ptr %79, ptr @273, ptr %72, ptr %78)
   %81 = load ptr, ptr %79, align 8
   %82 = call ptr @string_from_bytes(ptr %81, i64 %80)
   %83 = load ptr, ptr %memberidx26, align 8
@@ -23377,7 +24708,7 @@ ifend96:                                          ; preds = %ifend90
 
 if.entry102:                                      ; preds = %ifend96
   %range_type = alloca ptr, align 8
-  %167 = call ptr @string_from_bytes(ptr @291, i64 5)
+  %167 = call ptr @string_from_bytes(ptr @290, i64 5)
   %168 = call ptr @TypeChecker_get_type_from_current_scope(ptr %0, ptr %167)
   store ptr %168, ptr %range_type, align 8
   %169 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%NewExpression, ptr null, i32 1) to i32))
@@ -23419,9 +24750,10 @@ ifend104:                                         ; preds = %ifend96
   %190 = load ptr, ptr %memberidx111, align 8
   %191 = call ptr %190(ptr %188)
   %192 = alloca ptr, align 8
-  %193 = call i64 (ptr, ptr, ...) @asprintf(ptr %192, ptr @292, ptr %179, ptr %185, ptr %191)
+  %193 = call i64 (ptr, ptr, ...) @asprintf(ptr %192, ptr @291, ptr %179, ptr %185, ptr %191)
   %194 = load ptr, ptr %192, align 8
-  %195 = call ptr @string_from_bytes(ptr %194, i64 %193)
+  %195 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%string, ptr null, i32 1) to i32))
+  call void @string_constructor(ptr %195, ptr %194, i64 %193)
   %196 = load ptr, ptr %2, align 8
   call void @TypeChecker_error(ptr %0, i64 5, ptr %195, ptr %196)
   br label %common.ret
@@ -23476,7 +24808,7 @@ if.entry9:                                        ; preds = %ifend6
   %18 = load ptr, ptr %memberidx13, align 8
   %19 = call ptr %18(ptr %16)
   %20 = alloca ptr, align 8
-  %21 = call i64 (ptr, ptr, ...) @asprintf(ptr %20, ptr @326, ptr %19)
+  %21 = call i64 (ptr, ptr, ...) @asprintf(ptr %20, ptr @325, ptr %19)
   %22 = load ptr, ptr %20, align 8
   %23 = call ptr @string_from_bytes(ptr %22, i64 %21)
   %24 = load ptr, ptr %memberidx, align 8
@@ -23531,7 +24863,7 @@ if.entry24:                                       ; preds = %if.entry21
   %memberidx29 = getelementptr inbounds %Array_Expression_, ptr %43, i32 0, i32 2
   %44 = load i64, ptr %memberidx29, align 4
   %45 = alloca ptr, align 8
-  %46 = call i64 (ptr, ptr, ...) @asprintf(ptr %45, ptr @327, i64 %42, i64 %44)
+  %46 = call i64 (ptr, ptr, ...) @asprintf(ptr %45, ptr @326, i64 %42, i64 %44)
   %47 = load ptr, ptr %45, align 8
   %48 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%string, ptr null, i32 1) to i32))
   call void @string_constructor(ptr %48, ptr %47, i64 %46)
@@ -23544,7 +24876,7 @@ else25:                                           ; preds = %if.entry21
   %memberidx31 = getelementptr inbounds %FunctionType, ptr %50, i32 0, i32 1
   %51 = load ptr, ptr %memberidx31, align 8
   %52 = load ptr, ptr %51, align 8
-  %memberidx32 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %52, i32 0, i32 5
+  %memberidx32 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %52, i32 0, i32 6
   %53 = load ptr, ptr %memberidx32, align 8
   %54 = call ptr %53(ptr %51, i64 %33)
   %55 = call ptr @TypeChecker_dump_type(ptr %0, ptr %54)
@@ -23554,7 +24886,7 @@ else25:                                           ; preds = %if.entry21
   %58 = call ptr %57(ptr %55)
   %59 = load ptr, ptr %args, align 8
   %60 = load ptr, ptr %59, align 8
-  %memberidx34 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %60, i32 0, i32 5
+  %memberidx34 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %60, i32 0, i32 6
   %61 = load ptr, ptr %memberidx34, align 8
   %62 = load i64, ptr %index, align 4
   %63 = call ptr %61(ptr %59, i64 %62)
@@ -23566,12 +24898,12 @@ else25:                                           ; preds = %if.entry21
   %67 = load ptr, ptr %memberidx36, align 8
   %68 = call ptr %67(ptr %65)
   %69 = alloca ptr, align 8
-  %70 = call i64 (ptr, ptr, ...) @asprintf(ptr %69, ptr @328, ptr %58, ptr %68)
+  %70 = call i64 (ptr, ptr, ...) @asprintf(ptr %69, ptr @327, ptr %58, ptr %68)
   %71 = load ptr, ptr %69, align 8
   %72 = call ptr @string_from_bytes(ptr %71, i64 %70)
   %73 = load ptr, ptr %memberidx17, align 8
   %74 = load ptr, ptr %73, align 8
-  %memberidx38 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %74, i32 0, i32 5
+  %memberidx38 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %74, i32 0, i32 6
   %75 = load ptr, ptr %memberidx38, align 8
   %76 = load i64, ptr %index, align 4
   %77 = call ptr %75(ptr %73, i64 %76)
@@ -23599,7 +24931,7 @@ common.ret:                                       ; preds = %ifend, %if.entry
   ret ptr %common.ret.op
 
 if.entry:                                         ; preds = %2
-  %5 = call ptr @string_from_bytes(ptr @339, i64 29)
+  %5 = call ptr @string_from_bytes(ptr @343, i64 29)
   %6 = load ptr, ptr %1, align 8
   call void @TypeChecker_error(ptr %0, i64 4, ptr %5, ptr %6)
   br label %common.ret
@@ -23617,7 +24949,7 @@ define ptr @TypeChecker_get_class_from_var_id(ptr %0, ptr %1) {
   %memberidx1 = getelementptr inbounds %Module, ptr %4, i32 0, i32 4
   %5 = load ptr, ptr %memberidx1, align 8
   %6 = load ptr, ptr %5, align 8
-  %memberidx2 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %6, i32 0, i32 5
+  %memberidx2 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %6, i32 0, i32 6
   %7 = load ptr, ptr %memberidx2, align 8
   %memberidx3 = getelementptr inbounds %VarId, ptr %1, i32 0, i32 2
   %8 = load i64, ptr %memberidx3, align 4
@@ -23632,7 +24964,7 @@ define ptr @TypeChecker_get_enum_from_var_id(ptr %0, ptr %1) {
   %memberidx1 = getelementptr inbounds %Module, ptr %4, i32 0, i32 6
   %5 = load ptr, ptr %memberidx1, align 8
   %6 = load ptr, ptr %5, align 8
-  %memberidx2 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %6, i32 0, i32 5
+  %memberidx2 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %6, i32 0, i32 6
   %7 = load ptr, ptr %memberidx2, align 8
   %memberidx3 = getelementptr inbounds %VarId, ptr %1, i32 0, i32 2
   %8 = load i64, ptr %memberidx3, align 4
@@ -23714,7 +25046,7 @@ ifend19:                                          ; preds = %ifend14
   br i1 %25, label %if.entry41, label %ifend43
 
 if.entry22:                                       ; preds = %if.entry17
-  %26 = call ptr @string_from_bytes(ptr @261, i64 16)
+  %26 = call ptr @string_from_bytes(ptr @260, i64 16)
   %27 = load ptr, ptr %array_node, align 8
   %memberidx25 = getelementptr inbounds %ArrayTypeNode, ptr %27, i32 0, i32 3
   %28 = load ptr, ptr %memberidx25, align 8
@@ -23730,7 +25062,7 @@ ifend24:                                          ; preds = %if.entry17
   br i1 %32, label %if.entry28, label %ifend30
 
 if.entry28:                                       ; preds = %ifend24
-  %33 = call ptr @string_from_bytes(ptr @262, i64 30)
+  %33 = call ptr @string_from_bytes(ptr @261, i64 30)
   %34 = load ptr, ptr %array_node, align 8
   %memberidx31 = getelementptr inbounds %ArrayTypeNode, ptr %34, i32 0, i32 3
   %35 = load ptr, ptr %memberidx31, align 8
@@ -23747,7 +25079,7 @@ ifend30:                                          ; preds = %ifend24
   br i1 %39, label %if.entry34, label %ifend36
 
 if.entry34:                                       ; preds = %ifend30
-  %40 = call ptr @string_from_bytes(ptr @263, i64 31)
+  %40 = call ptr @string_from_bytes(ptr @262, i64 31)
   %41 = load ptr, ptr %array_node, align 8
   %memberidx37 = getelementptr inbounds %ArrayTypeNode, ptr %41, i32 0, i32 3
   %42 = load ptr, ptr %memberidx37, align 8
@@ -23799,10 +25131,10 @@ for.cond:                                         ; preds = %for.body, %if.entry
 for.body:                                         ; preds = %for.cond
   %57 = load ptr, ptr %arg_types, align 8
   %58 = load ptr, ptr %57, align 8
-  %memberidx48 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %58, i32 0, i32 2
+  %memberidx48 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %58, i32 0, i32 3
   %59 = load ptr, ptr %memberidx48, align 8
   %60 = load ptr, ptr %54, align 8
-  %memberidx50 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %60, i32 0, i32 5
+  %memberidx50 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %60, i32 0, i32 6
   %61 = load ptr, ptr %memberidx50, align 8
   %62 = call ptr %61(ptr %54, i64 %52)
   %63 = call ptr @TypeChecker_check_type(ptr %0, ptr %62)
@@ -23880,10 +25212,10 @@ for.cond65:                                       ; preds = %for.body66, %for.en
 for.body66:                                       ; preds = %for.cond65
   %89 = load ptr, ptr %types, align 8
   %90 = load ptr, ptr %89, align 8
-  %memberidx71 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %90, i32 0, i32 2
+  %memberidx71 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %90, i32 0, i32 3
   %91 = load ptr, ptr %memberidx71, align 8
   %92 = load ptr, ptr %86, align 8
-  %memberidx73 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %92, i32 0, i32 5
+  %memberidx73 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %92, i32 0, i32 6
   %93 = load ptr, ptr %memberidx73, align 8
   %94 = call ptr %93(ptr %86, i64 %84)
   %95 = call ptr @TypeChecker_check_type(ptr %0, ptr %94)
@@ -23914,7 +25246,7 @@ if.entry78:                                       ; preds = %ifend76
   %memberidx82 = getelementptr inbounds %Compiler, ptr %104, i32 0, i32 6
   %105 = load ptr, ptr %memberidx82, align 8
   %106 = load ptr, ptr %105, align 8
-  %memberidx83 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %106, i32 0, i32 5
+  %memberidx83 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %106, i32 0, i32 6
   %107 = load ptr, ptr %memberidx83, align 8
   %108 = call ptr %107(ptr %105, i64 0)
   %memberidx84 = getelementptr inbounds %FloError, ptr %108, i32 0, i32 2
@@ -23939,10 +25271,9 @@ if.entry91:                                       ; preds = %ifend63
   %115 = load ptr, ptr %memberidx95, align 8
   %116 = call ptr %115(ptr %113)
   %117 = alloca ptr, align 8
-  %118 = call i64 (ptr, ptr, ...) @asprintf(ptr %117, ptr @264, ptr %116)
+  %118 = call i64 (ptr, ptr, ...) @asprintf(ptr %117, ptr @263, ptr %116)
   %119 = load ptr, ptr %117, align 8
-  %120 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%string, ptr null, i32 1) to i32))
-  call void @string_constructor(ptr %120, ptr %119, i64 %118)
+  %120 = call ptr @string_from_bytes(ptr %119, i64 %118)
   %121 = load ptr, ptr %identifer_tok, align 8
   %memberidx96 = getelementptr inbounds %Token, ptr %121, i32 0, i32 1
   %122 = load ptr, ptr %memberidx96, align 8
@@ -23955,11 +25286,11 @@ ifend93:                                          ; preds = %ifend63
 
 define void @ForStatement_constructor(ptr %0) {
   call void @Statement_constructor(ptr %0, i64 3)
-  %memberidx = getelementptr inbounds %ForStatement, ptr %0, i32 0, i32 1
+  %memberidx = getelementptr inbounds %ForStatement, ptr %0, i32 0, i32 2
   store ptr null, ptr %memberidx, align 8
-  %memberidx1 = getelementptr inbounds %ForStatement, ptr %0, i32 0, i32 2
+  %memberidx1 = getelementptr inbounds %ForStatement, ptr %0, i32 0, i32 3
   store ptr null, ptr %memberidx1, align 8
-  %memberidx2 = getelementptr inbounds %ForStatement, ptr %0, i32 0, i32 3
+  %memberidx2 = getelementptr inbounds %ForStatement, ptr %0, i32 0, i32 4
   store ptr null, ptr %memberidx2, align 8
   ret void
 }
@@ -23972,7 +25303,7 @@ define ptr @TypeChecker_check_for_statement(ptr %0, ptr %1) {
   %memberidx1 = getelementptr inbounds %ForStatementNode, ptr %1, i32 0, i32 6
   %5 = load i64, ptr %memberidx1, align 4
   %6 = icmp eq i64 %5, 0
-  br i1 %6, label %if.entry, label %ifend
+  br i1 %6, label %if.entry, label %else
 
 if.entry:                                         ; preds = %2
   %memberidx2 = getelementptr inbounds %ForStatementNode, ptr %1, i32 0, i32 2
@@ -23980,46 +25311,221 @@ if.entry:                                         ; preds = %2
   %8 = icmp ne ptr %7, null
   br i1 %8, label %if.entry3, label %ifend5
 
-ifend:                                            ; preds = %if.entry15, %ifend11, %2
+else:                                             ; preds = %2
+  %iterator = alloca ptr, align 8
+  %9 = call ptr @Type_unknown()
+  %memberidx20 = getelementptr inbounds %ForStatementNode, ptr %1, i32 0, i32 5
+  %10 = load ptr, ptr %memberidx20, align 8
+  %11 = call ptr @TypeChecker_check_expression(ptr %0, ptr %9, ptr %10)
+  store ptr %11, ptr %iterator, align 8
+  %12 = call i1 @TypeChecker_has_errored(ptr %0)
+  br i1 %12, label %common.ret, label %ifend23
+
+common.ret:                                       ; preds = %else, %if.entry28, %ifend
+  %common.ret.op = phi ptr [ %3, %ifend ], [ null, %if.entry28 ], [ null, %else ]
+  ret ptr %common.ret.op
+
+ifend:                                            ; preds = %if.entry15, %ifend11, %ifend30
   store i1 true, ptr %memberidx, align 1
-  %memberidx21 = getelementptr inbounds %ForStatement, ptr %3, i32 0, i32 4
-  %memberidx22 = getelementptr inbounds %ForStatementNode, ptr %1, i32 0, i32 8
-  %9 = load ptr, ptr %memberidx22, align 8
-  %10 = call ptr @TypeChecker_check_block(ptr %0, ptr %9)
-  store ptr %10, ptr %memberidx21, align 8
+  %memberidx55 = getelementptr inbounds %ForStatement, ptr %3, i32 0, i32 5
+  %memberidx56 = getelementptr inbounds %ForStatementNode, ptr %1, i32 0, i32 8
+  %13 = load ptr, ptr %memberidx56, align 8
+  %14 = call ptr @TypeChecker_check_block(ptr %0, ptr %13)
+  store ptr %14, ptr %memberidx55, align 8
   store i1 %4, ptr %memberidx, align 1
-  ret ptr %3
+  br label %common.ret
 
 if.entry3:                                        ; preds = %if.entry
-  %memberidx6 = getelementptr inbounds %ForStatement, ptr %3, i32 0, i32 1
-  %11 = call ptr @TypeChecker_check_statement(ptr %0, ptr %7)
-  store ptr %11, ptr %memberidx6, align 8
+  %memberidx6 = getelementptr inbounds %ForStatement, ptr %3, i32 0, i32 2
+  %15 = call ptr @TypeChecker_check_statement(ptr %0, ptr %7)
+  store ptr %15, ptr %memberidx6, align 8
   br label %ifend5
 
 ifend5:                                           ; preds = %if.entry, %if.entry3
   %memberidx8 = getelementptr inbounds %ForStatementNode, ptr %1, i32 0, i32 3
-  %12 = load ptr, ptr %memberidx8, align 8
-  %13 = icmp ne ptr %12, null
-  br i1 %13, label %if.entry9, label %ifend11
+  %16 = load ptr, ptr %memberidx8, align 8
+  %17 = icmp ne ptr %16, null
+  br i1 %17, label %if.entry9, label %ifend11
 
 if.entry9:                                        ; preds = %ifend5
-  %memberidx12 = getelementptr inbounds %ForStatement, ptr %3, i32 0, i32 2
-  %14 = call ptr @TypeChecker_check_condition(ptr %0, ptr %12)
-  store ptr %14, ptr %memberidx12, align 8
+  %memberidx12 = getelementptr inbounds %ForStatement, ptr %3, i32 0, i32 3
+  %18 = call ptr @TypeChecker_check_condition(ptr %0, ptr %16)
+  store ptr %18, ptr %memberidx12, align 8
   br label %ifend11
 
 ifend11:                                          ; preds = %ifend5, %if.entry9
   %memberidx14 = getelementptr inbounds %ForStatementNode, ptr %1, i32 0, i32 4
-  %15 = load ptr, ptr %memberidx14, align 8
-  %16 = icmp ne ptr %15, null
-  br i1 %16, label %if.entry15, label %ifend
+  %19 = load ptr, ptr %memberidx14, align 8
+  %20 = icmp ne ptr %19, null
+  br i1 %20, label %if.entry15, label %ifend
 
 if.entry15:                                       ; preds = %ifend11
-  %memberidx18 = getelementptr inbounds %ForStatement, ptr %3, i32 0, i32 3
-  %17 = call ptr @Type_unknown()
-  %18 = load ptr, ptr %memberidx14, align 8
-  %19 = call ptr @TypeChecker_check_expression(ptr %0, ptr %17, ptr %18)
-  store ptr %19, ptr %memberidx18, align 8
+  %memberidx18 = getelementptr inbounds %ForStatement, ptr %3, i32 0, i32 4
+  %21 = call ptr @TypeChecker_check_statement(ptr %0, ptr %19)
+  store ptr %21, ptr %memberidx18, align 8
+  br label %ifend
+
+ifend23:                                          ; preds = %else
+  %iterator_class = alloca ptr, align 8
+  %22 = load ptr, ptr %0, align 8
+  %23 = load ptr, ptr %iterator, align 8
+  %memberidx25 = getelementptr inbounds %Expression, ptr %23, i32 0, i32 3
+  %24 = load ptr, ptr %memberidx25, align 8
+  %25 = call ptr @get_class_from_type(ptr %22, ptr %24)
+  store ptr %25, ptr %iterator_class, align 8
+  %iter_prop_id = alloca ptr, align 8
+  %memberidx26 = getelementptr inbounds %Class, ptr %25, i32 0, i32 6
+  %26 = load ptr, ptr %memberidx26, align 8
+  %27 = load ptr, ptr %26, align 8
+  %memberidx27 = getelementptr inbounds <{ ptr, ptr, ptr }>, ptr %27, i32 0, i32 1
+  %28 = load ptr, ptr %memberidx27, align 8
+  %29 = call ptr @string_from_bytes(ptr @338, i64 8)
+  %30 = call ptr %28(ptr %26, ptr %29)
+  store ptr %30, ptr %iter_prop_id, align 8
+  %31 = icmp eq ptr %30, null
+  br i1 %31, label %if.entry28, label %ifend30
+
+if.entry28:                                       ; preds = %ifend23
+  %32 = call ptr @string_from_bytes(ptr @339, i64 46)
+  %33 = load ptr, ptr %memberidx20, align 8
+  %34 = load ptr, ptr %33, align 8
+  call void @TypeChecker_error(ptr %0, i64 5, ptr %32, ptr %34)
+  br label %common.ret
+
+ifend30:                                          ; preds = %ifend23
+  %iter_generator_type = alloca ptr, align 8
+  %35 = load ptr, ptr %0, align 8
+  %36 = call ptr @get_class_prop_type(ptr %35, ptr %30)
+  store ptr %36, ptr %iter_generator_type, align 8
+  %iteratable_type = alloca ptr, align 8
+  %memberidx34 = getelementptr inbounds %FunctionType, ptr %36, i32 0, i32 2
+  %37 = load ptr, ptr %memberidx34, align 8
+  store ptr %37, ptr %iteratable_type, align 8
+  %iterator_name = alloca ptr, align 8
+  %38 = call ptr @string_from_bytes(ptr @340, i64 6)
+  store ptr %38, ptr %iterator_name, align 8
+  %iter_call = alloca ptr, align 8
+  %39 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%CallExpression, ptr null, i32 1) to i32))
+  %40 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%MemberExpression, ptr null, i32 1) to i32))
+  %41 = load ptr, ptr %iterator, align 8
+  %42 = load ptr, ptr %iter_prop_id, align 8
+  %43 = load ptr, ptr %iter_generator_type, align 8
+  call void @MemberExpression_constructor(ptr %40, ptr %41, ptr %42, ptr %43)
+  %44 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%Array_Expression_, ptr null, i32 1) to i32))
+  call void @Array_Expression__constructor(ptr %44, i64 ptrtoint (ptr getelementptr (ptr, ptr null, i32 1) to i64))
+  %memberidx35 = getelementptr inbounds %Array_Expression_, ptr %44, i32 0, i32 1
+  %memberidx36 = getelementptr inbounds %Array_Expression_, ptr %44, i32 0, i32 2
+  store i64 0, ptr %memberidx36, align 4
+  %45 = load ptr, ptr %iteratable_type, align 8
+  call void @CallExpression_constructor(ptr %39, ptr %40, ptr %44, ptr %45)
+  store ptr %39, ptr %iter_call, align 8
+  %iteratable_var_id = alloca ptr, align 8
+  %46 = load ptr, ptr %iterator_name, align 8
+  %47 = load ptr, ptr %iteratable_type, align 8
+  %48 = call ptr @TypeChecker_declare_var_within_current_scope(ptr %0, ptr %46, ptr %39, ptr %47)
+  %memberidx37 = getelementptr inbounds %Var, ptr %48, i32 0, i32 1
+  %49 = load ptr, ptr %memberidx37, align 8
+  store ptr %49, ptr %iteratable_var_id, align 8
+  %memberidx38 = getelementptr inbounds %ForStatement, ptr %3, i32 0, i32 1
+  %50 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%VarDeclaration, ptr null, i32 1) to i32))
+  %51 = load ptr, ptr %iterator_name, align 8
+  %52 = load ptr, ptr %iteratable_var_id, align 8
+  call void @VarDeclaration_constructor(ptr %50, ptr %51, ptr %52)
+  store ptr %50, ptr %memberidx38, align 8
+  %iteratable_class = alloca ptr, align 8
+  %53 = load ptr, ptr %0, align 8
+  %54 = load ptr, ptr %iteratable_type, align 8
+  %55 = call ptr @get_class_from_type(ptr %53, ptr %54)
+  store ptr %55, ptr %iteratable_class, align 8
+  %done_prop_id = alloca ptr, align 8
+  %memberidx40 = getelementptr inbounds %Class, ptr %55, i32 0, i32 6
+  %56 = load ptr, ptr %memberidx40, align 8
+  %57 = load ptr, ptr %56, align 8
+  %memberidx41 = getelementptr inbounds <{ ptr, ptr, ptr }>, ptr %57, i32 0, i32 1
+  %58 = load ptr, ptr %memberidx41, align 8
+  %59 = call ptr @string_from_bytes(ptr @341, i64 4)
+  %60 = call ptr %58(ptr %56, ptr %59)
+  store ptr %60, ptr %done_prop_id, align 8
+  %iteratable_load = alloca ptr, align 8
+  %61 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%VarAccessExpression, ptr null, i32 1) to i32))
+  %62 = load ptr, ptr %iteratable_var_id, align 8
+  %63 = load ptr, ptr %iteratable_type, align 8
+  call void @VarAccessExpression_constructor(ptr %61, ptr %62, ptr %63)
+  store ptr %61, ptr %iteratable_load, align 8
+  %memberidx42 = getelementptr inbounds %ForStatement, ptr %3, i32 0, i32 3
+  %64 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%UnaryExpression, ptr null, i32 1) to i32))
+  %65 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%MemberExpression, ptr null, i32 1) to i32))
+  %66 = load ptr, ptr %iteratable_load, align 8
+  %67 = load ptr, ptr %done_prop_id, align 8
+  %68 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%BooleanType, ptr null, i32 1) to i32))
+  call void @BooleanType_constructor(ptr %68)
+  call void @MemberExpression_constructor(ptr %65, ptr %66, ptr %67, ptr %68)
+  %69 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%BooleanType, ptr null, i32 1) to i32))
+  call void @BooleanType_constructor(ptr %69)
+  call void @UnaryExpression_constructor(ptr %64, i64 6, ptr %65, ptr %69, i1 false)
+  store ptr %64, ptr %memberidx42, align 8
+  %iter_item_name = alloca ptr, align 8
+  %memberidx43 = getelementptr inbounds %ForStatementNode, ptr %1, i32 0, i32 7
+  %70 = load ptr, ptr %memberidx43, align 8
+  %memberidx44 = getelementptr inbounds %IdentifierToken, ptr %70, i32 0, i32 2
+  %71 = load ptr, ptr %memberidx44, align 8
+  store ptr %71, ptr %iter_item_name, align 8
+  %next_prop_id = alloca ptr, align 8
+  %72 = load ptr, ptr %iteratable_class, align 8
+  %memberidx45 = getelementptr inbounds %Class, ptr %72, i32 0, i32 6
+  %73 = load ptr, ptr %memberidx45, align 8
+  %74 = load ptr, ptr %73, align 8
+  %memberidx46 = getelementptr inbounds <{ ptr, ptr, ptr }>, ptr %74, i32 0, i32 1
+  %75 = load ptr, ptr %memberidx46, align 8
+  %76 = call ptr @string_from_bytes(ptr @342, i64 8)
+  %77 = call ptr %75(ptr %73, ptr %76)
+  store ptr %77, ptr %next_prop_id, align 8
+  %next_prop_type = alloca ptr, align 8
+  %78 = load ptr, ptr %0, align 8
+  %79 = call ptr @get_class_prop_type(ptr %78, ptr %77)
+  store ptr %79, ptr %next_prop_type, align 8
+  %iter_item_type = alloca ptr, align 8
+  %memberidx48 = getelementptr inbounds %FunctionType, ptr %79, i32 0, i32 2
+  %80 = load ptr, ptr %memberidx48, align 8
+  store ptr %80, ptr %iter_item_type, align 8
+  %next_item_call = alloca ptr, align 8
+  %81 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%CallExpression, ptr null, i32 1) to i32))
+  %82 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%MemberExpression, ptr null, i32 1) to i32))
+  %83 = load ptr, ptr %iteratable_load, align 8
+  %84 = load ptr, ptr %next_prop_id, align 8
+  %85 = load ptr, ptr %next_prop_type, align 8
+  call void @MemberExpression_constructor(ptr %82, ptr %83, ptr %84, ptr %85)
+  %86 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%Array_Expression_, ptr null, i32 1) to i32))
+  call void @Array_Expression__constructor(ptr %86, i64 ptrtoint (ptr getelementptr (ptr, ptr null, i32 1) to i64))
+  %memberidx49 = getelementptr inbounds %Array_Expression_, ptr %86, i32 0, i32 1
+  %memberidx50 = getelementptr inbounds %Array_Expression_, ptr %86, i32 0, i32 2
+  store i64 0, ptr %memberidx50, align 4
+  %87 = load ptr, ptr %iter_item_type, align 8
+  call void @CallExpression_constructor(ptr %81, ptr %82, ptr %86, ptr %87)
+  store ptr %81, ptr %next_item_call, align 8
+  %iter_item_var_id = alloca ptr, align 8
+  %88 = load ptr, ptr %iter_item_name, align 8
+  %89 = load ptr, ptr %iter_item_type, align 8
+  %90 = call ptr @TypeChecker_declare_var_within_current_scope(ptr %0, ptr %88, ptr %81, ptr %89)
+  %memberidx51 = getelementptr inbounds %Var, ptr %90, i32 0, i32 1
+  %91 = load ptr, ptr %memberidx51, align 8
+  store ptr %91, ptr %iter_item_var_id, align 8
+  %memberidx52 = getelementptr inbounds %ForStatement, ptr %3, i32 0, i32 2
+  %92 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%VarDeclaration, ptr null, i32 1) to i32))
+  %93 = load ptr, ptr %iter_item_name, align 8
+  %94 = load ptr, ptr %iter_item_var_id, align 8
+  call void @VarDeclaration_constructor(ptr %92, ptr %93, ptr %94)
+  store ptr %92, ptr %memberidx52, align 8
+  %memberidx53 = getelementptr inbounds %ForStatement, ptr %3, i32 0, i32 4
+  %95 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%BinaryExpression, ptr null, i32 1) to i32))
+  %96 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%VarAccessExpression, ptr null, i32 1) to i32))
+  %97 = load ptr, ptr %iter_item_var_id, align 8
+  %98 = load ptr, ptr %iter_item_type, align 8
+  call void @VarAccessExpression_constructor(ptr %96, ptr %97, ptr %98)
+  %99 = load ptr, ptr %next_item_call, align 8
+  %100 = load ptr, ptr %iter_item_type, align 8
+  call void @BinaryExpression_constructor(ptr %95, ptr %96, i64 19, ptr %99, ptr %100, i1 false)
+  store ptr %95, ptr %memberidx53, align 8
   br label %ifend
 }
 
@@ -24165,14 +25671,14 @@ for.cond:                                         ; preds = %ifend26, %for.entry
 
 for.body:                                         ; preds = %for.cond
   %25 = load ptr, ptr %22, align 8
-  %memberidx21 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %25, i32 0, i32 5
+  %memberidx21 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %25, i32 0, i32 6
   %26 = load ptr, ptr %memberidx21, align 8
   %27 = call ptr %26(ptr %22, i64 %20)
   %28 = load ptr, ptr %t2_fnc_type, align 8
   %memberidx22 = getelementptr inbounds %FunctionType, ptr %28, i32 0, i32 1
   %29 = load ptr, ptr %memberidx22, align 8
   %30 = load ptr, ptr %29, align 8
-  %memberidx23 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %30, i32 0, i32 5
+  %memberidx23 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %30, i32 0, i32 6
   %31 = load ptr, ptr %memberidx23, align 8
   %32 = load i64, ptr %i, align 4
   %33 = call ptr %31(ptr %29, i64 %32)
@@ -24348,14 +25854,14 @@ for.cond86:                                       ; preds = %ifend98, %for.entry
 
 for.body87:                                       ; preds = %for.cond86
   %100 = load ptr, ptr %97, align 8
-  %memberidx93 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %100, i32 0, i32 5
+  %memberidx93 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %100, i32 0, i32 6
   %101 = load ptr, ptr %memberidx93, align 8
   %102 = call ptr %101(ptr %97, i64 %95)
   %103 = load ptr, ptr %t2_gen_type, align 8
   %memberidx94 = getelementptr inbounds %GenericType, ptr %103, i32 0, i32 2
   %104 = load ptr, ptr %memberidx94, align 8
   %105 = load ptr, ptr %104, align 8
-  %memberidx95 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %105, i32 0, i32 5
+  %memberidx95 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %105, i32 0, i32 6
   %106 = load ptr, ptr %memberidx95, align 8
   %107 = load i64, ptr %x, align 4
   %108 = call ptr %106(ptr %104, i64 %107)
@@ -24382,7 +25888,7 @@ define ptr @TypeChecker_create_scope(ptr %0) {
   call void @Scope_constructor(ptr %3, i64 %4, i64 %6)
   %7 = load ptr, ptr %memberidx1, align 8
   %8 = load ptr, ptr %7, align 8
-  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %8, i32 0, i32 2
+  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %8, i32 0, i32 3
   %9 = load ptr, ptr %memberidx4, align 8
   call void %9(ptr %7, ptr %3)
   ret ptr %3
@@ -24406,7 +25912,7 @@ if.entry:                                         ; preds = %4
   %10 = load ptr, ptr %memberidx1, align 8
   %11 = call ptr %10(ptr %8)
   %12 = alloca ptr, align 8
-  %13 = call i64 (ptr, ptr, ...) @asprintf(ptr %12, ptr @288, ptr %11)
+  %13 = call i64 (ptr, ptr, ...) @asprintf(ptr %12, ptr @287, ptr %11)
   %14 = load ptr, ptr %12, align 8
   %15 = call ptr @string_from_bytes(ptr %14, i64 %13)
   %16 = load ptr, ptr %2, align 8
@@ -24446,7 +25952,7 @@ ifend9:                                           ; preds = %ifend
   %memberidx21 = getelementptr inbounds %FunctionType, ptr %29, i32 0, i32 1
   %30 = load ptr, ptr %memberidx21, align 8
   %31 = load ptr, ptr %30, align 8
-  %memberidx22 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %31, i32 0, i32 5
+  %memberidx22 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %31, i32 0, i32 6
   %32 = load ptr, ptr %memberidx22, align 8
   %33 = call ptr %32(ptr %30, i64 0)
   store ptr %33, ptr %arg_type, align 8
@@ -24482,7 +25988,7 @@ ifend12:                                          ; preds = %if.entry7
   %50 = load ptr, ptr %memberidx18, align 8
   %51 = call ptr %50(ptr %6)
   %52 = alloca ptr, align 8
-  %53 = call i64 (ptr, ptr, ...) @asprintf(ptr %52, ptr @289, ptr %43, ptr %48, ptr %51)
+  %53 = call i64 (ptr, ptr, ...) @asprintf(ptr %52, ptr @288, ptr %43, ptr %48, ptr %51)
   %54 = load ptr, ptr %52, align 8
   %55 = call ptr @string_from_bytes(ptr %54, i64 %53)
   %56 = load ptr, ptr %2, align 8
@@ -24537,7 +26043,7 @@ if.entry34:                                       ; preds = %ifend32
   %79 = load ptr, ptr %memberidx39, align 8
   %80 = call ptr %79(ptr %77)
   %81 = alloca ptr, align 8
-  %82 = call i64 (ptr, ptr, ...) @asprintf(ptr %81, ptr @274, ptr %75, ptr %80)
+  %82 = call i64 (ptr, ptr, ...) @asprintf(ptr %81, ptr @273, ptr %75, ptr %80)
   %83 = load ptr, ptr %81, align 8
   %84 = call ptr @string_from_bytes(ptr %83, i64 %82)
   %memberidx40 = getelementptr inbounds %BinaryExpressionNode, ptr %2, i32 0, i32 5
@@ -24671,7 +26177,7 @@ if.entry22:                                       ; preds = %if.entry19
   %38 = load ptr, ptr %memberidx25, align 8
   %39 = call ptr %38(ptr %36)
   %40 = alloca ptr, align 8
-  %41 = call i64 (ptr, ptr, ...) @asprintf(ptr %40, ptr @299, ptr %39)
+  %41 = call i64 (ptr, ptr, ...) @asprintf(ptr %40, ptr @298, ptr %39)
   %42 = load ptr, ptr %40, align 8
   %43 = call ptr @string_from_bytes(ptr %42, i64 %41)
   %44 = load ptr, ptr %memberidx1, align 8
@@ -24702,7 +26208,7 @@ ifend30:                                          ; preds = %if.entry28, %ifend1
   %56 = load ptr, ptr %memberidx36, align 8
   %57 = call ptr %56(ptr %54)
   %58 = alloca ptr, align 8
-  %59 = call i64 (ptr, ptr, ...) @asprintf(ptr %58, ptr @300, ptr %52, ptr %57)
+  %59 = call i64 (ptr, ptr, ...) @asprintf(ptr %58, ptr @299, ptr %52, ptr %57)
   %60 = load ptr, ptr %58, align 8
   %61 = call ptr @string_from_bytes(ptr %60, i64 %59)
   %62 = load ptr, ptr %2, align 8
@@ -24818,7 +26324,7 @@ else23:                                           ; preds = %else12
   %30 = load ptr, ptr %memberidx44, align 8
   %31 = call ptr %30(ptr %28)
   %32 = alloca ptr, align 8
-  %33 = call i64 (ptr, ptr, ...) @asprintf(ptr %32, ptr @309, ptr %31)
+  %33 = call i64 (ptr, ptr, ...) @asprintf(ptr %32, ptr @308, ptr %31)
   %34 = load ptr, ptr %32, align 8
   %35 = call ptr @string_from_bytes(ptr %34, i64 %33)
   %36 = load ptr, ptr %1, align 8
@@ -24827,7 +26333,7 @@ else23:                                           ; preds = %else12
 
 if.entry27:                                       ; preds = %if.entry22
   %37 = alloca ptr, align 8
-  %38 = call i64 (ptr, ptr, ...) @asprintf(ptr %37, ptr @306, i64 %26)
+  %38 = call i64 (ptr, ptr, ...) @asprintf(ptr %37, ptr @305, i64 %26)
   %39 = load ptr, ptr %37, align 8
   %40 = call ptr @string_from_bytes(ptr %39, i64 %38)
   %41 = load ptr, ptr %1, align 8
@@ -24842,7 +26348,7 @@ ifend29:                                          ; preds = %if.entry22
   %arg = alloca ptr, align 8
   %43 = load ptr, ptr %memberidx25, align 8
   %44 = load ptr, ptr %43, align 8
-  %memberidx32 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %44, i32 0, i32 5
+  %memberidx32 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %44, i32 0, i32 6
   %45 = load ptr, ptr %memberidx32, align 8
   %46 = call ptr %45(ptr %43, i64 0)
   %47 = call ptr @TypeChecker_check_expression(ptr %0, ptr %42, ptr %46)
@@ -24866,15 +26372,16 @@ if.entry34:                                       ; preds = %ifend29
   %58 = load ptr, ptr %memberidx38, align 8
   %59 = load i64, ptr %58, align 4
   %60 = alloca ptr, align 8
-  %61 = call i64 (ptr, ptr, ...) @asprintf(ptr %60, ptr @307, i64 %59)
+  %61 = call i64 (ptr, ptr, ...) @asprintf(ptr %60, ptr @306, i64 %59)
   %62 = load ptr, ptr %60, align 8
   %63 = alloca ptr, align 8
-  %64 = call i64 (ptr, ptr, ...) @asprintf(ptr %63, ptr @308, ptr %56, ptr %62)
+  %64 = call i64 (ptr, ptr, ...) @asprintf(ptr %63, ptr @307, ptr %56, ptr %62)
   %65 = load ptr, ptr %63, align 8
-  %66 = call ptr @string_from_bytes(ptr %65, i64 %64)
+  %66 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%string, ptr null, i32 1) to i32))
+  call void @string_constructor(ptr %66, ptr %65, i64 %64)
   %67 = load ptr, ptr %memberidx25, align 8
   %68 = load ptr, ptr %67, align 8
-  %memberidx41 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %68, i32 0, i32 5
+  %memberidx41 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %68, i32 0, i32 6
   %69 = load ptr, ptr %memberidx41, align 8
   %70 = call ptr %69(ptr %67, i64 0)
   %71 = load ptr, ptr %70, align 8
@@ -24884,7 +26391,7 @@ if.entry34:                                       ; preds = %ifend29
 ifend36:                                          ; preds = %ifend29
   %72 = load ptr, ptr %args, align 8
   %73 = load ptr, ptr %72, align 8
-  %memberidx43 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %73, i32 0, i32 2
+  %memberidx43 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %73, i32 0, i32 3
   %74 = load ptr, ptr %memberidx43, align 8
   %75 = load ptr, ptr %arg, align 8
   call void %74(ptr %72, ptr %75)
@@ -24965,10 +26472,9 @@ if.entry11:                                       ; preds = %ifend9
   %28 = load ptr, ptr %memberidx15, align 8
   %29 = call ptr %28(ptr %26)
   %30 = alloca ptr, align 8
-  %31 = call i64 (ptr, ptr, ...) @asprintf(ptr %30, ptr @322, ptr %24, ptr %29)
+  %31 = call i64 (ptr, ptr, ...) @asprintf(ptr %30, ptr @321, ptr %24, ptr %29)
   %32 = load ptr, ptr %30, align 8
-  %33 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%string, ptr null, i32 1) to i32))
-  call void @string_constructor(ptr %33, ptr %32, i64 %31)
+  %33 = call ptr @string_from_bytes(ptr %32, i64 %31)
   %34 = load ptr, ptr %2, align 8
   call void @TypeChecker_error(ptr %0, i64 5, ptr %33, ptr %34)
   br label %common.ret
@@ -24990,7 +26496,7 @@ if.entry:                                         ; preds = %2
   %fnc_ty = alloca ptr, align 8
   store ptr %1, ptr %fnc_ty, align 8
   %args_tys_str = alloca ptr, align 8
-  %5 = call ptr @string_from_bytes(ptr @38, i64 0)
+  %5 = call ptr @string_from_bytes(ptr @37, i64 0)
   store ptr %5, ptr %args_tys_str, align 8
   %i = alloca i64, align 8
   store i64 0, ptr %i, align 4
@@ -25016,7 +26522,7 @@ for.body:                                         ; preds = %for.cond
   %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %13, i32 0, i32 1
   %14 = load ptr, ptr %memberidx3, align 8
   %15 = load ptr, ptr %9, align 8
-  %memberidx5 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %15, i32 0, i32 5
+  %memberidx5 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %15, i32 0, i32 6
   %16 = load ptr, ptr %memberidx5, align 8
   %17 = call ptr %16(ptr %9, i64 %7)
   %18 = call ptr @TypeChecker_dump_type(ptr %0, ptr %17)
@@ -25050,7 +26556,7 @@ for.end:                                          ; preds = %for.cond
   %34 = load ptr, ptr %memberidx14, align 8
   %35 = call ptr %34(ptr %32)
   %36 = alloca ptr, align 8
-  %37 = call i64 (ptr, ptr, ...) @asprintf(ptr %36, ptr @184, ptr %29, ptr %35)
+  %37 = call i64 (ptr, ptr, ...) @asprintf(ptr %36, ptr @183, ptr %29, ptr %35)
   %38 = load ptr, ptr %36, align 8
   %39 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%string, ptr null, i32 1) to i32))
   call void @string_constructor(ptr %39, ptr %38, i64 %37)
@@ -25061,7 +26567,7 @@ if.entry8:                                        ; preds = %for.body
   %41 = load ptr, ptr %40, align 8
   %memberidx11 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %41, i32 0, i32 1
   %42 = load ptr, ptr %memberidx11, align 8
-  %43 = call ptr @string_from_bytes(ptr @183, i64 2)
+  %43 = call ptr @string_from_bytes(ptr @182, i64 2)
   %44 = call ptr %42(ptr %40, ptr %43)
   br label %ifend10
 
@@ -25080,7 +26586,7 @@ if.entry16:                                       ; preds = %ifend
   %50 = load ptr, ptr %memberidx20, align 8
   %51 = call ptr %50(ptr %48)
   %52 = alloca ptr, align 8
-  %53 = call i64 (ptr, ptr, ...) @asprintf(ptr %52, ptr @185, ptr %51)
+  %53 = call i64 (ptr, ptr, ...) @asprintf(ptr %52, ptr @184, ptr %51)
   %54 = load ptr, ptr %52, align 8
   %55 = call ptr @string_from_bytes(ptr %54, i64 %53)
   br label %common.ret
@@ -25127,7 +26633,7 @@ if.entry35:                                       ; preds = %ifend30
   %memberidx40 = getelementptr inbounds %ArrayType, ptr %71, i32 0, i32 2
   %72 = load i64, ptr %memberidx40, align 4
   %73 = alloca ptr, align 8
-  %74 = call i64 (ptr, ptr, ...) @asprintf(ptr %73, ptr @186, ptr %70, i64 %72)
+  %74 = call i64 (ptr, ptr, ...) @asprintf(ptr %73, ptr @185, ptr %70, i64 %72)
   %75 = load ptr, ptr %73, align 8
   %76 = call ptr @string_from_bytes(ptr %75, i64 %74)
   br label %common.ret
@@ -25144,7 +26650,7 @@ if.entry42:                                       ; preds = %ifend37
   %78 = load ptr, ptr %memberidx45, align 8
   %79 = load ptr, ptr %78, align 8
   %80 = load ptr, ptr %79, align 8
-  %81 = call ptr @string_from_bytes(ptr @187, i64 1)
+  %81 = call ptr @string_from_bytes(ptr @186, i64 1)
   %82 = call ptr %80(ptr %78, ptr %81)
   store ptr %82, ptr %s, align 8
   %x = alloca i64, align 8
@@ -25171,7 +26677,7 @@ for.body49:                                       ; preds = %for.cond48
   %memberidx54 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %90, i32 0, i32 1
   %91 = load ptr, ptr %memberidx54, align 8
   %92 = load ptr, ptr %86, align 8
-  %memberidx56 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %92, i32 0, i32 5
+  %memberidx56 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %92, i32 0, i32 6
   %93 = load ptr, ptr %memberidx56, align 8
   %94 = call ptr %93(ptr %86, i64 %84)
   %95 = call ptr @TypeChecker_dump_type(ptr %0, ptr %94)
@@ -25185,7 +26691,7 @@ for.end51:                                        ; preds = %for.cond48
   %99 = load ptr, ptr %s, align 8
   %100 = load ptr, ptr %99, align 8
   %101 = load ptr, ptr %100, align 8
-  %102 = call ptr @string_from_bytes(ptr @188, i64 1)
+  %102 = call ptr @string_from_bytes(ptr @187, i64 1)
   %103 = call ptr %101(ptr %99, ptr %102)
   br label %common.ret
 }
@@ -25229,7 +26735,7 @@ define ptr @TypeChecker_get_module(ptr %0, i64 %1) {
   %memberidx1 = getelementptr inbounds %Program, ptr %3, i32 0, i32 1
   %4 = load ptr, ptr %memberidx1, align 8
   %5 = load ptr, ptr %4, align 8
-  %memberidx2 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %5, i32 0, i32 5
+  %memberidx2 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %5, i32 0, i32 6
   %6 = load ptr, ptr %memberidx2, align 8
   %7 = call ptr %6(ptr %4, i64 %1)
   ret ptr %7
@@ -25294,7 +26800,7 @@ if.entry6:                                        ; preds = %ifend
   %19 = load i64, ptr %memberidx11, align 4
   %20 = load i64, ptr %memberidx5, align 4
   %21 = alloca ptr, align 8
-  %22 = call i64 (ptr, ptr, ...) @asprintf(ptr %21, ptr @198, i64 %19, i64 %20)
+  %22 = call i64 (ptr, ptr, ...) @asprintf(ptr %21, ptr @197, i64 %19, i64 %20)
   %23 = load ptr, ptr %21, align 8
   %24 = call ptr @string_from_bytes(ptr %23, i64 %22)
   call void @TypeChecker_error(ptr %0, i64 5, ptr %24, ptr null)
@@ -25314,7 +26820,7 @@ ifend8:                                           ; preds = %ifend
   %27 = call ptr @TypeChecker_create_child_scope_within_current_scope(ptr %0)
   store ptr %27, ptr %generic_scope, align 8
   %param_strings = alloca ptr, align 8
-  %28 = call ptr @string_from_bytes(ptr @38, i64 0)
+  %28 = call ptr @string_from_bytes(ptr @37, i64 0)
   store ptr %28, ptr %param_strings, align 8
   %i = alloca i64, align 8
   store i64 0, ptr %i, align 4
@@ -25331,7 +26837,7 @@ for.cond:                                         ; preds = %end, %ifend8
 for.body:                                         ; preds = %for.cond
   %param_name = alloca ptr, align 8
   %33 = load ptr, ptr %30, align 8
-  %memberidx16 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %33, i32 0, i32 5
+  %memberidx16 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %33, i32 0, i32 6
   %34 = load ptr, ptr %memberidx16, align 8
   %35 = call ptr %34(ptr %30, i64 %29)
   %36 = load ptr, ptr %35, align 8
@@ -25340,7 +26846,7 @@ for.body:                                         ; preds = %for.cond
   store ptr %37, ptr %param_name, align 8
   %param_type = alloca ptr, align 8
   %38 = load ptr, ptr %2, align 8
-  %memberidx19 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %38, i32 0, i32 5
+  %memberidx19 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %38, i32 0, i32 6
   %39 = load ptr, ptr %memberidx19, align 8
   %40 = load i64, ptr %i, align 4
   %41 = call ptr %39(ptr %2, i64 %40)
@@ -25360,7 +26866,7 @@ for.end:                                          ; preds = %for.cond
   %49 = load ptr, ptr %memberidx30, align 8
   %50 = call ptr %49(ptr %47)
   %51 = alloca ptr, align 8
-  %52 = call i64 (ptr, ptr, ...) @asprintf(ptr %51, ptr @200, ptr %46, ptr %50)
+  %52 = call i64 (ptr, ptr, ...) @asprintf(ptr %51, ptr @199, ptr %46, ptr %50)
   %53 = load ptr, ptr %51, align 8
   %54 = call ptr @string_from_bytes(ptr %53, i64 %52)
   store ptr %54, ptr %instantiated_generic_name, align 8
@@ -25373,7 +26879,7 @@ for.end:                                          ; preds = %for.cond
 
 true_block:                                       ; preds = %for.body
   %58 = load ptr, ptr %2, align 8
-  %memberidx21 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %58, i32 0, i32 5
+  %memberidx21 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %58, i32 0, i32 6
   %59 = load ptr, ptr %memberidx21, align 8
   %60 = load i64, ptr %i, align 4
   %61 = call ptr %59(ptr %2, i64 %60)
@@ -25383,7 +26889,7 @@ true_block:                                       ; preds = %for.body
 
 false_block:                                      ; preds = %for.body
   %63 = load ptr, ptr %2, align 8
-  %memberidx23 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %63, i32 0, i32 5
+  %memberidx23 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %63, i32 0, i32 6
   %64 = load ptr, ptr %memberidx23, align 8
   %65 = load i64, ptr %i, align 4
   %66 = call ptr %64(ptr %2, i64 %65)
@@ -25402,7 +26908,7 @@ end:                                              ; preds = %false_block, %true_
   %72 = load ptr, ptr %memberidx25, align 8
   %73 = call ptr %72(ptr %70)
   %74 = alloca ptr, align 8
-  %75 = call i64 (ptr, ptr, ...) @asprintf(ptr %74, ptr @199, ptr %73)
+  %75 = call i64 (ptr, ptr, ...) @asprintf(ptr %74, ptr @198, ptr %73)
   %76 = load ptr, ptr %74, align 8
   %77 = call ptr @string_from_bytes(ptr %76, i64 %75)
   %78 = call ptr %69(ptr %67, ptr %77)
@@ -25413,7 +26919,7 @@ end:                                              ; preds = %false_block, %true_
   %82 = load ptr, ptr %81, align 8
   %83 = load ptr, ptr %param_name, align 8
   %84 = load ptr, ptr %2, align 8
-  %memberidx28 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %84, i32 0, i32 5
+  %memberidx28 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %84, i32 0, i32 6
   %85 = load ptr, ptr %memberidx28, align 8
   %86 = load i64, ptr %i, align 4
   %87 = call ptr %85(ptr %2, i64 %86)
@@ -25503,9 +27009,10 @@ if.entry:                                         ; preds = %2
   %11 = load ptr, ptr %memberidx4, align 8
   %12 = call ptr %11(ptr %5)
   %13 = alloca ptr, align 8
-  %14 = call i64 (ptr, ptr, ...) @asprintf(ptr %13, ptr @197, ptr %12)
+  %14 = call i64 (ptr, ptr, ...) @asprintf(ptr %13, ptr @196, ptr %12)
   %15 = load ptr, ptr %13, align 8
-  %16 = call ptr @string_from_bytes(ptr %15, i64 %14)
+  %16 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%string, ptr null, i32 1) to i32))
+  call void @string_constructor(ptr %16, ptr %15, i64 %14)
   %17 = load ptr, ptr %1, align 8
   %memberidx6 = getelementptr inbounds %Token, ptr %17, i32 0, i32 1
   %18 = load ptr, ptr %memberidx6, align 8
@@ -25538,7 +27045,7 @@ ifend:                                            ; preds = %2
   %memberidx15 = getelementptr inbounds %Module, ptr %26, i32 0, i32 6
   %27 = load ptr, ptr %memberidx15, align 8
   %28 = load ptr, ptr %27, align 8
-  %memberidx16 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %28, i32 0, i32 2
+  %memberidx16 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %28, i32 0, i32 3
   %29 = load ptr, ptr %memberidx16, align 8
   call void %29(ptr %27, ptr %3)
   %memberidx17 = getelementptr inbounds %Scope, ptr %6, i32 0, i32 4
@@ -25586,7 +27093,7 @@ if.entry:                                         ; preds = %2
   %15 = load ptr, ptr %memberidx5, align 8
   %16 = call ptr %15(ptr %4)
   %17 = alloca ptr, align 8
-  %18 = call i64 (ptr, ptr, ...) @asprintf(ptr %17, ptr @197, ptr %16)
+  %18 = call i64 (ptr, ptr, ...) @asprintf(ptr %17, ptr @196, ptr %16)
   %19 = load ptr, ptr %17, align 8
   %20 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%string, ptr null, i32 1) to i32))
   call void @string_constructor(ptr %20, ptr %19, i64 %18)
@@ -25673,7 +27180,7 @@ ifend20:                                          ; preds = %if.entry18, %else19
   %memberidx34 = getelementptr inbounds %Module, ptr %50, i32 0, i32 4
   %51 = load ptr, ptr %memberidx34, align 8
   %52 = load ptr, ptr %51, align 8
-  %memberidx35 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %52, i32 0, i32 2
+  %memberidx35 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %52, i32 0, i32 3
   %53 = load ptr, ptr %memberidx35, align 8
   %54 = load ptr, ptr %declared_class, align 8
   call void %53(ptr %51, ptr %54)
@@ -25722,7 +27229,7 @@ if.entry:                                         ; preds = %2
   %9 = load ptr, ptr %memberidx5, align 8
   %10 = call ptr %9(ptr %6)
   %11 = alloca ptr, align 8
-  %12 = call i64 (ptr, ptr, ...) @asprintf(ptr %11, ptr @206, ptr %10)
+  %12 = call i64 (ptr, ptr, ...) @asprintf(ptr %11, ptr @205, ptr %10)
   %13 = load ptr, ptr %11, align 8
   %14 = call ptr @string_from_bytes(ptr %13, i64 %12)
   %15 = load ptr, ptr %1, align 8
@@ -25743,7 +27250,7 @@ if.entry9:                                        ; preds = %ifend
   %21 = load ptr, ptr %memberidx12, align 8
   %22 = call ptr %21(ptr %6)
   %23 = alloca ptr, align 8
-  %24 = call i64 (ptr, ptr, ...) @asprintf(ptr %23, ptr @207, ptr %22)
+  %24 = call i64 (ptr, ptr, ...) @asprintf(ptr %23, ptr @206, ptr %22)
   %25 = load ptr, ptr %23, align 8
   %26 = call ptr @string_from_bytes(ptr %25, i64 %24)
   %27 = load ptr, ptr %1, align 8
@@ -25802,7 +27309,7 @@ ifend26:                                          ; preds = %ifend11
   %memberidx35 = getelementptr inbounds %Module, ptr %46, i32 0, i32 5
   %47 = load ptr, ptr %memberidx35, align 8
   %48 = load ptr, ptr %47, align 8
-  %memberidx36 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %48, i32 0, i32 2
+  %memberidx36 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %48, i32 0, i32 3
   %49 = load ptr, ptr %memberidx36, align 8
   call void %49(ptr %47, ptr %3)
   %50 = load ptr, ptr %module_scope, align 8
@@ -25846,7 +27353,7 @@ ifend:                                            ; preds = %3
   %memberidx6 = getelementptr inbounds %FunctionType, ptr %15, i32 0, i32 1
   %16 = load ptr, ptr %memberidx6, align 8
   %17 = load ptr, ptr %16, align 8
-  %memberidx7 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %17, i32 0, i32 5
+  %memberidx7 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %17, i32 0, i32 6
   %18 = load ptr, ptr %memberidx7, align 8
   %19 = call ptr %18(ptr %16, i64 0)
   store ptr %19, ptr %arg_type, align 8
@@ -25883,7 +27390,7 @@ if.entry13:                                       ; preds = %ifend11
   %37 = load ptr, ptr %memberidx18, align 8
   %38 = call ptr %37(ptr %35)
   %39 = alloca ptr, align 8
-  %40 = call i64 (ptr, ptr, ...) @asprintf(ptr %39, ptr @274, ptr %32, ptr %38)
+  %40 = call i64 (ptr, ptr, ...) @asprintf(ptr %39, ptr @273, ptr %32, ptr %38)
   %41 = load ptr, ptr %39, align 8
   %42 = call ptr @string_from_bytes(ptr %41, i64 %40)
   %43 = load ptr, ptr %memberidx8, align 8
@@ -25927,7 +27434,7 @@ define ptr @TypeChecker_check_object_index_expr(ptr %0, ptr %1, ptr %2) {
   %8 = load ptr, ptr %7, align 8
   %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr }>, ptr %8, i32 0, i32 1
   %9 = load ptr, ptr %memberidx3, align 8
-  %10 = call ptr @string_from_bytes(ptr @224, i64 11)
+  %10 = call ptr @string_from_bytes(ptr @223, i64 11)
   %11 = call ptr %9(ptr %7, ptr %10)
   %12 = icmp eq ptr %11, null
   br i1 %12, label %if.entry, label %ifend
@@ -25944,7 +27451,7 @@ if.entry:                                         ; preds = %3
   %15 = load ptr, ptr %memberidx5, align 8
   %16 = call ptr %15(ptr %13)
   %17 = alloca ptr, align 8
-  %18 = call i64 (ptr, ptr, ...) @asprintf(ptr %17, ptr @323, ptr %16)
+  %18 = call i64 (ptr, ptr, ...) @asprintf(ptr %17, ptr @322, ptr %16)
   %19 = load ptr, ptr %17, align 8
   %20 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%string, ptr null, i32 1) to i32))
   call void @string_constructor(ptr %20, ptr %19, i64 %18)
@@ -25961,7 +27468,7 @@ ifend:                                            ; preds = %3
   %memberidx8 = getelementptr inbounds %FunctionType, ptr %23, i32 0, i32 1
   %24 = load ptr, ptr %memberidx8, align 8
   %25 = load ptr, ptr %24, align 8
-  %memberidx9 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %25, i32 0, i32 5
+  %memberidx9 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %25, i32 0, i32 6
   %26 = load ptr, ptr %memberidx9, align 8
   %27 = call ptr %26(ptr %24, i64 0)
   store ptr %27, ptr %arg_type, align 8
@@ -25993,7 +27500,7 @@ if.entry12:                                       ; preds = %ifend
   %43 = load ptr, ptr %memberidx17, align 8
   %44 = call ptr %43(ptr %41)
   %45 = alloca ptr, align 8
-  %46 = call i64 (ptr, ptr, ...) @asprintf(ptr %45, ptr @274, ptr %38, ptr %44)
+  %46 = call i64 (ptr, ptr, ...) @asprintf(ptr %45, ptr @273, ptr %38, ptr %44)
   %47 = load ptr, ptr %45, align 8
   %48 = call ptr @string_from_bytes(ptr %47, i64 %46)
   %49 = load ptr, ptr %memberidx10, align 8
@@ -26076,7 +27583,7 @@ ifend5:                                           ; preds = %ifend
   br i1 %17, label %if.entry7, label %ifend9
 
 if.entry7:                                        ; preds = %ifend5
-  %18 = call ptr @string_from_bytes(ptr @324, i64 34)
+  %18 = call ptr @string_from_bytes(ptr @323, i64 34)
   %19 = load ptr, ptr %memberidx2, align 8
   %20 = load ptr, ptr %19, align 8
   call void @TypeChecker_error(ptr %0, i64 5, ptr %18, ptr %20)
@@ -26123,7 +27630,7 @@ else20:                                           ; preds = %else15
   %33 = load ptr, ptr %memberidx23, align 8
   %34 = call ptr %33(ptr %31)
   %35 = alloca ptr, align 8
-  %36 = call i64 (ptr, ptr, ...) @asprintf(ptr %35, ptr @325, ptr %34)
+  %36 = call i64 (ptr, ptr, ...) @asprintf(ptr %35, ptr @324, ptr %34)
   %37 = load ptr, ptr %35, align 8
   %38 = call ptr @string_from_bytes(ptr %37, i64 %36)
   %39 = load ptr, ptr %2, align 8
@@ -26166,7 +27673,7 @@ for.cond:                                         ; preds = %ifend40, %ifend
 for.body:                                         ; preds = %for.cond
   %stmt = alloca ptr, align 8
   %11 = load ptr, ptr %8, align 8
-  %memberidx5 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %11, i32 0, i32 5
+  %memberidx5 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %11, i32 0, i32 6
   %12 = load ptr, ptr %memberidx5, align 8
   %13 = call ptr %12(ptr %8, i64 %7)
   %14 = call ptr @TypeChecker_check_statement(ptr %0, ptr %13)
@@ -26186,7 +27693,7 @@ ifend8:                                           ; preds = %for.body
   %19 = load ptr, ptr %block, align 8
   %20 = load ptr, ptr %19, align 8
   %21 = load ptr, ptr %20, align 8
-  %memberidx10 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %21, i32 0, i32 2
+  %memberidx10 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %21, i32 0, i32 3
   %22 = load ptr, ptr %memberidx10, align 8
   %23 = load ptr, ptr %stmt, align 8
   call void %22(ptr %20, ptr %23)
@@ -26280,7 +27787,7 @@ common.ret:                                       ; preds = %ifend, %if.entry
   ret ptr %common.ret.op
 
 if.entry:                                         ; preds = %2
-  %5 = call ptr @string_from_bytes(ptr @340, i64 32)
+  %5 = call ptr @string_from_bytes(ptr @344, i64 32)
   %6 = load ptr, ptr %1, align 8
   call void @TypeChecker_error(ptr %0, i64 4, ptr %5, ptr %6)
   br label %common.ret
@@ -26457,7 +27964,7 @@ ifend:                                            ; preds = %2, %if.entry
 
 define void @Array_Bucket_string_Generic___append(ptr %0, ptr %1) {
   %3 = load ptr, ptr %0, align 8
-  %memberidx = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %3, i32 0, i32 2
+  %memberidx = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %3, i32 0, i32 3
   %4 = load ptr, ptr %memberidx, align 8
   call void %4(ptr %0, ptr %1)
   ret void
@@ -26502,6 +28009,46 @@ ifend:                                            ; preds = %3, %if.entry
   ret void
 }
 
+define ptr @ArrayIterator_Bucket_string_Generic_____next__(ptr %0) {
+  %memberidx = getelementptr inbounds %ArrayIterator_Bucket_string_Generic__, ptr %0, i32 0, i32 2
+  %2 = load i64, ptr %memberidx, align 4
+  %3 = add i64 %2, 1
+  store i64 %3, ptr %memberidx, align 4
+  %memberidx2 = getelementptr inbounds %ArrayIterator_Bucket_string_Generic__, ptr %0, i32 0, i32 4
+  %4 = load ptr, ptr %memberidx2, align 8
+  %ptridx = getelementptr inbounds ptr, ptr %4, i64 %2
+  %5 = load ptr, ptr %ptridx, align 8
+  %memberidx3 = getelementptr inbounds %Iterator_Bucket_string_Generic__, ptr %0, i32 0, i32 1
+  %memberidx5 = getelementptr inbounds %ArrayIterator_Bucket_string_Generic__, ptr %0, i32 0, i32 3
+  %6 = load i64, ptr %memberidx5, align 4
+  %7 = icmp sgt i64 %3, %6
+  store i1 %7, ptr %memberidx3, align 1
+  ret ptr %5
+}
+
+define void @ArrayIterator_Bucket_string_Generic___constructor(ptr %0, ptr %1, i64 %2) {
+  store ptr @VTableArrayIterator_Bucket_string_Generic__, ptr %0, align 8
+  %memberidx = getelementptr inbounds %Iterator_Bucket_string_Generic__, ptr %0, i32 0, i32 1
+  store i1 false, ptr %memberidx, align 1
+  %memberidx1 = getelementptr inbounds %ArrayIterator_Bucket_string_Generic__, ptr %0, i32 0, i32 2
+  store i64 0, ptr %memberidx1, align 4
+  %memberidx2 = getelementptr inbounds %ArrayIterator_Bucket_string_Generic__, ptr %0, i32 0, i32 4
+  store ptr %1, ptr %memberidx2, align 8
+  %memberidx3 = getelementptr inbounds %ArrayIterator_Bucket_string_Generic__, ptr %0, i32 0, i32 3
+  store i64 %2, ptr %memberidx3, align 4
+  ret void
+}
+
+define ptr @Array_Bucket_string_Generic_____iter__(ptr %0) {
+  %2 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%ArrayIterator_Bucket_string_Generic__, ptr null, i32 1) to i32))
+  %memberidx = getelementptr inbounds %Array_Bucket_string_Generic__, ptr %0, i32 0, i32 1
+  %3 = load ptr, ptr %memberidx, align 8
+  %memberidx1 = getelementptr inbounds %Array_Bucket_string_Generic__, ptr %0, i32 0, i32 2
+  %4 = load i64, ptr %memberidx1, align 4
+  call void @ArrayIterator_Bucket_string_Generic___constructor(ptr %2, ptr %3, i64 %4)
+  ret ptr %2
+}
+
 define void @Array_Bucket_string_Generic_____setitem__(ptr %0, i64 %1, ptr %2) {
   %4 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%Range, ptr null, i32 1) to i32))
   %memberidx = getelementptr inbounds %Array_Bucket_string_Generic__, ptr %0, i32 0, i32 2
@@ -26524,25 +28071,11 @@ ifend:                                            ; preds = %3, %if.entry
 }
 
 define ptr @Array_Bucket_string_Generic_____getitem__(ptr %0, i64 %1) {
-  %3 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%Range, ptr null, i32 1) to i32))
-  %memberidx = getelementptr inbounds %Array_Bucket_string_Generic__, ptr %0, i32 0, i32 2
-  %4 = load i64, ptr %memberidx, align 4
-  call void @Range_constructor(ptr %3, i64 0, i64 %4)
-  %5 = load ptr, ptr %3, align 8
-  %6 = load ptr, ptr %5, align 8
-  %7 = call i1 %6(ptr %3, i64 %1)
-  br i1 %7, label %if.entry, label %common.ret
-
-common.ret:                                       ; preds = %2, %if.entry
-  %common.ret.op = phi ptr [ %9, %if.entry ], [ null, %2 ]
-  ret ptr %common.ret.op
-
-if.entry:                                         ; preds = %2
-  %memberidx2 = getelementptr inbounds %Array_Bucket_string_Generic__, ptr %0, i32 0, i32 1
-  %8 = load ptr, ptr %memberidx2, align 8
-  %ptridx = getelementptr inbounds ptr, ptr %8, i64 %1
-  %9 = load ptr, ptr %ptridx, align 8
-  br label %common.ret
+  %memberidx = getelementptr inbounds %Array_Bucket_string_Generic__, ptr %0, i32 0, i32 1
+  %3 = load ptr, ptr %memberidx, align 8
+  %ptridx = getelementptr inbounds ptr, ptr %3, i64 %1
+  %4 = load ptr, ptr %ptridx, align 8
+  ret ptr %4
 }
 
 define i1 @Array_Bucket_string_Generic_____eq__(ptr %0, ptr %1) {
@@ -26570,11 +28103,11 @@ for.cond:                                         ; preds = %ifend7, %for.entry
 
 for.body:                                         ; preds = %for.cond
   %9 = load ptr, ptr %0, align 8
-  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %9, i32 0, i32 5
+  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %9, i32 0, i32 6
   %10 = load ptr, ptr %memberidx3, align 8
   %11 = call ptr %10(ptr %0, i64 %6)
   %12 = load ptr, ptr %1, align 8
-  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %12, i32 0, i32 5
+  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %12, i32 0, i32 6
   %13 = load ptr, ptr %memberidx4, align 8
   %14 = load i64, ptr %i, align 4
   %15 = call ptr %13(ptr %1, i64 %14)
@@ -26601,7 +28134,7 @@ for.cond:                                         ; preds = %ifend, %for.entry
 
 for.body:                                         ; preds = %for.cond
   %4 = load ptr, ptr %0, align 8
-  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %4, i32 0, i32 5
+  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %4, i32 0, i32 6
   %5 = load ptr, ptr %memberidx1, align 8
   %6 = call ptr %5(ptr %0, i64 %i.0)
   %7 = icmp eq ptr %6, %1
@@ -26663,7 +28196,7 @@ for.end:                                          ; preds = %for.cond
 
 if.entry:                                         ; preds = %for.body
   %8 = load ptr, ptr %1, align 8
-  %memberidx5 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %8, i32 0, i32 2
+  %memberidx5 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %8, i32 0, i32 3
   %9 = load ptr, ptr %memberidx5, align 8
   call void %9(ptr %1, ptr %5)
   br label %ifend
@@ -26722,13 +28255,13 @@ for.body11:                                       ; preds = %for.cond10
   %17 = load ptr, ptr %0, align 8
   %18 = load ptr, ptr %17, align 8
   %19 = load ptr, ptr %3, align 8
-  %memberidx16 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %19, i32 0, i32 5
+  %memberidx16 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %19, i32 0, i32 6
   %20 = load ptr, ptr %memberidx16, align 8
   %21 = call ptr %20(ptr %3, i64 %i.1)
   %memberidx17 = getelementptr inbounds %Bucket_string_Generic_, ptr %21, i32 0, i32 1
   %22 = load ptr, ptr %memberidx17, align 8
   %23 = load ptr, ptr %3, align 8
-  %memberidx18 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %23, i32 0, i32 5
+  %memberidx18 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %23, i32 0, i32 6
   %24 = load ptr, ptr %memberidx18, align 8
   %25 = call ptr %24(ptr %3, i64 %i.1)
   %memberidx19 = getelementptr inbounds %Bucket_string_Generic_, ptr %25, i32 0, i32 2
@@ -26939,7 +28472,7 @@ for.cond:                                         ; preds = %ifend27, %ifend16
 for.body:                                         ; preds = %for.cond
   %prop_id = alloca ptr, align 8
   %29 = load ptr, ptr %26, align 8
-  %memberidx20 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %29, i32 0, i32 5
+  %memberidx20 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %29, i32 0, i32 6
   %30 = load ptr, ptr %memberidx20, align 8
   %31 = call ptr %30(ptr %26, i64 %25)
   %memberidx21 = getelementptr inbounds %Bucket_string_PropId_, ptr %31, i32 0, i32 2
@@ -26948,7 +28481,7 @@ for.body:                                         ; preds = %for.cond
   %prop_name = alloca ptr, align 8
   %33 = load ptr, ptr %prop_buckets, align 8
   %34 = load ptr, ptr %33, align 8
-  %memberidx22 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %34, i32 0, i32 5
+  %memberidx22 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %34, i32 0, i32 6
   %35 = load ptr, ptr %memberidx22, align 8
   %36 = load i64, ptr %i, align 4
   %37 = call ptr %35(ptr %33, i64 %36)
@@ -26989,7 +28522,7 @@ if.entry34:                                       ; preds = %if.entry30
   %52 = load ptr, ptr %memberidx37, align 8
   %53 = call ptr %52(ptr %50)
   %54 = alloca ptr, align 8
-  %55 = call i64 (ptr, ptr, ...) @asprintf(ptr %54, ptr @258, ptr %53)
+  %55 = call i64 (ptr, ptr, ...) @asprintf(ptr %54, ptr @257, ptr %53)
   %56 = load ptr, ptr %54, align 8
   %57 = call ptr @string_from_bytes(ptr %56, i64 %55)
   %58 = load ptr, ptr %1, align 8
@@ -27020,7 +28553,7 @@ for.cond42:                                       ; preds = %for.incr44, %for.en
 for.body43:                                       ; preds = %for.cond42
   %method = alloca ptr, align 8
   %65 = load ptr, ptr %62, align 8
-  %memberidx49 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %65, i32 0, i32 5
+  %memberidx49 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %65, i32 0, i32 6
   %66 = load ptr, ptr %memberidx49, align 8
   %67 = call ptr %66(ptr %62, i64 %60)
   store ptr %67, ptr %method, align 8
@@ -27031,7 +28564,7 @@ for.body43:                                       ; preds = %for.cond42
   %memberidx52 = getelementptr inbounds %ClassDeclarationNode, ptr %1, i32 0, i32 4
   %69 = load ptr, ptr %memberidx52, align 8
   %70 = load ptr, ptr %69, align 8
-  %memberidx53 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %70, i32 0, i32 5
+  %memberidx53 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %70, i32 0, i32 6
   %71 = load ptr, ptr %memberidx53, align 8
   %72 = load i64, ptr %i, align 4
   %73 = call ptr %71(ptr %69, i64 %72)
@@ -27100,7 +28633,7 @@ ifend69:                                          ; preds = %ifend64, %if.entry7
 if.entry73:                                       ; preds = %if.entry67
   %98 = load ptr, ptr %86, align 8
   %99 = load ptr, ptr %98, align 8
-  %memberidx78 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %99, i32 0, i32 2
+  %memberidx78 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %99, i32 0, i32 3
   %100 = load ptr, ptr %memberidx78, align 8
   %101 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%ReturnStatement, ptr null, i32 1) to i32))
   call void @ReturnStatement_constructor(ptr %101)
@@ -27108,7 +28641,7 @@ if.entry73:                                       ; preds = %if.entry67
   br label %ifend69
 
 else74:                                           ; preds = %if.entry67
-  %102 = call ptr @string_from_bytes(ptr @259, i64 38)
+  %102 = call ptr @string_from_bytes(ptr @258, i64 38)
   %103 = load ptr, ptr %method_node, align 8
   %memberidx79 = getelementptr inbounds %MethodNode, ptr %103, i32 0, i32 4
   %104 = load ptr, ptr %memberidx79, align 8
@@ -27153,7 +28686,7 @@ define ptr @TypeChecker_lex_and_parse_typecheck_file(ptr %0, ptr %1, ptr %2) {
   %7 = load ptr, ptr %1, align 8
   %memberidx2 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %7, i32 0, i32 13
   %8 = load ptr, ptr %memberidx2, align 8
-  %9 = call ptr @string_from_bytes(ptr @205, i64 1)
+  %9 = call ptr @string_from_bytes(ptr @204, i64 1)
   %10 = call i1 %8(ptr %1, ptr %9)
   %11 = xor i1 %10, true
   %12 = and i1 %6, %11
@@ -27208,7 +28741,7 @@ if.entry16:                                       ; preds = %ifend12
   %33 = load ptr, ptr %memberidx19, align 8
   %34 = call ptr %33(ptr %1)
   %35 = alloca ptr, align 8
-  %36 = call i64 (ptr, ptr, ...) @asprintf(ptr %35, ptr @39, ptr %34)
+  %36 = call i64 (ptr, ptr, ...) @asprintf(ptr %35, ptr @38, ptr %34)
   %37 = load ptr, ptr %35, align 8
   %38 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%string, ptr null, i32 1) to i32))
   call void @string_constructor(ptr %38, ptr %37, i64 %36)
@@ -27275,7 +28808,7 @@ for.cond:                                         ; preds = %ifend67, %for.entry
 for.body:                                         ; preds = %for.cond
   %field_node = alloca ptr, align 8
   %7 = load ptr, ptr %4, align 8
-  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %7, i32 0, i32 5
+  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %7, i32 0, i32 6
   %8 = load ptr, ptr %memberidx4, align 8
   %9 = call ptr %8(ptr %4, i64 %i.0)
   store ptr %9, ptr %field_node, align 8
@@ -27304,7 +28837,7 @@ if.entry:                                         ; preds = %for.body
   %18 = load ptr, ptr %memberidx9, align 8
   %19 = load ptr, ptr %18, align 8
   %20 = load ptr, ptr %19, align 8
-  %21 = call ptr @string_from_bytes(ptr @240, i64 75)
+  %21 = call ptr @string_from_bytes(ptr @239, i64 75)
   %22 = call ptr %20(ptr %18, ptr %21)
   %23 = load ptr, ptr %field_node, align 8
   %24 = load ptr, ptr %23, align 8
@@ -27382,7 +28915,7 @@ if.entry31:                                       ; preds = %if.entry26
   %58 = load ptr, ptr %memberidx37, align 8
   %59 = call ptr %58(ptr %56)
   %60 = alloca ptr, align 8
-  %61 = call i64 (ptr, ptr, ...) @asprintf(ptr %60, ptr @241, ptr %55, ptr %59)
+  %61 = call i64 (ptr, ptr, ...) @asprintf(ptr %60, ptr @240, ptr %55, ptr %59)
   %62 = load ptr, ptr %60, align 8
   %63 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%string, ptr null, i32 1) to i32))
   call void @string_constructor(ptr %63, ptr %62, i64 %61)
@@ -27432,10 +28965,9 @@ if.entry43:                                       ; preds = %ifend33
   %89 = load ptr, ptr %memberidx50, align 8
   %90 = call ptr %89(ptr %87)
   %91 = alloca ptr, align 8
-  %92 = call i64 (ptr, ptr, ...) @asprintf(ptr %91, ptr @242, ptr %81, ptr %85, ptr %90)
+  %92 = call i64 (ptr, ptr, ...) @asprintf(ptr %91, ptr @241, ptr %81, ptr %85, ptr %90)
   %93 = load ptr, ptr %91, align 8
-  %94 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%string, ptr null, i32 1) to i32))
-  call void @string_constructor(ptr %94, ptr %93, i64 %92)
+  %94 = call ptr @string_from_bytes(ptr %93, i64 %92)
   %95 = load ptr, ptr %field_node, align 8
   %96 = load ptr, ptr %95, align 8
   %memberidx52 = getelementptr inbounds %Token, ptr %96, i32 0, i32 1
@@ -27471,7 +29003,7 @@ if.entry54:                                       ; preds = %ifend45
   %113 = load ptr, ptr %memberidx61, align 8
   %114 = call ptr %113(ptr %111)
   %115 = alloca ptr, align 8
-  %116 = call i64 (ptr, ptr, ...) @asprintf(ptr %115, ptr @243, ptr %105, ptr %109, ptr %114)
+  %116 = call i64 (ptr, ptr, ...) @asprintf(ptr %115, ptr @242, ptr %105, ptr %109, ptr %114)
   %117 = load ptr, ptr %115, align 8
   %118 = call ptr @string_from_bytes(ptr %117, i64 %116)
   %119 = load ptr, ptr %field_node, align 8
@@ -27511,7 +29043,7 @@ ifend67:                                          ; preds = %else66, %ifend91
   %memberidx104 = getelementptr inbounds %Class, ptr %1, i32 0, i32 4
   %134 = load ptr, ptr %memberidx104, align 8
   %135 = load ptr, ptr %134, align 8
-  %memberidx105 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %135, i32 0, i32 2
+  %memberidx105 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %135, i32 0, i32 3
   %136 = load ptr, ptr %memberidx105, align 8
   %137 = load ptr, ptr %field, align 8
   call void %136(ptr %134, ptr %137)
@@ -27550,9 +29082,10 @@ if.entry77:                                       ; preds = %ifend73
   %156 = load ptr, ptr %memberidx84, align 8
   %157 = call ptr %156(ptr %154)
   %158 = alloca ptr, align 8
-  %159 = call i64 (ptr, ptr, ...) @asprintf(ptr %158, ptr @244, ptr %150, ptr %157)
+  %159 = call i64 (ptr, ptr, ...) @asprintf(ptr %158, ptr @243, ptr %150, ptr %157)
   %160 = load ptr, ptr %158, align 8
-  %161 = call ptr @string_from_bytes(ptr %160, i64 %159)
+  %161 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%string, ptr null, i32 1) to i32))
+  call void @string_constructor(ptr %161, ptr %160, i64 %159)
   %162 = load ptr, ptr %field_node, align 8
   %memberidx85 = getelementptr inbounds %FieldNode, ptr %162, i32 0, i32 2
   %163 = load ptr, ptr %memberidx85, align 8
@@ -27570,7 +29103,7 @@ ifend79:                                          ; preds = %ifend73, %if.entry7
   br i1 %168, label %if.entry89, label %ifend91
 
 if.entry89:                                       ; preds = %ifend79
-  %169 = call ptr @string_from_bytes(ptr @245, i64 45)
+  %169 = call ptr @string_from_bytes(ptr @244, i64 45)
   %170 = load ptr, ptr %field_node, align 8
   %memberidx92 = getelementptr inbounds %FieldNode, ptr %170, i32 0, i32 2
   %171 = load ptr, ptr %memberidx92, align 8
@@ -27598,7 +29131,7 @@ define ptr @TypeChecker_get_current_module_global_scope(ptr %0) {
   %memberidx = getelementptr inbounds %Module, ptr %2, i32 0, i32 7
   %3 = load ptr, ptr %memberidx, align 8
   %4 = load ptr, ptr %3, align 8
-  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %4, i32 0, i32 5
+  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %4, i32 0, i32 6
   %5 = load ptr, ptr %memberidx1, align 8
   %6 = call ptr %5(ptr %3, i64 0)
   ret ptr %6
@@ -27631,7 +29164,7 @@ define ptr @TypeChecker_get_current_function(ptr %0) {
   %memberidx = getelementptr inbounds %Module, ptr %2, i32 0, i32 5
   %3 = load ptr, ptr %memberidx, align 8
   %4 = load ptr, ptr %3, align 8
-  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %4, i32 0, i32 5
+  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %4, i32 0, i32 6
   %5 = load ptr, ptr %memberidx1, align 8
   %memberidx2 = getelementptr inbounds %TypeChecker, ptr %0, i32 0, i32 3
   %6 = load ptr, ptr %memberidx2, align 8
@@ -27655,7 +29188,7 @@ common.ret:                                       ; preds = %for.cond, %else17, 
   ret void
 
 if.entry:                                         ; preds = %2
-  %7 = call ptr @string_from_bytes(ptr @203, i64 51)
+  %7 = call ptr @string_from_bytes(ptr @202, i64 51)
   %8 = load ptr, ptr %memberidx, align 8
   %memberidx4 = getelementptr inbounds %Token, ptr %8, i32 0, i32 1
   %9 = load ptr, ptr %memberidx4, align 8
@@ -27682,7 +29215,7 @@ ifend11:                                          ; preds = %ifend
   %memberidx12 = getelementptr inbounds %Module, ptr %15, i32 0, i32 7
   %16 = load ptr, ptr %memberidx12, align 8
   %17 = load ptr, ptr %16, align 8
-  %memberidx13 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %17, i32 0, i32 5
+  %memberidx13 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %17, i32 0, i32 6
   %18 = load ptr, ptr %memberidx13, align 8
   %19 = call ptr %18(ptr %16, i64 0)
   store ptr %19, ptr %global_module_scope, align 8
@@ -27713,7 +29246,7 @@ for.cond:                                         ; preds = %for.incr, %for.entr
 for.body:                                         ; preds = %for.cond
   %name_to_import = alloca ptr, align 8
   %28 = load ptr, ptr %25, align 8
-  %memberidx22 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %28, i32 0, i32 5
+  %memberidx22 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %28, i32 0, i32 6
   %29 = load ptr, ptr %memberidx22, align 8
   %30 = call ptr %29(ptr %25, i64 %24)
   %memberidx23 = getelementptr inbounds %IdentifierToken, ptr %30, i32 0, i32 2
@@ -27844,12 +29377,12 @@ else52:                                           ; preds = %ifend48
   %86 = load ptr, ptr %memberidx55, align 8
   %87 = call ptr %86(ptr %84)
   %88 = alloca ptr, align 8
-  %89 = call i64 (ptr, ptr, ...) @asprintf(ptr %88, ptr @204, ptr %83, ptr %87)
+  %89 = call i64 (ptr, ptr, ...) @asprintf(ptr %88, ptr @203, ptr %83, ptr %87)
   %90 = load ptr, ptr %88, align 8
   %91 = call ptr @string_from_bytes(ptr %90, i64 %89)
   %92 = load ptr, ptr %1, align 8
   %93 = load ptr, ptr %92, align 8
-  %memberidx57 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %93, i32 0, i32 5
+  %memberidx57 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %93, i32 0, i32 6
   %94 = load ptr, ptr %memberidx57, align 8
   %95 = load i64, ptr %i, align 4
   %96 = call ptr %94(ptr %92, i64 %95)
@@ -27964,7 +29497,7 @@ if.entry13:                                       ; preds = %while.end
   %43 = load ptr, ptr %memberidx18, align 8
   %44 = call ptr %43(ptr %41)
   %45 = alloca ptr, align 8
-  %46 = call i64 (ptr, ptr, ...) @asprintf(ptr %45, ptr @312, ptr %39, ptr %44)
+  %46 = call i64 (ptr, ptr, ...) @asprintf(ptr %45, ptr @311, ptr %39, ptr %44)
   %47 = load ptr, ptr %45, align 8
   %48 = call ptr @string_from_bytes(ptr %47, i64 %46)
   %49 = load ptr, ptr %memberidx2, align 8
@@ -28049,10 +29582,9 @@ if.entry38:                                       ; preds = %if.entry33
   %83 = load ptr, ptr %memberidx43, align 8
   %84 = call ptr %83(ptr %81)
   %85 = alloca ptr, align 8
-  %86 = call i64 (ptr, ptr, ...) @asprintf(ptr %85, ptr @313, ptr %79, ptr %84)
+  %86 = call i64 (ptr, ptr, ...) @asprintf(ptr %85, ptr @312, ptr %79, ptr %84)
   %87 = load ptr, ptr %85, align 8
-  %88 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%string, ptr null, i32 1) to i32))
-  call void @string_constructor(ptr %88, ptr %87, i64 %86)
+  %88 = call ptr @string_from_bytes(ptr %87, i64 %86)
   %89 = load ptr, ptr %memberidx2, align 8
   %memberidx45 = getelementptr inbounds %Token, ptr %89, i32 0, i32 1
   %90 = load ptr, ptr %memberidx45, align 8
@@ -28093,7 +29625,7 @@ if.entry54:                                       ; preds = %else34
   %105 = load ptr, ptr %memberidx59, align 8
   %106 = call ptr %105(ptr %103)
   %107 = alloca ptr, align 8
-  %108 = call i64 (ptr, ptr, ...) @asprintf(ptr %107, ptr @314, ptr %101, ptr %106)
+  %108 = call i64 (ptr, ptr, ...) @asprintf(ptr %107, ptr @313, ptr %101, ptr %106)
   %109 = load ptr, ptr %107, align 8
   %110 = call ptr @string_from_bytes(ptr %109, i64 %108)
   %111 = load ptr, ptr %memberidx2, align 8
@@ -28117,7 +29649,7 @@ if.entry63:                                       ; preds = %else29
   %117 = load ptr, ptr %116, align 8
   %memberidx66 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %117, i32 0, i32 4
   %118 = load ptr, ptr %memberidx66, align 8
-  %119 = call ptr @string_from_bytes(ptr @315, i64 9)
+  %119 = call ptr @string_from_bytes(ptr @314, i64 9)
   %120 = call i1 %118(ptr %116, ptr %119)
   br i1 %120, label %if.entry67, label %else68
 
@@ -28134,7 +29666,7 @@ else64:                                           ; preds = %else29
   %128 = load ptr, ptr %memberidx93, align 8
   %129 = call ptr %128(ptr %126)
   %130 = alloca ptr, align 8
-  %131 = call i64 (ptr, ptr, ...) @asprintf(ptr %130, ptr @321, ptr %124, ptr %129)
+  %131 = call i64 (ptr, ptr, ...) @asprintf(ptr %130, ptr @320, ptr %124, ptr %129)
   %132 = load ptr, ptr %130, align 8
   %133 = call ptr @string_from_bytes(ptr %132, i64 %131)
   %134 = load ptr, ptr %memberidx, align 8
@@ -28151,7 +29683,7 @@ else68:                                           ; preds = %if.entry63
   %137 = load ptr, ptr %136, align 8
   %memberidx70 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %137, i32 0, i32 4
   %138 = load ptr, ptr %memberidx70, align 8
-  %139 = call ptr @string_from_bytes(ptr @316, i64 9)
+  %139 = call ptr @string_from_bytes(ptr @315, i64 9)
   %140 = call i1 %138(ptr %136, ptr %139)
   br i1 %140, label %if.entry71, label %else72
 
@@ -28164,7 +29696,7 @@ ifend69:                                          ; preds = %if.entry79, %if.ent
   %memberidx89 = getelementptr inbounds %IntrinsicCall, ptr %141, i32 0, i32 5
   %143 = load ptr, ptr %memberidx89, align 8
   %144 = load ptr, ptr %143, align 8
-  %memberidx90 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %144, i32 0, i32 2
+  %memberidx90 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %144, i32 0, i32 3
   %145 = load ptr, ptr %memberidx90, align 8
   call void %145(ptr %143, ptr %6)
   %146 = load ptr, ptr %intrinsic_call, align 8
@@ -28179,7 +29711,7 @@ else72:                                           ; preds = %else68
   %148 = load ptr, ptr %147, align 8
   %memberidx74 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %148, i32 0, i32 4
   %149 = load ptr, ptr %memberidx74, align 8
-  %150 = call ptr @string_from_bytes(ptr @317, i64 9)
+  %150 = call ptr @string_from_bytes(ptr @316, i64 9)
   %151 = call i1 %149(ptr %147, ptr %150)
   br i1 %151, label %if.entry75, label %else76
 
@@ -28192,7 +29724,7 @@ else76:                                           ; preds = %else72
   %153 = load ptr, ptr %152, align 8
   %memberidx78 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %153, i32 0, i32 4
   %154 = load ptr, ptr %memberidx78, align 8
-  %155 = call ptr @string_from_bytes(ptr @318, i64 6)
+  %155 = call ptr @string_from_bytes(ptr @317, i64 6)
   %156 = call i1 %154(ptr %152, ptr %155)
   br i1 %156, label %if.entry79, label %else80
 
@@ -28205,7 +29737,7 @@ else80:                                           ; preds = %else76
   %158 = load ptr, ptr %157, align 8
   %memberidx82 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %158, i32 0, i32 4
   %159 = load ptr, ptr %memberidx82, align 8
-  %160 = call ptr @string_from_bytes(ptr @319, i64 7)
+  %160 = call ptr @string_from_bytes(ptr @318, i64 7)
   %161 = call i1 %159(ptr %157, ptr %160)
   br i1 %161, label %if.entry83, label %else84
 
@@ -28220,7 +29752,7 @@ else84:                                           ; preds = %else80
   %164 = load ptr, ptr %memberidx86, align 8
   %165 = call ptr %164(ptr %162)
   %166 = alloca ptr, align 8
-  %167 = call i64 (ptr, ptr, ...) @asprintf(ptr %166, ptr @320, ptr %165)
+  %167 = call i64 (ptr, ptr, ...) @asprintf(ptr %166, ptr @319, ptr %165)
   %168 = load ptr, ptr %166, align 8
   %169 = call ptr @string_from_bytes(ptr %168, i64 %167)
   %170 = load ptr, ptr %memberidx2, align 8
@@ -28274,7 +29806,7 @@ if.entry5:                                        ; preds = %if.entry2
   br label %common.ret
 
 if.entry11:                                       ; preds = %ifend
-  %20 = call ptr @string_from_bytes(ptr @268, i64 33)
+  %20 = call ptr @string_from_bytes(ptr @267, i64 33)
   %21 = load ptr, ptr %3, align 8
   call void @TypeChecker_error(ptr %0, i64 5, ptr %20, ptr %21)
   br label %common.ret
@@ -28285,7 +29817,7 @@ ifend13:                                          ; preds = %ifend
   br i1 %23, label %if.entry15, label %ifend17
 
 if.entry15:                                       ; preds = %ifend13
-  %24 = call ptr @string_from_bytes(ptr @269, i64 35)
+  %24 = call ptr @string_from_bytes(ptr @268, i64 35)
   %25 = load ptr, ptr %3, align 8
   call void @TypeChecker_error(ptr %0, i64 5, ptr %24, ptr %25)
   br label %common.ret
@@ -28312,7 +29844,7 @@ if.entry21:                                       ; preds = %ifend17
   %38 = load ptr, ptr %memberidx27, align 8
   %39 = call ptr %38(ptr %36)
   %40 = alloca ptr, align 8
-  %41 = call i64 (ptr, ptr, ...) @asprintf(ptr %40, ptr @270, ptr %34, ptr %39)
+  %41 = call i64 (ptr, ptr, ...) @asprintf(ptr %40, ptr @269, ptr %34, ptr %39)
   %42 = load ptr, ptr %40, align 8
   %43 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%string, ptr null, i32 1) to i32))
   call void @string_constructor(ptr %43, ptr %42, i64 %41)
@@ -28346,7 +29878,7 @@ for.cond:                                         ; preds = %ifend13, %for.entry
 for.body:                                         ; preds = %for.cond
   %arg = alloca ptr, align 8
   %7 = load ptr, ptr %1, align 8
-  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %7, i32 0, i32 5
+  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %7, i32 0, i32 6
   %8 = load ptr, ptr %memberidx3, align 8
   %9 = call ptr %8(ptr %1, i64 %i.0)
   store ptr %9, ptr %arg, align 8
@@ -28406,7 +29938,7 @@ if.entry11:                                       ; preds = %ifend
 
 ifend13:                                          ; preds = %if.entry24, %else18, %if.entry17, %ifend
   %32 = load ptr, ptr %3, align 8
-  %memberidx33 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %32, i32 0, i32 2
+  %memberidx33 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %32, i32 0, i32 3
   %33 = load ptr, ptr %memberidx33, align 8
   %34 = load ptr, ptr %fnc_arg, align 8
   call void %33(ptr %3, ptr %34)
@@ -28427,7 +29959,7 @@ ifend13:                                          ; preds = %if.entry24, %else18
   %42 = load ptr, ptr %memberidx37, align 8
   store ptr %42, ptr %memberidx36, align 8
   %43 = load ptr, ptr %4, align 8
-  %memberidx38 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %43, i32 0, i32 2
+  %memberidx38 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %43, i32 0, i32 3
   %44 = load ptr, ptr %memberidx38, align 8
   %45 = load ptr, ptr %arg_type, align 8
   call void %44(ptr %4, ptr %45)
@@ -28471,7 +30003,7 @@ if.entry24:                                       ; preds = %else18
   %65 = load ptr, ptr %memberidx30, align 8
   %66 = call ptr %65(ptr %63)
   %67 = alloca ptr, align 8
-  %68 = call i64 (ptr, ptr, ...) @asprintf(ptr %67, ptr @202, ptr %59, ptr %66)
+  %68 = call i64 (ptr, ptr, ...) @asprintf(ptr %67, ptr @201, ptr %59, ptr %66)
   %69 = load ptr, ptr %67, align 8
   %70 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%string, ptr null, i32 1) to i32))
   call void @string_constructor(ptr %70, ptr %69, i64 %68)
@@ -28496,7 +30028,7 @@ common.ret:                                       ; preds = %ifend, %else14, %if
   ret ptr %common.ret.op
 
 if.entry:                                         ; preds = %4
-  %9 = call ptr @string_from_bytes(ptr @303, i64 44)
+  %9 = call ptr @string_from_bytes(ptr @302, i64 44)
   br label %common.ret
 
 ifend:                                            ; preds = %4
@@ -28504,7 +30036,7 @@ ifend:                                            ; preds = %4
   %memberidx2 = getelementptr inbounds %Class, ptr %6, i32 0, i32 5
   %10 = load ptr, ptr %memberidx2, align 8
   %11 = load ptr, ptr %10, align 8
-  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %11, i32 0, i32 5
+  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %11, i32 0, i32 6
   %12 = load ptr, ptr %memberidx3, align 8
   %memberidx4 = getelementptr inbounds %PropId, ptr %7, i32 0, i32 2
   %13 = load i64, ptr %memberidx4, align 4
@@ -28550,7 +30082,7 @@ if.entry13:                                       ; preds = %if.entry10
   %memberidx18 = getelementptr inbounds %Array_ExpressionNode_, ptr %2, i32 0, i32 2
   %29 = load i64, ptr %memberidx18, align 4
   %30 = alloca ptr, align 8
-  %31 = call i64 (ptr, ptr, ...) @asprintf(ptr %30, ptr @304, i64 %28, i64 %29)
+  %31 = call i64 (ptr, ptr, ...) @asprintf(ptr %30, ptr @303, i64 %28, i64 %29)
   %32 = load ptr, ptr %30, align 8
   %33 = call ptr @string_from_bytes(ptr %32, i64 %31)
   br label %common.ret
@@ -28560,7 +30092,7 @@ else14:                                           ; preds = %if.entry10
   %memberidx19 = getelementptr inbounds %FunctionType, ptr %34, i32 0, i32 1
   %35 = load ptr, ptr %memberidx19, align 8
   %36 = load ptr, ptr %35, align 8
-  %memberidx20 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %36, i32 0, i32 5
+  %memberidx20 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %36, i32 0, i32 6
   %37 = load ptr, ptr %memberidx20, align 8
   %38 = call ptr %37(ptr %35, i64 %22)
   %39 = call ptr @TypeChecker_dump_type(ptr %0, ptr %38)
@@ -28570,7 +30102,7 @@ else14:                                           ; preds = %if.entry10
   %42 = call ptr %41(ptr %39)
   %43 = load ptr, ptr %checked_args, align 8
   %44 = load ptr, ptr %43, align 8
-  %memberidx22 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %44, i32 0, i32 5
+  %memberidx22 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %44, i32 0, i32 6
   %45 = load ptr, ptr %memberidx22, align 8
   %46 = load i64, ptr %index, align 4
   %47 = call ptr %45(ptr %43, i64 %46)
@@ -28583,9 +30115,10 @@ else14:                                           ; preds = %if.entry10
   %52 = call ptr %51(ptr %49)
   %53 = load i64, ptr %index, align 4
   %54 = alloca ptr, align 8
-  %55 = call i64 (ptr, ptr, ...) @asprintf(ptr %54, ptr @305, ptr %42, ptr %52, i64 %53)
+  %55 = call i64 (ptr, ptr, ...) @asprintf(ptr %54, ptr @304, ptr %42, ptr %52, i64 %53)
   %56 = load ptr, ptr %54, align 8
-  %57 = call ptr @string_from_bytes(ptr %56, i64 %55)
+  %57 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%string, ptr null, i32 1) to i32))
+  call void @string_constructor(ptr %57, ptr %56, i64 %55)
   br label %common.ret
 }
 
@@ -28613,7 +30146,7 @@ for.body:                                         ; preds = %for.cond
   %method_node = alloca ptr, align 8
   %8 = load ptr, ptr %memberidx1, align 8
   %9 = load ptr, ptr %8, align 8
-  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %9, i32 0, i32 5
+  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %9, i32 0, i32 6
   %10 = load ptr, ptr %memberidx4, align 8
   %11 = call ptr %10(ptr %8, i64 %i.0)
   store ptr %11, ptr %method_node, align 8
@@ -28652,7 +30185,7 @@ if.entry:                                         ; preds = %for.body
   %22 = load ptr, ptr %21, align 8
   %memberidx13 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %22, i32 0, i32 4
   %23 = load ptr, ptr %memberidx13, align 8
-  %24 = call ptr @string_from_bytes(ptr @225, i64 11)
+  %24 = call ptr @string_from_bytes(ptr @224, i64 11)
   %25 = call i1 %23(ptr %21, ptr %24)
   %. = select i1 %25, i64 2, i64 1
   store i64 %., ptr %args_num, align 4
@@ -28718,9 +30251,10 @@ if.entry16:                                       ; preds = %if.entry
   %memberidx21 = getelementptr inbounds %Array_ArgNode_, ptr %56, i32 0, i32 2
   %57 = load i64, ptr %memberidx21, align 4
   %58 = alloca ptr, align 8
-  %59 = call i64 (ptr, ptr, ...) @asprintf(ptr %58, ptr @246, i64 %., ptr %54, i64 %57)
+  %59 = call i64 (ptr, ptr, ...) @asprintf(ptr %58, ptr @245, i64 %., ptr %54, i64 %57)
   %60 = load ptr, ptr %58, align 8
-  %61 = call ptr @string_from_bytes(ptr %60, i64 %59)
+  %61 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%string, ptr null, i32 1) to i32))
+  call void @string_constructor(ptr %61, ptr %60, i64 %59)
   %62 = load ptr, ptr %method_node, align 8
   %63 = load ptr, ptr %62, align 8
   %memberidx23 = getelementptr inbounds %Token, ptr %63, i32 0, i32 1
@@ -28740,7 +30274,7 @@ if.entry25:                                       ; preds = %ifend18
   %68 = load ptr, ptr %memberidx28, align 8
   %69 = call ptr %68(ptr %66)
   %70 = alloca ptr, align 8
-  %71 = call i64 (ptr, ptr, ...) @asprintf(ptr %70, ptr @247, ptr %69)
+  %71 = call i64 (ptr, ptr, ...) @asprintf(ptr %70, ptr @246, ptr %69)
   %72 = load ptr, ptr %70, align 8
   %73 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%string, ptr null, i32 1) to i32))
   call void @string_constructor(ptr %73, ptr %72, i64 %71)
@@ -28788,7 +30322,7 @@ if.entry48:                                       ; preds = %if.entry43
   %92 = load ptr, ptr %memberidx53, align 8
   %93 = call ptr %92(ptr %90)
   %94 = alloca ptr, align 8
-  %95 = call i64 (ptr, ptr, ...) @asprintf(ptr %94, ptr @248, ptr %89, ptr %93)
+  %95 = call i64 (ptr, ptr, ...) @asprintf(ptr %94, ptr @247, ptr %89, ptr %93)
   %96 = load ptr, ptr %94, align 8
   %97 = call ptr @string_from_bytes(ptr %96, i64 %95)
   %98 = load ptr, ptr %method_node, align 8
@@ -28835,9 +30369,10 @@ if.entry59:                                       ; preds = %ifend50
   %122 = load ptr, ptr %memberidx65, align 8
   %123 = call ptr %122(ptr %120)
   %124 = alloca ptr, align 8
-  %125 = call i64 (ptr, ptr, ...) @asprintf(ptr %124, ptr @249, ptr %114, ptr %118, ptr %123)
+  %125 = call i64 (ptr, ptr, ...) @asprintf(ptr %124, ptr @248, ptr %114, ptr %118, ptr %123)
   %126 = load ptr, ptr %124, align 8
-  %127 = call ptr @string_from_bytes(ptr %126, i64 %125)
+  %127 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%string, ptr null, i32 1) to i32))
+  call void @string_constructor(ptr %127, ptr %126, i64 %125)
   %128 = load ptr, ptr %method_node, align 8
   %129 = load ptr, ptr %128, align 8
   %memberidx67 = getelementptr inbounds %Token, ptr %129, i32 0, i32 1
@@ -28872,7 +30407,7 @@ if.entry69:                                       ; preds = %ifend61
   %146 = load ptr, ptr %memberidx75, align 8
   %147 = call ptr %146(ptr %144)
   %148 = alloca ptr, align 8
-  %149 = call i64 (ptr, ptr, ...) @asprintf(ptr %148, ptr @250, ptr %138, ptr %142, ptr %147)
+  %149 = call i64 (ptr, ptr, ...) @asprintf(ptr %148, ptr @249, ptr %138, ptr %142, ptr %147)
   %150 = load ptr, ptr %148, align 8
   %151 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%string, ptr null, i32 1) to i32))
   call void @string_constructor(ptr %151, ptr %150, i64 %149)
@@ -28903,7 +30438,7 @@ else85:                                           ; preds = %ifend45
   %161 = load ptr, ptr %160, align 8
   %memberidx104 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %161, i32 0, i32 4
   %162 = load ptr, ptr %memberidx104, align 8
-  %163 = call ptr @string_from_bytes(ptr @252, i64 11)
+  %163 = call ptr @string_from_bytes(ptr @251, i64 11)
   %164 = call i1 %162(ptr %160, ptr %163)
   br i1 %164, label %if.entry105, label %else106
 
@@ -28917,7 +30452,7 @@ ifend86:                                          ; preds = %if.entry137, %if.en
   %memberidx143 = getelementptr inbounds %Class, ptr %1, i32 0, i32 5
   %168 = load ptr, ptr %memberidx143, align 8
   %169 = load ptr, ptr %168, align 8
-  %memberidx144 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %169, i32 0, i32 2
+  %memberidx144 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %169, i32 0, i32 3
   %170 = load ptr, ptr %memberidx144, align 8
   %171 = load ptr, ptr %method, align 8
   call void %170(ptr %168, ptr %171)
@@ -28929,7 +30464,7 @@ ifend86:                                          ; preds = %if.entry137, %if.en
   br label %for.cond
 
 if.entry88:                                       ; preds = %if.entry84
-  %175 = call ptr @string_from_bytes(ptr @251, i64 31)
+  %175 = call ptr @string_from_bytes(ptr @250, i64 31)
   %176 = load ptr, ptr %method_node, align 8
   %177 = load ptr, ptr %176, align 8
   %memberidx92 = getelementptr inbounds %Token, ptr %177, i32 0, i32 1
@@ -28944,12 +30479,12 @@ ifend90:                                          ; preds = %if.entry84
   %181 = load ptr, ptr %180, align 8
   %memberidx94 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %181, i32 0, i32 4
   %182 = load ptr, ptr %memberidx94, align 8
-  %183 = call ptr @string_from_bytes(ptr @252, i64 11)
+  %183 = call ptr @string_from_bytes(ptr @251, i64 11)
   %184 = call i1 %182(ptr %180, ptr %183)
   br i1 %184, label %if.entry95, label %ifend97
 
 if.entry95:                                       ; preds = %ifend90
-  %185 = call ptr @string_from_bytes(ptr @253, i64 33)
+  %185 = call ptr @string_from_bytes(ptr @252, i64 33)
   %186 = load ptr, ptr %method_node, align 8
   %187 = load ptr, ptr %186, align 8
   %memberidx99 = getelementptr inbounds %Token, ptr %187, i32 0, i32 1
@@ -28989,7 +30524,7 @@ ifend107:                                         ; preds = %ifend119, %ifend111
   call void @ObjectType_constructor(ptr %200, ptr %201)
   store ptr %200, ptr %object_type, align 8
   %this_const = alloca ptr, align 8
-  %202 = call ptr @string_from_bytes(ptr @179, i64 4)
+  %202 = call ptr @string_from_bytes(ptr @178, i64 4)
   %203 = load ptr, ptr %object_type, align 8
   %204 = call ptr @TypeChecker_declare_const_within_current_scope(ptr %0, ptr %202, ptr null, ptr %203)
   store ptr %204, ptr %this_const, align 8
@@ -28999,7 +30534,7 @@ ifend107:                                         ; preds = %ifend119, %ifend111
   br i1 %206, label %if.entry131, label %ifend86
 
 if.entry109:                                      ; preds = %if.entry105
-  %207 = call ptr @string_from_bytes(ptr @254, i64 35)
+  %207 = call ptr @string_from_bytes(ptr @253, i64 35)
   %208 = load ptr, ptr %method_node, align 8
   %209 = load ptr, ptr %208, align 8
   %memberidx113 = getelementptr inbounds %Token, ptr %209, i32 0, i32 1
@@ -29036,7 +30571,7 @@ ifend119:                                         ; preds = %else118, %if.entry1
   br label %ifend107
 
 if.entry121:                                      ; preds = %else118
-  %222 = call ptr @string_from_bytes(ptr @255, i64 58)
+  %222 = call ptr @string_from_bytes(ptr @254, i64 58)
   %223 = load ptr, ptr %method_node, align 8
   %224 = load ptr, ptr %223, align 8
   %memberidx125 = getelementptr inbounds %Token, ptr %224, i32 0, i32 1
@@ -29059,7 +30594,7 @@ if.entry137:                                      ; preds = %if.entry131
   %230 = load ptr, ptr %0, align 8
   %231 = call ptr @get_class_prop_type(ptr %230, ptr %228)
   store ptr %231, ptr %constructor_type, align 8
-  %232 = call ptr @string_from_bytes(ptr @256, i64 5)
+  %232 = call ptr @string_from_bytes(ptr @255, i64 5)
   %233 = load ptr, ptr %constructor_type, align 8
   %234 = call ptr @TypeChecker_declare_const_within_current_scope(ptr %0, ptr %232, ptr null, ptr %233)
   br label %ifend86
@@ -29078,7 +30613,7 @@ if.entry:                                         ; preds = %2
   %memberidx2 = getelementptr inbounds %Expression, ptr %0, i32 0, i32 3
   %5 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%ArrayType, ptr null, i32 1) to i32))
   %6 = load ptr, ptr %1, align 8
-  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %6, i32 0, i32 5
+  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %6, i32 0, i32 6
   %7 = load ptr, ptr %memberidx3, align 8
   %8 = call ptr %7(ptr %1, i64 0)
   %memberidx4 = getelementptr inbounds %Expression, ptr %8, i32 0, i32 3
@@ -29105,8 +30640,8 @@ define ptr @TypeChecker_check_array_expression(ptr %0, ptr %1, ptr %2) {
   %4 = call i1 @TypeChecker_has_errored(ptr %0)
   br i1 %4, label %common.ret, label %ifend
 
-common.ret:                                       ; preds = %for.body, %if.entry20, %3, %ifend69, %if.entry57, %else47
-  %common.ret.op = phi ptr [ null, %else47 ], [ null, %if.entry57 ], [ %122, %ifend69 ], [ null, %3 ], [ null, %if.entry20 ], [ null, %for.body ]
+common.ret:                                       ; preds = %for.body, %if.entry20, %3, %ifend64, %if.entry57, %else47
+  %common.ret.op = phi ptr [ null, %else47 ], [ null, %if.entry57 ], [ %115, %ifend64 ], [ null, %3 ], [ null, %if.entry20 ], [ null, %for.body ]
   ret ptr %common.ret.op
 
 ifend:                                            ; preds = %3
@@ -29157,7 +30692,7 @@ if.entry8:                                        ; preds = %else4
   %17 = load ptr, ptr %16, align 8
   %memberidx12 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %17, i32 0, i32 4
   %18 = load ptr, ptr %memberidx12, align 8
-  %19 = call ptr @string_from_bytes(ptr @176, i64 5)
+  %19 = call ptr @string_from_bytes(ptr @175, i64 5)
   %20 = call i1 %18(ptr %16, ptr %19)
   %21 = and i1 %14, %20
   br i1 %21, label %if.entry13, label %ifend5
@@ -29167,7 +30702,7 @@ if.entry13:                                       ; preds = %if.entry8
   %memberidx16 = getelementptr inbounds %GenericType, ptr %22, i32 0, i32 2
   %23 = load ptr, ptr %memberidx16, align 8
   %24 = load ptr, ptr %23, align 8
-  %memberidx17 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %24, i32 0, i32 5
+  %memberidx17 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %24, i32 0, i32 6
   %25 = load ptr, ptr %memberidx17, align 8
   %26 = call ptr %25(ptr %23, i64 0)
   store ptr %26, ptr %element_type, align 8
@@ -29176,11 +30711,11 @@ if.entry13:                                       ; preds = %if.entry8
 if.entry20:                                       ; preds = %ifend5
   %27 = load ptr, ptr %elements, align 8
   %28 = load ptr, ptr %27, align 8
-  %memberidx23 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %28, i32 0, i32 2
+  %memberidx23 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %28, i32 0, i32 3
   %29 = load ptr, ptr %memberidx23, align 8
   %30 = load ptr, ptr %element_type, align 8
   %31 = load ptr, ptr %11, align 8
-  %memberidx25 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %31, i32 0, i32 5
+  %memberidx25 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %31, i32 0, i32 6
   %32 = load ptr, ptr %memberidx25, align 8
   %33 = call ptr %32(ptr %11, i64 0)
   %34 = call ptr @TypeChecker_check_expression(ptr %0, ptr %30, ptr %33)
@@ -29198,7 +30733,7 @@ ifend28:                                          ; preds = %if.entry20
   %39 = load i1, ptr %is_constant, align 1
   %40 = load ptr, ptr %elements, align 8
   %41 = load ptr, ptr %40, align 8
-  %memberidx29 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %41, i32 0, i32 5
+  %memberidx29 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %41, i32 0, i32 6
   %42 = load ptr, ptr %memberidx29, align 8
   %43 = call ptr %42(ptr %40, i64 0)
   %memberidx30 = getelementptr inbounds %Expression, ptr %43, i32 0, i32 1
@@ -29213,7 +30748,7 @@ ifend28:                                          ; preds = %if.entry20
 if.entry32:                                       ; preds = %ifend28
   %49 = load ptr, ptr %elements, align 8
   %50 = load ptr, ptr %49, align 8
-  %memberidx35 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %50, i32 0, i32 5
+  %memberidx35 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %50, i32 0, i32 6
   %51 = load ptr, ptr %memberidx35, align 8
   %52 = call ptr %51(ptr %49, i64 0)
   %memberidx36 = getelementptr inbounds %Expression, ptr %52, i32 0, i32 3
@@ -29238,7 +30773,7 @@ for.body:                                         ; preds = %for.cond
   %element = alloca ptr, align 8
   %58 = load ptr, ptr %element_type, align 8
   %59 = load ptr, ptr %55, align 8
-  %memberidx40 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %59, i32 0, i32 5
+  %memberidx40 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %59, i32 0, i32 6
   %60 = load ptr, ptr %memberidx40, align 8
   %61 = call ptr %60(ptr %55, i64 %54)
   %62 = call ptr @TypeChecker_check_expression(ptr %0, ptr %58, ptr %61)
@@ -29263,7 +30798,7 @@ ifend43:                                          ; preds = %for.body
 if.entry46:                                       ; preds = %ifend43
   %72 = load ptr, ptr %elements, align 8
   %73 = load ptr, ptr %72, align 8
-  %memberidx49 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %73, i32 0, i32 2
+  %memberidx49 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %73, i32 0, i32 3
   %74 = load ptr, ptr %memberidx49, align 8
   %75 = load ptr, ptr %element, align 8
   call void %74(ptr %72, ptr %75)
@@ -29288,12 +30823,12 @@ else47:                                           ; preds = %ifend43
   %87 = load ptr, ptr %memberidx52, align 8
   %88 = call ptr %87(ptr %85)
   %89 = alloca ptr, align 8
-  %90 = call i64 (ptr, ptr, ...) @asprintf(ptr %89, ptr @265, ptr %82, ptr %88)
+  %90 = call i64 (ptr, ptr, ...) @asprintf(ptr %89, ptr @264, ptr %82, ptr %88)
   %91 = load ptr, ptr %89, align 8
   %92 = call ptr @string_from_bytes(ptr %91, i64 %90)
   %93 = load ptr, ptr %memberidx18, align 8
   %94 = load ptr, ptr %93, align 8
-  %memberidx54 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %94, i32 0, i32 5
+  %memberidx54 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %94, i32 0, i32 6
   %95 = load ptr, ptr %memberidx54, align 8
   %96 = load i64, ptr %i, align 4
   %97 = call ptr %95(ptr %93, i64 %96)
@@ -29302,7 +30837,7 @@ else47:                                           ; preds = %ifend43
   br label %common.ret
 
 if.entry57:                                       ; preds = %ifend22
-  %99 = call ptr @string_from_bytes(ptr @266, i64 37)
+  %99 = call ptr @string_from_bytes(ptr @265, i64 37)
   %100 = load ptr, ptr %2, align 8
   call void @TypeChecker_error(ptr %0, i64 5, ptr %99, ptr %100)
   br label %common.ret
@@ -29310,61 +30845,45 @@ if.entry57:                                       ; preds = %ifend22
 ifend59:                                          ; preds = %ifend22
   %101 = load ptr, ptr %array_type, align 8
   %102 = load i64, ptr %101, align 4
-  %103 = icmp eq i64 %102, 21
+  %103 = icmp ne i64 %102, 16
   br i1 %103, label %if.entry62, label %ifend64
 
 if.entry62:                                       ; preds = %ifend59
-  %104 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%ArrayType, ptr null, i32 1) to i32))
-  %105 = load ptr, ptr %element_type, align 8
-  %106 = load ptr, ptr %elements, align 8
-  %memberidx65 = getelementptr inbounds %Array_Expression_, ptr %106, i32 0, i32 2
-  %107 = load i64, ptr %memberidx65, align 4
-  call void @ArrayType_constructor(ptr %104, ptr %105, i64 %107)
-  store ptr %104, ptr %array_type, align 8
-  br label %ifend64
-
-ifend64:                                          ; preds = %ifend59, %if.entry62
-  %108 = load ptr, ptr %array_type, align 8
-  %109 = load i64, ptr %108, align 4
-  %110 = icmp ne i64 %109, 16
-  br i1 %110, label %if.entry67, label %ifend69
-
-if.entry67:                                       ; preds = %ifend64
   %generic_array_type = alloca ptr, align 8
-  %111 = call ptr @string_from_bytes(ptr @176, i64 5)
-  %112 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%Array_Type_, ptr null, i32 1) to i32))
-  call void @Array_Type__constructor(ptr %112, i64 ptrtoint (ptr getelementptr (ptr, ptr null, i32 1) to i64))
-  %memberidx70 = getelementptr inbounds %Array_Type_, ptr %112, i32 0, i32 1
-  %113 = load ptr, ptr %memberidx70, align 8
-  %114 = load ptr, ptr %element_type, align 8
-  store ptr %114, ptr %113, align 8
-  %memberidx71 = getelementptr inbounds %Array_Type_, ptr %112, i32 0, i32 2
-  store i64 1, ptr %memberidx71, align 4
-  %115 = call ptr @TypeChecker_create_generic_instance_in_module(ptr %0, ptr %111, ptr %112)
-  store ptr %115, ptr %generic_array_type, align 8
-  %116 = icmp ne ptr %115, null
-  br i1 %116, label %if.entry72, label %ifend69
+  %104 = call ptr @string_from_bytes(ptr @175, i64 5)
+  %105 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%Array_Type_, ptr null, i32 1) to i32))
+  call void @Array_Type__constructor(ptr %105, i64 ptrtoint (ptr getelementptr (ptr, ptr null, i32 1) to i64))
+  %memberidx65 = getelementptr inbounds %Array_Type_, ptr %105, i32 0, i32 1
+  %106 = load ptr, ptr %memberidx65, align 8
+  %107 = load ptr, ptr %element_type, align 8
+  store ptr %107, ptr %106, align 8
+  %memberidx66 = getelementptr inbounds %Array_Type_, ptr %105, i32 0, i32 2
+  store i64 1, ptr %memberidx66, align 4
+  %108 = call ptr @TypeChecker_create_generic_instance_in_module(ptr %0, ptr %104, ptr %105)
+  store ptr %108, ptr %generic_array_type, align 8
+  %109 = icmp ne ptr %108, null
+  br i1 %109, label %if.entry67, label %ifend64
 
-ifend69:                                          ; preds = %if.entry72, %if.entry67, %ifend64
+ifend64:                                          ; preds = %if.entry67, %if.entry62, %ifend59
   %arr_exp = alloca ptr, align 8
-  %117 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%ArrayExpression, ptr null, i32 1) to i32))
-  %118 = load ptr, ptr %elements, align 8
-  call void @ArrayExpression_constructor(ptr %117, ptr %118)
-  store ptr %117, ptr %arr_exp, align 8
-  %memberidx75 = getelementptr inbounds %Expression, ptr %117, i32 0, i32 1
-  %119 = load i1, ptr %is_constant, align 1
-  store i1 %119, ptr %memberidx75, align 1
-  %120 = load ptr, ptr %arr_exp, align 8
-  %memberidx76 = getelementptr inbounds %Expression, ptr %120, i32 0, i32 3
-  %121 = load ptr, ptr %array_type, align 8
-  store ptr %121, ptr %memberidx76, align 8
-  %122 = load ptr, ptr %arr_exp, align 8
+  %110 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%ArrayExpression, ptr null, i32 1) to i32))
+  %111 = load ptr, ptr %elements, align 8
+  call void @ArrayExpression_constructor(ptr %110, ptr %111)
+  store ptr %110, ptr %arr_exp, align 8
+  %memberidx70 = getelementptr inbounds %Expression, ptr %110, i32 0, i32 1
+  %112 = load i1, ptr %is_constant, align 1
+  store i1 %112, ptr %memberidx70, align 1
+  %113 = load ptr, ptr %arr_exp, align 8
+  %memberidx71 = getelementptr inbounds %Expression, ptr %113, i32 0, i32 3
+  %114 = load ptr, ptr %array_type, align 8
+  store ptr %114, ptr %memberidx71, align 8
+  %115 = load ptr, ptr %arr_exp, align 8
   br label %common.ret
 
-if.entry72:                                       ; preds = %if.entry67
-  store ptr %115, ptr %array_type, align 8
+if.entry67:                                       ; preds = %if.entry62
+  store ptr %108, ptr %array_type, align 8
   store i1 false, ptr %is_constant, align 1
-  br label %ifend69
+  br label %ifend64
 }
 
 define ptr @TypeChecker_get_func_args_from_expression(ptr %0, ptr %1) {
@@ -29519,10 +31038,9 @@ if.entry2:                                        ; preds = %else
   %12 = load ptr, ptr %memberidx5, align 8
   %13 = call ptr %12(ptr %10)
   %14 = alloca ptr, align 8
-  %15 = call i64 (ptr, ptr, ...) @asprintf(ptr %14, ptr @208, ptr %13)
+  %15 = call i64 (ptr, ptr, ...) @asprintf(ptr %14, ptr @207, ptr %13)
   %16 = load ptr, ptr %14, align 8
-  %17 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%string, ptr null, i32 1) to i32))
-  call void @string_constructor(ptr %17, ptr %16, i64 %15)
+  %17 = call ptr @string_from_bytes(ptr %16, i64 %15)
   %18 = load ptr, ptr %memberidx, align 8
   %19 = load ptr, ptr %18, align 8
   call void @TypeChecker_error(ptr %0, i64 5, ptr %17, ptr %19)
@@ -29540,7 +31058,7 @@ for.cond:                                         ; preds = %ifend19, %ifend
 for.body:                                         ; preds = %for.cond
   %enum_node_field = alloca ptr, align 8
   %24 = load ptr, ptr %21, align 8
-  %memberidx11 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %24, i32 0, i32 5
+  %memberidx11 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %24, i32 0, i32 6
   %25 = load ptr, ptr %memberidx11, align 8
   %26 = call ptr %25(ptr %21, i64 %20)
   store ptr %26, ptr %enum_node_field, align 8
@@ -29610,7 +31128,7 @@ ifend19:                                          ; preds = %else18, %ifend33
   %memberidx48 = getelementptr inbounds %Enum, ptr %1, i32 0, i32 2
   %56 = load ptr, ptr %memberidx48, align 8
   %57 = load ptr, ptr %56, align 8
-  %memberidx49 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %57, i32 0, i32 2
+  %memberidx49 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %57, i32 0, i32 3
   %58 = load ptr, ptr %memberidx49, align 8
   %59 = load ptr, ptr %enum_field, align 8
   call void %58(ptr %56, ptr %59)
@@ -29620,7 +31138,7 @@ ifend19:                                          ; preds = %else18, %ifend33
   br label %for.cond
 
 if.entry24:                                       ; preds = %if.entry17
-  %62 = call ptr @string_from_bytes(ptr @209, i64 37)
+  %62 = call ptr @string_from_bytes(ptr @208, i64 37)
   %63 = load ptr, ptr %enum_node_field, align 8
   %memberidx27 = getelementptr inbounds %EnumNodeField, ptr %63, i32 0, i32 1
   %64 = load ptr, ptr %memberidx27, align 8
@@ -29652,7 +31170,7 @@ if.entry31:                                       ; preds = %ifend26
   %78 = load ptr, ptr %memberidx37, align 8
   %79 = call ptr %78(ptr %76)
   %80 = alloca ptr, align 8
-  %81 = call i64 (ptr, ptr, ...) @asprintf(ptr %80, ptr @210, ptr %72, ptr %79)
+  %81 = call i64 (ptr, ptr, ...) @asprintf(ptr %80, ptr @209, ptr %72, ptr %79)
   %82 = load ptr, ptr %80, align 8
   %83 = call ptr @string_from_bytes(ptr %82, i64 %81)
   %84 = load ptr, ptr %enum_node_field, align 8
@@ -29708,12 +31226,12 @@ for.cond:                                         ; preds = %for.body, %for.entr
 
 for.body:                                         ; preds = %for.cond
   %7 = load ptr, ptr %3, align 8
-  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %7, i32 0, i32 2
+  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %7, i32 0, i32 3
   %8 = load ptr, ptr %memberidx4, align 8
   %9 = call ptr @Type_unknown()
   %10 = load ptr, ptr %memberidx2, align 8
   %11 = load ptr, ptr %10, align 8
-  %memberidx6 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %11, i32 0, i32 5
+  %memberidx6 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %11, i32 0, i32 6
   %12 = load ptr, ptr %memberidx6, align 8
   %13 = call ptr %12(ptr %10, i64 %i.0)
   %14 = call ptr @TypeChecker_check_expression(ptr %0, ptr %9, ptr %13)
@@ -29727,7 +31245,7 @@ for.end:                                          ; preds = %for.cond
   br i1 %17, label %if.entry, label %ifend
 
 if.entry:                                         ; preds = %for.end
-  %18 = call ptr @string_from_bytes(ptr @301, i64 6)
+  %18 = call ptr @string_from_bytes(ptr @300, i64 6)
   %19 = call ptr @TypeChecker_get_type_from_current_scope(ptr %0, ptr %18)
   br label %ifend
 
@@ -29889,7 +31407,7 @@ ifend:                                            ; preds = %2
   br i1 %10, label %if.entry4, label %ifend6
 
 if.entry4:                                        ; preds = %ifend
-  %11 = call ptr @string_from_bytes(ptr @201, i64 54)
+  %11 = call ptr @string_from_bytes(ptr @200, i64 54)
   %memberidx7 = getelementptr inbounds %VarDeclarationStatement, ptr %1, i32 0, i32 4
   %12 = load ptr, ptr %memberidx7, align 8
   %13 = load ptr, ptr %12, align 8
@@ -29903,7 +31421,7 @@ ifend6:                                           ; preds = %ifend
   %memberidx10 = getelementptr inbounds %Module, ptr %14, i32 0, i32 9
   %15 = load ptr, ptr %memberidx10, align 8
   %16 = load ptr, ptr %15, align 8
-  %memberidx11 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %16, i32 0, i32 2
+  %memberidx11 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %16, i32 0, i32 3
   %17 = load ptr, ptr %memberidx11, align 8
   call void %17(ptr %15, ptr %3)
   br label %common.ret
@@ -29917,7 +31435,7 @@ define ptr @TypeChecker_check_var_access_expr(ptr %0, ptr %1, ptr %2) {
   %6 = load ptr, ptr %5, align 8
   %memberidx2 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %6, i32 0, i32 4
   %7 = load ptr, ptr %memberidx2, align 8
-  %8 = call ptr @string_from_bytes(ptr @194, i64 4)
+  %8 = call ptr @string_from_bytes(ptr @193, i64 4)
   %9 = call i1 %7(ptr %5, ptr %8)
   br i1 %9, label %if.entry, label %ifend
 
@@ -29934,7 +31452,7 @@ ifend:                                            ; preds = %3
   %11 = load ptr, ptr %5, align 8
   %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %11, i32 0, i32 4
   %12 = load ptr, ptr %memberidx3, align 8
-  %13 = call ptr @string_from_bytes(ptr @195, i64 5)
+  %13 = call ptr @string_from_bytes(ptr @194, i64 5)
   %14 = call i1 %12(ptr %5, ptr %13)
   br i1 %14, label %if.entry4, label %ifend6
 
@@ -29947,7 +31465,7 @@ ifend6:                                           ; preds = %ifend
   %16 = load ptr, ptr %5, align 8
   %memberidx7 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %16, i32 0, i32 4
   %17 = load ptr, ptr %memberidx7, align 8
-  %18 = call ptr @string_from_bytes(ptr @196, i64 4)
+  %18 = call ptr @string_from_bytes(ptr @195, i64 4)
   %19 = call i1 %17(ptr %5, ptr %18)
   br i1 %19, label %if.entry8, label %ifend10
 
@@ -29983,7 +31501,7 @@ ifend13:                                          ; preds = %ifend10
   %29 = load ptr, ptr %memberidx37, align 8
   %30 = call ptr %29(ptr %5)
   %31 = alloca ptr, align 8
-  %32 = call i64 (ptr, ptr, ...) @asprintf(ptr %31, ptr @267, ptr %30)
+  %32 = call i64 (ptr, ptr, ...) @asprintf(ptr %31, ptr @266, ptr %30)
   %33 = load ptr, ptr %31, align 8
   %34 = call ptr @string_from_bytes(ptr %33, i64 %32)
   %35 = load ptr, ptr %2, align 8
@@ -30087,7 +31605,7 @@ for.end:                                          ; preds = %for.cond
   %memberidx9 = getelementptr inbounds %IntrinsicCall, ptr %1, i32 0, i32 5
   %14 = load ptr, ptr %memberidx9, align 8
   %15 = load ptr, ptr %14, align 8
-  %memberidx10 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %15, i32 0, i32 5
+  %memberidx10 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %15, i32 0, i32 6
   %16 = load ptr, ptr %memberidx10, align 8
   %17 = call ptr %16(ptr %14, i64 0)
   %memberidx11 = getelementptr inbounds %Expression, ptr %17, i32 0, i32 3
@@ -30104,7 +31622,7 @@ false_block:                                      ; preds = %for.body
   %memberidx3 = getelementptr inbounds %IntrinsicCall, ptr %1, i32 0, i32 5
   %22 = load ptr, ptr %memberidx3, align 8
   %23 = load ptr, ptr %22, align 8
-  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %23, i32 0, i32 5
+  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %23, i32 0, i32 6
   %24 = load ptr, ptr %memberidx4, align 8
   %25 = call ptr %24(ptr %22, i64 0)
   %memberidx5 = getelementptr inbounds %Expression, ptr %25, i32 0, i32 3
@@ -30117,10 +31635,10 @@ end:                                              ; preds = %false_block, %true_
   %memberidx6 = getelementptr inbounds %IntrinsicCall, ptr %1, i32 0, i32 5
   %27 = load ptr, ptr %memberidx6, align 8
   %28 = load ptr, ptr %27, align 8
-  %memberidx7 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %28, i32 0, i32 2
+  %memberidx7 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %28, i32 0, i32 3
   %29 = load ptr, ptr %memberidx7, align 8
   %30 = load ptr, ptr %3, align 8
-  %memberidx8 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %30, i32 0, i32 5
+  %memberidx8 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %30, i32 0, i32 6
   %31 = load ptr, ptr %memberidx8, align 8
   %32 = call ptr %31(ptr %3, i64 %i.0)
   %33 = call ptr @TypeChecker_check_expression(ptr %0, ptr %ternary, ptr %32)
@@ -30139,7 +31657,7 @@ ifend:                                            ; preds = %end
 if.entry12:                                       ; preds = %for.end
   %36 = load ptr, ptr %memberidx9, align 8
   %37 = load ptr, ptr %36, align 8
-  %memberidx16 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %37, i32 0, i32 5
+  %memberidx16 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %37, i32 0, i32 6
   %38 = load ptr, ptr %memberidx16, align 8
   %39 = call ptr %38(ptr %36, i64 0)
   %memberidx17 = getelementptr inbounds %Expression, ptr %39, i32 0, i32 3
@@ -30150,7 +31668,7 @@ if.entry12:                                       ; preds = %for.end
   %43 = load ptr, ptr %memberidx18, align 8
   %44 = call ptr %43(ptr %41)
   %45 = alloca ptr, align 8
-  %46 = call i64 (ptr, ptr, ...) @asprintf(ptr %45, ptr @329, ptr %44)
+  %46 = call i64 (ptr, ptr, ...) @asprintf(ptr %45, ptr @328, ptr %44)
   %47 = load ptr, ptr %45, align 8
   %48 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%string, ptr null, i32 1) to i32))
   call void @string_constructor(ptr %48, ptr %47, i64 %46)
@@ -30181,7 +31699,7 @@ ifend23:                                          ; preds = %if.entry95, %ifend8
 
 if.entry26:                                       ; preds = %if.entry21
   %57 = alloca ptr, align 8
-  %58 = call i64 (ptr, ptr, ...) @asprintf(ptr %57, ptr @330, i64 %53)
+  %58 = call i64 (ptr, ptr, ...) @asprintf(ptr %57, ptr @329, i64 %53)
   %59 = load ptr, ptr %57, align 8
   %60 = call ptr @string_from_bytes(ptr %59, i64 %58)
   %61 = load ptr, ptr %2, align 8
@@ -30191,7 +31709,7 @@ if.entry26:                                       ; preds = %if.entry21
 ifend28:                                          ; preds = %if.entry21
   %memberidx32 = getelementptr inbounds %Expression, ptr %1, i32 0, i32 3
   %62 = load ptr, ptr %52, align 8
-  %memberidx34 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %62, i32 0, i32 5
+  %memberidx34 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %62, i32 0, i32 6
   %63 = load ptr, ptr %memberidx34, align 8
   %64 = call ptr %63(ptr %52, i64 0)
   %memberidx35 = getelementptr inbounds %Expression, ptr %64, i32 0, i32 3
@@ -30199,7 +31717,7 @@ ifend28:                                          ; preds = %if.entry21
   store ptr %65, ptr %memberidx32, align 8
   %66 = load ptr, ptr %memberidx9, align 8
   %67 = load ptr, ptr %66, align 8
-  %memberidx37 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %67, i32 0, i32 5
+  %memberidx37 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %67, i32 0, i32 6
   %68 = load ptr, ptr %memberidx37, align 8
   %69 = call ptr %68(ptr %66, i64 1)
   %memberidx38 = getelementptr inbounds %Expression, ptr %69, i32 0, i32 3
@@ -30211,7 +31729,7 @@ ifend28:                                          ; preds = %if.entry21
 if.entry39:                                       ; preds = %ifend28
   %73 = load ptr, ptr %memberidx9, align 8
   %74 = load ptr, ptr %73, align 8
-  %memberidx43 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %74, i32 0, i32 5
+  %memberidx43 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %74, i32 0, i32 6
   %75 = load ptr, ptr %memberidx43, align 8
   %76 = call ptr %75(ptr %73, i64 1)
   %memberidx44 = getelementptr inbounds %Expression, ptr %76, i32 0, i32 3
@@ -30222,12 +31740,13 @@ if.entry39:                                       ; preds = %ifend28
   %80 = load ptr, ptr %memberidx45, align 8
   %81 = call ptr %80(ptr %78)
   %82 = alloca ptr, align 8
-  %83 = call i64 (ptr, ptr, ...) @asprintf(ptr %82, ptr @331, ptr %81)
+  %83 = call i64 (ptr, ptr, ...) @asprintf(ptr %82, ptr @330, ptr %81)
   %84 = load ptr, ptr %82, align 8
-  %85 = call ptr @string_from_bytes(ptr %84, i64 %83)
+  %85 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%string, ptr null, i32 1) to i32))
+  call void @string_constructor(ptr %85, ptr %84, i64 %83)
   %86 = load ptr, ptr %memberidx, align 8
   %87 = load ptr, ptr %86, align 8
-  %memberidx47 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %87, i32 0, i32 5
+  %memberidx47 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %87, i32 0, i32 6
   %88 = load ptr, ptr %memberidx47, align 8
   %89 = call ptr %88(ptr %86, i64 0)
   %90 = load ptr, ptr %89, align 8
@@ -30243,7 +31762,7 @@ if.entry49:                                       ; preds = %else22
 
 if.entry54:                                       ; preds = %if.entry49
   %94 = alloca ptr, align 8
-  %95 = call i64 (ptr, ptr, ...) @asprintf(ptr %94, ptr @332, i64 %92)
+  %95 = call i64 (ptr, ptr, ...) @asprintf(ptr %94, ptr @331, i64 %92)
   %96 = load ptr, ptr %94, align 8
   %97 = call ptr @string_from_bytes(ptr %96, i64 %95)
   %98 = load ptr, ptr %2, align 8
@@ -30253,7 +31772,7 @@ if.entry54:                                       ; preds = %if.entry49
 ifend56:                                          ; preds = %if.entry49
   %exp_arg2_type = alloca ptr, align 8
   %99 = load ptr, ptr %91, align 8
-  %memberidx61 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %99, i32 0, i32 5
+  %memberidx61 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %99, i32 0, i32 6
   %100 = load ptr, ptr %memberidx61, align 8
   %101 = call ptr %100(ptr %91, i64 0)
   %memberidx62 = getelementptr inbounds %Expression, ptr %101, i32 0, i32 3
@@ -30274,7 +31793,7 @@ ifend66:                                          ; preds = %ifend56, %if.entry6
   %105 = load ptr, ptr %exp_arg2_type, align 8
   %106 = load ptr, ptr %memberidx9, align 8
   %107 = load ptr, ptr %106, align 8
-  %memberidx69 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %107, i32 0, i32 5
+  %memberidx69 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %107, i32 0, i32 6
   %108 = load ptr, ptr %memberidx69, align 8
   %109 = call ptr %108(ptr %106, i64 1)
   %memberidx70 = getelementptr inbounds %Expression, ptr %109, i32 0, i32 3
@@ -30292,7 +31811,7 @@ if.entry71:                                       ; preds = %ifend66
   %117 = call ptr %116(ptr %114)
   %118 = load ptr, ptr %memberidx9, align 8
   %119 = load ptr, ptr %118, align 8
-  %memberidx76 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %119, i32 0, i32 5
+  %memberidx76 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %119, i32 0, i32 6
   %120 = load ptr, ptr %memberidx76, align 8
   %121 = call ptr %120(ptr %118, i64 1)
   %memberidx77 = getelementptr inbounds %Expression, ptr %121, i32 0, i32 3
@@ -30303,13 +31822,13 @@ if.entry71:                                       ; preds = %ifend66
   %125 = load ptr, ptr %memberidx78, align 8
   %126 = call ptr %125(ptr %123)
   %127 = alloca ptr, align 8
-  %128 = call i64 (ptr, ptr, ...) @asprintf(ptr %127, ptr @333, ptr %117, ptr %126)
+  %128 = call i64 (ptr, ptr, ...) @asprintf(ptr %127, ptr @332, ptr %117, ptr %126)
   %129 = load ptr, ptr %127, align 8
   %130 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%string, ptr null, i32 1) to i32))
   call void @string_constructor(ptr %130, ptr %129, i64 %128)
   %131 = load ptr, ptr %memberidx, align 8
   %132 = load ptr, ptr %131, align 8
-  %memberidx80 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %132, i32 0, i32 5
+  %memberidx80 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %132, i32 0, i32 6
   %133 = load ptr, ptr %memberidx80, align 8
   %134 = call ptr %133(ptr %131, i64 0)
   %135 = load ptr, ptr %134, align 8
@@ -30319,7 +31838,7 @@ if.entry71:                                       ; preds = %ifend66
 ifend73:                                          ; preds = %ifend66
   %136 = load ptr, ptr %memberidx9, align 8
   %137 = load ptr, ptr %136, align 8
-  %memberidx83 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %137, i32 0, i32 5
+  %memberidx83 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %137, i32 0, i32 6
   %138 = load ptr, ptr %memberidx83, align 8
   %139 = call ptr %138(ptr %136, i64 2)
   %memberidx84 = getelementptr inbounds %Expression, ptr %139, i32 0, i32 3
@@ -30331,7 +31850,7 @@ ifend73:                                          ; preds = %ifend66
 if.entry85:                                       ; preds = %ifend73
   %143 = load ptr, ptr %memberidx9, align 8
   %144 = load ptr, ptr %143, align 8
-  %memberidx89 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %144, i32 0, i32 5
+  %memberidx89 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %144, i32 0, i32 6
   %145 = load ptr, ptr %memberidx89, align 8
   %146 = call ptr %145(ptr %143, i64 2)
   %memberidx90 = getelementptr inbounds %Expression, ptr %146, i32 0, i32 3
@@ -30342,13 +31861,13 @@ if.entry85:                                       ; preds = %ifend73
   %150 = load ptr, ptr %memberidx91, align 8
   %151 = call ptr %150(ptr %148)
   %152 = alloca ptr, align 8
-  %153 = call i64 (ptr, ptr, ...) @asprintf(ptr %152, ptr @331, ptr %151)
+  %153 = call i64 (ptr, ptr, ...) @asprintf(ptr %152, ptr @330, ptr %151)
   %154 = load ptr, ptr %152, align 8
   %155 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%string, ptr null, i32 1) to i32))
   call void @string_constructor(ptr %155, ptr %154, i64 %153)
   %156 = load ptr, ptr %memberidx, align 8
   %157 = load ptr, ptr %156, align 8
-  %memberidx93 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %157, i32 0, i32 5
+  %memberidx93 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %157, i32 0, i32 6
   %158 = load ptr, ptr %memberidx93, align 8
   %159 = call ptr %158(ptr %156, i64 1)
   %160 = load ptr, ptr %159, align 8
@@ -30393,11 +31912,11 @@ for.cond:                                         ; preds = %ifend10, %for.entry
 for.body:                                         ; preds = %for.cond
   %11 = load ptr, ptr %memberidx, align 8
   %12 = load ptr, ptr %11, align 8
-  %memberidx5 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %12, i32 0, i32 5
+  %memberidx5 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %12, i32 0, i32 6
   %13 = load ptr, ptr %memberidx5, align 8
   %14 = call ptr %13(ptr %11, i64 %8)
   %15 = load ptr, ptr %2, align 8
-  %memberidx6 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %15, i32 0, i32 5
+  %memberidx6 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %15, i32 0, i32 6
   %16 = load ptr, ptr %memberidx6, align 8
   %17 = load i64, ptr %i, align 4
   %18 = call ptr %16(ptr %2, i64 %17)
@@ -30424,7 +31943,7 @@ define void @TypeChecker_error(ptr %0, i64 %1, ptr %2, ptr %3) {
   %memberidx1 = getelementptr inbounds %Compiler, ptr %5, i32 0, i32 6
   %6 = load ptr, ptr %memberidx1, align 8
   %7 = load ptr, ptr %6, align 8
-  %memberidx2 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %7, i32 0, i32 2
+  %memberidx2 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %7, i32 0, i32 3
   %8 = load ptr, ptr %memberidx2, align 8
   %9 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%FloError, ptr null, i32 1) to i32))
   call void @FloError_constructor(ptr %9, i64 %1, ptr %2, ptr %3)
@@ -30490,7 +32009,7 @@ ifend16:                                          ; preds = %ifend11, %if.entry2
 if.entry20:                                       ; preds = %if.entry14
   %23 = load ptr, ptr %12, align 8
   %24 = load ptr, ptr %23, align 8
-  %memberidx25 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %24, i32 0, i32 2
+  %memberidx25 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %24, i32 0, i32 3
   %25 = load ptr, ptr %memberidx25, align 8
   %26 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%ReturnStatement, ptr null, i32 1) to i32))
   call void @ReturnStatement_constructor(ptr %26)
@@ -30498,7 +32017,7 @@ if.entry20:                                       ; preds = %if.entry14
   br label %ifend16
 
 else21:                                           ; preds = %if.entry14
-  %27 = call ptr @string_from_bytes(ptr @260, i64 40)
+  %27 = call ptr @string_from_bytes(ptr @259, i64 40)
   %memberidx26 = getelementptr inbounds %FunctionDeclarationNode, ptr %2, i32 0, i32 3
   %28 = load ptr, ptr %memberidx26, align 8
   %29 = load ptr, ptr %28, align 8
@@ -30527,14 +32046,14 @@ define ptr @get_scope(ptr %0, ptr %1) {
   %memberidx = getelementptr inbounds %Program, ptr %0, i32 0, i32 1
   %3 = load ptr, ptr %memberidx, align 8
   %4 = load ptr, ptr %3, align 8
-  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %4, i32 0, i32 5
+  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %4, i32 0, i32 6
   %5 = load ptr, ptr %memberidx1, align 8
   %6 = load i64, ptr %1, align 4
   %7 = call ptr %5(ptr %3, i64 %6)
   %memberidx3 = getelementptr inbounds %Module, ptr %7, i32 0, i32 7
   %8 = load ptr, ptr %memberidx3, align 8
   %9 = load ptr, ptr %8, align 8
-  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %9, i32 0, i32 5
+  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %9, i32 0, i32 6
   %10 = load ptr, ptr %memberidx4, align 8
   %memberidx5 = getelementptr inbounds %ScopeId, ptr %1, i32 0, i32 1
   %11 = load i64, ptr %memberidx5, align 4
@@ -30556,7 +32075,7 @@ if.entry:                                         ; preds = %2
   %memberidx1 = getelementptr inbounds %Class, ptr %3, i32 0, i32 5
   %6 = load ptr, ptr %memberidx1, align 8
   %7 = load ptr, ptr %6, align 8
-  %memberidx2 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %7, i32 0, i32 5
+  %memberidx2 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %7, i32 0, i32 6
   %8 = load ptr, ptr %memberidx2, align 8
   %memberidx3 = getelementptr inbounds %PropId, ptr %1, i32 0, i32 2
   %9 = load i64, ptr %memberidx3, align 4
@@ -30569,7 +32088,7 @@ ifend:                                            ; preds = %2
   %memberidx5 = getelementptr inbounds %Class, ptr %3, i32 0, i32 4
   %12 = load ptr, ptr %memberidx5, align 8
   %13 = load ptr, ptr %12, align 8
-  %memberidx6 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %13, i32 0, i32 5
+  %memberidx6 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %13, i32 0, i32 6
   %14 = load ptr, ptr %memberidx6, align 8
   %memberidx7 = getelementptr inbounds %PropId, ptr %1, i32 0, i32 2
   %15 = load i64, ptr %memberidx7, align 4
@@ -30590,14 +32109,14 @@ define ptr @get_class(ptr %0, ptr %1) {
   %memberidx = getelementptr inbounds %Program, ptr %0, i32 0, i32 1
   %3 = load ptr, ptr %memberidx, align 8
   %4 = load ptr, ptr %3, align 8
-  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %4, i32 0, i32 5
+  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %4, i32 0, i32 6
   %5 = load ptr, ptr %memberidx1, align 8
   %6 = load i64, ptr %1, align 4
   %7 = call ptr %5(ptr %3, i64 %6)
   %memberidx3 = getelementptr inbounds %Module, ptr %7, i32 0, i32 4
   %8 = load ptr, ptr %memberidx3, align 8
   %9 = load ptr, ptr %8, align 8
-  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %9, i32 0, i32 5
+  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %9, i32 0, i32 6
   %10 = load ptr, ptr %memberidx4, align 8
   %memberidx5 = getelementptr inbounds %TypeId, ptr %1, i32 0, i32 2
   %11 = load i64, ptr %memberidx5, align 4
@@ -30656,14 +32175,14 @@ define ptr @get_enum(ptr %0, ptr %1) {
   %memberidx = getelementptr inbounds %Program, ptr %0, i32 0, i32 1
   %3 = load ptr, ptr %memberidx, align 8
   %4 = load ptr, ptr %3, align 8
-  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %4, i32 0, i32 5
+  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %4, i32 0, i32 6
   %5 = load ptr, ptr %memberidx1, align 8
   %6 = load i64, ptr %1, align 4
   %7 = call ptr %5(ptr %3, i64 %6)
   %memberidx3 = getelementptr inbounds %Module, ptr %7, i32 0, i32 6
   %8 = load ptr, ptr %memberidx3, align 8
   %9 = load ptr, ptr %8, align 8
-  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %9, i32 0, i32 5
+  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %9, i32 0, i32 6
   %10 = load ptr, ptr %memberidx4, align 8
   %memberidx5 = getelementptr inbounds %TypeId, ptr %1, i32 0, i32 2
   %11 = load i64, ptr %memberidx5, align 4
@@ -30681,7 +32200,7 @@ common.ret:                                       ; preds = %true_block45, %fals
   ret ptr %common.ret.op
 
 if.entry:                                         ; preds = %2
-  %5 = call ptr @string_from_bytes(ptr @47, i64 4)
+  %5 = call ptr @string_from_bytes(ptr @46, i64 4)
   br label %common.ret
 
 ifend:                                            ; preds = %2
@@ -30689,7 +32208,7 @@ ifend:                                            ; preds = %2
   br i1 %6, label %if.entry2, label %ifend4
 
 if.entry2:                                        ; preds = %ifend
-  %7 = call ptr @string_from_bytes(ptr @48, i64 2)
+  %7 = call ptr @string_from_bytes(ptr @47, i64 2)
   br label %common.ret
 
 ifend4:                                           ; preds = %ifend
@@ -30697,7 +32216,7 @@ ifend4:                                           ; preds = %ifend
   br i1 %8, label %if.entry6, label %ifend8
 
 if.entry6:                                        ; preds = %ifend4
-  %9 = call ptr @string_from_bytes(ptr @49, i64 2)
+  %9 = call ptr @string_from_bytes(ptr @48, i64 2)
   br label %common.ret
 
 ifend8:                                           ; preds = %ifend4
@@ -30705,7 +32224,7 @@ ifend8:                                           ; preds = %ifend4
   br i1 %10, label %if.entry10, label %ifend12
 
 if.entry10:                                       ; preds = %ifend8
-  %11 = call ptr @string_from_bytes(ptr @50, i64 3)
+  %11 = call ptr @string_from_bytes(ptr @49, i64 3)
   br label %common.ret
 
 ifend12:                                          ; preds = %ifend8
@@ -30713,7 +32232,7 @@ ifend12:                                          ; preds = %ifend8
   br i1 %12, label %if.entry14, label %ifend16
 
 if.entry14:                                       ; preds = %ifend12
-  %13 = call ptr @string_from_bytes(ptr @51, i64 3)
+  %13 = call ptr @string_from_bytes(ptr @50, i64 3)
   br label %common.ret
 
 ifend16:                                          ; preds = %ifend12
@@ -30721,7 +32240,7 @@ ifend16:                                          ; preds = %ifend12
   br i1 %14, label %if.entry18, label %ifend20
 
 if.entry18:                                       ; preds = %ifend16
-  %15 = call ptr @string_from_bytes(ptr @52, i64 3)
+  %15 = call ptr @string_from_bytes(ptr @51, i64 3)
   br label %common.ret
 
 ifend20:                                          ; preds = %ifend16
@@ -30729,7 +32248,7 @@ ifend20:                                          ; preds = %ifend16
   br i1 %16, label %if.entry22, label %ifend24
 
 if.entry22:                                       ; preds = %ifend20
-  %17 = call ptr @string_from_bytes(ptr @53, i64 4)
+  %17 = call ptr @string_from_bytes(ptr @52, i64 4)
   br label %common.ret
 
 ifend24:                                          ; preds = %ifend20
@@ -30745,17 +32264,17 @@ ifend28:                                          ; preds = %ifend24
 
 true_block:                                       ; preds = %if.entry26
   %20 = alloca ptr, align 8
-  %21 = call i64 (ptr, ptr, ...) @asprintf(ptr %20, ptr @189, i64 64)
+  %21 = call i64 (ptr, ptr, ...) @asprintf(ptr %20, ptr @188, i64 64)
   %22 = load ptr, ptr %20, align 8
   %23 = call ptr @string_from_bytes(ptr %22, i64 %21)
   br label %common.ret
 
 false_block:                                      ; preds = %if.entry26
-  %24 = call ptr @string_from_bytes(ptr @54, i64 3)
+  %24 = call ptr @string_from_bytes(ptr @53, i64 3)
   br label %common.ret
 
 if.entry30:                                       ; preds = %ifend28
-  %25 = call ptr @string_from_bytes(ptr @55, i64 3)
+  %25 = call ptr @string_from_bytes(ptr @54, i64 3)
   br label %common.ret
 
 ifend32:                                          ; preds = %ifend28
@@ -30763,7 +32282,7 @@ ifend32:                                          ; preds = %ifend28
   br i1 %26, label %if.entry34, label %ifend36
 
 if.entry34:                                       ; preds = %ifend32
-  %27 = call ptr @string_from_bytes(ptr @56, i64 3)
+  %27 = call ptr @string_from_bytes(ptr @55, i64 3)
   br label %common.ret
 
 ifend36:                                          ; preds = %ifend32
@@ -30771,7 +32290,7 @@ ifend36:                                          ; preds = %ifend32
   br i1 %28, label %if.entry38, label %ifend40
 
 if.entry38:                                       ; preds = %ifend36
-  %29 = call ptr @string_from_bytes(ptr @57, i64 3)
+  %29 = call ptr @string_from_bytes(ptr @56, i64 3)
   br label %common.ret
 
 ifend40:                                          ; preds = %ifend36
@@ -30787,18 +32306,18 @@ ifend44:                                          ; preds = %ifend40
 
 true_block45:                                     ; preds = %if.entry42
   %32 = alloca ptr, align 8
-  %33 = call i64 (ptr, ptr, ...) @asprintf(ptr %32, ptr @190, i64 64)
+  %33 = call i64 (ptr, ptr, ...) @asprintf(ptr %32, ptr @189, i64 64)
   %34 = load ptr, ptr %32, align 8
   %35 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%string, ptr null, i32 1) to i32))
   call void @string_constructor(ptr %35, ptr %34, i64 %33)
   br label %common.ret
 
 false_block46:                                    ; preds = %if.entry42
-  %36 = call ptr @string_from_bytes(ptr @58, i64 5)
+  %36 = call ptr @string_from_bytes(ptr @57, i64 5)
   br label %common.ret
 
 if.entry50:                                       ; preds = %ifend44
-  %37 = call ptr @string_from_bytes(ptr @59, i64 4)
+  %37 = call ptr @string_from_bytes(ptr @58, i64 4)
   br label %common.ret
 
 ifend52:                                          ; preds = %ifend44
@@ -30806,11 +32325,11 @@ ifend52:                                          ; preds = %ifend44
   br i1 %38, label %if.entry54, label %ifend56
 
 if.entry54:                                       ; preds = %ifend52
-  %39 = call ptr @string_from_bytes(ptr @191, i64 6)
+  %39 = call ptr @string_from_bytes(ptr @190, i64 6)
   br label %common.ret
 
 ifend56:                                          ; preds = %ifend52
-  %40 = call ptr @string_from_bytes(ptr @192, i64 7)
+  %40 = call ptr @string_from_bytes(ptr @191, i64 7)
   br label %common.ret
 }
 
@@ -30854,7 +32373,7 @@ define ptr @get_var(ptr %0, ptr %1) {
   %memberidx = getelementptr inbounds %Program, ptr %0, i32 0, i32 1
   %3 = load ptr, ptr %memberidx, align 8
   %4 = load ptr, ptr %3, align 8
-  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %4, i32 0, i32 5
+  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %4, i32 0, i32 6
   %5 = load ptr, ptr %memberidx1, align 8
   %memberidx2 = getelementptr inbounds %VarId, ptr %1, i32 0, i32 1
   %6 = load i64, ptr %memberidx2, align 4
@@ -30862,7 +32381,7 @@ define ptr @get_var(ptr %0, ptr %1) {
   %memberidx3 = getelementptr inbounds %Module, ptr %7, i32 0, i32 2
   %8 = load ptr, ptr %memberidx3, align 8
   %9 = load ptr, ptr %8, align 8
-  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %9, i32 0, i32 5
+  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %9, i32 0, i32 6
   %10 = load ptr, ptr %memberidx4, align 8
   %memberidx5 = getelementptr inbounds %VarId, ptr %1, i32 0, i32 2
   %11 = load i64, ptr %memberidx5, align 4
@@ -31126,7 +32645,7 @@ define ptr @get_const(ptr %0, ptr %1) {
   %memberidx = getelementptr inbounds %Program, ptr %0, i32 0, i32 1
   %3 = load ptr, ptr %memberidx, align 8
   %4 = load ptr, ptr %3, align 8
-  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %4, i32 0, i32 5
+  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %4, i32 0, i32 6
   %5 = load ptr, ptr %memberidx1, align 8
   %memberidx2 = getelementptr inbounds %VarId, ptr %1, i32 0, i32 1
   %6 = load i64, ptr %memberidx2, align 4
@@ -31134,7 +32653,7 @@ define ptr @get_const(ptr %0, ptr %1) {
   %memberidx3 = getelementptr inbounds %Module, ptr %7, i32 0, i32 3
   %8 = load ptr, ptr %memberidx3, align 8
   %9 = load ptr, ptr %8, align 8
-  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %9, i32 0, i32 5
+  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %9, i32 0, i32 6
   %10 = load ptr, ptr %memberidx4, align 8
   %memberidx5 = getelementptr inbounds %VarId, ptr %1, i32 0, i32 2
   %11 = load i64, ptr %memberidx5, align 4
@@ -31146,7 +32665,7 @@ define i1 @is_operator_overload_name(ptr %0) {
   %2 = load ptr, ptr %0, align 8
   %memberidx = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %2, i32 0, i32 4
   %3 = load ptr, ptr %memberidx, align 8
-  %4 = call ptr @string_from_bytes(ptr @211, i64 6)
+  %4 = call ptr @string_from_bytes(ptr @210, i64 6)
   %5 = call i1 %3(ptr %0, ptr %4)
   br i1 %5, label %common.ret, label %ifend
 
@@ -31158,7 +32677,7 @@ ifend:                                            ; preds = %1
   %6 = load ptr, ptr %0, align 8
   %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %6, i32 0, i32 4
   %7 = load ptr, ptr %memberidx1, align 8
-  %8 = call ptr @string_from_bytes(ptr @212, i64 7)
+  %8 = call ptr @string_from_bytes(ptr @211, i64 7)
   %9 = call i1 %7(ptr %0, ptr %8)
   br i1 %9, label %common.ret, label %ifend4
 
@@ -31166,7 +32685,7 @@ ifend4:                                           ; preds = %ifend
   %10 = load ptr, ptr %0, align 8
   %memberidx5 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %10, i32 0, i32 4
   %11 = load ptr, ptr %memberidx5, align 8
-  %12 = call ptr @string_from_bytes(ptr @213, i64 7)
+  %12 = call ptr @string_from_bytes(ptr @212, i64 7)
   %13 = call i1 %11(ptr %0, ptr %12)
   br i1 %13, label %common.ret, label %ifend8
 
@@ -31174,7 +32693,7 @@ ifend8:                                           ; preds = %ifend4
   %14 = load ptr, ptr %0, align 8
   %memberidx9 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %14, i32 0, i32 4
   %15 = load ptr, ptr %memberidx9, align 8
-  %16 = call ptr @string_from_bytes(ptr @214, i64 7)
+  %16 = call ptr @string_from_bytes(ptr @213, i64 7)
   %17 = call i1 %15(ptr %0, ptr %16)
   br i1 %17, label %common.ret, label %ifend12
 
@@ -31182,7 +32701,7 @@ ifend12:                                          ; preds = %ifend8
   %18 = load ptr, ptr %0, align 8
   %memberidx13 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %18, i32 0, i32 4
   %19 = load ptr, ptr %memberidx13, align 8
-  %20 = call ptr @string_from_bytes(ptr @215, i64 7)
+  %20 = call ptr @string_from_bytes(ptr @214, i64 7)
   %21 = call i1 %19(ptr %0, ptr %20)
   br i1 %21, label %common.ret, label %ifend16
 
@@ -31190,7 +32709,7 @@ ifend16:                                          ; preds = %ifend12
   %22 = load ptr, ptr %0, align 8
   %memberidx17 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %22, i32 0, i32 4
   %23 = load ptr, ptr %memberidx17, align 8
-  %24 = call ptr @string_from_bytes(ptr @216, i64 6)
+  %24 = call ptr @string_from_bytes(ptr @215, i64 6)
   %25 = call i1 %23(ptr %0, ptr %24)
   br i1 %25, label %common.ret, label %ifend20
 
@@ -31198,7 +32717,7 @@ ifend20:                                          ; preds = %ifend16
   %26 = load ptr, ptr %0, align 8
   %memberidx21 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %26, i32 0, i32 4
   %27 = load ptr, ptr %memberidx21, align 8
-  %28 = call ptr @string_from_bytes(ptr @217, i64 8)
+  %28 = call ptr @string_from_bytes(ptr @216, i64 8)
   %29 = call i1 %27(ptr %0, ptr %28)
   br i1 %29, label %common.ret, label %ifend24
 
@@ -31206,7 +32725,7 @@ ifend24:                                          ; preds = %ifend20
   %30 = load ptr, ptr %0, align 8
   %memberidx25 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %30, i32 0, i32 4
   %31 = load ptr, ptr %memberidx25, align 8
-  %32 = call ptr @string_from_bytes(ptr @218, i64 8)
+  %32 = call ptr @string_from_bytes(ptr @217, i64 8)
   %33 = call i1 %31(ptr %0, ptr %32)
   br i1 %33, label %common.ret, label %ifend28
 
@@ -31214,7 +32733,7 @@ ifend28:                                          ; preds = %ifend24
   %34 = load ptr, ptr %0, align 8
   %memberidx29 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %34, i32 0, i32 4
   %35 = load ptr, ptr %memberidx29, align 8
-  %36 = call ptr @string_from_bytes(ptr @219, i64 8)
+  %36 = call ptr @string_from_bytes(ptr @218, i64 8)
   %37 = call i1 %35(ptr %0, ptr %36)
   br i1 %37, label %common.ret, label %ifend32
 
@@ -31222,7 +32741,7 @@ ifend32:                                          ; preds = %ifend28
   %38 = load ptr, ptr %0, align 8
   %memberidx33 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %38, i32 0, i32 4
   %39 = load ptr, ptr %memberidx33, align 8
-  %40 = call ptr @string_from_bytes(ptr @220, i64 8)
+  %40 = call ptr @string_from_bytes(ptr @219, i64 8)
   %41 = call i1 %39(ptr %0, ptr %40)
   br i1 %41, label %common.ret, label %ifend36
 
@@ -31230,7 +32749,7 @@ ifend36:                                          ; preds = %ifend32
   %42 = load ptr, ptr %0, align 8
   %memberidx37 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %42, i32 0, i32 4
   %43 = load ptr, ptr %memberidx37, align 8
-  %44 = call ptr @string_from_bytes(ptr @221, i64 7)
+  %44 = call ptr @string_from_bytes(ptr @220, i64 7)
   %45 = call i1 %43(ptr %0, ptr %44)
   br i1 %45, label %common.ret, label %ifend40
 
@@ -31238,7 +32757,7 @@ ifend40:                                          ; preds = %ifend36
   %46 = load ptr, ptr %0, align 8
   %memberidx41 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %46, i32 0, i32 4
   %47 = load ptr, ptr %memberidx41, align 8
-  %48 = call ptr @string_from_bytes(ptr @222, i64 8)
+  %48 = call ptr @string_from_bytes(ptr @221, i64 8)
   %49 = call i1 %47(ptr %0, ptr %48)
   br i1 %49, label %common.ret, label %ifend44
 
@@ -31246,7 +32765,7 @@ ifend44:                                          ; preds = %ifend40
   %50 = load ptr, ptr %0, align 8
   %memberidx45 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %50, i32 0, i32 4
   %51 = load ptr, ptr %memberidx45, align 8
-  %52 = call ptr @string_from_bytes(ptr @223, i64 8)
+  %52 = call ptr @string_from_bytes(ptr @222, i64 8)
   %53 = call i1 %51(ptr %0, ptr %52)
   br i1 %53, label %common.ret, label %ifend48
 
@@ -31254,7 +32773,7 @@ ifend48:                                          ; preds = %ifend44
   %54 = load ptr, ptr %0, align 8
   %memberidx49 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %54, i32 0, i32 4
   %55 = load ptr, ptr %memberidx49, align 8
-  %56 = call ptr @string_from_bytes(ptr @224, i64 11)
+  %56 = call ptr @string_from_bytes(ptr @223, i64 11)
   %57 = call i1 %55(ptr %0, ptr %56)
   br i1 %57, label %common.ret, label %ifend52
 
@@ -31262,7 +32781,7 @@ ifend52:                                          ; preds = %ifend48
   %58 = load ptr, ptr %0, align 8
   %memberidx53 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %58, i32 0, i32 4
   %59 = load ptr, ptr %memberidx53, align 8
-  %60 = call ptr @string_from_bytes(ptr @225, i64 11)
+  %60 = call ptr @string_from_bytes(ptr @224, i64 11)
   %61 = call i1 %59(ptr %0, ptr %60)
   br i1 %61, label %common.ret, label %ifend56
 
@@ -31270,7 +32789,7 @@ ifend56:                                          ; preds = %ifend52
   %62 = load ptr, ptr %0, align 8
   %memberidx57 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %62, i32 0, i32 4
   %63 = load ptr, ptr %memberidx57, align 8
-  %64 = call ptr @string_from_bytes(ptr @226, i64 6)
+  %64 = call ptr @string_from_bytes(ptr @225, i64 6)
   %65 = call i1 %63(ptr %0, ptr %64)
   br i1 %65, label %common.ret, label %ifend60
 
@@ -31278,7 +32797,7 @@ ifend60:                                          ; preds = %ifend56
   %66 = load ptr, ptr %0, align 8
   %memberidx61 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %66, i32 0, i32 4
   %67 = load ptr, ptr %memberidx61, align 8
-  %68 = call ptr @string_from_bytes(ptr @227, i64 6)
+  %68 = call ptr @string_from_bytes(ptr @226, i64 6)
   %69 = call i1 %67(ptr %0, ptr %68)
   br i1 %69, label %common.ret, label %ifend64
 
@@ -31286,7 +32805,7 @@ ifend64:                                          ; preds = %ifend60
   %70 = load ptr, ptr %0, align 8
   %memberidx65 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %70, i32 0, i32 4
   %71 = load ptr, ptr %memberidx65, align 8
-  %72 = call ptr @string_from_bytes(ptr @228, i64 7)
+  %72 = call ptr @string_from_bytes(ptr @227, i64 7)
   %73 = call i1 %71(ptr %0, ptr %72)
   br i1 %73, label %common.ret, label %ifend68
 
@@ -31294,7 +32813,7 @@ ifend68:                                          ; preds = %ifend64
   %74 = load ptr, ptr %0, align 8
   %memberidx69 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %74, i32 0, i32 4
   %75 = load ptr, ptr %memberidx69, align 8
-  %76 = call ptr @string_from_bytes(ptr @229, i64 7)
+  %76 = call ptr @string_from_bytes(ptr @228, i64 7)
   %77 = call i1 %75(ptr %0, ptr %76)
   br i1 %77, label %common.ret, label %ifend72
 
@@ -31302,7 +32821,7 @@ ifend72:                                          ; preds = %ifend68
   %78 = load ptr, ptr %0, align 8
   %memberidx73 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %78, i32 0, i32 4
   %79 = load ptr, ptr %memberidx73, align 8
-  %80 = call ptr @string_from_bytes(ptr @230, i64 6)
+  %80 = call ptr @string_from_bytes(ptr @229, i64 6)
   %81 = call i1 %79(ptr %0, ptr %80)
   br i1 %81, label %common.ret, label %ifend76
 
@@ -31310,7 +32829,7 @@ ifend76:                                          ; preds = %ifend72
   %82 = load ptr, ptr %0, align 8
   %memberidx77 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %82, i32 0, i32 4
   %83 = load ptr, ptr %memberidx77, align 8
-  %84 = call ptr @string_from_bytes(ptr @231, i64 6)
+  %84 = call ptr @string_from_bytes(ptr @230, i64 6)
   %85 = call i1 %83(ptr %0, ptr %84)
   br i1 %85, label %common.ret, label %ifend80
 
@@ -31318,7 +32837,7 @@ ifend80:                                          ; preds = %ifend76
   %86 = load ptr, ptr %0, align 8
   %memberidx81 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %86, i32 0, i32 4
   %87 = load ptr, ptr %memberidx81, align 8
-  %88 = call ptr @string_from_bytes(ptr @232, i64 6)
+  %88 = call ptr @string_from_bytes(ptr @231, i64 6)
   %89 = call i1 %87(ptr %0, ptr %88)
   br i1 %89, label %common.ret, label %ifend84
 
@@ -31326,7 +32845,7 @@ ifend84:                                          ; preds = %ifend80
   %90 = load ptr, ptr %0, align 8
   %memberidx85 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %90, i32 0, i32 4
   %91 = load ptr, ptr %memberidx85, align 8
-  %92 = call ptr @string_from_bytes(ptr @233, i64 6)
+  %92 = call ptr @string_from_bytes(ptr @232, i64 6)
   %93 = call i1 %91(ptr %0, ptr %92)
   br i1 %93, label %common.ret, label %ifend88
 
@@ -31334,7 +32853,7 @@ ifend88:                                          ; preds = %ifend84
   %94 = load ptr, ptr %0, align 8
   %memberidx89 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %94, i32 0, i32 4
   %95 = load ptr, ptr %memberidx89, align 8
-  %96 = call ptr @string_from_bytes(ptr @234, i64 6)
+  %96 = call ptr @string_from_bytes(ptr @233, i64 6)
   %97 = call i1 %95(ptr %0, ptr %96)
   br i1 %97, label %common.ret, label %ifend92
 
@@ -31342,7 +32861,7 @@ ifend92:                                          ; preds = %ifend88
   %98 = load ptr, ptr %0, align 8
   %memberidx93 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %98, i32 0, i32 4
   %99 = load ptr, ptr %memberidx93, align 8
-  %100 = call ptr @string_from_bytes(ptr @235, i64 6)
+  %100 = call ptr @string_from_bytes(ptr @234, i64 6)
   %101 = call i1 %99(ptr %0, ptr %100)
   br i1 %101, label %common.ret, label %ifend96
 
@@ -31350,7 +32869,7 @@ ifend96:                                          ; preds = %ifend92
   %102 = load ptr, ptr %0, align 8
   %memberidx97 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %102, i32 0, i32 4
   %103 = load ptr, ptr %memberidx97, align 8
-  %104 = call ptr @string_from_bytes(ptr @236, i64 7)
+  %104 = call ptr @string_from_bytes(ptr @235, i64 7)
   %105 = call i1 %103(ptr %0, ptr %104)
   br i1 %105, label %common.ret, label %ifend100
 
@@ -31358,7 +32877,7 @@ ifend100:                                         ; preds = %ifend96
   %106 = load ptr, ptr %0, align 8
   %memberidx101 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %106, i32 0, i32 4
   %107 = load ptr, ptr %memberidx101, align 8
-  %108 = call ptr @string_from_bytes(ptr @237, i64 7)
+  %108 = call ptr @string_from_bytes(ptr @236, i64 7)
   %109 = call i1 %107(ptr %0, ptr %108)
   br i1 %109, label %common.ret, label %ifend104
 
@@ -31366,7 +32885,7 @@ ifend104:                                         ; preds = %ifend100
   %110 = load ptr, ptr %0, align 8
   %memberidx105 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %110, i32 0, i32 4
   %111 = load ptr, ptr %memberidx105, align 8
-  %112 = call ptr @string_from_bytes(ptr @238, i64 8)
+  %112 = call ptr @string_from_bytes(ptr @237, i64 8)
   %113 = call i1 %111(ptr %0, ptr %112)
   br i1 %113, label %common.ret, label %ifend108
 
@@ -31374,7 +32893,7 @@ ifend108:                                         ; preds = %ifend104
   %114 = load ptr, ptr %0, align 8
   %memberidx109 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %114, i32 0, i32 4
   %115 = load ptr, ptr %memberidx109, align 8
-  %116 = call ptr @string_from_bytes(ptr @239, i64 8)
+  %116 = call ptr @string_from_bytes(ptr @238, i64 8)
   %117 = call i1 %115(ptr %0, ptr %116)
   br label %common.ret
 }
@@ -31393,7 +32912,7 @@ if.entry:                                         ; preds = %2
   %memberidx1 = getelementptr inbounds %Class, ptr %3, i32 0, i32 5
   %6 = load ptr, ptr %memberidx1, align 8
   %7 = load ptr, ptr %6, align 8
-  %memberidx2 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %7, i32 0, i32 5
+  %memberidx2 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %7, i32 0, i32 6
   %8 = load ptr, ptr %memberidx2, align 8
   %memberidx3 = getelementptr inbounds %PropId, ptr %1, i32 0, i32 2
   %9 = load i64, ptr %memberidx3, align 4
@@ -31406,7 +32925,7 @@ ifend:                                            ; preds = %2
   %memberidx5 = getelementptr inbounds %Class, ptr %3, i32 0, i32 4
   %12 = load ptr, ptr %memberidx5, align 8
   %13 = load ptr, ptr %12, align 8
-  %memberidx6 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %13, i32 0, i32 5
+  %memberidx6 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %13, i32 0, i32 6
   %14 = load ptr, ptr %memberidx6, align 8
   %memberidx7 = getelementptr inbounds %PropId, ptr %1, i32 0, i32 2
   %15 = load i64, ptr %memberidx7, align 4
@@ -31425,7 +32944,7 @@ common.ret:                                       ; preds = %ifend3, %if.entry1,
   ret ptr %common.ret.op
 
 if.entry:                                         ; preds = %1
-  %3 = call ptr @string_from_bytes(ptr @67, i64 7)
+  %3 = call ptr @string_from_bytes(ptr @66, i64 7)
   br label %common.ret
 
 ifend:                                            ; preds = %1
@@ -31433,11 +32952,11 @@ ifend:                                            ; preds = %1
   br i1 %4, label %if.entry1, label %ifend3
 
 if.entry1:                                        ; preds = %ifend
-  %5 = call ptr @string_from_bytes(ptr @68, i64 6)
+  %5 = call ptr @string_from_bytes(ptr @67, i64 6)
   br label %common.ret
 
 ifend3:                                           ; preds = %ifend
-  %6 = call ptr @string_from_bytes(ptr @69, i64 9)
+  %6 = call ptr @string_from_bytes(ptr @68, i64 9)
   br label %common.ret
 }
 
@@ -31455,7 +32974,7 @@ if.entry:                                         ; preds = %2
   %memberidx1 = getelementptr inbounds %Class, ptr %3, i32 0, i32 5
   %6 = load ptr, ptr %memberidx1, align 8
   %7 = load ptr, ptr %6, align 8
-  %memberidx2 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %7, i32 0, i32 5
+  %memberidx2 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %7, i32 0, i32 6
   %8 = load ptr, ptr %memberidx2, align 8
   %memberidx3 = getelementptr inbounds %PropId, ptr %1, i32 0, i32 2
   %9 = load i64, ptr %memberidx3, align 4
@@ -31468,7 +32987,7 @@ ifend:                                            ; preds = %2
   %memberidx5 = getelementptr inbounds %Class, ptr %3, i32 0, i32 4
   %12 = load ptr, ptr %memberidx5, align 8
   %13 = load ptr, ptr %12, align 8
-  %memberidx6 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %13, i32 0, i32 5
+  %memberidx6 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %13, i32 0, i32 6
   %14 = load ptr, ptr %memberidx6, align 8
   %memberidx7 = getelementptr inbounds %PropId, ptr %1, i32 0, i32 2
   %15 = load i64, ptr %memberidx7, align 4
@@ -31512,7 +33031,7 @@ if.entry:                                         ; preds = %2
   %memberidx1 = getelementptr inbounds %Class, ptr %3, i32 0, i32 5
   %6 = load ptr, ptr %memberidx1, align 8
   %7 = load ptr, ptr %6, align 8
-  %memberidx2 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %7, i32 0, i32 5
+  %memberidx2 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %7, i32 0, i32 6
   %8 = load ptr, ptr %memberidx2, align 8
   %memberidx3 = getelementptr inbounds %PropId, ptr %1, i32 0, i32 2
   %9 = load i64, ptr %memberidx3, align 4
@@ -31525,7 +33044,7 @@ ifend:                                            ; preds = %2
   %memberidx5 = getelementptr inbounds %Class, ptr %3, i32 0, i32 4
   %12 = load ptr, ptr %memberidx5, align 8
   %13 = load ptr, ptr %12, align 8
-  %memberidx6 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %13, i32 0, i32 5
+  %memberidx6 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %13, i32 0, i32 6
   %14 = load ptr, ptr %memberidx6, align 8
   %memberidx7 = getelementptr inbounds %PropId, ptr %1, i32 0, i32 2
   %15 = load i64, ptr %memberidx7, align 4
@@ -31540,7 +33059,7 @@ define ptr @get_method(ptr %0, ptr %1) {
   %memberidx = getelementptr inbounds %Class, ptr %3, i32 0, i32 5
   %4 = load ptr, ptr %memberidx, align 8
   %5 = load ptr, ptr %4, align 8
-  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %5, i32 0, i32 5
+  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %5, i32 0, i32 6
   %6 = load ptr, ptr %memberidx1, align 8
   %memberidx2 = getelementptr inbounds %PropId, ptr %1, i32 0, i32 2
   %7 = load i64, ptr %memberidx2, align 4
@@ -31579,7 +33098,7 @@ define ptr @get_func(ptr %0, ptr %1) {
   %memberidx = getelementptr inbounds %Program, ptr %0, i32 0, i32 1
   %3 = load ptr, ptr %memberidx, align 8
   %4 = load ptr, ptr %3, align 8
-  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %4, i32 0, i32 5
+  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %4, i32 0, i32 6
   %5 = load ptr, ptr %memberidx1, align 8
   %memberidx2 = getelementptr inbounds %VarId, ptr %1, i32 0, i32 1
   %6 = load i64, ptr %memberidx2, align 4
@@ -31587,7 +33106,7 @@ define ptr @get_func(ptr %0, ptr %1) {
   %memberidx3 = getelementptr inbounds %Module, ptr %7, i32 0, i32 5
   %8 = load ptr, ptr %memberidx3, align 8
   %9 = load ptr, ptr %8, align 8
-  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %9, i32 0, i32 5
+  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %9, i32 0, i32 6
   %10 = load ptr, ptr %memberidx4, align 8
   %memberidx5 = getelementptr inbounds %VarId, ptr %1, i32 0, i32 2
   %11 = load i64, ptr %memberidx5, align 4
@@ -31672,7 +33191,7 @@ common.ret:                                       ; preds = %ifend78, %if.entry7
   ret ptr %common.ret.op
 
 if.entry:                                         ; preds = %1
-  %3 = call ptr @string_from_bytes(ptr @212, i64 7)
+  %3 = call ptr @string_from_bytes(ptr @211, i64 7)
   br label %common.ret
 
 ifend:                                            ; preds = %1
@@ -31680,7 +33199,7 @@ ifend:                                            ; preds = %1
   br i1 %4, label %if.entry1, label %ifend3
 
 if.entry1:                                        ; preds = %ifend
-  %5 = call ptr @string_from_bytes(ptr @213, i64 7)
+  %5 = call ptr @string_from_bytes(ptr @212, i64 7)
   br label %common.ret
 
 ifend3:                                           ; preds = %ifend
@@ -31688,7 +33207,7 @@ ifend3:                                           ; preds = %ifend
   br i1 %6, label %if.entry4, label %ifend6
 
 if.entry4:                                        ; preds = %ifend3
-  %7 = call ptr @string_from_bytes(ptr @214, i64 7)
+  %7 = call ptr @string_from_bytes(ptr @213, i64 7)
   br label %common.ret
 
 ifend6:                                           ; preds = %ifend3
@@ -31696,7 +33215,7 @@ ifend6:                                           ; preds = %ifend3
   br i1 %8, label %if.entry7, label %ifend9
 
 if.entry7:                                        ; preds = %ifend6
-  %9 = call ptr @string_from_bytes(ptr @215, i64 7)
+  %9 = call ptr @string_from_bytes(ptr @214, i64 7)
   br label %common.ret
 
 ifend9:                                           ; preds = %ifend6
@@ -31704,7 +33223,7 @@ ifend9:                                           ; preds = %ifend6
   br i1 %10, label %if.entry10, label %ifend12
 
 if.entry10:                                       ; preds = %ifend9
-  %11 = call ptr @string_from_bytes(ptr @237, i64 7)
+  %11 = call ptr @string_from_bytes(ptr @236, i64 7)
   br label %common.ret
 
 ifend12:                                          ; preds = %ifend9
@@ -31712,7 +33231,7 @@ ifend12:                                          ; preds = %ifend9
   br i1 %12, label %if.entry13, label %ifend15
 
 if.entry13:                                       ; preds = %ifend12
-  %13 = call ptr @string_from_bytes(ptr @236, i64 7)
+  %13 = call ptr @string_from_bytes(ptr @235, i64 7)
   br label %common.ret
 
 ifend15:                                          ; preds = %ifend12
@@ -31720,7 +33239,7 @@ ifend15:                                          ; preds = %ifend12
   br i1 %14, label %if.entry16, label %ifend18
 
 if.entry16:                                       ; preds = %ifend15
-  %15 = call ptr @string_from_bytes(ptr @217, i64 8)
+  %15 = call ptr @string_from_bytes(ptr @216, i64 8)
   br label %common.ret
 
 ifend18:                                          ; preds = %ifend15
@@ -31728,7 +33247,7 @@ ifend18:                                          ; preds = %ifend15
   br i1 %16, label %if.entry19, label %ifend21
 
 if.entry19:                                       ; preds = %ifend18
-  %17 = call ptr @string_from_bytes(ptr @218, i64 8)
+  %17 = call ptr @string_from_bytes(ptr @217, i64 8)
   br label %common.ret
 
 ifend21:                                          ; preds = %ifend18
@@ -31736,7 +33255,7 @@ ifend21:                                          ; preds = %ifend18
   br i1 %18, label %if.entry22, label %ifend24
 
 if.entry22:                                       ; preds = %ifend21
-  %19 = call ptr @string_from_bytes(ptr @219, i64 8)
+  %19 = call ptr @string_from_bytes(ptr @218, i64 8)
   br label %common.ret
 
 ifend24:                                          ; preds = %ifend21
@@ -31744,7 +33263,7 @@ ifend24:                                          ; preds = %ifend21
   br i1 %20, label %if.entry25, label %ifend27
 
 if.entry25:                                       ; preds = %ifend24
-  %21 = call ptr @string_from_bytes(ptr @220, i64 8)
+  %21 = call ptr @string_from_bytes(ptr @219, i64 8)
   br label %common.ret
 
 ifend27:                                          ; preds = %ifend24
@@ -31752,7 +33271,7 @@ ifend27:                                          ; preds = %ifend24
   br i1 %22, label %if.entry28, label %ifend30
 
 if.entry28:                                       ; preds = %ifend27
-  %23 = call ptr @string_from_bytes(ptr @239, i64 8)
+  %23 = call ptr @string_from_bytes(ptr @238, i64 8)
   br label %common.ret
 
 ifend30:                                          ; preds = %ifend27
@@ -31760,7 +33279,7 @@ ifend30:                                          ; preds = %ifend27
   br i1 %24, label %if.entry31, label %ifend33
 
 if.entry31:                                       ; preds = %ifend30
-  %25 = call ptr @string_from_bytes(ptr @238, i64 8)
+  %25 = call ptr @string_from_bytes(ptr @237, i64 8)
   br label %common.ret
 
 ifend33:                                          ; preds = %ifend30
@@ -31768,7 +33287,7 @@ ifend33:                                          ; preds = %ifend30
   br i1 %26, label %if.entry34, label %ifend36
 
 if.entry34:                                       ; preds = %ifend33
-  %27 = call ptr @string_from_bytes(ptr @271, i64 6)
+  %27 = call ptr @string_from_bytes(ptr @270, i64 6)
   br label %common.ret
 
 ifend36:                                          ; preds = %ifend33
@@ -31776,7 +33295,7 @@ ifend36:                                          ; preds = %ifend33
   br i1 %28, label %if.entry37, label %ifend39
 
 if.entry37:                                       ; preds = %ifend36
-  %29 = call ptr @string_from_bytes(ptr @235, i64 6)
+  %29 = call ptr @string_from_bytes(ptr @234, i64 6)
   br label %common.ret
 
 ifend39:                                          ; preds = %ifend36
@@ -31784,7 +33303,7 @@ ifend39:                                          ; preds = %ifend36
   br i1 %30, label %if.entry40, label %ifend42
 
 if.entry40:                                       ; preds = %ifend39
-  %31 = call ptr @string_from_bytes(ptr @231, i64 6)
+  %31 = call ptr @string_from_bytes(ptr @230, i64 6)
   br label %common.ret
 
 ifend42:                                          ; preds = %ifend39
@@ -31792,7 +33311,7 @@ ifend42:                                          ; preds = %ifend39
   br i1 %32, label %if.entry43, label %ifend45
 
 if.entry43:                                       ; preds = %ifend42
-  %33 = call ptr @string_from_bytes(ptr @234, i64 6)
+  %33 = call ptr @string_from_bytes(ptr @233, i64 6)
   br label %common.ret
 
 ifend45:                                          ; preds = %ifend42
@@ -31800,7 +33319,7 @@ ifend45:                                          ; preds = %ifend42
   br i1 %34, label %if.entry46, label %ifend48
 
 if.entry46:                                       ; preds = %ifend45
-  %35 = call ptr @string_from_bytes(ptr @211, i64 6)
+  %35 = call ptr @string_from_bytes(ptr @210, i64 6)
   br label %common.ret
 
 ifend48:                                          ; preds = %ifend45
@@ -31808,7 +33327,7 @@ ifend48:                                          ; preds = %ifend45
   br i1 %36, label %if.entry49, label %ifend51
 
 if.entry49:                                       ; preds = %ifend48
-  %37 = call ptr @string_from_bytes(ptr @233, i64 6)
+  %37 = call ptr @string_from_bytes(ptr @232, i64 6)
   br label %common.ret
 
 ifend51:                                          ; preds = %ifend48
@@ -31816,7 +33335,7 @@ ifend51:                                          ; preds = %ifend48
   br i1 %38, label %if.entry52, label %ifend54
 
 if.entry52:                                       ; preds = %ifend51
-  %39 = call ptr @string_from_bytes(ptr @226, i64 6)
+  %39 = call ptr @string_from_bytes(ptr @225, i64 6)
   br label %common.ret
 
 ifend54:                                          ; preds = %ifend51
@@ -31824,7 +33343,7 @@ ifend54:                                          ; preds = %ifend51
   br i1 %40, label %if.entry55, label %ifend57
 
 if.entry55:                                       ; preds = %ifend54
-  %41 = call ptr @string_from_bytes(ptr @227, i64 6)
+  %41 = call ptr @string_from_bytes(ptr @226, i64 6)
   br label %common.ret
 
 ifend57:                                          ; preds = %ifend54
@@ -31832,7 +33351,7 @@ ifend57:                                          ; preds = %ifend54
   br i1 %42, label %if.entry58, label %ifend60
 
 if.entry58:                                       ; preds = %ifend57
-  %43 = call ptr @string_from_bytes(ptr @228, i64 7)
+  %43 = call ptr @string_from_bytes(ptr @227, i64 7)
   br label %common.ret
 
 ifend60:                                          ; preds = %ifend57
@@ -31840,7 +33359,7 @@ ifend60:                                          ; preds = %ifend57
   br i1 %44, label %if.entry61, label %ifend63
 
 if.entry61:                                       ; preds = %ifend60
-  %45 = call ptr @string_from_bytes(ptr @229, i64 7)
+  %45 = call ptr @string_from_bytes(ptr @228, i64 7)
   br label %common.ret
 
 ifend63:                                          ; preds = %ifend60
@@ -31848,7 +33367,7 @@ ifend63:                                          ; preds = %ifend60
   br i1 %46, label %if.entry64, label %ifend66
 
 if.entry64:                                       ; preds = %ifend63
-  %47 = call ptr @string_from_bytes(ptr @216, i64 6)
+  %47 = call ptr @string_from_bytes(ptr @215, i64 6)
   br label %common.ret
 
 ifend66:                                          ; preds = %ifend63
@@ -31856,7 +33375,7 @@ ifend66:                                          ; preds = %ifend63
   br i1 %48, label %if.entry67, label %ifend69
 
 if.entry67:                                       ; preds = %ifend66
-  %49 = call ptr @string_from_bytes(ptr @272, i64 7)
+  %49 = call ptr @string_from_bytes(ptr @271, i64 7)
   br label %common.ret
 
 ifend69:                                          ; preds = %ifend66
@@ -31864,7 +33383,7 @@ ifend69:                                          ; preds = %ifend66
   br i1 %50, label %if.entry70, label %ifend72
 
 if.entry70:                                       ; preds = %ifend69
-  %51 = call ptr @string_from_bytes(ptr @273, i64 7)
+  %51 = call ptr @string_from_bytes(ptr @272, i64 7)
   br label %common.ret
 
 ifend72:                                          ; preds = %ifend69
@@ -31872,7 +33391,7 @@ ifend72:                                          ; preds = %ifend69
   br i1 %52, label %if.entry73, label %ifend75
 
 if.entry73:                                       ; preds = %ifend72
-  %53 = call ptr @string_from_bytes(ptr @222, i64 8)
+  %53 = call ptr @string_from_bytes(ptr @221, i64 8)
   br label %common.ret
 
 ifend75:                                          ; preds = %ifend72
@@ -31880,7 +33399,7 @@ ifend75:                                          ; preds = %ifend72
   br i1 %54, label %if.entry76, label %ifend78
 
 if.entry76:                                       ; preds = %ifend75
-  %55 = call ptr @string_from_bytes(ptr @223, i64 8)
+  %55 = call ptr @string_from_bytes(ptr @222, i64 8)
   br label %common.ret
 
 ifend78:                                          ; preds = %ifend75
@@ -31888,7 +33407,7 @@ ifend78:                                          ; preds = %ifend75
   br i1 %56, label %if.entry79, label %common.ret
 
 if.entry79:                                       ; preds = %ifend78
-  %57 = call ptr @string_from_bytes(ptr @230, i64 6)
+  %57 = call ptr @string_from_bytes(ptr @229, i64 6)
   br label %common.ret
 }
 
@@ -31901,7 +33420,7 @@ common.ret:                                       ; preds = %ifend54, %if.entry5
   ret ptr %common.ret.op
 
 if.entry:                                         ; preds = %1
-  %3 = call ptr @string_from_bytes(ptr @275, i64 1)
+  %3 = call ptr @string_from_bytes(ptr @274, i64 1)
   br label %common.ret
 
 ifend:                                            ; preds = %1
@@ -31909,7 +33428,7 @@ ifend:                                            ; preds = %1
   br i1 %4, label %if.entry1, label %ifend3
 
 if.entry1:                                        ; preds = %ifend
-  %5 = call ptr @string_from_bytes(ptr @276, i64 1)
+  %5 = call ptr @string_from_bytes(ptr @275, i64 1)
   br label %common.ret
 
 ifend3:                                           ; preds = %ifend
@@ -31917,7 +33436,7 @@ ifend3:                                           ; preds = %ifend
   br i1 %6, label %if.entry4, label %ifend6
 
 if.entry4:                                        ; preds = %ifend3
-  %7 = call ptr @string_from_bytes(ptr @277, i64 1)
+  %7 = call ptr @string_from_bytes(ptr @276, i64 1)
   br label %common.ret
 
 ifend6:                                           ; preds = %ifend3
@@ -31925,7 +33444,7 @@ ifend6:                                           ; preds = %ifend3
   br i1 %8, label %if.entry7, label %ifend9
 
 if.entry7:                                        ; preds = %ifend6
-  %9 = call ptr @string_from_bytes(ptr @278, i64 1)
+  %9 = call ptr @string_from_bytes(ptr @277, i64 1)
   br label %common.ret
 
 ifend9:                                           ; preds = %ifend6
@@ -31933,7 +33452,7 @@ ifend9:                                           ; preds = %ifend6
   br i1 %10, label %if.entry10, label %ifend12
 
 if.entry10:                                       ; preds = %ifend9
-  %11 = call ptr @string_from_bytes(ptr @279, i64 1)
+  %11 = call ptr @string_from_bytes(ptr @278, i64 1)
   br label %common.ret
 
 ifend12:                                          ; preds = %ifend9
@@ -31941,7 +33460,7 @@ ifend12:                                          ; preds = %ifend9
   br i1 %12, label %if.entry13, label %ifend15
 
 if.entry13:                                       ; preds = %ifend12
-  %13 = call ptr @string_from_bytes(ptr @36, i64 1)
+  %13 = call ptr @string_from_bytes(ptr @35, i64 1)
   br label %common.ret
 
 ifend15:                                          ; preds = %ifend12
@@ -31949,7 +33468,7 @@ ifend15:                                          ; preds = %ifend12
   br i1 %14, label %if.entry16, label %ifend18
 
 if.entry16:                                       ; preds = %ifend15
-  %15 = call ptr @string_from_bytes(ptr @188, i64 1)
+  %15 = call ptr @string_from_bytes(ptr @187, i64 1)
   br label %common.ret
 
 ifend18:                                          ; preds = %ifend15
@@ -31957,7 +33476,7 @@ ifend18:                                          ; preds = %ifend15
   br i1 %16, label %if.entry19, label %ifend21
 
 if.entry19:                                       ; preds = %ifend18
-  %17 = call ptr @string_from_bytes(ptr @280, i64 2)
+  %17 = call ptr @string_from_bytes(ptr @279, i64 2)
   br label %common.ret
 
 ifend21:                                          ; preds = %ifend18
@@ -31965,7 +33484,7 @@ ifend21:                                          ; preds = %ifend18
   br i1 %18, label %if.entry22, label %ifend24
 
 if.entry22:                                       ; preds = %ifend21
-  %19 = call ptr @string_from_bytes(ptr @187, i64 1)
+  %19 = call ptr @string_from_bytes(ptr @186, i64 1)
   br label %common.ret
 
 ifend24:                                          ; preds = %ifend21
@@ -31973,7 +33492,7 @@ ifend24:                                          ; preds = %ifend21
   br i1 %20, label %if.entry25, label %ifend27
 
 if.entry25:                                       ; preds = %ifend24
-  %21 = call ptr @string_from_bytes(ptr @281, i64 2)
+  %21 = call ptr @string_from_bytes(ptr @280, i64 2)
   br label %common.ret
 
 ifend27:                                          ; preds = %ifend24
@@ -31981,7 +33500,7 @@ ifend27:                                          ; preds = %ifend24
   br i1 %22, label %if.entry28, label %ifend30
 
 if.entry28:                                       ; preds = %ifend27
-  %23 = call ptr @string_from_bytes(ptr @282, i64 2)
+  %23 = call ptr @string_from_bytes(ptr @281, i64 2)
   br label %common.ret
 
 ifend30:                                          ; preds = %ifend27
@@ -31989,7 +33508,7 @@ ifend30:                                          ; preds = %ifend27
   br i1 %24, label %if.entry31, label %ifend33
 
 if.entry31:                                       ; preds = %ifend30
-  %25 = call ptr @string_from_bytes(ptr @283, i64 2)
+  %25 = call ptr @string_from_bytes(ptr @282, i64 2)
   br label %common.ret
 
 ifend33:                                          ; preds = %ifend30
@@ -31997,7 +33516,7 @@ ifend33:                                          ; preds = %ifend30
   br i1 %26, label %if.entry34, label %ifend36
 
 if.entry34:                                       ; preds = %ifend33
-  %27 = call ptr @string_from_bytes(ptr @284, i64 2)
+  %27 = call ptr @string_from_bytes(ptr @283, i64 2)
   br label %common.ret
 
 ifend36:                                          ; preds = %ifend33
@@ -32005,7 +33524,7 @@ ifend36:                                          ; preds = %ifend33
   br i1 %28, label %if.entry37, label %ifend39
 
 if.entry37:                                       ; preds = %ifend36
-  %29 = call ptr @string_from_bytes(ptr @285, i64 2)
+  %29 = call ptr @string_from_bytes(ptr @284, i64 2)
   br label %common.ret
 
 ifend39:                                          ; preds = %ifend36
@@ -32013,7 +33532,7 @@ ifend39:                                          ; preds = %ifend36
   br i1 %30, label %if.entry40, label %ifend42
 
 if.entry40:                                       ; preds = %ifend39
-  %31 = call ptr @string_from_bytes(ptr @41, i64 2)
+  %31 = call ptr @string_from_bytes(ptr @40, i64 2)
   br label %common.ret
 
 ifend42:                                          ; preds = %ifend39
@@ -32021,7 +33540,7 @@ ifend42:                                          ; preds = %ifend39
   br i1 %32, label %if.entry43, label %ifend45
 
 if.entry43:                                       ; preds = %ifend42
-  %33 = call ptr @string_from_bytes(ptr @40, i64 3)
+  %33 = call ptr @string_from_bytes(ptr @39, i64 3)
   br label %common.ret
 
 ifend45:                                          ; preds = %ifend42
@@ -32029,7 +33548,7 @@ ifend45:                                          ; preds = %ifend42
   br i1 %34, label %if.entry46, label %ifend48
 
 if.entry46:                                       ; preds = %ifend45
-  %35 = call ptr @string_from_bytes(ptr @42, i64 3)
+  %35 = call ptr @string_from_bytes(ptr @41, i64 3)
   br label %common.ret
 
 ifend48:                                          ; preds = %ifend45
@@ -32037,7 +33556,7 @@ ifend48:                                          ; preds = %ifend45
   br i1 %36, label %if.entry49, label %ifend51
 
 if.entry49:                                       ; preds = %ifend48
-  %37 = call ptr @string_from_bytes(ptr @70, i64 2)
+  %37 = call ptr @string_from_bytes(ptr @69, i64 2)
   br label %common.ret
 
 ifend51:                                          ; preds = %ifend48
@@ -32045,11 +33564,11 @@ ifend51:                                          ; preds = %ifend48
   br i1 %38, label %if.entry52, label %ifend54
 
 if.entry52:                                       ; preds = %ifend51
-  %39 = call ptr @string_from_bytes(ptr @286, i64 1)
+  %39 = call ptr @string_from_bytes(ptr @285, i64 1)
   br label %common.ret
 
 ifend54:                                          ; preds = %ifend51
-  %40 = call ptr @string_from_bytes(ptr @287, i64 2)
+  %40 = call ptr @string_from_bytes(ptr @286, i64 2)
   br label %common.ret
 }
 
@@ -32175,7 +33694,7 @@ common.ret:                                       ; preds = %ifend15, %if.entry1
   ret ptr %common.ret.op
 
 if.entry:                                         ; preds = %1
-  %3 = call ptr @string_from_bytes(ptr @293, i64 7)
+  %3 = call ptr @string_from_bytes(ptr @292, i64 7)
   br label %common.ret
 
 ifend:                                            ; preds = %1
@@ -32183,7 +33702,7 @@ ifend:                                            ; preds = %1
   br i1 %4, label %if.entry1, label %ifend3
 
 if.entry1:                                        ; preds = %ifend
-  %5 = call ptr @string_from_bytes(ptr @294, i64 7)
+  %5 = call ptr @string_from_bytes(ptr @293, i64 7)
   br label %common.ret
 
 ifend3:                                           ; preds = %ifend
@@ -32191,7 +33710,7 @@ ifend3:                                           ; preds = %ifend
   br i1 %6, label %if.entry4, label %ifend6
 
 if.entry4:                                        ; preds = %ifend3
-  %7 = call ptr @string_from_bytes(ptr @295, i64 8)
+  %7 = call ptr @string_from_bytes(ptr @294, i64 8)
   br label %common.ret
 
 ifend6:                                           ; preds = %ifend3
@@ -32199,7 +33718,7 @@ ifend6:                                           ; preds = %ifend3
   br i1 %8, label %if.entry7, label %ifend9
 
 if.entry7:                                        ; preds = %ifend6
-  %9 = call ptr @string_from_bytes(ptr @296, i64 8)
+  %9 = call ptr @string_from_bytes(ptr @295, i64 8)
   br label %common.ret
 
 ifend9:                                           ; preds = %ifend6
@@ -32207,7 +33726,7 @@ ifend9:                                           ; preds = %ifend6
   br i1 %10, label %if.entry10, label %ifend12
 
 if.entry10:                                       ; preds = %ifend9
-  %11 = call ptr @string_from_bytes(ptr @276, i64 1)
+  %11 = call ptr @string_from_bytes(ptr @275, i64 1)
   br label %common.ret
 
 ifend12:                                          ; preds = %ifend9
@@ -32215,11 +33734,11 @@ ifend12:                                          ; preds = %ifend9
   br i1 %12, label %if.entry13, label %ifend15
 
 if.entry13:                                       ; preds = %ifend12
-  %13 = call ptr @string_from_bytes(ptr @297, i64 1)
+  %13 = call ptr @string_from_bytes(ptr @296, i64 1)
   br label %common.ret
 
 ifend15:                                          ; preds = %ifend12
-  %14 = call ptr @string_from_bytes(ptr @298, i64 1)
+  %14 = call ptr @string_from_bytes(ptr @297, i64 1)
   br label %common.ret
 }
 
@@ -32245,7 +33764,7 @@ ifend:                                            ; preds = %3
   %11 = load ptr, ptr %class_obj, align 8
   %12 = load ptr, ptr %11, align 8
   %13 = load i64, ptr %12, align 4
-  %14 = icmp eq i64 %13, 0
+  %14 = icmp eq i64 %13, 1
   %15 = and i1 %10, %14
   br label %common.ret
 }
@@ -32278,7 +33797,7 @@ define void @GeneratedModule_print_errors(ptr %0) {
   %6 = load ptr, ptr %memberidx2, align 8
   %7 = call ptr %6(ptr %3)
   %8 = alloca ptr, align 8
-  %9 = call i64 (ptr, ptr, ...) @asprintf(ptr %8, ptr @345, ptr %7)
+  %9 = call i64 (ptr, ptr, ...) @asprintf(ptr %8, ptr @349, ptr %7)
   %10 = load ptr, ptr %8, align 8
   %11 = call ptr @string_from_bytes(ptr %10, i64 %9)
   call void @panic(ptr %11)
@@ -32302,7 +33821,7 @@ if.entry:                                         ; preds = %1
 ifend:                                            ; preds = %1, %if.entry
   %main_fnc = alloca ptr, align 8
   %4 = load ptr, ptr %memberidx, align 8
-  %5 = call ptr @LLVMGetNamedFunction(ptr %4, ptr @346)
+  %5 = call ptr @LLVMGetNamedFunction(ptr %4, ptr @350)
   store ptr %5, ptr %main_fnc, align 8
   %6 = icmp eq ptr %5, null
   br i1 %6, label %if.entry4, label %ifend6
@@ -32312,7 +33831,7 @@ common.ret:                                       ; preds = %ifend14, %if.entry4
   ret i64 %common.ret.op
 
 if.entry4:                                        ; preds = %ifend
-  %7 = call ptr @string_from_bytes(ptr @347, i64 48)
+  %7 = call ptr @string_from_bytes(ptr @351, i64 48)
   call void @println(ptr %7)
   %8 = load ptr, ptr %engine, align 8
   call void @LLVMDisposeExecutionEngine(ptr %8)
@@ -32343,7 +33862,7 @@ define ptr @GeneratedModule_create_target_machine(ptr %0, ptr %1) {
   %3 = load ptr, ptr %1, align 8
   %memberidx = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %3, i32 0, i32 4
   %4 = load ptr, ptr %memberidx, align 8
-  %5 = call ptr @string_from_bytes(ptr @38, i64 0)
+  %5 = call ptr @string_from_bytes(ptr @37, i64 0)
   %6 = call i1 %4(ptr %1, ptr %5)
   br i1 %6, label %true_block, label %false_block
 
@@ -32372,10 +33891,10 @@ if.entry:                                         ; preds = %end
 
 ifend:                                            ; preds = %end, %if.entry
   %CPU = alloca ptr, align 8
-  store ptr @348, ptr %CPU, align 8
+  store ptr @352, ptr %CPU, align 8
   %12 = load ptr, ptr %target, align 8
   %13 = call ptr @LLVMGetHostCPUFeatures()
-  %14 = call ptr @LLVMCreateTargetMachine(ptr %12, ptr %ternary, ptr @348, ptr %13, i64 3, i64 0, i64 0)
+  %14 = call ptr @LLVMCreateTargetMachine(ptr %12, ptr %ternary, ptr @352, ptr %13, i64 3, i64 0, i64 0)
   ret ptr %14
 }
 
@@ -32436,7 +33955,7 @@ define void @GeneratedModule_print(ptr %0) {
   %memberidx = getelementptr inbounds %GeneratedModule, ptr %0, i32 0, i32 1
   %2 = load ptr, ptr %memberidx, align 8
   %memberidx1 = getelementptr inbounds %GeneratedModule, ptr %0, i32 0, i32 2
-  %3 = call i1 @LLVMPrintModuleToFile(ptr %2, ptr @349, ptr %memberidx1)
+  %3 = call i1 @LLVMPrintModuleToFile(ptr %2, ptr @353, ptr %memberidx1)
   br i1 %3, label %if.entry, label %ifend
 
 if.entry:                                         ; preds = %1
@@ -32499,7 +34018,7 @@ define void @panic(ptr %0) {
   %3 = load ptr, ptr %memberidx, align 8
   %4 = call ptr %3(ptr %0)
   %5 = alloca ptr, align 8
-  %6 = call i64 (ptr, ptr, ...) @asprintf(ptr %5, ptr @344, ptr %4)
+  %6 = call i64 (ptr, ptr, ...) @asprintf(ptr %5, ptr @348, ptr %4)
   %7 = load ptr, ptr %5, align 8
   %8 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%string, ptr null, i32 1) to i32))
   call void @string_constructor(ptr %8, ptr %7, i64 %6)
@@ -32575,7 +34094,7 @@ true_block:                                       ; preds = %2
   br label %end
 
 false_block:                                      ; preds = %2
-  %5 = call ptr @LLVMBuildNeg(ptr %0, ptr %1, ptr @38)
+  %5 = call ptr @LLVMBuildNeg(ptr %0, ptr %1, ptr @37)
   br label %end
 
 end:                                              ; preds = %false_block, %true_block
@@ -32588,7 +34107,7 @@ for.entry:
   %memberidx = getelementptr inbounds %Program, ptr %0, i32 0, i32 1
   %1 = load ptr, ptr %memberidx, align 8
   %2 = load ptr, ptr %1, align 8
-  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %2, i32 0, i32 5
+  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %2, i32 0, i32 6
   %3 = load ptr, ptr %memberidx1, align 8
   %4 = call ptr %3(ptr %1, i64 2)
   %5 = alloca %CodeGen, align 8
@@ -32608,7 +34127,7 @@ for.cond:                                         ; preds = %for.body, %for.entr
 
 for.body:                                         ; preds = %for.cond
   %10 = load ptr, ptr %7, align 8
-  %memberidx6 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %10, i32 0, i32 5
+  %memberidx6 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %10, i32 0, i32 6
   %11 = load ptr, ptr %memberidx6, align 8
   %12 = call ptr %11(ptr %7, i64 %i.0)
   call void @CodeGen_declare_enum(ptr %5, ptr %12)
@@ -32629,7 +34148,7 @@ for.cond8:                                        ; preds = %for.body9, %for.ent
 
 for.body9:                                        ; preds = %for.cond8
   %17 = load ptr, ptr %14, align 8
-  %memberidx15 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %17, i32 0, i32 5
+  %memberidx15 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %17, i32 0, i32 6
   %18 = load ptr, ptr %memberidx15, align 8
   %19 = call ptr %18(ptr %14, i64 %i.1)
   call void @CodeGen_declare_class(ptr %5, ptr %19)
@@ -32650,7 +34169,7 @@ for.cond17:                                       ; preds = %for.body18, %for.en
 
 for.body18:                                       ; preds = %for.cond17
   %24 = load ptr, ptr %21, align 8
-  %memberidx24 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %24, i32 0, i32 5
+  %memberidx24 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %24, i32 0, i32 6
   %25 = load ptr, ptr %memberidx24, align 8
   %26 = call ptr %25(ptr %21, i64 %i.2)
   call void @CodeGen_codegen_const_declaration(ptr %5, ptr null, ptr %26)
@@ -32671,7 +34190,7 @@ for.cond26:                                       ; preds = %for.body27, %for.en
 
 for.body27:                                       ; preds = %for.cond26
   %31 = load ptr, ptr %28, align 8
-  %memberidx33 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %31, i32 0, i32 5
+  %memberidx33 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %31, i32 0, i32 6
   %32 = load ptr, ptr %memberidx33, align 8
   %33 = call ptr %32(ptr %28, i64 %i.3)
   call void @CodeGen_codegen_var_declaration(ptr %5, ptr null, ptr %33)
@@ -32691,7 +34210,7 @@ for.cond35:                                       ; preds = %for.body36, %for.en
 
 for.body36:                                       ; preds = %for.cond35
   %38 = load ptr, ptr %35, align 8
-  %memberidx42 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %38, i32 0, i32 5
+  %memberidx42 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %38, i32 0, i32 6
   %39 = load ptr, ptr %memberidx42, align 8
   %40 = call ptr %39(ptr %35, i64 %i.4)
   call void @CodeGen_codegen_class(ptr %5, ptr %40)
@@ -32712,7 +34231,7 @@ for.cond44:                                       ; preds = %for.body45, %for.en
 
 for.body45:                                       ; preds = %for.cond44
   %45 = load ptr, ptr %42, align 8
-  %memberidx51 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %45, i32 0, i32 5
+  %memberidx51 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %45, i32 0, i32 6
   %46 = load ptr, ptr %memberidx51, align 8
   %47 = call ptr %46(ptr %42, i64 %i.5)
   call void @CodeGen_codegen_function(ptr %5, ptr %47)
@@ -32752,7 +34271,7 @@ define ptr @CodeGen_codegen_index_exp(ptr %0, ptr %1, ptr %2) {
   %memberidx = getelementptr inbounds %Expression, ptr %2, i32 0, i32 3
   %5 = load ptr, ptr %memberidx, align 8
   %6 = call ptr @CodeGen_codegen_type(ptr %0, ptr %5, i1 true)
-  %7 = call ptr @LLVMBuildLoad2(ptr %1, ptr %6, ptr %4, ptr @38)
+  %7 = call ptr @LLVMBuildLoad2(ptr %1, ptr %6, ptr %4, ptr @37)
   ret ptr %7
 }
 
@@ -32827,7 +34346,7 @@ ifend:                                            ; preds = %2, %if.entry
 
 define void @Array_LLVMValueRef__append(ptr %0, ptr %1) {
   %3 = load ptr, ptr %0, align 8
-  %memberidx = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %3, i32 0, i32 2
+  %memberidx = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %3, i32 0, i32 3
   %4 = load ptr, ptr %memberidx, align 8
   call void %4(ptr %0, ptr %1)
   ret void
@@ -32872,6 +34391,46 @@ ifend:                                            ; preds = %3, %if.entry
   ret void
 }
 
+define ptr @ArrayIterator_LLVMValueRef____next__(ptr %0) {
+  %memberidx = getelementptr inbounds %ArrayIterator_LLVMValueRef_, ptr %0, i32 0, i32 2
+  %2 = load i64, ptr %memberidx, align 4
+  %3 = add i64 %2, 1
+  store i64 %3, ptr %memberidx, align 4
+  %memberidx2 = getelementptr inbounds %ArrayIterator_LLVMValueRef_, ptr %0, i32 0, i32 4
+  %4 = load ptr, ptr %memberidx2, align 8
+  %ptridx = getelementptr inbounds ptr, ptr %4, i64 %2
+  %5 = load ptr, ptr %ptridx, align 8
+  %memberidx3 = getelementptr inbounds %Iterator_LLVMValueRef_, ptr %0, i32 0, i32 1
+  %memberidx5 = getelementptr inbounds %ArrayIterator_LLVMValueRef_, ptr %0, i32 0, i32 3
+  %6 = load i64, ptr %memberidx5, align 4
+  %7 = icmp sgt i64 %3, %6
+  store i1 %7, ptr %memberidx3, align 1
+  ret ptr %5
+}
+
+define void @ArrayIterator_LLVMValueRef__constructor(ptr %0, ptr %1, i64 %2) {
+  store ptr @VTableArrayIterator_LLVMValueRef_, ptr %0, align 8
+  %memberidx = getelementptr inbounds %Iterator_LLVMValueRef_, ptr %0, i32 0, i32 1
+  store i1 false, ptr %memberidx, align 1
+  %memberidx1 = getelementptr inbounds %ArrayIterator_LLVMValueRef_, ptr %0, i32 0, i32 2
+  store i64 0, ptr %memberidx1, align 4
+  %memberidx2 = getelementptr inbounds %ArrayIterator_LLVMValueRef_, ptr %0, i32 0, i32 4
+  store ptr %1, ptr %memberidx2, align 8
+  %memberidx3 = getelementptr inbounds %ArrayIterator_LLVMValueRef_, ptr %0, i32 0, i32 3
+  store i64 %2, ptr %memberidx3, align 4
+  ret void
+}
+
+define ptr @Array_LLVMValueRef____iter__(ptr %0) {
+  %2 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%ArrayIterator_LLVMValueRef_, ptr null, i32 1) to i32))
+  %memberidx = getelementptr inbounds %Array_LLVMValueRef_, ptr %0, i32 0, i32 1
+  %3 = load ptr, ptr %memberidx, align 8
+  %memberidx1 = getelementptr inbounds %Array_LLVMValueRef_, ptr %0, i32 0, i32 2
+  %4 = load i64, ptr %memberidx1, align 4
+  call void @ArrayIterator_LLVMValueRef__constructor(ptr %2, ptr %3, i64 %4)
+  ret ptr %2
+}
+
 define void @Array_LLVMValueRef____setitem__(ptr %0, i64 %1, ptr %2) {
   %4 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%Range, ptr null, i32 1) to i32))
   %memberidx = getelementptr inbounds %Array_LLVMValueRef_, ptr %0, i32 0, i32 2
@@ -32894,25 +34453,11 @@ ifend:                                            ; preds = %3, %if.entry
 }
 
 define ptr @Array_LLVMValueRef____getitem__(ptr %0, i64 %1) {
-  %3 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%Range, ptr null, i32 1) to i32))
-  %memberidx = getelementptr inbounds %Array_LLVMValueRef_, ptr %0, i32 0, i32 2
-  %4 = load i64, ptr %memberidx, align 4
-  call void @Range_constructor(ptr %3, i64 0, i64 %4)
-  %5 = load ptr, ptr %3, align 8
-  %6 = load ptr, ptr %5, align 8
-  %7 = call i1 %6(ptr %3, i64 %1)
-  br i1 %7, label %if.entry, label %common.ret
-
-common.ret:                                       ; preds = %2, %if.entry
-  %common.ret.op = phi ptr [ %9, %if.entry ], [ null, %2 ]
-  ret ptr %common.ret.op
-
-if.entry:                                         ; preds = %2
-  %memberidx2 = getelementptr inbounds %Array_LLVMValueRef_, ptr %0, i32 0, i32 1
-  %8 = load ptr, ptr %memberidx2, align 8
-  %ptridx = getelementptr inbounds ptr, ptr %8, i64 %1
-  %9 = load ptr, ptr %ptridx, align 8
-  br label %common.ret
+  %memberidx = getelementptr inbounds %Array_LLVMValueRef_, ptr %0, i32 0, i32 1
+  %3 = load ptr, ptr %memberidx, align 8
+  %ptridx = getelementptr inbounds ptr, ptr %3, i64 %1
+  %4 = load ptr, ptr %ptridx, align 8
+  ret ptr %4
 }
 
 define i1 @Array_LLVMValueRef____eq__(ptr %0, ptr %1) {
@@ -32940,11 +34485,11 @@ for.cond:                                         ; preds = %ifend7, %for.entry
 
 for.body:                                         ; preds = %for.cond
   %9 = load ptr, ptr %0, align 8
-  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %9, i32 0, i32 5
+  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %9, i32 0, i32 6
   %10 = load ptr, ptr %memberidx3, align 8
   %11 = call ptr %10(ptr %0, i64 %6)
   %12 = load ptr, ptr %1, align 8
-  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %12, i32 0, i32 5
+  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %12, i32 0, i32 6
   %13 = load ptr, ptr %memberidx4, align 8
   %14 = load i64, ptr %i, align 4
   %15 = call ptr %13(ptr %1, i64 %14)
@@ -32971,7 +34516,7 @@ for.cond:                                         ; preds = %ifend, %for.entry
 
 for.body:                                         ; preds = %for.cond
   %4 = load ptr, ptr %0, align 8
-  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %4, i32 0, i32 5
+  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %4, i32 0, i32 6
   %5 = load ptr, ptr %memberidx1, align 8
   %6 = call ptr %5(ptr %0, i64 %i.0)
   %7 = icmp eq ptr %6, %1
@@ -33005,7 +34550,7 @@ define ptr @CodeGen_codegen_atol_call(ptr %0, ptr %1, ptr %2) {
   %5 = call ptr @LLVMPointerType(ptr %4, i64 0)
   %6 = call ptr @LLVMInt64Type()
   %7 = load ptr, ptr %0, align 8
-  %8 = call ptr @string_from_bytes(ptr @354, i64 4)
+  %8 = call ptr @string_from_bytes(ptr @358, i64 4)
   %9 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%Array_LLVMTypeRef_, ptr null, i32 1) to i32))
   call void @Array_LLVMTypeRef__constructor(ptr %9, i64 ptrtoint (ptr getelementptr (ptr, ptr null, i32 1) to i64))
   %memberidx1 = getelementptr inbounds %Array_LLVMTypeRef_, ptr %9, i32 0, i32 1
@@ -33021,7 +34566,7 @@ define ptr @CodeGen_codegen_atol_call(ptr %0, ptr %1, ptr %2) {
   %14 = load ptr, ptr %memberidx5, align 8
   %memberidx6 = getelementptr inbounds %Array_LLVMValueRef_, ptr %2, i32 0, i32 2
   %15 = load i64, ptr %memberidx6, align 4
-  %16 = call ptr @LLVMBuildCall2(ptr %1, ptr %12, ptr %13, ptr %14, i64 %15, ptr @38)
+  %16 = call ptr @LLVMBuildCall2(ptr %1, ptr %12, ptr %13, ptr %14, i64 %15, ptr @37)
   ret ptr %16
 }
 
@@ -33072,7 +34617,7 @@ if.entry4:                                        ; preds = %if.entry
   %18 = load ptr, ptr %value_ty, align 8
   %19 = call ptr @CodeGen_codegen_type(ptr %0, ptr %18, i1 true)
   store ptr %19, ptr %array_type, align 8
-  %20 = call ptr @LLVMBuildInBoundsGEP2(ptr %1, ptr %19, ptr %2, ptr %args, i64 2, ptr @38)
+  %20 = call ptr @LLVMBuildInBoundsGEP2(ptr %1, ptr %19, ptr %2, ptr %args, i64 2, ptr @37)
   %21 = load ptr, ptr %arr_expr, align 8
   %22 = call ptr @CodeGen_store_array_elements(ptr %0, ptr %1, ptr %20, ptr %21)
   br label %common.ret
@@ -33127,10 +34672,10 @@ for.cond:                                         ; preds = %for.body, %ifend
 for.body:                                         ; preds = %for.cond
   %15 = load ptr, ptr %elems, align 8
   %16 = load ptr, ptr %15, align 8
-  %memberidx9 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %16, i32 0, i32 2
+  %memberidx9 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %16, i32 0, i32 3
   %17 = load ptr, ptr %memberidx9, align 8
   %18 = load ptr, ptr %12, align 8
-  %memberidx11 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %18, i32 0, i32 5
+  %memberidx11 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %18, i32 0, i32 6
   %19 = load ptr, ptr %memberidx11, align 8
   %20 = call ptr %19(ptr %12, i64 %11)
   %21 = call ptr @CodeGen_codegen_expression(ptr %0, ptr %1, ptr %20)
@@ -33245,11 +34790,11 @@ define void @CodeGen_codegen_if_stmt(ptr %0, ptr %1, ptr %2) {
   %5 = call ptr @CodeGen_codegen_expression(ptr %0, ptr %1, ptr %4)
   %memberidx1 = getelementptr inbounds %CodeGen, ptr %0, i32 0, i32 1
   %6 = load ptr, ptr %memberidx1, align 8
-  %7 = call ptr @LLVMAppendBasicBlock(ptr %6, ptr @391)
+  %7 = call ptr @LLVMAppendBasicBlock(ptr %6, ptr @395)
   %8 = load ptr, ptr %memberidx1, align 8
-  %9 = call ptr @LLVMAppendBasicBlock(ptr %8, ptr @46)
+  %9 = call ptr @LLVMAppendBasicBlock(ptr %8, ptr @45)
   %10 = load ptr, ptr %memberidx1, align 8
-  %11 = call ptr @LLVMAppendBasicBlock(ptr %10, ptr @392)
+  %11 = call ptr @LLVMAppendBasicBlock(ptr %10, ptr @396)
   %12 = call ptr @LLVMBuildCondBr(ptr %1, ptr %5, ptr %7, ptr %9)
   call void @LLVMPositionBuilderAtEnd(ptr %1, ptr %7)
   %memberidx4 = getelementptr inbounds %IfStatement, ptr %2, i32 0, i32 2
@@ -33460,7 +35005,7 @@ ifend:                                            ; preds = %2, %if.entry
 
 define void @Array_Bucket_string_LLVMValueRef___append(ptr %0, ptr %1) {
   %3 = load ptr, ptr %0, align 8
-  %memberidx = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %3, i32 0, i32 2
+  %memberidx = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %3, i32 0, i32 3
   %4 = load ptr, ptr %memberidx, align 8
   call void %4(ptr %0, ptr %1)
   ret void
@@ -33505,6 +35050,46 @@ ifend:                                            ; preds = %3, %if.entry
   ret void
 }
 
+define ptr @ArrayIterator_Bucket_string_LLVMValueRef_____next__(ptr %0) {
+  %memberidx = getelementptr inbounds %ArrayIterator_Bucket_string_LLVMValueRef__, ptr %0, i32 0, i32 2
+  %2 = load i64, ptr %memberidx, align 4
+  %3 = add i64 %2, 1
+  store i64 %3, ptr %memberidx, align 4
+  %memberidx2 = getelementptr inbounds %ArrayIterator_Bucket_string_LLVMValueRef__, ptr %0, i32 0, i32 4
+  %4 = load ptr, ptr %memberidx2, align 8
+  %ptridx = getelementptr inbounds ptr, ptr %4, i64 %2
+  %5 = load ptr, ptr %ptridx, align 8
+  %memberidx3 = getelementptr inbounds %Iterator_Bucket_string_LLVMValueRef__, ptr %0, i32 0, i32 1
+  %memberidx5 = getelementptr inbounds %ArrayIterator_Bucket_string_LLVMValueRef__, ptr %0, i32 0, i32 3
+  %6 = load i64, ptr %memberidx5, align 4
+  %7 = icmp sgt i64 %3, %6
+  store i1 %7, ptr %memberidx3, align 1
+  ret ptr %5
+}
+
+define void @ArrayIterator_Bucket_string_LLVMValueRef___constructor(ptr %0, ptr %1, i64 %2) {
+  store ptr @VTableArrayIterator_Bucket_string_LLVMValueRef__, ptr %0, align 8
+  %memberidx = getelementptr inbounds %Iterator_Bucket_string_LLVMValueRef__, ptr %0, i32 0, i32 1
+  store i1 false, ptr %memberidx, align 1
+  %memberidx1 = getelementptr inbounds %ArrayIterator_Bucket_string_LLVMValueRef__, ptr %0, i32 0, i32 2
+  store i64 0, ptr %memberidx1, align 4
+  %memberidx2 = getelementptr inbounds %ArrayIterator_Bucket_string_LLVMValueRef__, ptr %0, i32 0, i32 4
+  store ptr %1, ptr %memberidx2, align 8
+  %memberidx3 = getelementptr inbounds %ArrayIterator_Bucket_string_LLVMValueRef__, ptr %0, i32 0, i32 3
+  store i64 %2, ptr %memberidx3, align 4
+  ret void
+}
+
+define ptr @Array_Bucket_string_LLVMValueRef_____iter__(ptr %0) {
+  %2 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%ArrayIterator_Bucket_string_LLVMValueRef__, ptr null, i32 1) to i32))
+  %memberidx = getelementptr inbounds %Array_Bucket_string_LLVMValueRef__, ptr %0, i32 0, i32 1
+  %3 = load ptr, ptr %memberidx, align 8
+  %memberidx1 = getelementptr inbounds %Array_Bucket_string_LLVMValueRef__, ptr %0, i32 0, i32 2
+  %4 = load i64, ptr %memberidx1, align 4
+  call void @ArrayIterator_Bucket_string_LLVMValueRef___constructor(ptr %2, ptr %3, i64 %4)
+  ret ptr %2
+}
+
 define void @Array_Bucket_string_LLVMValueRef_____setitem__(ptr %0, i64 %1, ptr %2) {
   %4 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%Range, ptr null, i32 1) to i32))
   %memberidx = getelementptr inbounds %Array_Bucket_string_LLVMValueRef__, ptr %0, i32 0, i32 2
@@ -33527,25 +35112,11 @@ ifend:                                            ; preds = %3, %if.entry
 }
 
 define ptr @Array_Bucket_string_LLVMValueRef_____getitem__(ptr %0, i64 %1) {
-  %3 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%Range, ptr null, i32 1) to i32))
-  %memberidx = getelementptr inbounds %Array_Bucket_string_LLVMValueRef__, ptr %0, i32 0, i32 2
-  %4 = load i64, ptr %memberidx, align 4
-  call void @Range_constructor(ptr %3, i64 0, i64 %4)
-  %5 = load ptr, ptr %3, align 8
-  %6 = load ptr, ptr %5, align 8
-  %7 = call i1 %6(ptr %3, i64 %1)
-  br i1 %7, label %if.entry, label %common.ret
-
-common.ret:                                       ; preds = %2, %if.entry
-  %common.ret.op = phi ptr [ %9, %if.entry ], [ null, %2 ]
-  ret ptr %common.ret.op
-
-if.entry:                                         ; preds = %2
-  %memberidx2 = getelementptr inbounds %Array_Bucket_string_LLVMValueRef__, ptr %0, i32 0, i32 1
-  %8 = load ptr, ptr %memberidx2, align 8
-  %ptridx = getelementptr inbounds ptr, ptr %8, i64 %1
-  %9 = load ptr, ptr %ptridx, align 8
-  br label %common.ret
+  %memberidx = getelementptr inbounds %Array_Bucket_string_LLVMValueRef__, ptr %0, i32 0, i32 1
+  %3 = load ptr, ptr %memberidx, align 8
+  %ptridx = getelementptr inbounds ptr, ptr %3, i64 %1
+  %4 = load ptr, ptr %ptridx, align 8
+  ret ptr %4
 }
 
 define i1 @Array_Bucket_string_LLVMValueRef_____eq__(ptr %0, ptr %1) {
@@ -33573,11 +35144,11 @@ for.cond:                                         ; preds = %ifend7, %for.entry
 
 for.body:                                         ; preds = %for.cond
   %9 = load ptr, ptr %0, align 8
-  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %9, i32 0, i32 5
+  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %9, i32 0, i32 6
   %10 = load ptr, ptr %memberidx3, align 8
   %11 = call ptr %10(ptr %0, i64 %6)
   %12 = load ptr, ptr %1, align 8
-  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %12, i32 0, i32 5
+  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %12, i32 0, i32 6
   %13 = load ptr, ptr %memberidx4, align 8
   %14 = load i64, ptr %i, align 4
   %15 = call ptr %13(ptr %1, i64 %14)
@@ -33604,7 +35175,7 @@ for.cond:                                         ; preds = %ifend, %for.entry
 
 for.body:                                         ; preds = %for.cond
   %4 = load ptr, ptr %0, align 8
-  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %4, i32 0, i32 5
+  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %4, i32 0, i32 6
   %5 = load ptr, ptr %memberidx1, align 8
   %6 = call ptr %5(ptr %0, i64 %i.0)
   %7 = icmp eq ptr %6, %1
@@ -33666,7 +35237,7 @@ for.end:                                          ; preds = %for.cond
 
 if.entry:                                         ; preds = %for.body
   %8 = load ptr, ptr %1, align 8
-  %memberidx5 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %8, i32 0, i32 2
+  %memberidx5 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %8, i32 0, i32 3
   %9 = load ptr, ptr %memberidx5, align 8
   call void %9(ptr %1, ptr %5)
   br label %ifend
@@ -33725,13 +35296,13 @@ for.body11:                                       ; preds = %for.cond10
   %17 = load ptr, ptr %0, align 8
   %18 = load ptr, ptr %17, align 8
   %19 = load ptr, ptr %3, align 8
-  %memberidx16 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %19, i32 0, i32 5
+  %memberidx16 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %19, i32 0, i32 6
   %20 = load ptr, ptr %memberidx16, align 8
   %21 = call ptr %20(ptr %3, i64 %i.1)
   %memberidx17 = getelementptr inbounds %Bucket_string_LLVMValueRef_, ptr %21, i32 0, i32 1
   %22 = load ptr, ptr %memberidx17, align 8
   %23 = load ptr, ptr %3, align 8
-  %memberidx18 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %23, i32 0, i32 5
+  %memberidx18 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %23, i32 0, i32 6
   %24 = load ptr, ptr %memberidx18, align 8
   %25 = call ptr %24(ptr %3, i64 %i.1)
   %memberidx19 = getelementptr inbounds %Bucket_string_LLVMValueRef_, ptr %25, i32 0, i32 2
@@ -33909,12 +35480,12 @@ for.cond:                                         ; preds = %for.body, %for.entr
 
 for.body:                                         ; preds = %for.cond
   %9 = load ptr, ptr %6, align 8
-  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %9, i32 0, i32 5
+  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %9, i32 0, i32 6
   %10 = load ptr, ptr %memberidx3, align 8
   %11 = call ptr %10(ptr %6, i64 %i.0)
   %12 = call ptr @CodeGen_codegen_expression(ptr %0, ptr %1, ptr %11)
   %13 = call ptr @LLVMBuildStore(ptr %1, ptr %12, ptr %addr.0)
-  %14 = call ptr @LLVMBuildInBoundsGEP2(ptr %1, ptr %5, ptr %addr.0, ptr %next_args, i64 1, ptr @38)
+  %14 = call ptr @LLVMBuildInBoundsGEP2(ptr %1, ptr %5, ptr %addr.0, ptr %next_args, i64 1, ptr @37)
   %15 = add i64 %i.0, 1
   br label %for.cond
 
@@ -34100,10 +35671,10 @@ for.cond:                                         ; preds = %for.body, %if.entry
 for.body:                                         ; preds = %for.cond
   %52 = load ptr, ptr %param_types, align 8
   %53 = load ptr, ptr %52, align 8
-  %memberidx70 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %53, i32 0, i32 2
+  %memberidx70 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %53, i32 0, i32 3
   %54 = load ptr, ptr %memberidx70, align 8
   %55 = load ptr, ptr %49, align 8
-  %memberidx72 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %55, i32 0, i32 5
+  %memberidx72 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %55, i32 0, i32 6
   %56 = load ptr, ptr %memberidx72, align 8
   %57 = call ptr %56(ptr %49, i64 %47)
   %58 = call ptr @CodeGen_codegen_type(ptr %0, ptr %57, i1 true)
@@ -34172,7 +35743,7 @@ if.entry91:                                       ; preds = %ifend79
   br i1 %78, label %if.entry95, label %ifend93
 
 ifend93:                                          ; preds = %if.entry91, %ifend79
-  %79 = call ptr @string_from_bytes(ptr @351, i64 32)
+  %79 = call ptr @string_from_bytes(ptr @355, i64 32)
   call void @panic(ptr %79)
   br label %common.ret
 
@@ -34198,7 +35769,7 @@ define ptr @CodeGen_codegen_var_access_exp(ptr %0, ptr %1, ptr %2) {
   br i1 %8, label %if.entry, label %ifend
 
 if.entry:                                         ; preds = %3
-  %9 = call ptr @string_from_bytes(ptr @381, i64 50)
+  %9 = call ptr @string_from_bytes(ptr @385, i64 50)
   call void @panic(ptr %9)
   br label %ifend
 
@@ -34225,7 +35796,7 @@ if.entry8:                                        ; preds = %ifend6
   br label %common.ret
 
 ifend10:                                          ; preds = %ifend6
-  %15 = call ptr @LLVMBuildLoad2(ptr %1, ptr %7, ptr %5, ptr @38)
+  %15 = call ptr @LLVMBuildLoad2(ptr %1, ptr %7, ptr %5, ptr @37)
   br label %common.ret
 }
 
@@ -34258,7 +35829,7 @@ true_block:                                       ; preds = %if.entry
   br label %common.ret
 
 false_block:                                      ; preds = %if.entry
-  %17 = call ptr @LLVMBuildIsNotNull(ptr %1, ptr %6, ptr @38)
+  %17 = call ptr @LLVMBuildIsNotNull(ptr %1, ptr %6, ptr @37)
   br label %common.ret
 
 common.ret:                                       ; preds = %true_block34, %false_block35, %true_block30, %false_block31, %true_block22, %false_block23, %true_block14, %false_block15, %true_block6, %false_block7, %true_block, %false_block
@@ -34280,7 +35851,7 @@ true_block6:                                      ; preds = %if.entry3
   br label %common.ret
 
 false_block7:                                     ; preds = %if.entry3
-  %23 = call ptr @LLVMBuildSIToFP(ptr %1, ptr %6, ptr %7, ptr @38)
+  %23 = call ptr @LLVMBuildSIToFP(ptr %1, ptr %6, ptr %7, ptr @37)
   br label %common.ret
 
 if.entry11:                                       ; preds = %else4
@@ -34298,7 +35869,7 @@ true_block14:                                     ; preds = %if.entry11
   br label %common.ret
 
 false_block15:                                    ; preds = %if.entry11
-  %29 = call ptr @LLVMBuildFPToSI(ptr %1, ptr %6, ptr %7, ptr @38)
+  %29 = call ptr @LLVMBuildFPToSI(ptr %1, ptr %6, ptr %7, ptr @37)
   br label %common.ret
 
 if.entry19:                                       ; preds = %else12
@@ -34316,7 +35887,7 @@ true_block22:                                     ; preds = %if.entry19
   br label %common.ret
 
 false_block23:                                    ; preds = %if.entry19
-  %35 = call ptr @LLVMBuildIntCast2(ptr %1, ptr %6, ptr %7, i1 true, ptr @38)
+  %35 = call ptr @LLVMBuildIntCast2(ptr %1, ptr %6, ptr %7, i1 true, ptr @37)
   br label %common.ret
 
 if.entry27:                                       ; preds = %else20
@@ -34330,7 +35901,7 @@ true_block30:                                     ; preds = %if.entry27
   br label %common.ret
 
 false_block31:                                    ; preds = %if.entry27
-  %37 = call ptr @LLVMBuildFPCast(ptr %1, ptr %6, ptr %7, ptr @38)
+  %37 = call ptr @LLVMBuildFPCast(ptr %1, ptr %6, ptr %7, ptr @37)
   br label %common.ret
 
 true_block34:                                     ; preds = %ifend29
@@ -34338,7 +35909,7 @@ true_block34:                                     ; preds = %ifend29
   br label %common.ret
 
 false_block35:                                    ; preds = %ifend29
-  %39 = call ptr @LLVMBuildBitCast(ptr %1, ptr %6, ptr %7, ptr @38)
+  %39 = call ptr @LLVMBuildBitCast(ptr %1, ptr %6, ptr %7, ptr @37)
   br label %common.ret
 }
 
@@ -34501,7 +36072,7 @@ ifend:                                            ; preds = %2, %if.entry
 
 define void @Array_Bucket_string_int___append(ptr %0, ptr %1) {
   %3 = load ptr, ptr %0, align 8
-  %memberidx = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %3, i32 0, i32 2
+  %memberidx = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %3, i32 0, i32 3
   %4 = load ptr, ptr %memberidx, align 8
   call void %4(ptr %0, ptr %1)
   ret void
@@ -34546,6 +36117,46 @@ ifend:                                            ; preds = %3, %if.entry
   ret void
 }
 
+define ptr @ArrayIterator_Bucket_string_int_____next__(ptr %0) {
+  %memberidx = getelementptr inbounds %ArrayIterator_Bucket_string_int__, ptr %0, i32 0, i32 2
+  %2 = load i64, ptr %memberidx, align 4
+  %3 = add i64 %2, 1
+  store i64 %3, ptr %memberidx, align 4
+  %memberidx2 = getelementptr inbounds %ArrayIterator_Bucket_string_int__, ptr %0, i32 0, i32 4
+  %4 = load ptr, ptr %memberidx2, align 8
+  %ptridx = getelementptr inbounds ptr, ptr %4, i64 %2
+  %5 = load ptr, ptr %ptridx, align 8
+  %memberidx3 = getelementptr inbounds %Iterator_Bucket_string_int__, ptr %0, i32 0, i32 1
+  %memberidx5 = getelementptr inbounds %ArrayIterator_Bucket_string_int__, ptr %0, i32 0, i32 3
+  %6 = load i64, ptr %memberidx5, align 4
+  %7 = icmp sgt i64 %3, %6
+  store i1 %7, ptr %memberidx3, align 1
+  ret ptr %5
+}
+
+define void @ArrayIterator_Bucket_string_int___constructor(ptr %0, ptr %1, i64 %2) {
+  store ptr @VTableArrayIterator_Bucket_string_int__, ptr %0, align 8
+  %memberidx = getelementptr inbounds %Iterator_Bucket_string_int__, ptr %0, i32 0, i32 1
+  store i1 false, ptr %memberidx, align 1
+  %memberidx1 = getelementptr inbounds %ArrayIterator_Bucket_string_int__, ptr %0, i32 0, i32 2
+  store i64 0, ptr %memberidx1, align 4
+  %memberidx2 = getelementptr inbounds %ArrayIterator_Bucket_string_int__, ptr %0, i32 0, i32 4
+  store ptr %1, ptr %memberidx2, align 8
+  %memberidx3 = getelementptr inbounds %ArrayIterator_Bucket_string_int__, ptr %0, i32 0, i32 3
+  store i64 %2, ptr %memberidx3, align 4
+  ret void
+}
+
+define ptr @Array_Bucket_string_int_____iter__(ptr %0) {
+  %2 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%ArrayIterator_Bucket_string_int__, ptr null, i32 1) to i32))
+  %memberidx = getelementptr inbounds %Array_Bucket_string_int__, ptr %0, i32 0, i32 1
+  %3 = load ptr, ptr %memberidx, align 8
+  %memberidx1 = getelementptr inbounds %Array_Bucket_string_int__, ptr %0, i32 0, i32 2
+  %4 = load i64, ptr %memberidx1, align 4
+  call void @ArrayIterator_Bucket_string_int___constructor(ptr %2, ptr %3, i64 %4)
+  ret ptr %2
+}
+
 define void @Array_Bucket_string_int_____setitem__(ptr %0, i64 %1, ptr %2) {
   %4 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%Range, ptr null, i32 1) to i32))
   %memberidx = getelementptr inbounds %Array_Bucket_string_int__, ptr %0, i32 0, i32 2
@@ -34568,25 +36179,11 @@ ifend:                                            ; preds = %3, %if.entry
 }
 
 define ptr @Array_Bucket_string_int_____getitem__(ptr %0, i64 %1) {
-  %3 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%Range, ptr null, i32 1) to i32))
-  %memberidx = getelementptr inbounds %Array_Bucket_string_int__, ptr %0, i32 0, i32 2
-  %4 = load i64, ptr %memberidx, align 4
-  call void @Range_constructor(ptr %3, i64 0, i64 %4)
-  %5 = load ptr, ptr %3, align 8
-  %6 = load ptr, ptr %5, align 8
-  %7 = call i1 %6(ptr %3, i64 %1)
-  br i1 %7, label %if.entry, label %common.ret
-
-common.ret:                                       ; preds = %2, %if.entry
-  %common.ret.op = phi ptr [ %9, %if.entry ], [ null, %2 ]
-  ret ptr %common.ret.op
-
-if.entry:                                         ; preds = %2
-  %memberidx2 = getelementptr inbounds %Array_Bucket_string_int__, ptr %0, i32 0, i32 1
-  %8 = load ptr, ptr %memberidx2, align 8
-  %ptridx = getelementptr inbounds ptr, ptr %8, i64 %1
-  %9 = load ptr, ptr %ptridx, align 8
-  br label %common.ret
+  %memberidx = getelementptr inbounds %Array_Bucket_string_int__, ptr %0, i32 0, i32 1
+  %3 = load ptr, ptr %memberidx, align 8
+  %ptridx = getelementptr inbounds ptr, ptr %3, i64 %1
+  %4 = load ptr, ptr %ptridx, align 8
+  ret ptr %4
 }
 
 define i1 @Array_Bucket_string_int_____eq__(ptr %0, ptr %1) {
@@ -34614,11 +36211,11 @@ for.cond:                                         ; preds = %ifend7, %for.entry
 
 for.body:                                         ; preds = %for.cond
   %9 = load ptr, ptr %0, align 8
-  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %9, i32 0, i32 5
+  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %9, i32 0, i32 6
   %10 = load ptr, ptr %memberidx3, align 8
   %11 = call ptr %10(ptr %0, i64 %6)
   %12 = load ptr, ptr %1, align 8
-  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %12, i32 0, i32 5
+  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %12, i32 0, i32 6
   %13 = load ptr, ptr %memberidx4, align 8
   %14 = load i64, ptr %i, align 4
   %15 = call ptr %13(ptr %1, i64 %14)
@@ -34645,7 +36242,7 @@ for.cond:                                         ; preds = %ifend, %for.entry
 
 for.body:                                         ; preds = %for.cond
   %4 = load ptr, ptr %0, align 8
-  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %4, i32 0, i32 5
+  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %4, i32 0, i32 6
   %5 = load ptr, ptr %memberidx1, align 8
   %6 = call ptr %5(ptr %0, i64 %i.0)
   %7 = icmp eq ptr %6, %1
@@ -34707,7 +36304,7 @@ for.end:                                          ; preds = %for.cond
 
 if.entry:                                         ; preds = %for.body
   %8 = load ptr, ptr %1, align 8
-  %memberidx5 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %8, i32 0, i32 2
+  %memberidx5 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %8, i32 0, i32 3
   %9 = load ptr, ptr %memberidx5, align 8
   call void %9(ptr %1, ptr %5)
   br label %ifend
@@ -34766,13 +36363,13 @@ for.body11:                                       ; preds = %for.cond10
   %17 = load ptr, ptr %0, align 8
   %18 = load ptr, ptr %17, align 8
   %19 = load ptr, ptr %3, align 8
-  %memberidx16 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %19, i32 0, i32 5
+  %memberidx16 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %19, i32 0, i32 6
   %20 = load ptr, ptr %memberidx16, align 8
   %21 = call ptr %20(ptr %3, i64 %i.1)
   %memberidx17 = getelementptr inbounds %Bucket_string_int_, ptr %21, i32 0, i32 1
   %22 = load ptr, ptr %memberidx17, align 8
   %23 = load ptr, ptr %3, align 8
-  %memberidx18 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %23, i32 0, i32 5
+  %memberidx18 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %23, i32 0, i32 6
   %24 = load ptr, ptr %memberidx18, align 8
   %25 = call ptr %24(ptr %3, i64 %i.1)
   %memberidx19 = getelementptr inbounds %Bucket_string_int_, ptr %25, i32 0, i32 2
@@ -34955,10 +36552,10 @@ for.cond:                                         ; preds = %for.body, %for.entr
 
 for.body:                                         ; preds = %for.cond
   %6 = load ptr, ptr %2, align 8
-  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %6, i32 0, i32 2
+  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %6, i32 0, i32 3
   %7 = load ptr, ptr %memberidx1, align 8
   %8 = load ptr, ptr %3, align 8
-  %memberidx2 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %8, i32 0, i32 5
+  %memberidx2 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %8, i32 0, i32 6
   %9 = load ptr, ptr %memberidx2, align 8
   %10 = call ptr %9(ptr %3, i64 %i.0)
   %11 = call ptr @CodeGen_codegen_expression(ptr %0, ptr %1, ptr %10)
@@ -34987,7 +36584,7 @@ for.cond:                                         ; preds = %for.body, %for.entr
 
 for.body:                                         ; preds = %for.cond
   %7 = load ptr, ptr %4, align 8
-  %memberidx5 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %7, i32 0, i32 5
+  %memberidx5 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %7, i32 0, i32 6
   %8 = load ptr, ptr %memberidx5, align 8
   %9 = call ptr %8(ptr %4, i64 %i.0)
   call void @CodeGen_codegen_statement(ptr %0, ptr %1, ptr %9)
@@ -35004,7 +36601,7 @@ define ptr @CodeGen_codegen_atof_call(ptr %0, ptr %1, ptr %2) {
   %5 = call ptr @LLVMPointerType(ptr %4, i64 0)
   %6 = call ptr @LLVMDoubleType()
   %7 = load ptr, ptr %0, align 8
-  %8 = call ptr @string_from_bytes(ptr @352, i64 4)
+  %8 = call ptr @string_from_bytes(ptr @356, i64 4)
   %9 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%Array_LLVMTypeRef_, ptr null, i32 1) to i32))
   call void @Array_LLVMTypeRef__constructor(ptr %9, i64 ptrtoint (ptr getelementptr (ptr, ptr null, i32 1) to i64))
   %memberidx1 = getelementptr inbounds %Array_LLVMTypeRef_, ptr %9, i32 0, i32 1
@@ -35020,7 +36617,7 @@ define ptr @CodeGen_codegen_atof_call(ptr %0, ptr %1, ptr %2) {
   %14 = load ptr, ptr %memberidx5, align 8
   %memberidx6 = getelementptr inbounds %Array_LLVMValueRef_, ptr %2, i32 0, i32 2
   %15 = load i64, ptr %memberidx6, align 4
-  %16 = call ptr @LLVMBuildCall2(ptr %1, ptr %12, ptr %13, ptr %14, i64 %15, ptr @38)
+  %16 = call ptr @LLVMBuildCall2(ptr %1, ptr %12, ptr %13, ptr %14, i64 %15, ptr @37)
   ret ptr %16
 }
 
@@ -35045,7 +36642,7 @@ for.body:                                         ; preds = %for.cond
   %method = alloca ptr, align 8
   %7 = load ptr, ptr %memberidx, align 8
   %8 = load ptr, ptr %7, align 8
-  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %8, i32 0, i32 5
+  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %8, i32 0, i32 6
   %9 = load ptr, ptr %memberidx4, align 8
   %10 = call ptr %9(ptr %7, i64 %i.0)
   store ptr %10, ptr %method, align 8
@@ -35081,7 +36678,7 @@ ifend:                                            ; preds = %for.body
   %22 = load ptr, ptr %21, align 8
   %memberidx10 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %22, i32 0, i32 4
   %23 = load ptr, ptr %memberidx10, align 8
-  %24 = call ptr @string_from_bytes(ptr @252, i64 11)
+  %24 = call ptr @string_from_bytes(ptr @251, i64 11)
   %25 = call i1 %23(ptr %21, ptr %24)
   store i1 %25, ptr %is_constructor, align 1
   %26 = load ptr, ptr %0, align 8
@@ -35099,7 +36696,7 @@ ifend:                                            ; preds = %for.body
   %34 = load ptr, ptr %memberidx15, align 8
   %35 = call ptr %34(ptr %32)
   %36 = alloca ptr, align 8
-  %37 = call i64 (ptr, ptr, ...) @asprintf(ptr %36, ptr @200, ptr %30, ptr %35)
+  %37 = call i64 (ptr, ptr, ...) @asprintf(ptr %36, ptr @199, ptr %30, ptr %35)
   %38 = load ptr, ptr %36, align 8
   %39 = call ptr @string_from_bytes(ptr %38, i64 %37)
   %40 = load ptr, ptr %39, align 8
@@ -35109,7 +36706,7 @@ ifend:                                            ; preds = %for.body
   %43 = call ptr @LLVMGetNamedFunction(ptr %26, ptr %42)
   store ptr %43, ptr %llvm_fnc, align 8
   %entry_block = alloca ptr, align 8
-  %44 = call ptr @LLVMAppendBasicBlock(ptr %43, ptr @38)
+  %44 = call ptr @LLVMAppendBasicBlock(ptr %43, ptr @37)
   store ptr %44, ptr %entry_block, align 8
   %func_builder = alloca ptr, align 8
   %45 = call ptr @LLVMCreateBuilder()
@@ -35137,7 +36734,7 @@ if.entry18:                                       ; preds = %ifend
   %this_alloc = alloca ptr, align 8
   %55 = load ptr, ptr %func_builder, align 8
   %56 = load ptr, ptr %object_type, align 8
-  %57 = call ptr @LLVMBuildAlloca(ptr %55, ptr %56, ptr @179)
+  %57 = call ptr @LLVMBuildAlloca(ptr %55, ptr %56, ptr @178)
   store ptr %57, ptr %this_alloc, align 8
   %this_id = alloca ptr, align 8
   %memberidx22 = getelementptr inbounds %CodeGen, ptr %0, i32 0, i32 4
@@ -35151,7 +36748,7 @@ if.entry18:                                       ; preds = %ifend
   %63 = load ptr, ptr %62, align 8
   %memberidx25 = getelementptr inbounds <{ ptr, ptr, ptr }>, ptr %63, i32 0, i32 1
   %64 = load ptr, ptr %memberidx25, align 8
-  %65 = call ptr @string_from_bytes(ptr @179, i64 4)
+  %65 = call ptr @string_from_bytes(ptr @178, i64 4)
   %66 = call ptr %64(ptr %62, ptr %65)
   store ptr %66, ptr %this_id, align 8
   %67 = load ptr, ptr %func_builder, align 8
@@ -35183,7 +36780,7 @@ if.entry30:                                       ; preds = %if.entry26
   %78 = load ptr, ptr %func_builder, align 8
   %79 = load ptr, ptr %object_type, align 8
   %80 = load ptr, ptr %this_param, align 8
-  %81 = call ptr @LLVMBuildInBoundsGEP2(ptr %78, ptr %79, ptr %80, ptr %index, i64 1, ptr @38)
+  %81 = call ptr @LLVMBuildInBoundsGEP2(ptr %78, ptr %79, ptr %80, ptr %index, i64 1, ptr @37)
   store ptr %81, ptr %vt_ptr, align 8
   %82 = load ptr, ptr %func_builder, align 8
   %83 = load ptr, ptr %struct_class, align 8
@@ -35212,7 +36809,7 @@ if.entry36:                                       ; preds = %ifend32
   %93 = load ptr, ptr %92, align 8
   %memberidx42 = getelementptr inbounds <{ ptr, ptr, ptr }>, ptr %93, i32 0, i32 1
   %94 = load ptr, ptr %memberidx42, align 8
-  %95 = call ptr @string_from_bytes(ptr @256, i64 5)
+  %95 = call ptr @string_from_bytes(ptr @255, i64 5)
   %96 = call ptr %94(ptr %92, ptr %95)
   store ptr %96, ptr %super_id, align 8
   %97 = icmp ne ptr %96, null
@@ -35230,7 +36827,7 @@ if.entry43:                                       ; preds = %if.entry36
   %super_ptr = alloca ptr, align 8
   %102 = load ptr, ptr %func_builder, align 8
   %103 = load ptr, ptr %object_type, align 8
-  %104 = call ptr @LLVMBuildAlloca(ptr %102, ptr %103, ptr @256)
+  %104 = call ptr @LLVMBuildAlloca(ptr %102, ptr %103, ptr @255)
   store ptr %104, ptr %super_ptr, align 8
   %105 = load ptr, ptr %func_builder, align 8
   %106 = load ptr, ptr %super_constructor, align 8
@@ -35266,7 +36863,7 @@ for.cond51:                                       ; preds = %for.body52, %for.en
 for.body52:                                       ; preds = %for.cond51
   %arg = alloca ptr, align 8
   %121 = load ptr, ptr %118, align 8
-  %memberidx58 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %121, i32 0, i32 5
+  %memberidx58 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %121, i32 0, i32 6
   %122 = load ptr, ptr %memberidx58, align 8
   %123 = call ptr %122(ptr %118, i64 %116)
   store ptr %123, ptr %arg, align 8
@@ -35339,7 +36936,7 @@ if.entry:                                         ; preds = %3
   %memberidx2 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %9, i32 0, i32 11
   %10 = load ptr, ptr %memberidx2, align 8
   %11 = call ptr %10(ptr %2)
-  %12 = call ptr @LLVMBuildGlobalString(ptr %1, ptr %11, ptr @38)
+  %12 = call ptr @LLVMBuildGlobalString(ptr %1, ptr %11, ptr @37)
   %13 = load ptr, ptr %memberidx, align 8
   %14 = load ptr, ptr %13, align 8
   %15 = load ptr, ptr %14, align 8
@@ -35357,13 +36954,13 @@ define ptr @CodeGen_codegen_string_to_cstring(ptr %0, ptr %1, ptr %2) {
   %memberidx1 = getelementptr inbounds %Program, ptr %4, i32 0, i32 1
   %5 = load ptr, ptr %memberidx1, align 8
   %6 = load ptr, ptr %5, align 8
-  %memberidx2 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %6, i32 0, i32 5
+  %memberidx2 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %6, i32 0, i32 6
   %7 = load ptr, ptr %memberidx2, align 8
   %8 = call ptr %7(ptr %5, i64 0)
   %memberidx3 = getelementptr inbounds %Module, ptr %8, i32 0, i32 7
   %9 = load ptr, ptr %memberidx3, align 8
   %10 = load ptr, ptr %9, align 8
-  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %10, i32 0, i32 5
+  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %10, i32 0, i32 6
   %11 = load ptr, ptr %memberidx4, align 8
   %12 = call ptr %11(ptr %9, i64 0)
   %memberidx5 = getelementptr inbounds %Scope, ptr %12, i32 0, i32 2
@@ -35371,19 +36968,19 @@ define ptr @CodeGen_codegen_string_to_cstring(ptr %0, ptr %1, ptr %2) {
   %14 = load ptr, ptr %13, align 8
   %memberidx6 = getelementptr inbounds <{ ptr, ptr, ptr }>, ptr %14, i32 0, i32 1
   %15 = load ptr, ptr %memberidx6, align 8
-  %16 = call ptr @string_from_bytes(ptr @301, i64 6)
+  %16 = call ptr @string_from_bytes(ptr @300, i64 6)
   %17 = call ptr %15(ptr %13, ptr %16)
   %18 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%ObjectType, ptr null, i32 1) to i32))
   call void @ObjectType_constructor(ptr %18, ptr %17)
   %19 = load ptr, ptr %memberidx, align 8
-  %20 = call ptr @string_from_bytes(ptr @389, i64 10)
+  %20 = call ptr @string_from_bytes(ptr @393, i64 10)
   %21 = call ptr @get_class_prop_type_with_name(ptr %19, ptr %18, ptr %20)
-  %22 = call ptr @string_from_bytes(ptr @389, i64 10)
+  %22 = call ptr @string_from_bytes(ptr @393, i64 10)
   %23 = call ptr @CodeGen_get_member_with_name(ptr %0, ptr %1, ptr %2, ptr %18, ptr %22)
   %args = alloca [1 x ptr], align 8
   store ptr %2, ptr %args, align 8
   %24 = call ptr @CodeGen_codegen_type(ptr %0, ptr %21, i1 false)
-  %25 = call ptr @LLVMBuildCall2(ptr %1, ptr %24, ptr %23, ptr %args, i64 1, ptr @38)
+  %25 = call ptr @LLVMBuildCall2(ptr %1, ptr %24, ptr %23, ptr %args, i64 1, ptr @37)
   ret ptr %25
 }
 
@@ -35654,7 +37251,7 @@ ifend:                                            ; preds = %2, %if.entry
 
 define void @Array_Bucket_string_CGClassType___append(ptr %0, ptr %1) {
   %3 = load ptr, ptr %0, align 8
-  %memberidx = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %3, i32 0, i32 2
+  %memberidx = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %3, i32 0, i32 3
   %4 = load ptr, ptr %memberidx, align 8
   call void %4(ptr %0, ptr %1)
   ret void
@@ -35699,6 +37296,46 @@ ifend:                                            ; preds = %3, %if.entry
   ret void
 }
 
+define ptr @ArrayIterator_Bucket_string_CGClassType_____next__(ptr %0) {
+  %memberidx = getelementptr inbounds %ArrayIterator_Bucket_string_CGClassType__, ptr %0, i32 0, i32 2
+  %2 = load i64, ptr %memberidx, align 4
+  %3 = add i64 %2, 1
+  store i64 %3, ptr %memberidx, align 4
+  %memberidx2 = getelementptr inbounds %ArrayIterator_Bucket_string_CGClassType__, ptr %0, i32 0, i32 4
+  %4 = load ptr, ptr %memberidx2, align 8
+  %ptridx = getelementptr inbounds ptr, ptr %4, i64 %2
+  %5 = load ptr, ptr %ptridx, align 8
+  %memberidx3 = getelementptr inbounds %Iterator_Bucket_string_CGClassType__, ptr %0, i32 0, i32 1
+  %memberidx5 = getelementptr inbounds %ArrayIterator_Bucket_string_CGClassType__, ptr %0, i32 0, i32 3
+  %6 = load i64, ptr %memberidx5, align 4
+  %7 = icmp sgt i64 %3, %6
+  store i1 %7, ptr %memberidx3, align 1
+  ret ptr %5
+}
+
+define void @ArrayIterator_Bucket_string_CGClassType___constructor(ptr %0, ptr %1, i64 %2) {
+  store ptr @VTableArrayIterator_Bucket_string_CGClassType__, ptr %0, align 8
+  %memberidx = getelementptr inbounds %Iterator_Bucket_string_CGClassType__, ptr %0, i32 0, i32 1
+  store i1 false, ptr %memberidx, align 1
+  %memberidx1 = getelementptr inbounds %ArrayIterator_Bucket_string_CGClassType__, ptr %0, i32 0, i32 2
+  store i64 0, ptr %memberidx1, align 4
+  %memberidx2 = getelementptr inbounds %ArrayIterator_Bucket_string_CGClassType__, ptr %0, i32 0, i32 4
+  store ptr %1, ptr %memberidx2, align 8
+  %memberidx3 = getelementptr inbounds %ArrayIterator_Bucket_string_CGClassType__, ptr %0, i32 0, i32 3
+  store i64 %2, ptr %memberidx3, align 4
+  ret void
+}
+
+define ptr @Array_Bucket_string_CGClassType_____iter__(ptr %0) {
+  %2 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%ArrayIterator_Bucket_string_CGClassType__, ptr null, i32 1) to i32))
+  %memberidx = getelementptr inbounds %Array_Bucket_string_CGClassType__, ptr %0, i32 0, i32 1
+  %3 = load ptr, ptr %memberidx, align 8
+  %memberidx1 = getelementptr inbounds %Array_Bucket_string_CGClassType__, ptr %0, i32 0, i32 2
+  %4 = load i64, ptr %memberidx1, align 4
+  call void @ArrayIterator_Bucket_string_CGClassType___constructor(ptr %2, ptr %3, i64 %4)
+  ret ptr %2
+}
+
 define void @Array_Bucket_string_CGClassType_____setitem__(ptr %0, i64 %1, ptr %2) {
   %4 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%Range, ptr null, i32 1) to i32))
   %memberidx = getelementptr inbounds %Array_Bucket_string_CGClassType__, ptr %0, i32 0, i32 2
@@ -35721,25 +37358,11 @@ ifend:                                            ; preds = %3, %if.entry
 }
 
 define ptr @Array_Bucket_string_CGClassType_____getitem__(ptr %0, i64 %1) {
-  %3 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%Range, ptr null, i32 1) to i32))
-  %memberidx = getelementptr inbounds %Array_Bucket_string_CGClassType__, ptr %0, i32 0, i32 2
-  %4 = load i64, ptr %memberidx, align 4
-  call void @Range_constructor(ptr %3, i64 0, i64 %4)
-  %5 = load ptr, ptr %3, align 8
-  %6 = load ptr, ptr %5, align 8
-  %7 = call i1 %6(ptr %3, i64 %1)
-  br i1 %7, label %if.entry, label %common.ret
-
-common.ret:                                       ; preds = %2, %if.entry
-  %common.ret.op = phi ptr [ %9, %if.entry ], [ null, %2 ]
-  ret ptr %common.ret.op
-
-if.entry:                                         ; preds = %2
-  %memberidx2 = getelementptr inbounds %Array_Bucket_string_CGClassType__, ptr %0, i32 0, i32 1
-  %8 = load ptr, ptr %memberidx2, align 8
-  %ptridx = getelementptr inbounds ptr, ptr %8, i64 %1
-  %9 = load ptr, ptr %ptridx, align 8
-  br label %common.ret
+  %memberidx = getelementptr inbounds %Array_Bucket_string_CGClassType__, ptr %0, i32 0, i32 1
+  %3 = load ptr, ptr %memberidx, align 8
+  %ptridx = getelementptr inbounds ptr, ptr %3, i64 %1
+  %4 = load ptr, ptr %ptridx, align 8
+  ret ptr %4
 }
 
 define i1 @Array_Bucket_string_CGClassType_____eq__(ptr %0, ptr %1) {
@@ -35767,11 +37390,11 @@ for.cond:                                         ; preds = %ifend7, %for.entry
 
 for.body:                                         ; preds = %for.cond
   %9 = load ptr, ptr %0, align 8
-  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %9, i32 0, i32 5
+  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %9, i32 0, i32 6
   %10 = load ptr, ptr %memberidx3, align 8
   %11 = call ptr %10(ptr %0, i64 %6)
   %12 = load ptr, ptr %1, align 8
-  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %12, i32 0, i32 5
+  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %12, i32 0, i32 6
   %13 = load ptr, ptr %memberidx4, align 8
   %14 = load i64, ptr %i, align 4
   %15 = call ptr %13(ptr %1, i64 %14)
@@ -35798,7 +37421,7 @@ for.cond:                                         ; preds = %ifend, %for.entry
 
 for.body:                                         ; preds = %for.cond
   %4 = load ptr, ptr %0, align 8
-  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %4, i32 0, i32 5
+  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %4, i32 0, i32 6
   %5 = load ptr, ptr %memberidx1, align 8
   %6 = call ptr %5(ptr %0, i64 %i.0)
   %7 = icmp eq ptr %6, %1
@@ -35860,7 +37483,7 @@ for.end:                                          ; preds = %for.cond
 
 if.entry:                                         ; preds = %for.body
   %8 = load ptr, ptr %1, align 8
-  %memberidx5 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %8, i32 0, i32 2
+  %memberidx5 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %8, i32 0, i32 3
   %9 = load ptr, ptr %memberidx5, align 8
   call void %9(ptr %1, ptr %5)
   br label %ifend
@@ -35919,13 +37542,13 @@ for.body11:                                       ; preds = %for.cond10
   %17 = load ptr, ptr %0, align 8
   %18 = load ptr, ptr %17, align 8
   %19 = load ptr, ptr %3, align 8
-  %memberidx16 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %19, i32 0, i32 5
+  %memberidx16 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %19, i32 0, i32 6
   %20 = load ptr, ptr %memberidx16, align 8
   %21 = call ptr %20(ptr %3, i64 %i.1)
   %memberidx17 = getelementptr inbounds %Bucket_string_CGClassType_, ptr %21, i32 0, i32 1
   %22 = load ptr, ptr %memberidx17, align 8
   %23 = load ptr, ptr %3, align 8
-  %memberidx18 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %23, i32 0, i32 5
+  %memberidx18 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %23, i32 0, i32 6
   %24 = load ptr, ptr %memberidx18, align 8
   %25 = call ptr %24(ptr %3, i64 %i.1)
   %memberidx19 = getelementptr inbounds %Bucket_string_CGClassType_, ptr %25, i32 0, i32 2
@@ -36075,15 +37698,15 @@ common.ret:                                       ; preds = %ifend32, %if.entry3
 
 if.entry:                                         ; preds = %5
   %true_str = alloca ptr, align 8
-  %7 = call ptr @string_from_bytes(ptr @194, i64 4)
+  %7 = call ptr @string_from_bytes(ptr @193, i64 4)
   %8 = call ptr @CodeGen_createGlobalLLVMString(ptr %0, ptr %1, ptr %7)
   store ptr %8, ptr %true_str, align 8
   %false_str = alloca ptr, align 8
-  %9 = call ptr @string_from_bytes(ptr @195, i64 5)
+  %9 = call ptr @string_from_bytes(ptr @194, i64 5)
   %10 = call ptr @CodeGen_createGlobalLLVMString(ptr %0, ptr %1, ptr %9)
   store ptr %10, ptr %false_str, align 8
   %11 = load ptr, ptr %true_str, align 8
-  %12 = call ptr @LLVMBuildSelect(ptr %1, ptr %2, ptr %11, ptr %10, ptr @38)
+  %12 = call ptr @LLVMBuildSelect(ptr %1, ptr %2, ptr %11, ptr %10, ptr @37)
   br label %common.ret
 
 ifend:                                            ; preds = %5
@@ -36093,7 +37716,7 @@ ifend:                                            ; preds = %5
 if.entry1:                                        ; preds = %ifend
   %memberidx = getelementptr inbounds %CodeGen, ptr %0, i32 0, i32 4
   %14 = load ptr, ptr %memberidx, align 8
-  %15 = call ptr @string_from_bytes(ptr @301, i64 6)
+  %15 = call ptr @string_from_bytes(ptr @300, i64 6)
   %16 = call i1 @is_buitin(ptr %14, ptr %3, ptr %15)
   br i1 %16, label %if.entry4, label %ifend6
 
@@ -36119,7 +37742,7 @@ ifend6:                                           ; preds = %if.entry1
   %24 = load ptr, ptr %memberidx9, align 8
   %25 = call ptr %24(ptr %22)
   %26 = alloca ptr, align 8
-  %27 = call i64 (ptr, ptr, ...) @asprintf(ptr %26, ptr @358, ptr %25)
+  %27 = call i64 (ptr, ptr, ...) @asprintf(ptr %26, ptr @362, ptr %25)
   %28 = load ptr, ptr %26, align 8
   %29 = call ptr @string_from_bytes(ptr %28, i64 %27)
   store ptr %29, ptr %fmt_str, align 8
@@ -36129,7 +37752,7 @@ ifend6:                                           ; preds = %if.entry1
 if.entry10:                                       ; preds = %ifend6
   %31 = load ptr, ptr %29, align 8
   %32 = load ptr, ptr %31, align 8
-  %33 = call ptr @string_from_bytes(ptr @359, i64 6)
+  %33 = call ptr @string_from_bytes(ptr @363, i64 6)
   %34 = call ptr %32(ptr %29, ptr %33)
   %35 = call ptr @CodeGen_createGlobalLLVMString(ptr %0, ptr %1, ptr %34)
   br label %common.ret
@@ -36166,7 +37789,7 @@ for.cond:                                         ; preds = %for.body, %ifend12
 for.body:                                         ; preds = %for.cond
   %field_bucket = alloca ptr, align 8
   %46 = load ptr, ptr %43, align 8
-  %memberidx19 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %46, i32 0, i32 5
+  %memberidx19 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %46, i32 0, i32 6
   %47 = load ptr, ptr %memberidx19, align 8
   %48 = call ptr %47(ptr %43, i64 %42)
   store ptr %48, ptr %field_bucket, align 8
@@ -36184,7 +37807,7 @@ for.body:                                         ; preds = %for.cond
   store ptr %54, ptr %member_val, align 8
   %55 = load ptr, ptr %fmt_args, align 8
   %56 = load ptr, ptr %55, align 8
-  %memberidx23 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %56, i32 0, i32 2
+  %memberidx23 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %56, i32 0, i32 3
   %57 = load ptr, ptr %memberidx23, align 8
   %58 = load ptr, ptr %field_ty, align 8
   %59 = add i64 %4, 1
@@ -36208,10 +37831,9 @@ for.body:                                         ; preds = %for.cond
   %72 = load ptr, ptr %memberidx27, align 8
   %73 = call ptr %72(ptr %70)
   %74 = alloca ptr, align 8
-  %75 = call i64 (ptr, ptr, ...) @asprintf(ptr %74, ptr @366, ptr %68, ptr %73)
+  %75 = call i64 (ptr, ptr, ...) @asprintf(ptr %74, ptr @370, ptr %68, ptr %73)
   %76 = load ptr, ptr %74, align 8
-  %77 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%string, ptr null, i32 1) to i32))
-  call void @string_constructor(ptr %77, ptr %76, i64 %75)
+  %77 = call ptr @string_from_bytes(ptr %76, i64 %75)
   %78 = call ptr %63(ptr %61, ptr %77)
   %79 = load i64, ptr %i, align 4
   %80 = add i64 %79, 1
@@ -36223,7 +37845,7 @@ for.end:                                          ; preds = %for.cond
   %82 = load ptr, ptr %81, align 8
   %memberidx28 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %82, i32 0, i32 1
   %83 = load ptr, ptr %memberidx28, align 8
-  %84 = call ptr @string_from_bytes(ptr @367, i64 1)
+  %84 = call ptr @string_from_bytes(ptr @371, i64 1)
   %85 = call ptr %83(ptr %81, ptr %84)
   %86 = load ptr, ptr %fmt_str, align 8
   %87 = load ptr, ptr %fmt_args, align 8
@@ -36231,7 +37853,7 @@ for.end:                                          ; preds = %for.cond
   br label %common.ret
 
 if.entry30:                                       ; preds = %ifend3
-  %89 = call ptr @string_from_bytes(ptr @368, i64 10)
+  %89 = call ptr @string_from_bytes(ptr @372, i64 10)
   %90 = call ptr @CodeGen_createGlobalLLVMString(ptr %0, ptr %1, ptr %89)
   br label %common.ret
 
@@ -36247,7 +37869,7 @@ define ptr @CodeGen_get_var_expr_mem(ptr %0, ptr %1, ptr %2) {
   br i1 %6, label %if.entry, label %ifend
 
 if.entry:                                         ; preds = %3
-  %7 = call ptr @string_from_bytes(ptr @371, i64 45)
+  %7 = call ptr @string_from_bytes(ptr @375, i64 45)
   call void @panic(ptr %7)
   br label %ifend
 
@@ -36297,7 +37919,7 @@ if.entry:                                         ; preds = %end
   %16 = load ptr, ptr %memberidx1, align 8
   %17 = call ptr @CodeGen_get_expr_mem(ptr %0, ptr %1, ptr %16)
   store ptr %17, ptr %ind_ptr, align 8
-  %18 = call ptr @LLVMBuildInBoundsGEP2(ptr %1, ptr %ternary, ptr %17, ptr %indices, i64 2, ptr @372)
+  %18 = call ptr @LLVMBuildInBoundsGEP2(ptr %1, ptr %ternary, ptr %17, ptr %indices, i64 2, ptr @376)
   br label %common.ret
 
 ifend:                                            ; preds = %end
@@ -36306,7 +37928,7 @@ ifend:                                            ; preds = %end
   %19 = load ptr, ptr %memberidx1, align 8
   %20 = call ptr @CodeGen_codegen_expression(ptr %0, ptr %1, ptr %19)
   store ptr %20, ptr %ind_ptr, align 8
-  %21 = call ptr @LLVMBuildInBoundsGEP2(ptr %1, ptr %ternary, ptr %20, ptr %indices_1, i64 1, ptr @373)
+  %21 = call ptr @LLVMBuildInBoundsGEP2(ptr %1, ptr %ternary, ptr %20, ptr %indices_1, i64 1, ptr @377)
   br label %common.ret
 }
 
@@ -36374,7 +37996,7 @@ if.entry14:                                       ; preds = %ifend10
   store i64 %., ptr %vtoffset, align 4
   %29 = load ptr, ptr %indices, align 8
   %30 = load ptr, ptr %29, align 8
-  %memberidx18 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %30, i32 0, i32 2
+  %memberidx18 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %30, i32 0, i32 3
   %31 = load ptr, ptr %memberidx18, align 8
   %32 = call ptr @LLVMInt32Type()
   %memberidx19 = getelementptr inbounds %CGClassType, ptr %7, i32 0, i32 2
@@ -36391,7 +38013,7 @@ if.entry14:                                       ; preds = %ifend10
 
 else15:                                           ; preds = %ifend10
   %40 = load ptr, ptr %22, align 8
-  %memberidx21 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %40, i32 0, i32 2
+  %memberidx21 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %40, i32 0, i32 3
   %41 = load ptr, ptr %memberidx21, align 8
   %42 = call ptr @LLVMInt32Type()
   %43 = call ptr @LLVMConstInt(ptr %42, i64 0, i1 false)
@@ -36401,14 +38023,14 @@ else15:                                           ; preds = %ifend10
   %45 = load ptr, ptr %memberidx22, align 8
   %memberidx23 = getelementptr inbounds %Array_LLVMValueRef_, ptr %44, i32 0, i32 2
   %46 = load i64, ptr %memberidx23, align 4
-  %47 = call ptr @LLVMBuildInBoundsGEP2(ptr %1, ptr %13, ptr %ptr.0, ptr %45, i64 %46, ptr @38)
+  %47 = call ptr @LLVMBuildInBoundsGEP2(ptr %1, ptr %13, ptr %ptr.0, ptr %45, i64 %46, ptr @37)
   %memberidx24 = getelementptr inbounds %CGClassType, ptr %7, i32 0, i32 5
   %48 = load ptr, ptr %memberidx24, align 8
   %49 = call ptr @LLVMPointerType(ptr %48, i64 0)
-  %50 = call ptr @LLVMBuildLoad2(ptr %1, ptr %49, ptr %47, ptr @38)
+  %50 = call ptr @LLVMBuildLoad2(ptr %1, ptr %49, ptr %47, ptr @37)
   %51 = load ptr, ptr %indices, align 8
   %52 = load ptr, ptr %51, align 8
-  %memberidx25 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %52, i32 0, i32 3
+  %memberidx25 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %52, i32 0, i32 4
   %53 = load ptr, ptr %memberidx25, align 8
   %54 = call ptr @LLVMInt32Type()
   %memberidx26 = getelementptr inbounds %CGClassType, ptr %7, i32 0, i32 1
@@ -36430,7 +38052,7 @@ ifend16:                                          ; preds = %else15, %if.entry14
   %62 = load ptr, ptr %memberidx29, align 8
   %memberidx30 = getelementptr inbounds %Array_LLVMValueRef_, ptr %61, i32 0, i32 2
   %63 = load i64, ptr %memberidx30, align 4
-  %64 = call ptr @LLVMBuildInBoundsGEP2(ptr %1, ptr %struct_type.0, ptr %ptr.1, ptr %62, i64 %63, ptr @375)
+  %64 = call ptr @LLVMBuildInBoundsGEP2(ptr %1, ptr %struct_type.0, ptr %ptr.1, ptr %62, i64 %63, ptr @379)
   br label %common.ret
 }
 
@@ -36484,11 +38106,11 @@ end:
   %memberidx1 = getelementptr inbounds %GenericType, ptr %2, i32 0, i32 2
   %6 = load ptr, ptr %memberidx1, align 8
   %7 = load ptr, ptr %6, align 8
-  %memberidx2 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %7, i32 0, i32 5
+  %memberidx2 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %7, i32 0, i32 6
   %8 = load ptr, ptr %memberidx2, align 8
   %9 = call ptr %8(ptr %6, i64 0)
   %10 = call ptr @CodeGen_codegen_type(ptr %0, ptr %9, i1 true)
-  %11 = call ptr @LLVMBuildMalloc(ptr %1, ptr %5, ptr @38)
+  %11 = call ptr @LLVMBuildMalloc(ptr %1, ptr %5, ptr @37)
   %memberidx3 = getelementptr inbounds %ArrayExpression, ptr %3, i32 0, i32 4
   %12 = load ptr, ptr %memberidx3, align 8
   %memberidx4 = getelementptr inbounds %Array_Expression_, ptr %12, i32 0, i32 2
@@ -36509,12 +38131,12 @@ end:
   %memberidx6 = getelementptr inbounds %Array_LLVMValueRef_, ptr %17, i32 0, i32 2
   store i64 2, ptr %memberidx6, align 4
   call void @CodeGen_build_constructor_call(ptr %0, ptr %1, ptr %4, ptr %17)
-  %22 = call ptr @string_from_bytes(ptr @376, i64 6)
+  %22 = call ptr @string_from_bytes(ptr @380, i64 6)
   %23 = call ptr @CodeGen_get_member_mem_with_name(ptr %0, ptr %1, ptr %11, ptr %4, ptr %22)
   %24 = call ptr @LLVMPointerType(ptr %10, i64 0)
-  %25 = call ptr @LLVMBuildLoad2(ptr %1, ptr %24, ptr %23, ptr @38)
+  %25 = call ptr @LLVMBuildLoad2(ptr %1, ptr %24, ptr %23, ptr @37)
   %26 = call ptr @CodeGen_store_array_elements(ptr %0, ptr %1, ptr %25, ptr %3)
-  %27 = call ptr @string_from_bytes(ptr @377, i64 6)
+  %27 = call ptr @string_from_bytes(ptr @381, i64 6)
   %28 = call ptr @CodeGen_get_member_mem_with_name(ptr %0, ptr %1, ptr %11, ptr %4, ptr %27)
   %29 = call ptr @LLVMBuildStore(ptr %1, ptr %16, ptr %28)
   ret ptr %11
@@ -36565,7 +38187,7 @@ if.entry:                                         ; preds = %2
   store i64 0, ptr %memberidx14, align 4
   store ptr %20, ptr %arg_types, align 8
   %21 = load ptr, ptr %20, align 8
-  %memberidx15 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %21, i32 0, i32 2
+  %memberidx15 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %21, i32 0, i32 3
   %22 = load ptr, ptr %memberidx15, align 8
   %23 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%ObjectType, ptr null, i32 1) to i32))
   %24 = load ptr, ptr %1, align 8
@@ -36596,10 +38218,10 @@ for.cond:                                         ; preds = %for.body, %if.entry
 for.body:                                         ; preds = %for.cond
   %30 = load ptr, ptr %arg_types, align 8
   %31 = load ptr, ptr %30, align 8
-  %memberidx19 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %31, i32 0, i32 2
+  %memberidx19 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %31, i32 0, i32 3
   %32 = load ptr, ptr %memberidx19, align 8
   %33 = load ptr, ptr %27, align 8
-  %memberidx21 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %33, i32 0, i32 5
+  %memberidx21 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %33, i32 0, i32 6
   %34 = load ptr, ptr %memberidx21, align 8
   %35 = call ptr %34(ptr %27, i64 %25)
   call void %32(ptr %30, ptr %35)
@@ -36622,7 +38244,7 @@ for.end:                                          ; preds = %for.cond
   %43 = load ptr, ptr %memberidx25, align 8
   %44 = call ptr %43(ptr %41)
   %45 = alloca ptr, align 8
-  %46 = call i64 (ptr, ptr, ...) @asprintf(ptr %45, ptr @403, ptr %44)
+  %46 = call i64 (ptr, ptr, ...) @asprintf(ptr %45, ptr @407, ptr %44)
   %47 = load ptr, ptr %45, align 8
   %48 = call ptr @string_from_bytes(ptr %47, i64 %46)
   %49 = load ptr, ptr %constructor_llvm_method_type, align 8
@@ -36636,7 +38258,7 @@ define ptr @CodeGen_codegen_memcmp_call(ptr %0, ptr %1, ptr %2) {
   %5 = call ptr @LLVMPointerType(ptr %4, i64 0)
   %6 = call ptr @LLVMIntType(i64 64)
   %7 = load ptr, ptr %0, align 8
-  %8 = call ptr @string_from_bytes(ptr @356, i64 6)
+  %8 = call ptr @string_from_bytes(ptr @360, i64 6)
   %9 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%Array_LLVMTypeRef_, ptr null, i32 1) to i32))
   call void @Array_LLVMTypeRef__constructor(ptr %9, i64 mul (i64 ptrtoint (ptr getelementptr (ptr, ptr null, i32 1) to i64), i64 3))
   %memberidx1 = getelementptr inbounds %Array_LLVMTypeRef_, ptr %9, i32 0, i32 1
@@ -36656,7 +38278,7 @@ define ptr @CodeGen_codegen_memcmp_call(ptr %0, ptr %1, ptr %2) {
   %16 = load ptr, ptr %memberidx5, align 8
   %memberidx6 = getelementptr inbounds %Array_LLVMValueRef_, ptr %2, i32 0, i32 2
   %17 = load i64, ptr %memberidx6, align 4
-  %18 = call ptr @LLVMBuildCall2(ptr %1, ptr %14, ptr %15, ptr %16, i64 %17, ptr @38)
+  %18 = call ptr @LLVMBuildCall2(ptr %1, ptr %14, ptr %15, ptr %16, i64 %17, ptr @37)
   ret ptr %18
 }
 
@@ -36760,7 +38382,7 @@ define ptr @CodeGen_get_member_with_name(ptr %0, ptr %1, ptr %2, ptr %3, ptr %4)
   %7 = load ptr, ptr %memberidx, align 8
   %8 = call ptr @get_class_prop_type_with_name(ptr %7, ptr %3, ptr %4)
   %9 = call ptr @CodeGen_codegen_type(ptr %0, ptr %8, i1 true)
-  %10 = call ptr @LLVMBuildLoad2(ptr %1, ptr %9, ptr %6, ptr @38)
+  %10 = call ptr @LLVMBuildLoad2(ptr %1, ptr %9, ptr %6, ptr @37)
   ret ptr %10
 }
 
@@ -36775,7 +38397,7 @@ end:
 define void @CodeGen_codegen_for_stmt(ptr %0, ptr %1, ptr %2) {
   %memberidx = getelementptr inbounds %CodeGen, ptr %0, i32 0, i32 1
   %4 = load ptr, ptr %memberidx, align 8
-  %5 = call ptr @LLVMAppendBasicBlock(ptr %4, ptr @393)
+  %5 = call ptr @LLVMAppendBasicBlock(ptr %4, ptr @397)
   %6 = call ptr @LLVMBuildBr(ptr %1, ptr %5)
   call void @LLVMPositionBuilderAtEnd(ptr %1, ptr %5)
   %memberidx1 = getelementptr inbounds %ForStatement, ptr %2, i32 0, i32 1
@@ -36788,92 +38410,102 @@ if.entry:                                         ; preds = %3
   br label %ifend
 
 ifend:                                            ; preds = %3, %if.entry
+  %memberidx3 = getelementptr inbounds %ForStatement, ptr %2, i32 0, i32 2
+  %9 = load ptr, ptr %memberidx3, align 8
+  %10 = icmp ne ptr %9, null
+  br i1 %10, label %if.entry4, label %ifend6
+
+if.entry4:                                        ; preds = %ifend
+  call void @CodeGen_codegen_statement(ptr %0, ptr %1, ptr %9)
+  br label %ifend6
+
+ifend6:                                           ; preds = %ifend, %if.entry4
   %for_cond_block = alloca ptr, align 8
-  %9 = load ptr, ptr %memberidx, align 8
-  %10 = call ptr @LLVMAppendBasicBlock(ptr %9, ptr @394)
-  store ptr %10, ptr %for_cond_block, align 8
-  %for_body_block = alloca ptr, align 8
   %11 = load ptr, ptr %memberidx, align 8
-  %12 = call ptr @LLVMAppendBasicBlock(ptr %11, ptr @395)
-  store ptr %12, ptr %for_body_block, align 8
-  %for_incr_block = alloca ptr, align 8
+  %12 = call ptr @LLVMAppendBasicBlock(ptr %11, ptr @398)
+  store ptr %12, ptr %for_cond_block, align 8
+  %for_body_block = alloca ptr, align 8
   %13 = load ptr, ptr %memberidx, align 8
-  %14 = call ptr @LLVMAppendBasicBlock(ptr %13, ptr @396)
-  store ptr %14, ptr %for_incr_block, align 8
-  %for_end_block = alloca ptr, align 8
+  %14 = call ptr @LLVMAppendBasicBlock(ptr %13, ptr @399)
+  store ptr %14, ptr %for_body_block, align 8
+  %for_incr_block = alloca ptr, align 8
   %15 = load ptr, ptr %memberidx, align 8
-  %16 = call ptr @LLVMAppendBasicBlock(ptr %15, ptr @397)
-  store ptr %16, ptr %for_end_block, align 8
+  %16 = call ptr @LLVMAppendBasicBlock(ptr %15, ptr @400)
+  store ptr %16, ptr %for_incr_block, align 8
+  %for_end_block = alloca ptr, align 8
+  %17 = load ptr, ptr %memberidx, align 8
+  %18 = call ptr @LLVMAppendBasicBlock(ptr %17, ptr @401)
+  store ptr %18, ptr %for_end_block, align 8
   %prev_break_bb = alloca ptr, align 8
-  %memberidx7 = getelementptr inbounds %CodeGen, ptr %0, i32 0, i32 2
-  %17 = load ptr, ptr %memberidx7, align 8
-  store ptr %17, ptr %prev_break_bb, align 8
+  %memberidx12 = getelementptr inbounds %CodeGen, ptr %0, i32 0, i32 2
+  %19 = load ptr, ptr %memberidx12, align 8
+  store ptr %19, ptr %prev_break_bb, align 8
   %prev_continue_bb = alloca ptr, align 8
-  %memberidx8 = getelementptr inbounds %CodeGen, ptr %0, i32 0, i32 3
-  %18 = load ptr, ptr %memberidx8, align 8
-  store ptr %18, ptr %prev_continue_bb, align 8
-  %19 = load ptr, ptr %for_end_block, align 8
-  store ptr %19, ptr %memberidx7, align 8
-  %20 = load ptr, ptr %for_incr_block, align 8
-  store ptr %20, ptr %memberidx8, align 8
-  %21 = load ptr, ptr %for_cond_block, align 8
-  %22 = call ptr @LLVMBuildBr(ptr %1, ptr %21)
+  %memberidx13 = getelementptr inbounds %CodeGen, ptr %0, i32 0, i32 3
+  %20 = load ptr, ptr %memberidx13, align 8
+  store ptr %20, ptr %prev_continue_bb, align 8
+  %21 = load ptr, ptr %for_end_block, align 8
+  store ptr %21, ptr %memberidx12, align 8
+  %22 = load ptr, ptr %for_incr_block, align 8
+  store ptr %22, ptr %memberidx13, align 8
   %23 = load ptr, ptr %for_cond_block, align 8
-  call void @LLVMPositionBuilderAtEnd(ptr %1, ptr %23)
+  %24 = call ptr @LLVMBuildBr(ptr %1, ptr %23)
+  %25 = load ptr, ptr %for_cond_block, align 8
+  call void @LLVMPositionBuilderAtEnd(ptr %1, ptr %25)
   %condition = alloca ptr, align 8
-  %24 = call ptr @CodeGen_createLLVMBool(ptr %0, i1 true)
-  store ptr %24, ptr %condition, align 8
-  %memberidx11 = getelementptr inbounds %ForStatement, ptr %2, i32 0, i32 2
-  %25 = load ptr, ptr %memberidx11, align 8
-  %26 = icmp ne ptr %25, null
-  br i1 %26, label %if.entry12, label %ifend14
+  %26 = call ptr @CodeGen_createLLVMBool(ptr %0, i1 true)
+  store ptr %26, ptr %condition, align 8
+  %memberidx16 = getelementptr inbounds %ForStatement, ptr %2, i32 0, i32 3
+  %27 = load ptr, ptr %memberidx16, align 8
+  %28 = icmp ne ptr %27, null
+  br i1 %28, label %if.entry17, label %ifend19
 
-if.entry12:                                       ; preds = %ifend
-  %27 = call ptr @CodeGen_codegen_expression(ptr %0, ptr %1, ptr %25)
-  store ptr %27, ptr %condition, align 8
-  br label %ifend14
+if.entry17:                                       ; preds = %ifend6
+  %29 = call ptr @CodeGen_codegen_expression(ptr %0, ptr %1, ptr %27)
+  store ptr %29, ptr %condition, align 8
+  br label %ifend19
 
-ifend14:                                          ; preds = %ifend, %if.entry12
-  %28 = load ptr, ptr %condition, align 8
-  %29 = load ptr, ptr %for_body_block, align 8
-  %30 = load ptr, ptr %for_end_block, align 8
-  %31 = call ptr @LLVMBuildCondBr(ptr %1, ptr %28, ptr %29, ptr %30)
-  %32 = load ptr, ptr %for_body_block, align 8
-  call void @LLVMPositionBuilderAtEnd(ptr %1, ptr %32)
-  %memberidx16 = getelementptr inbounds %ForStatement, ptr %2, i32 0, i32 4
-  %33 = load ptr, ptr %memberidx16, align 8
-  call void @CodeGen_codegen_block(ptr %0, ptr %1, ptr %33)
-  %34 = load ptr, ptr %memberidx16, align 8
-  %35 = call i1 @is_terminated(ptr %34)
-  %36 = xor i1 %35, true
-  br i1 %36, label %if.entry18, label %ifend20
+ifend19:                                          ; preds = %ifend6, %if.entry17
+  %30 = load ptr, ptr %condition, align 8
+  %31 = load ptr, ptr %for_body_block, align 8
+  %32 = load ptr, ptr %for_end_block, align 8
+  %33 = call ptr @LLVMBuildCondBr(ptr %1, ptr %30, ptr %31, ptr %32)
+  %34 = load ptr, ptr %for_body_block, align 8
+  call void @LLVMPositionBuilderAtEnd(ptr %1, ptr %34)
+  %memberidx21 = getelementptr inbounds %ForStatement, ptr %2, i32 0, i32 5
+  %35 = load ptr, ptr %memberidx21, align 8
+  call void @CodeGen_codegen_block(ptr %0, ptr %1, ptr %35)
+  %36 = load ptr, ptr %memberidx21, align 8
+  %37 = call i1 @is_terminated(ptr %36)
+  %38 = xor i1 %37, true
+  br i1 %38, label %if.entry23, label %ifend25
 
-if.entry18:                                       ; preds = %ifend14
-  %37 = load ptr, ptr %for_incr_block, align 8
-  %38 = call ptr @LLVMBuildBr(ptr %1, ptr %37)
-  br label %ifend20
-
-ifend20:                                          ; preds = %ifend14, %if.entry18
+if.entry23:                                       ; preds = %ifend19
   %39 = load ptr, ptr %for_incr_block, align 8
-  call void @LLVMPositionBuilderAtEnd(ptr %1, ptr %39)
-  %memberidx21 = getelementptr inbounds %ForStatement, ptr %2, i32 0, i32 3
-  %40 = load ptr, ptr %memberidx21, align 8
-  %41 = icmp ne ptr %40, null
-  br i1 %41, label %if.entry22, label %ifend24
+  %40 = call ptr @LLVMBuildBr(ptr %1, ptr %39)
+  br label %ifend25
 
-if.entry22:                                       ; preds = %ifend20
-  %42 = call ptr @CodeGen_codegen_expression(ptr %0, ptr %1, ptr %40)
-  br label %ifend24
+ifend25:                                          ; preds = %ifend19, %if.entry23
+  %41 = load ptr, ptr %for_incr_block, align 8
+  call void @LLVMPositionBuilderAtEnd(ptr %1, ptr %41)
+  %memberidx26 = getelementptr inbounds %ForStatement, ptr %2, i32 0, i32 4
+  %42 = load ptr, ptr %memberidx26, align 8
+  %43 = icmp ne ptr %42, null
+  br i1 %43, label %if.entry27, label %ifend29
 
-ifend24:                                          ; preds = %ifend20, %if.entry22
-  %43 = load ptr, ptr %for_cond_block, align 8
-  %44 = call ptr @LLVMBuildBr(ptr %1, ptr %43)
-  %45 = load ptr, ptr %prev_break_bb, align 8
-  store ptr %45, ptr %memberidx7, align 8
-  %46 = load ptr, ptr %prev_continue_bb, align 8
-  store ptr %46, ptr %memberidx8, align 8
-  %47 = load ptr, ptr %for_end_block, align 8
-  call void @LLVMPositionBuilderAtEnd(ptr %1, ptr %47)
+if.entry27:                                       ; preds = %ifend25
+  call void @CodeGen_codegen_statement(ptr %0, ptr %1, ptr %42)
+  br label %ifend29
+
+ifend29:                                          ; preds = %ifend25, %if.entry27
+  %44 = load ptr, ptr %for_cond_block, align 8
+  %45 = call ptr @LLVMBuildBr(ptr %1, ptr %44)
+  %46 = load ptr, ptr %prev_break_bb, align 8
+  store ptr %46, ptr %memberidx12, align 8
+  %47 = load ptr, ptr %prev_continue_bb, align 8
+  store ptr %47, ptr %memberidx13, align 8
+  %48 = load ptr, ptr %for_end_block, align 8
+  call void @LLVMPositionBuilderAtEnd(ptr %1, ptr %48)
   ret void
 }
 
@@ -36935,7 +38567,7 @@ if.entry8:                                        ; preds = %if.entry
 ifend10:                                          ; preds = %if.entry
   %23 = call ptr @CodeGen_codegen_type(ptr %0, ptr %14, i1 true)
   %24 = load ptr, ptr %ptr, align 8
-  %25 = call ptr @LLVMBuildLoad2(ptr %1, ptr %23, ptr %24, ptr @38)
+  %25 = call ptr @LLVMBuildLoad2(ptr %1, ptr %23, ptr %24, ptr @37)
   br label %common.ret
 
 if.entry14:                                       ; preds = %ifend
@@ -36951,7 +38583,7 @@ ifend16:                                          ; preds = %ifend
   br i1 %29, label %if.entry32, label %common.ret
 
 if.entry17:                                       ; preds = %if.entry14
-  %30 = call ptr @string_from_bytes(ptr @386, i64 51)
+  %30 = call ptr @string_from_bytes(ptr @390, i64 51)
   call void @panic(ptr %30)
   br label %ifend19
 
@@ -36970,7 +38602,7 @@ ifend19:                                          ; preds = %if.entry14, %if.ent
   br i1 %37, label %if.entry22, label %ifend24
 
 if.entry22:                                       ; preds = %ifend19
-  %38 = call ptr @string_from_bytes(ptr @387, i64 59)
+  %38 = call ptr @string_from_bytes(ptr @391, i64 59)
   call void @panic(ptr %38)
   br label %ifend24
 
@@ -36988,7 +38620,7 @@ if.entry27:                                       ; preds = %ifend24
 ifend29:                                          ; preds = %ifend24
   %43 = call ptr @CodeGen_codegen_type(ptr %0, ptr %39, i1 true)
   %44 = load ptr, ptr %prop, align 8
-  %45 = call ptr @LLVMBuildLoad2(ptr %1, ptr %43, ptr %44, ptr @38)
+  %45 = call ptr @LLVMBuildLoad2(ptr %1, ptr %43, ptr %44, ptr @37)
   br label %common.ret
 
 if.entry32:                                       ; preds = %ifend16
@@ -37000,7 +38632,7 @@ if.entry32:                                       ; preds = %ifend16
   br i1 %48, label %if.entry35, label %ifend37
 
 if.entry35:                                       ; preds = %if.entry32
-  %49 = call ptr @string_from_bytes(ptr @388, i64 50)
+  %49 = call ptr @string_from_bytes(ptr @392, i64 50)
   call void @panic(ptr %49)
   br label %ifend37
 
@@ -37021,7 +38653,7 @@ define ptr @CodeGen_codegen_atoi_call(ptr %0, ptr %1, ptr %2) {
   %5 = call ptr @LLVMPointerType(ptr %4, i64 0)
   %6 = call ptr @LLVMInt32Type()
   %7 = load ptr, ptr %0, align 8
-  %8 = call ptr @string_from_bytes(ptr @353, i64 4)
+  %8 = call ptr @string_from_bytes(ptr @357, i64 4)
   %9 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%Array_LLVMTypeRef_, ptr null, i32 1) to i32))
   call void @Array_LLVMTypeRef__constructor(ptr %9, i64 ptrtoint (ptr getelementptr (ptr, ptr null, i32 1) to i64))
   %memberidx1 = getelementptr inbounds %Array_LLVMTypeRef_, ptr %9, i32 0, i32 1
@@ -37037,7 +38669,7 @@ define ptr @CodeGen_codegen_atoi_call(ptr %0, ptr %1, ptr %2) {
   %14 = load ptr, ptr %memberidx5, align 8
   %memberidx6 = getelementptr inbounds %Array_LLVMValueRef_, ptr %2, i32 0, i32 2
   %15 = load i64, ptr %memberidx6, align 4
-  %16 = call ptr @LLVMBuildCall2(ptr %1, ptr %12, ptr %13, ptr %14, i64 %15, ptr @38)
+  %16 = call ptr @LLVMBuildCall2(ptr %1, ptr %12, ptr %13, ptr %14, i64 %15, ptr @37)
   ret ptr %16
 }
 
@@ -37071,7 +38703,7 @@ for.cond:                                         ; preds = %ifend, %for.entry
 for.body:                                         ; preds = %for.cond
   %prop_id = alloca ptr, align 8
   %9 = load ptr, ptr %6, align 8
-  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %9, i32 0, i32 5
+  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %9, i32 0, i32 6
   %10 = load ptr, ptr %memberidx3, align 8
   %11 = call ptr %10(ptr %6, i64 %i.0)
   %memberidx4 = getelementptr inbounds %Bucket_string_PropId_, ptr %11, i32 0, i32 2
@@ -37088,7 +38720,7 @@ for.body:                                         ; preds = %for.cond
   store ptr %16, ptr %prop_type, align 8
   %static_prop_name = alloca ptr, align 8
   %17 = load ptr, ptr %6, align 8
-  %memberidx6 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %17, i32 0, i32 5
+  %memberidx6 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %17, i32 0, i32 6
   %18 = load ptr, ptr %memberidx6, align 8
   %19 = call ptr %18(ptr %6, i64 %i.0)
   %memberidx7 = getelementptr inbounds %Bucket_string_PropId_, ptr %19, i32 0, i32 1
@@ -37112,7 +38744,7 @@ for.body:                                         ; preds = %for.cond
   %30 = load ptr, ptr %memberidx10, align 8
   %31 = call ptr %30(ptr %28)
   %32 = alloca ptr, align 8
-  %33 = call i64 (ptr, ptr, ...) @asprintf(ptr %32, ptr @200, ptr %27, ptr %31)
+  %33 = call i64 (ptr, ptr, ...) @asprintf(ptr %32, ptr @199, ptr %27, ptr %31)
   %34 = load ptr, ptr %32, align 8
   %35 = call ptr @string_from_bytes(ptr %34, i64 %33)
   store ptr %35, ptr %static_prop_name_concat, align 8
@@ -37147,7 +38779,7 @@ else:                                             ; preds = %for.body
   %memberidx14 = getelementptr inbounds %Class, ptr %2, i32 0, i32 4
   %49 = load ptr, ptr %memberidx14, align 8
   %50 = load ptr, ptr %49, align 8
-  %memberidx15 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %50, i32 0, i32 5
+  %memberidx15 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %50, i32 0, i32 6
   %51 = load ptr, ptr %memberidx15, align 8
   %52 = load ptr, ptr %prop_id, align 8
   %memberidx16 = getelementptr inbounds %PropId, ptr %52, i32 0, i32 2
@@ -37202,7 +38834,7 @@ ifend:                                            ; preds = %2
   %func_builder = alloca ptr, align 8
   %13 = call ptr @LLVMCreateBuilder()
   store ptr %13, ptr %func_builder, align 8
-  %14 = call ptr @LLVMAppendBasicBlock(ptr %10, ptr @38)
+  %14 = call ptr @LLVMAppendBasicBlock(ptr %10, ptr @37)
   call void @LLVMPositionBuilderAtEnd(ptr %13, ptr %14)
   %i = alloca i64, align 8
   store i64 0, ptr %i, align 4
@@ -37220,7 +38852,7 @@ for.cond:                                         ; preds = %for.body, %ifend
 for.body:                                         ; preds = %for.cond
   %arg = alloca ptr, align 8
   %19 = load ptr, ptr %16, align 8
-  %memberidx9 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %19, i32 0, i32 5
+  %memberidx9 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %19, i32 0, i32 6
   %20 = load ptr, ptr %memberidx9, align 8
   %21 = call ptr %20(ptr %16, i64 %15)
   store ptr %21, ptr %arg, align 8
@@ -37344,7 +38976,7 @@ ifend:                                            ; preds = %2, %if.entry
 
 define void @Array_LLVMTypeRef__append(ptr %0, ptr %1) {
   %3 = load ptr, ptr %0, align 8
-  %memberidx = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %3, i32 0, i32 2
+  %memberidx = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %3, i32 0, i32 3
   %4 = load ptr, ptr %memberidx, align 8
   call void %4(ptr %0, ptr %1)
   ret void
@@ -37389,6 +39021,46 @@ ifend:                                            ; preds = %3, %if.entry
   ret void
 }
 
+define ptr @ArrayIterator_LLVMTypeRef____next__(ptr %0) {
+  %memberidx = getelementptr inbounds %ArrayIterator_LLVMTypeRef_, ptr %0, i32 0, i32 2
+  %2 = load i64, ptr %memberidx, align 4
+  %3 = add i64 %2, 1
+  store i64 %3, ptr %memberidx, align 4
+  %memberidx2 = getelementptr inbounds %ArrayIterator_LLVMTypeRef_, ptr %0, i32 0, i32 4
+  %4 = load ptr, ptr %memberidx2, align 8
+  %ptridx = getelementptr inbounds ptr, ptr %4, i64 %2
+  %5 = load ptr, ptr %ptridx, align 8
+  %memberidx3 = getelementptr inbounds %Iterator_LLVMTypeRef_, ptr %0, i32 0, i32 1
+  %memberidx5 = getelementptr inbounds %ArrayIterator_LLVMTypeRef_, ptr %0, i32 0, i32 3
+  %6 = load i64, ptr %memberidx5, align 4
+  %7 = icmp sgt i64 %3, %6
+  store i1 %7, ptr %memberidx3, align 1
+  ret ptr %5
+}
+
+define void @ArrayIterator_LLVMTypeRef__constructor(ptr %0, ptr %1, i64 %2) {
+  store ptr @VTableArrayIterator_LLVMTypeRef_, ptr %0, align 8
+  %memberidx = getelementptr inbounds %Iterator_LLVMTypeRef_, ptr %0, i32 0, i32 1
+  store i1 false, ptr %memberidx, align 1
+  %memberidx1 = getelementptr inbounds %ArrayIterator_LLVMTypeRef_, ptr %0, i32 0, i32 2
+  store i64 0, ptr %memberidx1, align 4
+  %memberidx2 = getelementptr inbounds %ArrayIterator_LLVMTypeRef_, ptr %0, i32 0, i32 4
+  store ptr %1, ptr %memberidx2, align 8
+  %memberidx3 = getelementptr inbounds %ArrayIterator_LLVMTypeRef_, ptr %0, i32 0, i32 3
+  store i64 %2, ptr %memberidx3, align 4
+  ret void
+}
+
+define ptr @Array_LLVMTypeRef____iter__(ptr %0) {
+  %2 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%ArrayIterator_LLVMTypeRef_, ptr null, i32 1) to i32))
+  %memberidx = getelementptr inbounds %Array_LLVMTypeRef_, ptr %0, i32 0, i32 1
+  %3 = load ptr, ptr %memberidx, align 8
+  %memberidx1 = getelementptr inbounds %Array_LLVMTypeRef_, ptr %0, i32 0, i32 2
+  %4 = load i64, ptr %memberidx1, align 4
+  call void @ArrayIterator_LLVMTypeRef__constructor(ptr %2, ptr %3, i64 %4)
+  ret ptr %2
+}
+
 define void @Array_LLVMTypeRef____setitem__(ptr %0, i64 %1, ptr %2) {
   %4 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%Range, ptr null, i32 1) to i32))
   %memberidx = getelementptr inbounds %Array_LLVMTypeRef_, ptr %0, i32 0, i32 2
@@ -37411,25 +39083,11 @@ ifend:                                            ; preds = %3, %if.entry
 }
 
 define ptr @Array_LLVMTypeRef____getitem__(ptr %0, i64 %1) {
-  %3 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%Range, ptr null, i32 1) to i32))
-  %memberidx = getelementptr inbounds %Array_LLVMTypeRef_, ptr %0, i32 0, i32 2
-  %4 = load i64, ptr %memberidx, align 4
-  call void @Range_constructor(ptr %3, i64 0, i64 %4)
-  %5 = load ptr, ptr %3, align 8
-  %6 = load ptr, ptr %5, align 8
-  %7 = call i1 %6(ptr %3, i64 %1)
-  br i1 %7, label %if.entry, label %common.ret
-
-common.ret:                                       ; preds = %2, %if.entry
-  %common.ret.op = phi ptr [ %9, %if.entry ], [ null, %2 ]
-  ret ptr %common.ret.op
-
-if.entry:                                         ; preds = %2
-  %memberidx2 = getelementptr inbounds %Array_LLVMTypeRef_, ptr %0, i32 0, i32 1
-  %8 = load ptr, ptr %memberidx2, align 8
-  %ptridx = getelementptr inbounds ptr, ptr %8, i64 %1
-  %9 = load ptr, ptr %ptridx, align 8
-  br label %common.ret
+  %memberidx = getelementptr inbounds %Array_LLVMTypeRef_, ptr %0, i32 0, i32 1
+  %3 = load ptr, ptr %memberidx, align 8
+  %ptridx = getelementptr inbounds ptr, ptr %3, i64 %1
+  %4 = load ptr, ptr %ptridx, align 8
+  ret ptr %4
 }
 
 define i1 @Array_LLVMTypeRef____eq__(ptr %0, ptr %1) {
@@ -37457,11 +39115,11 @@ for.cond:                                         ; preds = %ifend7, %for.entry
 
 for.body:                                         ; preds = %for.cond
   %9 = load ptr, ptr %0, align 8
-  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %9, i32 0, i32 5
+  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %9, i32 0, i32 6
   %10 = load ptr, ptr %memberidx3, align 8
   %11 = call ptr %10(ptr %0, i64 %6)
   %12 = load ptr, ptr %1, align 8
-  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %12, i32 0, i32 5
+  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %12, i32 0, i32 6
   %13 = load ptr, ptr %memberidx4, align 8
   %14 = load i64, ptr %i, align 4
   %15 = call ptr %13(ptr %1, i64 %14)
@@ -37488,7 +39146,7 @@ for.cond:                                         ; preds = %ifend, %for.entry
 
 for.body:                                         ; preds = %for.cond
   %4 = load ptr, ptr %0, align 8
-  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %4, i32 0, i32 5
+  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %4, i32 0, i32 6
   %5 = load ptr, ptr %memberidx1, align 8
   %6 = call ptr %5(ptr %0, i64 %i.0)
   %7 = icmp eq ptr %6, %1
@@ -37552,7 +39210,7 @@ for.cond:                                         ; preds = %for.incr, %for.entr
 for.body:                                         ; preds = %for.cond
   %prop_id = alloca ptr, align 8
   %13 = load ptr, ptr %7, align 8
-  %memberidx9 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %13, i32 0, i32 5
+  %memberidx9 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %13, i32 0, i32 6
   %14 = load ptr, ptr %memberidx9, align 8
   %15 = call ptr %14(ptr %7, i64 %i.0)
   %memberidx10 = getelementptr inbounds %Bucket_string_PropId_, ptr %15, i32 0, i32 2
@@ -37572,7 +39230,7 @@ for.body:                                         ; preds = %for.cond
   store ptr %21, ptr %prop_type, align 8
   %prop_name = alloca ptr, align 8
   %22 = load ptr, ptr %7, align 8
-  %memberidx12 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %22, i32 0, i32 5
+  %memberidx12 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %22, i32 0, i32 6
   %23 = load ptr, ptr %memberidx12, align 8
   %24 = call ptr %23(ptr %7, i64 %i.0)
   %memberidx13 = getelementptr inbounds %Bucket_string_PropId_, ptr %24, i32 0, i32 1
@@ -37612,7 +39270,7 @@ if.entry:                                         ; preds = %for.body
   %42 = load i64, ptr %prop_index, align 4
   call void @resize_type_array(ptr %10, i64 %42)
   %43 = load ptr, ptr %10, align 8
-  %memberidx18 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %43, i32 0, i32 3
+  %memberidx18 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %43, i32 0, i32 4
   %44 = load ptr, ptr %memberidx18, align 8
   %45 = load i64, ptr %prop_index, align 4
   %46 = load ptr, ptr %field_type, align 8
@@ -37643,7 +39301,7 @@ if.entry21:                                       ; preds = %else
   store i64 0, ptr %memberidx25, align 4
   store ptr %52, ptr %arg_types, align 8
   %53 = load ptr, ptr %52, align 8
-  %memberidx26 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %53, i32 0, i32 2
+  %memberidx26 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %53, i32 0, i32 3
   %54 = load ptr, ptr %memberidx26, align 8
   %55 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%ObjectType, ptr null, i32 1) to i32))
   %56 = load ptr, ptr %2, align 8
@@ -37674,7 +39332,7 @@ else22:                                           ; preds = %else
   %69 = load ptr, ptr %memberidx59, align 8
   %70 = call ptr %69(ptr %67)
   %71 = alloca ptr, align 8
-  %72 = call i64 (ptr, ptr, ...) @asprintf(ptr %71, ptr @200, ptr %66, ptr %70)
+  %72 = call i64 (ptr, ptr, ...) @asprintf(ptr %71, ptr @199, ptr %66, ptr %70)
   %73 = load ptr, ptr %71, align 8
   %74 = call ptr @string_from_bytes(ptr %73, i64 %72)
   %75 = load ptr, ptr %74, align 8
@@ -37698,7 +39356,7 @@ ifend23:                                          ; preds = %if.entry61, %else22
   %memberidx69 = getelementptr inbounds %Class, ptr %85, i32 0, i32 5
   %86 = load ptr, ptr %memberidx69, align 8
   %87 = load ptr, ptr %86, align 8
-  %memberidx70 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %87, i32 0, i32 5
+  %memberidx70 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %87, i32 0, i32 6
   %88 = load ptr, ptr %memberidx70, align 8
   %89 = load ptr, ptr %prop_id, align 8
   %memberidx71 = getelementptr inbounds %PropId, ptr %89, i32 0, i32 2
@@ -37722,10 +39380,10 @@ for.cond29:                                       ; preds = %for.body30, %if.ent
 for.body30:                                       ; preds = %for.cond29
   %99 = load ptr, ptr %arg_types, align 8
   %100 = load ptr, ptr %99, align 8
-  %memberidx35 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %100, i32 0, i32 2
+  %memberidx35 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %100, i32 0, i32 3
   %101 = load ptr, ptr %memberidx35, align 8
   %102 = load ptr, ptr %96, align 8
-  %memberidx37 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %102, i32 0, i32 5
+  %memberidx37 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %102, i32 0, i32 6
   %103 = load ptr, ptr %memberidx37, align 8
   %104 = call ptr %103(ptr %96, i64 %94)
   call void %101(ptr %99, ptr %104)
@@ -37743,7 +39401,7 @@ for.end32:                                        ; preds = %for.cond29
   %memberidx39 = getelementptr inbounds %Class, ptr %2, i32 0, i32 5
   %110 = load ptr, ptr %memberidx39, align 8
   %111 = load ptr, ptr %110, align 8
-  %memberidx40 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %111, i32 0, i32 5
+  %memberidx40 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %111, i32 0, i32 6
   %112 = load ptr, ptr %memberidx40, align 8
   %113 = load ptr, ptr %prop_id, align 8
   %memberidx41 = getelementptr inbounds %PropId, ptr %113, i32 0, i32 2
@@ -37767,7 +39425,7 @@ if.entry43:                                       ; preds = %for.end32
   %124 = load ptr, ptr %memberidx48, align 8
   %125 = call ptr %124(ptr %122)
   %126 = alloca ptr, align 8
-  %127 = call i64 (ptr, ptr, ...) @asprintf(ptr %126, ptr @200, ptr %121, ptr %125)
+  %127 = call i64 (ptr, ptr, ...) @asprintf(ptr %126, ptr @199, ptr %121, ptr %125)
   %128 = load ptr, ptr %126, align 8
   %129 = call ptr @string_from_bytes(ptr %128, i64 %127)
   %130 = load ptr, ptr %llvm_method_type, align 8
@@ -37806,9 +39464,10 @@ if.entry61:                                       ; preds = %else22
   %148 = load ptr, ptr %memberidx66, align 8
   %149 = call ptr %148(ptr %146)
   %150 = alloca ptr, align 8
-  %151 = call i64 (ptr, ptr, ...) @asprintf(ptr %150, ptr @401, ptr %145, ptr %149)
+  %151 = call i64 (ptr, ptr, ...) @asprintf(ptr %150, ptr @405, ptr %145, ptr %149)
   %152 = load ptr, ptr %150, align 8
-  %153 = call ptr @string_from_bytes(ptr %152, i64 %151)
+  %153 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%string, ptr null, i32 1) to i32))
+  call void @string_constructor(ptr %153, ptr %152, i64 %151)
   call void @panic(ptr %153)
   br label %ifend23
 
@@ -37816,7 +39475,7 @@ if.entry73:                                       ; preds = %ifend23
   %154 = load i64, ptr %prop_index, align 4
   call void @resize_value_array(ptr %8, i64 %154)
   %155 = load ptr, ptr %8, align 8
-  %memberidx76 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %155, i32 0, i32 3
+  %memberidx76 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %155, i32 0, i32 4
   %156 = load ptr, ptr %memberidx76, align 8
   %157 = load i64, ptr %prop_index, align 4
   %158 = load ptr, ptr %llvm_method_val, align 8
@@ -37827,7 +39486,7 @@ ifend75:                                          ; preds = %ifend23, %if.entry7
   %159 = load i64, ptr %prop_index, align 4
   call void @resize_type_array(ptr %9, i64 %159)
   %160 = load ptr, ptr %9, align 8
-  %memberidx77 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %160, i32 0, i32 3
+  %memberidx77 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %160, i32 0, i32 4
   %161 = load ptr, ptr %memberidx77, align 8
   %162 = load i64, ptr %prop_index, align 4
   %163 = load ptr, ptr %llvm_method_type, align 8
@@ -37855,7 +39514,7 @@ if.entry85:                                       ; preds = %if.entry79
   %172 = load ptr, ptr %memberidx91, align 8
   %173 = call ptr %172(ptr %170)
   %174 = alloca ptr, align 8
-  %175 = call i64 (ptr, ptr, ...) @asprintf(ptr %174, ptr @402, ptr %173)
+  %175 = call i64 (ptr, ptr, ...) @asprintf(ptr %174, ptr @406, ptr %173)
   %176 = load ptr, ptr %174, align 8
   %177 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%string, ptr null, i32 1) to i32))
   call void @string_constructor(ptr %177, ptr %176, i64 %175)
@@ -37879,7 +39538,7 @@ ifend87:                                          ; preds = %if.entry79, %if.ent
   %186 = load ptr, ptr %vtable_struct_ty, align 8
   store ptr %186, ptr %memberidx96, align 8
   %187 = load ptr, ptr %3, align 8
-  %memberidx97 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %187, i32 0, i32 2
+  %memberidx97 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %187, i32 0, i32 3
   %188 = load ptr, ptr %memberidx97, align 8
   %189 = load ptr, ptr %vtable_struct_ty, align 8
   %190 = call ptr @LLVMPointerType(ptr %189, i64 0)
@@ -37897,10 +39556,10 @@ for.cond99:                                       ; preds = %for.body100, %for.e
 
 for.body100:                                      ; preds = %for.cond99
   %193 = load ptr, ptr %3, align 8
-  %memberidx104 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %193, i32 0, i32 2
+  %memberidx104 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %193, i32 0, i32 3
   %194 = load ptr, ptr %memberidx104, align 8
   %195 = load ptr, ptr %10, align 8
-  %memberidx105 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %195, i32 0, i32 5
+  %memberidx105 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %195, i32 0, i32 6
   %196 = load ptr, ptr %memberidx105, align 8
   %197 = call ptr %196(ptr %10, i64 %i.1)
   call void %194(ptr %3, ptr %197)
@@ -37930,7 +39589,7 @@ ifend:                                            ; preds = %2
   %memberidx1 = getelementptr inbounds %Program, ptr %5, i32 0, i32 1
   %6 = load ptr, ptr %memberidx1, align 8
   %7 = load ptr, ptr %6, align 8
-  %memberidx2 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %7, i32 0, i32 5
+  %memberidx2 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %7, i32 0, i32 6
   %8 = load ptr, ptr %memberidx2, align 8
   %memberidx3 = getelementptr inbounds %VarId, ptr %1, i32 0, i32 1
   %9 = load i64, ptr %memberidx3, align 4
@@ -37964,7 +39623,7 @@ for.cond:                                         ; preds = %ifend17, %for.entry
 for.body:                                         ; preds = %for.cond
   %global_const = alloca ptr, align 8
   %20 = load ptr, ptr %17, align 8
-  %memberidx11 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %20, i32 0, i32 5
+  %memberidx11 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %20, i32 0, i32 6
   %21 = load ptr, ptr %memberidx11, align 8
   %22 = call ptr %21(ptr %17, i64 %15)
   store ptr %22, ptr %global_const, align 8
@@ -38013,7 +39672,7 @@ for.cond23:                                       ; preds = %ifend36, %for.entry
 for.body24:                                       ; preds = %for.cond23
   %global_var = alloca ptr, align 8
   %38 = load ptr, ptr %35, align 8
-  %memberidx30 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %38, i32 0, i32 5
+  %memberidx30 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %38, i32 0, i32 6
   %39 = load ptr, ptr %memberidx30, align 8
   %40 = call ptr %39(ptr %35, i64 %33)
   store ptr %40, ptr %global_var, align 8
@@ -38057,7 +39716,7 @@ for.cond42:                                       ; preds = %ifend55, %for.entry
 for.body43:                                       ; preds = %for.cond42
   %function = alloca ptr, align 8
   %54 = load ptr, ptr %51, align 8
-  %memberidx49 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %54, i32 0, i32 5
+  %memberidx49 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %54, i32 0, i32 6
   %55 = load ptr, ptr %memberidx49, align 8
   %56 = call ptr %55(ptr %51, i64 %49)
   store ptr %56, ptr %function, align 8
@@ -38087,9 +39746,9 @@ ifend55:                                          ; preds = %for.body43
 define void @CodeGen_codegen_while_stmt(ptr %0, ptr %1, ptr %2) {
   %memberidx = getelementptr inbounds %CodeGen, ptr %0, i32 0, i32 1
   %4 = load ptr, ptr %memberidx, align 8
-  %5 = call ptr @LLVMAppendBasicBlock(ptr %4, ptr @398)
+  %5 = call ptr @LLVMAppendBasicBlock(ptr %4, ptr @402)
   %6 = load ptr, ptr %memberidx, align 8
-  %7 = call ptr @LLVMAppendBasicBlock(ptr %6, ptr @399)
+  %7 = call ptr @LLVMAppendBasicBlock(ptr %6, ptr @403)
   %memberidx2 = getelementptr inbounds %CodeGen, ptr %0, i32 0, i32 2
   %8 = load ptr, ptr %memberidx2, align 8
   %memberidx3 = getelementptr inbounds %CodeGen, ptr %0, i32 0, i32 3
@@ -38134,7 +39793,7 @@ define void @CodeGen_declare_enum(ptr %0, ptr %1) {
 
 if.entry:                                         ; preds = %2
   %7 = load ptr, ptr %4, align 8
-  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %7, i32 0, i32 5
+  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %7, i32 0, i32 6
   %8 = load ptr, ptr %memberidx4, align 8
   %9 = call ptr %8(ptr %4, i64 0)
   %memberidx5 = getelementptr inbounds %EnumField, ptr %9, i32 0, i32 2
@@ -38166,7 +39825,7 @@ for.cond:                                         ; preds = %for.body, %for.entr
 for.body:                                         ; preds = %for.cond
   %enum_field = alloca ptr, align 8
   %18 = load ptr, ptr %15, align 8
-  %memberidx11 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %18, i32 0, i32 5
+  %memberidx11 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %18, i32 0, i32 6
   %19 = load ptr, ptr %memberidx11, align 8
   %20 = call ptr %19(ptr %15, i64 %14)
   store ptr %20, ptr %enum_field, align 8
@@ -38230,11 +39889,11 @@ if.entry:                                         ; preds = %4
   %12 = load ptr, ptr %memberidx3, align 8
   %memberidx4 = getelementptr inbounds %Array_LLVMValueRef_, ptr %3, i32 0, i32 2
   %13 = load i64, ptr %memberidx4, align 4
-  %14 = call ptr @LLVMBuildCall2(ptr %1, ptr %11, ptr %9, ptr %12, i64 %13, ptr @38)
+  %14 = call ptr @LLVMBuildCall2(ptr %1, ptr %11, ptr %9, ptr %12, i64 %13, ptr @37)
   br label %ifend
 
 else:                                             ; preds = %4
-  %15 = call ptr @string_from_bytes(ptr @400, i64 47)
+  %15 = call ptr @string_from_bytes(ptr @404, i64 47)
   call void @panic(ptr %15)
   br label %ifend
 
@@ -38247,7 +39906,7 @@ for.entry:
   %5 = call ptr @LLVMInt8Type()
   %6 = call ptr @LLVMPointerType(ptr %5, i64 0)
   %7 = call ptr @LLVMIntType(i64 64)
-  %8 = call ptr @LLVMBuildAlloca(ptr %1, ptr %6, ptr @38)
+  %8 = call ptr @LLVMBuildAlloca(ptr %1, ptr %6, ptr @37)
   %9 = call ptr @CodeGen_createGlobalLLVMString(ptr %0, ptr %1, ptr %2)
   %10 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%Array_LLVMValueRef_, ptr null, i32 1) to i32))
   call void @Array_LLVMValueRef__constructor(ptr %10, i64 mul (i64 ptrtoint (ptr getelementptr (ptr, ptr null, i32 1) to i64), i64 2))
@@ -38269,10 +39928,10 @@ for.cond:                                         ; preds = %for.body, %for.entr
 
 for.body:                                         ; preds = %for.cond
   %15 = load ptr, ptr %10, align 8
-  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %15, i32 0, i32 2
+  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %15, i32 0, i32 3
   %16 = load ptr, ptr %memberidx3, align 8
   %17 = load ptr, ptr %3, align 8
-  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %17, i32 0, i32 5
+  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %17, i32 0, i32 6
   %18 = load ptr, ptr %memberidx4, align 8
   %19 = call ptr %18(ptr %3, i64 %i.0)
   call void %16(ptr %10, ptr %19)
@@ -38282,7 +39941,7 @@ for.body:                                         ; preds = %for.cond
 for.end:                                          ; preds = %for.cond
   %asprintf = alloca ptr, align 8
   %21 = load ptr, ptr %0, align 8
-  %22 = call ptr @string_from_bytes(ptr @357, i64 8)
+  %22 = call ptr @string_from_bytes(ptr @361, i64 8)
   %23 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%Array_LLVMTypeRef_, ptr null, i32 1) to i32))
   call void @Array_LLVMTypeRef__constructor(ptr %23, i64 mul (i64 ptrtoint (ptr getelementptr (ptr, ptr null, i32 1) to i64), i64 2))
   %memberidx6 = getelementptr inbounds %Array_LLVMTypeRef_, ptr %23, i32 0, i32 1
@@ -38300,7 +39959,7 @@ for.end:                                          ; preds = %for.cond
   %28 = load ptr, ptr %26, align 8
   %29 = load ptr, ptr %memberidx, align 8
   %30 = load i64, ptr %memberidx1, align 4
-  %31 = call ptr @LLVMBuildCall2(ptr %1, ptr %27, ptr %28, ptr %29, i64 %30, ptr @38)
+  %31 = call ptr @LLVMBuildCall2(ptr %1, ptr %27, ptr %28, ptr %29, i64 %30, ptr @37)
   store ptr %31, ptr %str_len, align 8
   %32 = icmp ne ptr %4, null
   br i1 %32, label %if.entry, label %ifend
@@ -38310,7 +39969,7 @@ if.entry:                                         ; preds = %for.end
   br label %ifend
 
 ifend:                                            ; preds = %for.end, %if.entry
-  %33 = call ptr @LLVMBuildLoad2(ptr %1, ptr %6, ptr %8, ptr @38)
+  %33 = call ptr @LLVMBuildLoad2(ptr %1, ptr %6, ptr %8, ptr @37)
   ret ptr %33
 }
 
@@ -38353,7 +40012,7 @@ for.cond:                                         ; preds = %for.body, %for.entr
 for.body:                                         ; preds = %for.cond
   %templ_arg = alloca ptr, align 8
   %17 = load ptr, ptr %14, align 8
-  %memberidx10 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %17, i32 0, i32 5
+  %memberidx10 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %17, i32 0, i32 6
   %18 = load ptr, ptr %memberidx10, align 8
   %19 = call ptr %18(ptr %14, i64 %i.0)
   store ptr %19, ptr %templ_arg, align 8
@@ -38366,7 +40025,7 @@ for.body:                                         ; preds = %for.cond
   store ptr %21, ptr %fmt, align 8
   %22 = load ptr, ptr %memberidx4, align 8
   %23 = load ptr, ptr %22, align 8
-  %memberidx13 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %23, i32 0, i32 5
+  %memberidx13 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %23, i32 0, i32 6
   %24 = load ptr, ptr %memberidx13, align 8
   %25 = call i64 %24(ptr %22, i64 %i.0)
   %incr = alloca i64, align 8
@@ -38387,7 +40046,7 @@ for.body:                                         ; preds = %for.cond
   %35 = call ptr @CodeGen_codegen_expression(ptr %0, ptr %1, ptr %34)
   store ptr %35, ptr %templ_arg_exp, align 8
   %36 = load ptr, ptr %4, align 8
-  %memberidx16 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %36, i32 0, i32 2
+  %memberidx16 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %36, i32 0, i32 3
   %37 = load ptr, ptr %memberidx16, align 8
   %38 = load ptr, ptr %templ_arg_ty, align 8
   %39 = call ptr @CodeGen_get_string_val(ptr %0, ptr %1, ptr %35, ptr %38, i64 0)
@@ -38451,7 +40110,7 @@ ifend:                                            ; preds = %end
 if.entry24:                                       ; preds = %if.entry
   %func = alloca ptr, align 8
   %61 = load ptr, ptr %0, align 8
-  %62 = call ptr @LLVMGetNamedFunction(ptr %61, ptr @369)
+  %62 = call ptr @LLVMGetNamedFunction(ptr %61, ptr @373)
   store ptr %62, ptr %func, align 8
   %63 = icmp eq ptr %62, null
   br i1 %63, label %if.entry28, label %ifend30
@@ -38459,7 +40118,7 @@ if.entry24:                                       ; preds = %if.entry
 ifend26:                                          ; preds = %if.entry
   %self = alloca ptr, align 8
   %64 = load ptr, ptr %str_ty, align 8
-  %65 = call ptr @LLVMBuildMalloc(ptr %1, ptr %64, ptr @38)
+  %65 = call ptr @LLVMBuildMalloc(ptr %1, ptr %64, ptr @37)
   store ptr %65, ptr %self, align 8
   %66 = load ptr, ptr %memberidx22, align 8
   %67 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%Array_LLVMValueRef_, ptr null, i32 1) to i32))
@@ -38481,7 +40140,7 @@ ifend26:                                          ; preds = %if.entry
   br label %common.ret
 
 if.entry28:                                       ; preds = %if.entry24
-  %75 = call ptr @string_from_bytes(ptr @370, i64 54)
+  %75 = call ptr @string_from_bytes(ptr @374, i64 54)
   call void @panic(ptr %75)
   br label %ifend30
 
@@ -38506,7 +40165,7 @@ ifend30:                                          ; preds = %if.entry24, %if.ent
   %86 = call ptr @LLVMFunctionType(ptr %85, ptr %arg_types, i64 2, i1 false)
   store ptr %86, ptr %fnc_ty, align 8
   %87 = load ptr, ptr %func, align 8
-  %88 = call ptr @LLVMBuildCall2(ptr %1, ptr %86, ptr %87, ptr %args, i64 2, ptr @38)
+  %88 = call ptr @LLVMBuildCall2(ptr %1, ptr %86, ptr %87, ptr %args, i64 2, ptr @37)
   br label %common.ret
 }
 
@@ -38811,7 +40470,7 @@ ifend:                                            ; preds = %2, %if.entry
 
 define void @Array_Bucket_string_CGEnumType___append(ptr %0, ptr %1) {
   %3 = load ptr, ptr %0, align 8
-  %memberidx = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %3, i32 0, i32 2
+  %memberidx = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %3, i32 0, i32 3
   %4 = load ptr, ptr %memberidx, align 8
   call void %4(ptr %0, ptr %1)
   ret void
@@ -38856,6 +40515,46 @@ ifend:                                            ; preds = %3, %if.entry
   ret void
 }
 
+define ptr @ArrayIterator_Bucket_string_CGEnumType_____next__(ptr %0) {
+  %memberidx = getelementptr inbounds %ArrayIterator_Bucket_string_CGEnumType__, ptr %0, i32 0, i32 2
+  %2 = load i64, ptr %memberidx, align 4
+  %3 = add i64 %2, 1
+  store i64 %3, ptr %memberidx, align 4
+  %memberidx2 = getelementptr inbounds %ArrayIterator_Bucket_string_CGEnumType__, ptr %0, i32 0, i32 4
+  %4 = load ptr, ptr %memberidx2, align 8
+  %ptridx = getelementptr inbounds ptr, ptr %4, i64 %2
+  %5 = load ptr, ptr %ptridx, align 8
+  %memberidx3 = getelementptr inbounds %Iterator_Bucket_string_CGEnumType__, ptr %0, i32 0, i32 1
+  %memberidx5 = getelementptr inbounds %ArrayIterator_Bucket_string_CGEnumType__, ptr %0, i32 0, i32 3
+  %6 = load i64, ptr %memberidx5, align 4
+  %7 = icmp sgt i64 %3, %6
+  store i1 %7, ptr %memberidx3, align 1
+  ret ptr %5
+}
+
+define void @ArrayIterator_Bucket_string_CGEnumType___constructor(ptr %0, ptr %1, i64 %2) {
+  store ptr @VTableArrayIterator_Bucket_string_CGEnumType__, ptr %0, align 8
+  %memberidx = getelementptr inbounds %Iterator_Bucket_string_CGEnumType__, ptr %0, i32 0, i32 1
+  store i1 false, ptr %memberidx, align 1
+  %memberidx1 = getelementptr inbounds %ArrayIterator_Bucket_string_CGEnumType__, ptr %0, i32 0, i32 2
+  store i64 0, ptr %memberidx1, align 4
+  %memberidx2 = getelementptr inbounds %ArrayIterator_Bucket_string_CGEnumType__, ptr %0, i32 0, i32 4
+  store ptr %1, ptr %memberidx2, align 8
+  %memberidx3 = getelementptr inbounds %ArrayIterator_Bucket_string_CGEnumType__, ptr %0, i32 0, i32 3
+  store i64 %2, ptr %memberidx3, align 4
+  ret void
+}
+
+define ptr @Array_Bucket_string_CGEnumType_____iter__(ptr %0) {
+  %2 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%ArrayIterator_Bucket_string_CGEnumType__, ptr null, i32 1) to i32))
+  %memberidx = getelementptr inbounds %Array_Bucket_string_CGEnumType__, ptr %0, i32 0, i32 1
+  %3 = load ptr, ptr %memberidx, align 8
+  %memberidx1 = getelementptr inbounds %Array_Bucket_string_CGEnumType__, ptr %0, i32 0, i32 2
+  %4 = load i64, ptr %memberidx1, align 4
+  call void @ArrayIterator_Bucket_string_CGEnumType___constructor(ptr %2, ptr %3, i64 %4)
+  ret ptr %2
+}
+
 define void @Array_Bucket_string_CGEnumType_____setitem__(ptr %0, i64 %1, ptr %2) {
   %4 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%Range, ptr null, i32 1) to i32))
   %memberidx = getelementptr inbounds %Array_Bucket_string_CGEnumType__, ptr %0, i32 0, i32 2
@@ -38878,25 +40577,11 @@ ifend:                                            ; preds = %3, %if.entry
 }
 
 define ptr @Array_Bucket_string_CGEnumType_____getitem__(ptr %0, i64 %1) {
-  %3 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%Range, ptr null, i32 1) to i32))
-  %memberidx = getelementptr inbounds %Array_Bucket_string_CGEnumType__, ptr %0, i32 0, i32 2
-  %4 = load i64, ptr %memberidx, align 4
-  call void @Range_constructor(ptr %3, i64 0, i64 %4)
-  %5 = load ptr, ptr %3, align 8
-  %6 = load ptr, ptr %5, align 8
-  %7 = call i1 %6(ptr %3, i64 %1)
-  br i1 %7, label %if.entry, label %common.ret
-
-common.ret:                                       ; preds = %2, %if.entry
-  %common.ret.op = phi ptr [ %9, %if.entry ], [ null, %2 ]
-  ret ptr %common.ret.op
-
-if.entry:                                         ; preds = %2
-  %memberidx2 = getelementptr inbounds %Array_Bucket_string_CGEnumType__, ptr %0, i32 0, i32 1
-  %8 = load ptr, ptr %memberidx2, align 8
-  %ptridx = getelementptr inbounds ptr, ptr %8, i64 %1
-  %9 = load ptr, ptr %ptridx, align 8
-  br label %common.ret
+  %memberidx = getelementptr inbounds %Array_Bucket_string_CGEnumType__, ptr %0, i32 0, i32 1
+  %3 = load ptr, ptr %memberidx, align 8
+  %ptridx = getelementptr inbounds ptr, ptr %3, i64 %1
+  %4 = load ptr, ptr %ptridx, align 8
+  ret ptr %4
 }
 
 define i1 @Array_Bucket_string_CGEnumType_____eq__(ptr %0, ptr %1) {
@@ -38924,11 +40609,11 @@ for.cond:                                         ; preds = %ifend7, %for.entry
 
 for.body:                                         ; preds = %for.cond
   %9 = load ptr, ptr %0, align 8
-  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %9, i32 0, i32 5
+  %memberidx3 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %9, i32 0, i32 6
   %10 = load ptr, ptr %memberidx3, align 8
   %11 = call ptr %10(ptr %0, i64 %6)
   %12 = load ptr, ptr %1, align 8
-  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %12, i32 0, i32 5
+  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %12, i32 0, i32 6
   %13 = load ptr, ptr %memberidx4, align 8
   %14 = load i64, ptr %i, align 4
   %15 = call ptr %13(ptr %1, i64 %14)
@@ -38955,7 +40640,7 @@ for.cond:                                         ; preds = %ifend, %for.entry
 
 for.body:                                         ; preds = %for.cond
   %4 = load ptr, ptr %0, align 8
-  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %4, i32 0, i32 5
+  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %4, i32 0, i32 6
   %5 = load ptr, ptr %memberidx1, align 8
   %6 = call ptr %5(ptr %0, i64 %i.0)
   %7 = icmp eq ptr %6, %1
@@ -39017,7 +40702,7 @@ for.end:                                          ; preds = %for.cond
 
 if.entry:                                         ; preds = %for.body
   %8 = load ptr, ptr %1, align 8
-  %memberidx5 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %8, i32 0, i32 2
+  %memberidx5 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %8, i32 0, i32 3
   %9 = load ptr, ptr %memberidx5, align 8
   call void %9(ptr %1, ptr %5)
   br label %ifend
@@ -39076,13 +40761,13 @@ for.body11:                                       ; preds = %for.cond10
   %17 = load ptr, ptr %0, align 8
   %18 = load ptr, ptr %17, align 8
   %19 = load ptr, ptr %3, align 8
-  %memberidx16 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %19, i32 0, i32 5
+  %memberidx16 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %19, i32 0, i32 6
   %20 = load ptr, ptr %memberidx16, align 8
   %21 = call ptr %20(ptr %3, i64 %i.1)
   %memberidx17 = getelementptr inbounds %Bucket_string_CGEnumType_, ptr %21, i32 0, i32 1
   %22 = load ptr, ptr %memberidx17, align 8
   %23 = load ptr, ptr %3, align 8
-  %memberidx18 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %23, i32 0, i32 5
+  %memberidx18 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %23, i32 0, i32 6
   %24 = load ptr, ptr %memberidx18, align 8
   %25 = call ptr %24(ptr %3, i64 %i.1)
   %memberidx19 = getelementptr inbounds %Bucket_string_CGEnumType_, ptr %25, i32 0, i32 2
@@ -39233,7 +40918,7 @@ define ptr @CodeGen_codegen_pow_expr(ptr %0, ptr %1, ptr %2, ptr %3, ptr %4) {
   %9 = load ptr, ptr %memberidx, align 8
   %10 = call ptr %9(ptr %7)
   %11 = alloca ptr, align 8
-  %12 = call i64 (ptr, ptr, ...) @asprintf(ptr %11, ptr @378, ptr %10)
+  %12 = call i64 (ptr, ptr, ...) @asprintf(ptr %11, ptr @382, ptr %10)
   %13 = load ptr, ptr %11, align 8
   %14 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%string, ptr null, i32 1) to i32))
   call void @string_constructor(ptr %14, ptr %13, i64 %12)
@@ -39252,7 +40937,7 @@ define ptr @CodeGen_codegen_pow_expr(ptr %0, ptr %1, ptr %2, ptr %3, ptr %4) {
   %memberidx4 = getelementptr inbounds %IntrinsicResult, ptr %20, i32 0, i32 1
   %21 = load ptr, ptr %memberidx4, align 8
   %22 = load ptr, ptr %20, align 8
-  %23 = call ptr @LLVMBuildCall2(ptr %1, ptr %21, ptr %22, ptr %args, i64 2, ptr @38)
+  %23 = call ptr @LLVMBuildCall2(ptr %1, ptr %21, ptr %22, ptr %args, i64 2, ptr @37)
   ret ptr %23
 }
 
@@ -39361,12 +41046,12 @@ end:                                              ; preds = %false_block, %true_
 
 true_block25:                                     ; preds = %ifend24
   %42 = load ptr, ptr %lhs, align 8
-  %43 = call ptr @LLVMBuildIsNull(ptr %1, ptr %42, ptr @38)
+  %43 = call ptr @LLVMBuildIsNull(ptr %1, ptr %42, ptr @37)
   br label %common.ret
 
 false_block26:                                    ; preds = %ifend24
   %44 = load ptr, ptr %lhs, align 8
-  %45 = call ptr @LLVMBuildIsNotNull(ptr %1, ptr %44, ptr @38)
+  %45 = call ptr @LLVMBuildIsNotNull(ptr %1, ptr %44, ptr @37)
   br label %common.ret
 
 if.entry33:                                       ; preds = %ifend21
@@ -39432,7 +41117,7 @@ end41:                                            ; preds = %false_block40, %tru
   %76 = call ptr @CodeGen_codegen_type(ptr %0, ptr %75, i1 true)
   store ptr %76, ptr %pointee_type, align 8
   %77 = load ptr, ptr %lhs, align 8
-  %78 = call ptr @LLVMBuildInBoundsGEP2(ptr %1, ptr %76, ptr %77, ptr %indices, i64 1, ptr @38)
+  %78 = call ptr @LLVMBuildInBoundsGEP2(ptr %1, ptr %76, ptr %77, ptr %indices, i64 1, ptr @37)
   br label %common.ret
 
 if.entry46:                                       ; preds = %ifend38
@@ -39454,7 +41139,7 @@ ifend48:                                          ; preds = %else172, %else126, 
   %87 = load ptr, ptr %rty, align 8
   %88 = load i64, ptr %87, align 4
   %89 = alloca ptr, align 8
-  %90 = call i64 (ptr, ptr, ...) @asprintf(ptr %89, ptr @379, i64 %82, ptr %86, i64 %88)
+  %90 = call i64 (ptr, ptr, ...) @asprintf(ptr %89, ptr @383, i64 %82, ptr %86, i64 %88)
   %91 = load ptr, ptr %89, align 8
   %92 = call ptr @string_from_bytes(ptr %91, i64 %90)
   call void @panic(ptr %92)
@@ -39477,7 +41162,7 @@ true_block52:                                     ; preds = %if.entry49
 false_block53:                                    ; preds = %if.entry49
   %98 = load ptr, ptr %lhs, align 8
   %99 = load ptr, ptr %rhs, align 8
-  %100 = call ptr @LLVMBuildAdd(ptr %1, ptr %98, ptr %99, ptr @38)
+  %100 = call ptr @LLVMBuildAdd(ptr %1, ptr %98, ptr %99, ptr @37)
   br label %common.ret
 
 if.entry56:                                       ; preds = %else50
@@ -39497,7 +41182,7 @@ true_block59:                                     ; preds = %if.entry56
 false_block60:                                    ; preds = %if.entry56
   %106 = load ptr, ptr %lhs, align 8
   %107 = load ptr, ptr %rhs, align 8
-  %108 = call ptr @LLVMBuildSub(ptr %1, ptr %106, ptr %107, ptr @38)
+  %108 = call ptr @LLVMBuildSub(ptr %1, ptr %106, ptr %107, ptr @37)
   br label %common.ret
 
 if.entry63:                                       ; preds = %else57
@@ -39517,13 +41202,13 @@ true_block66:                                     ; preds = %if.entry63
 false_block67:                                    ; preds = %if.entry63
   %114 = load ptr, ptr %lhs, align 8
   %115 = load ptr, ptr %rhs, align 8
-  %116 = call ptr @LLVMBuildMul(ptr %1, ptr %114, ptr %115, ptr @38)
+  %116 = call ptr @LLVMBuildMul(ptr %1, ptr %114, ptr %115, ptr @37)
   br label %common.ret
 
 if.entry70:                                       ; preds = %else64
   %117 = load ptr, ptr %lhs, align 8
   %118 = load ptr, ptr %rhs, align 8
-  %119 = call ptr @LLVMBuildSDiv(ptr %1, ptr %117, ptr %118, ptr @38)
+  %119 = call ptr @LLVMBuildSDiv(ptr %1, ptr %117, ptr %118, ptr @37)
   br label %common.ret
 
 else71:                                           ; preds = %else64
@@ -39533,7 +41218,7 @@ else71:                                           ; preds = %else64
 if.entry73:                                       ; preds = %else71
   %121 = load ptr, ptr %lhs, align 8
   %122 = load ptr, ptr %rhs, align 8
-  %123 = call ptr @LLVMBuildSRem(ptr %1, ptr %121, ptr %122, ptr @38)
+  %123 = call ptr @LLVMBuildSRem(ptr %1, ptr %121, ptr %122, ptr @37)
   br label %common.ret
 
 else74:                                           ; preds = %else71
@@ -39564,7 +41249,7 @@ true_block79:                                     ; preds = %if.entry76
 false_block80:                                    ; preds = %if.entry76
   %136 = load ptr, ptr %lhs, align 8
   %137 = load ptr, ptr %rhs, align 8
-  %138 = call ptr @LLVMBuildICmp(ptr %1, i64 %128, ptr %136, ptr %137, ptr @38)
+  %138 = call ptr @LLVMBuildICmp(ptr %1, i64 %128, ptr %136, ptr %137, ptr @37)
   br label %common.ret
 
 if.entry83:                                       ; preds = %else77
@@ -39587,7 +41272,7 @@ true_block86:                                     ; preds = %if.entry83
 false_block87:                                    ; preds = %if.entry83
   %146 = load ptr, ptr %lhs, align 8
   %147 = load ptr, ptr %rhs, align 8
-  %148 = call ptr @LLVMBuildICmp(ptr %1, i64 %140, ptr %146, ptr %147, ptr @38)
+  %148 = call ptr @LLVMBuildICmp(ptr %1, i64 %140, ptr %146, ptr %147, ptr @37)
   br label %common.ret
 
 if.entry90:                                       ; preds = %else84
@@ -39607,7 +41292,7 @@ true_block93:                                     ; preds = %if.entry90
 false_block94:                                    ; preds = %if.entry90
   %154 = load ptr, ptr %lhs, align 8
   %155 = load ptr, ptr %rhs, align 8
-  %156 = call ptr @LLVMBuildShl(ptr %1, ptr %154, ptr %155, ptr @38)
+  %156 = call ptr @LLVMBuildShl(ptr %1, ptr %154, ptr %155, ptr @37)
   br label %common.ret
 
 if.entry97:                                       ; preds = %else91
@@ -39627,7 +41312,7 @@ true_block100:                                    ; preds = %if.entry97
 false_block101:                                   ; preds = %if.entry97
   %162 = load ptr, ptr %lhs, align 8
   %163 = load ptr, ptr %rhs, align 8
-  %164 = call ptr @LLVMBuildAShr(ptr %1, ptr %162, ptr %163, ptr @38)
+  %164 = call ptr @LLVMBuildAShr(ptr %1, ptr %162, ptr %163, ptr @37)
   br label %common.ret
 
 if.entry104:                                      ; preds = %else98
@@ -39647,7 +41332,7 @@ true_block107:                                    ; preds = %if.entry104
 false_block108:                                   ; preds = %if.entry104
   %170 = load ptr, ptr %lhs, align 8
   %171 = load ptr, ptr %rhs, align 8
-  %172 = call ptr @LLVMBuildOr(ptr %1, ptr %170, ptr %171, ptr @38)
+  %172 = call ptr @LLVMBuildOr(ptr %1, ptr %170, ptr %171, ptr @37)
   br label %common.ret
 
 if.entry111:                                      ; preds = %else105
@@ -39667,7 +41352,7 @@ true_block114:                                    ; preds = %if.entry111
 false_block115:                                   ; preds = %if.entry111
   %178 = load ptr, ptr %lhs, align 8
   %179 = load ptr, ptr %rhs, align 8
-  %180 = call ptr @LLVMBuildAnd(ptr %1, ptr %178, ptr %179, ptr @38)
+  %180 = call ptr @LLVMBuildAnd(ptr %1, ptr %178, ptr %179, ptr @37)
   br label %common.ret
 
 if.entry118:                                      ; preds = %else112
@@ -39683,7 +41368,7 @@ true_block121:                                    ; preds = %if.entry118
 false_block122:                                   ; preds = %if.entry118
   %185 = load ptr, ptr %lhs, align 8
   %186 = load ptr, ptr %rhs, align 8
-  %187 = call ptr @LLVMBuildXor(ptr %1, ptr %185, ptr %186, ptr @38)
+  %187 = call ptr @LLVMBuildXor(ptr %1, ptr %185, ptr %186, ptr @37)
   br label %common.ret
 
 if.entry125:                                      ; preds = %else47
@@ -39698,7 +41383,7 @@ else126:                                          ; preds = %else47
 if.entry128:                                      ; preds = %if.entry125
   %191 = load ptr, ptr %lhs, align 8
   %192 = load ptr, ptr %rhs, align 8
-  %193 = call ptr @LLVMBuildFAdd(ptr %1, ptr %191, ptr %192, ptr @38)
+  %193 = call ptr @LLVMBuildFAdd(ptr %1, ptr %191, ptr %192, ptr @37)
   br label %common.ret
 
 else129:                                          ; preds = %if.entry125
@@ -39708,7 +41393,7 @@ else129:                                          ; preds = %if.entry125
 if.entry131:                                      ; preds = %else129
   %195 = load ptr, ptr %lhs, align 8
   %196 = load ptr, ptr %rhs, align 8
-  %197 = call ptr @LLVMBuildFSub(ptr %1, ptr %195, ptr %196, ptr @38)
+  %197 = call ptr @LLVMBuildFSub(ptr %1, ptr %195, ptr %196, ptr @37)
   br label %common.ret
 
 else132:                                          ; preds = %else129
@@ -39718,7 +41403,7 @@ else132:                                          ; preds = %else129
 if.entry134:                                      ; preds = %else132
   %199 = load ptr, ptr %lhs, align 8
   %200 = load ptr, ptr %rhs, align 8
-  %201 = call ptr @LLVMBuildFMul(ptr %1, ptr %199, ptr %200, ptr @38)
+  %201 = call ptr @LLVMBuildFMul(ptr %1, ptr %199, ptr %200, ptr @37)
   br label %common.ret
 
 else135:                                          ; preds = %else132
@@ -39728,7 +41413,7 @@ else135:                                          ; preds = %else132
 if.entry137:                                      ; preds = %else135
   %203 = load ptr, ptr %lhs, align 8
   %204 = load ptr, ptr %rhs, align 8
-  %205 = call ptr @LLVMBuildFDiv(ptr %1, ptr %203, ptr %204, ptr @38)
+  %205 = call ptr @LLVMBuildFDiv(ptr %1, ptr %203, ptr %204, ptr @37)
   br label %common.ret
 
 else138:                                          ; preds = %else135
@@ -39738,7 +41423,7 @@ else138:                                          ; preds = %else135
 if.entry140:                                      ; preds = %else138
   %207 = load ptr, ptr %lhs, align 8
   %208 = load ptr, ptr %rhs, align 8
-  %209 = call ptr @LLVMBuildFRem(ptr %1, ptr %207, ptr %208, ptr @38)
+  %209 = call ptr @LLVMBuildFRem(ptr %1, ptr %207, ptr %208, ptr @37)
   br label %common.ret
 
 else141:                                          ; preds = %else138
@@ -39769,7 +41454,7 @@ true_block146:                                    ; preds = %if.entry143
 false_block147:                                   ; preds = %if.entry143
   %222 = load ptr, ptr %lhs, align 8
   %223 = load ptr, ptr %rhs, align 8
-  %224 = call ptr @LLVMBuildFCmp(ptr %1, i64 %214, ptr %222, ptr %223, ptr @38)
+  %224 = call ptr @LLVMBuildFCmp(ptr %1, i64 %214, ptr %222, ptr %223, ptr @37)
   br label %common.ret
 
 if.entry150:                                      ; preds = %else144
@@ -39787,7 +41472,7 @@ true_block157:                                    ; preds = %if.entry150
 false_block158:                                   ; preds = %if.entry150
   %229 = load ptr, ptr %lhs, align 8
   %230 = load ptr, ptr %rhs, align 8
-  %231 = call ptr @LLVMBuildFCmp(ptr %1, i64 %., ptr %229, ptr %230, ptr @38)
+  %231 = call ptr @LLVMBuildFCmp(ptr %1, i64 %., ptr %229, ptr %230, ptr @37)
   br label %common.ret
 
 if.entry161:                                      ; preds = %else126
@@ -39812,7 +41497,7 @@ true_block167:                                    ; preds = %if.entry164
 false_block168:                                   ; preds = %if.entry164
   %239 = load ptr, ptr %lhs, align 8
   %240 = load ptr, ptr %rhs, align 8
-  %241 = call ptr @LLVMBuildAnd(ptr %1, ptr %239, ptr %240, ptr @38)
+  %241 = call ptr @LLVMBuildAnd(ptr %1, ptr %239, ptr %240, ptr @37)
   br label %common.ret
 
 if.entry171:                                      ; preds = %else165
@@ -39831,7 +41516,7 @@ true_block174:                                    ; preds = %if.entry171
 false_block175:                                   ; preds = %if.entry171
   %246 = load ptr, ptr %lhs, align 8
   %247 = load ptr, ptr %rhs, align 8
-  %248 = call ptr @LLVMBuildOr(ptr %1, ptr %246, ptr %247, ptr @38)
+  %248 = call ptr @LLVMBuildOr(ptr %1, ptr %246, ptr %247, ptr @37)
   br label %common.ret
 
 if.entry178:                                      ; preds = %else172
@@ -39847,7 +41532,7 @@ true_block181:                                    ; preds = %if.entry178
 false_block182:                                   ; preds = %if.entry178
   %253 = load ptr, ptr %lhs, align 8
   %254 = load ptr, ptr %rhs, align 8
-  %255 = call ptr @LLVMBuildXor(ptr %1, ptr %253, ptr %254, ptr @38)
+  %255 = call ptr @LLVMBuildXor(ptr %1, ptr %253, ptr %254, ptr @37)
   br label %common.ret
 }
 
@@ -39905,12 +41590,12 @@ if.entry10:                                       ; preds = %if.entry
   %22 = load ptr, ptr %member_exp, align 8
   %23 = call ptr @CodeGen_codegen_member_exp(ptr %0, ptr %1, ptr %22, ptr %21)
   %24 = load ptr, ptr %4, align 8
-  %memberidx16 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %24, i32 0, i32 2
+  %memberidx16 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %24, i32 0, i32 3
   %25 = load ptr, ptr %memberidx16, align 8
   %26 = load ptr, ptr %self, align 8
   call void %25(ptr %4, ptr %26)
   %27 = load ptr, ptr %5, align 8
-  %memberidx17 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %27, i32 0, i32 2
+  %memberidx17 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %27, i32 0, i32 3
   %28 = load ptr, ptr %memberidx17, align 8
   %29 = load ptr, ptr %struct_class, align 8
   %30 = load ptr, ptr %29, align 8
@@ -39949,11 +41634,11 @@ ifend26:                                          ; preds = %if.entry31, %if.ent
 
 if.entry31:                                       ; preds = %if.entry24
   %44 = load ptr, ptr %4, align 8
-  %memberidx34 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %44, i32 0, i32 2
+  %memberidx34 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %44, i32 0, i32 3
   %45 = load ptr, ptr %memberidx34, align 8
   call void %45(ptr %4, ptr %40)
   %46 = load ptr, ptr %5, align 8
-  %memberidx35 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %46, i32 0, i32 2
+  %memberidx35 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %46, i32 0, i32 3
   %47 = load ptr, ptr %memberidx35, align 8
   %48 = call ptr @LLVMInt8Type()
   %49 = call ptr @LLVMPointerType(ptr %48, i64 0)
@@ -39978,17 +41663,17 @@ for.cond:                                         ; preds = %for.body, %for.entr
 for.body:                                         ; preds = %for.cond
   %arg = alloca ptr, align 8
   %54 = load ptr, ptr %51, align 8
-  %memberidx40 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %54, i32 0, i32 5
+  %memberidx40 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %54, i32 0, i32 6
   %55 = load ptr, ptr %memberidx40, align 8
   %56 = call ptr %55(ptr %51, i64 %50)
   %57 = call ptr @CodeGen_codegen_expression(ptr %0, ptr %1, ptr %56)
   store ptr %57, ptr %arg, align 8
   %58 = load ptr, ptr %4, align 8
-  %memberidx41 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %58, i32 0, i32 2
+  %memberidx41 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %58, i32 0, i32 3
   %59 = load ptr, ptr %memberidx41, align 8
   call void %59(ptr %4, ptr %57)
   %60 = load ptr, ptr %5, align 8
-  %memberidx42 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %60, i32 0, i32 2
+  %memberidx42 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %60, i32 0, i32 3
   %61 = load ptr, ptr %memberidx42, align 8
   %62 = load ptr, ptr %arg, align 8
   %63 = call ptr @LLVMTypeOf(ptr %62)
@@ -40009,7 +41694,7 @@ for.end:                                          ; preds = %for.cond
   store ptr %70, ptr %func_ty, align 8
   %71 = load ptr, ptr %memberidx, align 8
   %72 = load i64, ptr %memberidx1, align 4
-  %73 = call ptr @LLVMBuildCall2(ptr %1, ptr %70, ptr %func.1, ptr %71, i64 %72, ptr @38)
+  %73 = call ptr @LLVMBuildCall2(ptr %1, ptr %70, ptr %func.1, ptr %71, i64 %72, ptr @37)
   ret ptr %73
 }
 
@@ -40018,7 +41703,7 @@ define ptr @CodeGen_codegen_realloc_call(ptr %0, ptr %1, ptr %2) {
   %5 = call ptr @LLVMPointerType(ptr %4, i64 0)
   %6 = call ptr @LLVMIntType(i64 64)
   %7 = load ptr, ptr %0, align 8
-  %8 = call ptr @string_from_bytes(ptr @355, i64 7)
+  %8 = call ptr @string_from_bytes(ptr @359, i64 7)
   %9 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%Array_LLVMTypeRef_, ptr null, i32 1) to i32))
   call void @Array_LLVMTypeRef__constructor(ptr %9, i64 mul (i64 ptrtoint (ptr getelementptr (ptr, ptr null, i32 1) to i64), i64 2))
   %memberidx1 = getelementptr inbounds %Array_LLVMTypeRef_, ptr %9, i32 0, i32 1
@@ -40036,7 +41721,7 @@ define ptr @CodeGen_codegen_realloc_call(ptr %0, ptr %1, ptr %2) {
   %15 = load ptr, ptr %memberidx5, align 8
   %memberidx6 = getelementptr inbounds %Array_LLVMValueRef_, ptr %2, i32 0, i32 2
   %16 = load i64, ptr %memberidx6, align 4
-  %17 = call ptr @LLVMBuildCall2(ptr %1, ptr %13, ptr %14, ptr %15, i64 %16, ptr @38)
+  %17 = call ptr @LLVMBuildCall2(ptr %1, ptr %13, ptr %14, ptr %15, i64 %16, ptr @37)
   ret ptr %17
 }
 
@@ -40081,7 +41766,7 @@ else4:                                            ; preds = %if.entry
   br i1 %13, label %if.entry7, label %ifend
 
 if.entry7:                                        ; preds = %else4
-  %14 = call ptr @LLVMBuildFNeg(ptr %1, ptr %6, ptr @38)
+  %14 = call ptr @LLVMBuildFNeg(ptr %1, ptr %6, ptr @37)
   br label %common.ret
 
 if.entry10:                                       ; preds = %ifend
@@ -40101,7 +41786,7 @@ true_block:                                       ; preds = %if.entry10
   br label %common.ret
 
 false_block:                                      ; preds = %if.entry10
-  %22 = call ptr @LLVMBuildNot(ptr %1, ptr %6, ptr @38)
+  %22 = call ptr @LLVMBuildNot(ptr %1, ptr %6, ptr @37)
   br label %common.ret
 
 if.entry13:                                       ; preds = %ifend12
@@ -40145,7 +41830,7 @@ if.entry25:                                       ; preds = %ifend18
   %35 = call ptr @CodeGen_createLLVMInt(ptr %0, i64 %34)
   store ptr %35, ptr %indices, align 8
   %36 = load ptr, ptr %alloc_ty, align 8
-  %37 = call ptr @LLVMBuildInBoundsGEP2(ptr %1, ptr %36, ptr %6, ptr %indices, i64 1, ptr @380)
+  %37 = call ptr @LLVMBuildInBoundsGEP2(ptr %1, ptr %36, ptr %6, ptr %indices, i64 1, ptr @384)
   store ptr %37, ptr %new_value, align 8
   br label %ifend27
 
@@ -40185,7 +41870,7 @@ false_block36:                                    ; preds = %if.entry32
 end37:                                            ; preds = %false_block36, %true_block35
   %ternary39 = phi ptr [ %49, %true_block35 ], [ %53, %false_block36 ]
   store ptr %ternary39, ptr %incr_amt, align 8
-  %54 = call ptr @LLVMBuildAdd(ptr %1, ptr %6, ptr %ternary39, ptr @38)
+  %54 = call ptr @LLVMBuildAdd(ptr %1, ptr %6, ptr %ternary39, ptr @37)
   store ptr %54, ptr %new_value, align 8
   br label %ifend27
 }
@@ -40193,11 +41878,11 @@ end37:                                            ; preds = %false_block36, %tru
 define ptr @CodeGen_codegen_ternary_exp(ptr %0, ptr %1, ptr %2) {
   %memberidx = getelementptr inbounds %CodeGen, ptr %0, i32 0, i32 1
   %4 = load ptr, ptr %memberidx, align 8
-  %5 = call ptr @LLVMAppendBasicBlock(ptr %4, ptr @382)
+  %5 = call ptr @LLVMAppendBasicBlock(ptr %4, ptr @386)
   %6 = load ptr, ptr %memberidx, align 8
-  %7 = call ptr @LLVMAppendBasicBlock(ptr %6, ptr @383)
+  %7 = call ptr @LLVMAppendBasicBlock(ptr %6, ptr @387)
   %8 = load ptr, ptr %memberidx, align 8
-  %9 = call ptr @LLVMAppendBasicBlock(ptr %8, ptr @384)
+  %9 = call ptr @LLVMAppendBasicBlock(ptr %8, ptr @388)
   %memberidx3 = getelementptr inbounds %TernaryExpression, ptr %2, i32 0, i32 4
   %10 = load ptr, ptr %memberidx3, align 8
   %11 = call ptr @CodeGen_codegen_expression(ptr %0, ptr %1, ptr %10)
@@ -40217,7 +41902,7 @@ define ptr @CodeGen_codegen_ternary_exp(ptr %0, ptr %1, ptr %2) {
   %memberidx7 = getelementptr inbounds %Expression, ptr %19, i32 0, i32 3
   %20 = load ptr, ptr %memberidx7, align 8
   %21 = call ptr @CodeGen_codegen_type(ptr %0, ptr %20, i1 true)
-  %22 = call ptr @LLVMBuildPhi(ptr %1, ptr %21, ptr @385)
+  %22 = call ptr @LLVMBuildPhi(ptr %1, ptr %21, ptr @389)
   %incomming_vals = alloca [2 x ptr], align 8
   store ptr %14, ptr %incomming_vals, align 8
   %23 = getelementptr inbounds ptr, ptr %incomming_vals, i64 1
@@ -40260,18 +41945,18 @@ ifend:                                            ; preds = %ifend16, %else, %if
 
 if.entry5:                                        ; preds = %if.entry
   %11 = load ptr, ptr %6, align 8
-  %memberidx8 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %11, i32 0, i32 5
+  %memberidx8 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %11, i32 0, i32 6
   %12 = load ptr, ptr %memberidx8, align 8
   %13 = call ptr %12(ptr %6, i64 0)
-  %14 = call ptr @LLVMBuildArrayMalloc(ptr %1, ptr %7, ptr %13, ptr @38)
+  %14 = call ptr @LLVMBuildArrayMalloc(ptr %1, ptr %7, ptr %13, ptr @37)
   br label %ifend
 
 else6:                                            ; preds = %if.entry
   %15 = load ptr, ptr %6, align 8
-  %memberidx9 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %15, i32 0, i32 5
+  %memberidx9 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %15, i32 0, i32 6
   %16 = load ptr, ptr %memberidx9, align 8
   %17 = call ptr %16(ptr %6, i64 0)
-  %18 = call ptr @LLVMBuildArrayAlloca(ptr %1, ptr %7, ptr %17, ptr @38)
+  %18 = call ptr @LLVMBuildArrayAlloca(ptr %1, ptr %7, ptr %17, ptr @37)
   br label %ifend
 
 if.entry10:                                       ; preds = %else
@@ -40281,17 +41966,17 @@ if.entry10:                                       ; preds = %else
   br i1 %20, label %if.entry14, label %else15
 
 if.entry14:                                       ; preds = %if.entry10
-  %21 = call ptr @LLVMBuildMalloc(ptr %1, ptr %19, ptr @38)
+  %21 = call ptr @LLVMBuildMalloc(ptr %1, ptr %19, ptr @37)
   br label %ifend16
 
 else15:                                           ; preds = %if.entry10
-  %22 = call ptr @LLVMBuildAlloca(ptr %1, ptr %19, ptr @38)
+  %22 = call ptr @LLVMBuildAlloca(ptr %1, ptr %19, ptr @37)
   br label %ifend16
 
 ifend16:                                          ; preds = %else15, %if.entry14
   %ptr.1 = phi ptr [ %21, %if.entry14 ], [ %22, %else15 ]
   %23 = load ptr, ptr %6, align 8
-  %memberidx17 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %23, i32 0, i32 2
+  %memberidx17 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %23, i32 0, i32 3
   %24 = load ptr, ptr %memberidx17, align 8
   call void %24(ptr %6, ptr %ptr.1)
   %memberidx18 = getelementptr inbounds %NewExpression, ptr %2, i32 0, i32 4
@@ -40318,7 +42003,7 @@ define ptr @CodeGen_codegen_intrinsic_exp(ptr %0, ptr %1, ptr %2) {
 if.entry:                                         ; preds = %3
   %cbuff = alloca ptr, align 8
   %8 = load ptr, ptr %5, align 8
-  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %8, i32 0, i32 5
+  %memberidx4 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %8, i32 0, i32 6
   %9 = load ptr, ptr %memberidx4, align 8
   %10 = call ptr %9(ptr %5, i64 0)
   %11 = call ptr @CodeGen_codegen_string_to_cstring(ptr %0, ptr %1, ptr %10)
@@ -40332,7 +42017,7 @@ ifend:                                            ; preds = %3
   %arg0_pointee_ty = alloca ptr, align 8
   %13 = load ptr, ptr %memberidx3, align 8
   %14 = load ptr, ptr %13, align 8
-  %memberidx21 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %14, i32 0, i32 5
+  %memberidx21 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %14, i32 0, i32 6
   %15 = load ptr, ptr %memberidx21, align 8
   %16 = call ptr %15(ptr %13, i64 0)
   %memberidx22 = getelementptr inbounds %Expression, ptr %16, i32 0, i32 3
@@ -40406,26 +42091,26 @@ ifend17:                                          ; preds = %ifend12, %if.entry1
 
 if.entry24:                                       ; preds = %ifend
   %39 = load ptr, ptr %5, align 8
-  %memberidx27 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %39, i32 0, i32 3
+  %memberidx27 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %39, i32 0, i32 4
   %40 = load ptr, ptr %memberidx27, align 8
-  %memberidx28 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %39, i32 0, i32 5
+  %memberidx28 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %39, i32 0, i32 6
   %41 = load ptr, ptr %memberidx28, align 8
   %42 = call ptr %41(ptr %5, i64 1)
   %43 = load ptr, ptr %arg0_pointee_size, align 8
-  %44 = call ptr @LLVMBuildMul(ptr %1, ptr %42, ptr %43, ptr @38)
+  %44 = call ptr @LLVMBuildMul(ptr %1, ptr %42, ptr %43, ptr @37)
   call void %40(ptr %5, i64 1, ptr %44)
   %45 = call ptr @CodeGen_codegen_realloc_call(ptr %0, ptr %1, ptr %5)
   br label %common.ret
 
 ifend26:                                          ; preds = %ifend
   %46 = load ptr, ptr %5, align 8
-  %memberidx29 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %46, i32 0, i32 3
+  %memberidx29 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %46, i32 0, i32 4
   %47 = load ptr, ptr %memberidx29, align 8
-  %memberidx30 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %46, i32 0, i32 5
+  %memberidx30 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %46, i32 0, i32 6
   %48 = load ptr, ptr %memberidx30, align 8
   %49 = call ptr %48(ptr %5, i64 2)
   %50 = load ptr, ptr %arg0_pointee_size, align 8
-  %51 = call ptr @LLVMBuildMul(ptr %1, ptr %49, ptr %50, ptr @38)
+  %51 = call ptr @LLVMBuildMul(ptr %1, ptr %49, ptr %50, ptr @37)
   call void %47(ptr %5, i64 2, ptr %51)
   %52 = icmp eq i64 %4, 7
   br i1 %52, label %if.entry31, label %ifend33
@@ -40437,7 +42122,7 @@ if.entry31:                                       ; preds = %ifend26
 ifend33:                                          ; preds = %ifend26
   %arg0_align = alloca i64, align 8
   %54 = load ptr, ptr %5, align 8
-  %memberidx34 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %54, i32 0, i32 5
+  %memberidx34 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %54, i32 0, i32 6
   %55 = load ptr, ptr %memberidx34, align 8
   %56 = call ptr %55(ptr %5, i64 0)
   %57 = call i64 @LLVMGetAlignment(ptr %56)
@@ -40447,17 +42132,17 @@ ifend33:                                          ; preds = %ifend26
 
 if.entry35:                                       ; preds = %ifend33
   %59 = load ptr, ptr %5, align 8
-  %memberidx38 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %59, i32 0, i32 5
+  %memberidx38 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %59, i32 0, i32 6
   %60 = load ptr, ptr %memberidx38, align 8
   %61 = call ptr %60(ptr %5, i64 0)
   %62 = load ptr, ptr %5, align 8
-  %memberidx39 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %62, i32 0, i32 5
+  %memberidx39 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %62, i32 0, i32 6
   %63 = load ptr, ptr %memberidx39, align 8
   %64 = call ptr %63(ptr %5, i64 1)
   %65 = call ptr @LLVMInt8Type()
-  %66 = call ptr @LLVMBuildIntCast2(ptr %1, ptr %64, ptr %65, i1 false, ptr @38)
+  %66 = call ptr @LLVMBuildIntCast2(ptr %1, ptr %64, ptr %65, i1 false, ptr @37)
   %67 = load ptr, ptr %5, align 8
-  %memberidx40 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %67, i32 0, i32 5
+  %memberidx40 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %67, i32 0, i32 6
   %68 = load ptr, ptr %memberidx40, align 8
   %69 = call ptr %68(ptr %5, i64 2)
   %70 = load i64, ptr %arg0_align, align 4
@@ -40467,7 +42152,7 @@ if.entry35:                                       ; preds = %ifend33
 ifend37:                                          ; preds = %ifend33
   %arg1_align = alloca i64, align 8
   %72 = load ptr, ptr %5, align 8
-  %memberidx41 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %72, i32 0, i32 5
+  %memberidx41 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %72, i32 0, i32 6
   %73 = load ptr, ptr %memberidx41, align 8
   %74 = call ptr %73(ptr %5, i64 1)
   %75 = call i64 @LLVMGetAlignment(ptr %74)
@@ -40477,17 +42162,17 @@ ifend37:                                          ; preds = %ifend33
 
 if.entry42:                                       ; preds = %ifend37
   %77 = load ptr, ptr %5, align 8
-  %memberidx45 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %77, i32 0, i32 5
+  %memberidx45 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %77, i32 0, i32 6
   %78 = load ptr, ptr %memberidx45, align 8
   %79 = call ptr %78(ptr %5, i64 0)
   %80 = load i64, ptr %arg0_align, align 4
   %81 = load ptr, ptr %5, align 8
-  %memberidx46 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %81, i32 0, i32 5
+  %memberidx46 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %81, i32 0, i32 6
   %82 = load ptr, ptr %memberidx46, align 8
   %83 = call ptr %82(ptr %5, i64 1)
   %84 = load i64, ptr %arg1_align, align 4
   %85 = load ptr, ptr %5, align 8
-  %memberidx47 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %85, i32 0, i32 5
+  %memberidx47 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %85, i32 0, i32 6
   %86 = load ptr, ptr %memberidx47, align 8
   %87 = call ptr %86(ptr %5, i64 2)
   %88 = call ptr @LLVMBuildMemCpy(ptr %1, ptr %79, i64 %80, ptr %83, i64 %84, ptr %87)
@@ -40499,24 +42184,24 @@ ifend44:                                          ; preds = %ifend37
 
 if.entry48:                                       ; preds = %ifend44
   %90 = load ptr, ptr %5, align 8
-  %memberidx51 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %90, i32 0, i32 5
+  %memberidx51 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %90, i32 0, i32 6
   %91 = load ptr, ptr %memberidx51, align 8
   %92 = call ptr %91(ptr %5, i64 0)
   %93 = load i64, ptr %arg0_align, align 4
   %94 = load ptr, ptr %5, align 8
-  %memberidx52 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %94, i32 0, i32 5
+  %memberidx52 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %94, i32 0, i32 6
   %95 = load ptr, ptr %memberidx52, align 8
   %96 = call ptr %95(ptr %5, i64 1)
   %97 = load i64, ptr %arg1_align, align 4
   %98 = load ptr, ptr %5, align 8
-  %memberidx53 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %98, i32 0, i32 5
+  %memberidx53 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %98, i32 0, i32 6
   %99 = load ptr, ptr %memberidx53, align 8
   %100 = call ptr %99(ptr %5, i64 2)
   %101 = call ptr @LLVMBuildMemMove(ptr %1, ptr %92, i64 %93, ptr %96, i64 %97, ptr %100)
   br label %common.ret
 
 ifend50:                                          ; preds = %ifend44
-  %102 = call ptr @string_from_bytes(ptr @390, i64 21)
+  %102 = call ptr @string_from_bytes(ptr @394, i64 21)
   call void @panic(ptr %102)
   br label %common.ret
 }
@@ -40568,7 +42253,7 @@ define ptr @create_var_key(ptr %0) {
   %memberidx2 = getelementptr inbounds %VarId, ptr %0, i32 0, i32 2
   %4 = load i64, ptr %memberidx2, align 4
   %5 = alloca ptr, align 8
-  %6 = call i64 (ptr, ptr, ...) @asprintf(ptr %5, ptr @350, i64 %2, i64 %3, i64 %4)
+  %6 = call i64 (ptr, ptr, ...) @asprintf(ptr %5, ptr @354, i64 %2, i64 %3, i64 %4)
   %7 = load ptr, ptr %5, align 8
   %8 = call ptr @string_from_bytes(ptr %7, i64 %6)
   ret ptr %8
@@ -40581,7 +42266,7 @@ define ptr @create_type_id_key(ptr %0) {
   %memberidx2 = getelementptr inbounds %TypeId, ptr %0, i32 0, i32 2
   %4 = load i64, ptr %memberidx2, align 4
   %5 = alloca ptr, align 8
-  %6 = call i64 (ptr, ptr, ...) @asprintf(ptr %5, ptr @350, i64 %2, i64 %3, i64 %4)
+  %6 = call i64 (ptr, ptr, ...) @asprintf(ptr %5, ptr @354, i64 %2, i64 %3, i64 %4)
   %7 = load ptr, ptr %5, align 8
   %8 = call ptr @string_from_bytes(ptr %7, i64 %6)
   ret ptr %8
@@ -40701,7 +42386,7 @@ common.ret:                                       ; preds = %ifend20, %if.entry1
   ret ptr %common.ret.op
 
 if.entry1:                                        ; preds = %if.entry
-  %9 = call ptr @string_from_bytes(ptr @360, i64 3)
+  %9 = call ptr @string_from_bytes(ptr @364, i64 3)
   br label %common.ret
 
 ifend3:                                           ; preds = %if.entry
@@ -40709,15 +42394,15 @@ ifend3:                                           ; preds = %if.entry
   br i1 %10, label %if.entry5, label %ifend7
 
 if.entry5:                                        ; preds = %ifend3
-  %11 = call ptr @string_from_bytes(ptr @361, i64 2)
+  %11 = call ptr @string_from_bytes(ptr @365, i64 2)
   br label %common.ret
 
 ifend7:                                           ; preds = %ifend3
-  %12 = call ptr @string_from_bytes(ptr @362, i64 2)
+  %12 = call ptr @string_from_bytes(ptr @366, i64 2)
   br label %common.ret
 
 if.entry10:                                       ; preds = %ifend
-  %13 = call ptr @string_from_bytes(ptr @363, i64 2)
+  %13 = call ptr @string_from_bytes(ptr @367, i64 2)
   br label %common.ret
 
 ifend12:                                          ; preds = %ifend
@@ -40727,7 +42412,7 @@ ifend12:                                          ; preds = %ifend
   br i1 %16, label %if.entry15, label %ifend17
 
 if.entry15:                                       ; preds = %ifend12
-  %17 = call ptr @string_from_bytes(ptr @364, i64 3)
+  %17 = call ptr @string_from_bytes(ptr @368, i64 3)
   br label %common.ret
 
 ifend17:                                          ; preds = %ifend12
@@ -40735,7 +42420,7 @@ ifend17:                                          ; preds = %ifend12
   br i1 %18, label %if.entry18, label %ifend20
 
 if.entry18:                                       ; preds = %ifend17
-  %19 = call ptr @string_from_bytes(ptr @365, i64 4)
+  %19 = call ptr @string_from_bytes(ptr @369, i64 4)
   br label %common.ret
 
 ifend20:                                          ; preds = %ifend17
@@ -40767,7 +42452,7 @@ define ptr @create_prop_key(ptr %0) {
   %memberidx3 = getelementptr inbounds %PropId, ptr %0, i32 0, i32 2
   %8 = load i64, ptr %memberidx3, align 4
   %9 = alloca ptr, align 8
-  %10 = call i64 (ptr, ptr, ...) @asprintf(ptr %9, ptr @374, ptr %6, i64 %7, i64 %8)
+  %10 = call i64 (ptr, ptr, ...) @asprintf(ptr %9, ptr @378, ptr %6, i64 %7, i64 %8)
   %11 = load ptr, ptr %9, align 8
   %12 = call ptr @string_from_bytes(ptr %11, i64 %10)
   ret ptr %12
@@ -40960,7 +42645,7 @@ for.cond:                                         ; preds = %for.body, %for.entr
 
 for.body:                                         ; preds = %for.cond
   %4 = load ptr, ptr %0, align 8
-  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %4, i32 0, i32 2
+  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %4, i32 0, i32 3
   %5 = load ptr, ptr %memberidx1, align 8
   call void %5(ptr %0, ptr null)
   %6 = add i64 %i.0, 1
@@ -40983,7 +42668,7 @@ for.cond:                                         ; preds = %for.body, %for.entr
 
 for.body:                                         ; preds = %for.cond
   %4 = load ptr, ptr %0, align 8
-  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %4, i32 0, i32 2
+  %memberidx1 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %4, i32 0, i32 3
   %5 = load ptr, ptr %memberidx1, align 8
   call void %5(ptr %0, ptr null)
   %6 = add i64 %i.0, 1
