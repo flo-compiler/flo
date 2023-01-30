@@ -22,7 +22,7 @@ stage1: stage0
 	$(call compile_and_link_fc,$^,$@)
 
 stage0: bootstrap/flo.ll llvm-bind.so
-	$(CC) $< llvm-bind.so $(LDFLAGS) -o $@
+	$(CC) $< llvm-bind.so $(LDFLAGS) -Woverride-module -o $@
 
 llvm-bind.so: src/llvm/FloLLVMBind.cpp
 	$(CC) -c $^ -o $@

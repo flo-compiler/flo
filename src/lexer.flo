@@ -180,13 +180,15 @@ class IdentifierToken (Token) {
     }
 }
 class Lexer {
-    current_char: i8
-    text: string
-    errors: FloError[]
-    idx: int
-    col: int
-    line: int
-    constructor(this){
+    private current_char: i8
+    private text: string
+    private errors: FloError[]
+    private idx: int
+    private col: int
+    private line: int
+    constructor(this, text: string, errors: FloError[]){
+        this.text = text
+        this.errors = errors
         this.idx = -1
         this.line = 1
         this.col = 0
@@ -459,7 +461,7 @@ class Lexer {
         this.advance()
         return new CharToken(value, this.get_range(length))
     }
-    public lex_token(this): Token {
+    private lex_token(this): Token {
         let char = this.current_char
         if this.current_char == ' ' or this.current_char == '\t'  {
             this.advance()
@@ -529,16 +531,15 @@ class Lexer {
         this.errors << new FloError(ErrorKind.ILLEGALCHAR, "Illegal character: '$(this.text.substring(this.idx, 1))'", this.get_range(1))
         return null
     }
-    public tokenize(this, text: string, errors: FloError[]): Token[] {
-        this.text = text
-        this.errors = errors
-        this.advance()
+    public tokenize(text: string, errors: FloError[]): Token[] {
+        let lexer: Lexer(text, errors)
+        lexer.advance()
         let tokens: Token[] = []
-        while !this.eof() and this.errors.length == 0 {
-            tokens << this.lex_token()
-            this.advance()
+        while !lexer.eof() and lexer.errors.length == 0 {
+            tokens << lexer.lex_token()
+            lexer.advance()
         }
-        tokens << new Token(TokType.EOF, new FloRange(0, 0, this.col, this.line))
+        tokens << new Token(TokType.EOF, new FloRange(0, 0, lexer.col, lexer.line))
         return tokens
     }
 }
