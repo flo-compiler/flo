@@ -362,8 +362,8 @@ class CodeGen {
                 if func == null {
                     panic("Could not find function 'string.from_bytes' in program")
                 }
-                let args = [str, str_len]
-                let arg_types = [LLVMTypeOf(str), LLVMTypeOf(str_len)]
+                let args: LLVMValueRef[2] = [str, str_len]
+                let arg_types: LLVMTypeRef[2] = [LLVMTypeOf(str), LLVMTypeOf(str_len)]
                 let fnc_ty = LLVMFunctionType(LLVMPointerType(str_ty), &arg_types[0], 2, false) 
                 return LLVMBuildCall2(builder, fnc_ty, func, &args[0], 2, "")
             }
@@ -374,7 +374,7 @@ class CodeGen {
         return str
     }
     private store_array_elements(this, builder: LLVMBuilderRef, ptr: LLVMValueRef, array_exp: ArrayExpression): LLVMValueRef {
-        let next_args = [this.createLLVMInt(1)]
+        let next_args: LLVMValueRef[1] = [this.createLLVMInt(1)]
         let ptr_ty = LLVMTypeOf(ptr)
         let addr = ptr
         for let i = 0; i < array_exp.value.length; ++i {
@@ -737,7 +737,7 @@ class CodeGen {
         LLVMBuildBr(builder, end)
         LLVMPositionBuilderAtEnd(builder, end)
         let phi_node = LLVMBuildPhi(builder, this.codegen_type(ternary_exp.is_true.value_type), "ternary")
-        let incomming_vals = [is_true, is_false]
+        let incomming_vals: LLVMValueRef[2] = [is_true, is_false]
         let blocks: LLVMBasicBlockRef[2] = [true_block, false_block]
         LLVMAddIncoming(phi_node, &incomming_vals[0], &blocks[0], 2)
         return phi_node
@@ -951,6 +951,9 @@ class CodeGen {
         let for_entry_block = LLVMAppendBasicBlock(this.function, "for.entry")
         LLVMBuildBr(builder, for_entry_block)
         LLVMPositionBuilderAtEnd(builder, for_entry_block)
+        if for_stmt.setup != null {
+            this.codegen_statement(builder, for_stmt.setup)
+        }
         if for_stmt.initialization != null {
             this.codegen_statement(builder, for_stmt.initialization)
         }
@@ -975,7 +978,7 @@ class CodeGen {
             LLVMBuildBr(builder, for_incr_block)
         LLVMPositionBuilderAtEnd(builder, for_incr_block)
         if for_stmt.incr_decr != null
-            this.codegen_expression(builder, for_stmt.incr_decr)
+            this.codegen_statement(builder, for_stmt.incr_decr)
         LLVMBuildBr(builder, for_cond_block)
         this.break_bb = prev_break_bb
         this.continue_bb = prev_continue_bb

@@ -34,10 +34,10 @@ class Compiler {
     }
     public set_std_path(this, std_dir_path: string){
         this.std_dir_path = std_dir_path
-        this.builtin_path = Path.join(std_dir_path, "builtins.flo")
+        this.builtin_path = Path.join(std_dir_path, "/builtins/builtins.flo")
     }
     private find_module_path(this, fpath: string): string {
-        let path = fpath.replace("@flo", Path.join(this.std_dir_path, "packages"))
+        let path = fpath.replace("@flo", this.std_dir_path)
         if !path.ends_with(".flo")
             path += ".flo"
         return Path.abspath(path)

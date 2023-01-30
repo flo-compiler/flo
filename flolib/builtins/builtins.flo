@@ -1,7 +1,10 @@
 /*@extern*/
 fnc strlen(str: i8*): int
 fnc write(res: int, buf: i8*, len: int)
-
+class Iterator<T> {
+    public done: bool
+    public __next__(this): T
+}
 const STDOUT = 1
 // ----- string -------
 class string {
@@ -153,6 +156,21 @@ class Range {
     public __in__(this, num: int): bool {
         return num >= this.start and num < this.end
     }
+    public __iter__(this): RangeIterator<int> {
+        return new RangeIterator<int>(this.start, this.end)
+    }
+}
+class RangeIterator<T>(Iterator<T>){
+    public idx: T
+    public end: T
+    constructor(this, idx: T, end: T){
+        this.idx = idx
+        this.end = end
+    }
+    public __next__(this): T {
+        this.done = this.idx >= this.end
+        return this.idx++
+    }
 }
 // ----- Array -------
 class Array <T> {
@@ -175,6 +193,9 @@ class Array <T> {
             this.buffer[i2] = tmp 
         }
     }
+    __iter__(this): ArrayIterator<T> {
+        return new ArrayIterator<T>(this.buffer, this.length)
+    } 
     __sl__(this, element: T){
         if (this.length >= this.size) this.resize()
         this.buffer[this.length++] = element
@@ -188,10 +209,7 @@ class Array <T> {
         this.__sl__(element)
     }
     __getitem__(this, index: int): T {
-        if index in 0..this.length {
-            return this.buffer[index]
-        }
-        return null
+        return this.buffer[index]
     }
     __eq__(this, other: T[]): bool {
         if this.length != other.length {
@@ -215,6 +233,22 @@ class Array <T> {
             if this.buffer[i] == search return i
         }
         return -1
+    }
+}
+class ArrayIterator<T>(Iterator<T>) {
+    private idx: int
+    private end: int
+    private bytes: T*
+    constructor(this, bytes: T*, end: int){
+        this.done = false
+        this.idx = 0
+        this.bytes = bytes
+        this.end = end
+    }
+    public __next__(this): T {
+        let next_elem = this.bytes[this.idx++]
+        this.done = this.idx > this.end
+        return next_elem
     }
 }
 fnc print(str: string){
