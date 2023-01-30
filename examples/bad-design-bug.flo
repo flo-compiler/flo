@@ -1,0 +1,23 @@
+class Chef {
+    specialty: string
+    constructor(this, specialty: string) {
+        this.specialty = specialty
+    }
+    print_specialty(this) {
+        println(this.specialty)
+    }
+}
+class ItalianChef(Chef) {
+    constructor(this) {
+        super("Pasta")
+    }
+    print_specialty(this){
+        println("Italian chef")
+    }
+}
+fnc print_chef_specialty(chef: Chef){
+    chef.print_specialty()
+}
+fnc main(){
+    print_chef_specialty(new ItalianChef())
+}

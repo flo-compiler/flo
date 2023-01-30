@@ -65,21 +65,17 @@ fnc main(argc: int, argv: i8**): int {
             return 1
         }
         /***** Lexing ******/
-        let lexer = new Lexer()
-        let tokens = lexer.tokenize(compiler.current_file_contents, compiler.errors)
+        let tokens = Lexer.tokenize(compiler.current_file_contents, compiler.errors)
         if (compiler.print_errors()) return 1
         if flag(args, "--print-tokens") print_tokens(tokens, compiler.current_file_contents)
         /***** Parsing *****/
-        let parser = new Parser()
-        let module_node = parser.parse(tokens, compiler.errors)
+        let module_node = Parser.parse(tokens, compiler.errors)
         if (compiler.print_errors()) return 1
         /**** Analyzing ****/
-        let typechecker = new TypeChecker()
-        let program = typechecker.check(module_node, compiler, filename)
+        let program = TypeChecker.check(module_node, compiler, filename)
         if (compiler.print_errors()) return 1       
         /**** Codegen ****/
-        let codegen = new CodeGen()
-        let flo_module = codegen.codegen(program)
+        let flo_module = CodeGen.codegen(program)
         flo_module.run_passes(flag_value_or(args, "-O", "1") as int)
         if flag(args, "--emit-llvm") {
             flo_module.print()

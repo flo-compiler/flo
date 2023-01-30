@@ -1,0 +1,11 @@
+class Static {
+    name: string = null
+    init(){
+        Static.name = "Hello"
+    }
+}
+fnc main(): int {
+    Static.init()
+    println(Static.name)
+    return 0
+}

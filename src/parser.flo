@@ -371,11 +371,13 @@ class ModuleAST {
     }
 }
 class Parser {
-    tokens: Token[]
-    errors: FloError[]
-    current_token: Token
-    idx: int
-    constructor(this){
+    private tokens: Token[]
+    private errors: FloError[]
+    private current_token: Token
+    private idx: int
+    constructor(this, tokens: Token[], errors: FloError[]){
+        this.tokens = tokens
+        this.errors = errors
         this.idx = -1
     }
     private can_parse(this): bool{
@@ -547,8 +549,7 @@ class Parser {
     }
     private parse_string(this): StringExpressionNode {
         let strtoken = this.eat(TokType.STR) as StrToken
-        let tmp_parser = new Parser()
-        tmp_parser.errors = this.errors
+        let tmp_parser: Parser(null, this.errors)
         let template_args: ExpressionNode [] = []
         for let i = 0; i < strtoken.args.length and this.can_parse(); i++ {
             tmp_parser.tokens = strtoken.args[i]
@@ -1136,32 +1137,31 @@ class Parser {
         this.eat(TokType.RBRACE)
         return enum_node
     }
-    parse(this, tokens: Token[], errors: FloError[]): ModuleAST {
-        this.tokens = tokens
-        this.errors = errors
-        this.advance()
+    public parse(tokens: Token[], errors: FloError[]): ModuleAST {
+        let parser: Parser(tokens, errors)
+        parser.advance()
         let module_node = new ModuleAST()
-        this.new_lines()
-        while this.can_parse() {
-            if this.current_token.ttype == TokType.FNC_KW {
-                this.advance()
-                module_node.functions << this.parse_function()
+        parser.new_lines()
+        while parser.can_parse() {
+            if parser.current_token.ttype == TokType.FNC_KW {
+                parser.advance()
+                module_node.functions << parser.parse_function()
             }
-            else if this.current_token.ttype == TokType.CLASS_KW
-                module_node.classes << this.parse_class()
-            else if this.current_token.ttype == TokType.ENUM_KW
-                module_node.enums << this.parse_enum()
-            else if this.current_token.ttype == TokType.IMPORT_KW
-                module_node.imports << this.parse_import()
-            else if this.current_token.ttype == TokType.CONST_KW
-                module_node.consts << this.parse_const_declaration_statement()
-            else if this.current_token.ttype == TokType.LET_KW
-                module_node.vars << this.parse_variable_declaration_statement()
-            else if this.current_token.ttype == TokType.IDENTIFER and (this.current_token as IdentifierToken).value == "type"
-                module_node.type_aliases << this.parse_type_alias()
+            else if parser.current_token.ttype == TokType.CLASS_KW
+                module_node.classes << parser.parse_class()
+            else if parser.current_token.ttype == TokType.ENUM_KW
+                module_node.enums << parser.parse_enum()
+            else if parser.current_token.ttype == TokType.IMPORT_KW
+                module_node.imports << parser.parse_import()
+            else if parser.current_token.ttype == TokType.CONST_KW
+                module_node.consts << parser.parse_const_declaration_statement()
+            else if parser.current_token.ttype == TokType.LET_KW
+                module_node.vars << parser.parse_variable_declaration_statement()
+            else if parser.current_token.ttype == TokType.IDENTIFER and (parser.current_token as IdentifierToken).value == "type"
+                module_node.type_aliases << parser.parse_type_alias()
             else 
-                this.error("Illegal expression expected: 'fnc', 'class', 'enum', 'import', 'const' or 'let'")
-            this.new_lines()
+                parser.error("Illegal expression expected: 'fnc', 'class', 'enum', 'import', 'const' or 'let'")
+            parser.new_lines()
         }
         return module_node
     }
