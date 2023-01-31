@@ -361,13 +361,14 @@ class ConstDeclaration (Statement) {
     }
 }
 class ForStatement (Statement) {
-    setup: Statement
+    for_in_setup: Statement
     initialization: Statement
     condition: Expression
     incr_decr: Statement
     block: Block
     constructor(this){
         super(StatementKind.FOR)
+        this.for_in_setup = null
         this.initialization = null
         this.condition = null
         this.incr_decr = null
@@ -1217,7 +1218,7 @@ class TypeChecker {
         for class_ in module_ast.classes {
             this.check_class_body(class_)
         }
-        for i = 0; i < module_ast.functions.length; i++ {
+        for let i = 0; i < module_ast.functions.length; i++ {
            this.check_function_body(module.functions[i], module_ast.functions[i])
         }
         if this.module_contains_generics and this.current_module != 0 {
@@ -2414,7 +2415,7 @@ class TypeChecker {
         }
         if this.has_errored() or func_args == null return called_args
         if func_args.length > args.length {
-            for i = args.length; i < func_args.length; ++i {
+            for let i = args.length; i < func_args.length; ++i {
                 let arg = func_args[i]
                 if arg.default != null
                     called_args << arg.default
@@ -2643,6 +2644,8 @@ class TypeChecker {
     }
     private check_for_statement(this, for_stmt_node: ForStatementNode): ForStatement {
         let for_stmt = new ForStatement()
+        let for_scope = this.create_child_scope_within_current_scope()
+        this.current_scope = for_scope.id
         let prev_in_loop = this.in_loop
         if for_stmt_node.for_kind == ForKind.DEF {
             if for_stmt_node.initialization != null
@@ -2670,7 +2673,7 @@ class TypeChecker {
             let iterator_name =  "tmp_it"
             let iter_call = new CallExpression(new MemberExpression(iterator, iter_prop_id, iter_generator_type), [], iteratable_type)
             let iteratable_var_id = this.declare_var_within_current_scope(iterator_name, iter_call, iteratable_type).var_id
-            for_stmt.setup = new VarDeclaration(iterator_name, iteratable_var_id)
+            for_stmt.for_in_setup = new VarDeclaration(iterator_name, iteratable_var_id)
 
             let iteratable_class = get_class_from_type(this.program, iteratable_type)
             let done_prop_id = iteratable_class.prop_map.get("done")
@@ -2690,6 +2693,7 @@ class TypeChecker {
         this.in_loop = true
         for_stmt.block = this.check_block(for_stmt_node.block)
         this.in_loop = prev_in_loop
+        this.current_scope = for_scope.parent
         return for_stmt
     }
     private check_while_statment(this, while_stmt_node: WhileStatementNode): WhileStatement {
