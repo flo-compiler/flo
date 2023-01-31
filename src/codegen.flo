@@ -332,7 +332,7 @@ class CodeGen {
     private codegen_string(this, builder: LLVMBuilderRef, string_exp: StringExpression): LLVMValueRef {
         let str_value = string_exp.value
         let call_args: LLVMValueRef[] = []
-        let fmt_str_builder = new StringBuilder(str_value.length + string_exp.fmt_indices.length*2)
+        let fmt_str_builder: StringBuilder(str_value.length + string_exp.fmt_indices.length*2)
         let chars = str_value.get_bytes()
         let curr_ind = 0
         let prev_ind = 0
@@ -505,7 +505,7 @@ class CodeGen {
         let obj_class = get_class_from_type(this.program, obj_type)
         let prop_id = obj_class.prop_map.get(name)
         let prop_ty = get_class_prop_type(this.program, prop_id)
-        let member_expr = new MemberExpression(null, prop_id, prop_ty) //TODO: Put it on the stack instead.
+        let member_expr: MemberExpression(null, prop_id, prop_ty) //TODO: Put it on the stack instead.
         return this.get_member_expr_mem(builder, member_expr, val)
     }
     private get_member_with_name(this, builder: LLVMBuilderRef, val: LLVMValueRef, obj_type: ObjectType, name: string): LLVMValueRef {
@@ -833,7 +833,7 @@ class CodeGen {
     }
     private codegen_string_to_cstring(this, builder: LLVMBuilderRef, value: LLVMValueRef): LLVMValueRef {
         let string_class_id = this.program.modules[0].scopes[0].classes.get("string")
-        let string_obj_ty = new ObjectType(string_class_id)
+        let string_obj_ty: ObjectType(string_class_id)
         let prop_ty = get_class_prop_type_with_name(this.program, string_obj_ty, "to_cstring")
         let func = this.get_member_with_name(builder, value, string_obj_ty, "to_cstring")
         let args: LLVMValueRef[1] = [value] 
@@ -979,7 +979,8 @@ class CodeGen {
         LLVMPositionBuilderAtEnd(builder, for_end_block)
         if for_stmt.for_in_setup != null {
             let var_id = (for_stmt.for_in_setup as VarDeclaration).var_id
-            let mem = this.codegen_var_access_exp(builder, new VarAccessExpression(var_id, get_var(this.program, var_id).value_type))
+            let it_load_exp: VarAccessExpression(var_id, get_var(this.program, var_id).value_type)
+            let mem = this.codegen_var_access_exp(builder, it_load_exp)
             LLVMBuildFree(builder, mem)
         }
     }
