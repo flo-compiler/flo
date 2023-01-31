@@ -1,9 +1,4 @@
-fnc main(){
-    let arr: int[] = [1, 2, 3, 4, 5, 6]
-    for num in 0..8 {
-        println("curent element in range $num.")
-    }
-    for item in arr {
-        println("curent element in array $item.")
-    }
+fnc main(): int {
+    println("Hello world")
+    return 0
 }

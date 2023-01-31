@@ -29,11 +29,11 @@ fnc print_error_line(text: string, range: FloRange){
     println(text.substring(start_line, end - start_line))
     let space_num = range.col
     let arrow_num = range.end - range.start
-    for let i = 0; i < space_num; i++ {
+    for _ in 0..space_num {
         print(" ")
     }
     change_print_color(COLORS.RED)
-    for i = 0; i < arrow_num; i++ {
+    for _ in  0..arrow_num {
         print("^")
     }
     change_print_color(COLORS.RESET)
