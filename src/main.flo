@@ -52,7 +52,7 @@ fnc main(argc: int, argv: i8**): int {
             return 0
         }
         let filename = args[1]
-        let compiler = new Compiler()
+        let compiler: Compiler()
         if flag(args, "-I") {
             let rt_path = flag_value_or(args, "-I", "")
             if rt_path != "" {
