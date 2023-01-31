@@ -982,7 +982,7 @@ if.entry:                                         ; preds = %3
   %18 = load ptr, ptr %memberidx6, align 8
   %19 = load i64, ptr %memberidx3, align 4
   %20 = mul i64 %19, ptrtoint (ptr getelementptr (i8, ptr null, i32 1) to i64)
-  call void @llvm.memcpy.p0.p0.i64(ptr align 1073741824 %ptridx, ptr align 8 %18, i64 %20, i1 false)
+  call void @llvm.memcpy.p0.p0.i64(ptr align 2147483648 %ptridx, ptr align 8 %18, i64 %20, i1 false)
   %21 = load i64, ptr %memberidx3, align 4
   %22 = add i64 %6, %21
   %23 = load ptr, ptr %nbuff, align 8
@@ -994,7 +994,7 @@ if.entry:                                         ; preds = %3
   %27 = load i64, ptr %memberidx1, align 4
   %28 = sub i64 %27, %25
   %29 = mul i64 %28, ptrtoint (ptr getelementptr (i8, ptr null, i32 1) to i64)
-  call void @llvm.memcpy.p0.p0.i64(ptr align 1073741824 %ptridx9, ptr align 1073741824 %ptridx14, i64 %29, i1 false)
+  call void @llvm.memcpy.p0.p0.i64(ptr align 2147483648 %ptridx9, ptr align 2147483648 %ptridx14, i64 %29, i1 false)
   %30 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%string, ptr null, i32 1) to i32))
   %31 = load ptr, ptr %nbuff, align 8
   %32 = load i64, ptr %nlen, align 4
@@ -1046,7 +1046,7 @@ define ptr @string___adda__(ptr %0, ptr %1) {
   %11 = load ptr, ptr %memberidx6, align 8
   %12 = load i64, ptr %memberidx1, align 4
   %13 = mul i64 %12, ptrtoint (ptr getelementptr (i8, ptr null, i32 1) to i64)
-  call void @llvm.memcpy.p0.p0.i64(ptr align 1073741824 %10, ptr align 8 %11, i64 %13, i1 false)
+  call void @llvm.memcpy.p0.p0.i64(ptr align 2147483648 %10, ptr align 8 %11, i64 %13, i1 false)
   store i64 %5, ptr %memberidx, align 4
   ret ptr %0
 }
@@ -3012,7 +3012,7 @@ ifend:                                            ; preds = %while.entry
   %12 = getelementptr inbounds i8, ptr %10, i64 %11
   %13 = load i64, ptr %read_len, align 4
   %14 = mul i64 %13, ptrtoint (ptr getelementptr (i8, ptr null, i32 1) to i64)
-  call void @llvm.memcpy.p0.p0.i64(ptr align 1073741824 %12, ptr align 1073741824 %buffer, i64 %14, i1 false)
+  call void @llvm.memcpy.p0.p0.i64(ptr align 2147483648 %12, ptr align 2147483648 %buffer, i64 %14, i1 false)
   br label %while.entry
 }
 
@@ -19220,7 +19220,8 @@ if.entry25:                                       ; preds = %if.entry11
   %37 = alloca ptr, align 8
   %38 = call i64 (ptr, ptr, ...) @asprintf(ptr %37, ptr @309, ptr %32, ptr %36)
   %39 = load ptr, ptr %37, align 8
-  %40 = call ptr @string_from_bytes(ptr %39, i64 %38)
+  %40 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%string, ptr null, i32 1) to i32))
+  call void @string_constructor(ptr %40, ptr %39, i64 %38)
   br label %common.ret
 
 if.entry31:                                       ; preds = %else12
@@ -19320,8 +19321,7 @@ if.entry11:                                       ; preds = %ifend8
   %30 = alloca ptr, align 8
   %31 = call i64 (ptr, ptr, ...) @asprintf(ptr %30, ptr @347, ptr %23, ptr %29)
   %32 = load ptr, ptr %30, align 8
-  %33 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%string, ptr null, i32 1) to i32))
-  call void @string_constructor(ptr %33, ptr %32, i64 %31)
+  %33 = call ptr @string_from_bytes(ptr %32, i64 %31)
   %34 = load ptr, ptr %3, align 8
   call void @TypeChecker_error(ptr %0, i64 5, ptr %33, ptr %34)
   br label %common.ret
@@ -19508,8 +19508,7 @@ if.entry38:                                       ; preds = %ifend34
   %72 = alloca ptr, align 8
   %73 = call i64 (ptr, ptr, ...) @asprintf(ptr %72, ptr @335, ptr %65, ptr %71)
   %74 = load ptr, ptr %72, align 8
-  %75 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%string, ptr null, i32 1) to i32))
-  call void @string_constructor(ptr %75, ptr %74, i64 %73)
+  %75 = call ptr @string_from_bytes(ptr %74, i64 %73)
   %76 = load ptr, ptr %1, align 8
   call void @TypeChecker_error(ptr %0, i64 5, ptr %75, ptr %76)
   br label %common.ret
@@ -22176,8 +22175,7 @@ else23:                                           ; preds = %else12
   %32 = alloca ptr, align 8
   %33 = call i64 (ptr, ptr, ...) @asprintf(ptr %32, ptr @308, ptr %31)
   %34 = load ptr, ptr %32, align 8
-  %35 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%string, ptr null, i32 1) to i32))
-  call void @string_constructor(ptr %35, ptr %34, i64 %33)
+  %35 = call ptr @string_from_bytes(ptr %34, i64 %33)
   %36 = load ptr, ptr %1, align 8
   call void @TypeChecker_error(ptr %0, i64 5, ptr %35, ptr %36)
   br label %common.ret
@@ -22186,8 +22184,7 @@ if.entry27:                                       ; preds = %if.entry22
   %37 = alloca ptr, align 8
   %38 = call i64 (ptr, ptr, ...) @asprintf(ptr %37, ptr @305, i64 %26)
   %39 = load ptr, ptr %37, align 8
-  %40 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%string, ptr null, i32 1) to i32))
-  call void @string_constructor(ptr %40, ptr %39, i64 %38)
+  %40 = call ptr @string_from_bytes(ptr %39, i64 %38)
   %41 = load ptr, ptr %1, align 8
   call void @TypeChecker_error(ptr %0, i64 4, ptr %40, ptr %41)
   br label %common.ret
@@ -22226,7 +22223,8 @@ if.entry33:                                       ; preds = %ifend29
   %61 = alloca ptr, align 8
   %62 = call i64 (ptr, ptr, ...) @asprintf(ptr %61, ptr @307, ptr %54, ptr %60)
   %63 = load ptr, ptr %61, align 8
-  %64 = call ptr @string_from_bytes(ptr %63, i64 %62)
+  %64 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%string, ptr null, i32 1) to i32))
+  call void @string_constructor(ptr %64, ptr %63, i64 %62)
   %65 = load ptr, ptr %memberidx25, align 8
   %66 = call ptr @Array_ExpressionNode____getitem__(ptr %65, i64 0)
   %67 = load ptr, ptr %66, align 8
@@ -25254,7 +25252,8 @@ if.entry38:                                       ; preds = %if.entry33
   %85 = alloca ptr, align 8
   %86 = call i64 (ptr, ptr, ...) @asprintf(ptr %85, ptr @312, ptr %79, ptr %84)
   %87 = load ptr, ptr %85, align 8
-  %88 = call ptr @string_from_bytes(ptr %87, i64 %86)
+  %88 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%string, ptr null, i32 1) to i32))
+  call void @string_constructor(ptr %88, ptr %87, i64 %86)
   %89 = load ptr, ptr %memberidx2, align 8
   %memberidx45 = getelementptr inbounds %Token, ptr %89, i32 0, i32 1
   %90 = load ptr, ptr %memberidx45, align 8
@@ -25498,7 +25497,8 @@ if.entry21:                                       ; preds = %ifend17
   %40 = alloca ptr, align 8
   %41 = call i64 (ptr, ptr, ...) @asprintf(ptr %40, ptr @269, ptr %34, ptr %39)
   %42 = load ptr, ptr %40, align 8
-  %43 = call ptr @string_from_bytes(ptr %42, i64 %41)
+  %43 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%string, ptr null, i32 1) to i32))
+  call void @string_constructor(ptr %43, ptr %42, i64 %41)
   %44 = load ptr, ptr %3, align 8
   call void @TypeChecker_error(ptr %0, i64 5, ptr %43, ptr %44)
   br label %common.ret
@@ -25721,7 +25721,8 @@ if.entry12:                                       ; preds = %if.entry9
   %28 = alloca ptr, align 8
   %29 = call i64 (ptr, ptr, ...) @asprintf(ptr %28, ptr @303, i64 %26, i64 %27)
   %30 = load ptr, ptr %28, align 8
-  %31 = call ptr @string_from_bytes(ptr %30, i64 %29)
+  %31 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%string, ptr null, i32 1) to i32))
+  call void @string_constructor(ptr %31, ptr %30, i64 %29)
   br label %common.ret
 
 else13:                                           ; preds = %if.entry9
@@ -25995,8 +25996,7 @@ if.entry57:                                       ; preds = %ifend48
   %120 = alloca ptr, align 8
   %121 = call i64 (ptr, ptr, ...) @asprintf(ptr %120, ptr @248, ptr %110, ptr %114, ptr %119)
   %122 = load ptr, ptr %120, align 8
-  %123 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%string, ptr null, i32 1) to i32))
-  call void @string_constructor(ptr %123, ptr %122, i64 %121)
+  %123 = call ptr @string_from_bytes(ptr %122, i64 %121)
   %124 = load ptr, ptr %method_node, align 8
   %125 = load ptr, ptr %124, align 8
   %memberidx65 = getelementptr inbounds %Token, ptr %125, i32 0, i32 1
@@ -32686,167 +32686,216 @@ for.end:                                          ; preds = %for.cond
   ret void
 }
 
-define ptr @CodeGen_get_string_val(ptr %0, ptr %1, ptr %2, ptr %3, i64 %4) {
-  %6 = call i1 @is_bool(ptr %3)
-  br i1 %6, label %if.entry, label %ifend
+define ptr @CodeGen_get_string_val(ptr %0, ptr %1, ptr %2, ptr %3, ptr %4, i64 %5) {
+  %7 = call i1 @is_bool(ptr %3)
+  br i1 %7, label %if.entry, label %ifend
 
-common.ret:                                       ; preds = %ifend29, %if.entry27, %for.end, %if.entry10, %if.entry4, %if.entry
-  %common.ret.op = phi ptr [ %12, %if.entry ], [ %19, %if.entry4 ], [ %33, %if.entry10 ], [ %83, %for.end ], [ %85, %if.entry27 ], [ %2, %ifend29 ]
+common.ret:                                       ; preds = %ifend41, %if.entry39, %for.end, %if.entry4, %if.entry
+  %common.ret.op = phi ptr [ %13, %if.entry ], [ %21, %if.entry4 ], [ %83, %for.end ], [ %109, %if.entry39 ], [ %2, %ifend41 ]
   ret ptr %common.ret.op
 
-if.entry:                                         ; preds = %5
+if.entry:                                         ; preds = %6
   %true_str = alloca ptr, align 8
-  %7 = call ptr @string_from_bytes(ptr @193, i64 4)
-  %8 = call ptr @CodeGen_createGlobalLLVMString(ptr %0, ptr %1, ptr %7)
-  store ptr %8, ptr %true_str, align 8
+  %8 = call ptr @string_from_bytes(ptr @193, i64 4)
+  %9 = call ptr @CodeGen_createGlobalLLVMString(ptr %0, ptr %1, ptr %8)
+  store ptr %9, ptr %true_str, align 8
   %false_str = alloca ptr, align 8
-  %9 = call ptr @string_from_bytes(ptr @194, i64 5)
-  %10 = call ptr @CodeGen_createGlobalLLVMString(ptr %0, ptr %1, ptr %9)
-  store ptr %10, ptr %false_str, align 8
-  %11 = load ptr, ptr %true_str, align 8
-  %12 = call ptr @LLVMBuildSelect(ptr %1, ptr %2, ptr %11, ptr %10, ptr @37)
+  %10 = call ptr @string_from_bytes(ptr @194, i64 5)
+  %11 = call ptr @CodeGen_createGlobalLLVMString(ptr %0, ptr %1, ptr %10)
+  store ptr %11, ptr %false_str, align 8
+  %12 = load ptr, ptr %true_str, align 8
+  %13 = call ptr @LLVMBuildSelect(ptr %1, ptr %2, ptr %12, ptr %11, ptr @37)
   br label %common.ret
 
-ifend:                                            ; preds = %5
-  %13 = call i1 @is_object(ptr %3)
-  br i1 %13, label %if.entry1, label %ifend3
+ifend:                                            ; preds = %6
+  %14 = call i1 @is_object(ptr %3)
+  br i1 %14, label %if.entry1, label %ifend3
 
 if.entry1:                                        ; preds = %ifend
   %memberidx = getelementptr inbounds %CodeGen, ptr %0, i32 0, i32 4
-  %14 = load ptr, ptr %memberidx, align 8
-  %15 = call ptr @string_from_bytes(ptr @300, i64 6)
-  %16 = call i1 @is_buitin(ptr %14, ptr %3, ptr %15)
-  br i1 %16, label %if.entry4, label %ifend6
+  %15 = load ptr, ptr %memberidx, align 8
+  %16 = call ptr @string_from_bytes(ptr @300, i64 6)
+  %17 = call i1 @is_buitin(ptr %15, ptr %3, ptr %16)
+  br i1 %17, label %if.entry4, label %ifend6
 
 ifend3:                                           ; preds = %ifend
-  %17 = load i64, ptr %3, align 4
-  %18 = icmp eq i64 %17, 17
-  br i1 %18, label %if.entry27, label %ifend29
+  %18 = load i64, ptr %3, align 4
+  %19 = icmp eq i64 %18, 17
+  br i1 %19, label %if.entry39, label %ifend41
 
 if.entry4:                                        ; preds = %if.entry1
-  %19 = call ptr @CodeGen_codegen_string_to_cstring(ptr %0, ptr %1, ptr %2)
+  %arg = alloca ptr, align 8
+  %20 = call ptr @CodeGen_codegen_string_to_cstring(ptr %0, ptr %1, ptr %2)
+  store ptr %20, ptr %arg, align 8
+  call void @Array_LLVMValueRef____sl__(ptr %4, ptr %20)
+  %21 = load ptr, ptr %arg, align 8
   br label %common.ret
 
 ifend6:                                           ; preds = %if.entry1
   %obj_class = alloca ptr, align 8
-  %20 = load ptr, ptr %memberidx, align 8
-  %21 = call ptr @get_class_from_type(ptr %20, ptr %3)
-  store ptr %21, ptr %obj_class, align 8
-  %fmt_str = alloca ptr, align 8
-  %memberidx8 = getelementptr inbounds %Class, ptr %21, i32 0, i32 1
-  %22 = load ptr, ptr %memberidx8, align 8
-  %23 = load ptr, ptr %22, align 8
-  %memberidx9 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %23, i32 0, i32 5
-  %24 = load ptr, ptr %memberidx9, align 8
-  %25 = call ptr %24(ptr %22)
-  %26 = alloca ptr, align 8
-  %27 = call i64 (ptr, ptr, ...) @asprintf(ptr %26, ptr @363, ptr %25)
-  %28 = load ptr, ptr %26, align 8
-  %29 = call ptr @string_from_bytes(ptr %28, i64 %27)
-  store ptr %29, ptr %fmt_str, align 8
-  %30 = icmp eq i64 %4, 3
-  br i1 %30, label %if.entry10, label %ifend12
+  %22 = load ptr, ptr %memberidx, align 8
+  %23 = call ptr @get_class_from_type(ptr %22, ptr %3)
+  store ptr %23, ptr %obj_class, align 8
+  %str_builder = alloca ptr, align 8
+  %24 = alloca %StringBuilder, align 8
+  %memberidx8 = getelementptr inbounds %Class, ptr %23, i32 0, i32 1
+  %25 = load ptr, ptr %memberidx8, align 8
+  %memberidx9 = getelementptr inbounds %string, ptr %25, i32 0, i32 2
+  %26 = load i64, ptr %memberidx9, align 4
+  %27 = add i64 %26, 14
+  call void @StringBuilder_constructor(ptr %24, i64 %27)
+  store ptr %24, ptr %str_builder, align 8
+  %28 = load ptr, ptr %24, align 8
+  %memberidx10 = getelementptr inbounds <{ ptr, ptr, ptr, ptr }>, ptr %28, i32 0, i32 1
+  %29 = load ptr, ptr %memberidx10, align 8
+  %30 = load ptr, ptr %obj_class, align 8
+  %memberidx11 = getelementptr inbounds %Class, ptr %30, i32 0, i32 1
+  %31 = load ptr, ptr %memberidx11, align 8
+  %32 = load ptr, ptr %31, align 8
+  %memberidx12 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %32, i32 0, i32 5
+  %33 = load ptr, ptr %memberidx12, align 8
+  %34 = call ptr %33(ptr %31)
+  %35 = alloca ptr, align 8
+  %36 = call i64 (ptr, ptr, ...) @asprintf(ptr %35, ptr @363, ptr %34)
+  %37 = load ptr, ptr %35, align 8
+  %38 = call ptr @string_from_bytes(ptr %37, i64 %36)
+  call void %29(ptr %24, ptr %38)
+  %39 = icmp eq i64 %5, 3
+  br i1 %39, label %if.entry13, label %ifend15
 
-if.entry10:                                       ; preds = %ifend6
-  %31 = call ptr @string_from_bytes(ptr @364, i64 6)
-  %32 = call ptr @string___add__(ptr %29, ptr %31)
-  %33 = call ptr @CodeGen_createGlobalLLVMString(ptr %0, ptr %1, ptr %32)
-  br label %common.ret
-
-ifend12:                                          ; preds = %ifend6
-  %fmt_args = alloca ptr, align 8
-  %34 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%Array_LLVMValueRef_, ptr null, i32 1) to i32))
-  call void @Array_LLVMValueRef__constructor(ptr %34, i64 ptrtoint (ptr getelementptr (ptr, ptr null, i32 1) to i64))
-  %memberidx13 = getelementptr inbounds %Array_LLVMValueRef_, ptr %34, i32 0, i32 1
-  %memberidx14 = getelementptr inbounds %Array_LLVMValueRef_, ptr %34, i32 0, i32 2
-  store i64 0, ptr %memberidx14, align 4
-  store ptr %34, ptr %fmt_args, align 8
-  %tmp_it = alloca ptr, align 8
-  %35 = load ptr, ptr %obj_class, align 8
-  %memberidx15 = getelementptr inbounds %Class, ptr %35, i32 0, i32 6
-  %36 = load ptr, ptr %memberidx15, align 8
-  %37 = load ptr, ptr %36, align 8
-  %memberidx16 = getelementptr inbounds <{ ptr, ptr, ptr }>, ptr %37, i32 0, i32 2
-  %38 = load ptr, ptr %memberidx16, align 8
-  %39 = call ptr %38(ptr %36)
-  %40 = call ptr @Array_Bucket_string_PropId_____iter__(ptr %39)
-  store ptr %40, ptr %tmp_it, align 8
-  %field_bucket = alloca ptr, align 8
+if.entry13:                                       ; preds = %ifend6
+  %40 = load ptr, ptr %str_builder, align 8
   %41 = load ptr, ptr %40, align 8
-  %42 = load ptr, ptr %41, align 8
-  %43 = call ptr %42(ptr %40)
-  store ptr %43, ptr %field_bucket, align 8
+  %memberidx16 = getelementptr inbounds <{ ptr, ptr, ptr, ptr }>, ptr %41, i32 0, i32 1
+  %42 = load ptr, ptr %memberidx16, align 8
+  %43 = call ptr @string_from_bytes(ptr @364, i64 6)
+  call void %42(ptr %40, ptr %43)
+  %44 = load ptr, ptr %str_builder, align 8
+  %45 = load ptr, ptr %44, align 8
+  %memberidx17 = getelementptr inbounds <{ ptr, ptr, ptr, ptr }>, ptr %45, i32 0, i32 3
+  %46 = load ptr, ptr %memberidx17, align 8
+  %47 = call ptr %46(ptr %44)
+  %48 = call ptr @CodeGen_createGlobalLLVMString(ptr %0, ptr %1, ptr %47)
+  br label %ifend15
+
+ifend15:                                          ; preds = %ifend6, %if.entry13
+  %llvm_val.0 = phi ptr [ %48, %if.entry13 ], [ %2, %ifend6 ]
+  %fmt_args = alloca ptr, align 8
+  %49 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%Array_LLVMValueRef_, ptr null, i32 1) to i32))
+  call void @Array_LLVMValueRef__constructor(ptr %49, i64 ptrtoint (ptr getelementptr (ptr, ptr null, i32 1) to i64))
+  %memberidx18 = getelementptr inbounds %Array_LLVMValueRef_, ptr %49, i32 0, i32 1
+  %memberidx19 = getelementptr inbounds %Array_LLVMValueRef_, ptr %49, i32 0, i32 2
+  store i64 0, ptr %memberidx19, align 4
+  store ptr %49, ptr %fmt_args, align 8
+  %tmp_it = alloca ptr, align 8
+  %50 = load ptr, ptr %obj_class, align 8
+  %memberidx20 = getelementptr inbounds %Class, ptr %50, i32 0, i32 6
+  %51 = load ptr, ptr %memberidx20, align 8
+  %52 = load ptr, ptr %51, align 8
+  %memberidx21 = getelementptr inbounds <{ ptr, ptr, ptr }>, ptr %52, i32 0, i32 2
+  %53 = load ptr, ptr %memberidx21, align 8
+  %54 = call ptr %53(ptr %51)
+  %55 = call ptr @Array_Bucket_string_PropId_____iter__(ptr %54)
+  store ptr %55, ptr %tmp_it, align 8
+  %field_bucket = alloca ptr, align 8
+  %56 = load ptr, ptr %55, align 8
+  %57 = load ptr, ptr %56, align 8
+  %58 = call ptr %57(ptr %55)
+  store ptr %58, ptr %field_bucket, align 8
   br label %for.cond
 
-for.cond:                                         ; preds = %for.body, %ifend12
-  %44 = load ptr, ptr %tmp_it, align 8
-  %memberidx18 = getelementptr inbounds %Iterator_Bucket_string_PropId__, ptr %44, i32 0, i32 1
-  %45 = load i1, ptr %memberidx18, align 1
-  %46 = xor i1 %45, true
-  br i1 %46, label %for.body, label %for.end
+for.cond:                                         ; preds = %ifend30, %ifend15
+  %59 = load ptr, ptr %tmp_it, align 8
+  %memberidx23 = getelementptr inbounds %Iterator_Bucket_string_PropId__, ptr %59, i32 0, i32 1
+  %60 = load i1, ptr %memberidx23, align 1
+  %61 = xor i1 %60, true
+  br i1 %61, label %for.body, label %for.end
 
 for.body:                                         ; preds = %for.cond
   %field_ty = alloca ptr, align 8
-  %47 = load ptr, ptr %memberidx, align 8
-  %48 = load ptr, ptr %field_bucket, align 8
-  %memberidx20 = getelementptr inbounds %Bucket_string_PropId_, ptr %48, i32 0, i32 2
-  %49 = load ptr, ptr %memberidx20, align 8
-  %50 = call ptr @get_class_prop_type(ptr %47, ptr %49)
-  store ptr %50, ptr %field_ty, align 8
+  %62 = load ptr, ptr %memberidx, align 8
+  %63 = load ptr, ptr %field_bucket, align 8
+  %memberidx25 = getelementptr inbounds %Bucket_string_PropId_, ptr %63, i32 0, i32 2
+  %64 = load ptr, ptr %memberidx25, align 8
+  %65 = call ptr @get_class_prop_type(ptr %62, ptr %64)
+  store ptr %65, ptr %field_ty, align 8
   %member_val = alloca ptr, align 8
-  %51 = load ptr, ptr %field_bucket, align 8
-  %memberidx21 = getelementptr inbounds %Bucket_string_PropId_, ptr %51, i32 0, i32 1
-  %52 = load ptr, ptr %memberidx21, align 8
-  %53 = call ptr @CodeGen_get_member_with_name(ptr %0, ptr %1, ptr %2, ptr %3, ptr %52)
-  store ptr %53, ptr %member_val, align 8
-  %54 = load ptr, ptr %fmt_args, align 8
-  %55 = load ptr, ptr %field_ty, align 8
-  %56 = add i64 %4, 1
-  %57 = call ptr @CodeGen_get_string_val(ptr %0, ptr %1, ptr %53, ptr %55, i64 %56)
-  call void @Array_LLVMValueRef____sl__(ptr %54, ptr %57)
-  %58 = load ptr, ptr %fmt_str, align 8
-  %59 = load ptr, ptr %field_bucket, align 8
-  %memberidx22 = getelementptr inbounds %Bucket_string_PropId_, ptr %59, i32 0, i32 1
-  %60 = load ptr, ptr %memberidx22, align 8
-  %61 = load ptr, ptr %60, align 8
-  %memberidx23 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %61, i32 0, i32 5
-  %62 = load ptr, ptr %memberidx23, align 8
-  %63 = call ptr %62(ptr %60)
-  %64 = load ptr, ptr %field_ty, align 8
-  %65 = call ptr @get_format_from_type(ptr %64)
-  %66 = load ptr, ptr %65, align 8
-  %memberidx24 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %66, i32 0, i32 5
-  %67 = load ptr, ptr %memberidx24, align 8
-  %68 = call ptr %67(ptr %65)
-  %69 = alloca ptr, align 8
-  %70 = call i64 (ptr, ptr, ...) @asprintf(ptr %69, ptr @371, ptr %63, ptr %68)
-  %71 = load ptr, ptr %69, align 8
-  %72 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%string, ptr null, i32 1) to i32))
-  call void @string_constructor(ptr %72, ptr %71, i64 %70)
-  %73 = call ptr @string___adda__(ptr %58, ptr %72)
-  %74 = load ptr, ptr %tmp_it, align 8
-  %75 = load ptr, ptr %74, align 8
-  %76 = load ptr, ptr %75, align 8
-  %77 = call ptr %76(ptr %74)
-  store ptr %77, ptr %field_bucket, align 8
-  br label %for.cond
+  %66 = load ptr, ptr %field_bucket, align 8
+  %memberidx26 = getelementptr inbounds %Bucket_string_PropId_, ptr %66, i32 0, i32 1
+  %67 = load ptr, ptr %memberidx26, align 8
+  %68 = call ptr @CodeGen_get_member_with_name(ptr %0, ptr %1, ptr %llvm_val.0, ptr %3, ptr %67)
+  store ptr %68, ptr %member_val, align 8
+  %arg27 = alloca ptr, align 8
+  %69 = load ptr, ptr %field_ty, align 8
+  %70 = add i64 %5, 1
+  %71 = call ptr @CodeGen_get_string_val(ptr %0, ptr %1, ptr %68, ptr %69, ptr %4, i64 %70)
+  store ptr %71, ptr %arg27, align 8
+  %72 = load ptr, ptr %field_ty, align 8
+  %73 = call i1 @is_object(ptr %72)
+  br i1 %73, label %if.entry28, label %ifend30
 
 for.end:                                          ; preds = %for.cond
-  tail call void @free(ptr %44)
-  %78 = load ptr, ptr %fmt_str, align 8
-  %79 = call ptr @string_from_bytes(ptr @372, i64 1)
-  %80 = call ptr @string___adda__(ptr %78, ptr %79)
-  %81 = load ptr, ptr %fmt_str, align 8
+  tail call void @free(ptr %59)
+  %74 = load ptr, ptr %str_builder, align 8
+  %75 = load ptr, ptr %74, align 8
+  %memberidx36 = getelementptr inbounds <{ ptr, ptr, ptr, ptr }>, ptr %75, i32 0, i32 1
+  %76 = load ptr, ptr %memberidx36, align 8
+  %77 = call ptr @string_from_bytes(ptr @372, i64 1)
+  call void %76(ptr %74, ptr %77)
+  %78 = load ptr, ptr %str_builder, align 8
+  %79 = load ptr, ptr %78, align 8
+  %memberidx37 = getelementptr inbounds <{ ptr, ptr, ptr, ptr }>, ptr %79, i32 0, i32 3
+  %80 = load ptr, ptr %memberidx37, align 8
+  %81 = call ptr %80(ptr %78)
   %82 = load ptr, ptr %fmt_args, align 8
   %83 = call ptr @CodeGen_codegen_safe_fmt_string(ptr %0, ptr %1, ptr %81, ptr %82, ptr null)
   br label %common.ret
 
-if.entry27:                                       ; preds = %ifend3
-  %84 = call ptr @string_from_bytes(ptr @373, i64 10)
-  %85 = call ptr @CodeGen_createGlobalLLVMString(ptr %0, ptr %1, ptr %84)
+if.entry28:                                       ; preds = %for.body
+  %84 = load ptr, ptr %arg27, align 8
+  call void @Array_LLVMValueRef____sl__(ptr %4, ptr %84)
+  br label %ifend30
+
+ifend30:                                          ; preds = %for.body, %if.entry28
+  %85 = load ptr, ptr %fmt_args, align 8
+  %86 = load ptr, ptr %arg27, align 8
+  call void @Array_LLVMValueRef____sl__(ptr %85, ptr %86)
+  %87 = load ptr, ptr %str_builder, align 8
+  %88 = load ptr, ptr %87, align 8
+  %memberidx31 = getelementptr inbounds <{ ptr, ptr, ptr, ptr }>, ptr %88, i32 0, i32 1
+  %89 = load ptr, ptr %memberidx31, align 8
+  %90 = load ptr, ptr %field_bucket, align 8
+  %memberidx32 = getelementptr inbounds %Bucket_string_PropId_, ptr %90, i32 0, i32 1
+  %91 = load ptr, ptr %memberidx32, align 8
+  %92 = load ptr, ptr %91, align 8
+  %memberidx33 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %92, i32 0, i32 5
+  %93 = load ptr, ptr %memberidx33, align 8
+  %94 = call ptr %93(ptr %91)
+  %95 = load ptr, ptr %field_ty, align 8
+  %96 = call ptr @get_format_from_type(ptr %95)
+  %97 = load ptr, ptr %96, align 8
+  %memberidx34 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %97, i32 0, i32 5
+  %98 = load ptr, ptr %memberidx34, align 8
+  %99 = call ptr %98(ptr %96)
+  %100 = alloca ptr, align 8
+  %101 = call i64 (ptr, ptr, ...) @asprintf(ptr %100, ptr @371, ptr %94, ptr %99)
+  %102 = load ptr, ptr %100, align 8
+  %103 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%string, ptr null, i32 1) to i32))
+  call void @string_constructor(ptr %103, ptr %102, i64 %101)
+  call void %89(ptr %87, ptr %103)
+  %104 = load ptr, ptr %tmp_it, align 8
+  %105 = load ptr, ptr %104, align 8
+  %106 = load ptr, ptr %105, align 8
+  %107 = call ptr %106(ptr %104)
+  store ptr %107, ptr %field_bucket, align 8
+  br label %for.cond
+
+if.entry39:                                       ; preds = %ifend3
+  %108 = call ptr @string_from_bytes(ptr @373, i64 10)
+  %109 = call ptr @CodeGen_createGlobalLLVMString(ptr %0, ptr %1, ptr %108)
   br label %common.ret
 
-ifend29:                                          ; preds = %ifend3
+ifend41:                                          ; preds = %ifend3
   br label %common.ret
 }
 
@@ -34355,8 +34404,7 @@ if.entry57:                                       ; preds = %else20
   %145 = alloca ptr, align 8
   %146 = call i64 (ptr, ptr, ...) @asprintf(ptr %145, ptr @406, ptr %140, ptr %144)
   %147 = load ptr, ptr %145, align 8
-  %148 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%string, ptr null, i32 1) to i32))
-  call void @string_constructor(ptr %148, ptr %147, i64 %146)
+  %148 = call ptr @string_from_bytes(ptr %147, i64 %146)
   call void @panic(ptr %148)
   br label %ifend21
 
@@ -34903,167 +34951,203 @@ for.entry:
   %memberidx6 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %11, i32 0, i32 3
   %12 = load ptr, ptr %memberidx6, align 8
   %13 = call ptr %12(ptr %3)
+  %14 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%Array_LLVMValueRef_, ptr null, i32 1) to i32))
+  call void @Array_LLVMValueRef__constructor(ptr %14, i64 ptrtoint (ptr getelementptr (ptr, ptr null, i32 1) to i64))
+  %memberidx7 = getelementptr inbounds %Array_LLVMValueRef_, ptr %14, i32 0, i32 1
+  %memberidx8 = getelementptr inbounds %Array_LLVMValueRef_, ptr %14, i32 0, i32 2
+  store i64 0, ptr %memberidx8, align 4
   br label %for.cond
 
 for.cond:                                         ; preds = %for.body, %for.entry
-  %chars.0 = phi ptr [ %13, %for.entry ], [ %29, %for.body ]
-  %curr_ind.0 = phi i64 [ 0, %for.entry ], [ %21, %for.body ]
-  %i.0 = phi i64 [ 0, %for.entry ], [ %34, %for.body ]
-  %memberidx7 = getelementptr inbounds %StringExpression, ptr %2, i32 0, i32 6
-  %14 = load ptr, ptr %memberidx7, align 8
-  %memberidx8 = getelementptr inbounds %Array_Expression_, ptr %14, i32 0, i32 2
-  %15 = load i64, ptr %memberidx8, align 4
-  %16 = icmp slt i64 %i.0, %15
-  br i1 %16, label %for.body, label %for.end
+  %chars.0 = phi ptr [ %13, %for.entry ], [ %30, %for.body ]
+  %curr_ind.0 = phi i64 [ 0, %for.entry ], [ %22, %for.body ]
+  %i.0 = phi i64 [ 0, %for.entry ], [ %35, %for.body ]
+  %memberidx9 = getelementptr inbounds %StringExpression, ptr %2, i32 0, i32 6
+  %15 = load ptr, ptr %memberidx9, align 8
+  %memberidx10 = getelementptr inbounds %Array_Expression_, ptr %15, i32 0, i32 2
+  %16 = load i64, ptr %memberidx10, align 4
+  %17 = icmp slt i64 %i.0, %16
+  br i1 %17, label %for.body, label %for.end
 
 for.body:                                         ; preds = %for.cond
   %templ_arg = alloca ptr, align 8
-  %17 = call ptr @Array_Expression____getitem__(ptr %14, i64 %i.0)
-  store ptr %17, ptr %templ_arg, align 8
+  %18 = call ptr @Array_Expression____getitem__(ptr %15, i64 %i.0)
+  store ptr %18, ptr %templ_arg, align 8
   %templ_arg_ty = alloca ptr, align 8
-  %memberidx10 = getelementptr inbounds %Expression, ptr %17, i32 0, i32 3
-  %18 = load ptr, ptr %memberidx10, align 8
-  store ptr %18, ptr %templ_arg_ty, align 8
+  %memberidx12 = getelementptr inbounds %Expression, ptr %18, i32 0, i32 3
+  %19 = load ptr, ptr %memberidx12, align 8
+  store ptr %19, ptr %templ_arg_ty, align 8
   %fmt = alloca ptr, align 8
-  %19 = call ptr @get_format_from_type(ptr %18)
-  store ptr %19, ptr %fmt, align 8
-  %20 = load ptr, ptr %memberidx4, align 8
-  %21 = call i64 @Array_int____getitem__(ptr %20, i64 %i.0)
+  %20 = call ptr @get_format_from_type(ptr %19)
+  store ptr %20, ptr %fmt, align 8
+  %21 = load ptr, ptr %memberidx4, align 8
+  %22 = call i64 @Array_int____getitem__(ptr %21, i64 %i.0)
   %incr = alloca i64, align 8
-  %22 = sub i64 %21, %curr_ind.0
-  store i64 %22, ptr %incr, align 4
-  %23 = load ptr, ptr %5, align 8
-  %24 = load ptr, ptr %23, align 8
-  call void %24(ptr %5, ptr %chars.0, i64 %22)
-  %25 = load ptr, ptr %5, align 8
-  %memberidx13 = getelementptr inbounds <{ ptr, ptr, ptr, ptr }>, ptr %25, i32 0, i32 1
-  %26 = load ptr, ptr %memberidx13, align 8
-  %27 = load ptr, ptr %fmt, align 8
-  call void %26(ptr %5, ptr %27)
-  %28 = load i64, ptr %incr, align 4
-  %29 = getelementptr inbounds i8, ptr %chars.0, i64 %28
+  %23 = sub i64 %22, %curr_ind.0
+  store i64 %23, ptr %incr, align 4
+  %24 = load ptr, ptr %5, align 8
+  %25 = load ptr, ptr %24, align 8
+  call void %25(ptr %5, ptr %chars.0, i64 %23)
+  %26 = load ptr, ptr %5, align 8
+  %memberidx15 = getelementptr inbounds <{ ptr, ptr, ptr, ptr }>, ptr %26, i32 0, i32 1
+  %27 = load ptr, ptr %memberidx15, align 8
+  %28 = load ptr, ptr %fmt, align 8
+  call void %27(ptr %5, ptr %28)
+  %29 = load i64, ptr %incr, align 4
+  %30 = getelementptr inbounds i8, ptr %chars.0, i64 %29
   %templ_arg_exp = alloca ptr, align 8
-  %30 = load ptr, ptr %templ_arg, align 8
-  %31 = call ptr @CodeGen_codegen_expression(ptr %0, ptr %1, ptr %30)
-  store ptr %31, ptr %templ_arg_exp, align 8
-  %32 = load ptr, ptr %templ_arg_ty, align 8
-  %33 = call ptr @CodeGen_get_string_val(ptr %0, ptr %1, ptr %31, ptr %32, i64 0)
-  call void @Array_LLVMValueRef____sl__(ptr %4, ptr %33)
-  %34 = add i64 %i.0, 1
+  %31 = load ptr, ptr %templ_arg, align 8
+  %32 = call ptr @CodeGen_codegen_expression(ptr %0, ptr %1, ptr %31)
+  store ptr %32, ptr %templ_arg_exp, align 8
+  %33 = load ptr, ptr %templ_arg_ty, align 8
+  %34 = call ptr @CodeGen_get_string_val(ptr %0, ptr %1, ptr %32, ptr %33, ptr %14, i64 0)
+  call void @Array_LLVMValueRef____sl__(ptr %4, ptr %34)
+  %35 = add i64 %i.0, 1
   br label %for.cond
 
 for.end:                                          ; preds = %for.cond
-  %35 = load ptr, ptr %5, align 8
-  %36 = load ptr, ptr %35, align 8
-  %37 = load i64, ptr %memberidx3, align 4
-  %38 = sub i64 %37, %curr_ind.0
-  call void %36(ptr %5, ptr %chars.0, i64 %38)
-  %39 = load ptr, ptr %5, align 8
-  %memberidx16 = getelementptr inbounds <{ ptr, ptr, ptr, ptr }>, ptr %39, i32 0, i32 3
-  %40 = load ptr, ptr %memberidx16, align 8
-  %41 = call ptr %40(ptr %5)
+  %36 = load ptr, ptr %5, align 8
+  %37 = load ptr, ptr %36, align 8
+  %38 = load i64, ptr %memberidx3, align 4
+  %39 = sub i64 %38, %curr_ind.0
+  call void %37(ptr %5, ptr %chars.0, i64 %39)
+  %40 = load ptr, ptr %5, align 8
+  %memberidx18 = getelementptr inbounds <{ ptr, ptr, ptr, ptr }>, ptr %40, i32 0, i32 3
+  %41 = load ptr, ptr %memberidx18, align 8
+  %42 = call ptr %41(ptr %5)
   %str_len = alloca ptr, align 8
-  %memberidx17 = getelementptr inbounds %string, ptr %41, i32 0, i32 2
-  %42 = load i64, ptr %memberidx17, align 4
-  %43 = call ptr @CodeGen_createLLVMInt(ptr %0, i64 %42)
-  store ptr %43, ptr %str_len, align 8
+  %memberidx19 = getelementptr inbounds %string, ptr %42, i32 0, i32 2
+  %43 = load i64, ptr %memberidx19, align 4
+  %44 = call ptr @CodeGen_createLLVMInt(ptr %0, i64 %43)
+  store ptr %44, ptr %str_len, align 8
   %str = alloca ptr, align 8
-  %44 = load i64, ptr %memberidx2, align 4
-  %45 = icmp sgt i64 %44, 0
-  br i1 %45, label %true_block, label %false_block
+  %45 = load i64, ptr %memberidx2, align 4
+  %46 = icmp sgt i64 %45, 0
+  br i1 %46, label %true_block, label %false_block
 
 true_block:                                       ; preds = %for.end
-  %46 = call ptr @CodeGen_codegen_safe_fmt_string(ptr %0, ptr %1, ptr %41, ptr %4, ptr %str_len)
+  %47 = call ptr @CodeGen_codegen_safe_fmt_string(ptr %0, ptr %1, ptr %42, ptr %4, ptr %str_len)
   br label %end
 
 false_block:                                      ; preds = %for.end
-  %47 = call ptr @CodeGen_createGlobalLLVMString(ptr %0, ptr %1, ptr %41)
+  %48 = call ptr @CodeGen_createGlobalLLVMString(ptr %0, ptr %1, ptr %42)
   br label %end
 
 end:                                              ; preds = %false_block, %true_block
-  %ternary = phi ptr [ %46, %true_block ], [ %47, %false_block ]
+  %ternary = phi ptr [ %47, %true_block ], [ %48, %false_block ]
   store ptr %ternary, ptr %str, align 8
-  %str_ty = alloca ptr, align 8
-  %memberidx19 = getelementptr inbounds %Expression, ptr %2, i32 0, i32 3
-  %48 = load ptr, ptr %memberidx19, align 8
-  %49 = call ptr @CodeGen_codegen_type(ptr %0, ptr %48, i1 false)
-  store ptr %49, ptr %str_ty, align 8
-  %50 = load ptr, ptr %memberidx19, align 8
-  %51 = call i1 @is_object(ptr %50)
-  br i1 %51, label %if.entry, label %ifend
+  %memberidx21 = getelementptr inbounds %Expression, ptr %2, i32 0, i32 3
+  %49 = load ptr, ptr %memberidx21, align 8
+  %50 = call i1 @is_object(ptr %49)
+  br i1 %50, label %if.entry, label %for.entry36
 
 if.entry:                                         ; preds = %end
-  %52 = load ptr, ptr %str, align 8
-  %53 = call i1 @LLVMIsGlobalConstant(ptr %52)
-  br i1 %53, label %if.entry21, label %ifend23
+  %str_ty = alloca ptr, align 8
+  %51 = load ptr, ptr %memberidx21, align 8
+  %52 = call ptr @CodeGen_codegen_type(ptr %0, ptr %51, i1 false)
+  store ptr %52, ptr %str_ty, align 8
+  %53 = load ptr, ptr %str, align 8
+  %54 = call i1 @LLVMIsGlobalConstant(ptr %53)
+  br i1 %54, label %if.entry23, label %else24
 
-common.ret:                                       ; preds = %ifend27, %ifend23, %ifend
-  %common.ret.op = phi ptr [ %54, %ifend ], [ %68, %ifend23 ], [ %82, %ifend27 ]
-  ret ptr %common.ret.op
-
-ifend:                                            ; preds = %end
-  %54 = load ptr, ptr %str, align 8
-  br label %common.ret
-
-if.entry21:                                       ; preds = %if.entry
+if.entry23:                                       ; preds = %if.entry
   %func = alloca ptr, align 8
   %55 = load ptr, ptr %0, align 8
   %56 = call ptr @LLVMGetNamedFunction(ptr %55, ptr @374)
   store ptr %56, ptr %func, align 8
   %57 = icmp eq ptr %56, null
-  br i1 %57, label %if.entry25, label %ifend27
+  br i1 %57, label %if.entry27, label %ifend29
 
-ifend23:                                          ; preds = %if.entry
+else24:                                           ; preds = %if.entry
+  %58 = load ptr, ptr %str, align 8
+  call void @Array_LLVMValueRef____sl__(ptr %14, ptr %58)
   %self = alloca ptr, align 8
-  %58 = load ptr, ptr %str_ty, align 8
-  %59 = call ptr @LLVMBuildMalloc(ptr %1, ptr %58, ptr @37)
-  store ptr %59, ptr %self, align 8
-  %60 = load ptr, ptr %memberidx19, align 8
-  %61 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%Array_LLVMValueRef_, ptr null, i32 1) to i32))
-  call void @Array_LLVMValueRef__constructor(ptr %61, i64 mul (i64 ptrtoint (ptr getelementptr (ptr, ptr null, i32 1) to i64), i64 3))
-  %memberidx32 = getelementptr inbounds %Array_LLVMValueRef_, ptr %61, i32 0, i32 1
-  %62 = load ptr, ptr %memberidx32, align 8
-  %63 = load ptr, ptr %self, align 8
-  store ptr %63, ptr %62, align 8
-  %64 = getelementptr inbounds ptr, ptr %62, i64 1
-  %65 = load ptr, ptr %str, align 8
-  store ptr %65, ptr %64, align 8
-  %66 = getelementptr inbounds ptr, ptr %64, i64 1
-  %67 = load ptr, ptr %str_len, align 8
-  store ptr %67, ptr %66, align 8
-  %memberidx33 = getelementptr inbounds %Array_LLVMValueRef_, ptr %61, i32 0, i32 2
-  store i64 3, ptr %memberidx33, align 4
-  call void @CodeGen_build_constructor_call(ptr %0, ptr %1, ptr %60, ptr %61)
-  %68 = load ptr, ptr %self, align 8
+  %59 = load ptr, ptr %str_ty, align 8
+  %60 = call ptr @LLVMBuildMalloc(ptr %1, ptr %59, ptr @37)
+  store ptr %60, ptr %self, align 8
+  %61 = load ptr, ptr %memberidx21, align 8
+  %62 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%Array_LLVMValueRef_, ptr null, i32 1) to i32))
+  call void @Array_LLVMValueRef__constructor(ptr %62, i64 mul (i64 ptrtoint (ptr getelementptr (ptr, ptr null, i32 1) to i64), i64 3))
+  %memberidx34 = getelementptr inbounds %Array_LLVMValueRef_, ptr %62, i32 0, i32 1
+  %63 = load ptr, ptr %memberidx34, align 8
+  %64 = load ptr, ptr %self, align 8
+  store ptr %64, ptr %63, align 8
+  %65 = getelementptr inbounds ptr, ptr %63, i64 1
+  %66 = load ptr, ptr %str, align 8
+  store ptr %66, ptr %65, align 8
+  %67 = getelementptr inbounds ptr, ptr %65, i64 1
+  %68 = load ptr, ptr %str_len, align 8
+  store ptr %68, ptr %67, align 8
+  %memberidx35 = getelementptr inbounds %Array_LLVMValueRef_, ptr %62, i32 0, i32 2
+  store i64 3, ptr %memberidx35, align 4
+  call void @CodeGen_build_constructor_call(ptr %0, ptr %1, ptr %61, ptr %62)
+  %69 = load ptr, ptr %self, align 8
   br label %common.ret
 
-if.entry25:                                       ; preds = %if.entry21
-  %69 = call ptr @string_from_bytes(ptr @375, i64 54)
-  call void @panic(ptr %69)
-  br label %ifend27
+common.ret:                                       ; preds = %for.end41, %ifend29, %else24
+  %common.ret.op = phi ptr [ %69, %else24 ], [ %83, %ifend29 ], [ %97, %for.end41 ]
+  ret ptr %common.ret.op
 
-ifend27:                                          ; preds = %if.entry21, %if.entry25
+if.entry27:                                       ; preds = %if.entry23
+  %70 = call ptr @string_from_bytes(ptr @375, i64 54)
+  call void @panic(ptr %70)
+  br label %ifend29
+
+ifend29:                                          ; preds = %if.entry23, %if.entry27
   %args = alloca [2 x ptr], align 8
-  %70 = load ptr, ptr %str, align 8
-  store ptr %70, ptr %args, align 8
-  %71 = getelementptr inbounds ptr, ptr %args, i64 1
-  %72 = load ptr, ptr %str_len, align 8
-  store ptr %72, ptr %71, align 8
+  %71 = load ptr, ptr %str, align 8
+  store ptr %71, ptr %args, align 8
+  %72 = getelementptr inbounds ptr, ptr %args, i64 1
+  %73 = load ptr, ptr %str_len, align 8
+  store ptr %73, ptr %72, align 8
   %arg_types = alloca [2 x ptr], align 8
-  %73 = load ptr, ptr %str, align 8
-  %74 = call ptr @LLVMTypeOf(ptr %73)
-  store ptr %74, ptr %arg_types, align 8
-  %75 = getelementptr inbounds ptr, ptr %arg_types, i64 1
-  %76 = load ptr, ptr %str_len, align 8
-  %77 = call ptr @LLVMTypeOf(ptr %76)
-  store ptr %77, ptr %75, align 8
+  %74 = load ptr, ptr %str, align 8
+  %75 = call ptr @LLVMTypeOf(ptr %74)
+  store ptr %75, ptr %arg_types, align 8
+  %76 = getelementptr inbounds ptr, ptr %arg_types, i64 1
+  %77 = load ptr, ptr %str_len, align 8
+  %78 = call ptr @LLVMTypeOf(ptr %77)
+  store ptr %78, ptr %76, align 8
   %fnc_ty = alloca ptr, align 8
-  %78 = load ptr, ptr %str_ty, align 8
-  %79 = call ptr @LLVMPointerType(ptr %78, i64 0)
-  %80 = call ptr @LLVMFunctionType(ptr %79, ptr %arg_types, i64 2, i1 false)
-  store ptr %80, ptr %fnc_ty, align 8
-  %81 = load ptr, ptr %func, align 8
-  %82 = call ptr @LLVMBuildCall2(ptr %1, ptr %80, ptr %81, ptr %args, i64 2, ptr @37)
+  %79 = load ptr, ptr %str_ty, align 8
+  %80 = call ptr @LLVMPointerType(ptr %79, i64 0)
+  %81 = call ptr @LLVMFunctionType(ptr %80, ptr %arg_types, i64 2, i1 false)
+  store ptr %81, ptr %fnc_ty, align 8
+  %82 = load ptr, ptr %func, align 8
+  %83 = call ptr @LLVMBuildCall2(ptr %1, ptr %81, ptr %82, ptr %args, i64 2, ptr @37)
+  br label %common.ret
+
+for.entry36:                                      ; preds = %end
+  %tmp_it = alloca ptr, align 8
+  %84 = call ptr @Array_LLVMValueRef____iter__(ptr %14)
+  store ptr %84, ptr %tmp_it, align 8
+  %mem = alloca ptr, align 8
+  %85 = load ptr, ptr %84, align 8
+  %86 = load ptr, ptr %85, align 8
+  %87 = call ptr %86(ptr %84)
+  store ptr %87, ptr %mem, align 8
+  br label %for.cond38
+
+for.cond38:                                       ; preds = %for.body39, %for.entry36
+  %88 = load ptr, ptr %tmp_it, align 8
+  %memberidx42 = getelementptr inbounds %Iterator_LLVMValueRef_, ptr %88, i32 0, i32 1
+  %89 = load i1, ptr %memberidx42, align 1
+  %90 = xor i1 %89, true
+  br i1 %90, label %for.body39, label %for.end41
+
+for.body39:                                       ; preds = %for.cond38
+  %91 = load ptr, ptr %mem, align 8
+  %92 = call ptr @LLVMBuildFree(ptr %1, ptr %91)
+  %93 = load ptr, ptr %tmp_it, align 8
+  %94 = load ptr, ptr %93, align 8
+  %95 = load ptr, ptr %94, align 8
+  %96 = call ptr %95(ptr %93)
+  store ptr %96, ptr %mem, align 8
+  br label %for.cond38
+
+for.end41:                                        ; preds = %for.cond38
+  tail call void @free(ptr %88)
+  %97 = load ptr, ptr %str, align 8
   br label %common.ret
 }
 
@@ -37164,6 +37248,8 @@ declare ptr @LLVMTypeOf(ptr)
 
 declare ptr @LLVMBuildMalloc(ptr, ptr, ptr)
 
+declare ptr @LLVMBuildFree(ptr, ptr)
+
 declare ptr @LLVMBuildStore(ptr, ptr, ptr)
 
 declare ptr @LLVMBuildInBoundsGEP2(ptr, ptr, ptr, ptr, i64, ptr)
@@ -37321,8 +37407,6 @@ declare void @LLVMAddIncoming(ptr, ptr, ptr, i64)
 declare ptr @LLVMBuildArrayMalloc(ptr, ptr, ptr, ptr)
 
 declare ptr @LLVMBuildArrayAlloca(ptr, ptr, ptr, ptr)
-
-declare ptr @LLVMBuildFree(ptr, ptr)
 
 declare i64 @LLVMGetAlignment(ptr)
 
