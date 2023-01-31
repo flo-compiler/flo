@@ -945,8 +945,8 @@ class CodeGen {
         let for_entry_block = LLVMAppendBasicBlock(this.function, "for.entry")
         LLVMBuildBr(builder, for_entry_block)
         LLVMPositionBuilderAtEnd(builder, for_entry_block)
-        if for_stmt.setup != null {
-            this.codegen_statement(builder, for_stmt.setup)
+        if for_stmt.for_in_setup != null {
+            this.codegen_statement(builder, for_stmt.for_in_setup)
         }
         if for_stmt.initialization != null {
             this.codegen_statement(builder, for_stmt.initialization)
@@ -977,6 +977,11 @@ class CodeGen {
         this.break_bb = prev_break_bb
         this.continue_bb = prev_continue_bb
         LLVMPositionBuilderAtEnd(builder, for_end_block)
+        if for_stmt.for_in_setup != null {
+            let var_id = (for_stmt.for_in_setup as VarDeclaration).var_id
+            let mem = this.codegen_var_access_exp(builder, new VarAccessExpression(var_id, get_var(this.program, var_id).value_type))
+            LLVMBuildFree(builder, mem)
+        }
     }
     private codegen_while_stmt(this, builder: LLVMBuilderRef, while_stmt: WhileStatement){
         let while_bb = LLVMAppendBasicBlock(this.function, "while.entry")

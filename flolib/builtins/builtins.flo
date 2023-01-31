@@ -16,7 +16,7 @@ class string {
         this.length = len
         this.size = len
     }
-    public __add__(this, data: string): string {
+    private __add__(this, data: string): string {
         let new_str_len = this.length + data.length
         let new_buffer = new i8*(new_str_len)
         new_buffer.copy_from(this.buffer, this.length)
@@ -24,22 +24,22 @@ class string {
         trailing_buffer.copy_from(data.buffer, data.length)
         return new string(new_buffer, new_str_len)   
     }
-    public __adda__(this, other: string): string {
+    private __adda__(this, other: string): string {
         let new_length = this.length + other.length
         this.buffer = this.buffer.resize(new_length)
         (this.buffer + this.length).copy_from(other.buffer, other.length)
         this.length = new_length
         return this
     }
-    public __getitem__(this, index: int): string {
+    private __getitem__(this, index: int): string {
         let new_buffer = new i8*(1)
         new_buffer[0] = this.buffer[index]
         return new string(new_buffer, 2)
     }
-    public __ne__(this, other: string): bool {
+    private __ne__(this, other: string): bool {
         return !(this.__eq__(other))
     }
-    public __eq__(this, other: string): bool {
+    private __eq__(this, other: string): bool {
         if this.length != other.length return false
         return this.buffer.compare(other.buffer, this.length) == 0
     }
@@ -59,7 +59,7 @@ class string {
         }
         return -1
     }
-    public __in__(this, other: string): bool {
+    private __in__(this, other: string): bool {
         return this.find(other) != -1
     }
     public substring (this, start: int, length: int): string {
@@ -114,7 +114,7 @@ class StringBuilder {
     private buffer: i8*
     private size: int
     private working_buffer: i8*
-    length: int
+    public length: int
     constructor(this, size: int){
         this.size = size
         this.buffer = new i8*(this.size)
@@ -153,16 +153,16 @@ class Range {
         this.start = start
         this.end = end
     }
-    public __in__(this, num: int): bool {
+    private __in__(this, num: int): bool {
         return num >= this.start and num < this.end
     }
-    public __iter__(this): RangeIterator<int> {
+    private __iter__(this): RangeIterator<int> {
         return new RangeIterator<int>(this.start, this.end)
     }
 }
 class RangeIterator<T>(Iterator<T>){
-    public idx: T
-    public end: T
+    private idx: T
+    private end: T
     constructor(this, idx: T, end: T){
         this.idx = idx
         this.end = end
@@ -182,36 +182,24 @@ class Array <T> {
         this.size = size
         this.buffer = new T*(size)
     }
-    resize(this){
+    private resize(this){
         this.size *= 2
         this.buffer = this.buffer.resize(this.size)
     }
-    swap(this, i1: int, i2: int){
-        if (i1 in 0..this.length) and (i2 in 0..this.length) {
-            let tmp = this.buffer[i1]
-            this.buffer[i1] = this.buffer[i2]
-            this.buffer[i2] = tmp 
-        }
-    }
-    __iter__(this): ArrayIterator<T> {
+    private __iter__(this): ArrayIterator<T> {
         return new ArrayIterator<T>(this.buffer, this.length)
     } 
-    __sl__(this, element: T){
+    private __sl__(this, element: T){
         if (this.length >= this.size) this.resize()
         this.buffer[this.length++] = element
     }
-    __setitem__(this, index: int, value: T){
-        if index in 0..this.length {
-            this.buffer[index] = value
-        }
+    private __setitem__(this, index: int, value: T){
+        this.buffer[index] = value
     }
-    append(this, element: T){
-        this.__sl__(element)
-    }
-    __getitem__(this, index: int): T {
+    private __getitem__(this, index: int): T {
         return this.buffer[index]
     }
-    __eq__(this, other: T[]): bool {
+    private __eq__(this, other: T[]): bool {
         if this.length != other.length {
             return false
         } else {
@@ -221,14 +209,10 @@ class Array <T> {
         }
         return true
     }
-    __in__(this, element: T): bool {
-        for let i = 0; i < this.length; i++ {
-            if this[i] == element return true 
-        }
-        return false
+    private __in__(this, element: T): bool {
+        return this.find(element) != -1
     }
-    
-    find(this, search: T): int{
+    public find(this, search: T): int{
         for let i = 0; i < this.length; i++ {
             if this.buffer[i] == search return i
         }

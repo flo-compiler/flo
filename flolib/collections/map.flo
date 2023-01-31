@@ -40,7 +40,7 @@ class Map<T, U> {
         for let i = 0; i < this.size; i++{
             this.buckets[i] = new Bucket<T, U>()
         }
-        for i = 0; i < buckets.length; i++ {
+        for let i = 0; i < buckets.length; i++ {
             this.set(buckets[i].key, buckets[i].value)
         }
     }
