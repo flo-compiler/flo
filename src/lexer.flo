@@ -105,7 +105,7 @@ fnc get_escape_char(char: i8): i8 {
     return char
 }
 fnc unescape(str: string): string {
-    let str_builder = new StringBuilder(str.length)
+    let str_builder: StringBuilder(str.length)
     let char = '\0'
     let aval = &char
     for let i = 0; i < str.length; i++ {
@@ -202,9 +202,7 @@ class Lexer {
         return '\0'
     }
     private advance(this){
-        if this.eof() {
-            return
-        }
+        if this.eof() return
         this.current_char = this.text.get_byte(++this.idx)
         if this.current_char == '\n' {
             this.col = 0
@@ -416,7 +414,7 @@ class Lexer {
         let fmt_indices: int[] = []
         let aval: i8* = null
         this.advance()
-        let str_builder = new StringBuilder(1)
+        let str_builder: StringBuilder(1)
         while !this.eof() {
             if (this.current_char == '"' and !escape_next) break
             if (this.current_char == '$' and !escape_next){

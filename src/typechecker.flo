@@ -1171,10 +1171,9 @@ class TypeChecker {
         this.current_module = this.program.modules.length
         this.program.modules << module
         let module_scope = this.create_scope()
-        let const_id = new ConstId(-1, -1)
-        module_scope.vars.set("true", const_id)
-        module_scope.vars.set("false", const_id)
-        module_scope.vars.set("null", const_id)
+        module_scope.vars.set("true", null)
+        module_scope.vars.set("false", null)
+        module_scope.vars.set("null", null)
         this.current_scope = module_scope.id
         this.current_method = null
         this.current_class = null
@@ -1255,8 +1254,8 @@ class TypeChecker {
         let possible_type = this.get_type_from_current_scope(instantiated_generic_name)
         if possible_type.kind == TypeKind.UNKNOWN {
             // TODO: Find a better way to create this initialization.
-            let new_identok = new IdentifierToken(instantiated_generic_name, generic.template.name.range)
-            let instantiated_generic_class = new ClassDeclarationNode(new_identok)
+            let new_identok: IdentifierToken(instantiated_generic_name, generic.template.name.range)
+            let instantiated_generic_class: ClassDeclarationNode(new_identok)
             instantiated_generic_class.parent = generic.template.parent
             instantiated_generic_class.fields = generic.template.fields
             instantiated_generic_class.methods = generic.template.methods
@@ -1267,8 +1266,7 @@ class TypeChecker {
         }
         this.current_module = module_id
         this.current_scope = scope_id
-        let generic_ty = new GenericType(name, types, possible_type)
-        return generic_ty
+        return new GenericType(name, types, possible_type)
     }
     private declare_var_within_current_scope(this, name: string, value: Expression, value_type: Type): Var {
         let var = new Var(value, value_type)
@@ -1292,13 +1290,13 @@ class TypeChecker {
     }
     private declare_global_const(this, const_decl_node: ConstDeclarationStatement){
         let const_stmt = this.check_const_declaration(const_decl_node)
-        if this.has_errored() {return}
+        if this.has_errored() return
         const_stmt.is_static = true
         this.get_current_module().global_consts << const_stmt
     }
     private declare_global_var(this, var_decl_node: VarDeclarationStatement){
         let var_stmt = this.check_var_declaration(var_decl_node)
-        if this.has_errored() {return}
+        if this.has_errored() return
         if !get_var(this.program, var_stmt.var_id).value.is_constant {
             this.error(ErrorKind.GEN, "Initilializer for global variable has to be a constant", var_decl_node.value.range)
             return
@@ -1385,9 +1383,7 @@ class TypeChecker {
         }
         let path = import_node.module_path.value
         let module = this.lex_and_parse_typecheck_file(path, import_node.module_path.range)
-        if this.has_errored() {
-            return
-        }
+        if this.has_errored() return
         let global_module_scope = module.scopes[0]
         if import_node.import_list.length > 0 {
             for import_identifier in import_node.import_list {
@@ -1513,7 +1509,7 @@ class TypeChecker {
         this.current_scope = fnc_scope.id 
         declared_function.args = []
         declared_function.fnc_type = this.init_function_signature(function_node.args, function_node.return_type, declared_function.args)
-        if this.has_errored() {return}
+        if this.has_errored() return
         declared_function.id = new VarId(VarIdKind.FNC, this.current_module, this.get_current_module().functions.length)
         this.current_scope = fnc_scope.parent
         declared_function.scope = fnc_scope.id
@@ -1570,7 +1566,7 @@ class TypeChecker {
             field.id = new PropId(PropIdKind.FIELD, declared_class.id, i)
             field.field_type = this.check_type(field_node.parsed_type)
             field.vtable_index = current_vtable_index
-            if this.has_errored() {return}
+            if this.has_errored() return
             let possible_prop_id = declared_class.prop_map.get(field.name)
             if possible_prop_id != null {
                 if possible_prop_id.type_id == declared_class.id {
@@ -1590,7 +1586,7 @@ class TypeChecker {
             }
             if field_node.initializer != null {
                 field.initializer = this.check_expression(field.field_type, field_node.initializer)
-                if this.has_errored() {return}
+                if this.has_errored() return
                 if !this.types_are_eq(field.field_type, field.initializer.value_type) {
                     this.error(ErrorKind.TYPE, "Expected type '$(this.dump_type(field.field_type))' but got type '$(this.dump_type(field.initializer.value_type))' on static field initialization", field_node.initializer.range)
                 }
@@ -1724,7 +1720,7 @@ class TypeChecker {
     private check_class_body(this, class_node: ClassDeclarationNode){
         let class_name = class_node.name.value
         let resolved_type = this.get_type_from_current_scope(class_name)
-        if resolved_type.kind == TypeKind.UNKNOWN {return}
+        if resolved_type.kind == TypeKind.UNKNOWN return
         let declared_class = get_class_from_type(this.program, resolved_type)
         let outer_class = this.current_class
         this.current_class = declared_class.id
@@ -1733,14 +1729,10 @@ class TypeChecker {
         }
         // Fields
         this.declare_class_fields(declared_class, class_node)     
-        if this.has_errored(){
-            return
-        }
+        if this.has_errored() return
         // Declare class methods
         this.declare_class_methods(declared_class, class_node)
-        if this.has_errored(){
-            return
-        }
+        if this.has_errored() return
         // Checking if class is abstract.
         for prop_bucket in declared_class.prop_map.get_buckets() {
             let prop_id = prop_bucket.value
@@ -1792,9 +1784,7 @@ class TypeChecker {
         let prev_scope = this.current_scope 
         this.current_scope = func.scope
         func.block = this.check_block(func_node.block)
-        if this.has_errored() {
-            return
-        }
+        if this.has_errored() return
         if !func.block.returns {
             if func.fnc_type.return_type.kind == TypeKind.VOID {
                 func.block.statements << (new ReturnStatement() as Statement)
@@ -2570,10 +2560,9 @@ class TypeChecker {
         return null
     }
     private check_condition(this, cond_node: ExpressionNode): Expression {
-       let bool_type = new BooleanType()
        let condition = this.check_expression(Type.unknown(), cond_node)
        if this.has_errored() return null
-       return !is_bool(condition.value_type) ? cast_exp_to_type(condition, bool_type) : condition
+       return !is_bool(condition.value_type) ? cast_exp_to_type(condition, new BooleanType()) : condition
     }
     private check_if_stamement(this, if_stmt_node: IfStatementNode): IfStatement {
         let condition = this.check_condition(if_stmt_node.condition)
@@ -2678,7 +2667,8 @@ class TypeChecker {
             let iteratable_class = get_class_from_type(this.program, iteratable_type)
             let done_prop_id = iteratable_class.prop_map.get("done")
             let iteratable_load = new VarAccessExpression(iteratable_var_id, iteratable_type)
-            for_stmt.condition = new UnaryExpression(UnaryOp.NOT, new MemberExpression(iteratable_load, done_prop_id, new BooleanType()), new BooleanType())
+            let bool_type = new BooleanType()
+            for_stmt.condition = new UnaryExpression(UnaryOp.NOT, new MemberExpression(iteratable_load, done_prop_id, bool_type), bool_type)
             
             let iter_item_name =  for_stmt_node.it_name.value
             let next_prop_id = iteratable_class.prop_map.get("__next__")
