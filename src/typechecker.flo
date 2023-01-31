@@ -1178,20 +1178,19 @@ class TypeChecker {
         this.current_method = null
         this.current_class = null
         this.current_function = null
-        for let i = 0; i < module_ast.imports.length; i++ {
-            this.check_module_import(module_ast.imports[i])
+        for module_import in module_ast.imports {
+            this.check_module_import(module_import)
             if (this.has_errored()) return null
         }
         // We declare module structures
-        for i = 0; i < module_ast.enums.length; i++ {
-            this.declare_enum_within_module(module_ast.enums[i])
+        for enum_ in module_ast.enums {
+            this.declare_enum_within_module(enum_)
         }
-        for i = 0; i < module_ast.classes.length; i++ {
-            this.declare_class_within_module(module_ast.classes[i])
+        for class_ in module_ast.classes {
+            this.declare_class_within_module(class_)
         }
         if this.has_errored() return null
-        for i = 0; i < module_ast.type_aliases.length; i++  {
-            let type_alias_node = module_ast.type_aliases[i]
+        for type_alias_node in module_ast.type_aliases {
             let ty = this.check_type(type_alias_node.parsed_type)
             let identifer_tok = type_alias_node.name
             let alias_name = identifer_tok.value
@@ -1201,22 +1200,22 @@ class TypeChecker {
             }
             module_scope.type_aliases.set(alias_name, ty)
         }
-        for i = 0; i < module_ast.consts.length; i++ {
-            this.declare_global_const(module_ast.consts[i])
+        for global_const in module_ast.consts {
+            this.declare_global_const(global_const)
         }
-        for i = 0; i < module_ast.vars.length; i++ {
-            this.declare_global_var(module_ast.vars[i])
+        for global_var in module_ast.vars {
+            this.declare_global_var(global_var)
         }
-        for i = 0; i < module_ast.functions.length; i++ {
-            this.declare_function_within_module(module_ast.functions[i])
+        for function in module_ast.functions {
+            this.declare_function_within_module(function)
         }
         if this.has_errored() return null
         // We Now check bodies
-        for i = 0; i < module_ast.enums.length; i++ {
+        for let i = 0; i < module_ast.enums.length; i++ {
             this.check_enum_body(module.enums[i], module_ast.enums[i])
         }
-        for i = 0; i < module_ast.classes.length; i++ {
-            this.check_class_body(module_ast.classes[i])
+        for class_ in module_ast.classes {
+            this.check_class_body(class_)
         }
         for i = 0; i < module_ast.functions.length; i++ {
            this.check_function_body(module.functions[i], module_ast.functions[i])
@@ -1330,8 +1329,7 @@ class TypeChecker {
     }
     private init_function_signature(this, arg_nodes: ArgNode[], return_type_node: TypeNode, args: FunctionArg[]): FunctionType {
         let arg_types: Type[] = []
-        for let i = 0; i < arg_nodes.length; ++i {
-            let arg = arg_nodes[i]
+        for arg in arg_nodes {
             let fnc_arg = new FunctionArg()
             fnc_arg.name = arg.name.value
             fnc_arg.default = null
@@ -1357,29 +1355,25 @@ class TypeChecker {
     }
     private import_all_from_module(this, module: Module){
         let global_module_scope = module.scopes[0]
-        for let i = 0; i < module.global_vars.length; i++ {
-            let var_ = module.global_vars[i]
+        for var_ in module.global_vars {
             this.add_imported_var_to_module(var_.name, var_.var_id)
         }
-        for i = 0; i < module.global_consts.length; i++ {
-            let const_ = module.global_consts[i]
+        for const_ in module.global_consts {
             this.add_imported_var_to_module(const_.name, const_.const_id)
         }
-        for i = 0; i < module.functions.length; i++ {
-            let function = module.functions[i]
+        for function in module.functions {
+            
             this.add_imported_fnc_to_module(function.name, function.id)
         }
-        for i = 0; i < module.classes.length; i++ {
-            let class_ = module.classes[i]
+        for class_ in module.classes {
+            
             this.add_imported_class_to_module(class_.name, class_.id)
         }
-        for i = 0; i < module.enums.length; i++ {
-            let enum_ = module.enums[i]
+        for enum_ in module.enums {
+            
             this.add_imported_enum_to_module(enum_.name, enum_.id)
         }
-        let type_buckets = global_module_scope.type_aliases.get_buckets()
-        for i = 0; i < type_buckets.length; i++ {
-            let type_bucket = type_buckets[i]
+        for type_bucket in global_module_scope.type_aliases.get_buckets() {
             this.add_imported_typealias_to_module(type_bucket.key, type_bucket.value)
         }
     }
@@ -1395,8 +1389,8 @@ class TypeChecker {
         }
         let global_module_scope = module.scopes[0]
         if import_node.import_list.length > 0 {
-            for let i = 0; i < import_node.import_list.length; i++ {
-                let name_to_import = import_node.import_list[i].value
+            for import_identifier in import_node.import_list {
+                let name_to_import = import_identifier.value
                 let renamed_name = name_to_import
                 if this.generic_templates.get(name_to_import) != null {
                     continue
@@ -1426,7 +1420,7 @@ class TypeChecker {
                     this.add_imported_typealias_to_module(renamed_name, type_alias)
                     continue
                 } else {
-                    this.error(ErrorKind.NAME, "$name_to_import not found in module \"$path\"", import_node.import_list[i].range)
+                    this.error(ErrorKind.NAME, "$name_to_import not found in module \"$path\"", import_identifier.range)
                     return
                 }
             }
@@ -1615,9 +1609,9 @@ class TypeChecker {
     }
     private declare_class_methods(this, declared_class: Class, class_node: ClassDeclarationNode){
         let current_vtable_index = declared_class.inherited_methods_num
-        for let i = 0; i < class_node.methods.length; i++ {
-            let method = new ClassMethod()
+          for let i = 0; i < class_node.methods.length; i++ {
             let method_node = class_node.methods[i]
+            let method = new ClassMethod()
             let name = method_node.name.value
             method.name = name
             let method_scope = this.create_child_scope_within_current_scope()
@@ -1706,10 +1700,9 @@ class TypeChecker {
             this.error(ErrorKind.TYPE, "Can only inherit from class not type '$(this.dump_type(parent_type))'", class_node.parent.range)
         }
         let parent_class = get_class_from_type(this.program, parent_type)
-        let parent_bucket_props = parent_class.prop_map.get_buckets()
-        for let i = 0; i < parent_bucket_props.length; i++ {
-            let parent_prop_name = parent_bucket_props[i].key
-            let parent_prop_id = parent_bucket_props[i].value  
+        for parent_bucket_prop in parent_class.prop_map.get_buckets() {
+            let parent_prop_name = parent_bucket_prop.key
+            let parent_prop_id = parent_bucket_prop.value  
             let parent_prop_type = get_class_prop_type(this.program, parent_prop_id)
             let child_prop_id = declared_class.prop_map.get(parent_prop_name)
             let parent_prop_visibility = get_class_prop_visibility(this.program, parent_prop_id)
@@ -1748,10 +1741,9 @@ class TypeChecker {
             return
         }
         // Checking if class is abstract.
-        let prop_buckets = declared_class.prop_map.get_buckets()
-        for let i = 0; i < prop_buckets.length; i++ {
-            let prop_id = prop_buckets[i].value
-            let prop_name = prop_buckets[i].key
+        for prop_bucket in declared_class.prop_map.get_buckets() {
+            let prop_id = prop_bucket.value
+            let prop_name = prop_bucket.key
             if prop_id.kind == PropIdKind.METHOD {
                 let prop_method = get_method(this.program, prop_id)
                 if prop_method.is_abstract {
@@ -1765,7 +1757,7 @@ class TypeChecker {
             }
         }
         // Class Methods Body
-        for i = 0; i < declared_class.methods.length; i++ {
+        for let i = 0; i < declared_class.methods.length; i++ {
             let method = declared_class.methods[i]
             this.current_method = method.id
             let method_node = class_node.methods[i]
@@ -1843,8 +1835,8 @@ class TypeChecker {
         if type_node.kind == TypeKind.FNC {
             let fnc_node = type_node as FunctionTypeNode
             let arg_types: Type[] = []
-            for let i = 0; i < fnc_node.args.length; i++ 
-                arg_types << this.check_type(fnc_node.args[i])
+            for arg in fnc_node.args 
+                arg_types << this.check_type(arg)
             let return_type = this.check_type(fnc_node.return_type)
             return new FunctionType(arg_types, return_type)
         }
@@ -1890,7 +1882,7 @@ class TypeChecker {
             if this.has_errored() return null
             is_constant and= elements[0].is_constant
             if element_type.kind == TypeKind.UNKNOWN {
-                element_type =  elements[0].value_type
+                element_type = elements[0].value_type
             }
             for let i = 1; i < array_node.elements.length; ++i {
                 let element = this.check_expression(element_type, array_node.elements[i])
@@ -2372,13 +2364,13 @@ class TypeChecker {
         let method_type = get_class_prop_type(this.program, prop_id) as FunctionType
         let arg_type = method_type.arg_types[0]
         let index = this.check_expression(arg_type, index_expr_node.index)
+        if this.has_errored() return null
         if !this.types_are_eq(arg_type, index.value_type) {
             this.error(ErrorKind.TYPE, "Expected type '$(this.dump_type(arg_type))' but got type '$(this.dump_type(index.value_type))'", index_expr_node.index.range)
             return null
         }
         let member_expr = new MemberExpression(object, prop_id, method_type)
-        let args: Expression[] = [index]
-        return new CallExpression(member_expr, args, method_type.return_type)
+        return new CallExpression(member_expr, [index], method_type.return_type)
     }
     private check_index_expr(this, expected_type: Type, index_expr_node: ExpressionIndexNode): IndexExpression {
         let root_expression = this.check_expression(Type.unknown(), index_expr_node.expression)
@@ -2535,8 +2527,8 @@ class TypeChecker {
     }
     private check_string_expression(this, expected_type: Type, str_node: StringExpressionNode): StringExpression{
         let template_args: Expression[] = []
-        for let i = 0; i < str_node.template_args.length; i++ {
-            template_args << this.check_expression(Type.unknown(), str_node.template_args[i])
+        for arg in str_node.template_args {
+            template_args << this.check_expression(Type.unknown(), arg)
         }
         if !is_i8_ptr(expected_type) {
             expected_type = this.get_type_from_current_scope("string")
@@ -2662,6 +2654,10 @@ class TypeChecker {
         } else {
             let iterator = this.check_expression(Type.unknown(), for_stmt_node.iterator)
             if this.has_errored() return null
+            if !is_object(iterator.value_type) {
+                this.error(ErrorKind.TYPE, "Iterator has to be an object", for_stmt_node.iterator.range)
+                return null
+            }
             let iterator_class = get_class_from_type(this.program, iterator.value_type)
             let iter_prop_id = iterator_class.prop_map.get("__iter__")
             if iter_prop_id == null {
@@ -2690,6 +2686,7 @@ class TypeChecker {
             for_stmt.initialization = new VarDeclaration(iter_item_name, iter_item_var_id)
             for_stmt.incr_decr = new BinaryExpression(new VarAccessExpression(iter_item_var_id, iter_item_type), BinaryOp.ASSIGN, next_item_call, iter_item_type, false)
         }
+        if this.has_errored() return null
         this.in_loop = true
         for_stmt.block = this.check_block(for_stmt_node.block)
         this.in_loop = prev_in_loop
@@ -2767,8 +2764,8 @@ class TypeChecker {
         let block = new Block()
         let new_scope = this.create_child_scope_within_current_scope()
         this.current_scope = new_scope.id
-        for let i = 0; i < block_node.statements.length; i++ {
-            let stmt = this.check_statement(block_node.statements[i])
+        for stmt_node in block_node.statements {
+            let stmt = this.check_statement(stmt_node)
             if this.has_errored() return null
             block.statements << stmt
             if stmt.kind == StatementKind.RETURN {

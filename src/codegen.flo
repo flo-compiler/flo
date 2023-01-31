@@ -119,23 +119,23 @@ class CodeGen {
     public codegen(program: Program): GeneratedModule{
         let module = program.modules[2]
         let codegen: CodeGen(program, module.name)
-        for let i = 0; i < module.enums.length; ++i {
-            codegen.declare_enum(module.enums[i])
+        for enum_ in module.enums  {
+            codegen.declare_enum(enum_)
         }
-        for i = 0; i < module.classes.length; ++i {
-            codegen.declare_class(module.classes[i])
+        for class_ in module.classes {
+            codegen.declare_class(class_)
         }
-        for i = 0; i < module.global_consts.length; ++i {
-            codegen.codegen_const_declaration(null, module.global_consts[i])
+        for const_ in module.global_consts {
+            codegen.codegen_const_declaration(null, const_)
         }
-        for i = 0; i < module.global_vars.length; ++i {
-            codegen.codegen_var_declaration(null, module.global_vars[i])
+        for var_ in module.global_vars {
+            codegen.codegen_var_declaration(null, var_)
         }
-        for i = 0; i < module.classes.length; ++i {
-            codegen.codegen_class(module.classes[i])
+        for class_ in module.classes {
+            codegen.codegen_class(class_)
         }
-        for i = 0; i < module.functions.length; ++i {
-            codegen.codegen_function(module.functions[i])
+        for func_ in module.functions {
+            codegen.codegen_function(func_)
         }
         return new GeneratedModule(codegen.module)
     }
@@ -204,8 +204,8 @@ class CodeGen {
         if tt.kind == TypeKind.FNC {
             let param_types: LLVMTypeRef[] = []
             let func_ty = tt as FunctionType
-            for let i = 0; i < func_ty.arg_types.length; i++ {
-                param_types << this.codegen_type(func_ty.arg_types[i])
+            for arg_ty in func_ty.arg_types {
+                param_types << this.codegen_type(arg_ty)
             }
             let ret_type = this.codegen_type(func_ty.return_type)
             let llvm_fnty = LLVMFunctionType(ret_type, param_types.buffer, param_types.length, false)
@@ -287,8 +287,8 @@ class CodeGen {
         let alloc_buff = LLVMBuildAlloca(builder, i8_ptr_ty, "")
         let llvm_fmt = this.createGlobalLLVMString(builder, fmt)
         let call_args: LLVMValueRef[] = [alloc_buff, llvm_fmt]
-        for let i = 0; i < args.length; i++ {
-            call_args << args[i]
+        for arg in args {
+            call_args << arg
         }
         let asprintf = get_intrinsic(this.module, "asprintf", [i8_ptr_ty, i8_ptr_ty], int_ty, true)
         let str_len = LLVMBuildCall2(builder, asprintf.fnc_type, asprintf.call, call_args.buffer, call_args.length, "")
@@ -314,9 +314,7 @@ class CodeGen {
                 return this.createGlobalLLVMString(builder, fmt_str + " ... }")
             }
             let fmt_args: LLVMValueRef[] = []
-            let field_buckets = obj_class.prop_map.get_buckets()
-            for let i = 0; i < field_buckets.length; i++ {
-                let field_bucket = field_buckets[i]
+            for field_bucket in obj_class.prop_map.get_buckets() {
                 let field_ty = get_class_prop_type(this.program, field_bucket.value)
                 let member_val = this.get_member_with_name(builder, llvm_val, val_ty as ObjectType, field_bucket.key)
                 fmt_args << this.get_string_val(builder, member_val, field_ty, depth + 1)
@@ -377,8 +375,8 @@ class CodeGen {
         let next_args: LLVMValueRef[1] = [this.createLLVMInt(1)]
         let ptr_ty = LLVMTypeOf(ptr)
         let addr = ptr
-        for let i = 0; i < array_exp.value.length; ++i {
-            LLVMBuildStore(builder, this.codegen_expression(builder, array_exp.value[i]), addr)
+        for value in array_exp.value {
+            LLVMBuildStore(builder, this.codegen_expression(builder, value), addr)
             addr = LLVMBuildInBoundsGEP2(builder, ptr_ty, addr, &next_args[0], 1, "")
         }
         return addr
@@ -390,8 +388,8 @@ class CodeGen {
         //FIXME: What if array is not constant?
         let elem_ty = this.codegen_type((array_exp.value_type as ArrayType).element_type)
         let elems: LLVMValueRef[] = []
-        for let i = 0; i < array_exp.value.length; i++ {
-            elems << this.codegen_expression(builder, array_exp.value[i])
+        for value in  array_exp.value {
+            elems << this.codegen_expression(builder, value)
         }
         return LLVMConstArray(elem_ty, elems.buffer, elems.length)
     }
@@ -400,10 +398,8 @@ class CodeGen {
         if var != null return var
         // We need to find this var..
         let module = this.program.modules[target_id.module_id]
-        let i = 0
         if target_id.kind == VarIdKind.CONST {
-            for i = 0; i < module.global_consts.length; i++ {
-                let global_const = module.global_consts[i]
+            for global_const in module.global_consts {
                 let const_id = global_const.const_id
                 if const_id.id == target_id.id {
                     this.codegen_const_declaration(null, global_const)
@@ -412,8 +408,7 @@ class CodeGen {
             }
         }
         if target_id.kind == VarIdKind.VAR {
-            for i = 0; i < module.global_vars.length; i++ {
-                let global_var = module.global_vars[i]
+            for global_var in module.global_vars {
                 let var_id = global_var.var_id
                 if var_id.id == target_id.id {
                     this.codegen_var_declaration(null, global_var)
@@ -422,8 +417,7 @@ class CodeGen {
             }
         }
         if target_id.kind == VarIdKind.FNC {
-            for i = 0; i < module.functions.length; i++ {
-                let function = module.functions[i]
+            for function in module.functions {
                 let fnc_id = function.id
                 if fnc_id.id == target_id.id {
                     this.codegen_function(function)
@@ -767,8 +761,8 @@ class CodeGen {
             }
             func = this.codegen_expression(builder, call_exp.callee)
         }
-        for let i = 0; i < call_exp.args.length; i++ { 
-            let arg = this.codegen_expression(builder, call_exp.args[i])
+        for call_arg in call_exp.args { 
+            let arg = this.codegen_expression(builder, call_arg)
             args << arg
             arg_types << LLVMTypeOf(arg)
         }
@@ -1004,8 +998,8 @@ class CodeGen {
         this.continue_bb = prev_continue_bb
     }
     private evaluate_expression_list(this, builder: LLVMBuilderRef, evaluated_list: LLVMValueRef[], list: Expression[]){
-        for let i = 0; i < list.length; i++ {
-            evaluated_list << this.codegen_expression(builder, list[i])
+        for item in list {
+            evaluated_list << this.codegen_expression(builder, item)
         }
     }
     private build_constructor_call(this, builder: LLVMBuilderRef, obj_type: ObjectType, params: LLVMValueRef[]){
@@ -1077,8 +1071,8 @@ class CodeGen {
     private codegen_block(this, builder: LLVMBuilderRef, block: Block){
         let was_instatic_ctx = this.in_static_ctx
         this.in_static_ctx = false
-        for let i = 0; i < block.statements.length; ++i {
-            this.codegen_statement(builder, block.statements[i])
+        for statement in block.statements {
+            this.codegen_statement(builder, statement)
         }
         this.in_static_ctx = was_instatic_ctx
     }
@@ -1106,9 +1100,8 @@ class CodeGen {
         this.function = prev_func
     }
     private codegen_class(this, checked_class: Class){
-        for let i = 0; i < checked_class.methods.length; i++ {
-            let struct_class = this.get_class_from_typeid(checked_class.id)
-            let method = checked_class.methods[i]
+        let struct_class = this.get_class_from_typeid(checked_class.id)
+        for method in checked_class.methods {
             if method.is_abstract continue
             let prop_id_key = create_prop_key(method.id)
             let llvm_fnc = struct_class.static_props_map.get(prop_id_key)
@@ -1145,9 +1138,9 @@ class CodeGen {
                 }
                 offset = 1
             }
-            for let j = 0; j < method.args.length; j++ {
-                let arg = method.args[j]
-                let param = LLVMGetParam(llvm_fnc, j + offset)
+            for let i = 0; i < method.args.length; i++ {
+                let arg = method.args[i]
+                let param = LLVMGetParam(llvm_fnc, i + offset)
                 let alloc = LLVMBuildAlloca(func_builder, this.codegen_type(arg.value_type), arg.name.to_cstring())
                 LLVMBuildStore(func_builder, param, alloc)
                 this.add_var(arg.id, alloc)
@@ -1163,12 +1156,11 @@ class CodeGen {
         return LLVMAddFunction(this.module, method_name.to_cstring(), method_type)
     }
     private declare_static_props(this, struct_class: CGClassType, checked_class: Class){
-        let buckets = checked_class.static_prop_map.get_buckets()
-        for let i = 0; i < buckets.length; i++ {
-            let prop_id = buckets[i].value
+        for bucket in checked_class.static_prop_map.get_buckets() {
+            let prop_id = bucket.value
+            let static_prop_name = bucket.key
             let prop_id_key = create_prop_key(prop_id)
             let prop_type = get_class_prop_type(this.program, prop_id)
-            let static_prop_name = buckets[i].key
             let static_prop_type = this.codegen_type(prop_type, is_object(prop_type))
             let static_prop_name_concat = "$(checked_class.name)_$static_prop_name"
             let static_prop_value: LLVMValueRef = null
@@ -1183,16 +1175,15 @@ class CodeGen {
         }
     }
     private declare_class_props(this, struct_class: CGClassType, checked_class: Class, prop_types: LLVMTypeRef[]){
-        let buckets = checked_class.prop_map.get_buckets()
         let vtable_values: LLVMValueRef[] = []
         let vtable_types: LLVMTypeRef[] = []
         let field_types: LLVMTypeRef[] = []
-        for let i = 0; i < buckets.length; i++ {
-            let prop_id = buckets[i].value
+        for bucket in checked_class.prop_map.get_buckets() {
+            let prop_id = bucket.value
+            let prop_name = bucket.key
             let prop_owner = checked_class
             let prop_id_key = create_prop_key(prop_id)
             let prop_type = get_class_prop_type(this.program, prop_id)
-            let prop_name = buckets[i].key
             let prop_index = get_vtable_index(this.program, prop_id)
             if prop_id.kind == PropIdKind.FIELD {
                 let field_type = this.codegen_type(prop_type)
@@ -1206,8 +1197,8 @@ class CodeGen {
                 if prop_id.type_id == checked_class.id {
                     let arg_types: Type[] = []
                     arg_types << (new ObjectType(checked_class.id) as Type)
-                    for let j = 0; j < method_type.arg_types.length; j++ {
-                        arg_types << method_type.arg_types[j]
+                    for arg_type in method_type.arg_types {
+                        arg_types << arg_type
                     }
                     method_type.arg_types = arg_types
                     llvm_method_type = this.codegen_type(method_type, false)
@@ -1245,8 +1236,8 @@ class CodeGen {
             struct_class.vtable_type = vtable_struct_ty
             prop_types << LLVMPointerType(vtable_struct_ty)
         }
-        for i = 0; i < field_types.length; i++ {
-            prop_types << field_types[i]
+        for field_type in field_types {
+            prop_types << field_type
         }
     }
     private declare_class(this, checked_class: Class){
@@ -1281,8 +1272,7 @@ class CodeGen {
         } else {
             enum_type.llvm_type = LLVMIntType(WORD_SIZE)
         }
-        for let i = 0; i < checked_enum.fields.length; i++ {
-            let enum_field = checked_enum.fields[i]
+        for enum_field in checked_enum.fields {
             let prop_id = enum_field.id
             enum_type.field_map.set(create_prop_key(prop_id), this.codegen_expression(null, enum_field.initializer))
         }

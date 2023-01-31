@@ -139,7 +139,7 @@ match test {
 ```
 for let i = 0; i < 10; i++ // do something
 ```
-- [ ] For in loop
+- [x] For in loop
 ```
 for x in 1..10
 ```
@@ -187,40 +187,6 @@ fnc main(){
 - [ ] Named parameters for function calls 
 ```
 let result = sum(y: 6, x: 5)
-```
-## Dictionaries
-- [ ] Intialization
-```
-let dic: Dict<string, int> = ["foo": 34, "bar": 36, "zoo": 55]
-// or
-let dic: [string: int] = ["foo": 34, "bar": 36, "zoo": 55]
-// or 
-let dic = ["foo": 34, "bar": 36, "zoo": 55]
-```
-The empty dictionary **must** have a type annotation
-- [ ] Adding to dictionary
-```
-dic["anny"] = 70
-```
-- [ ] Getting from dictionary (returns null if value was not found)
-```
-let age = dic["bar"]
-```
-## Sets
-```
-let set: Set<int> = {1, 2, 3, 4, 5}
-// or
-let set: {int} = = {1, 2, 3, 4, 5}
-// or
-let set = {1, 2, 3, 4, 5}
-```
-- Indexing a set.
-```
-let a = set[0]
-```
-- Checking if a set contains a member.
-```
-println("$(1 in set)")
 ```
 ## Tuples
 - [ ] Creating tuples
