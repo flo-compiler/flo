@@ -305,9 +305,9 @@ class CodeGen {
         }
         if is_object(val_ty){
             if is_buitin(this.program, val_ty, "string") {
-                let arg = this.codegen_string_to_cstring(builder, llvm_val)
-                malloc_list << arg
-                return arg
+                let result = this.codegen_string_to_cstring(builder, llvm_val)
+                malloc_list << result
+                return result
             }
             //TODO: will need to check for nullable
             let obj_class = get_class_from_type(this.program, val_ty)
@@ -315,21 +315,23 @@ class CodeGen {
             str_builder.append_string("$(obj_class.name) {\n")
             if depth == 3 {
                 str_builder.append_string(" ... }")
-                llvm_val = this.createGlobalLLVMString(builder, str_builder.get_string())
+                return this.createGlobalLLVMString(builder, str_builder.get_string())
             }
             let fmt_args: LLVMValueRef[] = []
             for field_bucket in obj_class.prop_map.get_buckets() {
                 let field_ty = get_class_prop_type(this.program, field_bucket.value)
                 let member_val = this.get_member_with_name(builder, llvm_val, val_ty as ObjectType, field_bucket.key)
                 let arg = this.get_string_val(builder, member_val, field_ty, malloc_list, depth + 1)
-                if is_object(field_ty) {
+                if LLVMGetTypeKind(LLVMTypeOf(arg)) == LLVMTypeKind.LLVMPointerTypeKind and !LLVMIsGlobalConstant(arg) {
                     malloc_list << arg
                 }
                 fmt_args << arg
                 str_builder.append_string(" '$(field_bucket.key)': $(get_format_from_type(field_ty)), \n")
             }
             str_builder.append_string("}")
-            return this.codegen_safe_fmt_string(builder, str_builder.get_string(), fmt_args, null)
+            let result = this.codegen_safe_fmt_string(builder, str_builder.get_string(), fmt_args, null)
+            malloc_list << result
+            return result
         }
         //TODO: Better toString for functions
         if val_ty.kind == TypeKind.FNC {
@@ -358,28 +360,24 @@ class CodeGen {
             let templ_arg_exp = this.codegen_expression(builder, templ_arg)
             call_args << this.get_string_val(builder, templ_arg_exp, templ_arg_ty, malloc_list)
         }
-        
         fmt_str_builder.add_bytes_length(chars, str_value.length - curr_ind)
         str_value = fmt_str_builder.get_string()
         let str_len = this.createLLVMInt(str_value.length)
         let str = call_args.length > 0 ? this.codegen_safe_fmt_string(builder, str_value, call_args, &str_len) : this.createGlobalLLVMString(builder, str_value)
         if is_object(string_exp.value_type) {
             let str_ty = this.codegen_type(string_exp.value_type, false)
-            if LLVMIsGlobalConstant(str) {
+            if LLVMIsConstant(str) and LLVMIsGlobalConstant(str) {
                 let func = LLVMGetNamedFunction(this.module, "string_from_bytes")
                 if func == null {
                     panic("Could not find function 'string.from_bytes' in program")
                 }
                 let args: LLVMValueRef[2] = [str, str_len]
-                let arg_types: LLVMTypeRef[2] = [LLVMTypeOf(str), LLVMTypeOf(str_len)]
-                let fnc_ty = LLVMFunctionType(LLVMPointerType(str_ty), &arg_types[0], 2, false) 
-                return LLVMBuildCall2(builder, fnc_ty, func, &args[0], 2, "")
+                str = LLVMBuildCall2(builder, LLVM_GetFunctionType(func), func, &args[0], 2, "")
             } else {
-                malloc_list << str
+                let self = LLVMBuildMalloc(builder, str_ty, "")
+                this.build_constructor_call(builder, string_exp.value_type as ObjectType, [self, str, str_len])
+                str = self
             }
-            let self = LLVMBuildMalloc(builder, str_ty, "")
-            this.build_constructor_call(builder, string_exp.value_type as ObjectType, [self, str, str_len])
-            return self
         }
         for mem in malloc_list {
             LLVMBuildFree(builder, mem)
