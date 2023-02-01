@@ -1274,8 +1274,8 @@ class CodeGen {
             let constructor_type = get_class_prop_type(this.program, checked_class.construct) as FunctionType
             let arg_types: Type[] = []
             arg_types << (new ObjectType(checked_class.id) as Type)
-            for let i = 0; i < constructor_type.arg_types.length; i++ {
-                arg_types << constructor_type.arg_types[i]
+            for arg_type in constructor_type.arg_types {
+                arg_types << arg_type
             }
             constructor_type.arg_types = arg_types
             let constructor_llvm_method_type = this.codegen_type(constructor_type, false)
