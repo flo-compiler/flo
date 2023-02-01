@@ -1,0 +1,10 @@
+class Test {
+    inner_test: Test
+    constructor(this){}
+}
+fnc main(): int {
+    let test: Test()
+    test.inner_test = test
+    println(test as string)
+    return 0
+}

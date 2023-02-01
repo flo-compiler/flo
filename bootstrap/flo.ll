@@ -982,7 +982,7 @@ if.entry:                                         ; preds = %3
   %18 = load ptr, ptr %memberidx6, align 8
   %19 = load i64, ptr %memberidx3, align 4
   %20 = mul i64 %19, ptrtoint (ptr getelementptr (i8, ptr null, i32 1) to i64)
-  call void @llvm.memcpy.p0.p0.i64(ptr align 2147483648 %ptridx, ptr align 8 %18, i64 %20, i1 false)
+  call void @llvm.memcpy.p0.p0.i64(ptr align 1073741824 %ptridx, ptr align 8 %18, i64 %20, i1 false)
   %21 = load i64, ptr %memberidx3, align 4
   %22 = add i64 %6, %21
   %23 = load ptr, ptr %nbuff, align 8
@@ -994,7 +994,7 @@ if.entry:                                         ; preds = %3
   %27 = load i64, ptr %memberidx1, align 4
   %28 = sub i64 %27, %25
   %29 = mul i64 %28, ptrtoint (ptr getelementptr (i8, ptr null, i32 1) to i64)
-  call void @llvm.memcpy.p0.p0.i64(ptr align 2147483648 %ptridx9, ptr align 2147483648 %ptridx14, i64 %29, i1 false)
+  call void @llvm.memcpy.p0.p0.i64(ptr align 1073741824 %ptridx9, ptr align 1073741824 %ptridx14, i64 %29, i1 false)
   %30 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%string, ptr null, i32 1) to i32))
   %31 = load ptr, ptr %nbuff, align 8
   %32 = load i64, ptr %nlen, align 4
@@ -1046,7 +1046,7 @@ define ptr @string___adda__(ptr %0, ptr %1) {
   %11 = load ptr, ptr %memberidx6, align 8
   %12 = load i64, ptr %memberidx1, align 4
   %13 = mul i64 %12, ptrtoint (ptr getelementptr (i8, ptr null, i32 1) to i64)
-  call void @llvm.memcpy.p0.p0.i64(ptr align 2147483648 %10, ptr align 8 %11, i64 %13, i1 false)
+  call void @llvm.memcpy.p0.p0.i64(ptr align 1073741824 %10, ptr align 8 %11, i64 %13, i1 false)
   store i64 %5, ptr %memberidx, align 4
   ret ptr %0
 }
@@ -3024,7 +3024,7 @@ ifend:                                            ; preds = %while.entry
   %12 = getelementptr inbounds i8, ptr %10, i64 %11
   %13 = load i64, ptr %read_len, align 4
   %14 = mul i64 %13, ptrtoint (ptr getelementptr (i8, ptr null, i32 1) to i64)
-  call void @llvm.memcpy.p0.p0.i64(ptr align 2147483648 %12, ptr align 2147483648 %buffer, i64 %14, i1 false)
+  call void @llvm.memcpy.p0.p0.i64(ptr align 1073741824 %12, ptr align 1073741824 %buffer, i64 %14, i1 false)
   br label %while.entry
 }
 
@@ -32898,7 +32898,7 @@ define ptr @CodeGen_get_string_val(ptr %0, ptr %1, ptr %2, ptr %3, ptr %4, i64 %
   br i1 %7, label %if.entry, label %ifend
 
 common.ret:                                       ; preds = %ifend41, %if.entry39, %for.end, %if.entry13, %if.entry4, %if.entry
-  %common.ret.op = phi ptr [ %13, %if.entry ], [ %21, %if.entry4 ], [ %48, %if.entry13 ], [ %89, %for.end ], [ %115, %if.entry39 ], [ %2, %ifend41 ]
+  %common.ret.op = phi ptr [ %13, %if.entry ], [ %21, %if.entry4 ], [ %48, %if.entry13 ], [ %94, %for.end ], [ %120, %if.entry39 ], [ %2, %ifend41 ]
   ret ptr %common.ret.op
 
 if.entry:                                         ; preds = %6
@@ -33038,80 +33038,85 @@ for.body:                                         ; preds = %for.cond
   %70 = add i64 %5, 1
   %71 = call ptr @CodeGen_get_string_val(ptr %0, ptr %1, ptr %68, ptr %69, ptr %4, i64 %70)
   store ptr %71, ptr %arg, align 8
-  %72 = call ptr @LLVMTypeOf(ptr %71)
-  %73 = call i64 @LLVMGetTypeKind(ptr %72)
-  %74 = icmp eq i64 %73, 12
+  %72 = load ptr, ptr %field_ty, align 8
+  %73 = call i1 @is_object(ptr %72)
+  %74 = xor i1 %73, true
   %75 = load ptr, ptr %arg, align 8
-  %76 = call i1 @LLVMIsGlobalConstant(ptr %75)
-  %77 = xor i1 %76, true
-  %78 = and i1 %74, %77
-  br i1 %78, label %if.entry27, label %ifend29
+  %76 = call ptr @LLVMTypeOf(ptr %75)
+  %77 = call i64 @LLVMGetTypeKind(ptr %76)
+  %78 = icmp eq i64 %77, 12
+  %79 = and i1 %74, %78
+  %80 = load ptr, ptr %arg, align 8
+  %81 = call i1 @LLVMIsGlobalConstant(ptr %80)
+  %82 = xor i1 %81, true
+  %83 = and i1 %79, %82
+  br i1 %83, label %if.entry27, label %ifend29
 
 for.end:                                          ; preds = %for.cond
   tail call void @free(ptr %59)
-  %79 = load ptr, ptr %str_builder, align 8
-  %80 = load ptr, ptr %79, align 8
-  %memberidx35 = getelementptr inbounds <{ ptr, ptr, ptr, ptr }>, ptr %80, i32 0, i32 1
-  %81 = load ptr, ptr %memberidx35, align 8
-  %82 = call ptr @string_from_bytes(ptr @372, i64 1)
-  call void %81(ptr %79, ptr %82)
+  %84 = load ptr, ptr %str_builder, align 8
+  %85 = load ptr, ptr %84, align 8
+  %memberidx35 = getelementptr inbounds <{ ptr, ptr, ptr, ptr }>, ptr %85, i32 0, i32 1
+  %86 = load ptr, ptr %memberidx35, align 8
+  %87 = call ptr @string_from_bytes(ptr @372, i64 1)
+  call void %86(ptr %84, ptr %87)
   %result36 = alloca ptr, align 8
-  %83 = load ptr, ptr %str_builder, align 8
-  %84 = load ptr, ptr %83, align 8
-  %memberidx37 = getelementptr inbounds <{ ptr, ptr, ptr, ptr }>, ptr %84, i32 0, i32 3
-  %85 = load ptr, ptr %memberidx37, align 8
-  %86 = call ptr %85(ptr %83)
-  %87 = load ptr, ptr %fmt_args, align 8
-  %88 = call ptr @CodeGen_codegen_safe_fmt_string(ptr %0, ptr %1, ptr %86, ptr %87, ptr null)
-  store ptr %88, ptr %result36, align 8
-  call void @Array_LLVMValueRef____sl__(ptr %4, ptr %88)
-  %89 = load ptr, ptr %result36, align 8
+  %88 = load ptr, ptr %str_builder, align 8
+  %89 = load ptr, ptr %88, align 8
+  %memberidx37 = getelementptr inbounds <{ ptr, ptr, ptr, ptr }>, ptr %89, i32 0, i32 3
+  %90 = load ptr, ptr %memberidx37, align 8
+  %91 = call ptr %90(ptr %88)
+  %92 = load ptr, ptr %fmt_args, align 8
+  %93 = call ptr @CodeGen_codegen_safe_fmt_string(ptr %0, ptr %1, ptr %91, ptr %92, ptr null)
+  store ptr %93, ptr %result36, align 8
+  call void @Array_LLVMValueRef____sl__(ptr %4, ptr %93)
+  %94 = load ptr, ptr %result36, align 8
   br label %common.ret
 
 if.entry27:                                       ; preds = %for.body
-  %90 = load ptr, ptr %arg, align 8
-  call void @Array_LLVMValueRef____sl__(ptr %4, ptr %90)
+  %95 = load ptr, ptr %arg, align 8
+  call void @Array_LLVMValueRef____sl__(ptr %4, ptr %95)
   br label %ifend29
 
 ifend29:                                          ; preds = %for.body, %if.entry27
-  %91 = load ptr, ptr %fmt_args, align 8
-  %92 = load ptr, ptr %arg, align 8
-  call void @Array_LLVMValueRef____sl__(ptr %91, ptr %92)
-  %93 = load ptr, ptr %str_builder, align 8
-  %94 = load ptr, ptr %93, align 8
-  %memberidx30 = getelementptr inbounds <{ ptr, ptr, ptr, ptr }>, ptr %94, i32 0, i32 1
-  %95 = load ptr, ptr %memberidx30, align 8
-  %96 = load ptr, ptr %field_bucket, align 8
-  %memberidx31 = getelementptr inbounds %Bucket_string_PropId_, ptr %96, i32 0, i32 1
-  %97 = load ptr, ptr %memberidx31, align 8
-  %98 = load ptr, ptr %97, align 8
-  %memberidx32 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %98, i32 0, i32 5
-  %99 = load ptr, ptr %memberidx32, align 8
-  %100 = call ptr %99(ptr %97)
-  %101 = load ptr, ptr %field_ty, align 8
-  %102 = call ptr @get_format_from_type(ptr %101)
+  %96 = load ptr, ptr %fmt_args, align 8
+  %97 = load ptr, ptr %arg, align 8
+  call void @Array_LLVMValueRef____sl__(ptr %96, ptr %97)
+  %98 = load ptr, ptr %str_builder, align 8
+  %99 = load ptr, ptr %98, align 8
+  %memberidx30 = getelementptr inbounds <{ ptr, ptr, ptr, ptr }>, ptr %99, i32 0, i32 1
+  %100 = load ptr, ptr %memberidx30, align 8
+  %101 = load ptr, ptr %field_bucket, align 8
+  %memberidx31 = getelementptr inbounds %Bucket_string_PropId_, ptr %101, i32 0, i32 1
+  %102 = load ptr, ptr %memberidx31, align 8
   %103 = load ptr, ptr %102, align 8
-  %memberidx33 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %103, i32 0, i32 5
-  %104 = load ptr, ptr %memberidx33, align 8
+  %memberidx32 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %103, i32 0, i32 5
+  %104 = load ptr, ptr %memberidx32, align 8
   %105 = call ptr %104(ptr %102)
-  %106 = alloca ptr, align 8
-  %107 = call i64 (ptr, ptr, ...) @asprintf(ptr %106, ptr @371, ptr %100, ptr %105)
-  %108 = load ptr, ptr %106, align 8
-  %109 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%string, ptr null, i32 1) to i32))
-  call void @string_constructor(ptr %109, ptr %108, i64 %107)
-  tail call void @free(ptr %100)
+  %106 = load ptr, ptr %field_ty, align 8
+  %107 = call ptr @get_format_from_type(ptr %106)
+  %108 = load ptr, ptr %107, align 8
+  %memberidx33 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %108, i32 0, i32 5
+  %109 = load ptr, ptr %memberidx33, align 8
+  %110 = call ptr %109(ptr %107)
+  %111 = alloca ptr, align 8
+  %112 = call i64 (ptr, ptr, ...) @asprintf(ptr %111, ptr @371, ptr %105, ptr %110)
+  %113 = load ptr, ptr %111, align 8
+  %114 = tail call ptr @malloc(i32 ptrtoint (ptr getelementptr (%string, ptr null, i32 1) to i32))
+  call void @string_constructor(ptr %114, ptr %113, i64 %112)
   tail call void @free(ptr %105)
-  call void %95(ptr %93, ptr %109)
-  %110 = load ptr, ptr %tmp_it, align 8
-  %111 = load ptr, ptr %110, align 8
-  %112 = load ptr, ptr %111, align 8
-  %113 = call ptr %112(ptr %110)
-  store ptr %113, ptr %field_bucket, align 8
+  tail call void @free(ptr %110)
+  call void %100(ptr %98, ptr %114)
+  %115 = load ptr, ptr %tmp_it, align 8
+  %116 = load ptr, ptr %115, align 8
+  %117 = load ptr, ptr %116, align 8
+  %118 = call ptr %117(ptr %115)
+  store ptr %118, ptr %field_bucket, align 8
   br label %for.cond
 
 if.entry39:                                       ; preds = %ifend3
-  %114 = call ptr @string_from_bytes(ptr @373, i64 10)
-  %115 = call ptr @CodeGen_createGlobalLLVMString(ptr %0, ptr %1, ptr %114)
+  %119 = call ptr @string_from_bytes(ptr @373, i64 10)
+  %120 = call ptr @CodeGen_createGlobalLLVMString(ptr %0, ptr %1, ptr %119)
   br label %common.ret
 
 ifend41:                                          ; preds = %ifend3

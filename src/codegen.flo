@@ -322,7 +322,7 @@ class CodeGen {
                 let field_ty = get_class_prop_type(this.program, field_bucket.value)
                 let member_val = this.get_member_with_name(builder, llvm_val, val_ty as ObjectType, field_bucket.key)
                 let arg = this.get_string_val(builder, member_val, field_ty, malloc_list, depth + 1)
-                if LLVMGetTypeKind(LLVMTypeOf(arg)) == LLVMTypeKind.LLVMPointerTypeKind and !LLVMIsGlobalConstant(arg) {
+                if !is_object(field_ty) and LLVMGetTypeKind(LLVMTypeOf(arg)) == LLVMTypeKind.LLVMPointerTypeKind and !LLVMIsGlobalConstant(arg) {
                     malloc_list << arg
                 }
                 fmt_args << arg
