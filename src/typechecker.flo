@@ -576,12 +576,12 @@ class ScopeId {
 }
 class Scope {
     public id: ScopeId
-    public vars: Map<string, VarId>
-    public classes: Map<string, ClassId>
-    public functions: Map<string, VarId>
-    public enums: Map<string, EnumId>
+    public vars: [string: VarId]
+    public classes: [string: ClassId]
+    public functions: [string: VarId]
+    public enums: [string: EnumId]
     public parent: ScopeId
-    public type_aliases: Map<string, Type>
+    public type_aliases: [string: Type]
     constructor(this, module_id: int, id: int){
         this.id = new ScopeId(module_id, id)
         this.vars = new Map<string, VarId>()
@@ -663,8 +663,8 @@ class Class {
     construct: PropId
     fields: ClassField[]
     methods: ClassMethod[]
-    prop_map: Map<string, PropId>
-    static_prop_map: Map<string, PropId>
+    prop_map: [string: PropId]
+    static_prop_map: [string: PropId]
     inherited_methods_num: int
     inherited_fields_num: int
     is_abstract: bool
@@ -689,7 +689,7 @@ class Enum {
     id: EnumId
     name: string
     fields: EnumField[]
-    field_map: Map<string, PropId>
+    field_map: [string: PropId]
     constructor(this){
         this.fields = []
     }
@@ -925,7 +925,7 @@ class TypeChecker {
     private compiler: Compiler
     private in_loop: bool
     private module_contains_generics: bool
-    private generic_templates: Map<string, Generic>
+    private generic_templates: [string: Generic]
     constructor(this, compiler: Compiler){
         this.compiler = compiler
         this.current_module = -1

@@ -22,7 +22,7 @@ class Compiler {
     public builtin_path: string
     private files: FloFile []
     public errors: FloError []
-    private file_ids: Map<string, FileId>
+    private file_ids: [string: FileId]
     constructor(this){
         this.files = []
         this.current_file = null

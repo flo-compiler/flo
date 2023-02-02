@@ -15,9 +15,9 @@ class IntrinsicResult {
 }
 class CGClassType  {
     llvm_type: LLVMTypeRef
-    vt_methods_pos_map: Map<string, int>
-    fields_pos_map: Map<string, int>
-    static_props_map: Map<string, LLVMValueRef>
+    vt_methods_pos_map: [string: int]
+    fields_pos_map: [string: int]
+    static_props_map: [string: LLVMValueRef]
     vtable: LLVMValueRef
     vtable_type: LLVMTypeRef
     class_constructor: LLVMValueRef
@@ -31,7 +31,7 @@ class CGClassType  {
 }
 class CGEnumType {
     llvm_type: LLVMTypeRef
-    field_map: Map<string, LLVMValueRef> 
+    field_map: [string: LLVMValueRef]
     constructor(this){
         this.field_map = new Map<string, LLVMValueRef>()
     }
@@ -98,11 +98,11 @@ class CodeGen {
     private continue_bb: LLVMBasicBlockRef
     private program: Program
     private in_static_ctx: bool
-    private global_var_scope: Map<string, LLVMValueRef>
-    private global_string_scope: Map<string, LLVMValueRef>
-    private global_class_scope: Map<string, CGClassType>
-    private global_enum_scope: Map<string, CGEnumType>
-    private super_functions: Map<string, LLVMValueRef>
+    private global_var_scope: [string: LLVMValueRef]
+    private global_string_scope: [string: LLVMValueRef]
+    private global_class_scope: [string: CGClassType]
+    private global_enum_scope: [string: CGEnumType]
+    private super_functions: [string: LLVMValueRef]
     constructor(this, program: Program, module_name: string){
         this.program = program
         this.global_var_scope = new Map<string, LLVMValueRef>()
