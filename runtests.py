@@ -36,7 +36,8 @@ def main():
         print("---------------------------------------------")
     print(f"Test Suites: \033[31;1m{failed_test_suits} failed\033[0m, \033[32;1m{passed_test_suits} passed\033[0m, {passed_test_suits+failed_test_suits} total")
     print(f"Tests:       \033[31;1m{failed_tests} failed\033[0m, \033[32;1m{passed_tests} passed\033[0m, {passed_tests+failed_tests} total")
-
+    if failed_test_suits > 0:
+        exit(1)
 def parse_return_code(filename):
      with open(filename) as f:
         first_line = f.readline()
