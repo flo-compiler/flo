@@ -1234,7 +1234,6 @@ class TypeChecker {
         if generic == null return null
         let generic_params = generic.template.generic_parameters
         if generic_params.length != types.length {
-            let buckets = this.generic_templates.get_buckets()
             this.error(ErrorKind.TYPE, "Generic expects $(generic_params.length) parameters but got $(types.length)", null)
             return null
         }
