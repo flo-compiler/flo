@@ -1,4 +1,3 @@
-import "@flo/collections/map"
 import panic in "utils"
 import "typechecker"
 import "llvm/types"
@@ -140,22 +139,22 @@ class CodeGen {
         return new GeneratedModule(codegen.module)
     }
     private get_var_from_varid(this, var_id: VarId): LLVMValueRef{
-        return this.global_var_scope.get(create_var_key(var_id))
+        return this.global_var_scope[create_var_key(var_id)]
     }
     private get_class_from_typeid(this, type_id: TypeId): CGClassType {
-        return this.global_class_scope.get(create_type_id_key(type_id))
+        return this.global_class_scope[create_type_id_key(type_id)]
     }
     private get_enum_from_typeid(this, type_id: TypeId): CGEnumType {
-        return this.global_enum_scope.get(create_type_id_key(type_id))
+        return this.global_enum_scope[create_type_id_key(type_id)]
     }
     private add_class(this, type_id: TypeId, struct_class: CGClassType){
-        this.global_class_scope.set(create_type_id_key(type_id), struct_class)
+        this.global_class_scope[create_type_id_key(type_id)] = struct_class
     }
     private add_enum(this, type_id: TypeId, enum_type: CGEnumType){
-        this.global_enum_scope.set(create_type_id_key(type_id), enum_type)
+        this.global_enum_scope[create_type_id_key(type_id)] = enum_type
     }
     private add_var(this, var_id: VarId, value: LLVMValueRef){
-        this.global_var_scope.set(create_var_key(var_id), value)
+        this.global_var_scope[create_var_key(var_id)] = value
     }
     private neg_int(builder: LLVMBuilderRef, val: LLVMValueRef): LLVMValueRef {
         return LLVMIsConstant(val) ? LLVMConstNeg(val) : LLVMBuildNeg(builder, val, "")
@@ -273,10 +272,10 @@ class CodeGen {
         return LLVMBuildCall2(builder, memcmp.fnc_type, memcmp.call, args.buffer, args.length, "")
     }
     private createGlobalLLVMString(this, builder: LLVMBuilderRef, str_value: string): LLVMValueRef {
-        let str = this.global_string_scope.get(str_value)
+        let str = this.global_string_scope[str_value]
         if str == null {
             str = LLVMBuildGlobalString(builder, str_value.to_cstring(), "")
-            this.global_string_scope.set(str_value, str)
+            this.global_string_scope[str_value] = str
         }
         return str
     }
@@ -487,7 +486,7 @@ class CodeGen {
         let is_function_type = member_expr.value_type.kind == TypeKind.FNC
         let prop_id_key = create_prop_key(member_expr.member_id)
         let struct_type = struct_class.llvm_type
-        let method = struct_class.static_props_map.get(prop_id_key)
+        let method = struct_class.static_props_map[prop_id_key]
         if method != null return method
         if ptr == null {
             ptr = this.codegen_expression(builder, member_expr.expression)
@@ -495,12 +494,12 @@ class CodeGen {
         let indices: LLVMValueRef[] = [LLVMConstInt(LLVMInt32Type(), 0, false)] 
         if !is_function_type {
             let vtoffset = struct_class.vtable_type == null ? 0 : 1
-            indices << LLVMConstInt(LLVMInt32Type(), struct_class.fields_pos_map.get(prop_id_key) + vtoffset as i64, false)
+            indices << LLVMConstInt(LLVMInt32Type(), struct_class.fields_pos_map[prop_id_key] + vtoffset as i64, false)
         } else {
             indices << LLVMConstInt(LLVMInt32Type(), 0, false)
             ptr = LLVMBuildInBoundsGEP2(builder, struct_type, ptr, indices.buffer, indices.length, "")
             ptr = LLVMBuildLoad2(builder, LLVMPointerType(struct_class.vtable_type), ptr, "")
-            indices[1] = LLVMConstInt(LLVMInt32Type(), struct_class.vt_methods_pos_map.get(prop_id_key) as i64, false)
+            indices[1] = LLVMConstInt(LLVMInt32Type(), struct_class.vt_methods_pos_map[prop_id_key] as i64, false)
             struct_type = struct_class.vtable_type
         }
         return LLVMBuildInBoundsGEP2(builder, struct_type, ptr, indices.buffer, indices.length, "memberidx")
@@ -516,7 +515,7 @@ class CodeGen {
     }
     private get_member_mem_with_name(this, builder: LLVMBuilderRef, val: LLVMValueRef, obj_type: ObjectType, name: string): LLVMValueRef {
         let obj_class = get_class_from_type(this.program, obj_type)
-        let prop_id = obj_class.prop_map.get(name)
+        let prop_id = obj_class.prop_map[name]
         let prop_ty = get_class_prop_type(this.program, prop_id)
         let member_expr: MemberExpression(null, prop_id, prop_ty) //TODO: Put it on the stack instead.
         return this.get_member_expr_mem(builder, member_expr, val)
@@ -766,7 +765,7 @@ class CodeGen {
         if func == null {
             if call_exp.callee.expr_kind == ExpressionKind.ACCESS {
                 let super_id = (call_exp.callee as VarAccessExpression).value_id
-                let this_param = this.super_functions.get(create_var_key(super_id))
+                let this_param = this.super_functions[create_var_key(super_id)]
                 if this_param != null {
                     args << this_param
                     arg_types << LLVMPointerType(LLVMInt8Type())
@@ -827,7 +826,7 @@ class CodeGen {
             if struct_class == null {
                 panic("this should not happen; (codegen_member_exp); class")
             }
-            let prop = struct_class.static_props_map.get(prop_id_key)
+            let prop = struct_class.static_props_map[prop_id_key]
             if prop == null {
                 panic("This should never happen; (codegen_member_expr; class prop)")
             }
@@ -840,12 +839,12 @@ class CodeGen {
              if enum_type == null {
                 panic("this should not happen; (codegen_member_exp); enum")
             }
-            return enum_type.field_map.get(prop_id_key)
+            return enum_type.field_map[prop_id_key]
         }
         return null
     }
     private codegen_string_to_cstring(this, builder: LLVMBuilderRef, value: LLVMValueRef): LLVMValueRef {
-        let string_class_id = this.program.modules[0].scopes[0].classes.get("string")
+        let string_class_id = this.program.modules[0].scopes[0].classes["string"]
         let string_obj_ty: ObjectType(string_class_id)
         let prop_ty = get_class_prop_type_with_name(this.program, string_obj_ty, "to_cstring")
         let func = this.get_member_with_name(builder, value, string_obj_ty, "to_cstring")
@@ -1123,7 +1122,7 @@ class CodeGen {
         for method in checked_class.methods {
             if method.is_abstract continue
             let prop_id_key = create_prop_key(method.id)
-            let llvm_fnc = struct_class.static_props_map.get(prop_id_key)
+            let llvm_fnc = struct_class.static_props_map[prop_id_key]
             let is_constructor = method.name == "constructor"
             llvm_fnc = LLVMGetNamedFunction(this.module, "$(checked_class.name)_$(method.name)".to_cstring())
             let entry_block = LLVMAppendBasicBlock(llvm_fnc, "")
@@ -1134,7 +1133,7 @@ class CodeGen {
                 let object_type = LLVMPointerType(struct_class.llvm_type)
                 let this_param = LLVMGetParam(llvm_fnc, 0)
                 let this_alloc = LLVMBuildAlloca(func_builder, object_type, "this")
-                let this_id = get_scope(this.program, method.scope).vars.get("this")
+                let this_id = get_scope(this.program, method.scope).vars["this"]
                 LLVMBuildStore(func_builder, this_param, this_alloc)
                 this.add_var(this_id, this_alloc)
                 if is_constructor {
@@ -1145,13 +1144,13 @@ class CodeGen {
                     }
                     let parent_ty = checked_class.parent as ObjectType
                     if parent_ty != null {
-                        let super_id = get_scope(this.program, method.scope).vars.get("super")
+                        let super_id = get_scope(this.program, method.scope).vars["super"]
                         if super_id != null {
                             let super_constructor = this.get_or_codegen_class_from_typeid(parent_ty.class_id).class_constructor
                             let super_ptr = LLVMBuildAlloca(func_builder, object_type, "super")
                             LLVMBuildStore(func_builder, super_constructor, super_ptr)
                             this.add_var(super_id, super_ptr)
-                            this.super_functions.set(create_var_key(super_id), this_param)
+                            this.super_functions[create_var_key(super_id)] = this_param
                         }
                     }
                 }
@@ -1190,7 +1189,7 @@ class CodeGen {
                 let global_prop_initializer = this.codegen_expression(null, checked_class.fields[prop_id.id].initializer)
                 LLVMSetInitializer(static_prop_value, global_prop_initializer)
             }
-            struct_class.static_props_map.set(prop_id_key, static_prop_value)
+            struct_class.static_props_map[prop_id_key] = static_prop_value
         }
     }
     private declare_class_props(this, struct_class: CGClassType, checked_class: Class, prop_types: LLVMTypeRef[]){
@@ -1206,7 +1205,7 @@ class CodeGen {
             let prop_index = get_vtable_index(this.program, prop_id)
             if prop_id.kind == PropIdKind.FIELD {
                 let field_type = this.codegen_type(prop_type)
-                struct_class.fields_pos_map.set(prop_id_key, prop_index)
+                struct_class.fields_pos_map[prop_id_key] = prop_index
                 resize_type_array(field_types, prop_index)
                 field_types[prop_index] = field_type
             } else {
@@ -1225,7 +1224,7 @@ class CodeGen {
                         llvm_method_val = this.declare_method("$(checked_class.name)_$prop_name", llvm_method_type)
                     }
                     if (get_class_prop_visibility(this.program, prop_id) == ACCESS_ATTR.PRIVATE){ 
-                        struct_class.static_props_map.set(prop_id_key, llvm_method_val)
+                        struct_class.static_props_map[prop_id_key] = llvm_method_val
                         continue
                     }
                 } else {
@@ -1236,7 +1235,7 @@ class CodeGen {
                         panic("This should not happen: could not find function $(prop_owner.name)_$prop_name (declare_class_props)")
                     }
                 }
-                struct_class.vt_methods_pos_map.set(prop_id_key, prop_index)
+                struct_class.vt_methods_pos_map[prop_id_key] = prop_index
                 if !prop_owner.methods[prop_id.id].is_abstract {
                     resize_value_array(vtable_values, prop_index)
                     vtable_values[prop_index] = llvm_method_val
@@ -1293,7 +1292,7 @@ class CodeGen {
         }
         for enum_field in checked_enum.fields {
             let prop_id = enum_field.id
-            enum_type.field_map.set(create_prop_key(prop_id), this.codegen_expression(null, enum_field.initializer))
+            enum_type.field_map[create_prop_key(prop_id)] = this.codegen_expression(null, enum_field.initializer)
         }
         this.add_enum(checked_enum.id, enum_type)
     }

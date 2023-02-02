@@ -50,9 +50,9 @@ The type of 8 and 7 are infered as `i8` using the type inference at function cal
 - [ ] Optional chaining `a?.b?.c`
 - [ ] Multiple assignemt/destructing
 ```
-let (a, b, c) = (5, 6, 7)
+let {a, b, c} = {5, 6, 7}
 // or
-let (a, b, c) = [5, 6, 7]
+let {a, b, c} = [5, 6, 7]
 ```
 ## Strings
 ### Two types of strings:
@@ -113,7 +113,25 @@ names << "Josh"
 ```
 let a = [1..100]
 ```
+## Maps
+- [x] Intialization
+```
+let map: Map<string, int> = ["foo": 34, "bar": 36, "zoo": 55]
+// or
+let map: [string: int] = ["foo": 34, "bar": 36, "zoo": 55]
+// or 
+let map = ["foo": 34, "bar": 36, "zoo": 55]
+```
+The empty map must have a type annotation
 
+- [x] Adding to map
+```
+map["anny"] = 70
+```
+- [x] Getting from dictionary (returns null if value was not found)
+```
+let age = map["bar"]
+```
 ## Conditionals
 - [x] `if`/`else`
 ```
@@ -191,15 +209,15 @@ let result = sum(y: 6, x: 5)
 ## Tuples
 - [ ] Creating tuples
 ```
-let items: (int, float, bool) = (1, 1.0, true)
+let items: {int, float, bool} = {1, 1.0, true}
 // or 
-let items = (1, 1.0, true)
+let items = {1, 1.0, true}
 ```
 - [ ] Named tuples
 ```
-let numerics: (x: int, y: int) = (x: 0, y: 1.0)
+let numerics: {x: int, y: int} = {x: 0, y: 1.0}
 // or
-let numerics = (x: 0, y: 1.0)
+let numerics = {x: 0, y: 1.0}
 ```
 - [ ] Accessing tuples
 ```
@@ -291,7 +309,7 @@ class Number {
 ```
 - [ ] Object Literal Intialization as named tuples. (Also should work on function return and parameter passing)
 ```
-chef: Chef = (specialty: "cake")
+chef: Chef = {specialty: "cake"}
 ```
 - [x] Class containing methods without body are considered an abstract class/interface (Objects of that class cannot be created but other classes can inherit that class and implement those methods).
 ```
@@ -450,7 +468,7 @@ These **will** not work
 ## Error Handling
 - [ ] Using destructing
 ```
-let (result, error) = io_operation()
+let {result, error} = io_operation()
 ```
 - [ ] Using Optional chaining
 ```

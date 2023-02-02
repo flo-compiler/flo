@@ -1,14 +1,4 @@
-const STDIN = 0
-const STDERR = 2
-/* c standart library functions:*/
-/*@extern*/
-fnc memcmp(ptr1: i8*, ptr2: i8*, len: int): int
-/*@extern*/
-fnc memcpy(ptr1: i8*, ptr2: i8*, len: int): int
-/*@extern*/
-fnc memset(ptr1: i8*, c: int, len: int)
 /* IO */
-fnc read(fd: int, buff: i8*, size: int): int 
 fnc open(filename: i8*, flags: int): int 
 fnc close(fd: int): int 
 fnc lstat(filename: i8*, stat_struct: i8*): int 

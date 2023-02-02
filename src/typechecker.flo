@@ -1,4 +1,3 @@
-import "@flo/collections/map"
 import "@flo/path/path"
 import "types"
 import Compiler in "compiler"
@@ -771,7 +770,7 @@ fnc get_class_prop_type(program: Program, prop_id: PropId): Type {
 fnc get_class_prop_type_with_name(program: Program, obj_ty: ObjectType, name: string): Type {
     let obj_class = get_class_from_type(program, obj_ty)
     if (obj_class == null) return null 
-    let prop_id = obj_class.prop_map.get(name)
+    let prop_id = obj_class.prop_map[name]
     if (prop_id == null) return null 
     return get_class_prop_type(program, prop_id)
 }
@@ -831,6 +830,7 @@ fnc is_operator_overload_name(name: string): bool {
     if name == "__mod__" return true
     if name == "__powa__" return true
     if name == "__moda__" return true
+    if name == "__iter__" return true
     return false
 }
 fnc bin_op_to_op_overload_name(op: BinaryOp): string {
@@ -1077,9 +1077,9 @@ class TypeChecker {
         let current_scope = this.get_current_scope()
         let value: VarId = null
         while value == null {
-            value = current_scope.vars.get(name)
+            value = current_scope.vars[name]
             if value == null
-                value = current_scope.functions.get(name)
+                value = current_scope.functions[name]
             if current_scope.parent == null or value != null
                 break
             current_scope = get_scope(this.program, current_scope.parent)
@@ -1107,15 +1107,15 @@ class TypeChecker {
     private get_type_from_current_scope(this, name: string): Type {
         let current_scope = this.get_current_scope()
         while true {
-            let aliased_ty = current_scope.type_aliases.get(name)
+            let aliased_ty = current_scope.type_aliases[name]
             if aliased_ty != null {
                 return aliased_ty
             }
-            let class_id = current_scope.classes.get(name)
+            let class_id = current_scope.classes[name]
             if class_id != null {
                 return new ObjectType(class_id)
             }
-            let enum_id = current_scope.enums.get(name)
+            let enum_id = current_scope.enums[name]
             if enum_id != null {
                 return new EnumType(enum_id)
             }
@@ -1171,9 +1171,9 @@ class TypeChecker {
         this.current_module = this.program.modules.length
         this.program.modules << module
         let module_scope = this.create_scope()
-        module_scope.vars.set("true", null)
-        module_scope.vars.set("false", null)
-        module_scope.vars.set("null", null)
+        module_scope.vars["true"] = null
+        module_scope.vars["false"] = null
+        module_scope.vars["null"] = null
         this.current_scope = module_scope.id
         this.current_method = null
         this.current_class = null
@@ -1198,7 +1198,7 @@ class TypeChecker {
                 this.error(ErrorKind.NAME, "Name '$alias_name' has already been used for another type. consider renaming", type_alias_node.name.range)
                 return null
             }
-            module_scope.type_aliases.set(alias_name, ty)
+            module_scope.type_aliases[alias_name] = ty
         }
         for global_const in module_ast.consts {
             this.declare_global_const(global_const)
@@ -1230,7 +1230,7 @@ class TypeChecker {
         return module
     }
     private create_generic_instance_in_module(this, name: string, types: Type[]): GenericType {
-        let generic = this.generic_templates.get(name)
+        let generic = this.generic_templates[name]
         if generic == null return null
         let generic_params = generic.template.generic_parameters
         if generic_params.length != types.length {
@@ -1247,7 +1247,7 @@ class TypeChecker {
             let param_name = generic_params[i].name.value
             let param_type: Type = types[i].kind == TypeKind.RESOLVED_GENERIC ? (types[i] as GenericType).instantiated_type : types[i]
             param_strings += "$(this.dump_type(param_type))_"
-            generic_scope.type_aliases.set(param_name, types[i])
+            generic_scope.type_aliases[param_name] = types[i]
         }
         let instantiated_generic_name = "$(name)_$param_strings"
         // TODO: find a way to remove/delete this context appended.
@@ -1275,7 +1275,7 @@ class TypeChecker {
         let id = new VarId(VarIdKind.VAR, this.current_module, current_module.vars.length)
         var.var_id = id
         current_module.vars << var
-        current_scope.vars.set(name, id)
+        current_scope.vars[name] = id
         return var
     }
     private declare_const_within_current_scope(this, name: string, value: Expression, value_type: Type): Const {
@@ -1285,7 +1285,7 @@ class TypeChecker {
         let id = new ConstId(this.current_module, current_module.consts.length)
         constant.const_id = id
         current_module.consts << constant
-        current_scope.vars.set(name, id)
+        current_scope.vars[name] = id
         return constant
     }
     private declare_global_const(this, const_decl_node: ConstDeclarationStatement){
@@ -1306,25 +1306,25 @@ class TypeChecker {
     }
     private add_imported_typealias_to_module(this, alias_name: string, type_: Type){
         let scope = this.get_current_module_global_scope()
-        scope.type_aliases.set(alias_name, type_)
+        scope.type_aliases[alias_name] = type_
     }
     private add_imported_var_to_module(this, var_name: string, var_id: VarId){
         let scope = this.get_current_module_global_scope()
-        scope.vars.set(var_name, var_id)
+        scope.vars[var_name] = var_id
     }
     private add_imported_fnc_to_module(this, fnc_name: string, fnc_id: VarId){
         let scope = this.get_current_module_global_scope()
-        scope.functions.set(fnc_name, fnc_id)
+        scope.functions[fnc_name] = fnc_id
     }
     private add_imported_class_to_module(this, class_name: string, class_id: ClassId){
         let scope = this.get_current_module_global_scope()
-        scope.classes.set(class_name, class_id)
-        scope.vars.set(class_name, new ClassVarId(class_id))
+        scope.classes[class_name] = class_id
+        scope.vars[class_name] = new ClassVarId(class_id)
     }
     private add_imported_enum_to_module(this, enum_name: string, enum_id: EnumId){
         let scope = this.get_current_module_global_scope()
-        scope.enums.set(enum_name, enum_id)
-        scope.vars.set(enum_name, new EnumVarId(enum_id))
+        scope.enums[enum_name] = enum_id
+        scope.vars[enum_name] = new EnumVarId(enum_id)
     }
     private init_function_signature(this, arg_nodes: ArgNode[], return_type_node: TypeNode, args: FunctionArg[]): FunctionType {
         let arg_types: Type[] = []
@@ -1386,30 +1386,30 @@ class TypeChecker {
             for import_identifier in import_node.import_list {
                 let name_to_import = import_identifier.value
                 let renamed_name = name_to_import
-                if this.generic_templates.get(name_to_import) != null {
+                if this.generic_templates[name_to_import] != null {
                     continue
                 }
-                let class_id = global_module_scope.classes.get(name_to_import)
+                let class_id = global_module_scope.classes[name_to_import]
                 if class_id != null {
                     this.add_imported_class_to_module(renamed_name, class_id)
                     continue
                 }
-                let enum_id = global_module_scope.enums.get(name_to_import)
+                let enum_id = global_module_scope.enums[name_to_import]
                 if enum_id != null {
                     this.add_imported_enum_to_module(renamed_name, enum_id)
                     continue
                 }
-                let var_id = global_module_scope.vars.get(name_to_import)
+                let var_id = global_module_scope.vars[name_to_import]
                 if var_id != null {
                     this.add_imported_var_to_module(renamed_name, var_id)
                     continue 
                 }
-                let func_id = global_module_scope.functions.get(name_to_import)
+                let func_id = global_module_scope.functions[name_to_import]
                 if func_id != null {
                     this.add_imported_fnc_to_module(renamed_name, func_id)
                     continue
                 }
-                let type_alias = global_module_scope.type_aliases.get(name_to_import)
+                let type_alias = global_module_scope.type_aliases[name_to_import]
                 if type_alias != null {
                     this.add_imported_typealias_to_module(renamed_name, type_alias)
                     continue
@@ -1459,18 +1459,18 @@ class TypeChecker {
         declared_enum.fields = []
         declared_enum.id = new EnumId(this.current_module, this.get_current_module().enums.length)
         this.get_current_module().enums << declared_enum
-        module_scope.enums.set(declared_enum.name, declared_enum.id)
-        module_scope.vars.set(declared_enum.name, new EnumVarId(declared_enum.id))
+        module_scope.enums[declared_enum.name] = declared_enum.id
+        module_scope.vars[declared_enum.name] = new EnumVarId(declared_enum.id)
     }
     private declare_class_within_module(this, class_decl_node: ClassDeclarationNode) {
         let name = class_decl_node.name.value
-        if (this.get_type_from_current_scope(name).kind != TypeKind.UNKNOWN) or (this.generic_templates.get(name) != null) {
+        if (this.get_type_from_current_scope(name).kind != TypeKind.UNKNOWN) or (this.generic_templates[name] != null) {
             this.error(ErrorKind.NAME, "Name '$name' has already been used for another type. consider renaming", class_decl_node.name.range)
             return
         }
         if class_decl_node.generic_parameters.length > 0 {
             this.module_contains_generics = true
-            this.generic_templates.set(name, new Generic(this.current_module, class_decl_node))
+            this.generic_templates[name] = new Generic(this.current_module, class_decl_node)
             return
         }
         let declared_class = new Class()
@@ -1486,8 +1486,8 @@ class TypeChecker {
         declared_class.name = name
         declared_class.id = new ClassId(this.current_module, this.get_current_module().classes.length)
         this.get_current_module().classes << declared_class
-        module_scope.classes.set(name, declared_class.id)
-        module_scope.vars.set(name, new ClassVarId(declared_class.id))
+        module_scope.classes[name] = declared_class.id
+        module_scope.vars[name] = new ClassVarId(declared_class.id)
     }
     private declare_function_within_module(this, function_node: FunctionDeclarationNode) {
         let declared_function = new Function()
@@ -1512,7 +1512,7 @@ class TypeChecker {
         declared_function.scope = fnc_scope.id
         let module_scope =  this.get_current_module_global_scope()
         this.get_current_module().functions << declared_function
-        module_scope.functions.set(declared_function.name, declared_function.id)
+        module_scope.functions[declared_function.name] = declared_function.id
     }
     private check_enum_body(this, declared_enum: Enum, enum_node: EnumNode){
         let enum_variant: Type = null
@@ -1546,7 +1546,7 @@ class TypeChecker {
                 enum_field.initializer.value_type = enum_variant
                 next_enum_value++
             }
-            declared_enum.field_map.set(enum_name, enum_field.id)
+            declared_enum.field_map[enum_name] = enum_field.id
             declared_enum.fields << enum_field
         }
     }
@@ -1564,7 +1564,7 @@ class TypeChecker {
             field.field_type = this.check_type(field_node.parsed_type)
             field.vtable_index = current_vtable_index
             if this.has_errored() return
-            let possible_prop_id = declared_class.prop_map.get(field.name)
+            let possible_prop_id = declared_class.prop_map[field.name]
             if possible_prop_id != null {
                 if possible_prop_id.type_id == declared_class.id {
                     this.error(ErrorKind.NAME, "Field $(field.name) in class $(declared_class.name) already exists", field_node.name.range)
@@ -1592,14 +1592,29 @@ class TypeChecker {
                     return
                 }
                 field.is_static = true
-                declared_class.static_prop_map.set(field.name, field.id)
+                declared_class.static_prop_map[field.name] = field.id
             } else {
                 field.is_static = false
-                declared_class.prop_map.set(field.name, field.id)
+                declared_class.prop_map[field.name] = field.id
                 current_vtable_index++
             }
             declared_class.fields << field
         }
+    }
+    private is_iteratable(this, suspect_type: Type): bool {
+        //TODO: Need to think about generics
+        if !is_object(suspect_type) return false
+        let class_ = get_class_from_type(this.program, suspect_type)
+        let done_prop_id = class_.prop_map["done"]
+        if (done_prop_id == null) return false
+        let done_type = get_class_prop_type(this.program, done_prop_id)
+        if (done_type.kind != TypeKind.BOOL) return false
+        let next_prop_id = class_.prop_map["next"]
+        if (next_prop_id == null) return false
+        let next_type = get_class_prop_type(this.program, next_prop_id) as FunctionType
+        if (next_type.kind != TypeKind.FNC) return false
+        if (next_type.arg_types.length != 0) return false
+        return true
     }
     private declare_class_methods(this, declared_class: Class, class_node: ClassDeclarationNode){
         let current_vtable_index = declared_class.inherited_methods_num
@@ -1612,7 +1627,12 @@ class TypeChecker {
             this.current_scope = method_scope.id
             method.args = []
             if is_operator_overload_name(name) {
-                let args_num = name == "__setitem__" ? 2 : 1
+                let args_num = 1
+                if name == "__iter__" {
+                    args_num = 0
+                } else if name =="__setitem__" {
+                    args_num = 2
+                }
                 if method_node.args.length != args_num {
                     this.error(ErrorKind.GEN, "Expected $args_num arguments for binary operator overload $name but got $(method_node.args.length)", method_node.name.range)
                     return
@@ -1626,7 +1646,13 @@ class TypeChecker {
             method.is_static = method_node.is_static
             method.visibility = method_node.access_modifier
             method.method_type = this.init_function_signature(method_node.args, method_node.return_type, method.args)
-            let possible_prop_id = declared_class.prop_map.get(name)
+            if name == "__iter__" {
+                if !this.is_iteratable(method.method_type.return_type) {
+                    this.error(ErrorKind.TYPE, "__iter__ method must return an iteratable object {done: bool, next(): any}", method_node.name.range)
+                    return 
+                }
+            }
+            let possible_prop_id = declared_class.prop_map[name]
             if possible_prop_id != null {
                 if possible_prop_id.type_id == declared_class.id {
                     this.error(ErrorKind.NAME, "Method $name in class $(declared_class.name) already exists", method_node.name.range)
@@ -1656,7 +1682,7 @@ class TypeChecker {
                     this.error(ErrorKind.GEN, "Class constructor can't be static", method_node.name.range)
                     return
                 }
-                declared_class.static_prop_map.set(name, method.id)
+                declared_class.static_prop_map[name] = method.id
             } else {
                 if method.name == "constructor" {
                     if method_node.is_abstract {
@@ -1671,7 +1697,7 @@ class TypeChecker {
                         this.error(ErrorKind.GEN, "Can't have a abstract private method use protected instead", method_node.name.range)
                         return
                     }
-                    declared_class.prop_map.set(name, method.id)
+                    declared_class.prop_map[name] = method.id
                 }
                 let object_type = new ObjectType(declared_class.id)
                 let this_const = this.declare_const_within_current_scope("this", null, object_type)
@@ -1698,7 +1724,7 @@ class TypeChecker {
             let parent_prop_name = parent_bucket_prop.key
             let parent_prop_id = parent_bucket_prop.value  
             let parent_prop_type = get_class_prop_type(this.program, parent_prop_id)
-            let child_prop_id = declared_class.prop_map.get(parent_prop_name)
+            let child_prop_id = declared_class.prop_map[parent_prop_name]
             let parent_prop_visibility = get_class_prop_visibility(this.program, parent_prop_id)
             let parent_prop_is_static = is_class_prop_static(this.program, parent_prop_id)
             if parent_prop_is_static
@@ -1710,7 +1736,7 @@ class TypeChecker {
                     declared_class.inherited_fields_num++
                 if parent_prop_id.kind == PropIdKind.METHOD
                     declared_class.inherited_methods_num++
-                declared_class.prop_map.set(parent_prop_name, parent_prop_id)
+                declared_class.prop_map[parent_prop_name] = parent_prop_id
             }
         }
     }
@@ -1953,7 +1979,7 @@ class TypeChecker {
         let op = binary_node.op
         let method_name = bin_op_to_op_overload_name(op)
         let owner_class = get_class_from_type(this.program, left.value_type as ObjectType)
-        let prop_id = owner_class.prop_map.get(method_name)
+        let prop_id = owner_class.prop_map[method_name]
         if prop_id == null {
             return null
         }
@@ -1977,7 +2003,7 @@ class TypeChecker {
             return null
         }
         let owner_class = get_class_from_type(this.program, left.value_type)
-        let prop_id = owner_class.prop_map.get(method_name)
+        let prop_id = owner_class.prop_map[method_name]
         if prop_id == null {
             if op == BinaryOp.EEQ or op == BinaryOp.NEQ {
                 return new BinaryExpression(left, op, this.check_expression(left.value_type, binary_node.rhs), new BooleanType())
@@ -2004,7 +2030,7 @@ class TypeChecker {
     private check_object_setitem_expr(this, object: Expression, binary_node: BinaryExpressionNode): Expression {
         let index_expr_node = binary_node.lhs as ExpressionIndexNode
         let owner_class = get_class_from_type(this.program, object.value_type)
-        let prop_id = owner_class.prop_map.get("__setitem__")
+        let prop_id = owner_class.prop_map["__setitem__"]
         if prop_id == null {
             this.error(ErrorKind.GEN, "No operator overload for index set operator on $(owner_class.name) object please implement method __setitem__ to use in this class", index_expr_node.range)
             return null
@@ -2014,6 +2040,7 @@ class TypeChecker {
         let arg2_type = method_type.arg_types[1]
         if this.has_errored() return null
         let index = this.check_expression(arg1_type, index_expr_node.index)
+        if this.has_errored() return null
         if !this.types_are_eq(arg1_type, index.value_type) {
             this.error(ErrorKind.TYPE, "Expected type '$(this.dump_type(arg1_type))' but got type '$(this.dump_type(index.value_type))'", index_expr_node.index.range)
             return null
@@ -2266,7 +2293,7 @@ class TypeChecker {
                 prop_owner_type = (prop_owner_type as GenericType).instantiated_type
             }
             parent_class = get_class_from_type(this.program, prop_owner_type)
-            prop_id = parent_class.prop_map.get(prop_name)
+            prop_id = parent_class.prop_map[prop_name]
             if (prop_id == null){   
                 this.error(ErrorKind.NAME, "Property '$prop_name' doesn't exist in object of class '$(parent_class.name)'", member_expr_node.member.range)
                 return null
@@ -2281,7 +2308,7 @@ class TypeChecker {
             let var_id = (prop_owner as VarAccessExpression).value_id
             if var_id.kind == VarIdKind.CLASS {
                 parent_class = this.get_class_from_var_id(var_id)
-                prop_id = parent_class.static_prop_map.get(prop_name)
+                prop_id = parent_class.static_prop_map[prop_name]
                 if (prop_id == null) {   
                     this.error(ErrorKind.NAME, "Property '$prop_name' is not a static member in class '$(parent_class.name)", member_expr_node.member.range)
                     return null
@@ -2294,7 +2321,7 @@ class TypeChecker {
                 prop_ty = get_class_prop_type(this.program, prop_id)
             } else {
                 let parent_enum = this.get_enum_from_var_id(var_id)
-                prop_id = parent_enum.field_map.get(prop_name)
+                prop_id = parent_enum.field_map[prop_name]
                 if (prop_id == null) {   
                     this.error(ErrorKind.NAME, "'$prop_name' is not an element of enum the '$(parent_enum.name)'", member_expr_node.member.range)
                     return null
@@ -2344,7 +2371,7 @@ class TypeChecker {
     }
     private check_object_index_expr(this, object: Expression, index_expr_node: ExpressionIndexNode): Expression {
         let owner_class = get_class_from_type(this.program, object.value_type)
-        let prop_id = owner_class.prop_map.get("__getitem__")
+        let prop_id = owner_class.prop_map["__getitem__"]
         if prop_id == null {
             this.error(ErrorKind.GEN, "No operator overload for indexing operator on $(owner_class.name) object please implement method __getitem__ to use indexing in this class", index_expr_node.range)
             return null
@@ -2596,7 +2623,7 @@ class TypeChecker {
                 var_type = value.value_type
             }
         }
-        if current_scope.vars.get(name) != null {
+        if current_scope.vars[name] != null {
             this.error(ErrorKind.NAME, "Illegal re-declaration of already declared variable '$name'", var_decl_node.var_name.range)
             return null
         }
@@ -2606,7 +2633,7 @@ class TypeChecker {
     private check_const_declaration(this, const_decl_stmt: ConstDeclarationStatement): ConstDeclaration {
         let name = const_decl_stmt.const_name.value
         let current_scope = this.get_current_scope()
-        if this.is_constant_in_scope(name) or current_scope.vars.get(name) != null {
+        if this.is_constant_in_scope(name) or current_scope.vars[name] != null {
             this.error(ErrorKind.NAME, "Illegal re-declaration of const '$name'", const_decl_stmt.const_name.range)
             return null
         }
@@ -2649,7 +2676,7 @@ class TypeChecker {
                 return null
             }
             let iterator_class = get_class_from_type(this.program, iterator.value_type)
-            let iter_prop_id = iterator_class.prop_map.get("__iter__")
+            let iter_prop_id = iterator_class.prop_map["__iter__"]
             if iter_prop_id == null {
                 this.error(ErrorKind.TYPE, "Iterator type has to have __iter__ as property", for_stmt_node.iterator.range)
                 return null
@@ -2663,13 +2690,13 @@ class TypeChecker {
             for_stmt.for_in_setup = new VarDeclaration(iterator_name, iteratable_var_id)
 
             let iteratable_class = get_class_from_type(this.program, iteratable_type)
-            let done_prop_id = iteratable_class.prop_map.get("done")
+            let done_prop_id = iteratable_class.prop_map["done"]
             let iteratable_load = new VarAccessExpression(iteratable_var_id, iteratable_type)
             let bool_type = new BooleanType()
             for_stmt.condition = new UnaryExpression(UnaryOp.NOT, new MemberExpression(iteratable_load, done_prop_id, bool_type), bool_type)
             
             let iter_item_name =  for_stmt_node.it_name.value
-            let next_prop_id = iteratable_class.prop_map.get("__next__")
+            let next_prop_id = iteratable_class.prop_map["next"]
             let next_prop_type = get_class_prop_type(this.program, next_prop_id) as FunctionType
             let iter_item_type = next_prop_type.return_type
             let next_item_call = new CallExpression(new MemberExpression(iteratable_load, next_prop_id, next_prop_type), [], iter_item_type)
