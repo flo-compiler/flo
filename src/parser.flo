@@ -496,7 +496,15 @@ class Parser {
             type_node = this.parse_object_type()
         else if this.current_token.ttype == TokType.LPAR
             type_node = this.parse_function_type()
-        else 
+        else if this.current_token.ttype == TokType.LBRACKET {
+            let rec_node = new RecordTypeNode(new IdentifierToken("Map", this.current_token.range) as IdentifierToken, this.current_token.range)
+            this.advance()
+            rec_node.generic_args << this.parse_type()
+            this.eat(TokType.COL)
+            rec_node.generic_args << this.parse_type()
+            this.eat(TokType.RBRACKET)
+            type_node = rec_node
+        } else 
             type_node = this.parse_primitive_type()
         
         while this.current_token.ttype == TokType.LBRACKET or this.current_token.ttype == TokType.MULT and this.can_parse() {
