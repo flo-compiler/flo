@@ -1367,7 +1367,7 @@ class TypeChecker {
         for imported_enum in module.enums {
             this.add_imported_enum_to_module(imported_enum.name, imported_enum.id)
         }
-        for type_bucket in global_module_scope.type_aliases.get_buckets() {
+        for type_bucket in global_module_scope.type_aliases {
             this.add_imported_typealias_to_module(type_bucket.key, type_bucket.value)
         }
     }
@@ -1718,7 +1718,7 @@ class TypeChecker {
             this.error(ErrorKind.TYPE, "Can only inherit from class not type '$(this.dump_type(parent_type))'", class_node.parent.range)
         }
         let parent_class = get_class_from_type(this.program, parent_type)
-        for parent_bucket_prop in parent_class.prop_map.get_buckets() {
+        for parent_bucket_prop in parent_class.prop_map {
             let parent_prop_name = parent_bucket_prop.key
             let parent_prop_id = parent_bucket_prop.value  
             let parent_prop_type = get_class_prop_type(this.program, parent_prop_id)
@@ -1755,7 +1755,7 @@ class TypeChecker {
         this.declare_class_methods(declared_class, class_node)
         if this.has_errored() return
         // Checking if class is abstract.
-        for prop_bucket in declared_class.prop_map.get_buckets() {
+        for prop_bucket in declared_class.prop_map {
             let prop_id = prop_bucket.value
             let prop_name = prop_bucket.key
             if prop_id.kind == PropIdKind.METHOD {
@@ -2054,6 +2054,7 @@ class TypeChecker {
         let is_assign_op = op >= BinaryOp.ASSIGN and op <= BinaryOp.SR_ASSIGN
         if op == BinaryOp.ASSIGN and binary_node.lhs.expr_kind == ExpressionKind.INDEX {
             let possible_obj = this.check_expression(Type.unknown(), (binary_node.lhs as ExpressionIndexNode).expression)
+            if this.has_errored() return null
             if is_object(possible_obj.value_type)
                 return this.check_object_setitem_expr(possible_obj, binary_node) as BinaryExpression
         }

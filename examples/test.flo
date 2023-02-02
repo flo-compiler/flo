@@ -1,4 +1,9 @@
 fnc main(): int {
-    let x: int[2] = [0, 1, 2, 4]
-    return x[0]
+    let map = new Map<string, int>()
+    map["foo"] = 5
+    map["bar"] = 10
+    for bucket in map {
+        println(bucket.key)
+    }
+    return 0
 }

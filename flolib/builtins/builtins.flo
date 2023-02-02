@@ -264,28 +264,23 @@ class ArrayIterator<T> {
     }
 }
 // ----- Map -------
-class Bucket<T, U> {
-    key: T
-    value: U
-    is_empty: bool
-    constructor(this){
-        this.is_empty = true
-    }
-    set(this, key: T, value: U){
-        this.is_empty = false
+class MapEntry<T, U> {
+    public key: T
+    public value: U
+    constructor(this, key: T, value: U){
         this.key = key
         this.value = value
     }
 }
 class Map<T, U> {
-    private buckets: Bucket<T, U>*
-    private length: int
+    private entries: MapEntry<T, U>*
     private size: int
+    public length: int
     constructor(this){
         let initial_capacity = 256
-        this.buckets = new Bucket<T, U>*(initial_capacity)
+        this.entries = new MapEntry<T, U>*(initial_capacity)
         for let i = 0; i < initial_capacity; i++ {
-            this.buckets[i] = new Bucket<T, U>()
+            this.entries[i] = null
         }
         this.size = initial_capacity
         this.length = 0
@@ -299,76 +294,71 @@ class Map<T, U> {
         return hash < 0 ? -hash : hash
     }
     private resize(this){
-        let buckets = this.get_buckets()
+        let old_entries: MapEntry<T, U>*(this.size)
+        let old_size = this.size
+        old_entries.copy_from(this.entries, this.size)
         this.size *= 2
         this.length = 0
-        this.buckets = this.buckets.resize(this.size)
+        this.entries = this.entries.resize(this.size)
         for let i = 0; i < this.size; i++{
-            this.buckets[i] = new Bucket<T, U>()
+            this.entries[i] = null
         }
-        for let i = 0; i < buckets.length; i++ {
-            this.__setitem__(buckets[i].key, buckets[i].value)
+        for let i = 0; i < old_size; i++ {
+            let entry = old_entries[i]
+            if (entry != null) this.__setitem__(entry.key, entry.value)
         }
     }
     private __setitem__(this, key: T, value: U){
         let ratio = this.length / (this.size as float)
         if (ratio > 0.75) this.resize()
         let hash = this.hash_fnc(key) % this.size
-        while !this.buckets[hash].is_empty {
-            if this.buckets[hash].key == key
+        let should_add = true
+        while this.entries[hash] != null {
+            if this.entries[hash].key == key {
+                should_add = false
                 break
+            }
             hash = (hash + 1) % this.size
-        } 
-        this.length++
-        this.buckets[hash].set(key, value)
+        }
+        if should_add {
+            this.length++
+        }
+        this.entries[hash] = new MapEntry<T, U>(key, value)
     }
     private __getitem__(this, key: T): U {
         let hash = this.hash_fnc(key) % this.size
-        while !this.buckets[hash].is_empty {
-            if this.buckets[hash].key == key
+        while this.entries[hash] != null {
+            if this.entries[hash].key == key
                 break
             else
                 hash = (hash + 1) % this.size
         }
-        if !this.buckets[hash].is_empty
-            return this.buckets[hash].value
+        if this.entries[hash] != null
+            return this.entries[hash].value
         return null
     }
     private __iter__(this): MapIterator<T, U> {
-        return new MapIterator<T, U>(this.buckets, this.size, this.length)
-    }
-    public get_buckets(this): Bucket<T, U>[] {
-        let buckets: Bucket<T, U>[] = []
-        for let i = 0; i < this.size; ++i {
-            let current_bucket = this.buckets[i]
-            if !current_bucket.is_empty {
-                buckets << current_bucket
-            }
-        }
-        return buckets  
+        return new MapIterator<T, U>(this.entries, this.size, this.length)
     }
 }
 class MapIterator<T, U> {
-    idx: int
-    done: bool
-    buckets: Bucket<T, U>*
-    size: int
-    length: int
-    constructor(this, buckets: Bucket<T, U>*, size: int, length: int){
-        this.idx = 0
+    private idx: int
+    private done: bool
+    private entries: MapEntry<T, U>*
+    private size: int
+    private length: int
+    constructor(this, entries: MapEntry<T, U>*, size: int, length: int){
+        this.idx = -1
         this.done = false
-        this.buckets = buckets
+        this.entries = entries
         this.size = size
         this.length = length
     }
-    private next(this): Bucket<T, U> {
-        let i = 0
-        for i = this.idx; i < this.size; i++ {
-            if !this.buckets[i].is_empty {
-                break
-            }
+    private next(this): MapEntry<T, U> {
+        for this.idx++; this.idx < this.size; this.idx++ {
+            if (this.entries[this.idx] != null) break
         }
-        this.done = this.idx++ > this.length
-        return this.buckets[i]
+        this.done = this.length-- <= 0
+        return this.entries[this.idx]
     }
 }
