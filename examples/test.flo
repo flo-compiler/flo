@@ -1,5 +1,4 @@
 fnc main(): int {
-    let x = input()
-    eprintln("Inputed: $x")
-    return 1
+    let x: int[2] = [0, 1, 2, 4]
+    return x[0]
 }

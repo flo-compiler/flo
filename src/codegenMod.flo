@@ -29,6 +29,7 @@ class GeneratedModule {
         panic("error: $error")
     }
     public run_passes(this, level: int){
+        if level == 0 return
         let pm = LLVMCreatePassManager()
         let fpm = LLVMCreateFunctionPassManagerForModule(this.llvm_mod)
         let pmb = LLVMPassManagerBuilderCreate()
