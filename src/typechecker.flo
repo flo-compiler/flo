@@ -1249,7 +1249,6 @@ class TypeChecker {
             generic_scope.type_aliases[param_name] = types[i]
         }
         let instantiated_generic_name = "$(name)_$param_strings"
-        // TODO: find a way to remove/delete this context appended.
         let possible_type = this.get_type_from_current_scope(instantiated_generic_name)
         if possible_type.kind == TypeKind.UNKNOWN {
             // TODO: Find a better way to create this initialization.
@@ -1262,6 +1261,8 @@ class TypeChecker {
             this.declare_class_within_module(instantiated_generic_class)
             this.check_class_body(instantiated_generic_class)
             possible_type = this.get_type_from_current_scope(instantiated_generic_name)
+        } else {
+            this.get_current_module().scopes.pop()
         }
         this.current_module = module_id
         this.current_scope = scope_id
