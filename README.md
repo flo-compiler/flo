@@ -127,10 +127,10 @@ if a in 0..11 {
 - [ ] Match Expression.
 ```
 match test {
-    expr1 => result1
-    expr2 => result2
-    expr3 => result3
-    _ => default_result
+    expr1: result1
+    expr2: result2
+    expr3: result3
+    else: default_result
 }
 ```
 
@@ -161,7 +161,7 @@ fnc double(x: int): int {
 - [x] Function with default args
 ```
 // adds two numbers and returns their sum
-fnc add(x: int, y: int = 0): int => {
+fnc add(x: int, y: int = 0): int {
     return x+y
 }
 add(5)
@@ -181,7 +181,7 @@ fnc max(...numbers: int){
 - [ ] Functions with closure (Anonymous functions).
 ```
 fnc main(){
-    let add = (x: int, y: int) => x + y
+    let add = (x: int, y: int) -> x + y
 }
 ```
 - [ ] Named parameters for function calls 
@@ -396,8 +396,8 @@ type Numeric = int or float
 fnc main(){
     let n: Numeric = 5
     match n {
-        int => println("int!")
-        float => println("float!")
+        int: println("int!")
+        float: println("float!")
     }
 }
 ```
@@ -459,8 +459,8 @@ let result = io_operation()?
 - [ ] Using match
 ```
 let result = match io_operation() {
-    Error(e) => println("An error occured")
-    _(result) => result
+    Error(e): println("An error occured")
+    _(result): result
 }
 ```
 

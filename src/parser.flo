@@ -410,9 +410,8 @@ class Parser {
                 this.error("Expected ':'")
             else if token_type == TokType.LPAR 
                 this.error("Expected '('")
-            else if token_type == TokType.RPAR {
+            else if token_type == TokType.RPAR 
                 this.error("Expected ')'")
-            }
             else if token_type == TokType.LBRACE 
                 this.error("Expected '{'")
             else if token_type == TokType.RBRACE 
@@ -424,7 +423,7 @@ class Parser {
             else if token_type == TokType.GT 
                 this.error("Expected '>'")
             else if token_type == TokType.ARROW 
-                this.error("Expected '=>'")
+                this.error("Expected '->'")
         }
         return new Token(TokType.EOF, current_token.range)
     }

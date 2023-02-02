@@ -409,7 +409,7 @@ source_filename = "src/main.flo"
 @126 = private unnamed_addr constant [13 x i8] c"Expected ','\00", align 1
 @127 = private unnamed_addr constant [13 x i8] c"Expected '<'\00", align 1
 @128 = private unnamed_addr constant [13 x i8] c"Expected '>'\00", align 1
-@129 = private unnamed_addr constant [14 x i8] c"Expected '=>'\00", align 1
+@129 = private unnamed_addr constant [14 x i8] c"Expected '->'\00", align 1
 @130 = private unnamed_addr constant [27 x i8] c"Expected a type definition\00", align 1
 @131 = private unnamed_addr constant [6 x i8] c"Array\00", align 1
 @132 = private unnamed_addr constant [29 x i8] c"Expected an Expression value\00", align 1
@@ -4487,8 +4487,8 @@ define internal fastcc ptr @Lexer_lex_token(ptr %0) unnamed_addr {
     i8 9, label %if.entry
   ]
 
-common.ret:                                       ; preds = %false_block.i, %true_block.i, %if.entry6.i912, %if.entry2.i, %if.entry.i909, %ifend5.i, %ifend.i895, %ifend6.i757, %Lexer_advance.exit84.i749, %ifend3.i728, %Lexer_advance.exit.i691, %ifend6.i, %Lexer_advance.exit84.i, %ifend3.i655, %Lexer_advance.exit.i649, %ifend.i628, %Lexer_advance.exit.i620, %ifend3.i591, %Lexer_advance.exit44.i583, %Lexer_advance.exit.i554, %ifend.i441, %Lexer_advance.exit.i433, %ifend.i365, %Lexer_advance.exit.i357, %ifend.i328, %Lexer_advance.exit.i320, %ifend.i291, %Lexer_advance.exit.i290, %ifend3.i269, %Lexer_advance.exit44.i261, %Lexer_advance.exit.i232, %ifend3.i, %Lexer_advance.exit44.i, %Lexer_advance.exit.i, %Array_FloError____sl__.exit, %if.entry87, %Lexer_dot_token.exit, %if.entry69, %if.entry66, %Lexer_char_token.exit, %if.entry60, %if.entry57, %if.entry54, %if.entry51, %if.entry48, %if.entry45, %if.entry42, %Lexer_advance.exit404, %if.entry18, %if.entry15, %if.entry12, %if.entry6, %Lexer_advance.exit
-  %common.ret.op = phi ptr [ %13, %Lexer_advance.exit ], [ %338, %if.entry6 ], [ %449, %if.entry12 ], [ %456, %if.entry15 ], [ %463, %if.entry18 ], [ %821, %Lexer_advance.exit404 ], [ %853, %if.entry42 ], [ %860, %if.entry45 ], [ %867, %if.entry48 ], [ %874, %if.entry51 ], [ %881, %if.entry54 ], [ %888, %if.entry57 ], [ %895, %if.entry60 ], [ %938, %Lexer_char_token.exit ], [ %947, %if.entry66 ], [ %954, %if.entry69 ], [ %1253, %Lexer_dot_token.exit ], [ %1262, %if.entry87 ], [ null, %Array_FloError____sl__.exit ], [ %488, %Lexer_advance.exit.i ], [ %520, %ifend3.i ], [ %512, %Lexer_advance.exit44.i ], [ %545, %Lexer_advance.exit.i232 ], [ %577, %ifend3.i269 ], [ %569, %Lexer_advance.exit44.i261 ], [ %603, %Lexer_advance.exit.i290 ], [ %611, %ifend.i291 ], [ %636, %Lexer_advance.exit.i320 ], [ %644, %ifend.i328 ], [ %669, %Lexer_advance.exit.i357 ], [ %677, %ifend.i365 ], [ %838, %Lexer_advance.exit.i433 ], [ %846, %ifend.i441 ], [ %979, %Lexer_advance.exit.i554 ], [ %1011, %ifend3.i591 ], [ %1003, %Lexer_advance.exit44.i583 ], [ %1036, %Lexer_advance.exit.i620 ], [ %1044, %ifend.i628 ], [ %1069, %Lexer_advance.exit.i649 ], [ %1101, %ifend3.i655 ], [ %1118, %Lexer_advance.exit84.i ], [ %1126, %ifend6.i ], [ %1152, %Lexer_advance.exit.i691 ], [ %1184, %ifend3.i728 ], [ %1201, %Lexer_advance.exit84.i749 ], [ %1209, %ifend6.i757 ], [ %308, %ifend.i895 ], [ %312, %ifend5.i ], [ %351, %if.entry.i909 ], [ %362, %if.entry2.i ], [ %373, %if.entry6.i912 ], [ %414, %true_block.i ], [ %414, %false_block.i ]
+common.ret:                                       ; preds = %false_block.i, %true_block.i, %if.entry6.i892, %if.entry2.i, %if.entry.i889, %ifend5.i, %ifend.i875, %ifend6.i737, %Lexer_advance.exit84.i729, %ifend3.i708, %Lexer_advance.exit.i671, %ifend6.i642, %Lexer_advance.exit84.i634, %ifend3.i618, %Lexer_advance.exit.i594, %ifend.i565, %Lexer_advance.exit.i557, %ifend.i528, %Lexer_advance.exit.i520, %ifend.i403, %Lexer_advance.exit.i395, %ifend.i323, %Lexer_advance.exit.i315, %ifend.i286, %Lexer_advance.exit.i278, %ifend.i249, %Lexer_advance.exit.i248, %ifend6.i, %Lexer_advance.exit84.i, %Lexer_advance.exit50.i, %Lexer_advance.exit.i224, %ifend3.i, %Lexer_advance.exit44.i, %Lexer_advance.exit.i, %Array_FloError____sl__.exit, %if.entry87, %Lexer_dot_token.exit, %if.entry69, %if.entry66, %Lexer_char_token.exit, %if.entry60, %if.entry57, %if.entry54, %if.entry51, %if.entry48, %if.entry45, %if.entry42, %Lexer_advance.exit366, %if.entry18, %if.entry15, %if.entry12, %if.entry6, %Lexer_advance.exit
+  %common.ret.op = phi ptr [ %13, %Lexer_advance.exit ], [ %338, %if.entry6 ], [ %449, %if.entry12 ], [ %456, %if.entry15 ], [ %463, %if.entry18 ], [ %845, %Lexer_advance.exit366 ], [ %877, %if.entry42 ], [ %884, %if.entry45 ], [ %891, %if.entry48 ], [ %898, %if.entry51 ], [ %905, %if.entry54 ], [ %912, %if.entry57 ], [ %919, %if.entry60 ], [ %962, %Lexer_char_token.exit ], [ %971, %if.entry66 ], [ %978, %if.entry69 ], [ %1253, %Lexer_dot_token.exit ], [ %1262, %if.entry87 ], [ null, %Array_FloError____sl__.exit ], [ %488, %Lexer_advance.exit.i ], [ %520, %ifend3.i ], [ %512, %Lexer_advance.exit44.i ], [ %545, %Lexer_advance.exit.i224 ], [ %601, %ifend6.i ], [ %569, %Lexer_advance.exit50.i ], [ %593, %Lexer_advance.exit84.i ], [ %627, %Lexer_advance.exit.i248 ], [ %635, %ifend.i249 ], [ %660, %Lexer_advance.exit.i278 ], [ %668, %ifend.i286 ], [ %693, %Lexer_advance.exit.i315 ], [ %701, %ifend.i323 ], [ %862, %Lexer_advance.exit.i395 ], [ %870, %ifend.i403 ], [ %1003, %Lexer_advance.exit.i520 ], [ %1011, %ifend.i528 ], [ %1036, %Lexer_advance.exit.i557 ], [ %1044, %ifend.i565 ], [ %1069, %Lexer_advance.exit.i594 ], [ %1101, %ifend3.i618 ], [ %1118, %Lexer_advance.exit84.i634 ], [ %1126, %ifend6.i642 ], [ %1152, %Lexer_advance.exit.i671 ], [ %1184, %ifend3.i708 ], [ %1201, %Lexer_advance.exit84.i729 ], [ %1209, %ifend6.i737 ], [ %308, %ifend.i875 ], [ %312, %ifend5.i ], [ %351, %if.entry.i889 ], [ %362, %if.entry2.i ], [ %373, %if.entry6.i892 ], [ %414, %true_block.i ], [ %414, %false_block.i ]
   ret ptr %common.ret.op
 
 if.entry:                                         ; preds = %1, %1
@@ -4498,8 +4498,8 @@ if.entry:                                         ; preds = %1, %1
   %4 = load ptr, ptr %memberidx1.i.i, align 8
   %memberidx2.i.i167 = getelementptr inbounds %string, ptr %4, i64 0, i32 2
   %5 = load i64, ptr %memberidx2.i.i167, align 4
-  %.not873 = icmp slt i64 %3, %5
-  br i1 %.not873, label %ifend.i, label %Lexer_advance.exit
+  %.not853 = icmp slt i64 %3, %5
+  br i1 %.not853, label %ifend.i, label %Lexer_advance.exit
 
 ifend.i:                                          ; preds = %if.entry
   %6 = load ptr, ptr %4, align 8
@@ -4519,10 +4519,10 @@ if.entry6.i:                                      ; preds = %ifend.i
   br label %Lexer_advance.exit.sink.split
 
 Lexer_advance.exit.sink.split:                    ; preds = %ifend.i, %if.entry6.i
-  %memberidx10.i.sink999 = phi ptr [ %memberidx10.i, %if.entry6.i ], [ %memberidx9.i, %ifend.i ]
-  %11 = load i64, ptr %memberidx10.i.sink999, align 4
+  %memberidx10.i.sink979 = phi ptr [ %memberidx10.i, %if.entry6.i ], [ %memberidx9.i, %ifend.i ]
+  %11 = load i64, ptr %memberidx10.i.sink979, align 4
   %12 = add i64 %11, 1
-  store i64 %12, ptr %memberidx10.i.sink999, align 4
+  store i64 %12, ptr %memberidx10.i.sink979, align 4
   br label %Lexer_advance.exit
 
 Lexer_advance.exit:                               ; preds = %Lexer_advance.exit.sink.split, %if.entry
@@ -4538,33 +4538,33 @@ ifend:                                            ; preds = %1
   br i1 %18, label %if.entry3, label %ifend5
 
 if.entry3:                                        ; preds = %ifend
-  %memberidx.i883 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 3
-  %19 = load i64, ptr %memberidx.i883, align 4
+  %memberidx.i863 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 3
+  %19 = load i64, ptr %memberidx.i863, align 4
   %20 = add i64 %19, 1
-  %memberidx1.i.i884 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 1
-  %21 = load ptr, ptr %memberidx1.i.i884, align 8
-  %memberidx2.i.i885 = getelementptr inbounds %string, ptr %21, i64 0, i32 2
-  %22 = load i64, ptr %memberidx2.i.i885, align 4
+  %memberidx1.i.i864 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 1
+  %21 = load ptr, ptr %memberidx1.i.i864, align 8
+  %memberidx2.i.i865 = getelementptr inbounds %string, ptr %21, i64 0, i32 2
+  %22 = load i64, ptr %memberidx2.i.i865, align 4
   %23 = icmp slt i64 %20, %22
-  br i1 %23, label %if.entry.i.i887, label %Lexer_peek.exit.i
+  br i1 %23, label %if.entry.i.i867, label %Lexer_peek.exit.i
 
-if.entry.i.i887:                                  ; preds = %if.entry3
+if.entry.i.i867:                                  ; preds = %if.entry3
   %24 = load ptr, ptr %21, align 8
-  %memberidx4.i.i886 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %24, i64 0, i32 2
-  %25 = load ptr, ptr %memberidx4.i.i886, align 8
+  %memberidx4.i.i866 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %24, i64 0, i32 2
+  %25 = load ptr, ptr %memberidx4.i.i866, align 8
   %26 = tail call i8 %25(ptr nonnull %21, i64 %20)
-  %.pre.i = load i64, ptr %memberidx.i883, align 4
-  %.pre159.i = load ptr, ptr %memberidx1.i.i884, align 8
+  %.pre.i = load i64, ptr %memberidx.i863, align 4
+  %.pre159.i = load ptr, ptr %memberidx1.i.i864, align 8
   %memberidx2.i32.phi.trans.insert.i = getelementptr inbounds %string, ptr %.pre159.i, i64 0, i32 2
   %.pre160.i = load i64, ptr %memberidx2.i32.phi.trans.insert.i, align 4
   %.pre167.i = add i64 %.pre.i, 1
   br label %Lexer_peek.exit.i
 
-Lexer_peek.exit.i:                                ; preds = %if.entry.i.i887, %if.entry3
-  %.pre-phi.i = phi i64 [ %20, %if.entry3 ], [ %.pre167.i, %if.entry.i.i887 ]
-  %27 = phi i64 [ %22, %if.entry3 ], [ %.pre160.i, %if.entry.i.i887 ]
-  %28 = phi ptr [ %21, %if.entry3 ], [ %.pre159.i, %if.entry.i.i887 ]
-  %29 = phi i64 [ %19, %if.entry3 ], [ %.pre.i, %if.entry.i.i887 ]
+Lexer_peek.exit.i:                                ; preds = %if.entry.i.i867, %if.entry3
+  %.pre-phi.i = phi i64 [ %20, %if.entry3 ], [ %.pre167.i, %if.entry.i.i867 ]
+  %27 = phi i64 [ %22, %if.entry3 ], [ %.pre160.i, %if.entry.i.i867 ]
+  %28 = phi ptr [ %21, %if.entry3 ], [ %.pre159.i, %if.entry.i.i867 ]
+  %29 = phi i64 [ %19, %if.entry3 ], [ %.pre.i, %if.entry.i.i867 ]
   %30 = icmp slt i64 %.pre-phi.i, %27
   br i1 %30, label %if.entry.i35.i, label %Lexer_peek.exit36.i
 
@@ -4573,8 +4573,8 @@ if.entry.i35.i:                                   ; preds = %Lexer_peek.exit.i
   %memberidx4.i34.i = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %31, i64 0, i32 2
   %32 = load ptr, ptr %memberidx4.i34.i, align 8
   %33 = tail call i8 %32(ptr nonnull %28, i64 %.pre-phi.i)
-  %.pre161.i = load i64, ptr %memberidx.i883, align 4
-  %.pre162.i = load ptr, ptr %memberidx1.i.i884, align 8
+  %.pre161.i = load i64, ptr %memberidx.i863, align 4
+  %.pre162.i = load ptr, ptr %memberidx1.i.i864, align 8
   %memberidx2.i54.phi.trans.insert.i = getelementptr inbounds %string, ptr %.pre162.i, i64 0, i32 2
   %.pre163.i = load i64, ptr %memberidx2.i54.phi.trans.insert.i, align 4
   br label %Lexer_peek.exit36.i
@@ -4594,28 +4594,28 @@ Lexer_peek.exit36.i:                              ; preds = %if.entry.i35.i, %Le
   %44 = or i1 %43, %41
   %.not150.i = icmp slt i64 %36, %34
   %45 = and i1 %.not150.i, %44
-  br i1 %45, label %while.entry.preheader.i, label %while.end.i891
+  br i1 %45, label %while.entry.preheader.i, label %while.end.i871
 
 while.entry.preheader.i:                          ; preds = %Lexer_peek.exit36.i
   %memberidx12.i78.i = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 4
   %memberidx10.i76.i = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 5
-  br label %while.entry.i889
+  br label %while.entry.i869
 
-while.entry.i889:                                 ; preds = %Lexer_peek.exit87.i, %while.entry.preheader.i
+while.entry.i869:                                 ; preds = %Lexer_peek.exit87.i, %while.entry.preheader.i
   %46 = phi ptr [ %65, %Lexer_peek.exit87.i ], [ %35, %while.entry.preheader.i ]
   %47 = phi i64 [ %66, %Lexer_peek.exit87.i ], [ %36, %while.entry.preheader.i ]
   %48 = phi i64 [ %67, %Lexer_peek.exit87.i ], [ %34, %while.entry.preheader.i ]
-  %length.0.i888 = phi i64 [ %49, %Lexer_peek.exit87.i ], [ 1, %while.entry.preheader.i ]
-  %49 = add i64 %length.0.i888, 1
+  %length.0.i868 = phi i64 [ %49, %Lexer_peek.exit87.i ], [ 1, %while.entry.preheader.i ]
+  %49 = add i64 %length.0.i868, 1
   %.not154.i = icmp slt i64 %47, %48
   br i1 %.not154.i, label %ifend.i74.i, label %Lexer_advance.exit80.i
 
-ifend.i74.i:                                      ; preds = %while.entry.i889
+ifend.i74.i:                                      ; preds = %while.entry.i869
   %50 = load ptr, ptr %46, align 8
   %memberidx2.i72.i = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %50, i64 0, i32 2
   %51 = load ptr, ptr %memberidx2.i72.i, align 8
   %52 = add nsw i64 %47, 1
-  store i64 %52, ptr %memberidx.i883, align 4
+  store i64 %52, ptr %memberidx.i863, align 4
   %53 = tail call i8 %51(ptr nonnull %46, i64 %52)
   store i8 %53, ptr %0, align 1
   %54 = icmp eq i8 %53, 10
@@ -4630,13 +4630,13 @@ Lexer_advance.exit80.sink.split.i:                ; preds = %if.entry6.i77.i, %i
   %55 = load i64, ptr %memberidx10.i76.sink170.i, align 4
   %56 = add i64 %55, 1
   store i64 %56, ptr %memberidx10.i76.sink170.i, align 4
-  %.pre975 = load i64, ptr %memberidx.i883, align 4
-  %.pre976 = load ptr, ptr %memberidx1.i.i884, align 8
+  %.pre955 = load i64, ptr %memberidx.i863, align 4
+  %.pre956 = load ptr, ptr %memberidx1.i.i864, align 8
   br label %Lexer_advance.exit80.i
 
-Lexer_advance.exit80.i:                           ; preds = %Lexer_advance.exit80.sink.split.i, %while.entry.i889
-  %57 = phi ptr [ %.pre976, %Lexer_advance.exit80.sink.split.i ], [ %46, %while.entry.i889 ]
-  %58 = phi i64 [ %.pre975, %Lexer_advance.exit80.sink.split.i ], [ %47, %while.entry.i889 ]
+Lexer_advance.exit80.i:                           ; preds = %Lexer_advance.exit80.sink.split.i, %while.entry.i869
+  %57 = phi ptr [ %.pre956, %Lexer_advance.exit80.sink.split.i ], [ %46, %while.entry.i869 ]
+  %58 = phi i64 [ %.pre955, %Lexer_advance.exit80.sink.split.i ], [ %47, %while.entry.i869 ]
   %59 = add i64 %58, 1
   %memberidx2.i83.i = getelementptr inbounds %string, ptr %57, i64 0, i32 2
   %60 = load i64, ptr %memberidx2.i83.i, align 4
@@ -4648,8 +4648,8 @@ if.entry.i86.i:                                   ; preds = %Lexer_advance.exit8
   %memberidx4.i85.i = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %62, i64 0, i32 2
   %63 = load ptr, ptr %memberidx4.i85.i, align 8
   %64 = tail call i8 %63(ptr nonnull %57, i64 %59)
-  %.pre164.i = load i64, ptr %memberidx.i883, align 4
-  %.pre165.i = load ptr, ptr %memberidx1.i.i884, align 8
+  %.pre164.i = load i64, ptr %memberidx.i863, align 4
+  %.pre165.i = load ptr, ptr %memberidx1.i.i864, align 8
   %memberidx2.i105.phi.trans.insert.i = getelementptr inbounds %string, ptr %.pre165.i, i64 0, i32 2
   %.pre166.i = load i64, ptr %memberidx2.i105.phi.trans.insert.i, align 4
   br label %Lexer_peek.exit87.i
@@ -4669,17 +4669,17 @@ Lexer_peek.exit87.i:                              ; preds = %if.entry.i86.i, %Le
   %75 = or i1 %74, %72
   %.not155.i = icmp slt i64 %66, %67
   %76 = and i1 %.not155.i, %75
-  br i1 %76, label %while.entry.i889, label %while.end.i891
+  br i1 %76, label %while.entry.i869, label %while.end.i871
 
-while.end.i891:                                   ; preds = %Lexer_peek.exit87.i, %Lexer_peek.exit36.i
+while.end.i871:                                   ; preds = %Lexer_peek.exit87.i, %Lexer_peek.exit36.i
   %77 = phi ptr [ %35, %Lexer_peek.exit36.i ], [ %65, %Lexer_peek.exit87.i ]
   %length.1.i = phi i64 [ 1, %Lexer_peek.exit36.i ], [ %49, %Lexer_peek.exit87.i ]
   %78 = load ptr, ptr %77, align 8
-  %memberidx2.i890 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %78, i64 0, i32 1
-  %79 = load ptr, ptr %memberidx2.i890, align 8
+  %memberidx2.i870 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %78, i64 0, i32 1
+  %79 = load ptr, ptr %memberidx2.i870, align 8
   %80 = tail call ptr %79(ptr nonnull %77, i64 %19, i64 %length.1.i)
   %81 = tail call ptr @malloc(i32 32)
-  %82 = load i64, ptr %memberidx.i883, align 4
+  %82 = load i64, ptr %memberidx.i863, align 4
   %83 = sub i64 1, %length.1.i
   %84 = add i64 %83, %82
   %85 = add i64 %82, 1
@@ -4710,14 +4710,14 @@ while.end.i891:                                   ; preds = %Lexer_peek.exit87.i
   %.not.i.i.i = icmp eq i64 %91, 3
   br i1 %.not.i.i.i, label %ifend.i.i.i, label %ifend.i102.i
 
-ifend.i.i.i:                                      ; preds = %while.end.i891
+ifend.i.i.i:                                      ; preds = %while.end.i871
   %memberidx2.i.i100.i = getelementptr inbounds %string, ptr %80, i64 0, i32 1
   %92 = load ptr, ptr %memberidx2.i.i100.i, align 8
   %93 = tail call i64 @memcmp(ptr %92, ptr nonnull %89, i64 3)
   %94 = icmp eq i64 %93, 0
-  br i1 %94, label %if.entry.i893, label %ifend.i102.i
+  br i1 %94, label %if.entry.i873, label %ifend.i102.i
 
-ifend.i102.i:                                     ; preds = %ifend.i.i.i, %while.end.i891
+ifend.i102.i:                                     ; preds = %ifend.i.i.i, %while.end.i871
   %95 = tail call ptr @malloc(i32 16)
   store i16 29295, ptr %95, align 8
   %96 = tail call ptr @malloc(i32 32)
@@ -4737,7 +4737,7 @@ ifend.i146.i.i:                                   ; preds = %ifend.i102.i
   %98 = load ptr, ptr %memberidx2.i144.i.i, align 8
   %99 = tail call i64 @memcmp(ptr %98, ptr nonnull %95, i64 2)
   %100 = icmp eq i64 %99, 0
-  br i1 %100, label %if.entry.i893, label %ifend3.i.i
+  br i1 %100, label %if.entry.i873, label %ifend3.i.i
 
 ifend3.i.i:                                       ; preds = %ifend.i146.i.i, %ifend.i102.i
   %101 = tail call ptr @malloc(i32 24)
@@ -4759,7 +4759,7 @@ ifend.i157.i.i:                                   ; preds = %ifend3.i.i
   %104 = load ptr, ptr %memberidx2.i155.i.i, align 8
   %105 = tail call i64 @memcmp(ptr %104, ptr nonnull %101, i64 3)
   %106 = icmp eq i64 %105, 0
-  br i1 %106, label %if.entry.i893, label %ifend6.i.i
+  br i1 %106, label %if.entry.i873, label %ifend6.i.i
 
 ifend6.i.i:                                       ; preds = %ifend.i157.i.i, %ifend3.i.i
   %107 = tail call ptr @malloc(i32 40)
@@ -4781,7 +4781,7 @@ ifend.i168.i.i:                                   ; preds = %ifend6.i.i
   %110 = load ptr, ptr %memberidx2.i166.i.i, align 8
   %111 = tail call i64 @memcmp(ptr %110, ptr nonnull %107, i64 5)
   %112 = icmp eq i64 %111, 0
-  br i1 %112, label %if.entry.i893, label %ifend9.i.i
+  br i1 %112, label %if.entry.i873, label %ifend9.i.i
 
 ifend9.i.i:                                       ; preds = %ifend.i168.i.i, %ifend6.i.i
   %113 = tail call ptr @malloc(i32 24)
@@ -4803,7 +4803,7 @@ ifend.i179.i.i:                                   ; preds = %ifend9.i.i
   %116 = load ptr, ptr %memberidx2.i177.i.i, align 8
   %117 = tail call i64 @memcmp(ptr %116, ptr nonnull %113, i64 3)
   %118 = icmp eq i64 %117, 0
-  br i1 %118, label %if.entry.i893, label %ifend12.i.i
+  br i1 %118, label %if.entry.i873, label %ifend12.i.i
 
 ifend12.i.i:                                      ; preds = %ifend.i179.i.i, %ifend9.i.i
   %119 = tail call ptr @malloc(i32 16)
@@ -4825,7 +4825,7 @@ ifend.i190.i.i:                                   ; preds = %ifend12.i.i
   %122 = load ptr, ptr %memberidx2.i188.i.i, align 8
   %123 = tail call i64 @memcmp(ptr %122, ptr nonnull %119, i64 2)
   %124 = icmp eq i64 %123, 0
-  br i1 %124, label %if.entry.i893, label %ifend15.i.i
+  br i1 %124, label %if.entry.i873, label %ifend15.i.i
 
 ifend15.i.i:                                      ; preds = %ifend.i190.i.i, %ifend12.i.i
   %125 = tail call ptr @malloc(i32 32)
@@ -4847,7 +4847,7 @@ ifend.i201.i.i:                                   ; preds = %ifend15.i.i
   %128 = load ptr, ptr %memberidx2.i199.i.i, align 8
   %129 = tail call i64 @memcmp(ptr %128, ptr nonnull %125, i64 4)
   %130 = icmp eq i64 %129, 0
-  br i1 %130, label %if.entry.i893, label %ifend18.i.i
+  br i1 %130, label %if.entry.i873, label %ifend18.i.i
 
 ifend18.i.i:                                      ; preds = %ifend.i201.i.i, %ifend15.i.i
   %131 = tail call ptr @malloc(i32 32)
@@ -4869,7 +4869,7 @@ ifend.i212.i.i:                                   ; preds = %ifend18.i.i
   %134 = load ptr, ptr %memberidx2.i210.i.i, align 8
   %135 = tail call i64 @memcmp(ptr %134, ptr nonnull %131, i64 4)
   %136 = icmp eq i64 %135, 0
-  br i1 %136, label %if.entry.i893, label %ifend21.i.i
+  br i1 %136, label %if.entry.i873, label %ifend21.i.i
 
 ifend21.i.i:                                      ; preds = %ifend.i212.i.i, %ifend18.i.i
   %137 = tail call ptr @malloc(i32 16)
@@ -4891,7 +4891,7 @@ ifend.i223.i.i:                                   ; preds = %ifend21.i.i
   %140 = load ptr, ptr %memberidx2.i221.i.i, align 8
   %141 = tail call i64 @memcmp(ptr %140, ptr nonnull %137, i64 2)
   %142 = icmp eq i64 %141, 0
-  br i1 %142, label %if.entry.i893, label %ifend24.i.i
+  br i1 %142, label %if.entry.i873, label %ifend24.i.i
 
 ifend24.i.i:                                      ; preds = %ifend.i223.i.i, %ifend21.i.i
   %143 = tail call ptr @malloc(i32 16)
@@ -4906,16 +4906,16 @@ ifend24.i.i:                                      ; preds = %ifend.i223.i.i, %if
   store i64 2, ptr %memberidx2.i.i227.i.i, align 4
   %145 = load i64, ptr %memberidx.i.i98.i, align 4
   %.not.i230.i.i = icmp eq i64 %145, 2
-  br i1 %.not.i230.i.i, label %ifend.i234.i.i, label %ifend27.i.i892
+  br i1 %.not.i230.i.i, label %ifend.i234.i.i, label %ifend27.i.i872
 
 ifend.i234.i.i:                                   ; preds = %ifend24.i.i
   %memberidx2.i232.i.i = getelementptr inbounds %string, ptr %80, i64 0, i32 1
   %146 = load ptr, ptr %memberidx2.i232.i.i, align 8
   %147 = tail call i64 @memcmp(ptr %146, ptr nonnull %143, i64 2)
   %148 = icmp eq i64 %147, 0
-  br i1 %148, label %if.entry.i893, label %ifend27.i.i892
+  br i1 %148, label %if.entry.i873, label %ifend27.i.i872
 
-ifend27.i.i892:                                   ; preds = %ifend.i234.i.i, %ifend24.i.i
+ifend27.i.i872:                                   ; preds = %ifend.i234.i.i, %ifend24.i.i
   %149 = tail call ptr @malloc(i32 24)
   tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(3) %149, ptr noundef nonnull align 8 dereferenceable(3) @34, i64 3, i1 false)
   %150 = tail call ptr @malloc(i32 32)
@@ -4930,14 +4930,14 @@ ifend27.i.i892:                                   ; preds = %ifend.i234.i.i, %if
   %.not.i241.i.i = icmp eq i64 %151, 3
   br i1 %.not.i241.i.i, label %ifend.i245.i.i, label %ifend30.i.i
 
-ifend.i245.i.i:                                   ; preds = %ifend27.i.i892
+ifend.i245.i.i:                                   ; preds = %ifend27.i.i872
   %memberidx2.i243.i.i = getelementptr inbounds %string, ptr %80, i64 0, i32 1
   %152 = load ptr, ptr %memberidx2.i243.i.i, align 8
   %153 = tail call i64 @memcmp(ptr %152, ptr nonnull %149, i64 3)
   %154 = icmp eq i64 %153, 0
-  br i1 %154, label %if.entry.i893, label %ifend30.i.i
+  br i1 %154, label %if.entry.i873, label %ifend30.i.i
 
-ifend30.i.i:                                      ; preds = %ifend.i245.i.i, %ifend27.i.i892
+ifend30.i.i:                                      ; preds = %ifend.i245.i.i, %ifend27.i.i872
   %155 = tail call ptr @malloc(i32 24)
   tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(3) %155, ptr noundef nonnull align 8 dereferenceable(3) @35, i64 3, i1 false)
   %156 = tail call ptr @malloc(i32 32)
@@ -4957,7 +4957,7 @@ ifend.i256.i.i:                                   ; preds = %ifend30.i.i
   %158 = load ptr, ptr %memberidx2.i254.i.i, align 8
   %159 = tail call i64 @memcmp(ptr %158, ptr nonnull %155, i64 3)
   %160 = icmp eq i64 %159, 0
-  br i1 %160, label %if.entry.i893, label %ifend33.i.i
+  br i1 %160, label %if.entry.i873, label %ifend33.i.i
 
 ifend33.i.i:                                      ; preds = %ifend.i256.i.i, %ifend30.i.i
   %161 = tail call ptr @malloc(i32 24)
@@ -4979,7 +4979,7 @@ ifend.i267.i.i:                                   ; preds = %ifend33.i.i
   %164 = load ptr, ptr %memberidx2.i265.i.i, align 8
   %165 = tail call i64 @memcmp(ptr %164, ptr nonnull %161, i64 3)
   %166 = icmp eq i64 %165, 0
-  br i1 %166, label %if.entry.i893, label %ifend36.i.i
+  br i1 %166, label %if.entry.i873, label %ifend36.i.i
 
 ifend36.i.i:                                      ; preds = %ifend.i267.i.i, %ifend33.i.i
   %167 = tail call ptr @malloc(i32 32)
@@ -5001,7 +5001,7 @@ ifend.i278.i.i:                                   ; preds = %ifend36.i.i
   %170 = load ptr, ptr %memberidx2.i276.i.i, align 8
   %171 = tail call i64 @memcmp(ptr %170, ptr nonnull %167, i64 4)
   %172 = icmp eq i64 %171, 0
-  br i1 %172, label %if.entry.i893, label %ifend39.i.i
+  br i1 %172, label %if.entry.i873, label %ifend39.i.i
 
 ifend39.i.i:                                      ; preds = %ifend.i278.i.i, %ifend36.i.i
   %173 = tail call ptr @malloc(i32 24)
@@ -5023,7 +5023,7 @@ ifend.i289.i.i:                                   ; preds = %ifend39.i.i
   %176 = load ptr, ptr %memberidx2.i287.i.i, align 8
   %177 = tail call i64 @memcmp(ptr %176, ptr nonnull %173, i64 3)
   %178 = icmp eq i64 %177, 0
-  br i1 %178, label %if.entry.i893, label %ifend42.i.i
+  br i1 %178, label %if.entry.i873, label %ifend42.i.i
 
 ifend42.i.i:                                      ; preds = %ifend.i289.i.i, %ifend39.i.i
   %179 = tail call ptr @malloc(i32 24)
@@ -5045,7 +5045,7 @@ ifend.i300.i.i:                                   ; preds = %ifend42.i.i
   %182 = load ptr, ptr %memberidx2.i298.i.i, align 8
   %183 = tail call i64 @memcmp(ptr %182, ptr nonnull %179, i64 3)
   %184 = icmp eq i64 %183, 0
-  br i1 %184, label %if.entry.i893, label %ifend45.i.i
+  br i1 %184, label %if.entry.i873, label %ifend45.i.i
 
 ifend45.i.i:                                      ; preds = %ifend.i300.i.i, %ifend42.i.i
   %185 = tail call ptr @malloc(i32 24)
@@ -5067,7 +5067,7 @@ ifend.i311.i.i:                                   ; preds = %ifend45.i.i
   %188 = load ptr, ptr %memberidx2.i309.i.i, align 8
   %189 = tail call i64 @memcmp(ptr %188, ptr nonnull %185, i64 3)
   %190 = icmp eq i64 %189, 0
-  br i1 %190, label %if.entry.i893, label %ifend48.i.i
+  br i1 %190, label %if.entry.i873, label %ifend48.i.i
 
 ifend48.i.i:                                      ; preds = %ifend.i311.i.i, %ifend45.i.i
   %191 = tail call ptr @malloc(i32 24)
@@ -5089,7 +5089,7 @@ ifend.i322.i.i:                                   ; preds = %ifend48.i.i
   %194 = load ptr, ptr %memberidx2.i320.i.i, align 8
   %195 = tail call i64 @memcmp(ptr %194, ptr nonnull %191, i64 3)
   %196 = icmp eq i64 %195, 0
-  br i1 %196, label %if.entry.i893, label %ifend51.i.i
+  br i1 %196, label %if.entry.i873, label %ifend51.i.i
 
 ifend51.i.i:                                      ; preds = %ifend.i322.i.i, %ifend48.i.i
   %197 = tail call ptr @malloc(i32 40)
@@ -5111,7 +5111,7 @@ ifend.i333.i.i:                                   ; preds = %ifend51.i.i
   %200 = load ptr, ptr %memberidx2.i331.i.i, align 8
   %201 = tail call i64 @memcmp(ptr %200, ptr nonnull %197, i64 5)
   %202 = icmp eq i64 %201, 0
-  br i1 %202, label %if.entry.i893, label %ifend54.i.i
+  br i1 %202, label %if.entry.i873, label %ifend54.i.i
 
 ifend54.i.i:                                      ; preds = %ifend.i333.i.i, %ifend51.i.i
   %203 = tail call ptr @malloc(i32 32)
@@ -5133,7 +5133,7 @@ ifend.i344.i.i:                                   ; preds = %ifend54.i.i
   %206 = load ptr, ptr %memberidx2.i342.i.i, align 8
   %207 = tail call i64 @memcmp(ptr %206, ptr nonnull %203, i64 4)
   %208 = icmp eq i64 %207, 0
-  br i1 %208, label %if.entry.i893, label %ifend57.i.i
+  br i1 %208, label %if.entry.i873, label %ifend57.i.i
 
 ifend57.i.i:                                      ; preds = %ifend.i344.i.i, %ifend54.i.i
   %209 = tail call ptr @malloc(i32 24)
@@ -5155,7 +5155,7 @@ ifend.i355.i.i:                                   ; preds = %ifend57.i.i
   %212 = load ptr, ptr %memberidx2.i353.i.i, align 8
   %213 = tail call i64 @memcmp(ptr %212, ptr nonnull %209, i64 3)
   %214 = icmp eq i64 %213, 0
-  br i1 %214, label %if.entry.i893, label %ifend60.i.i
+  br i1 %214, label %if.entry.i873, label %ifend60.i.i
 
 ifend60.i.i:                                      ; preds = %ifend.i355.i.i, %ifend57.i.i
   %215 = tail call ptr @malloc(i32 40)
@@ -5177,7 +5177,7 @@ ifend.i366.i.i:                                   ; preds = %ifend60.i.i
   %218 = load ptr, ptr %memberidx2.i364.i.i, align 8
   %219 = tail call i64 @memcmp(ptr %218, ptr nonnull %215, i64 5)
   %220 = icmp eq i64 %219, 0
-  br i1 %220, label %if.entry.i893, label %ifend63.i.i
+  br i1 %220, label %if.entry.i873, label %ifend63.i.i
 
 ifend63.i.i:                                      ; preds = %ifend.i366.i.i, %ifend60.i.i
   %221 = tail call ptr @malloc(i32 24)
@@ -5199,7 +5199,7 @@ ifend.i377.i.i:                                   ; preds = %ifend63.i.i
   %224 = load ptr, ptr %memberidx2.i375.i.i, align 8
   %225 = tail call i64 @memcmp(ptr %224, ptr nonnull %221, i64 3)
   %226 = icmp eq i64 %225, 0
-  br i1 %226, label %if.entry.i893, label %ifend66.i.i
+  br i1 %226, label %if.entry.i873, label %ifend66.i.i
 
 ifend66.i.i:                                      ; preds = %ifend.i377.i.i, %ifend63.i.i
   %227 = tail call ptr @malloc(i32 40)
@@ -5221,7 +5221,7 @@ ifend.i388.i.i:                                   ; preds = %ifend66.i.i
   %230 = load ptr, ptr %memberidx2.i386.i.i, align 8
   %231 = tail call i64 @memcmp(ptr %230, ptr nonnull %227, i64 5)
   %232 = icmp eq i64 %231, 0
-  br i1 %232, label %if.entry.i893, label %ifend69.i.i
+  br i1 %232, label %if.entry.i873, label %ifend69.i.i
 
 ifend69.i.i:                                      ; preds = %ifend.i388.i.i, %ifend66.i.i
   %233 = tail call ptr @malloc(i32 64)
@@ -5243,7 +5243,7 @@ ifend.i399.i.i:                                   ; preds = %ifend69.i.i
   %236 = load ptr, ptr %memberidx2.i397.i.i, align 8
   %237 = tail call i64 @memcmp(ptr %236, ptr nonnull %233, i64 8)
   %238 = icmp eq i64 %237, 0
-  br i1 %238, label %if.entry.i893, label %ifend72.i.i
+  br i1 %238, label %if.entry.i873, label %ifend72.i.i
 
 ifend72.i.i:                                      ; preds = %ifend.i399.i.i, %ifend69.i.i
   %239 = tail call ptr @malloc(i32 48)
@@ -5265,7 +5265,7 @@ ifend.i410.i.i:                                   ; preds = %ifend72.i.i
   %242 = load ptr, ptr %memberidx2.i408.i.i, align 8
   %243 = tail call i64 @memcmp(ptr %242, ptr nonnull %239, i64 6)
   %244 = icmp eq i64 %243, 0
-  br i1 %244, label %if.entry.i893, label %ifend75.i.i
+  br i1 %244, label %if.entry.i873, label %ifend75.i.i
 
 ifend75.i.i:                                      ; preds = %ifend.i410.i.i, %ifend72.i.i
   %245 = tail call ptr @malloc(i32 48)
@@ -5287,7 +5287,7 @@ ifend.i421.i.i:                                   ; preds = %ifend75.i.i
   %248 = load ptr, ptr %memberidx2.i419.i.i, align 8
   %249 = tail call i64 @memcmp(ptr %248, ptr nonnull %245, i64 6)
   %250 = icmp eq i64 %249, 0
-  br i1 %250, label %if.entry.i893, label %ifend78.i.i
+  br i1 %250, label %if.entry.i873, label %ifend78.i.i
 
 ifend78.i.i:                                      ; preds = %ifend.i421.i.i, %ifend75.i.i
   %251 = tail call ptr @malloc(i32 56)
@@ -5309,7 +5309,7 @@ ifend.i432.i.i:                                   ; preds = %ifend78.i.i
   %254 = load ptr, ptr %memberidx2.i430.i.i, align 8
   %255 = tail call i64 @memcmp(ptr %254, ptr nonnull %251, i64 7)
   %256 = icmp eq i64 %255, 0
-  br i1 %256, label %if.entry.i893, label %ifend81.i.i
+  br i1 %256, label %if.entry.i873, label %ifend81.i.i
 
 ifend81.i.i:                                      ; preds = %ifend.i432.i.i, %ifend78.i.i
   %257 = tail call ptr @malloc(i32 48)
@@ -5331,7 +5331,7 @@ ifend.i443.i.i:                                   ; preds = %ifend81.i.i
   %260 = load ptr, ptr %memberidx2.i441.i.i, align 8
   %261 = tail call i64 @memcmp(ptr %260, ptr nonnull %257, i64 6)
   %262 = icmp eq i64 %261, 0
-  br i1 %262, label %if.entry.i893, label %ifend84.i.i
+  br i1 %262, label %if.entry.i873, label %ifend84.i.i
 
 ifend84.i.i:                                      ; preds = %ifend.i443.i.i, %ifend81.i.i
   %263 = tail call ptr @malloc(i32 72)
@@ -5353,7 +5353,7 @@ ifend.i454.i.i:                                   ; preds = %ifend84.i.i
   %266 = load ptr, ptr %memberidx2.i452.i.i, align 8
   %267 = tail call i64 @memcmp(ptr %266, ptr nonnull %263, i64 9)
   %268 = icmp eq i64 %267, 0
-  br i1 %268, label %if.entry.i893, label %ifend87.i.i
+  br i1 %268, label %if.entry.i873, label %ifend87.i.i
 
 ifend87.i.i:                                      ; preds = %ifend.i454.i.i, %ifend84.i.i
   %269 = tail call ptr @malloc(i32 16)
@@ -5375,7 +5375,7 @@ ifend.i465.i.i:                                   ; preds = %ifend87.i.i
   %272 = load ptr, ptr %memberidx2.i463.i.i, align 8
   %273 = tail call i64 @memcmp(ptr %272, ptr nonnull %269, i64 2)
   %274 = icmp eq i64 %273, 0
-  br i1 %274, label %if.entry.i893, label %ifend90.i.i
+  br i1 %274, label %if.entry.i873, label %ifend90.i.i
 
 ifend90.i.i:                                      ; preds = %ifend.i465.i.i, %ifend87.i.i
   %275 = tail call ptr @malloc(i32 40)
@@ -5397,7 +5397,7 @@ ifend.i476.i.i:                                   ; preds = %ifend90.i.i
   %278 = load ptr, ptr %memberidx2.i474.i.i, align 8
   %279 = tail call i64 @memcmp(ptr %278, ptr nonnull %275, i64 5)
   %280 = icmp eq i64 %279, 0
-  br i1 %280, label %if.entry.i893, label %ifend93.i.i
+  br i1 %280, label %if.entry.i873, label %ifend93.i.i
 
 ifend93.i.i:                                      ; preds = %ifend.i476.i.i, %ifend90.i.i
   %281 = tail call ptr @malloc(i32 32)
@@ -5419,7 +5419,7 @@ ifend.i487.i.i:                                   ; preds = %ifend93.i.i
   %284 = load ptr, ptr %memberidx2.i485.i.i, align 8
   %285 = tail call i64 @memcmp(ptr %284, ptr nonnull %281, i64 4)
   %286 = icmp eq i64 %285, 0
-  br i1 %286, label %if.entry.i893, label %ifend96.i.i
+  br i1 %286, label %if.entry.i873, label %ifend96.i.i
 
 ifend96.i.i:                                      ; preds = %ifend.i487.i.i, %ifend93.i.i
   %287 = tail call ptr @malloc(i32 24)
@@ -5441,7 +5441,7 @@ ifend.i498.i.i:                                   ; preds = %ifend96.i.i
   %290 = load ptr, ptr %memberidx2.i496.i.i, align 8
   %291 = tail call i64 @memcmp(ptr %290, ptr nonnull %287, i64 3)
   %292 = icmp eq i64 %291, 0
-  br i1 %292, label %if.entry.i893, label %ifend99.i.i
+  br i1 %292, label %if.entry.i873, label %ifend99.i.i
 
 ifend99.i.i:                                      ; preds = %ifend.i498.i.i, %ifend96.i.i
   %293 = tail call ptr @malloc(i32 16)
@@ -5456,27 +5456,27 @@ ifend99.i.i:                                      ; preds = %ifend.i498.i.i, %if
   store i64 2, ptr %memberidx2.i.i502.i.i, align 4
   %295 = load i64, ptr %memberidx.i.i98.i, align 4
   %.not.i505.i.i = icmp eq i64 %295, 2
-  br i1 %.not.i505.i.i, label %ifend.i509.i.i, label %ifend.i895
+  br i1 %.not.i505.i.i, label %ifend.i509.i.i, label %ifend.i875
 
 ifend.i509.i.i:                                   ; preds = %ifend99.i.i
   %memberidx2.i507.i.i = getelementptr inbounds %string, ptr %80, i64 0, i32 1
   %296 = load ptr, ptr %memberidx2.i507.i.i, align 8
   %297 = tail call i64 @memcmp(ptr %296, ptr nonnull %293, i64 2)
   %298 = icmp eq i64 %297, 0
-  br i1 %298, label %if.entry.i893, label %ifend.i895
+  br i1 %298, label %if.entry.i873, label %ifend.i875
 
-if.entry.i893:                                    ; preds = %ifend.i509.i.i, %ifend.i498.i.i, %ifend.i487.i.i, %ifend.i476.i.i, %ifend.i465.i.i, %ifend.i454.i.i, %ifend.i443.i.i, %ifend.i432.i.i, %ifend.i421.i.i, %ifend.i410.i.i, %ifend.i399.i.i, %ifend.i388.i.i, %ifend.i377.i.i, %ifend.i366.i.i, %ifend.i355.i.i, %ifend.i344.i.i, %ifend.i333.i.i, %ifend.i322.i.i, %ifend.i311.i.i, %ifend.i300.i.i, %ifend.i289.i.i, %ifend.i278.i.i, %ifend.i267.i.i, %ifend.i256.i.i, %ifend.i245.i.i, %ifend.i234.i.i, %ifend.i223.i.i, %ifend.i212.i.i, %ifend.i201.i.i, %ifend.i190.i.i, %ifend.i179.i.i, %ifend.i168.i.i, %ifend.i157.i.i, %ifend.i146.i.i, %ifend.i.i.i
+if.entry.i873:                                    ; preds = %ifend.i509.i.i, %ifend.i498.i.i, %ifend.i487.i.i, %ifend.i476.i.i, %ifend.i465.i.i, %ifend.i454.i.i, %ifend.i443.i.i, %ifend.i432.i.i, %ifend.i421.i.i, %ifend.i410.i.i, %ifend.i399.i.i, %ifend.i388.i.i, %ifend.i377.i.i, %ifend.i366.i.i, %ifend.i355.i.i, %ifend.i344.i.i, %ifend.i333.i.i, %ifend.i322.i.i, %ifend.i311.i.i, %ifend.i300.i.i, %ifend.i289.i.i, %ifend.i278.i.i, %ifend.i267.i.i, %ifend.i256.i.i, %ifend.i245.i.i, %ifend.i234.i.i, %ifend.i223.i.i, %ifend.i212.i.i, %ifend.i201.i.i, %ifend.i190.i.i, %ifend.i179.i.i, %ifend.i168.i.i, %ifend.i157.i.i, %ifend.i146.i.i, %ifend.i.i.i
   %299 = phi i1 [ false, %ifend.i509.i.i ], [ true, %ifend.i.i.i ], [ false, %ifend.i146.i.i ], [ false, %ifend.i157.i.i ], [ false, %ifend.i168.i.i ], [ false, %ifend.i179.i.i ], [ false, %ifend.i190.i.i ], [ false, %ifend.i201.i.i ], [ false, %ifend.i212.i.i ], [ false, %ifend.i223.i.i ], [ false, %ifend.i234.i.i ], [ false, %ifend.i245.i.i ], [ false, %ifend.i256.i.i ], [ false, %ifend.i267.i.i ], [ false, %ifend.i278.i.i ], [ false, %ifend.i289.i.i ], [ false, %ifend.i300.i.i ], [ false, %ifend.i311.i.i ], [ false, %ifend.i322.i.i ], [ false, %ifend.i333.i.i ], [ false, %ifend.i344.i.i ], [ false, %ifend.i355.i.i ], [ false, %ifend.i366.i.i ], [ false, %ifend.i377.i.i ], [ false, %ifend.i388.i.i ], [ false, %ifend.i399.i.i ], [ false, %ifend.i410.i.i ], [ false, %ifend.i421.i.i ], [ false, %ifend.i432.i.i ], [ false, %ifend.i443.i.i ], [ false, %ifend.i454.i.i ], [ false, %ifend.i465.i.i ], [ false, %ifend.i476.i.i ], [ false, %ifend.i487.i.i ], [ false, %ifend.i498.i.i ]
   %.pr.i = phi i64 [ 86, %ifend.i509.i.i ], [ 52, %ifend.i.i.i ], [ 53, %ifend.i146.i.i ], [ 54, %ifend.i157.i.i ], [ 55, %ifend.i168.i.i ], [ 56, %ifend.i179.i.i ], [ 57, %ifend.i190.i.i ], [ 58, %ifend.i201.i.i ], [ 59, %ifend.i212.i.i ], [ 60, %ifend.i223.i.i ], [ 61, %ifend.i234.i.i ], [ 62, %ifend.i245.i.i ], [ 63, %ifend.i256.i.i ], [ 64, %ifend.i267.i.i ], [ 65, %ifend.i278.i.i ], [ 66, %ifend.i289.i.i ], [ 67, %ifend.i300.i.i ], [ 68, %ifend.i311.i.i ], [ 69, %ifend.i322.i.i ], [ 70, %ifend.i333.i.i ], [ 71, %ifend.i344.i.i ], [ 72, %ifend.i355.i.i ], [ 73, %ifend.i366.i.i ], [ 74, %ifend.i377.i.i ], [ 75, %ifend.i388.i.i ], [ 76, %ifend.i399.i.i ], [ 77, %ifend.i410.i.i ], [ 78, %ifend.i421.i.i ], [ 79, %ifend.i432.i.i ], [ 80, %ifend.i443.i.i ], [ 81, %ifend.i454.i.i ], [ 82, %ifend.i465.i.i ], [ 83, %ifend.i476.i.i ], [ 84, %ifend.i487.i.i ], [ 85, %ifend.i498.i.i ]
-  %300 = load i64, ptr %memberidx.i883, align 4
+  %300 = load i64, ptr %memberidx.i863, align 4
   %301 = add i64 %300, 1
-  %302 = load ptr, ptr %memberidx1.i.i884, align 8
+  %302 = load ptr, ptr %memberidx1.i.i864, align 8
   %memberidx2.i93.i = getelementptr inbounds %string, ptr %302, i64 0, i32 2
   %303 = load i64, ptr %memberidx2.i93.i, align 4
   %304 = icmp slt i64 %301, %303
   br i1 %304, label %if.entry.i96.i, label %ifend5.i
 
-if.entry.i96.i:                                   ; preds = %if.entry.i893
+if.entry.i96.i:                                   ; preds = %if.entry.i873
   %305 = load ptr, ptr %302, align 8
   %memberidx4.i95.i = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %305, i64 0, i32 2
   %306 = load ptr, ptr %memberidx4.i95.i, align 8
@@ -5484,53 +5484,53 @@ if.entry.i96.i:                                   ; preds = %if.entry.i893
   %phi.cmp.i = icmp eq i8 %307, 61
   br i1 %phi.cmp.i, label %if.entry3.i, label %ifend5.i
 
-ifend.i895:                                       ; preds = %ifend.i509.i.i, %ifend99.i.i
+ifend.i875:                                       ; preds = %ifend.i509.i.i, %ifend99.i.i
   %308 = tail call ptr @malloc(i32 24)
   store i64 51, ptr %308, align 4
-  %memberidx1.i.i89.i894 = getelementptr inbounds %Token, ptr %308, i64 0, i32 1
-  store ptr %81, ptr %memberidx1.i.i89.i894, align 8
+  %memberidx1.i.i89.i874 = getelementptr inbounds %Token, ptr %308, i64 0, i32 1
+  store ptr %81, ptr %memberidx1.i.i89.i874, align 8
   %memberidx.i90.i = getelementptr inbounds %IdentifierToken, ptr %308, i64 0, i32 2
   store ptr %80, ptr %memberidx.i90.i, align 8
   br label %common.ret
 
 if.entry3.i:                                      ; preds = %if.entry.i96.i
-  br i1 %299, label %if.entry6.i896, label %ifend8.i
+  br i1 %299, label %if.entry6.i876, label %ifend8.i
 
-ifend5.sink.split.sink.split.i:                   ; preds = %ifend.i.i900, %ifend.i45.i, %ifend.i61.i
-  %.ph.ph.i = phi i64 [ 16, %ifend.i61.i ], [ 17, %ifend.i45.i ], [ 18, %ifend.i.i900 ]
+ifend5.sink.split.sink.split.i:                   ; preds = %ifend.i.i880, %ifend.i45.i, %ifend.i61.i
+  %.ph.ph.i = phi i64 [ 16, %ifend.i61.i ], [ 17, %ifend.i45.i ], [ 18, %ifend.i.i880 ]
   store i64 0, ptr %memberidx2.i107.i, align 4
   br label %ifend5.sink.split.i
 
-ifend5.sink.split.i:                              ; preds = %ifend.i.i900, %ifend.i45.i, %ifend.i61.i, %ifend5.sink.split.sink.split.i
-  %memberidx2.i107.sink172.i = phi ptr [ %memberidx2.i107.i, %ifend.i61.i ], [ %memberidx2.i107.i, %ifend.i45.i ], [ %memberidx2.i107.i, %ifend.i.i900 ], [ %memberidx3.i108.i, %ifend5.sink.split.sink.split.i ]
-  %.ph.i = phi i64 [ 16, %ifend.i61.i ], [ 17, %ifend.i45.i ], [ 18, %ifend.i.i900 ], [ %.ph.ph.i, %ifend5.sink.split.sink.split.i ]
+ifend5.sink.split.i:                              ; preds = %ifend.i.i880, %ifend.i45.i, %ifend.i61.i, %ifend5.sink.split.sink.split.i
+  %memberidx2.i107.sink172.i = phi ptr [ %memberidx2.i107.i, %ifend.i61.i ], [ %memberidx2.i107.i, %ifend.i45.i ], [ %memberidx2.i107.i, %ifend.i.i880 ], [ %memberidx3.i108.i, %ifend5.sink.split.sink.split.i ]
+  %.ph.i = phi i64 [ 16, %ifend.i61.i ], [ 17, %ifend.i45.i ], [ 18, %ifend.i.i880 ], [ %.ph.ph.i, %ifend5.sink.split.sink.split.i ]
   %309 = load i64, ptr %memberidx2.i107.sink172.i, align 4
   %310 = add i64 %309, 1
   store i64 %310, ptr %memberidx2.i107.sink172.i, align 4
   br label %ifend5.i
 
-ifend5.i:                                         ; preds = %if.entry12.i, %if.entry9.i, %ifend8.i, %if.entry6.i896, %ifend5.sink.split.i, %if.entry.i96.i, %if.entry.i893
-  %311 = phi i64 [ %.pr.i, %ifend8.i ], [ %.pr.i, %if.entry.i893 ], [ %.pr.i, %if.entry.i96.i ], [ 16, %if.entry6.i896 ], [ 17, %if.entry9.i ], [ 18, %if.entry12.i ], [ %.ph.i, %ifend5.sink.split.i ]
+ifend5.i:                                         ; preds = %if.entry12.i, %if.entry9.i, %ifend8.i, %if.entry6.i876, %ifend5.sink.split.i, %if.entry.i96.i, %if.entry.i873
+  %311 = phi i64 [ %.pr.i, %ifend8.i ], [ %.pr.i, %if.entry.i873 ], [ %.pr.i, %if.entry.i96.i ], [ 16, %if.entry6.i876 ], [ 17, %if.entry9.i ], [ 18, %if.entry12.i ], [ %.ph.i, %ifend5.sink.split.i ]
   %312 = tail call ptr @malloc(i32 16)
   store i64 %311, ptr %312, align 4
   %memberidx1.i88.i = getelementptr inbounds %Token, ptr %312, i64 0, i32 1
   store ptr %81, ptr %memberidx1.i88.i, align 8
   br label %common.ret
 
-if.entry6.i896:                                   ; preds = %if.entry3.i
-  %313 = load i64, ptr %memberidx.i883, align 4
-  %314 = load ptr, ptr %memberidx1.i.i884, align 8
+if.entry6.i876:                                   ; preds = %if.entry3.i
+  %313 = load i64, ptr %memberidx.i863, align 4
+  %314 = load ptr, ptr %memberidx1.i.i864, align 8
   %memberidx2.i.i57.i = getelementptr inbounds %string, ptr %314, i64 0, i32 2
   %315 = load i64, ptr %memberidx2.i.i57.i, align 4
   %.not153.i = icmp slt i64 %313, %315
   br i1 %.not153.i, label %ifend.i61.i, label %ifend5.i
 
-ifend.i61.i:                                      ; preds = %if.entry6.i896
+ifend.i61.i:                                      ; preds = %if.entry6.i876
   %316 = load ptr, ptr %314, align 8
-  %memberidx2.i59.i897 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %316, i64 0, i32 2
-  %317 = load ptr, ptr %memberidx2.i59.i897, align 8
+  %memberidx2.i59.i877 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %316, i64 0, i32 2
+  %317 = load ptr, ptr %memberidx2.i59.i877, align 8
   %318 = add nsw i64 %313, 1
-  store i64 %318, ptr %memberidx.i883, align 4
+  store i64 %318, ptr %memberidx.i863, align 4
   %319 = tail call i8 %317(ptr nonnull %314, i64 %318)
   store i8 %319, ptr %0, align 1
   %320 = icmp eq i8 %319, 10
@@ -5544,8 +5544,8 @@ ifend8.i:                                         ; preds = %if.entry3.i
   ]
 
 if.entry9.i:                                      ; preds = %ifend8.i
-  %321 = load i64, ptr %memberidx.i883, align 4
-  %322 = load ptr, ptr %memberidx1.i.i884, align 8
+  %321 = load i64, ptr %memberidx.i863, align 4
+  %322 = load ptr, ptr %memberidx1.i.i864, align 8
   %memberidx2.i.i41.i = getelementptr inbounds %string, ptr %322, i64 0, i32 2
   %323 = load i64, ptr %memberidx2.i.i41.i, align 4
   %.not152.i = icmp slt i64 %321, %323
@@ -5553,29 +5553,29 @@ if.entry9.i:                                      ; preds = %ifend8.i
 
 ifend.i45.i:                                      ; preds = %if.entry9.i
   %324 = load ptr, ptr %322, align 8
-  %memberidx2.i43.i898 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %324, i64 0, i32 2
-  %325 = load ptr, ptr %memberidx2.i43.i898, align 8
+  %memberidx2.i43.i878 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %324, i64 0, i32 2
+  %325 = load ptr, ptr %memberidx2.i43.i878, align 8
   %326 = add nsw i64 %321, 1
-  store i64 %326, ptr %memberidx.i883, align 4
+  store i64 %326, ptr %memberidx.i863, align 4
   %327 = tail call i8 %325(ptr nonnull %322, i64 %326)
   store i8 %327, ptr %0, align 1
   %328 = icmp eq i8 %327, 10
   br i1 %328, label %ifend5.sink.split.sink.split.i, label %ifend5.sink.split.i
 
 if.entry12.i:                                     ; preds = %ifend8.i
-  %329 = load i64, ptr %memberidx.i883, align 4
-  %330 = load ptr, ptr %memberidx1.i.i884, align 8
-  %memberidx2.i.i.i899 = getelementptr inbounds %string, ptr %330, i64 0, i32 2
-  %331 = load i64, ptr %memberidx2.i.i.i899, align 4
+  %329 = load i64, ptr %memberidx.i863, align 4
+  %330 = load ptr, ptr %memberidx1.i.i864, align 8
+  %memberidx2.i.i.i879 = getelementptr inbounds %string, ptr %330, i64 0, i32 2
+  %331 = load i64, ptr %memberidx2.i.i.i879, align 4
   %.not151.i = icmp slt i64 %329, %331
-  br i1 %.not151.i, label %ifend.i.i900, label %ifend5.i
+  br i1 %.not151.i, label %ifend.i.i880, label %ifend5.i
 
-ifend.i.i900:                                     ; preds = %if.entry12.i
+ifend.i.i880:                                     ; preds = %if.entry12.i
   %332 = load ptr, ptr %330, align 8
   %memberidx2.i38.i = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %332, i64 0, i32 2
   %333 = load ptr, ptr %memberidx2.i38.i, align 8
   %334 = add nsw i64 %329, 1
-  store i64 %334, ptr %memberidx.i883, align 4
+  store i64 %334, ptr %memberidx.i863, align 4
   %335 = tail call i8 %333(ptr nonnull %330, i64 %334)
   store i8 %335, ptr %0, align 1
   %336 = icmp eq i8 %335, 10
@@ -5595,60 +5595,60 @@ ifend8:                                           ; preds = %ifend5
   br i1 %340, label %if.entry9, label %ifend11
 
 if.entry9:                                        ; preds = %ifend8
-  %memberidx.i.i901 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 3
-  %341 = load i64, ptr %memberidx.i.i901, align 4
+  %memberidx.i.i881 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 3
+  %341 = load i64, ptr %memberidx.i.i881, align 4
   %342 = add i64 %341, 1
-  %memberidx1.i.i902 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 1
-  %343 = load ptr, ptr %memberidx1.i.i902, align 8
-  %memberidx2.i.i903 = getelementptr inbounds %string, ptr %343, i64 0, i32 2
-  %344 = load i64, ptr %memberidx2.i.i903, align 4
+  %memberidx1.i.i882 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 1
+  %343 = load ptr, ptr %memberidx1.i.i882, align 8
+  %memberidx2.i.i883 = getelementptr inbounds %string, ptr %343, i64 0, i32 2
+  %344 = load i64, ptr %memberidx2.i.i883, align 4
   %345 = icmp slt i64 %342, %344
-  br i1 %345, label %Lexer_peek.exit.i906, label %ifend.i911
+  br i1 %345, label %Lexer_peek.exit.i886, label %ifend.i891
 
-Lexer_peek.exit.i906:                             ; preds = %if.entry9
+Lexer_peek.exit.i886:                             ; preds = %if.entry9
   %346 = icmp eq i8 %2, 48
   %347 = load ptr, ptr %343, align 8
-  %memberidx4.i.i904 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %347, i64 0, i32 2
-  %348 = load ptr, ptr %memberidx4.i.i904, align 8
+  %memberidx4.i.i884 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %347, i64 0, i32 2
+  %348 = load ptr, ptr %memberidx4.i.i884, align 8
   %349 = tail call i8 %348(ptr nonnull %343, i64 %342)
-  %phi.cmp.i905 = icmp eq i8 %349, 98
-  %350 = and i1 %346, %phi.cmp.i905
-  br i1 %350, label %if.entry.i909, label %Lexer_peek.exit.ifend_crit_edge.i
+  %phi.cmp.i885 = icmp eq i8 %349, 98
+  %350 = and i1 %346, %phi.cmp.i885
+  br i1 %350, label %if.entry.i889, label %Lexer_peek.exit.ifend_crit_edge.i
 
-Lexer_peek.exit.ifend_crit_edge.i:                ; preds = %Lexer_peek.exit.i906
-  %.pre.i907 = load i64, ptr %memberidx.i.i901, align 4
-  %.pre107.i = load ptr, ptr %memberidx1.i.i902, align 8
+Lexer_peek.exit.ifend_crit_edge.i:                ; preds = %Lexer_peek.exit.i886
+  %.pre.i887 = load i64, ptr %memberidx.i.i881, align 4
+  %.pre107.i = load ptr, ptr %memberidx1.i.i882, align 8
   %memberidx2.i45.phi.trans.insert.i = getelementptr inbounds %string, ptr %.pre107.i, i64 0, i32 2
   %.pre108.i = load i64, ptr %memberidx2.i45.phi.trans.insert.i, align 4
-  %.pre121.i = add i64 %.pre.i907, 1
-  br label %ifend.i911
+  %.pre121.i = add i64 %.pre.i887, 1
+  br label %ifend.i891
 
-if.entry.i909:                                    ; preds = %Lexer_peek.exit.i906
+if.entry.i889:                                    ; preds = %Lexer_peek.exit.i886
   %351 = tail call fastcc ptr @Lexer_base_int_token(ptr nonnull %0, i64 2)
   br label %common.ret
 
-ifend.i911:                                       ; preds = %Lexer_peek.exit.ifend_crit_edge.i, %if.entry9
-  %.pre-phi.i910 = phi i64 [ %.pre121.i, %Lexer_peek.exit.ifend_crit_edge.i ], [ %342, %if.entry9 ]
+ifend.i891:                                       ; preds = %Lexer_peek.exit.ifend_crit_edge.i, %if.entry9
+  %.pre-phi.i890 = phi i64 [ %.pre121.i, %Lexer_peek.exit.ifend_crit_edge.i ], [ %342, %if.entry9 ]
   %352 = phi i64 [ %.pre108.i, %Lexer_peek.exit.ifend_crit_edge.i ], [ %344, %if.entry9 ]
   %353 = phi ptr [ %.pre107.i, %Lexer_peek.exit.ifend_crit_edge.i ], [ %343, %if.entry9 ]
-  %354 = phi i64 [ %.pre.i907, %Lexer_peek.exit.ifend_crit_edge.i ], [ %341, %if.entry9 ]
-  %355 = icmp slt i64 %.pre-phi.i910, %352
+  %354 = phi i64 [ %.pre.i887, %Lexer_peek.exit.ifend_crit_edge.i ], [ %341, %if.entry9 ]
+  %355 = icmp slt i64 %.pre-phi.i890, %352
   br i1 %355, label %Lexer_peek.exit49.i, label %ifend4.i
 
-Lexer_peek.exit49.i:                              ; preds = %ifend.i911
+Lexer_peek.exit49.i:                              ; preds = %ifend.i891
   %356 = load i8, ptr %0, align 1
   %357 = icmp eq i8 %356, 48
   %358 = load ptr, ptr %353, align 8
   %memberidx4.i47.i = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %358, i64 0, i32 2
   %359 = load ptr, ptr %memberidx4.i47.i, align 8
-  %360 = tail call i8 %359(ptr nonnull %353, i64 %.pre-phi.i910)
+  %360 = tail call i8 %359(ptr nonnull %353, i64 %.pre-phi.i890)
   %phi.cmp100.i = icmp eq i8 %360, 111
   %361 = and i1 %357, %phi.cmp100.i
   br i1 %361, label %if.entry2.i, label %Lexer_peek.exit49.ifend4_crit_edge.i
 
 Lexer_peek.exit49.ifend4_crit_edge.i:             ; preds = %Lexer_peek.exit49.i
-  %.pre109.i = load i64, ptr %memberidx.i.i901, align 4
-  %.pre110.i = load ptr, ptr %memberidx1.i.i902, align 8
+  %.pre109.i = load i64, ptr %memberidx.i.i881, align 4
+  %.pre110.i = load ptr, ptr %memberidx1.i.i882, align 8
   %memberidx2.i52.phi.trans.insert.i = getelementptr inbounds %string, ptr %.pre110.i, i64 0, i32 2
   %.pre111.i = load i64, ptr %memberidx2.i52.phi.trans.insert.i, align 4
   %.pre122.i = add i64 %.pre109.i, 1
@@ -5658,13 +5658,13 @@ if.entry2.i:                                      ; preds = %Lexer_peek.exit49.i
   %362 = tail call fastcc ptr @Lexer_base_int_token(ptr nonnull %0, i64 8)
   br label %common.ret
 
-ifend4.i:                                         ; preds = %Lexer_peek.exit49.ifend4_crit_edge.i, %ifend.i911
-  %.pre-phi123.i = phi i64 [ %.pre122.i, %Lexer_peek.exit49.ifend4_crit_edge.i ], [ %.pre-phi.i910, %ifend.i911 ]
-  %363 = phi i64 [ %.pre111.i, %Lexer_peek.exit49.ifend4_crit_edge.i ], [ %352, %ifend.i911 ]
-  %364 = phi ptr [ %.pre110.i, %Lexer_peek.exit49.ifend4_crit_edge.i ], [ %353, %ifend.i911 ]
-  %365 = phi i64 [ %.pre109.i, %Lexer_peek.exit49.ifend4_crit_edge.i ], [ %354, %ifend.i911 ]
+ifend4.i:                                         ; preds = %Lexer_peek.exit49.ifend4_crit_edge.i, %ifend.i891
+  %.pre-phi123.i = phi i64 [ %.pre122.i, %Lexer_peek.exit49.ifend4_crit_edge.i ], [ %.pre-phi.i890, %ifend.i891 ]
+  %363 = phi i64 [ %.pre111.i, %Lexer_peek.exit49.ifend4_crit_edge.i ], [ %352, %ifend.i891 ]
+  %364 = phi ptr [ %.pre110.i, %Lexer_peek.exit49.ifend4_crit_edge.i ], [ %353, %ifend.i891 ]
+  %365 = phi i64 [ %.pre109.i, %Lexer_peek.exit49.ifend4_crit_edge.i ], [ %354, %ifend.i891 ]
   %366 = icmp slt i64 %.pre-phi123.i, %363
-  br i1 %366, label %Lexer_peek.exit56.i, label %ifend8.i913
+  br i1 %366, label %Lexer_peek.exit56.i, label %ifend8.i893
 
 Lexer_peek.exit56.i:                              ; preds = %ifend4.i
   %367 = load i8, ptr %0, align 1
@@ -5675,21 +5675,21 @@ Lexer_peek.exit56.i:                              ; preds = %ifend4.i
   %371 = tail call i8 %370(ptr nonnull %364, i64 %.pre-phi123.i)
   %phi.cmp101.i = icmp eq i8 %371, 120
   %372 = and i1 %368, %phi.cmp101.i
-  br i1 %372, label %if.entry6.i912, label %Lexer_peek.exit56.ifend8_crit_edge.i
+  br i1 %372, label %if.entry6.i892, label %Lexer_peek.exit56.ifend8_crit_edge.i
 
 Lexer_peek.exit56.ifend8_crit_edge.i:             ; preds = %Lexer_peek.exit56.i
-  %.pre112.i = load i64, ptr %memberidx.i.i901, align 4
-  %.pre113.i = load ptr, ptr %memberidx1.i.i902, align 8
+  %.pre112.i = load i64, ptr %memberidx.i.i881, align 4
+  %.pre113.i = load ptr, ptr %memberidx1.i.i882, align 8
   %memberidx2.i59.phi.trans.insert.i = getelementptr inbounds %string, ptr %.pre113.i, i64 0, i32 2
   %.pre114.i = load i64, ptr %memberidx2.i59.phi.trans.insert.i, align 4
   %.pre124.i = add i64 %.pre112.i, 1
-  br label %ifend8.i913
+  br label %ifend8.i893
 
-if.entry6.i912:                                   ; preds = %Lexer_peek.exit56.i
+if.entry6.i892:                                   ; preds = %Lexer_peek.exit56.i
   %373 = tail call fastcc ptr @Lexer_base_int_token(ptr nonnull %0, i64 16)
   br label %common.ret
 
-ifend8.i913:                                      ; preds = %Lexer_peek.exit56.ifend8_crit_edge.i, %ifend4.i
+ifend8.i893:                                      ; preds = %Lexer_peek.exit56.ifend8_crit_edge.i, %ifend4.i
   %.pre-phi125.i = phi i64 [ %.pre124.i, %Lexer_peek.exit56.ifend8_crit_edge.i ], [ %.pre-phi123.i, %ifend4.i ]
   %374 = phi i64 [ %.pre114.i, %Lexer_peek.exit56.ifend8_crit_edge.i ], [ %363, %ifend4.i ]
   %375 = phi ptr [ %.pre113.i, %Lexer_peek.exit56.ifend8_crit_edge.i ], [ %364, %ifend4.i ]
@@ -5697,87 +5697,87 @@ ifend8.i913:                                      ; preds = %Lexer_peek.exit56.i
   %377 = icmp slt i64 %.pre-phi125.i, %374
   br i1 %377, label %if.entry.i62.i, label %Lexer_peek.exit63.i
 
-if.entry.i62.i:                                   ; preds = %ifend8.i913
+if.entry.i62.i:                                   ; preds = %ifend8.i893
   %378 = load ptr, ptr %375, align 8
   %memberidx4.i61.i = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %378, i64 0, i32 2
   %379 = load ptr, ptr %memberidx4.i61.i, align 8
   %380 = tail call i8 %379(ptr nonnull %375, i64 %.pre-phi125.i)
-  %.pre115.i = load i64, ptr %memberidx.i.i901, align 4
-  %.pre116.i = load ptr, ptr %memberidx1.i.i902, align 8
+  %.pre115.i = load i64, ptr %memberidx.i.i881, align 4
+  %.pre116.i = load ptr, ptr %memberidx1.i.i882, align 8
   %memberidx2.i67.phi.trans.insert.i = getelementptr inbounds %string, ptr %.pre116.i, i64 0, i32 2
   %.pre117.i = load i64, ptr %memberidx2.i67.phi.trans.insert.i, align 4
   br label %Lexer_peek.exit63.i
 
-Lexer_peek.exit63.i:                              ; preds = %if.entry.i62.i, %ifend8.i913
-  %381 = phi i64 [ %.pre117.i, %if.entry.i62.i ], [ %374, %ifend8.i913 ]
-  %382 = phi ptr [ %.pre116.i, %if.entry.i62.i ], [ %375, %ifend8.i913 ]
-  %383 = phi i64 [ %.pre115.i, %if.entry.i62.i ], [ %376, %ifend8.i913 ]
-  %common.ret.op.i60.i = phi i8 [ %380, %if.entry.i62.i ], [ 0, %ifend8.i913 ]
+Lexer_peek.exit63.i:                              ; preds = %if.entry.i62.i, %ifend8.i893
+  %381 = phi i64 [ %.pre117.i, %if.entry.i62.i ], [ %374, %ifend8.i893 ]
+  %382 = phi ptr [ %.pre116.i, %if.entry.i62.i ], [ %375, %ifend8.i893 ]
+  %383 = phi i64 [ %.pre115.i, %if.entry.i62.i ], [ %376, %ifend8.i893 ]
+  %common.ret.op.i60.i = phi i8 [ %380, %if.entry.i62.i ], [ 0, %ifend8.i893 ]
   %384 = add i8 %common.ret.op.i60.i, -48
   %385 = icmp ult i8 %384, 10
   %386 = icmp eq i8 %common.ret.op.i60.i, 46
   %387 = or i1 %386, %385
-  %.not.i914 = icmp slt i64 %383, %381
-  %388 = and i1 %.not.i914, %387
-  br i1 %388, label %while.entry.preheader.i917, label %while.end.i925
+  %.not.i894 = icmp slt i64 %383, %381
+  %388 = and i1 %.not.i894, %387
+  br i1 %388, label %while.entry.preheader.i897, label %while.end.i905
 
-while.entry.preheader.i917:                       ; preds = %Lexer_peek.exit63.i
-  %memberidx12.i.i915 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 4
-  %memberidx10.i.i916 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 5
-  br label %while.entry.i919
+while.entry.preheader.i897:                       ; preds = %Lexer_peek.exit63.i
+  %memberidx12.i.i895 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 4
+  %memberidx10.i.i896 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 5
+  br label %while.entry.i899
 
-while.entry.i919:                                 ; preds = %Lexer_peek.exit86.i, %while.entry.preheader.i917
-  %389 = phi i64 [ %439, %Lexer_peek.exit86.i ], [ %381, %while.entry.preheader.i917 ]
-  %390 = phi ptr [ %440, %Lexer_peek.exit86.i ], [ %382, %while.entry.preheader.i917 ]
-  %391 = phi i64 [ %441, %Lexer_peek.exit86.i ], [ %383, %while.entry.preheader.i917 ]
-  %length.0.i918 = phi i64 [ %420, %Lexer_peek.exit86.i ], [ 1, %while.entry.preheader.i917 ]
-  %is_float.0.i = phi i1 [ %spec.select.i, %Lexer_peek.exit86.i ], [ false, %while.entry.preheader.i917 ]
-  %next_char.0.i = phi i8 [ %common.ret.op.i83.i, %Lexer_peek.exit86.i ], [ %common.ret.op.i60.i, %while.entry.preheader.i917 ]
+while.entry.i899:                                 ; preds = %Lexer_peek.exit86.i, %while.entry.preheader.i897
+  %389 = phi i64 [ %439, %Lexer_peek.exit86.i ], [ %381, %while.entry.preheader.i897 ]
+  %390 = phi ptr [ %440, %Lexer_peek.exit86.i ], [ %382, %while.entry.preheader.i897 ]
+  %391 = phi i64 [ %441, %Lexer_peek.exit86.i ], [ %383, %while.entry.preheader.i897 ]
+  %length.0.i898 = phi i64 [ %420, %Lexer_peek.exit86.i ], [ 1, %while.entry.preheader.i897 ]
+  %is_float.0.i = phi i1 [ %spec.select.i, %Lexer_peek.exit86.i ], [ false, %while.entry.preheader.i897 ]
+  %next_char.0.i = phi i8 [ %common.ret.op.i83.i, %Lexer_peek.exit86.i ], [ %common.ret.op.i60.i, %while.entry.preheader.i897 ]
   %392 = icmp eq i8 %next_char.0.i, 46
   %393 = add i64 %391, 2
   %394 = icmp slt i64 %393, %389
   br i1 %394, label %if.entry.i75.i, label %Lexer_peek.exit76.i
 
-if.entry.i75.i:                                   ; preds = %while.entry.i919
+if.entry.i75.i:                                   ; preds = %while.entry.i899
   %395 = load ptr, ptr %390, align 8
   %memberidx4.i74.i = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %395, i64 0, i32 2
   %396 = load ptr, ptr %memberidx4.i74.i, align 8
   %397 = tail call i8 %396(ptr nonnull %390, i64 %393)
   br label %Lexer_peek.exit76.i
 
-Lexer_peek.exit76.i:                              ; preds = %if.entry.i75.i, %while.entry.i919
-  %common.ret.op.i73.i = phi i8 [ %397, %if.entry.i75.i ], [ 0, %while.entry.i919 ]
+Lexer_peek.exit76.i:                              ; preds = %if.entry.i75.i, %while.entry.i899
+  %common.ret.op.i73.i = phi i8 [ %397, %if.entry.i75.i ], [ 0, %while.entry.i899 ]
   %398 = add i8 %common.ret.op.i73.i, -58
   %399 = icmp ult i8 %398, -10
   %400 = or i1 %is_float.0.i, %399
   %401 = and i1 %392, %400
-  br i1 %401, label %while.end.i925, label %ifend11.i
+  br i1 %401, label %while.end.i905, label %ifend11.i
 
-while.end.i925:                                   ; preds = %Lexer_peek.exit86.i, %Lexer_peek.exit76.i, %Lexer_peek.exit63.i
-  %length.1.i920 = phi i64 [ 1, %Lexer_peek.exit63.i ], [ %length.0.i918, %Lexer_peek.exit76.i ], [ %420, %Lexer_peek.exit86.i ]
+while.end.i905:                                   ; preds = %Lexer_peek.exit86.i, %Lexer_peek.exit76.i, %Lexer_peek.exit63.i
+  %length.1.i900 = phi i64 [ 1, %Lexer_peek.exit63.i ], [ %length.0.i898, %Lexer_peek.exit76.i ], [ %420, %Lexer_peek.exit86.i ]
   %is_float.1.i = phi i1 [ false, %Lexer_peek.exit63.i ], [ %is_float.0.i, %Lexer_peek.exit76.i ], [ %spec.select.i, %Lexer_peek.exit86.i ]
   %402 = tail call ptr @malloc(i32 32)
-  %403 = load i64, ptr %memberidx.i.i901, align 4
-  %404 = sub i64 %403, %length.1.i920
+  %403 = load i64, ptr %memberidx.i.i881, align 4
+  %404 = sub i64 %403, %length.1.i900
   %405 = add i64 %404, 1
   %406 = add i64 %403, 1
   %memberidx2.i88.i = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 4
   %407 = load i64, ptr %memberidx2.i88.i, align 4
-  %408 = sub i64 %407, %length.1.i920
-  %memberidx3.i.i921 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 5
-  %409 = load i64, ptr %memberidx3.i.i921, align 4
+  %408 = sub i64 %407, %length.1.i900
+  %memberidx3.i.i901 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 5
+  %409 = load i64, ptr %memberidx3.i.i901, align 4
   store i64 %405, ptr %402, align 4
-  %memberidx1.i.i89.i922 = getelementptr inbounds %FloRange, ptr %402, i64 0, i32 1
-  store i64 %406, ptr %memberidx1.i.i89.i922, align 4
-  %memberidx2.i.i.i923 = getelementptr inbounds %FloRange, ptr %402, i64 0, i32 2
-  store i64 %408, ptr %memberidx2.i.i.i923, align 4
-  %memberidx3.i.i.i924 = getelementptr inbounds %FloRange, ptr %402, i64 0, i32 3
-  store i64 %409, ptr %memberidx3.i.i.i924, align 4
-  %410 = load ptr, ptr %memberidx1.i.i902, align 8
+  %memberidx1.i.i89.i902 = getelementptr inbounds %FloRange, ptr %402, i64 0, i32 1
+  store i64 %406, ptr %memberidx1.i.i89.i902, align 4
+  %memberidx2.i.i.i903 = getelementptr inbounds %FloRange, ptr %402, i64 0, i32 2
+  store i64 %408, ptr %memberidx2.i.i.i903, align 4
+  %memberidx3.i.i.i904 = getelementptr inbounds %FloRange, ptr %402, i64 0, i32 3
+  store i64 %409, ptr %memberidx3.i.i.i904, align 4
+  %410 = load ptr, ptr %memberidx1.i.i882, align 8
   %411 = load ptr, ptr %410, align 8
   %memberidx17.i = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %411, i64 0, i32 1
   %412 = load ptr, ptr %memberidx17.i, align 8
-  %413 = tail call ptr %412(ptr nonnull %410, i64 %405, i64 %length.1.i920)
+  %413 = tail call ptr %412(ptr nonnull %410, i64 %405, i64 %length.1.i900)
   %414 = tail call ptr @malloc(i32 24)
   %415 = load ptr, ptr %413, align 8
   %memberidx19.i = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %415, i64 0, i32 5
@@ -5789,73 +5789,73 @@ ifend11.i:                                        ; preds = %Lexer_peek.exit76.i
   %418 = load i8, ptr %0, align 1
   %419 = icmp eq i8 %418, 46
   %spec.select.i = select i1 %419, i1 true, i1 %is_float.0.i
-  %420 = add i64 %length.0.i918, 1
-  %421 = load i64, ptr %memberidx.i.i901, align 4
-  %422 = load ptr, ptr %memberidx1.i.i902, align 8
+  %420 = add i64 %length.0.i898, 1
+  %421 = load i64, ptr %memberidx.i.i881, align 4
+  %422 = load ptr, ptr %memberidx1.i.i882, align 8
   %memberidx2.i.i91.i = getelementptr inbounds %string, ptr %422, i64 0, i32 2
   %423 = load i64, ptr %memberidx2.i.i91.i, align 4
   %.not102.i = icmp slt i64 %421, %423
-  br i1 %.not102.i, label %ifend.i.i927, label %Lexer_advance.exit.i929
+  br i1 %.not102.i, label %ifend.i.i907, label %Lexer_advance.exit.i909
 
-ifend.i.i927:                                     ; preds = %ifend11.i
+ifend.i.i907:                                     ; preds = %ifend11.i
   %424 = load ptr, ptr %422, align 8
-  %memberidx2.i93.i926 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %424, i64 0, i32 2
-  %425 = load ptr, ptr %memberidx2.i93.i926, align 8
+  %memberidx2.i93.i906 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %424, i64 0, i32 2
+  %425 = load ptr, ptr %memberidx2.i93.i906, align 8
   %426 = add nsw i64 %421, 1
-  store i64 %426, ptr %memberidx.i.i901, align 4
+  store i64 %426, ptr %memberidx.i.i881, align 4
   %427 = tail call i8 %425(ptr nonnull %422, i64 %426)
   store i8 %427, ptr %0, align 1
   %428 = icmp eq i8 %427, 10
-  br i1 %428, label %if.entry6.i.i928, label %Lexer_advance.exit.sink.split.i
+  br i1 %428, label %if.entry6.i.i908, label %Lexer_advance.exit.sink.split.i
 
-if.entry6.i.i928:                                 ; preds = %ifend.i.i927
-  store i64 0, ptr %memberidx12.i.i915, align 4
+if.entry6.i.i908:                                 ; preds = %ifend.i.i907
+  store i64 0, ptr %memberidx12.i.i895, align 4
   br label %Lexer_advance.exit.sink.split.i
 
-Lexer_advance.exit.sink.split.i:                  ; preds = %if.entry6.i.i928, %ifend.i.i927
-  %memberidx10.i.sink127.i = phi ptr [ %memberidx10.i.i916, %if.entry6.i.i928 ], [ %memberidx12.i.i915, %ifend.i.i927 ]
+Lexer_advance.exit.sink.split.i:                  ; preds = %if.entry6.i.i908, %ifend.i.i907
+  %memberidx10.i.sink127.i = phi ptr [ %memberidx10.i.i896, %if.entry6.i.i908 ], [ %memberidx12.i.i895, %ifend.i.i907 ]
   %429 = load i64, ptr %memberidx10.i.sink127.i, align 4
   %430 = add i64 %429, 1
   store i64 %430, ptr %memberidx10.i.sink127.i, align 4
-  %.pre972 = load i64, ptr %memberidx.i.i901, align 4
-  %.pre973 = load ptr, ptr %memberidx1.i.i902, align 8
-  %memberidx2.i82.i.phi.trans.insert = getelementptr inbounds %string, ptr %.pre973, i64 0, i32 2
-  %.pre974 = load i64, ptr %memberidx2.i82.i.phi.trans.insert, align 4
-  br label %Lexer_advance.exit.i929
+  %.pre952 = load i64, ptr %memberidx.i.i881, align 4
+  %.pre953 = load ptr, ptr %memberidx1.i.i882, align 8
+  %memberidx2.i82.i.phi.trans.insert = getelementptr inbounds %string, ptr %.pre953, i64 0, i32 2
+  %.pre954 = load i64, ptr %memberidx2.i82.i.phi.trans.insert, align 4
+  br label %Lexer_advance.exit.i909
 
-Lexer_advance.exit.i929:                          ; preds = %Lexer_advance.exit.sink.split.i, %ifend11.i
-  %431 = phi i64 [ %.pre974, %Lexer_advance.exit.sink.split.i ], [ %423, %ifend11.i ]
-  %432 = phi ptr [ %.pre973, %Lexer_advance.exit.sink.split.i ], [ %422, %ifend11.i ]
-  %433 = phi i64 [ %.pre972, %Lexer_advance.exit.sink.split.i ], [ %421, %ifend11.i ]
+Lexer_advance.exit.i909:                          ; preds = %Lexer_advance.exit.sink.split.i, %ifend11.i
+  %431 = phi i64 [ %.pre954, %Lexer_advance.exit.sink.split.i ], [ %423, %ifend11.i ]
+  %432 = phi ptr [ %.pre953, %Lexer_advance.exit.sink.split.i ], [ %422, %ifend11.i ]
+  %433 = phi i64 [ %.pre952, %Lexer_advance.exit.sink.split.i ], [ %421, %ifend11.i ]
   %434 = add i64 %433, 1
   %435 = icmp slt i64 %434, %431
   br i1 %435, label %if.entry.i85.i, label %Lexer_peek.exit86.i
 
-if.entry.i85.i:                                   ; preds = %Lexer_advance.exit.i929
+if.entry.i85.i:                                   ; preds = %Lexer_advance.exit.i909
   %436 = load ptr, ptr %432, align 8
   %memberidx4.i84.i = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %436, i64 0, i32 2
   %437 = load ptr, ptr %memberidx4.i84.i, align 8
   %438 = tail call i8 %437(ptr nonnull %432, i64 %434)
-  %.pre118.i = load i64, ptr %memberidx.i.i901, align 4
-  %.pre119.i = load ptr, ptr %memberidx1.i.i902, align 8
+  %.pre118.i = load i64, ptr %memberidx.i.i881, align 4
+  %.pre119.i = load ptr, ptr %memberidx1.i.i882, align 8
   %memberidx2.i79.phi.trans.insert.i = getelementptr inbounds %string, ptr %.pre119.i, i64 0, i32 2
   %.pre120.i = load i64, ptr %memberidx2.i79.phi.trans.insert.i, align 4
   br label %Lexer_peek.exit86.i
 
-Lexer_peek.exit86.i:                              ; preds = %if.entry.i85.i, %Lexer_advance.exit.i929
-  %439 = phi i64 [ %.pre120.i, %if.entry.i85.i ], [ %431, %Lexer_advance.exit.i929 ]
-  %440 = phi ptr [ %.pre119.i, %if.entry.i85.i ], [ %432, %Lexer_advance.exit.i929 ]
-  %441 = phi i64 [ %.pre118.i, %if.entry.i85.i ], [ %433, %Lexer_advance.exit.i929 ]
-  %common.ret.op.i83.i = phi i8 [ %438, %if.entry.i85.i ], [ 0, %Lexer_advance.exit.i929 ]
+Lexer_peek.exit86.i:                              ; preds = %if.entry.i85.i, %Lexer_advance.exit.i909
+  %439 = phi i64 [ %.pre120.i, %if.entry.i85.i ], [ %431, %Lexer_advance.exit.i909 ]
+  %440 = phi ptr [ %.pre119.i, %if.entry.i85.i ], [ %432, %Lexer_advance.exit.i909 ]
+  %441 = phi i64 [ %.pre118.i, %if.entry.i85.i ], [ %433, %Lexer_advance.exit.i909 ]
+  %common.ret.op.i83.i = phi i8 [ %438, %if.entry.i85.i ], [ 0, %Lexer_advance.exit.i909 ]
   %442 = add i8 %common.ret.op.i83.i, -48
   %443 = icmp ult i8 %442, 10
   %444 = icmp eq i8 %common.ret.op.i83.i, 46
   %445 = or i1 %444, %443
   %.not103.i = icmp slt i64 %441, %439
   %446 = and i1 %.not103.i, %445
-  br i1 %446, label %while.entry.i919, label %while.end.i925
+  br i1 %446, label %while.entry.i899, label %while.end.i905
 
-true_block.i:                                     ; preds = %while.end.i925
+true_block.i:                                     ; preds = %while.end.i905
   %447 = tail call double @atof(ptr %417)
   tail call void @free(ptr %417)
   store i64 30, ptr %414, align 4
@@ -5865,12 +5865,12 @@ true_block.i:                                     ; preds = %while.end.i925
   store double %447, ptr %memberidx.i69.i, align 8
   br label %common.ret
 
-false_block.i:                                    ; preds = %while.end.i925
+false_block.i:                                    ; preds = %while.end.i905
   %448 = tail call i64 @atol(ptr nocapture %417)
   tail call void @free(ptr %417)
   store i64 29, ptr %414, align 4
-  %memberidx1.i.i.i930 = getelementptr inbounds %Token, ptr %414, i64 0, i32 1
-  store ptr %402, ptr %memberidx1.i.i.i930, align 8
+  %memberidx1.i.i.i910 = getelementptr inbounds %Token, ptr %414, i64 0, i32 1
+  store ptr %402, ptr %memberidx1.i.i.i910, align 8
   %memberidx.i64.i = getelementptr inbounds %IntToken, ptr %414, i64 0, i32 2
   store i64 %448, ptr %memberidx.i64.i, align 4
   br label %common.ret
@@ -5990,20 +5990,20 @@ if.entry.i.i:                                     ; preds = %if.entry21
   %memberidx4.i.i = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %475, i64 0, i32 2
   %476 = load ptr, ptr %memberidx4.i.i, align 8
   %477 = tail call i8 %476(ptr nonnull %472, i64 %471)
-  %phi.cmp869 = icmp eq i8 %477, 43
+  %phi.cmp849 = icmp eq i8 %477, 43
   %478 = load i64, ptr %memberidx.i.i199, align 4
   %479 = load ptr, ptr %memberidx1.i.i200, align 8
   %memberidx2.i.i.i = getelementptr inbounds %string, ptr %479, i64 0, i32 2
   %480 = load i64, ptr %memberidx2.i.i.i, align 4
-  br i1 %phi.cmp869, label %if.entry.i202, label %if.entry.i.i.else.i_crit_edge
+  br i1 %phi.cmp849, label %if.entry.i202, label %if.entry.i.i.else.i_crit_edge
 
 if.entry.i.i.else.i_crit_edge:                    ; preds = %if.entry.i.i
-  %.pre980 = add i64 %478, 1
+  %.pre960 = add i64 %478, 1
   br label %else.i
 
 if.entry.i202:                                    ; preds = %if.entry.i.i
-  %.not872 = icmp slt i64 %478, %480
-  br i1 %.not872, label %ifend.i.i, label %Lexer_advance.exit.i
+  %.not852 = icmp slt i64 %478, %480
+  br i1 %.not852, label %ifend.i.i, label %Lexer_advance.exit.i
 
 ifend.i.i:                                        ; preds = %if.entry.i202
   %481 = load ptr, ptr %479, align 8
@@ -6023,10 +6023,10 @@ if.entry6.i.i:                                    ; preds = %ifend.i.i
   br label %Lexer_advance.exit.i.sink.split
 
 Lexer_advance.exit.i.sink.split:                  ; preds = %ifend.i.i, %if.entry6.i.i
-  %memberidx9.i.i.sink1001 = phi ptr [ %memberidx10.i.i, %if.entry6.i.i ], [ %memberidx9.i.i, %ifend.i.i ]
-  %486 = load i64, ptr %memberidx9.i.i.sink1001, align 4
+  %memberidx9.i.i.sink981 = phi ptr [ %memberidx10.i.i, %if.entry6.i.i ], [ %memberidx9.i.i, %ifend.i.i ]
+  %486 = load i64, ptr %memberidx9.i.i.sink981, align 4
   %487 = add i64 %486, 1
-  store i64 %487, ptr %memberidx9.i.i.sink1001, align 4
+  store i64 %487, ptr %memberidx9.i.i.sink981, align 4
   br label %Lexer_advance.exit.i
 
 Lexer_advance.exit.i:                             ; preds = %Lexer_advance.exit.i.sink.split, %if.entry.i202
@@ -6053,7 +6053,7 @@ Lexer_advance.exit.i:                             ; preds = %Lexer_advance.exit.
   br label %common.ret
 
 else.i:                                           ; preds = %if.entry.i.i.else.i_crit_edge, %if.entry21
-  %.pre-phi = phi i64 [ %.pre980, %if.entry.i.i.else.i_crit_edge ], [ %471, %if.entry21 ]
+  %.pre-phi = phi i64 [ %.pre960, %if.entry.i.i.else.i_crit_edge ], [ %471, %if.entry21 ]
   %496 = phi i64 [ %480, %if.entry.i.i.else.i_crit_edge ], [ %473, %if.entry21 ]
   %497 = phi ptr [ %479, %if.entry.i.i.else.i_crit_edge ], [ %472, %if.entry21 ]
   %498 = icmp slt i64 %.pre-phi, %496
@@ -6064,16 +6064,16 @@ if.entry.i30.i:                                   ; preds = %else.i
   %memberidx4.i29.i = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %499, i64 0, i32 2
   %500 = load ptr, ptr %memberidx4.i29.i, align 8
   %501 = tail call i8 %500(ptr nonnull %497, i64 %.pre-phi)
-  %phi.cmp870 = icmp eq i8 %501, 61
-  br i1 %phi.cmp870, label %if.entry1.i, label %ifend3.i
+  %phi.cmp850 = icmp eq i8 %501, 61
+  br i1 %phi.cmp850, label %if.entry1.i, label %ifend3.i
 
 if.entry1.i:                                      ; preds = %if.entry.i30.i
   %502 = load i64, ptr %memberidx.i.i199, align 4
   %503 = load ptr, ptr %memberidx1.i.i200, align 8
   %memberidx2.i.i34.i = getelementptr inbounds %string, ptr %503, i64 0, i32 2
   %504 = load i64, ptr %memberidx2.i.i34.i, align 4
-  %.not871 = icmp slt i64 %502, %504
-  br i1 %.not871, label %ifend.i38.i, label %Lexer_advance.exit44.i
+  %.not851 = icmp slt i64 %502, %504
+  br i1 %.not851, label %ifend.i38.i, label %Lexer_advance.exit44.i
 
 ifend.i38.i:                                      ; preds = %if.entry1.i
   %505 = load ptr, ptr %503, align 8
@@ -6093,10 +6093,10 @@ if.entry6.i41.i:                                  ; preds = %ifend.i38.i
   br label %Lexer_advance.exit44.i.sink.split
 
 Lexer_advance.exit44.i.sink.split:                ; preds = %ifend.i38.i, %if.entry6.i41.i
-  %memberidx9.i39.i.sink1003 = phi ptr [ %memberidx10.i40.i, %if.entry6.i41.i ], [ %memberidx9.i39.i, %ifend.i38.i ]
-  %510 = load i64, ptr %memberidx9.i39.i.sink1003, align 4
+  %memberidx9.i39.i.sink983 = phi ptr [ %memberidx10.i40.i, %if.entry6.i41.i ], [ %memberidx9.i39.i, %ifend.i38.i ]
+  %510 = load i64, ptr %memberidx9.i39.i.sink983, align 4
   %511 = add i64 %510, 1
-  store i64 %511, ptr %memberidx9.i39.i.sink1003, align 4
+  store i64 %511, ptr %memberidx9.i39.i.sink983, align 4
   br label %Lexer_advance.exit44.i
 
 Lexer_advance.exit44.i:                           ; preds = %Lexer_advance.exit44.i.sink.split, %if.entry1.i
@@ -6153,1697 +6153,113 @@ if.entry24:                                       ; preds = %ifend11
   %memberidx2.i.i206 = getelementptr inbounds %string, ptr %529, i64 0, i32 2
   %530 = load i64, ptr %memberidx2.i.i206, align 4
   %531 = icmp slt i64 %528, %530
-  br i1 %531, label %if.entry.i.i208, label %else.i236
+  br i1 %531, label %if.entry.i.i208, label %else.i225
 
 if.entry.i.i208:                                  ; preds = %if.entry24
   %532 = load ptr, ptr %529, align 8
   %memberidx4.i.i207 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %532, i64 0, i32 2
   %533 = load ptr, ptr %memberidx4.i.i207, align 8
   %534 = tail call i8 %533(ptr nonnull %529, i64 %528)
-  %phi.cmp865 = icmp eq i8 %534, 45
+  %phi.cmp843 = icmp eq i8 %534, 45
   %535 = load i64, ptr %memberidx.i.i204, align 4
   %536 = load ptr, ptr %memberidx1.i.i205, align 8
   %memberidx2.i.i.i214 = getelementptr inbounds %string, ptr %536, i64 0, i32 2
   %537 = load i64, ptr %memberidx2.i.i.i214, align 4
-  br i1 %phi.cmp865, label %if.entry.i215, label %if.entry.i.i208.else.i236_crit_edge
+  br i1 %phi.cmp843, label %if.entry.i215, label %if.entry.i.i208.else.i225_crit_edge
 
-if.entry.i.i208.else.i236_crit_edge:              ; preds = %if.entry.i.i208
-  %.pre981 = add i64 %535, 1
-  br label %else.i236
+if.entry.i.i208.else.i225_crit_edge:              ; preds = %if.entry.i.i208
+  %.pre961 = add i64 %535, 1
+  br label %else.i225
 
 if.entry.i215:                                    ; preds = %if.entry.i.i208
-  %.not868 = icmp slt i64 %535, %537
-  br i1 %.not868, label %ifend.i.i219, label %Lexer_advance.exit.i232
+  %.not848 = icmp slt i64 %535, %537
+  br i1 %.not848, label %ifend.i.i217, label %Lexer_advance.exit.i224
 
-ifend.i.i219:                                     ; preds = %if.entry.i215
+ifend.i.i217:                                     ; preds = %if.entry.i215
   %538 = load ptr, ptr %536, align 8
-  %memberidx2.i11.i217 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %538, i64 0, i32 2
-  %539 = load ptr, ptr %memberidx2.i11.i217, align 8
+  %memberidx2.i17.i = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %538, i64 0, i32 2
+  %539 = load ptr, ptr %memberidx2.i17.i, align 8
   %540 = add nsw i64 %535, 1
   store i64 %540, ptr %memberidx.i.i204, align 4
   %541 = tail call i8 %539(ptr nonnull %536, i64 %540)
   store i8 %541, ptr %0, align 1
   %542 = icmp eq i8 %541, 10
-  %memberidx9.i.i220 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 4
-  br i1 %542, label %if.entry6.i.i222, label %Lexer_advance.exit.i232.sink.split
+  %memberidx9.i.i218 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 4
+  br i1 %542, label %if.entry6.i.i220, label %Lexer_advance.exit.i224.sink.split
 
-if.entry6.i.i222:                                 ; preds = %ifend.i.i219
-  store i64 0, ptr %memberidx9.i.i220, align 4
-  %memberidx10.i.i221 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 5
-  br label %Lexer_advance.exit.i232.sink.split
+if.entry6.i.i220:                                 ; preds = %ifend.i.i217
+  store i64 0, ptr %memberidx9.i.i218, align 4
+  %memberidx10.i.i219 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 5
+  br label %Lexer_advance.exit.i224.sink.split
 
-Lexer_advance.exit.i232.sink.split:               ; preds = %ifend.i.i219, %if.entry6.i.i222
-  %memberidx9.i.i220.sink1005 = phi ptr [ %memberidx10.i.i221, %if.entry6.i.i222 ], [ %memberidx9.i.i220, %ifend.i.i219 ]
-  %543 = load i64, ptr %memberidx9.i.i220.sink1005, align 4
+Lexer_advance.exit.i224.sink.split:               ; preds = %ifend.i.i217, %if.entry6.i.i220
+  %memberidx9.i.i218.sink985 = phi ptr [ %memberidx10.i.i219, %if.entry6.i.i220 ], [ %memberidx9.i.i218, %ifend.i.i217 ]
+  %543 = load i64, ptr %memberidx9.i.i218.sink985, align 4
   %544 = add i64 %543, 1
-  store i64 %544, ptr %memberidx9.i.i220.sink1005, align 4
-  br label %Lexer_advance.exit.i232
+  store i64 %544, ptr %memberidx9.i.i218.sink985, align 4
+  br label %Lexer_advance.exit.i224
 
-Lexer_advance.exit.i232:                          ; preds = %Lexer_advance.exit.i232.sink.split, %if.entry.i215
+Lexer_advance.exit.i224:                          ; preds = %Lexer_advance.exit.i224.sink.split, %if.entry.i215
   %545 = tail call ptr @malloc(i32 16)
   %546 = tail call ptr @malloc(i32 32)
   %547 = load i64, ptr %memberidx.i.i204, align 4
   %548 = add i64 %547, -1
   %549 = add i64 %547, 1
-  %memberidx2.i13.i226 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 4
-  %550 = load i64, ptr %memberidx2.i13.i226, align 4
+  %memberidx2.i19.i = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 4
+  %550 = load i64, ptr %memberidx2.i19.i, align 4
   %551 = add i64 %550, -2
-  %memberidx3.i14.i227 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 5
-  %552 = load i64, ptr %memberidx3.i14.i227, align 4
+  %memberidx3.i20.i = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 5
+  %552 = load i64, ptr %memberidx3.i20.i, align 4
   store i64 %548, ptr %546, align 4
-  %memberidx1.i.i15.i228 = getelementptr inbounds %FloRange, ptr %546, i64 0, i32 1
-  store i64 %549, ptr %memberidx1.i.i15.i228, align 4
-  %memberidx2.i.i16.i229 = getelementptr inbounds %FloRange, ptr %546, i64 0, i32 2
-  store i64 %551, ptr %memberidx2.i.i16.i229, align 4
-  %memberidx3.i.i.i230 = getelementptr inbounds %FloRange, ptr %546, i64 0, i32 3
-  store i64 %552, ptr %memberidx3.i.i.i230, align 4
+  %memberidx1.i.i21.i = getelementptr inbounds %FloRange, ptr %546, i64 0, i32 1
+  store i64 %549, ptr %memberidx1.i.i21.i, align 4
+  %memberidx2.i.i22.i = getelementptr inbounds %FloRange, ptr %546, i64 0, i32 2
+  store i64 %551, ptr %memberidx2.i.i22.i, align 4
+  %memberidx3.i.i.i223 = getelementptr inbounds %FloRange, ptr %546, i64 0, i32 3
+  store i64 %552, ptr %memberidx3.i.i.i223, align 4
   store i64 22, ptr %545, align 4
-  %memberidx1.i17.i231 = getelementptr inbounds %Token, ptr %545, i64 0, i32 1
-  store ptr %546, ptr %memberidx1.i17.i231, align 8
+  %memberidx1.i23.i = getelementptr inbounds %Token, ptr %545, i64 0, i32 1
+  store ptr %546, ptr %memberidx1.i23.i, align 8
   br label %common.ret
 
-else.i236:                                        ; preds = %if.entry.i.i208.else.i236_crit_edge, %if.entry24
-  %.pre-phi982 = phi i64 [ %.pre981, %if.entry.i.i208.else.i236_crit_edge ], [ %528, %if.entry24 ]
-  %553 = phi i64 [ %537, %if.entry.i.i208.else.i236_crit_edge ], [ %530, %if.entry24 ]
-  %554 = phi ptr [ %536, %if.entry.i.i208.else.i236_crit_edge ], [ %529, %if.entry24 ]
-  %555 = icmp slt i64 %.pre-phi982, %553
-  br i1 %555, label %if.entry.i30.i238, label %ifend3.i269
+else.i225:                                        ; preds = %if.entry.i.i208.else.i225_crit_edge, %if.entry24
+  %.pre-phi962 = phi i64 [ %.pre961, %if.entry.i.i208.else.i225_crit_edge ], [ %528, %if.entry24 ]
+  %553 = phi i64 [ %537, %if.entry.i.i208.else.i225_crit_edge ], [ %530, %if.entry24 ]
+  %554 = phi ptr [ %536, %if.entry.i.i208.else.i225_crit_edge ], [ %529, %if.entry24 ]
+  %555 = icmp slt i64 %.pre-phi962, %553
+  br i1 %555, label %if.entry.i36.i, label %else2.i
 
-if.entry.i30.i238:                                ; preds = %else.i236
+if.entry.i36.i:                                   ; preds = %else.i225
   %556 = load ptr, ptr %554, align 8
-  %memberidx4.i29.i237 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %556, i64 0, i32 2
-  %557 = load ptr, ptr %memberidx4.i29.i237, align 8
-  %558 = tail call i8 %557(ptr nonnull %554, i64 %.pre-phi982)
-  %phi.cmp866 = icmp eq i8 %558, 61
-  br i1 %phi.cmp866, label %if.entry1.i244, label %ifend3.i269
-
-if.entry1.i244:                                   ; preds = %if.entry.i30.i238
+  %memberidx4.i35.i = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %556, i64 0, i32 2
+  %557 = load ptr, ptr %memberidx4.i35.i, align 8
+  %558 = tail call i8 %557(ptr nonnull %554, i64 %.pre-phi962)
+  %phi.cmp844 = icmp eq i8 %558, 61
   %559 = load i64, ptr %memberidx.i.i204, align 4
   %560 = load ptr, ptr %memberidx1.i.i205, align 8
-  %memberidx2.i.i34.i243 = getelementptr inbounds %string, ptr %560, i64 0, i32 2
-  %561 = load i64, ptr %memberidx2.i.i34.i243, align 4
-  %.not867 = icmp slt i64 %559, %561
-  br i1 %.not867, label %ifend.i38.i248, label %Lexer_advance.exit44.i261
+  %memberidx2.i.i40.i = getelementptr inbounds %string, ptr %560, i64 0, i32 2
+  %561 = load i64, ptr %memberidx2.i.i40.i, align 4
+  br i1 %phi.cmp844, label %if.entry1.i226, label %if.entry.i36.i.else2.i_crit_edge
 
-ifend.i38.i248:                                   ; preds = %if.entry1.i244
+if.entry.i36.i.else2.i_crit_edge:                 ; preds = %if.entry.i36.i
+  %.pre963 = add i64 %559, 1
+  br label %else2.i
+
+if.entry1.i226:                                   ; preds = %if.entry.i36.i
+  %.not847 = icmp slt i64 %559, %561
+  br i1 %.not847, label %ifend.i44.i, label %Lexer_advance.exit50.i
+
+ifend.i44.i:                                      ; preds = %if.entry1.i226
   %562 = load ptr, ptr %560, align 8
-  %memberidx2.i36.i246 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %562, i64 0, i32 2
-  %563 = load ptr, ptr %memberidx2.i36.i246, align 8
+  %memberidx2.i42.i = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %562, i64 0, i32 2
+  %563 = load ptr, ptr %memberidx2.i42.i, align 8
   %564 = add nsw i64 %559, 1
   store i64 %564, ptr %memberidx.i.i204, align 4
   %565 = tail call i8 %563(ptr nonnull %560, i64 %564)
   store i8 %565, ptr %0, align 1
   %566 = icmp eq i8 %565, 10
-  %memberidx9.i39.i249 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 4
-  br i1 %566, label %if.entry6.i41.i251, label %Lexer_advance.exit44.i261.sink.split
-
-if.entry6.i41.i251:                               ; preds = %ifend.i38.i248
-  store i64 0, ptr %memberidx9.i39.i249, align 4
-  %memberidx10.i40.i250 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 5
-  br label %Lexer_advance.exit44.i261.sink.split
-
-Lexer_advance.exit44.i261.sink.split:             ; preds = %ifend.i38.i248, %if.entry6.i41.i251
-  %memberidx9.i39.i249.sink1007 = phi ptr [ %memberidx10.i40.i250, %if.entry6.i41.i251 ], [ %memberidx9.i39.i249, %ifend.i38.i248 ]
-  %567 = load i64, ptr %memberidx9.i39.i249.sink1007, align 4
-  %568 = add i64 %567, 1
-  store i64 %568, ptr %memberidx9.i39.i249.sink1007, align 4
-  br label %Lexer_advance.exit44.i261
-
-Lexer_advance.exit44.i261:                        ; preds = %Lexer_advance.exit44.i261.sink.split, %if.entry1.i244
-  %569 = tail call ptr @malloc(i32 16)
-  %570 = tail call ptr @malloc(i32 32)
-  %571 = load i64, ptr %memberidx.i.i204, align 4
-  %572 = add i64 %571, -1
-  %573 = add i64 %571, 1
-  %memberidx2.i46.i255 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 4
-  %574 = load i64, ptr %memberidx2.i46.i255, align 4
-  %575 = add i64 %574, -2
-  %memberidx3.i47.i256 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 5
-  %576 = load i64, ptr %memberidx3.i47.i256, align 4
-  store i64 %572, ptr %570, align 4
-  %memberidx1.i.i48.i257 = getelementptr inbounds %FloRange, ptr %570, i64 0, i32 1
-  store i64 %573, ptr %memberidx1.i.i48.i257, align 4
-  %memberidx2.i.i49.i258 = getelementptr inbounds %FloRange, ptr %570, i64 0, i32 2
-  store i64 %575, ptr %memberidx2.i.i49.i258, align 4
-  %memberidx3.i.i50.i259 = getelementptr inbounds %FloRange, ptr %570, i64 0, i32 3
-  store i64 %576, ptr %memberidx3.i.i50.i259, align 4
-  store i64 11, ptr %569, align 4
-  %memberidx1.i51.i260 = getelementptr inbounds %Token, ptr %569, i64 0, i32 1
-  store ptr %570, ptr %memberidx1.i51.i260, align 8
-  br label %common.ret
-
-ifend3.i269:                                      ; preds = %else.i236, %if.entry.i30.i238
-  %577 = tail call ptr @malloc(i32 16)
-  %578 = tail call ptr @malloc(i32 32)
-  %579 = load i64, ptr %memberidx.i.i204, align 4
-  %580 = add i64 %579, -1
-  %581 = add i64 %579, 1
-  %memberidx2.i20.i263 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 4
-  %582 = load i64, ptr %memberidx2.i20.i263, align 4
-  %583 = add i64 %582, -2
-  %memberidx3.i21.i264 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 5
-  %584 = load i64, ptr %memberidx3.i21.i264, align 4
-  store i64 %580, ptr %578, align 4
-  %memberidx1.i.i22.i265 = getelementptr inbounds %FloRange, ptr %578, i64 0, i32 1
-  store i64 %581, ptr %memberidx1.i.i22.i265, align 4
-  %memberidx2.i.i23.i266 = getelementptr inbounds %FloRange, ptr %578, i64 0, i32 2
-  store i64 %583, ptr %memberidx2.i.i23.i266, align 4
-  %memberidx3.i.i24.i267 = getelementptr inbounds %FloRange, ptr %578, i64 0, i32 3
-  store i64 %584, ptr %memberidx3.i.i24.i267, align 4
-  store i64 5, ptr %577, align 4
-  %memberidx1.i18.i268 = getelementptr inbounds %Token, ptr %577, i64 0, i32 1
-  store ptr %578, ptr %memberidx1.i18.i268, align 8
-  br label %common.ret
-
-if.entry27:                                       ; preds = %ifend11
-  %memberidx.i.i270 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 3
-  %585 = load i64, ptr %memberidx.i.i270, align 4
-  %586 = add i64 %585, 1
-  %memberidx1.i.i271 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 1
-  %587 = load ptr, ptr %memberidx1.i.i271, align 8
-  %memberidx2.i.i272 = getelementptr inbounds %string, ptr %587, i64 0, i32 2
-  %588 = load i64, ptr %memberidx2.i.i272, align 4
-  %589 = icmp slt i64 %586, %588
-  br i1 %589, label %if.entry.i.i274, label %ifend.i291
-
-if.entry.i.i274:                                  ; preds = %if.entry27
-  %590 = load ptr, ptr %587, align 8
-  %memberidx4.i.i273 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %590, i64 0, i32 2
-  %591 = load ptr, ptr %memberidx4.i.i273, align 8
-  %592 = tail call i8 %591(ptr nonnull %587, i64 %586)
-  %phi.cmp863 = icmp eq i8 %592, 61
-  br i1 %phi.cmp863, label %if.entry.i281, label %ifend.i291
-
-if.entry.i281:                                    ; preds = %if.entry.i.i274
-  %593 = load i64, ptr %memberidx.i.i270, align 4
-  %594 = load ptr, ptr %memberidx1.i.i271, align 8
-  %memberidx2.i.i.i280 = getelementptr inbounds %string, ptr %594, i64 0, i32 2
-  %595 = load i64, ptr %memberidx2.i.i.i280, align 4
-  %.not864 = icmp slt i64 %593, %595
-  br i1 %.not864, label %ifend.i.i283, label %Lexer_advance.exit.i290
-
-ifend.i.i283:                                     ; preds = %if.entry.i281
-  %596 = load ptr, ptr %594, align 8
-  %memberidx2.i5.i = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %596, i64 0, i32 2
-  %597 = load ptr, ptr %memberidx2.i5.i, align 8
-  %598 = add nsw i64 %593, 1
-  store i64 %598, ptr %memberidx.i.i270, align 4
-  %599 = tail call i8 %597(ptr nonnull %594, i64 %598)
-  store i8 %599, ptr %0, align 1
-  %600 = icmp eq i8 %599, 10
-  %memberidx9.i.i284 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 4
-  br i1 %600, label %if.entry6.i.i286, label %Lexer_advance.exit.i290.sink.split
-
-if.entry6.i.i286:                                 ; preds = %ifend.i.i283
-  store i64 0, ptr %memberidx9.i.i284, align 4
-  %memberidx10.i.i285 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 5
-  br label %Lexer_advance.exit.i290.sink.split
-
-Lexer_advance.exit.i290.sink.split:               ; preds = %ifend.i.i283, %if.entry6.i.i286
-  %memberidx9.i.i284.sink1009 = phi ptr [ %memberidx10.i.i285, %if.entry6.i.i286 ], [ %memberidx9.i.i284, %ifend.i.i283 ]
-  %601 = load i64, ptr %memberidx9.i.i284.sink1009, align 4
-  %602 = add i64 %601, 1
-  store i64 %602, ptr %memberidx9.i.i284.sink1009, align 4
-  br label %Lexer_advance.exit.i290
-
-Lexer_advance.exit.i290:                          ; preds = %Lexer_advance.exit.i290.sink.split, %if.entry.i281
-  %603 = tail call ptr @malloc(i32 16)
-  %604 = tail call ptr @malloc(i32 32)
-  %605 = load i64, ptr %memberidx.i.i270, align 4
-  %606 = add i64 %605, -1
-  %607 = add i64 %605, 1
-  %memberidx2.i7.i = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 4
-  %608 = load i64, ptr %memberidx2.i7.i, align 4
-  %609 = add i64 %608, -2
-  %memberidx3.i8.i = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 5
-  %610 = load i64, ptr %memberidx3.i8.i, align 4
-  store i64 %606, ptr %604, align 4
-  %memberidx1.i.i9.i = getelementptr inbounds %FloRange, ptr %604, i64 0, i32 1
-  store i64 %607, ptr %memberidx1.i.i9.i, align 4
-  %memberidx2.i.i10.i = getelementptr inbounds %FloRange, ptr %604, i64 0, i32 2
-  store i64 %609, ptr %memberidx2.i.i10.i, align 4
-  %memberidx3.i.i.i289 = getelementptr inbounds %FloRange, ptr %604, i64 0, i32 3
-  store i64 %610, ptr %memberidx3.i.i.i289, align 4
-  store i64 10, ptr %603, align 4
-  %memberidx1.i11.i = getelementptr inbounds %Token, ptr %603, i64 0, i32 1
-  store ptr %604, ptr %memberidx1.i11.i, align 8
-  br label %common.ret
-
-ifend.i291:                                       ; preds = %if.entry27, %if.entry.i.i274
-  %611 = tail call ptr @malloc(i32 16)
-  %612 = tail call ptr @malloc(i32 32)
-  %613 = load i64, ptr %memberidx.i.i270, align 4
-  %614 = add i64 %613, 1
-  %memberidx2.i14.i = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 4
-  %615 = load i64, ptr %memberidx2.i14.i, align 4
-  %616 = add i64 %615, -1
-  %memberidx3.i15.i = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 5
-  %617 = load i64, ptr %memberidx3.i15.i, align 4
-  store i64 %613, ptr %612, align 4
-  %memberidx1.i.i16.i = getelementptr inbounds %FloRange, ptr %612, i64 0, i32 1
-  store i64 %614, ptr %memberidx1.i.i16.i, align 4
-  %memberidx2.i.i17.i = getelementptr inbounds %FloRange, ptr %612, i64 0, i32 2
-  store i64 %616, ptr %memberidx2.i.i17.i, align 4
-  %memberidx3.i.i18.i = getelementptr inbounds %FloRange, ptr %612, i64 0, i32 3
-  store i64 %617, ptr %memberidx3.i.i18.i, align 4
-  store i64 4, ptr %611, align 4
-  %memberidx1.i12.i = getelementptr inbounds %Token, ptr %611, i64 0, i32 1
-  store ptr %612, ptr %memberidx1.i12.i, align 8
-  br label %common.ret
-
-if.entry30:                                       ; preds = %ifend11
-  %memberidx.i.i292 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 3
-  %618 = load i64, ptr %memberidx.i.i292, align 4
-  %619 = add i64 %618, 1
-  %memberidx1.i.i293 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 1
-  %620 = load ptr, ptr %memberidx1.i.i293, align 8
-  %memberidx2.i.i294 = getelementptr inbounds %string, ptr %620, i64 0, i32 2
-  %621 = load i64, ptr %memberidx2.i.i294, align 4
-  %622 = icmp slt i64 %619, %621
-  br i1 %622, label %if.entry.i.i296, label %ifend.i328
-
-if.entry.i.i296:                                  ; preds = %if.entry30
-  %623 = load ptr, ptr %620, align 8
-  %memberidx4.i.i295 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %623, i64 0, i32 2
-  %624 = load ptr, ptr %memberidx4.i.i295, align 8
-  %625 = tail call i8 %624(ptr nonnull %620, i64 %619)
-  %phi.cmp861 = icmp eq i8 %625, 61
-  br i1 %phi.cmp861, label %if.entry.i303, label %ifend.i328
-
-if.entry.i303:                                    ; preds = %if.entry.i.i296
-  %626 = load i64, ptr %memberidx.i.i292, align 4
-  %627 = load ptr, ptr %memberidx1.i.i293, align 8
-  %memberidx2.i.i.i302 = getelementptr inbounds %string, ptr %627, i64 0, i32 2
-  %628 = load i64, ptr %memberidx2.i.i.i302, align 4
-  %.not862 = icmp slt i64 %626, %628
-  br i1 %.not862, label %ifend.i.i307, label %Lexer_advance.exit.i320
-
-ifend.i.i307:                                     ; preds = %if.entry.i303
-  %629 = load ptr, ptr %627, align 8
-  %memberidx2.i5.i305 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %629, i64 0, i32 2
-  %630 = load ptr, ptr %memberidx2.i5.i305, align 8
-  %631 = add nsw i64 %626, 1
-  store i64 %631, ptr %memberidx.i.i292, align 4
-  %632 = tail call i8 %630(ptr nonnull %627, i64 %631)
-  store i8 %632, ptr %0, align 1
-  %633 = icmp eq i8 %632, 10
-  %memberidx9.i.i308 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 4
-  br i1 %633, label %if.entry6.i.i310, label %Lexer_advance.exit.i320.sink.split
-
-if.entry6.i.i310:                                 ; preds = %ifend.i.i307
-  store i64 0, ptr %memberidx9.i.i308, align 4
-  %memberidx10.i.i309 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 5
-  br label %Lexer_advance.exit.i320.sink.split
-
-Lexer_advance.exit.i320.sink.split:               ; preds = %ifend.i.i307, %if.entry6.i.i310
-  %memberidx9.i.i308.sink1011 = phi ptr [ %memberidx10.i.i309, %if.entry6.i.i310 ], [ %memberidx9.i.i308, %ifend.i.i307 ]
-  %634 = load i64, ptr %memberidx9.i.i308.sink1011, align 4
-  %635 = add i64 %634, 1
-  store i64 %635, ptr %memberidx9.i.i308.sink1011, align 4
-  br label %Lexer_advance.exit.i320
-
-Lexer_advance.exit.i320:                          ; preds = %Lexer_advance.exit.i320.sink.split, %if.entry.i303
-  %636 = tail call ptr @malloc(i32 16)
-  %637 = tail call ptr @malloc(i32 32)
-  %638 = load i64, ptr %memberidx.i.i292, align 4
-  %639 = add i64 %638, -1
-  %640 = add i64 %638, 1
-  %memberidx2.i7.i314 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 4
-  %641 = load i64, ptr %memberidx2.i7.i314, align 4
-  %642 = add i64 %641, -2
-  %memberidx3.i8.i315 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 5
-  %643 = load i64, ptr %memberidx3.i8.i315, align 4
-  store i64 %639, ptr %637, align 4
-  %memberidx1.i.i9.i316 = getelementptr inbounds %FloRange, ptr %637, i64 0, i32 1
-  store i64 %640, ptr %memberidx1.i.i9.i316, align 4
-  %memberidx2.i.i10.i317 = getelementptr inbounds %FloRange, ptr %637, i64 0, i32 2
-  store i64 %642, ptr %memberidx2.i.i10.i317, align 4
-  %memberidx3.i.i.i318 = getelementptr inbounds %FloRange, ptr %637, i64 0, i32 3
-  store i64 %643, ptr %memberidx3.i.i.i318, align 4
-  store i64 14, ptr %636, align 4
-  %memberidx1.i11.i319 = getelementptr inbounds %Token, ptr %636, i64 0, i32 1
-  store ptr %637, ptr %memberidx1.i11.i319, align 8
-  br label %common.ret
-
-ifend.i328:                                       ; preds = %if.entry30, %if.entry.i.i296
-  %644 = tail call ptr @malloc(i32 16)
-  %645 = tail call ptr @malloc(i32 32)
-  %646 = load i64, ptr %memberidx.i.i292, align 4
-  %647 = add i64 %646, 1
-  %memberidx2.i14.i322 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 4
-  %648 = load i64, ptr %memberidx2.i14.i322, align 4
-  %649 = add i64 %648, -1
-  %memberidx3.i15.i323 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 5
-  %650 = load i64, ptr %memberidx3.i15.i323, align 4
-  store i64 %646, ptr %645, align 4
-  %memberidx1.i.i16.i324 = getelementptr inbounds %FloRange, ptr %645, i64 0, i32 1
-  store i64 %647, ptr %memberidx1.i.i16.i324, align 4
-  %memberidx2.i.i17.i325 = getelementptr inbounds %FloRange, ptr %645, i64 0, i32 2
-  store i64 %649, ptr %memberidx2.i.i17.i325, align 4
-  %memberidx3.i.i18.i326 = getelementptr inbounds %FloRange, ptr %645, i64 0, i32 3
-  store i64 %650, ptr %memberidx3.i.i18.i326, align 4
-  store i64 8, ptr %644, align 4
-  %memberidx1.i12.i327 = getelementptr inbounds %Token, ptr %644, i64 0, i32 1
-  store ptr %645, ptr %memberidx1.i12.i327, align 8
-  br label %common.ret
-
-if.entry33:                                       ; preds = %ifend11
-  %memberidx.i.i329 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 3
-  %651 = load i64, ptr %memberidx.i.i329, align 4
-  %652 = add i64 %651, 1
-  %memberidx1.i.i330 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 1
-  %653 = load ptr, ptr %memberidx1.i.i330, align 8
-  %memberidx2.i.i331 = getelementptr inbounds %string, ptr %653, i64 0, i32 2
-  %654 = load i64, ptr %memberidx2.i.i331, align 4
-  %655 = icmp slt i64 %652, %654
-  br i1 %655, label %if.entry.i.i333, label %ifend.i365
-
-if.entry.i.i333:                                  ; preds = %if.entry33
-  %656 = load ptr, ptr %653, align 8
-  %memberidx4.i.i332 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %656, i64 0, i32 2
-  %657 = load ptr, ptr %memberidx4.i.i332, align 8
-  %658 = tail call i8 %657(ptr nonnull %653, i64 %652)
-  %phi.cmp859 = icmp eq i8 %658, 61
-  br i1 %phi.cmp859, label %if.entry.i340, label %ifend.i365
-
-if.entry.i340:                                    ; preds = %if.entry.i.i333
-  %659 = load i64, ptr %memberidx.i.i329, align 4
-  %660 = load ptr, ptr %memberidx1.i.i330, align 8
-  %memberidx2.i.i.i339 = getelementptr inbounds %string, ptr %660, i64 0, i32 2
-  %661 = load i64, ptr %memberidx2.i.i.i339, align 4
-  %.not860 = icmp slt i64 %659, %661
-  br i1 %.not860, label %ifend.i.i344, label %Lexer_advance.exit.i357
-
-ifend.i.i344:                                     ; preds = %if.entry.i340
-  %662 = load ptr, ptr %660, align 8
-  %memberidx2.i5.i342 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %662, i64 0, i32 2
-  %663 = load ptr, ptr %memberidx2.i5.i342, align 8
-  %664 = add nsw i64 %659, 1
-  store i64 %664, ptr %memberidx.i.i329, align 4
-  %665 = tail call i8 %663(ptr nonnull %660, i64 %664)
-  store i8 %665, ptr %0, align 1
-  %666 = icmp eq i8 %665, 10
-  %memberidx9.i.i345 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 4
-  br i1 %666, label %if.entry6.i.i347, label %Lexer_advance.exit.i357.sink.split
-
-if.entry6.i.i347:                                 ; preds = %ifend.i.i344
-  store i64 0, ptr %memberidx9.i.i345, align 4
-  %memberidx10.i.i346 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 5
-  br label %Lexer_advance.exit.i357.sink.split
-
-Lexer_advance.exit.i357.sink.split:               ; preds = %ifend.i.i344, %if.entry6.i.i347
-  %memberidx9.i.i345.sink1013 = phi ptr [ %memberidx10.i.i346, %if.entry6.i.i347 ], [ %memberidx9.i.i345, %ifend.i.i344 ]
-  %667 = load i64, ptr %memberidx9.i.i345.sink1013, align 4
-  %668 = add i64 %667, 1
-  store i64 %668, ptr %memberidx9.i.i345.sink1013, align 4
-  br label %Lexer_advance.exit.i357
-
-Lexer_advance.exit.i357:                          ; preds = %Lexer_advance.exit.i357.sink.split, %if.entry.i340
-  %669 = tail call ptr @malloc(i32 16)
-  %670 = tail call ptr @malloc(i32 32)
-  %671 = load i64, ptr %memberidx.i.i329, align 4
-  %672 = add i64 %671, -1
-  %673 = add i64 %671, 1
-  %memberidx2.i7.i351 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 4
-  %674 = load i64, ptr %memberidx2.i7.i351, align 4
-  %675 = add i64 %674, -2
-  %memberidx3.i8.i352 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 5
-  %676 = load i64, ptr %memberidx3.i8.i352, align 4
-  store i64 %672, ptr %670, align 4
-  %memberidx1.i.i9.i353 = getelementptr inbounds %FloRange, ptr %670, i64 0, i32 1
-  store i64 %673, ptr %memberidx1.i.i9.i353, align 4
-  %memberidx2.i.i10.i354 = getelementptr inbounds %FloRange, ptr %670, i64 0, i32 2
-  store i64 %675, ptr %memberidx2.i.i10.i354, align 4
-  %memberidx3.i.i.i355 = getelementptr inbounds %FloRange, ptr %670, i64 0, i32 3
-  store i64 %676, ptr %memberidx3.i.i.i355, align 4
-  store i64 15, ptr %669, align 4
-  %memberidx1.i11.i356 = getelementptr inbounds %Token, ptr %669, i64 0, i32 1
-  store ptr %670, ptr %memberidx1.i11.i356, align 8
-  br label %common.ret
-
-ifend.i365:                                       ; preds = %if.entry33, %if.entry.i.i333
-  %677 = tail call ptr @malloc(i32 16)
-  %678 = tail call ptr @malloc(i32 32)
-  %679 = load i64, ptr %memberidx.i.i329, align 4
-  %680 = add i64 %679, 1
-  %memberidx2.i14.i359 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 4
-  %681 = load i64, ptr %memberidx2.i14.i359, align 4
-  %682 = add i64 %681, -1
-  %memberidx3.i15.i360 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 5
-  %683 = load i64, ptr %memberidx3.i15.i360, align 4
-  store i64 %679, ptr %678, align 4
-  %memberidx1.i.i16.i361 = getelementptr inbounds %FloRange, ptr %678, i64 0, i32 1
-  store i64 %680, ptr %memberidx1.i.i16.i361, align 4
-  %memberidx2.i.i17.i362 = getelementptr inbounds %FloRange, ptr %678, i64 0, i32 2
-  store i64 %682, ptr %memberidx2.i.i17.i362, align 4
-  %memberidx3.i.i18.i363 = getelementptr inbounds %FloRange, ptr %678, i64 0, i32 3
-  store i64 %683, ptr %memberidx3.i.i18.i363, align 4
-  store i64 9, ptr %677, align 4
-  %memberidx1.i12.i364 = getelementptr inbounds %Token, ptr %677, i64 0, i32 1
-  store ptr %678, ptr %memberidx1.i12.i364, align 8
-  br label %common.ret
-
-if.entry36:                                       ; preds = %ifend11
-  %memberidx.i.i366 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 3
-  %684 = load i64, ptr %memberidx.i.i366, align 4
-  %685 = add i64 %684, 1
-  %memberidx1.i.i367 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 1
-  %686 = load ptr, ptr %memberidx1.i.i367, align 8
-  %memberidx2.i.i368 = getelementptr inbounds %string, ptr %686, i64 0, i32 2
-  %687 = load i64, ptr %memberidx2.i.i368, align 4
-  %688 = icmp slt i64 %685, %687
-  br i1 %688, label %Lexer_peek.exit.i372, label %else.i387
-
-Lexer_peek.exit.i372:                             ; preds = %if.entry36
-  %689 = load ptr, ptr %686, align 8
-  %memberidx4.i.i369 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %689, i64 0, i32 2
-  %690 = load ptr, ptr %memberidx4.i.i369, align 8
-  %691 = tail call i8 %690(ptr nonnull %686, i64 %685)
-  %692 = icmp eq i8 %691, 42
-  %693 = load i64, ptr %memberidx.i.i366, align 4
-  %694 = load ptr, ptr %memberidx1.i.i367, align 8
-  %memberidx2.i.i.i375 = getelementptr inbounds %string, ptr %694, i64 0, i32 2
-  %695 = load i64, ptr %memberidx2.i.i.i375, align 4
-  br i1 %692, label %if.entry.i376, label %Lexer_peek.exit.i372.else.i387_crit_edge
-
-Lexer_peek.exit.i372.else.i387_crit_edge:         ; preds = %Lexer_peek.exit.i372
-  %.pre983 = add i64 %693, 1
-  br label %else.i387
-
-if.entry.i376:                                    ; preds = %Lexer_peek.exit.i372
-  %.not853 = icmp slt i64 %693, %695
-  br i1 %.not853, label %ifend.i.i380, label %Lexer_advance.exit.i386
-
-ifend.i.i380:                                     ; preds = %if.entry.i376
-  %696 = load ptr, ptr %694, align 8
-  %memberidx2.i27.i378 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %696, i64 0, i32 2
-  %697 = load ptr, ptr %memberidx2.i27.i378, align 8
-  %698 = add nsw i64 %693, 1
-  store i64 %698, ptr %memberidx.i.i366, align 4
-  %699 = tail call i8 %697(ptr nonnull %694, i64 %698)
-  store i8 %699, ptr %0, align 1
-  %700 = icmp eq i8 %699, 10
-  %memberidx9.i.i381 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 4
-  br i1 %700, label %if.entry6.i.i383, label %Lexer_advance.exit.i386.sink.split
-
-if.entry6.i.i383:                                 ; preds = %ifend.i.i380
-  store i64 0, ptr %memberidx9.i.i381, align 4
-  %memberidx10.i.i382 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 5
-  br label %Lexer_advance.exit.i386.sink.split
-
-Lexer_advance.exit.i386.sink.split:               ; preds = %ifend.i.i380, %if.entry6.i.i383
-  %memberidx9.i.i381.sink1015 = phi ptr [ %memberidx10.i.i382, %if.entry6.i.i383 ], [ %memberidx9.i.i381, %ifend.i.i380 ]
-  %701 = load i64, ptr %memberidx9.i.i381.sink1015, align 4
-  %702 = add i64 %701, 1
-  store i64 %702, ptr %memberidx9.i.i381.sink1015, align 4
-  br label %Lexer_advance.exit.i386
-
-Lexer_advance.exit.i386:                          ; preds = %Lexer_advance.exit.i386.sink.split, %if.entry.i376
-  %703 = load i64, ptr %memberidx.i.i366, align 4
-  %704 = load ptr, ptr %memberidx1.i.i367, align 8
-  %memberidx2.i30.i = getelementptr inbounds %string, ptr %704, i64 0, i32 2
-  %705 = load i64, ptr %memberidx2.i30.i, align 4
-  %.not854 = icmp slt i64 %703, %705
-  br i1 %.not854, label %while.entry.i.preheader, label %while.end.i
-
-while.entry.i.preheader:                          ; preds = %Lexer_advance.exit.i386
-  %memberidx12.i98.i = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 4
-  %memberidx10.i96.i = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 5
-  br label %while.entry.i
-
-else.i387:                                        ; preds = %Lexer_peek.exit.i372.else.i387_crit_edge, %if.entry36
-  %.pre-phi984 = phi i64 [ %.pre983, %Lexer_peek.exit.i372.else.i387_crit_edge ], [ %685, %if.entry36 ]
-  %706 = phi i64 [ %695, %Lexer_peek.exit.i372.else.i387_crit_edge ], [ %687, %if.entry36 ]
-  %707 = phi ptr [ %694, %Lexer_peek.exit.i372.else.i387_crit_edge ], [ %686, %if.entry36 ]
-  %708 = icmp slt i64 %.pre-phi984, %706
-  br i1 %708, label %if.entry.i46.i, label %ifend41
-
-if.entry.i46.i:                                   ; preds = %else.i387
-  %709 = load ptr, ptr %707, align 8
-  %memberidx4.i45.i = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %709, i64 0, i32 2
-  %710 = load ptr, ptr %memberidx4.i45.i, align 8
-  %711 = tail call i8 %710(ptr nonnull %707, i64 %.pre-phi984)
-  %phi.cmp846 = icmp eq i8 %711, 47
-  %712 = load i64, ptr %memberidx.i.i366, align 4
-  %713 = load ptr, ptr %memberidx1.i.i367, align 8
-  %memberidx2.i.i119.i = getelementptr inbounds %string, ptr %713, i64 0, i32 2
-  %714 = load i64, ptr %memberidx2.i.i119.i, align 4
-  br i1 %phi.cmp846, label %if.entry4.i, label %if.entry.i46.i.ifend41_crit_edge
-
-if.entry.i46.i.ifend41_crit_edge:                 ; preds = %if.entry.i46.i
-  %.pre985 = add i64 %712, 1
-  br label %ifend41
-
-while.entry.i:                                    ; preds = %while.entry.i.preheader, %Lexer_advance.exit100.i
-  %715 = phi i64 [ %705, %while.entry.i.preheader ], [ %764, %Lexer_advance.exit100.i ]
-  %716 = phi ptr [ %704, %while.entry.i.preheader ], [ %763, %Lexer_advance.exit100.i ]
-  %717 = phi i64 [ %703, %while.entry.i.preheader ], [ %762, %Lexer_advance.exit100.i ]
-  %718 = add nsw i64 %717, 1
-  %719 = icmp slt i64 %718, %715
-  br i1 %719, label %if.entry.i53.i, label %Lexer_peek.exit54.i
-
-if.entry.i53.i:                                   ; preds = %while.entry.i
-  %720 = load ptr, ptr %716, align 8
-  %memberidx4.i52.i = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %720, i64 0, i32 2
-  %721 = load ptr, ptr %memberidx4.i52.i, align 8
-  %722 = tail call i8 %721(ptr nonnull %716, i64 %718)
-  %.pre955 = load i64, ptr %memberidx.i.i366, align 4
-  %.pre956 = load ptr, ptr %memberidx1.i.i367, align 8
-  %memberidx2.i57.i.phi.trans.insert = getelementptr inbounds %string, ptr %.pre956, i64 0, i32 2
-  %.pre957 = load i64, ptr %memberidx2.i57.i.phi.trans.insert, align 4
-  br label %Lexer_peek.exit54.i
-
-Lexer_peek.exit54.i:                              ; preds = %if.entry.i53.i, %while.entry.i
-  %723 = phi i64 [ %.pre957, %if.entry.i53.i ], [ %715, %while.entry.i ]
-  %724 = phi ptr [ %.pre956, %if.entry.i53.i ], [ %716, %while.entry.i ]
-  %725 = phi i64 [ %.pre955, %if.entry.i53.i ], [ %717, %while.entry.i ]
-  %common.ret.op.i51.i = phi i8 [ %722, %if.entry.i53.i ], [ 0, %while.entry.i ]
-  %726 = add i64 %725, 2
-  %727 = icmp slt i64 %726, %723
-  br i1 %727, label %Lexer_peek.exit61.i, label %ifend3.i389
-
-Lexer_peek.exit61.i:                              ; preds = %Lexer_peek.exit54.i
-  %728 = icmp eq i8 %common.ret.op.i51.i, 42
-  %729 = load ptr, ptr %724, align 8
-  %memberidx4.i59.i = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %729, i64 0, i32 2
-  %730 = load ptr, ptr %memberidx4.i59.i, align 8
-  %731 = tail call i8 %730(ptr nonnull %724, i64 %726)
-  %732 = icmp eq i8 %731, 47
-  %733 = and i1 %728, %732
-  %.pre961.pre = load i64, ptr %memberidx.i.i366, align 4
-  %.pre962.pre = load ptr, ptr %memberidx1.i.i367, align 8
-  %memberidx2.i.i64.i.phi.trans.insert.phi.trans.insert = getelementptr inbounds %string, ptr %.pre962.pre, i64 0, i32 2
-  %.pre963.pre = load i64, ptr %memberidx2.i.i64.i.phi.trans.insert.phi.trans.insert, align 4
-  br i1 %733, label %while.end.i, label %ifend3.i389
-
-while.end.i:                                      ; preds = %Lexer_advance.exit100.i, %Lexer_peek.exit61.i, %Lexer_advance.exit.i386
-  %734 = phi i64 [ %705, %Lexer_advance.exit.i386 ], [ %.pre963.pre, %Lexer_peek.exit61.i ], [ %764, %Lexer_advance.exit100.i ]
-  %735 = phi ptr [ %704, %Lexer_advance.exit.i386 ], [ %.pre962.pre, %Lexer_peek.exit61.i ], [ %763, %Lexer_advance.exit100.i ]
-  %736 = phi i64 [ %703, %Lexer_advance.exit.i386 ], [ %.pre961.pre, %Lexer_peek.exit61.i ], [ %762, %Lexer_advance.exit100.i ]
-  %.not857 = icmp slt i64 %736, %734
-  br i1 %.not857, label %ifend.i68.i, label %Lexer_advance.exit74.i
-
-ifend.i68.i:                                      ; preds = %while.end.i
-  %737 = load ptr, ptr %735, align 8
-  %memberidx2.i66.i = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %737, i64 0, i32 2
-  %738 = load ptr, ptr %memberidx2.i66.i, align 8
-  %739 = add nsw i64 %736, 1
-  store i64 %739, ptr %memberidx.i.i366, align 4
-  %740 = tail call i8 %738(ptr nonnull %735, i64 %739)
-  store i8 %740, ptr %0, align 1
-  %741 = icmp eq i8 %740, 10
-  %memberidx9.i69.i = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 4
-  br i1 %741, label %if.entry6.i71.i, label %Lexer_advance.exit74.i.sink.split
-
-if.entry6.i71.i:                                  ; preds = %ifend.i68.i
-  store i64 0, ptr %memberidx9.i69.i, align 4
-  %memberidx10.i70.i = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 5
-  br label %Lexer_advance.exit74.i.sink.split
-
-Lexer_advance.exit74.i.sink.split:                ; preds = %ifend.i68.i, %if.entry6.i71.i
-  %memberidx9.i69.i.sink1017 = phi ptr [ %memberidx10.i70.i, %if.entry6.i71.i ], [ %memberidx9.i69.i, %ifend.i68.i ]
-  %742 = load i64, ptr %memberidx9.i69.i.sink1017, align 4
-  %743 = add i64 %742, 1
-  store i64 %743, ptr %memberidx9.i69.i.sink1017, align 4
-  br label %Lexer_advance.exit74.i
-
-Lexer_advance.exit74.i:                           ; preds = %Lexer_advance.exit74.i.sink.split, %while.end.i
-  %744 = load i64, ptr %memberidx.i.i366, align 4
-  %745 = load ptr, ptr %memberidx1.i.i367, align 8
-  %memberidx2.i.i77.i = getelementptr inbounds %string, ptr %745, i64 0, i32 2
-  %746 = load i64, ptr %memberidx2.i.i77.i, align 4
-  %.not858 = icmp slt i64 %744, %746
-  br i1 %.not858, label %ifend.i81.i, label %if.entry39
-
-ifend.i81.i:                                      ; preds = %Lexer_advance.exit74.i
-  %747 = load ptr, ptr %745, align 8
-  %memberidx2.i79.i = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %747, i64 0, i32 2
-  %748 = load ptr, ptr %memberidx2.i79.i, align 8
-  %749 = add nsw i64 %744, 1
-  store i64 %749, ptr %memberidx.i.i366, align 4
-  %750 = tail call i8 %748(ptr nonnull %745, i64 %749)
-  store i8 %750, ptr %0, align 1
-  %751 = icmp eq i8 %750, 10
-  %memberidx9.i82.i = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 4
-  br i1 %751, label %if.entry6.i84.i, label %if.entry39.sink.split
-
-if.entry6.i84.i:                                  ; preds = %ifend.i81.i
-  store i64 0, ptr %memberidx9.i82.i, align 4
-  %memberidx10.i83.i = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 5
-  br label %if.entry39.sink.split
-
-ifend3.i389:                                      ; preds = %Lexer_peek.exit61.i, %Lexer_peek.exit54.i
-  %752 = phi i64 [ %723, %Lexer_peek.exit54.i ], [ %.pre963.pre, %Lexer_peek.exit61.i ]
-  %753 = phi ptr [ %724, %Lexer_peek.exit54.i ], [ %.pre962.pre, %Lexer_peek.exit61.i ]
-  %754 = phi i64 [ %725, %Lexer_peek.exit54.i ], [ %.pre961.pre, %Lexer_peek.exit61.i ]
-  %.not855 = icmp slt i64 %754, %752
-  br i1 %.not855, label %ifend.i94.i, label %Lexer_advance.exit100.i
-
-ifend.i94.i:                                      ; preds = %ifend3.i389
-  %755 = load ptr, ptr %753, align 8
-  %memberidx2.i92.i = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %755, i64 0, i32 2
-  %756 = load ptr, ptr %memberidx2.i92.i, align 8
-  %757 = add nsw i64 %754, 1
-  store i64 %757, ptr %memberidx.i.i366, align 4
-  %758 = tail call i8 %756(ptr nonnull %753, i64 %757)
-  store i8 %758, ptr %0, align 1
-  %759 = icmp eq i8 %758, 10
-  br i1 %759, label %if.entry6.i97.i, label %Lexer_advance.exit100.i.sink.split
-
-if.entry6.i97.i:                                  ; preds = %ifend.i94.i
-  store i64 0, ptr %memberidx12.i98.i, align 4
-  br label %Lexer_advance.exit100.i.sink.split
-
-Lexer_advance.exit100.i.sink.split:               ; preds = %ifend.i94.i, %if.entry6.i97.i
-  %memberidx12.i98.i.sink1019 = phi ptr [ %memberidx10.i96.i, %if.entry6.i97.i ], [ %memberidx12.i98.i, %ifend.i94.i ]
-  %760 = load i64, ptr %memberidx12.i98.i.sink1019, align 4
-  %761 = add i64 %760, 1
-  store i64 %761, ptr %memberidx12.i98.i.sink1019, align 4
-  br label %Lexer_advance.exit100.i
-
-Lexer_advance.exit100.i:                          ; preds = %Lexer_advance.exit100.i.sink.split, %ifend3.i389
-  %762 = load i64, ptr %memberidx.i.i366, align 4
-  %763 = load ptr, ptr %memberidx1.i.i367, align 8
-  %memberidx2.i103.i = getelementptr inbounds %string, ptr %763, i64 0, i32 2
-  %764 = load i64, ptr %memberidx2.i103.i, align 4
-  %.not856 = icmp slt i64 %762, %764
-  br i1 %.not856, label %while.entry.i, label %while.end.i
-
-if.entry4.i:                                      ; preds = %if.entry.i46.i
-  %.not850 = icmp slt i64 %712, %714
-  br i1 %.not850, label %ifend.i123.i, label %Lexer_advance.exit129.i
-
-ifend.i123.i:                                     ; preds = %if.entry4.i
-  %765 = load ptr, ptr %713, align 8
-  %memberidx2.i121.i = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %765, i64 0, i32 2
-  %766 = load ptr, ptr %memberidx2.i121.i, align 8
-  %767 = add nsw i64 %712, 1
-  store i64 %767, ptr %memberidx.i.i366, align 4
-  %768 = tail call i8 %766(ptr nonnull %713, i64 %767)
-  store i8 %768, ptr %0, align 1
-  %769 = icmp eq i8 %768, 10
-  %memberidx9.i124.i = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 4
-  br i1 %769, label %if.entry6.i126.i, label %Lexer_advance.exit129.i.sink.split
-
-if.entry6.i126.i:                                 ; preds = %ifend.i123.i
-  store i64 0, ptr %memberidx9.i124.i, align 4
-  %memberidx10.i125.i = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 5
-  br label %Lexer_advance.exit129.i.sink.split
-
-Lexer_advance.exit129.i.sink.split:               ; preds = %ifend.i123.i, %if.entry6.i126.i
-  %memberidx9.i124.i.sink1021 = phi ptr [ %memberidx10.i125.i, %if.entry6.i126.i ], [ %memberidx9.i124.i, %ifend.i123.i ]
-  %770 = load i64, ptr %memberidx9.i124.i.sink1021, align 4
-  %771 = add i64 %770, 1
-  store i64 %771, ptr %memberidx9.i124.i.sink1021, align 4
-  br label %Lexer_advance.exit129.i
-
-Lexer_advance.exit129.i:                          ; preds = %Lexer_advance.exit129.i.sink.split, %if.entry4.i
-  %772 = load i64, ptr %memberidx.i.i366, align 4
-  %773 = add i64 %772, 1
-  %774 = load ptr, ptr %memberidx1.i.i367, align 8
-  %memberidx2.i132.i = getelementptr inbounds %string, ptr %774, i64 0, i32 2
-  %775 = load i64, ptr %memberidx2.i132.i, align 4
-  %776 = icmp slt i64 %773, %775
-  br i1 %776, label %if.entry.i135.i, label %Lexer_peek.exit136.i
-
-if.entry.i135.i:                                  ; preds = %Lexer_advance.exit129.i
-  %777 = load ptr, ptr %774, align 8
-  %memberidx4.i134.i = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %777, i64 0, i32 2
-  %778 = load ptr, ptr %memberidx4.i134.i, align 8
-  %779 = tail call i8 %778(ptr nonnull %774, i64 %773)
-  %phi.cmp851 = icmp eq i8 %779, 10
-  %.pre949 = load i64, ptr %memberidx.i.i366, align 4
-  %.pre950 = load ptr, ptr %memberidx1.i.i367, align 8
-  %memberidx2.i139.i.phi.trans.insert = getelementptr inbounds %string, ptr %.pre950, i64 0, i32 2
-  %.pre951 = load i64, ptr %memberidx2.i139.i.phi.trans.insert, align 4
-  br label %Lexer_peek.exit136.i
-
-Lexer_peek.exit136.i:                             ; preds = %if.entry.i135.i, %Lexer_advance.exit129.i
-  %780 = phi i64 [ %.pre951, %if.entry.i135.i ], [ %775, %Lexer_advance.exit129.i ]
-  %781 = phi ptr [ %.pre950, %if.entry.i135.i ], [ %774, %Lexer_advance.exit129.i ]
-  %782 = phi i64 [ %.pre949, %if.entry.i135.i ], [ %772, %Lexer_advance.exit129.i ]
-  %common.ret.op.i133.i = phi i1 [ %phi.cmp851, %if.entry.i135.i ], [ false, %Lexer_advance.exit129.i ]
-  %783 = icmp sge i64 %782, %780
-  %784 = or i1 %common.ret.op.i133.i, %783
-  br i1 %784, label %if.entry39, label %while.entry7.i.preheader
-
-while.entry7.i.preheader:                         ; preds = %Lexer_peek.exit136.i
-  %memberidx12.i114.i = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 4
-  %memberidx10.i112.i = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 5
-  br label %while.entry7.i
-
-while.entry7.i:                                   ; preds = %while.entry7.i.preheader, %Lexer_peek.exit40.i
-  %785 = phi i64 [ %780, %while.entry7.i.preheader ], [ %803, %Lexer_peek.exit40.i ]
-  %786 = phi ptr [ %781, %while.entry7.i.preheader ], [ %804, %Lexer_peek.exit40.i ]
-  %787 = phi i64 [ %782, %while.entry7.i.preheader ], [ %805, %Lexer_peek.exit40.i ]
-  %.not852 = icmp slt i64 %787, %785
-  br i1 %.not852, label %ifend.i110.i, label %Lexer_advance.exit116.i
-
-ifend.i110.i:                                     ; preds = %while.entry7.i
-  %788 = load ptr, ptr %786, align 8
-  %memberidx2.i108.i = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %788, i64 0, i32 2
-  %789 = load ptr, ptr %memberidx2.i108.i, align 8
-  %790 = add nsw i64 %787, 1
-  store i64 %790, ptr %memberidx.i.i366, align 4
-  %791 = tail call i8 %789(ptr nonnull %786, i64 %790)
-  store i8 %791, ptr %0, align 1
-  %792 = icmp eq i8 %791, 10
-  br i1 %792, label %if.entry6.i113.i, label %Lexer_advance.exit116.i.sink.split
-
-if.entry6.i113.i:                                 ; preds = %ifend.i110.i
-  store i64 0, ptr %memberidx12.i114.i, align 4
-  br label %Lexer_advance.exit116.i.sink.split
-
-Lexer_advance.exit116.i.sink.split:               ; preds = %ifend.i110.i, %if.entry6.i113.i
-  %memberidx12.i114.i.sink1023 = phi ptr [ %memberidx10.i112.i, %if.entry6.i113.i ], [ %memberidx12.i114.i, %ifend.i110.i ]
-  %793 = load i64, ptr %memberidx12.i114.i.sink1023, align 4
-  %794 = add i64 %793, 1
-  store i64 %794, ptr %memberidx12.i114.i.sink1023, align 4
-  br label %Lexer_advance.exit116.i
-
-Lexer_advance.exit116.i:                          ; preds = %Lexer_advance.exit116.i.sink.split, %while.entry7.i
-  %795 = load i64, ptr %memberidx.i.i366, align 4
-  %796 = add i64 %795, 1
-  %797 = load ptr, ptr %memberidx1.i.i367, align 8
-  %memberidx2.i36.i391 = getelementptr inbounds %string, ptr %797, i64 0, i32 2
-  %798 = load i64, ptr %memberidx2.i36.i391, align 4
-  %799 = icmp slt i64 %796, %798
-  br i1 %799, label %if.entry.i39.i, label %Lexer_peek.exit40.i
-
-if.entry.i39.i:                                   ; preds = %Lexer_advance.exit116.i
-  %800 = load ptr, ptr %797, align 8
-  %memberidx4.i38.i = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %800, i64 0, i32 2
-  %801 = load ptr, ptr %memberidx4.i38.i, align 8
-  %802 = tail call i8 %801(ptr nonnull %797, i64 %796)
-  %.pre952 = load i64, ptr %memberidx.i.i366, align 4
-  %.pre953 = load ptr, ptr %memberidx1.i.i367, align 8
-  %memberidx2.i33.i.phi.trans.insert = getelementptr inbounds %string, ptr %.pre953, i64 0, i32 2
-  %.pre954 = load i64, ptr %memberidx2.i33.i.phi.trans.insert, align 4
-  br label %Lexer_peek.exit40.i
-
-Lexer_peek.exit40.i:                              ; preds = %if.entry.i39.i, %Lexer_advance.exit116.i
-  %803 = phi i64 [ %.pre954, %if.entry.i39.i ], [ %798, %Lexer_advance.exit116.i ]
-  %804 = phi ptr [ %.pre953, %if.entry.i39.i ], [ %797, %Lexer_advance.exit116.i ]
-  %805 = phi i64 [ %.pre952, %if.entry.i39.i ], [ %795, %Lexer_advance.exit116.i ]
-  %common.ret.op.i37.i = phi i8 [ %802, %if.entry.i39.i ], [ 0, %Lexer_advance.exit116.i ]
-  %806 = icmp eq i8 %common.ret.op.i37.i, 10
-  %807 = icmp sge i64 %805, %803
-  %808 = or i1 %806, %807
-  br i1 %808, label %if.entry39, label %while.entry7.i
-
-if.entry39.sink.split:                            ; preds = %ifend.i81.i, %if.entry6.i84.i
-  %memberidx9.i82.i.sink1025 = phi ptr [ %memberidx10.i83.i, %if.entry6.i84.i ], [ %memberidx9.i82.i, %ifend.i81.i ]
-  %809 = load i64, ptr %memberidx9.i82.i.sink1025, align 4
-  %810 = add i64 %809, 1
-  store i64 %810, ptr %memberidx9.i82.i.sink1025, align 4
-  br label %if.entry39
-
-if.entry39:                                       ; preds = %Lexer_peek.exit40.i, %if.entry39.sink.split, %Lexer_peek.exit136.i, %Lexer_advance.exit74.i
-  %811 = load i64, ptr %memberidx.i.i366, align 4
-  %812 = load ptr, ptr %memberidx1.i.i367, align 8
-  %memberidx2.i.i394 = getelementptr inbounds %string, ptr %812, i64 0, i32 2
-  %813 = load i64, ptr %memberidx2.i.i394, align 4
-  %.not849 = icmp slt i64 %811, %813
-  br i1 %.not849, label %ifend.i398, label %Lexer_advance.exit404
-
-ifend.i398:                                       ; preds = %if.entry39
-  %814 = load ptr, ptr %812, align 8
-  %memberidx2.i396 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %814, i64 0, i32 2
-  %815 = load ptr, ptr %memberidx2.i396, align 8
-  %816 = add nsw i64 %811, 1
-  store i64 %816, ptr %memberidx.i.i366, align 4
-  %817 = tail call i8 %815(ptr nonnull %812, i64 %816)
-  store i8 %817, ptr %0, align 1
-  %818 = icmp eq i8 %817, 10
-  %memberidx9.i399 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 4
-  br i1 %818, label %if.entry6.i401, label %Lexer_advance.exit404.sink.split
-
-if.entry6.i401:                                   ; preds = %ifend.i398
-  store i64 0, ptr %memberidx9.i399, align 4
-  %memberidx10.i400 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 5
-  br label %Lexer_advance.exit404.sink.split
-
-Lexer_advance.exit404.sink.split:                 ; preds = %ifend.i398, %if.entry6.i401
-  %memberidx10.i400.sink1027 = phi ptr [ %memberidx10.i400, %if.entry6.i401 ], [ %memberidx9.i399, %ifend.i398 ]
-  %819 = load i64, ptr %memberidx10.i400.sink1027, align 4
-  %820 = add i64 %819, 1
-  store i64 %820, ptr %memberidx10.i400.sink1027, align 4
-  br label %Lexer_advance.exit404
-
-Lexer_advance.exit404:                            ; preds = %Lexer_advance.exit404.sink.split, %if.entry39
-  %821 = tail call fastcc ptr @Lexer_lex_token(ptr nonnull %0)
-  br label %common.ret
-
-ifend41:                                          ; preds = %if.entry.i46.i.ifend41_crit_edge, %else.i387
-  %.pre-phi986 = phi i64 [ %.pre985, %if.entry.i46.i.ifend41_crit_edge ], [ %.pre-phi984, %else.i387 ]
-  %822 = phi i64 [ %714, %if.entry.i46.i.ifend41_crit_edge ], [ %706, %else.i387 ]
-  %823 = phi ptr [ %713, %if.entry.i46.i.ifend41_crit_edge ], [ %707, %else.i387 ]
-  %824 = icmp slt i64 %.pre-phi986, %822
-  br i1 %824, label %if.entry.i.i409, label %ifend.i441
-
-if.entry.i.i409:                                  ; preds = %ifend41
-  %825 = load ptr, ptr %823, align 8
-  %memberidx4.i.i408 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %825, i64 0, i32 2
-  %826 = load ptr, ptr %memberidx4.i.i408, align 8
-  %827 = tail call i8 %826(ptr nonnull %823, i64 %.pre-phi986)
-  %phi.cmp847 = icmp eq i8 %827, 61
-  br i1 %phi.cmp847, label %if.entry.i416, label %ifend.i441
-
-if.entry.i416:                                    ; preds = %if.entry.i.i409
-  %828 = load i64, ptr %memberidx.i.i366, align 4
-  %829 = load ptr, ptr %memberidx1.i.i367, align 8
-  %memberidx2.i.i.i415 = getelementptr inbounds %string, ptr %829, i64 0, i32 2
-  %830 = load i64, ptr %memberidx2.i.i.i415, align 4
-  %.not848 = icmp slt i64 %828, %830
-  br i1 %.not848, label %ifend.i.i420, label %Lexer_advance.exit.i433
-
-ifend.i.i420:                                     ; preds = %if.entry.i416
-  %831 = load ptr, ptr %829, align 8
-  %memberidx2.i5.i418 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %831, i64 0, i32 2
-  %832 = load ptr, ptr %memberidx2.i5.i418, align 8
-  %833 = add nsw i64 %828, 1
-  store i64 %833, ptr %memberidx.i.i366, align 4
-  %834 = tail call i8 %832(ptr nonnull %829, i64 %833)
-  store i8 %834, ptr %0, align 1
-  %835 = icmp eq i8 %834, 10
-  %memberidx9.i.i421 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 4
-  br i1 %835, label %if.entry6.i.i423, label %Lexer_advance.exit.i433.sink.split
-
-if.entry6.i.i423:                                 ; preds = %ifend.i.i420
-  store i64 0, ptr %memberidx9.i.i421, align 4
-  %memberidx10.i.i422 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 5
-  br label %Lexer_advance.exit.i433.sink.split
-
-Lexer_advance.exit.i433.sink.split:               ; preds = %ifend.i.i420, %if.entry6.i.i423
-  %memberidx9.i.i421.sink1029 = phi ptr [ %memberidx10.i.i422, %if.entry6.i.i423 ], [ %memberidx9.i.i421, %ifend.i.i420 ]
-  %836 = load i64, ptr %memberidx9.i.i421.sink1029, align 4
-  %837 = add i64 %836, 1
-  store i64 %837, ptr %memberidx9.i.i421.sink1029, align 4
-  br label %Lexer_advance.exit.i433
-
-Lexer_advance.exit.i433:                          ; preds = %Lexer_advance.exit.i433.sink.split, %if.entry.i416
-  %838 = tail call ptr @malloc(i32 16)
-  %839 = tail call ptr @malloc(i32 32)
-  %840 = load i64, ptr %memberidx.i.i366, align 4
-  %841 = add i64 %840, -1
-  %842 = add i64 %840, 1
-  %memberidx2.i7.i427 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 4
-  %843 = load i64, ptr %memberidx2.i7.i427, align 4
-  %844 = add i64 %843, -2
-  %memberidx3.i8.i428 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 5
-  %845 = load i64, ptr %memberidx3.i8.i428, align 4
-  store i64 %841, ptr %839, align 4
-  %memberidx1.i.i9.i429 = getelementptr inbounds %FloRange, ptr %839, i64 0, i32 1
-  store i64 %842, ptr %memberidx1.i.i9.i429, align 4
-  %memberidx2.i.i10.i430 = getelementptr inbounds %FloRange, ptr %839, i64 0, i32 2
-  store i64 %844, ptr %memberidx2.i.i10.i430, align 4
-  %memberidx3.i.i.i431 = getelementptr inbounds %FloRange, ptr %839, i64 0, i32 3
-  store i64 %845, ptr %memberidx3.i.i.i431, align 4
-  store i64 13, ptr %838, align 4
-  %memberidx1.i11.i432 = getelementptr inbounds %Token, ptr %838, i64 0, i32 1
-  store ptr %839, ptr %memberidx1.i11.i432, align 8
-  br label %common.ret
-
-ifend.i441:                                       ; preds = %ifend41, %if.entry.i.i409
-  %846 = tail call ptr @malloc(i32 16)
-  %847 = tail call ptr @malloc(i32 32)
-  %848 = load i64, ptr %memberidx.i.i366, align 4
-  %849 = add i64 %848, 1
-  %memberidx2.i14.i435 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 4
-  %850 = load i64, ptr %memberidx2.i14.i435, align 4
-  %851 = add i64 %850, -1
-  %memberidx3.i15.i436 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 5
-  %852 = load i64, ptr %memberidx3.i15.i436, align 4
-  store i64 %848, ptr %847, align 4
-  %memberidx1.i.i16.i437 = getelementptr inbounds %FloRange, ptr %847, i64 0, i32 1
-  store i64 %849, ptr %memberidx1.i.i16.i437, align 4
-  %memberidx2.i.i17.i438 = getelementptr inbounds %FloRange, ptr %847, i64 0, i32 2
-  store i64 %851, ptr %memberidx2.i.i17.i438, align 4
-  %memberidx3.i.i18.i439 = getelementptr inbounds %FloRange, ptr %847, i64 0, i32 3
-  store i64 %852, ptr %memberidx3.i.i18.i439, align 4
-  store i64 7, ptr %846, align 4
-  %memberidx1.i12.i440 = getelementptr inbounds %Token, ptr %846, i64 0, i32 1
-  store ptr %847, ptr %memberidx1.i12.i440, align 8
-  br label %common.ret
-
-if.entry42:                                       ; preds = %ifend11
-  %853 = tail call ptr @malloc(i32 16)
-  %854 = tail call ptr @malloc(i32 32)
-  %memberidx.i442 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 3
-  %855 = load i64, ptr %memberidx.i442, align 4
-  %856 = add i64 %855, 1
-  %memberidx2.i443 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 4
-  %857 = load i64, ptr %memberidx2.i443, align 4
-  %858 = add i64 %857, -1
-  %memberidx3.i444 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 5
-  %859 = load i64, ptr %memberidx3.i444, align 4
-  store i64 %855, ptr %854, align 4
-  %memberidx1.i.i445 = getelementptr inbounds %FloRange, ptr %854, i64 0, i32 1
-  store i64 %856, ptr %memberidx1.i.i445, align 4
-  %memberidx2.i.i446 = getelementptr inbounds %FloRange, ptr %854, i64 0, i32 2
-  store i64 %858, ptr %memberidx2.i.i446, align 4
-  %memberidx3.i.i447 = getelementptr inbounds %FloRange, ptr %854, i64 0, i32 3
-  store i64 %859, ptr %memberidx3.i.i447, align 4
-  store i64 23, ptr %853, align 4
-  %memberidx1.i448 = getelementptr inbounds %Token, ptr %853, i64 0, i32 1
-  store ptr %854, ptr %memberidx1.i448, align 8
-  br label %common.ret
-
-if.entry45:                                       ; preds = %ifend11
-  %860 = tail call ptr @malloc(i32 16)
-  %861 = tail call ptr @malloc(i32 32)
-  %memberidx.i449 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 3
-  %862 = load i64, ptr %memberidx.i449, align 4
-  %863 = add i64 %862, 1
-  %memberidx2.i450 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 4
-  %864 = load i64, ptr %memberidx2.i450, align 4
-  %865 = add i64 %864, -1
-  %memberidx3.i451 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 5
-  %866 = load i64, ptr %memberidx3.i451, align 4
-  store i64 %862, ptr %861, align 4
-  %memberidx1.i.i452 = getelementptr inbounds %FloRange, ptr %861, i64 0, i32 1
-  store i64 %863, ptr %memberidx1.i.i452, align 4
-  %memberidx2.i.i453 = getelementptr inbounds %FloRange, ptr %861, i64 0, i32 2
-  store i64 %865, ptr %memberidx2.i.i453, align 4
-  %memberidx3.i.i454 = getelementptr inbounds %FloRange, ptr %861, i64 0, i32 3
-  store i64 %866, ptr %memberidx3.i.i454, align 4
-  store i64 24, ptr %860, align 4
-  %memberidx1.i455 = getelementptr inbounds %Token, ptr %860, i64 0, i32 1
-  store ptr %861, ptr %memberidx1.i455, align 8
-  br label %common.ret
-
-if.entry48:                                       ; preds = %ifend11
-  %867 = tail call ptr @malloc(i32 16)
-  %868 = tail call ptr @malloc(i32 32)
-  %memberidx.i456 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 3
-  %869 = load i64, ptr %memberidx.i456, align 4
-  %870 = add i64 %869, 1
-  %memberidx2.i457 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 4
-  %871 = load i64, ptr %memberidx2.i457, align 4
-  %872 = add i64 %871, -1
-  %memberidx3.i458 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 5
-  %873 = load i64, ptr %memberidx3.i458, align 4
-  store i64 %869, ptr %868, align 4
-  %memberidx1.i.i459 = getelementptr inbounds %FloRange, ptr %868, i64 0, i32 1
-  store i64 %870, ptr %memberidx1.i.i459, align 4
-  %memberidx2.i.i460 = getelementptr inbounds %FloRange, ptr %868, i64 0, i32 2
-  store i64 %872, ptr %memberidx2.i.i460, align 4
-  %memberidx3.i.i461 = getelementptr inbounds %FloRange, ptr %868, i64 0, i32 3
-  store i64 %873, ptr %memberidx3.i.i461, align 4
-  store i64 25, ptr %867, align 4
-  %memberidx1.i462 = getelementptr inbounds %Token, ptr %867, i64 0, i32 1
-  store ptr %868, ptr %memberidx1.i462, align 8
-  br label %common.ret
-
-if.entry51:                                       ; preds = %ifend11
-  %874 = tail call ptr @malloc(i32 16)
-  %875 = tail call ptr @malloc(i32 32)
-  %memberidx.i463 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 3
-  %876 = load i64, ptr %memberidx.i463, align 4
-  %877 = add i64 %876, 1
-  %memberidx2.i464 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 4
-  %878 = load i64, ptr %memberidx2.i464, align 4
-  %879 = add i64 %878, -1
-  %memberidx3.i465 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 5
-  %880 = load i64, ptr %memberidx3.i465, align 4
-  store i64 %876, ptr %875, align 4
-  %memberidx1.i.i466 = getelementptr inbounds %FloRange, ptr %875, i64 0, i32 1
-  store i64 %877, ptr %memberidx1.i.i466, align 4
-  %memberidx2.i.i467 = getelementptr inbounds %FloRange, ptr %875, i64 0, i32 2
-  store i64 %879, ptr %memberidx2.i.i467, align 4
-  %memberidx3.i.i468 = getelementptr inbounds %FloRange, ptr %875, i64 0, i32 3
-  store i64 %880, ptr %memberidx3.i.i468, align 4
-  store i64 26, ptr %874, align 4
-  %memberidx1.i469 = getelementptr inbounds %Token, ptr %874, i64 0, i32 1
-  store ptr %875, ptr %memberidx1.i469, align 8
-  br label %common.ret
-
-if.entry54:                                       ; preds = %ifend11
-  %881 = tail call ptr @malloc(i32 16)
-  %882 = tail call ptr @malloc(i32 32)
-  %memberidx.i470 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 3
-  %883 = load i64, ptr %memberidx.i470, align 4
-  %884 = add i64 %883, 1
-  %memberidx2.i471 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 4
-  %885 = load i64, ptr %memberidx2.i471, align 4
-  %886 = add i64 %885, -1
-  %memberidx3.i472 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 5
-  %887 = load i64, ptr %memberidx3.i472, align 4
-  store i64 %883, ptr %882, align 4
-  %memberidx1.i.i473 = getelementptr inbounds %FloRange, ptr %882, i64 0, i32 1
-  store i64 %884, ptr %memberidx1.i.i473, align 4
-  %memberidx2.i.i474 = getelementptr inbounds %FloRange, ptr %882, i64 0, i32 2
-  store i64 %886, ptr %memberidx2.i.i474, align 4
-  %memberidx3.i.i475 = getelementptr inbounds %FloRange, ptr %882, i64 0, i32 3
-  store i64 %887, ptr %memberidx3.i.i475, align 4
-  store i64 27, ptr %881, align 4
-  %memberidx1.i476 = getelementptr inbounds %Token, ptr %881, i64 0, i32 1
-  store ptr %882, ptr %memberidx1.i476, align 8
-  br label %common.ret
-
-if.entry57:                                       ; preds = %ifend11
-  %888 = tail call ptr @malloc(i32 16)
-  %889 = tail call ptr @malloc(i32 32)
-  %memberidx.i477 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 3
-  %890 = load i64, ptr %memberidx.i477, align 4
-  %891 = add i64 %890, 1
-  %memberidx2.i478 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 4
-  %892 = load i64, ptr %memberidx2.i478, align 4
-  %893 = add i64 %892, -1
-  %memberidx3.i479 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 5
-  %894 = load i64, ptr %memberidx3.i479, align 4
-  store i64 %890, ptr %889, align 4
-  %memberidx1.i.i480 = getelementptr inbounds %FloRange, ptr %889, i64 0, i32 1
-  store i64 %891, ptr %memberidx1.i.i480, align 4
-  %memberidx2.i.i481 = getelementptr inbounds %FloRange, ptr %889, i64 0, i32 2
-  store i64 %893, ptr %memberidx2.i.i481, align 4
-  %memberidx3.i.i482 = getelementptr inbounds %FloRange, ptr %889, i64 0, i32 3
-  store i64 %894, ptr %memberidx3.i.i482, align 4
-  store i64 28, ptr %888, align 4
-  %memberidx1.i483 = getelementptr inbounds %Token, ptr %888, i64 0, i32 1
-  store ptr %889, ptr %memberidx1.i483, align 8
-  br label %common.ret
-
-if.entry60:                                       ; preds = %ifend11, %ifend11
-  %895 = tail call ptr @malloc(i32 16)
-  %896 = tail call ptr @malloc(i32 32)
-  %memberidx.i484 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 3
-  %897 = load i64, ptr %memberidx.i484, align 4
-  %898 = add i64 %897, 1
-  %memberidx2.i485 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 4
-  %899 = load i64, ptr %memberidx2.i485, align 4
-  %900 = add i64 %899, -1
-  %memberidx3.i486 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 5
-  %901 = load i64, ptr %memberidx3.i486, align 4
-  store i64 %897, ptr %896, align 4
-  %memberidx1.i.i487 = getelementptr inbounds %FloRange, ptr %896, i64 0, i32 1
-  store i64 %898, ptr %memberidx1.i.i487, align 4
-  %memberidx2.i.i488 = getelementptr inbounds %FloRange, ptr %896, i64 0, i32 2
-  store i64 %900, ptr %memberidx2.i.i488, align 4
-  %memberidx3.i.i489 = getelementptr inbounds %FloRange, ptr %896, i64 0, i32 3
-  store i64 %901, ptr %memberidx3.i.i489, align 4
-  store i64 31, ptr %895, align 4
-  %memberidx1.i490 = getelementptr inbounds %Token, ptr %895, i64 0, i32 1
-  store ptr %896, ptr %memberidx1.i490, align 8
-  br label %common.ret
-
-if.entry63:                                       ; preds = %ifend11
-  %memberidx.i.i.i491 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 3
-  %902 = load i64, ptr %memberidx.i.i.i491, align 4
-  %memberidx1.i.i.i492 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 1
-  %903 = load ptr, ptr %memberidx1.i.i.i492, align 8
-  %memberidx2.i.i.i493 = getelementptr inbounds %string, ptr %903, i64 0, i32 2
-  %904 = load i64, ptr %memberidx2.i.i.i493, align 4
-  %.not843 = icmp slt i64 %902, %904
-  br i1 %.not843, label %ifend.i.i497, label %ifend.i508
-
-ifend.i.i497:                                     ; preds = %if.entry63
-  %905 = load ptr, ptr %903, align 8
-  %memberidx2.i.i495 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %905, i64 0, i32 2
-  %906 = load ptr, ptr %memberidx2.i.i495, align 8
-  %907 = add nsw i64 %902, 1
-  store i64 %907, ptr %memberidx.i.i.i491, align 4
-  %908 = tail call i8 %906(ptr nonnull %903, i64 %907)
-  store i8 %908, ptr %0, align 1
-  %909 = icmp eq i8 %908, 10
-  %memberidx9.i.i498 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 4
-  br i1 %909, label %if.entry6.i.i500, label %Lexer_advance.exit.i503
-
-if.entry6.i.i500:                                 ; preds = %ifend.i.i497
-  store i64 0, ptr %memberidx9.i.i498, align 4
-  %memberidx10.i.i499 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 5
-  %910 = load i64, ptr %memberidx10.i.i499, align 4
-  %911 = add i64 %910, 1
-  store i64 %911, ptr %memberidx10.i.i499, align 4
-  br label %ifend.i508
-
-Lexer_advance.exit.i503:                          ; preds = %ifend.i.i497
-  %912 = load i64, ptr %memberidx9.i.i498, align 4
-  %913 = add i64 %912, 1
-  store i64 %913, ptr %memberidx9.i.i498, align 4
-  %914 = icmp eq i8 %908, 92
-  br i1 %914, label %if.entry.i504, label %ifend.i508
-
-if.entry.i504:                                    ; preds = %Lexer_advance.exit.i503
-  %915 = load i64, ptr %memberidx.i.i.i491, align 4
-  %916 = load ptr, ptr %memberidx1.i.i.i492, align 8
-  %memberidx2.i.i12.i = getelementptr inbounds %string, ptr %916, i64 0, i32 2
-  %917 = load i64, ptr %memberidx2.i.i12.i, align 4
-  %.not845 = icmp slt i64 %915, %917
-  br i1 %.not845, label %ifend.i16.i, label %ifend27.i.i
-
-ifend.i16.i:                                      ; preds = %if.entry.i504
-  %918 = load ptr, ptr %916, align 8
-  %memberidx2.i14.i505 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %918, i64 0, i32 2
-  %919 = load ptr, ptr %memberidx2.i14.i505, align 8
-  %920 = add nsw i64 %915, 1
-  store i64 %920, ptr %memberidx.i.i.i491, align 4
-  %921 = tail call i8 %919(ptr nonnull %916, i64 %920)
-  store i8 %921, ptr %0, align 1
-  %922 = icmp eq i8 %921, 10
-  %memberidx9.i17.i = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 4
-  br i1 %922, label %if.entry6.i19.i, label %Lexer_advance.exit22.i
-
-if.entry6.i19.i:                                  ; preds = %ifend.i16.i
-  store i64 0, ptr %memberidx9.i17.i, align 4
-  %memberidx10.i18.i = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 5
-  %923 = load i64, ptr %memberidx10.i18.i, align 4
-  %924 = add i64 %923, 1
-  store i64 %924, ptr %memberidx10.i18.i, align 4
-  br label %ifend27.i.i
-
-Lexer_advance.exit22.i:                           ; preds = %ifend.i16.i
-  %925 = load i64, ptr %memberidx9.i17.i, align 4
-  %926 = add i64 %925, 1
-  store i64 %926, ptr %memberidx9.i17.i, align 4
-  switch i8 %921, label %ifend27.i.i [
-    i8 97, label %ifend.i508
-    i8 98, label %get_escape_char.exit.i.fold.split
-    i8 116, label %get_escape_char.exit.i.fold.split874
-    i8 102, label %get_escape_char.exit.i.fold.split875
-    i8 110, label %get_escape_char.exit.i.fold.split876
-    i8 114, label %get_escape_char.exit.i.fold.split877
-    i8 118, label %get_escape_char.exit.i.fold.split878
-    i8 48, label %get_escape_char.exit.i.fold.split879
-    i8 39, label %get_escape_char.exit.i.fold.split880
-    i8 34, label %get_escape_char.exit.i.fold.split881
-  ]
-
-ifend27.i.i:                                      ; preds = %if.entry.i504, %if.entry6.i19.i, %Lexer_advance.exit22.i
-  %927 = phi i8 [ %921, %Lexer_advance.exit22.i ], [ 92, %if.entry.i504 ], [ 10, %if.entry6.i19.i ]
-  br label %ifend.i508
-
-get_escape_char.exit.i.fold.split:                ; preds = %Lexer_advance.exit22.i
-  br label %ifend.i508
-
-get_escape_char.exit.i.fold.split874:             ; preds = %Lexer_advance.exit22.i
-  br label %ifend.i508
-
-get_escape_char.exit.i.fold.split875:             ; preds = %Lexer_advance.exit22.i
-  br label %ifend.i508
-
-get_escape_char.exit.i.fold.split876:             ; preds = %Lexer_advance.exit22.i
-  br label %ifend.i508
-
-get_escape_char.exit.i.fold.split877:             ; preds = %Lexer_advance.exit22.i
-  br label %ifend.i508
-
-get_escape_char.exit.i.fold.split878:             ; preds = %Lexer_advance.exit22.i
-  br label %ifend.i508
-
-get_escape_char.exit.i.fold.split879:             ; preds = %Lexer_advance.exit22.i
-  br label %ifend.i508
-
-get_escape_char.exit.i.fold.split880:             ; preds = %Lexer_advance.exit22.i
-  br label %ifend.i508
-
-get_escape_char.exit.i.fold.split881:             ; preds = %Lexer_advance.exit22.i
-  br label %ifend.i508
-
-ifend.i508:                                       ; preds = %if.entry63, %if.entry6.i.i500, %ifend27.i.i, %get_escape_char.exit.i.fold.split, %get_escape_char.exit.i.fold.split874, %get_escape_char.exit.i.fold.split875, %get_escape_char.exit.i.fold.split876, %get_escape_char.exit.i.fold.split877, %get_escape_char.exit.i.fold.split878, %get_escape_char.exit.i.fold.split879, %get_escape_char.exit.i.fold.split880, %get_escape_char.exit.i.fold.split881, %Lexer_advance.exit22.i, %Lexer_advance.exit.i503
-  %length.0.i = phi i64 [ 3, %Lexer_advance.exit.i503 ], [ 5, %Lexer_advance.exit22.i ], [ 5, %get_escape_char.exit.i.fold.split881 ], [ 5, %get_escape_char.exit.i.fold.split880 ], [ 5, %get_escape_char.exit.i.fold.split879 ], [ 5, %get_escape_char.exit.i.fold.split878 ], [ 5, %get_escape_char.exit.i.fold.split877 ], [ 5, %get_escape_char.exit.i.fold.split876 ], [ 5, %get_escape_char.exit.i.fold.split875 ], [ 5, %get_escape_char.exit.i.fold.split874 ], [ 5, %get_escape_char.exit.i.fold.split ], [ 5, %ifend27.i.i ], [ 3, %if.entry6.i.i500 ], [ 3, %if.entry63 ]
-  %value.0.i = phi i8 [ %908, %Lexer_advance.exit.i503 ], [ 7, %Lexer_advance.exit22.i ], [ %921, %get_escape_char.exit.i.fold.split881 ], [ %921, %get_escape_char.exit.i.fold.split880 ], [ 0, %get_escape_char.exit.i.fold.split879 ], [ 11, %get_escape_char.exit.i.fold.split878 ], [ 13, %get_escape_char.exit.i.fold.split877 ], [ 10, %get_escape_char.exit.i.fold.split876 ], [ 12, %get_escape_char.exit.i.fold.split875 ], [ 9, %get_escape_char.exit.i.fold.split874 ], [ 8, %get_escape_char.exit.i.fold.split ], [ %927, %ifend27.i.i ], [ 10, %if.entry6.i.i500 ], [ 39, %if.entry63 ]
-  %928 = load i64, ptr %memberidx.i.i.i491, align 4
-  %929 = load ptr, ptr %memberidx1.i.i.i492, align 8
-  %memberidx2.i.i32.i = getelementptr inbounds %string, ptr %929, i64 0, i32 2
-  %930 = load i64, ptr %memberidx2.i.i32.i, align 4
-  %.not844 = icmp slt i64 %928, %930
-  br i1 %.not844, label %ifend.i36.i, label %Lexer_char_token.exit
-
-ifend.i36.i:                                      ; preds = %ifend.i508
-  %931 = load ptr, ptr %929, align 8
-  %memberidx2.i34.i = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %931, i64 0, i32 2
-  %932 = load ptr, ptr %memberidx2.i34.i, align 8
-  %933 = add nsw i64 %928, 1
-  store i64 %933, ptr %memberidx.i.i.i491, align 4
-  %934 = tail call i8 %932(ptr nonnull %929, i64 %933)
-  store i8 %934, ptr %0, align 1
-  %935 = icmp eq i8 %934, 10
-  %memberidx9.i37.i = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 4
-  br i1 %935, label %if.entry6.i39.i, label %Lexer_char_token.exit.sink.split
-
-if.entry6.i39.i:                                  ; preds = %ifend.i36.i
-  store i64 0, ptr %memberidx9.i37.i, align 4
-  %memberidx10.i38.i = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 5
-  br label %Lexer_char_token.exit.sink.split
-
-Lexer_char_token.exit.sink.split:                 ; preds = %ifend.i36.i, %if.entry6.i39.i
-  %memberidx10.i38.i.sink1031 = phi ptr [ %memberidx10.i38.i, %if.entry6.i39.i ], [ %memberidx9.i37.i, %ifend.i36.i ]
-  %936 = load i64, ptr %memberidx10.i38.i.sink1031, align 4
-  %937 = add i64 %936, 1
-  store i64 %937, ptr %memberidx10.i38.i.sink1031, align 4
-  br label %Lexer_char_token.exit
-
-Lexer_char_token.exit:                            ; preds = %Lexer_char_token.exit.sink.split, %ifend.i508
-  %938 = tail call ptr @malloc(i32 17)
-  %939 = tail call ptr @malloc(i32 32)
-  %940 = load i64, ptr %memberidx.i.i.i491, align 4
-  %941 = sub nsw i64 1, %length.0.i
-  %942 = add i64 %941, %940
-  %943 = add i64 %940, 1
-  %memberidx2.i26.i = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 4
-  %944 = load i64, ptr %memberidx2.i26.i, align 4
-  %945 = sub i64 %944, %length.0.i
-  %memberidx3.i27.i = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 5
-  %946 = load i64, ptr %memberidx3.i27.i, align 4
-  store i64 %942, ptr %939, align 4
-  %memberidx1.i.i28.i = getelementptr inbounds %FloRange, ptr %939, i64 0, i32 1
-  store i64 %943, ptr %memberidx1.i.i28.i, align 4
-  %memberidx2.i.i29.i = getelementptr inbounds %FloRange, ptr %939, i64 0, i32 2
-  store i64 %945, ptr %memberidx2.i.i29.i, align 4
-  %memberidx3.i.i.i510 = getelementptr inbounds %FloRange, ptr %939, i64 0, i32 3
-  store i64 %946, ptr %memberidx3.i.i.i510, align 4
-  store i64 33, ptr %938, align 4
-  %memberidx1.i.i24.i = getelementptr inbounds %Token, ptr %938, i64 0, i32 1
-  store ptr %939, ptr %memberidx1.i.i24.i, align 8
-  %memberidx.i.i511 = getelementptr inbounds %CharToken, ptr %938, i64 0, i32 2
-  store i8 %value.0.i, ptr %memberidx.i.i511, align 1
-  br label %common.ret
-
-if.entry66:                                       ; preds = %ifend11
-  %947 = tail call ptr @malloc(i32 16)
-  %948 = tail call ptr @malloc(i32 32)
-  %memberidx.i512 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 3
-  %949 = load i64, ptr %memberidx.i512, align 4
-  %950 = add i64 %949, 1
-  %memberidx2.i513 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 4
-  %951 = load i64, ptr %memberidx2.i513, align 4
-  %952 = add i64 %951, -1
-  %memberidx3.i514 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 5
-  %953 = load i64, ptr %memberidx3.i514, align 4
-  store i64 %949, ptr %948, align 4
-  %memberidx1.i.i515 = getelementptr inbounds %FloRange, ptr %948, i64 0, i32 1
-  store i64 %950, ptr %memberidx1.i.i515, align 4
-  %memberidx2.i.i516 = getelementptr inbounds %FloRange, ptr %948, i64 0, i32 2
-  store i64 %952, ptr %memberidx2.i.i516, align 4
-  %memberidx3.i.i517 = getelementptr inbounds %FloRange, ptr %948, i64 0, i32 3
-  store i64 %953, ptr %memberidx3.i.i517, align 4
-  store i64 34, ptr %947, align 4
-  %memberidx1.i518 = getelementptr inbounds %Token, ptr %947, i64 0, i32 1
-  store ptr %948, ptr %memberidx1.i518, align 8
-  br label %common.ret
-
-if.entry69:                                       ; preds = %ifend11
-  %954 = tail call ptr @malloc(i32 16)
-  %955 = tail call ptr @malloc(i32 32)
-  %memberidx.i519 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 3
-  %956 = load i64, ptr %memberidx.i519, align 4
-  %957 = add i64 %956, 1
-  %memberidx2.i520 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 4
-  %958 = load i64, ptr %memberidx2.i520, align 4
-  %959 = add i64 %958, -1
-  %memberidx3.i521 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 5
-  %960 = load i64, ptr %memberidx3.i521, align 4
-  store i64 %956, ptr %955, align 4
-  %memberidx1.i.i522 = getelementptr inbounds %FloRange, ptr %955, i64 0, i32 1
-  store i64 %957, ptr %memberidx1.i.i522, align 4
-  %memberidx2.i.i523 = getelementptr inbounds %FloRange, ptr %955, i64 0, i32 2
-  store i64 %959, ptr %memberidx2.i.i523, align 4
-  %memberidx3.i.i524 = getelementptr inbounds %FloRange, ptr %955, i64 0, i32 3
-  store i64 %960, ptr %memberidx3.i.i524, align 4
-  store i64 35, ptr %954, align 4
-  %memberidx1.i525 = getelementptr inbounds %Token, ptr %954, i64 0, i32 1
-  store ptr %955, ptr %memberidx1.i525, align 8
-  br label %common.ret
-
-if.entry72:                                       ; preds = %ifend11
-  %memberidx.i.i526 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 3
-  %961 = load i64, ptr %memberidx.i.i526, align 4
-  %962 = add i64 %961, 1
-  %memberidx1.i.i527 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 1
-  %963 = load ptr, ptr %memberidx1.i.i527, align 8
-  %memberidx2.i.i528 = getelementptr inbounds %string, ptr %963, i64 0, i32 2
-  %964 = load i64, ptr %memberidx2.i.i528, align 4
-  %965 = icmp slt i64 %962, %964
-  br i1 %965, label %if.entry.i.i530, label %else.i558
-
-if.entry.i.i530:                                  ; preds = %if.entry72
-  %966 = load ptr, ptr %963, align 8
-  %memberidx4.i.i529 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %966, i64 0, i32 2
-  %967 = load ptr, ptr %memberidx4.i.i529, align 8
-  %968 = tail call i8 %967(ptr nonnull %963, i64 %962)
-  %phi.cmp839 = icmp eq i8 %968, 61
-  %969 = load i64, ptr %memberidx.i.i526, align 4
-  %970 = load ptr, ptr %memberidx1.i.i527, align 8
-  %memberidx2.i.i.i536 = getelementptr inbounds %string, ptr %970, i64 0, i32 2
-  %971 = load i64, ptr %memberidx2.i.i.i536, align 4
-  br i1 %phi.cmp839, label %if.entry.i537, label %if.entry.i.i530.else.i558_crit_edge
-
-if.entry.i.i530.else.i558_crit_edge:              ; preds = %if.entry.i.i530
-  %.pre987 = add i64 %969, 1
-  br label %else.i558
-
-if.entry.i537:                                    ; preds = %if.entry.i.i530
-  %.not842 = icmp slt i64 %969, %971
-  br i1 %.not842, label %ifend.i.i541, label %Lexer_advance.exit.i554
-
-ifend.i.i541:                                     ; preds = %if.entry.i537
-  %972 = load ptr, ptr %970, align 8
-  %memberidx2.i11.i539 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %972, i64 0, i32 2
-  %973 = load ptr, ptr %memberidx2.i11.i539, align 8
-  %974 = add nsw i64 %969, 1
-  store i64 %974, ptr %memberidx.i.i526, align 4
-  %975 = tail call i8 %973(ptr nonnull %970, i64 %974)
-  store i8 %975, ptr %0, align 1
-  %976 = icmp eq i8 %975, 10
-  %memberidx9.i.i542 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 4
-  br i1 %976, label %if.entry6.i.i544, label %Lexer_advance.exit.i554.sink.split
-
-if.entry6.i.i544:                                 ; preds = %ifend.i.i541
-  store i64 0, ptr %memberidx9.i.i542, align 4
-  %memberidx10.i.i543 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 5
-  br label %Lexer_advance.exit.i554.sink.split
-
-Lexer_advance.exit.i554.sink.split:               ; preds = %ifend.i.i541, %if.entry6.i.i544
-  %memberidx9.i.i542.sink1033 = phi ptr [ %memberidx10.i.i543, %if.entry6.i.i544 ], [ %memberidx9.i.i542, %ifend.i.i541 ]
-  %977 = load i64, ptr %memberidx9.i.i542.sink1033, align 4
-  %978 = add i64 %977, 1
-  store i64 %978, ptr %memberidx9.i.i542.sink1033, align 4
-  br label %Lexer_advance.exit.i554
-
-Lexer_advance.exit.i554:                          ; preds = %Lexer_advance.exit.i554.sink.split, %if.entry.i537
-  %979 = tail call ptr @malloc(i32 16)
-  %980 = tail call ptr @malloc(i32 32)
-  %981 = load i64, ptr %memberidx.i.i526, align 4
-  %982 = add i64 %981, -1
-  %983 = add i64 %981, 1
-  %memberidx2.i13.i548 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 4
-  %984 = load i64, ptr %memberidx2.i13.i548, align 4
-  %985 = add i64 %984, -2
-  %memberidx3.i14.i549 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 5
-  %986 = load i64, ptr %memberidx3.i14.i549, align 4
-  store i64 %982, ptr %980, align 4
-  %memberidx1.i.i15.i550 = getelementptr inbounds %FloRange, ptr %980, i64 0, i32 1
-  store i64 %983, ptr %memberidx1.i.i15.i550, align 4
-  %memberidx2.i.i16.i551 = getelementptr inbounds %FloRange, ptr %980, i64 0, i32 2
-  store i64 %985, ptr %memberidx2.i.i16.i551, align 4
-  %memberidx3.i.i.i552 = getelementptr inbounds %FloRange, ptr %980, i64 0, i32 3
-  store i64 %986, ptr %memberidx3.i.i.i552, align 4
-  store i64 37, ptr %979, align 4
-  %memberidx1.i17.i553 = getelementptr inbounds %Token, ptr %979, i64 0, i32 1
-  store ptr %980, ptr %memberidx1.i17.i553, align 8
-  br label %common.ret
-
-else.i558:                                        ; preds = %if.entry.i.i530.else.i558_crit_edge, %if.entry72
-  %.pre-phi988 = phi i64 [ %.pre987, %if.entry.i.i530.else.i558_crit_edge ], [ %962, %if.entry72 ]
-  %987 = phi i64 [ %971, %if.entry.i.i530.else.i558_crit_edge ], [ %964, %if.entry72 ]
-  %988 = phi ptr [ %970, %if.entry.i.i530.else.i558_crit_edge ], [ %963, %if.entry72 ]
-  %989 = icmp slt i64 %.pre-phi988, %987
-  br i1 %989, label %if.entry.i30.i560, label %ifend3.i591
-
-if.entry.i30.i560:                                ; preds = %else.i558
-  %990 = load ptr, ptr %988, align 8
-  %memberidx4.i29.i559 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %990, i64 0, i32 2
-  %991 = load ptr, ptr %memberidx4.i29.i559, align 8
-  %992 = tail call i8 %991(ptr nonnull %988, i64 %.pre-phi988)
-  %phi.cmp840 = icmp eq i8 %992, 62
-  br i1 %phi.cmp840, label %if.entry1.i566, label %ifend3.i591
-
-if.entry1.i566:                                   ; preds = %if.entry.i30.i560
-  %993 = load i64, ptr %memberidx.i.i526, align 4
-  %994 = load ptr, ptr %memberidx1.i.i527, align 8
-  %memberidx2.i.i34.i565 = getelementptr inbounds %string, ptr %994, i64 0, i32 2
-  %995 = load i64, ptr %memberidx2.i.i34.i565, align 4
-  %.not841 = icmp slt i64 %993, %995
-  br i1 %.not841, label %ifend.i38.i570, label %Lexer_advance.exit44.i583
-
-ifend.i38.i570:                                   ; preds = %if.entry1.i566
-  %996 = load ptr, ptr %994, align 8
-  %memberidx2.i36.i568 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %996, i64 0, i32 2
-  %997 = load ptr, ptr %memberidx2.i36.i568, align 8
-  %998 = add nsw i64 %993, 1
-  store i64 %998, ptr %memberidx.i.i526, align 4
-  %999 = tail call i8 %997(ptr nonnull %994, i64 %998)
-  store i8 %999, ptr %0, align 1
-  %1000 = icmp eq i8 %999, 10
-  %memberidx9.i39.i571 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 4
-  br i1 %1000, label %if.entry6.i41.i573, label %Lexer_advance.exit44.i583.sink.split
-
-if.entry6.i41.i573:                               ; preds = %ifend.i38.i570
-  store i64 0, ptr %memberidx9.i39.i571, align 4
-  %memberidx10.i40.i572 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 5
-  br label %Lexer_advance.exit44.i583.sink.split
-
-Lexer_advance.exit44.i583.sink.split:             ; preds = %ifend.i38.i570, %if.entry6.i41.i573
-  %memberidx9.i39.i571.sink1035 = phi ptr [ %memberidx10.i40.i572, %if.entry6.i41.i573 ], [ %memberidx9.i39.i571, %ifend.i38.i570 ]
-  %1001 = load i64, ptr %memberidx9.i39.i571.sink1035, align 4
-  %1002 = add i64 %1001, 1
-  store i64 %1002, ptr %memberidx9.i39.i571.sink1035, align 4
-  br label %Lexer_advance.exit44.i583
-
-Lexer_advance.exit44.i583:                        ; preds = %Lexer_advance.exit44.i583.sink.split, %if.entry1.i566
-  %1003 = tail call ptr @malloc(i32 16)
-  %1004 = tail call ptr @malloc(i32 32)
-  %1005 = load i64, ptr %memberidx.i.i526, align 4
-  %1006 = add i64 %1005, -1
-  %1007 = add i64 %1005, 1
-  %memberidx2.i46.i577 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 4
-  %1008 = load i64, ptr %memberidx2.i46.i577, align 4
-  %1009 = add i64 %1008, -2
-  %memberidx3.i47.i578 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 5
-  %1010 = load i64, ptr %memberidx3.i47.i578, align 4
-  store i64 %1006, ptr %1004, align 4
-  %memberidx1.i.i48.i579 = getelementptr inbounds %FloRange, ptr %1004, i64 0, i32 1
-  store i64 %1007, ptr %memberidx1.i.i48.i579, align 4
-  %memberidx2.i.i49.i580 = getelementptr inbounds %FloRange, ptr %1004, i64 0, i32 2
-  store i64 %1009, ptr %memberidx2.i.i49.i580, align 4
-  %memberidx3.i.i50.i581 = getelementptr inbounds %FloRange, ptr %1004, i64 0, i32 3
-  store i64 %1010, ptr %memberidx3.i.i50.i581, align 4
-  store i64 43, ptr %1003, align 4
-  %memberidx1.i51.i582 = getelementptr inbounds %Token, ptr %1003, i64 0, i32 1
-  store ptr %1004, ptr %memberidx1.i51.i582, align 8
-  br label %common.ret
-
-ifend3.i591:                                      ; preds = %else.i558, %if.entry.i30.i560
-  %1011 = tail call ptr @malloc(i32 16)
-  %1012 = tail call ptr @malloc(i32 32)
-  %1013 = load i64, ptr %memberidx.i.i526, align 4
-  %1014 = add i64 %1013, 1
-  %memberidx2.i20.i585 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 4
-  %1015 = load i64, ptr %memberidx2.i20.i585, align 4
-  %1016 = add i64 %1015, -1
-  %memberidx3.i21.i586 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 5
-  %1017 = load i64, ptr %memberidx3.i21.i586, align 4
-  store i64 %1013, ptr %1012, align 4
-  %memberidx1.i.i22.i587 = getelementptr inbounds %FloRange, ptr %1012, i64 0, i32 1
-  store i64 %1014, ptr %memberidx1.i.i22.i587, align 4
-  %memberidx2.i.i23.i588 = getelementptr inbounds %FloRange, ptr %1012, i64 0, i32 2
-  store i64 %1016, ptr %memberidx2.i.i23.i588, align 4
-  %memberidx3.i.i24.i589 = getelementptr inbounds %FloRange, ptr %1012, i64 0, i32 3
-  store i64 %1017, ptr %memberidx3.i.i24.i589, align 4
-  store i64 36, ptr %1011, align 4
-  %memberidx1.i18.i590 = getelementptr inbounds %Token, ptr %1011, i64 0, i32 1
-  store ptr %1012, ptr %memberidx1.i18.i590, align 8
-  br label %common.ret
-
-if.entry75:                                       ; preds = %ifend11
-  %memberidx.i.i592 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 3
-  %1018 = load i64, ptr %memberidx.i.i592, align 4
-  %1019 = add i64 %1018, 1
-  %memberidx1.i.i593 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 1
-  %1020 = load ptr, ptr %memberidx1.i.i593, align 8
-  %memberidx2.i.i594 = getelementptr inbounds %string, ptr %1020, i64 0, i32 2
-  %1021 = load i64, ptr %memberidx2.i.i594, align 4
-  %1022 = icmp slt i64 %1019, %1021
-  br i1 %1022, label %if.entry.i.i596, label %ifend.i628
-
-if.entry.i.i596:                                  ; preds = %if.entry75
-  %1023 = load ptr, ptr %1020, align 8
-  %memberidx4.i.i595 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %1023, i64 0, i32 2
-  %1024 = load ptr, ptr %memberidx4.i.i595, align 8
-  %1025 = tail call i8 %1024(ptr nonnull %1020, i64 %1019)
-  %phi.cmp837 = icmp eq i8 %1025, 61
-  br i1 %phi.cmp837, label %if.entry.i603, label %ifend.i628
-
-if.entry.i603:                                    ; preds = %if.entry.i.i596
-  %1026 = load i64, ptr %memberidx.i.i592, align 4
-  %1027 = load ptr, ptr %memberidx1.i.i593, align 8
-  %memberidx2.i.i.i602 = getelementptr inbounds %string, ptr %1027, i64 0, i32 2
-  %1028 = load i64, ptr %memberidx2.i.i.i602, align 4
-  %.not838 = icmp slt i64 %1026, %1028
-  br i1 %.not838, label %ifend.i.i607, label %Lexer_advance.exit.i620
-
-ifend.i.i607:                                     ; preds = %if.entry.i603
-  %1029 = load ptr, ptr %1027, align 8
-  %memberidx2.i5.i605 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %1029, i64 0, i32 2
-  %1030 = load ptr, ptr %memberidx2.i5.i605, align 8
-  %1031 = add nsw i64 %1026, 1
-  store i64 %1031, ptr %memberidx.i.i592, align 4
-  %1032 = tail call i8 %1030(ptr nonnull %1027, i64 %1031)
-  store i8 %1032, ptr %0, align 1
-  %1033 = icmp eq i8 %1032, 10
-  %memberidx9.i.i608 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 4
-  br i1 %1033, label %if.entry6.i.i610, label %Lexer_advance.exit.i620.sink.split
-
-if.entry6.i.i610:                                 ; preds = %ifend.i.i607
-  store i64 0, ptr %memberidx9.i.i608, align 4
-  %memberidx10.i.i609 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 5
-  br label %Lexer_advance.exit.i620.sink.split
-
-Lexer_advance.exit.i620.sink.split:               ; preds = %ifend.i.i607, %if.entry6.i.i610
-  %memberidx9.i.i608.sink1037 = phi ptr [ %memberidx10.i.i609, %if.entry6.i.i610 ], [ %memberidx9.i.i608, %ifend.i.i607 ]
-  %1034 = load i64, ptr %memberidx9.i.i608.sink1037, align 4
-  %1035 = add i64 %1034, 1
-  store i64 %1035, ptr %memberidx9.i.i608.sink1037, align 4
-  br label %Lexer_advance.exit.i620
-
-Lexer_advance.exit.i620:                          ; preds = %Lexer_advance.exit.i620.sink.split, %if.entry.i603
-  %1036 = tail call ptr @malloc(i32 16)
-  %1037 = tail call ptr @malloc(i32 32)
-  %1038 = load i64, ptr %memberidx.i.i592, align 4
-  %1039 = add i64 %1038, -1
-  %1040 = add i64 %1038, 1
-  %memberidx2.i7.i614 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 4
-  %1041 = load i64, ptr %memberidx2.i7.i614, align 4
-  %1042 = add i64 %1041, -2
-  %memberidx3.i8.i615 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 5
-  %1043 = load i64, ptr %memberidx3.i8.i615, align 4
-  store i64 %1039, ptr %1037, align 4
-  %memberidx1.i.i9.i616 = getelementptr inbounds %FloRange, ptr %1037, i64 0, i32 1
-  store i64 %1040, ptr %memberidx1.i.i9.i616, align 4
-  %memberidx2.i.i10.i617 = getelementptr inbounds %FloRange, ptr %1037, i64 0, i32 2
-  store i64 %1042, ptr %memberidx2.i.i10.i617, align 4
-  %memberidx3.i.i.i618 = getelementptr inbounds %FloRange, ptr %1037, i64 0, i32 3
-  store i64 %1043, ptr %memberidx3.i.i.i618, align 4
-  store i64 38, ptr %1036, align 4
-  %memberidx1.i11.i619 = getelementptr inbounds %Token, ptr %1036, i64 0, i32 1
-  store ptr %1037, ptr %memberidx1.i11.i619, align 8
-  br label %common.ret
-
-ifend.i628:                                       ; preds = %if.entry75, %if.entry.i.i596
-  %1044 = tail call ptr @malloc(i32 16)
-  %1045 = tail call ptr @malloc(i32 32)
-  %1046 = load i64, ptr %memberidx.i.i592, align 4
-  %1047 = add i64 %1046, 1
-  %memberidx2.i14.i622 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 4
-  %1048 = load i64, ptr %memberidx2.i14.i622, align 4
-  %1049 = add i64 %1048, -1
-  %memberidx3.i15.i623 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 5
-  %1050 = load i64, ptr %memberidx3.i15.i623, align 4
-  store i64 %1046, ptr %1045, align 4
-  %memberidx1.i.i16.i624 = getelementptr inbounds %FloRange, ptr %1045, i64 0, i32 1
-  store i64 %1047, ptr %memberidx1.i.i16.i624, align 4
-  %memberidx2.i.i17.i625 = getelementptr inbounds %FloRange, ptr %1045, i64 0, i32 2
-  store i64 %1049, ptr %memberidx2.i.i17.i625, align 4
-  %memberidx3.i.i18.i626 = getelementptr inbounds %FloRange, ptr %1045, i64 0, i32 3
-  store i64 %1050, ptr %memberidx3.i.i18.i626, align 4
-  store i64 45, ptr %1044, align 4
-  %memberidx1.i12.i627 = getelementptr inbounds %Token, ptr %1044, i64 0, i32 1
-  store ptr %1045, ptr %memberidx1.i12.i627, align 8
-  br label %common.ret
-
-if.entry78:                                       ; preds = %ifend11
-  %memberidx.i.i629 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 3
-  %1051 = load i64, ptr %memberidx.i.i629, align 4
-  %1052 = add i64 %1051, 1
-  %memberidx1.i.i630 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 1
-  %1053 = load ptr, ptr %memberidx1.i.i630, align 8
-  %memberidx2.i.i631 = getelementptr inbounds %string, ptr %1053, i64 0, i32 2
-  %1054 = load i64, ptr %memberidx2.i.i631, align 4
-  %1055 = icmp slt i64 %1052, %1054
-  br i1 %1055, label %if.entry.i.i633, label %else.i653
-
-if.entry.i.i633:                                  ; preds = %if.entry78
-  %1056 = load ptr, ptr %1053, align 8
-  %memberidx4.i.i632 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %1056, i64 0, i32 2
-  %1057 = load ptr, ptr %memberidx4.i.i632, align 8
-  %1058 = tail call i8 %1057(ptr nonnull %1053, i64 %1052)
-  %phi.cmp831 = icmp eq i8 %1058, 61
-  %1059 = load i64, ptr %memberidx.i.i629, align 4
-  %1060 = load ptr, ptr %memberidx1.i.i630, align 8
-  %memberidx2.i.i.i639 = getelementptr inbounds %string, ptr %1060, i64 0, i32 2
-  %1061 = load i64, ptr %memberidx2.i.i.i639, align 4
-  br i1 %phi.cmp831, label %if.entry.i640, label %if.entry.i.i633.else.i653_crit_edge
-
-if.entry.i.i633.else.i653_crit_edge:              ; preds = %if.entry.i.i633
-  %.pre989 = add i64 %1059, 1
-  br label %else.i653
-
-if.entry.i640:                                    ; preds = %if.entry.i.i633
-  %.not836 = icmp slt i64 %1059, %1061
-  br i1 %.not836, label %ifend.i.i642, label %Lexer_advance.exit.i649
-
-ifend.i.i642:                                     ; preds = %if.entry.i640
-  %1062 = load ptr, ptr %1060, align 8
-  %memberidx2.i17.i = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %1062, i64 0, i32 2
-  %1063 = load ptr, ptr %memberidx2.i17.i, align 8
-  %1064 = add nsw i64 %1059, 1
-  store i64 %1064, ptr %memberidx.i.i629, align 4
-  %1065 = tail call i8 %1063(ptr nonnull %1060, i64 %1064)
-  store i8 %1065, ptr %0, align 1
-  %1066 = icmp eq i8 %1065, 10
-  %memberidx9.i.i643 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 4
-  br i1 %1066, label %if.entry6.i.i645, label %Lexer_advance.exit.i649.sink.split
-
-if.entry6.i.i645:                                 ; preds = %ifend.i.i642
-  store i64 0, ptr %memberidx9.i.i643, align 4
-  %memberidx10.i.i644 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 5
-  br label %Lexer_advance.exit.i649.sink.split
-
-Lexer_advance.exit.i649.sink.split:               ; preds = %ifend.i.i642, %if.entry6.i.i645
-  %memberidx9.i.i643.sink1039 = phi ptr [ %memberidx10.i.i644, %if.entry6.i.i645 ], [ %memberidx9.i.i643, %ifend.i.i642 ]
-  %1067 = load i64, ptr %memberidx9.i.i643.sink1039, align 4
-  %1068 = add i64 %1067, 1
-  store i64 %1068, ptr %memberidx9.i.i643.sink1039, align 4
-  br label %Lexer_advance.exit.i649
-
-Lexer_advance.exit.i649:                          ; preds = %Lexer_advance.exit.i649.sink.split, %if.entry.i640
-  %1069 = tail call ptr @malloc(i32 16)
-  %1070 = tail call ptr @malloc(i32 32)
-  %1071 = load i64, ptr %memberidx.i.i629, align 4
-  %1072 = add i64 %1071, -1
-  %1073 = add i64 %1071, 1
-  %memberidx2.i19.i = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 4
-  %1074 = load i64, ptr %memberidx2.i19.i, align 4
-  %1075 = add i64 %1074, -2
-  %memberidx3.i20.i = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 5
-  %1076 = load i64, ptr %memberidx3.i20.i, align 4
-  store i64 %1072, ptr %1070, align 4
-  %memberidx1.i.i21.i = getelementptr inbounds %FloRange, ptr %1070, i64 0, i32 1
-  store i64 %1073, ptr %memberidx1.i.i21.i, align 4
-  %memberidx2.i.i22.i = getelementptr inbounds %FloRange, ptr %1070, i64 0, i32 2
-  store i64 %1075, ptr %memberidx2.i.i22.i, align 4
-  %memberidx3.i.i.i648 = getelementptr inbounds %FloRange, ptr %1070, i64 0, i32 3
-  store i64 %1076, ptr %memberidx3.i.i.i648, align 4
-  store i64 42, ptr %1069, align 4
-  %memberidx1.i23.i = getelementptr inbounds %Token, ptr %1069, i64 0, i32 1
-  store ptr %1070, ptr %memberidx1.i23.i, align 8
-  br label %common.ret
-
-else.i653:                                        ; preds = %if.entry.i.i633.else.i653_crit_edge, %if.entry78
-  %.pre-phi990 = phi i64 [ %.pre989, %if.entry.i.i633.else.i653_crit_edge ], [ %1052, %if.entry78 ]
-  %1077 = phi i64 [ %1061, %if.entry.i.i633.else.i653_crit_edge ], [ %1054, %if.entry78 ]
-  %1078 = phi ptr [ %1060, %if.entry.i.i633.else.i653_crit_edge ], [ %1053, %if.entry78 ]
-  %1079 = icmp slt i64 %.pre-phi990, %1077
-  br i1 %1079, label %if.entry.i36.i, label %ifend3.i655
-
-if.entry.i36.i:                                   ; preds = %else.i653
-  %1080 = load ptr, ptr %1078, align 8
-  %memberidx4.i35.i = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %1080, i64 0, i32 2
-  %1081 = load ptr, ptr %memberidx4.i35.i, align 8
-  %1082 = tail call i8 %1081(ptr nonnull %1078, i64 %.pre-phi990)
-  %phi.cmp832 = icmp eq i8 %1082, 62
-  br i1 %phi.cmp832, label %if.entry1.i654, label %ifend3.i655
-
-if.entry1.i654:                                   ; preds = %if.entry.i36.i
-  %1083 = load i64, ptr %memberidx.i.i629, align 4
-  %1084 = load ptr, ptr %memberidx1.i.i630, align 8
-  %memberidx2.i.i40.i = getelementptr inbounds %string, ptr %1084, i64 0, i32 2
-  %1085 = load i64, ptr %memberidx2.i.i40.i, align 4
-  %.not833 = icmp slt i64 %1083, %1085
-  br i1 %.not833, label %ifend.i44.i, label %Lexer_advance.exit50.i
-
-ifend.i44.i:                                      ; preds = %if.entry1.i654
-  %1086 = load ptr, ptr %1084, align 8
-  %memberidx2.i42.i = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %1086, i64 0, i32 2
-  %1087 = load ptr, ptr %memberidx2.i42.i, align 8
-  %1088 = add nsw i64 %1083, 1
-  store i64 %1088, ptr %memberidx.i.i629, align 4
-  %1089 = tail call i8 %1087(ptr nonnull %1084, i64 %1088)
-  store i8 %1089, ptr %0, align 1
-  %1090 = icmp eq i8 %1089, 10
   %memberidx9.i45.i = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 4
-  br i1 %1090, label %if.entry6.i47.i, label %Lexer_advance.exit50.i.sink.split
+  br i1 %566, label %if.entry6.i47.i, label %Lexer_advance.exit50.i.sink.split
 
 if.entry6.i47.i:                                  ; preds = %ifend.i44.i
   store i64 0, ptr %memberidx9.i45.i, align 4
@@ -7851,33 +6267,1617 @@ if.entry6.i47.i:                                  ; preds = %ifend.i44.i
   br label %Lexer_advance.exit50.i.sink.split
 
 Lexer_advance.exit50.i.sink.split:                ; preds = %ifend.i44.i, %if.entry6.i47.i
-  %memberidx9.i45.i.sink1041 = phi ptr [ %memberidx10.i46.i, %if.entry6.i47.i ], [ %memberidx9.i45.i, %ifend.i44.i ]
-  %1091 = load i64, ptr %memberidx9.i45.i.sink1041, align 4
-  %1092 = add i64 %1091, 1
-  store i64 %1092, ptr %memberidx9.i45.i.sink1041, align 4
+  %memberidx9.i45.i.sink987 = phi ptr [ %memberidx10.i46.i, %if.entry6.i47.i ], [ %memberidx9.i45.i, %ifend.i44.i ]
+  %567 = load i64, ptr %memberidx9.i45.i.sink987, align 4
+  %568 = add i64 %567, 1
+  store i64 %568, ptr %memberidx9.i45.i.sink987, align 4
   br label %Lexer_advance.exit50.i
 
-Lexer_advance.exit50.i:                           ; preds = %Lexer_advance.exit50.i.sink.split, %if.entry1.i654
-  %1093 = load i64, ptr %memberidx.i.i629, align 4
+Lexer_advance.exit50.i:                           ; preds = %Lexer_advance.exit50.i.sink.split, %if.entry1.i226
+  %569 = tail call ptr @malloc(i32 16)
+  %570 = tail call ptr @malloc(i32 32)
+  %571 = load i64, ptr %memberidx.i.i204, align 4
+  %572 = add i64 %571, -1
+  %573 = add i64 %571, 1
+  %memberidx2.i52.i = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 4
+  %574 = load i64, ptr %memberidx2.i52.i, align 4
+  %575 = add i64 %574, -2
+  %memberidx3.i53.i = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 5
+  %576 = load i64, ptr %memberidx3.i53.i, align 4
+  store i64 %572, ptr %570, align 4
+  %memberidx1.i.i54.i = getelementptr inbounds %FloRange, ptr %570, i64 0, i32 1
+  store i64 %573, ptr %memberidx1.i.i54.i, align 4
+  %memberidx2.i.i55.i = getelementptr inbounds %FloRange, ptr %570, i64 0, i32 2
+  store i64 %575, ptr %memberidx2.i.i55.i, align 4
+  %memberidx3.i.i56.i = getelementptr inbounds %FloRange, ptr %570, i64 0, i32 3
+  store i64 %576, ptr %memberidx3.i.i56.i, align 4
+  store i64 11, ptr %569, align 4
+  %memberidx1.i57.i = getelementptr inbounds %Token, ptr %569, i64 0, i32 1
+  store ptr %570, ptr %memberidx1.i57.i, align 8
+  br label %common.ret
+
+else2.i:                                          ; preds = %if.entry.i36.i.else2.i_crit_edge, %else.i225
+  %.pre-phi964 = phi i64 [ %.pre963, %if.entry.i36.i.else2.i_crit_edge ], [ %.pre-phi962, %else.i225 ]
+  %577 = phi i64 [ %561, %if.entry.i36.i.else2.i_crit_edge ], [ %553, %else.i225 ]
+  %578 = phi ptr [ %560, %if.entry.i36.i.else2.i_crit_edge ], [ %554, %else.i225 ]
+  %579 = icmp slt i64 %.pre-phi964, %577
+  br i1 %579, label %if.entry.i70.i, label %ifend6.i
+
+if.entry.i70.i:                                   ; preds = %else2.i
+  %580 = load ptr, ptr %578, align 8
+  %memberidx4.i69.i = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %580, i64 0, i32 2
+  %581 = load ptr, ptr %memberidx4.i69.i, align 8
+  %582 = tail call i8 %581(ptr nonnull %578, i64 %.pre-phi964)
+  %phi.cmp845 = icmp eq i8 %582, 62
+  br i1 %phi.cmp845, label %if.entry4.i, label %ifend6.i
+
+if.entry4.i:                                      ; preds = %if.entry.i70.i
+  %583 = load i64, ptr %memberidx.i.i204, align 4
+  %584 = load ptr, ptr %memberidx1.i.i205, align 8
+  %memberidx2.i.i74.i = getelementptr inbounds %string, ptr %584, i64 0, i32 2
+  %585 = load i64, ptr %memberidx2.i.i74.i, align 4
+  %.not846 = icmp slt i64 %583, %585
+  br i1 %.not846, label %ifend.i78.i, label %Lexer_advance.exit84.i
+
+ifend.i78.i:                                      ; preds = %if.entry4.i
+  %586 = load ptr, ptr %584, align 8
+  %memberidx2.i76.i = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %586, i64 0, i32 2
+  %587 = load ptr, ptr %memberidx2.i76.i, align 8
+  %588 = add nsw i64 %583, 1
+  store i64 %588, ptr %memberidx.i.i204, align 4
+  %589 = tail call i8 %587(ptr nonnull %584, i64 %588)
+  store i8 %589, ptr %0, align 1
+  %590 = icmp eq i8 %589, 10
+  %memberidx9.i79.i = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 4
+  br i1 %590, label %if.entry6.i81.i, label %Lexer_advance.exit84.i.sink.split
+
+if.entry6.i81.i:                                  ; preds = %ifend.i78.i
+  store i64 0, ptr %memberidx9.i79.i, align 4
+  %memberidx10.i80.i = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 5
+  br label %Lexer_advance.exit84.i.sink.split
+
+Lexer_advance.exit84.i.sink.split:                ; preds = %ifend.i78.i, %if.entry6.i81.i
+  %memberidx9.i79.i.sink989 = phi ptr [ %memberidx10.i80.i, %if.entry6.i81.i ], [ %memberidx9.i79.i, %ifend.i78.i ]
+  %591 = load i64, ptr %memberidx9.i79.i.sink989, align 4
+  %592 = add i64 %591, 1
+  store i64 %592, ptr %memberidx9.i79.i.sink989, align 4
+  br label %Lexer_advance.exit84.i
+
+Lexer_advance.exit84.i:                           ; preds = %Lexer_advance.exit84.i.sink.split, %if.entry4.i
+  %593 = tail call ptr @malloc(i32 16)
+  %594 = tail call ptr @malloc(i32 32)
+  %595 = load i64, ptr %memberidx.i.i204, align 4
+  %596 = add i64 %595, -1
+  %597 = add i64 %595, 1
+  %memberidx2.i60.i = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 4
+  %598 = load i64, ptr %memberidx2.i60.i, align 4
+  %599 = add i64 %598, -2
+  %memberidx3.i61.i = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 5
+  %600 = load i64, ptr %memberidx3.i61.i, align 4
+  store i64 %596, ptr %594, align 4
+  %memberidx1.i.i62.i = getelementptr inbounds %FloRange, ptr %594, i64 0, i32 1
+  store i64 %597, ptr %memberidx1.i.i62.i, align 4
+  %memberidx2.i.i63.i = getelementptr inbounds %FloRange, ptr %594, i64 0, i32 2
+  store i64 %599, ptr %memberidx2.i.i63.i, align 4
+  %memberidx3.i.i64.i = getelementptr inbounds %FloRange, ptr %594, i64 0, i32 3
+  store i64 %600, ptr %memberidx3.i.i64.i, align 4
+  store i64 43, ptr %593, align 4
+  %memberidx1.i58.i = getelementptr inbounds %Token, ptr %593, i64 0, i32 1
+  store ptr %594, ptr %memberidx1.i58.i, align 8
+  br label %common.ret
+
+ifend6.i:                                         ; preds = %else2.i, %if.entry.i70.i
+  %601 = tail call ptr @malloc(i32 16)
+  %602 = tail call ptr @malloc(i32 32)
+  %603 = load i64, ptr %memberidx.i.i204, align 4
+  %604 = add i64 %603, -1
+  %605 = add i64 %603, 1
+  %memberidx2.i26.i = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 4
+  %606 = load i64, ptr %memberidx2.i26.i, align 4
+  %607 = add i64 %606, -2
+  %memberidx3.i27.i = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 5
+  %608 = load i64, ptr %memberidx3.i27.i, align 4
+  store i64 %604, ptr %602, align 4
+  %memberidx1.i.i28.i = getelementptr inbounds %FloRange, ptr %602, i64 0, i32 1
+  store i64 %605, ptr %memberidx1.i.i28.i, align 4
+  %memberidx2.i.i29.i = getelementptr inbounds %FloRange, ptr %602, i64 0, i32 2
+  store i64 %607, ptr %memberidx2.i.i29.i, align 4
+  %memberidx3.i.i30.i = getelementptr inbounds %FloRange, ptr %602, i64 0, i32 3
+  store i64 %608, ptr %memberidx3.i.i30.i, align 4
+  store i64 5, ptr %601, align 4
+  %memberidx1.i24.i = getelementptr inbounds %Token, ptr %601, i64 0, i32 1
+  store ptr %602, ptr %memberidx1.i24.i, align 8
+  br label %common.ret
+
+if.entry27:                                       ; preds = %ifend11
+  %memberidx.i.i228 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 3
+  %609 = load i64, ptr %memberidx.i.i228, align 4
+  %610 = add i64 %609, 1
+  %memberidx1.i.i229 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 1
+  %611 = load ptr, ptr %memberidx1.i.i229, align 8
+  %memberidx2.i.i230 = getelementptr inbounds %string, ptr %611, i64 0, i32 2
+  %612 = load i64, ptr %memberidx2.i.i230, align 4
+  %613 = icmp slt i64 %610, %612
+  br i1 %613, label %if.entry.i.i232, label %ifend.i249
+
+if.entry.i.i232:                                  ; preds = %if.entry27
+  %614 = load ptr, ptr %611, align 8
+  %memberidx4.i.i231 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %614, i64 0, i32 2
+  %615 = load ptr, ptr %memberidx4.i.i231, align 8
+  %616 = tail call i8 %615(ptr nonnull %611, i64 %610)
+  %phi.cmp841 = icmp eq i8 %616, 61
+  br i1 %phi.cmp841, label %if.entry.i239, label %ifend.i249
+
+if.entry.i239:                                    ; preds = %if.entry.i.i232
+  %617 = load i64, ptr %memberidx.i.i228, align 4
+  %618 = load ptr, ptr %memberidx1.i.i229, align 8
+  %memberidx2.i.i.i238 = getelementptr inbounds %string, ptr %618, i64 0, i32 2
+  %619 = load i64, ptr %memberidx2.i.i.i238, align 4
+  %.not842 = icmp slt i64 %617, %619
+  br i1 %.not842, label %ifend.i.i241, label %Lexer_advance.exit.i248
+
+ifend.i.i241:                                     ; preds = %if.entry.i239
+  %620 = load ptr, ptr %618, align 8
+  %memberidx2.i5.i = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %620, i64 0, i32 2
+  %621 = load ptr, ptr %memberidx2.i5.i, align 8
+  %622 = add nsw i64 %617, 1
+  store i64 %622, ptr %memberidx.i.i228, align 4
+  %623 = tail call i8 %621(ptr nonnull %618, i64 %622)
+  store i8 %623, ptr %0, align 1
+  %624 = icmp eq i8 %623, 10
+  %memberidx9.i.i242 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 4
+  br i1 %624, label %if.entry6.i.i244, label %Lexer_advance.exit.i248.sink.split
+
+if.entry6.i.i244:                                 ; preds = %ifend.i.i241
+  store i64 0, ptr %memberidx9.i.i242, align 4
+  %memberidx10.i.i243 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 5
+  br label %Lexer_advance.exit.i248.sink.split
+
+Lexer_advance.exit.i248.sink.split:               ; preds = %ifend.i.i241, %if.entry6.i.i244
+  %memberidx9.i.i242.sink991 = phi ptr [ %memberidx10.i.i243, %if.entry6.i.i244 ], [ %memberidx9.i.i242, %ifend.i.i241 ]
+  %625 = load i64, ptr %memberidx9.i.i242.sink991, align 4
+  %626 = add i64 %625, 1
+  store i64 %626, ptr %memberidx9.i.i242.sink991, align 4
+  br label %Lexer_advance.exit.i248
+
+Lexer_advance.exit.i248:                          ; preds = %Lexer_advance.exit.i248.sink.split, %if.entry.i239
+  %627 = tail call ptr @malloc(i32 16)
+  %628 = tail call ptr @malloc(i32 32)
+  %629 = load i64, ptr %memberidx.i.i228, align 4
+  %630 = add i64 %629, -1
+  %631 = add i64 %629, 1
+  %memberidx2.i7.i = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 4
+  %632 = load i64, ptr %memberidx2.i7.i, align 4
+  %633 = add i64 %632, -2
+  %memberidx3.i8.i = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 5
+  %634 = load i64, ptr %memberidx3.i8.i, align 4
+  store i64 %630, ptr %628, align 4
+  %memberidx1.i.i9.i = getelementptr inbounds %FloRange, ptr %628, i64 0, i32 1
+  store i64 %631, ptr %memberidx1.i.i9.i, align 4
+  %memberidx2.i.i10.i = getelementptr inbounds %FloRange, ptr %628, i64 0, i32 2
+  store i64 %633, ptr %memberidx2.i.i10.i, align 4
+  %memberidx3.i.i.i247 = getelementptr inbounds %FloRange, ptr %628, i64 0, i32 3
+  store i64 %634, ptr %memberidx3.i.i.i247, align 4
+  store i64 10, ptr %627, align 4
+  %memberidx1.i11.i = getelementptr inbounds %Token, ptr %627, i64 0, i32 1
+  store ptr %628, ptr %memberidx1.i11.i, align 8
+  br label %common.ret
+
+ifend.i249:                                       ; preds = %if.entry27, %if.entry.i.i232
+  %635 = tail call ptr @malloc(i32 16)
+  %636 = tail call ptr @malloc(i32 32)
+  %637 = load i64, ptr %memberidx.i.i228, align 4
+  %638 = add i64 %637, 1
+  %memberidx2.i14.i = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 4
+  %639 = load i64, ptr %memberidx2.i14.i, align 4
+  %640 = add i64 %639, -1
+  %memberidx3.i15.i = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 5
+  %641 = load i64, ptr %memberidx3.i15.i, align 4
+  store i64 %637, ptr %636, align 4
+  %memberidx1.i.i16.i = getelementptr inbounds %FloRange, ptr %636, i64 0, i32 1
+  store i64 %638, ptr %memberidx1.i.i16.i, align 4
+  %memberidx2.i.i17.i = getelementptr inbounds %FloRange, ptr %636, i64 0, i32 2
+  store i64 %640, ptr %memberidx2.i.i17.i, align 4
+  %memberidx3.i.i18.i = getelementptr inbounds %FloRange, ptr %636, i64 0, i32 3
+  store i64 %641, ptr %memberidx3.i.i18.i, align 4
+  store i64 4, ptr %635, align 4
+  %memberidx1.i12.i = getelementptr inbounds %Token, ptr %635, i64 0, i32 1
+  store ptr %636, ptr %memberidx1.i12.i, align 8
+  br label %common.ret
+
+if.entry30:                                       ; preds = %ifend11
+  %memberidx.i.i250 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 3
+  %642 = load i64, ptr %memberidx.i.i250, align 4
+  %643 = add i64 %642, 1
+  %memberidx1.i.i251 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 1
+  %644 = load ptr, ptr %memberidx1.i.i251, align 8
+  %memberidx2.i.i252 = getelementptr inbounds %string, ptr %644, i64 0, i32 2
+  %645 = load i64, ptr %memberidx2.i.i252, align 4
+  %646 = icmp slt i64 %643, %645
+  br i1 %646, label %if.entry.i.i254, label %ifend.i286
+
+if.entry.i.i254:                                  ; preds = %if.entry30
+  %647 = load ptr, ptr %644, align 8
+  %memberidx4.i.i253 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %647, i64 0, i32 2
+  %648 = load ptr, ptr %memberidx4.i.i253, align 8
+  %649 = tail call i8 %648(ptr nonnull %644, i64 %643)
+  %phi.cmp839 = icmp eq i8 %649, 61
+  br i1 %phi.cmp839, label %if.entry.i261, label %ifend.i286
+
+if.entry.i261:                                    ; preds = %if.entry.i.i254
+  %650 = load i64, ptr %memberidx.i.i250, align 4
+  %651 = load ptr, ptr %memberidx1.i.i251, align 8
+  %memberidx2.i.i.i260 = getelementptr inbounds %string, ptr %651, i64 0, i32 2
+  %652 = load i64, ptr %memberidx2.i.i.i260, align 4
+  %.not840 = icmp slt i64 %650, %652
+  br i1 %.not840, label %ifend.i.i265, label %Lexer_advance.exit.i278
+
+ifend.i.i265:                                     ; preds = %if.entry.i261
+  %653 = load ptr, ptr %651, align 8
+  %memberidx2.i5.i263 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %653, i64 0, i32 2
+  %654 = load ptr, ptr %memberidx2.i5.i263, align 8
+  %655 = add nsw i64 %650, 1
+  store i64 %655, ptr %memberidx.i.i250, align 4
+  %656 = tail call i8 %654(ptr nonnull %651, i64 %655)
+  store i8 %656, ptr %0, align 1
+  %657 = icmp eq i8 %656, 10
+  %memberidx9.i.i266 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 4
+  br i1 %657, label %if.entry6.i.i268, label %Lexer_advance.exit.i278.sink.split
+
+if.entry6.i.i268:                                 ; preds = %ifend.i.i265
+  store i64 0, ptr %memberidx9.i.i266, align 4
+  %memberidx10.i.i267 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 5
+  br label %Lexer_advance.exit.i278.sink.split
+
+Lexer_advance.exit.i278.sink.split:               ; preds = %ifend.i.i265, %if.entry6.i.i268
+  %memberidx9.i.i266.sink993 = phi ptr [ %memberidx10.i.i267, %if.entry6.i.i268 ], [ %memberidx9.i.i266, %ifend.i.i265 ]
+  %658 = load i64, ptr %memberidx9.i.i266.sink993, align 4
+  %659 = add i64 %658, 1
+  store i64 %659, ptr %memberidx9.i.i266.sink993, align 4
+  br label %Lexer_advance.exit.i278
+
+Lexer_advance.exit.i278:                          ; preds = %Lexer_advance.exit.i278.sink.split, %if.entry.i261
+  %660 = tail call ptr @malloc(i32 16)
+  %661 = tail call ptr @malloc(i32 32)
+  %662 = load i64, ptr %memberidx.i.i250, align 4
+  %663 = add i64 %662, -1
+  %664 = add i64 %662, 1
+  %memberidx2.i7.i272 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 4
+  %665 = load i64, ptr %memberidx2.i7.i272, align 4
+  %666 = add i64 %665, -2
+  %memberidx3.i8.i273 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 5
+  %667 = load i64, ptr %memberidx3.i8.i273, align 4
+  store i64 %663, ptr %661, align 4
+  %memberidx1.i.i9.i274 = getelementptr inbounds %FloRange, ptr %661, i64 0, i32 1
+  store i64 %664, ptr %memberidx1.i.i9.i274, align 4
+  %memberidx2.i.i10.i275 = getelementptr inbounds %FloRange, ptr %661, i64 0, i32 2
+  store i64 %666, ptr %memberidx2.i.i10.i275, align 4
+  %memberidx3.i.i.i276 = getelementptr inbounds %FloRange, ptr %661, i64 0, i32 3
+  store i64 %667, ptr %memberidx3.i.i.i276, align 4
+  store i64 14, ptr %660, align 4
+  %memberidx1.i11.i277 = getelementptr inbounds %Token, ptr %660, i64 0, i32 1
+  store ptr %661, ptr %memberidx1.i11.i277, align 8
+  br label %common.ret
+
+ifend.i286:                                       ; preds = %if.entry30, %if.entry.i.i254
+  %668 = tail call ptr @malloc(i32 16)
+  %669 = tail call ptr @malloc(i32 32)
+  %670 = load i64, ptr %memberidx.i.i250, align 4
+  %671 = add i64 %670, 1
+  %memberidx2.i14.i280 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 4
+  %672 = load i64, ptr %memberidx2.i14.i280, align 4
+  %673 = add i64 %672, -1
+  %memberidx3.i15.i281 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 5
+  %674 = load i64, ptr %memberidx3.i15.i281, align 4
+  store i64 %670, ptr %669, align 4
+  %memberidx1.i.i16.i282 = getelementptr inbounds %FloRange, ptr %669, i64 0, i32 1
+  store i64 %671, ptr %memberidx1.i.i16.i282, align 4
+  %memberidx2.i.i17.i283 = getelementptr inbounds %FloRange, ptr %669, i64 0, i32 2
+  store i64 %673, ptr %memberidx2.i.i17.i283, align 4
+  %memberidx3.i.i18.i284 = getelementptr inbounds %FloRange, ptr %669, i64 0, i32 3
+  store i64 %674, ptr %memberidx3.i.i18.i284, align 4
+  store i64 8, ptr %668, align 4
+  %memberidx1.i12.i285 = getelementptr inbounds %Token, ptr %668, i64 0, i32 1
+  store ptr %669, ptr %memberidx1.i12.i285, align 8
+  br label %common.ret
+
+if.entry33:                                       ; preds = %ifend11
+  %memberidx.i.i287 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 3
+  %675 = load i64, ptr %memberidx.i.i287, align 4
+  %676 = add i64 %675, 1
+  %memberidx1.i.i288 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 1
+  %677 = load ptr, ptr %memberidx1.i.i288, align 8
+  %memberidx2.i.i289 = getelementptr inbounds %string, ptr %677, i64 0, i32 2
+  %678 = load i64, ptr %memberidx2.i.i289, align 4
+  %679 = icmp slt i64 %676, %678
+  br i1 %679, label %if.entry.i.i291, label %ifend.i323
+
+if.entry.i.i291:                                  ; preds = %if.entry33
+  %680 = load ptr, ptr %677, align 8
+  %memberidx4.i.i290 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %680, i64 0, i32 2
+  %681 = load ptr, ptr %memberidx4.i.i290, align 8
+  %682 = tail call i8 %681(ptr nonnull %677, i64 %676)
+  %phi.cmp837 = icmp eq i8 %682, 61
+  br i1 %phi.cmp837, label %if.entry.i298, label %ifend.i323
+
+if.entry.i298:                                    ; preds = %if.entry.i.i291
+  %683 = load i64, ptr %memberidx.i.i287, align 4
+  %684 = load ptr, ptr %memberidx1.i.i288, align 8
+  %memberidx2.i.i.i297 = getelementptr inbounds %string, ptr %684, i64 0, i32 2
+  %685 = load i64, ptr %memberidx2.i.i.i297, align 4
+  %.not838 = icmp slt i64 %683, %685
+  br i1 %.not838, label %ifend.i.i302, label %Lexer_advance.exit.i315
+
+ifend.i.i302:                                     ; preds = %if.entry.i298
+  %686 = load ptr, ptr %684, align 8
+  %memberidx2.i5.i300 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %686, i64 0, i32 2
+  %687 = load ptr, ptr %memberidx2.i5.i300, align 8
+  %688 = add nsw i64 %683, 1
+  store i64 %688, ptr %memberidx.i.i287, align 4
+  %689 = tail call i8 %687(ptr nonnull %684, i64 %688)
+  store i8 %689, ptr %0, align 1
+  %690 = icmp eq i8 %689, 10
+  %memberidx9.i.i303 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 4
+  br i1 %690, label %if.entry6.i.i305, label %Lexer_advance.exit.i315.sink.split
+
+if.entry6.i.i305:                                 ; preds = %ifend.i.i302
+  store i64 0, ptr %memberidx9.i.i303, align 4
+  %memberidx10.i.i304 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 5
+  br label %Lexer_advance.exit.i315.sink.split
+
+Lexer_advance.exit.i315.sink.split:               ; preds = %ifend.i.i302, %if.entry6.i.i305
+  %memberidx9.i.i303.sink995 = phi ptr [ %memberidx10.i.i304, %if.entry6.i.i305 ], [ %memberidx9.i.i303, %ifend.i.i302 ]
+  %691 = load i64, ptr %memberidx9.i.i303.sink995, align 4
+  %692 = add i64 %691, 1
+  store i64 %692, ptr %memberidx9.i.i303.sink995, align 4
+  br label %Lexer_advance.exit.i315
+
+Lexer_advance.exit.i315:                          ; preds = %Lexer_advance.exit.i315.sink.split, %if.entry.i298
+  %693 = tail call ptr @malloc(i32 16)
+  %694 = tail call ptr @malloc(i32 32)
+  %695 = load i64, ptr %memberidx.i.i287, align 4
+  %696 = add i64 %695, -1
+  %697 = add i64 %695, 1
+  %memberidx2.i7.i309 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 4
+  %698 = load i64, ptr %memberidx2.i7.i309, align 4
+  %699 = add i64 %698, -2
+  %memberidx3.i8.i310 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 5
+  %700 = load i64, ptr %memberidx3.i8.i310, align 4
+  store i64 %696, ptr %694, align 4
+  %memberidx1.i.i9.i311 = getelementptr inbounds %FloRange, ptr %694, i64 0, i32 1
+  store i64 %697, ptr %memberidx1.i.i9.i311, align 4
+  %memberidx2.i.i10.i312 = getelementptr inbounds %FloRange, ptr %694, i64 0, i32 2
+  store i64 %699, ptr %memberidx2.i.i10.i312, align 4
+  %memberidx3.i.i.i313 = getelementptr inbounds %FloRange, ptr %694, i64 0, i32 3
+  store i64 %700, ptr %memberidx3.i.i.i313, align 4
+  store i64 15, ptr %693, align 4
+  %memberidx1.i11.i314 = getelementptr inbounds %Token, ptr %693, i64 0, i32 1
+  store ptr %694, ptr %memberidx1.i11.i314, align 8
+  br label %common.ret
+
+ifend.i323:                                       ; preds = %if.entry33, %if.entry.i.i291
+  %701 = tail call ptr @malloc(i32 16)
+  %702 = tail call ptr @malloc(i32 32)
+  %703 = load i64, ptr %memberidx.i.i287, align 4
+  %704 = add i64 %703, 1
+  %memberidx2.i14.i317 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 4
+  %705 = load i64, ptr %memberidx2.i14.i317, align 4
+  %706 = add i64 %705, -1
+  %memberidx3.i15.i318 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 5
+  %707 = load i64, ptr %memberidx3.i15.i318, align 4
+  store i64 %703, ptr %702, align 4
+  %memberidx1.i.i16.i319 = getelementptr inbounds %FloRange, ptr %702, i64 0, i32 1
+  store i64 %704, ptr %memberidx1.i.i16.i319, align 4
+  %memberidx2.i.i17.i320 = getelementptr inbounds %FloRange, ptr %702, i64 0, i32 2
+  store i64 %706, ptr %memberidx2.i.i17.i320, align 4
+  %memberidx3.i.i18.i321 = getelementptr inbounds %FloRange, ptr %702, i64 0, i32 3
+  store i64 %707, ptr %memberidx3.i.i18.i321, align 4
+  store i64 9, ptr %701, align 4
+  %memberidx1.i12.i322 = getelementptr inbounds %Token, ptr %701, i64 0, i32 1
+  store ptr %702, ptr %memberidx1.i12.i322, align 8
+  br label %common.ret
+
+if.entry36:                                       ; preds = %ifend11
+  %memberidx.i.i324 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 3
+  %708 = load i64, ptr %memberidx.i.i324, align 4
+  %709 = add i64 %708, 1
+  %memberidx1.i.i325 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 1
+  %710 = load ptr, ptr %memberidx1.i.i325, align 8
+  %memberidx2.i.i326 = getelementptr inbounds %string, ptr %710, i64 0, i32 2
+  %711 = load i64, ptr %memberidx2.i.i326, align 4
+  %712 = icmp slt i64 %709, %711
+  br i1 %712, label %Lexer_peek.exit.i330, label %else.i345
+
+Lexer_peek.exit.i330:                             ; preds = %if.entry36
+  %713 = load ptr, ptr %710, align 8
+  %memberidx4.i.i327 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %713, i64 0, i32 2
+  %714 = load ptr, ptr %memberidx4.i.i327, align 8
+  %715 = tail call i8 %714(ptr nonnull %710, i64 %709)
+  %716 = icmp eq i8 %715, 42
+  %717 = load i64, ptr %memberidx.i.i324, align 4
+  %718 = load ptr, ptr %memberidx1.i.i325, align 8
+  %memberidx2.i.i.i333 = getelementptr inbounds %string, ptr %718, i64 0, i32 2
+  %719 = load i64, ptr %memberidx2.i.i.i333, align 4
+  br i1 %716, label %if.entry.i334, label %Lexer_peek.exit.i330.else.i345_crit_edge
+
+Lexer_peek.exit.i330.else.i345_crit_edge:         ; preds = %Lexer_peek.exit.i330
+  %.pre965 = add i64 %717, 1
+  br label %else.i345
+
+if.entry.i334:                                    ; preds = %Lexer_peek.exit.i330
+  %.not831 = icmp slt i64 %717, %719
+  br i1 %.not831, label %ifend.i.i338, label %Lexer_advance.exit.i344
+
+ifend.i.i338:                                     ; preds = %if.entry.i334
+  %720 = load ptr, ptr %718, align 8
+  %memberidx2.i27.i336 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %720, i64 0, i32 2
+  %721 = load ptr, ptr %memberidx2.i27.i336, align 8
+  %722 = add nsw i64 %717, 1
+  store i64 %722, ptr %memberidx.i.i324, align 4
+  %723 = tail call i8 %721(ptr nonnull %718, i64 %722)
+  store i8 %723, ptr %0, align 1
+  %724 = icmp eq i8 %723, 10
+  %memberidx9.i.i339 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 4
+  br i1 %724, label %if.entry6.i.i341, label %Lexer_advance.exit.i344.sink.split
+
+if.entry6.i.i341:                                 ; preds = %ifend.i.i338
+  store i64 0, ptr %memberidx9.i.i339, align 4
+  %memberidx10.i.i340 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 5
+  br label %Lexer_advance.exit.i344.sink.split
+
+Lexer_advance.exit.i344.sink.split:               ; preds = %ifend.i.i338, %if.entry6.i.i341
+  %memberidx9.i.i339.sink997 = phi ptr [ %memberidx10.i.i340, %if.entry6.i.i341 ], [ %memberidx9.i.i339, %ifend.i.i338 ]
+  %725 = load i64, ptr %memberidx9.i.i339.sink997, align 4
+  %726 = add i64 %725, 1
+  store i64 %726, ptr %memberidx9.i.i339.sink997, align 4
+  br label %Lexer_advance.exit.i344
+
+Lexer_advance.exit.i344:                          ; preds = %Lexer_advance.exit.i344.sink.split, %if.entry.i334
+  %727 = load i64, ptr %memberidx.i.i324, align 4
+  %728 = load ptr, ptr %memberidx1.i.i325, align 8
+  %memberidx2.i30.i = getelementptr inbounds %string, ptr %728, i64 0, i32 2
+  %729 = load i64, ptr %memberidx2.i30.i, align 4
+  %.not832 = icmp slt i64 %727, %729
+  br i1 %.not832, label %while.entry.i.preheader, label %while.end.i
+
+while.entry.i.preheader:                          ; preds = %Lexer_advance.exit.i344
+  %memberidx12.i98.i = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 4
+  %memberidx10.i96.i = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 5
+  br label %while.entry.i
+
+else.i345:                                        ; preds = %Lexer_peek.exit.i330.else.i345_crit_edge, %if.entry36
+  %.pre-phi966 = phi i64 [ %.pre965, %Lexer_peek.exit.i330.else.i345_crit_edge ], [ %709, %if.entry36 ]
+  %730 = phi i64 [ %719, %Lexer_peek.exit.i330.else.i345_crit_edge ], [ %711, %if.entry36 ]
+  %731 = phi ptr [ %718, %Lexer_peek.exit.i330.else.i345_crit_edge ], [ %710, %if.entry36 ]
+  %732 = icmp slt i64 %.pre-phi966, %730
+  br i1 %732, label %if.entry.i46.i, label %ifend41
+
+if.entry.i46.i:                                   ; preds = %else.i345
+  %733 = load ptr, ptr %731, align 8
+  %memberidx4.i45.i = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %733, i64 0, i32 2
+  %734 = load ptr, ptr %memberidx4.i45.i, align 8
+  %735 = tail call i8 %734(ptr nonnull %731, i64 %.pre-phi966)
+  %phi.cmp824 = icmp eq i8 %735, 47
+  %736 = load i64, ptr %memberidx.i.i324, align 4
+  %737 = load ptr, ptr %memberidx1.i.i325, align 8
+  %memberidx2.i.i119.i = getelementptr inbounds %string, ptr %737, i64 0, i32 2
+  %738 = load i64, ptr %memberidx2.i.i119.i, align 4
+  br i1 %phi.cmp824, label %if.entry4.i348, label %if.entry.i46.i.ifend41_crit_edge
+
+if.entry.i46.i.ifend41_crit_edge:                 ; preds = %if.entry.i46.i
+  %.pre967 = add i64 %736, 1
+  br label %ifend41
+
+while.entry.i:                                    ; preds = %while.entry.i.preheader, %Lexer_advance.exit100.i
+  %739 = phi i64 [ %729, %while.entry.i.preheader ], [ %788, %Lexer_advance.exit100.i ]
+  %740 = phi ptr [ %728, %while.entry.i.preheader ], [ %787, %Lexer_advance.exit100.i ]
+  %741 = phi i64 [ %727, %while.entry.i.preheader ], [ %786, %Lexer_advance.exit100.i ]
+  %742 = add nsw i64 %741, 1
+  %743 = icmp slt i64 %742, %739
+  br i1 %743, label %if.entry.i53.i, label %Lexer_peek.exit54.i
+
+if.entry.i53.i:                                   ; preds = %while.entry.i
+  %744 = load ptr, ptr %740, align 8
+  %memberidx4.i52.i = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %744, i64 0, i32 2
+  %745 = load ptr, ptr %memberidx4.i52.i, align 8
+  %746 = tail call i8 %745(ptr nonnull %740, i64 %742)
+  %.pre932 = load i64, ptr %memberidx.i.i324, align 4
+  %.pre933 = load ptr, ptr %memberidx1.i.i325, align 8
+  %memberidx2.i57.i.phi.trans.insert = getelementptr inbounds %string, ptr %.pre933, i64 0, i32 2
+  %.pre934 = load i64, ptr %memberidx2.i57.i.phi.trans.insert, align 4
+  br label %Lexer_peek.exit54.i
+
+Lexer_peek.exit54.i:                              ; preds = %if.entry.i53.i, %while.entry.i
+  %747 = phi i64 [ %.pre934, %if.entry.i53.i ], [ %739, %while.entry.i ]
+  %748 = phi ptr [ %.pre933, %if.entry.i53.i ], [ %740, %while.entry.i ]
+  %749 = phi i64 [ %.pre932, %if.entry.i53.i ], [ %741, %while.entry.i ]
+  %common.ret.op.i51.i = phi i8 [ %746, %if.entry.i53.i ], [ 0, %while.entry.i ]
+  %750 = add i64 %749, 2
+  %751 = icmp slt i64 %750, %747
+  br i1 %751, label %Lexer_peek.exit61.i, label %ifend3.i347
+
+Lexer_peek.exit61.i:                              ; preds = %Lexer_peek.exit54.i
+  %752 = icmp eq i8 %common.ret.op.i51.i, 42
+  %753 = load ptr, ptr %748, align 8
+  %memberidx4.i59.i = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %753, i64 0, i32 2
+  %754 = load ptr, ptr %memberidx4.i59.i, align 8
+  %755 = tail call i8 %754(ptr nonnull %748, i64 %750)
+  %756 = icmp eq i8 %755, 47
+  %757 = and i1 %752, %756
+  %.pre938.pre = load i64, ptr %memberidx.i.i324, align 4
+  %.pre939.pre = load ptr, ptr %memberidx1.i.i325, align 8
+  %memberidx2.i.i64.i.phi.trans.insert.phi.trans.insert = getelementptr inbounds %string, ptr %.pre939.pre, i64 0, i32 2
+  %.pre940.pre = load i64, ptr %memberidx2.i.i64.i.phi.trans.insert.phi.trans.insert, align 4
+  br i1 %757, label %while.end.i, label %ifend3.i347
+
+while.end.i:                                      ; preds = %Lexer_advance.exit100.i, %Lexer_peek.exit61.i, %Lexer_advance.exit.i344
+  %758 = phi i64 [ %729, %Lexer_advance.exit.i344 ], [ %.pre940.pre, %Lexer_peek.exit61.i ], [ %788, %Lexer_advance.exit100.i ]
+  %759 = phi ptr [ %728, %Lexer_advance.exit.i344 ], [ %.pre939.pre, %Lexer_peek.exit61.i ], [ %787, %Lexer_advance.exit100.i ]
+  %760 = phi i64 [ %727, %Lexer_advance.exit.i344 ], [ %.pre938.pre, %Lexer_peek.exit61.i ], [ %786, %Lexer_advance.exit100.i ]
+  %.not835 = icmp slt i64 %760, %758
+  br i1 %.not835, label %ifend.i68.i, label %Lexer_advance.exit74.i
+
+ifend.i68.i:                                      ; preds = %while.end.i
+  %761 = load ptr, ptr %759, align 8
+  %memberidx2.i66.i = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %761, i64 0, i32 2
+  %762 = load ptr, ptr %memberidx2.i66.i, align 8
+  %763 = add nsw i64 %760, 1
+  store i64 %763, ptr %memberidx.i.i324, align 4
+  %764 = tail call i8 %762(ptr nonnull %759, i64 %763)
+  store i8 %764, ptr %0, align 1
+  %765 = icmp eq i8 %764, 10
+  %memberidx9.i69.i = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 4
+  br i1 %765, label %if.entry6.i71.i, label %Lexer_advance.exit74.i.sink.split
+
+if.entry6.i71.i:                                  ; preds = %ifend.i68.i
+  store i64 0, ptr %memberidx9.i69.i, align 4
+  %memberidx10.i70.i = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 5
+  br label %Lexer_advance.exit74.i.sink.split
+
+Lexer_advance.exit74.i.sink.split:                ; preds = %ifend.i68.i, %if.entry6.i71.i
+  %memberidx9.i69.i.sink999 = phi ptr [ %memberidx10.i70.i, %if.entry6.i71.i ], [ %memberidx9.i69.i, %ifend.i68.i ]
+  %766 = load i64, ptr %memberidx9.i69.i.sink999, align 4
+  %767 = add i64 %766, 1
+  store i64 %767, ptr %memberidx9.i69.i.sink999, align 4
+  br label %Lexer_advance.exit74.i
+
+Lexer_advance.exit74.i:                           ; preds = %Lexer_advance.exit74.i.sink.split, %while.end.i
+  %768 = load i64, ptr %memberidx.i.i324, align 4
+  %769 = load ptr, ptr %memberidx1.i.i325, align 8
+  %memberidx2.i.i77.i = getelementptr inbounds %string, ptr %769, i64 0, i32 2
+  %770 = load i64, ptr %memberidx2.i.i77.i, align 4
+  %.not836 = icmp slt i64 %768, %770
+  br i1 %.not836, label %ifend.i81.i, label %if.entry39
+
+ifend.i81.i:                                      ; preds = %Lexer_advance.exit74.i
+  %771 = load ptr, ptr %769, align 8
+  %memberidx2.i79.i = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %771, i64 0, i32 2
+  %772 = load ptr, ptr %memberidx2.i79.i, align 8
+  %773 = add nsw i64 %768, 1
+  store i64 %773, ptr %memberidx.i.i324, align 4
+  %774 = tail call i8 %772(ptr nonnull %769, i64 %773)
+  store i8 %774, ptr %0, align 1
+  %775 = icmp eq i8 %774, 10
+  %memberidx9.i82.i = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 4
+  br i1 %775, label %if.entry6.i84.i, label %if.entry39.sink.split
+
+if.entry6.i84.i:                                  ; preds = %ifend.i81.i
+  store i64 0, ptr %memberidx9.i82.i, align 4
+  %memberidx10.i83.i = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 5
+  br label %if.entry39.sink.split
+
+ifend3.i347:                                      ; preds = %Lexer_peek.exit61.i, %Lexer_peek.exit54.i
+  %776 = phi i64 [ %747, %Lexer_peek.exit54.i ], [ %.pre940.pre, %Lexer_peek.exit61.i ]
+  %777 = phi ptr [ %748, %Lexer_peek.exit54.i ], [ %.pre939.pre, %Lexer_peek.exit61.i ]
+  %778 = phi i64 [ %749, %Lexer_peek.exit54.i ], [ %.pre938.pre, %Lexer_peek.exit61.i ]
+  %.not833 = icmp slt i64 %778, %776
+  br i1 %.not833, label %ifend.i94.i, label %Lexer_advance.exit100.i
+
+ifend.i94.i:                                      ; preds = %ifend3.i347
+  %779 = load ptr, ptr %777, align 8
+  %memberidx2.i92.i = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %779, i64 0, i32 2
+  %780 = load ptr, ptr %memberidx2.i92.i, align 8
+  %781 = add nsw i64 %778, 1
+  store i64 %781, ptr %memberidx.i.i324, align 4
+  %782 = tail call i8 %780(ptr nonnull %777, i64 %781)
+  store i8 %782, ptr %0, align 1
+  %783 = icmp eq i8 %782, 10
+  br i1 %783, label %if.entry6.i97.i, label %Lexer_advance.exit100.i.sink.split
+
+if.entry6.i97.i:                                  ; preds = %ifend.i94.i
+  store i64 0, ptr %memberidx12.i98.i, align 4
+  br label %Lexer_advance.exit100.i.sink.split
+
+Lexer_advance.exit100.i.sink.split:               ; preds = %ifend.i94.i, %if.entry6.i97.i
+  %memberidx12.i98.i.sink1001 = phi ptr [ %memberidx10.i96.i, %if.entry6.i97.i ], [ %memberidx12.i98.i, %ifend.i94.i ]
+  %784 = load i64, ptr %memberidx12.i98.i.sink1001, align 4
+  %785 = add i64 %784, 1
+  store i64 %785, ptr %memberidx12.i98.i.sink1001, align 4
+  br label %Lexer_advance.exit100.i
+
+Lexer_advance.exit100.i:                          ; preds = %Lexer_advance.exit100.i.sink.split, %ifend3.i347
+  %786 = load i64, ptr %memberidx.i.i324, align 4
+  %787 = load ptr, ptr %memberidx1.i.i325, align 8
+  %memberidx2.i103.i = getelementptr inbounds %string, ptr %787, i64 0, i32 2
+  %788 = load i64, ptr %memberidx2.i103.i, align 4
+  %.not834 = icmp slt i64 %786, %788
+  br i1 %.not834, label %while.entry.i, label %while.end.i
+
+if.entry4.i348:                                   ; preds = %if.entry.i46.i
+  %.not828 = icmp slt i64 %736, %738
+  br i1 %.not828, label %ifend.i123.i, label %Lexer_advance.exit129.i
+
+ifend.i123.i:                                     ; preds = %if.entry4.i348
+  %789 = load ptr, ptr %737, align 8
+  %memberidx2.i121.i = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %789, i64 0, i32 2
+  %790 = load ptr, ptr %memberidx2.i121.i, align 8
+  %791 = add nsw i64 %736, 1
+  store i64 %791, ptr %memberidx.i.i324, align 4
+  %792 = tail call i8 %790(ptr nonnull %737, i64 %791)
+  store i8 %792, ptr %0, align 1
+  %793 = icmp eq i8 %792, 10
+  %memberidx9.i124.i = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 4
+  br i1 %793, label %if.entry6.i126.i, label %Lexer_advance.exit129.i.sink.split
+
+if.entry6.i126.i:                                 ; preds = %ifend.i123.i
+  store i64 0, ptr %memberidx9.i124.i, align 4
+  %memberidx10.i125.i = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 5
+  br label %Lexer_advance.exit129.i.sink.split
+
+Lexer_advance.exit129.i.sink.split:               ; preds = %ifend.i123.i, %if.entry6.i126.i
+  %memberidx9.i124.i.sink1003 = phi ptr [ %memberidx10.i125.i, %if.entry6.i126.i ], [ %memberidx9.i124.i, %ifend.i123.i ]
+  %794 = load i64, ptr %memberidx9.i124.i.sink1003, align 4
+  %795 = add i64 %794, 1
+  store i64 %795, ptr %memberidx9.i124.i.sink1003, align 4
+  br label %Lexer_advance.exit129.i
+
+Lexer_advance.exit129.i:                          ; preds = %Lexer_advance.exit129.i.sink.split, %if.entry4.i348
+  %796 = load i64, ptr %memberidx.i.i324, align 4
+  %797 = add i64 %796, 1
+  %798 = load ptr, ptr %memberidx1.i.i325, align 8
+  %memberidx2.i132.i = getelementptr inbounds %string, ptr %798, i64 0, i32 2
+  %799 = load i64, ptr %memberidx2.i132.i, align 4
+  %800 = icmp slt i64 %797, %799
+  br i1 %800, label %if.entry.i135.i, label %Lexer_peek.exit136.i
+
+if.entry.i135.i:                                  ; preds = %Lexer_advance.exit129.i
+  %801 = load ptr, ptr %798, align 8
+  %memberidx4.i134.i = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %801, i64 0, i32 2
+  %802 = load ptr, ptr %memberidx4.i134.i, align 8
+  %803 = tail call i8 %802(ptr nonnull %798, i64 %797)
+  %phi.cmp829 = icmp eq i8 %803, 10
+  %.pre926 = load i64, ptr %memberidx.i.i324, align 4
+  %.pre927 = load ptr, ptr %memberidx1.i.i325, align 8
+  %memberidx2.i139.i.phi.trans.insert = getelementptr inbounds %string, ptr %.pre927, i64 0, i32 2
+  %.pre928 = load i64, ptr %memberidx2.i139.i.phi.trans.insert, align 4
+  br label %Lexer_peek.exit136.i
+
+Lexer_peek.exit136.i:                             ; preds = %if.entry.i135.i, %Lexer_advance.exit129.i
+  %804 = phi i64 [ %.pre928, %if.entry.i135.i ], [ %799, %Lexer_advance.exit129.i ]
+  %805 = phi ptr [ %.pre927, %if.entry.i135.i ], [ %798, %Lexer_advance.exit129.i ]
+  %806 = phi i64 [ %.pre926, %if.entry.i135.i ], [ %796, %Lexer_advance.exit129.i ]
+  %common.ret.op.i133.i = phi i1 [ %phi.cmp829, %if.entry.i135.i ], [ false, %Lexer_advance.exit129.i ]
+  %807 = icmp sge i64 %806, %804
+  %808 = or i1 %common.ret.op.i133.i, %807
+  br i1 %808, label %if.entry39, label %while.entry7.i.preheader
+
+while.entry7.i.preheader:                         ; preds = %Lexer_peek.exit136.i
+  %memberidx12.i114.i = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 4
+  %memberidx10.i112.i = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 5
+  br label %while.entry7.i
+
+while.entry7.i:                                   ; preds = %while.entry7.i.preheader, %Lexer_peek.exit40.i
+  %809 = phi i64 [ %804, %while.entry7.i.preheader ], [ %827, %Lexer_peek.exit40.i ]
+  %810 = phi ptr [ %805, %while.entry7.i.preheader ], [ %828, %Lexer_peek.exit40.i ]
+  %811 = phi i64 [ %806, %while.entry7.i.preheader ], [ %829, %Lexer_peek.exit40.i ]
+  %.not830 = icmp slt i64 %811, %809
+  br i1 %.not830, label %ifend.i110.i, label %Lexer_advance.exit116.i
+
+ifend.i110.i:                                     ; preds = %while.entry7.i
+  %812 = load ptr, ptr %810, align 8
+  %memberidx2.i108.i = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %812, i64 0, i32 2
+  %813 = load ptr, ptr %memberidx2.i108.i, align 8
+  %814 = add nsw i64 %811, 1
+  store i64 %814, ptr %memberidx.i.i324, align 4
+  %815 = tail call i8 %813(ptr nonnull %810, i64 %814)
+  store i8 %815, ptr %0, align 1
+  %816 = icmp eq i8 %815, 10
+  br i1 %816, label %if.entry6.i113.i, label %Lexer_advance.exit116.i.sink.split
+
+if.entry6.i113.i:                                 ; preds = %ifend.i110.i
+  store i64 0, ptr %memberidx12.i114.i, align 4
+  br label %Lexer_advance.exit116.i.sink.split
+
+Lexer_advance.exit116.i.sink.split:               ; preds = %ifend.i110.i, %if.entry6.i113.i
+  %memberidx12.i114.i.sink1005 = phi ptr [ %memberidx10.i112.i, %if.entry6.i113.i ], [ %memberidx12.i114.i, %ifend.i110.i ]
+  %817 = load i64, ptr %memberidx12.i114.i.sink1005, align 4
+  %818 = add i64 %817, 1
+  store i64 %818, ptr %memberidx12.i114.i.sink1005, align 4
+  br label %Lexer_advance.exit116.i
+
+Lexer_advance.exit116.i:                          ; preds = %Lexer_advance.exit116.i.sink.split, %while.entry7.i
+  %819 = load i64, ptr %memberidx.i.i324, align 4
+  %820 = add i64 %819, 1
+  %821 = load ptr, ptr %memberidx1.i.i325, align 8
+  %memberidx2.i36.i350 = getelementptr inbounds %string, ptr %821, i64 0, i32 2
+  %822 = load i64, ptr %memberidx2.i36.i350, align 4
+  %823 = icmp slt i64 %820, %822
+  br i1 %823, label %if.entry.i39.i, label %Lexer_peek.exit40.i
+
+if.entry.i39.i:                                   ; preds = %Lexer_advance.exit116.i
+  %824 = load ptr, ptr %821, align 8
+  %memberidx4.i38.i = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %824, i64 0, i32 2
+  %825 = load ptr, ptr %memberidx4.i38.i, align 8
+  %826 = tail call i8 %825(ptr nonnull %821, i64 %820)
+  %.pre929 = load i64, ptr %memberidx.i.i324, align 4
+  %.pre930 = load ptr, ptr %memberidx1.i.i325, align 8
+  %memberidx2.i33.i353.phi.trans.insert = getelementptr inbounds %string, ptr %.pre930, i64 0, i32 2
+  %.pre931 = load i64, ptr %memberidx2.i33.i353.phi.trans.insert, align 4
+  br label %Lexer_peek.exit40.i
+
+Lexer_peek.exit40.i:                              ; preds = %if.entry.i39.i, %Lexer_advance.exit116.i
+  %827 = phi i64 [ %.pre931, %if.entry.i39.i ], [ %822, %Lexer_advance.exit116.i ]
+  %828 = phi ptr [ %.pre930, %if.entry.i39.i ], [ %821, %Lexer_advance.exit116.i ]
+  %829 = phi i64 [ %.pre929, %if.entry.i39.i ], [ %819, %Lexer_advance.exit116.i ]
+  %common.ret.op.i37.i = phi i8 [ %826, %if.entry.i39.i ], [ 0, %Lexer_advance.exit116.i ]
+  %830 = icmp eq i8 %common.ret.op.i37.i, 10
+  %831 = icmp sge i64 %829, %827
+  %832 = or i1 %830, %831
+  br i1 %832, label %if.entry39, label %while.entry7.i
+
+if.entry39.sink.split:                            ; preds = %ifend.i81.i, %if.entry6.i84.i
+  %memberidx9.i82.i.sink1007 = phi ptr [ %memberidx10.i83.i, %if.entry6.i84.i ], [ %memberidx9.i82.i, %ifend.i81.i ]
+  %833 = load i64, ptr %memberidx9.i82.i.sink1007, align 4
+  %834 = add i64 %833, 1
+  store i64 %834, ptr %memberidx9.i82.i.sink1007, align 4
+  br label %if.entry39
+
+if.entry39:                                       ; preds = %Lexer_peek.exit40.i, %if.entry39.sink.split, %Lexer_peek.exit136.i, %Lexer_advance.exit74.i
+  %835 = load i64, ptr %memberidx.i.i324, align 4
+  %836 = load ptr, ptr %memberidx1.i.i325, align 8
+  %memberidx2.i.i356 = getelementptr inbounds %string, ptr %836, i64 0, i32 2
+  %837 = load i64, ptr %memberidx2.i.i356, align 4
+  %.not827 = icmp slt i64 %835, %837
+  br i1 %.not827, label %ifend.i360, label %Lexer_advance.exit366
+
+ifend.i360:                                       ; preds = %if.entry39
+  %838 = load ptr, ptr %836, align 8
+  %memberidx2.i358 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %838, i64 0, i32 2
+  %839 = load ptr, ptr %memberidx2.i358, align 8
+  %840 = add nsw i64 %835, 1
+  store i64 %840, ptr %memberidx.i.i324, align 4
+  %841 = tail call i8 %839(ptr nonnull %836, i64 %840)
+  store i8 %841, ptr %0, align 1
+  %842 = icmp eq i8 %841, 10
+  %memberidx9.i361 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 4
+  br i1 %842, label %if.entry6.i363, label %Lexer_advance.exit366.sink.split
+
+if.entry6.i363:                                   ; preds = %ifend.i360
+  store i64 0, ptr %memberidx9.i361, align 4
+  %memberidx10.i362 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 5
+  br label %Lexer_advance.exit366.sink.split
+
+Lexer_advance.exit366.sink.split:                 ; preds = %ifend.i360, %if.entry6.i363
+  %memberidx10.i362.sink1009 = phi ptr [ %memberidx10.i362, %if.entry6.i363 ], [ %memberidx9.i361, %ifend.i360 ]
+  %843 = load i64, ptr %memberidx10.i362.sink1009, align 4
+  %844 = add i64 %843, 1
+  store i64 %844, ptr %memberidx10.i362.sink1009, align 4
+  br label %Lexer_advance.exit366
+
+Lexer_advance.exit366:                            ; preds = %Lexer_advance.exit366.sink.split, %if.entry39
+  %845 = tail call fastcc ptr @Lexer_lex_token(ptr nonnull %0)
+  br label %common.ret
+
+ifend41:                                          ; preds = %if.entry.i46.i.ifend41_crit_edge, %else.i345
+  %.pre-phi968 = phi i64 [ %.pre967, %if.entry.i46.i.ifend41_crit_edge ], [ %.pre-phi966, %else.i345 ]
+  %846 = phi i64 [ %738, %if.entry.i46.i.ifend41_crit_edge ], [ %730, %else.i345 ]
+  %847 = phi ptr [ %737, %if.entry.i46.i.ifend41_crit_edge ], [ %731, %else.i345 ]
+  %848 = icmp slt i64 %.pre-phi968, %846
+  br i1 %848, label %if.entry.i.i371, label %ifend.i403
+
+if.entry.i.i371:                                  ; preds = %ifend41
+  %849 = load ptr, ptr %847, align 8
+  %memberidx4.i.i370 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %849, i64 0, i32 2
+  %850 = load ptr, ptr %memberidx4.i.i370, align 8
+  %851 = tail call i8 %850(ptr nonnull %847, i64 %.pre-phi968)
+  %phi.cmp825 = icmp eq i8 %851, 61
+  br i1 %phi.cmp825, label %if.entry.i378, label %ifend.i403
+
+if.entry.i378:                                    ; preds = %if.entry.i.i371
+  %852 = load i64, ptr %memberidx.i.i324, align 4
+  %853 = load ptr, ptr %memberidx1.i.i325, align 8
+  %memberidx2.i.i.i377 = getelementptr inbounds %string, ptr %853, i64 0, i32 2
+  %854 = load i64, ptr %memberidx2.i.i.i377, align 4
+  %.not826 = icmp slt i64 %852, %854
+  br i1 %.not826, label %ifend.i.i382, label %Lexer_advance.exit.i395
+
+ifend.i.i382:                                     ; preds = %if.entry.i378
+  %855 = load ptr, ptr %853, align 8
+  %memberidx2.i5.i380 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %855, i64 0, i32 2
+  %856 = load ptr, ptr %memberidx2.i5.i380, align 8
+  %857 = add nsw i64 %852, 1
+  store i64 %857, ptr %memberidx.i.i324, align 4
+  %858 = tail call i8 %856(ptr nonnull %853, i64 %857)
+  store i8 %858, ptr %0, align 1
+  %859 = icmp eq i8 %858, 10
+  %memberidx9.i.i383 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 4
+  br i1 %859, label %if.entry6.i.i385, label %Lexer_advance.exit.i395.sink.split
+
+if.entry6.i.i385:                                 ; preds = %ifend.i.i382
+  store i64 0, ptr %memberidx9.i.i383, align 4
+  %memberidx10.i.i384 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 5
+  br label %Lexer_advance.exit.i395.sink.split
+
+Lexer_advance.exit.i395.sink.split:               ; preds = %ifend.i.i382, %if.entry6.i.i385
+  %memberidx9.i.i383.sink1011 = phi ptr [ %memberidx10.i.i384, %if.entry6.i.i385 ], [ %memberidx9.i.i383, %ifend.i.i382 ]
+  %860 = load i64, ptr %memberidx9.i.i383.sink1011, align 4
+  %861 = add i64 %860, 1
+  store i64 %861, ptr %memberidx9.i.i383.sink1011, align 4
+  br label %Lexer_advance.exit.i395
+
+Lexer_advance.exit.i395:                          ; preds = %Lexer_advance.exit.i395.sink.split, %if.entry.i378
+  %862 = tail call ptr @malloc(i32 16)
+  %863 = tail call ptr @malloc(i32 32)
+  %864 = load i64, ptr %memberidx.i.i324, align 4
+  %865 = add i64 %864, -1
+  %866 = add i64 %864, 1
+  %memberidx2.i7.i389 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 4
+  %867 = load i64, ptr %memberidx2.i7.i389, align 4
+  %868 = add i64 %867, -2
+  %memberidx3.i8.i390 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 5
+  %869 = load i64, ptr %memberidx3.i8.i390, align 4
+  store i64 %865, ptr %863, align 4
+  %memberidx1.i.i9.i391 = getelementptr inbounds %FloRange, ptr %863, i64 0, i32 1
+  store i64 %866, ptr %memberidx1.i.i9.i391, align 4
+  %memberidx2.i.i10.i392 = getelementptr inbounds %FloRange, ptr %863, i64 0, i32 2
+  store i64 %868, ptr %memberidx2.i.i10.i392, align 4
+  %memberidx3.i.i.i393 = getelementptr inbounds %FloRange, ptr %863, i64 0, i32 3
+  store i64 %869, ptr %memberidx3.i.i.i393, align 4
+  store i64 13, ptr %862, align 4
+  %memberidx1.i11.i394 = getelementptr inbounds %Token, ptr %862, i64 0, i32 1
+  store ptr %863, ptr %memberidx1.i11.i394, align 8
+  br label %common.ret
+
+ifend.i403:                                       ; preds = %ifend41, %if.entry.i.i371
+  %870 = tail call ptr @malloc(i32 16)
+  %871 = tail call ptr @malloc(i32 32)
+  %872 = load i64, ptr %memberidx.i.i324, align 4
+  %873 = add i64 %872, 1
+  %memberidx2.i14.i397 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 4
+  %874 = load i64, ptr %memberidx2.i14.i397, align 4
+  %875 = add i64 %874, -1
+  %memberidx3.i15.i398 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 5
+  %876 = load i64, ptr %memberidx3.i15.i398, align 4
+  store i64 %872, ptr %871, align 4
+  %memberidx1.i.i16.i399 = getelementptr inbounds %FloRange, ptr %871, i64 0, i32 1
+  store i64 %873, ptr %memberidx1.i.i16.i399, align 4
+  %memberidx2.i.i17.i400 = getelementptr inbounds %FloRange, ptr %871, i64 0, i32 2
+  store i64 %875, ptr %memberidx2.i.i17.i400, align 4
+  %memberidx3.i.i18.i401 = getelementptr inbounds %FloRange, ptr %871, i64 0, i32 3
+  store i64 %876, ptr %memberidx3.i.i18.i401, align 4
+  store i64 7, ptr %870, align 4
+  %memberidx1.i12.i402 = getelementptr inbounds %Token, ptr %870, i64 0, i32 1
+  store ptr %871, ptr %memberidx1.i12.i402, align 8
+  br label %common.ret
+
+if.entry42:                                       ; preds = %ifend11
+  %877 = tail call ptr @malloc(i32 16)
+  %878 = tail call ptr @malloc(i32 32)
+  %memberidx.i404 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 3
+  %879 = load i64, ptr %memberidx.i404, align 4
+  %880 = add i64 %879, 1
+  %memberidx2.i405 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 4
+  %881 = load i64, ptr %memberidx2.i405, align 4
+  %882 = add i64 %881, -1
+  %memberidx3.i406 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 5
+  %883 = load i64, ptr %memberidx3.i406, align 4
+  store i64 %879, ptr %878, align 4
+  %memberidx1.i.i407 = getelementptr inbounds %FloRange, ptr %878, i64 0, i32 1
+  store i64 %880, ptr %memberidx1.i.i407, align 4
+  %memberidx2.i.i408 = getelementptr inbounds %FloRange, ptr %878, i64 0, i32 2
+  store i64 %882, ptr %memberidx2.i.i408, align 4
+  %memberidx3.i.i409 = getelementptr inbounds %FloRange, ptr %878, i64 0, i32 3
+  store i64 %883, ptr %memberidx3.i.i409, align 4
+  store i64 23, ptr %877, align 4
+  %memberidx1.i410 = getelementptr inbounds %Token, ptr %877, i64 0, i32 1
+  store ptr %878, ptr %memberidx1.i410, align 8
+  br label %common.ret
+
+if.entry45:                                       ; preds = %ifend11
+  %884 = tail call ptr @malloc(i32 16)
+  %885 = tail call ptr @malloc(i32 32)
+  %memberidx.i411 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 3
+  %886 = load i64, ptr %memberidx.i411, align 4
+  %887 = add i64 %886, 1
+  %memberidx2.i412 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 4
+  %888 = load i64, ptr %memberidx2.i412, align 4
+  %889 = add i64 %888, -1
+  %memberidx3.i413 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 5
+  %890 = load i64, ptr %memberidx3.i413, align 4
+  store i64 %886, ptr %885, align 4
+  %memberidx1.i.i414 = getelementptr inbounds %FloRange, ptr %885, i64 0, i32 1
+  store i64 %887, ptr %memberidx1.i.i414, align 4
+  %memberidx2.i.i415 = getelementptr inbounds %FloRange, ptr %885, i64 0, i32 2
+  store i64 %889, ptr %memberidx2.i.i415, align 4
+  %memberidx3.i.i416 = getelementptr inbounds %FloRange, ptr %885, i64 0, i32 3
+  store i64 %890, ptr %memberidx3.i.i416, align 4
+  store i64 24, ptr %884, align 4
+  %memberidx1.i417 = getelementptr inbounds %Token, ptr %884, i64 0, i32 1
+  store ptr %885, ptr %memberidx1.i417, align 8
+  br label %common.ret
+
+if.entry48:                                       ; preds = %ifend11
+  %891 = tail call ptr @malloc(i32 16)
+  %892 = tail call ptr @malloc(i32 32)
+  %memberidx.i418 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 3
+  %893 = load i64, ptr %memberidx.i418, align 4
+  %894 = add i64 %893, 1
+  %memberidx2.i419 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 4
+  %895 = load i64, ptr %memberidx2.i419, align 4
+  %896 = add i64 %895, -1
+  %memberidx3.i420 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 5
+  %897 = load i64, ptr %memberidx3.i420, align 4
+  store i64 %893, ptr %892, align 4
+  %memberidx1.i.i421 = getelementptr inbounds %FloRange, ptr %892, i64 0, i32 1
+  store i64 %894, ptr %memberidx1.i.i421, align 4
+  %memberidx2.i.i422 = getelementptr inbounds %FloRange, ptr %892, i64 0, i32 2
+  store i64 %896, ptr %memberidx2.i.i422, align 4
+  %memberidx3.i.i423 = getelementptr inbounds %FloRange, ptr %892, i64 0, i32 3
+  store i64 %897, ptr %memberidx3.i.i423, align 4
+  store i64 25, ptr %891, align 4
+  %memberidx1.i424 = getelementptr inbounds %Token, ptr %891, i64 0, i32 1
+  store ptr %892, ptr %memberidx1.i424, align 8
+  br label %common.ret
+
+if.entry51:                                       ; preds = %ifend11
+  %898 = tail call ptr @malloc(i32 16)
+  %899 = tail call ptr @malloc(i32 32)
+  %memberidx.i425 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 3
+  %900 = load i64, ptr %memberidx.i425, align 4
+  %901 = add i64 %900, 1
+  %memberidx2.i426 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 4
+  %902 = load i64, ptr %memberidx2.i426, align 4
+  %903 = add i64 %902, -1
+  %memberidx3.i427 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 5
+  %904 = load i64, ptr %memberidx3.i427, align 4
+  store i64 %900, ptr %899, align 4
+  %memberidx1.i.i428 = getelementptr inbounds %FloRange, ptr %899, i64 0, i32 1
+  store i64 %901, ptr %memberidx1.i.i428, align 4
+  %memberidx2.i.i429 = getelementptr inbounds %FloRange, ptr %899, i64 0, i32 2
+  store i64 %903, ptr %memberidx2.i.i429, align 4
+  %memberidx3.i.i430 = getelementptr inbounds %FloRange, ptr %899, i64 0, i32 3
+  store i64 %904, ptr %memberidx3.i.i430, align 4
+  store i64 26, ptr %898, align 4
+  %memberidx1.i431 = getelementptr inbounds %Token, ptr %898, i64 0, i32 1
+  store ptr %899, ptr %memberidx1.i431, align 8
+  br label %common.ret
+
+if.entry54:                                       ; preds = %ifend11
+  %905 = tail call ptr @malloc(i32 16)
+  %906 = tail call ptr @malloc(i32 32)
+  %memberidx.i432 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 3
+  %907 = load i64, ptr %memberidx.i432, align 4
+  %908 = add i64 %907, 1
+  %memberidx2.i433 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 4
+  %909 = load i64, ptr %memberidx2.i433, align 4
+  %910 = add i64 %909, -1
+  %memberidx3.i434 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 5
+  %911 = load i64, ptr %memberidx3.i434, align 4
+  store i64 %907, ptr %906, align 4
+  %memberidx1.i.i435 = getelementptr inbounds %FloRange, ptr %906, i64 0, i32 1
+  store i64 %908, ptr %memberidx1.i.i435, align 4
+  %memberidx2.i.i436 = getelementptr inbounds %FloRange, ptr %906, i64 0, i32 2
+  store i64 %910, ptr %memberidx2.i.i436, align 4
+  %memberidx3.i.i437 = getelementptr inbounds %FloRange, ptr %906, i64 0, i32 3
+  store i64 %911, ptr %memberidx3.i.i437, align 4
+  store i64 27, ptr %905, align 4
+  %memberidx1.i438 = getelementptr inbounds %Token, ptr %905, i64 0, i32 1
+  store ptr %906, ptr %memberidx1.i438, align 8
+  br label %common.ret
+
+if.entry57:                                       ; preds = %ifend11
+  %912 = tail call ptr @malloc(i32 16)
+  %913 = tail call ptr @malloc(i32 32)
+  %memberidx.i439 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 3
+  %914 = load i64, ptr %memberidx.i439, align 4
+  %915 = add i64 %914, 1
+  %memberidx2.i440 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 4
+  %916 = load i64, ptr %memberidx2.i440, align 4
+  %917 = add i64 %916, -1
+  %memberidx3.i441 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 5
+  %918 = load i64, ptr %memberidx3.i441, align 4
+  store i64 %914, ptr %913, align 4
+  %memberidx1.i.i442 = getelementptr inbounds %FloRange, ptr %913, i64 0, i32 1
+  store i64 %915, ptr %memberidx1.i.i442, align 4
+  %memberidx2.i.i443 = getelementptr inbounds %FloRange, ptr %913, i64 0, i32 2
+  store i64 %917, ptr %memberidx2.i.i443, align 4
+  %memberidx3.i.i444 = getelementptr inbounds %FloRange, ptr %913, i64 0, i32 3
+  store i64 %918, ptr %memberidx3.i.i444, align 4
+  store i64 28, ptr %912, align 4
+  %memberidx1.i445 = getelementptr inbounds %Token, ptr %912, i64 0, i32 1
+  store ptr %913, ptr %memberidx1.i445, align 8
+  br label %common.ret
+
+if.entry60:                                       ; preds = %ifend11, %ifend11
+  %919 = tail call ptr @malloc(i32 16)
+  %920 = tail call ptr @malloc(i32 32)
+  %memberidx.i446 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 3
+  %921 = load i64, ptr %memberidx.i446, align 4
+  %922 = add i64 %921, 1
+  %memberidx2.i447 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 4
+  %923 = load i64, ptr %memberidx2.i447, align 4
+  %924 = add i64 %923, -1
+  %memberidx3.i448 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 5
+  %925 = load i64, ptr %memberidx3.i448, align 4
+  store i64 %921, ptr %920, align 4
+  %memberidx1.i.i449 = getelementptr inbounds %FloRange, ptr %920, i64 0, i32 1
+  store i64 %922, ptr %memberidx1.i.i449, align 4
+  %memberidx2.i.i450 = getelementptr inbounds %FloRange, ptr %920, i64 0, i32 2
+  store i64 %924, ptr %memberidx2.i.i450, align 4
+  %memberidx3.i.i451 = getelementptr inbounds %FloRange, ptr %920, i64 0, i32 3
+  store i64 %925, ptr %memberidx3.i.i451, align 4
+  store i64 31, ptr %919, align 4
+  %memberidx1.i452 = getelementptr inbounds %Token, ptr %919, i64 0, i32 1
+  store ptr %920, ptr %memberidx1.i452, align 8
+  br label %common.ret
+
+if.entry63:                                       ; preds = %ifend11
+  %memberidx.i.i.i453 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 3
+  %926 = load i64, ptr %memberidx.i.i.i453, align 4
+  %memberidx1.i.i.i454 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 1
+  %927 = load ptr, ptr %memberidx1.i.i.i454, align 8
+  %memberidx2.i.i.i455 = getelementptr inbounds %string, ptr %927, i64 0, i32 2
+  %928 = load i64, ptr %memberidx2.i.i.i455, align 4
+  %.not821 = icmp slt i64 %926, %928
+  br i1 %.not821, label %ifend.i.i459, label %ifend.i470
+
+ifend.i.i459:                                     ; preds = %if.entry63
+  %929 = load ptr, ptr %927, align 8
+  %memberidx2.i.i457 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %929, i64 0, i32 2
+  %930 = load ptr, ptr %memberidx2.i.i457, align 8
+  %931 = add nsw i64 %926, 1
+  store i64 %931, ptr %memberidx.i.i.i453, align 4
+  %932 = tail call i8 %930(ptr nonnull %927, i64 %931)
+  store i8 %932, ptr %0, align 1
+  %933 = icmp eq i8 %932, 10
+  %memberidx9.i.i460 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 4
+  br i1 %933, label %if.entry6.i.i462, label %Lexer_advance.exit.i465
+
+if.entry6.i.i462:                                 ; preds = %ifend.i.i459
+  store i64 0, ptr %memberidx9.i.i460, align 4
+  %memberidx10.i.i461 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 5
+  %934 = load i64, ptr %memberidx10.i.i461, align 4
+  %935 = add i64 %934, 1
+  store i64 %935, ptr %memberidx10.i.i461, align 4
+  br label %ifend.i470
+
+Lexer_advance.exit.i465:                          ; preds = %ifend.i.i459
+  %936 = load i64, ptr %memberidx9.i.i460, align 4
+  %937 = add i64 %936, 1
+  store i64 %937, ptr %memberidx9.i.i460, align 4
+  %938 = icmp eq i8 %932, 92
+  br i1 %938, label %if.entry.i466, label %ifend.i470
+
+if.entry.i466:                                    ; preds = %Lexer_advance.exit.i465
+  %939 = load i64, ptr %memberidx.i.i.i453, align 4
+  %940 = load ptr, ptr %memberidx1.i.i.i454, align 8
+  %memberidx2.i.i12.i = getelementptr inbounds %string, ptr %940, i64 0, i32 2
+  %941 = load i64, ptr %memberidx2.i.i12.i, align 4
+  %.not823 = icmp slt i64 %939, %941
+  br i1 %.not823, label %ifend.i16.i, label %ifend27.i.i
+
+ifend.i16.i:                                      ; preds = %if.entry.i466
+  %942 = load ptr, ptr %940, align 8
+  %memberidx2.i14.i467 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %942, i64 0, i32 2
+  %943 = load ptr, ptr %memberidx2.i14.i467, align 8
+  %944 = add nsw i64 %939, 1
+  store i64 %944, ptr %memberidx.i.i.i453, align 4
+  %945 = tail call i8 %943(ptr nonnull %940, i64 %944)
+  store i8 %945, ptr %0, align 1
+  %946 = icmp eq i8 %945, 10
+  %memberidx9.i17.i = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 4
+  br i1 %946, label %if.entry6.i19.i, label %Lexer_advance.exit22.i
+
+if.entry6.i19.i:                                  ; preds = %ifend.i16.i
+  store i64 0, ptr %memberidx9.i17.i, align 4
+  %memberidx10.i18.i = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 5
+  %947 = load i64, ptr %memberidx10.i18.i, align 4
+  %948 = add i64 %947, 1
+  store i64 %948, ptr %memberidx10.i18.i, align 4
+  br label %ifend27.i.i
+
+Lexer_advance.exit22.i:                           ; preds = %ifend.i16.i
+  %949 = load i64, ptr %memberidx9.i17.i, align 4
+  %950 = add i64 %949, 1
+  store i64 %950, ptr %memberidx9.i17.i, align 4
+  switch i8 %945, label %ifend27.i.i [
+    i8 97, label %ifend.i470
+    i8 98, label %get_escape_char.exit.i.fold.split
+    i8 116, label %get_escape_char.exit.i.fold.split854
+    i8 102, label %get_escape_char.exit.i.fold.split855
+    i8 110, label %get_escape_char.exit.i.fold.split856
+    i8 114, label %get_escape_char.exit.i.fold.split857
+    i8 118, label %get_escape_char.exit.i.fold.split858
+    i8 48, label %get_escape_char.exit.i.fold.split859
+    i8 39, label %get_escape_char.exit.i.fold.split860
+    i8 34, label %get_escape_char.exit.i.fold.split861
+  ]
+
+ifend27.i.i:                                      ; preds = %if.entry.i466, %if.entry6.i19.i, %Lexer_advance.exit22.i
+  %951 = phi i8 [ %945, %Lexer_advance.exit22.i ], [ 92, %if.entry.i466 ], [ 10, %if.entry6.i19.i ]
+  br label %ifend.i470
+
+get_escape_char.exit.i.fold.split:                ; preds = %Lexer_advance.exit22.i
+  br label %ifend.i470
+
+get_escape_char.exit.i.fold.split854:             ; preds = %Lexer_advance.exit22.i
+  br label %ifend.i470
+
+get_escape_char.exit.i.fold.split855:             ; preds = %Lexer_advance.exit22.i
+  br label %ifend.i470
+
+get_escape_char.exit.i.fold.split856:             ; preds = %Lexer_advance.exit22.i
+  br label %ifend.i470
+
+get_escape_char.exit.i.fold.split857:             ; preds = %Lexer_advance.exit22.i
+  br label %ifend.i470
+
+get_escape_char.exit.i.fold.split858:             ; preds = %Lexer_advance.exit22.i
+  br label %ifend.i470
+
+get_escape_char.exit.i.fold.split859:             ; preds = %Lexer_advance.exit22.i
+  br label %ifend.i470
+
+get_escape_char.exit.i.fold.split860:             ; preds = %Lexer_advance.exit22.i
+  br label %ifend.i470
+
+get_escape_char.exit.i.fold.split861:             ; preds = %Lexer_advance.exit22.i
+  br label %ifend.i470
+
+ifend.i470:                                       ; preds = %if.entry63, %if.entry6.i.i462, %ifend27.i.i, %get_escape_char.exit.i.fold.split, %get_escape_char.exit.i.fold.split854, %get_escape_char.exit.i.fold.split855, %get_escape_char.exit.i.fold.split856, %get_escape_char.exit.i.fold.split857, %get_escape_char.exit.i.fold.split858, %get_escape_char.exit.i.fold.split859, %get_escape_char.exit.i.fold.split860, %get_escape_char.exit.i.fold.split861, %Lexer_advance.exit22.i, %Lexer_advance.exit.i465
+  %length.0.i = phi i64 [ 3, %Lexer_advance.exit.i465 ], [ 5, %Lexer_advance.exit22.i ], [ 5, %get_escape_char.exit.i.fold.split861 ], [ 5, %get_escape_char.exit.i.fold.split860 ], [ 5, %get_escape_char.exit.i.fold.split859 ], [ 5, %get_escape_char.exit.i.fold.split858 ], [ 5, %get_escape_char.exit.i.fold.split857 ], [ 5, %get_escape_char.exit.i.fold.split856 ], [ 5, %get_escape_char.exit.i.fold.split855 ], [ 5, %get_escape_char.exit.i.fold.split854 ], [ 5, %get_escape_char.exit.i.fold.split ], [ 5, %ifend27.i.i ], [ 3, %if.entry6.i.i462 ], [ 3, %if.entry63 ]
+  %value.0.i = phi i8 [ %932, %Lexer_advance.exit.i465 ], [ 7, %Lexer_advance.exit22.i ], [ %945, %get_escape_char.exit.i.fold.split861 ], [ %945, %get_escape_char.exit.i.fold.split860 ], [ 0, %get_escape_char.exit.i.fold.split859 ], [ 11, %get_escape_char.exit.i.fold.split858 ], [ 13, %get_escape_char.exit.i.fold.split857 ], [ 10, %get_escape_char.exit.i.fold.split856 ], [ 12, %get_escape_char.exit.i.fold.split855 ], [ 9, %get_escape_char.exit.i.fold.split854 ], [ 8, %get_escape_char.exit.i.fold.split ], [ %951, %ifend27.i.i ], [ 10, %if.entry6.i.i462 ], [ 39, %if.entry63 ]
+  %952 = load i64, ptr %memberidx.i.i.i453, align 4
+  %953 = load ptr, ptr %memberidx1.i.i.i454, align 8
+  %memberidx2.i.i32.i = getelementptr inbounds %string, ptr %953, i64 0, i32 2
+  %954 = load i64, ptr %memberidx2.i.i32.i, align 4
+  %.not822 = icmp slt i64 %952, %954
+  br i1 %.not822, label %ifend.i36.i, label %Lexer_char_token.exit
+
+ifend.i36.i:                                      ; preds = %ifend.i470
+  %955 = load ptr, ptr %953, align 8
+  %memberidx2.i34.i = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %955, i64 0, i32 2
+  %956 = load ptr, ptr %memberidx2.i34.i, align 8
+  %957 = add nsw i64 %952, 1
+  store i64 %957, ptr %memberidx.i.i.i453, align 4
+  %958 = tail call i8 %956(ptr nonnull %953, i64 %957)
+  store i8 %958, ptr %0, align 1
+  %959 = icmp eq i8 %958, 10
+  %memberidx9.i37.i = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 4
+  br i1 %959, label %if.entry6.i39.i, label %Lexer_char_token.exit.sink.split
+
+if.entry6.i39.i:                                  ; preds = %ifend.i36.i
+  store i64 0, ptr %memberidx9.i37.i, align 4
+  %memberidx10.i38.i = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 5
+  br label %Lexer_char_token.exit.sink.split
+
+Lexer_char_token.exit.sink.split:                 ; preds = %ifend.i36.i, %if.entry6.i39.i
+  %memberidx10.i38.i.sink1013 = phi ptr [ %memberidx10.i38.i, %if.entry6.i39.i ], [ %memberidx9.i37.i, %ifend.i36.i ]
+  %960 = load i64, ptr %memberidx10.i38.i.sink1013, align 4
+  %961 = add i64 %960, 1
+  store i64 %961, ptr %memberidx10.i38.i.sink1013, align 4
+  br label %Lexer_char_token.exit
+
+Lexer_char_token.exit:                            ; preds = %Lexer_char_token.exit.sink.split, %ifend.i470
+  %962 = tail call ptr @malloc(i32 17)
+  %963 = tail call ptr @malloc(i32 32)
+  %964 = load i64, ptr %memberidx.i.i.i453, align 4
+  %965 = sub nsw i64 1, %length.0.i
+  %966 = add i64 %965, %964
+  %967 = add i64 %964, 1
+  %memberidx2.i26.i472 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 4
+  %968 = load i64, ptr %memberidx2.i26.i472, align 4
+  %969 = sub i64 %968, %length.0.i
+  %memberidx3.i27.i473 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 5
+  %970 = load i64, ptr %memberidx3.i27.i473, align 4
+  store i64 %966, ptr %963, align 4
+  %memberidx1.i.i28.i474 = getelementptr inbounds %FloRange, ptr %963, i64 0, i32 1
+  store i64 %967, ptr %memberidx1.i.i28.i474, align 4
+  %memberidx2.i.i29.i475 = getelementptr inbounds %FloRange, ptr %963, i64 0, i32 2
+  store i64 %969, ptr %memberidx2.i.i29.i475, align 4
+  %memberidx3.i.i.i476 = getelementptr inbounds %FloRange, ptr %963, i64 0, i32 3
+  store i64 %970, ptr %memberidx3.i.i.i476, align 4
+  store i64 33, ptr %962, align 4
+  %memberidx1.i.i24.i = getelementptr inbounds %Token, ptr %962, i64 0, i32 1
+  store ptr %963, ptr %memberidx1.i.i24.i, align 8
+  %memberidx.i.i477 = getelementptr inbounds %CharToken, ptr %962, i64 0, i32 2
+  store i8 %value.0.i, ptr %memberidx.i.i477, align 1
+  br label %common.ret
+
+if.entry66:                                       ; preds = %ifend11
+  %971 = tail call ptr @malloc(i32 16)
+  %972 = tail call ptr @malloc(i32 32)
+  %memberidx.i478 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 3
+  %973 = load i64, ptr %memberidx.i478, align 4
+  %974 = add i64 %973, 1
+  %memberidx2.i479 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 4
+  %975 = load i64, ptr %memberidx2.i479, align 4
+  %976 = add i64 %975, -1
+  %memberidx3.i480 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 5
+  %977 = load i64, ptr %memberidx3.i480, align 4
+  store i64 %973, ptr %972, align 4
+  %memberidx1.i.i481 = getelementptr inbounds %FloRange, ptr %972, i64 0, i32 1
+  store i64 %974, ptr %memberidx1.i.i481, align 4
+  %memberidx2.i.i482 = getelementptr inbounds %FloRange, ptr %972, i64 0, i32 2
+  store i64 %976, ptr %memberidx2.i.i482, align 4
+  %memberidx3.i.i483 = getelementptr inbounds %FloRange, ptr %972, i64 0, i32 3
+  store i64 %977, ptr %memberidx3.i.i483, align 4
+  store i64 34, ptr %971, align 4
+  %memberidx1.i484 = getelementptr inbounds %Token, ptr %971, i64 0, i32 1
+  store ptr %972, ptr %memberidx1.i484, align 8
+  br label %common.ret
+
+if.entry69:                                       ; preds = %ifend11
+  %978 = tail call ptr @malloc(i32 16)
+  %979 = tail call ptr @malloc(i32 32)
+  %memberidx.i485 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 3
+  %980 = load i64, ptr %memberidx.i485, align 4
+  %981 = add i64 %980, 1
+  %memberidx2.i486 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 4
+  %982 = load i64, ptr %memberidx2.i486, align 4
+  %983 = add i64 %982, -1
+  %memberidx3.i487 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 5
+  %984 = load i64, ptr %memberidx3.i487, align 4
+  store i64 %980, ptr %979, align 4
+  %memberidx1.i.i488 = getelementptr inbounds %FloRange, ptr %979, i64 0, i32 1
+  store i64 %981, ptr %memberidx1.i.i488, align 4
+  %memberidx2.i.i489 = getelementptr inbounds %FloRange, ptr %979, i64 0, i32 2
+  store i64 %983, ptr %memberidx2.i.i489, align 4
+  %memberidx3.i.i490 = getelementptr inbounds %FloRange, ptr %979, i64 0, i32 3
+  store i64 %984, ptr %memberidx3.i.i490, align 4
+  store i64 35, ptr %978, align 4
+  %memberidx1.i491 = getelementptr inbounds %Token, ptr %978, i64 0, i32 1
+  store ptr %979, ptr %memberidx1.i491, align 8
+  br label %common.ret
+
+if.entry72:                                       ; preds = %ifend11
+  %memberidx.i.i492 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 3
+  %985 = load i64, ptr %memberidx.i.i492, align 4
+  %986 = add i64 %985, 1
+  %memberidx1.i.i493 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 1
+  %987 = load ptr, ptr %memberidx1.i.i493, align 8
+  %memberidx2.i.i494 = getelementptr inbounds %string, ptr %987, i64 0, i32 2
+  %988 = load i64, ptr %memberidx2.i.i494, align 4
+  %989 = icmp slt i64 %986, %988
+  br i1 %989, label %if.entry.i.i496, label %ifend.i528
+
+if.entry.i.i496:                                  ; preds = %if.entry72
+  %990 = load ptr, ptr %987, align 8
+  %memberidx4.i.i495 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %990, i64 0, i32 2
+  %991 = load ptr, ptr %memberidx4.i.i495, align 8
+  %992 = tail call i8 %991(ptr nonnull %987, i64 %986)
+  %phi.cmp819 = icmp eq i8 %992, 61
+  br i1 %phi.cmp819, label %if.entry.i503, label %ifend.i528
+
+if.entry.i503:                                    ; preds = %if.entry.i.i496
+  %993 = load i64, ptr %memberidx.i.i492, align 4
+  %994 = load ptr, ptr %memberidx1.i.i493, align 8
+  %memberidx2.i.i.i502 = getelementptr inbounds %string, ptr %994, i64 0, i32 2
+  %995 = load i64, ptr %memberidx2.i.i.i502, align 4
+  %.not820 = icmp slt i64 %993, %995
+  br i1 %.not820, label %ifend.i.i507, label %Lexer_advance.exit.i520
+
+ifend.i.i507:                                     ; preds = %if.entry.i503
+  %996 = load ptr, ptr %994, align 8
+  %memberidx2.i5.i505 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %996, i64 0, i32 2
+  %997 = load ptr, ptr %memberidx2.i5.i505, align 8
+  %998 = add nsw i64 %993, 1
+  store i64 %998, ptr %memberidx.i.i492, align 4
+  %999 = tail call i8 %997(ptr nonnull %994, i64 %998)
+  store i8 %999, ptr %0, align 1
+  %1000 = icmp eq i8 %999, 10
+  %memberidx9.i.i508 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 4
+  br i1 %1000, label %if.entry6.i.i510, label %Lexer_advance.exit.i520.sink.split
+
+if.entry6.i.i510:                                 ; preds = %ifend.i.i507
+  store i64 0, ptr %memberidx9.i.i508, align 4
+  %memberidx10.i.i509 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 5
+  br label %Lexer_advance.exit.i520.sink.split
+
+Lexer_advance.exit.i520.sink.split:               ; preds = %ifend.i.i507, %if.entry6.i.i510
+  %memberidx9.i.i508.sink1015 = phi ptr [ %memberidx10.i.i509, %if.entry6.i.i510 ], [ %memberidx9.i.i508, %ifend.i.i507 ]
+  %1001 = load i64, ptr %memberidx9.i.i508.sink1015, align 4
+  %1002 = add i64 %1001, 1
+  store i64 %1002, ptr %memberidx9.i.i508.sink1015, align 4
+  br label %Lexer_advance.exit.i520
+
+Lexer_advance.exit.i520:                          ; preds = %Lexer_advance.exit.i520.sink.split, %if.entry.i503
+  %1003 = tail call ptr @malloc(i32 16)
+  %1004 = tail call ptr @malloc(i32 32)
+  %1005 = load i64, ptr %memberidx.i.i492, align 4
+  %1006 = add i64 %1005, -1
+  %1007 = add i64 %1005, 1
+  %memberidx2.i7.i514 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 4
+  %1008 = load i64, ptr %memberidx2.i7.i514, align 4
+  %1009 = add i64 %1008, -2
+  %memberidx3.i8.i515 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 5
+  %1010 = load i64, ptr %memberidx3.i8.i515, align 4
+  store i64 %1006, ptr %1004, align 4
+  %memberidx1.i.i9.i516 = getelementptr inbounds %FloRange, ptr %1004, i64 0, i32 1
+  store i64 %1007, ptr %memberidx1.i.i9.i516, align 4
+  %memberidx2.i.i10.i517 = getelementptr inbounds %FloRange, ptr %1004, i64 0, i32 2
+  store i64 %1009, ptr %memberidx2.i.i10.i517, align 4
+  %memberidx3.i.i.i518 = getelementptr inbounds %FloRange, ptr %1004, i64 0, i32 3
+  store i64 %1010, ptr %memberidx3.i.i.i518, align 4
+  store i64 37, ptr %1003, align 4
+  %memberidx1.i11.i519 = getelementptr inbounds %Token, ptr %1003, i64 0, i32 1
+  store ptr %1004, ptr %memberidx1.i11.i519, align 8
+  br label %common.ret
+
+ifend.i528:                                       ; preds = %if.entry72, %if.entry.i.i496
+  %1011 = tail call ptr @malloc(i32 16)
+  %1012 = tail call ptr @malloc(i32 32)
+  %1013 = load i64, ptr %memberidx.i.i492, align 4
+  %1014 = add i64 %1013, 1
+  %memberidx2.i14.i522 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 4
+  %1015 = load i64, ptr %memberidx2.i14.i522, align 4
+  %1016 = add i64 %1015, -1
+  %memberidx3.i15.i523 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 5
+  %1017 = load i64, ptr %memberidx3.i15.i523, align 4
+  store i64 %1013, ptr %1012, align 4
+  %memberidx1.i.i16.i524 = getelementptr inbounds %FloRange, ptr %1012, i64 0, i32 1
+  store i64 %1014, ptr %memberidx1.i.i16.i524, align 4
+  %memberidx2.i.i17.i525 = getelementptr inbounds %FloRange, ptr %1012, i64 0, i32 2
+  store i64 %1016, ptr %memberidx2.i.i17.i525, align 4
+  %memberidx3.i.i18.i526 = getelementptr inbounds %FloRange, ptr %1012, i64 0, i32 3
+  store i64 %1017, ptr %memberidx3.i.i18.i526, align 4
+  store i64 36, ptr %1011, align 4
+  %memberidx1.i12.i527 = getelementptr inbounds %Token, ptr %1011, i64 0, i32 1
+  store ptr %1012, ptr %memberidx1.i12.i527, align 8
+  br label %common.ret
+
+if.entry75:                                       ; preds = %ifend11
+  %memberidx.i.i529 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 3
+  %1018 = load i64, ptr %memberidx.i.i529, align 4
+  %1019 = add i64 %1018, 1
+  %memberidx1.i.i530 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 1
+  %1020 = load ptr, ptr %memberidx1.i.i530, align 8
+  %memberidx2.i.i531 = getelementptr inbounds %string, ptr %1020, i64 0, i32 2
+  %1021 = load i64, ptr %memberidx2.i.i531, align 4
+  %1022 = icmp slt i64 %1019, %1021
+  br i1 %1022, label %if.entry.i.i533, label %ifend.i565
+
+if.entry.i.i533:                                  ; preds = %if.entry75
+  %1023 = load ptr, ptr %1020, align 8
+  %memberidx4.i.i532 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %1023, i64 0, i32 2
+  %1024 = load ptr, ptr %memberidx4.i.i532, align 8
+  %1025 = tail call i8 %1024(ptr nonnull %1020, i64 %1019)
+  %phi.cmp817 = icmp eq i8 %1025, 61
+  br i1 %phi.cmp817, label %if.entry.i540, label %ifend.i565
+
+if.entry.i540:                                    ; preds = %if.entry.i.i533
+  %1026 = load i64, ptr %memberidx.i.i529, align 4
+  %1027 = load ptr, ptr %memberidx1.i.i530, align 8
+  %memberidx2.i.i.i539 = getelementptr inbounds %string, ptr %1027, i64 0, i32 2
+  %1028 = load i64, ptr %memberidx2.i.i.i539, align 4
+  %.not818 = icmp slt i64 %1026, %1028
+  br i1 %.not818, label %ifend.i.i544, label %Lexer_advance.exit.i557
+
+ifend.i.i544:                                     ; preds = %if.entry.i540
+  %1029 = load ptr, ptr %1027, align 8
+  %memberidx2.i5.i542 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %1029, i64 0, i32 2
+  %1030 = load ptr, ptr %memberidx2.i5.i542, align 8
+  %1031 = add nsw i64 %1026, 1
+  store i64 %1031, ptr %memberidx.i.i529, align 4
+  %1032 = tail call i8 %1030(ptr nonnull %1027, i64 %1031)
+  store i8 %1032, ptr %0, align 1
+  %1033 = icmp eq i8 %1032, 10
+  %memberidx9.i.i545 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 4
+  br i1 %1033, label %if.entry6.i.i547, label %Lexer_advance.exit.i557.sink.split
+
+if.entry6.i.i547:                                 ; preds = %ifend.i.i544
+  store i64 0, ptr %memberidx9.i.i545, align 4
+  %memberidx10.i.i546 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 5
+  br label %Lexer_advance.exit.i557.sink.split
+
+Lexer_advance.exit.i557.sink.split:               ; preds = %ifend.i.i544, %if.entry6.i.i547
+  %memberidx9.i.i545.sink1017 = phi ptr [ %memberidx10.i.i546, %if.entry6.i.i547 ], [ %memberidx9.i.i545, %ifend.i.i544 ]
+  %1034 = load i64, ptr %memberidx9.i.i545.sink1017, align 4
+  %1035 = add i64 %1034, 1
+  store i64 %1035, ptr %memberidx9.i.i545.sink1017, align 4
+  br label %Lexer_advance.exit.i557
+
+Lexer_advance.exit.i557:                          ; preds = %Lexer_advance.exit.i557.sink.split, %if.entry.i540
+  %1036 = tail call ptr @malloc(i32 16)
+  %1037 = tail call ptr @malloc(i32 32)
+  %1038 = load i64, ptr %memberidx.i.i529, align 4
+  %1039 = add i64 %1038, -1
+  %1040 = add i64 %1038, 1
+  %memberidx2.i7.i551 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 4
+  %1041 = load i64, ptr %memberidx2.i7.i551, align 4
+  %1042 = add i64 %1041, -2
+  %memberidx3.i8.i552 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 5
+  %1043 = load i64, ptr %memberidx3.i8.i552, align 4
+  store i64 %1039, ptr %1037, align 4
+  %memberidx1.i.i9.i553 = getelementptr inbounds %FloRange, ptr %1037, i64 0, i32 1
+  store i64 %1040, ptr %memberidx1.i.i9.i553, align 4
+  %memberidx2.i.i10.i554 = getelementptr inbounds %FloRange, ptr %1037, i64 0, i32 2
+  store i64 %1042, ptr %memberidx2.i.i10.i554, align 4
+  %memberidx3.i.i.i555 = getelementptr inbounds %FloRange, ptr %1037, i64 0, i32 3
+  store i64 %1043, ptr %memberidx3.i.i.i555, align 4
+  store i64 38, ptr %1036, align 4
+  %memberidx1.i11.i556 = getelementptr inbounds %Token, ptr %1036, i64 0, i32 1
+  store ptr %1037, ptr %memberidx1.i11.i556, align 8
+  br label %common.ret
+
+ifend.i565:                                       ; preds = %if.entry75, %if.entry.i.i533
+  %1044 = tail call ptr @malloc(i32 16)
+  %1045 = tail call ptr @malloc(i32 32)
+  %1046 = load i64, ptr %memberidx.i.i529, align 4
+  %1047 = add i64 %1046, 1
+  %memberidx2.i14.i559 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 4
+  %1048 = load i64, ptr %memberidx2.i14.i559, align 4
+  %1049 = add i64 %1048, -1
+  %memberidx3.i15.i560 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 5
+  %1050 = load i64, ptr %memberidx3.i15.i560, align 4
+  store i64 %1046, ptr %1045, align 4
+  %memberidx1.i.i16.i561 = getelementptr inbounds %FloRange, ptr %1045, i64 0, i32 1
+  store i64 %1047, ptr %memberidx1.i.i16.i561, align 4
+  %memberidx2.i.i17.i562 = getelementptr inbounds %FloRange, ptr %1045, i64 0, i32 2
+  store i64 %1049, ptr %memberidx2.i.i17.i562, align 4
+  %memberidx3.i.i18.i563 = getelementptr inbounds %FloRange, ptr %1045, i64 0, i32 3
+  store i64 %1050, ptr %memberidx3.i.i18.i563, align 4
+  store i64 45, ptr %1044, align 4
+  %memberidx1.i12.i564 = getelementptr inbounds %Token, ptr %1044, i64 0, i32 1
+  store ptr %1045, ptr %memberidx1.i12.i564, align 8
+  br label %common.ret
+
+if.entry78:                                       ; preds = %ifend11
+  %memberidx.i.i566 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 3
+  %1051 = load i64, ptr %memberidx.i.i566, align 4
+  %1052 = add i64 %1051, 1
+  %memberidx1.i.i567 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 1
+  %1053 = load ptr, ptr %memberidx1.i.i567, align 8
+  %memberidx2.i.i568 = getelementptr inbounds %string, ptr %1053, i64 0, i32 2
+  %1054 = load i64, ptr %memberidx2.i.i568, align 4
+  %1055 = icmp slt i64 %1052, %1054
+  br i1 %1055, label %if.entry.i.i570, label %else.i598
+
+if.entry.i.i570:                                  ; preds = %if.entry78
+  %1056 = load ptr, ptr %1053, align 8
+  %memberidx4.i.i569 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %1056, i64 0, i32 2
+  %1057 = load ptr, ptr %memberidx4.i.i569, align 8
+  %1058 = tail call i8 %1057(ptr nonnull %1053, i64 %1052)
+  %phi.cmp811 = icmp eq i8 %1058, 61
+  %1059 = load i64, ptr %memberidx.i.i566, align 4
+  %1060 = load ptr, ptr %memberidx1.i.i567, align 8
+  %memberidx2.i.i.i576 = getelementptr inbounds %string, ptr %1060, i64 0, i32 2
+  %1061 = load i64, ptr %memberidx2.i.i.i576, align 4
+  br i1 %phi.cmp811, label %if.entry.i577, label %if.entry.i.i570.else.i598_crit_edge
+
+if.entry.i.i570.else.i598_crit_edge:              ; preds = %if.entry.i.i570
+  %.pre969 = add i64 %1059, 1
+  br label %else.i598
+
+if.entry.i577:                                    ; preds = %if.entry.i.i570
+  %.not816 = icmp slt i64 %1059, %1061
+  br i1 %.not816, label %ifend.i.i581, label %Lexer_advance.exit.i594
+
+ifend.i.i581:                                     ; preds = %if.entry.i577
+  %1062 = load ptr, ptr %1060, align 8
+  %memberidx2.i17.i579 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %1062, i64 0, i32 2
+  %1063 = load ptr, ptr %memberidx2.i17.i579, align 8
+  %1064 = add nsw i64 %1059, 1
+  store i64 %1064, ptr %memberidx.i.i566, align 4
+  %1065 = tail call i8 %1063(ptr nonnull %1060, i64 %1064)
+  store i8 %1065, ptr %0, align 1
+  %1066 = icmp eq i8 %1065, 10
+  %memberidx9.i.i582 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 4
+  br i1 %1066, label %if.entry6.i.i584, label %Lexer_advance.exit.i594.sink.split
+
+if.entry6.i.i584:                                 ; preds = %ifend.i.i581
+  store i64 0, ptr %memberidx9.i.i582, align 4
+  %memberidx10.i.i583 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 5
+  br label %Lexer_advance.exit.i594.sink.split
+
+Lexer_advance.exit.i594.sink.split:               ; preds = %ifend.i.i581, %if.entry6.i.i584
+  %memberidx9.i.i582.sink1019 = phi ptr [ %memberidx10.i.i583, %if.entry6.i.i584 ], [ %memberidx9.i.i582, %ifend.i.i581 ]
+  %1067 = load i64, ptr %memberidx9.i.i582.sink1019, align 4
+  %1068 = add i64 %1067, 1
+  store i64 %1068, ptr %memberidx9.i.i582.sink1019, align 4
+  br label %Lexer_advance.exit.i594
+
+Lexer_advance.exit.i594:                          ; preds = %Lexer_advance.exit.i594.sink.split, %if.entry.i577
+  %1069 = tail call ptr @malloc(i32 16)
+  %1070 = tail call ptr @malloc(i32 32)
+  %1071 = load i64, ptr %memberidx.i.i566, align 4
+  %1072 = add i64 %1071, -1
+  %1073 = add i64 %1071, 1
+  %memberidx2.i19.i588 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 4
+  %1074 = load i64, ptr %memberidx2.i19.i588, align 4
+  %1075 = add i64 %1074, -2
+  %memberidx3.i20.i589 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 5
+  %1076 = load i64, ptr %memberidx3.i20.i589, align 4
+  store i64 %1072, ptr %1070, align 4
+  %memberidx1.i.i21.i590 = getelementptr inbounds %FloRange, ptr %1070, i64 0, i32 1
+  store i64 %1073, ptr %memberidx1.i.i21.i590, align 4
+  %memberidx2.i.i22.i591 = getelementptr inbounds %FloRange, ptr %1070, i64 0, i32 2
+  store i64 %1075, ptr %memberidx2.i.i22.i591, align 4
+  %memberidx3.i.i.i592 = getelementptr inbounds %FloRange, ptr %1070, i64 0, i32 3
+  store i64 %1076, ptr %memberidx3.i.i.i592, align 4
+  store i64 42, ptr %1069, align 4
+  %memberidx1.i23.i593 = getelementptr inbounds %Token, ptr %1069, i64 0, i32 1
+  store ptr %1070, ptr %memberidx1.i23.i593, align 8
+  br label %common.ret
+
+else.i598:                                        ; preds = %if.entry.i.i570.else.i598_crit_edge, %if.entry78
+  %.pre-phi970 = phi i64 [ %.pre969, %if.entry.i.i570.else.i598_crit_edge ], [ %1052, %if.entry78 ]
+  %1077 = phi i64 [ %1061, %if.entry.i.i570.else.i598_crit_edge ], [ %1054, %if.entry78 ]
+  %1078 = phi ptr [ %1060, %if.entry.i.i570.else.i598_crit_edge ], [ %1053, %if.entry78 ]
+  %1079 = icmp slt i64 %.pre-phi970, %1077
+  br i1 %1079, label %if.entry.i36.i600, label %ifend3.i618
+
+if.entry.i36.i600:                                ; preds = %else.i598
+  %1080 = load ptr, ptr %1078, align 8
+  %memberidx4.i35.i599 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %1080, i64 0, i32 2
+  %1081 = load ptr, ptr %memberidx4.i35.i599, align 8
+  %1082 = tail call i8 %1081(ptr nonnull %1078, i64 %.pre-phi970)
+  %phi.cmp812 = icmp eq i8 %1082, 62
+  br i1 %phi.cmp812, label %if.entry1.i606, label %ifend3.i618
+
+if.entry1.i606:                                   ; preds = %if.entry.i36.i600
+  %1083 = load i64, ptr %memberidx.i.i566, align 4
+  %1084 = load ptr, ptr %memberidx1.i.i567, align 8
+  %memberidx2.i.i40.i605 = getelementptr inbounds %string, ptr %1084, i64 0, i32 2
+  %1085 = load i64, ptr %memberidx2.i.i40.i605, align 4
+  %.not813 = icmp slt i64 %1083, %1085
+  br i1 %.not813, label %ifend.i44.i610, label %Lexer_advance.exit50.i617
+
+ifend.i44.i610:                                   ; preds = %if.entry1.i606
+  %1086 = load ptr, ptr %1084, align 8
+  %memberidx2.i42.i608 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %1086, i64 0, i32 2
+  %1087 = load ptr, ptr %memberidx2.i42.i608, align 8
+  %1088 = add nsw i64 %1083, 1
+  store i64 %1088, ptr %memberidx.i.i566, align 4
+  %1089 = tail call i8 %1087(ptr nonnull %1084, i64 %1088)
+  store i8 %1089, ptr %0, align 1
+  %1090 = icmp eq i8 %1089, 10
+  %memberidx9.i45.i611 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 4
+  br i1 %1090, label %if.entry6.i47.i613, label %Lexer_advance.exit50.i617.sink.split
+
+if.entry6.i47.i613:                               ; preds = %ifend.i44.i610
+  store i64 0, ptr %memberidx9.i45.i611, align 4
+  %memberidx10.i46.i612 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 5
+  br label %Lexer_advance.exit50.i617.sink.split
+
+Lexer_advance.exit50.i617.sink.split:             ; preds = %ifend.i44.i610, %if.entry6.i47.i613
+  %memberidx9.i45.i611.sink1021 = phi ptr [ %memberidx10.i46.i612, %if.entry6.i47.i613 ], [ %memberidx9.i45.i611, %ifend.i44.i610 ]
+  %1091 = load i64, ptr %memberidx9.i45.i611.sink1021, align 4
+  %1092 = add i64 %1091, 1
+  store i64 %1092, ptr %memberidx9.i45.i611.sink1021, align 4
+  br label %Lexer_advance.exit50.i617
+
+Lexer_advance.exit50.i617:                        ; preds = %Lexer_advance.exit50.i617.sink.split, %if.entry1.i606
+  %1093 = load i64, ptr %memberidx.i.i566, align 4
   %1094 = add i64 %1093, 1
-  %1095 = load ptr, ptr %memberidx1.i.i630, align 8
+  %1095 = load ptr, ptr %memberidx1.i.i567, align 8
   %memberidx2.i53.i = getelementptr inbounds %string, ptr %1095, i64 0, i32 2
   %1096 = load i64, ptr %memberidx2.i53.i, align 4
   %1097 = icmp slt i64 %1094, %1096
-  br i1 %1097, label %if.entry.i56.i, label %ifend6.i
+  br i1 %1097, label %if.entry.i56.i, label %ifend6.i642
 
-if.entry.i56.i:                                   ; preds = %Lexer_advance.exit50.i
+if.entry.i56.i:                                   ; preds = %Lexer_advance.exit50.i617
   %1098 = load ptr, ptr %1095, align 8
   %memberidx4.i55.i = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %1098, i64 0, i32 2
   %1099 = load ptr, ptr %memberidx4.i55.i, align 8
   %1100 = tail call i8 %1099(ptr nonnull %1095, i64 %1094)
-  %phi.cmp834 = icmp eq i8 %1100, 61
-  br i1 %phi.cmp834, label %if.entry4.i656, label %ifend6.i
+  %phi.cmp814 = icmp eq i8 %1100, 61
+  br i1 %phi.cmp814, label %if.entry4.i622, label %ifend6.i642
 
-ifend3.i655:                                      ; preds = %else.i653, %if.entry.i36.i
+ifend3.i618:                                      ; preds = %else.i598, %if.entry.i36.i600
   %1101 = tail call ptr @malloc(i32 16)
   %1102 = tail call ptr @malloc(i32 32)
-  %1103 = load i64, ptr %memberidx.i.i629, align 4
+  %1103 = load i64, ptr %memberidx.i.i566, align 4
   %1104 = add i64 %1103, 1
   %memberidx2.i59.i = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 4
   %1105 = load i64, ptr %memberidx2.i59.i, align 4
@@ -7896,46 +7896,46 @@ ifend3.i655:                                      ; preds = %else.i653, %if.entr
   store ptr %1102, ptr %memberidx1.i64.i, align 8
   br label %common.ret
 
-if.entry4.i656:                                   ; preds = %if.entry.i56.i
-  %1108 = load i64, ptr %memberidx.i.i629, align 4
-  %1109 = load ptr, ptr %memberidx1.i.i630, align 8
-  %memberidx2.i.i74.i = getelementptr inbounds %string, ptr %1109, i64 0, i32 2
-  %1110 = load i64, ptr %memberidx2.i.i74.i, align 4
-  %.not835 = icmp slt i64 %1108, %1110
-  br i1 %.not835, label %ifend.i78.i, label %Lexer_advance.exit84.i
+if.entry4.i622:                                   ; preds = %if.entry.i56.i
+  %1108 = load i64, ptr %memberidx.i.i566, align 4
+  %1109 = load ptr, ptr %memberidx1.i.i567, align 8
+  %memberidx2.i.i74.i621 = getelementptr inbounds %string, ptr %1109, i64 0, i32 2
+  %1110 = load i64, ptr %memberidx2.i.i74.i621, align 4
+  %.not815 = icmp slt i64 %1108, %1110
+  br i1 %.not815, label %ifend.i78.i626, label %Lexer_advance.exit84.i634
 
-ifend.i78.i:                                      ; preds = %if.entry4.i656
+ifend.i78.i626:                                   ; preds = %if.entry4.i622
   %1111 = load ptr, ptr %1109, align 8
-  %memberidx2.i76.i = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %1111, i64 0, i32 2
-  %1112 = load ptr, ptr %memberidx2.i76.i, align 8
+  %memberidx2.i76.i624 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %1111, i64 0, i32 2
+  %1112 = load ptr, ptr %memberidx2.i76.i624, align 8
   %1113 = add nsw i64 %1108, 1
-  store i64 %1113, ptr %memberidx.i.i629, align 4
+  store i64 %1113, ptr %memberidx.i.i566, align 4
   %1114 = tail call i8 %1112(ptr nonnull %1109, i64 %1113)
   store i8 %1114, ptr %0, align 1
   %1115 = icmp eq i8 %1114, 10
-  %memberidx9.i79.i = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 4
-  br i1 %1115, label %if.entry6.i81.i, label %Lexer_advance.exit84.i.sink.split
+  %memberidx9.i79.i627 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 4
+  br i1 %1115, label %if.entry6.i81.i629, label %Lexer_advance.exit84.i634.sink.split
 
-if.entry6.i81.i:                                  ; preds = %ifend.i78.i
-  store i64 0, ptr %memberidx9.i79.i, align 4
-  %memberidx10.i80.i = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 5
-  br label %Lexer_advance.exit84.i.sink.split
+if.entry6.i81.i629:                               ; preds = %ifend.i78.i626
+  store i64 0, ptr %memberidx9.i79.i627, align 4
+  %memberidx10.i80.i628 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 5
+  br label %Lexer_advance.exit84.i634.sink.split
 
-Lexer_advance.exit84.i.sink.split:                ; preds = %ifend.i78.i, %if.entry6.i81.i
-  %memberidx9.i79.i.sink1043 = phi ptr [ %memberidx10.i80.i, %if.entry6.i81.i ], [ %memberidx9.i79.i, %ifend.i78.i ]
-  %1116 = load i64, ptr %memberidx9.i79.i.sink1043, align 4
+Lexer_advance.exit84.i634.sink.split:             ; preds = %ifend.i78.i626, %if.entry6.i81.i629
+  %memberidx9.i79.i627.sink1023 = phi ptr [ %memberidx10.i80.i628, %if.entry6.i81.i629 ], [ %memberidx9.i79.i627, %ifend.i78.i626 ]
+  %1116 = load i64, ptr %memberidx9.i79.i627.sink1023, align 4
   %1117 = add i64 %1116, 1
-  store i64 %1117, ptr %memberidx9.i79.i.sink1043, align 4
-  br label %Lexer_advance.exit84.i
+  store i64 %1117, ptr %memberidx9.i79.i627.sink1023, align 4
+  br label %Lexer_advance.exit84.i634
 
-Lexer_advance.exit84.i:                           ; preds = %Lexer_advance.exit84.i.sink.split, %if.entry4.i656
+Lexer_advance.exit84.i634:                        ; preds = %Lexer_advance.exit84.i634.sink.split, %if.entry4.i622
   %1118 = tail call ptr @malloc(i32 16)
   %1119 = tail call ptr @malloc(i32 32)
-  %1120 = load i64, ptr %memberidx.i.i629, align 4
+  %1120 = load i64, ptr %memberidx.i.i566, align 4
   %1121 = add i64 %1120, -2
   %1122 = add i64 %1120, 1
-  %memberidx2.i67.i = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 4
-  %1123 = load i64, ptr %memberidx2.i67.i, align 4
+  %memberidx2.i67.i632 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 4
+  %1123 = load i64, ptr %memberidx2.i67.i632, align 4
   %1124 = add i64 %1123, -3
   %memberidx3.i68.i = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 5
   %1125 = load i64, ptr %memberidx3.i68.i, align 4
@@ -7947,357 +7947,357 @@ Lexer_advance.exit84.i:                           ; preds = %Lexer_advance.exit8
   %memberidx3.i.i71.i = getelementptr inbounds %FloRange, ptr %1119, i64 0, i32 3
   store i64 %1125, ptr %memberidx3.i.i71.i, align 4
   store i64 19, ptr %1118, align 4
-  %memberidx1.i65.i657 = getelementptr inbounds %Token, ptr %1118, i64 0, i32 1
-  store ptr %1119, ptr %memberidx1.i65.i657, align 8
+  %memberidx1.i65.i633 = getelementptr inbounds %Token, ptr %1118, i64 0, i32 1
+  store ptr %1119, ptr %memberidx1.i65.i633, align 8
   br label %common.ret
 
-ifend6.i:                                         ; preds = %Lexer_advance.exit50.i, %if.entry.i56.i
+ifend6.i642:                                      ; preds = %Lexer_advance.exit50.i617, %if.entry.i56.i
   %1126 = tail call ptr @malloc(i32 16)
   %1127 = tail call ptr @malloc(i32 32)
-  %1128 = load i64, ptr %memberidx.i.i629, align 4
+  %1128 = load i64, ptr %memberidx.i.i566, align 4
   %1129 = add i64 %1128, -1
   %1130 = add i64 %1128, 1
-  %memberidx2.i26.i659 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 4
-  %1131 = load i64, ptr %memberidx2.i26.i659, align 4
+  %memberidx2.i26.i636 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 4
+  %1131 = load i64, ptr %memberidx2.i26.i636, align 4
   %1132 = add i64 %1131, -2
-  %memberidx3.i27.i660 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 5
-  %1133 = load i64, ptr %memberidx3.i27.i660, align 4
+  %memberidx3.i27.i637 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 5
+  %1133 = load i64, ptr %memberidx3.i27.i637, align 4
   store i64 %1129, ptr %1127, align 4
-  %memberidx1.i.i28.i661 = getelementptr inbounds %FloRange, ptr %1127, i64 0, i32 1
-  store i64 %1130, ptr %memberidx1.i.i28.i661, align 4
-  %memberidx2.i.i29.i662 = getelementptr inbounds %FloRange, ptr %1127, i64 0, i32 2
-  store i64 %1132, ptr %memberidx2.i.i29.i662, align 4
-  %memberidx3.i.i30.i = getelementptr inbounds %FloRange, ptr %1127, i64 0, i32 3
-  store i64 %1133, ptr %memberidx3.i.i30.i, align 4
+  %memberidx1.i.i28.i638 = getelementptr inbounds %FloRange, ptr %1127, i64 0, i32 1
+  store i64 %1130, ptr %memberidx1.i.i28.i638, align 4
+  %memberidx2.i.i29.i639 = getelementptr inbounds %FloRange, ptr %1127, i64 0, i32 2
+  store i64 %1132, ptr %memberidx2.i.i29.i639, align 4
+  %memberidx3.i.i30.i640 = getelementptr inbounds %FloRange, ptr %1127, i64 0, i32 3
+  store i64 %1133, ptr %memberidx3.i.i30.i640, align 4
   store i64 47, ptr %1126, align 4
-  %memberidx1.i24.i = getelementptr inbounds %Token, ptr %1126, i64 0, i32 1
-  store ptr %1127, ptr %memberidx1.i24.i, align 8
+  %memberidx1.i24.i641 = getelementptr inbounds %Token, ptr %1126, i64 0, i32 1
+  store ptr %1127, ptr %memberidx1.i24.i641, align 8
   br label %common.ret
 
 if.entry81:                                       ; preds = %ifend11
-  %memberidx.i.i663 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 3
-  %1134 = load i64, ptr %memberidx.i.i663, align 4
+  %memberidx.i.i643 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 3
+  %1134 = load i64, ptr %memberidx.i.i643, align 4
   %1135 = add i64 %1134, 1
-  %memberidx1.i.i664 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 1
-  %1136 = load ptr, ptr %memberidx1.i.i664, align 8
-  %memberidx2.i.i665 = getelementptr inbounds %string, ptr %1136, i64 0, i32 2
-  %1137 = load i64, ptr %memberidx2.i.i665, align 4
+  %memberidx1.i.i644 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 1
+  %1136 = load ptr, ptr %memberidx1.i.i644, align 8
+  %memberidx2.i.i645 = getelementptr inbounds %string, ptr %1136, i64 0, i32 2
+  %1137 = load i64, ptr %memberidx2.i.i645, align 4
   %1138 = icmp slt i64 %1135, %1137
-  br i1 %1138, label %if.entry.i.i667, label %else.i695
+  br i1 %1138, label %if.entry.i.i647, label %else.i675
 
-if.entry.i.i667:                                  ; preds = %if.entry81
+if.entry.i.i647:                                  ; preds = %if.entry81
   %1139 = load ptr, ptr %1136, align 8
-  %memberidx4.i.i666 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %1139, i64 0, i32 2
-  %1140 = load ptr, ptr %memberidx4.i.i666, align 8
+  %memberidx4.i.i646 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %1139, i64 0, i32 2
+  %1140 = load ptr, ptr %memberidx4.i.i646, align 8
   %1141 = tail call i8 %1140(ptr nonnull %1136, i64 %1135)
-  %phi.cmp825 = icmp eq i8 %1141, 61
-  %1142 = load i64, ptr %memberidx.i.i663, align 4
-  %1143 = load ptr, ptr %memberidx1.i.i664, align 8
-  %memberidx2.i.i.i673 = getelementptr inbounds %string, ptr %1143, i64 0, i32 2
-  %1144 = load i64, ptr %memberidx2.i.i.i673, align 4
-  br i1 %phi.cmp825, label %if.entry.i674, label %if.entry.i.i667.else.i695_crit_edge
+  %phi.cmp805 = icmp eq i8 %1141, 61
+  %1142 = load i64, ptr %memberidx.i.i643, align 4
+  %1143 = load ptr, ptr %memberidx1.i.i644, align 8
+  %memberidx2.i.i.i653 = getelementptr inbounds %string, ptr %1143, i64 0, i32 2
+  %1144 = load i64, ptr %memberidx2.i.i.i653, align 4
+  br i1 %phi.cmp805, label %if.entry.i654, label %if.entry.i.i647.else.i675_crit_edge
 
-if.entry.i.i667.else.i695_crit_edge:              ; preds = %if.entry.i.i667
-  %.pre991 = add i64 %1142, 1
-  br label %else.i695
+if.entry.i.i647.else.i675_crit_edge:              ; preds = %if.entry.i.i647
+  %.pre971 = add i64 %1142, 1
+  br label %else.i675
 
-if.entry.i674:                                    ; preds = %if.entry.i.i667
-  %.not830 = icmp slt i64 %1142, %1144
-  br i1 %.not830, label %ifend.i.i678, label %Lexer_advance.exit.i691
+if.entry.i654:                                    ; preds = %if.entry.i.i647
+  %.not810 = icmp slt i64 %1142, %1144
+  br i1 %.not810, label %ifend.i.i658, label %Lexer_advance.exit.i671
 
-ifend.i.i678:                                     ; preds = %if.entry.i674
+ifend.i.i658:                                     ; preds = %if.entry.i654
   %1145 = load ptr, ptr %1143, align 8
-  %memberidx2.i17.i676 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %1145, i64 0, i32 2
-  %1146 = load ptr, ptr %memberidx2.i17.i676, align 8
+  %memberidx2.i17.i656 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %1145, i64 0, i32 2
+  %1146 = load ptr, ptr %memberidx2.i17.i656, align 8
   %1147 = add nsw i64 %1142, 1
-  store i64 %1147, ptr %memberidx.i.i663, align 4
+  store i64 %1147, ptr %memberidx.i.i643, align 4
   %1148 = tail call i8 %1146(ptr nonnull %1143, i64 %1147)
   store i8 %1148, ptr %0, align 1
   %1149 = icmp eq i8 %1148, 10
-  %memberidx9.i.i679 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 4
-  br i1 %1149, label %if.entry6.i.i681, label %Lexer_advance.exit.i691.sink.split
+  %memberidx9.i.i659 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 4
+  br i1 %1149, label %if.entry6.i.i661, label %Lexer_advance.exit.i671.sink.split
 
-if.entry6.i.i681:                                 ; preds = %ifend.i.i678
-  store i64 0, ptr %memberidx9.i.i679, align 4
-  %memberidx10.i.i680 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 5
-  br label %Lexer_advance.exit.i691.sink.split
+if.entry6.i.i661:                                 ; preds = %ifend.i.i658
+  store i64 0, ptr %memberidx9.i.i659, align 4
+  %memberidx10.i.i660 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 5
+  br label %Lexer_advance.exit.i671.sink.split
 
-Lexer_advance.exit.i691.sink.split:               ; preds = %ifend.i.i678, %if.entry6.i.i681
-  %memberidx9.i.i679.sink1045 = phi ptr [ %memberidx10.i.i680, %if.entry6.i.i681 ], [ %memberidx9.i.i679, %ifend.i.i678 ]
-  %1150 = load i64, ptr %memberidx9.i.i679.sink1045, align 4
+Lexer_advance.exit.i671.sink.split:               ; preds = %ifend.i.i658, %if.entry6.i.i661
+  %memberidx9.i.i659.sink1025 = phi ptr [ %memberidx10.i.i660, %if.entry6.i.i661 ], [ %memberidx9.i.i659, %ifend.i.i658 ]
+  %1150 = load i64, ptr %memberidx9.i.i659.sink1025, align 4
   %1151 = add i64 %1150, 1
-  store i64 %1151, ptr %memberidx9.i.i679.sink1045, align 4
-  br label %Lexer_advance.exit.i691
+  store i64 %1151, ptr %memberidx9.i.i659.sink1025, align 4
+  br label %Lexer_advance.exit.i671
 
-Lexer_advance.exit.i691:                          ; preds = %Lexer_advance.exit.i691.sink.split, %if.entry.i674
+Lexer_advance.exit.i671:                          ; preds = %Lexer_advance.exit.i671.sink.split, %if.entry.i654
   %1152 = tail call ptr @malloc(i32 16)
   %1153 = tail call ptr @malloc(i32 32)
-  %1154 = load i64, ptr %memberidx.i.i663, align 4
+  %1154 = load i64, ptr %memberidx.i.i643, align 4
   %1155 = add i64 %1154, -1
   %1156 = add i64 %1154, 1
-  %memberidx2.i19.i685 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 4
-  %1157 = load i64, ptr %memberidx2.i19.i685, align 4
+  %memberidx2.i19.i665 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 4
+  %1157 = load i64, ptr %memberidx2.i19.i665, align 4
   %1158 = add i64 %1157, -2
-  %memberidx3.i20.i686 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 5
-  %1159 = load i64, ptr %memberidx3.i20.i686, align 4
+  %memberidx3.i20.i666 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 5
+  %1159 = load i64, ptr %memberidx3.i20.i666, align 4
   store i64 %1155, ptr %1153, align 4
-  %memberidx1.i.i21.i687 = getelementptr inbounds %FloRange, ptr %1153, i64 0, i32 1
-  store i64 %1156, ptr %memberidx1.i.i21.i687, align 4
-  %memberidx2.i.i22.i688 = getelementptr inbounds %FloRange, ptr %1153, i64 0, i32 2
-  store i64 %1158, ptr %memberidx2.i.i22.i688, align 4
-  %memberidx3.i.i.i689 = getelementptr inbounds %FloRange, ptr %1153, i64 0, i32 3
-  store i64 %1159, ptr %memberidx3.i.i.i689, align 4
+  %memberidx1.i.i21.i667 = getelementptr inbounds %FloRange, ptr %1153, i64 0, i32 1
+  store i64 %1156, ptr %memberidx1.i.i21.i667, align 4
+  %memberidx2.i.i22.i668 = getelementptr inbounds %FloRange, ptr %1153, i64 0, i32 2
+  store i64 %1158, ptr %memberidx2.i.i22.i668, align 4
+  %memberidx3.i.i.i669 = getelementptr inbounds %FloRange, ptr %1153, i64 0, i32 3
+  store i64 %1159, ptr %memberidx3.i.i.i669, align 4
   store i64 41, ptr %1152, align 4
-  %memberidx1.i23.i690 = getelementptr inbounds %Token, ptr %1152, i64 0, i32 1
-  store ptr %1153, ptr %memberidx1.i23.i690, align 8
+  %memberidx1.i23.i670 = getelementptr inbounds %Token, ptr %1152, i64 0, i32 1
+  store ptr %1153, ptr %memberidx1.i23.i670, align 8
   br label %common.ret
 
-else.i695:                                        ; preds = %if.entry.i.i667.else.i695_crit_edge, %if.entry81
-  %.pre-phi992 = phi i64 [ %.pre991, %if.entry.i.i667.else.i695_crit_edge ], [ %1135, %if.entry81 ]
-  %1160 = phi i64 [ %1144, %if.entry.i.i667.else.i695_crit_edge ], [ %1137, %if.entry81 ]
-  %1161 = phi ptr [ %1143, %if.entry.i.i667.else.i695_crit_edge ], [ %1136, %if.entry81 ]
-  %1162 = icmp slt i64 %.pre-phi992, %1160
-  br i1 %1162, label %if.entry.i36.i697, label %ifend3.i728
+else.i675:                                        ; preds = %if.entry.i.i647.else.i675_crit_edge, %if.entry81
+  %.pre-phi972 = phi i64 [ %.pre971, %if.entry.i.i647.else.i675_crit_edge ], [ %1135, %if.entry81 ]
+  %1160 = phi i64 [ %1144, %if.entry.i.i647.else.i675_crit_edge ], [ %1137, %if.entry81 ]
+  %1161 = phi ptr [ %1143, %if.entry.i.i647.else.i675_crit_edge ], [ %1136, %if.entry81 ]
+  %1162 = icmp slt i64 %.pre-phi972, %1160
+  br i1 %1162, label %if.entry.i36.i677, label %ifend3.i708
 
-if.entry.i36.i697:                                ; preds = %else.i695
+if.entry.i36.i677:                                ; preds = %else.i675
   %1163 = load ptr, ptr %1161, align 8
-  %memberidx4.i35.i696 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %1163, i64 0, i32 2
-  %1164 = load ptr, ptr %memberidx4.i35.i696, align 8
-  %1165 = tail call i8 %1164(ptr nonnull %1161, i64 %.pre-phi992)
-  %phi.cmp826 = icmp eq i8 %1165, 60
-  br i1 %phi.cmp826, label %if.entry1.i703, label %ifend3.i728
+  %memberidx4.i35.i676 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %1163, i64 0, i32 2
+  %1164 = load ptr, ptr %memberidx4.i35.i676, align 8
+  %1165 = tail call i8 %1164(ptr nonnull %1161, i64 %.pre-phi972)
+  %phi.cmp806 = icmp eq i8 %1165, 60
+  br i1 %phi.cmp806, label %if.entry1.i683, label %ifend3.i708
 
-if.entry1.i703:                                   ; preds = %if.entry.i36.i697
-  %1166 = load i64, ptr %memberidx.i.i663, align 4
-  %1167 = load ptr, ptr %memberidx1.i.i664, align 8
-  %memberidx2.i.i40.i702 = getelementptr inbounds %string, ptr %1167, i64 0, i32 2
-  %1168 = load i64, ptr %memberidx2.i.i40.i702, align 4
-  %.not827 = icmp slt i64 %1166, %1168
-  br i1 %.not827, label %ifend.i44.i707, label %Lexer_advance.exit50.i716
+if.entry1.i683:                                   ; preds = %if.entry.i36.i677
+  %1166 = load i64, ptr %memberidx.i.i643, align 4
+  %1167 = load ptr, ptr %memberidx1.i.i644, align 8
+  %memberidx2.i.i40.i682 = getelementptr inbounds %string, ptr %1167, i64 0, i32 2
+  %1168 = load i64, ptr %memberidx2.i.i40.i682, align 4
+  %.not807 = icmp slt i64 %1166, %1168
+  br i1 %.not807, label %ifend.i44.i687, label %Lexer_advance.exit50.i696
 
-ifend.i44.i707:                                   ; preds = %if.entry1.i703
+ifend.i44.i687:                                   ; preds = %if.entry1.i683
   %1169 = load ptr, ptr %1167, align 8
-  %memberidx2.i42.i705 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %1169, i64 0, i32 2
-  %1170 = load ptr, ptr %memberidx2.i42.i705, align 8
+  %memberidx2.i42.i685 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %1169, i64 0, i32 2
+  %1170 = load ptr, ptr %memberidx2.i42.i685, align 8
   %1171 = add nsw i64 %1166, 1
-  store i64 %1171, ptr %memberidx.i.i663, align 4
+  store i64 %1171, ptr %memberidx.i.i643, align 4
   %1172 = tail call i8 %1170(ptr nonnull %1167, i64 %1171)
   store i8 %1172, ptr %0, align 1
   %1173 = icmp eq i8 %1172, 10
-  %memberidx9.i45.i708 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 4
-  br i1 %1173, label %if.entry6.i47.i710, label %Lexer_advance.exit50.i716.sink.split
+  %memberidx9.i45.i688 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 4
+  br i1 %1173, label %if.entry6.i47.i690, label %Lexer_advance.exit50.i696.sink.split
 
-if.entry6.i47.i710:                               ; preds = %ifend.i44.i707
-  store i64 0, ptr %memberidx9.i45.i708, align 4
-  %memberidx10.i46.i709 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 5
-  br label %Lexer_advance.exit50.i716.sink.split
+if.entry6.i47.i690:                               ; preds = %ifend.i44.i687
+  store i64 0, ptr %memberidx9.i45.i688, align 4
+  %memberidx10.i46.i689 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 5
+  br label %Lexer_advance.exit50.i696.sink.split
 
-Lexer_advance.exit50.i716.sink.split:             ; preds = %ifend.i44.i707, %if.entry6.i47.i710
-  %memberidx9.i45.i708.sink1047 = phi ptr [ %memberidx10.i46.i709, %if.entry6.i47.i710 ], [ %memberidx9.i45.i708, %ifend.i44.i707 ]
-  %1174 = load i64, ptr %memberidx9.i45.i708.sink1047, align 4
+Lexer_advance.exit50.i696.sink.split:             ; preds = %ifend.i44.i687, %if.entry6.i47.i690
+  %memberidx9.i45.i688.sink1027 = phi ptr [ %memberidx10.i46.i689, %if.entry6.i47.i690 ], [ %memberidx9.i45.i688, %ifend.i44.i687 ]
+  %1174 = load i64, ptr %memberidx9.i45.i688.sink1027, align 4
   %1175 = add i64 %1174, 1
-  store i64 %1175, ptr %memberidx9.i45.i708.sink1047, align 4
-  br label %Lexer_advance.exit50.i716
+  store i64 %1175, ptr %memberidx9.i45.i688.sink1027, align 4
+  br label %Lexer_advance.exit50.i696
 
-Lexer_advance.exit50.i716:                        ; preds = %Lexer_advance.exit50.i716.sink.split, %if.entry1.i703
-  %1176 = load i64, ptr %memberidx.i.i663, align 4
+Lexer_advance.exit50.i696:                        ; preds = %Lexer_advance.exit50.i696.sink.split, %if.entry1.i683
+  %1176 = load i64, ptr %memberidx.i.i643, align 4
   %1177 = add i64 %1176, 1
-  %1178 = load ptr, ptr %memberidx1.i.i664, align 8
-  %memberidx2.i53.i715 = getelementptr inbounds %string, ptr %1178, i64 0, i32 2
-  %1179 = load i64, ptr %memberidx2.i53.i715, align 4
+  %1178 = load ptr, ptr %memberidx1.i.i644, align 8
+  %memberidx2.i53.i695 = getelementptr inbounds %string, ptr %1178, i64 0, i32 2
+  %1179 = load i64, ptr %memberidx2.i53.i695, align 4
   %1180 = icmp slt i64 %1177, %1179
-  br i1 %1180, label %if.entry.i56.i718, label %ifend6.i757
+  br i1 %1180, label %if.entry.i56.i698, label %ifend6.i737
 
-if.entry.i56.i718:                                ; preds = %Lexer_advance.exit50.i716
+if.entry.i56.i698:                                ; preds = %Lexer_advance.exit50.i696
   %1181 = load ptr, ptr %1178, align 8
-  %memberidx4.i55.i717 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %1181, i64 0, i32 2
-  %1182 = load ptr, ptr %memberidx4.i55.i717, align 8
+  %memberidx4.i55.i697 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %1181, i64 0, i32 2
+  %1182 = load ptr, ptr %memberidx4.i55.i697, align 8
   %1183 = tail call i8 %1182(ptr nonnull %1178, i64 %1177)
-  %phi.cmp828 = icmp eq i8 %1183, 61
-  br i1 %phi.cmp828, label %if.entry4.i732, label %ifend6.i757
+  %phi.cmp808 = icmp eq i8 %1183, 61
+  br i1 %phi.cmp808, label %if.entry4.i712, label %ifend6.i737
 
-ifend3.i728:                                      ; preds = %else.i695, %if.entry.i36.i697
+ifend3.i708:                                      ; preds = %else.i675, %if.entry.i36.i677
   %1184 = tail call ptr @malloc(i32 16)
   %1185 = tail call ptr @malloc(i32 32)
-  %1186 = load i64, ptr %memberidx.i.i663, align 4
+  %1186 = load i64, ptr %memberidx.i.i643, align 4
   %1187 = add i64 %1186, 1
-  %memberidx2.i59.i722 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 4
-  %1188 = load i64, ptr %memberidx2.i59.i722, align 4
+  %memberidx2.i59.i702 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 4
+  %1188 = load i64, ptr %memberidx2.i59.i702, align 4
   %1189 = add i64 %1188, -1
-  %memberidx3.i60.i723 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 5
-  %1190 = load i64, ptr %memberidx3.i60.i723, align 4
+  %memberidx3.i60.i703 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 5
+  %1190 = load i64, ptr %memberidx3.i60.i703, align 4
   store i64 %1186, ptr %1185, align 4
-  %memberidx1.i.i61.i724 = getelementptr inbounds %FloRange, ptr %1185, i64 0, i32 1
-  store i64 %1187, ptr %memberidx1.i.i61.i724, align 4
-  %memberidx2.i.i62.i725 = getelementptr inbounds %FloRange, ptr %1185, i64 0, i32 2
-  store i64 %1189, ptr %memberidx2.i.i62.i725, align 4
-  %memberidx3.i.i63.i726 = getelementptr inbounds %FloRange, ptr %1185, i64 0, i32 3
-  store i64 %1190, ptr %memberidx3.i.i63.i726, align 4
+  %memberidx1.i.i61.i704 = getelementptr inbounds %FloRange, ptr %1185, i64 0, i32 1
+  store i64 %1187, ptr %memberidx1.i.i61.i704, align 4
+  %memberidx2.i.i62.i705 = getelementptr inbounds %FloRange, ptr %1185, i64 0, i32 2
+  store i64 %1189, ptr %memberidx2.i.i62.i705, align 4
+  %memberidx3.i.i63.i706 = getelementptr inbounds %FloRange, ptr %1185, i64 0, i32 3
+  store i64 %1190, ptr %memberidx3.i.i63.i706, align 4
   store i64 40, ptr %1184, align 4
-  %memberidx1.i64.i727 = getelementptr inbounds %Token, ptr %1184, i64 0, i32 1
-  store ptr %1185, ptr %memberidx1.i64.i727, align 8
+  %memberidx1.i64.i707 = getelementptr inbounds %Token, ptr %1184, i64 0, i32 1
+  store ptr %1185, ptr %memberidx1.i64.i707, align 8
   br label %common.ret
 
-if.entry4.i732:                                   ; preds = %if.entry.i56.i718
-  %1191 = load i64, ptr %memberidx.i.i663, align 4
-  %1192 = load ptr, ptr %memberidx1.i.i664, align 8
-  %memberidx2.i.i74.i731 = getelementptr inbounds %string, ptr %1192, i64 0, i32 2
-  %1193 = load i64, ptr %memberidx2.i.i74.i731, align 4
-  %.not829 = icmp slt i64 %1191, %1193
-  br i1 %.not829, label %ifend.i78.i736, label %Lexer_advance.exit84.i749
+if.entry4.i712:                                   ; preds = %if.entry.i56.i698
+  %1191 = load i64, ptr %memberidx.i.i643, align 4
+  %1192 = load ptr, ptr %memberidx1.i.i644, align 8
+  %memberidx2.i.i74.i711 = getelementptr inbounds %string, ptr %1192, i64 0, i32 2
+  %1193 = load i64, ptr %memberidx2.i.i74.i711, align 4
+  %.not809 = icmp slt i64 %1191, %1193
+  br i1 %.not809, label %ifend.i78.i716, label %Lexer_advance.exit84.i729
 
-ifend.i78.i736:                                   ; preds = %if.entry4.i732
+ifend.i78.i716:                                   ; preds = %if.entry4.i712
   %1194 = load ptr, ptr %1192, align 8
-  %memberidx2.i76.i734 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %1194, i64 0, i32 2
-  %1195 = load ptr, ptr %memberidx2.i76.i734, align 8
+  %memberidx2.i76.i714 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %1194, i64 0, i32 2
+  %1195 = load ptr, ptr %memberidx2.i76.i714, align 8
   %1196 = add nsw i64 %1191, 1
-  store i64 %1196, ptr %memberidx.i.i663, align 4
+  store i64 %1196, ptr %memberidx.i.i643, align 4
   %1197 = tail call i8 %1195(ptr nonnull %1192, i64 %1196)
   store i8 %1197, ptr %0, align 1
   %1198 = icmp eq i8 %1197, 10
-  %memberidx9.i79.i737 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 4
-  br i1 %1198, label %if.entry6.i81.i739, label %Lexer_advance.exit84.i749.sink.split
+  %memberidx9.i79.i717 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 4
+  br i1 %1198, label %if.entry6.i81.i719, label %Lexer_advance.exit84.i729.sink.split
 
-if.entry6.i81.i739:                               ; preds = %ifend.i78.i736
-  store i64 0, ptr %memberidx9.i79.i737, align 4
-  %memberidx10.i80.i738 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 5
-  br label %Lexer_advance.exit84.i749.sink.split
+if.entry6.i81.i719:                               ; preds = %ifend.i78.i716
+  store i64 0, ptr %memberidx9.i79.i717, align 4
+  %memberidx10.i80.i718 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 5
+  br label %Lexer_advance.exit84.i729.sink.split
 
-Lexer_advance.exit84.i749.sink.split:             ; preds = %ifend.i78.i736, %if.entry6.i81.i739
-  %memberidx9.i79.i737.sink1049 = phi ptr [ %memberidx10.i80.i738, %if.entry6.i81.i739 ], [ %memberidx9.i79.i737, %ifend.i78.i736 ]
-  %1199 = load i64, ptr %memberidx9.i79.i737.sink1049, align 4
+Lexer_advance.exit84.i729.sink.split:             ; preds = %ifend.i78.i716, %if.entry6.i81.i719
+  %memberidx9.i79.i717.sink1029 = phi ptr [ %memberidx10.i80.i718, %if.entry6.i81.i719 ], [ %memberidx9.i79.i717, %ifend.i78.i716 ]
+  %1199 = load i64, ptr %memberidx9.i79.i717.sink1029, align 4
   %1200 = add i64 %1199, 1
-  store i64 %1200, ptr %memberidx9.i79.i737.sink1049, align 4
-  br label %Lexer_advance.exit84.i749
+  store i64 %1200, ptr %memberidx9.i79.i717.sink1029, align 4
+  br label %Lexer_advance.exit84.i729
 
-Lexer_advance.exit84.i749:                        ; preds = %Lexer_advance.exit84.i749.sink.split, %if.entry4.i732
+Lexer_advance.exit84.i729:                        ; preds = %Lexer_advance.exit84.i729.sink.split, %if.entry4.i712
   %1201 = tail call ptr @malloc(i32 16)
   %1202 = tail call ptr @malloc(i32 32)
-  %1203 = load i64, ptr %memberidx.i.i663, align 4
+  %1203 = load i64, ptr %memberidx.i.i643, align 4
   %1204 = add i64 %1203, -2
   %1205 = add i64 %1203, 1
-  %memberidx2.i67.i743 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 4
-  %1206 = load i64, ptr %memberidx2.i67.i743, align 4
+  %memberidx2.i67.i723 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 4
+  %1206 = load i64, ptr %memberidx2.i67.i723, align 4
   %1207 = add i64 %1206, -3
-  %memberidx3.i68.i744 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 5
-  %1208 = load i64, ptr %memberidx3.i68.i744, align 4
+  %memberidx3.i68.i724 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 5
+  %1208 = load i64, ptr %memberidx3.i68.i724, align 4
   store i64 %1204, ptr %1202, align 4
-  %memberidx1.i.i69.i745 = getelementptr inbounds %FloRange, ptr %1202, i64 0, i32 1
-  store i64 %1205, ptr %memberidx1.i.i69.i745, align 4
-  %memberidx2.i.i70.i746 = getelementptr inbounds %FloRange, ptr %1202, i64 0, i32 2
-  store i64 %1207, ptr %memberidx2.i.i70.i746, align 4
-  %memberidx3.i.i71.i747 = getelementptr inbounds %FloRange, ptr %1202, i64 0, i32 3
-  store i64 %1208, ptr %memberidx3.i.i71.i747, align 4
+  %memberidx1.i.i69.i725 = getelementptr inbounds %FloRange, ptr %1202, i64 0, i32 1
+  store i64 %1205, ptr %memberidx1.i.i69.i725, align 4
+  %memberidx2.i.i70.i726 = getelementptr inbounds %FloRange, ptr %1202, i64 0, i32 2
+  store i64 %1207, ptr %memberidx2.i.i70.i726, align 4
+  %memberidx3.i.i71.i727 = getelementptr inbounds %FloRange, ptr %1202, i64 0, i32 3
+  store i64 %1208, ptr %memberidx3.i.i71.i727, align 4
   store i64 20, ptr %1201, align 4
-  %memberidx1.i65.i748 = getelementptr inbounds %Token, ptr %1201, i64 0, i32 1
-  store ptr %1202, ptr %memberidx1.i65.i748, align 8
+  %memberidx1.i65.i728 = getelementptr inbounds %Token, ptr %1201, i64 0, i32 1
+  store ptr %1202, ptr %memberidx1.i65.i728, align 8
   br label %common.ret
 
-ifend6.i757:                                      ; preds = %Lexer_advance.exit50.i716, %if.entry.i56.i718
+ifend6.i737:                                      ; preds = %Lexer_advance.exit50.i696, %if.entry.i56.i698
   %1209 = tail call ptr @malloc(i32 16)
   %1210 = tail call ptr @malloc(i32 32)
-  %1211 = load i64, ptr %memberidx.i.i663, align 4
+  %1211 = load i64, ptr %memberidx.i.i643, align 4
   %1212 = add i64 %1211, -1
   %1213 = add i64 %1211, 1
-  %memberidx2.i26.i751 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 4
-  %1214 = load i64, ptr %memberidx2.i26.i751, align 4
+  %memberidx2.i26.i731 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 4
+  %1214 = load i64, ptr %memberidx2.i26.i731, align 4
   %1215 = add i64 %1214, -2
-  %memberidx3.i27.i752 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 5
-  %1216 = load i64, ptr %memberidx3.i27.i752, align 4
+  %memberidx3.i27.i732 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 5
+  %1216 = load i64, ptr %memberidx3.i27.i732, align 4
   store i64 %1212, ptr %1210, align 4
-  %memberidx1.i.i28.i753 = getelementptr inbounds %FloRange, ptr %1210, i64 0, i32 1
-  store i64 %1213, ptr %memberidx1.i.i28.i753, align 4
-  %memberidx2.i.i29.i754 = getelementptr inbounds %FloRange, ptr %1210, i64 0, i32 2
-  store i64 %1215, ptr %memberidx2.i.i29.i754, align 4
-  %memberidx3.i.i30.i755 = getelementptr inbounds %FloRange, ptr %1210, i64 0, i32 3
-  store i64 %1216, ptr %memberidx3.i.i30.i755, align 4
+  %memberidx1.i.i28.i733 = getelementptr inbounds %FloRange, ptr %1210, i64 0, i32 1
+  store i64 %1213, ptr %memberidx1.i.i28.i733, align 4
+  %memberidx2.i.i29.i734 = getelementptr inbounds %FloRange, ptr %1210, i64 0, i32 2
+  store i64 %1215, ptr %memberidx2.i.i29.i734, align 4
+  %memberidx3.i.i30.i735 = getelementptr inbounds %FloRange, ptr %1210, i64 0, i32 3
+  store i64 %1216, ptr %memberidx3.i.i30.i735, align 4
   store i64 46, ptr %1209, align 4
-  %memberidx1.i24.i756 = getelementptr inbounds %Token, ptr %1209, i64 0, i32 1
-  store ptr %1210, ptr %memberidx1.i24.i756, align 8
+  %memberidx1.i24.i736 = getelementptr inbounds %Token, ptr %1209, i64 0, i32 1
+  store ptr %1210, ptr %memberidx1.i24.i736, align 8
   br label %common.ret
 
 if.entry84:                                       ; preds = %ifend11
-  %memberidx.i.i758 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 3
-  %1217 = load i64, ptr %memberidx.i.i758, align 4
+  %memberidx.i.i738 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 3
+  %1217 = load i64, ptr %memberidx.i.i738, align 4
   %1218 = add i64 %1217, 1
-  %memberidx1.i.i759 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 1
-  %1219 = load ptr, ptr %memberidx1.i.i759, align 8
-  %memberidx2.i.i760 = getelementptr inbounds %string, ptr %1219, i64 0, i32 2
-  %1220 = load i64, ptr %memberidx2.i.i760, align 4
+  %memberidx1.i.i739 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 1
+  %1219 = load ptr, ptr %memberidx1.i.i739, align 8
+  %memberidx2.i.i740 = getelementptr inbounds %string, ptr %1219, i64 0, i32 2
+  %1220 = load i64, ptr %memberidx2.i.i740, align 4
   %1221 = icmp slt i64 %1218, %1220
-  br i1 %1221, label %if.entry.i.i762, label %Lexer_dot_token.exit
+  br i1 %1221, label %if.entry.i.i742, label %Lexer_dot_token.exit
 
-if.entry.i.i762:                                  ; preds = %if.entry84
+if.entry.i.i742:                                  ; preds = %if.entry84
   %1222 = load ptr, ptr %1219, align 8
-  %memberidx4.i.i761 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %1222, i64 0, i32 2
-  %1223 = load ptr, ptr %memberidx4.i.i761, align 8
+  %memberidx4.i.i741 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %1222, i64 0, i32 2
+  %1223 = load ptr, ptr %memberidx4.i.i741, align 8
   %1224 = tail call i8 %1223(ptr nonnull %1219, i64 %1218)
   %phi.cmp = icmp eq i8 %1224, 46
-  br i1 %phi.cmp, label %if.entry.i768, label %Lexer_dot_token.exit
+  br i1 %phi.cmp, label %if.entry.i748, label %Lexer_dot_token.exit
 
-if.entry.i768:                                    ; preds = %if.entry.i.i762
-  %1225 = load i64, ptr %memberidx.i.i758, align 4
-  %1226 = load ptr, ptr %memberidx1.i.i759, align 8
-  %memberidx2.i.i.i767 = getelementptr inbounds %string, ptr %1226, i64 0, i32 2
-  %1227 = load i64, ptr %memberidx2.i.i.i767, align 4
+if.entry.i748:                                    ; preds = %if.entry.i.i742
+  %1225 = load i64, ptr %memberidx.i.i738, align 4
+  %1226 = load ptr, ptr %memberidx1.i.i739, align 8
+  %memberidx2.i.i.i747 = getelementptr inbounds %string, ptr %1226, i64 0, i32 2
+  %1227 = load i64, ptr %memberidx2.i.i.i747, align 4
   %.not = icmp slt i64 %1225, %1227
-  br i1 %.not, label %ifend.i.i772, label %Lexer_advance.exit.i781
+  br i1 %.not, label %ifend.i.i752, label %Lexer_advance.exit.i761
 
-ifend.i.i772:                                     ; preds = %if.entry.i768
+ifend.i.i752:                                     ; preds = %if.entry.i748
   %1228 = load ptr, ptr %1226, align 8
-  %memberidx2.i11.i770 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %1228, i64 0, i32 2
-  %1229 = load ptr, ptr %memberidx2.i11.i770, align 8
+  %memberidx2.i11.i750 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %1228, i64 0, i32 2
+  %1229 = load ptr, ptr %memberidx2.i11.i750, align 8
   %1230 = add nsw i64 %1225, 1
-  store i64 %1230, ptr %memberidx.i.i758, align 4
+  store i64 %1230, ptr %memberidx.i.i738, align 4
   %1231 = tail call i8 %1229(ptr nonnull %1226, i64 %1230)
   store i8 %1231, ptr %0, align 1
   %1232 = icmp eq i8 %1231, 10
-  %memberidx9.i.i773 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 4
-  br i1 %1232, label %if.entry6.i.i775, label %Lexer_advance.exit.i781.sink.split
+  %memberidx9.i.i753 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 4
+  br i1 %1232, label %if.entry6.i.i755, label %Lexer_advance.exit.i761.sink.split
 
-if.entry6.i.i775:                                 ; preds = %ifend.i.i772
-  store i64 0, ptr %memberidx9.i.i773, align 4
-  %memberidx10.i.i774 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 5
-  br label %Lexer_advance.exit.i781.sink.split
+if.entry6.i.i755:                                 ; preds = %ifend.i.i752
+  store i64 0, ptr %memberidx9.i.i753, align 4
+  %memberidx10.i.i754 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 5
+  br label %Lexer_advance.exit.i761.sink.split
 
-Lexer_advance.exit.i781.sink.split:               ; preds = %ifend.i.i772, %if.entry6.i.i775
-  %memberidx9.i.i773.sink1051 = phi ptr [ %memberidx10.i.i774, %if.entry6.i.i775 ], [ %memberidx9.i.i773, %ifend.i.i772 ]
-  %1233 = load i64, ptr %memberidx9.i.i773.sink1051, align 4
+Lexer_advance.exit.i761.sink.split:               ; preds = %ifend.i.i752, %if.entry6.i.i755
+  %memberidx9.i.i753.sink1031 = phi ptr [ %memberidx10.i.i754, %if.entry6.i.i755 ], [ %memberidx9.i.i753, %ifend.i.i752 ]
+  %1233 = load i64, ptr %memberidx9.i.i753.sink1031, align 4
   %1234 = add i64 %1233, 1
-  store i64 %1234, ptr %memberidx9.i.i773.sink1051, align 4
-  br label %Lexer_advance.exit.i781
+  store i64 %1234, ptr %memberidx9.i.i753.sink1031, align 4
+  br label %Lexer_advance.exit.i761
 
-Lexer_advance.exit.i781:                          ; preds = %Lexer_advance.exit.i781.sink.split, %if.entry.i768
-  %1235 = load i64, ptr %memberidx.i.i758, align 4
+Lexer_advance.exit.i761:                          ; preds = %Lexer_advance.exit.i761.sink.split, %if.entry.i748
+  %1235 = load i64, ptr %memberidx.i.i738, align 4
   %1236 = add i64 %1235, 1
-  %1237 = load ptr, ptr %memberidx1.i.i759, align 8
-  %memberidx2.i14.i780 = getelementptr inbounds %string, ptr %1237, i64 0, i32 2
-  %1238 = load i64, ptr %memberidx2.i14.i780, align 4
+  %1237 = load ptr, ptr %memberidx1.i.i739, align 8
+  %memberidx2.i14.i760 = getelementptr inbounds %string, ptr %1237, i64 0, i32 2
+  %1238 = load i64, ptr %memberidx2.i14.i760, align 4
   %1239 = icmp slt i64 %1236, %1238
   br i1 %1239, label %if.entry.i17.i, label %Lexer_dot_token.exit
 
-if.entry.i17.i:                                   ; preds = %Lexer_advance.exit.i781
+if.entry.i17.i:                                   ; preds = %Lexer_advance.exit.i761
   %1240 = load ptr, ptr %1237, align 8
   %memberidx4.i16.i = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %1240, i64 0, i32 2
   %1241 = load ptr, ptr %memberidx4.i16.i, align 8
   %1242 = tail call i8 %1241(ptr nonnull %1237, i64 %1236)
-  %phi.cmp823 = icmp eq i8 %1242, 46
-  br i1 %phi.cmp823, label %if.entry1.i791, label %Lexer_dot_token.exit
+  %phi.cmp803 = icmp eq i8 %1242, 46
+  br i1 %phi.cmp803, label %if.entry1.i771, label %Lexer_dot_token.exit
 
-if.entry1.i791:                                   ; preds = %if.entry.i17.i
-  %1243 = load i64, ptr %memberidx.i.i758, align 4
-  %1244 = load ptr, ptr %memberidx1.i.i759, align 8
+if.entry1.i771:                                   ; preds = %if.entry.i17.i
+  %1243 = load i64, ptr %memberidx.i.i738, align 4
+  %1244 = load ptr, ptr %memberidx1.i.i739, align 8
   %memberidx2.i.i27.i = getelementptr inbounds %string, ptr %1244, i64 0, i32 2
   %1245 = load i64, ptr %memberidx2.i.i27.i, align 4
-  %.not824 = icmp slt i64 %1243, %1245
-  br i1 %.not824, label %ifend.i31.i, label %Lexer_dot_token.exit
+  %.not804 = icmp slt i64 %1243, %1245
+  br i1 %.not804, label %ifend.i31.i, label %Lexer_dot_token.exit
 
-ifend.i31.i:                                      ; preds = %if.entry1.i791
+ifend.i31.i:                                      ; preds = %if.entry1.i771
   %1246 = load ptr, ptr %1244, align 8
   %memberidx2.i29.i = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %1246, i64 0, i32 2
   %1247 = load ptr, ptr %memberidx2.i29.i, align 8
   %1248 = add nsw i64 %1243, 1
-  store i64 %1248, ptr %memberidx.i.i758, align 4
+  store i64 %1248, ptr %memberidx.i.i738, align 4
   %1249 = tail call i8 %1247(ptr nonnull %1244, i64 %1248)
   store i8 %1249, ptr %0, align 1
   %1250 = icmp eq i8 %1249, 10
@@ -8310,36 +8310,36 @@ if.entry6.i34.i:                                  ; preds = %ifend.i31.i
   br label %Lexer_dot_token.exit.sink.split
 
 Lexer_dot_token.exit.sink.split:                  ; preds = %ifend.i31.i, %if.entry6.i34.i
-  %memberidx10.i33.i.sink1053 = phi ptr [ %memberidx10.i33.i, %if.entry6.i34.i ], [ %memberidx9.i32.i, %ifend.i31.i ]
-  %1251 = load i64, ptr %memberidx10.i33.i.sink1053, align 4
+  %memberidx10.i33.i.sink1033 = phi ptr [ %memberidx10.i33.i, %if.entry6.i34.i ], [ %memberidx9.i32.i, %ifend.i31.i ]
+  %1251 = load i64, ptr %memberidx10.i33.i.sink1033, align 4
   %1252 = add i64 %1251, 1
-  store i64 %1252, ptr %memberidx10.i33.i.sink1053, align 4
+  store i64 %1252, ptr %memberidx10.i33.i.sink1033, align 4
   br label %Lexer_dot_token.exit
 
-Lexer_dot_token.exit:                             ; preds = %Lexer_dot_token.exit.sink.split, %Lexer_advance.exit.i781, %if.entry84, %if.entry1.i791, %if.entry.i.i762, %if.entry.i17.i
-  %token.0.i = phi i64 [ 49, %if.entry.i17.i ], [ 48, %if.entry.i.i762 ], [ 50, %if.entry1.i791 ], [ 48, %if.entry84 ], [ 49, %Lexer_advance.exit.i781 ], [ 50, %Lexer_dot_token.exit.sink.split ]
-  %length.0.i782 = phi i64 [ 2, %if.entry.i17.i ], [ 1, %if.entry.i.i762 ], [ 3, %if.entry1.i791 ], [ 1, %if.entry84 ], [ 2, %Lexer_advance.exit.i781 ], [ 3, %Lexer_dot_token.exit.sink.split ]
+Lexer_dot_token.exit:                             ; preds = %Lexer_dot_token.exit.sink.split, %Lexer_advance.exit.i761, %if.entry84, %if.entry1.i771, %if.entry.i.i742, %if.entry.i17.i
+  %token.0.i = phi i64 [ 49, %if.entry.i17.i ], [ 48, %if.entry.i.i742 ], [ 50, %if.entry1.i771 ], [ 48, %if.entry84 ], [ 49, %Lexer_advance.exit.i761 ], [ 50, %Lexer_dot_token.exit.sink.split ]
+  %length.0.i762 = phi i64 [ 2, %if.entry.i17.i ], [ 1, %if.entry.i.i742 ], [ 3, %if.entry1.i771 ], [ 1, %if.entry84 ], [ 2, %Lexer_advance.exit.i761 ], [ 3, %Lexer_dot_token.exit.sink.split ]
   %1253 = tail call ptr @malloc(i32 16)
   %1254 = tail call ptr @malloc(i32 32)
-  %1255 = load i64, ptr %memberidx.i.i758, align 4
-  %1256 = sub nsw i64 1, %length.0.i782
+  %1255 = load i64, ptr %memberidx.i.i738, align 4
+  %1256 = sub nsw i64 1, %length.0.i762
   %1257 = add i64 %1256, %1255
   %1258 = add i64 %1255, 1
-  %memberidx2.i20.i784 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 4
-  %1259 = load i64, ptr %memberidx2.i20.i784, align 4
-  %1260 = sub i64 %1259, %length.0.i782
-  %memberidx3.i21.i785 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 5
-  %1261 = load i64, ptr %memberidx3.i21.i785, align 4
+  %memberidx2.i20.i764 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 4
+  %1259 = load i64, ptr %memberidx2.i20.i764, align 4
+  %1260 = sub i64 %1259, %length.0.i762
+  %memberidx3.i21.i765 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 5
+  %1261 = load i64, ptr %memberidx3.i21.i765, align 4
   store i64 %1257, ptr %1254, align 4
-  %memberidx1.i.i22.i786 = getelementptr inbounds %FloRange, ptr %1254, i64 0, i32 1
-  store i64 %1258, ptr %memberidx1.i.i22.i786, align 4
-  %memberidx2.i.i23.i787 = getelementptr inbounds %FloRange, ptr %1254, i64 0, i32 2
-  store i64 %1260, ptr %memberidx2.i.i23.i787, align 4
-  %memberidx3.i.i.i788 = getelementptr inbounds %FloRange, ptr %1254, i64 0, i32 3
-  store i64 %1261, ptr %memberidx3.i.i.i788, align 4
+  %memberidx1.i.i22.i766 = getelementptr inbounds %FloRange, ptr %1254, i64 0, i32 1
+  store i64 %1258, ptr %memberidx1.i.i22.i766, align 4
+  %memberidx2.i.i23.i767 = getelementptr inbounds %FloRange, ptr %1254, i64 0, i32 2
+  store i64 %1260, ptr %memberidx2.i.i23.i767, align 4
+  %memberidx3.i.i.i768 = getelementptr inbounds %FloRange, ptr %1254, i64 0, i32 3
+  store i64 %1261, ptr %memberidx3.i.i.i768, align 4
   store i64 %token.0.i, ptr %1253, align 4
-  %memberidx1.i24.i789 = getelementptr inbounds %Token, ptr %1253, i64 0, i32 1
-  store ptr %1254, ptr %memberidx1.i24.i789, align 8
+  %memberidx1.i24.i769 = getelementptr inbounds %Token, ptr %1253, i64 0, i32 1
+  store ptr %1254, ptr %memberidx1.i24.i769, align 8
   br label %common.ret
 
 if.entry87:                                       ; preds = %ifend11
@@ -8349,14 +8349,14 @@ if.entry87:                                       ; preds = %ifend11
   %1264 = load i64, ptr %memberidx90, align 4
   %memberidx91 = getelementptr inbounds %Lexer, ptr %0, i64 0, i32 5
   %1265 = load i64, ptr %memberidx91, align 4
-  %memberidx2.i793 = getelementptr inbounds %FloRange, ptr %1263, i64 0, i32 2
+  %memberidx2.i773 = getelementptr inbounds %FloRange, ptr %1263, i64 0, i32 2
   call void @llvm.memset.p0.i64(ptr noundef nonnull align 4 dereferenceable(16) %1263, i8 0, i64 16, i1 false)
-  store i64 %1264, ptr %memberidx2.i793, align 4
-  %memberidx3.i794 = getelementptr inbounds %FloRange, ptr %1263, i64 0, i32 3
-  store i64 %1265, ptr %memberidx3.i794, align 4
+  store i64 %1264, ptr %memberidx2.i773, align 4
+  %memberidx3.i774 = getelementptr inbounds %FloRange, ptr %1263, i64 0, i32 3
+  store i64 %1265, ptr %memberidx3.i774, align 4
   store i64 44, ptr %1262, align 4
-  %memberidx1.i795 = getelementptr inbounds %Token, ptr %1262, i64 0, i32 1
-  store ptr %1263, ptr %memberidx1.i795, align 8
+  %memberidx1.i775 = getelementptr inbounds %Token, ptr %1262, i64 0, i32 1
+  store ptr %1263, ptr %memberidx1.i775, align 8
   br label %common.ret
 
 ifend89:                                          ; preds = %ifend11
@@ -8416,7 +8416,7 @@ ifend89:                                          ; preds = %ifend11
 
 ifend89.Array_FloError____sl__.exit_crit_edge:    ; preds = %ifend89
   %memberidx4.i.phi.trans.insert = getelementptr inbounds %Array_FloError_, ptr %1266, i64 0, i32 1
-  %.pre971 = load ptr, ptr %memberidx4.i.phi.trans.insert, align 8
+  %.pre951 = load ptr, ptr %memberidx4.i.phi.trans.insert, align 8
   br label %Array_FloError____sl__.exit
 
 if.entry.i:                                       ; preds = %ifend89
@@ -8427,12 +8427,12 @@ if.entry.i:                                       ; preds = %ifend89
   %1290 = shl i64 %1287, 4
   %1291 = call ptr @realloc(ptr %1289, i64 %1290)
   store ptr %1291, ptr %memberidx2.i.i, align 8
-  %.pre970 = load i64, ptr %memberidx.i, align 4
+  %.pre950 = load i64, ptr %memberidx.i, align 4
   br label %Array_FloError____sl__.exit
 
 Array_FloError____sl__.exit:                      ; preds = %ifend89.Array_FloError____sl__.exit_crit_edge, %if.entry.i
-  %1292 = phi ptr [ %.pre971, %ifend89.Array_FloError____sl__.exit_crit_edge ], [ %1291, %if.entry.i ]
-  %1293 = phi i64 [ %1286, %ifend89.Array_FloError____sl__.exit_crit_edge ], [ %.pre970, %if.entry.i ]
+  %1292 = phi ptr [ %.pre951, %ifend89.Array_FloError____sl__.exit_crit_edge ], [ %1291, %if.entry.i ]
+  %1293 = phi i64 [ %1286, %ifend89.Array_FloError____sl__.exit_crit_edge ], [ %.pre950, %if.entry.i ]
   %1294 = add i64 %1293, 1
   store i64 %1294, ptr %memberidx.i, align 4
   %ptridx.i = getelementptr inbounds ptr, ptr %1292, i64 %1293

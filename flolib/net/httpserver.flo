@@ -2,7 +2,7 @@ import accept, read, AF_INET, SOCK_STREAM in "@flo/sys/lib"
 import "socket"
 import "response"
 import "request"
-type RequestHandler = (Request, Response) => void
+type RequestHandler = (Request, Response) -> void
 class HTTPServer {
     private socket: Socket
     private response: Response
