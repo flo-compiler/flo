@@ -387,7 +387,7 @@ class CodeGen {
         let next_args: LLVMValueRef[1] = [this.createLLVMInt(1)]
         let ptr_ty = LLVMTypeOf(ptr)
         let addr = ptr
-        for value in array_exp.value {
+        for value in array_exp.elements {
             LLVMBuildStore(builder, this.codegen_expression(builder, value), addr)
             addr = LLVMBuildInBoundsGEP2(builder, ptr_ty, addr, &next_args[0], 1, "")
         }
@@ -400,7 +400,7 @@ class CodeGen {
         //FIXME: What if array is not constant?
         let elem_ty = this.codegen_type((array_exp.value_type as ArrayType).element_type)
         let elems: LLVMValueRef[] = []
-        for value in  array_exp.value {
+        for value in  array_exp.elements {
             elems << this.codegen_expression(builder, value)
         }
         return LLVMConstArray(elem_ty, elems.buffer, elems.length)
@@ -530,7 +530,7 @@ class CodeGen {
         let objllvm_ty = this.codegen_type(obj_ty, false)
         let elmllvm_ty = this.codegen_type(arrgen_ty.arg_types[0])
         let self = LLVMBuildMalloc(builder, objllvm_ty, "")
-        let len_val = arr_expr.value.length
+        let len_val = arr_expr.elements.length
         let size_value = this.createLLVMInt(len_val > 0 ? len_val: 1)
         let len_value = this.createLLVMInt(len_val)
         this.build_constructor_call(builder, obj_ty, [self, LLVMConstMul(size_value, LLVMSizeOf(elmllvm_ty))])

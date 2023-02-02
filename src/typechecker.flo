@@ -159,12 +159,10 @@ class NullExpression (Expression) {
     }
 }
 class ArrayExpression (Expression) {
-    value: Expression[]
-    constructor(this, value: Expression[]){
+    elements: Expression[]
+    constructor(this, elements: Expression[]){
         super(ExpressionKind.ARRAY)
-        this.value = value
-        if value.length > 0
-            this.value_type = new ArrayType(value[0].value_type, value.length)
+        this.elements = elements
     }
 }
 class BinaryExpression (Expression) {
@@ -1892,15 +1890,12 @@ class TypeChecker {
                 element_type = generic_ty.arg_types[0]
         } 
         if array_node.elements.length > 0 {
-            elements << this.check_expression(element_type, array_node.elements[0])
-            if this.has_errored() return null
-            is_constant and= elements[0].is_constant
-            if element_type.kind == TypeKind.UNKNOWN {
-                element_type = elements[0].value_type
-            }
-            for let i = 1; i < array_node.elements.length; ++i {
+            for let i = 0; i < array_node.elements.length; ++i {
                 let element = this.check_expression(element_type, array_node.elements[i])
                 if this.has_errored() return null
+                if i == 0 and element_type.kind == TypeKind.UNKNOWN {
+                    element_type = element.value_type
+                }
                 is_constant and= element.is_constant
                 if this.types_are_eq(element_type, element.value_type) {
                     elements << element
@@ -1910,16 +1905,14 @@ class TypeChecker {
                 }
             }
         }
-        if element_type.kind == TypeKind.UNKNOWN {
-            this.error(ErrorKind.TYPE, "Cannot create array without type hint",  array_node.range)
-            return null
-        }
         if array_type.kind != TypeKind.ARRAY {
             let generic_array_type = this.create_generic_instance_in_module("Array", [element_type])
             if (generic_array_type != null) {
                 array_type = generic_array_type
                 is_constant = false
             }
+        } else {
+            array_type = new ArrayType(element_type, elements.length)
         }
         let arr_exp = new ArrayExpression(elements)
         arr_exp.is_constant = is_constant
