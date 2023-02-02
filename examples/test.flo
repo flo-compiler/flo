@@ -1,4 +1,7 @@
 fnc main(): int {
-    println("Hello world")
+    let i = 0xAFFF
+    let j = 0o0765
+    let k = 0b1101
+    println("$i $j $k")
     return 0
 }

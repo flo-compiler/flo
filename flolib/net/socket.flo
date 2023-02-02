@@ -5,15 +5,12 @@ fnc htons(x: int): int {
     let x2 = (x >> 8) and 255 
     return x1 or x2
 }
-fnc create_sockaddr_in (sin_family: int, sin_port: int, sin_addr: int): i8* {
-    let sin_family_port = (sin_port << 16) or (sin_family and 0xFFFF)
-    let socket_addr_in: int[2] = [sin_family_port, sin_addr]
-    return &socket_addr_in[0] as i8*
+fnc calc_sin_addr(sin_family: int, sin_port: int): int {
+    return (sin_port << 16) or (sin_family and 0xFFFF)
 }
 class Socket {
     sockfd: int
     domain: int
-    address: i8*
     constructor(this, domain: int, socktype: int, protocol: int){
         let sockfd = socket(domain, socktype, protocol)
         if sockfd < 1 {
@@ -24,25 +21,20 @@ class Socket {
         this.domain = domain
     }
     bind(this, port: int, address: string = ""){
-        let interface = inet_addr(address.to_cstring())
-        this.address = create_sockaddr_in(this.domain, htons(port), interface)
-        if bind(this.sockfd, this.address, 16) < 0 {
+        let addr: int[2] = [calc_sin_addr(this.domain, htons(port)), inet_addr(address.to_cstring())]
+        if bind(this.sockfd, &addr[0] as i8*, 16) < 0 {
             println("Error: could not bind socket")
-            return
         }
     }
     connect(this, port: int, address: string){
-        let interface = inet_addr(address.to_cstring())
-        this.address = create_sockaddr_in(this.domain, htons(port), interface)
-        if connect(this.sockfd, this.address, 16) < 0 {
+        let addr: int[2] = [calc_sin_addr(this.domain, htons(port)), inet_addr(address.to_cstring())]
+        if connect(this.sockfd, &addr[0] as i8*, 16) < 0 {
             println("Error: could not connect socket")
-            return
         }
     }
     listen(this, backlog: int = 10){
         if listen(this.sockfd, backlog) < 0 {
             println("Error: could not start listening")
-            return
         }
     }
     close(this){

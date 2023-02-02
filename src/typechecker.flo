@@ -1354,23 +1354,20 @@ class TypeChecker {
     }
     private import_all_from_module(this, module: Module){
         let global_module_scope = module.scopes[0]
-        for var_ in module.global_vars {
-            this.add_imported_var_to_module(var_.name, var_.var_id)
+        for imported_var in module.global_vars {
+            this.add_imported_var_to_module(imported_var.name, imported_var.var_id)
         }
-        for const_ in module.global_consts {
-            this.add_imported_var_to_module(const_.name, const_.const_id)
+        for imported_const in module.global_consts {
+            this.add_imported_var_to_module(imported_const.name, imported_const.const_id)
         }
-        for function in module.functions {
-            
-            this.add_imported_fnc_to_module(function.name, function.id)
+        for imported_func in module.functions {
+            this.add_imported_fnc_to_module(imported_func.name, imported_func.id)
         }
-        for class_ in module.classes {
-            
-            this.add_imported_class_to_module(class_.name, class_.id)
+        for imported_class in module.classes {
+            this.add_imported_class_to_module(imported_class.name, imported_class.id)
         }
-        for enum_ in module.enums {
-            
-            this.add_imported_enum_to_module(enum_.name, enum_.id)
+        for imported_enum in module.enums {
+            this.add_imported_enum_to_module(imported_enum.name, imported_enum.id)
         }
         for type_bucket in global_module_scope.type_aliases.get_buckets() {
             this.add_imported_typealias_to_module(type_bucket.key, type_bucket.value)
@@ -2365,6 +2362,7 @@ class TypeChecker {
     }
     private check_index_expr(this, expected_type: Type, index_expr_node: ExpressionIndexNode): IndexExpression {
         let root_expression = this.check_expression(Type.unknown(), index_expr_node.expression)
+        if this.has_errored() return null
         if is_object(root_expression.value_type)
             return this.check_object_index_expr(root_expression, index_expr_node) as IndexExpression
         let index = this.check_expression(new Type(TypeKind.INT), index_expr_node.index)
