@@ -46353,11 +46353,11 @@ for.body:                                         ; preds = %for.body.lr.ph, %Ma
   %storemerge63.in = phi i64 [ %9, %for.body.lr.ph ], [ %storemerge63, %MapIterator_string_PropId__next.exit ]
   %13 = phi i64 [ %storemerge.i40.lcssa, %for.body.lr.ph ], [ %storemerge.i.lcssa, %MapIterator_string_PropId__next.exit ]
   %storemerge63 = add i64 %storemerge63.in, -1
-  %bucket.0.in = getelementptr inbounds ptr, ptr %7, i64 %13
-  %bucket.0 = load ptr, ptr %bucket.0.in, align 8
-  %memberidx2 = getelementptr inbounds %MapEntry_string_PropId_, ptr %bucket.0, i64 0, i32 1
+  %entry.0.in = getelementptr inbounds ptr, ptr %7, i64 %13
+  %entry.0 = load ptr, ptr %entry.0.in, align 8
+  %memberidx2 = getelementptr inbounds %MapEntry_string_PropId_, ptr %entry.0, i64 0, i32 1
   %14 = load ptr, ptr %memberidx2, align 8
-  %15 = load ptr, ptr %bucket.0, align 8
+  %15 = load ptr, ptr %entry.0, align 8
   call void @llvm.lifetime.start.p0(i64 8, ptr nonnull %4)
   %memberidx.i33 = getelementptr inbounds %PropId, ptr %14, i64 0, i32 1
   %16 = load ptr, ptr %memberidx.i33, align 8
@@ -46813,11 +46813,11 @@ for.body.lr.ph:                                   ; preds = %MapIterator_string_
   br label %for.body
 
 for.body:                                         ; preds = %for.body.lr.ph, %MapIterator_string_PropId__next.exit183
-  %bucket.0.in386 = phi ptr [ %ptridx13.i, %for.body.lr.ph ], [ %ptridx13.i181, %MapIterator_string_PropId__next.exit183 ]
-  %bucket.0 = load ptr, ptr %bucket.0.in386, align 8
-  %memberidx8 = getelementptr inbounds %MapEntry_string_PropId_, ptr %bucket.0, i64 0, i32 1
+  %entry.0.in386 = phi ptr [ %ptridx13.i, %for.body.lr.ph ], [ %ptridx13.i181, %MapIterator_string_PropId__next.exit183 ]
+  %entry.0 = load ptr, ptr %entry.0.in386, align 8
+  %memberidx8 = getelementptr inbounds %MapEntry_string_PropId_, ptr %entry.0, i64 0, i32 1
   %22 = load ptr, ptr %memberidx8, align 8
-  %23 = load ptr, ptr %bucket.0, align 8
+  %23 = load ptr, ptr %entry.0, align 8
   call void @llvm.lifetime.start.p0(i64 8, ptr nonnull %6)
   %memberidx.i135 = getelementptr inbounds %PropId, ptr %22, i64 0, i32 1
   %24 = load ptr, ptr %memberidx.i135, align 8

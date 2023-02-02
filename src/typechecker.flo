@@ -1367,8 +1367,8 @@ class TypeChecker {
         for imported_enum in module.enums {
             this.add_imported_enum_to_module(imported_enum.name, imported_enum.id)
         }
-        for type_bucket in global_module_scope.type_aliases {
-            this.add_imported_typealias_to_module(type_bucket.key, type_bucket.value)
+        for type_alias_entry in global_module_scope.type_aliases {
+            this.add_imported_typealias_to_module(type_alias_entry.key, type_alias_entry.value)
         }
     }
     private check_module_import(this, import_node: ImportNode){
@@ -1718,9 +1718,9 @@ class TypeChecker {
             this.error(ErrorKind.TYPE, "Can only inherit from class not type '$(this.dump_type(parent_type))'", class_node.parent.range)
         }
         let parent_class = get_class_from_type(this.program, parent_type)
-        for parent_bucket_prop in parent_class.prop_map {
-            let parent_prop_name = parent_bucket_prop.key
-            let parent_prop_id = parent_bucket_prop.value  
+        for parent_entry_prop in parent_class.prop_map {
+            let parent_prop_name = parent_entry_prop.key
+            let parent_prop_id = parent_entry_prop.value  
             let parent_prop_type = get_class_prop_type(this.program, parent_prop_id)
             let child_prop_id = declared_class.prop_map[parent_prop_name]
             let parent_prop_visibility = get_class_prop_visibility(this.program, parent_prop_id)
@@ -1755,9 +1755,9 @@ class TypeChecker {
         this.declare_class_methods(declared_class, class_node)
         if this.has_errored() return
         // Checking if class is abstract.
-        for prop_bucket in declared_class.prop_map {
-            let prop_id = prop_bucket.value
-            let prop_name = prop_bucket.key
+        for prop_entry in declared_class.prop_map {
+            let prop_id = prop_entry.value
+            let prop_name = prop_entry.key
             if prop_id.kind == PropIdKind.METHOD {
                 let prop_method = get_method(this.program, prop_id)
                 if prop_method.is_abstract {
