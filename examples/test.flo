@@ -1,7 +1,5 @@
 fnc main(): int {
-    let i = 0xAFFF
-    let j = 0o0765
-    let k = 0b1101
-    println("$i $j $k")
-    return 0
+    let x = input()
+    eprintln("Inputed: $x")
+    return 1
 }

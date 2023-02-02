@@ -1,11 +1,34 @@
+const STDIN = 0
+const STDOUT = 1
+const STDERR = 2
 /*@extern*/
 fnc strlen(str: i8*): int
-fnc write(res: int, buf: i8*, len: int)
-class Iterator<T> {
-    public done: bool
-    public __next__(this): T
+fnc write(fc: int, buf: i8*, len: int)
+fnc read(fd: int, buff: i8*, size: int): int 
+// ----- functions -----
+fnc print(str: string){
+    write(STDOUT, str.get_bytes(), str.length)
 }
-const STDOUT = 1
+fnc println(str: string){
+    print(str)
+    write(STDOUT, "\n", 1)
+}
+fnc eprint(str: string){
+    write(STDERR, str.get_bytes(), str.length)
+}
+fnc eprintln(str: string){
+    eprint(str)
+    write(STDERR, "\n", 1)
+}
+fnc input(): string {
+    let size = -1
+    let buffer = new i8*(1)
+    while (buffer[size] != '\n'){
+        buffer = buffer.resize((++size)+1)
+        read(STDIN, buffer+size, 1)
+    }
+    return new string(buffer, size)
+}
 // ----- string -------
 class string {
     private buffer: i8*
@@ -43,6 +66,9 @@ class string {
         if this.length != other.length return false
         return this.buffer.compare(other.buffer, this.length) == 0
     }
+    private __in__(this, other: string): bool {
+        return this.find(other) != -1
+    }
     public find(this, search: string, start: int = 0): int {
         for let i = start; i < this.length; i++ {
             if (search.buffer[0] == this.buffer[i]) {
@@ -58,9 +84,6 @@ class string {
             }
         }
         return -1
-    }
-    private __in__(this, other: string): bool {
-        return this.find(other) != -1
     }
     public substring (this, start: int, length: int): string {
         return new string(this.buffer + start, length)
@@ -146,6 +169,19 @@ class StringBuilder {
     }
 }
 // ------- Range -------
+class RangeIterator {
+    private done: bool
+    private idx: int
+    private end: int
+    constructor(this, idx: int, end: int){
+        this.idx = idx
+        this.end = end
+    }
+    private next(this): int {
+        this.done = this.idx >= this.end
+        return this.idx++
+    }
+}
 class Range {
     private start: int
     private end: int
@@ -156,20 +192,8 @@ class Range {
     private __in__(this, num: int): bool {
         return num >= this.start and num < this.end
     }
-    private __iter__(this): RangeIterator<int> {
-        return new RangeIterator<int>(this.start, this.end)
-    }
-}
-class RangeIterator<T>(Iterator<T>){
-    private idx: T
-    private end: T
-    constructor(this, idx: T, end: T){
-        this.idx = idx
-        this.end = end
-    }
-    public __next__(this): T {
-        this.done = this.idx >= this.end
-        return this.idx++
+    private __iter__(this): RangeIterator{
+        return new RangeIterator(this.start, this.end)
     }
 }
 // ----- Array -------
@@ -219,7 +243,8 @@ class Array <T> {
         return -1
     }
 }
-class ArrayIterator<T>(Iterator<T>) {
+class ArrayIterator<T> {
+    private done: bool
     private idx: int
     private end: int
     private bytes: T*
@@ -229,16 +254,118 @@ class ArrayIterator<T>(Iterator<T>) {
         this.bytes = bytes
         this.end = end
     }
-    public __next__(this): T {
+    private next(this): T {
         let next_elem = this.bytes[this.idx++]
         this.done = this.idx > this.end
         return next_elem
     }
 }
-fnc print(str: string){
-    write(STDOUT, str.get_bytes(), str.length)
+// ----- Map -------
+class Bucket<T, U> {
+    key: T
+    value: U
+    is_empty: bool
+    constructor(this){
+        this.is_empty = true
+    }
+    set(this, key: T, value: U){
+        this.is_empty = false
+        this.key = key
+        this.value = value
+    }
 }
-fnc println(str: string){
-    print(str)
-    write(STDOUT, "\n", 1)
+class Map<T, U> {
+    private buckets: Bucket<T, U>*
+    private length: int
+    private size: int
+    constructor(this){
+        let initial_capacity = 256
+        this.buckets = new Bucket<T, U>*(initial_capacity)
+        for let i = 0; i < initial_capacity; i++ {
+            this.buckets[i] = new Bucket<T, U>()
+        }
+        this.size = initial_capacity
+        this.length = 0
+    }
+    private hash_fnc(this, key: T): int {
+        let str = key as string
+        let hash = 0
+        for let i = 0; i < str.length; ++i {
+            hash = (hash << 1) + (str.get_byte(i) as int)
+        }
+        return hash < 0 ? -hash : hash
+    }
+    private resize(this){
+        let buckets = this.get_buckets()
+        this.size *= 2
+        this.length = 0
+        this.buckets = this.buckets.resize(this.size)
+        for let i = 0; i < this.size; i++{
+            this.buckets[i] = new Bucket<T, U>()
+        }
+        for let i = 0; i < buckets.length; i++ {
+            this.__setitem__(buckets[i].key, buckets[i].value)
+        }
+    }
+    private __setitem__(this, key: T, value: U){
+        let ratio = this.length / (this.size as float)
+        if (ratio > 0.75) this.resize()
+        let hash = this.hash_fnc(key) % this.size
+        while !this.buckets[hash].is_empty {
+            if this.buckets[hash].key == key
+                break
+            hash = (hash + 1) % this.size
+        } 
+        this.length++
+        this.buckets[hash].set(key, value)
+    }
+    private __getitem__(this, key: T): U {
+        let hash = this.hash_fnc(key) % this.size
+        while !this.buckets[hash].is_empty {
+            if this.buckets[hash].key == key
+                break
+            else
+                hash = (hash + 1) % this.size
+        }
+        if !this.buckets[hash].is_empty
+            return this.buckets[hash].value
+        return null
+    }
+    private __iter__(this): MapIterator<T, U> {
+        return new MapIterator<T, U>(this.buckets, this.size, this.length)
+    }
+    public get_buckets(this): Bucket<T, U>[] {
+        let buckets: Bucket<T, U>[] = []
+        for let i = 0; i < this.size; ++i {
+            let current_bucket = this.buckets[i]
+            if !current_bucket.is_empty {
+                buckets << current_bucket
+            }
+        }
+        return buckets  
+    }
+}
+class MapIterator<T, U> {
+    idx: int
+    done: bool
+    buckets: Bucket<T, U>*
+    size: int
+    length: int
+    constructor(this, buckets: Bucket<T, U>*, size: int, length: int){
+        this.idx = 0
+        this.done = false
+        this.buckets = buckets
+        this.size = size
+        this.length = length
+    }
+    private next(this): Bucket<T, U> {
+        let i = 0
+        for i = this.idx; i < this.size; i++ {
+            if !this.buckets[i].is_empty {
+                break
+            }
+        }
+        this.done = this.idx++ > this.length
+        return this.buckets[i]
+    }
 }

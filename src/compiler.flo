@@ -1,5 +1,4 @@
 import "@flo/io/file"
-import "@flo/collections/map"
 import "@flo/path/path"
 import  "error"
 class FileId {
@@ -44,10 +43,10 @@ class Compiler {
     }
     public register_file(this, fpath: string): FileId {
         let abspath = this.find_module_path(fpath)
-        let file_id = this.file_ids.get(abspath)
+        let file_id = this.file_ids[abspath]
         if file_id != null return file_id
         file_id = new FileId(this.files.length)
-        this.file_ids.set(abspath, file_id)
+        this.file_ids[abspath] = file_id
         this.files << new FloFile(abspath, fpath)
         return file_id
     }

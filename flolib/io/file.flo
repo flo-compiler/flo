@@ -17,7 +17,6 @@ class File {
         let size = 0
         let allocated_mem = new i8*(size)
         while true {
-            // const CHUNK_SIZE = 
             let buffer: i8[1024]
             let read_len = fread(&buffer[0], 1, 1024, this.fd)
             if read_len == 0 {
