@@ -89,7 +89,9 @@ class string {
         return -1
     }
     public substring (this, start: int, length: int): string {
-        return new string(this.buffer + start, length)
+        let new_str_buff = new i8*(length)
+        new_str_buff.copy_from(this.buffer + start, length)
+        return new string(new_str_buff, length)
     }
     public get_byte(this, index: int): i8 {
         return (this.buffer[index])
@@ -225,6 +227,21 @@ class Array <T> {
     }
     private __getitem__(this, index: int): T {
         return this.buffer[index]
+    }
+    // private __add__(this, other: T[]): T[]{
+    //     let arr = new Array<T>(this.length + other.length + 2)
+    //     arr.buffer.copy_from(this.buffer, this.length)
+    //     arr.length = this.length
+    //     arr.__adda__(other)
+    //     return arr
+    // }
+    // private __adda__(this, other: T[]): T[]{
+    //     while ((this.size - this.length) < other.length) this.resize()
+    //     (this.buffer + this.length).copy_from(other.buffer, other.length)
+    //     return this
+    // }
+    private __neq__(this, other: T[]): bool {
+        return !this.__eq__(other)
     }
     private __eq__(this, other: T[]): bool {
         if this.length != other.length {

@@ -136,7 +136,32 @@ class CodeGen {
         for func_ in module.functions {
             codegen.codegen_function(func_)
         }
+        codegen.destroy()
         return new GeneratedModule(codegen.module)
+    }
+    private destroy(this){
+        for var_entry in this.global_var_scope {
+            del var_entry.key
+        }
+        del this.global_var_scope
+        for string_entry in this.global_string_scope {
+            del string_entry.key
+        }
+        del this.global_string_scope 
+        for func_entry in this.super_functions {
+            del func_entry.key
+        }
+        del this.super_functions
+        for class_entry in this.global_class_scope {
+            del class_entry.key
+            del class_entry.value
+        }
+        del this.global_class_scope
+        for enum_entry in this.global_enum_scope {
+            del enum_entry.key
+            del enum_entry.value
+        }
+        del this.global_enum_scope
     }
     private get_var_from_varid(this, var_id: VarId): LLVMValueRef{
         return this.global_var_scope[create_var_key(var_id)]
@@ -289,20 +314,17 @@ class CodeGen {
         }
         return str
     }
-    private codegen_safe_fmt_string(this, builder: LLVMBuilderRef, fmt: string, args: LLVMValueRef[], len_ptr: LLVMValueRef*): LLVMValueRef {
+    private codegen_safe_fmt_string(this, builder: LLVMBuilderRef, fmt: string, args: LLVMValueRef*, args_length: int, len_ptr: LLVMValueRef*): LLVMValueRef {
         let i8_ty = LLVMInt8Type()
         let i8_ptr_ty = LLVMPointerType(i8_ty)
         let int_ty = LLVMIntType(WORD_SIZE)
         let alloc_buff = LLVMBuildAlloca(builder, i8_ptr_ty, "")
         let llvm_fmt = this.createGlobalLLVMString(builder, fmt)
-        let num_passed_args = args.length + 2
+        let num_passed_args = args_length + 2
         let call_args_buffer: LLVMValueRef*(num_passed_args)
-        let idx = 0
-        call_args_buffer[idx++] = alloc_buff
-        call_args_buffer[idx++] = llvm_fmt
-        for arg in args {
-            call_args_buffer[idx++] = arg
-        }
+        call_args_buffer[0] = alloc_buff
+        call_args_buffer[1] = llvm_fmt
+        (call_args_buffer + 2).copy_from(args, args_length)
         let arg_types: LLVMTypeRef[2] = [i8_ptr_ty, i8_ptr_ty]
         let asprintf = get_intrinsic(this.module, "asprintf", &arg_types[0], 2, int_ty, true)
         let str_len = LLVMBuildCall2(builder, asprintf.fnc_type, asprintf.call, call_args_buffer, num_passed_args, "")
@@ -331,7 +353,9 @@ class CodeGen {
                 str_builder.append_string(" ... }")
                 return this.createGlobalLLVMString(builder, str_builder.get_string())
             }
-            let fmt_args: LLVMValueRef[] = []
+            let fmt_args_length = obj_class.prop_map.length
+            let fmt_args: LLVMValueRef*(fmt_args_length)
+            let idx = 0
             for field_entry in obj_class.prop_map {
                 let field_ty = get_class_prop_type(this.program, field_entry.value)
                 let member_val = this.get_member_with_name(builder, llvm_val, val_ty as ObjectType, field_entry.key)
@@ -339,11 +363,11 @@ class CodeGen {
                 if !is_object(field_ty) and LLVMGetTypeKind(LLVMTypeOf(arg)) == LLVMTypeKind.LLVMPointerTypeKind and !LLVMIsGlobalConstant(arg) {
                     malloc_list << arg
                 }
-                fmt_args << arg
+                fmt_args[idx++] = arg
                 str_builder.append_string(" '$(field_entry.key)': $(get_format_from_type(field_ty)), \n")
             }
             str_builder.append_string("}")
-            let result = this.codegen_safe_fmt_string(builder, str_builder.get_string(), fmt_args, null)
+            let result = this.codegen_safe_fmt_string(builder, str_builder.get_string(), fmt_args, fmt_args_length, null)
             malloc_list << result
             return result
         }
@@ -355,13 +379,14 @@ class CodeGen {
     }
     private codegen_string(this, builder: LLVMBuilderRef, string_exp: StringExpression): LLVMValueRef {
         let str_value = string_exp.value
-        let call_args: LLVMValueRef[] = []
         let fmt_str_builder: StringBuilder(str_value.length + string_exp.fmt_indices.length*2)
         let chars = str_value.get_bytes()
         let curr_ind = 0
         let prev_ind = 0
         let malloc_list: LLVMValueRef[] = []
-        for let i = 0; i < string_exp.template_args.length; i++ {
+        let call_args_length = string_exp.template_args.length
+        let call_args: LLVMValueRef*(call_args_length)
+        for let i = 0; i < call_args_length; i++ {
             let templ_arg = string_exp.template_args[i]
             let templ_arg_ty = templ_arg.value_type
             let fmt = get_format_from_type(templ_arg_ty)
@@ -372,12 +397,12 @@ class CodeGen {
             fmt_str_builder.append_string(fmt)
             chars += incr
             let templ_arg_exp = this.codegen_expression(builder, templ_arg)
-            call_args << this.get_string_val(builder, templ_arg_exp, templ_arg_ty, malloc_list)
+            call_args[i] = this.get_string_val(builder, templ_arg_exp, templ_arg_ty, malloc_list)
         }
         fmt_str_builder.add_bytes_length(chars, str_value.length - curr_ind)
         str_value = fmt_str_builder.get_string()
         let str_len = this.createLLVMInt(str_value.length)
-        let str = call_args.length > 0 ? this.codegen_safe_fmt_string(builder, str_value, call_args, &str_len) : this.createGlobalLLVMString(builder, str_value)
+        let str = call_args_length > 0 ? this.codegen_safe_fmt_string(builder, str_value, call_args, call_args_length, &str_len) : this.createGlobalLLVMString(builder, str_value)
         if is_object(string_exp.value_type) {
             let str_ty = this.codegen_type(string_exp.value_type, false)
             if LLVMIsConstant(str) and LLVMIsGlobalConstant(str) {
@@ -397,6 +422,7 @@ class CodeGen {
         for mem in malloc_list {
             LLVMBuildFree(builder, mem)
         }
+        del malloc_list
         return str
     }
     private store_array_elements(this, builder: LLVMBuilderRef, ptr: LLVMValueRef, array_exp: ArrayExpression): LLVMValueRef {
@@ -1242,8 +1268,7 @@ class CodeGen {
                 let llvm_method_val: LLVMValueRef = null
                 let llvm_method_type: LLVMTypeRef = null
                 if prop_id.type_id == checked_class.id {
-                    let arg_types: Type[] = []
-                    arg_types << (new ObjectType(checked_class.id) as Type)
+                    let arg_types: Type[] = [new ObjectType(checked_class.id)]
                     for arg_type in method_type.arg_types {
                         arg_types << arg_type
                     }
@@ -1304,8 +1329,7 @@ class CodeGen {
         // Now constructor
         if checked_class.construct != null {
             let constructor_type = get_class_prop_type(this.program, checked_class.construct) as FunctionType
-            let arg_types: Type[] = []
-            arg_types << (new ObjectType(checked_class.id) as Type)
+            let arg_types: Type[] = [new ObjectType(checked_class.id)]
             for arg_type in constructor_type.arg_types {
                 arg_types << arg_type
             }
