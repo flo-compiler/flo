@@ -575,6 +575,13 @@ class ScopeId {
         this.id = id
     }
 }
+class ModuleVarId(VarId){
+    scope_id: ScopeId
+    constructor(this, scope_id: ScopeId){
+        super(VarIdKind.MODULE, scope_id.module_id, scope_id.id)
+        this.scope_id = scope_id
+    }
+}
 class Scope {
     public id: ScopeId
     public vars: [string: VarId]
@@ -1393,9 +1400,9 @@ class TypeChecker {
         if this.has_errored() return
         let global_module_scope = module.scopes[0]
         if import_node.import_list.length > 0 {
-            for import_identifier in import_node.import_list {
-                let name_to_import = import_identifier.value
-                let renamed_name = name_to_import
+            for import_clause in import_node.import_list {
+                let name_to_import = import_clause.original_identifer.value
+                let renamed_name = import_clause.renamed_identifer ? import_clause.renamed_identifer.value : name_to_import
                 if this.generic_templates[name_to_import] != null {
                     continue
                 }
@@ -1424,10 +1431,13 @@ class TypeChecker {
                     this.add_imported_typealias_to_module(renamed_name, type_alias)
                     continue
                 } else {
-                    this.error(ErrorKind.NAME, "$name_to_import not found in module \"$path\"", import_identifier.range)
+                    this.error(ErrorKind.NAME, "$name_to_import not found in module \"$path\"", import_clause.original_identifer.range)
                     return
                 }
             }
+        } else if import_node.module_name {
+            let name = import_node.module_name.value
+            this.get_current_module_global_scope().vars[name] = new ModuleVarId(global_module_scope.id)
         } else {
             this.import_all_from_module(module)
         }
@@ -1952,6 +1962,8 @@ class TypeChecker {
                 var_ty = get_const(this.program, var_id as ConstId).value_type
             else if var_id.kind == VarIdKind.CLASS or var_id.kind == VarIdKind.ENUM
                 var_ty = new Type(TypeKind.RECORD)
+            else if var_id.kind == VarIdKind.MODULE
+                var_ty = new Type(TypeKind.MODULE)
             return new VarAccessExpression(var_id, var_ty)
         }
         this.error(ErrorKind.NAME, "Undefined variable '$name'", var_access_node.range)
@@ -2359,6 +2371,16 @@ class TypeChecker {
             let intrinsic_call = new IntrinsicCall(mem_intrinsic) 
             intrinsic_call.args << prop_owner
             return intrinsic_call as MemberExpression
+        } else if prop_owner_type.kind == TypeKind.MODULE {
+            let scope_id = ((prop_owner as VarAccessExpression).value_id as ModuleVarId).scope_id
+            let current_scope = this.current_scope
+            this.current_module = scope_id.module_id
+            this.current_scope = scope_id
+            let var_access_node: VarAccessExpressionNode(member_expr_node.member)
+            let value = this.check_var_access_expr(Type.unknown(), var_access_node)
+            this.current_module = current_scope.module_id
+            this.current_scope = current_scope
+            return value as MemberExpression
         } else {
             this.error(ErrorKind.GEN, "Cannot get property '$prop_name' of type '$(this.dump_type(prop_owner.value_type))'", member_expr_node.expression.range)
             return null

@@ -1,0 +1,7 @@
+import "modules/add" as M
+fnc main(): int {
+    return M.add(1, -1)
+}
+fnc add(x: int, y: int): int {
+    return x - y
+}

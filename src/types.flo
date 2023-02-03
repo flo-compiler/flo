@@ -108,6 +108,7 @@ enum TypeKind {
     ARRAY
     FNC
     RECORD
+    MODULE
     GENERIC_TEMPLATE
     RESOLVED_GENERIC
     UNKNOWN
@@ -156,6 +157,7 @@ enum VarIdKind {
     CONST
     CLASS
     ENUM
+    MODULE
 }
 enum TypeIdKind {
     CLASS
