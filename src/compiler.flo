@@ -1,6 +1,7 @@
 import "@flo/io/file"
 import "@flo/path/path"
 import  "error"
+import free in "utils"
 class FileId {
     id: int
     constructor(this, id: int){
@@ -54,6 +55,9 @@ class Compiler {
         let file_path = this.files[file_id.id]
         if !File.exists(file_path.abspath) return false
         let file = File.open_for_reading(file_path.abspath)
+        if this.current_file_contents != null {
+            free(this.current_file_contents.get_bytes())
+        }
         this.current_file_contents = file.read_all()
         this.current_file = file_id
         file.close()

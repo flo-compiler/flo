@@ -25,3 +25,4 @@ fnc panic(message: string){
     println("Panic: $message")
     exit(-1)
 }
+fnc free(b: i8*)
