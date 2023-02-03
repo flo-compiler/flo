@@ -409,6 +409,9 @@ fnc is_object(val_ty: Type): bool {
         return is_object((val_ty as GenericType).instantiated_type)
     return val_ty.kind == TypeKind.OBJECT
 }
+fnc is_function(val_ty: Type): bool {
+    return val_ty.kind == TypeKind.FNC
+}
 fnc is_pointer(val_ty: Type): bool {
     return val_ty.kind == TypeKind.PTR
 }
@@ -829,6 +832,7 @@ fnc is_operator_overload_name(name: string): bool {
     if name == "__powa__" return true
     if name == "__moda__" return true
     if name == "__iter__" return true
+    if name == "__del__" return true
     return false
 }
 fnc bin_op_to_op_overload_name(op: BinaryOp): string {
@@ -972,7 +976,7 @@ class TypeChecker {
     }
     private types_are_eq(this, t1: Type, t2: Type): bool {
         if t1.kind != t2.kind return false
-        if t1.kind == TypeKind.FNC {
+        if is_function(t1) {
             let t1_fnc_type = t1 as FunctionType
             let t2_fnc_type = t2 as FunctionType
             if t1_fnc_type.arg_types.length != t2_fnc_type.arg_types.length return false
@@ -1024,7 +1028,7 @@ class TypeChecker {
         return true
     }
     private dump_type(this, ty: Type): string {
-        if ty.kind == TypeKind.FNC {
+        if is_function(ty) {
             let fnc_ty = ty as FunctionType
             let args_tys_str = ""
             for let i = 0; i < fnc_ty.arg_types.length; i++ {
@@ -1626,7 +1630,7 @@ class TypeChecker {
             method.args = []
             if is_operator_overload_name(name) {
                 let args_num = 1
-                if name == "__iter__" {
+                if name == "__iter__" or name == "__del__" {
                     args_num = 0
                 } else if name =="__setitem__" {
                     args_num = 2
@@ -1727,7 +1731,7 @@ class TypeChecker {
             let parent_prop_is_static = is_class_prop_static(this.program, parent_prop_id)
             if parent_prop_is_static
                 continue
-            if parent_prop_visibility == ACCESS_ATTR.PRIVATE and parent_prop_type.kind == TypeKind.FNC
+            if parent_prop_visibility == ACCESS_ATTR.PRIVATE and is_function(parent_prop_type)
                 continue
             if child_prop_id == null {
                 if parent_prop_id.kind == PropIdKind.FIELD
@@ -2141,6 +2145,10 @@ class TypeChecker {
         if op == UnaryOp.ADDROF {
             if check_is_var(expression)
                 return new UnaryExpression(op, expression, new PointerType(expression.value_type))
+        }
+        if op == UnaryOp.DEL {
+            if is_object(ty) or is_pointer(ty)
+                return new UnaryExpression(op, expression, new Type(TypeKind.VOID))
         }
         this.error(ErrorKind.TYPE, "Illegal unary operation $(dump_unary_op(op)) on type '$(this.dump_type(ty))'", unary_node.range)
         return null

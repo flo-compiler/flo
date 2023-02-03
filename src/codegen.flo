@@ -200,7 +200,7 @@ class CodeGen {
         if tt.kind == TypeKind.RESOLVED_GENERIC {
             tt = (tt as GenericType).instantiated_type
         }
-        if tt.kind == TypeKind.FNC {
+        if is_function(tt) {
             let func_ty = tt as FunctionType
             let param_types: LLVMTypeRef*(func_ty.arg_types.length)
             let idx = 0
@@ -272,6 +272,12 @@ class CodeGen {
         let memcmp = get_intrinsic(this.module, "memcmp", &arg_types[0], 3, int_ty)
         return LLVMBuildCall2(builder, memcmp.fnc_type, memcmp.call, args.buffer, args.length, "")
     }
+    private codegen_del_call(this, builder: LLVMBuilderRef, self: LLVMValueRef, obj_ty: ObjectType): LLVMValueRef {
+        let func = this.get_member_mem_with_name(builder, self, obj_ty, "__del__")
+        if func == null return null
+        let args: LLVMValueRef[1] = [self]
+        return LLVMBuildCall2(builder, LLVM_GetFunctionType(func), func, &args[0], 1, "")
+    }
     private createGlobalLLVMString(this, builder: LLVMBuilderRef, str_value: string): LLVMValueRef {
         let str = this.global_string_scope[str_value]
         if str == null {
@@ -339,7 +345,7 @@ class CodeGen {
             return result
         }
         //TODO: Better toString for functions
-        if val_ty.kind == TypeKind.FNC {
+        if is_function(val_ty) {
             return this.createGlobalLLVMString(builder, "<function>")
         }
         return llvm_val
@@ -493,7 +499,6 @@ class CodeGen {
     }
     private get_member_expr_mem(this, builder: LLVMBuilderRef, member_expr: MemberExpression, ptr: LLVMValueRef): LLVMValueRef {
         let struct_class = this.get_or_codegen_class_from_typeid(member_expr.member_id.type_id)
-        let is_function_type = member_expr.value_type.kind == TypeKind.FNC
         let prop_id_key = create_prop_key(member_expr.member_id)
         let struct_type = struct_class.llvm_type
         let method = struct_class.static_props_map[prop_id_key]
@@ -503,7 +508,7 @@ class CodeGen {
         }
         const indices_count = 2
         let indices_buffer: LLVMValueRef[indices_count] = [LLVMConstInt(LLVMInt32Type(), 0, false), null]
-        if !is_function_type {
+        if !is_function(member_expr.value_type) {
             let vtoffset = struct_class.vtable_type == null ? 0 : 1
             indices_buffer[1] = LLVMConstInt(LLVMInt32Type(), struct_class.fields_pos_map[prop_id_key] + vtoffset as i64, false)
         } else {
@@ -527,12 +532,14 @@ class CodeGen {
     private get_member_mem_with_name(this, builder: LLVMBuilderRef, val: LLVMValueRef, obj_type: ObjectType, name: string): LLVMValueRef {
         let obj_class = get_class_from_type(this.program, obj_type)
         let prop_id = obj_class.prop_map[name]
+        if prop_id == null  return null
         let prop_ty = get_class_prop_type(this.program, prop_id)
         let member_expr: MemberExpression(null, prop_id, prop_ty) //TODO: Put it on the stack instead.
         return this.get_member_expr_mem(builder, member_expr, val)
     }
     private get_member_with_name(this, builder: LLVMBuilderRef, val: LLVMValueRef, obj_type: ObjectType, name: string): LLVMValueRef {
         let memb_mem = this.get_member_mem_with_name(builder, val, obj_type, name)
+        if memb_mem == null return null
         let prop_ty = get_class_prop_type_with_name(this.program, obj_type, name)
         return LLVMBuildLoad2(builder, this.codegen_type(prop_ty), memb_mem, "")
     }
@@ -695,6 +702,12 @@ class CodeGen {
         let op = unary_exp.op
         let exp = unary_exp.expression
         let val = this.codegen_expression(builder, exp)
+        if op == UnaryOp.DEL {
+            if is_object(exp.value_type)
+                this.codegen_del_call(builder, val, exp.value_type as ObjectType)
+            LLVMBuildFree(builder, val)
+            return null
+        }
         if op == UnaryOp.NEG {
             if is_int(exp.value_type){
                 return CodeGen.neg_int(builder, val)
@@ -823,7 +836,7 @@ class CodeGen {
         let var_id = (member_exp.expression as VarAccessExpression).value_id
         if is_object(member_exp.expression.value_type) {
             let ptr = this.get_member_expr_mem(builder, member_exp, self)
-            if get_class_prop_visibility(this.program, member_exp.member_id) == ACCESS_ATTR.PRIVATE and member_exp.value_type.kind == TypeKind.FNC
+            if get_class_prop_visibility(this.program, member_exp.member_id) == ACCESS_ATTR.PRIVATE and is_function(member_exp.value_type)
                 return ptr
             return LLVMBuildLoad2(builder, this.codegen_type(member_exp.value_type), ptr, "")
         }
@@ -837,7 +850,7 @@ class CodeGen {
             if prop == null {
                 panic("This should never happen; (codegen_member_expr; class prop)")
             }
-            if member_exp.value_type.kind == TypeKind.FNC
+            if is_function(member_exp.value_type)
                 return prop
             return LLVMBuildLoad2(builder, this.codegen_type(member_exp.value_type), prop, "")
         }

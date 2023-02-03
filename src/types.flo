@@ -85,6 +85,7 @@ enum TokType {
     CLASS_KW
     ENUM_KW
     NEW_KW
+    DEL_KW
     AS_KW
 }
 enum TypeKind {
@@ -196,6 +197,7 @@ enum BinaryOp {
 }
 enum UnaryOp {
     UNDEF
+    DEL
     PREINCR
     PREDECR
     POSTINCR

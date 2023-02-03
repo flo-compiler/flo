@@ -238,6 +238,9 @@ class Array <T> {
     }
     private __in__(this, element: T): bool {
         return this.find(element) != -1
+    }    
+    private __del__(this){
+        del this.buffer
     }
     public pop(this): T {
         return this.buffer[--this.length]
@@ -342,6 +345,9 @@ class Map<T, U> {
     }
     private __iter__(this): MapIterator<T, U> {
         return new MapIterator<T, U>(this.entries, this.size, this.length)
+    }
+    private __del__(this){
+        del this.entries
     }
 }
 class MapIterator<T, U> {
