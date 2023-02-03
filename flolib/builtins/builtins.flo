@@ -24,8 +24,8 @@ fnc input(): string {
     let size = -1
     let buffer = new i8*(1)
     while (buffer[size] != '\n'){
-        buffer = buffer.resize((++size)+1)
-        read(STDIN, buffer+size, 1)
+        buffer = buffer.resize((++size) + 1)
+        read(STDIN, buffer + size, 1)
     }
     return new string(buffer, size)
 }
@@ -200,7 +200,7 @@ class Range {
 class Array <T> {
     public buffer: T*
     public length: int
-    private size: int
+    public size: int
     constructor(this, size: int){
         this.length = 0
         this.size = size
@@ -342,23 +342,22 @@ class Map<T, U> {
     }
 }
 class MapIterator<T, U> {
-    private idx: int
     private done: bool
     private entries: MapEntry<T, U>*
-    private size: int
-    private length: int
-    constructor(this, entries: MapEntry<T, U>*, size: int, length: int){
-        this.idx = -1
+    private remaining_size: int
+    private items_remaining: int
+    constructor(this, entries: MapEntry<T, U>*, remaining_size: int, items_remaining: int){
         this.done = false
         this.entries = entries
-        this.size = size
-        this.length = length
+        this.remaining_size = remaining_size
+        this.items_remaining = items_remaining
     }
     private next(this): MapEntry<T, U> {
-        for this.idx++; this.idx < this.size; this.idx++ {
-            if (this.entries[this.idx] != null) break
+        while this.remaining_size-- > 0 {
+            this.entries++
+            if this.entries[-1] != null break
         }
-        this.done = this.length-- <= 0
-        return this.entries[this.idx]
+        this.done = this.items_remaining-- <= 0
+        return this.entries[-1]
     }
 }

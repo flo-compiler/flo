@@ -1,9 +1,12 @@
 fnc main(): int {
-    let map = new Map<string, int>()
-    map["foo"] = 5
-    map["bar"] = 10
-    for entry in map {
-        println(entry.key)
-    }
+    // let map = new Map<string, int>()
+    // map["foo"] = 5
+    // map["bar"] = 10
+    // map["zoo"] = 10
+    // for entry in map {
+    //     println(entry.key)
+    // }
+    let arr: int[] = [1, 2, 3, 4]
+    println("$arr")
     return 0
 }
