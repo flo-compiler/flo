@@ -241,36 +241,39 @@ class CodeGen {
         let val = bool_exp.value
         return this.createLLVMBool(val)
     }
-    private codegen_atof_call(this, builder: LLVMBuilderRef, args: LLVMValueRef[]): LLVMValueRef {
+    private codegen_atof_call(this, builder: LLVMBuilderRef, arg: LLVMValueRef): LLVMValueRef {
         let arg_types: LLVMTypeRef[1] = [LLVMPointerType(LLVMInt8Type())]
+        let args: LLVMValueRef[1] = [arg]
         let float_ty = LLVMDoubleType()
         let atof = get_intrinsic(this.module, "atof", &arg_types[0], 1, float_ty)
-        return LLVMBuildCall2(builder, atof.fnc_type, atof.call, args.buffer, args.length, "")
+        return LLVMBuildCall2(builder, atof.fnc_type, atof.call, &args[0], 1, "")
     }
-    private codegen_atoi_call(this, builder: LLVMBuilderRef, args: LLVMValueRef[]): LLVMValueRef {
+    private codegen_atoi_call(this, builder: LLVMBuilderRef, arg: LLVMValueRef): LLVMValueRef {
         let arg_types: LLVMTypeRef[1] = [LLVMPointerType(LLVMInt8Type())]
+        let args: LLVMValueRef[1] = [arg]
         let int_ty = LLVMInt32Type()
         let atoi = get_intrinsic(this.module, "atoi", &arg_types[0], 1, int_ty)
-        return LLVMBuildCall2(builder, atoi.fnc_type, atoi.call, args.buffer, args.length, "")
+        return LLVMBuildCall2(builder, atoi.fnc_type, atoi.call, &args[0], 1, "")
     }
-    private codegen_atol_call(this, builder: LLVMBuilderRef, args: LLVMValueRef[]): LLVMValueRef {
+    private codegen_atol_call(this, builder: LLVMBuilderRef, arg: LLVMValueRef): LLVMValueRef {
         let arg_types: LLVMTypeRef[1] = [LLVMPointerType(LLVMInt8Type())]
+        let args: LLVMValueRef[1] = [arg]
         let big_int_ty = LLVMInt64Type()
         let atol = get_intrinsic(this.module, "atol", &arg_types[0], 1, big_int_ty)
-        return LLVMBuildCall2(builder, atol.fnc_type, atol.call, args.buffer, args.length, "")
+        return LLVMBuildCall2(builder, atol.fnc_type, atol.call, &args[0], 1, "")
     }
-    private codegen_realloc_call(this, builder: LLVMBuilderRef, args: LLVMValueRef[]): LLVMValueRef {
+    private codegen_realloc_call(this, builder: LLVMBuilderRef, args: LLVMValueRef*): LLVMValueRef {
         let i8_ptr_ty = LLVMPointerType(LLVMInt8Type())
         let arg_types: LLVMTypeRef[2] = [i8_ptr_ty, LLVMIntType(WORD_SIZE)]
         let realloc = get_intrinsic(this.module, "realloc", &arg_types[0], 2, i8_ptr_ty)
-        return LLVMBuildCall2(builder, realloc.fnc_type, realloc.call, args.buffer, args.length, "")
+        return LLVMBuildCall2(builder, realloc.fnc_type, realloc.call, args, 2, "")
     }
-    private codegen_memcmp_call(this, builder: LLVMBuilderRef, args: LLVMValueRef[]): LLVMValueRef {
+    private codegen_memcmp_call(this, builder: LLVMBuilderRef, args: LLVMValueRef*): LLVMValueRef {
         let i8_ptr_ty = LLVMPointerType(LLVMInt8Type())
         let int_ty = LLVMIntType(WORD_SIZE)
         let arg_types: LLVMTypeRef[3] = [i8_ptr_ty, i8_ptr_ty, int_ty]
         let memcmp = get_intrinsic(this.module, "memcmp", &arg_types[0], 3, int_ty)
-        return LLVMBuildCall2(builder, memcmp.fnc_type, memcmp.call, args.buffer, args.length, "")
+        return LLVMBuildCall2(builder, memcmp.fnc_type, memcmp.call, args, 3, "")
     }
     private codegen_del_call(this, builder: LLVMBuilderRef, self: LLVMValueRef, obj_ty: ObjectType): LLVMValueRef {
         let func = this.get_member_mem_with_name(builder, self, obj_ty, "__del__")
@@ -386,7 +389,8 @@ class CodeGen {
                 str = LLVMBuildCall2(builder, LLVM_GetFunctionType(func), func, &args[0], 2, "")
             } else {
                 let self = LLVMBuildMalloc(builder, str_ty, "")
-                this.build_constructor_call(builder, string_exp.value_type as ObjectType, [self, str, str_len])
+                let args: LLVMValueRef[3] = [self, str, str_len] 
+                this.build_constructor_call(builder, string_exp.value_type as ObjectType, &args[0], 3)
                 str = self
             }
         }
@@ -551,7 +555,8 @@ class CodeGen {
         let len_val = arr_expr.elements.length
         let size_value = this.createLLVMInt(len_val > 0 ? len_val: 1)
         let len_value = this.createLLVMInt(len_val)
-        this.build_constructor_call(builder, obj_ty, [self, LLVMConstMul(size_value, LLVMSizeOf(elmllvm_ty))])
+        let args: LLVMValueRef[2] = [self, LLVMConstMul(size_value, LLVMSizeOf(elmllvm_ty))]
+        this.build_constructor_call(builder, obj_ty, &args[0], 2)
         let buff_ptr = this.get_member_mem_with_name(builder, self, obj_ty, "buffer")
         let arg_ptr = LLVMBuildLoad2(builder, LLVMPointerType(elmllvm_ty), buff_ptr, "")
         this.store_array_elements(builder, arg_ptr, arr_expr)
@@ -810,25 +815,26 @@ class CodeGen {
         let alloc_ty = new_expr.memory_type
         let is_ptr_ty = is_pointer(alloc_ty)
         let llvm_type: LLVMTypeRef = null
-        let args: LLVMValueRef[] = []
         if is_ptr_ty {
             llvm_type = this.codegen_type(alloc_ty)
-            this.evaluate_expression_list(builder, args, new_expr.args)
+            let size = this.codegen_expression(builder, new_expr.args[0])
             if new_expr.onheap {
-                ptr = LLVMBuildArrayMalloc(builder, llvm_type, args[0], "")
+                ptr = LLVMBuildArrayMalloc(builder, llvm_type, size, "")
             } else {
-                ptr = LLVMBuildArrayAlloca(builder, llvm_type, args[0], "")
+                ptr = LLVMBuildArrayAlloca(builder, llvm_type, size, "")
             }
         } else if is_object(alloc_ty) {
+            let args_length = new_expr.args.length + 1
+            let args: LLVMValueRef*(args_length)
             llvm_type = this.codegen_type(alloc_ty, false)
             if new_expr.onheap {
                 ptr = LLVMBuildMalloc(builder, llvm_type, "")
             } else {
                 ptr = LLVMBuildAlloca(builder, llvm_type, "")
             }
-            args << ptr
-            this.evaluate_expression_list(builder, args, new_expr.args)
-            this.build_constructor_call(builder, alloc_ty as ObjectType, args)
+            args[0] = ptr
+            this.evaluate_expression_list(builder, args, 1, new_expr.args)
+            this.build_constructor_call(builder, alloc_ty as ObjectType, args, args_length)
         }
         return ptr
     }
@@ -873,23 +879,23 @@ class CodeGen {
     }
     private codegen_intrinsic_exp(this, builder: LLVMBuilderRef, intrinsic_call_exp: IntrinsicCall): LLVMValueRef {
         let intrinsic_type = intrinsic_call_exp.intrinsic
-        let args: LLVMValueRef[] = []
-        this.evaluate_expression_list(builder, args, intrinsic_call_exp.args)
         if intrinsic_type < Intrinsics.MEMCPY {
-            let cbuff = this.codegen_string_to_cstring(builder, args[0])
+            let cbuff = this.codegen_string_to_cstring(builder, this.codegen_expression(builder, intrinsic_call_exp.args[0]))
             let value: LLVMValueRef = null
             if intrinsic_type == Intrinsics.STR_TO_F {
-                value = this.codegen_atof_call(builder, [cbuff])
+                value = this.codegen_atof_call(builder, cbuff)
             }
             if intrinsic_type == Intrinsics.STR_TO_I {
-                value = this.codegen_atoi_call(builder, [cbuff])
+                value = this.codegen_atoi_call(builder, cbuff)
             }
             if intrinsic_type == Intrinsics.STR_TO_L {
-                value = this.codegen_atol_call(builder, [cbuff])
+                value = this.codegen_atol_call(builder, cbuff)
             }
             LLVMBuildFree(builder, cbuff)
             return value
         }
+        let args: LLVMValueRef*(intrinsic_call_exp.args.length)
+        this.evaluate_expression_list(builder, args, 0, intrinsic_call_exp.args)
         let arg0_pointee_ty = (intrinsic_call_exp.args[0].value_type as PointerType).pointee_type
         let arg0_pointee_size = LLVMSizeOf(this.codegen_type(arg0_pointee_ty))
         if intrinsic_type == Intrinsics.MEMRESIZE {
@@ -902,14 +908,17 @@ class CodeGen {
         }
 
         let arg0_align = LLVMGetAlignment(args[0])
-        if intrinsic_type == Intrinsics.MEMSET
+        if intrinsic_type == Intrinsics.MEMSET {
             return LLVMBuildMemSet(builder, args[0], LLVMBuildIntCast2(builder, args[1], LLVMInt8Type(), false, ""), args[2], arg0_align)
+        }
 
         let arg1_align = LLVMGetAlignment(args[1])
-        if intrinsic_type == Intrinsics.MEMCPY 
+        if intrinsic_type == Intrinsics.MEMCPY {
             return LLVMBuildMemCpy(builder, args[0], arg0_align, args[1], arg1_align, args[2])
-        if intrinsic_type == Intrinsics.MEMMOVE 
+        }
+        if intrinsic_type == Intrinsics.MEMMOVE {
             return LLVMBuildMemMove(builder, args[0], arg0_align, args[1], arg1_align, args[2])
+        }
         panic("instrinsic not found!")
         return null
     }
@@ -1035,16 +1044,16 @@ class CodeGen {
         this.break_bb = prev_break_bb
         this.continue_bb = prev_continue_bb
     }
-    private evaluate_expression_list(this, builder: LLVMBuilderRef, evaluated_list: LLVMValueRef[], list: Expression[]){
+    private evaluate_expression_list(this, builder: LLVMBuilderRef, evaluated_list: LLVMValueRef*, start: int, list: Expression[]){
         for item in list {
-            evaluated_list << this.codegen_expression(builder, item)
+            evaluated_list[start++] = this.codegen_expression(builder, item)
         }
     }
-    private build_constructor_call(this, builder: LLVMBuilderRef, obj_type: ObjectType, params: LLVMValueRef[]){
+    private build_constructor_call(this, builder: LLVMBuilderRef, obj_type: ObjectType, params: LLVMValueRef*, params_length: int){
         let checked_class = get_class_from_type(this.program, obj_type)
         let constructor = this.get_or_codegen_class_from_typeid(obj_type.class_id).class_constructor
         if constructor != null {
-            LLVMBuildCall2(builder, LLVM_GetFunctionType(constructor), constructor, params.buffer, params.length, "")
+            LLVMBuildCall2(builder, LLVM_GetFunctionType(constructor), constructor, params, params_length, "")
         } else {
             panic("Could not find constructor for constructor call")
         }
@@ -1277,6 +1286,9 @@ class CodeGen {
         for field_type in field_types {
             prop_types << field_type
         }
+        del field_types
+        del vtable_types
+        del vtable_values
     }
     private declare_class(this, checked_class: Class){
         let struct_class = new CGClassType()
@@ -1288,6 +1300,7 @@ class CodeGen {
         // creating a vtable
         this.declare_class_props(struct_class, checked_class, prop_types)
         LLVMStructSetBody(struct_class.llvm_type, prop_types.buffer, prop_types.length, true)
+        del prop_types
         // Now constructor
         if checked_class.construct != null {
             let constructor_type = get_class_prop_type(this.program, checked_class.construct) as FunctionType
@@ -1296,6 +1309,7 @@ class CodeGen {
             for arg_type in constructor_type.arg_types {
                 arg_types << arg_type
             }
+            del constructor_type.arg_types
             constructor_type.arg_types = arg_types
             let constructor_llvm_method_type = this.codegen_type(constructor_type, false)
             struct_class.class_constructor = this.declare_method("$(checked_class.name)_constructor", constructor_llvm_method_type)
