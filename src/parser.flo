@@ -338,11 +338,21 @@ class EnumNode {
         this.variant = null
     }
 }
+class ImportClause {
+    original_identifer: IdentifierToken
+    renamed_identifer: IdentifierToken
+    constructor(this, original_identifer: IdentifierToken){
+        this.original_identifer = original_identifer
+        this.renamed_identifer = null
+    }
+}
 class ImportNode {
-    import_list: IdentifierToken[]
+    import_list: ImportClause[]
     module_path: StrToken
+    module_name: IdentifierToken
     constructor(this){
         this.import_list = []
+        this.module_name = null
     }
 }
 class TypeAliasNode {
@@ -1108,19 +1118,30 @@ class Parser {
         const_decl_node.range = FloRange.merge(const_decl_node.range, const_decl_node.value.range)
         return const_decl_node
     }
-    private parse_import(this): ImportNode {
-        let import_node = new ImportNode()
-        this.advance()
-        if this.current_token.ttype == TokType.IDENTIFER {
-            import_node.import_list << (this.current_token as IdentifierToken)
+    private parse_import_clause(this): ImportClause {
+        let import_clause = new ImportClause(this.eat(TokType.IDENTIFER) as IdentifierToken)
+        if this.current_token.ttype == TokType.AS_KW {
             this.advance()
+            import_clause.renamed_identifer = this.eat(TokType.IDENTIFER) as IdentifierToken
+        }
+        return import_clause
+    }
+    private parse_import(this): ImportNode {
+        this.advance()
+        let import_node = new ImportNode()
+        if this.current_token.ttype == TokType.IDENTIFER {
+            import_node.import_list << this.parse_import_clause()
             while this.current_token.ttype == TokType.COMMA and this.can_parse() {
                 this.advance()
-                import_node.import_list << (this.eat(TokType.IDENTIFER) as IdentifierToken)
+                import_node.import_list << this.parse_import_clause()
             }
             this.eat(TokType.IN_KW)
         }
         import_node.module_path = this.eat(TokType.STR) as StrToken
+        if this.current_token.ttype == TokType.AS_KW {
+            this.advance()
+            import_node.module_name = this.eat(TokType.IDENTIFER) as IdentifierToken
+        }
         return import_node
     }
     private parse_enum(this): EnumNode {

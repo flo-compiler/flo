@@ -491,11 +491,13 @@ import A, B in "module"
 ```
 import "module"
 ```
-- [ ] Import renaming/ namespacing.
+- [x] Import renaming
 ```
 import A as C in "module"
+```
+- [x] import module namespace.
+```
 import "module" as B
-B.add(1)
 ```
 
 ## Debugger
