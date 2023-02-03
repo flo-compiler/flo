@@ -69,6 +69,9 @@ class string {
     private __in__(this, other: string): bool {
         return this.find(other) != -1
     }
+    private __del__(this){
+        del this.buffer
+    }
     public find(this, search: string, start: int = 0): int {
         for let i = start; i < this.length; i++ {
             if (search.buffer[0] == this.buffer[i]) {
