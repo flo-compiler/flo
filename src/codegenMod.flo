@@ -95,7 +95,7 @@ class GeneratedModule {
             this.print_errors()
         }
     }
-    public llvm_shutdown(this){
+    private __del__(this){
         LLVMShutdown()
     }
 }

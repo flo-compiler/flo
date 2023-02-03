@@ -1272,7 +1272,6 @@ class TypeChecker {
             this.check_class_body(instantiated_generic_class)
             possible_type = this.get_type_from_current_scope(instantiated_generic_name)
         } else {
-            this.get_current_module().scopes.pop()
             del generic_scope
         }
         this.current_module = module_id
@@ -1870,8 +1869,8 @@ class TypeChecker {
             let types: Type[] = []
             let identifer_tok = record_type.name
             if record_type.generic_args.length > 0 {
-                for let j = 0; j < record_type.generic_args.length; j++
-                    types << this.check_type(record_type.generic_args[j])
+                for arg in record_type.generic_args
+                    types << this.check_type(arg)
                 if this.has_errored() return null
                 let generic_type = this.create_generic_instance_in_module(identifer_tok.value, types)
                 if this.has_errored() this.compiler.errors[0].range = type_node.range

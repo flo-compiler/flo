@@ -84,7 +84,7 @@ fnc main(argc: int, argv: i8**): int {
         } else {
             code = flo_module.exec()
         }
-        flo_module.llvm_shutdown()
+        del module_node
     } else {
         print_message_error(ErrorKind.GEN, "No input file specified.")
         return 1
