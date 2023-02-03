@@ -70,6 +70,8 @@ fnc string_to_kw_token(word: string): TokType {
         return TokType.ENUM_KW
     if word == "new"
         return TokType.NEW_KW
+    if word == "del"
+        return TokType.DEL_KW
     if word == "as"
         return TokType.AS_KW
     return TokType.ILLEGAL

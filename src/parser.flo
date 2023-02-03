@@ -645,6 +645,8 @@ class Parser {
             return UnaryOp.NEG
         if token_type == TokType.AMP 
             return UnaryOp.ADDROF
+        if token_type == TokType.DEL_KW 
+            return UnaryOp.DEL
         return UnaryOp.UNDEF
     }
     private parse_unary_expression_pre(this): ExpressionNode {

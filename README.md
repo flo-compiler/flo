@@ -19,7 +19,7 @@ flo -h
 Still in progress. In the future it might be acheived by:
 - [ ] Reference counting
 - [ ] A borrow mechanism inspired by rust.
-- [ ] Manual memory management with `del` keyword.
+- [x] Manual memory management with `del` keyword.
 
 ## Math Safety
 - [ ] Integer Overflows.
