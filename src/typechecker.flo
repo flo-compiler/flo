@@ -592,6 +592,14 @@ class Scope {
         this.type_aliases = new Map<string, Type>()
         this.parent = null 
     }
+    private __del__(this){
+        del this.id
+        del this.vars
+        del this.classes
+        del this.functions
+        del this.enums
+        del this.type_aliases
+    }
 }
 class FunctionArg(Expression) {
     id: VarId
@@ -1265,6 +1273,7 @@ class TypeChecker {
             possible_type = this.get_type_from_current_scope(instantiated_generic_name)
         } else {
             this.get_current_module().scopes.pop()
+            del generic_scope
         }
         this.current_module = module_id
         this.current_scope = scope_id
@@ -2246,6 +2255,7 @@ class TypeChecker {
             }
             let int_ty = new Type(TypeKind.INT)
             let arg = this.check_expression(int_ty, new_expr_node.args[0])
+            if this.has_errored() return null
             if !this.types_are_eq(int_ty, arg.value_type) {
                 this.error(ErrorKind.GEN, "New operator for pointers expects argument of type '$(this.dump_type(int_ty))' but got type '$(arg.value_type)'", new_expr_node.args[0].range)
                 return null
