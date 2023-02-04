@@ -1,5 +1,4 @@
 fnc main(): int {
     let x = 0..5
-    println("$(4 in x)")
-    return 0
+    return (4 in x) ? 0 : 1
 }
