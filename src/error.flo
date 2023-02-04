@@ -26,7 +26,8 @@ fnc get_next_line_index(text: string, start: int): int {
 fnc print_error_line(text: string, range: FloRange){
     let end = get_next_line_index(text, range.end)
     let start_line = range.start - range.col
-    println(text.substring(start_line, end - start_line))
+    let line = text.substring(start_line, end - start_line)
+    println(line)
     let space_num = range.col
     let arrow_num = range.end - range.start
     for _ in 0..space_num {
@@ -38,6 +39,7 @@ fnc print_error_line(text: string, range: FloRange){
     }
     change_print_color(COLORS.RESET)
     print("\n")
+    del line
 }
 fnc print_message_error(kind: ErrorKind, message: string){
     change_print_color(COLORS.RED)

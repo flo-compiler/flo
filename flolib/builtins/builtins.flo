@@ -309,11 +309,12 @@ class Map<T, U> {
         this.length = 0
     }
     private hash_fnc(this, key: T): int {
-        let str = key as string
+        let str = "$key"
         let hash = 0
         for let i = 0; i < str.length; ++i {
             hash = (hash << 1) + (str.get_byte(i) as int)
         }
+        del str
         return hash < 0 ? -hash : hash
     }
     private resize(this){
