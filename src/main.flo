@@ -2,7 +2,6 @@ import "utils"
 import "error"
 import "compiler"
 import "lexer"
-import "debug"
 import "parser"
 import "typechecker"
 import "codegen"
@@ -16,7 +15,6 @@ fnc help(exec_file: string){
     println("Usage: $exec_file <path> [OPTIONS]\n")
     println("OPTIONS:")
     println(" -h, --help\t\t\tShow this help message.")
-    println(" --print-tokens\t\t\tPrint generated Tokens")
     println(" --print-ast\t\t\tPrint generated AST.")
     println(" --emit-llvm\t\t\tPrint generated LLVM-IR.")
     println(" -o <file>\t\t\tPlace the output into <file>.")
@@ -67,7 +65,6 @@ fnc main(argc: int, argv: i8**): int {
         /***** Lexing ******/
         let tokens = Lexer.tokenize(compiler.current_file_contents, compiler.errors)
         if (compiler.print_errors()) return 1
-        if flag(args, "--print-tokens") print_tokens(tokens, compiler.current_file_contents)
         /***** Parsing *****/
         let module_node = Parser.parse(tokens, compiler.errors)
         if (compiler.print_errors()) return 1
@@ -84,6 +81,7 @@ fnc main(argc: int, argv: i8**): int {
         } else {
             code = flo_module.exec()
         }
+        del args
         del module_node
     } else {
         print_message_error(ErrorKind.GEN, "No input file specified.")

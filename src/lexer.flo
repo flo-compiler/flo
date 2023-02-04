@@ -376,7 +376,9 @@ class Lexer {
         }
         let range = this.get_range(length)
         let str_value = this.text.substring(range.start, length)
-        return is_float ? new FloatToken(str_value as float, range) as Token : new IntToken(str_value as int, range)
+        let num_value: Token = is_float ? new FloatToken(str_value as float, range) as Token : new IntToken(str_value as int, range)
+        del str_value
+        return num_value
     }
     private identifier_token(this): Token {
         let length = 1
@@ -527,7 +529,9 @@ class Lexer {
             return this.dot_token()
         if char == '\0'
             return new Token(TokType.EOF, new FloRange(0, 0, this.col, this.line))
-        this.errors << new FloError(ErrorKind.ILLEGALCHAR, "Illegal character: '$(this.text.substring(this.idx, 1))'", this.get_range(1))
+        let char_msg = this.text.substring(this.idx, 1)
+        this.errors << new FloError(ErrorKind.ILLEGALCHAR, "Illegal character: '$char_msg'", this.get_range(1))
+        del char_msg
         return null
     }
     public tokenize(text: string, errors: FloError[]): Token[] {
