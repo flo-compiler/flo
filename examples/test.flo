@@ -1,6 +1,0 @@
-//@expect: return_code=11
-fnc main(): int {
-    let arr: int[] = [1, 2, 3, 4]
-    del arr
-    return arr[1]
-}

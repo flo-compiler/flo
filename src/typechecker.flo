@@ -1074,6 +1074,12 @@ class TypeChecker {
             }
             return s + ">"
         }
+        if ty.kind == TypeKind.MODULE {
+            return "Namespace"
+        }
+        if ty.kind == TypeKind.RECORD {
+            return "Record"
+        }
         return dump_type(ty, false)
     }
     private create_scope(this): Scope {
@@ -2180,7 +2186,6 @@ class TypeChecker {
         if this.has_errored() return null
         /* TODO:
             int to pointer.
-            any type to boolean.
             boolean to int/float.
         */
         if is_buitin(this.program, dest_ty, "string") {
@@ -2206,7 +2211,7 @@ class TypeChecker {
             } else {
                 call = new IntrinsicCall(Intrinsics.STR_TO_L)
             }
-            call.args = [exp]
+            call.args << exp
             exp = call
             is_valid_cast = true
         }
@@ -2214,6 +2219,9 @@ class TypeChecker {
             is_valid_cast = true
         }
         if is_pointer(dest_ty) and is_pointer(val_ty) {
+            is_valid_cast = true
+        }
+        if is_bool(dest_ty) {
             is_valid_cast = true
         }
         if !is_valid_cast {

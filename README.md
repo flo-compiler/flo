@@ -16,9 +16,8 @@ flo -h
 5. Fast Performance.
 
 ## Memory Safety
-Still in progress. In the future it might be acheived by:
-- [ ] Reference counting
-- [ ] A borrow mechanism inspired by rust.
+Allowing programmers to opt-in between:
+- [ ] Garbage collection.
 - [x] Manual memory management with `del` keyword.
 
 ## Math Safety
@@ -47,13 +46,6 @@ fnc addTwo(x: i8, y: i8): i8 {
 addTwo(8, 7) 
 ```
 The type of 8 and 7 are infered as `i8` using the type inference at function call.
-- [ ] Optional chaining `a?.b?.c`
-- [ ] Multiple assignemt/destructing
-```
-let {a, b, c} = {5, 6, 7}
-// or
-let {a, b, c} = [5, 6, 7]
-```
 ## Strings
 ### Two types of strings:
 1. C-String (null terminated string)
@@ -114,7 +106,7 @@ names << "Josh"
 let a = [1..100]
 ```
 ## Maps
-- [x] Intialization
+- [ ] Intialization
 ```
 let map: Map<string, int> = ["foo": 34, "bar": 36, "zoo": 55]
 // or
@@ -161,7 +153,23 @@ for let i = 0; i < 10; i++ // do something
 ```
 for x in 1..10
 ```
-- Need Iterable support
+- Object has to an iterable that is it must have an `__iter__` method that returns an iterator object with the following properties:
+    - done: `bool` for when the iterator is done with iteration.
+    - next: `any` which returns the next element in the iteration loop.
+- The iterator object in the loop is automatically cleaned up at the end of the loop.
+- Other examples of where you can use the the for/in loop:
+```
+// iterating over an array.
+for element in [1, 2, 3, 4] {
+    println("$element")
+}
+```
+```
+// iterating over a map.
+for entry in ["foo": 1, "bar": 2] { 
+    println("$entry")
+}
+```
 - [x] While loop
 ```
 while 1 // do something 
@@ -372,8 +380,9 @@ class Int(ICMP) {
     - `__ge__` (>=)
     - `__pow__` (^)
     - `__mod__` (%)
-    - `__pow__` (^=)
-    - `__mod__` (%=)
+    - `__powa__` (^=)
+    - `__moda__` (%=)
+    - `__del__` (del object; this will be called before deallocating objects memory)
 
 - [x] Operator Fall backs.
     -   Overloads for `==` and `!=` have fallbacks other operators don't and need to be implemented in order to use those in an object.
@@ -402,6 +411,7 @@ fnc identity<T>(arg: T): T {
 ```
 let x: int?
 ```
+- [ ] Optional chaining `a?.b?.c`
 - [ ] Any type 
 ```
 let x: any
