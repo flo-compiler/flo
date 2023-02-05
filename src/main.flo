@@ -18,7 +18,7 @@ fnc help(exec_file: string){
     println(" --print-ast\t\t\tPrint generated AST.")
     println(" --emit-llvm\t\t\tPrint generated LLVM-IR.")
     println(" -o <file>\t\t\tPlace the output into <file>.")
-    println(" --target\t\t\tCompile to specific target triple.")
+    println(" -target\t\t\tCompile to specific target triple.")
     println(" -I\t\t\tSpecify runtime directory.")
     println(" -O OPT_LEVEL\n \t\t\t\tSpecify the compiler's optimization level which is a\n \t\t\t\tvalue from 0-3.")
     println(" -v, --version\t\t\tShow version.")

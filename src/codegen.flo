@@ -896,7 +896,7 @@ class CodeGen {
         return null
     }
     private codegen_string_to_cstring(this, builder: LLVMBuilderRef, value: LLVMValueRef): LLVMValueRef {
-        let string_class_id = this.program.modules[0].scopes[0].classes["string"]
+        let string_class_id = get_scope(this.program, this.program.modules[0].scope).classes["string"]
         let string_obj_ty: ObjectType(string_class_id)
         let prop_ty = get_class_prop_type_with_name(this.program, string_obj_ty, "to_cstring")
         let func = this.get_member_with_name(builder, value, string_obj_ty, "to_cstring")
