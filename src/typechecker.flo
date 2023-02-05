@@ -717,6 +717,7 @@ class Module {
     consts: Const[]
     classes: Class[]
     functions: Function[]
+    scope: ScopeId
     enums: Enum[]
     scopes: Scope[]
     global_consts: ConstDeclaration[]
@@ -970,7 +971,7 @@ class TypeChecker {
         return get_scope(this.program, this.current_scope)
     }
     private get_current_module_global_scope(this): Scope {
-        return this.get_current_module().scopes[0]
+        return get_scope(this.program, this.get_current_module().scope)
     }
     private get_current_function(this): Function {
         return this.get_current_module().functions[this.current_function.id]
@@ -1110,7 +1111,7 @@ class TypeChecker {
         // Get Var from builtins
         if value == null and this.current_scope.module_id != 0 {
             let previous_scope = this.current_scope
-            this.current_scope = this.program.modules[0].scopes[0].id
+            this.current_scope = this.program.modules[0].scope
             value = this.get_var_from_current_scope(name)
             this.current_scope = previous_scope
             if value != null {
@@ -1148,7 +1149,7 @@ class TypeChecker {
         // Get type from builtins
         if this.current_scope.module_id != 0 {
             let previous_scope = this.current_scope
-            this.current_scope = this.program.modules[0].scopes[0].id
+            this.current_scope = this.program.modules[0].scope
             let builtin_type = this.get_type_from_current_scope(name)
             if builtin_type.kind != TypeKind.UNKNOWN {
                 this.program.uses_builtins = true
@@ -1184,7 +1185,7 @@ class TypeChecker {
     private switch_to_generic_module(this){
         let generic_module_id = 0
         this.current_module = generic_module_id
-        this.current_scope = this.get_module(generic_module_id).scopes[0].id
+        this.current_scope = this.get_module(generic_module_id).scope
     }
     private check_module(this, module_ast: ModuleAST, filename: string): Module {
         this.module_contains_generics = false
@@ -1194,6 +1195,7 @@ class TypeChecker {
         this.current_module = this.program.modules.length
         this.program.modules << module
         let module_scope = this.create_scope()
+        module.scope = module_scope.id
         module_scope.vars["true"] = null
         module_scope.vars["false"] = null
         module_scope.vars["null"] = null
@@ -1284,11 +1286,10 @@ class TypeChecker {
             this.declare_class_within_module(instantiated_generic_class)
             this.check_class_body(instantiated_generic_class)
             possible_type = this.get_type_from_current_scope(instantiated_generic_name)
-        } else {
-            del generic_scope
         }
         this.current_module = module_id
         this.current_scope = scope_id
+        del generic_scope
         return new GenericType(name, types, possible_type)
     }
     private declare_var_within_current_scope(this, name: string, value: Expression, value_type: Type): Var {
@@ -1376,7 +1377,7 @@ class TypeChecker {
         return new FunctionType(arg_types, ret_type)
     }
     private import_all_from_module(this, module: Module){
-        let global_module_scope = module.scopes[0]
+        let global_module_scope = get_scope(this.program, module.scope)
         for imported_var in module.global_vars {
             this.add_imported_var_to_module(imported_var.name, imported_var.var_id)
         }
@@ -1404,7 +1405,7 @@ class TypeChecker {
         let path = import_node.module_path.value
         let module = this.lex_and_parse_typecheck_file(path, import_node.module_path.range)
         if this.has_errored() return
-        let global_module_scope = module.scopes[0]
+        let global_module_scope = get_scope(this.program, module.scope)
         if import_node.import_list.length > 0 {
             for import_clause in import_node.import_list {
                 let name_to_import = import_clause.original_identifer.value
@@ -1528,6 +1529,7 @@ class TypeChecker {
             this.error(ErrorKind.NAME, "Illegal re-declaration of type '$name' as function", function_node.name.range)
             return
         }
+        let parent_scope = this.current_scope
         let fnc_scope = this.create_child_scope_within_current_scope()
         this.current_scope = fnc_scope.id 
         declared_function.args = []
@@ -2633,7 +2635,7 @@ class TypeChecker {
     private check_if_stamement(this, if_stmt_node: IfStatementNode): IfStatement {
         let condition = this.check_condition(if_stmt_node.condition)
         let block = this.check_block(if_stmt_node.block)
-        let else_block: Block = if_stmt_node.else_block != null ? this.check_block(if_stmt_node.else_block) : null
+        let else_block = if_stmt_node.else_block != null ? this.check_block(if_stmt_node.else_block) : null
         return new IfStatement(condition, block, else_block)
     }
     private check_var_declaration(this, var_decl_node: VarDeclarationStatement): VarDeclaration {
@@ -2747,7 +2749,7 @@ class TypeChecker {
         }
         if this.has_errored() return null
         this.in_loop = true
-        for_stmt.block = this.check_block(for_stmt_node.block)
+        for_stmt.block = this.check_block(for_stmt_node.block, for_scope)
         this.in_loop = prev_in_loop
         this.current_scope = for_scope.parent
         return for_stmt
@@ -2819,11 +2821,11 @@ class TypeChecker {
             return this.check_expression(Type.unknown(), stmt_node as ExpressionNode)
         return null
     }
-    private check_block(this, block_node: BlockNode): Block {
+    private check_block(this, block_node: BlockNode, block_scope: Scope = null): Block {
         if this.has_errored() return null
         let block = new Block()
-        let new_scope = this.create_child_scope_within_current_scope()
-        this.current_scope = new_scope.id
+        block_scope = block_scope != null ? block_scope : this.create_child_scope_within_current_scope() //TODO: Use ?? in the future
+        this.current_scope = block_scope.id
         for stmt_node in block_node.statements {
             let stmt = this.check_statement(stmt_node)
             if this.has_errored() return null
@@ -2850,7 +2852,8 @@ class TypeChecker {
                 break
             }
         }
-        this.current_scope = new_scope.parent
+        this.current_scope = block_scope.parent
+        del block_scope
         return block
     }
 }
