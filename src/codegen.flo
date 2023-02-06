@@ -1279,9 +1279,8 @@ class CodeGen {
                 let llvm_method_type: LLVMTypeRef = null
                 if prop_id.type_id == checked_class.id {
                     let arg_types: Type[] = [new ObjectType(checked_class.id)]
-                    for arg_type in method_type.arg_types {
-                        arg_types << arg_type
-                    }
+                    arg_types += method_type.arg_types
+                    del method_type.arg_types
                     method_type.arg_types = arg_types
                     llvm_method_type = this.codegen_type(method_type, false)
                     if !checked_class.methods[prop_id.id].is_abstract {
@@ -1318,9 +1317,7 @@ class CodeGen {
             struct_class.vtable_type = vtable_struct_ty
             prop_types << LLVMPointerType(vtable_struct_ty)
         }
-        for field_type in field_types {
-            prop_types << field_type
-        }
+        prop_types += field_types
         del field_types
         del vtable_types
         del vtable_values
@@ -1340,9 +1337,7 @@ class CodeGen {
         if checked_class.construct != null {
             let constructor_type = get_class_prop_type(this.program, checked_class.construct) as FunctionType
             let arg_types: Type[] = [new ObjectType(checked_class.id)]
-            for arg_type in constructor_type.arg_types {
-                arg_types << arg_type
-            }
+            arg_types += constructor_type.arg_types
             del constructor_type.arg_types
             constructor_type.arg_types = arg_types
             let constructor_llvm_method_type = this.codegen_type(constructor_type, false)
