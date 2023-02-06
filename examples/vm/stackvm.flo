@@ -32,7 +32,7 @@ class StackVM {
     private execute(this){
         if (this.typ == 0) or (this.typ == 2) {
             this.sp++
-            printf("push (%d)\n",  this.dat as i32)
+            printf("push (%d)\n", this.dat as i32)
             this.mem[this.sp] = this.dat
         } else {
             this.doPrimitive()
@@ -71,8 +71,6 @@ class StackVM {
         printf("output: %x\n", this.mem[this.sp] as i32)
     }
     loadProgram(this, prog: int*, size: int){
-        for let i = 0; i < size; i++ {
-            this.mem[this.pc + i] = prog[i]
-        }
+        (this.mem + this.pc).copy_from(prog, size)
     }
 }
