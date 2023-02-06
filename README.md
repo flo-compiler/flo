@@ -101,9 +101,9 @@ let number = numbers[0] // paul
 ```
 names << "Josh"
 ```
-- [ ] Short Hand for arrays
+- [ ] The spread operator
 ```
-let a = [1..100]
+let a = [...(1..100)]
 ```
 ## Maps
 - [ ] Intialization

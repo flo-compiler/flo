@@ -1,13 +1,15 @@
+let DID_NOT_DELETE = 1
 class A {
     x: int
     constructor(this, x: int){
         this.x = x
     }
     public __del__(this){
-        println("deleted")
+        DID_NOT_DELETE = 0
     }
 }
-fnc main(){
+fnc main(): int {
     let a = new A(7)
     del a
+    return DID_NOT_DELETE
 }

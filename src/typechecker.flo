@@ -690,7 +690,22 @@ class Class {
         this.inherited_methods_num = 0
         this.fields = []
         this.methods = []
+        this.prop_map = new Map<string, PropId>()
+        this.static_prop_map = new Map<string, PropId>()
         this.is_abstract = false
+    }
+    private __del__(this){
+        del this.id
+        del this.name
+        if this.parent del this.parent
+        for field in this.fields {
+            del field
+        }
+        for method in this.methods {
+            del method
+        }
+        del this.prop_map
+        del this.static_prop_map
     }
 }
 class EnumField {
@@ -700,6 +715,11 @@ class EnumField {
     constructor(this, name: string){
         this.name = name
     }
+    private __del__(this){
+        del this.id
+        del this.name
+        del this.initializer
+    }
 }
 class Enum {
     id: EnumId
@@ -708,6 +728,16 @@ class Enum {
     field_map: [string: PropId]
     constructor(this){
         this.fields = []
+        this.field_map = new Map<string, PropId>()
+    }
+    private __del__(this){
+        del this.id
+        del this.name
+        for field in this.fields {
+            del field
+        }
+        del this.fields
+        del this.field_map
     }
 }
 class Module {
@@ -727,12 +757,41 @@ class Module {
         this.functions = []
         this.vars = []
         this.classes = []
-        this.functions = []
         this.enums = []
         this.scopes = []
         this.global_consts = []
         this.global_vars = []
         this.consts = []
+    }
+    private __del__(this){
+        for func in this.functions {
+            del func
+        }
+        for var in this.vars {
+            del var
+        }
+        for mod_class in this.classes {
+            del mod_class
+        }
+        for mod_enum in this.enums {
+            del mod_enum
+        }
+        for global_const in this.global_consts {
+            del global_const
+        }
+        for global_var in this.global_vars {
+            del global_var
+        }
+        del this.scopes[this.scope.id]
+        del this.name
+        del this.functions
+        del this.vars
+        del this.classes
+        del this.enums
+        del this.scopes
+        del this.global_consts
+        del this.global_vars
+        del this.consts
     }
 }
 class Program {
@@ -741,6 +800,12 @@ class Program {
     constructor(this){
         this.uses_builtins = false
         this.modules = []
+    }
+    private __del__(this){
+        for module in this.modules {
+            del module
+        }
+        del this.modules
     }
 }
 fnc get_var(program: Program, var_id: VarId): Var {
@@ -1482,8 +1547,6 @@ class TypeChecker {
             this.error(ErrorKind.NAME, "Name '$name' has already been used for another type. consider renaming", enum_node.name.range)
             return
         }
-        declared_enum.field_map = new Map<string, PropId>()
-        declared_enum.fields = []
         declared_enum.id = new EnumId(this.current_module, this.get_current_module().enums.length)
         this.get_current_module().enums << declared_enum
         module_scope.enums[declared_enum.name] = declared_enum.id
@@ -1508,8 +1571,6 @@ class TypeChecker {
         } else {
             declared_class.parent = null
         }
-        declared_class.prop_map = new Map<string, PropId>()
-        declared_class.static_prop_map = new Map<string, PropId>()
         declared_class.name = name
         declared_class.id = new ClassId(this.current_module, this.get_current_module().classes.length)
         this.get_current_module().classes << declared_class
