@@ -137,6 +137,7 @@ class CodeGen {
             codegen.codegen_function(func_)
         }
         codegen.destroy()
+        del program
         return new GeneratedModule(codegen.module)
     }
     private destroy(this){
@@ -301,10 +302,11 @@ class CodeGen {
         return LLVMBuildCall2(builder, memcmp.fnc_type, memcmp.call, args, 3, "")
     }
     private codegen_del_call(this, builder: LLVMBuilderRef, self: LLVMValueRef, obj_ty: ObjectType): LLVMValueRef {
-        let func = this.get_member_mem_with_name(builder, self, obj_ty, "__del__")
+        let func_ty: FunctionType
+        let func = this.get_member_with_name(builder, self, obj_ty, "__del__", &func_ty)
         if func == null return null
         let args: LLVMValueRef[1] = [self]
-        return LLVMBuildCall2(builder, LLVM_GetFunctionType(func), func, &args[0], 1, "")
+        return LLVMBuildCall2(builder, this.codegen_type(func_ty, false), func, &args[0], 1, "")
     }
     private createGlobalLLVMString(this, builder: LLVMBuilderRef, str_value: string): LLVMValueRef {
         let str = this.global_string_scope[str_value]
@@ -559,19 +561,27 @@ class CodeGen {
             return this.get_member_expr_mem(builder, exp as MemberExpression, null)
         return this.codegen_expression(builder, exp)
     }
-    private get_member_mem_with_name(this, builder: LLVMBuilderRef, val: LLVMValueRef, obj_type: ObjectType, name: string): LLVMValueRef {
+    // Only call for non-static members.
+    private get_member_mem_with_name(this, builder: LLVMBuilderRef, self: LLVMValueRef, obj_type: ObjectType, name: string, save_type: Type* = null): LLVMValueRef {
         let obj_class = get_class_from_type(this.program, obj_type)
         let prop_id = obj_class.prop_map[name]
         if prop_id == null  return null
         let prop_ty = get_class_prop_type(this.program, prop_id)
-        let member_expr: MemberExpression(null, prop_id, prop_ty) //TODO: Put it on the stack instead.
-        return this.get_member_expr_mem(builder, member_expr, val)
+        if save_type != null save_type[0] = prop_ty
+        let member_expr: MemberExpression(null, prop_id, prop_ty)
+        return this.get_member_expr_mem(builder, member_expr, self)
     }
-    private get_member_with_name(this, builder: LLVMBuilderRef, val: LLVMValueRef, obj_type: ObjectType, name: string): LLVMValueRef {
-        let memb_mem = this.get_member_mem_with_name(builder, val, obj_type, name)
-        if memb_mem == null return null
-        let prop_ty = get_class_prop_type_with_name(this.program, obj_type, name)
-        return LLVMBuildLoad2(builder, this.codegen_type(prop_ty), memb_mem, "")
+    // Only call for non-static members.
+    private get_member_with_name(this, builder: LLVMBuilderRef, self: LLVMValueRef, obj_type: ObjectType, name: string, save_type: Type* = null): LLVMValueRef {
+        let obj_class = get_class_from_type(this.program, obj_type)
+        let prop_id = obj_class.prop_map[name]
+        if prop_id == null  return null
+        let prop_ty = get_class_prop_type(this.program, prop_id)
+        if save_type != null save_type[0] = prop_ty
+        let expr: Expression(ExpressionKind.ACCESS)
+        expr.value_type = obj_type
+        let member_expr: MemberExpression(expr, prop_id, prop_ty)
+        return this.codegen_member_exp(builder, member_expr, self)
     }
     private codegen_builtin_array(this, builder: LLVMBuilderRef, arrgen_ty: GenericType, arr_expr: ArrayExpression): LLVMValueRef {
         let obj_ty = (arrgen_ty as GenericType).instantiated_type as ObjectType
@@ -865,13 +875,13 @@ class CodeGen {
         return ptr
     }
     private codegen_member_exp(this, builder: LLVMBuilderRef, member_exp: MemberExpression, self: LLVMValueRef): LLVMValueRef {
-        let var_id = (member_exp.expression as VarAccessExpression).value_id
         if is_object(member_exp.expression.value_type) {
             let ptr = this.get_member_expr_mem(builder, member_exp, self)
             if get_class_prop_visibility(this.program, member_exp.member_id) == ACCESS_ATTR.PRIVATE and is_function(member_exp.value_type)
                 return ptr
             return LLVMBuildLoad2(builder, this.codegen_type(member_exp.value_type), ptr, "")
         }
+        let var_id = (member_exp.expression as VarAccessExpression).value_id
         let prop_id_key = create_prop_key(member_exp.member_id)
         if var_id.kind == VarIdKind.CLASS {
             let struct_class = this.get_or_codegen_class_from_typeid(ClassVarId.to_classId(var_id))
