@@ -228,18 +228,20 @@ class Array <T> {
     private __getitem__(this, index: int): T {
         return this.buffer[index]
     }
-    // private __add__(this, other: T[]): T[]{
-    //     let arr = new Array<T>(this.length + other.length + 2)
-    //     arr.buffer.copy_from(this.buffer, this.length)
-    //     arr.length = this.length
-    //     arr.__adda__(other)
-    //     return arr
-    // }
-    // private __adda__(this, other: T[]): T[]{
-    //     while ((this.size - this.length) < other.length) this.resize()
-    //     (this.buffer + this.length).copy_from(other.buffer, other.length)
-    //     return this
-    // }
+    private __add__(this, other: T[]): T[]{
+        let arr: T[] = []
+        while arr.size < this.length arr.resize()
+        arr.buffer.copy_from(this.buffer, this.length)
+        arr.length = this.length
+        arr.__adda__(other)
+        return arr
+    }
+    private __adda__(this, other: T[]): T[]{
+        while ((this.size - this.length) < other.length) this.resize()
+        (this.buffer + this.length).copy_from(other.buffer, other.length)
+        this.length += other.length
+        return this as T[]
+    }
     private __neq__(this, other: T[]): bool {
         return !this.__eq__(other)
     }

@@ -1102,8 +1102,8 @@ class TypeChecker {
             let t2_gen_type = t2 as GenericType
             if t1_gen_type.name != t2_gen_type.name return false
             if t1_gen_type.arg_types.length != t2_gen_type.arg_types.length return false
-            for let x = 0; x < t1_gen_type.arg_types.length; x++ {
-                if !this.types_are_eq(t1_gen_type.arg_types[x], t2_gen_type.arg_types[x]) return false
+            for let i = 0; i < t1_gen_type.arg_types.length; i++ {
+                if (!this.types_are_eq(t1_gen_type.arg_types[i], t2_gen_type.arg_types[i])) return false
             }
         }
         return true
