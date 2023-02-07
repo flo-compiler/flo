@@ -2315,21 +2315,19 @@ class TypeChecker {
         return null
     }
     private check_new_expr(this, new_expr_node: NewExpressionNode): NewExpression {
-        let expr_ty = this.check_type(new_expr_node.parsed_type)
+        let expression_type = this.check_type(new_expr_node.parsed_type)
         if this.has_errored() return null
-        let value_type = expr_ty
-        if value_type.kind == TypeKind.RESOLVED_GENERIC {
-            value_type = (value_type as GenericType).instantiated_type
-        }
+        let memory_type = expression_type
+        if (memory_type.kind == TypeKind.RESOLVED_GENERIC) memory_type = (memory_type as GenericType).instantiated_type
         let args: Expression[] = []
-        if this.has_errored() return null
-        if is_object(expr_ty) {
-            let msg = this.check_constructor_call(get_class_from_type(this.program, expr_ty).id, new_expr_node.args, &args)
+        if is_object(memory_type) {
+            let msg = this.check_constructor_call(get_class_from_type(this.program, memory_type).id, new_expr_node.args, &args)
             if msg != null {
                 this.error(ErrorKind.GEN, msg, new_expr_node.range)
                 return null
             }
-        } else if expr_ty.kind == TypeKind.PTR {
+        } else if memory_type.kind == TypeKind.PTR {
+            memory_type = (memory_type as PointerType).pointee_type
             let argno = new_expr_node.args.length
             if argno != 1 {
                 this.error(ErrorKind.GEN, "New operator expects 1 argument for pointers but got $argno argument(s)", new_expr_node.range)
@@ -2340,14 +2338,15 @@ class TypeChecker {
             if this.has_errored() return null
             if !this.types_are_eq(int_ty, arg.value_type) {
                 this.error(ErrorKind.GEN, "New operator for pointers expects argument of type '$(this.dump_type(int_ty))' but got type '$(arg.value_type)'", new_expr_node.args[0].range)
+                del int_ty
                 return null
             }
             args << arg
         } else {
-            this.error(ErrorKind.TYPE, "New operator expects either an a pointer or an object not a '$(this.dump_type(expr_ty))'", new_expr_node.range)
+            this.error(ErrorKind.TYPE, "New operator expects either an a pointer or an object not a '$(this.dump_type(memory_type))'", new_expr_node.range)
             return null
         }
-        return new NewExpression(value_type, expr_ty, args, new_expr_node.onheap)
+        return new NewExpression(memory_type, expression_type, args, new_expr_node.onheap)
     }   
     private check_member_access(this, accessor: PropId): string {
         let visibility = ACCESS_ATTR.PUBLIC

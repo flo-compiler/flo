@@ -849,9 +849,8 @@ class CodeGen {
     private codegen_new_exp(this, builder: LLVMBuilderRef, new_expr: NewExpression): LLVMValueRef {
         let ptr: LLVMValueRef = null
         let alloc_ty = new_expr.memory_type
-        let is_ptr_ty = is_pointer(alloc_ty)
         let llvm_type: LLVMTypeRef = null
-        if is_ptr_ty {
+        if is_pointer(new_expr.value_type) {
             llvm_type = this.codegen_type(alloc_ty)
             let size = this.codegen_expression(builder, new_expr.args[0])
             if new_expr.onheap {
