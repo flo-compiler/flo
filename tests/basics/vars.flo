@@ -2,5 +2,5 @@
 fnc main(): int {
     let a = 25
     let b = 0.5
-    return a ^ b as int
+    return a ** b as int
 }

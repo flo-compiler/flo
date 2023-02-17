@@ -13,15 +13,15 @@ class Int {
     }
 }
 class Float {
-    private value: float
-    constructor(this, value: float){
+    private value: f64
+    constructor(this, value: f64){
         this.value = value
     }
     public __adda__(this, other: Float): Float {
         this.value += other.value
         return this
     }
-    public get_value(this): float {
+    public get_value(this): f64 {
         return this.value
     }
 }

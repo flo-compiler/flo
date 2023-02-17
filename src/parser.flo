@@ -459,14 +459,10 @@ class Parser {
             type_node.kind = TypeKind.I128
         else if this.current_token.ttype == TokType.INT_KW
             type_node.kind = TypeKind.INT
-        else if this.current_token.ttype == TokType.F16_KW
-            type_node.kind = TypeKind.F16
         else if this.current_token.ttype == TokType.F32_KW
             type_node.kind = TypeKind.F32
         else if this.current_token.ttype == TokType.F64_KW
             type_node.kind = TypeKind.F64
-        else if this.current_token.ttype == TokType.FLOAT_KW
-            type_node.kind = TypeKind.FLOAT
         else if this.current_token.ttype != TokType.VOID_KW
             this.error("Expected a type definition")
         this.advance()
@@ -517,7 +513,7 @@ class Parser {
         } else 
             type_node = this.parse_primitive_type()
         
-        while this.current_token.ttype == TokType.LBRACKET or this.current_token.ttype == TokType.MULT and this.can_parse() {
+        while this.current_token.ttype == TokType.LBRACKET or this.current_token.ttype == TokType.POW or this.current_token.ttype == TokType.MULT and this.can_parse() {
             if this.current_token.ttype == TokType.LBRACKET {
                 this.advance()
                 if this.current_token.ttype == TokType.RBRACKET {
@@ -530,7 +526,11 @@ class Parser {
                 type_node.range = FloRange.merge(type_node.range, this.current_token.range)
                 this.eat(TokType.RBRACKET)
             } else {
-                type_node = new PointerTypeNode(type_node, FloRange.merge(type_node.range, this.eat(TokType.MULT).range))
+                type_node = new PointerTypeNode(type_node, FloRange.merge(type_node.range, this.current_token.range))
+                if this.current_token.ttype == TokType.POW 
+                    type_node = new PointerTypeNode(type_node, FloRange.merge(type_node.range, this.eat(TokType.POW).range))
+                else
+                    this.advance()
             }
         }
         return type_node
@@ -713,7 +713,7 @@ class Parser {
             return BinaryOp.SL
         if token_type == TokType.SR
             return BinaryOp.SR
-        if token_type == TokType.XOR_KW
+        if token_type == TokType.XOR
             return BinaryOp.XOR
         return BinaryOp.UNDEF
     }

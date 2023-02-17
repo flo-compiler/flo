@@ -7,6 +7,8 @@ enum TokType {
     MINUS
     PLUS
     DIV
+    AND_KW
+    OR_KW
     MOD
     POW
     MULT_EQ
@@ -48,12 +50,10 @@ enum TokType {
     SL
     SR
     DOT
+    XOR
     DOT_DOT
     DOT_DOT_DOT
     IDENTIFER
-    AND_KW
-    OR_KW
-    XOR_KW
     CONST_KW
     LET_KW
     IF_KW
@@ -66,10 +66,8 @@ enum TokType {
     I64_KW
     I128_KW
     INT_KW
-    F16_KW
     F32_KW
     F64_KW
-    FLOAT_KW
     VOID_KW
     FOR_KW
     WHILE_KW
@@ -95,12 +93,10 @@ enum TypeKind {
     I16
     I32
     I64
-    I128
     INT
-    F16
+    I128
     F32
     F64
-    FLOAT
     VOID
     OBJECT
     ENUM

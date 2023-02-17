@@ -1,4 +1,4 @@
-import HTTPServer as Server in "@flo/net/httpserver"
+import HTTPServer as Server in "@net/httpserver"
 type HTTPServer = int
 fnc main(): int {
     return 0

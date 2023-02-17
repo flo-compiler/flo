@@ -335,7 +335,7 @@ class Map<T, U> {
         }
     }
     private __setitem__(this, key: T, value: U){
-        let ratio = this.length / (this.size as float)
+        let ratio = this.length / (this.size as f64)
         if (ratio > 0.75) this.resize()
         let hash = this.hash_fnc(key) % this.size
         let should_add = true

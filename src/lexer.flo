@@ -6,8 +6,6 @@ fnc string_to_kw_token(word: string): TokType {
         return TokType.AND_KW
     if word == "or"
         return TokType.OR_KW
-    if word == "xor"
-        return TokType.XOR_KW
     if word == "const"
         return TokType.CONST_KW
     if word == "let"
@@ -32,14 +30,10 @@ fnc string_to_kw_token(word: string): TokType {
         return TokType.I128_KW
     if word == "int"
         return TokType.INT_KW
-    if word == "f16"
-        return TokType.F16_KW
     if word == "f32"
         return TokType.F32_KW
     if word == "f64"
         return TokType.F64_KW
-    if word == "float"
-        return TokType.FLOAT_KW
     if word == "void"
         return TokType.VOID_KW
     if word == "for"
@@ -143,15 +137,15 @@ class Token {
     }
 }
 class IntToken (Token) {
-    value: int
-    constructor(this, value: int, range: FloRange){
+    value: i64
+    constructor(this, value: i64, range: FloRange){
         super(TokType.INT, range)
         this.value = value
     }
 }
 class FloatToken (Token) {
-    value: float
-    constructor(this, value: float, range: FloRange){
+    value: f64
+    constructor(this, value: f64, range: FloRange){
         super(TokType.FLOAT, range)
         this.value = value
     }
@@ -260,6 +254,13 @@ class Lexer {
         if this.peek() == '=' {
             this.advance()
             return new Token(TokType.MULT_EQ, this.get_range(2))
+        } else if this.peek() == '*' {
+            this.advance()
+            if this.peek() == '=' {
+                this.advance()
+                return new Token(TokType.POW_EQ, this.get_range(3))
+            }
+            return new Token(TokType.POW, this.get_range(2))
         }
         return new Token(TokType.MULT, this.get_range(1))
     }
@@ -270,12 +271,12 @@ class Lexer {
         }
         return new Token(TokType.MOD, this.get_range(1))
     }
-    private pow_token(this): Token {
+    private xor_token(this): Token {
         if this.peek() == '=' {
             this.advance()
-            return new Token(TokType.POW_EQ, this.get_range(2))
+            return new Token(TokType.XOR_EQ, this.get_range(2))
         }
-        return new Token(TokType.POW, this.get_range(1))
+        return new Token(TokType.XOR, this.get_range(1))
     }
     private div_token(this): Token {
         if this.peek() == '=' {
@@ -343,12 +344,12 @@ class Lexer {
         }
         return new Token(token, this.get_range(length))
     }
-    private base_int_token(this, base: int): IntToken{
+    private base_int_token(this, base: i64): IntToken{
         this.advance()
         let length = 3
-        let value = 0
+        let value: i64 = 0
         let current_char = '\0'
-        while in_base_range(current_char = capitalize(this.peek()), base) and !this.eof() {
+        while in_base_range(current_char = capitalize(this.peek()), base as int) and !this.eof() {
             value *= base
             let add =  current_char - '0'
             if (current_char >= 'A') add = current_char - 'A' + 10
@@ -376,7 +377,7 @@ class Lexer {
         }
         let range = this.get_range(length)
         let str_value = this.text.substring(range.start, length)
-        let num_value: Token = is_float ? new FloatToken(str_value as float, range) as Token : new IntToken(str_value as int, range)
+        let num_value: Token = is_float ? new FloatToken(str_value as f64, range) as Token : new IntToken((str_value as i64), range)
         del str_value
         return num_value
     }
@@ -400,10 +401,6 @@ class Lexer {
                 if keyword == TokType.OR_KW {
                     this.advance()
                     keyword = TokType.OR_EQ
-                }
-                if keyword == TokType.XOR_KW {
-                    this.advance()
-                    keyword = TokType.XOR_EQ
                 }
             }
             return new Token(keyword, range)
@@ -489,7 +486,7 @@ class Lexer {
         if char == '%'
             return this.mod_token()
         if char == '^'
-            return this.pow_token()
+            return this.xor_token()
         if char == '/' {
             if this.skip_comment() {
                 this.advance()

@@ -1,0 +1,7 @@
+fnc main(){
+    let a = 0xC3 as i8
+    println("$a")
+    if a == 0xC3 {
+        println("1")
+    }
+}

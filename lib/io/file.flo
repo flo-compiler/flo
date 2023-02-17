@@ -1,4 +1,4 @@
-import access, F_OK in "@flo/sys/lib"
+import access, F_OK in "@sys/lib"
 // ------- File -------
 fnc fopen(path: i8*, mode: i8*): int
 fnc fclose(stream: int)

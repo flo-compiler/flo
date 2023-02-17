@@ -2559,7 +2559,7 @@
 		},
 		"after-operator-block-as-object-literal": {
 			"name": "meta.objectliteral.flo",
-			"begin": "(?<!\\+\\+|--)(?<=[:=(,\\[?+!>]|^await|[^\\._$[:alnum:]]await|^return|[^\\._$[:alnum:]]return|^yield|[^\\._$[:alnum:]]yield|^throw|[^\\._$[:alnum:]]throw|^in|[^\\._$[:alnum:]]in|^of|[^\\._$[:alnum:]]of|^typeof|[^\\._$[:alnum:]]typeof|and|\\|\\or\\*)\\s*(\\{)",
+			"begin": "(?<!\\+\\+|--)(?<=[:=(,\\[?+!>]|^await|[^\\._$[:alnum:]]await|^return|[^\\._$[:alnum:]]return|^yield|[^\\._$[:alnum:]]yield|^throw|[^\\._$[:alnum:]]throw|^in|[^\\._$[:alnum:]]in|^of|[^\\._$[:alnum:]]of|^typeof|[^\\._$[:alnum:]]typeof|\\|\\or\\*)\\s*(\\{)",
 			"beginCaptures": {
 				"1": {
 					"name": "punctuation.definition.block.flo"
@@ -3357,7 +3357,7 @@
 				},
 				{
 					"name": "keyword.operator.logical.flo",
-					"match": "\\!|and|or|\\|\\||\\?\\?"
+					"match": "\\!|&|\\|\\||\\?\\?"
 				},
 				{
 					"name": "keyword.operator.bitwise.flo",
@@ -5469,7 +5469,7 @@
 				},
 				{
 					"name": "storage.type.class.jsdoc",
-					"match": "(?x) (@) (?:access|alias|api|arg|argument|async|attribute|augments|author|beta|borrows|bubbles |callback|chainable|class|classdesc|code|config|const|constant|constructor|constructs|copyright |default|defaultvalue|define|deprecated|desc|description|dict|emits|enum|event|example|exception |exports?|extends|extension(?:_?for)?|external|externs|file|fileoverview|final|fires|and|or|xor|for|fnc|generator|global|hideconstructor|host|ignore|implements|implicitCast|inherit[Dd]oc |inner|instance|internal|kind|lends|license|listens|main|member|memberof!?|method |mixes|mixins?|modifies|module|name|noalias|nocollapse|nocompile|nosideeffects |override|overview|package|param|polymer(?:Behavior)?|preserve|private|prop|property|protected |public|read[Oo]nly|record|require[ds]|returns?|see|since|static|struct|submodule|summary |suppress|template|this|throws|todo|tutorial|type|typedef|unrestricted|uses|variation |version|virtual|writeOnce|yields?) \\b",
+					"match": "(?x) (@) (?:access|alias|api|arg|argument|async|attribute|augments|author|beta|borrows|bubbles |callback|chainable|class|classdesc|code|config|const|constant|constructor|constructs|copyright |default|defaultvalue|define|deprecated|desc|description|dict|emits|enum|event|example|exception |exports?|extends|extension(?:_?for)?|external|externs|file|fileoverview|final|fires|for|fnc|generator|global|hideconstructor|host|ignore|implements|implicitCast|inherit[Dd]oc |inner|instance|internal|kind|lends|license|listens|main|member|memberof!?|method |mixes|mixins?|modifies|module|name|noalias|nocollapse|nocompile|nosideeffects |override|overview|package|param|polymer(?:Behavior)?|preserve|private|prop|property|protected |public|read[Oo]nly|record|require[ds]|returns?|see|since|static|struct|submodule|summary |suppress|template|this|throws|todo|tutorial|type|typedef|unrestricted|uses|variation |version|virtual|writeOnce|yields?) \\b",
 					"captures": {
 						"1": {
 							"name": "punctuation.definition.block.tag.jsdoc"

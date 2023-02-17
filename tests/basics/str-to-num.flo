@@ -2,8 +2,8 @@
 fnc main(): int {
     let x = "1" as int
     let w = "2.8" as int
-    let y = "1.5" as float
-    let z = "2" as float
+    let y = "1.5" as f64
+    let z = "2" as f64
     println("x = $x, y = $y")
     return (z + y) > 3.4 ? 0 : 1
 }
