@@ -19,7 +19,7 @@ class FloError {
     }
 }
 fnc get_next_line_index(text: string, start: int): int {
-    while text.get_byte(start) != '\n' & start < text.length 
+    while text.get_byte(start) != '\n' and start < text.length 
         start++
     return start
 }
