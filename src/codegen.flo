@@ -1,5 +1,6 @@
 import panic in "utils"
 import "typechecker"
+import ARCH_WORD_SIZE in "@sys/lib"
 import "llvm/types"
 import "llvm/core"
 import "types"
@@ -32,6 +33,7 @@ class CGClassType  {
 class CGEnumType {
     llvm_type: LLVMTypeRef
     field_map: [string: LLVMValueRef]
+    metanames: LLVMValueRef
     constructor(this){
         this.field_map = new Map<string, LLVMValueRef>()
     }
@@ -78,14 +80,14 @@ fnc resize_value_array(array: LLVMValueRef[], amt: int){
 fnc get_format_from_type(ty: Type): string {
     if is_int(ty){
         if ty.kind == TypeKind.I128
-            return "lld"
+            return "%lld"
         if ty.kind == TypeKind.I64 
-            return "ld"
+            return "%ld"
         return "%d"
     }
-    if ty.kind == TypeKind.F16 or ty.kind == TypeKind.F32 
+    if ty.kind == TypeKind.F32 
         return "%f"
-    if ty.kind == TypeKind.F64 or ty.kind == TypeKind.FLOAT
+    if ty.kind == TypeKind.F64
         return "%lf"
     if is_pointer(ty)
         return "0x%X"
@@ -189,7 +191,7 @@ class CodeGen {
         return LLVMConstInt(LLVMInt1Type(), val ? 1 : 0 as i64, false)
     }
     private createLLVMInt(this, i: int): LLVMValueRef {
-        return LLVMConstInt(LLVMIntType(WORD_SIZE), i as i64, false)
+        return LLVMConstInt(LLVMIntType(ARCH_WORD_SIZE), i as i64, false)
     }
     private codegen_type(this, tt: Type, as_pointer = true): LLVMTypeRef {
         if tt.kind == TypeKind.VOID
@@ -202,19 +204,17 @@ class CodeGen {
             return LLVMInt8Type()
         if tt.kind == TypeKind.I16
             return LLVMInt16Type()
-        if tt.kind == TypeKind.I32 
+        if tt.kind == TypeKind.I32
             return LLVMInt32Type()
         if tt.kind == TypeKind.INT
-            return LLVMIntType(WORD_SIZE)
+            return LLVMIntType(ARCH_WORD_SIZE)
         if tt.kind == TypeKind.I64
             return LLVMInt64Type()
         if tt.kind == TypeKind.I128
             return LLVMInt128Type()
-        if tt.kind == TypeKind.F16 
-            return LLVMHalfType()
         if tt.kind == TypeKind.F32 
             return LLVMFloatType()
-        if tt.kind == TypeKind.F64 or tt.kind == TypeKind.FLOAT
+        if tt.kind == TypeKind.F64
             return LLVMDoubleType()
         if tt.kind == TypeKind.PTR
             return LLVMPointerType(this.codegen_type((tt as PointerType).pointee_type))
@@ -252,16 +252,20 @@ class CodeGen {
         return null
     }
     private codegen_return_stmt(this, builder: LLVMBuilderRef, return_stmt: ReturnStatement){
-        if return_stmt.return_value != null 
-            LLVMBuildRet(builder, this.codegen_expression(builder, return_stmt.return_value))
-        else
-            LLVMBuildRetVoid(builder)
+        if return_stmt.return_value != null {
+            let expression = this.codegen_expression(builder, return_stmt.return_value)
+            if return_stmt.return_value.value_type.kind != TypeKind.VOID {
+                LLVMBuildRet(builder, expression)
+                return
+            }
+        }
+        LLVMBuildRetVoid(builder)
     }
     private codegen_int(this, int_exp: IntExpression): LLVMValueRef {
-        return LLVMConstInt(this.codegen_type(int_exp.value_type), int_exp.value as i64, true)
+        return LLVMConstInt(this.codegen_type(int_exp.value_type), int_exp.value, true)
     }
     private codegen_float(this, float_exp: FloatExpression): LLVMValueRef {
-        return LLVMConstReal(this.codegen_type(float_exp.value_type), float_exp.value as f64)
+        return LLVMConstReal(this.codegen_type(float_exp.value_type), float_exp.value)
     }
     private codegen_bool(this, bool_exp: BooleanExpression): LLVMValueRef {
         let val = bool_exp.value
@@ -290,13 +294,13 @@ class CodeGen {
     }
     private codegen_realloc_call(this, builder: LLVMBuilderRef, args: LLVMValueRef*): LLVMValueRef {
         let i8_ptr_ty = LLVMPointerType(LLVMInt8Type())
-        let arg_types: LLVMTypeRef[2] = [i8_ptr_ty, LLVMIntType(WORD_SIZE)]
+        let arg_types: LLVMTypeRef[2] = [i8_ptr_ty, LLVMIntType(ARCH_WORD_SIZE)]
         let realloc = get_intrinsic(this.module, "realloc", &arg_types[0], 2, i8_ptr_ty)
         return LLVMBuildCall2(builder, realloc.fnc_type, realloc.call, args, 2, "")
     }
     private codegen_memcmp_call(this, builder: LLVMBuilderRef, args: LLVMValueRef*): LLVMValueRef {
         let i8_ptr_ty = LLVMPointerType(LLVMInt8Type())
-        let int_ty = LLVMIntType(WORD_SIZE)
+        let int_ty = LLVMIntType(ARCH_WORD_SIZE)
         let arg_types: LLVMTypeRef[3] = [i8_ptr_ty, i8_ptr_ty, int_ty]
         let memcmp = get_intrinsic(this.module, "memcmp", &arg_types[0], 3, int_ty)
         return LLVMBuildCall2(builder, memcmp.fnc_type, memcmp.call, args, 3, "")
@@ -319,7 +323,7 @@ class CodeGen {
     private codegen_safe_fmt_string(this, builder: LLVMBuilderRef, fmt: string, args: LLVMValueRef*, args_length: int, len_ptr: LLVMValueRef*): LLVMValueRef {
         let i8_ty = LLVMInt8Type()
         let i8_ptr_ty = LLVMPointerType(i8_ty)
-        let int_ty = LLVMIntType(WORD_SIZE)
+        let int_ty = LLVMIntType(ARCH_WORD_SIZE)
         let alloc_buff = LLVMBuildAlloca(builder, i8_ptr_ty, "")
         let llvm_fmt = this.createGlobalLLVMString(builder, fmt)
         let num_passed_args = args_length + 2
@@ -376,6 +380,12 @@ class CodeGen {
         //TODO: Better toString for functions
         if is_function(val_ty) {
             return this.createGlobalLLVMString(builder, "<function>")
+        }
+        if val_ty.kind == TypeKind.ENUM {
+            let enum_meta = this.get_or_codegen_enum_from_typeid((val_ty as EnumType).enum_id).metanames
+            let indices: LLVMValueRef[1] = [llvm_val]
+            let ptr = LLVMBuildInBoundsGEP2(builder, LLVMTypeOf(enum_meta), enum_meta, &indices[0], 1, "")
+            return LLVMBuildLoad2(builder, LLVMTypeOf(ptr), ptr, "")
         }
         return llvm_val
     }
@@ -672,7 +682,7 @@ class CodeGen {
             } else if op == BinaryOp.MOD {
                 return LLVMBuildSRem(builder, lhs, rhs, "")
             } else if op >= BinaryOp.GT and op <= BinaryOp.LTE {
-                ipred = ((op as int) - (BinaryOp.GT as int) + 38) as LLVMIntPredicate
+                ipred = ((op as int) - (BinaryOp.GT as int) + 38) as LLVMIntPredicate // Consider Enum variants
                 return is_const_expr ? LLVMConstICmp(ipred, lhs, rhs) : LLVMBuildICmp(builder, ipred, lhs, rhs, "")
             } else if op >= BinaryOp.EEQ and op <= BinaryOp.NEQ {
                 ipred = ((op as int) - (BinaryOp.EEQ as int) + 32) as LLVMIntPredicate
@@ -732,7 +742,9 @@ class CodeGen {
         } else if is_float(exp.value_type) and is_int(value_type) {
             return is_const ? LLVMConstFPToSI(val, ty) : LLVMBuildFPToSI(builder, val, ty, "")
         } else if is_int(exp.value_type) and is_int(value_type){
-            return is_const ? LLVMConstIntCast(val, ty, true) : LLVMBuildIntCast2(builder, val, ty, true, "")
+            if value_type.kind != TypeKind.I128
+                return is_const ? LLVMConstIntCast(val, ty, true) : LLVMBuildIntCast2(builder, val, ty, true, "")
+            return is_const ? LLVMConstSExt(val, ty) : LLVMBuildSExt(builder, val, ty, "")
         } else if is_float(exp.value_type) and is_float(value_type){
             return is_const ? LLVMConstFPCast(val, ty) : LLVMBuildFPCast(builder, val, ty, "")
         }
@@ -1350,12 +1362,23 @@ class CodeGen {
         if checked_enum.fields.length > 0 {
             enum_type.llvm_type = this.codegen_type(checked_enum.fields[0].initializer.value_type)
         } else {
-            enum_type.llvm_type = LLVMIntType(WORD_SIZE)
+            enum_type.llvm_type = LLVMIntType(ARCH_WORD_SIZE)
         }
+        let elements: LLVMValueRef*(checked_enum.fields.length)
+        let idx = 0
         for enum_field in checked_enum.fields {
             let prop_id = enum_field.id
             enum_type.field_map[create_prop_key(prop_id)] = this.codegen_expression(null, enum_field.initializer)
+            let str = "$(checked_enum.name).$(enum_field.name)"
+            let str_const = LLVMConstString(str.to_cstring(), str.length, false) //Issue: Mem lick!
+            let str_global = LLVMAddGlobal(this.module, LLVMTypeOf(str_const), "")
+            LLVMSetInitializer(str_global, str_const)
+            elements[idx++] = str_global
         }
+        let metanames_initializer = LLVMConstStruct(elements, idx, false)   
+        let metanames = LLVMAddGlobal(this.module, LLVMTypeOf(metanames_initializer), "$(checked_enum.name)_names".to_cstring())
+        LLVMSetInitializer(metanames, metanames_initializer)
+        enum_type.metanames = metanames
         this.add_enum(checked_enum.id, enum_type)
     }
 }

@@ -1,5 +1,5 @@
-import "@flo/io/file"
-import "@flo/path/path"
+import "@io/file"
+import "@path/path"
 import  "error"
 class FileId {
     id: int
@@ -29,14 +29,14 @@ class Compiler {
         this.current_file_contents = null
         this.errors = []
         this.file_ids = new Map<string, FileId>()
-        this.set_std_path("./flolib")
+        this.set_std_path("./lib/")
     }
     public set_std_path(this, std_dir_path: string){
         this.std_dir_path = std_dir_path
-        this.builtin_path = Path.join(std_dir_path, "/builtins/builtins.flo")
+        this.builtin_path = Path.join(std_dir_path, "builtins/builtins.flo")
     }
     private find_module_path(this, fpath: string): string {
-        let path = fpath.replace("@flo", this.std_dir_path)
+        let path = fpath.replace("@", this.std_dir_path)
         if !path.ends_with(".flo")
             path += ".flo"
         return Path.abspath(path)

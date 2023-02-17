@@ -359,12 +359,14 @@ class Int(ICMP) {
     - `__mul__` (*)
     - `__div__` (/)
     - `__or__` (or)
+    - `__xor__` (^)
     - `__and__` (and)
     - `__adda__` (+=)
     - `__suba__` (-=)
     - `__mula__` (*=)
     - `__diva__` (/=)
     - `__ora__` (or=)
+    - `__xora__` (^=)
     - `__anda__` (and=)
     - `__getitem__` (a[b])
     - `__setitem__` (a[b] = 2)
@@ -378,9 +380,9 @@ class Int(ICMP) {
     - `__ne__` (!=)
     - `__le__` (<=)
     - `__ge__` (>=)
-    - `__pow__` (^)
+    - `__pow__` (**)
     - `__mod__` (%)
-    - `__powa__` (^=)
+    - `__powa__` (**=)
     - `__moda__` (%=)
     - `__del__` (del object; this will be called before deallocating objects memory)
 
@@ -410,13 +412,6 @@ fnc identity<T>(arg: T): T {
 - [ ] Optional types. 
 ```
 let x: int?
-```
-- [ ] Optional chaining `a?.b?.c`
-- [ ] Any type 
-```
-let x: any
-x = 7
-x = 8.0
 ```
 - [ ] Type Union
 ```
@@ -476,14 +471,6 @@ These **will** not work
 
 
 ## Error Handling
-- [ ] Using destructing
-```
-let {result, error} = io_operation()
-```
-- [ ] Using Optional chaining
-```
-let result = io_operation()?
-```
 - [ ] Using match
 ```
 let result = match io_operation() {

@@ -5,7 +5,7 @@ fnc main(): int {
     s.add(2)
     s.add(1)
     s.add(2)
-    let sf: Set<float>()
+    let sf: Set<f64>()
     sf.add(1.0)
     let s1: Set<int>()
     s1.add(0)

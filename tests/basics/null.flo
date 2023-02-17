@@ -2,7 +2,7 @@
 fnc main(): int {
     let a: int = 121
     let b = 0.5
-    let c: float = null
-    a = a ^ b  + c as int
+    let c: f64 = null
+    a = a ** b  + c as int
     return a
 }

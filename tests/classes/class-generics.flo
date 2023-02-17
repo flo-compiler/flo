@@ -10,6 +10,6 @@ class Generic<T>{
 }
 fnc main(): int {
     let intObj: Generic<int>(5)
-    let floatObj: Generic<float>(8.0)
+    let floatObj: Generic<f32>(8.0)
     return intObj.getData()
 }

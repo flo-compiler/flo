@@ -1,4 +1,4 @@
-import socket, connect, accept, bind, listen, close in "@flo/sys/lib"
+import socket, connect, accept, bind, listen, close in "@sys/lib"
 fnc inet_addr(addr: i8*): int
 fnc htons(x: int): int {
     let x1 = (x and 255) << 8

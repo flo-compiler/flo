@@ -1,4 +1,4 @@
-import HTTPServer, Request, Response in "@flo/net/httpserver"
+import HTTPServer, Request, Response in "@net/httpserver"
 fnc handler(req: Request, res: Response){
     res.write("HTTP/1.1 OK\r\n")
     res.write("Server: FloServer\r\n")

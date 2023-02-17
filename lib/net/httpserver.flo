@@ -1,4 +1,4 @@
-import accept, AF_INET, SOCK_STREAM in "@flo/sys/lib"
+import accept, AF_INET, SOCK_STREAM in "@sys/lib"
 import "socket"
 import "response"
 import "request"

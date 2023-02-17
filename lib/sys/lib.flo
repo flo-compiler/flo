@@ -1,3 +1,5 @@
+
+const ARCH_WORD_SIZE = 64
 /* IO */
 fnc open(filename: i8*, flags: int): int 
 fnc close(fd: int): int 
