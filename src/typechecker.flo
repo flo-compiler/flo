@@ -2343,7 +2343,7 @@ class TypeChecker {
             let arg = this.check_expression(int_ty, new_expr_node.args[0])
             if this.has_errored() return null
             if !this.types_are_eq(int_ty, arg.value_type) {
-                this.error(ErrorKind.GEN, "New operator for pointers expects argument of type '$(this.dump_type(int_ty))' but got type '$(arg.value_type)'", new_expr_node.args[0].range)
+                this.error(ErrorKind.GEN, "New operator for pointers expects argument of type '$(this.dump_type(int_ty))' but got type '$(this.dump_type(arg.value_type))'", new_expr_node.args[0].range)
                 del int_ty
                 return null
             }

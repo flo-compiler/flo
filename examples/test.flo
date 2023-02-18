@@ -1,7 +1,10 @@
-fnc main(){
-    let a = 0xC3 as i8
-    println("$a")
-    if a == 0xC3 {
-        println("1")
-    }
+enum SS {
+    ONE
+    TWO
+    THREE
+    FOUR
+}
+fnc main(): int {
+    println(SS.FOUR as string)
+    return 0
 }

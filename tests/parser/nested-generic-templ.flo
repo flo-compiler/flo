@@ -1,0 +1,10 @@
+class B<T>{
+    x: T
+}
+class A<T> {
+    val: T
+}
+fnc main(): int {
+    let a: A<B<int>> = null
+    return 0
+}

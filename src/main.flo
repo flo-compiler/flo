@@ -76,7 +76,7 @@ fnc main(argc: int, argv: i8**): int {
         /**** Codegen ****/
         let flo_module = CodeGen.codegen(program)
         /**** Misc ****/
-        flo_module.run_passes(flag_value_or(args, "-O", "2") as int)
+        flo_module.run_passes(flag_value_or(args, "-O", "1") as int)
         let emit_type = flag_value_or(args, "--emit", null)
         let output_fn = flag_value_or(args, "-o", null)
         let link_libs = flag_value_or(args, "-l", null)

@@ -45,10 +45,10 @@ class Int(ICMP) {
         let v: Int((this.value ^ other.value) as int)
         return v
     }
-    public __getitem__(this, index: int): int {
+    public get_value(this): int {
         return this.value
     }
-    public __setitem__(this, index: int, value: int) {
+    public set_value(this, index: int, value: int) {
         this.value = value
     }
     protected __cmp__(this, other: Int): int {
@@ -67,5 +67,5 @@ fnc main(): int {
     if z == null {
         return 0
     }
-    return (z as Int)[0]
+    return (z as Int).get_value()
 }
