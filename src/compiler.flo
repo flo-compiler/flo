@@ -29,7 +29,7 @@ class Compiler {
         this.current_file_contents = null
         this.errors = []
         this.file_ids = new Map<string, FileId>()
-        this.set_std_path("/usr/local/flo/lib")
+        this.set_std_path("/usr/local/flo/lib/")
     }
     public set_std_path(this, std_dir_path: string){
         this.std_dir_path = std_dir_path
