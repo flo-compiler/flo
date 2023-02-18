@@ -9,7 +9,6 @@ cd flo
 make
 make install # install to path.
 ```
-(Note: If you have installed flo in your system path use -I flag to specify the flo library (`flo/lib` directory).)
 ## Usage
 ```bash
 flo -h

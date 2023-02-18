@@ -6,10 +6,10 @@ LLVM_BIN_PATH=$(LLVM_BUILD_PATH)/bin
 
 LDFLAGS=`$(LLVM_BIN_PATH)/llvm-config --ldflags --libs --system-libs`
 
-FLO_INSTALL_PATH=~/flo
+FLO_INSTALL_PATH=/usr/local/flo
 
 define compile_and_link_fc
-	$(1) src/main.flo --emit obj -o $(1).o -O 3
+	$(1) src/main.flo --emit obj -o $(1).o -O 3 -I ./lib/
 	$(CC) -no-pie $(1).o /tmp/llvm-bind.so $(LDFLAGS) -o $(2)
 endef
 
@@ -26,8 +26,10 @@ check:
 	./runtests.py
 
 install:
-	cp -f flo $(FLO_INSTALL_PATH)
-	sudo ln -f $(FLO_INSTALL_PATH) /usr/bin/flo
+	sudo mkdir -p $(FLO_INSTALL_PATH)
+	sudo cp -f flo $(FLO_INSTALL_PATH)
+	sudo cp -r lib $(FLO_INSTALL_PATH)
+	sudo ln -f $(FLO_INSTALL_PATH)/flo /usr/bin/flo
 
 clean:
 	rm -rf flo 
