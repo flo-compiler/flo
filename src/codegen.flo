@@ -725,7 +725,7 @@ class CodeGen {
                 return is_const_expr ? LLVMConstXor(lhs, rhs) : LLVMBuildXor(builder, lhs, rhs, "")
             }
         }
-        panic("Unknown case! $(lty.kind) $(dump_bin_op(op)) $(rty.kind)")
+        panic("Unknown bin expression case case!")
         return null
     }
     private codegen_typecast_exp(this, builder: LLVMBuilderRef, type_exp: TypeCastExpression): LLVMValueRef {
@@ -1375,7 +1375,7 @@ class CodeGen {
             LLVMSetInitializer(str_global, str_const)
             elements[idx++] = str_global
         }
-        let metanames_initializer = LLVMConstStruct(elements, idx, false)   
+        let metanames_initializer = LLVMConstArray(LLVMPointerType(LLVMInt8Type()), elements, idx)
         let metanames = LLVMAddGlobal(this.module, LLVMTypeOf(metanames_initializer), "$(checked_enum.name)_names".to_cstring())
         LLVMSetInitializer(metanames, metanames_initializer)
         enum_type.metanames = metanames

@@ -481,7 +481,13 @@ class Parser {
         if this.current_token.ttype == TokType.LT {
             this.advance()
             this.parse_type_list(object_type_node.generic_args)
-            object_type_node.range = FloRange.merge(object_type_node.range, this.eat(TokType.GT).range)
+            let end_range = this.current_token.range
+            if this.current_token.ttype == TokType.SR {
+                this.current_token.ttype = TokType.GT
+            } else {
+                this.eat(TokType.GT)
+            }
+            object_type_node.range = FloRange.merge(object_type_node.range, end_range)
         }
         return object_type_node
     }
