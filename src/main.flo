@@ -11,16 +11,18 @@ fnc parse_args(size: int, args: i8**): string[] {
         arr << string.from_cstring(args[i])
     return arr
 }
+fnc system(cmd: i8*)
 fnc help(exec_file: string){
     println("Usage: $exec_file <path> [OPTIONS]\n")
     println("OPTIONS:")
     println(" -h, --help\t\t\tShow this help message.")
     println(" --print-ast\t\t\tPrint generated AST.")
-    println(" --emit-llvm\t\t\tPrint generated LLVM-IR.")
-    println(" -o <file>\t\t\tPlace the output into <file>.")
-    println(" -target\t\t\tCompile to specific target triple.")
-    println(" -I\t\t\tSpecify runtime directory.")
-    println(" -O OPT_LEVEL\n \t\t\t\tSpecify the compiler's optimization level which is a\n \t\t\t\tvalue from 0-3.")
+    println(" --emit <format>\t\tEmit output in a particular format. Options are:\n  \t\t\t\t\texe - Generates an executable.\n  \t\t\t\t\tllvm-ir - Generates a file containing LLVM IR.\n  \t\t\t\t\tllvm-bc - Generates a file containing LLVM bitcode.\n  \t\t\t\t\tobj - Generates an object file\n  \t\t\t\t\tasm - Generates Assembly code.")
+    println(" -o <file>\t\t\tSpecify file to put the output into.")
+    println(" --target <triple>\t\tCompile to specific target triple.")
+    println(" -l <lib>\t\t\tSpecify a library to link against.")
+    println(" -I\t\t\t\tSpecify runtime directory.")
+    println(" -O OPT_LEVEL \t\t\tSpecify the compiler's optimization level which is a\n \t\t\t\tvalue from 0-3.")
     println(" -v, --version\t\t\tShow version.")
 }
 fnc flag(args: string[], name: string): bool {
@@ -42,7 +44,7 @@ fnc main(argc: int, argv: i8**): int {
     if argc >= 2 {
         let args = parse_args(argc, argv)
         if flag(args, "-v") or flag(args, "--version"){
-            println("v0.01@test.selfhost")
+            println("v0.01@selfhost")
             return 0
         }
         if flag(args, "-h") or flag(args, "--help"){
@@ -73,11 +75,29 @@ fnc main(argc: int, argv: i8**): int {
         if (compiler.print_errors()) return 1       
         /**** Codegen ****/
         let flo_module = CodeGen.codegen(program)
-        flo_module.run_passes(flag_value_or(args, "-O", "1") as int)
-        if flag(args, "--emit-llvm") {
-            flo_module.print()
-        } else if flag(args, "-o") {
-            flo_module.write_object(flag_value_or(args, "-o", "a.o"), flag_value_or(args, "--target", ""))
+        /**** Misc ****/
+        flo_module.run_passes(flag_value_or(args, "-O", "2") as int)
+        let emit_type = flag_value_or(args, "--emit", null)
+        let output_fn = flag_value_or(args, "-o", null)
+        let link_libs = flag_value_or(args, "-l", null)
+        flo_module.set_target_machine(flag_value_or(args, "--target", ""))
+        if emit_type {
+            if emit_type == "exe" {
+                let tmp_file = "/tmp/output.o"
+                flo_module.write_obj(tmp_file)
+                output_fn = output_fn ? output_fn : "output"
+                link_libs = link_libs ? link_libs : ""
+                let linker_exec = "clang-15"
+                system("$linker_exec -no-pie $tmp_file -l$link_libs -o $output_fn")
+            } else if emit_type == "llvm-ir" {
+                flo_module.write_ir(output_fn ? output_fn : "output.ll")
+            } else if emit_type == "llvm-bc" {
+                flo_module.write_bc(output_fn ? output_fn : "output.bc")
+            } else if emit_type == "obj" {
+                flo_module.write_obj(output_fn ? output_fn : "output.o")
+            } else if emit_type == "asm" {
+                flo_module.write_asm(output_fn ? output_fn : "output.s")
+            }
         } else {
             code = flo_module.exec()
         }

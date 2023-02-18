@@ -9,7 +9,7 @@ LDFLAGS=`$(LLVM_BIN_PATH)/llvm-config --ldflags --libs --system-libs`
 FLO_INSTALL_PATH=~/flo
 
 define compile_and_link_fc
-	$(1) src/main.flo -o $(1).o -O 3
+	$(1) src/main.flo --emit obj -o $(1).o -O 3
 	$(CC) -no-pie $(1).o /tmp/llvm-bind.so $(LDFLAGS) -o $(2)
 endef
 
