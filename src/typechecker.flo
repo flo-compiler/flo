@@ -2048,6 +2048,7 @@ class TypeChecker {
                 if exp != null or this.has_errored() return exp
             }
             right = this.check_bin_expr(left.value_type, lower_bin_assign_node(binary_node))
+            if this.has_errored() return null
         }
         if left.value_type.kind == TypeKind.RECORD {
             this.error(ErrorKind.TYPE, "Cannot assign a value to a record", binary_node.range)

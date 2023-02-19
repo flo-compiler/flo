@@ -3,6 +3,7 @@ import access, F_OK in "@sys/lib"
 fnc fopen(path: i8*, mode: i8*): int
 fnc fclose(stream: int)
 fnc fread(buf: i8*, size: int, nmemb: int, stream: int): int
+fnc fwrite(buf:i8*, size: int, nmemb: int, stream: int): int
 class File {
     fd: int
     constructor(this, fd: int){
@@ -10,6 +11,11 @@ class File {
     }
     public open_for_reading(path: string): File {
         let fd = fopen(path.to_cstring(), "r")
+        if fd == null return null
+        return new File(fd)
+    }
+    public open_for_writing(path: string): File {
+        let fd = fopen(path.to_cstring(), "wb")
         if fd == null return null
         return new File(fd)
     }
@@ -28,6 +34,9 @@ class File {
             (allocated_mem + prev_size).copy_from(&buffer[0], read_len)
         }
         return null
+    }
+    public write_bytes_length(this, buffer: i8*, length: int): int {
+        return fwrite(buffer, 1, length, this.fd)
     }
     public exists(path: string): bool {
         return access(path.to_cstring(), F_OK) == 0
