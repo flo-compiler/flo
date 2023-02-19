@@ -451,10 +451,10 @@ class CodeGen {
         if array_exp.value_type.kind == TypeKind.RESOLVED_GENERIC {
             return this.codegen_builtin_array(builder, array_exp.value_type as GenericType, array_exp)
         } 
+        //FIXME: What if array is not constant?
         if !array_exp.is_constant {
             panic("Array expression is not a constant (codegen_array_exp)")
         }
-        //FIXME: What if array is not constant?
         let elem_ty = this.codegen_type((array_exp.value_type as ArrayType).element_type)
         let elems_buffer: LLVMValueRef*(array_exp.elements.length)
         let idx = 0
@@ -672,7 +672,7 @@ class CodeGen {
         let is_const_expr = LLVMIsConstant(lhs) and LLVMIsConstant(rhs)
         if is_int(rty) or (is_object(lty) and is_object(rty) and (op == BinaryOp.EEQ or op == BinaryOp.NEQ)) or (rty.kind == TypeKind.ENUM) {
             if op == BinaryOp.ADD {
-                return is_const_expr ? LLVMConstAdd(lhs, rhs) : LLVMBuildAdd(builder, lhs, rhs, "")
+                return is_const_expr ? LLVMConstNSWAdd(lhs, rhs) : LLVMBuildNSWAdd(builder, lhs, rhs, "")
             } else if op == BinaryOp.SUB {
                 return is_const_expr ? LLVMConstSub(lhs, rhs) : LLVMBuildSub(builder, lhs, rhs, "")
             } else if op == BinaryOp.MUL {
@@ -690,7 +690,7 @@ class CodeGen {
             } else if op == BinaryOp.SL {
                 return is_const_expr ? LLVMConstShl(lhs, rhs) : LLVMBuildShl(builder, lhs, rhs, "")
             } else if op == BinaryOp.SR {
-                return is_const_expr ? LLVMConstAShr(lhs, rhs) : LLVMBuildAShr(builder, lhs, rhs, "")
+                return is_const_expr ? LLVMConstLShr(lhs, rhs) : LLVMBuildLShr(builder, lhs, rhs, "")
             } else if op == BinaryOp.OR {
                 return is_const_expr ? LLVMConstOr(lhs, rhs) : LLVMBuildOr(builder, lhs, rhs, "")
             } else if op == BinaryOp.AND {
@@ -785,7 +785,7 @@ class CodeGen {
                 new_value = LLVMBuildInBoundsGEP2(builder, alloc_ty, val, &indices[0], 1, "incdec.ptr")
             } else if is_numeric(exp.value_type){
                 let incr_amt = is_int(exp.value_type) ? LLVMConstInt(alloc_ty, incr_value as i64, false) : LLVMConstReal(alloc_ty, incr_value * 1.0 as f64)
-                new_value = LLVMBuildAdd(builder, val, incr_amt, "")
+                new_value = LLVMBuildNSWAdd(builder, val, incr_amt, "")
             }
             LLVMBuildStore(builder, new_value, ptr)
             return op >= UnaryOp.PREDECR ? val : new_value 
