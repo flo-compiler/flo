@@ -1382,9 +1382,12 @@ class TypeChecker {
     private declare_global_var(this, var_decl_node: VarDeclarationStatement){
         let var_stmt = this.check_var_declaration(var_decl_node)
         if this.has_errored() return
-        if !get_var(this.program, var_stmt.var_id).value.is_constant {
-            this.error(ErrorKind.GEN, "Initilializer for global variable has to be a constant", var_decl_node.value.range)
-            return
+        let value = get_var(this.program, var_stmt.var_id).value
+        if value != null {
+            if !value.is_constant {
+                this.error(ErrorKind.GEN, "Initilializer for global variable has to be a constant", var_decl_node.value.range)
+                return
+            }
         }
         var_stmt.is_static = true
         this.get_current_module().global_vars << var_stmt
