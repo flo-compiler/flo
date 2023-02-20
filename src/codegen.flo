@@ -1114,9 +1114,11 @@ class CodeGen {
         let name = var_decl.name.to_cstring()
         let ptr: LLVMValueRef = null
         if var_decl.is_static {
-            let value = this.codegen_expression(builder, expression)
             ptr = LLVMAddGlobal(this.module, ty, name)
-            LLVMSetInitializer(ptr, value)
+            if expression != null {
+                let value = this.codegen_expression(builder, expression)
+                LLVMSetInitializer(ptr, value)
+            }
         } else {
             ptr = LLVMBuildAlloca(builder, ty, name)
             if expression != null {
