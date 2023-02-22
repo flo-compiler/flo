@@ -58,17 +58,6 @@ enum TokType {
     LET_KW
     IF_KW
     ELSE_KW
-    BOOL_KW
-    I4_KW
-    I8_KW
-    I16_KW
-    I32_KW
-    I64_KW
-    I128_KW
-    INT_KW
-    F32_KW
-    F64_KW
-    VOID_KW
     FOR_KW
     WHILE_KW
     FNC_KW

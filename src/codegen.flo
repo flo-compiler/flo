@@ -672,7 +672,9 @@ class CodeGen {
         let is_const_expr = LLVMIsConstant(lhs) and LLVMIsConstant(rhs)
         if is_int(rty) or (is_object(lty) and is_object(rty) and (op == BinaryOp.EEQ or op == BinaryOp.NEQ)) or (rty.kind == TypeKind.ENUM) {
             if op == BinaryOp.ADD {
-                return is_const_expr ? LLVMConstNSWAdd(lhs, rhs) : LLVMBuildNSWAdd(builder, lhs, rhs, "")
+                if ((rty as IntType).is_signed)
+                    return is_const_expr ? LLVMConstNSWAdd(lhs, rhs) : LLVMBuildNSWAdd(builder, lhs, rhs, "")
+                return is_const_expr ? LLVMConstNUWAdd(lhs, rhs) : LLVMBuildNUWAdd(builder, lhs, rhs, "")
             } else if op == BinaryOp.SUB {
                 return is_const_expr ? LLVMConstSub(lhs, rhs) : LLVMBuildSub(builder, lhs, rhs, "")
             } else if op == BinaryOp.MUL {
@@ -682,6 +684,7 @@ class CodeGen {
             } else if op == BinaryOp.MOD {
                 return LLVMBuildSRem(builder, lhs, rhs, "")
             } else if op >= BinaryOp.GT and op <= BinaryOp.LTE {
+                let offset = (rty as IntType).is_signed ? 38 : 34
                 ipred = ((op as int) - (BinaryOp.GT as int) + 38) as LLVMIntPredicate // Consider Enum variants
                 return is_const_expr ? LLVMConstICmp(ipred, lhs, rhs) : LLVMBuildICmp(builder, ipred, lhs, rhs, "")
             } else if op >= BinaryOp.EEQ and op <= BinaryOp.NEQ {
@@ -741,9 +744,10 @@ class CodeGen {
             return is_const ? LLVMConstSIToFP(val, ty) : LLVMBuildSIToFP(builder, val, ty, "")
         } else if is_float(exp.value_type) and is_int(value_type) {
             return is_const ? LLVMConstFPToSI(val, ty) : LLVMBuildFPToSI(builder, val, ty, "")
-        } else if is_int(exp.value_type) and is_int(value_type){
+        } else if is_int(exp.value_type) and is_int(value_type){ // FIXME: Enums?
+            let int_ty = value_type as IntType
             if value_type.kind != TypeKind.I128
-                return is_const ? LLVMConstIntCast(val, ty, true) : LLVMBuildIntCast2(builder, val, ty, true, "")
+                return is_const ? LLVMConstIntCast(val, ty, int_ty.is_signed) : LLVMBuildIntCast2(builder, val, ty, int_ty.is_signed, "")
             return is_const ? LLVMConstSExt(val, ty) : LLVMBuildSExt(builder, val, ty, "")
         } else if is_float(exp.value_type) and is_float(value_type){
             return is_const ? LLVMConstFPCast(val, ty) : LLVMBuildFPCast(builder, val, ty, "")

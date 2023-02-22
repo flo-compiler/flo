@@ -1,13 +1,13 @@
-const HEIGHT: i32 = 10
-const WIDTH: i32 = 10
-fnc fill_array(arr: int*, width: i32, height: i32, value: int){
+const HEIGHT: uint = 10
+const WIDTH: uint = 10
+fnc fill_array(arr: uint*, width: uint, height: uint, value: uint){
     for let i = 0; i < width*height; ++i {
         arr[i] = value
     }
 }
-let array: int[WIDTH * HEIGHT] = null
+let array: uint[WIDTH * HEIGHT] = null
 
-fnc main(): int {
+fnc main(): uint {
     const bg_color = 0xFFA498
     fill_array(&array[0], WIDTH, HEIGHT, bg_color)
     return 0

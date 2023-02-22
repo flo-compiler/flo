@@ -5,13 +5,13 @@ import "lexer"
 import "parser"
 import "typechecker"
 import "codegen"
-fnc parse_args(size: int, args: i8**): string[] {
+fnc parse_args(size: int, args: u8**): string[] {
     let arr: string[] = []
     for let i = 0; i < size; i++
         arr << string.from_cstring(args[i])
     return arr
 }
-fnc system(cmd: i8*)
+fnc system(cmd: u8*)
 fnc help(exec_file: string){
     println("Usage: $exec_file <path> [OPTIONS]\n")
     println("OPTIONS:")
@@ -39,7 +39,7 @@ fnc flag_value_or(args: string[], name: string, default: string): string {
     }
     return default
 }
-fnc main(argc: int, argv: i8**): int {
+fnc main(argc: int, argv: u8**): int {
     let code = 0
     if argc >= 2 {
         let args = parse_args(argc, argv)

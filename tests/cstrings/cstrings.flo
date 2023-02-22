@@ -1,4 +1,4 @@
-fnc printf(str: i8*)
+fnc printf(str: u8*)
 fnc main(): int {
     printf("Hello World\n")
     return 0
