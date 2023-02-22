@@ -310,6 +310,7 @@ class Map<T, U> {
         this.size = initial_capacity
         this.length = 0
     }
+    // FIXME: Needs to be unsigned.
     private hash_fnc(this, key: T): int {
         let str = "$key"
         let hash = 0

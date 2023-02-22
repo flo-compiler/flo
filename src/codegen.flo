@@ -676,7 +676,9 @@ class CodeGen {
                     return is_const_expr ? LLVMConstNSWAdd(lhs, rhs) : LLVMBuildNSWAdd(builder, lhs, rhs, "")
                 return is_const_expr ? LLVMConstNUWAdd(lhs, rhs) : LLVMBuildNUWAdd(builder, lhs, rhs, "")
             } else if op == BinaryOp.SUB {
-                return is_const_expr ? LLVMConstSub(lhs, rhs) : LLVMBuildSub(builder, lhs, rhs, "")
+                if ((rty as IntType).is_signed)
+                    return is_const_expr ? LLVMConstNSWSub(lhs, rhs) : LLVMBuildNSWSub(builder, lhs, rhs, "")
+                return is_const_expr ? LLVMConstNUWSub(lhs, rhs) : LLVMBuildNUWSub(builder, lhs, rhs, "")
             } else if op == BinaryOp.MUL {
                 return is_const_expr ? LLVMConstMul(lhs, rhs) : LLVMBuildMul(builder, lhs, rhs, "")
             } else if op == BinaryOp.DIV {
