@@ -1,5 +1,5 @@
 import "types.flo"
-fnc LLVMWriteBitcodeToFile(M: LLVMModuleRef, Path: i8*): int
+fnc LLVMWriteBitcodeToFile(M: LLVMModuleRef, Path: u8*): int
 
 /** Writes a module to an open file descriptor. Returns 0 on success. */
 fnc LLVMWriteBitcodeToFD(M: LLVMModuleRef, FD: int , ShouldClose: int, Unbuffered: int): int

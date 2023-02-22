@@ -20,6 +20,13 @@ class BooleanType (Type) {
         super(TypeKind.BOOL)
     }
 }
+class IntType(Type){
+    is_signed: bool
+    constructor(this, ty: TypeKind, is_signed: bool){
+        super(ty)
+        this.is_signed = is_signed
+    }
+}
 class PointerType (Type) {
     pointee_type: Type
     constructor(this, pointee_type: Type){
@@ -111,10 +118,10 @@ class EnumType (Type) {
     }
 }
 class IntExpression (Expression) {
-    value: i64
-    constructor(this, value: i64){
+    value: u64
+    constructor(this, value: u64){
         super(ExpressionKind.INT)
-        this.value_type = new Type(TypeKind.INT)
+        this.value_type = new IntType(TypeKind.INT, false)
         this.value = value
         this.is_constant = true
     }
@@ -399,9 +406,13 @@ fnc is_int(val_ty: Type): bool {
 fnc is_bool(val_ty: Type): bool {
     return val_ty.kind == TypeKind.BOOL
 }
-fnc is_i8_ptr(val_ty: Type): bool {
-    if val_ty.kind == TypeKind.PTR
-        return (val_ty as PointerType).pointee_type.kind == TypeKind.I8
+fnc is_u8_ptr(val_ty: Type): bool {
+    if val_ty.kind == TypeKind.PTR {
+        let pointee_type = (val_ty as PointerType).pointee_type
+        if is_int(pointee_type) {
+            return pointee_type.kind == TypeKind.I8 and !(pointee_type as IntType).is_signed
+        }
+    }
     return false
 }
 fnc is_object(val_ty: Type): bool {
@@ -434,6 +445,13 @@ fnc check_cast_lower_bits(p1: Expression*, p2: Expression*){
             p1[0] = cast_exp_to_type(p1[0], ty2)
         } else {
             ty1 = max_type(ty1, ty2)
+            if is_int(ty1) and is_int(ty2){
+                let inty1 = ty1 as IntType
+                let inty2 = ty2 as IntType
+                if inty1.is_signed != inty2.is_signed {
+                    inty1.is_signed = inty2.is_signed = true
+                }
+            }
             p1[0] = cast_exp_to_type(p1[0], ty1)
             p2[0] = cast_exp_to_type(p2[0], ty1)
         }
@@ -452,20 +470,23 @@ fnc check_is_var(expr: Expression): bool{
 fnc dump_type(ty: Type, force_bit_size = false): string {
     if ty.kind == TypeKind.BOOL
         return "bool"
-    if ty.kind == TypeKind.I4
-        return "i4" 
-    if ty.kind == TypeKind.I8
-        return "i8"
-    if ty.kind == TypeKind.I16
-        return "i16"
-    if ty.kind == TypeKind.I32
-        return "i32"
-    if ty.kind == TypeKind.I64
-        return "i64"
-    if ty.kind == TypeKind.I128
-        return "i128"
-    if ty.kind == TypeKind.INT
-        return force_bit_size ? "i$ARCH_WORD_SIZE" : "int"
+    if is_int(ty){
+        let char = (ty as IntType).is_signed ? "i" : "u"
+        if ty.kind == TypeKind.I4
+            return "$(char)4" 
+        if ty.kind == TypeKind.I8
+            return "$(char)8"
+        if ty.kind == TypeKind.I16
+            return "$(char)16"
+        if ty.kind == TypeKind.I32
+            return "$(char)32"
+        if ty.kind == TypeKind.I64
+            return "$(char)64"
+        if ty.kind == TypeKind.I128
+            return "$(char)128"
+        if ty.kind == TypeKind.INT
+            return force_bit_size ? "$(char)$ARCH_WORD_SIZE" : "int" // FIXME: Find a way.
+    }
     if ty.kind == TypeKind.F32
         return "f32"
     if ty.kind == TypeKind.F64
@@ -1608,7 +1629,7 @@ class TypeChecker {
     private check_enum_body(this, declared_enum: Enum, enum_node: EnumNode){
         let enum_variant: Type = null
         if enum_node.variant == null {
-            enum_variant = new Type(TypeKind.INT)
+            enum_variant = new IntType(TypeKind.INT, true)
         } else {
             enum_variant = this.check_type(enum_node.variant)
             if !is_int(enum_variant){
@@ -1911,21 +1932,20 @@ class TypeChecker {
         this.current_scope = get_scope(this.program, func.scope).parent
     }
     private check_type(this, type_node: TypeNode): Type {
-        if type_node.kind == TypeKind.BOOL
-            return new Type(TypeKind.BOOL)
-        if type_node.kind >= TypeKind.I4 and type_node.kind <= TypeKind.F64
-            return new Type(type_node.kind)
-        if type_node.kind == TypeKind.VOID
-            return new Type(TypeKind.VOID)
         if type_node.kind == TypeKind.PTR
             return new PointerType(this.check_type((type_node as PointerTypeNode).pointee_type))
         if type_node.kind == TypeKind.ARRAY {
             let array_node = type_node as ArrayTypeNode
-            let int_ty: Type(TypeKind.INT)
+            let int_ty: IntType(TypeKind.INT, false)
             let len_expr = this.check_expression(int_ty, array_node.length)
             if this.has_errored() return Type.unknown()
             if !is_int(len_expr.value_type) {
                 this.error(ErrorKind.GEN, "length has to be an int", array_node.length.range)
+                return null
+            }
+            let size_ty = len_expr.value_type as IntType
+            if size_ty.is_signed or size_ty.kind != TypeKind.INT {
+                this.error(ErrorKind.GEN, "length has to be a uint", array_node.length.range)
                 return null
             }
             if !len_expr.is_constant {
@@ -1952,6 +1972,43 @@ class TypeChecker {
             let record_type = type_node as RecordTypeNode
             let types: Type[] = []
             let identifer_tok = record_type.name
+            let name = identifer_tok.value
+            if name == "bool"
+                return new BooleanType()
+            if name == "u4"
+                return new IntType(TypeKind.I4, false)
+            if name == "u8"
+                return new IntType(TypeKind.I8, false)
+            if name == "u16"
+                return new IntType(TypeKind.I16, false)
+            if name == "u32"
+                return new IntType(TypeKind.I32, false)
+            if name == "u64"
+                return new IntType(TypeKind.I64, false)
+            if name == "u128"
+                return new IntType(TypeKind.I128, false)
+            if name == "uint"
+                return new IntType(TypeKind.INT, false)
+            if name == "i4"
+                return new IntType(TypeKind.I4, true)
+            if name == "i8"
+                return new IntType(TypeKind.I8, true)
+            if name == "i16"
+                return new IntType(TypeKind.I16, true)
+            if name == "i32"
+                return new IntType(TypeKind.I32, true)
+            if name == "i64"
+                return new IntType(TypeKind.I64, true)
+            if name == "i128"
+                return new IntType(TypeKind.I128, true)
+            if name == "int"
+                return new IntType(TypeKind.INT, true)
+            if name == "f32"
+                return new Type(TypeKind.F32)
+            if name == "f64"
+                return new Type(TypeKind.F64)
+            if name == "void"
+                return new Type(TypeKind.VOID)
             if record_type.generic_args.length > 0 {
                 for arg in record_type.generic_args
                     types << this.check_type(arg)
@@ -1964,7 +2021,7 @@ class TypeChecker {
             }
             let found_type = this.get_type_from_current_scope(identifer_tok.value)
             if found_type.kind == TypeKind.UNKNOWN {
-                this.error(ErrorKind.TYPE, "Undefined type '$(identifer_tok.value)'", identifer_tok.range)
+                this.error(ErrorKind.TYPE, "Undefined type '$name'", identifer_tok.range)
                 return null
             }
             return found_type
@@ -2191,9 +2248,9 @@ class TypeChecker {
             }
             if op >= BinaryOp.SL and op <= BinaryOp.XOR {
                 if is_float(left.value_type)
-                    left = cast_exp_to_type(left, new Type(TypeKind.INT)) // Might need to cast it to the biggest available
+                    left = cast_exp_to_type(left, new IntType(TypeKind.INT, true)) // Might need to cast it to the biggest available
                 if is_float(right.value_type){
-                    right = cast_exp_to_type(right, new Type(TypeKind.INT)) // Might need to cast it to the biggest available
+                    right = cast_exp_to_type(right, new IntType(TypeKind.INT, true)) // Might need to cast it to the biggest available
                 }
                 check_cast_lower_bits(&left, &right)
                 return new BinaryExpression(left, op, right, left.value_type, is_const)
@@ -2225,7 +2282,12 @@ class TypeChecker {
         let ty = expression.value_type
         let is_const = expression.is_constant
         if op == UnaryOp.NEG {
-            if is_numeric(ty) return new UnaryExpression(op, expression, ty, is_const)
+            if is_numeric(ty){
+                if is_int(ty){ 
+                    (ty as IntType).is_signed = true
+                }
+                return new UnaryExpression(op, expression, ty, is_const)
+            }
         }
         if op == UnaryOp.NOT {
             if is_bool(ty) or is_numeric(ty)
@@ -2343,7 +2405,7 @@ class TypeChecker {
                 this.error(ErrorKind.GEN, "New operator expects 1 argument for pointers but got $argno argument(s)", new_expr_node.range)
                 return null
             }
-            let int_ty = new Type(TypeKind.INT)
+            let int_ty = new IntType(TypeKind.INT, false)
             let arg = this.check_expression(int_ty, new_expr_node.args[0])
             if this.has_errored() return null
             if !this.types_are_eq(int_ty, arg.value_type) {
@@ -2505,7 +2567,7 @@ class TypeChecker {
         if this.has_errored() return null
         if is_object(root_expression.value_type)
             return this.check_object_index_expr(root_expression, index_expr_node) as IndexExpression
-        let index = this.check_expression(new Type(TypeKind.INT), index_expr_node.index)
+        let index = this.check_expression(new IntType(TypeKind.INT, false), index_expr_node.index)
         if this.has_errored() return null
         if !is_int(index.value_type) {
             this.error(ErrorKind.TYPE, "Expected an integer type for index", index_expr_node.index.range)
@@ -2632,7 +2694,7 @@ class TypeChecker {
                 return null
             }
             if intrinsic_func == Intrinsics.MEMCMP {
-                intrinsic_call.value_type = new Type(TypeKind.INT)
+                intrinsic_call.value_type = new IntType(TypeKind.INT, true)
             }
         }
         return intrinsic_call
@@ -2640,18 +2702,34 @@ class TypeChecker {
     private check_int_expression(this, expected_type: Type, int_node: IntExpressionNode): IntExpression{
         let int_value = int_node.value.value
         let expr_value = new IntExpression(int_value)
-        if is_int(expected_type)
+        let is_signed = true
+        if is_int(expected_type){
             expr_value.value_type.kind = expected_type.kind
-        if int_value < -8 or int_value > 7 and expr_value.value_type.kind == TypeKind.I4
-            expr_value.value_type.kind = TypeKind.I8
-        if int_value < -128 or int_value > 127 and expr_value.value_type.kind == TypeKind.I8
-            expr_value.value_type.kind = TypeKind.I16
-        if int_value < -32768 or int_value > 32767 and expr_value.value_type.kind == TypeKind.I16
-            expr_value.value_type.kind = TypeKind.I32
-        if int_value < -2147483648 or int_value > 2147483647 and (expr_value.value_type.kind == TypeKind.I32 or (expr_value.value_type.kind == TypeKind.INT and ARCH_WORD_SIZE == 32))
-            expr_value.value_type.kind = TypeKind.I64
-        if int_value < -9223372036854775808 or int_value > 9223372036854775807 and (expr_value.value_type.kind == TypeKind.I64 or (expr_value.value_type.kind == TypeKind.INT and ARCH_WORD_SIZE == 64))
-            expr_value.value_type.kind = TypeKind.I128
+            is_signed = (expr_value.value_type as IntType).is_signed = (expected_type as IntType).is_signed
+        }
+        if is_signed {
+            if int_value < -8 or int_value > 7 and expr_value.value_type.kind == TypeKind.I4
+                expr_value.value_type.kind = TypeKind.I8
+            if int_value < -128 or int_value > 127 and expr_value.value_type.kind == TypeKind.I8
+                expr_value.value_type.kind = TypeKind.I16
+            if int_value < -32768 or int_value > 32767 and expr_value.value_type.kind == TypeKind.I16
+                expr_value.value_type.kind = TypeKind.I32
+            if int_value < -2147483648 or int_value > 2147483647 and (expr_value.value_type.kind == TypeKind.I32 or (expr_value.value_type.kind == TypeKind.INT and ARCH_WORD_SIZE == 32))
+                expr_value.value_type.kind = TypeKind.I64
+            if int_value < -9223372036854775808 or int_value > 9223372036854775807 and (expr_value.value_type.kind == TypeKind.I64 or (expr_value.value_type.kind == TypeKind.INT and ARCH_WORD_SIZE == 64))
+                expr_value.value_type.kind = TypeKind.I128
+        } else {
+            if int_value > 15 and expr_value.value_type.kind == TypeKind.I4
+                expr_value.value_type.kind = TypeKind.I8
+            if int_value > 255 and expr_value.value_type.kind == TypeKind.I8
+                expr_value.value_type.kind = TypeKind.I16
+            if int_value > 65535 and expr_value.value_type.kind == TypeKind.I16
+                expr_value.value_type.kind = TypeKind.I32
+            if int_value > 4294967295 and (expr_value.value_type.kind == TypeKind.I32 or (expr_value.value_type.kind == TypeKind.INT and ARCH_WORD_SIZE == 32))
+                expr_value.value_type.kind = TypeKind.I64
+            if int_value > 9223372036854775807 and (expr_value.value_type.kind == TypeKind.I64 or (expr_value.value_type.kind == TypeKind.INT and ARCH_WORD_SIZE == 64))
+                expr_value.value_type.kind = TypeKind.I128
+        }
         return expr_value
     }
     private check_float_expression(this, expected_type: Type, float_node: FloatExpressionNode): FloatExpression {
@@ -2675,7 +2753,7 @@ class TypeChecker {
         for arg in str_node.template_args {
             template_args << this.check_expression(Type.unknown(), arg)
         }
-        if !is_i8_ptr(expected_type) {
+        if !is_u8_ptr(expected_type) {
             expected_type = this.get_type_from_current_scope("string")
         }
         let str_exp = new StringExpression(str_node.value.value, str_node.value.fmt_indices, template_args, expected_type)

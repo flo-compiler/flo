@@ -55,7 +55,7 @@ The type of 8 and 7 are infered as `i8` using the type inference at function cal
 ### Two types of strings:
 1. C-String (null terminated string)
 ```
-let message: i8* = "Hello, world!"
+let message: u8* = "Hello, world!"
 ```
 2. String object
 ```
@@ -70,7 +70,7 @@ let x = 33
 let y = 36
 let message = "$x + $y = $(x+y)" // 33 + 36 = 69
 // or as a cstring
-let message2: i8* = "$x + $y = $(x+y)" // 33 + 36 = 69
+let message2: u8* = "$x + $y = $(x+y)" // 33 + 36 = 69
 ```
 Automatically converts format parameters to string and includes then in the formatted string.
 ## Ranges
@@ -246,10 +246,10 @@ enum Currencies {
     CAD
 }
 ```
-- [x] Enum constraints (limited only to integer types (`i4`, `i8`, `i16`, `i32`, `i64`, `i128`, `int`))
+- [x] Enum constraints (limited only to integer types (`i4`, `i8`, `i16`, `i32`, `i64`, `i128`, `int`, `u4`, `u8`, `u16`, `u32`, `u64`, `u128`, `uint`))
 ```
 /*
-The values of the members of the month enum are all of type i8 
+The values of the members of the Months enum are all of type i4 
 */
 enum Months(i4) {
     JANUARY,
@@ -432,7 +432,7 @@ fnc main(){
 ### Type Alias
 - [x] basic Type Aliasing.
 ```
-type char = i8
+type char = u8
 type i1 = bool
 ```
 - [ ] Better Type Aliasing.

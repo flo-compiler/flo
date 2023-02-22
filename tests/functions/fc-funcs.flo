@@ -1,5 +1,5 @@
-fnc system(element: i8*)
-fnc exec_function(func: (i8*) -> void, param: i8* ){
+fnc system(element: u8*)
+fnc exec_function(func: (u8*) -> void, param: u8* ){
     func(param)
 }
 fnc main(): int {

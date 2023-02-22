@@ -1,4 +1,4 @@
 fnc main(): int {
-    let mystring: i8* = "ABCD"
+    let mystring: u8* = "ABCD"
     return (mystring + 1).compare("BCD", 3)
 }

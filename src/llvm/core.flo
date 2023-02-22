@@ -6,8 +6,8 @@ fnc LLVMShutdown()
 
 /*===-- Error handling ----------------------------------------------------===*/
 
-fnc LLVMCreateMessage(Message: i8*): i8*
-fnc LLVMDisposeMessage(Message: i8*)
+fnc LLVMCreateMessage(Message: u8*): u8*
+fnc LLVMDisposeMessage(Message: u8*)
 /**
  * Create a new context.
  *
@@ -19,14 +19,14 @@ fnc LLVMGetGlobalContext(): LLVMContextRef
 fnc LLVMContextSetOpaquePointers(C: LLVMContextRef, OpaquePointers: LLVMBool)
 fnc LLVMContextDispose(C: LLVMContextRef)
 
-fnc LLVMModuleCreateWithName(ModuleID: i8*): LLVMModuleRef 
-fnc LLVMModuleCreateWithNameInContext(ModuleID: i8*, C: LLVMContextRef): LLVMModuleRef
+fnc LLVMModuleCreateWithName(ModuleID: u8*): LLVMModuleRef 
+fnc LLVMModuleCreateWithNameInContext(ModuleID: u8*, C: LLVMContextRef): LLVMModuleRef
 fnc LLVMCloneModule(M: LLVMModuleRef): LLVMModuleRef 
 
 fnc LLVMDisposeModule(M: LLVMModuleRef)
 
-fnc LLVMGetSourceFileName(M: LLVMModuleRef, Len: int*): i8* 
-fnc LLVMMDString (Str: i8*, SLen: int)
+fnc LLVMGetSourceFileName(M: LLVMModuleRef, Len: int*): u8* 
+fnc LLVMMDString (Str: u8*, SLen: int)
 fnc LLVMGetModuleContext(M: LLVMModuleRef): LLVMContextRef
 /**
  * Set the original source file name of a module to a string Name with length
@@ -37,8 +37,8 @@ fnc LLVMGetModuleContext(M: LLVMModuleRef): LLVMContextRef
  * @param Len Length of Name
  * @see Module::setSourceFileName()
  */
-fnc LLVMSetSourceFileName(M: LLVMModuleRef, Name: i8* , Len: int)
-fnc LLVMMDStringInContext2(C: LLVMContextRef, Str: i8*, SLen: int ): LLVMMetadataRef
+fnc LLVMSetSourceFileName(M: LLVMModuleRef, Name: u8* , Len: int)
+fnc LLVMMDStringInContext2(C: LLVMContextRef, Str: u8*, SLen: int ): LLVMMetadataRef
 /**
  * Obtain the data layout for a module.
  *
@@ -48,38 +48,38 @@ fnc LLVMMDStringInContext2(C: LLVMContextRef, Str: i8*, SLen: int ): LLVMMetadat
  * but match the name of another method on the module. Prefer the use
  * of LLVMGetDataLayoutStr, which is not ambiguous.
  */
-fnc LLVMGetDataLayoutStr(M: LLVMModuleRef ): i8* 
-fnc LLVMGetDataLayout(M: LLVMModuleRef ): i8* 
+fnc LLVMGetDataLayoutStr(M: LLVMModuleRef ): u8* 
+fnc LLVMGetDataLayout(M: LLVMModuleRef ): u8* 
 
 /**
  * Set the data layout for a module.
  *
  * @see Module::setDataLayout()
  */
-fnc LLVMSetDataLayout(M: LLVMModuleRef, DataLayoutStr: i8*)
+fnc LLVMSetDataLayout(M: LLVMModuleRef, DataLayoutStr: u8*)
 
 /**
  * Obtain the target triple for a module.
  *
  * @see Module::getTargetTriple()
  */
-fnc LLVMGetTarget(M: LLVMModuleRef): i8* 
+fnc LLVMGetTarget(M: LLVMModuleRef): u8* 
 
 /**
  * Set the target triple for a module.
  *
  * @see Module::setTargetTriple()
  */
-fnc LLVMSetTarget(M: LLVMModuleRef, Triple: i8* )
-fnc LLVMAddModuleFlag(M: LLVMModuleRef, Behavior: LLVMModuleFlagBehavior, Key: i8*, KeyLen: int, Val: LLVMMetadataRef)
+fnc LLVMSetTarget(M: LLVMModuleRef, Triple: u8* )
+fnc LLVMAddModuleFlag(M: LLVMModuleRef, Behavior: LLVMModuleFlagBehavior, Key: u8*, KeyLen: int, Val: LLVMMetadataRef)
 fnc LLVMDumpModule(M: LLVMModuleRef )
-fnc LLVMPrintModuleToFile(M: LLVMModuleRef, Filename: i8*, ErrorMessage: i8**): LLVMBool
-fnc LLVMPrintModuleToString(M: LLVMModuleRef): i8*
+fnc LLVMPrintModuleToFile(M: LLVMModuleRef, Filename: u8*, ErrorMessage: u8**): LLVMBool
+fnc LLVMPrintModuleToString(M: LLVMModuleRef): u8*
 
-fnc LLVMGetInlineAsm(Ty: LLVMTypeRef, AsmString: i8*, AsmStringSize: int, Constraints: i8*, ConstraintsSize: int, HasSideEffects: LLVMBool, IsAlignStack: LLVMBool, Dialect: LLVMInlineAsmDialect, CanThrow: LLVMBool ): LLVMValueRef
+fnc LLVMGetInlineAsm(Ty: LLVMTypeRef, AsmString: u8*, AsmStringSize: int, Constraints: u8*, ConstraintsSize: int, HasSideEffects: LLVMBool, IsAlignStack: LLVMBool, Dialect: LLVMInlineAsmDialect, CanThrow: LLVMBool ): LLVMValueRef
 
-fnc LLVMAddFunction(M: LLVMModuleRef, name: i8*, FunctionTy: LLVMTypeRef): LLVMValueRef
-fnc LLVMGetNamedFunction(M: LLVMModuleRef, Name: i8*): LLVMValueRef 
+fnc LLVMAddFunction(M: LLVMModuleRef, name: u8*, FunctionTy: LLVMTypeRef): LLVMValueRef
+fnc LLVMGetNamedFunction(M: LLVMModuleRef, Name: u8*): LLVMValueRef 
 fnc LLVMGetFirstFunction(M: LLVMModuleRef): LLVMValueRef
 fnc LLVMGetLastFunction(M: LLVMModuleRef): LLVMValueRef
 fnc LLVMGetNextFunction(Fn: LLVMValueRef): LLVMValueRef
@@ -143,7 +143,7 @@ fnc LLVMGetReturnType(FunctionTy: LLVMTypeRef): LLVMTypeRef
 fnc LLVMCountParamTypes(FunctionTy: LLVMTypeRef): int
 fnc LLVMStructTypeInContext(C: LLVMContextRef, ElementTypes: LLVMTypeRef*, ElementCount: int, Packed: LLVMBool): LLVMTypeRef
 fnc LLVMStructType(ElementTypes: LLVMTypeRef*, ElementCount: int, Packed: LLVMBool): LLVMTypeRef
-fnc LLVMStructCreateNamed(C: LLVMContextRef, name: i8*): LLVMTypeRef 
+fnc LLVMStructCreateNamed(C: LLVMContextRef, name: u8*): LLVMTypeRef 
 fnc LLVMStructSetBody(StructTy: LLVMTypeRef, ElementTypes: LLVMTypeRef *, element_count: int, packed: LLVMBool)
 
 fnc LLVMGetElementType(Ty: LLVMTypeRef): LLVMTypeRef
@@ -169,12 +169,12 @@ fnc LLVMConstNull(Ty: LLVMTypeRef): LLVMValueRef
 fnc LLVMIsNull(Val: LLVMValueRef ): LLVMBool
 fnc LLVMConstPointerNull(Ty: LLVMTypeRef): LLVMValueRef
 /* constant */
-fnc LLVMConstInt(IntTy: LLVMTypeRef, N: i64, SignExtend: LLVMBool): LLVMValueRef 
+fnc LLVMConstInt(IntTy: LLVMTypeRef, N: u64, SignExtend: LLVMBool): LLVMValueRef 
 
 fnc LLVMConstReal(RealTy: LLVMTypeRef, N: f64): LLVMValueRef
 
-fnc LLVMConstStringInContext(C: LLVMContextRef, Str: i8*,length: int, DontNullTerminate: LLVMBool): LLVMValueRef
-fnc LLVMConstString(Str: i8*, Length: int, DontNullTerminate: LLVMBool): LLVMValueRef
+fnc LLVMConstStringInContext(C: LLVMContextRef, Str: u8*,length: int, DontNullTerminate: LLVMBool): LLVMValueRef
+fnc LLVMConstString(Str: u8*, Length: int, DontNullTerminate: LLVMBool): LLVMValueRef
 
 
 fnc LLVMIsConstantString(c: LLVMValueRef): LLVMBool
@@ -250,9 +250,9 @@ fnc LLVMBlockAddress(F: LLVMValueRef, BB: LLVMBasicBlockRef): LLVMValueRef
 /* globals */
 fnc LLVMGetLinkage(Global: LLVMValueRef)
 fnc LLVMSetLinkage(Global: LLVMValueRef, Linkage: LLVMLinkage)
-fnc LLVMAddGlobal(M: LLVMModuleRef, Ty: LLVMTypeRef, Name: i8*): LLVMValueRef 
-fnc LLVMAddGlobalInAddressSpace(M: LLVMModuleRef, Ty: LLVMTypeRef, Name: i8*, AddressSpace: int):LLVMValueRef 
-fnc LLVMGetNamedGlobal(M: LLVMModuleRef, Name: i8*): LLVMValueRef 
+fnc LLVMAddGlobal(M: LLVMModuleRef, Ty: LLVMTypeRef, Name: u8*): LLVMValueRef 
+fnc LLVMAddGlobalInAddressSpace(M: LLVMModuleRef, Ty: LLVMTypeRef, Name: u8*, AddressSpace: int):LLVMValueRef 
+fnc LLVMGetNamedGlobal(M: LLVMModuleRef, Name: u8*): LLVMValueRef 
 fnc LLVMDeleteGlobal(GlobalVar: LLVMValueRef)
 fnc LLVMGetInitializer(GlobalVar: LLVMValueRef): LLVMValueRef 
 fnc LLVMSetInitializer(GlobalVar: LLVMValueRef,  ConstantVal: LLVMValueRef)
@@ -270,24 +270,24 @@ fnc LLVMGlobalGetValueType(Global: LLVMValueRef): LLVMTypeRef
 fnc LLVMGetAlignment(V: LLVMValueRef): int
 /* functions */
 fnc LLVMDeleteFunction(Fn: LLVMValueRef)
-fnc LLVMLookupIntrinsicID(Name: i8*, NameLen: int): int
+fnc LLVMLookupIntrinsicID(Name: u8*, NameLen: int): int
 fnc LLVMGetIntrinsicDeclaration(Mod: LLVMModuleRef, ID: int, ParamTypes: LLVMTypeRef*, ParamCount: int): LLVMValueRef
 fnc LLVMIntrinsicGetType(Ctx: LLVMContextRef, ID: int, ParamTypes: LLVMTypeRef*, ParamCount: int): LLVMTypeRef
-fnc LLVMGetGC(Fn: LLVMValueRef): i8*
-fnc LLVMSetGC(Fn: LLVMValueRef, Name: i8*)
+fnc LLVMGetGC(Fn: LLVMValueRef): u8*
+fnc LLVMSetGC(Fn: LLVMValueRef, Name: u8*)
 fnc LLVMCountParams(Fn: LLVMValueRef): int
 fnc LLVMGetParam (Fn: LLVMValueRef, Index: int): LLVMValueRef
 /* Basic blocks */
 fnc LLVMBasicBlockAsValue(BB: LLVMBasicBlockRef): LLVMValueRef
-fnc LLVMGetBasicBlockName(BB: LLVMBasicBlockRef): i8*
+fnc LLVMGetBasicBlockName(BB: LLVMBasicBlockRef): u8*
 fnc LLVMGetBasicBlockParent(BB: LLVMBasicBlockRef): LLVMValueRef
 fnc LLVMGetBasicBlockTerminator(BB: LLVMBasicBlockRef): LLVMValueRef
 fnc LLVMGetEntryBasicBlock(Fn: LLVMValueRef): LLVMBasicBlockRef
 fnc LLVMInsertExistingBasicBlockAfterInsertBlock(Builder: LLVMBuilderRef, BB: LLVMBasicBlockRef)
-fnc LLVMCreateBasicBlockInContext(C: LLVMContextRef, Name: i8*): LLVMBasicBlockRef
-fnc LLVMAppendBasicBlock(fn: LLVMValueRef, name: i8*): LLVMBasicBlockRef
-fnc LLVMAppendBasicBlockInContext(C: LLVMContextRef, Fn: LLVMValueRef, Name: i8*): LLVMBasicBlockRef
-fnc LLVMInsertBasicBlock(InsertBeforeBB: LLVMBasicBlockRef, Name: i8*): LLVMBasicBlockRef
+fnc LLVMCreateBasicBlockInContext(C: LLVMContextRef, Name: u8*): LLVMBasicBlockRef
+fnc LLVMAppendBasicBlock(fn: LLVMValueRef, name: u8*): LLVMBasicBlockRef
+fnc LLVMAppendBasicBlockInContext(C: LLVMContextRef, Fn: LLVMValueRef, Name: u8*): LLVMBasicBlockRef
+fnc LLVMInsertBasicBlock(InsertBeforeBB: LLVMBasicBlockRef, Name: u8*): LLVMBasicBlockRef
 fnc LLVMDeleteBasicBlock(BB: LLVMBasicBlockRef)
 fnc LLVMRemoveBasicBlockFromParent(BB: LLVMBasicBlockRef)
 /* functions calls */
@@ -316,7 +316,7 @@ fnc LLVMPositionBuilderAtEnd(Builder: LLVMBuilderRef, Block: LLVMBasicBlockRef)
 fnc LLVMGetInsertBlock(Builder: LLVMBuilderRef): LLVMBasicBlockRef
 fnc LLVMClearInsertionPosition(Builder: LLVMBuilderRef)
 fnc LLVMInsertIntoBuilder(Builder: LLVMBuilderRef, Instr: LLVMValueRef)
-fnc LLVMInsertIntoBuilderWithName(Builder: LLVMBuilderRef, Instr: LLVMValueRef, Name: i8*)
+fnc LLVMInsertIntoBuilderWithName(Builder: LLVMBuilderRef, Instr: LLVMValueRef, Name: u8*)
 fnc LLVMDisposeBuilder(Builder: LLVMBuilderRef)
 /* Terminators */
 fnc LLVMBuildRetVoid(B: LLVMBuilderRef): LLVMValueRef
@@ -327,17 +327,17 @@ fnc LLVMBuildCondBr(B: LLVMBuilderRef, If: LLVMValueRef, Then: LLVMBasicBlockRef
 fnc LLVMBuildSwitch(B: LLVMBuilderRef, V: LLVMValueRef, Else: LLVMBasicBlockRef, NumCases: int ): LLVMValueRef
 fnc LLVMBuildIndirectBr(B: LLVMBuilderRef, Addr: LLVMValueRef, NumDests: int): LLVMValueRef
 
-fnc LLVMBuildInvoke2(B: LLVMBuilderRef, Ty: LLVMTypeRef, Fn: LLVMValueRef, Args: LLVMValueRef *, NumArgs: int, Then: LLVMBasicBlockRef, Catch: LLVMBasicBlockRef, Name: i8*): LLVMValueRef
+fnc LLVMBuildInvoke2(B: LLVMBuilderRef, Ty: LLVMTypeRef, Fn: LLVMValueRef, Args: LLVMValueRef *, NumArgs: int, Then: LLVMBasicBlockRef, Catch: LLVMBasicBlockRef, Name: u8*): LLVMValueRef
 fnc LLVMBuildUnreachable(B: LLVMBuilderRef): LLVMValueRef
 
 /* Exception Handling */
 fnc LLVMBuildResume(B: LLVMBuilderRef, Exn: LLVMValueRef): LLVMValueRef
-fnc LLVMBuildLandingPad(B: LLVMBuilderRef, Ty: LLVMTypeRef, PersFn: LLVMValueRef, NumClauses: int, Name: i8*): LLVMValueRef
+fnc LLVMBuildLandingPad(B: LLVMBuilderRef, Ty: LLVMTypeRef, PersFn: LLVMValueRef, NumClauses: int, Name: u8*): LLVMValueRef
 fnc LLVMBuildCleanupRet(B: LLVMBuilderRef, CatchPad: LLVMValueRef, BB: LLVMBasicBlockRef): LLVMValueRef
 fnc LLVMBuildCatchRet(B: LLVMBuilderRef, CatchPad: LLVMValueRef, BB: LLVMBasicBlockRef): LLVMValueRef
-fnc LLVMBuildCatchPad(B: LLVMBuilderRef, ParentPad: LLVMValueRef, Args: LLVMValueRef *, NumArgs: int, Name: i8*): LLVMValueRef
-fnc LLVMBuildCleanupPad(B: LLVMBuilderRef, ParentPad: LLVMValueRef, Args: LLVMValueRef *, NumArgs: int, Name: i8*): LLVMValueRef
-fnc LLVMBuildCatchSwitch(B: LLVMBuilderRef, ParentPad: LLVMValueRef, UnwindBB: LLVMBasicBlockRef,  NumHandlers: int, Name: i8*): LLVMValueRef
+fnc LLVMBuildCatchPad(B: LLVMBuilderRef, ParentPad: LLVMValueRef, Args: LLVMValueRef *, NumArgs: int, Name: u8*): LLVMValueRef
+fnc LLVMBuildCleanupPad(B: LLVMBuilderRef, ParentPad: LLVMValueRef, Args: LLVMValueRef *, NumArgs: int, Name: u8*): LLVMValueRef
+fnc LLVMBuildCatchSwitch(B: LLVMBuilderRef, ParentPad: LLVMValueRef, UnwindBB: LLVMBasicBlockRef,  NumHandlers: int, Name: u8*): LLVMValueRef
 /* Add a case to the switch instruction */
 fnc LLVMAddCase(Switch: LLVMValueRef, OnVal: LLVMValueRef, Dest: LLVMBasicBlockRef)
 
@@ -374,41 +374,41 @@ fnc LLVMGetNumHandlers(CatchSwitch: LLVMValueRef): int
 fnc LLVMGetParentCatchSwitch(CatchPad: LLVMValueRef): LLVMValueRef
 fnc LLVMSetParentCatchSwitch(CatchPad: LLVMValueRef, CatchSwitch: LLVMValueRef)
 /* Arithmetic */
-fnc LLVMBuildAdd(B: LLVMBuilderRef, LHS: LLVMValueRef, RHS: LLVMValueRef, Name: i8*): LLVMValueRef
-fnc LLVMBuildNSWAdd(B: LLVMBuilderRef, LHS: LLVMValueRef, RHS: LLVMValueRef, Name: i8*): LLVMValueRef
-fnc LLVMBuildNUWAdd(B: LLVMBuilderRef, LHS: LLVMValueRef, RHS: LLVMValueRef, Name: i8*): LLVMValueRef
-fnc LLVMBuildFAdd(B: LLVMBuilderRef, LHS: LLVMValueRef, RHS: LLVMValueRef,  Name: i8*): LLVMValueRef
-fnc LLVMBuildSub(B: LLVMBuilderRef, LHS: LLVMValueRef, RHS: LLVMValueRef, Name: i8*): LLVMValueRef
-fnc LLVMBuildNSWSub(B: LLVMBuilderRef, LHS: LLVMValueRef, RHS: LLVMValueRef, Name: i8*): LLVMValueRef
-fnc LLVMBuildNUWSub(B: LLVMBuilderRef, LHS: LLVMValueRef, RHS: LLVMValueRef, Name: i8*): LLVMValueRef
-fnc LLVMBuildFSub(B: LLVMBuilderRef, LHS: LLVMValueRef, RHS: LLVMValueRef,  Name: i8*): LLVMValueRef
-fnc LLVMBuildMul(B: LLVMBuilderRef, LHS: LLVMValueRef, RHS: LLVMValueRef, Name: i8*): LLVMValueRef
-fnc LLVMBuildNSWMul(B: LLVMBuilderRef, LHS: LLVMValueRef, RHS: LLVMValueRef, Name: i8*): LLVMValueRef
-fnc LLVMBuildNUWMul(B: LLVMBuilderRef, LHS: LLVMValueRef, RHS: LLVMValueRef, Name: i8*): LLVMValueRef
-fnc LLVMBuildFMul(B: LLVMBuilderRef, LHS: LLVMValueRef, RHS: LLVMValueRef, Name: i8*): LLVMValueRef
-fnc LLVMBuildUDiv(B: LLVMBuilderRef, LHS: LLVMValueRef, RHS: LLVMValueRef, Name: i8*): LLVMValueRef
-fnc LLVMBuildExactUDiv(B: LLVMBuilderRef, LHS: LLVMValueRef, RHS: LLVMValueRef, Name: i8*): LLVMValueRef
-fnc LLVMBuildSDiv(B: LLVMBuilderRef, LHS: LLVMValueRef, RHS: LLVMValueRef, Name: i8*): LLVMValueRef
-fnc LLVMBuildExactSDiv(B: LLVMBuilderRef, LHS: LLVMValueRef, RHS: LLVMValueRef, Name: i8*): LLVMValueRef
-fnc LLVMBuildFDiv(B: LLVMBuilderRef, LHS: LLVMValueRef, RHS: LLVMValueRef, Name: i8*): LLVMValueRef
-fnc LLVMBuildURem(B: LLVMBuilderRef, LHS: LLVMValueRef, RHS: LLVMValueRef, Name: i8*): LLVMValueRef
-fnc LLVMBuildSRem(B: LLVMBuilderRef, LHS: LLVMValueRef, RHS: LLVMValueRef, Name: i8*): LLVMValueRef
-fnc LLVMBuildFRem(B: LLVMBuilderRef, LHS: LLVMValueRef, RHS: LLVMValueRef, Name: i8*): LLVMValueRef
-fnc LLVMBuildShl(B: LLVMBuilderRef, LHS: LLVMValueRef, RHS: LLVMValueRef, Name: i8*): LLVMValueRef
-fnc LLVMBuildLShr(B: LLVMBuilderRef, LHS: LLVMValueRef, RHS: LLVMValueRef, Name: i8*): LLVMValueRef
-fnc LLVMBuildAShr(B: LLVMBuilderRef, LHS: LLVMValueRef, RHS: LLVMValueRef, Name: i8*): LLVMValueRef
-fnc LLVMBuildAnd(B: LLVMBuilderRef, LHS: LLVMValueRef, RHS: LLVMValueRef, Name: i8*): LLVMValueRef
-fnc LLVMBuildOr(B: LLVMBuilderRef, LHS: LLVMValueRef, RHS: LLVMValueRef, Name: i8*): LLVMValueRef
-fnc LLVMBuildXor(B: LLVMBuilderRef, LHS: LLVMValueRef, RHS: LLVMValueRef, Name: i8*): LLVMValueRef
-fnc LLVMBuildBinOp(B: LLVMBuilderRef, Op: LLVMOpcode,LHS: LLVMValueRef, RHS: LLVMValueRef, Name: i8*): LLVMValueRef
-fnc LLVMBuildNeg(B: LLVMBuilderRef, V: LLVMValueRef, Name: i8*): LLVMValueRef
-fnc LLVMBuildNSWNeg(B: LLVMBuilderRef, V: LLVMValueRef, Name: i8*): LLVMValueRef
-fnc LLVMBuildNUWNeg(B: LLVMBuilderRef, V: LLVMValueRef, Name: i8*): LLVMValueRef
-fnc LLVMBuildFNeg(B: LLVMBuilderRef, V: LLVMValueRef, Name: i8*): LLVMValueRef
-fnc LLVMBuildNot(B: LLVMBuilderRef, V: LLVMValueRef, Name: i8*): LLVMValueRef
+fnc LLVMBuildAdd(B: LLVMBuilderRef, LHS: LLVMValueRef, RHS: LLVMValueRef, Name: u8*): LLVMValueRef
+fnc LLVMBuildNSWAdd(B: LLVMBuilderRef, LHS: LLVMValueRef, RHS: LLVMValueRef, Name: u8*): LLVMValueRef
+fnc LLVMBuildNUWAdd(B: LLVMBuilderRef, LHS: LLVMValueRef, RHS: LLVMValueRef, Name: u8*): LLVMValueRef
+fnc LLVMBuildFAdd(B: LLVMBuilderRef, LHS: LLVMValueRef, RHS: LLVMValueRef,  Name: u8*): LLVMValueRef
+fnc LLVMBuildSub(B: LLVMBuilderRef, LHS: LLVMValueRef, RHS: LLVMValueRef, Name: u8*): LLVMValueRef
+fnc LLVMBuildNSWSub(B: LLVMBuilderRef, LHS: LLVMValueRef, RHS: LLVMValueRef, Name: u8*): LLVMValueRef
+fnc LLVMBuildNUWSub(B: LLVMBuilderRef, LHS: LLVMValueRef, RHS: LLVMValueRef, Name: u8*): LLVMValueRef
+fnc LLVMBuildFSub(B: LLVMBuilderRef, LHS: LLVMValueRef, RHS: LLVMValueRef,  Name: u8*): LLVMValueRef
+fnc LLVMBuildMul(B: LLVMBuilderRef, LHS: LLVMValueRef, RHS: LLVMValueRef, Name: u8*): LLVMValueRef
+fnc LLVMBuildNSWMul(B: LLVMBuilderRef, LHS: LLVMValueRef, RHS: LLVMValueRef, Name: u8*): LLVMValueRef
+fnc LLVMBuildNUWMul(B: LLVMBuilderRef, LHS: LLVMValueRef, RHS: LLVMValueRef, Name: u8*): LLVMValueRef
+fnc LLVMBuildFMul(B: LLVMBuilderRef, LHS: LLVMValueRef, RHS: LLVMValueRef, Name: u8*): LLVMValueRef
+fnc LLVMBuildUDiv(B: LLVMBuilderRef, LHS: LLVMValueRef, RHS: LLVMValueRef, Name: u8*): LLVMValueRef
+fnc LLVMBuildExactUDiv(B: LLVMBuilderRef, LHS: LLVMValueRef, RHS: LLVMValueRef, Name: u8*): LLVMValueRef
+fnc LLVMBuildSDiv(B: LLVMBuilderRef, LHS: LLVMValueRef, RHS: LLVMValueRef, Name: u8*): LLVMValueRef
+fnc LLVMBuildExactSDiv(B: LLVMBuilderRef, LHS: LLVMValueRef, RHS: LLVMValueRef, Name: u8*): LLVMValueRef
+fnc LLVMBuildFDiv(B: LLVMBuilderRef, LHS: LLVMValueRef, RHS: LLVMValueRef, Name: u8*): LLVMValueRef
+fnc LLVMBuildURem(B: LLVMBuilderRef, LHS: LLVMValueRef, RHS: LLVMValueRef, Name: u8*): LLVMValueRef
+fnc LLVMBuildSRem(B: LLVMBuilderRef, LHS: LLVMValueRef, RHS: LLVMValueRef, Name: u8*): LLVMValueRef
+fnc LLVMBuildFRem(B: LLVMBuilderRef, LHS: LLVMValueRef, RHS: LLVMValueRef, Name: u8*): LLVMValueRef
+fnc LLVMBuildShl(B: LLVMBuilderRef, LHS: LLVMValueRef, RHS: LLVMValueRef, Name: u8*): LLVMValueRef
+fnc LLVMBuildLShr(B: LLVMBuilderRef, LHS: LLVMValueRef, RHS: LLVMValueRef, Name: u8*): LLVMValueRef
+fnc LLVMBuildAShr(B: LLVMBuilderRef, LHS: LLVMValueRef, RHS: LLVMValueRef, Name: u8*): LLVMValueRef
+fnc LLVMBuildAnd(B: LLVMBuilderRef, LHS: LLVMValueRef, RHS: LLVMValueRef, Name: u8*): LLVMValueRef
+fnc LLVMBuildOr(B: LLVMBuilderRef, LHS: LLVMValueRef, RHS: LLVMValueRef, Name: u8*): LLVMValueRef
+fnc LLVMBuildXor(B: LLVMBuilderRef, LHS: LLVMValueRef, RHS: LLVMValueRef, Name: u8*): LLVMValueRef
+fnc LLVMBuildBinOp(B: LLVMBuilderRef, Op: LLVMOpcode,LHS: LLVMValueRef, RHS: LLVMValueRef, Name: u8*): LLVMValueRef
+fnc LLVMBuildNeg(B: LLVMBuilderRef, V: LLVMValueRef, Name: u8*): LLVMValueRef
+fnc LLVMBuildNSWNeg(B: LLVMBuilderRef, V: LLVMValueRef, Name: u8*): LLVMValueRef
+fnc LLVMBuildNUWNeg(B: LLVMBuilderRef, V: LLVMValueRef, Name: u8*): LLVMValueRef
+fnc LLVMBuildFNeg(B: LLVMBuilderRef, V: LLVMValueRef, Name: u8*): LLVMValueRef
+fnc LLVMBuildNot(B: LLVMBuilderRef, V: LLVMValueRef, Name: u8*): LLVMValueRef
 /* Memory */
-fnc LLVMBuildMalloc(B: LLVMBuilderRef, Ty: LLVMTypeRef, Name: i8*): LLVMValueRef 
-fnc LLVMBuildArrayMalloc(B: LLVMBuilderRef, Ty: LLVMTypeRef, Val: LLVMValueRef, Name: i8*): LLVMValueRef
+fnc LLVMBuildMalloc(B: LLVMBuilderRef, Ty: LLVMTypeRef, Name: u8*): LLVMValueRef 
+fnc LLVMBuildArrayMalloc(B: LLVMBuilderRef, Ty: LLVMTypeRef, Val: LLVMValueRef, Name: u8*): LLVMValueRef
 /**
  * Creates and inserts a memset to the specified pointer and the
  * specified value.
@@ -429,18 +429,18 @@ fnc LLVMBuildMemCpy(B: LLVMBuilderRef, Dst: LLVMValueRef, DstAlign: int, Src: LL
  */
 fnc LLVMBuildMemMove(B: LLVMBuilderRef, Dst: LLVMValueRef, DstAlign: int, Src: LLVMValueRef, SrcAlign: int, Size: LLVMValueRef): LLVMValueRef
 
-fnc LLVMBuildAlloca(B: LLVMBuilderRef, Ty: LLVMTypeRef, Name: i8*): LLVMValueRef
-fnc LLVMBuildArrayAlloca(B: LLVMBuilderRef, Ty: LLVMTypeRef, Val: LLVMValueRef, Name: i8*): LLVMValueRef
+fnc LLVMBuildAlloca(B: LLVMBuilderRef, Ty: LLVMTypeRef, Name: u8*): LLVMValueRef
+fnc LLVMBuildArrayAlloca(B: LLVMBuilderRef, Ty: LLVMTypeRef, Val: LLVMValueRef, Name: u8*): LLVMValueRef
 fnc LLVMBuildFree(B: LLVMBuilderRef, PointerVal: LLVMValueRef): LLVMValueRef
 
-fnc LLVMBuildLoad(B: LLVMBuilderRef, PointerVal: LLVMValueRef, Name: i8*): LLVMValueRef
-fnc LLVMBuildLoad2(B: LLVMBuilderRef, Ty: LLVMTypeRef, PointerVal: LLVMValueRef, Name: i8*): LLVMValueRef
+fnc LLVMBuildLoad(B: LLVMBuilderRef, PointerVal: LLVMValueRef, Name: u8*): LLVMValueRef
+fnc LLVMBuildLoad2(B: LLVMBuilderRef, Ty: LLVMTypeRef, PointerVal: LLVMValueRef, Name: u8*): LLVMValueRef
 fnc LLVMBuildStore(B: LLVMBuilderRef, Val: LLVMValueRef, Ptr: LLVMValueRef): LLVMValueRef
-fnc LLVMBuildGEP2(B: LLVMBuilderRef, Ty: LLVMTypeRef, Pointer: LLVMValueRef, Indices: LLVMValueRef *, NumIndices: int, Name: i8*): LLVMValueRef
-fnc LLVMBuildInBoundsGEP2(B: LLVMBuilderRef, Ty: LLVMTypeRef, Pointer: LLVMValueRef, Indices: LLVMValueRef *, NumIndices: int, Name: i8*): LLVMValueRef
-fnc LLVMBuildStructGEP2(B: LLVMBuilderRef, Ty: LLVMTypeRef, Pointer: LLVMValueRef, Idx: int, Name: i8*): LLVMValueRef
-fnc LLVMBuildGlobalString(B: LLVMBuilderRef, Str: i8*, Name: i8*): LLVMValueRef
-fnc LLVMBuildGlobalStringPtr(B: LLVMBuilderRef, Str: i8*, Name: i8*): LLVMValueRef
+fnc LLVMBuildGEP2(B: LLVMBuilderRef, Ty: LLVMTypeRef, Pointer: LLVMValueRef, Indices: LLVMValueRef *, NumIndices: int, Name: u8*): LLVMValueRef
+fnc LLVMBuildInBoundsGEP2(B: LLVMBuilderRef, Ty: LLVMTypeRef, Pointer: LLVMValueRef, Indices: LLVMValueRef *, NumIndices: int, Name: u8*): LLVMValueRef
+fnc LLVMBuildStructGEP2(B: LLVMBuilderRef, Ty: LLVMTypeRef, Pointer: LLVMValueRef, Idx: int, Name: u8*): LLVMValueRef
+fnc LLVMBuildGlobalString(B: LLVMBuilderRef, Str: u8*, Name: u8*): LLVMValueRef
+fnc LLVMBuildGlobalStringPtr(B: LLVMBuilderRef, Str: u8*, Name: u8*): LLVMValueRef
 fnc LLVMGetVolatile(MemoryAccessInst: LLVMValueRef): LLVMBool
 fnc LLVMSetVolatile(MemoryAccessInst: LLVMValueRef, IsVolatile: LLVMBool)
 fnc LLVMGetWeak(CmpXchgInst: LLVMValueRef): LLVMBool
@@ -451,54 +451,54 @@ fnc LLVMGetAtomicRMWBinOp(AtomicRMWInst: LLVMValueRef): LLVMAtomicRMWBinOp
 fnc LLVMSetAtomicRMWBinOp(AtomicRMWInst: LLVMValueRef, BinOp: LLVMAtomicRMWBinOp)
 
 /* Casts */
-fnc LLVMBuildTrunc(B: LLVMBuilderRef, Val: LLVMValueRef, DestTy: LLVMTypeRef, Name: i8*): LLVMValueRef
-fnc LLVMBuildZExt(B: LLVMBuilderRef, Val: LLVMValueRef, DestTy: LLVMTypeRef, Name: i8*): LLVMValueRef
-fnc LLVMBuildSExt(B: LLVMBuilderRef, Val: LLVMValueRef, DestTy: LLVMTypeRef, Name: i8*): LLVMValueRef
-fnc LLVMBuildFPToUI(B: LLVMBuilderRef, Val: LLVMValueRef, DestTy: LLVMTypeRef, Name: i8*): LLVMValueRef
-fnc LLVMBuildFPToSI(B: LLVMBuilderRef, Val: LLVMValueRef, DestTy: LLVMTypeRef, Name: i8*): LLVMValueRef
-fnc LLVMBuildUIToFP(B: LLVMBuilderRef, Val: LLVMValueRef, DestTy: LLVMTypeRef, Name: i8*): LLVMValueRef
-fnc LLVMBuildSIToFP(B: LLVMBuilderRef, Val: LLVMValueRef, DestTy: LLVMTypeRef, Name: i8*): LLVMValueRef
-fnc LLVMBuildFPTrunc(B: LLVMBuilderRef, Val: LLVMValueRef,  DestTy: LLVMTypeRef, Name: i8*): LLVMValueRef
-fnc LLVMBuildFPExt(B: LLVMBuilderRef, Val: LLVMValueRef, DestTy: LLVMTypeRef, Name: i8*): LLVMValueRef
-fnc LLVMBuildPtrToInt(B: LLVMBuilderRef, Val: LLVMValueRef,   DestTy: LLVMTypeRef, Name: i8*): LLVMValueRef
-fnc LLVMBuildIntToPtr(B: LLVMBuilderRef, Val: LLVMValueRef,   DestTy: LLVMTypeRef, Name: i8*): LLVMValueRef
-fnc LLVMBuildBitCast(B: LLVMBuilderRef, Val: LLVMValueRef,  DestTy: LLVMTypeRef, Name: i8*): LLVMValueRef
-fnc LLVMBuildAddrSpaceCast(B: LLVMBuilderRef, Val: LLVMValueRef, DestTy: LLVMTypeRef, Name: i8*): LLVMValueRef
-fnc LLVMBuildZExtOrBitCast(B: LLVMBuilderRef, Val: LLVMValueRef, DestTy: LLVMTypeRef, Name: i8*): LLVMValueRef
-fnc LLVMBuildSExtOrBitCast(B: LLVMBuilderRef, Val: LLVMValueRef, DestTy: LLVMTypeRef, Name: i8*): LLVMValueRef
-fnc LLVMBuildTruncOrBitCast(B: LLVMBuilderRef, Val: LLVMValueRef,  DestTy: LLVMTypeRef, Name: i8*): LLVMValueRef
-fnc LLVMBuildCast(B: LLVMBuilderRef, Op: LLVMOpcode, Val: LLVMValueRef, DestTy: LLVMTypeRef, Name: i8*): LLVMValueRef
-fnc LLVMBuildPointerCast(B: LLVMBuilderRef, Val: LLVMValueRef, DestTy: LLVMTypeRef, Name: i8*): LLVMValueRef
-fnc LLVMBuildIntCast2(B: LLVMBuilderRef, Val: LLVMValueRef,  DestTy: LLVMTypeRef, IsSigned: LLVMBool, Name: i8*): LLVMValueRef
-fnc LLVMBuildFPCast(B: LLVMBuilderRef, Val: LLVMValueRef, DestTy: LLVMTypeRef, Name: i8*): LLVMValueRef
+fnc LLVMBuildTrunc(B: LLVMBuilderRef, Val: LLVMValueRef, DestTy: LLVMTypeRef, Name: u8*): LLVMValueRef
+fnc LLVMBuildZExt(B: LLVMBuilderRef, Val: LLVMValueRef, DestTy: LLVMTypeRef, Name: u8*): LLVMValueRef
+fnc LLVMBuildSExt(B: LLVMBuilderRef, Val: LLVMValueRef, DestTy: LLVMTypeRef, Name: u8*): LLVMValueRef
+fnc LLVMBuildFPToUI(B: LLVMBuilderRef, Val: LLVMValueRef, DestTy: LLVMTypeRef, Name: u8*): LLVMValueRef
+fnc LLVMBuildFPToSI(B: LLVMBuilderRef, Val: LLVMValueRef, DestTy: LLVMTypeRef, Name: u8*): LLVMValueRef
+fnc LLVMBuildUIToFP(B: LLVMBuilderRef, Val: LLVMValueRef, DestTy: LLVMTypeRef, Name: u8*): LLVMValueRef
+fnc LLVMBuildSIToFP(B: LLVMBuilderRef, Val: LLVMValueRef, DestTy: LLVMTypeRef, Name: u8*): LLVMValueRef
+fnc LLVMBuildFPTrunc(B: LLVMBuilderRef, Val: LLVMValueRef,  DestTy: LLVMTypeRef, Name: u8*): LLVMValueRef
+fnc LLVMBuildFPExt(B: LLVMBuilderRef, Val: LLVMValueRef, DestTy: LLVMTypeRef, Name: u8*): LLVMValueRef
+fnc LLVMBuildPtrToInt(B: LLVMBuilderRef, Val: LLVMValueRef,   DestTy: LLVMTypeRef, Name: u8*): LLVMValueRef
+fnc LLVMBuildIntToPtr(B: LLVMBuilderRef, Val: LLVMValueRef,   DestTy: LLVMTypeRef, Name: u8*): LLVMValueRef
+fnc LLVMBuildBitCast(B: LLVMBuilderRef, Val: LLVMValueRef,  DestTy: LLVMTypeRef, Name: u8*): LLVMValueRef
+fnc LLVMBuildAddrSpaceCast(B: LLVMBuilderRef, Val: LLVMValueRef, DestTy: LLVMTypeRef, Name: u8*): LLVMValueRef
+fnc LLVMBuildZExtOrBitCast(B: LLVMBuilderRef, Val: LLVMValueRef, DestTy: LLVMTypeRef, Name: u8*): LLVMValueRef
+fnc LLVMBuildSExtOrBitCast(B: LLVMBuilderRef, Val: LLVMValueRef, DestTy: LLVMTypeRef, Name: u8*): LLVMValueRef
+fnc LLVMBuildTruncOrBitCast(B: LLVMBuilderRef, Val: LLVMValueRef,  DestTy: LLVMTypeRef, Name: u8*): LLVMValueRef
+fnc LLVMBuildCast(B: LLVMBuilderRef, Op: LLVMOpcode, Val: LLVMValueRef, DestTy: LLVMTypeRef, Name: u8*): LLVMValueRef
+fnc LLVMBuildPointerCast(B: LLVMBuilderRef, Val: LLVMValueRef, DestTy: LLVMTypeRef, Name: u8*): LLVMValueRef
+fnc LLVMBuildIntCast2(B: LLVMBuilderRef, Val: LLVMValueRef,  DestTy: LLVMTypeRef, IsSigned: LLVMBool, Name: u8*): LLVMValueRef
+fnc LLVMBuildFPCast(B: LLVMBuilderRef, Val: LLVMValueRef, DestTy: LLVMTypeRef, Name: u8*): LLVMValueRef
 
 /** Deprecated: This cast is always signed. Use LLVMBuildIntCast2 instead. */
-fnc LLVMBuildIntCast(B: LLVMBuilderRef, Val: LLVMValueRef, /*Signed cast!*/  DestTy: LLVMTypeRef, Name: i8*): LLVMValueRef
+fnc LLVMBuildIntCast(B: LLVMBuilderRef, Val: LLVMValueRef, /*Signed cast!*/  DestTy: LLVMTypeRef, Name: u8*): LLVMValueRef
 
 /* Comparisons */
-fnc LLVMBuildICmp(B: LLVMBuilderRef, Op: LLVMIntPredicate, LHS: LLVMValueRef, RHS: LLVMValueRef, Name: i8*): LLVMValueRef
-fnc LLVMBuildFCmp(B: LLVMBuilderRef, Op: LLVMRealPredicate, LHS: LLVMValueRef, RHS: LLVMValueRef, Name: i8*): LLVMValueRef
+fnc LLVMBuildICmp(B: LLVMBuilderRef, Op: LLVMIntPredicate, LHS: LLVMValueRef, RHS: LLVMValueRef, Name: u8*): LLVMValueRef
+fnc LLVMBuildFCmp(B: LLVMBuilderRef, Op: LLVMRealPredicate, LHS: LLVMValueRef, RHS: LLVMValueRef, Name: u8*): LLVMValueRef
 
 /* Miscellaneous instructions */
-fnc LLVMBuildPhi(B: LLVMBuilderRef, Ty: LLVMTypeRef, Name: i8*): LLVMValueRef
-fnc LLVMBuildCall2(B: LLVMBuilderRef, t: LLVMTypeRef, Fn: LLVMValueRef, Args: LLVMValueRef *, NumArgs: int, Name: i8*): LLVMValueRef
-fnc LLVMBuildSelect(B: LLVMBuilderRef, If: LLVMValueRef, Then: LLVMValueRef, Else: LLVMValueRef, Name: i8*): LLVMValueRef
-fnc LLVMBuildVAArg(B: LLVMBuilderRef, List: LLVMValueRef, Ty: LLVMTypeRef, Name: i8*): LLVMValueRef
-fnc LLVMBuildExtractElement(B: LLVMBuilderRef, VecVal: LLVMValueRef, Index: LLVMValueRef, Name: i8*): LLVMValueRef
-fnc LLVMBuildInsertElement(B: LLVMBuilderRef, VecVal: LLVMValueRef, EltVal: LLVMValueRef, Index: LLVMValueRef, Name: i8*): LLVMValueRef
-fnc LLVMBuildShuffleVector(B: LLVMBuilderRef, V1: LLVMValueRef, V2: LLVMValueRef, Mask: LLVMValueRef, Name: i8*): LLVMValueRef
-fnc LLVMBuildExtractValue(B: LLVMBuilderRef, AggVal: LLVMValueRef, Index: int, Name: i8*): LLVMValueRef
-fnc LLVMBuildInsertValue(B: LLVMBuilderRef, AggVal: LLVMValueRef, EltVal: LLVMValueRef, Index: int, Name: i8*): LLVMValueRef
-fnc LLVMBuildFreeze(B: LLVMBuilderRef, Val: LLVMValueRef, Name: i8*): LLVMValueRef
+fnc LLVMBuildPhi(B: LLVMBuilderRef, Ty: LLVMTypeRef, Name: u8*): LLVMValueRef
+fnc LLVMBuildCall2(B: LLVMBuilderRef, t: LLVMTypeRef, Fn: LLVMValueRef, Args: LLVMValueRef *, NumArgs: int, Name: u8*): LLVMValueRef
+fnc LLVMBuildSelect(B: LLVMBuilderRef, If: LLVMValueRef, Then: LLVMValueRef, Else: LLVMValueRef, Name: u8*): LLVMValueRef
+fnc LLVMBuildVAArg(B: LLVMBuilderRef, List: LLVMValueRef, Ty: LLVMTypeRef, Name: u8*): LLVMValueRef
+fnc LLVMBuildExtractElement(B: LLVMBuilderRef, VecVal: LLVMValueRef, Index: LLVMValueRef, Name: u8*): LLVMValueRef
+fnc LLVMBuildInsertElement(B: LLVMBuilderRef, VecVal: LLVMValueRef, EltVal: LLVMValueRef, Index: LLVMValueRef, Name: u8*): LLVMValueRef
+fnc LLVMBuildShuffleVector(B: LLVMBuilderRef, V1: LLVMValueRef, V2: LLVMValueRef, Mask: LLVMValueRef, Name: u8*): LLVMValueRef
+fnc LLVMBuildExtractValue(B: LLVMBuilderRef, AggVal: LLVMValueRef, Index: int, Name: u8*): LLVMValueRef
+fnc LLVMBuildInsertValue(B: LLVMBuilderRef, AggVal: LLVMValueRef, EltVal: LLVMValueRef, Index: int, Name: u8*): LLVMValueRef
+fnc LLVMBuildFreeze(B: LLVMBuilderRef, Val: LLVMValueRef, Name: u8*): LLVMValueRef
 
-fnc LLVMBuildIsNull(B: LLVMBuilderRef, Val: LLVMValueRef, Name: i8*): LLVMValueRef
-fnc LLVMBuildIsNotNull(B: LLVMBuilderRef, Val: LLVMValueRef, Name: i8*): LLVMValueRef
-fnc LLVMBuildPtrDiff2(B: LLVMBuilderRef, ElemTy: LLVMTypeRef, LHS: LLVMValueRef, RHS: LLVMValueRef, Name: i8*): LLVMValueRef
-fnc LLVMBuildFence(B: LLVMBuilderRef, ordering: LLVMAtomicOrdering, singleThread: LLVMBool, Name: i8*): LLVMValueRef
+fnc LLVMBuildIsNull(B: LLVMBuilderRef, Val: LLVMValueRef, Name: u8*): LLVMValueRef
+fnc LLVMBuildIsNotNull(B: LLVMBuilderRef, Val: LLVMValueRef, Name: u8*): LLVMValueRef
+fnc LLVMBuildPtrDiff2(B: LLVMBuilderRef, ElemTy: LLVMTypeRef, LHS: LLVMValueRef, RHS: LLVMValueRef, Name: u8*): LLVMValueRef
+fnc LLVMBuildFence(B: LLVMBuilderRef, ordering: LLVMAtomicOrdering, singleThread: LLVMBool, Name: u8*): LLVMValueRef
 fnc LLVMBuildAtomicRMW(B: LLVMBuilderRef, op: LLVMAtomicRMWBinOp, PTR: LLVMValueRef, Val: LLVMValueRef, ordering: LLVMAtomicOrdering , singleThread: LLVMBool): LLVMValueRef
 fnc LLVMBuildAtomicCmpXchg(B: LLVMBuilderRef, Ptr: LLVMValueRef, Cmp: LLVMValueRef, New: LLVMValueRef, SuccessOrdering: LLVMAtomicOrdering, FailureOrdering: LLVMAtomicOrdering, SingleThread: LLVMBool): LLVMValueRef
 
-fnc LLVMAddGlobalIFunc(M: LLVMModuleRef, Name: i8*, NameLen: int, Ty: LLVMTypeRef, AddrSpace: int, Resolver: LLVMValueRef): LLVMValueRef 
+fnc LLVMAddGlobalIFunc(M: LLVMModuleRef, Name: u8*, NameLen: int, Ty: LLVMTypeRef, AddrSpace: int, Resolver: LLVMValueRef): LLVMValueRef 
 /**
  * @defgroup LLVMCCorePassManagers Pass Managers
 */

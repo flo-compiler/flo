@@ -2,9 +2,9 @@ const STDIN = 0
 const STDOUT = 1
 const STDERR = 2
 /*@extern*/
-fnc strlen(str: i8*): int
-fnc write(fc: int, buf: i8*, len: int)
-fnc read(fd: int, buff: i8*, size: int): int 
+fnc strlen(str: u8*): int
+fnc write(fc: int, buf: u8*, len: int)
+fnc read(fd: int, buff: u8*, size: int): int 
 // ----- functions -----
 fnc print(str: string){
     write(STDOUT, str.get_bytes(), str.length)
@@ -22,7 +22,7 @@ fnc eprintln(str: string){
 }
 fnc input(): string {
     let size = -1
-    let buffer = new i8*(1)
+    let buffer = new u8*(1)
     while (buffer[size] != '\n'){
         buffer = buffer.resize((++size) + 1)
         read(STDIN, buffer + size, 1)
@@ -31,17 +31,17 @@ fnc input(): string {
 }
 // ----- string -------
 class string {
-    private buffer: i8*
+    private buffer: u8*
     public length: int
     private size: int
-    constructor(this, data: i8*, len: int){
+    constructor(this, data: u8*, len: int){
         this.buffer = data
         this.length = len
         this.size = len
     }
     private __add__(this, data: string): string {
         let new_str_len = this.length + data.length
-        let new_buffer = new i8*(new_str_len)
+        let new_buffer = new u8*(new_str_len)
         new_buffer.copy_from(this.buffer, this.length)
         let trailing_buffer = new_buffer + this.length
         trailing_buffer.copy_from(data.buffer, data.length)
@@ -55,7 +55,7 @@ class string {
         return this
     }
     private __getitem__(this, index: int): string {
-        let new_buffer = new i8*(1)
+        let new_buffer = new u8*(1)
         new_buffer[0] = this.buffer[index]
         return new string(new_buffer, 2)
     }
@@ -89,21 +89,21 @@ class string {
         return -1
     }
     public substring (this, start: int, length: int): string {
-        let new_str_buff = new i8*(length)
+        let new_str_buff = new u8*(length)
         new_str_buff.copy_from(this.buffer + start, length)
         return new string(new_str_buff, length)
     }
-    public get_byte(this, index: int): i8 {
+    public get_byte(this, index: int): u8 {
         return (this.buffer[index])
     }
-    public get_bytes(this): i8* {
+    public get_bytes(this): u8* {
         return this.buffer
     }
     public replace(this, val: string, repl: string): string {
         let idx = this.find(val)
         if idx >= 0 {
             let nlen = this.length - val.length + repl.length
-            let nbuff = new i8*(nlen)
+            let nbuff = new u8*(nlen)
             nbuff.copy_from(this.buffer, idx)
             (&nbuff[idx]).copy_from(repl.buffer, repl.length)
             (&nbuff[idx + repl.length]).copy_from(&this.buffer[idx + val.length], this.length - (idx + val.length))
@@ -111,8 +111,8 @@ class string {
         } 
         return this
     }
-    public to_cstring(this): i8* {
-        let c_string = new i8*(this.length + 1)
+    public to_cstring(this): u8* {
+        let c_string = new u8*(this.length + 1)
         c_string.copy_from(this.buffer, this.length)
         c_string[this.length] = '\0'
         return c_string
@@ -126,26 +126,26 @@ class string {
         if (this.length < preffix.length) return false
         return this.buffer.compare(preffix.buffer, preffix.length) == 0
     }
-    public from_cstring(str: i8*): string {
+    public from_cstring(str: u8*): string {
         let len = strlen(str)
-        let buf = new i8*(len)
+        let buf = new u8*(len)
         buf.copy_from(str, len)
         return new string(buf, len)
     }
-    public from_bytes(bytes: i8*, len: int): string {
-        let buf = new i8*(len)
+    public from_bytes(bytes: u8*, len: int): string {
+        let buf = new u8*(len)
         buf.copy_from(bytes, len)
         return new string(buf, len)
     }
 }
 class StringBuilder {
-    private buffer: i8*
+    private buffer: u8*
     private size: int
-    private working_buffer: i8*
+    private working_buffer: u8*
     public length: int
     constructor(this, size: int){
         this.size = size
-        this.buffer = new i8*(this.size)
+        this.buffer = new u8*(this.size)
         this.working_buffer = this.buffer
         this.length = 0
     }
@@ -154,7 +154,7 @@ class StringBuilder {
         this.buffer = this.buffer.resize(this.size)
         this.working_buffer = this.buffer + this.length
     }
-    public add_bytes_length(this, bytes: i8*, length: int){
+    public add_bytes_length(this, bytes: u8*, length: int){
         if (this.size - this.length <= length) this.resize()
         this.working_buffer.copy_from(bytes, length)
         this.working_buffer += length

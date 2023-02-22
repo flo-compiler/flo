@@ -441,33 +441,6 @@ class Parser {
         while this.current_token.ttype == TokType.LN and this.can_parse()
             this.advance()
     }
-    private parse_primitive_type(this): TypeNode {
-        let type_node = new TypeNode(TypeKind.VOID, this.current_token.range)
-        if this.current_token.ttype == TokType.BOOL_KW
-            type_node.kind = TypeKind.BOOL
-        else if this.current_token.ttype == TokType.I4_KW
-            type_node.kind = TypeKind.I4
-        else if this.current_token.ttype == TokType.I8_KW
-            type_node.kind = TypeKind.I8
-        else if this.current_token.ttype == TokType.I16_KW
-            type_node.kind = TypeKind.I16
-        else if this.current_token.ttype == TokType.I32_KW
-            type_node.kind = TypeKind.I32
-        else if this.current_token.ttype == TokType.I64_KW
-            type_node.kind = TypeKind.I64
-        else if this.current_token.ttype == TokType.I128_KW
-            type_node.kind = TypeKind.I128
-        else if this.current_token.ttype == TokType.INT_KW
-            type_node.kind = TypeKind.INT
-        else if this.current_token.ttype == TokType.F32_KW
-            type_node.kind = TypeKind.F32
-        else if this.current_token.ttype == TokType.F64_KW
-            type_node.kind = TypeKind.F64
-        else if this.current_token.ttype != TokType.VOID_KW
-            this.error("Expected a type definition")
-        this.advance()
-        return type_node
-    }
     private parse_type_list(this, type_nodes: TypeNode[]) {
         type_nodes << this.parse_type()
         while this.current_token.ttype == TokType.COMMA and this.can_parse() {
@@ -503,7 +476,7 @@ class Parser {
         return fnc_type_node
     }
     private parse_type(this): TypeNode {
-        let type_node = new TypeNode(TypeKind.VOID, this.current_token.range)
+        let type_node: TypeNode = null
         if this.current_token.ttype == TokType.IDENTIFER
             type_node = this.parse_object_type()
         else if this.current_token.ttype == TokType.LPAR
@@ -516,8 +489,7 @@ class Parser {
             rec_node.generic_args << this.parse_type()
             this.eat(TokType.RBRACKET)
             type_node = rec_node
-        } else 
-            type_node = this.parse_primitive_type()
+        }
         
         while this.current_token.ttype == TokType.LBRACKET or this.current_token.ttype == TokType.POW or this.current_token.ttype == TokType.MULT and this.can_parse() {
             if this.current_token.ttype == TokType.LBRACKET {
@@ -1012,7 +984,8 @@ class Parser {
             this.advance()
             fnc_node.return_type = this.parse_type()
         } else {
-            fnc_node.return_type = new TypeNode(TypeKind.VOID, new FloRange(0, 0, 0, 0))
+            let identifier_tok = new IdentifierToken("void", new FloRange(0, 0, 0, 0))
+            fnc_node.return_type = new RecordTypeNode(identifier_tok, identifier_tok.range)
         }
         if this.current_token.ttype == TokType.LBRACE {
             fnc_node.block = this.parse_block()
@@ -1038,7 +1011,8 @@ class Parser {
             this.advance()
             method_node.return_type = this.parse_type()
         } else {
-            method_node.return_type = new TypeNode(TypeKind.VOID, new FloRange(0, 0, 0, 0))
+            let identifier_tok = new IdentifierToken("void", new FloRange(0, 0, 0, 0))
+            method_node.return_type = new RecordTypeNode(identifier_tok, identifier_tok.range)
         }
         if this.current_token.ttype == TokType.LBRACE {
             method_node.block = this.parse_block()

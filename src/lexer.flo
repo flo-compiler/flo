@@ -14,28 +14,6 @@ fnc string_to_kw_token(word: string): TokType {
         return TokType.IF_KW
     if word == "else"
         return TokType.ELSE_KW
-    if word == "bool"
-        return TokType.BOOL_KW
-    if word == "i4"
-        return TokType.I4_KW
-    if word == "i8"
-        return TokType.I8_KW
-    if word == "i16"
-        return TokType.I16_KW
-    if word == "i32"
-        return TokType.I32_KW
-    if word == "i64"
-        return TokType.I64_KW
-    if word == "i128"
-        return TokType.I128_KW
-    if word == "int"
-        return TokType.INT_KW
-    if word == "f32"
-        return TokType.F32_KW
-    if word == "f64"
-        return TokType.F64_KW
-    if word == "void"
-        return TokType.VOID_KW
     if word == "for"
         return TokType.FOR_KW
     if word == "while"
@@ -137,8 +115,8 @@ class Token {
     }
 }
 class IntToken (Token) {
-    value: i64
-    constructor(this, value: i64, range: FloRange){
+    value: u64
+    constructor(this, value: u64, range: FloRange){
         super(TokType.INT, range)
         this.value = value
     }
@@ -344,10 +322,10 @@ class Lexer {
         }
         return new Token(token, this.get_range(length))
     }
-    private base_int_token(this, base: i64): IntToken{
+    private base_int_token(this, base: u64): IntToken{
         this.advance()
         let length = 3
-        let value: i64 = 0
+        let value: u64 = 0
         let current_char = '\0'
         while in_base_range(current_char = capitalize(this.peek()), base as int) and !this.eof() {
             value *= base
