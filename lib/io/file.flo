@@ -2,8 +2,8 @@ import access, F_OK in "@sys/lib"
 // ------- File -------
 fnc fopen(path: u8*, mode: u8*): int
 fnc fclose(stream: int)
-fnc fread(buf: u8*, size: int, nmemb: int, stream: int): int
-fnc fwrite(buf: u8*, size: int, nmemb: int, stream: int): int
+fnc fread(buf: u8*, size: uint, nmemb: uint, stream: int): int
+fnc fwrite(buf: u8*, size: uint, nmemb: uint, stream: int): int
 class File {
     fd: int
     constructor(this, fd: int){
@@ -35,8 +35,11 @@ class File {
         }
         return null
     }
-    public write_bytes_length(this, buffer: u8*, length: int): int {
+    public write_bytes_length(this, buffer: u8*, length: uint): int {
         return fwrite(buffer, 1, length, this.fd)
+    }
+    public write_string(this, s: string): int {
+        return fwrite(s.get_bytes(), 1, s.length, this.fd)
     }
     public exists(path: string): bool {
         return access(path.to_cstring(), F_OK) == 0

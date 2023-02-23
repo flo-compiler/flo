@@ -672,19 +672,25 @@ class CodeGen {
         let is_const_expr = LLVMIsConstant(lhs) and LLVMIsConstant(rhs)
         if is_int(rty) or (is_object(lty) and is_object(rty) and (op == BinaryOp.EEQ or op == BinaryOp.NEQ)) or (rty.kind == TypeKind.ENUM) {
             if op == BinaryOp.ADD {
-                if ((rty as IntType).is_signed)
+                if ((bin_exp.value_type as IntType).is_signed)
                     return is_const_expr ? LLVMConstNSWAdd(lhs, rhs) : LLVMBuildNSWAdd(builder, lhs, rhs, "")
                 return is_const_expr ? LLVMConstNUWAdd(lhs, rhs) : LLVMBuildNUWAdd(builder, lhs, rhs, "")
             } else if op == BinaryOp.SUB {
-                if ((rty as IntType).is_signed)
+                if ((bin_exp.value_type as IntType).is_signed)
                     return is_const_expr ? LLVMConstNSWSub(lhs, rhs) : LLVMBuildNSWSub(builder, lhs, rhs, "")
                 return is_const_expr ? LLVMConstNUWSub(lhs, rhs) : LLVMBuildNUWSub(builder, lhs, rhs, "")
             } else if op == BinaryOp.MUL {
-                return is_const_expr ? LLVMConstMul(lhs, rhs) : LLVMBuildMul(builder, lhs, rhs, "")
+                if ((bin_exp.value_type as IntType).is_signed)
+                    return is_const_expr ? LLVMConstNSWMul(lhs, rhs) : LLVMBuildNSWMul(builder, lhs, rhs, "")
+                return is_const_expr ? LLVMConstNUWMul(lhs, rhs) : LLVMBuildNUWMul(builder, lhs, rhs, "")
             } else if op == BinaryOp.DIV {
-                return LLVMBuildSDiv(builder, lhs, rhs, "")
+                if ((bin_exp.value_type as IntType).is_signed)
+                        return LLVMBuildSDiv(builder, lhs, rhs, "")
+                    return LLVMBuildUDiv(builder, lhs, rhs, "")
             } else if op == BinaryOp.MOD {
-                return LLVMBuildSRem(builder, lhs, rhs, "")
+                if ((bin_exp.value_type as IntType).is_signed)
+                    return LLVMBuildSRem(builder, lhs, rhs, "")
+                return LLVMBuildURem(builder, lhs, rhs, "")
             } else if op >= BinaryOp.GT and op <= BinaryOp.LTE {
                 let offset = (rty as IntType).is_signed ? 38 : 34
                 ipred = ((op as int) - (BinaryOp.GT as int) + 38) as LLVMIntPredicate // Consider Enum variants
@@ -748,9 +754,7 @@ class CodeGen {
             return is_const ? LLVMConstFPToSI(val, ty) : LLVMBuildFPToSI(builder, val, ty, "")
         } else if is_int(exp.value_type) and is_int(value_type){ // FIXME: Enums?
             let int_ty = value_type as IntType
-            if value_type.kind != TypeKind.I128
-                return is_const ? LLVMConstIntCast(val, ty, int_ty.is_signed) : LLVMBuildIntCast2(builder, val, ty, int_ty.is_signed, "")
-            return is_const ? LLVMConstSExt(val, ty) : LLVMBuildSExt(builder, val, ty, "")
+            return is_const ? LLVMConstIntCast(val, ty, int_ty.is_signed) : LLVMBuildIntCast2(builder, val, ty, int_ty.is_signed, "")
         } else if is_float(exp.value_type) and is_float(value_type){
             return is_const ? LLVMConstFPCast(val, ty) : LLVMBuildFPCast(builder, val, ty, "")
         }
@@ -769,7 +773,9 @@ class CodeGen {
         }
         if op == UnaryOp.NEG {
             if is_int(exp.value_type){
-                return CodeGen.neg_int(builder, val)
+                if (exp.value_type as IntType).is_signed
+                    return LLVMIsConstant(val) ? LLVMConstNSWNeg(val) : LLVMBuildNSWNeg(builder, val, "")
+                return LLVMIsConstant(val) ? LLVMConstNUWNeg(val) : LLVMBuildNUWNeg(builder, val, "")
             } else if is_float(exp.value_type){
                 return LLVMBuildFNeg(builder, val, "")
             }

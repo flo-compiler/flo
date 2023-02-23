@@ -311,14 +311,14 @@ class Map<T, U> {
         this.length = 0
     }
     // FIXME: Needs to be unsigned.
-    private hash_fnc(this, key: T): int {
+    private hash_fnc(this, key: T): uint {
         let str = "$key"
         let hash = 0
         for let i = 0; i < str.length; ++i {
-            hash = (hash << 1) + (str.get_byte(i) as int)
+            hash = (hash << 1) + str.get_byte(i)
         }
         del str
-        return hash < 0 ? -hash : hash
+        return hash
     }
     private resize(this){
         let old_entries: MapEntry<T, U>*(this.size)
