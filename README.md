@@ -21,7 +21,7 @@ flo -h
 5. Fast Performance.
 
 ## Memory Safety
-Allowing programmers to opt-in between:
+Allowing programmers to opt in between:
 - [ ] Garbage collection.
 - [x] Manual memory management with `del` keyword.
 
