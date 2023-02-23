@@ -1,10 +1,10 @@
-const STDIN = 0
-const STDOUT = 1
-const STDERR = 2
+const STDIN: int = 0
+const STDOUT: int = 1
+const STDERR: int = 2
 /*@extern*/
-fnc strlen(str: u8*): int
-fnc write(fc: int, buf: u8*, len: int)
-fnc read(fd: int, buff: u8*, size: int): int 
+fnc strlen(str: u8*): uint
+fnc write(fc: int, buf: u8*, len: uint)
+fnc read(fd: int, buff: u8*, size: uint): uint 
 // ----- functions -----
 fnc print(str: string){
     write(STDOUT, str.get_bytes(), str.length)
@@ -21,7 +21,7 @@ fnc eprintln(str: string){
     write(STDERR, "\n", 1)
 }
 fnc input(): string {
-    let size = -1
+    let size = 0
     let buffer = new u8*(1)
     while (buffer[size] != '\n'){
         buffer = buffer.resize((++size) + 1)
@@ -32,9 +32,9 @@ fnc input(): string {
 // ----- string -------
 class string {
     private buffer: u8*
-    public length: int
-    private size: int
-    constructor(this, data: u8*, len: int){
+    public length: uint
+    private size: uint
+    constructor(this, data: u8*, len: uint){
         this.buffer = data
         this.length = len
         this.size = len
@@ -54,7 +54,7 @@ class string {
         this.length = new_length
         return this
     }
-    private __getitem__(this, index: int): string {
+    private __getitem__(this, index: uint): string {
         let new_buffer = new u8*(1)
         new_buffer[0] = this.buffer[index]
         return new string(new_buffer, 2)
@@ -72,7 +72,7 @@ class string {
     private __del__(this){
         del this.buffer
     }
-    public find(this, search: string, start: int = 0): int {
+    public find(this, search: string, start: uint = 0): int {
         for let i = start; i < this.length; i++ {
             if (search.buffer[0] == this.buffer[i]) {
                 let x = search.length - 1
@@ -83,17 +83,17 @@ class string {
                     }
                     x--
                 }
-                if matches return i
+                if matches return (i as int)
             }
         }
         return -1
     }
-    public substring (this, start: int, length: int): string {
+    public substring (this, start: int, length: uint): string {
         let new_str_buff = new u8*(length)
         new_str_buff.copy_from(this.buffer + start, length)
         return new string(new_str_buff, length)
     }
-    public get_byte(this, index: int): u8 {
+    public get_byte(this, index: uint): u8 {
         return (this.buffer[index])
     }
     public get_bytes(this): u8* {
@@ -132,7 +132,7 @@ class string {
         buf.copy_from(str, len)
         return new string(buf, len)
     }
-    public from_bytes(bytes: u8*, len: int): string {
+    public from_bytes(bytes: u8*, len: uint): string {
         let buf = new u8*(len)
         buf.copy_from(bytes, len)
         return new string(buf, len)
@@ -140,10 +140,10 @@ class string {
 }
 class StringBuilder {
     private buffer: u8*
-    private size: int
+    private size: uint
     private working_buffer: u8*
-    public length: int
-    constructor(this, size: int){
+    public length: uint
+    constructor(this, size: uint){
         this.size = size
         this.buffer = new u8*(this.size)
         this.working_buffer = this.buffer
@@ -154,7 +154,7 @@ class StringBuilder {
         this.buffer = this.buffer.resize(this.size)
         this.working_buffer = this.buffer + this.length
     }
-    public add_bytes_length(this, bytes: u8*, length: int){
+    public add_bytes_length(this, bytes: u8*, length: uint){
         if (this.size - this.length <= length) this.resize()
         this.working_buffer.copy_from(bytes, length)
         this.working_buffer += length
@@ -163,7 +163,7 @@ class StringBuilder {
     public append_string(this, str: string){
         this.add_bytes_length(str.get_bytes(), str.length)
     }
-    public add_byte(this, byte: i8){
+    public add_byte(this, byte: u8){
         if (this.size - this.length <= 1) this.resize()
         this.working_buffer[0] = byte
         this.working_buffer += 1
@@ -176,15 +176,15 @@ class StringBuilder {
 // ------- Range -------
 class RangeIterator {
     private done: bool
-    private idx: int
+    private pos: int
     private end: int
-    constructor(this, idx: int, end: int){
-        this.idx = idx
+    constructor(this, pos: int, end: int){
+        this.pos = pos
         this.end = end
     }
     private next(this): int {
-        this.done = this.idx >= this.end
-        return this.idx++
+        this.done = this.pos >= this.end
+        return this.pos++
     }
 }
 class Range {
@@ -204,9 +204,9 @@ class Range {
 // ----- Array -------
 class Array <T> {
     public buffer: T*
-    public length: int
-    public size: int
-    constructor(this, size: int){
+    public length: uint
+    public size: uint
+    constructor(this, size: uint){
         this.length = 0
         this.size = size
         this.buffer = new T*(size)
@@ -222,10 +222,10 @@ class Array <T> {
         if (this.length >= this.size) this.resize()
         this.buffer[this.length++] = element
     }
-    private __setitem__(this, index: int, value: T){
+    private __setitem__(this, index: uint, value: T){
         this.buffer[index] = value
     }
-    private __getitem__(this, index: int): T {
+    private __getitem__(this, index: uint): T {
         return this.buffer[index]
     }
     private __add__(this, other: T[]): T[]{
@@ -273,10 +273,10 @@ class Array <T> {
 }
 class ArrayIterator<T> {
     private done: bool
-    private idx: int
-    private end: int
+    private idx: uint
+    private end: uint
     private bytes: T*
-    constructor(this, bytes: T*, end: int){
+    constructor(this, bytes: T*, end: uint){
         this.done = false
         this.idx = 0
         this.bytes = bytes
@@ -299,8 +299,8 @@ class MapEntry<T, U> {
 }
 class Map<T, U> {
     private entries: MapEntry<T, U>*
-    private size: int
-    public length: int
+    private size: uint
+    public length: uint
     constructor(this){
         let initial_capacity = 256
         this.entries = new MapEntry<T, U>*(initial_capacity)
@@ -374,9 +374,9 @@ class Map<T, U> {
 class MapIterator<T, U> {
     private done: bool
     private entries: MapEntry<T, U>*
-    private remaining_size: int
-    private items_remaining: int
-    constructor(this, entries: MapEntry<T, U>*, remaining_size: int, items_remaining: int){
+    private remaining_size: uint
+    private items_remaining: uint
+    constructor(this, entries: MapEntry<T, U>*, remaining_size: uint, items_remaining: uint){
         this.done = false
         this.entries = entries
         this.remaining_size = remaining_size

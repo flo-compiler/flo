@@ -410,7 +410,7 @@ fnc is_u8_ptr(val_ty: Type): bool {
     if val_ty.kind == TypeKind.PTR {
         let pointee_type = (val_ty as PointerType).pointee_type
         if is_int(pointee_type) {
-            return pointee_type.kind == TypeKind.I8 and !(pointee_type as IntType).is_signed
+            return (pointee_type.kind == TypeKind.I8) and !((pointee_type as IntType).is_signed)
         }
     }
     return false
@@ -471,7 +471,12 @@ fnc dump_type(ty: Type, force_bit_size = false): string {
     if ty.kind == TypeKind.BOOL
         return "bool"
     if is_int(ty){
-        let char = (ty as IntType).is_signed ? "i" : "u"
+        if force_bit_size return "i$ARCH_WORD_SIZE"
+        let is_signed = (ty as IntType).is_signed
+        if ty.kind == TypeKind.INT {
+            return is_signed ? "int" : "uint"
+        }
+        let char = is_signed ? "i" : "u"
         if ty.kind == TypeKind.I4
             return "$(char)4" 
         if ty.kind == TypeKind.I8
@@ -484,8 +489,6 @@ fnc dump_type(ty: Type, force_bit_size = false): string {
             return "$(char)64"
         if ty.kind == TypeKind.I128
             return "$(char)128"
-        if ty.kind == TypeKind.INT
-            return force_bit_size ? "$(char)$ARCH_WORD_SIZE" : "int" // FIXME: Find a way.
     }
     if ty.kind == TypeKind.F32
         return "f32"
@@ -1123,6 +1126,9 @@ class TypeChecker {
                 if (!this.types_are_eq(t1_gen_type.arg_types[i], t2_gen_type.arg_types[i])) return false
             }
         }
+        // if is_int(t1){
+        //     if (t1 as IntType).is_signed != (t2 as IntType).is_signed return false
+        // }
         return true
     }
     private dump_type(this, ty: Type): string {
