@@ -1,6 +1,6 @@
 //@expect: return_code=5
 fnc main(): int {
-    let a = 25
+    let a: int = 25
     let b = 0.5
     a = a ** b as int
     return a

@@ -1,8 +1,8 @@
 fnc free(ptr: i8*)
 class Set<T>{
     private elements: T*
-    private size: int
-    public len: int
+    private size: uint
+    public len: uint
     constructor(this){
         this.size = 2
         this.len = 0

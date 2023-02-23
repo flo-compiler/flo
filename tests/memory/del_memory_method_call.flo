@@ -1,4 +1,4 @@
-let DID_NOT_DELETE = 1
+let DID_NOT_DELETE: int = 1
 class A {
     x: int
     constructor(this, x: int){

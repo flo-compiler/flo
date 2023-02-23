@@ -1,5 +1,5 @@
 //@expect: return_code=197
-fnc main(): int {
+fnc main(): uint {
     let arr: int[] = [1, 2, 3, 4, 5, 6]
     let num_acc = 1
     for num in 1..8 {

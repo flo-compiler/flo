@@ -32,7 +32,7 @@ fnc flag_value_or(args: string[], name: string, default: string): string {
     let idx = args.find(name)
     if idx != -1 {
         if args.length > ++idx
-            return args[idx]
+            return args[idx as uint]
         else {
             print_message_error(ErrorKind.GEN, "Missing value after '$name' argument.")
         }
@@ -40,7 +40,7 @@ fnc flag_value_or(args: string[], name: string, default: string): string {
     return default
 }
 fnc main(argc: int, argv: u8**): int {
-    let code = 0
+    let code: int = 0
     if argc >= 2 {
         let args = parse_args(argc, argv)
         if flag(args, "-v") or flag(args, "--version"){

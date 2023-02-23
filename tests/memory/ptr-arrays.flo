@@ -1,6 +1,6 @@
 //@expect: return_code=2
 fnc main(): int {
-    let end = 5
+    let end: int = 5
     let arr: int[5] = [1, 2, 3, 4, end]
     arr[2] = 10
     let ptr = &arr[0]

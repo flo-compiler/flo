@@ -1,5 +1,5 @@
 class NO {}
-fnc resize_array(arr: NO[], n: int){
+fnc resize_array(arr: NO[], n: uint){
     for let i = arr.length; i <= n; i++ {
         arr << null
     }

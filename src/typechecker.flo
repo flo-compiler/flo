@@ -54,22 +54,22 @@ class Statement {
     }
 }
 class TypeId {
-    module_id: int
+    module_id: uint
     kind: TypeIdKind
-    id: int
-    constructor(this, module_id: int, kind: TypeIdKind, id: int){
+    id: uint
+    constructor(this, module_id: uint, kind: TypeIdKind, id: uint){
         this.module_id = module_id
         this.kind = kind
         this.id =  id
     }
 }
 class ClassId(TypeId) {
-    constructor(this, module_id: int, id: int){
+    constructor(this, module_id: uint, id: uint){
         super(module_id, TypeIdKind.CLASS, id)
     }
 }
 class EnumId(TypeId) {
-    constructor(this, module_id: int, id: int){
+    constructor(this, module_id: uint, id: uint){
         super(module_id, TypeIdKind.ENUM, id)
     }
 }
@@ -85,8 +85,8 @@ class Expression (Statement) {
 }
 class ArrayType (Type) {
     element_type: Type
-    length: int
-    constructor(this, element_type: Type, length: int){
+    length: uint
+    constructor(this, element_type: Type, length: uint){
         super(TypeKind.ARRAY)
         this.element_type = element_type
         this.length = length
@@ -147,9 +147,9 @@ class FloatExpression (Expression) {
 }
 class StringExpression (Expression) {
     value: string
-    fmt_indices: int[]
+    fmt_indices: uint[]
     template_args: Expression[]
-    constructor(this, value: string, fmt_indices: int[], template_args: Expression[], value_type: Type){
+    constructor(this, value: string, fmt_indices: uint[], template_args: Expression[], value_type: Type){
         super(ExpressionKind.STRING)
         this.template_args = template_args
         this.fmt_indices = fmt_indices
@@ -261,9 +261,9 @@ class IntrinsicCall (Expression) {
 }
 class VarId {
     kind: VarIdKind
-    module_id: int
-    id: int
-    constructor(this, kind: VarIdKind, module_id: int, id: int){
+    module_id: uint
+    id: uint
+    constructor(this, kind: VarIdKind, module_id: uint, id: uint){
         this.kind = kind
         this.module_id = module_id
         this.id = id
@@ -286,15 +286,15 @@ class EnumVarId(VarId){
     }
 }
 class ConstId(VarId) {
-    constructor(this, module_id: int, id: int){
+    constructor(this, module_id: uint, id: uint){
        super(VarIdKind.CONST, module_id, id)
     }
 }
 class PropId {
     kind: PropIdKind
     type_id: TypeId
-    id: int
-    constructor(this, kind: PropIdKind, type_id: TypeId, id: int){
+    id: uint
+    constructor(this, kind: PropIdKind, type_id: TypeId, id: uint){
         this.kind = kind
         this.type_id = type_id
         this.id = id
@@ -588,9 +588,9 @@ fnc lower_bin_assign_node(binary_node: BinaryExpressionNode): BinaryExpressionNo
     return new BinaryExpressionNode(binary_node.lhs, op, binary_node.rhs)
 }
 class ScopeId {
-    module_id: int
-    id: int
-    constructor(this, module_id: int, id: int){
+    module_id: uint
+    id: uint
+    constructor(this, module_id: uint, id: uint){
         this.module_id = module_id
         this.id = id
     }
@@ -610,7 +610,7 @@ class Scope {
     public enums: [string: EnumId]
     public parent: ScopeId
     public type_aliases: [string: Type]
-    constructor(this, module_id: int, id: int){
+    constructor(this, module_id: uint, id: uint){
         this.id = new ScopeId(module_id, id)
         this.vars = new Map<string, VarId>()
         this.classes = new Map<string, ClassId>()
@@ -672,7 +672,7 @@ class ClassField {
     name: string
     field_type: Type
     initializer: Expression
-    vtable_index: int
+    vtable_index: uint
     constructor(this){
         this.is_static = false
     }
@@ -687,7 +687,7 @@ class ClassMethod {
     args: FunctionArg []
     is_abstract: bool
     scope: ScopeId
-    vtable_index: int
+    vtable_index: uint
     constructor(this){
         this.is_abstract = false
     }
@@ -701,8 +701,8 @@ class Class {
     methods: ClassMethod[]
     prop_map: [string: PropId]
     static_prop_map: [string: PropId]
-    inherited_methods_num: int
-    inherited_fields_num: int
+    inherited_methods_num: uint
+    inherited_fields_num: uint
     is_abstract: bool
     constructor(this){
         this.construct = null
@@ -883,7 +883,7 @@ fnc get_class_prop_visibility(program: Program, prop_id: PropId): ACCESS_ATTR {
     }
     return owner.fields[prop_id.id].visibility
 }
-fnc get_vtable_index(program: Program, prop_id: PropId): int {
+fnc get_vtable_index(program: Program, prop_id: PropId): uint {
     let owner = get_class_from_prop_id(program, prop_id)
     if prop_id.kind == PropIdKind.METHOD {
         return owner.methods[prop_id.id].vtable_index
@@ -967,12 +967,12 @@ fnc bin_op_to_op_overload_name(op: BinaryOp): string {
     if op == BinaryOp.IN return "__in__"
     return null
 }
-fnc evaluate_const_int_expression(program: Program, exp: Expression): i64 {
+fnc evaluate_const_int_expression(program: Program, exp: Expression): uint {
     if exp.expr_kind == ExpressionKind.INT {
-        return (exp as IntExpression).value
+        return (exp as IntExpression).value as uint
     }
     if exp.expr_kind == ExpressionKind.FLOAT
-        return (exp as FloatExpression).value as i64
+        return (exp as FloatExpression).value as uint
     if exp.expr_kind == ExpressionKind.BIN {
         let bin_exp = exp as BinaryExpression
         if bin_exp.op == BinaryOp.ADD
@@ -1010,9 +1010,9 @@ fnc evaluate_const_int_expression(program: Program, exp: Expression): i64 {
     return -99999999
 }
 class Generic {
-    module_id: int
+    module_id: uint
     template: ClassDeclarationNode
-    constructor(this, module_id: int, template: ClassDeclarationNode){
+    constructor(this, module_id: uint, template: ClassDeclarationNode){
         this.module_id = module_id
         this.template = template
     }
@@ -1020,7 +1020,7 @@ class Generic {
 // Hint: For Generics and typed constraints consider Hidley-Milner Algorithm.
 class TypeChecker {
     private program: Program
-    private current_module: int
+    private current_module: uint
     private current_class: ClassId
     private current_function: VarId
     private current_method: PropId
@@ -1031,7 +1031,7 @@ class TypeChecker {
     private generic_templates: [string: Generic]
     constructor(this, compiler: Compiler){
         this.compiler = compiler
-        this.current_module = -1
+        this.current_module = 0
         this.in_loop = false
         this.program = new Program()
         this.generic_templates = new Map<string, Generic>()
@@ -1046,7 +1046,7 @@ class TypeChecker {
         typechecker.check_module(module_ast, filename)
         return typechecker.program
     }
-    private get_module(this, id: int): Module {
+    private get_module(this, id: uint): Module {
         return this.program.modules[id]
     }
     private get_current_module(this): Module {
@@ -1126,9 +1126,9 @@ class TypeChecker {
                 if (!this.types_are_eq(t1_gen_type.arg_types[i], t2_gen_type.arg_types[i])) return false
             }
         }
-        // if is_int(t1){
-        //     if (t1 as IntType).is_signed != (t2 as IntType).is_signed return false
-        // }
+        if is_int(t1){
+            if (t1 as IntType).is_signed != (t2 as IntType).is_signed return false
+        }
         return true
     }
     private dump_type(this, ty: Type): string {
@@ -1642,7 +1642,7 @@ class TypeChecker {
                 this.error(ErrorKind.TYPE, "Expected an int type for enum type but got type '$(this.dump_type(enum_variant))'", enum_node.variant.range)
             }
         }
-        let next_enum_value: i64 = 0
+        let next_enum_value: u64 = 0 // What about negatives?
         for let i = 0; i < enum_node.fields.length; ++i {
             let enum_node_field = enum_node.fields[i]
             let enum_name = enum_node_field.name.value
@@ -1659,9 +1659,9 @@ class TypeChecker {
                     return
                 }
                 // Not safe!
-                next_enum_value = evaluate_const_int_expression(this.program, enum_field.initializer) + 1
+                next_enum_value = evaluate_const_int_expression(this.program, enum_field.initializer) + 1 as u64
             } else {
-                enum_field.initializer = new IntExpression(next_enum_value)
+                enum_field.initializer = new IntExpression(next_enum_value as u64)
                 enum_field.initializer.value_type = enum_variant
                 next_enum_value++
             }
@@ -1893,6 +1893,7 @@ class TypeChecker {
         }
         // Class Methods Body
         for let i = 0; i < declared_class.methods.length; i++ {
+            let prev_method = this.current_method
             let method = declared_class.methods[i]
             this.current_method = method.id
             let method_node = class_node.methods[i]
@@ -1912,7 +1913,7 @@ class TypeChecker {
                     return
                 }
             }
-            this.current_method = null
+            this.current_method = prev_method
             this.current_scope = get_scope(this.program, method.scope).parent
         }
         this.current_class = outer_class
@@ -1964,7 +1965,7 @@ class TypeChecker {
                 return null
             }
             let element_type = this.check_type(array_node.element_type)
-            return new ArrayType(element_type, length as int)
+            return new ArrayType(element_type, length as uint)
         }
         if type_node.kind == TypeKind.FNC {
             let fnc_node = type_node as FunctionTypeNode
@@ -2386,7 +2387,7 @@ class TypeChecker {
             if index == -1 {
                 return "Expected $(construct_type.arg_types.length) argument(s) on constructor call but got $(args.length)"
             } else {
-                return "Expected type '$(this.dump_type(construct_type.arg_types[index]))' but got type '$(this.dump_type(checked_args[index].value_type))' as constructor call argument ($index)"
+                return "Expected type '$(this.dump_type(construct_type.arg_types[index as uint]))' but got type '$(this.dump_type(checked_args[index as uint].value_type))' as constructor call argument ($index)"
             }
         }
         argsp[0] = checked_args
@@ -2625,7 +2626,7 @@ class TypeChecker {
         }
         for let i = 0; i < args.length; ++i {
             if !this.types_are_eq(func_ty.arg_types[i], args[i].value_type) {
-                return i
+                return (i as int)
             }
         }
         return -2
@@ -2650,7 +2651,7 @@ class TypeChecker {
             if index == -1 {
                 this.error(ErrorKind.GEN, "Expected $(func_ty.arg_types.length) argument(s) on function call but got $(args.length)", call_expr_node.range)
             } else {
-                this.error(ErrorKind.TYPE, "Expected type '$(this.dump_type(func_ty.arg_types[index]))' but got type '$(this.dump_type(args[index].value_type))' as function call argument", call_expr_node.args[index].range)
+                this.error(ErrorKind.TYPE, "Expected type '$(this.dump_type(func_ty.arg_types[index as uint]))' but got type '$(this.dump_type(args[index as uint].value_type))' as function call argument", call_expr_node.args[index as uint].range)
             }
             return null
         }
@@ -2750,7 +2751,7 @@ class TypeChecker {
         return expr_value
     }
     private check_char_expression(this, char_node: CharExpressionNode): IntExpression {
-        let expr_value = new IntExpression(char_node.value.value as i64)
+        let expr_value = new IntExpression(char_node.value.value as u64)
         expr_value.value_type.kind = TypeKind.I8
         return expr_value
     }

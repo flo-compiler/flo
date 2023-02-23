@@ -94,14 +94,14 @@ fnc LLVMInt16TypeInContext(C: LLVMContextRef): LLVMTypeRef
 fnc LLVMInt32TypeInContext(C: LLVMContextRef): LLVMTypeRef
 fnc LLVMInt64TypeInContext(C: LLVMContextRef): LLVMTypeRef
 fnc LLVMInt128TypeInContext(C: LLVMContextRef): LLVMTypeRef
-fnc LLVMIntTypeInContext(C: LLVMContextRef, NumBits: int): LLVMTypeRef
+fnc LLVMIntTypeInContext(C: LLVMContextRef, NumBits: uint): LLVMTypeRef
 fnc LLVMInt1Type(): LLVMTypeRef 
 fnc LLVMInt8Type(): LLVMTypeRef 
 fnc LLVMInt16Type(): LLVMTypeRef 
 fnc LLVMInt32Type(): LLVMTypeRef 
 fnc LLVMInt64Type(): LLVMTypeRef 
 fnc LLVMInt128Type(): LLVMTypeRef
-fnc LLVMIntType(bits: int): LLVMTypeRef 
+fnc LLVMIntType(bits: uint): LLVMTypeRef 
 
 /**
  * Obtain a 16-bit floating point type from a context.
@@ -138,17 +138,17 @@ fnc LLVMFP128Type(): LLVMTypeRef
 fnc LLVMPPCFP128Type(): LLVMTypeRef 
 
 
-fnc LLVMFunctionType(return_type:LLVMTypeRef, param_types: LLVMTypeRef*, param_count: int, is_var_arg: LLVMBool): LLVMTypeRef
+fnc LLVMFunctionType(return_type:LLVMTypeRef, param_types: LLVMTypeRef*, param_count: uint, is_var_arg: LLVMBool): LLVMTypeRef
 fnc LLVMGetReturnType(FunctionTy: LLVMTypeRef): LLVMTypeRef 
-fnc LLVMCountParamTypes(FunctionTy: LLVMTypeRef): int
-fnc LLVMStructTypeInContext(C: LLVMContextRef, ElementTypes: LLVMTypeRef*, ElementCount: int, Packed: LLVMBool): LLVMTypeRef
-fnc LLVMStructType(ElementTypes: LLVMTypeRef*, ElementCount: int, Packed: LLVMBool): LLVMTypeRef
+fnc LLVMCountParamTypes(FunctionTy: LLVMTypeRef): uint
+fnc LLVMStructTypeInContext(C: LLVMContextRef, ElementTypes: LLVMTypeRef*, ElementCount: uint, Packed: LLVMBool): LLVMTypeRef
+fnc LLVMStructType(ElementTypes: LLVMTypeRef*, ElementCount: uint, Packed: LLVMBool): LLVMTypeRef
 fnc LLVMStructCreateNamed(C: LLVMContextRef, name: u8*): LLVMTypeRef 
-fnc LLVMStructSetBody(StructTy: LLVMTypeRef, ElementTypes: LLVMTypeRef *, element_count: int, packed: LLVMBool)
+fnc LLVMStructSetBody(StructTy: LLVMTypeRef, ElementTypes: LLVMTypeRef *, element_count: uint, packed: LLVMBool)
 
 fnc LLVMGetElementType(Ty: LLVMTypeRef): LLVMTypeRef
 
-fnc LLVMArrayType(ElementType: LLVMTypeRef, element_count: int): LLVMTypeRef
+fnc LLVMArrayType(ElementType: LLVMTypeRef, element_count: uint): LLVMTypeRef
 
 fnc LLVMPointerType(ElementType: LLVMTypeRef, address_space = 0): LLVMTypeRef
 
@@ -173,8 +173,8 @@ fnc LLVMConstInt(IntTy: LLVMTypeRef, N: u64, SignExtend: LLVMBool): LLVMValueRef
 
 fnc LLVMConstReal(RealTy: LLVMTypeRef, N: f64): LLVMValueRef
 
-fnc LLVMConstStringInContext(C: LLVMContextRef, Str: u8*,length: int, DontNullTerminate: LLVMBool): LLVMValueRef
-fnc LLVMConstString(Str: u8*, Length: int, DontNullTerminate: LLVMBool): LLVMValueRef
+fnc LLVMConstStringInContext(C: LLVMContextRef, Str: u8*, length: uint, DontNullTerminate: LLVMBool): LLVMValueRef
+fnc LLVMConstString(Str: u8*, Length: uint, DontNullTerminate: LLVMBool): LLVMValueRef
 
 
 fnc LLVMIsConstantString(c: LLVMValueRef): LLVMBool
@@ -183,17 +183,17 @@ fnc LLVMConstIntGetZExtValue(ConstantVal: LLVMValueRef): int
 
 fnc LLVMConstIntGetSExtValue(ConstantVal: LLVMValueRef): int
 
-fnc LLVMConstStructInContext(C: LLVMContextRef, vals: LLVMValueRef*, count: int, Packed: LLVMBool): LLVMValueRef
+fnc LLVMConstStructInContext(C: LLVMContextRef, vals: LLVMValueRef*, count: uint, Packed: LLVMBool): LLVMValueRef
 
-fnc LLVMConstStruct(ConstantVals: LLVMValueRef*, count: int, Packed: LLVMBool ): LLVMValueRef
+fnc LLVMConstStruct(ConstantVals: LLVMValueRef*, count: uint, Packed: LLVMBool ): LLVMValueRef
 
 /**
  * Create a ConstantArray from values.
  *
  * @see llvm::ConstantArray::get()
  */
-fnc LLVMConstArray(ElementTy: LLVMTypeRef, ConstantVals: LLVMValueRef*, Length: int): LLVMValueRef
-fnc LLVMGetElementAsConstant(C: LLVMValueRef, idx: int): LLVMValueRef 
+fnc LLVMConstArray(ElementTy: LLVMTypeRef, ConstantVals: LLVMValueRef*, Length: uint): LLVMValueRef
+fnc LLVMGetElementAsConstant(C: LLVMValueRef, idx: uint): LLVMValueRef 
 
 
 fnc LLVMGetConstOpcode(ConstantVal: LLVMValueRef): LLVMOpcode 
@@ -275,8 +275,8 @@ fnc LLVMGetIntrinsicDeclaration(Mod: LLVMModuleRef, ID: int, ParamTypes: LLVMTyp
 fnc LLVMIntrinsicGetType(Ctx: LLVMContextRef, ID: int, ParamTypes: LLVMTypeRef*, ParamCount: int): LLVMTypeRef
 fnc LLVMGetGC(Fn: LLVMValueRef): u8*
 fnc LLVMSetGC(Fn: LLVMValueRef, Name: u8*)
-fnc LLVMCountParams(Fn: LLVMValueRef): int
-fnc LLVMGetParam (Fn: LLVMValueRef, Index: int): LLVMValueRef
+fnc LLVMCountParams(Fn: LLVMValueRef): uint
+fnc LLVMGetParam (Fn: LLVMValueRef, Index: uint): LLVMValueRef
 /* Basic blocks */
 fnc LLVMBasicBlockAsValue(BB: LLVMBasicBlockRef): LLVMValueRef
 fnc LLVMGetBasicBlockName(BB: LLVMBasicBlockRef): u8*
@@ -437,8 +437,8 @@ fnc LLVMBuildLoad(B: LLVMBuilderRef, PointerVal: LLVMValueRef, Name: u8*): LLVMV
 fnc LLVMBuildLoad2(B: LLVMBuilderRef, Ty: LLVMTypeRef, PointerVal: LLVMValueRef, Name: u8*): LLVMValueRef
 fnc LLVMBuildStore(B: LLVMBuilderRef, Val: LLVMValueRef, Ptr: LLVMValueRef): LLVMValueRef
 fnc LLVMBuildGEP2(B: LLVMBuilderRef, Ty: LLVMTypeRef, Pointer: LLVMValueRef, Indices: LLVMValueRef *, NumIndices: int, Name: u8*): LLVMValueRef
-fnc LLVMBuildInBoundsGEP2(B: LLVMBuilderRef, Ty: LLVMTypeRef, Pointer: LLVMValueRef, Indices: LLVMValueRef *, NumIndices: int, Name: u8*): LLVMValueRef
-fnc LLVMBuildStructGEP2(B: LLVMBuilderRef, Ty: LLVMTypeRef, Pointer: LLVMValueRef, Idx: int, Name: u8*): LLVMValueRef
+fnc LLVMBuildInBoundsGEP2(B: LLVMBuilderRef, Ty: LLVMTypeRef, Pointer: LLVMValueRef, Indices: LLVMValueRef *, NumIndices: uint, Name: u8*): LLVMValueRef
+fnc LLVMBuildStructGEP2(B: LLVMBuilderRef, Ty: LLVMTypeRef, Pointer: LLVMValueRef, Idx: uint, Name: u8*): LLVMValueRef
 fnc LLVMBuildGlobalString(B: LLVMBuilderRef, Str: u8*, Name: u8*): LLVMValueRef
 fnc LLVMBuildGlobalStringPtr(B: LLVMBuilderRef, Str: u8*, Name: u8*): LLVMValueRef
 fnc LLVMGetVolatile(MemoryAccessInst: LLVMValueRef): LLVMBool
@@ -481,7 +481,7 @@ fnc LLVMBuildFCmp(B: LLVMBuilderRef, Op: LLVMRealPredicate, LHS: LLVMValueRef, R
 
 /* Miscellaneous instructions */
 fnc LLVMBuildPhi(B: LLVMBuilderRef, Ty: LLVMTypeRef, Name: u8*): LLVMValueRef
-fnc LLVMBuildCall2(B: LLVMBuilderRef, t: LLVMTypeRef, Fn: LLVMValueRef, Args: LLVMValueRef *, NumArgs: int, Name: u8*): LLVMValueRef
+fnc LLVMBuildCall2(B: LLVMBuilderRef, t: LLVMTypeRef, Fn: LLVMValueRef, Args: LLVMValueRef *, NumArgs: uint, Name: u8*): LLVMValueRef
 fnc LLVMBuildSelect(B: LLVMBuilderRef, If: LLVMValueRef, Then: LLVMValueRef, Else: LLVMValueRef, Name: u8*): LLVMValueRef
 fnc LLVMBuildVAArg(B: LLVMBuilderRef, List: LLVMValueRef, Ty: LLVMTypeRef, Name: u8*): LLVMValueRef
 fnc LLVMBuildExtractElement(B: LLVMBuilderRef, VecVal: LLVMValueRef, Index: LLVMValueRef, Name: u8*): LLVMValueRef

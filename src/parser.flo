@@ -398,10 +398,10 @@ class Parser {
     }    
     private advance(this){
         if this.idx < this.tokens.length
-            this.current_token = this.tokens[++this.idx]
+            this.current_token = this.tokens[++this.idx as uint]
     }
     private peek(this, offset = 1): Token{
-        let peek_idx = this.idx + offset
+        let peek_idx = this.idx + offset as uint
         if peek_idx < this.tokens.length
             return this.tokens[peek_idx]
         return this.tokens[this.tokens.length - 1]

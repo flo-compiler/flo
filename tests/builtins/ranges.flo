@@ -1,4 +1,4 @@
-fnc main(): int {
+fnc main(): uint {
     let x = 0..5
     return (4 in x) ? 0 : 1
 }

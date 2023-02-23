@@ -264,8 +264,8 @@ class Array <T> {
     public pop(this): T {
         return this.buffer[--this.length]
     }
-    public find(this, search: T): int{
-        for let i = 0; i < this.length; i++ {
+    public find(this, search: T): int {
+        for let i: int = 0; i < this.length; i++ {
             if this.buffer[i] == search return i
         }
         return -1

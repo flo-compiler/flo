@@ -1,5 +1,5 @@
 //@expect: return_code=13
-fnc main(): int {
+fnc main(): uint {
    let x = 10
    let mystring = "$x myfile.flo"
    return mystring.length

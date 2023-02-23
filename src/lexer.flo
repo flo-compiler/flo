@@ -48,23 +48,23 @@ fnc string_to_kw_token(word: string): TokType {
         return TokType.AS_KW
     return TokType.ILLEGAL
 }
-fnc is_identifier_char(char: i8): bool {
+fnc is_identifier_char(char: u8): bool {
     return (char >= 'A' and char <= 'Z') or (char >= 'a' and char <= 'z') or (char == '_')
 }
-fnc is_number_char(char: i8): bool {
+fnc is_number_char(char: u8): bool {
     return (char >= '0' and char <= '9')
 }
-fnc capitalize(char: i8): i8 {
+fnc capitalize(char: u8): u8 {
     if char >= 'a' and char <= 'z'
         return char - ' '
     return char 
 }
-fnc in_base_range(char: i8, base: int): bool {
+fnc in_base_range(char: u8, base: int): bool {
     if base < 10 
         return char >= '0' and char <= (base + 48)
     return (char >= '0' and char <= (base + 48)) or (char >= 'A' and char <= (base + 65))
 }
-fnc get_escape_char(char: i8): i8 {
+fnc get_escape_char(char: u8): u8 {
     if (char == 'a') return '\a'
     if (char == 'b') return '\b'
     if (char == 't') return '\t'
@@ -129,17 +129,17 @@ class FloatToken (Token) {
     }
 }
 class CharToken (Token) {
-    value: i8
-    constructor(this, value: i8, range: FloRange){
+    value: u8
+    constructor(this, value: u8, range: FloRange){
         super(TokType.CHAR, range)
         this.value = value
     }
 }
 class StrToken (Token) {
     value: string
-    fmt_indices: int[]
+    fmt_indices: uint[]
     args: Token[][]
-    constructor(this, args: Token[][], fmt_indices: int[], value: string, range: FloRange){
+    constructor(this, args: Token[][], fmt_indices: uint[], value: string, range: FloRange){
         super(TokType.STR, range)
         this.value = value
         this.fmt_indices = fmt_indices
@@ -154,12 +154,12 @@ class IdentifierToken (Token) {
     }
 }
 class Lexer {
-    private current_char: i8
+    private current_char: u8
     private text: string
     private errors: FloError[]
     private idx: int
-    private col: int
-    private line: int
+    private col: uint
+    private line: uint
     constructor(this, text: string, errors: FloError[]){
         this.text = text
         this.errors = errors
@@ -170,22 +170,22 @@ class Lexer {
     private eof(this): bool{
         return this.idx >= this.text.length
     }
-    private peek(this, offset = 1): i8 {
+    private peek(this, offset = 1): u8 {
         if this.idx + offset < this.text.length 
-            return this.text.get_byte(this.idx + offset)
+            return this.text.get_byte((this.idx + offset) as uint)
         return '\0'
     }
     private advance(this){
         if this.eof() return
-        this.current_char = this.text.get_byte(++this.idx)
+        this.current_char = this.text.get_byte(++this.idx as uint)
         if this.current_char == '\n' {
             this.col = 0
             this.line++
         } else
             this.col++
     }
-    private get_range(this, back: int): FloRange {
-        return new FloRange(this.idx - back + 1, this.idx + 1, this.col - back, this.line)
+    private get_range(this, back: uint): FloRange {
+        return new FloRange(this.idx - back + 1, (this.idx + 1) as uint, this.col - back, this.line)
     }
     private plus_token(this): Token {
         if this.peek() == '+' {
@@ -355,7 +355,7 @@ class Lexer {
         }
         let range = this.get_range(length)
         let str_value = this.text.substring(range.start, length)
-        let num_value: Token = is_float ? new FloatToken(str_value as f64, range) as Token : new IntToken((str_value as i64), range)
+        let num_value: Token = is_float ? new FloatToken(str_value as f64, range) as Token : new IntToken((str_value as u64), range)
         del str_value
         return num_value
     }
@@ -389,7 +389,7 @@ class Lexer {
         let length = 2
         let escape_next = false
         let args: Token[][] = []
-        let fmt_indices: int[] = []
+        let fmt_indices: uint[] = []
         let aval: i8* = null
         this.advance()
         let str_builder: StringBuilder(1)

@@ -1,5 +1,5 @@
 //@expect: return_code=251
 fnc main(): int {
-    let x = !4
+    let x: int = !4
     return x
 }

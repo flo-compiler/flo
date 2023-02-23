@@ -1,5 +1,5 @@
 //@expect: return_code=18
-fnc main(): int {
+fnc main(): uint {
     let arr: int[] = [1, 2, 3, 4]
     arr << 8
     let sum = 0

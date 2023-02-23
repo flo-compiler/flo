@@ -1,33 +1,33 @@
 
 const ARCH_WORD_SIZE = 64
 /* IO */
-fnc open(filename: i8*, flags: int): int 
+fnc open(filename: u8*, flags: int): int 
 fnc close(fd: int): int 
-fnc lstat(filename: i8*, stat_struct: i8*): int 
+fnc lstat(filename: u8*, stat_struct: u8*): int 
 fnc lseek(fd: int, offset: int, whence: int): int 
-fnc access(filename: i8*, mode: int): int 
-fnc nanosleep(req: i8*, rem: i8*): int 
+fnc access(filename: u8*, mode: int): int 
+fnc nanosleep(req: u8*, rem: u8*): int 
 /* net */
 fnc socket(name: int, socktype: int, protocol: int): int 
-fnc connect(sockfd: int, socketaddr_in: i8*, size: int): int 
-fnc accept(sockfd: int, socketaddr_in: i8*, size_ptr: int*): int 
-fnc bind(sockfd: int, socketaddr_in: i8*, size: int): int 
+fnc connect(sockfd: int, socketaddr_in: u8*, size: uint): int 
+fnc accept(sockfd: int, socketaddr_in: u8*, size_ptr: uint*): int 
+fnc bind(sockfd: int, socketaddr_in: u8*, size: uint): int 
 fnc listen(sockfd: int, backlog: int): int
 fnc fcntl(fd: int, cmd: int, arg: int): int 
-fnc execve(filename: i8*, argv: i8**, envp: i8**): int
+fnc execve(filename: u8*, argv: u8**, envp: u8**): int
 fnc exit (error_code: int)
-fnc getcwd(buf: i8*, size: int): int
-fnc rename(oldname: i8*, newname: i8*): int 
-fnc unlink(pathname: i8*): int 
+fnc getcwd(buf: u8*, size: int): int
+fnc rename(oldname: u8*, newname: u8*): int 
+fnc unlink(pathname: u8*): int 
 /* IO consts */
 const O_RDONLY = 0
 const O_WRONLY = 1
 const O_RDWR = 2
 const O_CREAT = 100
-const R_OK = 4 /* Test for read permission.  */
-const W_OK = 2 /* Test for write permission.  */
-const X_OK = 1 /* Test for execute permission.  */
-const F_OK = 0 /* Test if file exists */
+const R_OK: int = 4 /* Test for read permission.  */
+const W_OK: int = 2 /* Test for write permission.  */
+const X_OK: int = 1 /* Test for execute permission.  */
+const F_OK: int = 0 /* Test if file exists */
 const O_NONBLOCK = 2048
 
 const F_SETFL = 4

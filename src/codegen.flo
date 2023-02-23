@@ -16,15 +16,15 @@ class IntrinsicResult {
 }
 class CGClassType  {
     llvm_type: LLVMTypeRef
-    vt_methods_pos_map: [string: int]
-    fields_pos_map: [string: int]
+    vt_methods_pos_map: [string: uint]
+    fields_pos_map: [string: uint]
     static_props_map: [string: LLVMValueRef]
     vtable: LLVMValueRef
     vtable_type: LLVMTypeRef
     class_constructor: LLVMValueRef
     constructor(this){
-        this.vt_methods_pos_map = new Map<string, int>()
-        this.fields_pos_map = new Map<string, int>()
+        this.vt_methods_pos_map = new Map<string, uint>()
+        this.fields_pos_map = new Map<string, uint>()
         this.static_props_map = new Map<string, LLVMValueRef>()
         this.vtable = null
         this.vtable_type = null
@@ -38,7 +38,7 @@ class CGEnumType {
         this.field_map = new Map<string, LLVMValueRef>()
     }
 }
-fnc get_intrinsic(mod: LLVMModuleRef, name: string, params_types: LLVMTypeRef*, params_length: int, return_type: LLVMTypeRef, var_args = false): IntrinsicResult {
+fnc get_intrinsic(mod: LLVMModuleRef, name: string, params_types: LLVMTypeRef*, params_length: uint, return_type: LLVMTypeRef, var_args = false): IntrinsicResult {
     let result = new IntrinsicResult()
     result.fnc_type = LLVMFunctionType(return_type, params_types, params_length, var_args)
     let fn_name = name.to_cstring()
@@ -67,12 +67,12 @@ fnc create_prop_key(prop_id: PropId): string {
     return "$(create_type_id_key(prop_id.type_id));$(prop_id.kind as int);$(prop_id.id)"
 }
 // These two functions will eventually become a generic function once we implement those.
-fnc resize_type_array(array: LLVMTypeRef[], amt: int){
+fnc resize_type_array(array: LLVMTypeRef[], amt: uint){
     for let i = array.length; i <= amt; i++ {
         array << null
     }
 }
-fnc resize_value_array(array: LLVMValueRef[], amt: int){
+fnc resize_value_array(array: LLVMValueRef[], amt: uint){
     for let i = array.length; i <= amt; i++ {
         array << null
     }
@@ -188,10 +188,10 @@ class CodeGen {
         return LLVMIsConstant(val) ? LLVMConstNeg(val) : LLVMBuildNeg(builder, val, "")
     }
     private createLLVMBool(this, val: bool): LLVMValueRef{
-        return LLVMConstInt(LLVMInt1Type(), val ? 1 : 0 as i64, false)
+        return LLVMConstInt(LLVMInt1Type(), val ? 1 : 0 as u64, false)
     }
-    private createLLVMInt(this, i: int): LLVMValueRef {
-        return LLVMConstInt(LLVMIntType(ARCH_WORD_SIZE), i as i64, false)
+    private createLLVMInt(this, i: uint): LLVMValueRef {
+        return LLVMConstInt(LLVMIntType(ARCH_WORD_SIZE), i as u64, false)
     }
     private codegen_type(this, tt: Type, as_pointer = true): LLVMTypeRef {
         if tt.kind == TypeKind.VOID
@@ -320,7 +320,7 @@ class CodeGen {
         }
         return str
     }
-    private codegen_safe_fmt_string(this, builder: LLVMBuilderRef, fmt: string, args: LLVMValueRef*, args_length: int, len_ptr: LLVMValueRef*): LLVMValueRef {
+    private codegen_safe_fmt_string(this, builder: LLVMBuilderRef, fmt: string, args: LLVMValueRef*, args_length: uint, len_ptr: LLVMValueRef*): LLVMValueRef {
         let i8_ty = LLVMInt8Type()
         let i8_ptr_ty = LLVMPointerType(i8_ty)
         let int_ty = LLVMIntType(ARCH_WORD_SIZE)
@@ -552,12 +552,12 @@ class CodeGen {
         let indices_buffer: LLVMValueRef[indices_count] = [LLVMConstInt(LLVMInt32Type(), 0, false), null]
         if !is_function(member_expr.value_type) {
             let vtoffset = struct_class.vtable_type == null ? 0 : 1
-            indices_buffer[1] = LLVMConstInt(LLVMInt32Type(), struct_class.fields_pos_map[prop_id_key] + vtoffset as i64, false)
+            indices_buffer[1] = LLVMConstInt(LLVMInt32Type(), struct_class.fields_pos_map[prop_id_key] + vtoffset as u64, false)
         } else {
             indices_buffer[1] = LLVMConstInt(LLVMInt32Type(), 0, false)
             ptr = LLVMBuildInBoundsGEP2(builder, struct_type, ptr, &indices_buffer[0], indices_count, "")
             ptr = LLVMBuildLoad2(builder, LLVMPointerType(struct_class.vtable_type), ptr, "")
-            indices_buffer[1] = LLVMConstInt(LLVMInt32Type(), struct_class.vt_methods_pos_map[prop_id_key] as i64, false)
+            indices_buffer[1] = LLVMConstInt(LLVMInt32Type(), struct_class.vt_methods_pos_map[prop_id_key] as u64, false)
             struct_type = struct_class.vtable_type
         }
         return LLVMBuildInBoundsGEP2(builder, struct_type, ptr, &indices_buffer[0], indices_count, "memberidx")
@@ -783,14 +783,14 @@ class CodeGen {
                 return ptr
             }
             let alloc_ty = this.codegen_type(exp.value_type)
-            let incr_value = op == UnaryOp.PREINCR or op == UnaryOp.POSTINCR ? 1 : -1
+            let incr_value: i64 = op == UnaryOp.PREINCR or op == UnaryOp.POSTINCR ? 1 : -1
             let new_value: LLVMValueRef = null
             if is_pointer(exp.value_type) {
                 alloc_ty = this.codegen_type((exp.value_type as PointerType).pointee_type)
-                let indices: LLVMValueRef[1] = [this.createLLVMInt(incr_value)]
+                let indices: LLVMValueRef[1] = [LLVMConstInt(LLVMInt32Type(), incr_value as u64, true)]
                 new_value = LLVMBuildInBoundsGEP2(builder, alloc_ty, val, &indices[0], 1, "incdec.ptr")
             } else if is_numeric(exp.value_type){
-                let incr_amt = is_int(exp.value_type) ? LLVMConstInt(alloc_ty, incr_value as i64, false) : LLVMConstReal(alloc_ty, incr_value * 1.0 as f64)
+                let incr_amt = is_int(exp.value_type) ? LLVMConstInt(alloc_ty, incr_value as u64, false) : LLVMConstReal(alloc_ty, incr_value * 1.0 as f64)
                 new_value = LLVMBuildNSWAdd(builder, val, incr_amt, "")
             }
             LLVMBuildStore(builder, new_value, ptr)
@@ -1102,7 +1102,7 @@ class CodeGen {
             evaluated_list[start++] = this.codegen_expression(builder, item)
         }
     }
-    private build_constructor_call(this, builder: LLVMBuilderRef, obj_type: ObjectType, params: LLVMValueRef*, params_length: int){
+    private build_constructor_call(this, builder: LLVMBuilderRef, obj_type: ObjectType, params: LLVMValueRef*, params_length: uint){
         let checked_class = get_class_from_type(this.program, obj_type)
         let constructor = this.get_or_codegen_class_from_typeid(obj_type.class_id).class_constructor
         if constructor != null {

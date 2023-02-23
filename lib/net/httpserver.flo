@@ -7,15 +7,15 @@ class HTTPServer {
     private socket: Socket
     private response: Response
     private request: Request
-    constructor(this, port: int, address: string = ""){
-        this.socket = new Socket(AF_INET, SOCK_STREAM, 0)
+    constructor(this, port: uint, address: string = ""){
+        this.socket = new Socket(AF_INET as int, SOCK_STREAM as int, 0)
         this.socket.bind(port, address)
         this.socket.listen()
         this.response = new Response(-1)
         this.request = new Request()
     }
     private accept_connection(this){
-        let cli: i8[16]
+        let cli: u8[16]
         let cli_len = 4
         let connfd = accept(this.socket.sockfd, &cli[0], &cli_len)
         if connfd < 0 {

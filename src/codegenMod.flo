@@ -10,7 +10,7 @@ import LLVMDisposeTargetMachine, LLVMTargetMachineEmitToFile, LLVMGetDefaultTarg
 import LLVMWriteBitcodeToFile in "llvm/bitwriter"
 class GeneratedModule {
     private llvm_mod: LLVMModuleRef
-    private errors: i8*
+    private errors: u8*
     private tm: LLVMTargetMachineRef
     constructor(this, llvm_mod: LLVMModuleRef){
         this.llvm_mod = llvm_mod

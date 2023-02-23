@@ -18,7 +18,7 @@ class FloError {
         this.message = message
     }
 }
-fnc get_next_line_index(text: string, start: int): int {
+fnc get_next_line_index(text: string, start: uint): uint {
     while text.get_byte(start) != '\n' and start < text.length 
         start++
     return start

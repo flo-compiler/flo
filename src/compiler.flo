@@ -2,8 +2,8 @@ import "@io/file"
 import "@path/path"
 import  "error"
 class FileId {
-    id: int
-    constructor(this, id: int){
+    id: uint
+    constructor(this, id: uint){
         this.id = id
     }
 }

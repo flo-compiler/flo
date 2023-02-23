@@ -3,7 +3,7 @@ import access, F_OK in "@sys/lib"
 fnc fopen(path: u8*, mode: u8*): int
 fnc fclose(stream: int)
 fnc fread(buf: u8*, size: int, nmemb: int, stream: int): int
-fnc fwrite(buf:u8*, size: int, nmemb: int, stream: int): int
+fnc fwrite(buf: u8*, size: int, nmemb: int, stream: int): int
 class File {
     fd: int
     constructor(this, fd: int){
@@ -23,7 +23,7 @@ class File {
         let size = 0
         let allocated_mem = new u8*(size)
         while true {
-            let buffer: i8[1024]
+            let buffer: u8[1024]
             let read_len = fread(&buffer[0], 1, 1024, this.fd)
             if read_len == 0 {
                 return new string(allocated_mem, size)

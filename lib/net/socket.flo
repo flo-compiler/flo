@@ -1,9 +1,9 @@
 import socket, connect, accept, bind, listen, close in "@sys/lib"
-fnc inet_addr(addr: i8*): int
-fnc htons(x: int): int {
+fnc inet_addr(addr: u8*): int
+fnc htons(x: uint): int {
     let x1 = (x and 255) << 8
     let x2 = (x >> 8) and 255 
-    return x1 or x2
+    return (x1 or x2) as int
 }
 fnc calc_sin_addr(sin_family: int, sin_port: int): int {
     return (sin_port << 16) or (sin_family and 0xFFFF)
@@ -20,15 +20,15 @@ class Socket {
         this.sockfd = sockfd
         this.domain = domain
     }
-    bind(this, port: int, address: string = ""){
+    bind(this, port: uint, address: string = ""){
         let addr: int[2] = [calc_sin_addr(this.domain, htons(port)), inet_addr(address.to_cstring())]
-        if bind(this.sockfd, &addr[0] as i8*, 16) < 0 {
+        if bind(this.sockfd, &addr[0] as u8*, 16) < 0 {
             println("Error: could not bind socket")
         }
     }
-    connect(this, port: int, address: string){
+    connect(this, port: uint, address: string){
         let addr: int[2] = [calc_sin_addr(this.domain, htons(port)), inet_addr(address.to_cstring())]
-        if connect(this.sockfd, &addr[0] as i8*, 16) < 0 {
+        if connect(this.sockfd, &addr[0] as u8*, 16) < 0 {
             println("Error: could not connect socket")
         }
     }

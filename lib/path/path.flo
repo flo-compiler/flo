@@ -1,11 +1,11 @@
-fnc realpath(path: i8*, abspath: i8*): i8*
-fnc dirname(path: i8*): i8*
+fnc realpath(path: u8*, abspath: u8*): u8*
+fnc dirname(path: u8*): u8*
 class Path {
     public join(root: string, rest: string): string {        
         return "$root/$rest"
     }
     public abspath(p: string): string {
-        let buf: i8[400]
+        let buf: u8[400]
         realpath(p.to_cstring(), &buf[0])
         return string.from_cstring(&buf[0])
     }
