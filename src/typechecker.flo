@@ -2451,7 +2451,7 @@ class TypeChecker {
         }
         return null
     }
-    private check_member_expr(this, expected_type: Type, member_expr_node: MemberExpressionNode): MemberExpression {
+    private check_member_expr(this, expected_type: Type, member_expr_node: MemberExpressionNode): Expression {
         let prop_owner = this.check_expression(Type.unknown(), member_expr_node.expression)
         if this.has_errored() return null
         let prop_owner_type = prop_owner.value_type
@@ -2519,7 +2519,11 @@ class TypeChecker {
             }
             let intrinsic_call = new IntrinsicCall(mem_intrinsic) 
             intrinsic_call.args << prop_owner
-            return intrinsic_call as MemberExpression
+            return intrinsic_call
+        } else if prop_owner_type.kind == TypeKind.ARRAY {
+            if prop_name == "size" {
+                return new IntExpression((prop_owner_type as ArrayType).length as u64)
+            }
         } else if prop_owner_type.kind == TypeKind.MODULE {
             let scope_id = ((prop_owner as VarAccessExpression).value_id as ModuleVarId).scope_id
             let current_scope = this.current_scope
@@ -2529,7 +2533,7 @@ class TypeChecker {
             let value = this.check_var_access_expr(Type.unknown(), var_access_node)
             this.current_module = current_scope.module_id
             this.current_scope = current_scope
-            return value as MemberExpression
+            return value
         } else {
             this.error(ErrorKind.GEN, "Cannot get property '$prop_name' of type '$(this.dump_type(prop_owner.value_type))'", member_expr_node.expression.range)
             return null
