@@ -2175,6 +2175,11 @@ class TypeChecker {
         if is_null(right) and (op == BinaryOp.EEQ or op == BinaryOp.NEQ) {
             return new BinaryExpression(left, op, right, new BooleanType())
         }
+        if op == BinaryOp.IN {
+            if is_int(right.value_type){
+                right = cast_exp_to_type(right, max_type(right.value_type, arg_type))
+            }
+        }
         if !this.types_are_eq(arg_type, right.value_type) {
             this.error(ErrorKind.TYPE, "Expected type '$(this.dump_type(arg_type))' but got type '$(this.dump_type(right.value_type))'", binary_node.rhs.range)
             return null
@@ -2664,10 +2669,12 @@ class TypeChecker {
     private check_intrinsic_call(this, intrinsic_call: IntrinsicCall, call_expr_node: CallExpressionNode): IntrinsicCall {
         //Note: This assumes that intrisics always have alteast 1 arg and that call_expr_node.args has the rest of the args
         let args = call_expr_node.args
+        let int_ty: IntType(TypeKind.INT, true)
         let intrinsic_func = intrinsic_call.intrinsic
         let is_mem_grp1 = intrinsic_func == Intrinsics.MEMCPY or intrinsic_func == Intrinsics.MEMMOVE or intrinsic_func == Intrinsics.MEMCMP
         for let i = 0; i < args.length; i++ {
             let expected_type = is_mem_grp1 and i == 1 ? Type.unknown() : intrinsic_call.args[0].value_type
+            if (intrinsic_func == Intrinsics.MEMSET) expected_type = int_ty
             intrinsic_call.args << this.check_expression(expected_type, args[i])
             if this.has_errored() return null
         }

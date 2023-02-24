@@ -27601,8 +27601,8 @@ define internal fastcc ptr @TypeChecker_check_object_binary_expr(ptr %0, ptr %1,
   %7 = icmp eq ptr %6, null
   br i1 %7, label %if.entry, label %ifend
 
-common.ret:                                       ; preds = %ifend23, %ifend34, %TypeChecker_error.exit141, %if.entry28, %TypeChecker_error.exit114, %if.entry9, %TypeChecker_error.exit
-  %common.ret.op = phi ptr [ null, %TypeChecker_error.exit ], [ %89, %if.entry9 ], [ null, %TypeChecker_error.exit114 ], [ %133, %if.entry28 ], [ null, %TypeChecker_error.exit141 ], [ %167, %ifend34 ], [ null, %ifend23 ]
+common.ret:                                       ; preds = %ifend23, %ifend42, %TypeChecker_error.exit158, %if.entry28, %TypeChecker_error.exit126, %if.entry9, %TypeChecker_error.exit
+  %common.ret.op = phi ptr [ null, %TypeChecker_error.exit ], [ %89, %if.entry9 ], [ null, %TypeChecker_error.exit126 ], [ %133, %if.entry28 ], [ null, %TypeChecker_error.exit158 ], [ %176, %ifend42 ], [ null, %ifend23 ]
   ret ptr %common.ret.op
 
 if.entry:                                         ; preds = %4
@@ -27624,10 +27624,10 @@ if.entry:                                         ; preds = %4
   store i64 %13, ptr %memberidx2.i, align 4
   tail call void @free(ptr %11)
   %16 = load ptr, ptr %2, align 8
-  %memberidx.i77 = getelementptr inbounds %TypeChecker, ptr %0, i64 0, i32 6
-  %17 = load ptr, ptr %memberidx.i77, align 8
-  %memberidx1.i78 = getelementptr inbounds %Compiler, ptr %17, i64 0, i32 6
-  %18 = load ptr, ptr %memberidx1.i78, align 8
+  %memberidx.i89 = getelementptr inbounds %TypeChecker, ptr %0, i64 0, i32 6
+  %17 = load ptr, ptr %memberidx.i89, align 8
+  %memberidx1.i90 = getelementptr inbounds %Compiler, ptr %17, i64 0, i32 6
+  %18 = load ptr, ptr %memberidx1.i90, align 8
   %19 = call ptr @malloc(i32 24)
   store i64 4, ptr %19, align 4
   %memberidx1.i.i = getelementptr inbounds %FloError, ptr %19, i64 0, i32 2
@@ -27643,7 +27643,7 @@ if.entry:                                         ; preds = %4
 
 if.entry.TypeChecker_error.exit_crit_edge:        ; preds = %if.entry
   %memberidx4.i.i.phi.trans.insert = getelementptr inbounds %Array_FloError_, ptr %18, i64 0, i32 1
-  %.pre177 = load ptr, ptr %memberidx4.i.i.phi.trans.insert, align 8
+  %.pre195 = load ptr, ptr %memberidx4.i.i.phi.trans.insert, align 8
   br label %TypeChecker_error.exit
 
 if.entry.i.i:                                     ; preds = %if.entry
@@ -27654,12 +27654,12 @@ if.entry.i.i:                                     ; preds = %if.entry
   %24 = shl i64 %21, 4
   %25 = call ptr @realloc(ptr %23, i64 %24)
   store ptr %25, ptr %memberidx2.i.i.i, align 8
-  %.pre176 = load i64, ptr %memberidx.i.i, align 4
+  %.pre194 = load i64, ptr %memberidx.i.i, align 4
   br label %TypeChecker_error.exit
 
 TypeChecker_error.exit:                           ; preds = %if.entry.TypeChecker_error.exit_crit_edge, %if.entry.i.i
-  %26 = phi ptr [ %.pre177, %if.entry.TypeChecker_error.exit_crit_edge ], [ %25, %if.entry.i.i ]
-  %27 = phi i64 [ %20, %if.entry.TypeChecker_error.exit_crit_edge ], [ %.pre176, %if.entry.i.i ]
+  %26 = phi ptr [ %.pre195, %if.entry.TypeChecker_error.exit_crit_edge ], [ %25, %if.entry.i.i ]
+  %27 = phi i64 [ %20, %if.entry.TypeChecker_error.exit_crit_edge ], [ %.pre194, %if.entry.i.i ]
   %28 = add nsw i64 %27, 1
   store i64 %28, ptr %memberidx.i.i, align 4
   %ptridx.i.i = getelementptr inbounds ptr, ptr %26, i64 %27
@@ -27671,33 +27671,33 @@ ifend:                                            ; preds = %4
   %memberidx4 = getelementptr inbounds %Expression, ptr %1, i64 0, i32 3
   br label %tailrecurse.i
 
-tailrecurse.i:                                    ; preds = %if.entry.i160, %ifend
-  %.tr11.i.in = phi ptr [ %memberidx4, %ifend ], [ %memberidx1.i159, %if.entry.i160 ]
+tailrecurse.i:                                    ; preds = %if.entry.i177, %ifend
+  %.tr11.i.in = phi ptr [ %memberidx4, %ifend ], [ %memberidx1.i176, %if.entry.i177 ]
   %.tr11.i = load ptr, ptr %.tr11.i.in, align 8
   %30 = load i64, ptr %.tr11.i, align 4
   switch i64 %30, label %get_class_from_type.exit [
-    i64 19, label %if.entry.i160
+    i64 19, label %if.entry.i177
     i64 11, label %if.entry3.i
   ]
 
-if.entry.i160:                                    ; preds = %tailrecurse.i
-  %memberidx1.i159 = getelementptr inbounds %GenericType, ptr %.tr11.i, i64 0, i32 3
+if.entry.i177:                                    ; preds = %tailrecurse.i
+  %memberidx1.i176 = getelementptr inbounds %GenericType, ptr %.tr11.i, i64 0, i32 3
   br label %tailrecurse.i
 
 if.entry3.i:                                      ; preds = %tailrecurse.i
-  %memberidx6.i161 = getelementptr inbounds %ObjectType, ptr %.tr11.i, i64 0, i32 1
-  %31 = load ptr, ptr %memberidx6.i161, align 8
-  %memberidx.i.i162 = getelementptr inbounds %Program, ptr %29, i64 0, i32 1
-  %32 = load ptr, ptr %memberidx.i.i162, align 8
+  %memberidx6.i178 = getelementptr inbounds %ObjectType, ptr %.tr11.i, i64 0, i32 1
+  %31 = load ptr, ptr %memberidx6.i178, align 8
+  %memberidx.i.i179 = getelementptr inbounds %Program, ptr %29, i64 0, i32 1
+  %32 = load ptr, ptr %memberidx.i.i179, align 8
   %33 = load i64, ptr %31, align 4
-  %memberidx.i.i.i163 = getelementptr inbounds %Array_Module_, ptr %32, i64 0, i32 1
-  %34 = load ptr, ptr %memberidx.i.i.i163, align 8
+  %memberidx.i.i.i180 = getelementptr inbounds %Array_Module_, ptr %32, i64 0, i32 1
+  %34 = load ptr, ptr %memberidx.i.i.i180, align 8
   %ptridx.i.i.i = getelementptr inbounds ptr, ptr %34, i64 %33
   %35 = load ptr, ptr %ptridx.i.i.i, align 8
-  %memberidx2.i.i164 = getelementptr inbounds %Module, ptr %35, i64 0, i32 4
-  %36 = load ptr, ptr %memberidx2.i.i164, align 8
-  %memberidx3.i.i165 = getelementptr inbounds %TypeId, ptr %31, i64 0, i32 2
-  %37 = load i64, ptr %memberidx3.i.i165, align 4
+  %memberidx2.i.i181 = getelementptr inbounds %Module, ptr %35, i64 0, i32 4
+  %36 = load ptr, ptr %memberidx2.i.i181, align 8
+  %memberidx3.i.i182 = getelementptr inbounds %TypeId, ptr %31, i64 0, i32 2
+  %37 = load i64, ptr %memberidx3.i.i182, align 4
   %memberidx.i5.i.i = getelementptr inbounds %Array_Class_, ptr %36, i64 0, i32 1
   %38 = load ptr, ptr %memberidx.i5.i.i, align 8
   %ptridx.i6.i.i = getelementptr inbounds ptr, ptr %38, i64 %37
@@ -27705,12 +27705,12 @@ if.entry3.i:                                      ; preds = %tailrecurse.i
   br label %get_class_from_type.exit
 
 get_class_from_type.exit:                         ; preds = %tailrecurse.i, %if.entry3.i
-  %common.ret.op.i158 = phi ptr [ %39, %if.entry3.i ], [ null, %tailrecurse.i ]
-  %memberidx5 = getelementptr inbounds %Class, ptr %common.ret.op.i158, i64 0, i32 6
+  %common.ret.op.i175 = phi ptr [ %39, %if.entry3.i ], [ null, %tailrecurse.i ]
+  %memberidx5 = getelementptr inbounds %Class, ptr %common.ret.op.i175, i64 0, i32 6
   %40 = load ptr, ptr %memberidx5, align 8
   %41 = tail call fastcc i64 @Map_string_PropId__hash_fnc(ptr nonnull %6)
-  %memberidx.i79 = getelementptr inbounds %Map_string_PropId_, ptr %40, i64 0, i32 1
-  %42 = load i64, ptr %memberidx.i79, align 4
+  %memberidx.i91 = getelementptr inbounds %Map_string_PropId_, ptr %40, i64 0, i32 1
+  %42 = load i64, ptr %memberidx.i91, align 4
   %43 = urem i64 %41, %42
   %44 = load ptr, ptr %40, align 8
   %ptridx.i = getelementptr inbounds ptr, ptr %44, i64 %43
@@ -27719,7 +27719,7 @@ get_class_from_type.exit:                         ; preds = %tailrecurse.i, %if.
   br i1 %.not.i, label %if.entry6, label %while.entry.i.preheader
 
 while.entry.i.preheader:                          ; preds = %get_class_from_type.exit
-  %memberidx1.i.i81 = getelementptr inbounds %string, ptr %6, i64 0, i32 2
+  %memberidx1.i.i93 = getelementptr inbounds %string, ptr %6, i64 0, i32 2
   %memberidx3.i.i = getelementptr inbounds %string, ptr %6, i64 0, i32 1
   br label %while.entry.i
 
@@ -27729,34 +27729,34 @@ while.entry.i:                                    ; preds = %while.entry.i.prehe
   %48 = phi ptr [ %60, %else.i ], [ %45, %while.entry.i.preheader ]
   %hash.0.i = phi i64 [ %59, %else.i ], [ %43, %while.entry.i.preheader ]
   %49 = load ptr, ptr %48, align 8
-  %memberidx.i.i80 = getelementptr inbounds %string, ptr %49, i64 0, i32 2
-  %50 = load i64, ptr %memberidx.i.i80, align 4
-  %51 = load i64, ptr %memberidx1.i.i81, align 4
-  %.not.i.i82 = icmp eq i64 %50, %51
-  br i1 %.not.i.i82, label %ifend.i.i, label %else.i
+  %memberidx.i.i92 = getelementptr inbounds %string, ptr %49, i64 0, i32 2
+  %50 = load i64, ptr %memberidx.i.i92, align 4
+  %51 = load i64, ptr %memberidx1.i.i93, align 4
+  %.not.i.i94 = icmp eq i64 %50, %51
+  br i1 %.not.i.i94, label %ifend.i.i, label %else.i
 
 ifend.i.i:                                        ; preds = %while.entry.i
-  %memberidx2.i.i83 = getelementptr inbounds %string, ptr %49, i64 0, i32 1
-  %52 = load ptr, ptr %memberidx2.i.i83, align 8
+  %memberidx2.i.i95 = getelementptr inbounds %string, ptr %49, i64 0, i32 1
+  %52 = load ptr, ptr %memberidx2.i.i95, align 8
   %53 = load ptr, ptr %memberidx3.i.i, align 8
   %54 = tail call i64 @memcmp(ptr %52, ptr %53, i64 %50)
   %55 = icmp eq i64 %54, 0
   br i1 %55, label %while.end.i, label %ifend.i.i.else.i_crit_edge
 
 ifend.i.i.else.i_crit_edge:                       ; preds = %ifend.i.i
-  %.pre = load i64, ptr %memberidx.i79, align 4
-  %.pre169 = load ptr, ptr %40, align 8
+  %.pre = load i64, ptr %memberidx.i91, align 4
+  %.pre186 = load ptr, ptr %40, align 8
   br label %else.i
 
 while.end.i:                                      ; preds = %ifend.i.i
-  %.pre170.pre = load ptr, ptr %40, align 8
-  %ptridx9.i.phi.trans.insert.phi.trans.insert = getelementptr inbounds ptr, ptr %.pre170.pre, i64 %hash.0.i
-  %.pre171.pre = load ptr, ptr %ptridx9.i.phi.trans.insert.phi.trans.insert, align 8
-  %.not29.i = icmp eq ptr %.pre171.pre, null
+  %.pre187.pre = load ptr, ptr %40, align 8
+  %ptridx9.i.phi.trans.insert.phi.trans.insert = getelementptr inbounds ptr, ptr %.pre187.pre, i64 %hash.0.i
+  %.pre188.pre = load ptr, ptr %ptridx9.i.phi.trans.insert.phi.trans.insert, align 8
+  %.not29.i = icmp eq ptr %.pre188.pre, null
   br i1 %.not29.i, label %if.entry6, label %Map_string_PropId____getitem__.exit
 
 else.i:                                           ; preds = %ifend.i.i.else.i_crit_edge, %while.entry.i
-  %56 = phi ptr [ %.pre169, %ifend.i.i.else.i_crit_edge ], [ %46, %while.entry.i ]
+  %56 = phi ptr [ %.pre186, %ifend.i.i.else.i_crit_edge ], [ %46, %while.entry.i ]
   %57 = phi i64 [ %.pre, %ifend.i.i.else.i_crit_edge ], [ %47, %while.entry.i ]
   %58 = add nuw i64 %hash.0.i, 1
   %59 = urem i64 %58, %57
@@ -27766,7 +27766,7 @@ else.i:                                           ; preds = %ifend.i.i.else.i_cr
   br i1 %.not30.i, label %if.entry6, label %while.entry.i
 
 Map_string_PropId____getitem__.exit:              ; preds = %while.end.i
-  %memberidx15.i = getelementptr inbounds %MapEntry_string_PropId_, ptr %.pre171.pre, i64 0, i32 1
+  %memberidx15.i = getelementptr inbounds %MapEntry_string_PropId_, ptr %.pre188.pre, i64 0, i32 1
   %61 = load ptr, ptr %memberidx15.i, align 8
   %62 = icmp eq ptr %61, null
   br i1 %62, label %if.entry6, label %ifend8
@@ -27778,17 +27778,17 @@ if.entry6:                                        ; preds = %else.i, %get_class_
 
 ifend8:                                           ; preds = %Map_string_PropId____getitem__.exit
   %65 = load ptr, ptr %0, align 8
-  %memberidx.i.i84 = getelementptr inbounds %PropId, ptr %61, i64 0, i32 1
-  %66 = load ptr, ptr %memberidx.i.i84, align 8
-  %memberidx.i.i.i85 = getelementptr inbounds %Program, ptr %65, i64 0, i32 1
-  %67 = load ptr, ptr %memberidx.i.i.i85, align 8
+  %memberidx.i.i96 = getelementptr inbounds %PropId, ptr %61, i64 0, i32 1
+  %66 = load ptr, ptr %memberidx.i.i96, align 8
+  %memberidx.i.i.i97 = getelementptr inbounds %Program, ptr %65, i64 0, i32 1
+  %67 = load ptr, ptr %memberidx.i.i.i97, align 8
   %68 = load i64, ptr %66, align 4
   %memberidx.i.i.i.i = getelementptr inbounds %Array_Module_, ptr %67, i64 0, i32 1
   %69 = load ptr, ptr %memberidx.i.i.i.i, align 8
   %ptridx.i.i.i.i = getelementptr inbounds ptr, ptr %69, i64 %68
   %70 = load ptr, ptr %ptridx.i.i.i.i, align 8
-  %memberidx2.i.i.i86 = getelementptr inbounds %Module, ptr %70, i64 0, i32 4
-  %71 = load ptr, ptr %memberidx2.i.i.i86, align 8
+  %memberidx2.i.i.i98 = getelementptr inbounds %Module, ptr %70, i64 0, i32 4
+  %71 = load ptr, ptr %memberidx2.i.i.i98, align 8
   %memberidx3.i.i.i = getelementptr inbounds %TypeId, ptr %66, i64 0, i32 2
   %72 = load i64, ptr %memberidx3.i.i.i, align 4
   %memberidx.i5.i.i.i = getelementptr inbounds %Array_Class_, ptr %71, i64 0, i32 1
@@ -27800,10 +27800,10 @@ ifend8:                                           ; preds = %Map_string_PropId__
   br i1 %76, label %if.entry.i, label %ifend.i
 
 if.entry.i:                                       ; preds = %ifend8
-  %memberidx1.i88 = getelementptr inbounds %Class, ptr %74, i64 0, i32 5
-  %77 = load ptr, ptr %memberidx1.i88, align 8
-  %memberidx2.i89 = getelementptr inbounds %PropId, ptr %61, i64 0, i32 2
-  %78 = load i64, ptr %memberidx2.i89, align 4
+  %memberidx1.i100 = getelementptr inbounds %Class, ptr %74, i64 0, i32 5
+  %77 = load ptr, ptr %memberidx1.i100, align 8
+  %memberidx2.i101 = getelementptr inbounds %PropId, ptr %61, i64 0, i32 2
+  %78 = load i64, ptr %memberidx2.i101, align 4
   %memberidx.i12.i = getelementptr inbounds %Array_ClassMethod_, ptr %77, i64 0, i32 1
   %79 = load ptr, ptr %memberidx.i12.i, align 8
   %ptridx.i13.i = getelementptr inbounds ptr, ptr %79, i64 %78
@@ -27818,18 +27818,18 @@ ifend.i:                                          ; preds = %ifend8
   %82 = load i64, ptr %memberidx5.i, align 4
   %memberidx.i11.i = getelementptr inbounds %Array_ClassField_, ptr %81, i64 0, i32 1
   %83 = load ptr, ptr %memberidx.i11.i, align 8
-  %ptridx.i.i90 = getelementptr inbounds ptr, ptr %83, i64 %82
-  %84 = load ptr, ptr %ptridx.i.i90, align 8
+  %ptridx.i.i102 = getelementptr inbounds ptr, ptr %83, i64 %82
+  %84 = load ptr, ptr %ptridx.i.i102, align 8
   %memberidx6.i = getelementptr inbounds %ClassField, ptr %84, i64 0, i32 4
   br label %get_class_prop_type.exit
 
 get_class_prop_type.exit:                         ; preds = %if.entry.i, %ifend.i
   %common.ret.op.in.i = phi ptr [ %memberidx3.i, %if.entry.i ], [ %memberidx6.i, %ifend.i ]
-  %common.ret.op.i87 = load ptr, ptr %common.ret.op.in.i, align 8
-  %memberidx20 = getelementptr inbounds %FunctionType, ptr %common.ret.op.i87, i64 0, i32 1
+  %common.ret.op.i99 = load ptr, ptr %common.ret.op.in.i, align 8
+  %memberidx20 = getelementptr inbounds %FunctionType, ptr %common.ret.op.i99, i64 0, i32 1
   %85 = load ptr, ptr %memberidx20, align 8
-  %memberidx.i91 = getelementptr inbounds %Array_Type_, ptr %85, i64 0, i32 1
-  %86 = load ptr, ptr %memberidx.i91, align 8
+  %memberidx.i103 = getelementptr inbounds %Array_Type_, ptr %85, i64 0, i32 1
+  %86 = load ptr, ptr %memberidx.i103, align 8
   %87 = load ptr, ptr %86, align 8
   %88 = icmp eq ptr %3, null
   br i1 %88, label %if.entry21, label %ifend23
@@ -27843,18 +27843,18 @@ if.entry9:                                        ; preds = %if.entry6
   %93 = tail call ptr @malloc(i32 8)
   store i64 0, ptr %93, align 4
   store i64 8, ptr %89, align 4
-  %memberidx.i.i92 = getelementptr inbounds %Expression, ptr %89, i64 0, i32 2
-  store i64 8, ptr %memberidx.i.i92, align 4
-  %memberidx1.i.i93 = getelementptr inbounds %Expression, ptr %89, i64 0, i32 1
-  %memberidx.i94 = getelementptr inbounds %BinaryExpression, ptr %89, i64 0, i32 4
-  store ptr %1, ptr %memberidx.i94, align 8
-  %memberidx1.i95 = getelementptr inbounds %BinaryExpression, ptr %89, i64 0, i32 5
-  store i64 %5, ptr %memberidx1.i95, align 4
-  %memberidx2.i96 = getelementptr inbounds %BinaryExpression, ptr %89, i64 0, i32 6
-  store ptr %92, ptr %memberidx2.i96, align 8
-  %memberidx3.i97 = getelementptr inbounds %Expression, ptr %89, i64 0, i32 3
-  store ptr %93, ptr %memberidx3.i97, align 8
-  store i1 false, ptr %memberidx1.i.i93, align 1
+  %memberidx.i.i104 = getelementptr inbounds %Expression, ptr %89, i64 0, i32 2
+  store i64 8, ptr %memberidx.i.i104, align 4
+  %memberidx1.i.i105 = getelementptr inbounds %Expression, ptr %89, i64 0, i32 1
+  %memberidx.i106 = getelementptr inbounds %BinaryExpression, ptr %89, i64 0, i32 4
+  store ptr %1, ptr %memberidx.i106, align 8
+  %memberidx1.i107 = getelementptr inbounds %BinaryExpression, ptr %89, i64 0, i32 5
+  store i64 %5, ptr %memberidx1.i107, align 4
+  %memberidx2.i108 = getelementptr inbounds %BinaryExpression, ptr %89, i64 0, i32 6
+  store ptr %92, ptr %memberidx2.i108, align 8
+  %memberidx3.i109 = getelementptr inbounds %Expression, ptr %89, i64 0, i32 3
+  store ptr %93, ptr %memberidx3.i109, align 8
+  store i1 false, ptr %memberidx1.i.i105, align 1
   br label %common.ret
 
 ifend11:                                          ; preds = %if.entry6
@@ -27863,7 +27863,7 @@ ifend11:                                          ; preds = %if.entry6
   %memberidx14 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %95, i64 0, i32 5
   %96 = load ptr, ptr %memberidx14, align 8
   %97 = tail call ptr %96(ptr nonnull %94)
-  %memberidx15 = getelementptr inbounds %Class, ptr %common.ret.op.i158, i64 0, i32 1
+  %memberidx15 = getelementptr inbounds %Class, ptr %common.ret.op.i175, i64 0, i32 1
   %98 = load ptr, ptr %memberidx15, align 8
   %99 = load ptr, ptr %98, align 8
   %memberidx16 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %99, i64 0, i32 5
@@ -27878,56 +27878,56 @@ ifend11:                                          ; preds = %if.entry6
   %107 = load ptr, ptr %105, align 8
   %108 = tail call ptr @malloc(i32 32)
   store ptr @VTablestring, ptr %108, align 8
-  %memberidx.i99 = getelementptr inbounds %string, ptr %108, i64 0, i32 1
-  store ptr %107, ptr %memberidx.i99, align 8
-  %memberidx1.i100 = getelementptr inbounds %string, ptr %108, i64 0, i32 2
-  store i64 %106, ptr %memberidx1.i100, align 4
-  %memberidx2.i101 = getelementptr inbounds %string, ptr %108, i64 0, i32 3
-  store i64 %106, ptr %memberidx2.i101, align 4
+  %memberidx.i111 = getelementptr inbounds %string, ptr %108, i64 0, i32 1
+  store ptr %107, ptr %memberidx.i111, align 8
+  %memberidx1.i112 = getelementptr inbounds %string, ptr %108, i64 0, i32 2
+  store i64 %106, ptr %memberidx1.i112, align 4
+  %memberidx2.i113 = getelementptr inbounds %string, ptr %108, i64 0, i32 3
+  store i64 %106, ptr %memberidx2.i113, align 4
   tail call void @free(ptr %97)
   tail call void @free(ptr %101)
   tail call void @free(ptr %104)
   %109 = load ptr, ptr %2, align 8
-  %memberidx.i102 = getelementptr inbounds %TypeChecker, ptr %0, i64 0, i32 6
-  %110 = load ptr, ptr %memberidx.i102, align 8
-  %memberidx1.i103 = getelementptr inbounds %Compiler, ptr %110, i64 0, i32 6
-  %111 = load ptr, ptr %memberidx1.i103, align 8
+  %memberidx.i114 = getelementptr inbounds %TypeChecker, ptr %0, i64 0, i32 6
+  %110 = load ptr, ptr %memberidx.i114, align 8
+  %memberidx1.i115 = getelementptr inbounds %Compiler, ptr %110, i64 0, i32 6
+  %111 = load ptr, ptr %memberidx1.i115, align 8
   %112 = call ptr @malloc(i32 24)
   store i64 1, ptr %112, align 4
-  %memberidx1.i.i104 = getelementptr inbounds %FloError, ptr %112, i64 0, i32 2
-  store ptr %109, ptr %memberidx1.i.i104, align 8
-  %memberidx2.i.i105 = getelementptr inbounds %FloError, ptr %112, i64 0, i32 1
-  store ptr %108, ptr %memberidx2.i.i105, align 8
-  %memberidx.i.i106 = getelementptr inbounds %Array_FloError_, ptr %111, i64 0, i32 2
-  %113 = load i64, ptr %memberidx.i.i106, align 4
-  %memberidx1.i2.i107 = getelementptr inbounds %Array_FloError_, ptr %111, i64 0, i32 3
-  %114 = load i64, ptr %memberidx1.i2.i107, align 4
-  %.not.i.i108 = icmp slt i64 %113, %114
-  br i1 %.not.i.i108, label %ifend11.TypeChecker_error.exit114_crit_edge, label %if.entry.i.i111
+  %memberidx1.i.i116 = getelementptr inbounds %FloError, ptr %112, i64 0, i32 2
+  store ptr %109, ptr %memberidx1.i.i116, align 8
+  %memberidx2.i.i117 = getelementptr inbounds %FloError, ptr %112, i64 0, i32 1
+  store ptr %108, ptr %memberidx2.i.i117, align 8
+  %memberidx.i.i118 = getelementptr inbounds %Array_FloError_, ptr %111, i64 0, i32 2
+  %113 = load i64, ptr %memberidx.i.i118, align 4
+  %memberidx1.i2.i119 = getelementptr inbounds %Array_FloError_, ptr %111, i64 0, i32 3
+  %114 = load i64, ptr %memberidx1.i2.i119, align 4
+  %.not.i.i120 = icmp slt i64 %113, %114
+  br i1 %.not.i.i120, label %ifend11.TypeChecker_error.exit126_crit_edge, label %if.entry.i.i123
 
-ifend11.TypeChecker_error.exit114_crit_edge:      ; preds = %ifend11
-  %memberidx4.i.i112.phi.trans.insert = getelementptr inbounds %Array_FloError_, ptr %111, i64 0, i32 1
-  %.pre175 = load ptr, ptr %memberidx4.i.i112.phi.trans.insert, align 8
-  br label %TypeChecker_error.exit114
+ifend11.TypeChecker_error.exit126_crit_edge:      ; preds = %ifend11
+  %memberidx4.i.i124.phi.trans.insert = getelementptr inbounds %Array_FloError_, ptr %111, i64 0, i32 1
+  %.pre193 = load ptr, ptr %memberidx4.i.i124.phi.trans.insert, align 8
+  br label %TypeChecker_error.exit126
 
-if.entry.i.i111:                                  ; preds = %ifend11
+if.entry.i.i123:                                  ; preds = %ifend11
   %115 = shl nuw i64 %114, 1
-  store i64 %115, ptr %memberidx1.i2.i107, align 4
-  %memberidx2.i.i.i110 = getelementptr inbounds %Array_FloError_, ptr %111, i64 0, i32 1
-  %116 = load ptr, ptr %memberidx2.i.i.i110, align 8
+  store i64 %115, ptr %memberidx1.i2.i119, align 4
+  %memberidx2.i.i.i122 = getelementptr inbounds %Array_FloError_, ptr %111, i64 0, i32 1
+  %116 = load ptr, ptr %memberidx2.i.i.i122, align 8
   %117 = shl i64 %114, 4
   %118 = call ptr @realloc(ptr %116, i64 %117)
-  store ptr %118, ptr %memberidx2.i.i.i110, align 8
-  %.pre174 = load i64, ptr %memberidx.i.i106, align 4
-  br label %TypeChecker_error.exit114
+  store ptr %118, ptr %memberidx2.i.i.i122, align 8
+  %.pre192 = load i64, ptr %memberidx.i.i118, align 4
+  br label %TypeChecker_error.exit126
 
-TypeChecker_error.exit114:                        ; preds = %ifend11.TypeChecker_error.exit114_crit_edge, %if.entry.i.i111
-  %119 = phi ptr [ %.pre175, %ifend11.TypeChecker_error.exit114_crit_edge ], [ %118, %if.entry.i.i111 ]
-  %120 = phi i64 [ %113, %ifend11.TypeChecker_error.exit114_crit_edge ], [ %.pre174, %if.entry.i.i111 ]
+TypeChecker_error.exit126:                        ; preds = %ifend11.TypeChecker_error.exit126_crit_edge, %if.entry.i.i123
+  %119 = phi ptr [ %.pre193, %ifend11.TypeChecker_error.exit126_crit_edge ], [ %118, %if.entry.i.i123 ]
+  %120 = phi i64 [ %113, %ifend11.TypeChecker_error.exit126_crit_edge ], [ %.pre192, %if.entry.i.i123 ]
   %121 = add nsw i64 %120, 1
-  store i64 %121, ptr %memberidx.i.i106, align 4
-  %ptridx.i.i113 = getelementptr inbounds ptr, ptr %119, i64 %120
-  store ptr %112, ptr %ptridx.i.i113, align 8
+  store i64 %121, ptr %memberidx.i.i118, align 4
+  %ptridx.i.i125 = getelementptr inbounds ptr, ptr %119, i64 %120
+  store ptr %112, ptr %ptridx.i.i125, align 8
   br label %common.ret
 
 if.entry21:                                       ; preds = %get_class_prop_type.exit
@@ -27938,18 +27938,18 @@ if.entry21:                                       ; preds = %get_class_prop_type
 
 ifend23:                                          ; preds = %get_class_prop_type.exit, %if.entry21
   %right.0 = phi ptr [ %123, %if.entry21 ], [ %3, %get_class_prop_type.exit ]
-  %memberidx.i115 = getelementptr inbounds %TypeChecker, ptr %0, i64 0, i32 6
-  %124 = load ptr, ptr %memberidx.i115, align 8
-  %memberidx1.i116 = getelementptr inbounds %Compiler, ptr %124, i64 0, i32 6
-  %125 = load ptr, ptr %memberidx1.i116, align 8
-  %memberidx2.i117 = getelementptr inbounds %Array_FloError_, ptr %125, i64 0, i32 2
-  %126 = load i64, ptr %memberidx2.i117, align 4
+  %memberidx.i127 = getelementptr inbounds %TypeChecker, ptr %0, i64 0, i32 6
+  %124 = load ptr, ptr %memberidx.i127, align 8
+  %memberidx1.i128 = getelementptr inbounds %Compiler, ptr %124, i64 0, i32 6
+  %125 = load ptr, ptr %memberidx1.i128, align 8
+  %memberidx2.i129 = getelementptr inbounds %Array_FloError_, ptr %125, i64 0, i32 2
+  %126 = load i64, ptr %memberidx2.i129, align 4
   %127 = icmp sgt i64 %126, 0
   br i1 %127, label %common.ret, label %ifend27
 
 ifend27:                                          ; preds = %ifend23
-  %memberidx.i118 = getelementptr inbounds %Expression, ptr %right.0, i64 0, i32 2
-  %128 = load i64, ptr %memberidx.i118, align 4
+  %memberidx.i130 = getelementptr inbounds %Expression, ptr %right.0, i64 0, i32 2
+  %128 = load i64, ptr %memberidx.i130, align 4
   %129 = icmp eq i64 %128, 5
   %130 = add i64 %5, -11
   %131 = icmp ult i64 %130, 2
@@ -27961,133 +27961,164 @@ if.entry28:                                       ; preds = %ifend27
   %134 = tail call ptr @malloc(i32 8)
   store i64 0, ptr %134, align 4
   store i64 8, ptr %133, align 4
-  %memberidx.i.i119 = getelementptr inbounds %Expression, ptr %133, i64 0, i32 2
-  store i64 8, ptr %memberidx.i.i119, align 4
-  %memberidx1.i.i120 = getelementptr inbounds %Expression, ptr %133, i64 0, i32 1
-  %memberidx.i121 = getelementptr inbounds %BinaryExpression, ptr %133, i64 0, i32 4
-  store ptr %1, ptr %memberidx.i121, align 8
-  %memberidx1.i122 = getelementptr inbounds %BinaryExpression, ptr %133, i64 0, i32 5
-  store i64 %5, ptr %memberidx1.i122, align 4
-  %memberidx2.i123 = getelementptr inbounds %BinaryExpression, ptr %133, i64 0, i32 6
-  store ptr %right.0, ptr %memberidx2.i123, align 8
-  %memberidx3.i124 = getelementptr inbounds %Expression, ptr %133, i64 0, i32 3
-  store ptr %134, ptr %memberidx3.i124, align 8
-  store i1 false, ptr %memberidx1.i.i120, align 1
+  %memberidx.i.i131 = getelementptr inbounds %Expression, ptr %133, i64 0, i32 2
+  store i64 8, ptr %memberidx.i.i131, align 4
+  %memberidx1.i.i132 = getelementptr inbounds %Expression, ptr %133, i64 0, i32 1
+  %memberidx.i133 = getelementptr inbounds %BinaryExpression, ptr %133, i64 0, i32 4
+  store ptr %1, ptr %memberidx.i133, align 8
+  %memberidx1.i134 = getelementptr inbounds %BinaryExpression, ptr %133, i64 0, i32 5
+  store i64 %5, ptr %memberidx1.i134, align 4
+  %memberidx2.i135 = getelementptr inbounds %BinaryExpression, ptr %133, i64 0, i32 6
+  store ptr %right.0, ptr %memberidx2.i135, align 8
+  %memberidx3.i136 = getelementptr inbounds %Expression, ptr %133, i64 0, i32 3
+  store ptr %134, ptr %memberidx3.i136, align 8
+  store i1 false, ptr %memberidx1.i.i132, align 1
   br label %common.ret
 
 ifend30:                                          ; preds = %ifend27
-  %memberidx31 = getelementptr inbounds %Expression, ptr %right.0, i64 0, i32 3
-  %135 = load ptr, ptr %memberidx31, align 8
-  %136 = tail call fastcc i1 @TypeChecker_types_are_eq(ptr nonnull %0, ptr %87, ptr %135)
-  br i1 %136, label %ifend34, label %if.entry32
+  %135 = icmp eq i64 %5, 18
+  %memberidx34 = getelementptr inbounds %Expression, ptr %right.0, i64 0, i32 3
+  %136 = load ptr, ptr %memberidx34, align 8
+  br i1 %135, label %if.entry31, label %ifend33
 
-if.entry32:                                       ; preds = %ifend30
-  %137 = tail call fastcc ptr @TypeChecker_dump_type(ptr nonnull %0, ptr %87)
-  %138 = load ptr, ptr %137, align 8
-  %memberidx35 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %138, i64 0, i32 5
-  %139 = load ptr, ptr %memberidx35, align 8
-  %140 = tail call ptr %139(ptr nonnull %137)
-  %141 = load ptr, ptr %memberidx31, align 8
-  %142 = tail call fastcc ptr @TypeChecker_dump_type(ptr nonnull %0, ptr %141)
-  %143 = load ptr, ptr %142, align 8
-  %memberidx37 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %143, i64 0, i32 5
-  %144 = load ptr, ptr %memberidx37, align 8
-  %145 = tail call ptr %144(ptr nonnull %142)
-  %146 = alloca ptr, align 8
-  %147 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %146, ptr nonnull @163, ptr %140, ptr %145)
-  %148 = load ptr, ptr %146, align 8
-  %149 = tail call ptr @malloc(i32 32)
-  store ptr @VTablestring, ptr %149, align 8
-  %memberidx.i126 = getelementptr inbounds %string, ptr %149, i64 0, i32 1
-  store ptr %148, ptr %memberidx.i126, align 8
-  %memberidx1.i127 = getelementptr inbounds %string, ptr %149, i64 0, i32 2
-  store i64 %147, ptr %memberidx1.i127, align 4
-  %memberidx2.i128 = getelementptr inbounds %string, ptr %149, i64 0, i32 3
-  store i64 %147, ptr %memberidx2.i128, align 4
-  tail call void @free(ptr %140)
-  tail call void @free(ptr %145)
-  %memberidx38 = getelementptr inbounds %BinaryExpressionNode, ptr %2, i64 0, i32 5
-  %150 = load ptr, ptr %memberidx38, align 8
-  %151 = load ptr, ptr %150, align 8
-  %152 = load ptr, ptr %memberidx.i115, align 8
-  %memberidx1.i130 = getelementptr inbounds %Compiler, ptr %152, i64 0, i32 6
-  %153 = load ptr, ptr %memberidx1.i130, align 8
-  %154 = call ptr @malloc(i32 24)
-  store i64 5, ptr %154, align 4
-  %memberidx1.i.i131 = getelementptr inbounds %FloError, ptr %154, i64 0, i32 2
-  store ptr %151, ptr %memberidx1.i.i131, align 8
-  %memberidx2.i.i132 = getelementptr inbounds %FloError, ptr %154, i64 0, i32 1
-  store ptr %149, ptr %memberidx2.i.i132, align 8
-  %memberidx.i.i133 = getelementptr inbounds %Array_FloError_, ptr %153, i64 0, i32 2
-  %155 = load i64, ptr %memberidx.i.i133, align 4
-  %memberidx1.i2.i134 = getelementptr inbounds %Array_FloError_, ptr %153, i64 0, i32 3
-  %156 = load i64, ptr %memberidx1.i2.i134, align 4
-  %.not.i.i135 = icmp slt i64 %155, %156
-  br i1 %.not.i.i135, label %if.entry32.TypeChecker_error.exit141_crit_edge, label %if.entry.i.i138
+if.entry31:                                       ; preds = %ifend30
+  %137 = load i64, ptr %136, align 4
+  %138 = add i64 %137, -1
+  %139 = icmp ult i64 %138, 7
+  br i1 %139, label %if.entry35, label %ifend33
 
-if.entry32.TypeChecker_error.exit141_crit_edge:   ; preds = %if.entry32
-  %memberidx4.i.i139.phi.trans.insert = getelementptr inbounds %Array_FloError_, ptr %153, i64 0, i32 1
-  %.pre173 = load ptr, ptr %memberidx4.i.i139.phi.trans.insert, align 8
-  br label %TypeChecker_error.exit141
+ifend33:                                          ; preds = %ifend30, %if.entry35, %if.entry31
+  %140 = phi ptr [ %ternary.i, %if.entry35 ], [ %136, %if.entry31 ], [ %136, %ifend30 ]
+  %right.1 = phi ptr [ %144, %if.entry35 ], [ %right.0, %if.entry31 ], [ %right.0, %ifend30 ]
+  %141 = tail call fastcc i1 @TypeChecker_types_are_eq(ptr nonnull %0, ptr %87, ptr %140)
+  br i1 %141, label %ifend42, label %if.entry40
 
-if.entry.i.i138:                                  ; preds = %if.entry32
-  %157 = shl nuw i64 %156, 1
-  store i64 %157, ptr %memberidx1.i2.i134, align 4
-  %memberidx2.i.i.i137 = getelementptr inbounds %Array_FloError_, ptr %153, i64 0, i32 1
-  %158 = load ptr, ptr %memberidx2.i.i.i137, align 8
-  %159 = shl i64 %156, 4
-  %160 = call ptr @realloc(ptr %158, i64 %159)
-  store ptr %160, ptr %memberidx2.i.i.i137, align 8
-  %.pre172 = load i64, ptr %memberidx.i.i133, align 4
-  br label %TypeChecker_error.exit141
+if.entry35:                                       ; preds = %if.entry31
+  %142 = load i64, ptr %87, align 4
+  %143 = icmp sgt i64 %137, %142
+  %ternary.i = select i1 %143, ptr %136, ptr %87
+  %144 = tail call ptr @malloc(i32 33)
+  store i64 8, ptr %144, align 4
+  %memberidx.i.i.i138 = getelementptr inbounds %Expression, ptr %144, i64 0, i32 2
+  store i64 10, ptr %memberidx.i.i.i138, align 4
+  %memberidx1.i.i.i = getelementptr inbounds %Expression, ptr %144, i64 0, i32 1
+  %memberidx.i.i139 = getelementptr inbounds %TypeCastExpression, ptr %144, i64 0, i32 4
+  store ptr %right.0, ptr %memberidx.i.i139, align 8
+  %memberidx1.i.i140 = getelementptr inbounds %Expression, ptr %144, i64 0, i32 3
+  store ptr %ternary.i, ptr %memberidx1.i.i140, align 8
+  %memberidx3.i.i142 = getelementptr inbounds %Expression, ptr %right.0, i64 0, i32 1
+  %145 = load i1, ptr %memberidx3.i.i142, align 1
+  store i1 %145, ptr %memberidx1.i.i.i, align 1
+  br label %ifend33
 
-TypeChecker_error.exit141:                        ; preds = %if.entry32.TypeChecker_error.exit141_crit_edge, %if.entry.i.i138
-  %161 = phi ptr [ %.pre173, %if.entry32.TypeChecker_error.exit141_crit_edge ], [ %160, %if.entry.i.i138 ]
-  %162 = phi i64 [ %155, %if.entry32.TypeChecker_error.exit141_crit_edge ], [ %.pre172, %if.entry.i.i138 ]
-  %163 = add nsw i64 %162, 1
-  store i64 %163, ptr %memberidx.i.i133, align 4
-  %ptridx.i.i140 = getelementptr inbounds ptr, ptr %161, i64 %162
-  store ptr %154, ptr %ptridx.i.i140, align 8
+if.entry40:                                       ; preds = %ifend33
+  %memberidx39 = getelementptr inbounds %Expression, ptr %right.1, i64 0, i32 3
+  %146 = tail call fastcc ptr @TypeChecker_dump_type(ptr nonnull %0, ptr %87)
+  %147 = load ptr, ptr %146, align 8
+  %memberidx43 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %147, i64 0, i32 5
+  %148 = load ptr, ptr %memberidx43, align 8
+  %149 = tail call ptr %148(ptr nonnull %146)
+  %150 = load ptr, ptr %memberidx39, align 8
+  %151 = tail call fastcc ptr @TypeChecker_dump_type(ptr nonnull %0, ptr %150)
+  %152 = load ptr, ptr %151, align 8
+  %memberidx45 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %152, i64 0, i32 5
+  %153 = load ptr, ptr %memberidx45, align 8
+  %154 = tail call ptr %153(ptr nonnull %151)
+  %155 = alloca ptr, align 8
+  %156 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %155, ptr nonnull @163, ptr %149, ptr %154)
+  %157 = load ptr, ptr %155, align 8
+  %158 = tail call ptr @malloc(i32 32)
+  store ptr @VTablestring, ptr %158, align 8
+  %memberidx.i143 = getelementptr inbounds %string, ptr %158, i64 0, i32 1
+  store ptr %157, ptr %memberidx.i143, align 8
+  %memberidx1.i144 = getelementptr inbounds %string, ptr %158, i64 0, i32 2
+  store i64 %156, ptr %memberidx1.i144, align 4
+  %memberidx2.i145 = getelementptr inbounds %string, ptr %158, i64 0, i32 3
+  store i64 %156, ptr %memberidx2.i145, align 4
+  tail call void @free(ptr %149)
+  tail call void @free(ptr %154)
+  %memberidx46 = getelementptr inbounds %BinaryExpressionNode, ptr %2, i64 0, i32 5
+  %159 = load ptr, ptr %memberidx46, align 8
+  %160 = load ptr, ptr %159, align 8
+  %161 = load ptr, ptr %memberidx.i127, align 8
+  %memberidx1.i147 = getelementptr inbounds %Compiler, ptr %161, i64 0, i32 6
+  %162 = load ptr, ptr %memberidx1.i147, align 8
+  %163 = call ptr @malloc(i32 24)
+  store i64 5, ptr %163, align 4
+  %memberidx1.i.i148 = getelementptr inbounds %FloError, ptr %163, i64 0, i32 2
+  store ptr %160, ptr %memberidx1.i.i148, align 8
+  %memberidx2.i.i149 = getelementptr inbounds %FloError, ptr %163, i64 0, i32 1
+  store ptr %158, ptr %memberidx2.i.i149, align 8
+  %memberidx.i.i150 = getelementptr inbounds %Array_FloError_, ptr %162, i64 0, i32 2
+  %164 = load i64, ptr %memberidx.i.i150, align 4
+  %memberidx1.i2.i151 = getelementptr inbounds %Array_FloError_, ptr %162, i64 0, i32 3
+  %165 = load i64, ptr %memberidx1.i2.i151, align 4
+  %.not.i.i152 = icmp slt i64 %164, %165
+  br i1 %.not.i.i152, label %if.entry40.TypeChecker_error.exit158_crit_edge, label %if.entry.i.i155
+
+if.entry40.TypeChecker_error.exit158_crit_edge:   ; preds = %if.entry40
+  %memberidx4.i.i156.phi.trans.insert = getelementptr inbounds %Array_FloError_, ptr %162, i64 0, i32 1
+  %.pre191 = load ptr, ptr %memberidx4.i.i156.phi.trans.insert, align 8
+  br label %TypeChecker_error.exit158
+
+if.entry.i.i155:                                  ; preds = %if.entry40
+  %166 = shl nuw i64 %165, 1
+  store i64 %166, ptr %memberidx1.i2.i151, align 4
+  %memberidx2.i.i.i154 = getelementptr inbounds %Array_FloError_, ptr %162, i64 0, i32 1
+  %167 = load ptr, ptr %memberidx2.i.i.i154, align 8
+  %168 = shl i64 %165, 4
+  %169 = call ptr @realloc(ptr %167, i64 %168)
+  store ptr %169, ptr %memberidx2.i.i.i154, align 8
+  %.pre190 = load i64, ptr %memberidx.i.i150, align 4
+  br label %TypeChecker_error.exit158
+
+TypeChecker_error.exit158:                        ; preds = %if.entry40.TypeChecker_error.exit158_crit_edge, %if.entry.i.i155
+  %170 = phi ptr [ %.pre191, %if.entry40.TypeChecker_error.exit158_crit_edge ], [ %169, %if.entry.i.i155 ]
+  %171 = phi i64 [ %164, %if.entry40.TypeChecker_error.exit158_crit_edge ], [ %.pre190, %if.entry.i.i155 ]
+  %172 = add nsw i64 %171, 1
+  store i64 %172, ptr %memberidx.i.i150, align 4
+  %ptridx.i.i157 = getelementptr inbounds ptr, ptr %170, i64 %171
+  store ptr %163, ptr %ptridx.i.i157, align 8
   br label %common.ret
 
-ifend34:                                          ; preds = %ifend30
-  %164 = tail call ptr @malloc(i32 41)
-  store i64 8, ptr %164, align 4
-  %memberidx.i.i142 = getelementptr inbounds %Expression, ptr %164, i64 0, i32 2
-  store i64 12, ptr %memberidx.i.i142, align 4
-  %memberidx1.i.i143 = getelementptr inbounds %Expression, ptr %164, i64 0, i32 1
-  store i1 false, ptr %memberidx1.i.i143, align 1
-  %memberidx.i144 = getelementptr inbounds %MemberExpression, ptr %164, i64 0, i32 4
-  store ptr %1, ptr %memberidx.i144, align 8
-  %memberidx1.i145 = getelementptr inbounds %MemberExpression, ptr %164, i64 0, i32 5
-  store ptr %61, ptr %memberidx1.i145, align 8
-  %memberidx2.i146 = getelementptr inbounds %Expression, ptr %164, i64 0, i32 3
-  store ptr %common.ret.op.i87, ptr %memberidx2.i146, align 8
-  %165 = tail call ptr @malloc(i32 32)
-  store ptr @VTableArray_Expression_, ptr %165, align 8
-  %memberidx.i147 = getelementptr inbounds %Array_Expression_, ptr %165, i64 0, i32 2
-  store i64 0, ptr %memberidx.i147, align 4
-  %memberidx1.i148 = getelementptr inbounds %Array_Expression_, ptr %165, i64 0, i32 3
-  store i64 8, ptr %memberidx1.i148, align 4
-  %memberidx2.i149 = getelementptr inbounds %Array_Expression_, ptr %165, i64 0, i32 1
-  %166 = tail call ptr @malloc(i32 64)
-  store ptr %166, ptr %memberidx2.i149, align 8
-  store ptr %right.0, ptr %166, align 8
-  store i64 1, ptr %memberidx.i147, align 4
-  %167 = tail call ptr @malloc(i32 41)
-  %memberidx42 = getelementptr inbounds %FunctionType, ptr %common.ret.op.i87, i64 0, i32 2
-  %168 = load ptr, ptr %memberidx42, align 8
-  store i64 8, ptr %167, align 4
-  %memberidx.i.i150 = getelementptr inbounds %Expression, ptr %167, i64 0, i32 2
-  store i64 14, ptr %memberidx.i.i150, align 4
-  %memberidx1.i.i151 = getelementptr inbounds %Expression, ptr %167, i64 0, i32 1
-  store i1 false, ptr %memberidx1.i.i151, align 1
-  %memberidx.i152 = getelementptr inbounds %CallExpression, ptr %167, i64 0, i32 4
-  store ptr %164, ptr %memberidx.i152, align 8
-  %memberidx1.i153 = getelementptr inbounds %CallExpression, ptr %167, i64 0, i32 5
-  store ptr %165, ptr %memberidx1.i153, align 8
-  %memberidx2.i154 = getelementptr inbounds %Expression, ptr %167, i64 0, i32 3
-  store ptr %168, ptr %memberidx2.i154, align 8
+ifend42:                                          ; preds = %ifend33
+  %173 = tail call ptr @malloc(i32 41)
+  store i64 8, ptr %173, align 4
+  %memberidx.i.i159 = getelementptr inbounds %Expression, ptr %173, i64 0, i32 2
+  store i64 12, ptr %memberidx.i.i159, align 4
+  %memberidx1.i.i160 = getelementptr inbounds %Expression, ptr %173, i64 0, i32 1
+  store i1 false, ptr %memberidx1.i.i160, align 1
+  %memberidx.i161 = getelementptr inbounds %MemberExpression, ptr %173, i64 0, i32 4
+  store ptr %1, ptr %memberidx.i161, align 8
+  %memberidx1.i162 = getelementptr inbounds %MemberExpression, ptr %173, i64 0, i32 5
+  store ptr %61, ptr %memberidx1.i162, align 8
+  %memberidx2.i163 = getelementptr inbounds %Expression, ptr %173, i64 0, i32 3
+  store ptr %common.ret.op.i99, ptr %memberidx2.i163, align 8
+  %174 = tail call ptr @malloc(i32 32)
+  store ptr @VTableArray_Expression_, ptr %174, align 8
+  %memberidx.i164 = getelementptr inbounds %Array_Expression_, ptr %174, i64 0, i32 2
+  store i64 0, ptr %memberidx.i164, align 4
+  %memberidx1.i165 = getelementptr inbounds %Array_Expression_, ptr %174, i64 0, i32 3
+  store i64 8, ptr %memberidx1.i165, align 4
+  %memberidx2.i166 = getelementptr inbounds %Array_Expression_, ptr %174, i64 0, i32 1
+  %175 = tail call ptr @malloc(i32 64)
+  store ptr %175, ptr %memberidx2.i166, align 8
+  store ptr %right.1, ptr %175, align 8
+  store i64 1, ptr %memberidx.i164, align 4
+  %176 = tail call ptr @malloc(i32 41)
+  %memberidx50 = getelementptr inbounds %FunctionType, ptr %common.ret.op.i99, i64 0, i32 2
+  %177 = load ptr, ptr %memberidx50, align 8
+  store i64 8, ptr %176, align 4
+  %memberidx.i.i167 = getelementptr inbounds %Expression, ptr %176, i64 0, i32 2
+  store i64 14, ptr %memberidx.i.i167, align 4
+  %memberidx1.i.i168 = getelementptr inbounds %Expression, ptr %176, i64 0, i32 1
+  store i1 false, ptr %memberidx1.i.i168, align 1
+  %memberidx.i169 = getelementptr inbounds %CallExpression, ptr %176, i64 0, i32 4
+  store ptr %173, ptr %memberidx.i169, align 8
+  %memberidx1.i170 = getelementptr inbounds %CallExpression, ptr %176, i64 0, i32 5
+  store ptr %174, ptr %memberidx1.i170, align 8
+  %memberidx2.i171 = getelementptr inbounds %Expression, ptr %176, i64 0, i32 3
+  store ptr %177, ptr %memberidx2.i171, align 8
   br label %common.ret
 }
 
@@ -38824,573 +38855,579 @@ define internal fastcc ptr @TypeChecker_check_intrinsic_call(ptr %0, ptr %1, ptr
 for.entry:
   %memberidx = getelementptr inbounds %CallExpressionNode, ptr %2, i64 0, i32 4
   %3 = load ptr, ptr %memberidx, align 8
+  %4 = alloca %IntType, align 8
+  store i64 6, ptr %4, align 8
+  %memberidx.i = getelementptr inbounds %IntType, ptr %4, i64 0, i32 1
+  store i1 true, ptr %memberidx.i, align 8
   %memberidx1 = getelementptr inbounds %IntrinsicCall, ptr %1, i64 0, i32 4
-  %4 = load i64, ptr %memberidx1, align 4
-  %5 = add i64 %4, -3
-  %6 = icmp ult i64 %5, 2
-  %7 = icmp eq i64 %4, 7
-  %8 = or i1 %7, %6
+  %5 = load i64, ptr %memberidx1, align 4
+  %6 = add i64 %5, -3
+  %7 = icmp ult i64 %6, 2
+  %8 = icmp eq i64 %5, 7
+  %9 = or i1 %8, %7
   %memberidx2 = getelementptr inbounds %Array_ExpressionNode_, ptr %3, i64 0, i32 2
-  %9 = load i64, ptr %memberidx2, align 4
-  %10 = icmp sgt i64 %9, 0
-  br i1 %10, label %for.body.lr.ph, label %for.end
+  %10 = load i64, ptr %memberidx2, align 4
+  %11 = icmp sgt i64 %10, 0
+  br i1 %11, label %for.body.lr.ph, label %for.end
 
 for.body.lr.ph:                                   ; preds = %for.entry
   %memberidx3 = getelementptr inbounds %IntrinsicCall, ptr %1, i64 0, i32 5
-  %memberidx.i135 = getelementptr inbounds %Array_ExpressionNode_, ptr %3, i64 0, i32 1
-  %memberidx.i138 = getelementptr inbounds %TypeChecker, ptr %0, i64 0, i32 6
+  %12 = icmp eq i64 %5, 5
+  %memberidx.i140 = getelementptr inbounds %Array_ExpressionNode_, ptr %3, i64 0, i32 1
+  %memberidx.i143 = getelementptr inbounds %TypeChecker, ptr %0, i64 0, i32 6
   br label %for.body
 
 for.cond:                                         ; preds = %Array_Expression____sl__.exit
-  %11 = add nuw nsw i64 %i.0249, 1
-  %12 = load i64, ptr %memberidx2, align 4
-  %13 = icmp slt i64 %11, %12
-  br i1 %13, label %for.body, label %for.end
+  %13 = add nuw nsw i64 %i.0254, 1
+  %14 = load i64, ptr %memberidx2, align 4
+  %15 = icmp slt i64 %13, %14
+  br i1 %15, label %for.body, label %for.end
 
 for.body:                                         ; preds = %for.body.lr.ph, %for.cond
-  %i.0249 = phi i64 [ 0, %for.body.lr.ph ], [ %11, %for.cond ]
-  %14 = icmp eq i64 %i.0249, 1
-  %15 = and i1 %8, %14
-  br i1 %15, label %true_block, label %false_block
+  %i.0254 = phi i64 [ 0, %for.body.lr.ph ], [ %13, %for.cond ]
+  %16 = icmp eq i64 %i.0254, 1
+  %17 = and i1 %9, %16
+  br i1 %17, label %true_block, label %false_block
 
 for.end:                                          ; preds = %for.cond, %for.entry
-  %memberidx6 = getelementptr inbounds %IntrinsicCall, ptr %1, i64 0, i32 5
-  %16 = load ptr, ptr %memberidx6, align 8
-  %memberidx.i = getelementptr inbounds %Array_Expression_, ptr %16, i64 0, i32 1
-  %17 = load ptr, ptr %memberidx.i, align 8
-  %18 = load ptr, ptr %17, align 8
-  %memberidx7 = getelementptr inbounds %Expression, ptr %18, i64 0, i32 3
-  %19 = load ptr, ptr %memberidx7, align 8
-  %20 = load i64, ptr %19, align 4
-  %21 = icmp eq i64 %20, 13
-  br i1 %21, label %ifend10, label %if.entry8
+  %memberidx9 = getelementptr inbounds %IntrinsicCall, ptr %1, i64 0, i32 5
+  %18 = load ptr, ptr %memberidx9, align 8
+  %memberidx.i138 = getelementptr inbounds %Array_Expression_, ptr %18, i64 0, i32 1
+  %19 = load ptr, ptr %memberidx.i138, align 8
+  %20 = load ptr, ptr %19, align 8
+  %memberidx10 = getelementptr inbounds %Expression, ptr %20, i64 0, i32 3
+  %21 = load ptr, ptr %memberidx10, align 8
+  %22 = load i64, ptr %21, align 4
+  %23 = icmp eq i64 %22, 13
+  br i1 %23, label %ifend13, label %if.entry11
 
 true_block:                                       ; preds = %for.body
-  %22 = tail call ptr @malloc(i32 8)
-  store i64 20, ptr %22, align 4
+  %24 = call ptr @malloc(i32 8)
+  store i64 20, ptr %24, align 4
   %.pre = load ptr, ptr %memberidx3, align 8
   br label %end
 
 false_block:                                      ; preds = %for.body
-  %23 = load ptr, ptr %memberidx3, align 8
-  %memberidx.i134 = getelementptr inbounds %Array_Expression_, ptr %23, i64 0, i32 1
-  %24 = load ptr, ptr %memberidx.i134, align 8
-  %25 = load ptr, ptr %24, align 8
-  %memberidx4 = getelementptr inbounds %Expression, ptr %25, i64 0, i32 3
-  %26 = load ptr, ptr %memberidx4, align 8
+  %25 = load ptr, ptr %memberidx3, align 8
+  %memberidx.i139 = getelementptr inbounds %Array_Expression_, ptr %25, i64 0, i32 1
+  %26 = load ptr, ptr %memberidx.i139, align 8
+  %27 = load ptr, ptr %26, align 8
+  %memberidx4 = getelementptr inbounds %Expression, ptr %27, i64 0, i32 3
+  %28 = load ptr, ptr %memberidx4, align 8
   br label %end
 
 end:                                              ; preds = %false_block, %true_block
-  %27 = phi ptr [ %.pre, %true_block ], [ %23, %false_block ]
-  %ternary = phi ptr [ %22, %true_block ], [ %26, %false_block ]
-  %28 = load ptr, ptr %memberidx.i135, align 8
-  %ptridx.i = getelementptr inbounds ptr, ptr %28, i64 %i.0249
-  %29 = load ptr, ptr %ptridx.i, align 8
-  %30 = tail call fastcc ptr @TypeChecker_check_expression(ptr %0, ptr %ternary, ptr %29)
-  %memberidx.i136 = getelementptr inbounds %Array_Expression_, ptr %27, i64 0, i32 2
-  %31 = load i64, ptr %memberidx.i136, align 4
-  %memberidx1.i = getelementptr inbounds %Array_Expression_, ptr %27, i64 0, i32 3
-  %32 = load i64, ptr %memberidx1.i, align 4
-  %.not.i = icmp slt i64 %31, %32
+  %29 = phi ptr [ %.pre, %true_block ], [ %25, %false_block ]
+  %ternary = phi ptr [ %24, %true_block ], [ %28, %false_block ]
+  %spec.select = select i1 %12, ptr %4, ptr %ternary
+  %30 = load ptr, ptr %memberidx.i140, align 8
+  %ptridx.i = getelementptr inbounds ptr, ptr %30, i64 %i.0254
+  %31 = load ptr, ptr %ptridx.i, align 8
+  %32 = call fastcc ptr @TypeChecker_check_expression(ptr %0, ptr %spec.select, ptr %31)
+  %memberidx.i141 = getelementptr inbounds %Array_Expression_, ptr %29, i64 0, i32 2
+  %33 = load i64, ptr %memberidx.i141, align 4
+  %memberidx1.i = getelementptr inbounds %Array_Expression_, ptr %29, i64 0, i32 3
+  %34 = load i64, ptr %memberidx1.i, align 4
+  %.not.i = icmp slt i64 %33, %34
   br i1 %.not.i, label %end.Array_Expression____sl__.exit_crit_edge, label %if.entry.i
 
 end.Array_Expression____sl__.exit_crit_edge:      ; preds = %end
-  %memberidx4.i.phi.trans.insert = getelementptr inbounds %Array_Expression_, ptr %27, i64 0, i32 1
-  %.pre251 = load ptr, ptr %memberidx4.i.phi.trans.insert, align 8
+  %memberidx4.i.phi.trans.insert = getelementptr inbounds %Array_Expression_, ptr %29, i64 0, i32 1
+  %.pre256 = load ptr, ptr %memberidx4.i.phi.trans.insert, align 8
   br label %Array_Expression____sl__.exit
 
 if.entry.i:                                       ; preds = %end
-  %33 = shl nuw i64 %32, 1
-  store i64 %33, ptr %memberidx1.i, align 4
-  %memberidx2.i.i = getelementptr inbounds %Array_Expression_, ptr %27, i64 0, i32 1
-  %34 = load ptr, ptr %memberidx2.i.i, align 8
-  %35 = shl i64 %32, 4
-  %36 = tail call ptr @realloc(ptr %34, i64 %35)
-  store ptr %36, ptr %memberidx2.i.i, align 8
-  %.pre250 = load i64, ptr %memberidx.i136, align 4
+  %35 = shl nuw i64 %34, 1
+  store i64 %35, ptr %memberidx1.i, align 4
+  %memberidx2.i.i = getelementptr inbounds %Array_Expression_, ptr %29, i64 0, i32 1
+  %36 = load ptr, ptr %memberidx2.i.i, align 8
+  %37 = shl i64 %34, 4
+  %38 = call ptr @realloc(ptr %36, i64 %37)
+  store ptr %38, ptr %memberidx2.i.i, align 8
+  %.pre255 = load i64, ptr %memberidx.i141, align 4
   br label %Array_Expression____sl__.exit
 
 Array_Expression____sl__.exit:                    ; preds = %end.Array_Expression____sl__.exit_crit_edge, %if.entry.i
-  %37 = phi ptr [ %.pre251, %end.Array_Expression____sl__.exit_crit_edge ], [ %36, %if.entry.i ]
-  %38 = phi i64 [ %31, %end.Array_Expression____sl__.exit_crit_edge ], [ %.pre250, %if.entry.i ]
-  %39 = add nsw i64 %38, 1
-  store i64 %39, ptr %memberidx.i136, align 4
-  %ptridx.i137 = getelementptr inbounds ptr, ptr %37, i64 %38
-  store ptr %30, ptr %ptridx.i137, align 8
-  %40 = load ptr, ptr %memberidx.i138, align 8
-  %memberidx1.i139 = getelementptr inbounds %Compiler, ptr %40, i64 0, i32 6
-  %41 = load ptr, ptr %memberidx1.i139, align 8
-  %memberidx2.i = getelementptr inbounds %Array_FloError_, ptr %41, i64 0, i32 2
-  %42 = load i64, ptr %memberidx2.i, align 4
-  %43 = icmp sgt i64 %42, 0
-  br i1 %43, label %common.ret, label %for.cond
+  %39 = phi ptr [ %.pre256, %end.Array_Expression____sl__.exit_crit_edge ], [ %38, %if.entry.i ]
+  %40 = phi i64 [ %33, %end.Array_Expression____sl__.exit_crit_edge ], [ %.pre255, %if.entry.i ]
+  %41 = add nsw i64 %40, 1
+  store i64 %41, ptr %memberidx.i141, align 4
+  %ptridx.i142 = getelementptr inbounds ptr, ptr %39, i64 %40
+  store ptr %32, ptr %ptridx.i142, align 8
+  %42 = load ptr, ptr %memberidx.i143, align 8
+  %memberidx1.i144 = getelementptr inbounds %Compiler, ptr %42, i64 0, i32 6
+  %43 = load ptr, ptr %memberidx1.i144, align 8
+  %memberidx2.i = getelementptr inbounds %Array_FloError_, ptr %43, i64 0, i32 2
+  %44 = load i64, ptr %memberidx2.i, align 4
+  %45 = icmp sgt i64 %44, 0
+  br i1 %45, label %common.ret, label %for.cond
 
-common.ret:                                       ; preds = %Array_Expression____sl__.exit, %ifend23, %ifend73, %if.entry79, %else17, %TypeChecker_error.exit245, %TypeChecker_error.exit223, %TypeChecker_error.exit201, %TypeChecker_error.exit185, %TypeChecker_error.exit163, %TypeChecker_error.exit
-  %common.ret.op = phi ptr [ null, %TypeChecker_error.exit ], [ null, %TypeChecker_error.exit163 ], [ null, %TypeChecker_error.exit185 ], [ null, %TypeChecker_error.exit201 ], [ null, %TypeChecker_error.exit223 ], [ null, %TypeChecker_error.exit245 ], [ %1, %else17 ], [ %1, %if.entry79 ], [ %1, %ifend73 ], [ %1, %ifend23 ], [ null, %Array_Expression____sl__.exit ]
+common.ret:                                       ; preds = %Array_Expression____sl__.exit, %ifend26, %ifend76, %if.entry82, %else20, %TypeChecker_error.exit250, %TypeChecker_error.exit228, %TypeChecker_error.exit206, %TypeChecker_error.exit190, %TypeChecker_error.exit168, %TypeChecker_error.exit
+  %common.ret.op = phi ptr [ null, %TypeChecker_error.exit ], [ null, %TypeChecker_error.exit168 ], [ null, %TypeChecker_error.exit190 ], [ null, %TypeChecker_error.exit206 ], [ null, %TypeChecker_error.exit228 ], [ null, %TypeChecker_error.exit250 ], [ %1, %else20 ], [ %1, %if.entry82 ], [ %1, %ifend76 ], [ %1, %ifend26 ], [ null, %Array_Expression____sl__.exit ]
   ret ptr %common.ret.op
 
-if.entry8:                                        ; preds = %for.end
-  %44 = tail call fastcc ptr @TypeChecker_dump_type(ptr %0, ptr nonnull %19)
-  %45 = load ptr, ptr %44, align 8
-  %memberidx13 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %45, i64 0, i32 5
-  %46 = load ptr, ptr %memberidx13, align 8
-  %47 = tail call ptr %46(ptr nonnull %44)
-  %48 = alloca ptr, align 8
-  %49 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %48, ptr nonnull @200, ptr %47)
-  %50 = load ptr, ptr %48, align 8
-  %51 = tail call ptr @malloc(i32 32)
-  store ptr @VTablestring, ptr %51, align 8
-  %memberidx.i141 = getelementptr inbounds %string, ptr %51, i64 0, i32 1
-  store ptr %50, ptr %memberidx.i141, align 8
-  %memberidx1.i142 = getelementptr inbounds %string, ptr %51, i64 0, i32 2
-  store i64 %49, ptr %memberidx1.i142, align 4
-  %memberidx2.i143 = getelementptr inbounds %string, ptr %51, i64 0, i32 3
-  store i64 %49, ptr %memberidx2.i143, align 4
-  tail call void @free(ptr %47)
-  %memberidx14 = getelementptr inbounds %CallExpressionNode, ptr %2, i64 0, i32 3
-  %52 = load ptr, ptr %memberidx14, align 8
-  %53 = load ptr, ptr %52, align 8
-  %memberidx.i144 = getelementptr inbounds %TypeChecker, ptr %0, i64 0, i32 6
-  %54 = load ptr, ptr %memberidx.i144, align 8
-  %memberidx1.i145 = getelementptr inbounds %Compiler, ptr %54, i64 0, i32 6
-  %55 = load ptr, ptr %memberidx1.i145, align 8
-  %56 = call ptr @malloc(i32 24)
-  store i64 5, ptr %56, align 4
-  %memberidx1.i.i = getelementptr inbounds %FloError, ptr %56, i64 0, i32 2
-  store ptr %53, ptr %memberidx1.i.i, align 8
-  %memberidx2.i.i146 = getelementptr inbounds %FloError, ptr %56, i64 0, i32 1
-  store ptr %51, ptr %memberidx2.i.i146, align 8
-  %memberidx.i.i147 = getelementptr inbounds %Array_FloError_, ptr %55, i64 0, i32 2
-  %57 = load i64, ptr %memberidx.i.i147, align 4
-  %memberidx1.i2.i = getelementptr inbounds %Array_FloError_, ptr %55, i64 0, i32 3
-  %58 = load i64, ptr %memberidx1.i2.i, align 4
-  %.not.i.i = icmp slt i64 %57, %58
-  br i1 %.not.i.i, label %if.entry8.TypeChecker_error.exit_crit_edge, label %if.entry.i.i
+if.entry11:                                       ; preds = %for.end
+  %46 = call fastcc ptr @TypeChecker_dump_type(ptr %0, ptr nonnull %21)
+  %47 = load ptr, ptr %46, align 8
+  %memberidx16 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %47, i64 0, i32 5
+  %48 = load ptr, ptr %memberidx16, align 8
+  %49 = call ptr %48(ptr nonnull %46)
+  %50 = alloca ptr, align 8
+  %51 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %50, ptr nonnull @200, ptr %49)
+  %52 = load ptr, ptr %50, align 8
+  %53 = tail call ptr @malloc(i32 32)
+  store ptr @VTablestring, ptr %53, align 8
+  %memberidx.i146 = getelementptr inbounds %string, ptr %53, i64 0, i32 1
+  store ptr %52, ptr %memberidx.i146, align 8
+  %memberidx1.i147 = getelementptr inbounds %string, ptr %53, i64 0, i32 2
+  store i64 %51, ptr %memberidx1.i147, align 4
+  %memberidx2.i148 = getelementptr inbounds %string, ptr %53, i64 0, i32 3
+  store i64 %51, ptr %memberidx2.i148, align 4
+  tail call void @free(ptr %49)
+  %memberidx17 = getelementptr inbounds %CallExpressionNode, ptr %2, i64 0, i32 3
+  %54 = load ptr, ptr %memberidx17, align 8
+  %55 = load ptr, ptr %54, align 8
+  %memberidx.i149 = getelementptr inbounds %TypeChecker, ptr %0, i64 0, i32 6
+  %56 = load ptr, ptr %memberidx.i149, align 8
+  %memberidx1.i150 = getelementptr inbounds %Compiler, ptr %56, i64 0, i32 6
+  %57 = load ptr, ptr %memberidx1.i150, align 8
+  %58 = call ptr @malloc(i32 24)
+  store i64 5, ptr %58, align 4
+  %memberidx1.i.i = getelementptr inbounds %FloError, ptr %58, i64 0, i32 2
+  store ptr %55, ptr %memberidx1.i.i, align 8
+  %memberidx2.i.i151 = getelementptr inbounds %FloError, ptr %58, i64 0, i32 1
+  store ptr %53, ptr %memberidx2.i.i151, align 8
+  %memberidx.i.i152 = getelementptr inbounds %Array_FloError_, ptr %57, i64 0, i32 2
+  %59 = load i64, ptr %memberidx.i.i152, align 4
+  %memberidx1.i2.i = getelementptr inbounds %Array_FloError_, ptr %57, i64 0, i32 3
+  %60 = load i64, ptr %memberidx1.i2.i, align 4
+  %.not.i.i = icmp slt i64 %59, %60
+  br i1 %.not.i.i, label %if.entry11.TypeChecker_error.exit_crit_edge, label %if.entry.i.i
 
-if.entry8.TypeChecker_error.exit_crit_edge:       ; preds = %if.entry8
-  %memberidx4.i.i.phi.trans.insert = getelementptr inbounds %Array_FloError_, ptr %55, i64 0, i32 1
-  %.pre253 = load ptr, ptr %memberidx4.i.i.phi.trans.insert, align 8
+if.entry11.TypeChecker_error.exit_crit_edge:      ; preds = %if.entry11
+  %memberidx4.i.i.phi.trans.insert = getelementptr inbounds %Array_FloError_, ptr %57, i64 0, i32 1
+  %.pre258 = load ptr, ptr %memberidx4.i.i.phi.trans.insert, align 8
   br label %TypeChecker_error.exit
 
-if.entry.i.i:                                     ; preds = %if.entry8
-  %59 = shl nuw i64 %58, 1
-  store i64 %59, ptr %memberidx1.i2.i, align 4
-  %memberidx2.i.i.i = getelementptr inbounds %Array_FloError_, ptr %55, i64 0, i32 1
-  %60 = load ptr, ptr %memberidx2.i.i.i, align 8
-  %61 = shl i64 %58, 4
-  %62 = call ptr @realloc(ptr %60, i64 %61)
-  store ptr %62, ptr %memberidx2.i.i.i, align 8
-  %.pre252 = load i64, ptr %memberidx.i.i147, align 4
+if.entry.i.i:                                     ; preds = %if.entry11
+  %61 = shl nuw i64 %60, 1
+  store i64 %61, ptr %memberidx1.i2.i, align 4
+  %memberidx2.i.i.i = getelementptr inbounds %Array_FloError_, ptr %57, i64 0, i32 1
+  %62 = load ptr, ptr %memberidx2.i.i.i, align 8
+  %63 = shl i64 %60, 4
+  %64 = call ptr @realloc(ptr %62, i64 %63)
+  store ptr %64, ptr %memberidx2.i.i.i, align 8
+  %.pre257 = load i64, ptr %memberidx.i.i152, align 4
   br label %TypeChecker_error.exit
 
-TypeChecker_error.exit:                           ; preds = %if.entry8.TypeChecker_error.exit_crit_edge, %if.entry.i.i
-  %63 = phi ptr [ %.pre253, %if.entry8.TypeChecker_error.exit_crit_edge ], [ %62, %if.entry.i.i ]
-  %64 = phi i64 [ %57, %if.entry8.TypeChecker_error.exit_crit_edge ], [ %.pre252, %if.entry.i.i ]
-  %65 = add nsw i64 %64, 1
-  store i64 %65, ptr %memberidx.i.i147, align 4
-  %ptridx.i.i = getelementptr inbounds ptr, ptr %63, i64 %64
-  store ptr %56, ptr %ptridx.i.i, align 8
+TypeChecker_error.exit:                           ; preds = %if.entry11.TypeChecker_error.exit_crit_edge, %if.entry.i.i
+  %65 = phi ptr [ %.pre258, %if.entry11.TypeChecker_error.exit_crit_edge ], [ %64, %if.entry.i.i ]
+  %66 = phi i64 [ %59, %if.entry11.TypeChecker_error.exit_crit_edge ], [ %.pre257, %if.entry.i.i ]
+  %67 = add nsw i64 %66, 1
+  store i64 %67, ptr %memberidx.i.i152, align 4
+  %ptridx.i.i = getelementptr inbounds ptr, ptr %65, i64 %66
+  store ptr %58, ptr %ptridx.i.i, align 8
   br label %common.ret
 
-ifend10:                                          ; preds = %for.end
-  %66 = icmp eq i64 %4, 6
-  br i1 %66, label %if.entry16, label %else17
+ifend13:                                          ; preds = %for.end
+  %68 = icmp eq i64 %5, 6
+  br i1 %68, label %if.entry19, label %else20
 
-if.entry16:                                       ; preds = %ifend10
-  %memberidx20 = getelementptr inbounds %Array_Expression_, ptr %16, i64 0, i32 2
-  %67 = load i64, ptr %memberidx20, align 4
-  %.not133 = icmp eq i64 %67, 2
-  br i1 %.not133, label %ifend23, label %if.entry21
+if.entry19:                                       ; preds = %ifend13
+  %memberidx23 = getelementptr inbounds %Array_Expression_, ptr %18, i64 0, i32 2
+  %69 = load i64, ptr %memberidx23, align 4
+  %.not137 = icmp eq i64 %69, 2
+  br i1 %.not137, label %ifend26, label %if.entry24
 
-else17:                                           ; preds = %ifend10
-  %68 = icmp eq i64 %4, 5
-  switch i64 %4, label %common.ret [
-    i64 7, label %if.entry40
-    i64 5, label %if.entry40
-    i64 4, label %if.entry40
-    i64 3, label %if.entry40
+else20:                                           ; preds = %ifend13
+  %70 = icmp eq i64 %5, 5
+  switch i64 %5, label %common.ret [
+    i64 7, label %if.entry43
+    i64 5, label %if.entry43
+    i64 4, label %if.entry43
+    i64 3, label %if.entry43
   ]
 
-if.entry21:                                       ; preds = %if.entry16
-  %69 = alloca ptr, align 8
-  %70 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %69, ptr nonnull @201, i64 %67)
-  %71 = load ptr, ptr %69, align 8
-  %72 = tail call ptr @malloc(i32 32)
-  store ptr @VTablestring, ptr %72, align 8
-  %memberidx.i148 = getelementptr inbounds %string, ptr %72, i64 0, i32 1
-  store ptr %71, ptr %memberidx.i148, align 8
-  %memberidx1.i149 = getelementptr inbounds %string, ptr %72, i64 0, i32 2
-  store i64 %70, ptr %memberidx1.i149, align 4
-  %memberidx2.i150 = getelementptr inbounds %string, ptr %72, i64 0, i32 3
-  store i64 %70, ptr %memberidx2.i150, align 4
-  %73 = load ptr, ptr %2, align 8
-  %memberidx.i151 = getelementptr inbounds %TypeChecker, ptr %0, i64 0, i32 6
-  %74 = load ptr, ptr %memberidx.i151, align 8
-  %memberidx1.i152 = getelementptr inbounds %Compiler, ptr %74, i64 0, i32 6
-  %75 = load ptr, ptr %memberidx1.i152, align 8
-  %76 = call ptr @malloc(i32 24)
-  store i64 4, ptr %76, align 4
-  %memberidx1.i.i153 = getelementptr inbounds %FloError, ptr %76, i64 0, i32 2
-  store ptr %73, ptr %memberidx1.i.i153, align 8
-  %memberidx2.i.i154 = getelementptr inbounds %FloError, ptr %76, i64 0, i32 1
-  store ptr %72, ptr %memberidx2.i.i154, align 8
-  %memberidx.i.i155 = getelementptr inbounds %Array_FloError_, ptr %75, i64 0, i32 2
-  %77 = load i64, ptr %memberidx.i.i155, align 4
-  %memberidx1.i2.i156 = getelementptr inbounds %Array_FloError_, ptr %75, i64 0, i32 3
-  %78 = load i64, ptr %memberidx1.i2.i156, align 4
-  %.not.i.i157 = icmp slt i64 %77, %78
-  br i1 %.not.i.i157, label %if.entry21.TypeChecker_error.exit163_crit_edge, label %if.entry.i.i160
+if.entry24:                                       ; preds = %if.entry19
+  %71 = alloca ptr, align 8
+  %72 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %71, ptr nonnull @201, i64 %69)
+  %73 = load ptr, ptr %71, align 8
+  %74 = tail call ptr @malloc(i32 32)
+  store ptr @VTablestring, ptr %74, align 8
+  %memberidx.i153 = getelementptr inbounds %string, ptr %74, i64 0, i32 1
+  store ptr %73, ptr %memberidx.i153, align 8
+  %memberidx1.i154 = getelementptr inbounds %string, ptr %74, i64 0, i32 2
+  store i64 %72, ptr %memberidx1.i154, align 4
+  %memberidx2.i155 = getelementptr inbounds %string, ptr %74, i64 0, i32 3
+  store i64 %72, ptr %memberidx2.i155, align 4
+  %75 = load ptr, ptr %2, align 8
+  %memberidx.i156 = getelementptr inbounds %TypeChecker, ptr %0, i64 0, i32 6
+  %76 = load ptr, ptr %memberidx.i156, align 8
+  %memberidx1.i157 = getelementptr inbounds %Compiler, ptr %76, i64 0, i32 6
+  %77 = load ptr, ptr %memberidx1.i157, align 8
+  %78 = call ptr @malloc(i32 24)
+  store i64 4, ptr %78, align 4
+  %memberidx1.i.i158 = getelementptr inbounds %FloError, ptr %78, i64 0, i32 2
+  store ptr %75, ptr %memberidx1.i.i158, align 8
+  %memberidx2.i.i159 = getelementptr inbounds %FloError, ptr %78, i64 0, i32 1
+  store ptr %74, ptr %memberidx2.i.i159, align 8
+  %memberidx.i.i160 = getelementptr inbounds %Array_FloError_, ptr %77, i64 0, i32 2
+  %79 = load i64, ptr %memberidx.i.i160, align 4
+  %memberidx1.i2.i161 = getelementptr inbounds %Array_FloError_, ptr %77, i64 0, i32 3
+  %80 = load i64, ptr %memberidx1.i2.i161, align 4
+  %.not.i.i162 = icmp slt i64 %79, %80
+  br i1 %.not.i.i162, label %if.entry24.TypeChecker_error.exit168_crit_edge, label %if.entry.i.i165
 
-if.entry21.TypeChecker_error.exit163_crit_edge:   ; preds = %if.entry21
-  %memberidx4.i.i161.phi.trans.insert = getelementptr inbounds %Array_FloError_, ptr %75, i64 0, i32 1
-  %.pre261 = load ptr, ptr %memberidx4.i.i161.phi.trans.insert, align 8
-  br label %TypeChecker_error.exit163
+if.entry24.TypeChecker_error.exit168_crit_edge:   ; preds = %if.entry24
+  %memberidx4.i.i166.phi.trans.insert = getelementptr inbounds %Array_FloError_, ptr %77, i64 0, i32 1
+  %.pre266 = load ptr, ptr %memberidx4.i.i166.phi.trans.insert, align 8
+  br label %TypeChecker_error.exit168
 
-if.entry.i.i160:                                  ; preds = %if.entry21
-  %79 = shl nuw i64 %78, 1
-  store i64 %79, ptr %memberidx1.i2.i156, align 4
-  %memberidx2.i.i.i159 = getelementptr inbounds %Array_FloError_, ptr %75, i64 0, i32 1
-  %80 = load ptr, ptr %memberidx2.i.i.i159, align 8
-  %81 = shl i64 %78, 4
-  %82 = call ptr @realloc(ptr %80, i64 %81)
-  store ptr %82, ptr %memberidx2.i.i.i159, align 8
-  %.pre260 = load i64, ptr %memberidx.i.i155, align 4
-  br label %TypeChecker_error.exit163
+if.entry.i.i165:                                  ; preds = %if.entry24
+  %81 = shl nuw i64 %80, 1
+  store i64 %81, ptr %memberidx1.i2.i161, align 4
+  %memberidx2.i.i.i164 = getelementptr inbounds %Array_FloError_, ptr %77, i64 0, i32 1
+  %82 = load ptr, ptr %memberidx2.i.i.i164, align 8
+  %83 = shl i64 %80, 4
+  %84 = call ptr @realloc(ptr %82, i64 %83)
+  store ptr %84, ptr %memberidx2.i.i.i164, align 8
+  %.pre265 = load i64, ptr %memberidx.i.i160, align 4
+  br label %TypeChecker_error.exit168
 
-TypeChecker_error.exit163:                        ; preds = %if.entry21.TypeChecker_error.exit163_crit_edge, %if.entry.i.i160
-  %83 = phi ptr [ %.pre261, %if.entry21.TypeChecker_error.exit163_crit_edge ], [ %82, %if.entry.i.i160 ]
-  %84 = phi i64 [ %77, %if.entry21.TypeChecker_error.exit163_crit_edge ], [ %.pre260, %if.entry.i.i160 ]
-  %85 = add nsw i64 %84, 1
-  store i64 %85, ptr %memberidx.i.i155, align 4
-  %ptridx.i.i162 = getelementptr inbounds ptr, ptr %83, i64 %84
-  store ptr %76, ptr %ptridx.i.i162, align 8
+TypeChecker_error.exit168:                        ; preds = %if.entry24.TypeChecker_error.exit168_crit_edge, %if.entry.i.i165
+  %85 = phi ptr [ %.pre266, %if.entry24.TypeChecker_error.exit168_crit_edge ], [ %84, %if.entry.i.i165 ]
+  %86 = phi i64 [ %79, %if.entry24.TypeChecker_error.exit168_crit_edge ], [ %.pre265, %if.entry.i.i165 ]
+  %87 = add nsw i64 %86, 1
+  store i64 %87, ptr %memberidx.i.i160, align 4
+  %ptridx.i.i167 = getelementptr inbounds ptr, ptr %85, i64 %86
+  store ptr %78, ptr %ptridx.i.i167, align 8
   br label %common.ret
 
-ifend23:                                          ; preds = %if.entry16
-  %memberidx27 = getelementptr inbounds %Expression, ptr %1, i64 0, i32 3
-  store ptr %19, ptr %memberidx27, align 8
-  %86 = load ptr, ptr %memberidx.i, align 8
-  %ptridx.i166 = getelementptr inbounds ptr, ptr %86, i64 1
-  %87 = load ptr, ptr %ptridx.i166, align 8
-  %memberidx31 = getelementptr inbounds %Expression, ptr %87, i64 0, i32 3
-  %88 = load ptr, ptr %memberidx31, align 8
-  %89 = load i64, ptr %88, align 4
-  %90 = add i64 %89, -1
-  %91 = icmp ult i64 %90, 7
-  br i1 %91, label %common.ret, label %if.entry32
+ifend26:                                          ; preds = %if.entry19
+  %memberidx30 = getelementptr inbounds %Expression, ptr %1, i64 0, i32 3
+  store ptr %21, ptr %memberidx30, align 8
+  %88 = load ptr, ptr %memberidx.i138, align 8
+  %ptridx.i171 = getelementptr inbounds ptr, ptr %88, i64 1
+  %89 = load ptr, ptr %ptridx.i171, align 8
+  %memberidx34 = getelementptr inbounds %Expression, ptr %89, i64 0, i32 3
+  %90 = load ptr, ptr %memberidx34, align 8
+  %91 = load i64, ptr %90, align 4
+  %92 = add i64 %91, -1
+  %93 = icmp ult i64 %92, 7
+  br i1 %93, label %common.ret, label %if.entry35
 
-if.entry32:                                       ; preds = %ifend23
-  %92 = tail call fastcc ptr @TypeChecker_dump_type(ptr %0, ptr nonnull %88)
-  %93 = load ptr, ptr %92, align 8
-  %memberidx37 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %93, i64 0, i32 5
-  %94 = load ptr, ptr %memberidx37, align 8
-  %95 = tail call ptr %94(ptr nonnull %92)
-  %96 = alloca ptr, align 8
-  %97 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %96, ptr nonnull @202, ptr %95)
-  %98 = load ptr, ptr %96, align 8
-  %99 = tail call ptr @malloc(i32 32)
-  store ptr @VTablestring, ptr %99, align 8
-  %memberidx.i169 = getelementptr inbounds %string, ptr %99, i64 0, i32 1
-  store ptr %98, ptr %memberidx.i169, align 8
-  %memberidx1.i170 = getelementptr inbounds %string, ptr %99, i64 0, i32 2
-  store i64 %97, ptr %memberidx1.i170, align 4
-  %memberidx2.i171 = getelementptr inbounds %string, ptr %99, i64 0, i32 3
-  store i64 %97, ptr %memberidx2.i171, align 4
-  tail call void @free(ptr %95)
-  %100 = load ptr, ptr %memberidx, align 8
-  %memberidx.i172 = getelementptr inbounds %Array_ExpressionNode_, ptr %100, i64 0, i32 1
-  %101 = load ptr, ptr %memberidx.i172, align 8
-  %102 = load ptr, ptr %101, align 8
-  %103 = load ptr, ptr %102, align 8
-  %memberidx.i173 = getelementptr inbounds %TypeChecker, ptr %0, i64 0, i32 6
-  %104 = load ptr, ptr %memberidx.i173, align 8
-  %memberidx1.i174 = getelementptr inbounds %Compiler, ptr %104, i64 0, i32 6
-  %105 = load ptr, ptr %memberidx1.i174, align 8
-  %106 = call ptr @malloc(i32 24)
-  store i64 5, ptr %106, align 4
-  %memberidx1.i.i175 = getelementptr inbounds %FloError, ptr %106, i64 0, i32 2
-  store ptr %103, ptr %memberidx1.i.i175, align 8
-  %memberidx2.i.i176 = getelementptr inbounds %FloError, ptr %106, i64 0, i32 1
-  store ptr %99, ptr %memberidx2.i.i176, align 8
-  %memberidx.i.i177 = getelementptr inbounds %Array_FloError_, ptr %105, i64 0, i32 2
-  %107 = load i64, ptr %memberidx.i.i177, align 4
-  %memberidx1.i2.i178 = getelementptr inbounds %Array_FloError_, ptr %105, i64 0, i32 3
-  %108 = load i64, ptr %memberidx1.i2.i178, align 4
-  %.not.i.i179 = icmp slt i64 %107, %108
-  br i1 %.not.i.i179, label %if.entry32.TypeChecker_error.exit185_crit_edge, label %if.entry.i.i182
+if.entry35:                                       ; preds = %ifend26
+  %94 = call fastcc ptr @TypeChecker_dump_type(ptr %0, ptr nonnull %90)
+  %95 = load ptr, ptr %94, align 8
+  %memberidx40 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %95, i64 0, i32 5
+  %96 = load ptr, ptr %memberidx40, align 8
+  %97 = call ptr %96(ptr nonnull %94)
+  %98 = alloca ptr, align 8
+  %99 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %98, ptr nonnull @202, ptr %97)
+  %100 = load ptr, ptr %98, align 8
+  %101 = tail call ptr @malloc(i32 32)
+  store ptr @VTablestring, ptr %101, align 8
+  %memberidx.i174 = getelementptr inbounds %string, ptr %101, i64 0, i32 1
+  store ptr %100, ptr %memberidx.i174, align 8
+  %memberidx1.i175 = getelementptr inbounds %string, ptr %101, i64 0, i32 2
+  store i64 %99, ptr %memberidx1.i175, align 4
+  %memberidx2.i176 = getelementptr inbounds %string, ptr %101, i64 0, i32 3
+  store i64 %99, ptr %memberidx2.i176, align 4
+  tail call void @free(ptr %97)
+  %102 = load ptr, ptr %memberidx, align 8
+  %memberidx.i177 = getelementptr inbounds %Array_ExpressionNode_, ptr %102, i64 0, i32 1
+  %103 = load ptr, ptr %memberidx.i177, align 8
+  %104 = load ptr, ptr %103, align 8
+  %105 = load ptr, ptr %104, align 8
+  %memberidx.i178 = getelementptr inbounds %TypeChecker, ptr %0, i64 0, i32 6
+  %106 = load ptr, ptr %memberidx.i178, align 8
+  %memberidx1.i179 = getelementptr inbounds %Compiler, ptr %106, i64 0, i32 6
+  %107 = load ptr, ptr %memberidx1.i179, align 8
+  %108 = call ptr @malloc(i32 24)
+  store i64 5, ptr %108, align 4
+  %memberidx1.i.i180 = getelementptr inbounds %FloError, ptr %108, i64 0, i32 2
+  store ptr %105, ptr %memberidx1.i.i180, align 8
+  %memberidx2.i.i181 = getelementptr inbounds %FloError, ptr %108, i64 0, i32 1
+  store ptr %101, ptr %memberidx2.i.i181, align 8
+  %memberidx.i.i182 = getelementptr inbounds %Array_FloError_, ptr %107, i64 0, i32 2
+  %109 = load i64, ptr %memberidx.i.i182, align 4
+  %memberidx1.i2.i183 = getelementptr inbounds %Array_FloError_, ptr %107, i64 0, i32 3
+  %110 = load i64, ptr %memberidx1.i2.i183, align 4
+  %.not.i.i184 = icmp slt i64 %109, %110
+  br i1 %.not.i.i184, label %if.entry35.TypeChecker_error.exit190_crit_edge, label %if.entry.i.i187
 
-if.entry32.TypeChecker_error.exit185_crit_edge:   ; preds = %if.entry32
-  %memberidx4.i.i183.phi.trans.insert = getelementptr inbounds %Array_FloError_, ptr %105, i64 0, i32 1
-  %.pre263 = load ptr, ptr %memberidx4.i.i183.phi.trans.insert, align 8
-  br label %TypeChecker_error.exit185
+if.entry35.TypeChecker_error.exit190_crit_edge:   ; preds = %if.entry35
+  %memberidx4.i.i188.phi.trans.insert = getelementptr inbounds %Array_FloError_, ptr %107, i64 0, i32 1
+  %.pre268 = load ptr, ptr %memberidx4.i.i188.phi.trans.insert, align 8
+  br label %TypeChecker_error.exit190
 
-if.entry.i.i182:                                  ; preds = %if.entry32
-  %109 = shl nuw i64 %108, 1
-  store i64 %109, ptr %memberidx1.i2.i178, align 4
-  %memberidx2.i.i.i181 = getelementptr inbounds %Array_FloError_, ptr %105, i64 0, i32 1
-  %110 = load ptr, ptr %memberidx2.i.i.i181, align 8
-  %111 = shl i64 %108, 4
-  %112 = call ptr @realloc(ptr %110, i64 %111)
-  store ptr %112, ptr %memberidx2.i.i.i181, align 8
-  %.pre262 = load i64, ptr %memberidx.i.i177, align 4
-  br label %TypeChecker_error.exit185
+if.entry.i.i187:                                  ; preds = %if.entry35
+  %111 = shl nuw i64 %110, 1
+  store i64 %111, ptr %memberidx1.i2.i183, align 4
+  %memberidx2.i.i.i186 = getelementptr inbounds %Array_FloError_, ptr %107, i64 0, i32 1
+  %112 = load ptr, ptr %memberidx2.i.i.i186, align 8
+  %113 = shl i64 %110, 4
+  %114 = call ptr @realloc(ptr %112, i64 %113)
+  store ptr %114, ptr %memberidx2.i.i.i186, align 8
+  %.pre267 = load i64, ptr %memberidx.i.i182, align 4
+  br label %TypeChecker_error.exit190
 
-TypeChecker_error.exit185:                        ; preds = %if.entry32.TypeChecker_error.exit185_crit_edge, %if.entry.i.i182
-  %113 = phi ptr [ %.pre263, %if.entry32.TypeChecker_error.exit185_crit_edge ], [ %112, %if.entry.i.i182 ]
-  %114 = phi i64 [ %107, %if.entry32.TypeChecker_error.exit185_crit_edge ], [ %.pre262, %if.entry.i.i182 ]
-  %115 = add nsw i64 %114, 1
-  store i64 %115, ptr %memberidx.i.i177, align 4
-  %ptridx.i.i184 = getelementptr inbounds ptr, ptr %113, i64 %114
-  store ptr %106, ptr %ptridx.i.i184, align 8
+TypeChecker_error.exit190:                        ; preds = %if.entry35.TypeChecker_error.exit190_crit_edge, %if.entry.i.i187
+  %115 = phi ptr [ %.pre268, %if.entry35.TypeChecker_error.exit190_crit_edge ], [ %114, %if.entry.i.i187 ]
+  %116 = phi i64 [ %109, %if.entry35.TypeChecker_error.exit190_crit_edge ], [ %.pre267, %if.entry.i.i187 ]
+  %117 = add nsw i64 %116, 1
+  store i64 %117, ptr %memberidx.i.i182, align 4
+  %ptridx.i.i189 = getelementptr inbounds ptr, ptr %115, i64 %116
+  store ptr %108, ptr %ptridx.i.i189, align 8
   br label %common.ret
 
-if.entry40:                                       ; preds = %else17, %else17, %else17, %else17
-  %memberidx44 = getelementptr inbounds %Array_Expression_, ptr %16, i64 0, i32 2
-  %116 = load i64, ptr %memberidx44, align 4
-  %.not = icmp eq i64 %116, 3
-  br i1 %.not, label %ifend47, label %if.entry45
+if.entry43:                                       ; preds = %else20, %else20, %else20, %else20
+  %memberidx47 = getelementptr inbounds %Array_Expression_, ptr %18, i64 0, i32 2
+  %118 = load i64, ptr %memberidx47, align 4
+  %.not = icmp eq i64 %118, 3
+  br i1 %.not, label %ifend50, label %if.entry48
 
-if.entry45:                                       ; preds = %if.entry40
-  %117 = alloca ptr, align 8
-  %118 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %117, ptr nonnull @203, i64 %116)
-  %119 = load ptr, ptr %117, align 8
-  %120 = tail call ptr @malloc(i32 32)
-  store ptr @VTablestring, ptr %120, align 8
-  %memberidx.i186 = getelementptr inbounds %string, ptr %120, i64 0, i32 1
-  store ptr %119, ptr %memberidx.i186, align 8
-  %memberidx1.i187 = getelementptr inbounds %string, ptr %120, i64 0, i32 2
-  store i64 %118, ptr %memberidx1.i187, align 4
-  %memberidx2.i188 = getelementptr inbounds %string, ptr %120, i64 0, i32 3
-  store i64 %118, ptr %memberidx2.i188, align 4
-  %121 = load ptr, ptr %2, align 8
-  %memberidx.i189 = getelementptr inbounds %TypeChecker, ptr %0, i64 0, i32 6
-  %122 = load ptr, ptr %memberidx.i189, align 8
-  %memberidx1.i190 = getelementptr inbounds %Compiler, ptr %122, i64 0, i32 6
-  %123 = load ptr, ptr %memberidx1.i190, align 8
-  %124 = call ptr @malloc(i32 24)
-  store i64 4, ptr %124, align 4
-  %memberidx1.i.i191 = getelementptr inbounds %FloError, ptr %124, i64 0, i32 2
-  store ptr %121, ptr %memberidx1.i.i191, align 8
-  %memberidx2.i.i192 = getelementptr inbounds %FloError, ptr %124, i64 0, i32 1
-  store ptr %120, ptr %memberidx2.i.i192, align 8
-  %memberidx.i.i193 = getelementptr inbounds %Array_FloError_, ptr %123, i64 0, i32 2
-  %125 = load i64, ptr %memberidx.i.i193, align 4
-  %memberidx1.i2.i194 = getelementptr inbounds %Array_FloError_, ptr %123, i64 0, i32 3
-  %126 = load i64, ptr %memberidx1.i2.i194, align 4
-  %.not.i.i195 = icmp slt i64 %125, %126
-  br i1 %.not.i.i195, label %if.entry45.TypeChecker_error.exit201_crit_edge, label %if.entry.i.i198
+if.entry48:                                       ; preds = %if.entry43
+  %119 = alloca ptr, align 8
+  %120 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %119, ptr nonnull @203, i64 %118)
+  %121 = load ptr, ptr %119, align 8
+  %122 = tail call ptr @malloc(i32 32)
+  store ptr @VTablestring, ptr %122, align 8
+  %memberidx.i191 = getelementptr inbounds %string, ptr %122, i64 0, i32 1
+  store ptr %121, ptr %memberidx.i191, align 8
+  %memberidx1.i192 = getelementptr inbounds %string, ptr %122, i64 0, i32 2
+  store i64 %120, ptr %memberidx1.i192, align 4
+  %memberidx2.i193 = getelementptr inbounds %string, ptr %122, i64 0, i32 3
+  store i64 %120, ptr %memberidx2.i193, align 4
+  %123 = load ptr, ptr %2, align 8
+  %memberidx.i194 = getelementptr inbounds %TypeChecker, ptr %0, i64 0, i32 6
+  %124 = load ptr, ptr %memberidx.i194, align 8
+  %memberidx1.i195 = getelementptr inbounds %Compiler, ptr %124, i64 0, i32 6
+  %125 = load ptr, ptr %memberidx1.i195, align 8
+  %126 = call ptr @malloc(i32 24)
+  store i64 4, ptr %126, align 4
+  %memberidx1.i.i196 = getelementptr inbounds %FloError, ptr %126, i64 0, i32 2
+  store ptr %123, ptr %memberidx1.i.i196, align 8
+  %memberidx2.i.i197 = getelementptr inbounds %FloError, ptr %126, i64 0, i32 1
+  store ptr %122, ptr %memberidx2.i.i197, align 8
+  %memberidx.i.i198 = getelementptr inbounds %Array_FloError_, ptr %125, i64 0, i32 2
+  %127 = load i64, ptr %memberidx.i.i198, align 4
+  %memberidx1.i2.i199 = getelementptr inbounds %Array_FloError_, ptr %125, i64 0, i32 3
+  %128 = load i64, ptr %memberidx1.i2.i199, align 4
+  %.not.i.i200 = icmp slt i64 %127, %128
+  br i1 %.not.i.i200, label %if.entry48.TypeChecker_error.exit206_crit_edge, label %if.entry.i.i203
 
-if.entry45.TypeChecker_error.exit201_crit_edge:   ; preds = %if.entry45
-  %memberidx4.i.i199.phi.trans.insert = getelementptr inbounds %Array_FloError_, ptr %123, i64 0, i32 1
-  %.pre255 = load ptr, ptr %memberidx4.i.i199.phi.trans.insert, align 8
-  br label %TypeChecker_error.exit201
+if.entry48.TypeChecker_error.exit206_crit_edge:   ; preds = %if.entry48
+  %memberidx4.i.i204.phi.trans.insert = getelementptr inbounds %Array_FloError_, ptr %125, i64 0, i32 1
+  %.pre260 = load ptr, ptr %memberidx4.i.i204.phi.trans.insert, align 8
+  br label %TypeChecker_error.exit206
 
-if.entry.i.i198:                                  ; preds = %if.entry45
-  %127 = shl nuw i64 %126, 1
-  store i64 %127, ptr %memberidx1.i2.i194, align 4
-  %memberidx2.i.i.i197 = getelementptr inbounds %Array_FloError_, ptr %123, i64 0, i32 1
-  %128 = load ptr, ptr %memberidx2.i.i.i197, align 8
-  %129 = shl i64 %126, 4
-  %130 = call ptr @realloc(ptr %128, i64 %129)
-  store ptr %130, ptr %memberidx2.i.i.i197, align 8
-  %.pre254 = load i64, ptr %memberidx.i.i193, align 4
-  br label %TypeChecker_error.exit201
+if.entry.i.i203:                                  ; preds = %if.entry48
+  %129 = shl nuw i64 %128, 1
+  store i64 %129, ptr %memberidx1.i2.i199, align 4
+  %memberidx2.i.i.i202 = getelementptr inbounds %Array_FloError_, ptr %125, i64 0, i32 1
+  %130 = load ptr, ptr %memberidx2.i.i.i202, align 8
+  %131 = shl i64 %128, 4
+  %132 = call ptr @realloc(ptr %130, i64 %131)
+  store ptr %132, ptr %memberidx2.i.i.i202, align 8
+  %.pre259 = load i64, ptr %memberidx.i.i198, align 4
+  br label %TypeChecker_error.exit206
 
-TypeChecker_error.exit201:                        ; preds = %if.entry45.TypeChecker_error.exit201_crit_edge, %if.entry.i.i198
-  %131 = phi ptr [ %.pre255, %if.entry45.TypeChecker_error.exit201_crit_edge ], [ %130, %if.entry.i.i198 ]
-  %132 = phi i64 [ %125, %if.entry45.TypeChecker_error.exit201_crit_edge ], [ %.pre254, %if.entry.i.i198 ]
-  %133 = add nsw i64 %132, 1
-  store i64 %133, ptr %memberidx.i.i193, align 4
-  %ptridx.i.i200 = getelementptr inbounds ptr, ptr %131, i64 %132
-  store ptr %124, ptr %ptridx.i.i200, align 8
+TypeChecker_error.exit206:                        ; preds = %if.entry48.TypeChecker_error.exit206_crit_edge, %if.entry.i.i203
+  %133 = phi ptr [ %.pre260, %if.entry48.TypeChecker_error.exit206_crit_edge ], [ %132, %if.entry.i.i203 ]
+  %134 = phi i64 [ %127, %if.entry48.TypeChecker_error.exit206_crit_edge ], [ %.pre259, %if.entry.i.i203 ]
+  %135 = add nsw i64 %134, 1
+  store i64 %135, ptr %memberidx.i.i198, align 4
+  %ptridx.i.i205 = getelementptr inbounds ptr, ptr %133, i64 %134
+  store ptr %126, ptr %ptridx.i.i205, align 8
   br label %common.ret
 
-ifend47:                                          ; preds = %if.entry40
-  %memberidx53 = getelementptr inbounds %Expression, ptr %1, i64 0, i32 3
-  store ptr %19, ptr %memberidx53, align 8
-  br i1 %68, label %if.entry54, label %ifend56
+ifend50:                                          ; preds = %if.entry43
+  %memberidx56 = getelementptr inbounds %Expression, ptr %1, i64 0, i32 3
+  store ptr %21, ptr %memberidx56, align 8
+  br i1 %70, label %if.entry57, label %ifend59
 
-if.entry54:                                       ; preds = %ifend47
-  %memberidx57 = getelementptr inbounds %PointerType, ptr %19, i64 0, i32 1
-  %134 = load ptr, ptr %memberidx57, align 8
-  br label %ifend56
+if.entry57:                                       ; preds = %ifend50
+  %memberidx60 = getelementptr inbounds %PointerType, ptr %21, i64 0, i32 1
+  %136 = load ptr, ptr %memberidx60, align 8
+  br label %ifend59
 
-ifend56:                                          ; preds = %ifend47, %if.entry54
-  %135 = phi ptr [ %19, %ifend47 ], [ %134, %if.entry54 ]
-  %136 = load ptr, ptr %memberidx.i, align 8
-  %ptridx.i204 = getelementptr inbounds ptr, ptr %136, i64 1
-  %137 = load ptr, ptr %ptridx.i204, align 8
-  %memberidx59 = getelementptr inbounds %Expression, ptr %137, i64 0, i32 3
-  %138 = load ptr, ptr %memberidx59, align 8
-  %139 = tail call fastcc i1 @TypeChecker_types_are_eq(ptr %0, ptr %135, ptr %138)
-  br i1 %139, label %ifend62, label %if.entry60
+ifend59:                                          ; preds = %ifend50, %if.entry57
+  %137 = phi ptr [ %21, %ifend50 ], [ %136, %if.entry57 ]
+  %138 = load ptr, ptr %memberidx.i138, align 8
+  %ptridx.i209 = getelementptr inbounds ptr, ptr %138, i64 1
+  %139 = load ptr, ptr %ptridx.i209, align 8
+  %memberidx62 = getelementptr inbounds %Expression, ptr %139, i64 0, i32 3
+  %140 = load ptr, ptr %memberidx62, align 8
+  %141 = call fastcc i1 @TypeChecker_types_are_eq(ptr %0, ptr %137, ptr %140)
+  br i1 %141, label %ifend65, label %if.entry63
 
-if.entry60:                                       ; preds = %ifend56
-  %140 = tail call fastcc ptr @TypeChecker_dump_type(ptr %0, ptr %135)
-  %141 = load ptr, ptr %140, align 8
-  %memberidx63 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %141, i64 0, i32 5
-  %142 = load ptr, ptr %memberidx63, align 8
-  %143 = tail call ptr %142(ptr nonnull %140)
-  %144 = load ptr, ptr %memberidx6, align 8
-  %memberidx.i205 = getelementptr inbounds %Array_Expression_, ptr %144, i64 0, i32 1
-  %145 = load ptr, ptr %memberidx.i205, align 8
-  %ptridx.i206 = getelementptr inbounds ptr, ptr %145, i64 1
-  %146 = load ptr, ptr %ptridx.i206, align 8
-  %memberidx65 = getelementptr inbounds %Expression, ptr %146, i64 0, i32 3
-  %147 = load ptr, ptr %memberidx65, align 8
-  %148 = tail call fastcc ptr @TypeChecker_dump_type(ptr %0, ptr %147)
-  %149 = load ptr, ptr %148, align 8
-  %memberidx66 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %149, i64 0, i32 5
-  %150 = load ptr, ptr %memberidx66, align 8
-  %151 = tail call ptr %150(ptr nonnull %148)
-  %152 = alloca ptr, align 8
-  %153 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %152, ptr nonnull @204, ptr %143, ptr %151)
-  %154 = load ptr, ptr %152, align 8
-  %155 = tail call ptr @malloc(i32 32)
-  store ptr @VTablestring, ptr %155, align 8
-  %memberidx.i207 = getelementptr inbounds %string, ptr %155, i64 0, i32 1
-  store ptr %154, ptr %memberidx.i207, align 8
-  %memberidx1.i208 = getelementptr inbounds %string, ptr %155, i64 0, i32 2
-  store i64 %153, ptr %memberidx1.i208, align 4
-  %memberidx2.i209 = getelementptr inbounds %string, ptr %155, i64 0, i32 3
-  store i64 %153, ptr %memberidx2.i209, align 4
-  tail call void @free(ptr %143)
-  tail call void @free(ptr %151)
-  %156 = load ptr, ptr %memberidx, align 8
-  %memberidx.i210 = getelementptr inbounds %Array_ExpressionNode_, ptr %156, i64 0, i32 1
-  %157 = load ptr, ptr %memberidx.i210, align 8
-  %158 = load ptr, ptr %157, align 8
-  %159 = load ptr, ptr %158, align 8
-  %memberidx.i211 = getelementptr inbounds %TypeChecker, ptr %0, i64 0, i32 6
-  %160 = load ptr, ptr %memberidx.i211, align 8
-  %memberidx1.i212 = getelementptr inbounds %Compiler, ptr %160, i64 0, i32 6
-  %161 = load ptr, ptr %memberidx1.i212, align 8
-  %162 = call ptr @malloc(i32 24)
-  store i64 5, ptr %162, align 4
-  %memberidx1.i.i213 = getelementptr inbounds %FloError, ptr %162, i64 0, i32 2
-  store ptr %159, ptr %memberidx1.i.i213, align 8
-  %memberidx2.i.i214 = getelementptr inbounds %FloError, ptr %162, i64 0, i32 1
-  store ptr %155, ptr %memberidx2.i.i214, align 8
-  %memberidx.i.i215 = getelementptr inbounds %Array_FloError_, ptr %161, i64 0, i32 2
-  %163 = load i64, ptr %memberidx.i.i215, align 4
-  %memberidx1.i2.i216 = getelementptr inbounds %Array_FloError_, ptr %161, i64 0, i32 3
-  %164 = load i64, ptr %memberidx1.i2.i216, align 4
-  %.not.i.i217 = icmp slt i64 %163, %164
-  br i1 %.not.i.i217, label %if.entry60.TypeChecker_error.exit223_crit_edge, label %if.entry.i.i220
+if.entry63:                                       ; preds = %ifend59
+  %142 = call fastcc ptr @TypeChecker_dump_type(ptr %0, ptr %137)
+  %143 = load ptr, ptr %142, align 8
+  %memberidx66 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %143, i64 0, i32 5
+  %144 = load ptr, ptr %memberidx66, align 8
+  %145 = call ptr %144(ptr nonnull %142)
+  %146 = load ptr, ptr %memberidx9, align 8
+  %memberidx.i210 = getelementptr inbounds %Array_Expression_, ptr %146, i64 0, i32 1
+  %147 = load ptr, ptr %memberidx.i210, align 8
+  %ptridx.i211 = getelementptr inbounds ptr, ptr %147, i64 1
+  %148 = load ptr, ptr %ptridx.i211, align 8
+  %memberidx68 = getelementptr inbounds %Expression, ptr %148, i64 0, i32 3
+  %149 = load ptr, ptr %memberidx68, align 8
+  %150 = call fastcc ptr @TypeChecker_dump_type(ptr %0, ptr %149)
+  %151 = load ptr, ptr %150, align 8
+  %memberidx69 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %151, i64 0, i32 5
+  %152 = load ptr, ptr %memberidx69, align 8
+  %153 = call ptr %152(ptr nonnull %150)
+  %154 = alloca ptr, align 8
+  %155 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %154, ptr nonnull @204, ptr %145, ptr %153)
+  %156 = load ptr, ptr %154, align 8
+  %157 = tail call ptr @malloc(i32 32)
+  store ptr @VTablestring, ptr %157, align 8
+  %memberidx.i212 = getelementptr inbounds %string, ptr %157, i64 0, i32 1
+  store ptr %156, ptr %memberidx.i212, align 8
+  %memberidx1.i213 = getelementptr inbounds %string, ptr %157, i64 0, i32 2
+  store i64 %155, ptr %memberidx1.i213, align 4
+  %memberidx2.i214 = getelementptr inbounds %string, ptr %157, i64 0, i32 3
+  store i64 %155, ptr %memberidx2.i214, align 4
+  tail call void @free(ptr %145)
+  tail call void @free(ptr %153)
+  %158 = load ptr, ptr %memberidx, align 8
+  %memberidx.i215 = getelementptr inbounds %Array_ExpressionNode_, ptr %158, i64 0, i32 1
+  %159 = load ptr, ptr %memberidx.i215, align 8
+  %160 = load ptr, ptr %159, align 8
+  %161 = load ptr, ptr %160, align 8
+  %memberidx.i216 = getelementptr inbounds %TypeChecker, ptr %0, i64 0, i32 6
+  %162 = load ptr, ptr %memberidx.i216, align 8
+  %memberidx1.i217 = getelementptr inbounds %Compiler, ptr %162, i64 0, i32 6
+  %163 = load ptr, ptr %memberidx1.i217, align 8
+  %164 = call ptr @malloc(i32 24)
+  store i64 5, ptr %164, align 4
+  %memberidx1.i.i218 = getelementptr inbounds %FloError, ptr %164, i64 0, i32 2
+  store ptr %161, ptr %memberidx1.i.i218, align 8
+  %memberidx2.i.i219 = getelementptr inbounds %FloError, ptr %164, i64 0, i32 1
+  store ptr %157, ptr %memberidx2.i.i219, align 8
+  %memberidx.i.i220 = getelementptr inbounds %Array_FloError_, ptr %163, i64 0, i32 2
+  %165 = load i64, ptr %memberidx.i.i220, align 4
+  %memberidx1.i2.i221 = getelementptr inbounds %Array_FloError_, ptr %163, i64 0, i32 3
+  %166 = load i64, ptr %memberidx1.i2.i221, align 4
+  %.not.i.i222 = icmp slt i64 %165, %166
+  br i1 %.not.i.i222, label %if.entry63.TypeChecker_error.exit228_crit_edge, label %if.entry.i.i225
 
-if.entry60.TypeChecker_error.exit223_crit_edge:   ; preds = %if.entry60
-  %memberidx4.i.i221.phi.trans.insert = getelementptr inbounds %Array_FloError_, ptr %161, i64 0, i32 1
-  %.pre257 = load ptr, ptr %memberidx4.i.i221.phi.trans.insert, align 8
-  br label %TypeChecker_error.exit223
+if.entry63.TypeChecker_error.exit228_crit_edge:   ; preds = %if.entry63
+  %memberidx4.i.i226.phi.trans.insert = getelementptr inbounds %Array_FloError_, ptr %163, i64 0, i32 1
+  %.pre262 = load ptr, ptr %memberidx4.i.i226.phi.trans.insert, align 8
+  br label %TypeChecker_error.exit228
 
-if.entry.i.i220:                                  ; preds = %if.entry60
-  %165 = shl nuw i64 %164, 1
-  store i64 %165, ptr %memberidx1.i2.i216, align 4
-  %memberidx2.i.i.i219 = getelementptr inbounds %Array_FloError_, ptr %161, i64 0, i32 1
-  %166 = load ptr, ptr %memberidx2.i.i.i219, align 8
-  %167 = shl i64 %164, 4
-  %168 = call ptr @realloc(ptr %166, i64 %167)
-  store ptr %168, ptr %memberidx2.i.i.i219, align 8
-  %.pre256 = load i64, ptr %memberidx.i.i215, align 4
-  br label %TypeChecker_error.exit223
+if.entry.i.i225:                                  ; preds = %if.entry63
+  %167 = shl nuw i64 %166, 1
+  store i64 %167, ptr %memberidx1.i2.i221, align 4
+  %memberidx2.i.i.i224 = getelementptr inbounds %Array_FloError_, ptr %163, i64 0, i32 1
+  %168 = load ptr, ptr %memberidx2.i.i.i224, align 8
+  %169 = shl i64 %166, 4
+  %170 = call ptr @realloc(ptr %168, i64 %169)
+  store ptr %170, ptr %memberidx2.i.i.i224, align 8
+  %.pre261 = load i64, ptr %memberidx.i.i220, align 4
+  br label %TypeChecker_error.exit228
 
-TypeChecker_error.exit223:                        ; preds = %if.entry60.TypeChecker_error.exit223_crit_edge, %if.entry.i.i220
-  %169 = phi ptr [ %.pre257, %if.entry60.TypeChecker_error.exit223_crit_edge ], [ %168, %if.entry.i.i220 ]
-  %170 = phi i64 [ %163, %if.entry60.TypeChecker_error.exit223_crit_edge ], [ %.pre256, %if.entry.i.i220 ]
-  %171 = add nsw i64 %170, 1
-  store i64 %171, ptr %memberidx.i.i215, align 4
-  %ptridx.i.i222 = getelementptr inbounds ptr, ptr %169, i64 %170
-  store ptr %162, ptr %ptridx.i.i222, align 8
+TypeChecker_error.exit228:                        ; preds = %if.entry63.TypeChecker_error.exit228_crit_edge, %if.entry.i.i225
+  %171 = phi ptr [ %.pre262, %if.entry63.TypeChecker_error.exit228_crit_edge ], [ %170, %if.entry.i.i225 ]
+  %172 = phi i64 [ %165, %if.entry63.TypeChecker_error.exit228_crit_edge ], [ %.pre261, %if.entry.i.i225 ]
+  %173 = add nsw i64 %172, 1
+  store i64 %173, ptr %memberidx.i.i220, align 4
+  %ptridx.i.i227 = getelementptr inbounds ptr, ptr %171, i64 %172
+  store ptr %164, ptr %ptridx.i.i227, align 8
   br label %common.ret
 
-ifend62:                                          ; preds = %ifend56
-  %172 = load ptr, ptr %memberidx6, align 8
-  %memberidx.i224 = getelementptr inbounds %Array_Expression_, ptr %172, i64 0, i32 1
-  %173 = load ptr, ptr %memberidx.i224, align 8
-  %ptridx.i225 = getelementptr inbounds ptr, ptr %173, i64 2
-  %174 = load ptr, ptr %ptridx.i225, align 8
-  %memberidx70 = getelementptr inbounds %Expression, ptr %174, i64 0, i32 3
-  %175 = load ptr, ptr %memberidx70, align 8
-  %176 = load i64, ptr %175, align 4
-  %177 = add i64 %176, -1
-  %178 = icmp ult i64 %177, 7
-  br i1 %178, label %ifend73, label %if.entry71
+ifend65:                                          ; preds = %ifend59
+  %174 = load ptr, ptr %memberidx9, align 8
+  %memberidx.i229 = getelementptr inbounds %Array_Expression_, ptr %174, i64 0, i32 1
+  %175 = load ptr, ptr %memberidx.i229, align 8
+  %ptridx.i230 = getelementptr inbounds ptr, ptr %175, i64 2
+  %176 = load ptr, ptr %ptridx.i230, align 8
+  %memberidx73 = getelementptr inbounds %Expression, ptr %176, i64 0, i32 3
+  %177 = load ptr, ptr %memberidx73, align 8
+  %178 = load i64, ptr %177, align 4
+  %179 = add i64 %178, -1
+  %180 = icmp ult i64 %179, 7
+  br i1 %180, label %ifend76, label %if.entry74
 
-if.entry71:                                       ; preds = %ifend62
-  %179 = tail call fastcc ptr @TypeChecker_dump_type(ptr %0, ptr nonnull %175)
-  %180 = load ptr, ptr %179, align 8
-  %memberidx76 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %180, i64 0, i32 5
-  %181 = load ptr, ptr %memberidx76, align 8
-  %182 = tail call ptr %181(ptr nonnull %179)
-  %183 = alloca ptr, align 8
-  %184 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %183, ptr nonnull @202, ptr %182)
-  %185 = load ptr, ptr %183, align 8
-  %186 = tail call ptr @malloc(i32 32)
-  store ptr @VTablestring, ptr %186, align 8
-  %memberidx.i228 = getelementptr inbounds %string, ptr %186, i64 0, i32 1
-  store ptr %185, ptr %memberidx.i228, align 8
-  %memberidx1.i229 = getelementptr inbounds %string, ptr %186, i64 0, i32 2
-  store i64 %184, ptr %memberidx1.i229, align 4
-  %memberidx2.i230 = getelementptr inbounds %string, ptr %186, i64 0, i32 3
-  store i64 %184, ptr %memberidx2.i230, align 4
-  tail call void @free(ptr %182)
-  %187 = load ptr, ptr %memberidx, align 8
-  %memberidx.i231 = getelementptr inbounds %Array_ExpressionNode_, ptr %187, i64 0, i32 1
-  %188 = load ptr, ptr %memberidx.i231, align 8
-  %ptridx.i232 = getelementptr inbounds ptr, ptr %188, i64 1
-  %189 = load ptr, ptr %ptridx.i232, align 8
-  %190 = load ptr, ptr %189, align 8
-  %memberidx.i233 = getelementptr inbounds %TypeChecker, ptr %0, i64 0, i32 6
-  %191 = load ptr, ptr %memberidx.i233, align 8
-  %memberidx1.i234 = getelementptr inbounds %Compiler, ptr %191, i64 0, i32 6
-  %192 = load ptr, ptr %memberidx1.i234, align 8
-  %193 = call ptr @malloc(i32 24)
-  store i64 5, ptr %193, align 4
-  %memberidx1.i.i235 = getelementptr inbounds %FloError, ptr %193, i64 0, i32 2
-  store ptr %190, ptr %memberidx1.i.i235, align 8
-  %memberidx2.i.i236 = getelementptr inbounds %FloError, ptr %193, i64 0, i32 1
-  store ptr %186, ptr %memberidx2.i.i236, align 8
-  %memberidx.i.i237 = getelementptr inbounds %Array_FloError_, ptr %192, i64 0, i32 2
-  %194 = load i64, ptr %memberidx.i.i237, align 4
-  %memberidx1.i2.i238 = getelementptr inbounds %Array_FloError_, ptr %192, i64 0, i32 3
-  %195 = load i64, ptr %memberidx1.i2.i238, align 4
-  %.not.i.i239 = icmp slt i64 %194, %195
-  br i1 %.not.i.i239, label %if.entry71.TypeChecker_error.exit245_crit_edge, label %if.entry.i.i242
+if.entry74:                                       ; preds = %ifend65
+  %181 = call fastcc ptr @TypeChecker_dump_type(ptr %0, ptr nonnull %177)
+  %182 = load ptr, ptr %181, align 8
+  %memberidx79 = getelementptr inbounds <{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr %182, i64 0, i32 5
+  %183 = load ptr, ptr %memberidx79, align 8
+  %184 = call ptr %183(ptr nonnull %181)
+  %185 = alloca ptr, align 8
+  %186 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %185, ptr nonnull @202, ptr %184)
+  %187 = load ptr, ptr %185, align 8
+  %188 = tail call ptr @malloc(i32 32)
+  store ptr @VTablestring, ptr %188, align 8
+  %memberidx.i233 = getelementptr inbounds %string, ptr %188, i64 0, i32 1
+  store ptr %187, ptr %memberidx.i233, align 8
+  %memberidx1.i234 = getelementptr inbounds %string, ptr %188, i64 0, i32 2
+  store i64 %186, ptr %memberidx1.i234, align 4
+  %memberidx2.i235 = getelementptr inbounds %string, ptr %188, i64 0, i32 3
+  store i64 %186, ptr %memberidx2.i235, align 4
+  tail call void @free(ptr %184)
+  %189 = load ptr, ptr %memberidx, align 8
+  %memberidx.i236 = getelementptr inbounds %Array_ExpressionNode_, ptr %189, i64 0, i32 1
+  %190 = load ptr, ptr %memberidx.i236, align 8
+  %ptridx.i237 = getelementptr inbounds ptr, ptr %190, i64 1
+  %191 = load ptr, ptr %ptridx.i237, align 8
+  %192 = load ptr, ptr %191, align 8
+  %memberidx.i238 = getelementptr inbounds %TypeChecker, ptr %0, i64 0, i32 6
+  %193 = load ptr, ptr %memberidx.i238, align 8
+  %memberidx1.i239 = getelementptr inbounds %Compiler, ptr %193, i64 0, i32 6
+  %194 = load ptr, ptr %memberidx1.i239, align 8
+  %195 = call ptr @malloc(i32 24)
+  store i64 5, ptr %195, align 4
+  %memberidx1.i.i240 = getelementptr inbounds %FloError, ptr %195, i64 0, i32 2
+  store ptr %192, ptr %memberidx1.i.i240, align 8
+  %memberidx2.i.i241 = getelementptr inbounds %FloError, ptr %195, i64 0, i32 1
+  store ptr %188, ptr %memberidx2.i.i241, align 8
+  %memberidx.i.i242 = getelementptr inbounds %Array_FloError_, ptr %194, i64 0, i32 2
+  %196 = load i64, ptr %memberidx.i.i242, align 4
+  %memberidx1.i2.i243 = getelementptr inbounds %Array_FloError_, ptr %194, i64 0, i32 3
+  %197 = load i64, ptr %memberidx1.i2.i243, align 4
+  %.not.i.i244 = icmp slt i64 %196, %197
+  br i1 %.not.i.i244, label %if.entry74.TypeChecker_error.exit250_crit_edge, label %if.entry.i.i247
 
-if.entry71.TypeChecker_error.exit245_crit_edge:   ; preds = %if.entry71
-  %memberidx4.i.i243.phi.trans.insert = getelementptr inbounds %Array_FloError_, ptr %192, i64 0, i32 1
-  %.pre259 = load ptr, ptr %memberidx4.i.i243.phi.trans.insert, align 8
-  br label %TypeChecker_error.exit245
+if.entry74.TypeChecker_error.exit250_crit_edge:   ; preds = %if.entry74
+  %memberidx4.i.i248.phi.trans.insert = getelementptr inbounds %Array_FloError_, ptr %194, i64 0, i32 1
+  %.pre264 = load ptr, ptr %memberidx4.i.i248.phi.trans.insert, align 8
+  br label %TypeChecker_error.exit250
 
-if.entry.i.i242:                                  ; preds = %if.entry71
-  %196 = shl nuw i64 %195, 1
-  store i64 %196, ptr %memberidx1.i2.i238, align 4
-  %memberidx2.i.i.i241 = getelementptr inbounds %Array_FloError_, ptr %192, i64 0, i32 1
-  %197 = load ptr, ptr %memberidx2.i.i.i241, align 8
-  %198 = shl i64 %195, 4
-  %199 = call ptr @realloc(ptr %197, i64 %198)
-  store ptr %199, ptr %memberidx2.i.i.i241, align 8
-  %.pre258 = load i64, ptr %memberidx.i.i237, align 4
-  br label %TypeChecker_error.exit245
+if.entry.i.i247:                                  ; preds = %if.entry74
+  %198 = shl nuw i64 %197, 1
+  store i64 %198, ptr %memberidx1.i2.i243, align 4
+  %memberidx2.i.i.i246 = getelementptr inbounds %Array_FloError_, ptr %194, i64 0, i32 1
+  %199 = load ptr, ptr %memberidx2.i.i.i246, align 8
+  %200 = shl i64 %197, 4
+  %201 = call ptr @realloc(ptr %199, i64 %200)
+  store ptr %201, ptr %memberidx2.i.i.i246, align 8
+  %.pre263 = load i64, ptr %memberidx.i.i242, align 4
+  br label %TypeChecker_error.exit250
 
-TypeChecker_error.exit245:                        ; preds = %if.entry71.TypeChecker_error.exit245_crit_edge, %if.entry.i.i242
-  %200 = phi ptr [ %.pre259, %if.entry71.TypeChecker_error.exit245_crit_edge ], [ %199, %if.entry.i.i242 ]
-  %201 = phi i64 [ %194, %if.entry71.TypeChecker_error.exit245_crit_edge ], [ %.pre258, %if.entry.i.i242 ]
-  %202 = add nsw i64 %201, 1
-  store i64 %202, ptr %memberidx.i.i237, align 4
-  %ptridx.i.i244 = getelementptr inbounds ptr, ptr %200, i64 %201
-  store ptr %193, ptr %ptridx.i.i244, align 8
+TypeChecker_error.exit250:                        ; preds = %if.entry74.TypeChecker_error.exit250_crit_edge, %if.entry.i.i247
+  %202 = phi ptr [ %.pre264, %if.entry74.TypeChecker_error.exit250_crit_edge ], [ %201, %if.entry.i.i247 ]
+  %203 = phi i64 [ %196, %if.entry74.TypeChecker_error.exit250_crit_edge ], [ %.pre263, %if.entry.i.i247 ]
+  %204 = add nsw i64 %203, 1
+  store i64 %204, ptr %memberidx.i.i242, align 4
+  %ptridx.i.i249 = getelementptr inbounds ptr, ptr %202, i64 %203
+  store ptr %195, ptr %ptridx.i.i249, align 8
   br label %common.ret
 
-ifend73:                                          ; preds = %ifend62
-  br i1 %7, label %if.entry79, label %common.ret
+ifend76:                                          ; preds = %ifend65
+  br i1 %8, label %if.entry82, label %common.ret
 
-if.entry79:                                       ; preds = %ifend73
-  %203 = tail call ptr @malloc(i32 9)
-  store i64 6, ptr %203, align 4
-  %memberidx.i246 = getelementptr inbounds %IntType, ptr %203, i64 0, i32 1
-  store i1 true, ptr %memberidx.i246, align 1
-  store ptr %203, ptr %memberidx53, align 8
+if.entry82:                                       ; preds = %ifend76
+  %205 = tail call ptr @malloc(i32 9)
+  store i64 6, ptr %205, align 4
+  %memberidx.i251 = getelementptr inbounds %IntType, ptr %205, i64 0, i32 1
+  store i1 true, ptr %memberidx.i251, align 1
+  store ptr %205, ptr %memberidx56, align 8
   br label %common.ret
 }
 
