@@ -104,7 +104,7 @@ class string {
         if idx >= 0 {
             let nlen = this.length - val.length + repl.length
             let nbuff = new u8*(nlen)
-            nbuff.copy_from(this.buffer, idx)
+            nbuff.copy_from(this.buffer, idx as uint)
             (&nbuff[idx]).copy_from(repl.buffer, repl.length)
             (&nbuff[idx + repl.length]).copy_from(&this.buffer[idx + val.length], this.length - (idx + val.length))
             return new string(nbuff, nlen)
