@@ -1,5 +1,6 @@
 
 fnc main(): int {
-    let s: int[-10]
+    let addr: u16 = 256
+    println("$(addr < 0x8000)")
     return 0
 }

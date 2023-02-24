@@ -38161,361 +38161,328 @@ define internal fastcc ptr @TypeChecker_check_expression(ptr %0, ptr %1, ptr noc
     i64 14, label %if.entry50
   ]
 
-5:                                                ; preds = %else9.i
-  %6 = and i1 %49, %50
-  %spec.select146 = select i1 %6, i64 5, i64 %spec.select145
-  store i64 %spec.select146, ptr %10, align 4
-  br label %common.ret
-
-common.ret:                                       ; preds = %5, %else9.i, %3, %if.entry8.i114, %ifend.i113, %if.entry45.i, %ifend38.i, %if.entry50, %if.entry46, %if.entry42, %if.entry38, %if.entry34, %if.entry30, %if.entry26, %if.entry22, %if.entry18, %if.entry14, %TypeChecker_check_string_expression.exit, %if.entry6
-  %common.ret.op = phi ptr [ %77, %if.entry6 ], [ %114, %TypeChecker_check_string_expression.exit ], [ %118, %if.entry14 ], [ %119, %if.entry18 ], [ %120, %if.entry22 ], [ %121, %if.entry26 ], [ %122, %if.entry30 ], [ %123, %if.entry34 ], [ %124, %if.entry38 ], [ %125, %if.entry42 ], [ %126, %if.entry46 ], [ %127, %if.entry50 ], [ %9, %ifend38.i ], [ %9, %if.entry45.i ], [ %60, %ifend.i113 ], [ %60, %if.entry8.i114 ], [ null, %3 ], [ %9, %else9.i ], [ %9, %5 ]
+common.ret:                                       ; preds = %3, %if.entry8.i, %ifend.i113, %if.entry42.i, %ifend35.i, %if.entry50, %if.entry46, %if.entry42, %if.entry38, %if.entry34, %if.entry30, %if.entry26, %if.entry22, %if.entry18, %if.entry14, %TypeChecker_check_string_expression.exit, %if.entry6
+  %common.ret.op = phi ptr [ %59, %if.entry6 ], [ %96, %TypeChecker_check_string_expression.exit ], [ %100, %if.entry14 ], [ %101, %if.entry18 ], [ %102, %if.entry22 ], [ %103, %if.entry26 ], [ %104, %if.entry30 ], [ %105, %if.entry34 ], [ %106, %if.entry38 ], [ %107, %if.entry42 ], [ %108, %if.entry46 ], [ %109, %if.entry50 ], [ %7, %ifend35.i ], [ %7, %if.entry42.i ], [ %42, %ifend.i113 ], [ %42, %if.entry8.i ], [ null, %3 ]
   ret ptr %common.ret.op
 
 if.entry:                                         ; preds = %3
   %memberidx.i = getelementptr inbounds %IntExpressionNode, ptr %2, i64 0, i32 3
-  %7 = load ptr, ptr %memberidx.i, align 8
-  %memberidx1.i = getelementptr inbounds %IntToken, ptr %7, i64 0, i32 2
-  %8 = load i64, ptr %memberidx1.i, align 4
-  %9 = tail call ptr @malloc(i32 33)
-  store i64 8, ptr %9, align 4
-  %memberidx.i.i.i = getelementptr inbounds %Expression, ptr %9, i64 0, i32 2
+  %5 = load ptr, ptr %memberidx.i, align 8
+  %memberidx1.i = getelementptr inbounds %IntToken, ptr %5, i64 0, i32 2
+  %6 = load i64, ptr %memberidx1.i, align 4
+  %7 = tail call ptr @malloc(i32 33)
+  store i64 8, ptr %7, align 4
+  %memberidx.i.i.i = getelementptr inbounds %Expression, ptr %7, i64 0, i32 2
   store i64 0, ptr %memberidx.i.i.i, align 4
-  %memberidx1.i.i.i = getelementptr inbounds %Expression, ptr %9, i64 0, i32 1
-  %memberidx.i.i = getelementptr inbounds %Expression, ptr %9, i64 0, i32 3
-  %10 = tail call ptr @malloc(i32 9)
-  store i64 6, ptr %10, align 4
-  %memberidx.i5.i.i = getelementptr inbounds %IntType, ptr %10, i64 0, i32 1
+  %memberidx1.i.i.i = getelementptr inbounds %Expression, ptr %7, i64 0, i32 1
+  %memberidx.i.i = getelementptr inbounds %Expression, ptr %7, i64 0, i32 3
+  %8 = tail call ptr @malloc(i32 9)
+  store i64 6, ptr %8, align 4
+  %memberidx.i5.i.i = getelementptr inbounds %IntType, ptr %8, i64 0, i32 1
   store i1 false, ptr %memberidx.i5.i.i, align 1
-  store ptr %10, ptr %memberidx.i.i, align 8
-  %memberidx1.i.i = getelementptr inbounds %IntExpression, ptr %9, i64 0, i32 4
-  store i64 %8, ptr %memberidx1.i.i, align 4
+  store ptr %8, ptr %memberidx.i.i, align 8
+  %memberidx1.i.i = getelementptr inbounds %IntExpression, ptr %7, i64 0, i32 4
+  store i64 %6, ptr %memberidx1.i.i, align 4
   store i1 true, ptr %memberidx1.i.i.i, align 1
-  %11 = load i64, ptr %1, align 4
-  %12 = add i64 %11, -1
-  %13 = icmp ult i64 %12, 7
-  br i1 %13, label %if.entry.i, label %ifend38.i
+  %9 = load i64, ptr %1, align 4
+  %10 = add i64 %9, -1
+  %11 = icmp ult i64 %10, 7
+  br i1 %11, label %ifend.i, label %ifend35.i
 
-if.entry.i:                                       ; preds = %if.entry
-  store i64 %11, ptr %10, align 4
+ifend.i:                                          ; preds = %if.entry
+  store i64 %9, ptr %8, align 4
   %memberidx7.i = getelementptr inbounds %IntType, ptr %1, i64 0, i32 1
-  %14 = load i1, ptr %memberidx7.i, align 1
-  store i1 %14, ptr %memberidx.i5.i.i, align 1
-  br i1 %14, label %if.entry8.i, label %else9.i
+  %12 = load i1, ptr %memberidx7.i, align 1
+  store i1 %12, ptr %memberidx.i5.i.i, align 1
+  %13 = add i64 %6, -8
+  %14 = icmp ult i64 %13, -16
+  %15 = icmp eq i64 %9, 1
+  %16 = and i1 %14, %15
+  %17 = select i1 %16, i64 2, i64 %9
+  %18 = add i64 %6, -128
+  %19 = icmp ult i64 %18, -256
+  %20 = icmp eq i64 %17, 2
+  %21 = and i1 %19, %20
+  %22 = select i1 %21, i64 3, i64 %17
+  %.demorgan = and i1 %14, %15
+  %.demorgan145 = and i1 %19, %20
+  %23 = or i1 %.demorgan, %.demorgan145
+  %24 = add i64 %6, -32768
+  %25 = icmp ult i64 %24, -65536
+  %26 = icmp eq i64 %22, 3
+  %27 = and i1 %25, %26
+  %spec.select = select i1 %27, i64 4, i64 %22
+  %.demorgan146 = and i1 %25, %26
+  %28 = or i1 %23, %.demorgan146
+  %29 = add i64 %6, -2147483648
+  %30 = icmp ult i64 %29, -4294967296
+  %31 = icmp eq i64 %spec.select, 4
+  %32 = and i1 %30, %31
+  %spec.select144 = select i1 %32, i64 5, i64 %spec.select
+  %.demorgan147 = and i1 %30, %31
+  %33 = or i1 %28, %.demorgan147
+  br i1 %33, label %34, label %ifend35.i
 
-if.entry8.i:                                      ; preds = %if.entry.i
-  %15 = add i64 %8, -8
-  %16 = icmp ult i64 %15, -16
-  %17 = icmp eq i64 %11, 1
-  %18 = and i1 %16, %17
-  %19 = select i1 %18, i64 2, i64 %11
-  %20 = add i64 %8, -128
-  %21 = icmp ult i64 %20, -256
-  %22 = icmp eq i64 %19, 2
-  %23 = and i1 %21, %22
-  %24 = select i1 %23, i64 3, i64 %19
-  %.demorgan150 = and i1 %16, %17
-  %.demorgan151 = and i1 %21, %22
-  %25 = or i1 %.demorgan150, %.demorgan151
-  %26 = add i64 %8, -32768
-  %27 = icmp ult i64 %26, -65536
-  %28 = icmp eq i64 %24, 3
-  %29 = and i1 %27, %28
-  %spec.select = select i1 %29, i64 4, i64 %24
-  %.demorgan152 = and i1 %27, %28
-  %30 = or i1 %25, %.demorgan152
-  %31 = add i64 %8, -2147483648
-  %32 = icmp ult i64 %31, -4294967296
-  %33 = icmp eq i64 %spec.select, 4
-  %34 = and i1 %32, %33
-  %spec.select144 = select i1 %34, i64 5, i64 %spec.select
-  %.demorgan153 = and i1 %32, %33
-  %35 = or i1 %30, %.demorgan153
-  br i1 %35, label %52, label %ifend38.i
+34:                                               ; preds = %ifend.i
+  store i64 %spec.select144, ptr %8, align 4
+  br label %ifend35.i
 
-else9.i:                                          ; preds = %if.entry.i
-  %36 = icmp sgt i64 %8, 15
-  %37 = icmp eq i64 %11, 1
-  %38 = and i1 %36, %37
-  %39 = select i1 %38, i64 2, i64 %11
-  %40 = icmp sgt i64 %8, 255
-  %41 = icmp eq i64 %39, 2
-  %42 = and i1 %40, %41
-  %43 = select i1 %42, i64 3, i64 %39
-  %.demorgan = and i1 %36, %37
-  %.demorgan147 = and i1 %40, %41
-  %44 = or i1 %.demorgan, %.demorgan147
-  %45 = icmp sgt i64 %8, 65535
-  %46 = icmp eq i64 %43, 3
-  %47 = and i1 %45, %46
-  %spec.select145 = select i1 %47, i64 4, i64 %43
-  %.demorgan148 = and i1 %45, %46
-  %48 = or i1 %44, %.demorgan148
-  %49 = icmp sgt i64 %8, 4294967295
-  %50 = icmp eq i64 %spec.select145, 4
-  %.demorgan149 = and i1 %49, %50
-  %51 = or i1 %48, %.demorgan149
-  br i1 %51, label %5, label %common.ret
+ifend35.i:                                        ; preds = %34, %ifend.i, %if.entry
+  %35 = phi i64 [ 6, %if.entry ], [ %spec.select144, %ifend.i ], [ %spec.select144, %34 ]
+  %36 = icmp eq i64 %6, -9223372036854775808
+  %37 = add nsw i64 %35, -5
+  %38 = icmp ult i64 %37, 2
+  %39 = and i1 %36, %38
+  br i1 %39, label %if.entry42.i, label %common.ret
 
-52:                                               ; preds = %if.entry8.i
-  store i64 %spec.select144, ptr %10, align 4
-  br label %ifend38.i
-
-ifend38.i:                                        ; preds = %52, %if.entry8.i, %if.entry
-  %53 = phi i64 [ 6, %if.entry ], [ %spec.select144, %if.entry8.i ], [ %spec.select144, %52 ]
-  %54 = icmp eq i64 %8, -9223372036854775808
-  %55 = add nsw i64 %53, -5
-  %56 = icmp ult i64 %55, 2
-  %57 = and i1 %54, %56
-  br i1 %57, label %if.entry45.i, label %common.ret
-
-if.entry45.i:                                     ; preds = %ifend38.i
-  store i64 7, ptr %10, align 4
+if.entry42.i:                                     ; preds = %ifend35.i
+  store i64 7, ptr %8, align 4
   br label %common.ret
 
 if.entry2:                                        ; preds = %3
   %memberidx.i103 = getelementptr inbounds %FloatExpressionNode, ptr %2, i64 0, i32 3
-  %58 = load ptr, ptr %memberidx.i103, align 8
-  %memberidx1.i104 = getelementptr inbounds %FloatToken, ptr %58, i64 0, i32 2
-  %59 = load double, ptr %memberidx1.i104, align 8
-  %60 = tail call ptr @malloc(i32 33)
-  store i64 8, ptr %60, align 4
-  %memberidx.i.i.i105 = getelementptr inbounds %Expression, ptr %60, i64 0, i32 2
+  %40 = load ptr, ptr %memberidx.i103, align 8
+  %memberidx1.i104 = getelementptr inbounds %FloatToken, ptr %40, i64 0, i32 2
+  %41 = load double, ptr %memberidx1.i104, align 8
+  %42 = tail call ptr @malloc(i32 33)
+  store i64 8, ptr %42, align 4
+  %memberidx.i.i.i105 = getelementptr inbounds %Expression, ptr %42, i64 0, i32 2
   store i64 1, ptr %memberidx.i.i.i105, align 4
-  %memberidx1.i.i.i106 = getelementptr inbounds %Expression, ptr %60, i64 0, i32 1
-  %memberidx.i.i107 = getelementptr inbounds %Expression, ptr %60, i64 0, i32 3
-  %61 = tail call ptr @malloc(i32 8)
-  store i64 9, ptr %61, align 4
-  store ptr %61, ptr %memberidx.i.i107, align 8
-  %memberidx1.i.i108 = getelementptr inbounds %FloatExpression, ptr %60, i64 0, i32 4
-  store double %59, ptr %memberidx1.i.i108, align 8
+  %memberidx1.i.i.i106 = getelementptr inbounds %Expression, ptr %42, i64 0, i32 1
+  %memberidx.i.i107 = getelementptr inbounds %Expression, ptr %42, i64 0, i32 3
+  %43 = tail call ptr @malloc(i32 8)
+  store i64 9, ptr %43, align 4
+  store ptr %43, ptr %memberidx.i.i107, align 8
+  %memberidx1.i.i108 = getelementptr inbounds %FloatExpression, ptr %42, i64 0, i32 4
+  store double %41, ptr %memberidx1.i.i108, align 8
   store i1 true, ptr %memberidx1.i.i.i106, align 1
-  %62 = tail call ptr @malloc(i32 6)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(6) %62, ptr noundef nonnull align 8 dereferenceable(6) @205, i64 6, i1 false)
-  %63 = tail call ptr @malloc(i32 32)
-  store ptr @VTablestring, ptr %63, align 8
-  %memberidx.i.i20.i = getelementptr inbounds %string, ptr %63, i64 0, i32 1
-  store ptr %62, ptr %memberidx.i.i20.i, align 8
-  %memberidx1.i.i21.i = getelementptr inbounds %string, ptr %63, i64 0, i32 2
+  %44 = tail call ptr @malloc(i32 6)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(6) %44, ptr noundef nonnull align 8 dereferenceable(6) @205, i64 6, i1 false)
+  %45 = tail call ptr @malloc(i32 32)
+  store ptr @VTablestring, ptr %45, align 8
+  %memberidx.i.i20.i = getelementptr inbounds %string, ptr %45, i64 0, i32 1
+  store ptr %44, ptr %memberidx.i.i20.i, align 8
+  %memberidx1.i.i21.i = getelementptr inbounds %string, ptr %45, i64 0, i32 2
   store i64 6, ptr %memberidx1.i.i21.i, align 4
-  %memberidx2.i.i.i = getelementptr inbounds %string, ptr %63, i64 0, i32 3
+  %memberidx2.i.i.i = getelementptr inbounds %string, ptr %45, i64 0, i32 3
   store i64 6, ptr %memberidx2.i.i.i, align 4
-  %64 = load ptr, ptr getelementptr inbounds (<{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr @VTablestring, i64 0, i32 5), align 8
-  %65 = tail call ptr %64(ptr nonnull %63)
-  %66 = tail call double @atof(ptr %65)
-  tail call void @free(ptr %65)
-  %67 = load i64, ptr %1, align 4
-  %68 = and i64 %67, -2
-  %69 = icmp eq i64 %68, 8
-  br i1 %69, label %if.entry.i111, label %if.entry2.ifend.i113_crit_edge
+  %46 = load ptr, ptr getelementptr inbounds (<{ ptr, ptr, ptr, ptr, ptr, ptr, ptr, ptr }>, ptr @VTablestring, i64 0, i32 5), align 8
+  %47 = tail call ptr %46(ptr nonnull %45)
+  %48 = tail call double @atof(ptr %47)
+  tail call void @free(ptr %47)
+  %49 = load i64, ptr %1, align 4
+  %50 = and i64 %49, -2
+  %51 = icmp eq i64 %50, 8
+  br i1 %51, label %if.entry.i111, label %if.entry2.ifend.i113_crit_edge
 
 if.entry2.ifend.i113_crit_edge:                   ; preds = %if.entry2
-  %.pre143 = load i64, ptr %61, align 4
+  %.pre143 = load i64, ptr %43, align 4
   br label %ifend.i113
 
 if.entry.i111:                                    ; preds = %if.entry2
-  store i64 %67, ptr %61, align 4
+  store i64 %49, ptr %43, align 4
   br label %ifend.i113
 
 ifend.i113:                                       ; preds = %if.entry2.ifend.i113_crit_edge, %if.entry.i111
-  %70 = phi i64 [ %.pre143, %if.entry2.ifend.i113_crit_edge ], [ %67, %if.entry.i111 ]
-  %71 = fneg double %66
-  %72 = fcmp olt double %59, %71
-  %73 = fcmp ogt double %59, %66
-  %74 = or i1 %72, %73
-  %75 = icmp eq i64 %70, 8
-  %76 = and i1 %74, %75
-  br i1 %76, label %if.entry8.i114, label %common.ret
+  %52 = phi i64 [ %.pre143, %if.entry2.ifend.i113_crit_edge ], [ %49, %if.entry.i111 ]
+  %53 = fneg double %48
+  %54 = fcmp olt double %41, %53
+  %55 = fcmp ogt double %41, %48
+  %56 = or i1 %54, %55
+  %57 = icmp eq i64 %52, 8
+  %58 = and i1 %56, %57
+  br i1 %58, label %if.entry8.i, label %common.ret
 
-if.entry8.i114:                                   ; preds = %ifend.i113
-  store i64 9, ptr %61, align 4
+if.entry8.i:                                      ; preds = %ifend.i113
+  store i64 9, ptr %43, align 4
   br label %common.ret
 
 if.entry6:                                        ; preds = %3
-  %77 = tail call ptr @malloc(i32 33)
-  %memberidx.i115 = getelementptr inbounds %CharExpressionNode, ptr %2, i64 0, i32 3
-  %78 = load ptr, ptr %memberidx.i115, align 8
-  %memberidx1.i116 = getelementptr inbounds %CharToken, ptr %78, i64 0, i32 2
-  %79 = load i8, ptr %memberidx1.i116, align 1
-  %80 = zext i8 %79 to i64
-  store i64 8, ptr %77, align 4
-  %memberidx.i.i.i117 = getelementptr inbounds %Expression, ptr %77, i64 0, i32 2
-  store i64 0, ptr %memberidx.i.i.i117, align 4
-  %memberidx1.i.i.i118 = getelementptr inbounds %Expression, ptr %77, i64 0, i32 1
-  %memberidx.i.i119 = getelementptr inbounds %Expression, ptr %77, i64 0, i32 3
-  %81 = tail call ptr @malloc(i32 9)
-  %memberidx.i5.i.i120 = getelementptr inbounds %IntType, ptr %81, i64 0, i32 1
-  store i1 false, ptr %memberidx.i5.i.i120, align 1
-  store ptr %81, ptr %memberidx.i.i119, align 8
-  %memberidx1.i.i121 = getelementptr inbounds %IntExpression, ptr %77, i64 0, i32 4
-  store i64 %80, ptr %memberidx1.i.i121, align 4
-  store i1 true, ptr %memberidx1.i.i.i118, align 1
-  store i64 2, ptr %81, align 4
+  %59 = tail call ptr @malloc(i32 33)
+  %memberidx.i114 = getelementptr inbounds %CharExpressionNode, ptr %2, i64 0, i32 3
+  %60 = load ptr, ptr %memberidx.i114, align 8
+  %memberidx1.i115 = getelementptr inbounds %CharToken, ptr %60, i64 0, i32 2
+  %61 = load i8, ptr %memberidx1.i115, align 1
+  %62 = zext i8 %61 to i64
+  store i64 8, ptr %59, align 4
+  %memberidx.i.i.i116 = getelementptr inbounds %Expression, ptr %59, i64 0, i32 2
+  store i64 0, ptr %memberidx.i.i.i116, align 4
+  %memberidx1.i.i.i117 = getelementptr inbounds %Expression, ptr %59, i64 0, i32 1
+  %memberidx.i.i118 = getelementptr inbounds %Expression, ptr %59, i64 0, i32 3
+  %63 = tail call ptr @malloc(i32 9)
+  %memberidx.i5.i.i119 = getelementptr inbounds %IntType, ptr %63, i64 0, i32 1
+  store i1 false, ptr %memberidx.i5.i.i119, align 1
+  store ptr %63, ptr %memberidx.i.i118, align 8
+  %memberidx1.i.i120 = getelementptr inbounds %IntExpression, ptr %59, i64 0, i32 4
+  store i64 %62, ptr %memberidx1.i.i120, align 4
+  store i1 true, ptr %memberidx1.i.i.i117, align 1
+  store i64 2, ptr %63, align 4
   br label %common.ret
 
 if.entry10:                                       ; preds = %3
-  %82 = tail call ptr @malloc(i32 32)
-  store ptr @VTableArray_Expression_, ptr %82, align 8
-  %memberidx.i.i124 = getelementptr inbounds %Array_Expression_, ptr %82, i64 0, i32 2
-  store i64 0, ptr %memberidx.i.i124, align 4
-  %memberidx1.i.i125 = getelementptr inbounds %Array_Expression_, ptr %82, i64 0, i32 3
-  store i64 8, ptr %memberidx1.i.i125, align 4
-  %memberidx2.i.i126 = getelementptr inbounds %Array_Expression_, ptr %82, i64 0, i32 1
-  %83 = tail call ptr @malloc(i32 64)
-  store ptr %83, ptr %memberidx2.i.i126, align 8
-  store i64 0, ptr %memberidx.i.i124, align 4
-  %memberidx2.i128 = getelementptr inbounds %StringExpressionNode, ptr %2, i64 0, i32 4
-  %84 = load ptr, ptr %memberidx2.i128, align 8
-  %85 = tail call ptr @malloc(i32 25)
-  %memberidx.i18.i = getelementptr inbounds %Array_ExpressionNode_, ptr %84, i64 0, i32 1
-  %86 = load ptr, ptr %memberidx.i18.i, align 8
-  %memberidx1.i19.i = getelementptr inbounds %Array_ExpressionNode_, ptr %84, i64 0, i32 2
-  %87 = load i64, ptr %memberidx1.i19.i, align 4
-  store i1 false, ptr %85, align 1
-  %memberidx1.i.i.i129 = getelementptr inbounds %ArrayIterator_ExpressionNode_, ptr %85, i64 0, i32 1
-  %memberidx2.i.i.i130 = getelementptr inbounds %ArrayIterator_ExpressionNode_, ptr %85, i64 0, i32 3
-  store ptr %86, ptr %memberidx2.i.i.i130, align 8
-  %memberidx3.i.i.i = getelementptr inbounds %ArrayIterator_ExpressionNode_, ptr %85, i64 0, i32 2
-  store i64 %87, ptr %memberidx3.i.i.i, align 4
-  store i64 1, ptr %memberidx1.i.i.i129, align 4
-  %88 = icmp slt i64 %87, 1
-  br i1 %88, label %for.end.i, label %for.body.i
+  %64 = tail call ptr @malloc(i32 32)
+  store ptr @VTableArray_Expression_, ptr %64, align 8
+  %memberidx.i.i123 = getelementptr inbounds %Array_Expression_, ptr %64, i64 0, i32 2
+  store i64 0, ptr %memberidx.i.i123, align 4
+  %memberidx1.i.i124 = getelementptr inbounds %Array_Expression_, ptr %64, i64 0, i32 3
+  store i64 8, ptr %memberidx1.i.i124, align 4
+  %memberidx2.i.i125 = getelementptr inbounds %Array_Expression_, ptr %64, i64 0, i32 1
+  %65 = tail call ptr @malloc(i32 64)
+  store ptr %65, ptr %memberidx2.i.i125, align 8
+  store i64 0, ptr %memberidx.i.i123, align 4
+  %memberidx2.i127 = getelementptr inbounds %StringExpressionNode, ptr %2, i64 0, i32 4
+  %66 = load ptr, ptr %memberidx2.i127, align 8
+  %67 = tail call ptr @malloc(i32 25)
+  %memberidx.i18.i = getelementptr inbounds %Array_ExpressionNode_, ptr %66, i64 0, i32 1
+  %68 = load ptr, ptr %memberidx.i18.i, align 8
+  %memberidx1.i19.i = getelementptr inbounds %Array_ExpressionNode_, ptr %66, i64 0, i32 2
+  %69 = load i64, ptr %memberidx1.i19.i, align 4
+  store i1 false, ptr %67, align 1
+  %memberidx1.i.i.i128 = getelementptr inbounds %ArrayIterator_ExpressionNode_, ptr %67, i64 0, i32 1
+  %memberidx2.i.i.i129 = getelementptr inbounds %ArrayIterator_ExpressionNode_, ptr %67, i64 0, i32 3
+  store ptr %68, ptr %memberidx2.i.i.i129, align 8
+  %memberidx3.i.i.i = getelementptr inbounds %ArrayIterator_ExpressionNode_, ptr %67, i64 0, i32 2
+  store i64 %69, ptr %memberidx3.i.i.i, align 4
+  store i64 1, ptr %memberidx1.i.i.i128, align 4
+  %70 = icmp slt i64 %69, 1
+  br i1 %70, label %for.end.i, label %for.body.i
 
 for.body.i:                                       ; preds = %if.entry10, %Array_Expression____sl__.exit.i
-  %89 = phi i64 [ %101, %Array_Expression____sl__.exit.i ], [ 1, %if.entry10 ]
-  %arg.0.i141.in = phi ptr [ %ptridx.i28.i, %Array_Expression____sl__.exit.i ], [ %86, %if.entry10 ]
+  %71 = phi i64 [ %83, %Array_Expression____sl__.exit.i ], [ 1, %if.entry10 ]
+  %arg.0.i141.in = phi ptr [ %ptridx.i28.i, %Array_Expression____sl__.exit.i ], [ %68, %if.entry10 ]
   %arg.0.i141 = load ptr, ptr %arg.0.i141.in, align 8
-  %90 = tail call ptr @malloc(i32 8)
-  store i64 20, ptr %90, align 4
-  %91 = tail call fastcc ptr @TypeChecker_check_expression(ptr %0, ptr nonnull %90, ptr %arg.0.i141)
-  %92 = load i64, ptr %memberidx.i.i124, align 4
-  %93 = load i64, ptr %memberidx1.i.i125, align 4
-  %.not.i.i = icmp slt i64 %92, %93
+  %72 = tail call ptr @malloc(i32 8)
+  store i64 20, ptr %72, align 4
+  %73 = tail call fastcc ptr @TypeChecker_check_expression(ptr %0, ptr nonnull %72, ptr %arg.0.i141)
+  %74 = load i64, ptr %memberidx.i.i123, align 4
+  %75 = load i64, ptr %memberidx1.i.i124, align 4
+  %.not.i.i = icmp slt i64 %74, %75
   br i1 %.not.i.i, label %for.body.i.Array_Expression____sl__.exit.i_crit_edge, label %if.entry.i.i
 
 for.body.i.Array_Expression____sl__.exit.i_crit_edge: ; preds = %for.body.i
-  %.pre142 = load ptr, ptr %memberidx2.i.i126, align 8
+  %.pre142 = load ptr, ptr %memberidx2.i.i125, align 8
   br label %Array_Expression____sl__.exit.i
 
 if.entry.i.i:                                     ; preds = %for.body.i
-  %94 = shl nuw i64 %93, 1
-  store i64 %94, ptr %memberidx1.i.i125, align 4
-  %95 = load ptr, ptr %memberidx2.i.i126, align 8
-  %96 = shl i64 %93, 4
-  %97 = tail call ptr @realloc(ptr %95, i64 %96)
-  store ptr %97, ptr %memberidx2.i.i126, align 8
-  %.pre = load i64, ptr %memberidx.i.i124, align 4
+  %76 = shl nuw i64 %75, 1
+  store i64 %76, ptr %memberidx1.i.i124, align 4
+  %77 = load ptr, ptr %memberidx2.i.i125, align 8
+  %78 = shl i64 %75, 4
+  %79 = tail call ptr @realloc(ptr %77, i64 %78)
+  store ptr %79, ptr %memberidx2.i.i125, align 8
+  %.pre = load i64, ptr %memberidx.i.i123, align 4
   br label %Array_Expression____sl__.exit.i
 
 Array_Expression____sl__.exit.i:                  ; preds = %for.body.i.Array_Expression____sl__.exit.i_crit_edge, %if.entry.i.i
-  %98 = phi ptr [ %97, %if.entry.i.i ], [ %.pre142, %for.body.i.Array_Expression____sl__.exit.i_crit_edge ]
-  %99 = phi i64 [ %.pre, %if.entry.i.i ], [ %92, %for.body.i.Array_Expression____sl__.exit.i_crit_edge ]
-  %100 = add nsw i64 %99, 1
-  store i64 %100, ptr %memberidx.i.i124, align 4
-  %ptridx.i25.i = getelementptr inbounds ptr, ptr %98, i64 %99
-  store ptr %91, ptr %ptridx.i25.i, align 8
-  %101 = add nuw nsw i64 %89, 1
-  store i64 %101, ptr %memberidx1.i.i.i129, align 4
-  %ptridx.i28.i = getelementptr inbounds ptr, ptr %86, i64 %89
-  %.not = icmp slt i64 %89, %87
+  %80 = phi ptr [ %79, %if.entry.i.i ], [ %.pre142, %for.body.i.Array_Expression____sl__.exit.i_crit_edge ]
+  %81 = phi i64 [ %.pre, %if.entry.i.i ], [ %74, %for.body.i.Array_Expression____sl__.exit.i_crit_edge ]
+  %82 = add nsw i64 %81, 1
+  store i64 %82, ptr %memberidx.i.i123, align 4
+  %ptridx.i25.i = getelementptr inbounds ptr, ptr %80, i64 %81
+  store ptr %73, ptr %ptridx.i25.i, align 8
+  %83 = add nuw nsw i64 %71, 1
+  store i64 %83, ptr %memberidx1.i.i.i128, align 4
+  %ptridx.i28.i = getelementptr inbounds ptr, ptr %68, i64 %71
+  %.not = icmp slt i64 %71, %69
   br i1 %.not, label %for.body.i, label %for.end.i
 
 for.end.i:                                        ; preds = %Array_Expression____sl__.exit.i, %if.entry10
-  tail call void @free(ptr nonnull %85)
-  %102 = load i64, ptr %1, align 4
-  %103 = icmp eq i64 %102, 13
-  br i1 %103, label %if.entry.i136, label %if.entry.i132
+  tail call void @free(ptr nonnull %67)
+  %84 = load i64, ptr %1, align 4
+  %85 = icmp eq i64 %84, 13
+  br i1 %85, label %if.entry.i136, label %if.entry.i131
 
 if.entry.i136:                                    ; preds = %for.end.i
   %memberidx1.i135 = getelementptr inbounds %PointerType, ptr %1, i64 0, i32 1
-  %104 = load ptr, ptr %memberidx1.i135, align 8
-  %105 = load i64, ptr %104, align 4
-  %106 = add i64 %105, -1
-  %107 = icmp ult i64 %106, 7
-  br i1 %107, label %is_u8_ptr.exit, label %if.entry.i132
+  %86 = load ptr, ptr %memberidx1.i135, align 8
+  %87 = load i64, ptr %86, align 4
+  %88 = add i64 %87, -1
+  %89 = icmp ult i64 %88, 7
+  br i1 %89, label %is_u8_ptr.exit, label %if.entry.i131
 
 is_u8_ptr.exit:                                   ; preds = %if.entry.i136
-  %108 = icmp ne i64 %105, 2
-  %memberidx6.i137 = getelementptr inbounds %IntType, ptr %104, i64 0, i32 1
-  %109 = load i1, ptr %memberidx6.i137, align 1
-  %110 = or i1 %108, %109
-  br i1 %110, label %if.entry.i132, label %TypeChecker_check_string_expression.exit
+  %90 = icmp ne i64 %87, 2
+  %memberidx6.i137 = getelementptr inbounds %IntType, ptr %86, i64 0, i32 1
+  %91 = load i1, ptr %memberidx6.i137, align 1
+  %92 = or i1 %90, %91
+  br i1 %92, label %if.entry.i131, label %TypeChecker_check_string_expression.exit
 
-if.entry.i132:                                    ; preds = %if.entry.i136, %for.end.i, %is_u8_ptr.exit
-  %111 = tail call ptr @malloc(i32 6)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(6) %111, ptr noundef nonnull align 8 dereferenceable(6) @173, i64 6, i1 false)
-  %112 = tail call ptr @malloc(i32 32)
-  store ptr @VTablestring, ptr %112, align 8
-  %memberidx.i.i30.i = getelementptr inbounds %string, ptr %112, i64 0, i32 1
-  store ptr %111, ptr %memberidx.i.i30.i, align 8
-  %memberidx1.i.i31.i = getelementptr inbounds %string, ptr %112, i64 0, i32 2
+if.entry.i131:                                    ; preds = %if.entry.i136, %for.end.i, %is_u8_ptr.exit
+  %93 = tail call ptr @malloc(i32 6)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(6) %93, ptr noundef nonnull align 8 dereferenceable(6) @173, i64 6, i1 false)
+  %94 = tail call ptr @malloc(i32 32)
+  store ptr @VTablestring, ptr %94, align 8
+  %memberidx.i.i30.i = getelementptr inbounds %string, ptr %94, i64 0, i32 1
+  store ptr %93, ptr %memberidx.i.i30.i, align 8
+  %memberidx1.i.i31.i = getelementptr inbounds %string, ptr %94, i64 0, i32 2
   store i64 6, ptr %memberidx1.i.i31.i, align 4
-  %memberidx2.i.i32.i = getelementptr inbounds %string, ptr %112, i64 0, i32 3
+  %memberidx2.i.i32.i = getelementptr inbounds %string, ptr %94, i64 0, i32 3
   store i64 6, ptr %memberidx2.i.i32.i, align 4
-  %113 = tail call fastcc ptr @TypeChecker_get_type_from_current_scope(ptr %0, ptr nonnull %112)
+  %95 = tail call fastcc ptr @TypeChecker_get_type_from_current_scope(ptr %0, ptr nonnull %94)
   br label %TypeChecker_check_string_expression.exit
 
-TypeChecker_check_string_expression.exit:         ; preds = %is_u8_ptr.exit, %if.entry.i132
-  %expected_type.0.i = phi ptr [ %113, %if.entry.i132 ], [ %1, %is_u8_ptr.exit ]
-  %114 = tail call ptr @malloc(i32 49)
+TypeChecker_check_string_expression.exit:         ; preds = %is_u8_ptr.exit, %if.entry.i131
+  %expected_type.0.i = phi ptr [ %95, %if.entry.i131 ], [ %1, %is_u8_ptr.exit ]
+  %96 = tail call ptr @malloc(i32 49)
   %memberidx4.i = getelementptr inbounds %StringExpressionNode, ptr %2, i64 0, i32 3
-  %115 = load ptr, ptr %memberidx4.i, align 8
-  %memberidx5.i = getelementptr inbounds %StrToken, ptr %115, i64 0, i32 2
-  %116 = load ptr, ptr %memberidx5.i, align 8
-  %memberidx7.i133 = getelementptr inbounds %StrToken, ptr %115, i64 0, i32 3
-  %117 = load ptr, ptr %memberidx7.i133, align 8
-  store i64 8, ptr %114, align 4
-  %memberidx.i.i33.i = getelementptr inbounds %Expression, ptr %114, i64 0, i32 2
+  %97 = load ptr, ptr %memberidx4.i, align 8
+  %memberidx5.i = getelementptr inbounds %StrToken, ptr %97, i64 0, i32 2
+  %98 = load ptr, ptr %memberidx5.i, align 8
+  %memberidx7.i132 = getelementptr inbounds %StrToken, ptr %97, i64 0, i32 3
+  %99 = load ptr, ptr %memberidx7.i132, align 8
+  store i64 8, ptr %96, align 4
+  %memberidx.i.i33.i = getelementptr inbounds %Expression, ptr %96, i64 0, i32 2
   store i64 2, ptr %memberidx.i.i33.i, align 4
-  %memberidx1.i.i34.i = getelementptr inbounds %Expression, ptr %114, i64 0, i32 1
-  %memberidx.i35.i = getelementptr inbounds %StringExpression, ptr %114, i64 0, i32 6
-  store ptr %82, ptr %memberidx.i35.i, align 8
-  %memberidx1.i36.i = getelementptr inbounds %StringExpression, ptr %114, i64 0, i32 5
-  store ptr %117, ptr %memberidx1.i36.i, align 8
-  %memberidx2.i37.i = getelementptr inbounds %Expression, ptr %114, i64 0, i32 3
-  %memberidx3.i.i = getelementptr inbounds %StringExpression, ptr %114, i64 0, i32 4
-  store ptr %116, ptr %memberidx3.i.i, align 8
+  %memberidx1.i.i34.i = getelementptr inbounds %Expression, ptr %96, i64 0, i32 1
+  %memberidx.i35.i = getelementptr inbounds %StringExpression, ptr %96, i64 0, i32 6
+  store ptr %64, ptr %memberidx.i35.i, align 8
+  %memberidx1.i36.i = getelementptr inbounds %StringExpression, ptr %96, i64 0, i32 5
+  store ptr %99, ptr %memberidx1.i36.i, align 8
+  %memberidx2.i37.i = getelementptr inbounds %Expression, ptr %96, i64 0, i32 3
+  %memberidx3.i.i = getelementptr inbounds %StringExpression, ptr %96, i64 0, i32 4
+  store ptr %98, ptr %memberidx3.i.i, align 8
   store i1 true, ptr %memberidx1.i.i34.i, align 1
   store ptr %expected_type.0.i, ptr %memberidx2.i37.i, align 8
   br label %common.ret
 
 if.entry14:                                       ; preds = %3
-  %118 = tail call fastcc ptr @TypeChecker_check_array_expression(ptr %0, ptr %1, ptr nonnull %2)
+  %100 = tail call fastcc ptr @TypeChecker_check_array_expression(ptr %0, ptr %1, ptr nonnull %2)
   br label %common.ret
 
 if.entry18:                                       ; preds = %3
-  %119 = tail call fastcc ptr @TypeChecker_check_var_access_expr(ptr %0, ptr %1, ptr nonnull %2)
+  %101 = tail call fastcc ptr @TypeChecker_check_var_access_expr(ptr %0, ptr %1, ptr nonnull %2)
   br label %common.ret
 
 if.entry22:                                       ; preds = %3
-  %120 = tail call fastcc ptr @TypeChecker_check_bin_expr(ptr %0, ptr %1, ptr nonnull %2)
+  %102 = tail call fastcc ptr @TypeChecker_check_bin_expr(ptr %0, ptr %1, ptr nonnull %2)
   br label %common.ret
 
 if.entry26:                                       ; preds = %3
-  %121 = tail call fastcc ptr @TypeChecker_check_unary_expr(ptr %0, ptr %1, ptr nonnull %2)
+  %103 = tail call fastcc ptr @TypeChecker_check_unary_expr(ptr %0, ptr %1, ptr nonnull %2)
   br label %common.ret
 
 if.entry30:                                       ; preds = %3
-  %122 = tail call fastcc ptr @TypeChecker_check_ternary_expr(ptr %0, ptr %1, ptr nonnull %2)
+  %104 = tail call fastcc ptr @TypeChecker_check_ternary_expr(ptr %0, ptr %1, ptr nonnull %2)
   br label %common.ret
 
 if.entry34:                                       ; preds = %3
-  %123 = tail call fastcc ptr @TypeChecker_check_typecast_expr(ptr %0, ptr nonnull %2)
+  %105 = tail call fastcc ptr @TypeChecker_check_typecast_expr(ptr %0, ptr nonnull %2)
   br label %common.ret
 
 if.entry38:                                       ; preds = %3
-  %124 = tail call fastcc ptr @TypeChecker_check_new_expr(ptr %0, ptr nonnull %2)
+  %106 = tail call fastcc ptr @TypeChecker_check_new_expr(ptr %0, ptr nonnull %2)
   br label %common.ret
 
 if.entry42:                                       ; preds = %3
-  %125 = tail call fastcc ptr @TypeChecker_check_member_expr(ptr %0, ptr nonnull %2)
+  %107 = tail call fastcc ptr @TypeChecker_check_member_expr(ptr %0, ptr nonnull %2)
   br label %common.ret
 
 if.entry46:                                       ; preds = %3
-  %126 = tail call fastcc ptr @TypeChecker_check_index_expr(ptr %0, ptr nonnull %2)
+  %108 = tail call fastcc ptr @TypeChecker_check_index_expr(ptr %0, ptr nonnull %2)
   br label %common.ret
 
 if.entry50:                                       ; preds = %3
-  %127 = tail call fastcc ptr @TypeChecker_check_call_expr(ptr %0, ptr nonnull %2)
+  %109 = tail call fastcc ptr @TypeChecker_check_call_expr(ptr %0, ptr nonnull %2)
   br label %common.ret
 }
 

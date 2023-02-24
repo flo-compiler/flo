@@ -2712,31 +2712,18 @@ class TypeChecker {
         let is_signed = true
         if is_int(expected_type){
             expr_value.value_type.kind = expected_type.kind
-            is_signed = (expr_value.value_type as IntType).is_signed = (expected_type as IntType).is_signed
+            (expr_value.value_type as IntType).is_signed = (expected_type as IntType).is_signed
         }
-        if is_signed {
-            if int_value < -8 or int_value > 7 and expr_value.value_type.kind == TypeKind.I4
-                expr_value.value_type.kind = TypeKind.I8
-            if int_value < -128 or int_value > 127 and expr_value.value_type.kind == TypeKind.I8
-                expr_value.value_type.kind = TypeKind.I16
-            if int_value < -32768 or int_value > 32767 and expr_value.value_type.kind == TypeKind.I16
-                expr_value.value_type.kind = TypeKind.I32
-            if int_value < -2147483648 or int_value > 2147483647 and (expr_value.value_type.kind == TypeKind.I32 or (expr_value.value_type.kind == TypeKind.INT and ARCH_WORD_SIZE == 32))
-                expr_value.value_type.kind = TypeKind.I64
-            if int_value < -9223372036854775808 or int_value > 9223372036854775807 and (expr_value.value_type.kind == TypeKind.I64 or (expr_value.value_type.kind == TypeKind.INT and ARCH_WORD_SIZE == 64))
-                expr_value.value_type.kind = TypeKind.I128
-        } else {
-            if int_value > 15 and expr_value.value_type.kind == TypeKind.I4
-                expr_value.value_type.kind = TypeKind.I8
-            if int_value > 255 and expr_value.value_type.kind == TypeKind.I8
-                expr_value.value_type.kind = TypeKind.I16
-            if int_value > 65535 and expr_value.value_type.kind == TypeKind.I16
-                expr_value.value_type.kind = TypeKind.I32
-            if int_value > 4294967295 and (expr_value.value_type.kind == TypeKind.I32 or (expr_value.value_type.kind == TypeKind.INT and ARCH_WORD_SIZE == 32))
-                expr_value.value_type.kind = TypeKind.I64
-            if int_value > 9223372036854775807 and (expr_value.value_type.kind == TypeKind.I64 or (expr_value.value_type.kind == TypeKind.INT and ARCH_WORD_SIZE == 64))
-                expr_value.value_type.kind = TypeKind.I128
-        }
+        if int_value < -8 or int_value > 7 and expr_value.value_type.kind == TypeKind.I4
+            expr_value.value_type.kind = TypeKind.I8
+        if int_value < -128 or int_value > 127 and expr_value.value_type.kind == TypeKind.I8
+            expr_value.value_type.kind = TypeKind.I16
+        if int_value < -32768 or int_value > 32767 and expr_value.value_type.kind == TypeKind.I16
+            expr_value.value_type.kind = TypeKind.I32
+        if int_value < -2147483648 or int_value > 2147483647 and (expr_value.value_type.kind == TypeKind.I32 or (expr_value.value_type.kind == TypeKind.INT and ARCH_WORD_SIZE == 32))
+            expr_value.value_type.kind = TypeKind.I64
+        if int_value < -9223372036854775808 or int_value > 9223372036854775807 and (expr_value.value_type.kind == TypeKind.I64 or (expr_value.value_type.kind == TypeKind.INT and ARCH_WORD_SIZE == 64))
+            expr_value.value_type.kind = TypeKind.I128
         return expr_value
     }
     private check_float_expression(this, expected_type: Type, float_node: FloatExpressionNode): FloatExpression {
