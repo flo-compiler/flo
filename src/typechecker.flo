@@ -2175,8 +2175,8 @@ class TypeChecker {
         if is_null(right) and (op == BinaryOp.EEQ or op == BinaryOp.NEQ) {
             return new BinaryExpression(left, op, right, new BooleanType())
         }
-        if op == BinaryOp.IN {
-            if is_int(right.value_type){
+        if op == BinaryOp.IN { //FIXME: Just For Ranges. Will not be required once we have ranges are generics. 
+            if is_int(right.value_type) and is_int(arg_type){
                 right = cast_exp_to_type(right, max_type(right.value_type, arg_type))
             }
         }
