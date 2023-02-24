@@ -275,42 +275,42 @@ class CodeGen {
         let arg_types: LLVMTypeRef[1] = [LLVMPointerType(LLVMInt8Type())]
         let args: LLVMValueRef[1] = [arg]
         let float_ty = LLVMDoubleType()
-        let atof = get_intrinsic(this.module, "atof", &arg_types[0], 1, float_ty)
-        return LLVMBuildCall2(builder, atof.fnc_type, atof.call, &args[0], 1, "")
+        let atof = get_intrinsic(this.module, "atof", &arg_types[0], arg_types.size, float_ty)
+        return LLVMBuildCall2(builder, atof.fnc_type, atof.call, &args[0], args.size, "")
     }
     private codegen_atoi_call(this, builder: LLVMBuilderRef, arg: LLVMValueRef): LLVMValueRef {
         let arg_types: LLVMTypeRef[1] = [LLVMPointerType(LLVMInt8Type())]
         let args: LLVMValueRef[1] = [arg]
         let int_ty = LLVMInt32Type()
-        let atoi = get_intrinsic(this.module, "atoi", &arg_types[0], 1, int_ty)
-        return LLVMBuildCall2(builder, atoi.fnc_type, atoi.call, &args[0], 1, "")
+        let atoi = get_intrinsic(this.module, "atoi", &arg_types[0], arg_types.size, int_ty)
+        return LLVMBuildCall2(builder, atoi.fnc_type, atoi.call, &args[0], args.size, "")
     }
     private codegen_atol_call(this, builder: LLVMBuilderRef, arg: LLVMValueRef): LLVMValueRef {
         let arg_types: LLVMTypeRef[1] = [LLVMPointerType(LLVMInt8Type())]
         let args: LLVMValueRef[1] = [arg]
         let big_int_ty = LLVMInt64Type()
-        let atol = get_intrinsic(this.module, "atol", &arg_types[0], 1, big_int_ty)
-        return LLVMBuildCall2(builder, atol.fnc_type, atol.call, &args[0], 1, "")
+        let atol = get_intrinsic(this.module, "atol", &arg_types[0], arg_types.size, big_int_ty)
+        return LLVMBuildCall2(builder, atol.fnc_type, atol.call, &args[0], args.size, "")
     }
     private codegen_realloc_call(this, builder: LLVMBuilderRef, args: LLVMValueRef*): LLVMValueRef {
         let i8_ptr_ty = LLVMPointerType(LLVMInt8Type())
         let arg_types: LLVMTypeRef[2] = [i8_ptr_ty, LLVMIntType(ARCH_WORD_SIZE)]
-        let realloc = get_intrinsic(this.module, "realloc", &arg_types[0], 2, i8_ptr_ty)
-        return LLVMBuildCall2(builder, realloc.fnc_type, realloc.call, args, 2, "")
+        let realloc = get_intrinsic(this.module, "realloc", &arg_types[0], arg_types.size, i8_ptr_ty)
+        return LLVMBuildCall2(builder, realloc.fnc_type, realloc.call, args, arg_types.size, "")
     }
     private codegen_memcmp_call(this, builder: LLVMBuilderRef, args: LLVMValueRef*): LLVMValueRef {
         let i8_ptr_ty = LLVMPointerType(LLVMInt8Type())
         let int_ty = LLVMIntType(ARCH_WORD_SIZE)
         let arg_types: LLVMTypeRef[3] = [i8_ptr_ty, i8_ptr_ty, int_ty]
-        let memcmp = get_intrinsic(this.module, "memcmp", &arg_types[0], 3, int_ty)
-        return LLVMBuildCall2(builder, memcmp.fnc_type, memcmp.call, args, 3, "")
+        let memcmp = get_intrinsic(this.module, "memcmp", &arg_types[0], arg_types.size, int_ty)
+        return LLVMBuildCall2(builder, memcmp.fnc_type, memcmp.call, args, arg_types.size, "")
     }
     private codegen_del_call(this, builder: LLVMBuilderRef, self: LLVMValueRef, obj_ty: ObjectType): LLVMValueRef {
         let func_ty: FunctionType
         let func = this.get_member_with_name(builder, self, obj_ty, "__del__", &func_ty)
         if func == null return null
         let args: LLVMValueRef[1] = [self]
-        return LLVMBuildCall2(builder, this.codegen_type(func_ty, false), func, &args[0], 1, "")
+        return LLVMBuildCall2(builder, this.codegen_type(func_ty, false), func, &args[0], args.size, "")
     }
     private createGlobalLLVMString(this, builder: LLVMBuilderRef, str_value: string): LLVMValueRef {
         let str = this.global_string_scope[str_value]
@@ -332,7 +332,7 @@ class CodeGen {
         call_args_buffer[1] = llvm_fmt
         (call_args_buffer + 2).copy_from(args, args_length)
         let arg_types: LLVMTypeRef[2] = [i8_ptr_ty, i8_ptr_ty]
-        let asprintf = get_intrinsic(this.module, "asprintf", &arg_types[0], 2, int_ty, true)
+        let asprintf = get_intrinsic(this.module, "asprintf", &arg_types[0], arg_types.size, int_ty, true)
         let str_len = LLVMBuildCall2(builder, asprintf.fnc_type, asprintf.call, call_args_buffer, num_passed_args, "")
         if len_ptr != null {
             len_ptr[0] = str_len
@@ -384,7 +384,7 @@ class CodeGen {
         if val_ty.kind == TypeKind.ENUM {
             let enum_meta = this.get_or_codegen_enum_from_typeid((val_ty as EnumType).enum_id).metanames
             let indices: LLVMValueRef[1] = [llvm_val]
-            let ptr = LLVMBuildInBoundsGEP2(builder, LLVMTypeOf(enum_meta), enum_meta, &indices[0], 1, "")
+            let ptr = LLVMBuildInBoundsGEP2(builder, LLVMTypeOf(enum_meta), enum_meta, &indices[0], indices.size, "")
             return LLVMBuildLoad2(builder, LLVMTypeOf(ptr), ptr, "")
         }
         return llvm_val
@@ -423,11 +423,11 @@ class CodeGen {
                     panic("Could not find function 'string.from_bytes' in program")
                 }
                 let args: LLVMValueRef[2] = [str, str_len]
-                str = LLVMBuildCall2(builder, LLVM_GetFunctionType(func), func, &args[0], 2, "")
+                str = LLVMBuildCall2(builder, LLVM_GetFunctionType(func), func, &args[0], args.size, "")
             } else {
                 let self = LLVMBuildMalloc(builder, str_ty, "")
                 let args: LLVMValueRef[3] = [self, str, str_len] 
-                this.build_constructor_call(builder, string_exp.value_type as ObjectType, &args[0], 3)
+                this.build_constructor_call(builder, string_exp.value_type as ObjectType, &args[0], args.size)
                 str = self
             }
         }
@@ -443,7 +443,7 @@ class CodeGen {
         let addr = ptr
         for value in array_exp.elements {
             LLVMBuildStore(builder, this.codegen_expression(builder, value), addr)
-            addr = LLVMBuildInBoundsGEP2(builder, ptr_ty, addr, &next_args[0], 1, "")
+            addr = LLVMBuildInBoundsGEP2(builder, ptr_ty, addr, &next_args[0], next_args.size, "")
         }
         return addr
     }
@@ -533,11 +533,11 @@ class CodeGen {
         if expr_val_ty.kind == TypeKind.ARRAY {
             let indices: LLVMValueRef[2] = [this.createLLVMInt(0), index]
             ind_ptr = this.get_expr_mem(builder, index_exp.expression)
-            return LLVMBuildInBoundsGEP2(builder, ty, ind_ptr, &indices[0], 2, "arrayidx")
+            return LLVMBuildInBoundsGEP2(builder, ty, ind_ptr, &indices[0], indices.size, "arrayidx")
         }
         let indices_1: LLVMValueRef[1] = [index]
         ind_ptr = this.codegen_expression(builder, index_exp.expression)
-        return LLVMBuildInBoundsGEP2(builder, ty, ind_ptr, &indices_1[0], 1, "ptridx")
+        return LLVMBuildInBoundsGEP2(builder, ty, ind_ptr, &indices_1[0], indices_1.size, "ptridx")
     }
     private get_member_expr_mem(this, builder: LLVMBuilderRef, member_expr: MemberExpression, ptr: LLVMValueRef): LLVMValueRef {
         let struct_class = this.get_or_codegen_class_from_typeid(member_expr.member_id.type_id)
@@ -548,19 +548,18 @@ class CodeGen {
         if ptr == null {
             ptr = this.codegen_expression(builder, member_expr.expression)
         }
-        const indices_count = 2
-        let indices_buffer: LLVMValueRef[indices_count] = [LLVMConstInt(LLVMInt32Type(), 0, false), null]
+        let indices_buffer: LLVMValueRef[2] = [LLVMConstInt(LLVMInt32Type(), 0, false), null]
         if !is_function(member_expr.value_type) {
             let vtoffset = struct_class.vtable_type == null ? 0 : 1
             indices_buffer[1] = LLVMConstInt(LLVMInt32Type(), struct_class.fields_pos_map[prop_id_key] + vtoffset as u64, false)
         } else {
             indices_buffer[1] = LLVMConstInt(LLVMInt32Type(), 0, false)
-            ptr = LLVMBuildInBoundsGEP2(builder, struct_type, ptr, &indices_buffer[0], indices_count, "")
+            ptr = LLVMBuildInBoundsGEP2(builder, struct_type, ptr, &indices_buffer[0], indices_buffer.size, "")
             ptr = LLVMBuildLoad2(builder, LLVMPointerType(struct_class.vtable_type), ptr, "")
             indices_buffer[1] = LLVMConstInt(LLVMInt32Type(), struct_class.vt_methods_pos_map[prop_id_key] as u64, false)
             struct_type = struct_class.vtable_type
         }
-        return LLVMBuildInBoundsGEP2(builder, struct_type, ptr, &indices_buffer[0], indices_count, "memberidx")
+        return LLVMBuildInBoundsGEP2(builder, struct_type, ptr, &indices_buffer[0], indices_buffer.size, "memberidx")
     }
     private get_expr_mem(this, builder: LLVMBuilderRef, exp: Expression): LLVMValueRef {
         if exp.expr_kind == ExpressionKind.ACCESS
@@ -602,7 +601,7 @@ class CodeGen {
         let size_value = this.createLLVMInt(len_val > 0 ? len_val: 1)
         let len_value = this.createLLVMInt(len_val)
         let args: LLVMValueRef[2] = [self, LLVMConstMul(size_value, LLVMSizeOf(elmllvm_ty))]
-        this.build_constructor_call(builder, obj_ty, &args[0], 2)
+        this.build_constructor_call(builder, obj_ty, &args[0], args.size)
         let buff_ptr = this.get_member_mem_with_name(builder, self, obj_ty, "buffer")
         let arg_ptr = LLVMBuildLoad2(builder, LLVMPointerType(elmllvm_ty), buff_ptr, "")
         this.store_array_elements(builder, arg_ptr, arr_expr)
@@ -619,7 +618,7 @@ class CodeGen {
                 let zero = this.createLLVMInt(0)
                 let args: LLVMValueRef[2] = [zero, zero]
                 let array_type = this.codegen_type(value_ty)
-                ptr = LLVMBuildInBoundsGEP2(builder, array_type, ptr, &args[0], 2, "")
+                ptr = LLVMBuildInBoundsGEP2(builder, array_type, ptr, &args[0], args.size, "")
                 return this.store_array_elements(builder, ptr, arr_expr)
             }
             value = this.codegen_builtin_array(builder, value_ty as GenericType, arr_expr)
@@ -638,8 +637,8 @@ class CodeGen {
         let name = "llvm.pow.$(dump_type(ty, true))"
         let llvmty = this.codegen_type(ty)
         let arg_types: LLVMTypeRef[2] = [llvmty, llvmty]
-        let res = get_intrinsic(this.module, name, &arg_types[0], 2, llvmty)
-        return LLVMBuildCall2(builder, res.fnc_type, res.call, &args[0], 2, "")
+        let res = get_intrinsic(this.module, name, &arg_types[0], arg_types.size, llvmty)
+        return LLVMBuildCall2(builder, res.fnc_type, res.call, &args[0], args.size, "")
     }
     private codegen_bin_exp(this, builder: LLVMBuilderRef, bin_exp: BinaryExpression): LLVMValueRef {   
         let op = bin_exp.op
@@ -665,7 +664,7 @@ class CodeGen {
         if is_pointer(lty){
             let indices: LLVMValueRef[1] = [op == BinaryOp.ADD ? rhs: CodeGen.neg_int(builder, rhs)]
             let pointee_type = this.codegen_type((lty as PointerType).pointee_type)
-            return LLVMBuildInBoundsGEP2(builder, pointee_type, lhs, &indices[0], 1, "")
+            return LLVMBuildInBoundsGEP2(builder, pointee_type, lhs, &indices[0], indices.size, "")
         }
         let ipred: LLVMIntPredicate = null
         let rpred: LLVMRealPredicate = null
@@ -794,7 +793,7 @@ class CodeGen {
             if is_pointer(exp.value_type) {
                 alloc_ty = this.codegen_type((exp.value_type as PointerType).pointee_type)
                 let indices: LLVMValueRef[1] = [LLVMConstInt(LLVMInt32Type(), incr_value as u64, true)]
-                new_value = LLVMBuildInBoundsGEP2(builder, alloc_ty, val, &indices[0], 1, "incdec.ptr")
+                new_value = LLVMBuildInBoundsGEP2(builder, alloc_ty, val, &indices[0], indices.size, "incdec.ptr")
             } else if is_numeric(exp.value_type){
                 let incr_amt = is_int(exp.value_type) ? LLVMConstInt(alloc_ty, incr_value as u64, false) : LLVMConstReal(alloc_ty, incr_value * 1.0 as f64)
                 new_value = LLVMBuildNSWAdd(builder, val, incr_amt, "")
@@ -835,7 +834,7 @@ class CodeGen {
         let phi_node = LLVMBuildPhi(builder, this.codegen_type(ternary_exp.is_true.value_type), "ternary")
         let incomming_vals: LLVMValueRef[2] = [is_true, is_false]
         let blocks: LLVMBasicBlockRef[2] = [true_block, false_block]
-        LLVMAddIncoming(phi_node, &incomming_vals[0], &blocks[0], 2)
+        LLVMAddIncoming(phi_node, &incomming_vals[0], &blocks[0], blocks.size)
         return phi_node
     }
     /* TODO: Needs refactoring to remove array expression */
@@ -934,7 +933,7 @@ class CodeGen {
         let prop_ty = get_class_prop_type_with_name(this.program, string_obj_ty, "to_cstring")
         let func = this.get_member_with_name(builder, value, string_obj_ty, "to_cstring")
         let args: LLVMValueRef[1] = [value] 
-        return LLVMBuildCall2(builder, this.codegen_type(prop_ty, false), func, &args[0], 1, "")
+        return LLVMBuildCall2(builder, this.codegen_type(prop_ty, false), func, &args[0], args.size, "")
     }
     private codegen_intrinsic_exp(this, builder: LLVMBuilderRef, intrinsic_call_exp: IntrinsicCall): LLVMValueRef {
         let intrinsic_type = intrinsic_call_exp.intrinsic
@@ -1228,8 +1227,8 @@ class CodeGen {
                 this.add_var(this_id, this_alloc)
                 if is_constructor {
                     if struct_class.vtable != null {
-                        let index: LLVMValueRef[1] = [this.createLLVMInt(0)]
-                        let vt_ptr =  LLVMBuildInBoundsGEP2(func_builder, object_type, this_param, &index[0], 1, "")
+                        let indices: LLVMValueRef[1] = [this.createLLVMInt(0)]
+                        let vt_ptr =  LLVMBuildInBoundsGEP2(func_builder, object_type, this_param, &indices[0], indices.size, "")
                         LLVMBuildStore(func_builder, struct_class.vtable, vt_ptr)
                     }
                     let parent_ty = checked_class.parent as ObjectType

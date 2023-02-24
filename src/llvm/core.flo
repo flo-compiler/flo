@@ -306,7 +306,7 @@ fnc LLVMIsInBounds(GEP: LLVMValueRef): LLVMBool
 fnc LLVMGetGEPSourceElementType(GEP: LLVMValueRef): LLVMTypeRef
 
 
-fnc LLVMAddIncoming(PhiNode: LLVMValueRef, IncomingValues: LLVMValueRef*, IncomingBlocks: LLVMBasicBlockRef*, Count: int)
+fnc LLVMAddIncoming(PhiNode: LLVMValueRef, IncomingValues: LLVMValueRef*, IncomingBlocks: LLVMBasicBlockRef*, Count: uint)
 /* builder instructions */
 fnc LLVMCreateBuilderInContext(C: LLVMContextRef): LLVMBuilderRef 
 fnc LLVMCreateBuilder(): LLVMBuilderRef 

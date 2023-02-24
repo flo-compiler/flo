@@ -22,9 +22,9 @@ class File {
     public read_all(this): string {
         let size = 0
         let allocated_mem = new u8*(size)
+        let buffer: u8[1024]
         while true {
-            let buffer: u8[1024]
-            let read_len = fread(&buffer[0], 1, 1024, this.fd)
+            let read_len = fread(&buffer[0], 1, buffer.size, this.fd)
             if read_len == 0 {
                 return new string(allocated_mem, size)
             }
