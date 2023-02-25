@@ -596,7 +596,7 @@ define internal noalias ptr @string_substring(ptr nocapture readonly %0, i64 %1,
   %memberidx = getelementptr inbounds %string, ptr %0, i64 0, i32 1
   %6 = load ptr, ptr %memberidx, align 8
   %7 = getelementptr inbounds i8, ptr %6, i64 %1
-  tail call void @llvm.memcpy.p0.p0.i64(ptr align 8 %5, ptr align 2147483648 %7, i64 %2, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr align 8 %5, ptr align 536870912 %7, i64 %2, i1 false)
   %8 = tail call ptr @malloc(i32 32)
   store ptr @VTablestring, ptr %8, align 8
   %memberidx.i = getelementptr inbounds %string, ptr %8, i64 0, i32 1
@@ -637,7 +637,7 @@ if.entry:                                         ; preds = %3
   %memberidx6 = getelementptr inbounds %string, ptr %2, i64 0, i32 1
   %16 = load ptr, ptr %memberidx6, align 8
   %17 = load i64, ptr %memberidx3, align 4
-  tail call void @llvm.memcpy.p0.p0.i64(ptr align 2147483648 %ptridx, ptr align 8 %16, i64 %17, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr align 536870912 %ptridx, ptr align 8 %16, i64 %17, i1 false)
   %18 = add nsw i64 %17, %6
   %ptridx9 = getelementptr inbounds i8, ptr %14, i64 %18
   %19 = load i64, ptr %memberidx2, align 4
@@ -645,7 +645,7 @@ if.entry:                                         ; preds = %3
   %ptridx14 = getelementptr inbounds i8, ptr %15, i64 %20
   %21 = load i64, ptr %memberidx1, align 4
   %22 = sub nuw i64 %21, %20
-  tail call void @llvm.memcpy.p0.p0.i64(ptr align 2147483648 %ptridx9, ptr align 2147483648 %ptridx14, i64 %22, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr align 536870912 %ptridx9, ptr align 536870912 %ptridx14, i64 %22, i1 false)
   %23 = tail call ptr @malloc(i32 32)
   store ptr @VTablestring, ptr %23, align 8
   %memberidx.i = getelementptr inbounds %string, ptr %23, i64 0, i32 1
@@ -3629,7 +3629,7 @@ if.entry.i:                                       ; preds = %2
   %20 = load i64, ptr %memberidx.i.i, align 4
   %21 = getelementptr inbounds i8, ptr %19, i64 %20
   %22 = load i32, ptr %14, align 8
-  store i32 %22, ptr %21, align 2147483648
+  store i32 %22, ptr %21, align 536870912
   store i64 %17, ptr %memberidx.i.i, align 4
   br label %Compiler_find_module_path.exit
 
@@ -4119,7 +4119,7 @@ ifend:                                            ; preds = %1, %ifend
   %8 = add nuw i64 %7, %size.010
   %9 = call ptr @realloc(ptr %allocated_mem.011, i64 %8)
   %10 = getelementptr inbounds i8, ptr %9, i64 %size.010
-  call void @llvm.memcpy.p0.p0.i64(ptr align 2147483648 %10, ptr nonnull align 2147483648 %buffer, i64 %7, i1 false)
+  call void @llvm.memcpy.p0.p0.i64(ptr align 536870912 %10, ptr nonnull align 536870912 %buffer, i64 %7, i1 false)
   %11 = load i64, ptr %memberidx, align 4
   %12 = call i64 @fread(ptr nonnull %buffer, i64 1, i64 1024, i64 %11)
   %13 = icmp eq i64 %12, 0
@@ -10095,8 +10095,8 @@ while.entry.preheader:                            ; preds = %Parser_new_lines.ex
   br label %while.entry
 
 while.entry:                                      ; preds = %while.entry.preheader, %Parser_new_lines.exit135
-  %34 = phi i64 [ %30, %while.entry.preheader ], [ %112, %Parser_new_lines.exit135 ]
-  %35 = phi ptr [ %31, %while.entry.preheader ], [ %113, %Parser_new_lines.exit135 ]
+  %34 = phi i64 [ %30, %while.entry.preheader ], [ %154, %Parser_new_lines.exit135 ]
+  %35 = phi ptr [ %31, %while.entry.preheader ], [ %155, %Parser_new_lines.exit135 ]
   switch i64 %34, label %else30 [
     i64 61, label %if.entry
     i64 70, label %if.entry5
@@ -10149,1908 +10149,2096 @@ Parser_advance.exit92:                            ; preds = %if.entry, %if.entry
   %48 = call fastcc ptr @Parser_eat(ptr nonnull %3, i64 25)
   %49 = load ptr, ptr %memberidx.i75, align 8
   %50 = load i64, ptr %49, align 4
-  %.not.i104 = icmp eq i64 %50, 26
+  %51 = icmp eq i64 %50, 33
+  %52 = load ptr, ptr %memberidx1.i, align 8
+  %memberidx3.i.i.i = getelementptr inbounds %Array_FloError_, ptr %52, i64 0, i32 2
+  %53 = load i64, ptr %memberidx3.i.i.i, align 4
+  %54 = icmp eq i64 %53, 0
+  %55 = and i1 %51, %54
+  br i1 %55, label %while.entry.i.i.preheader, label %Parser_new_lines.exit.i
+
+while.entry.i.i.preheader:                        ; preds = %Parser_advance.exit92
+  %56 = load ptr, ptr %3, align 8
+  %memberidx2.i12.i.i = getelementptr inbounds %Array_Token_, ptr %56, i64 0, i32 2
+  %memberidx.i.i.i.i = getelementptr inbounds %Array_Token_, ptr %56, i64 0, i32 1
+  %.pre390 = load i64, ptr %memberidx2.i, align 8
+  br label %while.entry.i.i
+
+while.entry.i.i:                                  ; preds = %while.entry.i.i.preheader, %Parser_advance.exit.i.i
+  %57 = phi i64 [ 33, %while.entry.i.i.preheader ], [ %64, %Parser_advance.exit.i.i ]
+  %58 = phi i64 [ %.pre390, %while.entry.i.i.preheader ], [ %67, %Parser_advance.exit.i.i ]
+  %59 = load i64, ptr %memberidx2.i12.i.i, align 4
+  %60 = icmp slt i64 %58, %59
+  br i1 %60, label %if.entry.i.i.i, label %Parser_advance.exit.i.i
+
+if.entry.i.i.i:                                   ; preds = %while.entry.i.i
+  %61 = add nsw i64 %58, 1
+  store i64 %61, ptr %memberidx2.i, align 8
+  %62 = load ptr, ptr %memberidx.i.i.i.i, align 8
+  %ptridx.i.i.i.i = getelementptr inbounds ptr, ptr %62, i64 %61
+  %63 = load ptr, ptr %ptridx.i.i.i.i, align 8
+  store ptr %63, ptr %memberidx.i75, align 8
+  %.pre391 = load i64, ptr %63, align 4
+  %.pre392 = load i64, ptr %memberidx3.i.i.i, align 4
+  br label %Parser_advance.exit.i.i
+
+Parser_advance.exit.i.i:                          ; preds = %if.entry.i.i.i, %while.entry.i.i
+  %64 = phi i64 [ %.pre391, %if.entry.i.i.i ], [ %57, %while.entry.i.i ]
+  %65 = phi i64 [ %.pre392, %if.entry.i.i.i ], [ 0, %while.entry.i.i ]
+  %66 = phi i64 [ %.pre391, %if.entry.i.i.i ], [ 33, %while.entry.i.i ]
+  %67 = phi i64 [ %61, %if.entry.i.i.i ], [ %58, %while.entry.i.i ]
+  %68 = icmp eq i64 %66, 33
+  %69 = icmp eq i64 %65, 0
+  %70 = and i1 %68, %69
+  br i1 %70, label %while.entry.i.i, label %Parser_new_lines.exit.i
+
+Parser_new_lines.exit.i:                          ; preds = %Parser_advance.exit.i.i, %Parser_advance.exit92
+  %71 = phi i64 [ %50, %Parser_advance.exit92 ], [ %64, %Parser_advance.exit.i.i ]
+  %.not.i104 = icmp eq i64 %71, 26
   br i1 %.not.i104, label %ifend.i, label %if.entry.i106
 
-if.entry.i106:                                    ; preds = %Parser_advance.exit92
-  %51 = load ptr, ptr %memberidx.i.i98, align 8
-  call fastcc void @Parser_parse_args(ptr nonnull %3, ptr %51)
+if.entry.i106:                                    ; preds = %Parser_new_lines.exit.i
+  %72 = load ptr, ptr %memberidx.i.i98, align 8
+  call fastcc void @Parser_parse_args(ptr nonnull %3, ptr %72)
   br label %ifend.i
 
-ifend.i:                                          ; preds = %if.entry.i106, %Parser_advance.exit92
-  %52 = call fastcc ptr @Parser_eat(ptr nonnull %3, i64 26)
-  %53 = load ptr, ptr %memberidx.i75, align 8
-  %54 = load i64, ptr %53, align 4
-  %55 = icmp eq i64 %54, 1
-  br i1 %55, label %if.entry6.i, label %else7.i
+ifend.i:                                          ; preds = %if.entry.i106, %Parser_new_lines.exit.i
+  %73 = call fastcc ptr @Parser_eat(ptr nonnull %3, i64 26)
+  %74 = load ptr, ptr %memberidx.i75, align 8
+  %75 = load i64, ptr %74, align 4
+  %76 = icmp eq i64 %75, 1
+  br i1 %76, label %if.entry6.i, label %else7.i
 
 if.entry6.i:                                      ; preds = %ifend.i
-  %56 = load i64, ptr %memberidx2.i, align 8
-  %57 = load ptr, ptr %3, align 8
-  %memberidx2.i35.i = getelementptr inbounds %Array_Token_, ptr %57, i64 0, i32 2
-  %58 = load i64, ptr %memberidx2.i35.i, align 4
-  %59 = icmp slt i64 %56, %58
-  br i1 %59, label %if.entry.i.i108, label %Parser_advance.exit.i109
+  %77 = load i64, ptr %memberidx2.i, align 8
+  %78 = load ptr, ptr %3, align 8
+  %memberidx2.i40.i = getelementptr inbounds %Array_Token_, ptr %78, i64 0, i32 2
+  %79 = load i64, ptr %memberidx2.i40.i, align 4
+  %80 = icmp slt i64 %77, %79
+  br i1 %80, label %if.entry.i.i108, label %Parser_advance.exit.i109
 
 if.entry.i.i108:                                  ; preds = %if.entry6.i
-  %60 = add nsw i64 %56, 1
-  store i64 %60, ptr %memberidx2.i, align 8
-  %memberidx.i.i37.i = getelementptr inbounds %Array_Token_, ptr %57, i64 0, i32 1
-  %61 = load ptr, ptr %memberidx.i.i37.i, align 8
-  %ptridx.i.i.i107 = getelementptr inbounds ptr, ptr %61, i64 %60
-  %62 = load ptr, ptr %ptridx.i.i.i107, align 8
-  store ptr %62, ptr %memberidx.i75, align 8
+  %81 = add nsw i64 %77, 1
+  store i64 %81, ptr %memberidx2.i, align 8
+  %memberidx.i.i42.i = getelementptr inbounds %Array_Token_, ptr %78, i64 0, i32 1
+  %82 = load ptr, ptr %memberidx.i.i42.i, align 8
+  %ptridx.i.i.i107 = getelementptr inbounds ptr, ptr %82, i64 %81
+  %83 = load ptr, ptr %ptridx.i.i.i107, align 8
+  store ptr %83, ptr %memberidx.i75, align 8
   br label %Parser_advance.exit.i109
 
 Parser_advance.exit.i109:                         ; preds = %if.entry.i.i108, %if.entry6.i
   %memberidx9.i = getelementptr inbounds %FunctionDeclarationNode, ptr %44, i64 0, i32 3
-  %63 = call fastcc ptr @Parser_parse_type(ptr nonnull %3)
-  store ptr %63, ptr %memberidx9.i, align 8
+  %84 = call fastcc ptr @Parser_parse_type(ptr nonnull %3)
+  store ptr %84, ptr %memberidx9.i, align 8
   br label %ifend8.i
 
 else7.i:                                          ; preds = %ifend.i
-  %64 = call ptr @malloc(i32 24)
-  %65 = call ptr @malloc(i32 4)
-  store i32 1684631414, ptr %65, align 8
-  %66 = call ptr @malloc(i32 32)
-  store ptr @VTablestring, ptr %66, align 8
-  %memberidx.i.i38.i = getelementptr inbounds %string, ptr %66, i64 0, i32 1
-  store ptr %65, ptr %memberidx.i.i38.i, align 8
-  %memberidx1.i.i39.i = getelementptr inbounds %string, ptr %66, i64 0, i32 2
-  store i64 4, ptr %memberidx1.i.i39.i, align 4
-  %memberidx2.i.i40.i = getelementptr inbounds %string, ptr %66, i64 0, i32 3
-  store i64 4, ptr %memberidx2.i.i40.i, align 4
-  %67 = call ptr @malloc(i32 32)
-  call void @llvm.memset.p0.i64(ptr noundef nonnull align 4 dereferenceable(32) %67, i8 0, i64 32, i1 false)
-  store i64 54, ptr %64, align 4
-  %memberidx1.i.i43.i = getelementptr inbounds %Token, ptr %64, i64 0, i32 1
-  store ptr %67, ptr %memberidx1.i.i43.i, align 8
-  %memberidx.i44.i = getelementptr inbounds %IdentifierToken, ptr %64, i64 0, i32 2
-  store ptr %66, ptr %memberidx.i44.i, align 8
+  %85 = call ptr @malloc(i32 24)
+  %86 = call ptr @malloc(i32 4)
+  store i32 1684631414, ptr %86, align 8
+  %87 = call ptr @malloc(i32 32)
+  store ptr @VTablestring, ptr %87, align 8
+  %memberidx.i.i43.i = getelementptr inbounds %string, ptr %87, i64 0, i32 1
+  store ptr %86, ptr %memberidx.i.i43.i, align 8
+  %memberidx1.i.i44.i = getelementptr inbounds %string, ptr %87, i64 0, i32 2
+  store i64 4, ptr %memberidx1.i.i44.i, align 4
+  %memberidx2.i.i45.i = getelementptr inbounds %string, ptr %87, i64 0, i32 3
+  store i64 4, ptr %memberidx2.i.i45.i, align 4
+  %88 = call ptr @malloc(i32 32)
+  call void @llvm.memset.p0.i64(ptr noundef nonnull align 4 dereferenceable(32) %88, i8 0, i64 32, i1 false)
+  store i64 54, ptr %85, align 4
+  %memberidx1.i.i48.i = getelementptr inbounds %Token, ptr %85, i64 0, i32 1
+  store ptr %88, ptr %memberidx1.i.i48.i, align 8
+  %memberidx.i49.i = getelementptr inbounds %IdentifierToken, ptr %85, i64 0, i32 2
+  store ptr %87, ptr %memberidx.i49.i, align 8
   %memberidx10.i = getelementptr inbounds %FunctionDeclarationNode, ptr %44, i64 0, i32 3
-  %68 = call ptr @malloc(i32 32)
-  %69 = load ptr, ptr %memberidx1.i.i43.i, align 8
-  store ptr %69, ptr %68, align 8
-  %memberidx.i.i45.i = getelementptr inbounds %TypeNode, ptr %68, i64 0, i32 1
-  store i64 16, ptr %memberidx.i.i45.i, align 4
-  %memberidx.i46.i = getelementptr inbounds %RecordTypeNode, ptr %68, i64 0, i32 2
-  store ptr %64, ptr %memberidx.i46.i, align 8
-  %memberidx1.i47.i = getelementptr inbounds %RecordTypeNode, ptr %68, i64 0, i32 3
-  %70 = call ptr @malloc(i32 32)
-  store ptr @VTableArray_TypeNode_, ptr %70, align 8
-  %memberidx.i5.i.i = getelementptr inbounds %Array_TypeNode_, ptr %70, i64 0, i32 2
+  %89 = call ptr @malloc(i32 32)
+  %90 = load ptr, ptr %memberidx1.i.i48.i, align 8
+  store ptr %90, ptr %89, align 8
+  %memberidx.i.i66.i = getelementptr inbounds %TypeNode, ptr %89, i64 0, i32 1
+  store i64 16, ptr %memberidx.i.i66.i, align 4
+  %memberidx.i67.i = getelementptr inbounds %RecordTypeNode, ptr %89, i64 0, i32 2
+  store ptr %85, ptr %memberidx.i67.i, align 8
+  %memberidx1.i68.i = getelementptr inbounds %RecordTypeNode, ptr %89, i64 0, i32 3
+  %91 = call ptr @malloc(i32 32)
+  store ptr @VTableArray_TypeNode_, ptr %91, align 8
+  %memberidx.i5.i.i = getelementptr inbounds %Array_TypeNode_, ptr %91, i64 0, i32 2
   store i64 0, ptr %memberidx.i5.i.i, align 4
-  %memberidx1.i.i48.i = getelementptr inbounds %Array_TypeNode_, ptr %70, i64 0, i32 3
-  store i64 8, ptr %memberidx1.i.i48.i, align 4
-  %memberidx2.i.i49.i = getelementptr inbounds %Array_TypeNode_, ptr %70, i64 0, i32 1
-  %71 = call ptr @malloc(i32 64)
-  store ptr %71, ptr %memberidx2.i.i49.i, align 8
+  %memberidx1.i.i69.i = getelementptr inbounds %Array_TypeNode_, ptr %91, i64 0, i32 3
+  store i64 8, ptr %memberidx1.i.i69.i, align 4
+  %memberidx2.i.i70.i = getelementptr inbounds %Array_TypeNode_, ptr %91, i64 0, i32 1
+  %92 = call ptr @malloc(i32 64)
+  store ptr %92, ptr %memberidx2.i.i70.i, align 8
   store i64 0, ptr %memberidx.i5.i.i, align 4
-  store ptr %70, ptr %memberidx1.i47.i, align 8
-  store ptr %68, ptr %memberidx10.i, align 8
+  store ptr %91, ptr %memberidx1.i68.i, align 8
+  store ptr %89, ptr %memberidx10.i, align 8
   br label %ifend8.i
 
 ifend8.i:                                         ; preds = %else7.i, %Parser_advance.exit.i109
-  %72 = load ptr, ptr %memberidx.i75, align 8
-  %73 = load i64, ptr %72, align 4
-  %74 = icmp eq i64 %73, 27
-  br i1 %74, label %if.entry14.i, label %else15.i
+  %93 = load ptr, ptr %memberidx.i75, align 8
+  %94 = load i64, ptr %93, align 4
+  %95 = icmp eq i64 %94, 33
+  %96 = load ptr, ptr %memberidx1.i, align 8
+  %memberidx3.i.i53.i = getelementptr inbounds %Array_FloError_, ptr %96, i64 0, i32 2
+  %97 = load i64, ptr %memberidx3.i.i53.i, align 4
+  %98 = icmp eq i64 %97, 0
+  %99 = and i1 %95, %98
+  br i1 %99, label %while.entry.i56.i.preheader, label %Parser_new_lines.exit65.i
 
-if.entry14.i:                                     ; preds = %ifend8.i
+while.entry.i56.i.preheader:                      ; preds = %ifend8.i
+  %100 = load ptr, ptr %3, align 8
+  %memberidx2.i12.i55.i = getelementptr inbounds %Array_Token_, ptr %100, i64 0, i32 2
+  %memberidx.i.i.i58.i = getelementptr inbounds %Array_Token_, ptr %100, i64 0, i32 1
+  %.pre393 = load i64, ptr %memberidx2.i, align 8
+  br label %while.entry.i56.i
+
+while.entry.i56.i:                                ; preds = %while.entry.i56.i.preheader, %Parser_advance.exit.i64.i
+  %101 = phi i64 [ 33, %while.entry.i56.i.preheader ], [ %108, %Parser_advance.exit.i64.i ]
+  %102 = phi i64 [ %.pre393, %while.entry.i56.i.preheader ], [ %111, %Parser_advance.exit.i64.i ]
+  %103 = load i64, ptr %memberidx2.i12.i55.i, align 4
+  %104 = icmp slt i64 %102, %103
+  br i1 %104, label %if.entry.i.i60.i, label %Parser_advance.exit.i64.i
+
+if.entry.i.i60.i:                                 ; preds = %while.entry.i56.i
+  %105 = add nsw i64 %102, 1
+  store i64 %105, ptr %memberidx2.i, align 8
+  %106 = load ptr, ptr %memberidx.i.i.i58.i, align 8
+  %ptridx.i.i.i59.i = getelementptr inbounds ptr, ptr %106, i64 %105
+  %107 = load ptr, ptr %ptridx.i.i.i59.i, align 8
+  store ptr %107, ptr %memberidx.i75, align 8
+  %.pre394 = load i64, ptr %107, align 4
+  %.pre395 = load i64, ptr %memberidx3.i.i53.i, align 4
+  br label %Parser_advance.exit.i64.i
+
+Parser_advance.exit.i64.i:                        ; preds = %if.entry.i.i60.i, %while.entry.i56.i
+  %108 = phi i64 [ %.pre394, %if.entry.i.i60.i ], [ %101, %while.entry.i56.i ]
+  %109 = phi i64 [ %.pre395, %if.entry.i.i60.i ], [ 0, %while.entry.i56.i ]
+  %110 = phi i64 [ %.pre394, %if.entry.i.i60.i ], [ 33, %while.entry.i56.i ]
+  %111 = phi i64 [ %105, %if.entry.i.i60.i ], [ %102, %while.entry.i56.i ]
+  %112 = icmp eq i64 %110, 33
+  %113 = icmp eq i64 %109, 0
+  %114 = and i1 %112, %113
+  br i1 %114, label %while.entry.i56.i, label %Parser_new_lines.exit65.i
+
+Parser_new_lines.exit65.i:                        ; preds = %Parser_advance.exit.i64.i, %ifend8.i
+  %115 = phi i64 [ %94, %ifend8.i ], [ %108, %Parser_advance.exit.i64.i ]
+  %116 = icmp eq i64 %115, 27
+  br i1 %116, label %if.entry14.i, label %else15.i
+
+if.entry14.i:                                     ; preds = %Parser_new_lines.exit65.i
   %memberidx17.i = getelementptr inbounds %FunctionDeclarationNode, ptr %44, i64 0, i32 2
-  %75 = call fastcc ptr @Parser_parse_block(ptr nonnull %3)
-  store ptr %75, ptr %memberidx17.i, align 8
+  %117 = call fastcc ptr @Parser_parse_block(ptr nonnull %3)
+  store ptr %117, ptr %memberidx17.i, align 8
   br label %Parser_parse_function.exit
 
-else15.i:                                         ; preds = %ifend8.i
+else15.i:                                         ; preds = %Parser_new_lines.exit65.i
   store i1 true, ptr %memberidx3.i.i102, align 1
   br label %Parser_parse_function.exit
 
 Parser_parse_function.exit:                       ; preds = %if.entry14.i, %else15.i
   %memberidx.i111 = getelementptr inbounds %Array_FunctionDeclarationNode_, ptr %43, i64 0, i32 2
-  %76 = load i64, ptr %memberidx.i111, align 4
+  %118 = load i64, ptr %memberidx.i111, align 4
   %memberidx1.i112 = getelementptr inbounds %Array_FunctionDeclarationNode_, ptr %43, i64 0, i32 3
-  %77 = load i64, ptr %memberidx1.i112, align 4
-  %.not.i113 = icmp slt i64 %76, %77
+  %119 = load i64, ptr %memberidx1.i112, align 4
+  %.not.i113 = icmp slt i64 %118, %119
   br i1 %.not.i113, label %Parser_parse_function.exit.Array_FunctionDeclarationNode____sl__.exit_crit_edge, label %if.entry.i116
 
 Parser_parse_function.exit.Array_FunctionDeclarationNode____sl__.exit_crit_edge: ; preds = %Parser_parse_function.exit
   %memberidx4.i117.phi.trans.insert = getelementptr inbounds %Array_FunctionDeclarationNode_, ptr %43, i64 0, i32 1
-  %.pre353 = load ptr, ptr %memberidx4.i117.phi.trans.insert, align 8
+  %.pre397 = load ptr, ptr %memberidx4.i117.phi.trans.insert, align 8
   br label %Array_FunctionDeclarationNode____sl__.exit
 
 if.entry.i116:                                    ; preds = %Parser_parse_function.exit
-  %78 = shl nuw i64 %77, 1
-  store i64 %78, ptr %memberidx1.i112, align 4
+  %120 = shl nuw i64 %119, 1
+  store i64 %120, ptr %memberidx1.i112, align 4
   %memberidx2.i.i115 = getelementptr inbounds %Array_FunctionDeclarationNode_, ptr %43, i64 0, i32 1
-  %79 = load ptr, ptr %memberidx2.i.i115, align 8
-  %80 = shl i64 %77, 4
-  %81 = call ptr @realloc(ptr %79, i64 %80)
-  store ptr %81, ptr %memberidx2.i.i115, align 8
-  %.pre352 = load i64, ptr %memberidx.i111, align 4
+  %121 = load ptr, ptr %memberidx2.i.i115, align 8
+  %122 = shl i64 %119, 4
+  %123 = call ptr @realloc(ptr %121, i64 %122)
+  store ptr %123, ptr %memberidx2.i.i115, align 8
+  %.pre396 = load i64, ptr %memberidx.i111, align 4
   br label %Array_FunctionDeclarationNode____sl__.exit
 
 Array_FunctionDeclarationNode____sl__.exit:       ; preds = %Parser_parse_function.exit.Array_FunctionDeclarationNode____sl__.exit_crit_edge, %if.entry.i116
-  %82 = phi ptr [ %.pre353, %Parser_parse_function.exit.Array_FunctionDeclarationNode____sl__.exit_crit_edge ], [ %81, %if.entry.i116 ]
-  %83 = phi i64 [ %76, %Parser_parse_function.exit.Array_FunctionDeclarationNode____sl__.exit_crit_edge ], [ %.pre352, %if.entry.i116 ]
-  %84 = add nsw i64 %83, 1
-  store i64 %84, ptr %memberidx.i111, align 4
-  %ptridx.i118 = getelementptr inbounds ptr, ptr %82, i64 %83
+  %124 = phi ptr [ %.pre397, %Parser_parse_function.exit.Array_FunctionDeclarationNode____sl__.exit_crit_edge ], [ %123, %if.entry.i116 ]
+  %125 = phi i64 [ %118, %Parser_parse_function.exit.Array_FunctionDeclarationNode____sl__.exit_crit_edge ], [ %.pre396, %if.entry.i116 ]
+  %126 = add nsw i64 %125, 1
+  store i64 %126, ptr %memberidx.i111, align 4
+  %ptridx.i118 = getelementptr inbounds ptr, ptr %124, i64 %125
   store ptr %44, ptr %ptridx.i118, align 8
   br label %ifend
 
 ifend:                                            ; preds = %Array_TypeAliasNode____sl__.exit, %Parser_error.exit, %Array_VarDeclarationStatement____sl__.exit, %Array_ConstDeclarationStatement____sl__.exit, %Array_ImportNode____sl__.exit, %Array_EnumNode____sl__.exit, %Array_ClassDeclarationNode____sl__.exit, %Array_FunctionDeclarationNode____sl__.exit
-  %85 = load ptr, ptr %memberidx.i75, align 8
-  %86 = load i64, ptr %85, align 4
-  %87 = icmp eq i64 %86, 33
-  %88 = load ptr, ptr %memberidx1.i, align 8
-  %memberidx3.i.i123 = getelementptr inbounds %Array_FloError_, ptr %88, i64 0, i32 2
-  %89 = load i64, ptr %memberidx3.i.i123, align 4
-  %90 = icmp eq i64 %89, 0
-  %91 = and i1 %87, %90
-  br i1 %91, label %while.entry.i126.preheader, label %Parser_new_lines.exit135
+  %127 = load ptr, ptr %memberidx.i75, align 8
+  %128 = load i64, ptr %127, align 4
+  %129 = icmp eq i64 %128, 33
+  %130 = load ptr, ptr %memberidx1.i, align 8
+  %memberidx3.i.i123 = getelementptr inbounds %Array_FloError_, ptr %130, i64 0, i32 2
+  %131 = load i64, ptr %memberidx3.i.i123, align 4
+  %132 = icmp eq i64 %131, 0
+  %133 = and i1 %129, %132
+  br i1 %133, label %while.entry.i126.preheader, label %Parser_new_lines.exit135
 
 while.entry.i126.preheader:                       ; preds = %ifend
-  %92 = load ptr, ptr %3, align 8
-  %memberidx2.i12.i125 = getelementptr inbounds %Array_Token_, ptr %92, i64 0, i32 2
-  %memberidx.i.i.i128 = getelementptr inbounds %Array_Token_, ptr %92, i64 0, i32 1
-  %.pre358 = load i64, ptr %memberidx2.i, align 8
+  %134 = load ptr, ptr %3, align 8
+  %memberidx2.i12.i125 = getelementptr inbounds %Array_Token_, ptr %134, i64 0, i32 2
+  %memberidx.i.i.i128 = getelementptr inbounds %Array_Token_, ptr %134, i64 0, i32 1
+  %.pre402 = load i64, ptr %memberidx2.i, align 8
   br label %while.entry.i126
 
 while.entry.i126:                                 ; preds = %while.entry.i126.preheader, %Parser_advance.exit.i134
-  %93 = phi i64 [ 0, %while.entry.i126.preheader ], [ %102, %Parser_advance.exit.i134 ]
-  %94 = phi i64 [ 33, %while.entry.i126.preheader ], [ %103, %Parser_advance.exit.i134 ]
-  %95 = phi ptr [ %85, %while.entry.i126.preheader ], [ %106, %Parser_advance.exit.i134 ]
-  %96 = phi i64 [ %.pre358, %while.entry.i126.preheader ], [ %107, %Parser_advance.exit.i134 ]
-  %97 = load i64, ptr %memberidx2.i12.i125, align 4
-  %98 = icmp slt i64 %96, %97
-  br i1 %98, label %if.entry.i.i130, label %Parser_advance.exit.i134
+  %135 = phi i64 [ 0, %while.entry.i126.preheader ], [ %144, %Parser_advance.exit.i134 ]
+  %136 = phi i64 [ 33, %while.entry.i126.preheader ], [ %145, %Parser_advance.exit.i134 ]
+  %137 = phi ptr [ %127, %while.entry.i126.preheader ], [ %148, %Parser_advance.exit.i134 ]
+  %138 = phi i64 [ %.pre402, %while.entry.i126.preheader ], [ %149, %Parser_advance.exit.i134 ]
+  %139 = load i64, ptr %memberidx2.i12.i125, align 4
+  %140 = icmp slt i64 %138, %139
+  br i1 %140, label %if.entry.i.i130, label %Parser_advance.exit.i134
 
 if.entry.i.i130:                                  ; preds = %while.entry.i126
-  %99 = add nsw i64 %96, 1
-  store i64 %99, ptr %memberidx2.i, align 8
-  %100 = load ptr, ptr %memberidx.i.i.i128, align 8
-  %ptridx.i.i.i129 = getelementptr inbounds ptr, ptr %100, i64 %99
-  %101 = load ptr, ptr %ptridx.i.i.i129, align 8
-  store ptr %101, ptr %memberidx.i75, align 8
-  %.pre359 = load i64, ptr %101, align 4
-  %.pre360 = load i64, ptr %memberidx3.i.i123, align 4
+  %141 = add nsw i64 %138, 1
+  store i64 %141, ptr %memberidx2.i, align 8
+  %142 = load ptr, ptr %memberidx.i.i.i128, align 8
+  %ptridx.i.i.i129 = getelementptr inbounds ptr, ptr %142, i64 %141
+  %143 = load ptr, ptr %ptridx.i.i.i129, align 8
+  store ptr %143, ptr %memberidx.i75, align 8
+  %.pre403 = load i64, ptr %143, align 4
+  %.pre404 = load i64, ptr %memberidx3.i.i123, align 4
   br label %Parser_advance.exit.i134
 
 Parser_advance.exit.i134:                         ; preds = %if.entry.i.i130, %while.entry.i126
-  %102 = phi i64 [ %.pre360, %if.entry.i.i130 ], [ %93, %while.entry.i126 ]
-  %103 = phi i64 [ %.pre359, %if.entry.i.i130 ], [ %94, %while.entry.i126 ]
-  %104 = phi i64 [ %.pre360, %if.entry.i.i130 ], [ 0, %while.entry.i126 ]
-  %105 = phi i64 [ %.pre359, %if.entry.i.i130 ], [ 33, %while.entry.i126 ]
-  %106 = phi ptr [ %101, %if.entry.i.i130 ], [ %95, %while.entry.i126 ]
-  %107 = phi i64 [ %99, %if.entry.i.i130 ], [ %96, %while.entry.i126 ]
-  %108 = icmp eq i64 %105, 33
-  %109 = icmp eq i64 %104, 0
-  %110 = and i1 %108, %109
-  br i1 %110, label %while.entry.i126, label %Parser_new_lines.exit135
+  %144 = phi i64 [ %.pre404, %if.entry.i.i130 ], [ %135, %while.entry.i126 ]
+  %145 = phi i64 [ %.pre403, %if.entry.i.i130 ], [ %136, %while.entry.i126 ]
+  %146 = phi i64 [ %.pre404, %if.entry.i.i130 ], [ 0, %while.entry.i126 ]
+  %147 = phi i64 [ %.pre403, %if.entry.i.i130 ], [ 33, %while.entry.i126 ]
+  %148 = phi ptr [ %143, %if.entry.i.i130 ], [ %137, %while.entry.i126 ]
+  %149 = phi i64 [ %141, %if.entry.i.i130 ], [ %138, %while.entry.i126 ]
+  %150 = icmp eq i64 %147, 33
+  %151 = icmp eq i64 %146, 0
+  %152 = and i1 %150, %151
+  br i1 %152, label %while.entry.i126, label %Parser_new_lines.exit135
 
 Parser_new_lines.exit135:                         ; preds = %Parser_advance.exit.i134, %ifend
-  %111 = phi i64 [ %89, %ifend ], [ %102, %Parser_advance.exit.i134 ]
-  %112 = phi i64 [ %86, %ifend ], [ %103, %Parser_advance.exit.i134 ]
-  %113 = phi ptr [ %85, %ifend ], [ %106, %Parser_advance.exit.i134 ]
-  %114 = icmp ne i64 %112, 46
-  %115 = icmp eq i64 %111, 0
-  %116 = and i1 %114, %115
-  br i1 %116, label %while.entry, label %while.end
+  %153 = phi i64 [ %131, %ifend ], [ %144, %Parser_advance.exit.i134 ]
+  %154 = phi i64 [ %128, %ifend ], [ %145, %Parser_advance.exit.i134 ]
+  %155 = phi ptr [ %127, %ifend ], [ %148, %Parser_advance.exit.i134 ]
+  %156 = icmp ne i64 %154, 46
+  %157 = icmp eq i64 %153, 0
+  %158 = and i1 %156, %157
+  br i1 %158, label %while.entry, label %while.end
 
 if.entry5:                                        ; preds = %while.entry
-  %117 = load ptr, ptr %memberidx8, align 8
-  %118 = load i64, ptr %memberidx2.i, align 8
-  %119 = load ptr, ptr %3, align 8
-  %memberidx2.i.i140 = getelementptr inbounds %Array_Token_, ptr %119, i64 0, i32 2
-  %120 = load i64, ptr %memberidx2.i.i140, align 4
-  %121 = icmp slt i64 %118, %120
-  br i1 %121, label %if.entry.i.i144, label %Parser_advance.exit.i150
+  %159 = load ptr, ptr %memberidx8, align 8
+  %160 = load i64, ptr %memberidx2.i, align 8
+  %161 = load ptr, ptr %3, align 8
+  %memberidx2.i.i140 = getelementptr inbounds %Array_Token_, ptr %161, i64 0, i32 2
+  %162 = load i64, ptr %memberidx2.i.i140, align 4
+  %163 = icmp slt i64 %160, %162
+  br i1 %163, label %if.entry.i.i144, label %Parser_advance.exit.i150
 
 if.entry.i.i144:                                  ; preds = %if.entry5
-  %122 = add nsw i64 %118, 1
-  store i64 %122, ptr %memberidx2.i, align 8
-  %memberidx.i.i.i142 = getelementptr inbounds %Array_Token_, ptr %119, i64 0, i32 1
-  %123 = load ptr, ptr %memberidx.i.i.i142, align 8
-  %ptridx.i.i.i143 = getelementptr inbounds ptr, ptr %123, i64 %122
-  %124 = load ptr, ptr %ptridx.i.i.i143, align 8
-  store ptr %124, ptr %memberidx.i75, align 8
+  %164 = add nsw i64 %160, 1
+  store i64 %164, ptr %memberidx2.i, align 8
+  %memberidx.i.i.i142 = getelementptr inbounds %Array_Token_, ptr %161, i64 0, i32 1
+  %165 = load ptr, ptr %memberidx.i.i.i142, align 8
+  %ptridx.i.i.i143 = getelementptr inbounds ptr, ptr %165, i64 %164
+  %166 = load ptr, ptr %ptridx.i.i.i143, align 8
+  store ptr %166, ptr %memberidx.i75, align 8
   br label %Parser_advance.exit.i150
 
 Parser_advance.exit.i150:                         ; preds = %if.entry.i.i144, %if.entry5
-  %125 = call ptr @malloc(i32 40)
-  %126 = call fastcc ptr @Parser_eat(ptr nonnull %3, i64 54)
-  store ptr %126, ptr %125, align 8
-  %memberidx1.i.i145 = getelementptr inbounds %ClassDeclarationNode, ptr %125, i64 0, i32 3
-  %127 = call ptr @malloc(i32 32)
-  store ptr @VTableArray_FieldNode_, ptr %127, align 8
-  %memberidx.i.i21.i = getelementptr inbounds %Array_FieldNode_, ptr %127, i64 0, i32 2
+  %167 = call ptr @malloc(i32 40)
+  %168 = call fastcc ptr @Parser_eat(ptr nonnull %3, i64 54)
+  store ptr %168, ptr %167, align 8
+  %memberidx1.i.i145 = getelementptr inbounds %ClassDeclarationNode, ptr %167, i64 0, i32 3
+  %169 = call ptr @malloc(i32 32)
+  store ptr @VTableArray_FieldNode_, ptr %169, align 8
+  %memberidx.i.i21.i = getelementptr inbounds %Array_FieldNode_, ptr %169, i64 0, i32 2
   store i64 0, ptr %memberidx.i.i21.i, align 4
-  %memberidx1.i.i.i146 = getelementptr inbounds %Array_FieldNode_, ptr %127, i64 0, i32 3
+  %memberidx1.i.i.i146 = getelementptr inbounds %Array_FieldNode_, ptr %169, i64 0, i32 3
   store i64 8, ptr %memberidx1.i.i.i146, align 4
-  %memberidx2.i.i.i147 = getelementptr inbounds %Array_FieldNode_, ptr %127, i64 0, i32 1
-  %128 = call ptr @malloc(i32 64)
-  store ptr %128, ptr %memberidx2.i.i.i147, align 8
+  %memberidx2.i.i.i147 = getelementptr inbounds %Array_FieldNode_, ptr %169, i64 0, i32 1
+  %170 = call ptr @malloc(i32 64)
+  store ptr %170, ptr %memberidx2.i.i.i147, align 8
   store i64 0, ptr %memberidx.i.i21.i, align 4
-  store ptr %127, ptr %memberidx1.i.i145, align 8
-  %memberidx4.i.i148 = getelementptr inbounds %ClassDeclarationNode, ptr %125, i64 0, i32 4
-  %129 = call ptr @malloc(i32 32)
-  store ptr @VTableArray_MethodNode_, ptr %129, align 8
-  %memberidx.i15.i.i = getelementptr inbounds %Array_MethodNode_, ptr %129, i64 0, i32 2
+  store ptr %169, ptr %memberidx1.i.i145, align 8
+  %memberidx4.i.i148 = getelementptr inbounds %ClassDeclarationNode, ptr %167, i64 0, i32 4
+  %171 = call ptr @malloc(i32 32)
+  store ptr @VTableArray_MethodNode_, ptr %171, align 8
+  %memberidx.i15.i.i = getelementptr inbounds %Array_MethodNode_, ptr %171, i64 0, i32 2
   store i64 0, ptr %memberidx.i15.i.i, align 4
-  %memberidx1.i16.i.i = getelementptr inbounds %Array_MethodNode_, ptr %129, i64 0, i32 3
+  %memberidx1.i16.i.i = getelementptr inbounds %Array_MethodNode_, ptr %171, i64 0, i32 3
   store i64 8, ptr %memberidx1.i16.i.i, align 4
-  %memberidx2.i17.i.i = getelementptr inbounds %Array_MethodNode_, ptr %129, i64 0, i32 1
-  %130 = call ptr @malloc(i32 64)
-  store ptr %130, ptr %memberidx2.i17.i.i, align 8
+  %memberidx2.i17.i.i = getelementptr inbounds %Array_MethodNode_, ptr %171, i64 0, i32 1
+  %172 = call ptr @malloc(i32 64)
+  store ptr %172, ptr %memberidx2.i17.i.i, align 8
   store i64 0, ptr %memberidx.i15.i.i, align 4
-  store ptr %129, ptr %memberidx4.i.i148, align 8
-  %memberidx7.i.i = getelementptr inbounds %ClassDeclarationNode, ptr %125, i64 0, i32 1
-  %131 = call ptr @malloc(i32 32)
-  store ptr @VTableArray_GenericParameterNode_, ptr %131, align 8
-  %memberidx.i18.i.i = getelementptr inbounds %Array_GenericParameterNode_, ptr %131, i64 0, i32 2
+  store ptr %171, ptr %memberidx4.i.i148, align 8
+  %memberidx7.i.i = getelementptr inbounds %ClassDeclarationNode, ptr %167, i64 0, i32 1
+  %173 = call ptr @malloc(i32 32)
+  store ptr @VTableArray_GenericParameterNode_, ptr %173, align 8
+  %memberidx.i18.i.i = getelementptr inbounds %Array_GenericParameterNode_, ptr %173, i64 0, i32 2
   store i64 0, ptr %memberidx.i18.i.i, align 4
-  %memberidx1.i19.i.i = getelementptr inbounds %Array_GenericParameterNode_, ptr %131, i64 0, i32 3
+  %memberidx1.i19.i.i = getelementptr inbounds %Array_GenericParameterNode_, ptr %173, i64 0, i32 3
   store i64 8, ptr %memberidx1.i19.i.i, align 4
-  %memberidx2.i20.i.i = getelementptr inbounds %Array_GenericParameterNode_, ptr %131, i64 0, i32 1
-  %132 = call ptr @malloc(i32 64)
-  store ptr %132, ptr %memberidx2.i20.i.i, align 8
+  %memberidx2.i20.i.i = getelementptr inbounds %Array_GenericParameterNode_, ptr %173, i64 0, i32 1
+  %174 = call ptr @malloc(i32 64)
+  store ptr %174, ptr %memberidx2.i20.i.i, align 8
   store i64 0, ptr %memberidx.i18.i.i, align 4
-  store ptr %131, ptr %memberidx7.i.i, align 8
-  %memberidx10.i.i = getelementptr inbounds %ClassDeclarationNode, ptr %125, i64 0, i32 2
+  store ptr %173, ptr %memberidx7.i.i, align 8
+  %memberidx10.i.i = getelementptr inbounds %ClassDeclarationNode, ptr %167, i64 0, i32 2
   store ptr null, ptr %memberidx10.i.i, align 8
-  %133 = load ptr, ptr %memberidx.i75, align 8
-  %134 = load i64, ptr %133, align 4
-  %135 = icmp eq i64 %134, 42
-  br i1 %135, label %if.entry.i152, label %ifend.i153
+  %175 = load ptr, ptr %memberidx.i75, align 8
+  %176 = load i64, ptr %175, align 4
+  %177 = icmp eq i64 %176, 42
+  br i1 %177, label %if.entry.i152, label %ifend.i159
 
 if.entry.i152:                                    ; preds = %Parser_advance.exit.i150
-  %136 = load i64, ptr %memberidx2.i, align 8
-  %137 = load ptr, ptr %3, align 8
-  %memberidx2.i.i24.i = getelementptr inbounds %Array_Token_, ptr %137, i64 0, i32 2
-  %138 = load i64, ptr %memberidx2.i.i24.i, align 4
-  %139 = icmp slt i64 %136, %138
-  br i1 %139, label %if.entry.i.i.i, label %Parser_advance.exit.i.i
+  %178 = load i64, ptr %memberidx2.i, align 8
+  %179 = load ptr, ptr %3, align 8
+  %memberidx2.i.i24.i = getelementptr inbounds %Array_Token_, ptr %179, i64 0, i32 2
+  %180 = load i64, ptr %memberidx2.i.i24.i, align 4
+  %181 = icmp slt i64 %178, %180
+  br i1 %181, label %if.entry.i.i.i156, label %Parser_advance.exit.i.i157
 
-if.entry.i.i.i:                                   ; preds = %if.entry.i152
-  %140 = add nsw i64 %136, 1
-  store i64 %140, ptr %memberidx2.i, align 8
-  %memberidx.i.i.i.i = getelementptr inbounds %Array_Token_, ptr %137, i64 0, i32 1
-  %141 = load ptr, ptr %memberidx.i.i.i.i, align 8
-  %ptridx.i.i.i.i = getelementptr inbounds ptr, ptr %141, i64 %140
-  %142 = load ptr, ptr %ptridx.i.i.i.i, align 8
-  store ptr %142, ptr %memberidx.i75, align 8
-  br label %Parser_advance.exit.i.i
+if.entry.i.i.i156:                                ; preds = %if.entry.i152
+  %182 = add nsw i64 %178, 1
+  store i64 %182, ptr %memberidx2.i, align 8
+  %memberidx.i.i.i.i154 = getelementptr inbounds %Array_Token_, ptr %179, i64 0, i32 1
+  %183 = load ptr, ptr %memberidx.i.i.i.i154, align 8
+  %ptridx.i.i.i.i155 = getelementptr inbounds ptr, ptr %183, i64 %182
+  %184 = load ptr, ptr %ptridx.i.i.i.i155, align 8
+  store ptr %184, ptr %memberidx.i75, align 8
+  br label %Parser_advance.exit.i.i157
 
-Parser_advance.exit.i.i:                          ; preds = %if.entry.i.i.i, %if.entry.i152
-  %143 = call ptr @malloc(i32 8)
-  %144 = call fastcc ptr @Parser_eat(ptr nonnull %3, i64 54)
-  store ptr %144, ptr %143, align 8
-  %145 = load i64, ptr %memberidx.i18.i.i, align 4
-  %146 = load i64, ptr %memberidx1.i19.i.i, align 4
-  %.not.i21.i.i = icmp slt i64 %145, %146
-  br i1 %.not.i21.i.i, label %Parser_advance.exit.i.i.Array_GenericParameterNode____sl__.exit27.i.i_crit_edge, label %if.entry.i24.i.i
+Parser_advance.exit.i.i157:                       ; preds = %if.entry.i.i.i156, %if.entry.i152
+  %185 = call ptr @malloc(i32 8)
+  %186 = call fastcc ptr @Parser_eat(ptr nonnull %3, i64 54)
+  store ptr %186, ptr %185, align 8
+  %187 = load i64, ptr %memberidx.i18.i.i, align 4
+  %188 = load i64, ptr %memberidx1.i19.i.i, align 4
+  %.not.i21.i.i = icmp slt i64 %187, %188
+  br i1 %.not.i21.i.i, label %Parser_advance.exit.i.i157.Array_GenericParameterNode____sl__.exit27.i.i_crit_edge, label %if.entry.i24.i.i
 
-Parser_advance.exit.i.i.Array_GenericParameterNode____sl__.exit27.i.i_crit_edge: ; preds = %Parser_advance.exit.i.i
-  %.pre340 = load ptr, ptr %memberidx2.i20.i.i, align 8
+Parser_advance.exit.i.i157.Array_GenericParameterNode____sl__.exit27.i.i_crit_edge: ; preds = %Parser_advance.exit.i.i157
+  %.pre378 = load ptr, ptr %memberidx2.i20.i.i, align 8
   br label %Array_GenericParameterNode____sl__.exit27.i.i
 
-if.entry.i24.i.i:                                 ; preds = %Parser_advance.exit.i.i
-  %147 = shl nuw i64 %146, 1
-  store i64 %147, ptr %memberidx1.i19.i.i, align 4
-  %148 = load ptr, ptr %memberidx2.i20.i.i, align 8
-  %149 = shl i64 %146, 4
-  %150 = call ptr @realloc(ptr %148, i64 %149)
-  store ptr %150, ptr %memberidx2.i20.i.i, align 8
-  %.pre339 = load i64, ptr %memberidx.i18.i.i, align 4
+if.entry.i24.i.i:                                 ; preds = %Parser_advance.exit.i.i157
+  %189 = shl nuw i64 %188, 1
+  store i64 %189, ptr %memberidx1.i19.i.i, align 4
+  %190 = load ptr, ptr %memberidx2.i20.i.i, align 8
+  %191 = shl i64 %188, 4
+  %192 = call ptr @realloc(ptr %190, i64 %191)
+  store ptr %192, ptr %memberidx2.i20.i.i, align 8
+  %.pre377 = load i64, ptr %memberidx.i18.i.i, align 4
   br label %Array_GenericParameterNode____sl__.exit27.i.i
 
-Array_GenericParameterNode____sl__.exit27.i.i:    ; preds = %Parser_advance.exit.i.i.Array_GenericParameterNode____sl__.exit27.i.i_crit_edge, %if.entry.i24.i.i
-  %151 = phi ptr [ %150, %if.entry.i24.i.i ], [ %.pre340, %Parser_advance.exit.i.i.Array_GenericParameterNode____sl__.exit27.i.i_crit_edge ]
-  %152 = phi i64 [ %.pre339, %if.entry.i24.i.i ], [ %145, %Parser_advance.exit.i.i.Array_GenericParameterNode____sl__.exit27.i.i_crit_edge ]
-  %153 = add nsw i64 %152, 1
-  store i64 %153, ptr %memberidx.i18.i.i, align 4
-  %ptridx.i26.i.i = getelementptr inbounds ptr, ptr %151, i64 %152
-  store ptr %143, ptr %ptridx.i26.i.i, align 8
-  %154 = load ptr, ptr %memberidx.i75, align 8
-  %155 = load i64, ptr %154, align 4
-  %156 = icmp eq i64 %155, 3
-  %157 = load ptr, ptr %memberidx1.i, align 8
-  %memberidx3.i30.i.i = getelementptr inbounds %Array_FloError_, ptr %157, i64 0, i32 2
-  %158 = load i64, ptr %memberidx3.i30.i.i, align 4
-  %159 = icmp eq i64 %158, 0
-  %160 = and i1 %156, %159
-  br i1 %160, label %while.entry.i.i, label %Parser_parse_generic_parameters.exit.i
+Array_GenericParameterNode____sl__.exit27.i.i:    ; preds = %Parser_advance.exit.i.i157.Array_GenericParameterNode____sl__.exit27.i.i_crit_edge, %if.entry.i24.i.i
+  %193 = phi ptr [ %192, %if.entry.i24.i.i ], [ %.pre378, %Parser_advance.exit.i.i157.Array_GenericParameterNode____sl__.exit27.i.i_crit_edge ]
+  %194 = phi i64 [ %.pre377, %if.entry.i24.i.i ], [ %187, %Parser_advance.exit.i.i157.Array_GenericParameterNode____sl__.exit27.i.i_crit_edge ]
+  %195 = add nsw i64 %194, 1
+  store i64 %195, ptr %memberidx.i18.i.i, align 4
+  %ptridx.i26.i.i = getelementptr inbounds ptr, ptr %193, i64 %194
+  store ptr %185, ptr %ptridx.i26.i.i, align 8
+  %196 = load ptr, ptr %memberidx.i75, align 8
+  %197 = load i64, ptr %196, align 4
+  %198 = icmp eq i64 %197, 3
+  %199 = load ptr, ptr %memberidx1.i, align 8
+  %memberidx3.i30.i.i = getelementptr inbounds %Array_FloError_, ptr %199, i64 0, i32 2
+  %200 = load i64, ptr %memberidx3.i30.i.i, align 4
+  %201 = icmp eq i64 %200, 0
+  %202 = and i1 %198, %201
+  br i1 %202, label %while.entry.i.i158, label %Parser_parse_generic_parameters.exit.i
 
-while.entry.i.i:                                  ; preds = %Array_GenericParameterNode____sl__.exit27.i.i, %Array_GenericParameterNode____sl__.exit.i.i
-  %161 = load i64, ptr %memberidx2.i, align 8
-  %162 = load ptr, ptr %3, align 8
-  %memberidx2.i32.i.i = getelementptr inbounds %Array_Token_, ptr %162, i64 0, i32 2
-  %163 = load i64, ptr %memberidx2.i32.i.i, align 4
-  %164 = icmp slt i64 %161, %163
-  br i1 %164, label %if.entry.i36.i.i, label %Parser_advance.exit37.i.i
+while.entry.i.i158:                               ; preds = %Array_GenericParameterNode____sl__.exit27.i.i, %Array_GenericParameterNode____sl__.exit.i.i
+  %203 = load i64, ptr %memberidx2.i, align 8
+  %204 = load ptr, ptr %3, align 8
+  %memberidx2.i32.i.i = getelementptr inbounds %Array_Token_, ptr %204, i64 0, i32 2
+  %205 = load i64, ptr %memberidx2.i32.i.i, align 4
+  %206 = icmp slt i64 %203, %205
+  br i1 %206, label %if.entry.i36.i.i, label %Parser_advance.exit37.i.i
 
-if.entry.i36.i.i:                                 ; preds = %while.entry.i.i
-  %165 = add nsw i64 %161, 1
-  store i64 %165, ptr %memberidx2.i, align 8
-  %memberidx.i.i34.i.i = getelementptr inbounds %Array_Token_, ptr %162, i64 0, i32 1
-  %166 = load ptr, ptr %memberidx.i.i34.i.i, align 8
-  %ptridx.i.i35.i.i = getelementptr inbounds ptr, ptr %166, i64 %165
-  %167 = load ptr, ptr %ptridx.i.i35.i.i, align 8
-  store ptr %167, ptr %memberidx.i75, align 8
+if.entry.i36.i.i:                                 ; preds = %while.entry.i.i158
+  %207 = add nsw i64 %203, 1
+  store i64 %207, ptr %memberidx2.i, align 8
+  %memberidx.i.i34.i.i = getelementptr inbounds %Array_Token_, ptr %204, i64 0, i32 1
+  %208 = load ptr, ptr %memberidx.i.i34.i.i, align 8
+  %ptridx.i.i35.i.i = getelementptr inbounds ptr, ptr %208, i64 %207
+  %209 = load ptr, ptr %ptridx.i.i35.i.i, align 8
+  store ptr %209, ptr %memberidx.i75, align 8
   br label %Parser_advance.exit37.i.i
 
-Parser_advance.exit37.i.i:                        ; preds = %if.entry.i36.i.i, %while.entry.i.i
-  %168 = call ptr @malloc(i32 8)
-  %169 = call fastcc ptr @Parser_eat(ptr nonnull %3, i64 54)
-  store ptr %169, ptr %168, align 8
-  %170 = load i64, ptr %memberidx.i18.i.i, align 4
-  %171 = load i64, ptr %memberidx1.i19.i.i, align 4
-  %.not.i.i.i = icmp slt i64 %170, %171
+Parser_advance.exit37.i.i:                        ; preds = %if.entry.i36.i.i, %while.entry.i.i158
+  %210 = call ptr @malloc(i32 8)
+  %211 = call fastcc ptr @Parser_eat(ptr nonnull %3, i64 54)
+  store ptr %211, ptr %210, align 8
+  %212 = load i64, ptr %memberidx.i18.i.i, align 4
+  %213 = load i64, ptr %memberidx1.i19.i.i, align 4
+  %.not.i.i.i = icmp slt i64 %212, %213
   br i1 %.not.i.i.i, label %Parser_advance.exit37.i.i.Array_GenericParameterNode____sl__.exit.i.i_crit_edge, label %if.entry.i18.i.i
 
 Parser_advance.exit37.i.i.Array_GenericParameterNode____sl__.exit.i.i_crit_edge: ; preds = %Parser_advance.exit37.i.i
-  %.pre342 = load ptr, ptr %memberidx2.i20.i.i, align 8
+  %.pre380 = load ptr, ptr %memberidx2.i20.i.i, align 8
   br label %Array_GenericParameterNode____sl__.exit.i.i
 
 if.entry.i18.i.i:                                 ; preds = %Parser_advance.exit37.i.i
-  %172 = shl nuw i64 %171, 1
-  store i64 %172, ptr %memberidx1.i19.i.i, align 4
-  %173 = load ptr, ptr %memberidx2.i20.i.i, align 8
-  %174 = shl i64 %171, 4
-  %175 = call ptr @realloc(ptr %173, i64 %174)
-  store ptr %175, ptr %memberidx2.i20.i.i, align 8
-  %.pre341 = load i64, ptr %memberidx.i18.i.i, align 4
+  %214 = shl nuw i64 %213, 1
+  store i64 %214, ptr %memberidx1.i19.i.i, align 4
+  %215 = load ptr, ptr %memberidx2.i20.i.i, align 8
+  %216 = shl i64 %213, 4
+  %217 = call ptr @realloc(ptr %215, i64 %216)
+  store ptr %217, ptr %memberidx2.i20.i.i, align 8
+  %.pre379 = load i64, ptr %memberidx.i18.i.i, align 4
   br label %Array_GenericParameterNode____sl__.exit.i.i
 
 Array_GenericParameterNode____sl__.exit.i.i:      ; preds = %Parser_advance.exit37.i.i.Array_GenericParameterNode____sl__.exit.i.i_crit_edge, %if.entry.i18.i.i
-  %176 = phi ptr [ %175, %if.entry.i18.i.i ], [ %.pre342, %Parser_advance.exit37.i.i.Array_GenericParameterNode____sl__.exit.i.i_crit_edge ]
-  %177 = phi i64 [ %.pre341, %if.entry.i18.i.i ], [ %170, %Parser_advance.exit37.i.i.Array_GenericParameterNode____sl__.exit.i.i_crit_edge ]
-  %178 = add nsw i64 %177, 1
-  store i64 %178, ptr %memberidx.i18.i.i, align 4
-  %ptridx.i.i27.i = getelementptr inbounds ptr, ptr %176, i64 %177
-  store ptr %168, ptr %ptridx.i.i27.i, align 8
-  %179 = load ptr, ptr %memberidx.i75, align 8
-  %180 = load i64, ptr %179, align 4
-  %181 = icmp eq i64 %180, 3
-  %182 = load ptr, ptr %memberidx1.i, align 8
-  %memberidx3.i15.i.i = getelementptr inbounds %Array_FloError_, ptr %182, i64 0, i32 2
-  %183 = load i64, ptr %memberidx3.i15.i.i, align 4
-  %184 = icmp eq i64 %183, 0
-  %185 = and i1 %181, %184
-  br i1 %185, label %while.entry.i.i, label %Parser_parse_generic_parameters.exit.i
+  %218 = phi ptr [ %217, %if.entry.i18.i.i ], [ %.pre380, %Parser_advance.exit37.i.i.Array_GenericParameterNode____sl__.exit.i.i_crit_edge ]
+  %219 = phi i64 [ %.pre379, %if.entry.i18.i.i ], [ %212, %Parser_advance.exit37.i.i.Array_GenericParameterNode____sl__.exit.i.i_crit_edge ]
+  %220 = add nsw i64 %219, 1
+  store i64 %220, ptr %memberidx.i18.i.i, align 4
+  %ptridx.i.i27.i = getelementptr inbounds ptr, ptr %218, i64 %219
+  store ptr %210, ptr %ptridx.i.i27.i, align 8
+  %221 = load ptr, ptr %memberidx.i75, align 8
+  %222 = load i64, ptr %221, align 4
+  %223 = icmp eq i64 %222, 3
+  %224 = load ptr, ptr %memberidx1.i, align 8
+  %memberidx3.i15.i.i = getelementptr inbounds %Array_FloError_, ptr %224, i64 0, i32 2
+  %225 = load i64, ptr %memberidx3.i15.i.i, align 4
+  %226 = icmp eq i64 %225, 0
+  %227 = and i1 %223, %226
+  br i1 %227, label %while.entry.i.i158, label %Parser_parse_generic_parameters.exit.i
 
 Parser_parse_generic_parameters.exit.i:           ; preds = %Array_GenericParameterNode____sl__.exit.i.i, %Array_GenericParameterNode____sl__.exit27.i.i
-  %186 = call fastcc ptr @Parser_eat(ptr nonnull %3, i64 41)
-  %.pre343 = load ptr, ptr %memberidx.i75, align 8
-  %.pre344 = load i64, ptr %.pre343, align 4
-  br label %ifend.i153
+  %228 = call fastcc ptr @Parser_eat(ptr nonnull %3, i64 41)
+  %.pre381 = load ptr, ptr %memberidx.i75, align 8
+  %.pre382 = load i64, ptr %.pre381, align 4
+  br label %ifend.i159
 
-ifend.i153:                                       ; preds = %Parser_parse_generic_parameters.exit.i, %Parser_advance.exit.i150
-  %187 = phi i64 [ %.pre344, %Parser_parse_generic_parameters.exit.i ], [ %134, %Parser_advance.exit.i150 ]
-  %188 = icmp eq i64 %187, 25
-  br i1 %188, label %if.entry5.i, label %ifend7.i
+ifend.i159:                                       ; preds = %Parser_parse_generic_parameters.exit.i, %Parser_advance.exit.i150
+  %229 = phi i64 [ %.pre382, %Parser_parse_generic_parameters.exit.i ], [ %176, %Parser_advance.exit.i150 ]
+  %230 = icmp eq i64 %229, 25
+  br i1 %230, label %if.entry5.i, label %ifend7.i
 
-if.entry5.i:                                      ; preds = %ifend.i153
-  %189 = load i64, ptr %memberidx2.i, align 8
-  %190 = load ptr, ptr %3, align 8
-  %memberidx2.i29.i = getelementptr inbounds %Array_Token_, ptr %190, i64 0, i32 2
-  %191 = load i64, ptr %memberidx2.i29.i, align 4
-  %192 = icmp slt i64 %189, %191
-  br i1 %192, label %if.entry.i33.i, label %Parser_advance.exit34.i
+if.entry5.i:                                      ; preds = %ifend.i159
+  %231 = load i64, ptr %memberidx2.i, align 8
+  %232 = load ptr, ptr %3, align 8
+  %memberidx2.i29.i = getelementptr inbounds %Array_Token_, ptr %232, i64 0, i32 2
+  %233 = load i64, ptr %memberidx2.i29.i, align 4
+  %234 = icmp slt i64 %231, %233
+  br i1 %234, label %if.entry.i33.i, label %Parser_advance.exit34.i
 
 if.entry.i33.i:                                   ; preds = %if.entry5.i
-  %193 = add nsw i64 %189, 1
-  store i64 %193, ptr %memberidx2.i, align 8
-  %memberidx.i.i31.i = getelementptr inbounds %Array_Token_, ptr %190, i64 0, i32 1
-  %194 = load ptr, ptr %memberidx.i.i31.i, align 8
-  %ptridx.i.i32.i = getelementptr inbounds ptr, ptr %194, i64 %193
-  %195 = load ptr, ptr %ptridx.i.i32.i, align 8
-  store ptr %195, ptr %memberidx.i75, align 8
+  %235 = add nsw i64 %231, 1
+  store i64 %235, ptr %memberidx2.i, align 8
+  %memberidx.i.i31.i = getelementptr inbounds %Array_Token_, ptr %232, i64 0, i32 1
+  %236 = load ptr, ptr %memberidx.i.i31.i, align 8
+  %ptridx.i.i32.i = getelementptr inbounds ptr, ptr %236, i64 %235
+  %237 = load ptr, ptr %ptridx.i.i32.i, align 8
+  store ptr %237, ptr %memberidx.i75, align 8
   br label %Parser_advance.exit34.i
 
 Parser_advance.exit34.i:                          ; preds = %if.entry.i33.i, %if.entry5.i
-  %196 = call fastcc ptr @Parser_parse_object_type(ptr nonnull %3)
-  store ptr %196, ptr %memberidx10.i.i, align 8
-  %197 = call fastcc ptr @Parser_eat(ptr nonnull %3, i64 26)
-  %.pre345 = load ptr, ptr %memberidx.i75, align 8
-  %.pre346 = load i64, ptr %.pre345, align 4
+  %238 = call fastcc ptr @Parser_parse_object_type(ptr nonnull %3)
+  store ptr %238, ptr %memberidx10.i.i, align 8
+  %239 = call fastcc ptr @Parser_eat(ptr nonnull %3, i64 26)
+  %.pre383 = load ptr, ptr %memberidx.i75, align 8
+  %.pre384 = load i64, ptr %.pre383, align 4
   br label %ifend7.i
 
-ifend7.i:                                         ; preds = %Parser_advance.exit34.i, %ifend.i153
-  %198 = phi i64 [ %.pre346, %Parser_advance.exit34.i ], [ %187, %ifend.i153 ]
-  %199 = icmp eq i64 %198, 33
-  %200 = load ptr, ptr %memberidx1.i, align 8
-  %memberidx3.i.i38.i = getelementptr inbounds %Array_FloError_, ptr %200, i64 0, i32 2
-  %201 = load i64, ptr %memberidx3.i.i38.i, align 4
-  %202 = icmp eq i64 %201, 0
-  %203 = and i1 %199, %202
-  br i1 %203, label %while.entry.i39.i.preheader, label %Parser_parse_class.exit
+ifend7.i:                                         ; preds = %Parser_advance.exit34.i, %ifend.i159
+  %240 = phi i64 [ %.pre384, %Parser_advance.exit34.i ], [ %229, %ifend.i159 ]
+  %241 = icmp eq i64 %240, 33
+  %242 = load ptr, ptr %memberidx1.i, align 8
+  %memberidx3.i.i38.i = getelementptr inbounds %Array_FloError_, ptr %242, i64 0, i32 2
+  %243 = load i64, ptr %memberidx3.i.i38.i, align 4
+  %244 = icmp eq i64 %243, 0
+  %245 = and i1 %241, %244
+  br i1 %245, label %while.entry.i39.i.preheader, label %Parser_parse_class.exit
 
 while.entry.i39.i.preheader:                      ; preds = %ifend7.i
-  %204 = load ptr, ptr %3, align 8
-  %memberidx2.i12.i.i = getelementptr inbounds %Array_Token_, ptr %204, i64 0, i32 2
-  %memberidx.i.i.i40.i = getelementptr inbounds %Array_Token_, ptr %204, i64 0, i32 1
-  %.pre347 = load i64, ptr %memberidx2.i, align 8
+  %246 = load ptr, ptr %3, align 8
+  %memberidx2.i12.i.i161 = getelementptr inbounds %Array_Token_, ptr %246, i64 0, i32 2
+  %memberidx.i.i.i40.i = getelementptr inbounds %Array_Token_, ptr %246, i64 0, i32 1
+  %.pre385 = load i64, ptr %memberidx2.i, align 8
   br label %while.entry.i39.i
 
 while.entry.i39.i:                                ; preds = %while.entry.i39.i.preheader, %Parser_advance.exit.i43.i
-  %205 = phi i64 [ %.pre347, %while.entry.i39.i.preheader ], [ %213, %Parser_advance.exit.i43.i ]
-  %206 = load i64, ptr %memberidx2.i12.i.i, align 4
-  %207 = icmp slt i64 %205, %206
-  br i1 %207, label %if.entry.i.i42.i, label %Parser_advance.exit.i43.i
+  %247 = phi i64 [ %.pre385, %while.entry.i39.i.preheader ], [ %255, %Parser_advance.exit.i43.i ]
+  %248 = load i64, ptr %memberidx2.i12.i.i161, align 4
+  %249 = icmp slt i64 %247, %248
+  br i1 %249, label %if.entry.i.i42.i, label %Parser_advance.exit.i43.i
 
 if.entry.i.i42.i:                                 ; preds = %while.entry.i39.i
-  %208 = add nsw i64 %205, 1
-  store i64 %208, ptr %memberidx2.i, align 8
-  %209 = load ptr, ptr %memberidx.i.i.i40.i, align 8
-  %ptridx.i.i.i41.i = getelementptr inbounds ptr, ptr %209, i64 %208
-  %210 = load ptr, ptr %ptridx.i.i.i41.i, align 8
-  store ptr %210, ptr %memberidx.i75, align 8
-  %.pre348 = load i64, ptr %210, align 4
-  %.pre349 = load i64, ptr %memberidx3.i.i38.i, align 4
+  %250 = add nsw i64 %247, 1
+  store i64 %250, ptr %memberidx2.i, align 8
+  %251 = load ptr, ptr %memberidx.i.i.i40.i, align 8
+  %ptridx.i.i.i41.i = getelementptr inbounds ptr, ptr %251, i64 %250
+  %252 = load ptr, ptr %ptridx.i.i.i41.i, align 8
+  store ptr %252, ptr %memberidx.i75, align 8
+  %.pre386 = load i64, ptr %252, align 4
+  %.pre387 = load i64, ptr %memberidx3.i.i38.i, align 4
   br label %Parser_advance.exit.i43.i
 
 Parser_advance.exit.i43.i:                        ; preds = %if.entry.i.i42.i, %while.entry.i39.i
-  %211 = phi i64 [ %.pre349, %if.entry.i.i42.i ], [ 0, %while.entry.i39.i ]
-  %212 = phi i64 [ %.pre348, %if.entry.i.i42.i ], [ 33, %while.entry.i39.i ]
-  %213 = phi i64 [ %208, %if.entry.i.i42.i ], [ %205, %while.entry.i39.i ]
-  %214 = icmp eq i64 %212, 33
-  %215 = icmp eq i64 %211, 0
-  %216 = and i1 %214, %215
-  br i1 %216, label %while.entry.i39.i, label %Parser_parse_class.exit
+  %253 = phi i64 [ %.pre387, %if.entry.i.i42.i ], [ 0, %while.entry.i39.i ]
+  %254 = phi i64 [ %.pre386, %if.entry.i.i42.i ], [ 33, %while.entry.i39.i ]
+  %255 = phi i64 [ %250, %if.entry.i.i42.i ], [ %247, %while.entry.i39.i ]
+  %256 = icmp eq i64 %254, 33
+  %257 = icmp eq i64 %253, 0
+  %258 = and i1 %256, %257
+  br i1 %258, label %while.entry.i39.i, label %Parser_parse_class.exit
 
 Parser_parse_class.exit:                          ; preds = %Parser_advance.exit.i43.i, %ifend7.i
-  %217 = call fastcc ptr @Parser_eat(ptr nonnull %3, i64 27)
-  %218 = load ptr, ptr %memberidx.i75, align 8
-  %219 = load i64, ptr %218, align 4
-  %220 = icmp eq i64 %219, 33
-  %221 = load ptr, ptr %memberidx1.i, align 8
-  %memberidx3.i.i.i261 = getelementptr inbounds %Array_FloError_, ptr %221, i64 0, i32 2
-  %222 = load i64, ptr %memberidx3.i.i.i261, align 4
-  %223 = icmp eq i64 %222, 0
-  %224 = and i1 %220, %223
-  br i1 %224, label %while.entry.i.preheader.i, label %Parser_new_lines.exit.i
+  %259 = call fastcc ptr @Parser_eat(ptr nonnull %3, i64 27)
+  %260 = load ptr, ptr %memberidx.i75, align 8
+  %261 = load i64, ptr %260, align 4
+  %262 = icmp eq i64 %261, 33
+  %263 = load ptr, ptr %memberidx1.i, align 8
+  %memberidx3.i.i.i283 = getelementptr inbounds %Array_FloError_, ptr %263, i64 0, i32 2
+  %264 = load i64, ptr %memberidx3.i.i.i283, align 4
+  %265 = icmp eq i64 %264, 0
+  %266 = and i1 %262, %265
+  br i1 %266, label %while.entry.i.preheader.i, label %Parser_new_lines.exit.i291
 
 while.entry.i.preheader.i:                        ; preds = %Parser_parse_class.exit
-  %225 = load ptr, ptr %3, align 8
-  %memberidx2.i12.i.i263 = getelementptr inbounds %Array_Token_, ptr %225, i64 0, i32 2
-  %memberidx.i.i.i.i264 = getelementptr inbounds %Array_Token_, ptr %225, i64 0, i32 1
-  %226 = load i64, ptr %memberidx2.i, align 8
-  %227 = load i64, ptr %memberidx2.i12.i.i263, align 4
-  %228 = icmp slt i64 %226, %227
-  br i1 %228, label %while.entry.i.i265, label %while.entry.i.us.i
+  %267 = load ptr, ptr %3, align 8
+  %memberidx2.i12.i.i285 = getelementptr inbounds %Array_Token_, ptr %267, i64 0, i32 2
+  %memberidx.i.i.i.i286 = getelementptr inbounds %Array_Token_, ptr %267, i64 0, i32 1
+  %268 = load i64, ptr %memberidx2.i, align 8
+  %269 = load i64, ptr %memberidx2.i12.i.i285, align 4
+  %270 = icmp slt i64 %268, %269
+  br i1 %270, label %while.entry.i.i287, label %while.entry.i.us.i
 
 while.entry.i.us.i:                               ; preds = %while.entry.i.preheader.i, %while.entry.i.us.i
   br label %while.entry.i.us.i
 
-while.entry.i.i265:                               ; preds = %while.entry.i.preheader.i, %Parser_advance.exit.i.i268
-  %229 = phi i64 [ %236, %Parser_advance.exit.i.i268 ], [ 33, %while.entry.i.preheader.i ]
-  %230 = phi i64 [ %239, %Parser_advance.exit.i.i268 ], [ %226, %while.entry.i.preheader.i ]
-  %231 = load i64, ptr %memberidx2.i12.i.i263, align 4
-  %232 = icmp slt i64 %230, %231
-  br i1 %232, label %if.entry.i.i.i267, label %Parser_advance.exit.i.i268
+while.entry.i.i287:                               ; preds = %while.entry.i.preheader.i, %Parser_advance.exit.i.i290
+  %271 = phi i64 [ %278, %Parser_advance.exit.i.i290 ], [ 33, %while.entry.i.preheader.i ]
+  %272 = phi i64 [ %281, %Parser_advance.exit.i.i290 ], [ %268, %while.entry.i.preheader.i ]
+  %273 = load i64, ptr %memberidx2.i12.i.i285, align 4
+  %274 = icmp slt i64 %272, %273
+  br i1 %274, label %if.entry.i.i.i289, label %Parser_advance.exit.i.i290
 
-if.entry.i.i.i267:                                ; preds = %while.entry.i.i265
-  %233 = add nsw i64 %230, 1
-  store i64 %233, ptr %memberidx2.i, align 8
-  %234 = load ptr, ptr %memberidx.i.i.i.i264, align 8
-  %ptridx.i.i.i.i266 = getelementptr inbounds ptr, ptr %234, i64 %233
-  %235 = load ptr, ptr %ptridx.i.i.i.i266, align 8
-  store ptr %235, ptr %memberidx.i75, align 8
-  %.pre.i = load i64, ptr %235, align 4
-  %.pre161.i = load i64, ptr %memberidx3.i.i.i261, align 4
-  br label %Parser_advance.exit.i.i268
+if.entry.i.i.i289:                                ; preds = %while.entry.i.i287
+  %275 = add nsw i64 %272, 1
+  store i64 %275, ptr %memberidx2.i, align 8
+  %276 = load ptr, ptr %memberidx.i.i.i.i286, align 8
+  %ptridx.i.i.i.i288 = getelementptr inbounds ptr, ptr %276, i64 %275
+  %277 = load ptr, ptr %ptridx.i.i.i.i288, align 8
+  store ptr %277, ptr %memberidx.i75, align 8
+  %.pre.i = load i64, ptr %277, align 4
+  %.pre163.i = load i64, ptr %memberidx3.i.i.i283, align 4
+  br label %Parser_advance.exit.i.i290
 
-Parser_advance.exit.i.i268:                       ; preds = %if.entry.i.i.i267, %while.entry.i.i265
-  %236 = phi i64 [ %.pre.i, %if.entry.i.i.i267 ], [ %229, %while.entry.i.i265 ]
-  %237 = phi i64 [ %.pre161.i, %if.entry.i.i.i267 ], [ 0, %while.entry.i.i265 ]
-  %238 = phi i64 [ %.pre.i, %if.entry.i.i.i267 ], [ 33, %while.entry.i.i265 ]
-  %239 = phi i64 [ %233, %if.entry.i.i.i267 ], [ %230, %while.entry.i.i265 ]
-  %240 = icmp eq i64 %238, 33
-  %241 = icmp eq i64 %237, 0
-  %242 = and i1 %241, %240
-  br i1 %242, label %while.entry.i.i265, label %Parser_new_lines.exit.i
+Parser_advance.exit.i.i290:                       ; preds = %if.entry.i.i.i289, %while.entry.i.i287
+  %278 = phi i64 [ %.pre.i, %if.entry.i.i.i289 ], [ %271, %while.entry.i.i287 ]
+  %279 = phi i64 [ %.pre163.i, %if.entry.i.i.i289 ], [ 0, %while.entry.i.i287 ]
+  %280 = phi i64 [ %.pre.i, %if.entry.i.i.i289 ], [ 33, %while.entry.i.i287 ]
+  %281 = phi i64 [ %275, %if.entry.i.i.i289 ], [ %272, %while.entry.i.i287 ]
+  %282 = icmp eq i64 %280, 33
+  %283 = icmp eq i64 %279, 0
+  %284 = and i1 %283, %282
+  br i1 %284, label %while.entry.i.i287, label %Parser_new_lines.exit.i291
 
-Parser_new_lines.exit.i:                          ; preds = %Parser_advance.exit.i.i268, %Parser_parse_class.exit
-  %243 = phi i64 [ %219, %Parser_parse_class.exit ], [ %236, %Parser_advance.exit.i.i268 ]
-  %244 = phi i64 [ %222, %Parser_parse_class.exit ], [ %237, %Parser_advance.exit.i.i268 ]
-  %.fr.i = freeze i64 %244
-  %245 = icmp eq i64 %.fr.i, 0
-  br i1 %245, label %switch.early.test.i, label %while.end.i271
+Parser_new_lines.exit.i291:                       ; preds = %Parser_advance.exit.i.i290, %Parser_parse_class.exit
+  %285 = phi i64 [ %261, %Parser_parse_class.exit ], [ %278, %Parser_advance.exit.i.i290 ]
+  %286 = phi i64 [ %264, %Parser_parse_class.exit ], [ %279, %Parser_advance.exit.i.i290 ]
+  %.fr.i = freeze i64 %286
+  %287 = icmp eq i64 %.fr.i, 0
+  br i1 %287, label %switch.early.test.i, label %while.end.i294
 
-switch.early.test.i:                              ; preds = %Parser_new_lines.exit.i
-  switch i64 %243, label %while.entry.i270 [
-    i64 46, label %while.end.i271
-    i64 28, label %while.end.i271
+switch.early.test.i:                              ; preds = %Parser_new_lines.exit.i291
+  switch i64 %285, label %while.entry.i293 [
+    i64 46, label %while.end.i294
+    i64 28, label %while.end.i294
   ]
 
-while.entry.i270:                                 ; preds = %switch.early.test.i, %switch.early.test147.i
-  %246 = phi i64 [ %302, %switch.early.test147.i ], [ %243, %switch.early.test.i ]
-  switch i64 %246, label %if.entry.i272 [
+while.entry.i293:                                 ; preds = %switch.early.test.i, %switch.early.test149.i
+  %288 = phi i64 [ %341, %switch.early.test149.i ], [ %285, %switch.early.test.i ]
+  switch i64 %288, label %if.entry.i295 [
     i64 67, label %else.i
     i64 66, label %Parser_parse_access_modifier.exit.fold.split.i
     i64 68, label %else.fold.split.i
   ]
 
-Parser_parse_access_modifier.exit.fold.split.i:   ; preds = %while.entry.i270
+Parser_parse_access_modifier.exit.fold.split.i:   ; preds = %while.entry.i293
   br label %else.i
 
-while.end.i271:                                   ; preds = %switch.early.test147.i, %switch.early.test147.i, %Parser_new_lines.exit115.i, %switch.early.test.i, %switch.early.test.i, %Parser_new_lines.exit.i
-  %247 = call fastcc ptr @Parser_eat(ptr nonnull %3, i64 28)
+while.end.i294:                                   ; preds = %switch.early.test149.i, %switch.early.test149.i, %Parser_new_lines.exit115.i, %switch.early.test.i, %switch.early.test.i, %Parser_new_lines.exit.i291
+  %289 = call fastcc ptr @Parser_eat(ptr nonnull %3, i64 28)
   br label %Parser_parse_class_block.exit
 
-if.entry.i272:                                    ; preds = %while.entry.i270
-  %.pre162.i = load i64, ptr %memberidx2.i, align 8
-  %.pre163.i = load ptr, ptr %3, align 8
-  br label %ifend.i274
+if.entry.i295:                                    ; preds = %while.entry.i293
+  %.pre164.i = load i64, ptr %memberidx2.i, align 8
+  %.pre165.i = load ptr, ptr %3, align 8
+  br label %ifend.i297
 
-else.fold.split.i:                                ; preds = %while.entry.i270
+else.fold.split.i:                                ; preds = %while.entry.i293
   br label %else.i
 
-else.i:                                           ; preds = %else.fold.split.i, %Parser_parse_access_modifier.exit.fold.split.i, %while.entry.i270
-  %common.ret.op.i.ph.i = phi i64 [ 1, %Parser_parse_access_modifier.exit.fold.split.i ], [ 2, %while.entry.i270 ], [ 3, %else.fold.split.i ]
-  %248 = load i64, ptr %memberidx2.i, align 8
-  %249 = load ptr, ptr %3, align 8
-  %memberidx2.i55.i = getelementptr inbounds %Array_Token_, ptr %249, i64 0, i32 2
-  %250 = load i64, ptr %memberidx2.i55.i, align 4
-  %251 = icmp slt i64 %248, %250
-  br i1 %251, label %if.entry.i.i273, label %ifend.i274
+else.i:                                           ; preds = %else.fold.split.i, %Parser_parse_access_modifier.exit.fold.split.i, %while.entry.i293
+  %common.ret.op.i.ph.i = phi i64 [ 1, %Parser_parse_access_modifier.exit.fold.split.i ], [ 2, %while.entry.i293 ], [ 3, %else.fold.split.i ]
+  %290 = load i64, ptr %memberidx2.i, align 8
+  %291 = load ptr, ptr %3, align 8
+  %memberidx2.i55.i = getelementptr inbounds %Array_Token_, ptr %291, i64 0, i32 2
+  %292 = load i64, ptr %memberidx2.i55.i, align 4
+  %293 = icmp slt i64 %290, %292
+  br i1 %293, label %if.entry.i.i296, label %ifend.i297
 
-if.entry.i.i273:                                  ; preds = %else.i
-  %252 = add nsw i64 %248, 1
-  store i64 %252, ptr %memberidx2.i, align 8
-  %memberidx.i.i57.i = getelementptr inbounds %Array_Token_, ptr %249, i64 0, i32 1
-  %253 = load ptr, ptr %memberidx.i.i57.i, align 8
-  %ptridx.i.i58.i = getelementptr inbounds ptr, ptr %253, i64 %252
-  %254 = load ptr, ptr %ptridx.i.i58.i, align 8
-  store ptr %254, ptr %memberidx.i75, align 8
-  br label %ifend.i274
+if.entry.i.i296:                                  ; preds = %else.i
+  %294 = add nsw i64 %290, 1
+  store i64 %294, ptr %memberidx2.i, align 8
+  %memberidx.i.i57.i = getelementptr inbounds %Array_Token_, ptr %291, i64 0, i32 1
+  %295 = load ptr, ptr %memberidx.i.i57.i, align 8
+  %ptridx.i.i58.i = getelementptr inbounds ptr, ptr %295, i64 %294
+  %296 = load ptr, ptr %ptridx.i.i58.i, align 8
+  store ptr %296, ptr %memberidx.i75, align 8
+  br label %ifend.i297
 
-ifend.i274:                                       ; preds = %if.entry.i.i273, %else.i, %if.entry.i272
-  %255 = phi i64 [ %common.ret.op.i.ph.i, %if.entry.i.i273 ], [ %common.ret.op.i.ph.i, %else.i ], [ 2, %if.entry.i272 ]
-  %256 = phi ptr [ %249, %if.entry.i.i273 ], [ %249, %else.i ], [ %.pre163.i, %if.entry.i272 ]
-  %257 = phi i64 [ %252, %if.entry.i.i273 ], [ %248, %else.i ], [ %.pre162.i, %if.entry.i272 ]
-  %258 = add nsw i64 %257, 1
-  %memberidx2.i61.i = getelementptr inbounds %Array_Token_, ptr %256, i64 0, i32 2
-  %259 = load i64, ptr %memberidx2.i61.i, align 4
-  %260 = icmp slt i64 %258, %259
-  br i1 %260, label %Parser_peek.exit.i, label %Parser_peek.exit.thread.i
+ifend.i297:                                       ; preds = %if.entry.i.i296, %else.i, %if.entry.i295
+  %297 = phi i64 [ %common.ret.op.i.ph.i, %if.entry.i.i296 ], [ %common.ret.op.i.ph.i, %else.i ], [ 2, %if.entry.i295 ]
+  %298 = phi ptr [ %291, %if.entry.i.i296 ], [ %291, %else.i ], [ %.pre165.i, %if.entry.i295 ]
+  %299 = phi i64 [ %294, %if.entry.i.i296 ], [ %290, %else.i ], [ %.pre164.i, %if.entry.i295 ]
+  %300 = add nsw i64 %299, 1
+  %memberidx2.i61.i = getelementptr inbounds %Array_Token_, ptr %298, i64 0, i32 2
+  %301 = load i64, ptr %memberidx2.i61.i, align 4
+  %302 = icmp slt i64 %300, %301
+  br i1 %302, label %Parser_peek.exit.i, label %Parser_peek.exit.thread.i
 
-Parser_peek.exit.i:                               ; preds = %ifend.i274
-  %memberidx.i.i63.i = getelementptr inbounds %Array_Token_, ptr %256, i64 0, i32 1
-  %261 = load ptr, ptr %memberidx.i.i63.i, align 8
-  %ptridx.i.i64.i = getelementptr inbounds ptr, ptr %261, i64 %258
+Parser_peek.exit.i:                               ; preds = %ifend.i297
+  %memberidx.i.i63.i = getelementptr inbounds %Array_Token_, ptr %298, i64 0, i32 1
+  %303 = load ptr, ptr %memberidx.i.i63.i, align 8
+  %ptridx.i.i64.i = getelementptr inbounds ptr, ptr %303, i64 %300
   %common.ret.op.i62.i = load ptr, ptr %ptridx.i.i64.i, align 8
-  %262 = load i64, ptr %common.ret.op.i62.i, align 4
-  %263 = icmp eq i64 %262, 1
-  br i1 %263, label %if.entry3.i, label %Parser_peek.exit99.i
+  %304 = load i64, ptr %common.ret.op.i62.i, align 4
+  %305 = icmp eq i64 %304, 1
+  br i1 %305, label %if.entry3.i, label %Parser_peek.exit99.i
 
-Parser_peek.exit.thread.i:                        ; preds = %ifend.i274
-  %264 = add i64 %259, -1
-  %memberidx.i12.i.i = getelementptr inbounds %Array_Token_, ptr %256, i64 0, i32 1
-  %265 = load ptr, ptr %memberidx.i12.i.i, align 8
-  %ptridx.i13.i.i = getelementptr inbounds ptr, ptr %265, i64 %264
-  %common.ret.op.i62150.i = load ptr, ptr %ptridx.i13.i.i, align 8
-  %266 = load i64, ptr %common.ret.op.i62150.i, align 4
-  %267 = icmp eq i64 %266, 1
-  br i1 %267, label %if.entry3.i, label %Parser_peek.exit99.i
+Parser_peek.exit.thread.i:                        ; preds = %ifend.i297
+  %306 = add i64 %301, -1
+  %memberidx.i12.i.i = getelementptr inbounds %Array_Token_, ptr %298, i64 0, i32 1
+  %307 = load ptr, ptr %memberidx.i12.i.i, align 8
+  %ptridx.i13.i.i = getelementptr inbounds ptr, ptr %307, i64 %306
+  %common.ret.op.i62152.i = load ptr, ptr %ptridx.i13.i.i, align 8
+  %308 = load i64, ptr %common.ret.op.i62152.i, align 4
+  %309 = icmp eq i64 %308, 1
+  br i1 %309, label %if.entry3.i, label %Parser_peek.exit99.i
 
 if.entry3.i:                                      ; preds = %Parser_peek.exit.thread.i, %Parser_peek.exit.i
-  %268 = call ptr @malloc(i32 32)
-  %269 = call fastcc ptr @Parser_eat(ptr nonnull %3, i64 54)
-  store ptr %269, ptr %268, align 8
-  %memberidx1.i73.i = getelementptr inbounds %FieldNode, ptr %268, i64 0, i32 2
+  %310 = call ptr @malloc(i32 32)
+  %311 = call fastcc ptr @Parser_eat(ptr nonnull %3, i64 54)
+  store ptr %311, ptr %310, align 8
+  %memberidx1.i73.i = getelementptr inbounds %FieldNode, ptr %310, i64 0, i32 2
   store ptr null, ptr %memberidx1.i73.i, align 8
-  %270 = call fastcc ptr @Parser_eat(ptr nonnull %3, i64 1)
-  %memberidx6.i = getelementptr inbounds %FieldNode, ptr %268, i64 0, i32 3
-  %271 = call fastcc ptr @Parser_parse_type(ptr nonnull %3)
-  store ptr %271, ptr %memberidx6.i, align 8
-  %272 = load ptr, ptr %memberidx.i75, align 8
-  %273 = load i64, ptr %272, align 4
-  %274 = icmp eq i64 %273, 38
-  br i1 %274, label %if.entry9.i, label %ifend11.i
+  %312 = call fastcc ptr @Parser_eat(ptr nonnull %3, i64 1)
+  %memberidx6.i = getelementptr inbounds %FieldNode, ptr %310, i64 0, i32 3
+  %313 = call fastcc ptr @Parser_parse_type(ptr nonnull %3)
+  store ptr %313, ptr %memberidx6.i, align 8
+  %314 = load ptr, ptr %memberidx.i75, align 8
+  %315 = load i64, ptr %314, align 4
+  %316 = icmp eq i64 %315, 38
+  br i1 %316, label %if.entry9.i, label %ifend11.i
 
 Parser_peek.exit99.i:                             ; preds = %Parser_peek.exit.thread.i, %Parser_peek.exit.i
-  %275 = phi i64 [ %262, %Parser_peek.exit.i ], [ %266, %Parser_peek.exit.thread.i ]
-  %276 = icmp eq i64 %275, 25
-  br i1 %276, label %if.entry16.i, label %else17.i
+  %317 = phi i64 [ %304, %Parser_peek.exit.i ], [ %308, %Parser_peek.exit.thread.i ]
+  %318 = icmp eq i64 %317, 25
+  br i1 %318, label %if.entry16.i, label %else17.i
 
 ifend5.i:                                         ; preds = %Array_MethodNode____sl__.exit.i, %Array_FieldNode____sl__.exit.i
-  %277 = load ptr, ptr %memberidx.i75, align 8
-  %278 = load i64, ptr %277, align 4
-  %279 = icmp eq i64 %278, 33
-  %280 = load ptr, ptr %memberidx1.i, align 8
-  %memberidx3.i.i103.i = getelementptr inbounds %Array_FloError_, ptr %280, i64 0, i32 2
-  %281 = load i64, ptr %memberidx3.i.i103.i, align 4
-  %282 = icmp eq i64 %281, 0
-  %283 = and i1 %279, %282
-  br i1 %283, label %while.entry.i106.preheader.i, label %Parser_new_lines.exit115.i
+  %319 = load ptr, ptr %memberidx.i75, align 8
+  %320 = load i64, ptr %319, align 4
+  %321 = icmp eq i64 %320, 33
+  %322 = load ptr, ptr %memberidx1.i, align 8
+  %memberidx3.i.i103.i = getelementptr inbounds %Array_FloError_, ptr %322, i64 0, i32 2
+  %323 = load i64, ptr %memberidx3.i.i103.i, align 4
+  %324 = icmp eq i64 %323, 0
+  %325 = and i1 %321, %324
+  br i1 %325, label %while.entry.i106.preheader.i, label %Parser_new_lines.exit115.i
 
 while.entry.i106.preheader.i:                     ; preds = %ifend5.i
-  %284 = load ptr, ptr %3, align 8
-  %memberidx2.i12.i105.i = getelementptr inbounds %Array_Token_, ptr %284, i64 0, i32 2
-  %memberidx.i.i.i108.i = getelementptr inbounds %Array_Token_, ptr %284, i64 0, i32 1
-  %285 = load i64, ptr %memberidx2.i, align 8
-  %286 = load i64, ptr %memberidx2.i12.i105.i, align 4
-  %287 = icmp slt i64 %285, %286
-  br i1 %287, label %while.entry.i106.i, label %while.entry.i106.us.i
+  %326 = load ptr, ptr %3, align 8
+  %memberidx2.i12.i105.i = getelementptr inbounds %Array_Token_, ptr %326, i64 0, i32 2
+  %memberidx.i.i.i108.i = getelementptr inbounds %Array_Token_, ptr %326, i64 0, i32 1
+  %.pre177.i = load i64, ptr %memberidx2.i, align 8
+  br label %while.entry.i106.i
 
-while.entry.i106.us.i:                            ; preds = %while.entry.i106.preheader.i, %while.entry.i106.us.i
-  br label %while.entry.i106.us.i
-
-while.entry.i106.i:                               ; preds = %while.entry.i106.preheader.i, %Parser_advance.exit.i114.i
-  %288 = phi i64 [ %295, %Parser_advance.exit.i114.i ], [ 33, %while.entry.i106.preheader.i ]
-  %289 = phi i64 [ %298, %Parser_advance.exit.i114.i ], [ %285, %while.entry.i106.preheader.i ]
-  %290 = load i64, ptr %memberidx2.i12.i105.i, align 4
-  %291 = icmp slt i64 %289, %290
-  br i1 %291, label %if.entry.i.i110.i, label %Parser_advance.exit.i114.i
+while.entry.i106.i:                               ; preds = %Parser_advance.exit.i114.i, %while.entry.i106.preheader.i
+  %327 = phi i64 [ 33, %while.entry.i106.preheader.i ], [ %334, %Parser_advance.exit.i114.i ]
+  %328 = phi i64 [ %.pre177.i, %while.entry.i106.preheader.i ], [ %337, %Parser_advance.exit.i114.i ]
+  %329 = load i64, ptr %memberidx2.i12.i105.i, align 4
+  %330 = icmp slt i64 %328, %329
+  br i1 %330, label %if.entry.i.i110.i, label %Parser_advance.exit.i114.i
 
 if.entry.i.i110.i:                                ; preds = %while.entry.i106.i
-  %292 = add nsw i64 %289, 1
-  store i64 %292, ptr %memberidx2.i, align 8
-  %293 = load ptr, ptr %memberidx.i.i.i108.i, align 8
-  %ptridx.i.i.i109.i = getelementptr inbounds ptr, ptr %293, i64 %292
-  %294 = load ptr, ptr %ptridx.i.i.i109.i, align 8
-  store ptr %294, ptr %memberidx.i75, align 8
-  %.pre171.i = load i64, ptr %294, align 4
-  %.pre172.i = load i64, ptr %memberidx3.i.i103.i, align 4
+  %331 = add nsw i64 %328, 1
+  store i64 %331, ptr %memberidx2.i, align 8
+  %332 = load ptr, ptr %memberidx.i.i.i108.i, align 8
+  %ptridx.i.i.i109.i = getelementptr inbounds ptr, ptr %332, i64 %331
+  %333 = load ptr, ptr %ptridx.i.i.i109.i, align 8
+  store ptr %333, ptr %memberidx.i75, align 8
+  %.pre178.i = load i64, ptr %333, align 4
+  %.pre179.i = load i64, ptr %memberidx3.i.i103.i, align 4
   br label %Parser_advance.exit.i114.i
 
 Parser_advance.exit.i114.i:                       ; preds = %if.entry.i.i110.i, %while.entry.i106.i
-  %295 = phi i64 [ %.pre171.i, %if.entry.i.i110.i ], [ %288, %while.entry.i106.i ]
-  %296 = phi i64 [ %.pre172.i, %if.entry.i.i110.i ], [ 0, %while.entry.i106.i ]
-  %297 = phi i64 [ %.pre171.i, %if.entry.i.i110.i ], [ 33, %while.entry.i106.i ]
-  %298 = phi i64 [ %292, %if.entry.i.i110.i ], [ %289, %while.entry.i106.i ]
-  %299 = icmp eq i64 %297, 33
-  %300 = icmp eq i64 %296, 0
-  %301 = and i1 %300, %299
-  br i1 %301, label %while.entry.i106.i, label %Parser_new_lines.exit115.i
+  %334 = phi i64 [ %.pre178.i, %if.entry.i.i110.i ], [ %327, %while.entry.i106.i ]
+  %335 = phi i64 [ %.pre179.i, %if.entry.i.i110.i ], [ 0, %while.entry.i106.i ]
+  %336 = phi i64 [ %.pre178.i, %if.entry.i.i110.i ], [ 33, %while.entry.i106.i ]
+  %337 = phi i64 [ %331, %if.entry.i.i110.i ], [ %328, %while.entry.i106.i ]
+  %338 = icmp eq i64 %336, 33
+  %339 = icmp eq i64 %335, 0
+  %340 = and i1 %339, %338
+  br i1 %340, label %while.entry.i106.i, label %Parser_new_lines.exit115.i
 
 Parser_new_lines.exit115.i:                       ; preds = %Parser_advance.exit.i114.i, %ifend5.i
-  %302 = phi i64 [ %278, %ifend5.i ], [ %295, %Parser_advance.exit.i114.i ]
-  %303 = phi i64 [ %281, %ifend5.i ], [ %296, %Parser_advance.exit.i114.i ]
-  %.fr151.i = freeze i64 %303
-  %304 = icmp eq i64 %.fr151.i, 0
-  br i1 %304, label %switch.early.test147.i, label %while.end.i271
+  %341 = phi i64 [ %320, %ifend5.i ], [ %334, %Parser_advance.exit.i114.i ]
+  %342 = phi i64 [ %323, %ifend5.i ], [ %335, %Parser_advance.exit.i114.i ]
+  %.fr153.i = freeze i64 %342
+  %343 = icmp eq i64 %.fr153.i, 0
+  br i1 %343, label %switch.early.test149.i, label %while.end.i294
 
-switch.early.test147.i:                           ; preds = %Parser_new_lines.exit115.i
-  switch i64 %302, label %while.entry.i270 [
-    i64 46, label %while.end.i271
-    i64 28, label %while.end.i271
+switch.early.test149.i:                           ; preds = %Parser_new_lines.exit115.i
+  switch i64 %341, label %while.entry.i293 [
+    i64 46, label %while.end.i294
+    i64 28, label %while.end.i294
   ]
 
 if.entry9.i:                                      ; preds = %if.entry3.i
-  %305 = load i64, ptr %memberidx2.i, align 8
-  %306 = load ptr, ptr %3, align 8
-  %memberidx2.i120.i = getelementptr inbounds %Array_Token_, ptr %306, i64 0, i32 2
-  %307 = load i64, ptr %memberidx2.i120.i, align 4
-  %308 = icmp slt i64 %305, %307
-  br i1 %308, label %if.entry.i124.i, label %Parser_advance.exit126.i
+  %344 = load i64, ptr %memberidx2.i, align 8
+  %345 = load ptr, ptr %3, align 8
+  %memberidx2.i120.i = getelementptr inbounds %Array_Token_, ptr %345, i64 0, i32 2
+  %346 = load i64, ptr %memberidx2.i120.i, align 4
+  %347 = icmp slt i64 %344, %346
+  br i1 %347, label %if.entry.i124.i, label %Parser_advance.exit126.i
 
 if.entry.i124.i:                                  ; preds = %if.entry9.i
-  %309 = add nsw i64 %305, 1
-  store i64 %309, ptr %memberidx2.i, align 8
-  %memberidx.i.i122.i = getelementptr inbounds %Array_Token_, ptr %306, i64 0, i32 1
-  %310 = load ptr, ptr %memberidx.i.i122.i, align 8
-  %ptridx.i.i123.i = getelementptr inbounds ptr, ptr %310, i64 %309
-  %311 = load ptr, ptr %ptridx.i.i123.i, align 8
-  store ptr %311, ptr %memberidx.i75, align 8
+  %348 = add nsw i64 %344, 1
+  store i64 %348, ptr %memberidx2.i, align 8
+  %memberidx.i.i122.i = getelementptr inbounds %Array_Token_, ptr %345, i64 0, i32 1
+  %349 = load ptr, ptr %memberidx.i.i122.i, align 8
+  %ptridx.i.i123.i = getelementptr inbounds ptr, ptr %349, i64 %348
+  %350 = load ptr, ptr %ptridx.i.i123.i, align 8
+  store ptr %350, ptr %memberidx.i75, align 8
   br label %Parser_advance.exit126.i
 
 Parser_advance.exit126.i:                         ; preds = %if.entry.i124.i, %if.entry9.i
-  %312 = call fastcc ptr @Parser_parse_expression(ptr nonnull %3)
-  store ptr %312, ptr %memberidx1.i73.i, align 8
+  %351 = call fastcc ptr @Parser_parse_expression(ptr nonnull %3)
+  store ptr %351, ptr %memberidx1.i73.i, align 8
   br label %ifend11.i
 
 ifend11.i:                                        ; preds = %Parser_advance.exit126.i, %if.entry3.i
-  %memberidx13.i = getelementptr inbounds %FieldNode, ptr %268, i64 0, i32 1
-  store i64 %255, ptr %memberidx13.i, align 4
-  %313 = load ptr, ptr %memberidx1.i.i145, align 8
-  %memberidx.i127.i = getelementptr inbounds %Array_FieldNode_, ptr %313, i64 0, i32 2
-  %314 = load i64, ptr %memberidx.i127.i, align 4
-  %memberidx1.i128.i = getelementptr inbounds %Array_FieldNode_, ptr %313, i64 0, i32 3
-  %315 = load i64, ptr %memberidx1.i128.i, align 4
-  %.not.i129.i = icmp slt i64 %314, %315
+  %memberidx13.i = getelementptr inbounds %FieldNode, ptr %310, i64 0, i32 1
+  store i64 %297, ptr %memberidx13.i, align 4
+  %352 = load ptr, ptr %memberidx1.i.i145, align 8
+  %memberidx.i127.i = getelementptr inbounds %Array_FieldNode_, ptr %352, i64 0, i32 2
+  %353 = load i64, ptr %memberidx.i127.i, align 4
+  %memberidx1.i128.i = getelementptr inbounds %Array_FieldNode_, ptr %352, i64 0, i32 3
+  %354 = load i64, ptr %memberidx1.i128.i, align 4
+  %.not.i129.i = icmp slt i64 %353, %354
   br i1 %.not.i129.i, label %ifend11.Array_FieldNode____sl__.exit_crit_edge.i, label %if.entry.i132.i
 
 ifend11.Array_FieldNode____sl__.exit_crit_edge.i: ; preds = %ifend11.i
-  %memberidx4.i133.phi.trans.insert.i = getelementptr inbounds %Array_FieldNode_, ptr %313, i64 0, i32 1
-  %.pre170.i = load ptr, ptr %memberidx4.i133.phi.trans.insert.i, align 8
+  %memberidx4.i133.phi.trans.insert.i = getelementptr inbounds %Array_FieldNode_, ptr %352, i64 0, i32 1
+  %.pre176.i = load ptr, ptr %memberidx4.i133.phi.trans.insert.i, align 8
   br label %Array_FieldNode____sl__.exit.i
 
 if.entry.i132.i:                                  ; preds = %ifend11.i
-  %316 = shl nuw i64 %315, 1
-  store i64 %316, ptr %memberidx1.i128.i, align 4
-  %memberidx2.i.i131.i = getelementptr inbounds %Array_FieldNode_, ptr %313, i64 0, i32 1
-  %317 = load ptr, ptr %memberidx2.i.i131.i, align 8
-  %318 = shl i64 %315, 4
-  %319 = call ptr @realloc(ptr %317, i64 %318)
-  store ptr %319, ptr %memberidx2.i.i131.i, align 8
-  %.pre169.i = load i64, ptr %memberidx.i127.i, align 4
+  %355 = shl nuw i64 %354, 1
+  store i64 %355, ptr %memberidx1.i128.i, align 4
+  %memberidx2.i.i131.i = getelementptr inbounds %Array_FieldNode_, ptr %352, i64 0, i32 1
+  %356 = load ptr, ptr %memberidx2.i.i131.i, align 8
+  %357 = shl i64 %354, 4
+  %358 = call ptr @realloc(ptr %356, i64 %357)
+  store ptr %358, ptr %memberidx2.i.i131.i, align 8
+  %.pre175.i = load i64, ptr %memberidx.i127.i, align 4
   br label %Array_FieldNode____sl__.exit.i
 
 Array_FieldNode____sl__.exit.i:                   ; preds = %if.entry.i132.i, %ifend11.Array_FieldNode____sl__.exit_crit_edge.i
-  %320 = phi ptr [ %.pre170.i, %ifend11.Array_FieldNode____sl__.exit_crit_edge.i ], [ %319, %if.entry.i132.i ]
-  %321 = phi i64 [ %314, %ifend11.Array_FieldNode____sl__.exit_crit_edge.i ], [ %.pre169.i, %if.entry.i132.i ]
-  %322 = add nsw i64 %321, 1
-  store i64 %322, ptr %memberidx.i127.i, align 4
-  %ptridx.i134.i = getelementptr inbounds ptr, ptr %320, i64 %321
-  store ptr %268, ptr %ptridx.i134.i, align 8
+  %359 = phi ptr [ %.pre176.i, %ifend11.Array_FieldNode____sl__.exit_crit_edge.i ], [ %358, %if.entry.i132.i ]
+  %360 = phi i64 [ %353, %ifend11.Array_FieldNode____sl__.exit_crit_edge.i ], [ %.pre175.i, %if.entry.i132.i ]
+  %361 = add nsw i64 %360, 1
+  store i64 %361, ptr %memberidx.i127.i, align 4
+  %ptridx.i134.i = getelementptr inbounds ptr, ptr %359, i64 %360
+  store ptr %310, ptr %ptridx.i134.i, align 8
   br label %ifend5.i
 
 if.entry16.i:                                     ; preds = %Parser_peek.exit99.i
-  %323 = call ptr @malloc(i32 42)
-  %324 = call fastcc ptr @Parser_eat(ptr nonnull %3, i64 54)
-  store ptr %324, ptr %323, align 8
-  %memberidx1.i.i74.i = getelementptr inbounds %MethodNode, ptr %323, i64 0, i32 1
-  %325 = call ptr @malloc(i32 32)
-  store ptr @VTableArray_ArgNode_, ptr %325, align 8
-  %memberidx.i.i.i75.i = getelementptr inbounds %Array_ArgNode_, ptr %325, i64 0, i32 2
+  %362 = call ptr @malloc(i32 42)
+  %363 = call fastcc ptr @Parser_eat(ptr nonnull %3, i64 54)
+  store ptr %363, ptr %362, align 8
+  %memberidx1.i.i74.i = getelementptr inbounds %MethodNode, ptr %362, i64 0, i32 1
+  %364 = call ptr @malloc(i32 32)
+  store ptr @VTableArray_ArgNode_, ptr %364, align 8
+  %memberidx.i.i.i75.i = getelementptr inbounds %Array_ArgNode_, ptr %364, i64 0, i32 2
   store i64 0, ptr %memberidx.i.i.i75.i, align 4
-  %memberidx1.i.i.i.i = getelementptr inbounds %Array_ArgNode_, ptr %325, i64 0, i32 3
+  %memberidx1.i.i.i.i = getelementptr inbounds %Array_ArgNode_, ptr %364, i64 0, i32 3
   store i64 8, ptr %memberidx1.i.i.i.i, align 4
-  %memberidx2.i.i.i76.i = getelementptr inbounds %Array_ArgNode_, ptr %325, i64 0, i32 1
-  %326 = call ptr @malloc(i32 64)
-  store ptr %326, ptr %memberidx2.i.i.i76.i, align 8
+  %memberidx2.i.i.i76.i = getelementptr inbounds %Array_ArgNode_, ptr %364, i64 0, i32 1
+  %365 = call ptr @malloc(i32 64)
+  store ptr %365, ptr %memberidx2.i.i.i76.i, align 8
   store i64 0, ptr %memberidx.i.i.i75.i, align 4
-  store ptr %325, ptr %memberidx1.i.i74.i, align 8
-  %memberidx4.i.i78.i = getelementptr inbounds %MethodNode, ptr %323, i64 0, i32 5
+  store ptr %364, ptr %memberidx1.i.i74.i, align 8
+  %memberidx4.i.i78.i = getelementptr inbounds %MethodNode, ptr %362, i64 0, i32 5
   store i1 true, ptr %memberidx4.i.i78.i, align 1
-  %memberidx5.i.i.i = getelementptr inbounds %MethodNode, ptr %323, i64 0, i32 6
+  %memberidx5.i.i.i = getelementptr inbounds %MethodNode, ptr %362, i64 0, i32 6
   store i1 false, ptr %memberidx5.i.i.i, align 1
-  %327 = call fastcc ptr @Parser_eat(ptr nonnull %3, i64 25)
-  %328 = load ptr, ptr %memberidx.i75, align 8
-  %329 = load i64, ptr %328, align 4
-  %.not.i80.i = icmp eq i64 %329, 26
-  br i1 %.not.i80.i, label %ifend.i86.i, label %if.entry.i84.i
+  %366 = call fastcc ptr @Parser_eat(ptr nonnull %3, i64 25)
+  %367 = load ptr, ptr %memberidx.i75, align 8
+  %368 = load i64, ptr %367, align 4
+  %369 = icmp eq i64 %368, 33
+  %370 = load ptr, ptr %memberidx1.i, align 8
+  %memberidx3.i.i.i.i = getelementptr inbounds %Array_FloError_, ptr %370, i64 0, i32 2
+  %371 = load i64, ptr %memberidx3.i.i.i.i, align 4
+  %372 = icmp eq i64 %371, 0
+  %373 = and i1 %369, %372
+  br i1 %373, label %while.entry.i.i.preheader.i, label %Parser_new_lines.exit.i.i
 
-if.entry.i84.i:                                   ; preds = %if.entry16.i
-  %memberidx3.i81.i = getelementptr inbounds %IdentifierToken, ptr %328, i64 0, i32 2
-  %330 = load ptr, ptr %memberidx3.i81.i, align 8
-  %331 = call ptr @malloc(i32 4)
-  store i32 1936287860, ptr %331, align 8
-  %332 = call ptr @malloc(i32 32)
-  store ptr @VTablestring, ptr %332, align 8
-  %memberidx.i.i54.i.i = getelementptr inbounds %string, ptr %332, i64 0, i32 1
-  store ptr %331, ptr %memberidx.i.i54.i.i, align 8
-  %memberidx1.i.i55.i.i = getelementptr inbounds %string, ptr %332, i64 0, i32 2
-  store i64 4, ptr %memberidx1.i.i55.i.i, align 4
-  %memberidx2.i.i56.i.i = getelementptr inbounds %string, ptr %332, i64 0, i32 3
-  store i64 4, ptr %memberidx2.i.i56.i.i, align 4
-  %memberidx.i.i82.i = getelementptr inbounds %string, ptr %330, i64 0, i32 2
-  %333 = load i64, ptr %memberidx.i.i82.i, align 4
-  %.not.i.i83.i = icmp eq i64 %333, 4
+while.entry.i.i.preheader.i:                      ; preds = %if.entry16.i
+  %374 = load ptr, ptr %3, align 8
+  %memberidx2.i12.i.i.i = getelementptr inbounds %Array_Token_, ptr %374, i64 0, i32 2
+  %memberidx.i.i.i.i.i = getelementptr inbounds %Array_Token_, ptr %374, i64 0, i32 1
+  %375 = load i64, ptr %memberidx2.i, align 8
+  %376 = load i64, ptr %memberidx2.i12.i.i.i, align 4
+  %377 = icmp slt i64 %375, %376
+  br i1 %377, label %while.entry.i.i.i, label %while.entry.i.i.us.i
+
+while.entry.i.i.us.i:                             ; preds = %while.entry.i.i.preheader.i, %while.entry.i.i.us.i
+  br label %while.entry.i.i.us.i
+
+while.entry.i.i.i:                                ; preds = %while.entry.i.i.preheader.i, %Parser_advance.exit.i.i.i
+  %378 = phi i64 [ %386, %Parser_advance.exit.i.i.i ], [ 33, %while.entry.i.i.preheader.i ]
+  %379 = phi ptr [ %389, %Parser_advance.exit.i.i.i ], [ %367, %while.entry.i.i.preheader.i ]
+  %380 = phi i64 [ %390, %Parser_advance.exit.i.i.i ], [ %375, %while.entry.i.i.preheader.i ]
+  %381 = load i64, ptr %memberidx2.i12.i.i.i, align 4
+  %382 = icmp slt i64 %380, %381
+  br i1 %382, label %if.entry.i.i.i.i, label %Parser_advance.exit.i.i.i
+
+if.entry.i.i.i.i:                                 ; preds = %while.entry.i.i.i
+  %383 = add nsw i64 %380, 1
+  store i64 %383, ptr %memberidx2.i, align 8
+  %384 = load ptr, ptr %memberidx.i.i.i.i.i, align 8
+  %ptridx.i.i.i.i.i = getelementptr inbounds ptr, ptr %384, i64 %383
+  %385 = load ptr, ptr %ptridx.i.i.i.i.i, align 8
+  store ptr %385, ptr %memberidx.i75, align 8
+  %.pre169.i = load i64, ptr %385, align 4
+  %.pre170.i = load i64, ptr %memberidx3.i.i.i.i, align 4
+  br label %Parser_advance.exit.i.i.i
+
+Parser_advance.exit.i.i.i:                        ; preds = %if.entry.i.i.i.i, %while.entry.i.i.i
+  %386 = phi i64 [ %.pre169.i, %if.entry.i.i.i.i ], [ %378, %while.entry.i.i.i ]
+  %387 = phi i64 [ %.pre170.i, %if.entry.i.i.i.i ], [ 0, %while.entry.i.i.i ]
+  %388 = phi i64 [ %.pre169.i, %if.entry.i.i.i.i ], [ 33, %while.entry.i.i.i ]
+  %389 = phi ptr [ %385, %if.entry.i.i.i.i ], [ %379, %while.entry.i.i.i ]
+  %390 = phi i64 [ %383, %if.entry.i.i.i.i ], [ %380, %while.entry.i.i.i ]
+  %391 = icmp eq i64 %388, 33
+  %392 = icmp eq i64 %387, 0
+  %393 = and i1 %392, %391
+  br i1 %393, label %while.entry.i.i.i, label %Parser_new_lines.exit.i.i
+
+Parser_new_lines.exit.i.i:                        ; preds = %Parser_advance.exit.i.i.i, %if.entry16.i
+  %394 = phi i64 [ %368, %if.entry16.i ], [ %386, %Parser_advance.exit.i.i.i ]
+  %395 = phi ptr [ %367, %if.entry16.i ], [ %389, %Parser_advance.exit.i.i.i ]
+  %.not.i81.i = icmp eq i64 %394, 26
+  br i1 %.not.i81.i, label %ifend.i86.i, label %if.entry.i84.i
+
+if.entry.i84.i:                                   ; preds = %Parser_new_lines.exit.i.i
+  %memberidx3.i82.i = getelementptr inbounds %IdentifierToken, ptr %395, i64 0, i32 2
+  %396 = load ptr, ptr %memberidx3.i82.i, align 8
+  %397 = call ptr @malloc(i32 4)
+  store i32 1936287860, ptr %397, align 8
+  %398 = call ptr @malloc(i32 32)
+  store ptr @VTablestring, ptr %398, align 8
+  %memberidx.i.i58.i.i = getelementptr inbounds %string, ptr %398, i64 0, i32 1
+  store ptr %397, ptr %memberidx.i.i58.i.i, align 8
+  %memberidx1.i.i59.i.i = getelementptr inbounds %string, ptr %398, i64 0, i32 2
+  store i64 4, ptr %memberidx1.i.i59.i.i, align 4
+  %memberidx2.i.i60.i.i = getelementptr inbounds %string, ptr %398, i64 0, i32 3
+  store i64 4, ptr %memberidx2.i.i60.i.i, align 4
+  %memberidx.i61.i.i = getelementptr inbounds %string, ptr %396, i64 0, i32 2
+  %399 = load i64, ptr %memberidx.i61.i.i, align 4
+  %.not.i.i83.i = icmp eq i64 %399, 4
   br i1 %.not.i.i83.i, label %ifend.i.i.i, label %ifend.i86.i
 
 ifend.i.i.i:                                      ; preds = %if.entry.i84.i
-  %memberidx2.i.i85.i = getelementptr inbounds %string, ptr %330, i64 0, i32 1
-  %334 = load ptr, ptr %memberidx2.i.i85.i, align 8
-  %335 = call i64 @memcmp(ptr %334, ptr nonnull %331, i64 4)
-  %336 = icmp eq i64 %335, 0
-  br i1 %336, label %if.entry4.i.i, label %ifend.i86.i
+  %memberidx2.i.i85.i = getelementptr inbounds %string, ptr %396, i64 0, i32 1
+  %400 = load ptr, ptr %memberidx2.i.i85.i, align 8
+  %401 = call i64 @memcmp(ptr %400, ptr nonnull %397, i64 4)
+  %402 = icmp eq i64 %401, 0
+  br i1 %402, label %if.entry4.i.i, label %ifend.i86.i
 
-ifend.i86.i:                                      ; preds = %if.entry.i.i88.i, %if.entry4.i.i, %ifend.i.i.i, %if.entry.i84.i, %if.entry16.i
-  %337 = load ptr, ptr %memberidx.i75, align 8
-  %338 = load i64, ptr %337, align 4
-  %.not53.i.i = icmp eq i64 %338, 26
-  br i1 %.not53.i.i, label %ifend12.i.i, label %if.entry10.i.i
+ifend.i86.i:                                      ; preds = %if.entry.i.i88.i, %if.entry4.i.i, %ifend.i.i.i, %if.entry.i84.i, %Parser_new_lines.exit.i.i
+  %403 = load ptr, ptr %memberidx.i75, align 8
+  %404 = load i64, ptr %403, align 4
+  %.not55.i.i = icmp eq i64 %404, 26
+  br i1 %.not55.i.i, label %ifend12.i.i, label %if.entry10.i.i
 
 if.entry4.i.i:                                    ; preds = %ifend.i.i.i
   store i1 false, ptr %memberidx4.i.i78.i, align 1
-  %339 = load i64, ptr %memberidx2.i, align 8
-  %340 = load ptr, ptr %3, align 8
-  %memberidx2.i60.i.i = getelementptr inbounds %Array_Token_, ptr %340, i64 0, i32 2
-  %341 = load i64, ptr %memberidx2.i60.i.i, align 4
-  %342 = icmp slt i64 %339, %341
-  br i1 %342, label %if.entry.i.i88.i, label %ifend.i86.i
+  %405 = load i64, ptr %memberidx2.i, align 8
+  %406 = load ptr, ptr %3, align 8
+  %memberidx2.i65.i.i = getelementptr inbounds %Array_Token_, ptr %406, i64 0, i32 2
+  %407 = load i64, ptr %memberidx2.i65.i.i, align 4
+  %408 = icmp slt i64 %405, %407
+  br i1 %408, label %if.entry.i.i88.i, label %ifend.i86.i
 
 if.entry.i.i88.i:                                 ; preds = %if.entry4.i.i
-  %343 = add nsw i64 %339, 1
-  store i64 %343, ptr %memberidx2.i, align 8
-  %memberidx.i.i62.i.i = getelementptr inbounds %Array_Token_, ptr %340, i64 0, i32 1
-  %344 = load ptr, ptr %memberidx.i.i62.i.i, align 8
-  %ptridx.i.i.i87.i = getelementptr inbounds ptr, ptr %344, i64 %343
-  %345 = load ptr, ptr %ptridx.i.i.i87.i, align 8
-  store ptr %345, ptr %memberidx.i75, align 8
+  %409 = add nsw i64 %405, 1
+  store i64 %409, ptr %memberidx2.i, align 8
+  %memberidx.i.i67.i.i = getelementptr inbounds %Array_Token_, ptr %406, i64 0, i32 1
+  %410 = load ptr, ptr %memberidx.i.i67.i.i, align 8
+  %ptridx.i.i.i87.i = getelementptr inbounds ptr, ptr %410, i64 %409
+  %411 = load ptr, ptr %ptridx.i.i.i87.i, align 8
+  store ptr %411, ptr %memberidx.i75, align 8
   br label %ifend.i86.i
 
 if.entry10.i.i:                                   ; preds = %ifend.i86.i
-  %346 = load i1, ptr %memberidx4.i.i78.i, align 1
-  br i1 %346, label %ifend16.i.i, label %if.entry14.i.i
+  %412 = load i1, ptr %memberidx4.i.i78.i, align 1
+  br i1 %412, label %ifend16.i.i, label %if.entry14.i.i
 
 ifend12.i.i:                                      ; preds = %ifend16.i.i, %ifend.i86.i
-  %347 = call fastcc ptr @Parser_eat(ptr nonnull %3, i64 26)
-  %348 = load ptr, ptr %memberidx.i75, align 8
-  %349 = load i64, ptr %348, align 4
-  %350 = icmp eq i64 %349, 1
-  br i1 %350, label %if.entry20.i.i, label %else21.i.i
+  %413 = call fastcc ptr @Parser_eat(ptr nonnull %3, i64 26)
+  %414 = load ptr, ptr %memberidx.i75, align 8
+  %415 = load i64, ptr %414, align 4
+  %416 = icmp eq i64 %415, 1
+  br i1 %416, label %if.entry20.i.i, label %else21.i.i
 
 if.entry14.i.i:                                   ; preds = %if.entry10.i.i
-  %351 = call fastcc ptr @Parser_eat(ptr nonnull %3, i64 3)
+  %417 = call fastcc ptr @Parser_eat(ptr nonnull %3, i64 3)
   br label %ifend16.i.i
 
 ifend16.i.i:                                      ; preds = %if.entry14.i.i, %if.entry10.i.i
-  %352 = load ptr, ptr %memberidx1.i.i74.i, align 8
-  call fastcc void @Parser_parse_args(ptr nonnull %3, ptr %352)
+  %418 = load ptr, ptr %memberidx1.i.i74.i, align 8
+  call fastcc void @Parser_parse_args(ptr nonnull %3, ptr %418)
   br label %ifend12.i.i
 
 if.entry20.i.i:                                   ; preds = %ifend12.i.i
-  %353 = load i64, ptr %memberidx2.i, align 8
-  %354 = load ptr, ptr %3, align 8
-  %memberidx2.i65.i.i = getelementptr inbounds %Array_Token_, ptr %354, i64 0, i32 2
-  %355 = load i64, ptr %memberidx2.i65.i.i, align 4
-  %356 = icmp slt i64 %353, %355
-  br i1 %356, label %if.entry.i69.i.i, label %Parser_advance.exit71.i.i
+  %419 = load i64, ptr %memberidx2.i, align 8
+  %420 = load ptr, ptr %3, align 8
+  %memberidx2.i70.i.i = getelementptr inbounds %Array_Token_, ptr %420, i64 0, i32 2
+  %421 = load i64, ptr %memberidx2.i70.i.i, align 4
+  %422 = icmp slt i64 %419, %421
+  br i1 %422, label %if.entry.i74.i.i, label %Parser_advance.exit76.i.i
 
-if.entry.i69.i.i:                                 ; preds = %if.entry20.i.i
-  %357 = add nsw i64 %353, 1
-  store i64 %357, ptr %memberidx2.i, align 8
-  %memberidx.i.i67.i.i = getelementptr inbounds %Array_Token_, ptr %354, i64 0, i32 1
-  %358 = load ptr, ptr %memberidx.i.i67.i.i, align 8
-  %ptridx.i.i68.i.i = getelementptr inbounds ptr, ptr %358, i64 %357
-  %359 = load ptr, ptr %ptridx.i.i68.i.i, align 8
-  store ptr %359, ptr %memberidx.i75, align 8
-  br label %Parser_advance.exit71.i.i
+if.entry.i74.i.i:                                 ; preds = %if.entry20.i.i
+  %423 = add nsw i64 %419, 1
+  store i64 %423, ptr %memberidx2.i, align 8
+  %memberidx.i.i72.i.i = getelementptr inbounds %Array_Token_, ptr %420, i64 0, i32 1
+  %424 = load ptr, ptr %memberidx.i.i72.i.i, align 8
+  %ptridx.i.i73.i.i = getelementptr inbounds ptr, ptr %424, i64 %423
+  %425 = load ptr, ptr %ptridx.i.i73.i.i, align 8
+  store ptr %425, ptr %memberidx.i75, align 8
+  br label %Parser_advance.exit76.i.i
 
-Parser_advance.exit71.i.i:                        ; preds = %if.entry.i69.i.i, %if.entry20.i.i
-  %memberidx23.i.i = getelementptr inbounds %MethodNode, ptr %323, i64 0, i32 4
-  %360 = call fastcc ptr @Parser_parse_type(ptr nonnull %3)
-  store ptr %360, ptr %memberidx23.i.i, align 8
+Parser_advance.exit76.i.i:                        ; preds = %if.entry.i74.i.i, %if.entry20.i.i
+  %memberidx23.i.i = getelementptr inbounds %MethodNode, ptr %362, i64 0, i32 4
+  %426 = call fastcc ptr @Parser_parse_type(ptr nonnull %3)
+  store ptr %426, ptr %memberidx23.i.i, align 8
   br label %ifend22.i.i
 
 else21.i.i:                                       ; preds = %ifend12.i.i
-  %361 = call ptr @malloc(i32 24)
-  %362 = call ptr @malloc(i32 4)
-  store i32 1684631414, ptr %362, align 8
-  %363 = call ptr @malloc(i32 32)
-  store ptr @VTablestring, ptr %363, align 8
-  %memberidx.i.i72.i.i = getelementptr inbounds %string, ptr %363, i64 0, i32 1
-  store ptr %362, ptr %memberidx.i.i72.i.i, align 8
-  %memberidx1.i.i73.i.i = getelementptr inbounds %string, ptr %363, i64 0, i32 2
-  store i64 4, ptr %memberidx1.i.i73.i.i, align 4
-  %memberidx2.i.i74.i.i = getelementptr inbounds %string, ptr %363, i64 0, i32 3
-  store i64 4, ptr %memberidx2.i.i74.i.i, align 4
-  %364 = call ptr @malloc(i32 32)
-  call void @llvm.memset.p0.i64(ptr noundef nonnull align 4 dereferenceable(32) %364, i8 0, i64 32, i1 false)
-  store i64 54, ptr %361, align 4
-  %memberidx1.i.i78.i.i = getelementptr inbounds %Token, ptr %361, i64 0, i32 1
-  store ptr %364, ptr %memberidx1.i.i78.i.i, align 8
-  %memberidx.i79.i.i = getelementptr inbounds %IdentifierToken, ptr %361, i64 0, i32 2
-  store ptr %363, ptr %memberidx.i79.i.i, align 8
-  %memberidx24.i.i = getelementptr inbounds %MethodNode, ptr %323, i64 0, i32 4
-  %365 = call ptr @malloc(i32 32)
-  %366 = load ptr, ptr %memberidx1.i.i78.i.i, align 8
-  store ptr %366, ptr %365, align 8
-  %memberidx.i.i80.i.i = getelementptr inbounds %TypeNode, ptr %365, i64 0, i32 1
-  store i64 16, ptr %memberidx.i.i80.i.i, align 4
-  %memberidx.i81.i.i = getelementptr inbounds %RecordTypeNode, ptr %365, i64 0, i32 2
-  store ptr %361, ptr %memberidx.i81.i.i, align 8
-  %memberidx1.i82.i.i275 = getelementptr inbounds %RecordTypeNode, ptr %365, i64 0, i32 3
-  %367 = call ptr @malloc(i32 32)
-  store ptr @VTableArray_TypeNode_, ptr %367, align 8
-  %memberidx.i5.i.i.i = getelementptr inbounds %Array_TypeNode_, ptr %367, i64 0, i32 2
+  %427 = call ptr @malloc(i32 24)
+  %428 = call ptr @malloc(i32 4)
+  store i32 1684631414, ptr %428, align 8
+  %429 = call ptr @malloc(i32 32)
+  store ptr @VTablestring, ptr %429, align 8
+  %memberidx.i.i77.i.i = getelementptr inbounds %string, ptr %429, i64 0, i32 1
+  store ptr %428, ptr %memberidx.i.i77.i.i, align 8
+  %memberidx1.i.i78.i.i = getelementptr inbounds %string, ptr %429, i64 0, i32 2
+  store i64 4, ptr %memberidx1.i.i78.i.i, align 4
+  %memberidx2.i.i79.i.i = getelementptr inbounds %string, ptr %429, i64 0, i32 3
+  store i64 4, ptr %memberidx2.i.i79.i.i, align 4
+  %430 = call ptr @malloc(i32 32)
+  call void @llvm.memset.p0.i64(ptr noundef nonnull align 4 dereferenceable(32) %430, i8 0, i64 32, i1 false)
+  store i64 54, ptr %427, align 4
+  %memberidx1.i.i83.i.i = getelementptr inbounds %Token, ptr %427, i64 0, i32 1
+  store ptr %430, ptr %memberidx1.i.i83.i.i, align 8
+  %memberidx.i84.i.i = getelementptr inbounds %IdentifierToken, ptr %427, i64 0, i32 2
+  store ptr %429, ptr %memberidx.i84.i.i, align 8
+  %memberidx24.i.i = getelementptr inbounds %MethodNode, ptr %362, i64 0, i32 4
+  %431 = call ptr @malloc(i32 32)
+  %432 = load ptr, ptr %memberidx1.i.i83.i.i, align 8
+  store ptr %432, ptr %431, align 8
+  %memberidx.i.i101.i.i = getelementptr inbounds %TypeNode, ptr %431, i64 0, i32 1
+  store i64 16, ptr %memberidx.i.i101.i.i, align 4
+  %memberidx.i102.i.i = getelementptr inbounds %RecordTypeNode, ptr %431, i64 0, i32 2
+  store ptr %427, ptr %memberidx.i102.i.i, align 8
+  %memberidx1.i103.i.i = getelementptr inbounds %RecordTypeNode, ptr %431, i64 0, i32 3
+  %433 = call ptr @malloc(i32 32)
+  store ptr @VTableArray_TypeNode_, ptr %433, align 8
+  %memberidx.i5.i.i.i = getelementptr inbounds %Array_TypeNode_, ptr %433, i64 0, i32 2
   store i64 0, ptr %memberidx.i5.i.i.i, align 4
-  %memberidx1.i.i83.i.i = getelementptr inbounds %Array_TypeNode_, ptr %367, i64 0, i32 3
-  store i64 8, ptr %memberidx1.i.i83.i.i, align 4
-  %memberidx2.i.i84.i.i = getelementptr inbounds %Array_TypeNode_, ptr %367, i64 0, i32 1
-  %368 = call ptr @malloc(i32 64)
-  store ptr %368, ptr %memberidx2.i.i84.i.i, align 8
+  %memberidx1.i.i104.i.i = getelementptr inbounds %Array_TypeNode_, ptr %433, i64 0, i32 3
+  store i64 8, ptr %memberidx1.i.i104.i.i, align 4
+  %memberidx2.i.i105.i.i = getelementptr inbounds %Array_TypeNode_, ptr %433, i64 0, i32 1
+  %434 = call ptr @malloc(i32 64)
+  store ptr %434, ptr %memberidx2.i.i105.i.i, align 8
   store i64 0, ptr %memberidx.i5.i.i.i, align 4
-  store ptr %367, ptr %memberidx1.i82.i.i275, align 8
-  store ptr %365, ptr %memberidx24.i.i, align 8
+  store ptr %433, ptr %memberidx1.i103.i.i, align 8
+  store ptr %431, ptr %memberidx24.i.i, align 8
   br label %ifend22.i.i
 
-ifend22.i.i:                                      ; preds = %else21.i.i, %Parser_advance.exit71.i.i
-  %369 = load ptr, ptr %memberidx.i75, align 8
-  %370 = load i64, ptr %369, align 4
-  %371 = icmp eq i64 %370, 27
-  br i1 %371, label %if.entry28.i.i, label %else29.i.i
+ifend22.i.i:                                      ; preds = %else21.i.i, %Parser_advance.exit76.i.i
+  %435 = load ptr, ptr %memberidx.i75, align 8
+  %436 = load i64, ptr %435, align 4
+  %437 = icmp eq i64 %436, 33
+  %438 = load ptr, ptr %memberidx1.i, align 8
+  %memberidx3.i.i88.i.i = getelementptr inbounds %Array_FloError_, ptr %438, i64 0, i32 2
+  %439 = load i64, ptr %memberidx3.i.i88.i.i, align 4
+  %440 = icmp eq i64 %439, 0
+  %441 = and i1 %437, %440
+  br i1 %441, label %while.entry.i91.i.preheader.i, label %Parser_new_lines.exit100.i.i
 
-if.entry28.i.i:                                   ; preds = %ifend22.i.i
-  %memberidx31.i.i = getelementptr inbounds %MethodNode, ptr %323, i64 0, i32 2
-  %372 = call fastcc ptr @Parser_parse_block(ptr nonnull %3)
-  store ptr %372, ptr %memberidx31.i.i, align 8
+while.entry.i91.i.preheader.i:                    ; preds = %ifend22.i.i
+  %442 = load ptr, ptr %3, align 8
+  %memberidx2.i12.i90.i.i = getelementptr inbounds %Array_Token_, ptr %442, i64 0, i32 2
+  %memberidx.i.i.i93.i.i = getelementptr inbounds %Array_Token_, ptr %442, i64 0, i32 1
+  %443 = load i64, ptr %memberidx2.i, align 8
+  %444 = load i64, ptr %memberidx2.i12.i90.i.i, align 4
+  %445 = icmp slt i64 %443, %444
+  br i1 %445, label %while.entry.i91.i.i, label %while.entry.i91.i.us.i
+
+while.entry.i91.i.us.i:                           ; preds = %while.entry.i91.i.preheader.i, %while.entry.i91.i.us.i
+  br label %while.entry.i91.i.us.i
+
+while.entry.i91.i.i:                              ; preds = %while.entry.i91.i.preheader.i, %Parser_advance.exit.i99.i.i
+  %446 = phi i64 [ %453, %Parser_advance.exit.i99.i.i ], [ 33, %while.entry.i91.i.preheader.i ]
+  %447 = phi i64 [ %456, %Parser_advance.exit.i99.i.i ], [ %443, %while.entry.i91.i.preheader.i ]
+  %448 = load i64, ptr %memberidx2.i12.i90.i.i, align 4
+  %449 = icmp slt i64 %447, %448
+  br i1 %449, label %if.entry.i.i95.i.i, label %Parser_advance.exit.i99.i.i
+
+if.entry.i.i95.i.i:                               ; preds = %while.entry.i91.i.i
+  %450 = add nsw i64 %447, 1
+  store i64 %450, ptr %memberidx2.i, align 8
+  %451 = load ptr, ptr %memberidx.i.i.i93.i.i, align 8
+  %ptridx.i.i.i94.i.i = getelementptr inbounds ptr, ptr %451, i64 %450
+  %452 = load ptr, ptr %ptridx.i.i.i94.i.i, align 8
+  store ptr %452, ptr %memberidx.i75, align 8
+  %.pre171.i = load i64, ptr %452, align 4
+  %.pre172.i = load i64, ptr %memberidx3.i.i88.i.i, align 4
+  br label %Parser_advance.exit.i99.i.i
+
+Parser_advance.exit.i99.i.i:                      ; preds = %if.entry.i.i95.i.i, %while.entry.i91.i.i
+  %453 = phi i64 [ %.pre171.i, %if.entry.i.i95.i.i ], [ %446, %while.entry.i91.i.i ]
+  %454 = phi i64 [ %.pre172.i, %if.entry.i.i95.i.i ], [ 0, %while.entry.i91.i.i ]
+  %455 = phi i64 [ %.pre171.i, %if.entry.i.i95.i.i ], [ 33, %while.entry.i91.i.i ]
+  %456 = phi i64 [ %450, %if.entry.i.i95.i.i ], [ %447, %while.entry.i91.i.i ]
+  %457 = icmp eq i64 %455, 33
+  %458 = icmp eq i64 %454, 0
+  %459 = and i1 %458, %457
+  br i1 %459, label %while.entry.i91.i.i, label %Parser_new_lines.exit100.i.i
+
+Parser_new_lines.exit100.i.i:                     ; preds = %Parser_advance.exit.i99.i.i, %ifend22.i.i
+  %460 = phi i64 [ %436, %ifend22.i.i ], [ %453, %Parser_advance.exit.i99.i.i ]
+  %461 = icmp eq i64 %460, 27
+  br i1 %461, label %if.entry28.i.i, label %else29.i.i
+
+if.entry28.i.i:                                   ; preds = %Parser_new_lines.exit100.i.i
+  %memberidx31.i.i = getelementptr inbounds %MethodNode, ptr %362, i64 0, i32 2
+  %462 = call fastcc ptr @Parser_parse_block(ptr nonnull %3)
+  store ptr %462, ptr %memberidx31.i.i, align 8
   br label %Parser_parse_method.exit.i
 
-else29.i.i:                                       ; preds = %ifend22.i.i
+else29.i.i:                                       ; preds = %Parser_new_lines.exit100.i.i
   store i1 true, ptr %memberidx5.i.i.i, align 1
   br label %Parser_parse_method.exit.i
 
 Parser_parse_method.exit.i:                       ; preds = %else29.i.i, %if.entry28.i.i
-  %memberidx19.i = getelementptr inbounds %MethodNode, ptr %323, i64 0, i32 3
-  store i64 %255, ptr %memberidx19.i, align 4
-  %373 = load ptr, ptr %memberidx4.i.i148, align 8
-  %memberidx.i67.i = getelementptr inbounds %Array_MethodNode_, ptr %373, i64 0, i32 2
-  %374 = load i64, ptr %memberidx.i67.i, align 4
-  %memberidx1.i68.i = getelementptr inbounds %Array_MethodNode_, ptr %373, i64 0, i32 3
-  %375 = load i64, ptr %memberidx1.i68.i, align 4
-  %.not.i.i276 = icmp slt i64 %374, %375
-  br i1 %.not.i.i276, label %Parser_parse_method.exit.Array_MethodNode____sl__.exit_crit_edge.i, label %if.entry.i71.i
+  %memberidx19.i = getelementptr inbounds %MethodNode, ptr %362, i64 0, i32 3
+  store i64 %297, ptr %memberidx19.i, align 4
+  %463 = load ptr, ptr %memberidx4.i.i148, align 8
+  %memberidx.i67.i298 = getelementptr inbounds %Array_MethodNode_, ptr %463, i64 0, i32 2
+  %464 = load i64, ptr %memberidx.i67.i298, align 4
+  %memberidx1.i68.i299 = getelementptr inbounds %Array_MethodNode_, ptr %463, i64 0, i32 3
+  %465 = load i64, ptr %memberidx1.i68.i299, align 4
+  %.not.i.i300 = icmp slt i64 %464, %465
+  br i1 %.not.i.i300, label %Parser_parse_method.exit.Array_MethodNode____sl__.exit_crit_edge.i, label %if.entry.i71.i
 
 Parser_parse_method.exit.Array_MethodNode____sl__.exit_crit_edge.i: ; preds = %Parser_parse_method.exit.i
-  %memberidx4.i.phi.trans.insert.i = getelementptr inbounds %Array_MethodNode_, ptr %373, i64 0, i32 1
-  %.pre168.i = load ptr, ptr %memberidx4.i.phi.trans.insert.i, align 8
+  %memberidx4.i.phi.trans.insert.i = getelementptr inbounds %Array_MethodNode_, ptr %463, i64 0, i32 1
+  %.pre174.i = load ptr, ptr %memberidx4.i.phi.trans.insert.i, align 8
   br label %Array_MethodNode____sl__.exit.i
 
 if.entry.i71.i:                                   ; preds = %Parser_parse_method.exit.i
-  %376 = shl nuw i64 %375, 1
-  store i64 %376, ptr %memberidx1.i68.i, align 4
-  %memberidx2.i.i70.i = getelementptr inbounds %Array_MethodNode_, ptr %373, i64 0, i32 1
-  %377 = load ptr, ptr %memberidx2.i.i70.i, align 8
-  %378 = shl i64 %375, 4
-  %379 = call ptr @realloc(ptr %377, i64 %378)
-  store ptr %379, ptr %memberidx2.i.i70.i, align 8
-  %.pre167.i = load i64, ptr %memberidx.i67.i, align 4
+  %466 = shl nuw i64 %465, 1
+  store i64 %466, ptr %memberidx1.i68.i299, align 4
+  %memberidx2.i.i70.i301 = getelementptr inbounds %Array_MethodNode_, ptr %463, i64 0, i32 1
+  %467 = load ptr, ptr %memberidx2.i.i70.i301, align 8
+  %468 = shl i64 %465, 4
+  %469 = call ptr @realloc(ptr %467, i64 %468)
+  store ptr %469, ptr %memberidx2.i.i70.i301, align 8
+  %.pre173.i = load i64, ptr %memberidx.i67.i298, align 4
   br label %Array_MethodNode____sl__.exit.i
 
 Array_MethodNode____sl__.exit.i:                  ; preds = %if.entry.i71.i, %Parser_parse_method.exit.Array_MethodNode____sl__.exit_crit_edge.i
-  %380 = phi ptr [ %.pre168.i, %Parser_parse_method.exit.Array_MethodNode____sl__.exit_crit_edge.i ], [ %379, %if.entry.i71.i ]
-  %381 = phi i64 [ %374, %Parser_parse_method.exit.Array_MethodNode____sl__.exit_crit_edge.i ], [ %.pre167.i, %if.entry.i71.i ]
-  %382 = add nsw i64 %381, 1
-  store i64 %382, ptr %memberidx.i67.i, align 4
-  %ptridx.i.i277 = getelementptr inbounds ptr, ptr %380, i64 %381
-  store ptr %323, ptr %ptridx.i.i277, align 8
+  %470 = phi ptr [ %.pre174.i, %Parser_parse_method.exit.Array_MethodNode____sl__.exit_crit_edge.i ], [ %469, %if.entry.i71.i ]
+  %471 = phi i64 [ %464, %Parser_parse_method.exit.Array_MethodNode____sl__.exit_crit_edge.i ], [ %.pre173.i, %if.entry.i71.i ]
+  %472 = add nsw i64 %471, 1
+  store i64 %472, ptr %memberidx.i67.i298, align 4
+  %ptridx.i.i302 = getelementptr inbounds ptr, ptr %470, i64 %471
+  store ptr %362, ptr %ptridx.i.i302, align 8
   br label %ifend5.i
 
 else17.i:                                         ; preds = %Parser_peek.exit99.i
-  %383 = call ptr @malloc(i32 19)
-  call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(19) %383, ptr noundef nonnull align 8 dereferenceable(19) @66, i64 19, i1 false)
-  %384 = call ptr @malloc(i32 32)
-  store ptr @VTablestring, ptr %384, align 8
-  %memberidx.i.i51.i = getelementptr inbounds %string, ptr %384, i64 0, i32 1
-  store ptr %383, ptr %memberidx.i.i51.i, align 8
-  %memberidx1.i.i52.i = getelementptr inbounds %string, ptr %384, i64 0, i32 2
+  %473 = call ptr @malloc(i32 19)
+  call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(19) %473, ptr noundef nonnull align 8 dereferenceable(19) @66, i64 19, i1 false)
+  %474 = call ptr @malloc(i32 32)
+  store ptr @VTablestring, ptr %474, align 8
+  %memberidx.i.i51.i = getelementptr inbounds %string, ptr %474, i64 0, i32 1
+  store ptr %473, ptr %memberidx.i.i51.i, align 8
+  %memberidx1.i.i52.i = getelementptr inbounds %string, ptr %474, i64 0, i32 2
   store i64 19, ptr %memberidx1.i.i52.i, align 4
-  %memberidx2.i.i53.i = getelementptr inbounds %string, ptr %384, i64 0, i32 3
+  %memberidx2.i.i53.i = getelementptr inbounds %string, ptr %474, i64 0, i32 3
   store i64 19, ptr %memberidx2.i.i53.i, align 4
-  %385 = load ptr, ptr %memberidx1.i, align 8
-  %386 = call ptr @malloc(i32 24)
-  %387 = load ptr, ptr %memberidx.i75, align 8
-  %memberidx2.i.i278 = getelementptr inbounds %Token, ptr %387, i64 0, i32 1
-  %388 = load ptr, ptr %memberidx2.i.i278, align 8
-  store i64 2, ptr %386, align 4
-  %memberidx1.i.i.i279 = getelementptr inbounds %FloError, ptr %386, i64 0, i32 2
-  store ptr %388, ptr %memberidx1.i.i.i279, align 8
-  %memberidx2.i.i44.i = getelementptr inbounds %FloError, ptr %386, i64 0, i32 1
-  store ptr %384, ptr %memberidx2.i.i44.i, align 8
-  %memberidx.i.i45.i280 = getelementptr inbounds %Array_FloError_, ptr %385, i64 0, i32 2
-  %389 = load i64, ptr %memberidx.i.i45.i280, align 4
-  %memberidx1.i4.i.i = getelementptr inbounds %Array_FloError_, ptr %385, i64 0, i32 3
-  %390 = load i64, ptr %memberidx1.i4.i.i, align 4
-  %.not.i.i.i281 = icmp slt i64 %389, %390
-  br i1 %.not.i.i.i281, label %else17.Parser_error.exit_crit_edge.i, label %if.entry.i.i47.i
+  %475 = load ptr, ptr %memberidx1.i, align 8
+  %476 = call ptr @malloc(i32 24)
+  %477 = load ptr, ptr %memberidx.i75, align 8
+  %memberidx2.i.i303 = getelementptr inbounds %Token, ptr %477, i64 0, i32 1
+  %478 = load ptr, ptr %memberidx2.i.i303, align 8
+  store i64 2, ptr %476, align 4
+  %memberidx1.i.i.i304 = getelementptr inbounds %FloError, ptr %476, i64 0, i32 2
+  store ptr %478, ptr %memberidx1.i.i.i304, align 8
+  %memberidx2.i.i44.i = getelementptr inbounds %FloError, ptr %476, i64 0, i32 1
+  store ptr %474, ptr %memberidx2.i.i44.i, align 8
+  %memberidx.i.i45.i = getelementptr inbounds %Array_FloError_, ptr %475, i64 0, i32 2
+  %479 = load i64, ptr %memberidx.i.i45.i, align 4
+  %memberidx1.i4.i.i = getelementptr inbounds %Array_FloError_, ptr %475, i64 0, i32 3
+  %480 = load i64, ptr %memberidx1.i4.i.i, align 4
+  %.not.i.i.i305 = icmp slt i64 %479, %480
+  br i1 %.not.i.i.i305, label %else17.Parser_error.exit_crit_edge.i, label %if.entry.i.i47.i
 
 else17.Parser_error.exit_crit_edge.i:             ; preds = %else17.i
-  %memberidx4.i.i.phi.trans.insert.i = getelementptr inbounds %Array_FloError_, ptr %385, i64 0, i32 1
-  %.pre166.i = load ptr, ptr %memberidx4.i.i.phi.trans.insert.i, align 8
+  %memberidx4.i.i.phi.trans.insert.i = getelementptr inbounds %Array_FloError_, ptr %475, i64 0, i32 1
+  %.pre168.i = load ptr, ptr %memberidx4.i.i.phi.trans.insert.i, align 8
   br label %Parser_error.exit.i
 
 if.entry.i.i47.i:                                 ; preds = %else17.i
-  %391 = shl nuw i64 %390, 1
-  store i64 %391, ptr %memberidx1.i4.i.i, align 4
-  %memberidx2.i.i.i.i282 = getelementptr inbounds %Array_FloError_, ptr %385, i64 0, i32 1
-  %392 = load ptr, ptr %memberidx2.i.i.i.i282, align 8
-  %393 = shl i64 %390, 4
-  %394 = call ptr @realloc(ptr %392, i64 %393)
-  store ptr %394, ptr %memberidx2.i.i.i.i282, align 8
-  %.pre165.i = load i64, ptr %memberidx.i.i45.i280, align 4
+  %481 = shl nuw i64 %480, 1
+  store i64 %481, ptr %memberidx1.i4.i.i, align 4
+  %memberidx2.i.i.i.i306 = getelementptr inbounds %Array_FloError_, ptr %475, i64 0, i32 1
+  %482 = load ptr, ptr %memberidx2.i.i.i.i306, align 8
+  %483 = shl i64 %480, 4
+  %484 = call ptr @realloc(ptr %482, i64 %483)
+  store ptr %484, ptr %memberidx2.i.i.i.i306, align 8
+  %.pre167.i = load i64, ptr %memberidx.i.i45.i, align 4
   br label %Parser_error.exit.i
 
 Parser_error.exit.i:                              ; preds = %if.entry.i.i47.i, %else17.Parser_error.exit_crit_edge.i
-  %395 = phi ptr [ %.pre166.i, %else17.Parser_error.exit_crit_edge.i ], [ %394, %if.entry.i.i47.i ]
-  %396 = phi i64 [ %389, %else17.Parser_error.exit_crit_edge.i ], [ %.pre165.i, %if.entry.i.i47.i ]
-  %397 = add nsw i64 %396, 1
-  store i64 %397, ptr %memberidx.i.i45.i280, align 4
-  %ptridx.i.i.i283 = getelementptr inbounds ptr, ptr %395, i64 %396
-  store ptr %386, ptr %ptridx.i.i.i283, align 8
+  %485 = phi ptr [ %.pre168.i, %else17.Parser_error.exit_crit_edge.i ], [ %484, %if.entry.i.i47.i ]
+  %486 = phi i64 [ %479, %else17.Parser_error.exit_crit_edge.i ], [ %.pre167.i, %if.entry.i.i47.i ]
+  %487 = add nsw i64 %486, 1
+  store i64 %487, ptr %memberidx.i.i45.i, align 4
+  %ptridx.i.i.i307 = getelementptr inbounds ptr, ptr %485, i64 %486
+  store ptr %476, ptr %ptridx.i.i.i307, align 8
   br label %Parser_parse_class_block.exit
 
-Parser_parse_class_block.exit:                    ; preds = %while.end.i271, %Parser_error.exit.i
-  %memberidx.i154 = getelementptr inbounds %Array_ClassDeclarationNode_, ptr %117, i64 0, i32 2
-  %398 = load i64, ptr %memberidx.i154, align 4
-  %memberidx1.i155 = getelementptr inbounds %Array_ClassDeclarationNode_, ptr %117, i64 0, i32 3
-  %399 = load i64, ptr %memberidx1.i155, align 4
-  %.not.i156 = icmp slt i64 %398, %399
-  br i1 %.not.i156, label %Parser_parse_class_block.exit.Array_ClassDeclarationNode____sl__.exit_crit_edge, label %if.entry.i159
+Parser_parse_class_block.exit:                    ; preds = %while.end.i294, %Parser_error.exit.i
+  %memberidx.i167 = getelementptr inbounds %Array_ClassDeclarationNode_, ptr %159, i64 0, i32 2
+  %488 = load i64, ptr %memberidx.i167, align 4
+  %memberidx1.i168 = getelementptr inbounds %Array_ClassDeclarationNode_, ptr %159, i64 0, i32 3
+  %489 = load i64, ptr %memberidx1.i168, align 4
+  %.not.i169 = icmp slt i64 %488, %489
+  br i1 %.not.i169, label %Parser_parse_class_block.exit.Array_ClassDeclarationNode____sl__.exit_crit_edge, label %if.entry.i172
 
 Parser_parse_class_block.exit.Array_ClassDeclarationNode____sl__.exit_crit_edge: ; preds = %Parser_parse_class_block.exit
-  %memberidx4.i160.phi.trans.insert = getelementptr inbounds %Array_ClassDeclarationNode_, ptr %117, i64 0, i32 1
-  %.pre351 = load ptr, ptr %memberidx4.i160.phi.trans.insert, align 8
+  %memberidx4.i173.phi.trans.insert = getelementptr inbounds %Array_ClassDeclarationNode_, ptr %159, i64 0, i32 1
+  %.pre389 = load ptr, ptr %memberidx4.i173.phi.trans.insert, align 8
   br label %Array_ClassDeclarationNode____sl__.exit
 
-if.entry.i159:                                    ; preds = %Parser_parse_class_block.exit
-  %400 = shl nuw i64 %399, 1
-  store i64 %400, ptr %memberidx1.i155, align 4
-  %memberidx2.i.i158 = getelementptr inbounds %Array_ClassDeclarationNode_, ptr %117, i64 0, i32 1
-  %401 = load ptr, ptr %memberidx2.i.i158, align 8
-  %402 = shl i64 %399, 4
-  %403 = call ptr @realloc(ptr %401, i64 %402)
-  store ptr %403, ptr %memberidx2.i.i158, align 8
-  %.pre350 = load i64, ptr %memberidx.i154, align 4
+if.entry.i172:                                    ; preds = %Parser_parse_class_block.exit
+  %490 = shl nuw i64 %489, 1
+  store i64 %490, ptr %memberidx1.i168, align 4
+  %memberidx2.i.i171 = getelementptr inbounds %Array_ClassDeclarationNode_, ptr %159, i64 0, i32 1
+  %491 = load ptr, ptr %memberidx2.i.i171, align 8
+  %492 = shl i64 %489, 4
+  %493 = call ptr @realloc(ptr %491, i64 %492)
+  store ptr %493, ptr %memberidx2.i.i171, align 8
+  %.pre388 = load i64, ptr %memberidx.i167, align 4
   br label %Array_ClassDeclarationNode____sl__.exit
 
-Array_ClassDeclarationNode____sl__.exit:          ; preds = %Parser_parse_class_block.exit.Array_ClassDeclarationNode____sl__.exit_crit_edge, %if.entry.i159
-  %404 = phi ptr [ %.pre351, %Parser_parse_class_block.exit.Array_ClassDeclarationNode____sl__.exit_crit_edge ], [ %403, %if.entry.i159 ]
-  %405 = phi i64 [ %398, %Parser_parse_class_block.exit.Array_ClassDeclarationNode____sl__.exit_crit_edge ], [ %.pre350, %if.entry.i159 ]
-  %406 = add nsw i64 %405, 1
-  store i64 %406, ptr %memberidx.i154, align 4
-  %ptridx.i161 = getelementptr inbounds ptr, ptr %404, i64 %405
-  store ptr %125, ptr %ptridx.i161, align 8
+Array_ClassDeclarationNode____sl__.exit:          ; preds = %Parser_parse_class_block.exit.Array_ClassDeclarationNode____sl__.exit_crit_edge, %if.entry.i172
+  %494 = phi ptr [ %.pre389, %Parser_parse_class_block.exit.Array_ClassDeclarationNode____sl__.exit_crit_edge ], [ %493, %if.entry.i172 ]
+  %495 = phi i64 [ %488, %Parser_parse_class_block.exit.Array_ClassDeclarationNode____sl__.exit_crit_edge ], [ %.pre388, %if.entry.i172 ]
+  %496 = add nsw i64 %495, 1
+  store i64 %496, ptr %memberidx.i167, align 4
+  %ptridx.i174 = getelementptr inbounds ptr, ptr %494, i64 %495
+  store ptr %167, ptr %ptridx.i174, align 8
   br label %ifend
 
 if.entry11:                                       ; preds = %while.entry
-  %407 = load ptr, ptr %memberidx14, align 8
-  %408 = load i64, ptr %memberidx2.i, align 8
-  %409 = load ptr, ptr %3, align 8
-  %memberidx2.i.i285 = getelementptr inbounds %Array_Token_, ptr %409, i64 0, i32 2
-  %410 = load i64, ptr %memberidx2.i.i285, align 4
-  %411 = icmp slt i64 %408, %410
-  br i1 %411, label %if.entry.i.i289, label %Parser_advance.exit.i293
+  %497 = load ptr, ptr %memberidx14, align 8
+  %498 = load i64, ptr %memberidx2.i, align 8
+  %499 = load ptr, ptr %3, align 8
+  %memberidx2.i.i309 = getelementptr inbounds %Array_Token_, ptr %499, i64 0, i32 2
+  %500 = load i64, ptr %memberidx2.i.i309, align 4
+  %501 = icmp slt i64 %498, %500
+  br i1 %501, label %if.entry.i.i313, label %Parser_advance.exit.i316
 
-if.entry.i.i289:                                  ; preds = %if.entry11
-  %412 = add nsw i64 %408, 1
-  store i64 %412, ptr %memberidx2.i, align 8
-  %memberidx.i.i.i287 = getelementptr inbounds %Array_Token_, ptr %409, i64 0, i32 1
-  %413 = load ptr, ptr %memberidx.i.i.i287, align 8
-  %ptridx.i.i.i288 = getelementptr inbounds ptr, ptr %413, i64 %412
-  %414 = load ptr, ptr %ptridx.i.i.i288, align 8
-  store ptr %414, ptr %memberidx.i75, align 8
-  br label %Parser_advance.exit.i293
+if.entry.i.i313:                                  ; preds = %if.entry11
+  %502 = add nsw i64 %498, 1
+  store i64 %502, ptr %memberidx2.i, align 8
+  %memberidx.i.i.i311 = getelementptr inbounds %Array_Token_, ptr %499, i64 0, i32 1
+  %503 = load ptr, ptr %memberidx.i.i.i311, align 8
+  %ptridx.i.i.i312 = getelementptr inbounds ptr, ptr %503, i64 %502
+  %504 = load ptr, ptr %ptridx.i.i.i312, align 8
+  store ptr %504, ptr %memberidx.i75, align 8
+  br label %Parser_advance.exit.i316
 
-Parser_advance.exit.i293:                         ; preds = %if.entry.i.i289, %if.entry11
-  %415 = call ptr @malloc(i32 24)
-  %416 = call fastcc ptr @Parser_eat(ptr nonnull %3, i64 54)
-  store ptr %416, ptr %415, align 8
-  %memberidx1.i38.i = getelementptr inbounds %EnumNode, ptr %415, i64 0, i32 1
-  %417 = call ptr @malloc(i32 32)
-  store ptr @VTableArray_EnumNodeField_, ptr %417, align 8
-  %memberidx.i.i39.i = getelementptr inbounds %Array_EnumNodeField_, ptr %417, i64 0, i32 2
+Parser_advance.exit.i316:                         ; preds = %if.entry.i.i313, %if.entry11
+  %505 = call ptr @malloc(i32 24)
+  %506 = call fastcc ptr @Parser_eat(ptr nonnull %3, i64 54)
+  store ptr %506, ptr %505, align 8
+  %memberidx1.i38.i = getelementptr inbounds %EnumNode, ptr %505, i64 0, i32 1
+  %507 = call ptr @malloc(i32 32)
+  store ptr @VTableArray_EnumNodeField_, ptr %507, align 8
+  %memberidx.i.i39.i = getelementptr inbounds %Array_EnumNodeField_, ptr %507, i64 0, i32 2
   store i64 0, ptr %memberidx.i.i39.i, align 4
-  %memberidx1.i.i.i290 = getelementptr inbounds %Array_EnumNodeField_, ptr %417, i64 0, i32 3
-  store i64 8, ptr %memberidx1.i.i.i290, align 4
-  %memberidx2.i.i40.i291 = getelementptr inbounds %Array_EnumNodeField_, ptr %417, i64 0, i32 1
-  %418 = call ptr @malloc(i32 64)
-  store ptr %418, ptr %memberidx2.i.i40.i291, align 8
+  %memberidx1.i.i.i314 = getelementptr inbounds %Array_EnumNodeField_, ptr %507, i64 0, i32 3
+  store i64 8, ptr %memberidx1.i.i.i314, align 4
+  %memberidx2.i.i40.i = getelementptr inbounds %Array_EnumNodeField_, ptr %507, i64 0, i32 1
+  %508 = call ptr @malloc(i32 64)
+  store ptr %508, ptr %memberidx2.i.i40.i, align 8
   store i64 0, ptr %memberidx.i.i39.i, align 4
-  store ptr %417, ptr %memberidx1.i38.i, align 8
-  %memberidx4.i42.i = getelementptr inbounds %EnumNode, ptr %415, i64 0, i32 2
+  store ptr %507, ptr %memberidx1.i38.i, align 8
+  %memberidx4.i42.i = getelementptr inbounds %EnumNode, ptr %505, i64 0, i32 2
   store ptr null, ptr %memberidx4.i42.i, align 8
-  %419 = load ptr, ptr %memberidx.i75, align 8
-  %420 = load i64, ptr %419, align 4
-  %421 = icmp eq i64 %420, 25
-  br i1 %421, label %if.entry.i294, label %ifend.i296
+  %509 = load ptr, ptr %memberidx.i75, align 8
+  %510 = load i64, ptr %509, align 4
+  %511 = icmp eq i64 %510, 25
+  br i1 %511, label %if.entry.i317, label %ifend.i321
 
-if.entry.i294:                                    ; preds = %Parser_advance.exit.i293
-  %422 = load i64, ptr %memberidx2.i, align 8
-  %423 = load ptr, ptr %3, align 8
-  %memberidx2.i44.i = getelementptr inbounds %Array_Token_, ptr %423, i64 0, i32 2
-  %424 = load i64, ptr %memberidx2.i44.i, align 4
-  %425 = icmp slt i64 %422, %424
-  br i1 %425, label %if.entry.i48.i, label %Parser_advance.exit49.i
+if.entry.i317:                                    ; preds = %Parser_advance.exit.i316
+  %512 = load i64, ptr %memberidx2.i, align 8
+  %513 = load ptr, ptr %3, align 8
+  %memberidx2.i44.i = getelementptr inbounds %Array_Token_, ptr %513, i64 0, i32 2
+  %514 = load i64, ptr %memberidx2.i44.i, align 4
+  %515 = icmp slt i64 %512, %514
+  br i1 %515, label %if.entry.i48.i, label %Parser_advance.exit49.i
 
-if.entry.i48.i:                                   ; preds = %if.entry.i294
-  %426 = add nsw i64 %422, 1
-  store i64 %426, ptr %memberidx2.i, align 8
-  %memberidx.i.i46.i = getelementptr inbounds %Array_Token_, ptr %423, i64 0, i32 1
-  %427 = load ptr, ptr %memberidx.i.i46.i, align 8
-  %ptridx.i.i47.i = getelementptr inbounds ptr, ptr %427, i64 %426
-  %428 = load ptr, ptr %ptridx.i.i47.i, align 8
-  store ptr %428, ptr %memberidx.i75, align 8
+if.entry.i48.i:                                   ; preds = %if.entry.i317
+  %516 = add nsw i64 %512, 1
+  store i64 %516, ptr %memberidx2.i, align 8
+  %memberidx.i.i46.i = getelementptr inbounds %Array_Token_, ptr %513, i64 0, i32 1
+  %517 = load ptr, ptr %memberidx.i.i46.i, align 8
+  %ptridx.i.i47.i = getelementptr inbounds ptr, ptr %517, i64 %516
+  %518 = load ptr, ptr %ptridx.i.i47.i, align 8
+  store ptr %518, ptr %memberidx.i75, align 8
   br label %Parser_advance.exit49.i
 
-Parser_advance.exit49.i:                          ; preds = %if.entry.i48.i, %if.entry.i294
-  %429 = call fastcc ptr @Parser_parse_type(ptr nonnull %3)
-  store ptr %429, ptr %memberidx4.i42.i, align 8
-  %430 = call fastcc ptr @Parser_eat(ptr nonnull %3, i64 26)
-  %.pre.i295 = load ptr, ptr %memberidx.i75, align 8
-  %.pre101.i = load i64, ptr %.pre.i295, align 4
-  br label %ifend.i296
+Parser_advance.exit49.i:                          ; preds = %if.entry.i48.i, %if.entry.i317
+  %519 = call fastcc ptr @Parser_parse_type(ptr nonnull %3)
+  store ptr %519, ptr %memberidx4.i42.i, align 8
+  %520 = call fastcc ptr @Parser_eat(ptr nonnull %3, i64 26)
+  %.pre.i318 = load ptr, ptr %memberidx.i75, align 8
+  %.pre101.i = load i64, ptr %.pre.i318, align 4
+  br label %ifend.i321
 
-ifend.i296:                                       ; preds = %Parser_advance.exit49.i, %Parser_advance.exit.i293
-  %431 = phi i64 [ %420, %Parser_advance.exit.i293 ], [ %.pre101.i, %Parser_advance.exit49.i ]
-  %432 = icmp eq i64 %431, 33
-  %433 = load ptr, ptr %memberidx1.i, align 8
-  %memberidx3.i.i53.i = getelementptr inbounds %Array_FloError_, ptr %433, i64 0, i32 2
-  %434 = load i64, ptr %memberidx3.i.i53.i, align 4
-  %435 = icmp eq i64 %434, 0
-  %436 = and i1 %432, %435
-  br i1 %436, label %while.entry.i56.preheader.i, label %Parser_new_lines.exit65.i
+ifend.i321:                                       ; preds = %Parser_advance.exit49.i, %Parser_advance.exit.i316
+  %521 = phi i64 [ %510, %Parser_advance.exit.i316 ], [ %.pre101.i, %Parser_advance.exit49.i ]
+  %522 = icmp eq i64 %521, 33
+  %523 = load ptr, ptr %memberidx1.i, align 8
+  %memberidx3.i.i53.i320 = getelementptr inbounds %Array_FloError_, ptr %523, i64 0, i32 2
+  %524 = load i64, ptr %memberidx3.i.i53.i320, align 4
+  %525 = icmp eq i64 %524, 0
+  %526 = and i1 %522, %525
+  br i1 %526, label %while.entry.i56.preheader.i, label %Parser_new_lines.exit65.i329
 
-while.entry.i56.preheader.i:                      ; preds = %ifend.i296
-  %437 = load ptr, ptr %3, align 8
-  %memberidx2.i12.i55.i = getelementptr inbounds %Array_Token_, ptr %437, i64 0, i32 2
-  %memberidx.i.i.i58.i = getelementptr inbounds %Array_Token_, ptr %437, i64 0, i32 1
-  %438 = load i64, ptr %memberidx2.i, align 8
-  %439 = load i64, ptr %memberidx2.i12.i55.i, align 4
-  %440 = icmp slt i64 %438, %439
-  br i1 %440, label %while.entry.i56.i, label %while.entry.i56.us.i
+while.entry.i56.preheader.i:                      ; preds = %ifend.i321
+  %527 = load ptr, ptr %3, align 8
+  %memberidx2.i12.i55.i322 = getelementptr inbounds %Array_Token_, ptr %527, i64 0, i32 2
+  %memberidx.i.i.i58.i323 = getelementptr inbounds %Array_Token_, ptr %527, i64 0, i32 1
+  %528 = load i64, ptr %memberidx2.i, align 8
+  %529 = load i64, ptr %memberidx2.i12.i55.i322, align 4
+  %530 = icmp slt i64 %528, %529
+  br i1 %530, label %while.entry.i56.i324, label %while.entry.i56.us.i
 
 while.entry.i56.us.i:                             ; preds = %while.entry.i56.preheader.i, %while.entry.i56.us.i
   br label %while.entry.i56.us.i
 
-while.entry.i56.i:                                ; preds = %while.entry.i56.preheader.i, %Parser_advance.exit.i64.i
-  %441 = phi i64 [ %449, %Parser_advance.exit.i64.i ], [ %438, %while.entry.i56.preheader.i ]
-  %442 = load i64, ptr %memberidx2.i12.i55.i, align 4
-  %443 = icmp slt i64 %441, %442
-  br i1 %443, label %if.entry.i.i60.i, label %Parser_advance.exit.i64.i
+while.entry.i56.i324:                             ; preds = %while.entry.i56.preheader.i, %Parser_advance.exit.i64.i327
+  %531 = phi i64 [ %539, %Parser_advance.exit.i64.i327 ], [ %528, %while.entry.i56.preheader.i ]
+  %532 = load i64, ptr %memberidx2.i12.i55.i322, align 4
+  %533 = icmp slt i64 %531, %532
+  br i1 %533, label %if.entry.i.i60.i326, label %Parser_advance.exit.i64.i327
 
-if.entry.i.i60.i:                                 ; preds = %while.entry.i56.i
-  %444 = add nsw i64 %441, 1
-  store i64 %444, ptr %memberidx2.i, align 8
-  %445 = load ptr, ptr %memberidx.i.i.i58.i, align 8
-  %ptridx.i.i.i59.i = getelementptr inbounds ptr, ptr %445, i64 %444
-  %446 = load ptr, ptr %ptridx.i.i.i59.i, align 8
-  store ptr %446, ptr %memberidx.i75, align 8
-  %.pre102.i = load i64, ptr %446, align 4
-  %.pre103.i = load i64, ptr %memberidx3.i.i53.i, align 4
-  br label %Parser_advance.exit.i64.i
+if.entry.i.i60.i326:                              ; preds = %while.entry.i56.i324
+  %534 = add nsw i64 %531, 1
+  store i64 %534, ptr %memberidx2.i, align 8
+  %535 = load ptr, ptr %memberidx.i.i.i58.i323, align 8
+  %ptridx.i.i.i59.i325 = getelementptr inbounds ptr, ptr %535, i64 %534
+  %536 = load ptr, ptr %ptridx.i.i.i59.i325, align 8
+  store ptr %536, ptr %memberidx.i75, align 8
+  %.pre102.i = load i64, ptr %536, align 4
+  %.pre103.i = load i64, ptr %memberidx3.i.i53.i320, align 4
+  br label %Parser_advance.exit.i64.i327
 
-Parser_advance.exit.i64.i:                        ; preds = %if.entry.i.i60.i, %while.entry.i56.i
-  %447 = phi i64 [ %.pre103.i, %if.entry.i.i60.i ], [ 0, %while.entry.i56.i ]
-  %448 = phi i64 [ %.pre102.i, %if.entry.i.i60.i ], [ 33, %while.entry.i56.i ]
-  %449 = phi i64 [ %444, %if.entry.i.i60.i ], [ %441, %while.entry.i56.i ]
-  %450 = icmp eq i64 %448, 33
-  %451 = icmp eq i64 %447, 0
-  %452 = and i1 %451, %450
-  br i1 %452, label %while.entry.i56.i, label %Parser_new_lines.exit65.i
+Parser_advance.exit.i64.i327:                     ; preds = %if.entry.i.i60.i326, %while.entry.i56.i324
+  %537 = phi i64 [ %.pre103.i, %if.entry.i.i60.i326 ], [ 0, %while.entry.i56.i324 ]
+  %538 = phi i64 [ %.pre102.i, %if.entry.i.i60.i326 ], [ 33, %while.entry.i56.i324 ]
+  %539 = phi i64 [ %534, %if.entry.i.i60.i326 ], [ %531, %while.entry.i56.i324 ]
+  %540 = icmp eq i64 %538, 33
+  %541 = icmp eq i64 %537, 0
+  %542 = and i1 %541, %540
+  br i1 %542, label %while.entry.i56.i324, label %Parser_new_lines.exit65.i329
 
-Parser_new_lines.exit65.i:                        ; preds = %Parser_advance.exit.i64.i, %ifend.i296
-  %453 = call fastcc ptr @Parser_eat(ptr nonnull %3, i64 27)
-  %454 = load ptr, ptr %memberidx.i75, align 8
-  %455 = load i64, ptr %454, align 4
-  %456 = icmp eq i64 %455, 33
-  %457 = load ptr, ptr %memberidx1.i, align 8
-  %memberidx3.i.i69.i297 = getelementptr inbounds %Array_FloError_, ptr %457, i64 0, i32 2
-  %458 = load i64, ptr %memberidx3.i.i69.i297, align 4
-  %459 = icmp eq i64 %458, 0
-  %460 = and i1 %456, %459
-  br i1 %460, label %while.entry.i72.preheader.i, label %Parser_new_lines.exit81.i
+Parser_new_lines.exit65.i329:                     ; preds = %Parser_advance.exit.i64.i327, %ifend.i321
+  %543 = call fastcc ptr @Parser_eat(ptr nonnull %3, i64 27)
+  %544 = load ptr, ptr %memberidx.i75, align 8
+  %545 = load i64, ptr %544, align 4
+  %546 = icmp eq i64 %545, 33
+  %547 = load ptr, ptr %memberidx1.i, align 8
+  %memberidx3.i.i69.i328 = getelementptr inbounds %Array_FloError_, ptr %547, i64 0, i32 2
+  %548 = load i64, ptr %memberidx3.i.i69.i328, align 4
+  %549 = icmp eq i64 %548, 0
+  %550 = and i1 %546, %549
+  br i1 %550, label %while.entry.i72.preheader.i, label %Parser_new_lines.exit81.i
 
-while.entry.i72.preheader.i:                      ; preds = %Parser_new_lines.exit65.i
-  %461 = load ptr, ptr %3, align 8
-  %memberidx2.i12.i71.i = getelementptr inbounds %Array_Token_, ptr %461, i64 0, i32 2
-  %memberidx.i.i.i74.i = getelementptr inbounds %Array_Token_, ptr %461, i64 0, i32 1
-  %462 = load i64, ptr %memberidx2.i, align 8
-  %463 = load i64, ptr %memberidx2.i12.i71.i, align 4
-  %464 = icmp slt i64 %462, %463
-  br i1 %464, label %while.entry.i72.i, label %while.entry.i72.us.i
+while.entry.i72.preheader.i:                      ; preds = %Parser_new_lines.exit65.i329
+  %551 = load ptr, ptr %3, align 8
+  %memberidx2.i12.i71.i = getelementptr inbounds %Array_Token_, ptr %551, i64 0, i32 2
+  %memberidx.i.i.i74.i = getelementptr inbounds %Array_Token_, ptr %551, i64 0, i32 1
+  %552 = load i64, ptr %memberidx2.i, align 8
+  %553 = load i64, ptr %memberidx2.i12.i71.i, align 4
+  %554 = icmp slt i64 %552, %553
+  br i1 %554, label %while.entry.i72.i, label %while.entry.i72.us.i
 
 while.entry.i72.us.i:                             ; preds = %while.entry.i72.preheader.i, %while.entry.i72.us.i
   br label %while.entry.i72.us.i
 
 while.entry.i72.i:                                ; preds = %while.entry.i72.preheader.i, %Parser_advance.exit.i80.i
-  %465 = phi i64 [ %472, %Parser_advance.exit.i80.i ], [ 33, %while.entry.i72.preheader.i ]
-  %466 = phi i64 [ %475, %Parser_advance.exit.i80.i ], [ %462, %while.entry.i72.preheader.i ]
-  %467 = load i64, ptr %memberidx2.i12.i71.i, align 4
-  %468 = icmp slt i64 %466, %467
-  br i1 %468, label %if.entry.i.i76.i, label %Parser_advance.exit.i80.i
+  %555 = phi i64 [ %562, %Parser_advance.exit.i80.i ], [ 33, %while.entry.i72.preheader.i ]
+  %556 = phi i64 [ %565, %Parser_advance.exit.i80.i ], [ %552, %while.entry.i72.preheader.i ]
+  %557 = load i64, ptr %memberidx2.i12.i71.i, align 4
+  %558 = icmp slt i64 %556, %557
+  br i1 %558, label %if.entry.i.i76.i, label %Parser_advance.exit.i80.i
 
 if.entry.i.i76.i:                                 ; preds = %while.entry.i72.i
-  %469 = add nsw i64 %466, 1
-  store i64 %469, ptr %memberidx2.i, align 8
-  %470 = load ptr, ptr %memberidx.i.i.i74.i, align 8
-  %ptridx.i.i.i75.i = getelementptr inbounds ptr, ptr %470, i64 %469
-  %471 = load ptr, ptr %ptridx.i.i.i75.i, align 8
-  store ptr %471, ptr %memberidx.i75, align 8
-  %.pre104.i = load i64, ptr %471, align 4
-  %.pre105.i = load i64, ptr %memberidx3.i.i69.i297, align 4
+  %559 = add nsw i64 %556, 1
+  store i64 %559, ptr %memberidx2.i, align 8
+  %560 = load ptr, ptr %memberidx.i.i.i74.i, align 8
+  %ptridx.i.i.i75.i = getelementptr inbounds ptr, ptr %560, i64 %559
+  %561 = load ptr, ptr %ptridx.i.i.i75.i, align 8
+  store ptr %561, ptr %memberidx.i75, align 8
+  %.pre104.i = load i64, ptr %561, align 4
+  %.pre105.i = load i64, ptr %memberidx3.i.i69.i328, align 4
   br label %Parser_advance.exit.i80.i
 
 Parser_advance.exit.i80.i:                        ; preds = %if.entry.i.i76.i, %while.entry.i72.i
-  %472 = phi i64 [ %.pre104.i, %if.entry.i.i76.i ], [ %465, %while.entry.i72.i ]
-  %473 = phi i64 [ %.pre105.i, %if.entry.i.i76.i ], [ 0, %while.entry.i72.i ]
-  %474 = phi i64 [ %.pre104.i, %if.entry.i.i76.i ], [ 33, %while.entry.i72.i ]
-  %475 = phi i64 [ %469, %if.entry.i.i76.i ], [ %466, %while.entry.i72.i ]
-  %476 = icmp eq i64 %474, 33
-  %477 = icmp eq i64 %473, 0
-  %478 = and i1 %477, %476
-  br i1 %478, label %while.entry.i72.i, label %Parser_new_lines.exit81.i
+  %562 = phi i64 [ %.pre104.i, %if.entry.i.i76.i ], [ %555, %while.entry.i72.i ]
+  %563 = phi i64 [ %.pre105.i, %if.entry.i.i76.i ], [ 0, %while.entry.i72.i ]
+  %564 = phi i64 [ %.pre104.i, %if.entry.i.i76.i ], [ 33, %while.entry.i72.i ]
+  %565 = phi i64 [ %559, %if.entry.i.i76.i ], [ %556, %while.entry.i72.i ]
+  %566 = icmp eq i64 %564, 33
+  %567 = icmp eq i64 %563, 0
+  %568 = and i1 %567, %566
+  br i1 %568, label %while.entry.i72.i, label %Parser_new_lines.exit81.i
 
-Parser_new_lines.exit81.i:                        ; preds = %Parser_advance.exit.i80.i, %Parser_new_lines.exit65.i
-  %479 = phi i64 [ %455, %Parser_new_lines.exit65.i ], [ %472, %Parser_advance.exit.i80.i ]
-  %480 = icmp eq i64 %479, 54
-  br i1 %480, label %while.entry.i298, label %Parser_parse_enum.exit
+Parser_new_lines.exit81.i:                        ; preds = %Parser_advance.exit.i80.i, %Parser_new_lines.exit65.i329
+  %569 = phi i64 [ %545, %Parser_new_lines.exit65.i329 ], [ %562, %Parser_advance.exit.i80.i ]
+  %570 = icmp eq i64 %569, 54
+  br i1 %570, label %while.entry.i330, label %Parser_parse_enum.exit
 
-while.entry.i298:                                 ; preds = %Parser_new_lines.exit81.i, %Parser_new_lines.exit.i311
-  %481 = call ptr @malloc(i32 16)
-  %482 = call fastcc ptr @Parser_eat(ptr nonnull %3, i64 54)
-  store ptr %482, ptr %481, align 8
-  %memberidx1.i89.i = getelementptr inbounds %EnumNodeField, ptr %481, i64 0, i32 1
+while.entry.i330:                                 ; preds = %Parser_new_lines.exit81.i, %Parser_new_lines.exit.i343
+  %571 = call ptr @malloc(i32 16)
+  %572 = call fastcc ptr @Parser_eat(ptr nonnull %3, i64 54)
+  store ptr %572, ptr %571, align 8
+  %memberidx1.i89.i = getelementptr inbounds %EnumNodeField, ptr %571, i64 0, i32 1
   store ptr null, ptr %memberidx1.i89.i, align 8
-  %483 = load ptr, ptr %memberidx.i75, align 8
-  %484 = load i64, ptr %483, align 4
-  %485 = icmp eq i64 %484, 38
-  br i1 %485, label %if.entry7.i, label %ifend9.i
+  %573 = load ptr, ptr %memberidx.i75, align 8
+  %574 = load i64, ptr %573, align 4
+  %575 = icmp eq i64 %574, 38
+  br i1 %575, label %if.entry7.i, label %ifend9.i
 
-if.entry7.i:                                      ; preds = %while.entry.i298
-  %486 = load i64, ptr %memberidx2.i, align 8
-  %487 = load ptr, ptr %3, align 8
-  %memberidx2.i83.i = getelementptr inbounds %Array_Token_, ptr %487, i64 0, i32 2
-  %488 = load i64, ptr %memberidx2.i83.i, align 4
-  %489 = icmp slt i64 %486, %488
-  br i1 %489, label %if.entry.i87.i, label %Parser_advance.exit88.i
+if.entry7.i:                                      ; preds = %while.entry.i330
+  %576 = load i64, ptr %memberidx2.i, align 8
+  %577 = load ptr, ptr %3, align 8
+  %memberidx2.i83.i = getelementptr inbounds %Array_Token_, ptr %577, i64 0, i32 2
+  %578 = load i64, ptr %memberidx2.i83.i, align 4
+  %579 = icmp slt i64 %576, %578
+  br i1 %579, label %if.entry.i87.i, label %Parser_advance.exit88.i
 
 if.entry.i87.i:                                   ; preds = %if.entry7.i
-  %490 = add nsw i64 %486, 1
-  store i64 %490, ptr %memberidx2.i, align 8
-  %memberidx.i.i85.i = getelementptr inbounds %Array_Token_, ptr %487, i64 0, i32 1
-  %491 = load ptr, ptr %memberidx.i.i85.i, align 8
-  %ptridx.i.i86.i = getelementptr inbounds ptr, ptr %491, i64 %490
-  %492 = load ptr, ptr %ptridx.i.i86.i, align 8
-  store ptr %492, ptr %memberidx.i75, align 8
+  %580 = add nsw i64 %576, 1
+  store i64 %580, ptr %memberidx2.i, align 8
+  %memberidx.i.i85.i = getelementptr inbounds %Array_Token_, ptr %577, i64 0, i32 1
+  %581 = load ptr, ptr %memberidx.i.i85.i, align 8
+  %ptridx.i.i86.i = getelementptr inbounds ptr, ptr %581, i64 %580
+  %582 = load ptr, ptr %ptridx.i.i86.i, align 8
+  store ptr %582, ptr %memberidx.i75, align 8
   br label %Parser_advance.exit88.i
 
 Parser_advance.exit88.i:                          ; preds = %if.entry.i87.i, %if.entry7.i
-  %493 = call fastcc ptr @Parser_parse_expression(ptr nonnull %3)
-  store ptr %493, ptr %memberidx1.i89.i, align 8
+  %583 = call fastcc ptr @Parser_parse_expression(ptr nonnull %3)
+  store ptr %583, ptr %memberidx1.i89.i, align 8
   br label %ifend9.i
 
-ifend9.i:                                         ; preds = %Parser_advance.exit88.i, %while.entry.i298
-  %494 = load i64, ptr %memberidx.i.i39.i, align 4
-  %495 = load i64, ptr %memberidx1.i.i.i290, align 4
-  %.not.i.i300 = icmp slt i64 %494, %495
-  br i1 %.not.i.i300, label %ifend9.Array_EnumNodeField____sl__.exit_crit_edge.i, label %if.entry.i37.i
+ifend9.i:                                         ; preds = %Parser_advance.exit88.i, %while.entry.i330
+  %584 = load i64, ptr %memberidx.i.i39.i, align 4
+  %585 = load i64, ptr %memberidx1.i.i.i314, align 4
+  %.not.i.i332 = icmp slt i64 %584, %585
+  br i1 %.not.i.i332, label %ifend9.Array_EnumNodeField____sl__.exit_crit_edge.i, label %if.entry.i37.i
 
 ifend9.Array_EnumNodeField____sl__.exit_crit_edge.i: ; preds = %ifend9.i
-  %.pre107.i = load ptr, ptr %memberidx2.i.i40.i291, align 8
+  %.pre107.i = load ptr, ptr %memberidx2.i.i40.i, align 8
   br label %Array_EnumNodeField____sl__.exit.i
 
 if.entry.i37.i:                                   ; preds = %ifend9.i
-  %496 = shl nuw i64 %495, 1
-  store i64 %496, ptr %memberidx1.i.i.i290, align 4
-  %497 = load ptr, ptr %memberidx2.i.i40.i291, align 8
-  %498 = shl i64 %495, 4
-  %499 = call ptr @realloc(ptr %497, i64 %498)
-  store ptr %499, ptr %memberidx2.i.i40.i291, align 8
+  %586 = shl nuw i64 %585, 1
+  store i64 %586, ptr %memberidx1.i.i.i314, align 4
+  %587 = load ptr, ptr %memberidx2.i.i40.i, align 8
+  %588 = shl i64 %585, 4
+  %589 = call ptr @realloc(ptr %587, i64 %588)
+  store ptr %589, ptr %memberidx2.i.i40.i, align 8
   %.pre106.i = load i64, ptr %memberidx.i.i39.i, align 4
   br label %Array_EnumNodeField____sl__.exit.i
 
 Array_EnumNodeField____sl__.exit.i:               ; preds = %if.entry.i37.i, %ifend9.Array_EnumNodeField____sl__.exit_crit_edge.i
-  %500 = phi ptr [ %.pre107.i, %ifend9.Array_EnumNodeField____sl__.exit_crit_edge.i ], [ %499, %if.entry.i37.i ]
-  %501 = phi i64 [ %494, %ifend9.Array_EnumNodeField____sl__.exit_crit_edge.i ], [ %.pre106.i, %if.entry.i37.i ]
-  %502 = add nsw i64 %501, 1
-  store i64 %502, ptr %memberidx.i.i39.i, align 4
-  %ptridx.i.i301 = getelementptr inbounds ptr, ptr %500, i64 %501
-  store ptr %481, ptr %ptridx.i.i301, align 8
-  %503 = load ptr, ptr %memberidx.i75, align 8
-  %504 = load i64, ptr %503, align 4
-  %505 = icmp eq i64 %504, 33
-  %506 = load ptr, ptr %memberidx1.i, align 8
-  %memberidx3.i.i.i302 = getelementptr inbounds %Array_FloError_, ptr %506, i64 0, i32 2
-  %507 = load i64, ptr %memberidx3.i.i.i302, align 4
-  %508 = icmp eq i64 %507, 0
-  %509 = and i1 %505, %508
-  br i1 %509, label %while.entry.i.preheader.i305, label %Parser_new_lines.exit.i311
+  %590 = phi ptr [ %.pre107.i, %ifend9.Array_EnumNodeField____sl__.exit_crit_edge.i ], [ %589, %if.entry.i37.i ]
+  %591 = phi i64 [ %584, %ifend9.Array_EnumNodeField____sl__.exit_crit_edge.i ], [ %.pre106.i, %if.entry.i37.i ]
+  %592 = add nsw i64 %591, 1
+  store i64 %592, ptr %memberidx.i.i39.i, align 4
+  %ptridx.i.i333 = getelementptr inbounds ptr, ptr %590, i64 %591
+  store ptr %571, ptr %ptridx.i.i333, align 8
+  %593 = load ptr, ptr %memberidx.i75, align 8
+  %594 = load i64, ptr %593, align 4
+  %595 = icmp eq i64 %594, 33
+  %596 = load ptr, ptr %memberidx1.i, align 8
+  %memberidx3.i.i.i334 = getelementptr inbounds %Array_FloError_, ptr %596, i64 0, i32 2
+  %597 = load i64, ptr %memberidx3.i.i.i334, align 4
+  %598 = icmp eq i64 %597, 0
+  %599 = and i1 %595, %598
+  br i1 %599, label %while.entry.i.preheader.i337, label %Parser_new_lines.exit.i343
 
-while.entry.i.preheader.i305:                     ; preds = %Array_EnumNodeField____sl__.exit.i
-  %510 = load ptr, ptr %3, align 8
-  %memberidx2.i12.i.i303 = getelementptr inbounds %Array_Token_, ptr %510, i64 0, i32 2
-  %memberidx.i.i.i.i304 = getelementptr inbounds %Array_Token_, ptr %510, i64 0, i32 1
-  %511 = load i64, ptr %memberidx2.i, align 8
-  %512 = load i64, ptr %memberidx2.i12.i.i303, align 4
-  %513 = icmp slt i64 %511, %512
-  br i1 %513, label %while.entry.i.i307, label %while.entry.i.us.i306
+while.entry.i.preheader.i337:                     ; preds = %Array_EnumNodeField____sl__.exit.i
+  %600 = load ptr, ptr %3, align 8
+  %memberidx2.i12.i.i335 = getelementptr inbounds %Array_Token_, ptr %600, i64 0, i32 2
+  %memberidx.i.i.i.i336 = getelementptr inbounds %Array_Token_, ptr %600, i64 0, i32 1
+  %601 = load i64, ptr %memberidx2.i, align 8
+  %602 = load i64, ptr %memberidx2.i12.i.i335, align 4
+  %603 = icmp slt i64 %601, %602
+  br i1 %603, label %while.entry.i.i339, label %while.entry.i.us.i338
 
-while.entry.i.us.i306:                            ; preds = %while.entry.i.preheader.i305, %while.entry.i.us.i306
-  br label %while.entry.i.us.i306
+while.entry.i.us.i338:                            ; preds = %while.entry.i.preheader.i337, %while.entry.i.us.i338
+  br label %while.entry.i.us.i338
 
-while.entry.i.i307:                               ; preds = %while.entry.i.preheader.i305, %Parser_advance.exit.i.i310
-  %514 = phi i64 [ %521, %Parser_advance.exit.i.i310 ], [ 33, %while.entry.i.preheader.i305 ]
-  %515 = phi i64 [ %524, %Parser_advance.exit.i.i310 ], [ %511, %while.entry.i.preheader.i305 ]
-  %516 = load i64, ptr %memberidx2.i12.i.i303, align 4
-  %517 = icmp slt i64 %515, %516
-  br i1 %517, label %if.entry.i.i.i309, label %Parser_advance.exit.i.i310
+while.entry.i.i339:                               ; preds = %while.entry.i.preheader.i337, %Parser_advance.exit.i.i342
+  %604 = phi i64 [ %611, %Parser_advance.exit.i.i342 ], [ 33, %while.entry.i.preheader.i337 ]
+  %605 = phi i64 [ %614, %Parser_advance.exit.i.i342 ], [ %601, %while.entry.i.preheader.i337 ]
+  %606 = load i64, ptr %memberidx2.i12.i.i335, align 4
+  %607 = icmp slt i64 %605, %606
+  br i1 %607, label %if.entry.i.i.i341, label %Parser_advance.exit.i.i342
 
-if.entry.i.i.i309:                                ; preds = %while.entry.i.i307
-  %518 = add nsw i64 %515, 1
-  store i64 %518, ptr %memberidx2.i, align 8
-  %519 = load ptr, ptr %memberidx.i.i.i.i304, align 8
-  %ptridx.i.i.i.i308 = getelementptr inbounds ptr, ptr %519, i64 %518
-  %520 = load ptr, ptr %ptridx.i.i.i.i308, align 8
-  store ptr %520, ptr %memberidx.i75, align 8
-  %.pre108.i = load i64, ptr %520, align 4
-  %.pre109.i = load i64, ptr %memberidx3.i.i.i302, align 4
-  br label %Parser_advance.exit.i.i310
+if.entry.i.i.i341:                                ; preds = %while.entry.i.i339
+  %608 = add nsw i64 %605, 1
+  store i64 %608, ptr %memberidx2.i, align 8
+  %609 = load ptr, ptr %memberidx.i.i.i.i336, align 8
+  %ptridx.i.i.i.i340 = getelementptr inbounds ptr, ptr %609, i64 %608
+  %610 = load ptr, ptr %ptridx.i.i.i.i340, align 8
+  store ptr %610, ptr %memberidx.i75, align 8
+  %.pre108.i = load i64, ptr %610, align 4
+  %.pre109.i = load i64, ptr %memberidx3.i.i.i334, align 4
+  br label %Parser_advance.exit.i.i342
 
-Parser_advance.exit.i.i310:                       ; preds = %if.entry.i.i.i309, %while.entry.i.i307
-  %521 = phi i64 [ %.pre108.i, %if.entry.i.i.i309 ], [ %514, %while.entry.i.i307 ]
-  %522 = phi i64 [ %.pre109.i, %if.entry.i.i.i309 ], [ 0, %while.entry.i.i307 ]
-  %523 = phi i64 [ %.pre108.i, %if.entry.i.i.i309 ], [ 33, %while.entry.i.i307 ]
-  %524 = phi i64 [ %518, %if.entry.i.i.i309 ], [ %515, %while.entry.i.i307 ]
-  %525 = icmp eq i64 %523, 33
-  %526 = icmp eq i64 %522, 0
-  %527 = and i1 %526, %525
-  br i1 %527, label %while.entry.i.i307, label %Parser_new_lines.exit.i311
+Parser_advance.exit.i.i342:                       ; preds = %if.entry.i.i.i341, %while.entry.i.i339
+  %611 = phi i64 [ %.pre108.i, %if.entry.i.i.i341 ], [ %604, %while.entry.i.i339 ]
+  %612 = phi i64 [ %.pre109.i, %if.entry.i.i.i341 ], [ 0, %while.entry.i.i339 ]
+  %613 = phi i64 [ %.pre108.i, %if.entry.i.i.i341 ], [ 33, %while.entry.i.i339 ]
+  %614 = phi i64 [ %608, %if.entry.i.i.i341 ], [ %605, %while.entry.i.i339 ]
+  %615 = icmp eq i64 %613, 33
+  %616 = icmp eq i64 %612, 0
+  %617 = and i1 %616, %615
+  br i1 %617, label %while.entry.i.i339, label %Parser_new_lines.exit.i343
 
-Parser_new_lines.exit.i311:                       ; preds = %Parser_advance.exit.i.i310, %Array_EnumNodeField____sl__.exit.i
-  %528 = phi i64 [ %504, %Array_EnumNodeField____sl__.exit.i ], [ %521, %Parser_advance.exit.i.i310 ]
-  %529 = icmp eq i64 %528, 54
-  br i1 %529, label %while.entry.i298, label %Parser_parse_enum.exit
+Parser_new_lines.exit.i343:                       ; preds = %Parser_advance.exit.i.i342, %Array_EnumNodeField____sl__.exit.i
+  %618 = phi i64 [ %594, %Array_EnumNodeField____sl__.exit.i ], [ %611, %Parser_advance.exit.i.i342 ]
+  %619 = icmp eq i64 %618, 54
+  br i1 %619, label %while.entry.i330, label %Parser_parse_enum.exit
 
-Parser_parse_enum.exit:                           ; preds = %Parser_new_lines.exit.i311, %Parser_new_lines.exit81.i
-  %530 = call fastcc ptr @Parser_eat(ptr nonnull %3, i64 28)
-  %memberidx.i163 = getelementptr inbounds %Array_EnumNode_, ptr %407, i64 0, i32 2
-  %531 = load i64, ptr %memberidx.i163, align 4
-  %memberidx1.i164 = getelementptr inbounds %Array_EnumNode_, ptr %407, i64 0, i32 3
-  %532 = load i64, ptr %memberidx1.i164, align 4
-  %.not.i165 = icmp slt i64 %531, %532
-  br i1 %.not.i165, label %Parser_parse_enum.exit.Array_EnumNode____sl__.exit_crit_edge, label %if.entry.i168
+Parser_parse_enum.exit:                           ; preds = %Parser_new_lines.exit.i343, %Parser_new_lines.exit81.i
+  %620 = call fastcc ptr @Parser_eat(ptr nonnull %3, i64 28)
+  %memberidx.i176 = getelementptr inbounds %Array_EnumNode_, ptr %497, i64 0, i32 2
+  %621 = load i64, ptr %memberidx.i176, align 4
+  %memberidx1.i177 = getelementptr inbounds %Array_EnumNode_, ptr %497, i64 0, i32 3
+  %622 = load i64, ptr %memberidx1.i177, align 4
+  %.not.i178 = icmp slt i64 %621, %622
+  br i1 %.not.i178, label %Parser_parse_enum.exit.Array_EnumNode____sl__.exit_crit_edge, label %if.entry.i181
 
 Parser_parse_enum.exit.Array_EnumNode____sl__.exit_crit_edge: ; preds = %Parser_parse_enum.exit
-  %memberidx4.i169.phi.trans.insert = getelementptr inbounds %Array_EnumNode_, ptr %407, i64 0, i32 1
-  %.pre338 = load ptr, ptr %memberidx4.i169.phi.trans.insert, align 8
+  %memberidx4.i182.phi.trans.insert = getelementptr inbounds %Array_EnumNode_, ptr %497, i64 0, i32 1
+  %.pre376 = load ptr, ptr %memberidx4.i182.phi.trans.insert, align 8
   br label %Array_EnumNode____sl__.exit
 
-if.entry.i168:                                    ; preds = %Parser_parse_enum.exit
-  %533 = shl nuw i64 %532, 1
-  store i64 %533, ptr %memberidx1.i164, align 4
-  %memberidx2.i.i167 = getelementptr inbounds %Array_EnumNode_, ptr %407, i64 0, i32 1
-  %534 = load ptr, ptr %memberidx2.i.i167, align 8
-  %535 = shl i64 %532, 4
-  %536 = call ptr @realloc(ptr %534, i64 %535)
-  store ptr %536, ptr %memberidx2.i.i167, align 8
-  %.pre337 = load i64, ptr %memberidx.i163, align 4
+if.entry.i181:                                    ; preds = %Parser_parse_enum.exit
+  %623 = shl nuw i64 %622, 1
+  store i64 %623, ptr %memberidx1.i177, align 4
+  %memberidx2.i.i180 = getelementptr inbounds %Array_EnumNode_, ptr %497, i64 0, i32 1
+  %624 = load ptr, ptr %memberidx2.i.i180, align 8
+  %625 = shl i64 %622, 4
+  %626 = call ptr @realloc(ptr %624, i64 %625)
+  store ptr %626, ptr %memberidx2.i.i180, align 8
+  %.pre375 = load i64, ptr %memberidx.i176, align 4
   br label %Array_EnumNode____sl__.exit
 
-Array_EnumNode____sl__.exit:                      ; preds = %Parser_parse_enum.exit.Array_EnumNode____sl__.exit_crit_edge, %if.entry.i168
-  %537 = phi ptr [ %.pre338, %Parser_parse_enum.exit.Array_EnumNode____sl__.exit_crit_edge ], [ %536, %if.entry.i168 ]
-  %538 = phi i64 [ %531, %Parser_parse_enum.exit.Array_EnumNode____sl__.exit_crit_edge ], [ %.pre337, %if.entry.i168 ]
-  %539 = add nsw i64 %538, 1
-  store i64 %539, ptr %memberidx.i163, align 4
-  %ptridx.i170 = getelementptr inbounds ptr, ptr %537, i64 %538
-  store ptr %415, ptr %ptridx.i170, align 8
+Array_EnumNode____sl__.exit:                      ; preds = %Parser_parse_enum.exit.Array_EnumNode____sl__.exit_crit_edge, %if.entry.i181
+  %627 = phi ptr [ %.pre376, %Parser_parse_enum.exit.Array_EnumNode____sl__.exit_crit_edge ], [ %626, %if.entry.i181 ]
+  %628 = phi i64 [ %621, %Parser_parse_enum.exit.Array_EnumNode____sl__.exit_crit_edge ], [ %.pre375, %if.entry.i181 ]
+  %629 = add nsw i64 %628, 1
+  store i64 %629, ptr %memberidx.i176, align 4
+  %ptridx.i183 = getelementptr inbounds ptr, ptr %627, i64 %628
+  store ptr %505, ptr %ptridx.i183, align 8
   br label %ifend
 
 if.entry17:                                       ; preds = %while.entry
-  %540 = load ptr, ptr %memberidx20, align 8
-  %541 = load i64, ptr %memberidx2.i, align 8
-  %542 = load ptr, ptr %3, align 8
-  %memberidx2.i.i173 = getelementptr inbounds %Array_Token_, ptr %542, i64 0, i32 2
-  %543 = load i64, ptr %memberidx2.i.i173, align 4
-  %544 = icmp slt i64 %541, %543
-  br i1 %544, label %if.entry.i.i177, label %Parser_advance.exit.i181
+  %630 = load ptr, ptr %memberidx20, align 8
+  %631 = load i64, ptr %memberidx2.i, align 8
+  %632 = load ptr, ptr %3, align 8
+  %memberidx2.i.i186 = getelementptr inbounds %Array_Token_, ptr %632, i64 0, i32 2
+  %633 = load i64, ptr %memberidx2.i.i186, align 4
+  %634 = icmp slt i64 %631, %633
+  br i1 %634, label %if.entry.i.i190, label %Parser_advance.exit.i194
 
-if.entry.i.i177:                                  ; preds = %if.entry17
-  %545 = add nsw i64 %541, 1
-  store i64 %545, ptr %memberidx2.i, align 8
-  %memberidx.i.i.i175 = getelementptr inbounds %Array_Token_, ptr %542, i64 0, i32 1
-  %546 = load ptr, ptr %memberidx.i.i.i175, align 8
-  %ptridx.i.i.i176 = getelementptr inbounds ptr, ptr %546, i64 %545
-  %547 = load ptr, ptr %ptridx.i.i.i176, align 8
-  store ptr %547, ptr %memberidx.i75, align 8
-  br label %Parser_advance.exit.i181
+if.entry.i.i190:                                  ; preds = %if.entry17
+  %635 = add nsw i64 %631, 1
+  store i64 %635, ptr %memberidx2.i, align 8
+  %memberidx.i.i.i188 = getelementptr inbounds %Array_Token_, ptr %632, i64 0, i32 1
+  %636 = load ptr, ptr %memberidx.i.i.i188, align 8
+  %ptridx.i.i.i189 = getelementptr inbounds ptr, ptr %636, i64 %635
+  %637 = load ptr, ptr %ptridx.i.i.i189, align 8
+  store ptr %637, ptr %memberidx.i75, align 8
+  br label %Parser_advance.exit.i194
 
-Parser_advance.exit.i181:                         ; preds = %if.entry.i.i177, %if.entry17
-  %548 = call ptr @malloc(i32 24)
-  %549 = call ptr @malloc(i32 32)
-  store ptr @VTableArray_ImportClause_, ptr %549, align 8
-  %memberidx.i.i32.i = getelementptr inbounds %Array_ImportClause_, ptr %549, i64 0, i32 2
+Parser_advance.exit.i194:                         ; preds = %if.entry.i.i190, %if.entry17
+  %638 = call ptr @malloc(i32 24)
+  %639 = call ptr @malloc(i32 32)
+  store ptr @VTableArray_ImportClause_, ptr %639, align 8
+  %memberidx.i.i32.i = getelementptr inbounds %Array_ImportClause_, ptr %639, i64 0, i32 2
   store i64 0, ptr %memberidx.i.i32.i, align 4
-  %memberidx1.i.i.i178 = getelementptr inbounds %Array_ImportClause_, ptr %549, i64 0, i32 3
-  store i64 8, ptr %memberidx1.i.i.i178, align 4
-  %memberidx2.i.i.i179 = getelementptr inbounds %Array_ImportClause_, ptr %549, i64 0, i32 1
-  %550 = call ptr @malloc(i32 64)
-  store ptr %550, ptr %memberidx2.i.i.i179, align 8
+  %memberidx1.i.i.i191 = getelementptr inbounds %Array_ImportClause_, ptr %639, i64 0, i32 3
+  store i64 8, ptr %memberidx1.i.i.i191, align 4
+  %memberidx2.i.i.i192 = getelementptr inbounds %Array_ImportClause_, ptr %639, i64 0, i32 1
+  %640 = call ptr @malloc(i32 64)
+  store ptr %640, ptr %memberidx2.i.i.i192, align 8
   store i64 0, ptr %memberidx.i.i32.i, align 4
-  store ptr %549, ptr %548, align 8
-  %memberidx3.i34.i = getelementptr inbounds %ImportNode, ptr %548, i64 0, i32 2
+  store ptr %639, ptr %638, align 8
+  %memberidx3.i34.i = getelementptr inbounds %ImportNode, ptr %638, i64 0, i32 2
   store ptr null, ptr %memberidx3.i34.i, align 8
-  %551 = load ptr, ptr %memberidx.i75, align 8
-  %552 = load i64, ptr %551, align 4
-  %553 = icmp eq i64 %552, 54
-  br i1 %553, label %if.entry.i182, label %ifend.i194
+  %641 = load ptr, ptr %memberidx.i75, align 8
+  %642 = load i64, ptr %641, align 4
+  %643 = icmp eq i64 %642, 54
+  br i1 %643, label %if.entry.i196, label %ifend.i213
 
-if.entry.i182:                                    ; preds = %Parser_advance.exit.i181
-  %554 = call ptr @malloc(i32 16)
-  %555 = call fastcc ptr @Parser_eat(ptr nonnull %3, i64 54)
-  store ptr %555, ptr %554, align 8
-  %memberidx1.i.i35.i = getelementptr inbounds %ImportClause, ptr %554, i64 0, i32 1
+if.entry.i196:                                    ; preds = %Parser_advance.exit.i194
+  %644 = call ptr @malloc(i32 16)
+  %645 = call fastcc ptr @Parser_eat(ptr nonnull %3, i64 54)
+  store ptr %645, ptr %644, align 8
+  %memberidx1.i.i35.i = getelementptr inbounds %ImportClause, ptr %644, i64 0, i32 1
   store ptr null, ptr %memberidx1.i.i35.i, align 8
-  %556 = load ptr, ptr %memberidx.i75, align 8
-  %557 = load i64, ptr %556, align 4
-  %558 = icmp eq i64 %557, 74
-  br i1 %558, label %if.entry.i39.i, label %Parser_parse_import_clause.exit.i
+  %646 = load ptr, ptr %memberidx.i75, align 8
+  %647 = load i64, ptr %646, align 4
+  %648 = icmp eq i64 %647, 74
+  br i1 %648, label %if.entry.i39.i, label %Parser_parse_import_clause.exit.i
 
-if.entry.i39.i:                                   ; preds = %if.entry.i182
-  %559 = load i64, ptr %memberidx2.i, align 8
-  %560 = load ptr, ptr %3, align 8
-  %memberidx2.i.i38.i = getelementptr inbounds %Array_Token_, ptr %560, i64 0, i32 2
-  %561 = load i64, ptr %memberidx2.i.i38.i, align 4
-  %562 = icmp slt i64 %559, %561
-  br i1 %562, label %if.entry.i.i.i187, label %Parser_advance.exit.i.i188
+if.entry.i39.i:                                   ; preds = %if.entry.i196
+  %649 = load i64, ptr %memberidx2.i, align 8
+  %650 = load ptr, ptr %3, align 8
+  %memberidx2.i.i38.i198 = getelementptr inbounds %Array_Token_, ptr %650, i64 0, i32 2
+  %651 = load i64, ptr %memberidx2.i.i38.i198, align 4
+  %652 = icmp slt i64 %649, %651
+  br i1 %652, label %if.entry.i.i.i202, label %Parser_advance.exit.i.i204
 
-if.entry.i.i.i187:                                ; preds = %if.entry.i39.i
-  %563 = add nsw i64 %559, 1
-  store i64 %563, ptr %memberidx2.i, align 8
-  %memberidx.i.i.i.i185 = getelementptr inbounds %Array_Token_, ptr %560, i64 0, i32 1
-  %564 = load ptr, ptr %memberidx.i.i.i.i185, align 8
-  %ptridx.i.i.i.i186 = getelementptr inbounds ptr, ptr %564, i64 %563
-  %565 = load ptr, ptr %ptridx.i.i.i.i186, align 8
-  store ptr %565, ptr %memberidx.i75, align 8
-  br label %Parser_advance.exit.i.i188
+if.entry.i.i.i202:                                ; preds = %if.entry.i39.i
+  %653 = add nsw i64 %649, 1
+  store i64 %653, ptr %memberidx2.i, align 8
+  %memberidx.i.i.i.i200 = getelementptr inbounds %Array_Token_, ptr %650, i64 0, i32 1
+  %654 = load ptr, ptr %memberidx.i.i.i.i200, align 8
+  %ptridx.i.i.i.i201 = getelementptr inbounds ptr, ptr %654, i64 %653
+  %655 = load ptr, ptr %ptridx.i.i.i.i201, align 8
+  store ptr %655, ptr %memberidx.i75, align 8
+  br label %Parser_advance.exit.i.i204
 
-Parser_advance.exit.i.i188:                       ; preds = %if.entry.i.i.i187, %if.entry.i39.i
-  %566 = call fastcc ptr @Parser_eat(ptr nonnull %3, i64 54)
-  store ptr %566, ptr %memberidx1.i.i35.i, align 8
+Parser_advance.exit.i.i204:                       ; preds = %if.entry.i.i.i202, %if.entry.i39.i
+  %656 = call fastcc ptr @Parser_eat(ptr nonnull %3, i64 54)
+  store ptr %656, ptr %memberidx1.i.i35.i, align 8
   br label %Parser_parse_import_clause.exit.i
 
-Parser_parse_import_clause.exit.i:                ; preds = %Parser_advance.exit.i.i188, %if.entry.i182
-  %567 = load i64, ptr %memberidx.i.i32.i, align 4
-  %568 = load i64, ptr %memberidx1.i.i.i178, align 4
-  %.not.i.i190 = icmp slt i64 %567, %568
-  br i1 %.not.i.i190, label %Parser_parse_import_clause.exit.i.Array_ImportClause____sl__.exit.i_crit_edge, label %if.entry.i44.i
+Parser_parse_import_clause.exit.i:                ; preds = %Parser_advance.exit.i.i204, %if.entry.i196
+  %657 = load i64, ptr %memberidx.i.i32.i, align 4
+  %658 = load i64, ptr %memberidx1.i.i.i191, align 4
+  %.not.i.i206 = icmp slt i64 %657, %658
+  br i1 %.not.i.i206, label %Parser_parse_import_clause.exit.i.Array_ImportClause____sl__.exit.i_crit_edge, label %if.entry.i44.i
 
 Parser_parse_import_clause.exit.i.Array_ImportClause____sl__.exit.i_crit_edge: ; preds = %Parser_parse_import_clause.exit.i
-  %.pre330 = load ptr, ptr %memberidx2.i.i.i179, align 8
+  %.pre368 = load ptr, ptr %memberidx2.i.i.i192, align 8
   br label %Array_ImportClause____sl__.exit.i
 
 if.entry.i44.i:                                   ; preds = %Parser_parse_import_clause.exit.i
-  %569 = shl nuw i64 %568, 1
-  store i64 %569, ptr %memberidx1.i.i.i178, align 4
-  %570 = load ptr, ptr %memberidx2.i.i.i179, align 8
-  %571 = shl i64 %568, 4
-  %572 = call ptr @realloc(ptr %570, i64 %571)
-  store ptr %572, ptr %memberidx2.i.i.i179, align 8
-  %.pre329 = load i64, ptr %memberidx.i.i32.i, align 4
+  %659 = shl nuw i64 %658, 1
+  store i64 %659, ptr %memberidx1.i.i.i191, align 4
+  %660 = load ptr, ptr %memberidx2.i.i.i192, align 8
+  %661 = shl i64 %658, 4
+  %662 = call ptr @realloc(ptr %660, i64 %661)
+  store ptr %662, ptr %memberidx2.i.i.i192, align 8
+  %.pre367 = load i64, ptr %memberidx.i.i32.i, align 4
   br label %Array_ImportClause____sl__.exit.i
 
 Array_ImportClause____sl__.exit.i:                ; preds = %Parser_parse_import_clause.exit.i.Array_ImportClause____sl__.exit.i_crit_edge, %if.entry.i44.i
-  %573 = phi ptr [ %572, %if.entry.i44.i ], [ %.pre330, %Parser_parse_import_clause.exit.i.Array_ImportClause____sl__.exit.i_crit_edge ]
-  %574 = phi i64 [ %.pre329, %if.entry.i44.i ], [ %567, %Parser_parse_import_clause.exit.i.Array_ImportClause____sl__.exit.i_crit_edge ]
-  %575 = add nsw i64 %574, 1
-  store i64 %575, ptr %memberidx.i.i32.i, align 4
-  %ptridx.i.i192 = getelementptr inbounds ptr, ptr %573, i64 %574
-  store ptr %554, ptr %ptridx.i.i192, align 8
-  %576 = load ptr, ptr %memberidx.i75, align 8
-  %577 = load i64, ptr %576, align 4
-  %578 = icmp eq i64 %577, 3
-  %579 = load ptr, ptr %memberidx1.i, align 8
-  %memberidx3.i47.i = getelementptr inbounds %Array_FloError_, ptr %579, i64 0, i32 2
-  %580 = load i64, ptr %memberidx3.i47.i, align 4
-  %581 = icmp eq i64 %580, 0
-  %582 = and i1 %578, %581
-  br i1 %582, label %while.entry.i195, label %while.end.i
+  %663 = phi ptr [ %662, %if.entry.i44.i ], [ %.pre368, %Parser_parse_import_clause.exit.i.Array_ImportClause____sl__.exit.i_crit_edge ]
+  %664 = phi i64 [ %.pre367, %if.entry.i44.i ], [ %657, %Parser_parse_import_clause.exit.i.Array_ImportClause____sl__.exit.i_crit_edge ]
+  %665 = add nsw i64 %664, 1
+  store i64 %665, ptr %memberidx.i.i32.i, align 4
+  %ptridx.i.i209 = getelementptr inbounds ptr, ptr %663, i64 %664
+  store ptr %644, ptr %ptridx.i.i209, align 8
+  %666 = load ptr, ptr %memberidx.i75, align 8
+  %667 = load i64, ptr %666, align 4
+  %668 = icmp eq i64 %667, 3
+  %669 = load ptr, ptr %memberidx1.i, align 8
+  %memberidx3.i47.i211 = getelementptr inbounds %Array_FloError_, ptr %669, i64 0, i32 2
+  %670 = load i64, ptr %memberidx3.i47.i211, align 4
+  %671 = icmp eq i64 %670, 0
+  %672 = and i1 %668, %671
+  br i1 %672, label %while.entry.i214, label %while.end.i
 
-ifend.i194thread-pre-split:                       ; preds = %if.entry.i92.i, %if.entry.i.i96.i, %else.i98.i
-  %.ph = phi ptr [ %636, %if.entry.i92.i ], [ %644, %if.entry.i.i96.i ], [ %.pre333, %else.i98.i ]
+ifend.i213thread-pre-split:                       ; preds = %if.entry.i92.i, %if.entry.i.i96.i, %else.i98.i
+  %.ph = phi ptr [ %726, %if.entry.i92.i ], [ %734, %if.entry.i.i96.i ], [ %.pre371, %else.i98.i ]
   %.pr = load i64, ptr %.ph, align 4
-  br label %ifend.i194
+  br label %ifend.i213
 
-ifend.i194:                                       ; preds = %ifend.i194thread-pre-split, %Parser_advance.exit.i181
-  %583 = phi i64 [ %.pr, %ifend.i194thread-pre-split ], [ %552, %Parser_advance.exit.i181 ]
-  %584 = phi ptr [ %.ph, %ifend.i194thread-pre-split ], [ %551, %Parser_advance.exit.i181 ]
-  %memberidx8.i193 = getelementptr inbounds %ImportNode, ptr %548, i64 0, i32 1
-  %585 = icmp eq i64 %583, 34
-  br i1 %585, label %if.entry.i51.i, label %else.i.i
+ifend.i213:                                       ; preds = %ifend.i213thread-pre-split, %Parser_advance.exit.i194
+  %673 = phi i64 [ %.pr, %ifend.i213thread-pre-split ], [ %642, %Parser_advance.exit.i194 ]
+  %674 = phi ptr [ %.ph, %ifend.i213thread-pre-split ], [ %641, %Parser_advance.exit.i194 ]
+  %memberidx8.i212 = getelementptr inbounds %ImportNode, ptr %638, i64 0, i32 1
+  %675 = icmp eq i64 %673, 34
+  br i1 %675, label %if.entry.i51.i, label %else.i.i
 
-if.entry.i51.i:                                   ; preds = %ifend.i194
-  %586 = load i64, ptr %memberidx2.i, align 8
-  %587 = load ptr, ptr %3, align 8
-  %memberidx2.i.i50.i = getelementptr inbounds %Array_Token_, ptr %587, i64 0, i32 2
-  %588 = load i64, ptr %memberidx2.i.i50.i, align 4
-  %589 = icmp slt i64 %586, %588
-  br i1 %589, label %if.entry.i.i55.i, label %Parser_eat.exit.i
+if.entry.i51.i:                                   ; preds = %ifend.i213
+  %676 = load i64, ptr %memberidx2.i, align 8
+  %677 = load ptr, ptr %3, align 8
+  %memberidx2.i.i50.i = getelementptr inbounds %Array_Token_, ptr %677, i64 0, i32 2
+  %678 = load i64, ptr %memberidx2.i.i50.i, align 4
+  %679 = icmp slt i64 %676, %678
+  br i1 %679, label %if.entry.i.i55.i, label %Parser_eat.exit.i
 
 if.entry.i.i55.i:                                 ; preds = %if.entry.i51.i
-  %590 = add nsw i64 %586, 1
-  store i64 %590, ptr %memberidx2.i, align 8
-  %memberidx.i.i.i53.i = getelementptr inbounds %Array_Token_, ptr %587, i64 0, i32 1
-  %591 = load ptr, ptr %memberidx.i.i.i53.i, align 8
-  %ptridx.i.i.i54.i = getelementptr inbounds ptr, ptr %591, i64 %590
-  %592 = load ptr, ptr %ptridx.i.i.i54.i, align 8
-  store ptr %592, ptr %memberidx.i75, align 8
+  %680 = add nsw i64 %676, 1
+  store i64 %680, ptr %memberidx2.i, align 8
+  %memberidx.i.i.i53.i = getelementptr inbounds %Array_Token_, ptr %677, i64 0, i32 1
+  %681 = load ptr, ptr %memberidx.i.i.i53.i, align 8
+  %ptridx.i.i.i54.i = getelementptr inbounds ptr, ptr %681, i64 %680
+  %682 = load ptr, ptr %ptridx.i.i.i54.i, align 8
+  store ptr %682, ptr %memberidx.i75, align 8
   br label %Parser_eat.exit.i
 
-else.i.i:                                         ; preds = %ifend.i194
-  %593 = call ptr @malloc(i32 16)
-  %memberidx35.i.i = getelementptr inbounds %Token, ptr %584, i64 0, i32 1
-  %594 = load ptr, ptr %memberidx35.i.i, align 8
-  store i64 46, ptr %593, align 4
-  %memberidx1.i82.i.i = getelementptr inbounds %Token, ptr %593, i64 0, i32 1
-  store ptr %594, ptr %memberidx1.i82.i.i, align 8
-  %.pre334 = load ptr, ptr %memberidx.i75, align 8
+else.i.i:                                         ; preds = %ifend.i213
+  %683 = call ptr @malloc(i32 16)
+  %memberidx35.i.i = getelementptr inbounds %Token, ptr %674, i64 0, i32 1
+  %684 = load ptr, ptr %memberidx35.i.i, align 8
+  store i64 46, ptr %683, align 4
+  %memberidx1.i82.i.i = getelementptr inbounds %Token, ptr %683, i64 0, i32 1
+  store ptr %684, ptr %memberidx1.i82.i.i, align 8
+  %.pre372 = load ptr, ptr %memberidx.i75, align 8
   br label %Parser_eat.exit.i
 
 Parser_eat.exit.i:                                ; preds = %if.entry.i51.i, %if.entry.i.i55.i, %else.i.i
-  %595 = phi ptr [ %.pre334, %else.i.i ], [ %592, %if.entry.i.i55.i ], [ %584, %if.entry.i51.i ]
-  %common.ret.op.i.i = phi ptr [ %593, %else.i.i ], [ %584, %if.entry.i.i55.i ], [ %584, %if.entry.i51.i ]
-  store ptr %common.ret.op.i.i, ptr %memberidx8.i193, align 8
-  %596 = load i64, ptr %595, align 4
-  %597 = icmp eq i64 %596, 74
-  br i1 %597, label %if.entry11.i, label %Parser_parse_import.exit
+  %685 = phi ptr [ %.pre372, %else.i.i ], [ %682, %if.entry.i.i55.i ], [ %674, %if.entry.i51.i ]
+  %common.ret.op.i.i = phi ptr [ %683, %else.i.i ], [ %674, %if.entry.i.i55.i ], [ %674, %if.entry.i51.i ]
+  store ptr %common.ret.op.i.i, ptr %memberidx8.i212, align 8
+  %686 = load i64, ptr %685, align 4
+  %687 = icmp eq i64 %686, 74
+  br i1 %687, label %if.entry11.i, label %Parser_parse_import.exit
 
-while.entry.i195:                                 ; preds = %Array_ImportClause____sl__.exit.i, %Array_ImportClause____sl__.exit84.i
-  %598 = load i64, ptr %memberidx2.i, align 8
-  %599 = load ptr, ptr %3, align 8
-  %memberidx2.i58.i = getelementptr inbounds %Array_Token_, ptr %599, i64 0, i32 2
-  %600 = load i64, ptr %memberidx2.i58.i, align 4
-  %601 = icmp slt i64 %598, %600
-  br i1 %601, label %if.entry.i62.i, label %Parser_advance.exit63.i
+while.entry.i214:                                 ; preds = %Array_ImportClause____sl__.exit.i, %Array_ImportClause____sl__.exit84.i
+  %688 = load i64, ptr %memberidx2.i, align 8
+  %689 = load ptr, ptr %3, align 8
+  %memberidx2.i58.i = getelementptr inbounds %Array_Token_, ptr %689, i64 0, i32 2
+  %690 = load i64, ptr %memberidx2.i58.i, align 4
+  %691 = icmp slt i64 %688, %690
+  br i1 %691, label %if.entry.i62.i, label %Parser_advance.exit63.i
 
-if.entry.i62.i:                                   ; preds = %while.entry.i195
-  %602 = add nsw i64 %598, 1
-  store i64 %602, ptr %memberidx2.i, align 8
-  %memberidx.i.i60.i = getelementptr inbounds %Array_Token_, ptr %599, i64 0, i32 1
-  %603 = load ptr, ptr %memberidx.i.i60.i, align 8
-  %ptridx.i.i61.i = getelementptr inbounds ptr, ptr %603, i64 %602
-  %604 = load ptr, ptr %ptridx.i.i61.i, align 8
-  store ptr %604, ptr %memberidx.i75, align 8
+if.entry.i62.i:                                   ; preds = %while.entry.i214
+  %692 = add nsw i64 %688, 1
+  store i64 %692, ptr %memberidx2.i, align 8
+  %memberidx.i.i60.i = getelementptr inbounds %Array_Token_, ptr %689, i64 0, i32 1
+  %693 = load ptr, ptr %memberidx.i.i60.i, align 8
+  %ptridx.i.i61.i = getelementptr inbounds ptr, ptr %693, i64 %692
+  %694 = load ptr, ptr %ptridx.i.i61.i, align 8
+  store ptr %694, ptr %memberidx.i75, align 8
   br label %Parser_advance.exit63.i
 
-Parser_advance.exit63.i:                          ; preds = %if.entry.i62.i, %while.entry.i195
-  %605 = load ptr, ptr %548, align 8
-  %606 = call ptr @malloc(i32 16)
-  %607 = call fastcc ptr @Parser_eat(ptr nonnull %3, i64 54)
-  store ptr %607, ptr %606, align 8
-  %memberidx1.i.i64.i = getelementptr inbounds %ImportClause, ptr %606, i64 0, i32 1
+Parser_advance.exit63.i:                          ; preds = %if.entry.i62.i, %while.entry.i214
+  %695 = load ptr, ptr %638, align 8
+  %696 = call ptr @malloc(i32 16)
+  %697 = call fastcc ptr @Parser_eat(ptr nonnull %3, i64 54)
+  store ptr %697, ptr %696, align 8
+  %memberidx1.i.i64.i = getelementptr inbounds %ImportClause, ptr %696, i64 0, i32 1
   store ptr null, ptr %memberidx1.i.i64.i, align 8
-  %608 = load ptr, ptr %memberidx.i75, align 8
-  %609 = load i64, ptr %608, align 4
-  %610 = icmp eq i64 %609, 74
-  br i1 %610, label %if.entry.i68.i, label %Parser_parse_import_clause.exit75.i
+  %698 = load ptr, ptr %memberidx.i75, align 8
+  %699 = load i64, ptr %698, align 4
+  %700 = icmp eq i64 %699, 74
+  br i1 %700, label %if.entry.i68.i, label %Parser_parse_import_clause.exit75.i
 
 if.entry.i68.i:                                   ; preds = %Parser_advance.exit63.i
-  %611 = load i64, ptr %memberidx2.i, align 8
-  %612 = load ptr, ptr %3, align 8
-  %memberidx2.i.i67.i = getelementptr inbounds %Array_Token_, ptr %612, i64 0, i32 2
-  %613 = load i64, ptr %memberidx2.i.i67.i, align 4
-  %614 = icmp slt i64 %611, %613
-  br i1 %614, label %if.entry.i.i72.i, label %Parser_advance.exit.i74.i
+  %701 = load i64, ptr %memberidx2.i, align 8
+  %702 = load ptr, ptr %3, align 8
+  %memberidx2.i.i67.i = getelementptr inbounds %Array_Token_, ptr %702, i64 0, i32 2
+  %703 = load i64, ptr %memberidx2.i.i67.i, align 4
+  %704 = icmp slt i64 %701, %703
+  br i1 %704, label %if.entry.i.i72.i, label %Parser_advance.exit.i74.i
 
 if.entry.i.i72.i:                                 ; preds = %if.entry.i68.i
-  %615 = add nsw i64 %611, 1
-  store i64 %615, ptr %memberidx2.i, align 8
-  %memberidx.i.i.i70.i = getelementptr inbounds %Array_Token_, ptr %612, i64 0, i32 1
-  %616 = load ptr, ptr %memberidx.i.i.i70.i, align 8
-  %ptridx.i.i.i71.i = getelementptr inbounds ptr, ptr %616, i64 %615
-  %617 = load ptr, ptr %ptridx.i.i.i71.i, align 8
-  store ptr %617, ptr %memberidx.i75, align 8
+  %705 = add nsw i64 %701, 1
+  store i64 %705, ptr %memberidx2.i, align 8
+  %memberidx.i.i.i70.i = getelementptr inbounds %Array_Token_, ptr %702, i64 0, i32 1
+  %706 = load ptr, ptr %memberidx.i.i.i70.i, align 8
+  %ptridx.i.i.i71.i = getelementptr inbounds ptr, ptr %706, i64 %705
+  %707 = load ptr, ptr %ptridx.i.i.i71.i, align 8
+  store ptr %707, ptr %memberidx.i75, align 8
   br label %Parser_advance.exit.i74.i
 
 Parser_advance.exit.i74.i:                        ; preds = %if.entry.i.i72.i, %if.entry.i68.i
-  %618 = call fastcc ptr @Parser_eat(ptr nonnull %3, i64 54)
-  store ptr %618, ptr %memberidx1.i.i64.i, align 8
+  %708 = call fastcc ptr @Parser_eat(ptr nonnull %3, i64 54)
+  store ptr %708, ptr %memberidx1.i.i64.i, align 8
   br label %Parser_parse_import_clause.exit75.i
 
 Parser_parse_import_clause.exit75.i:              ; preds = %Parser_advance.exit.i74.i, %Parser_advance.exit63.i
-  %memberidx.i76.i = getelementptr inbounds %Array_ImportClause_, ptr %605, i64 0, i32 2
-  %619 = load i64, ptr %memberidx.i76.i, align 4
-  %memberidx1.i77.i = getelementptr inbounds %Array_ImportClause_, ptr %605, i64 0, i32 3
-  %620 = load i64, ptr %memberidx1.i77.i, align 4
-  %.not.i78.i = icmp slt i64 %619, %620
+  %memberidx.i76.i = getelementptr inbounds %Array_ImportClause_, ptr %695, i64 0, i32 2
+  %709 = load i64, ptr %memberidx.i76.i, align 4
+  %memberidx1.i77.i = getelementptr inbounds %Array_ImportClause_, ptr %695, i64 0, i32 3
+  %710 = load i64, ptr %memberidx1.i77.i, align 4
+  %.not.i78.i = icmp slt i64 %709, %710
   br i1 %.not.i78.i, label %Parser_parse_import_clause.exit75.i.Array_ImportClause____sl__.exit84.i_crit_edge, label %if.entry.i81.i
 
 Parser_parse_import_clause.exit75.i.Array_ImportClause____sl__.exit84.i_crit_edge: ; preds = %Parser_parse_import_clause.exit75.i
-  %memberidx4.i82.i.phi.trans.insert = getelementptr inbounds %Array_ImportClause_, ptr %605, i64 0, i32 1
-  %.pre332 = load ptr, ptr %memberidx4.i82.i.phi.trans.insert, align 8
+  %memberidx4.i82.i.phi.trans.insert = getelementptr inbounds %Array_ImportClause_, ptr %695, i64 0, i32 1
+  %.pre370 = load ptr, ptr %memberidx4.i82.i.phi.trans.insert, align 8
   br label %Array_ImportClause____sl__.exit84.i
 
 if.entry.i81.i:                                   ; preds = %Parser_parse_import_clause.exit75.i
-  %621 = shl nuw i64 %620, 1
-  store i64 %621, ptr %memberidx1.i77.i, align 4
-  %memberidx2.i.i80.i = getelementptr inbounds %Array_ImportClause_, ptr %605, i64 0, i32 1
-  %622 = load ptr, ptr %memberidx2.i.i80.i, align 8
-  %623 = shl i64 %620, 4
-  %624 = call ptr @realloc(ptr %622, i64 %623)
-  store ptr %624, ptr %memberidx2.i.i80.i, align 8
-  %.pre331 = load i64, ptr %memberidx.i76.i, align 4
+  %711 = shl nuw i64 %710, 1
+  store i64 %711, ptr %memberidx1.i77.i, align 4
+  %memberidx2.i.i80.i = getelementptr inbounds %Array_ImportClause_, ptr %695, i64 0, i32 1
+  %712 = load ptr, ptr %memberidx2.i.i80.i, align 8
+  %713 = shl i64 %710, 4
+  %714 = call ptr @realloc(ptr %712, i64 %713)
+  store ptr %714, ptr %memberidx2.i.i80.i, align 8
+  %.pre369 = load i64, ptr %memberidx.i76.i, align 4
   br label %Array_ImportClause____sl__.exit84.i
 
 Array_ImportClause____sl__.exit84.i:              ; preds = %Parser_parse_import_clause.exit75.i.Array_ImportClause____sl__.exit84.i_crit_edge, %if.entry.i81.i
-  %625 = phi ptr [ %624, %if.entry.i81.i ], [ %.pre332, %Parser_parse_import_clause.exit75.i.Array_ImportClause____sl__.exit84.i_crit_edge ]
-  %626 = phi i64 [ %.pre331, %if.entry.i81.i ], [ %619, %Parser_parse_import_clause.exit75.i.Array_ImportClause____sl__.exit84.i_crit_edge ]
-  %627 = add nsw i64 %626, 1
-  store i64 %627, ptr %memberidx.i76.i, align 4
-  %ptridx.i83.i = getelementptr inbounds ptr, ptr %625, i64 %626
-  store ptr %606, ptr %ptridx.i83.i, align 8
-  %628 = load ptr, ptr %memberidx.i75, align 8
-  %629 = load i64, ptr %628, align 4
-  %630 = icmp eq i64 %629, 3
-  %631 = load ptr, ptr %memberidx1.i, align 8
-  %memberidx3.i87.i = getelementptr inbounds %Array_FloError_, ptr %631, i64 0, i32 2
-  %632 = load i64, ptr %memberidx3.i87.i, align 4
-  %633 = icmp eq i64 %632, 0
-  %634 = and i1 %630, %633
-  br i1 %634, label %while.entry.i195, label %while.end.i
+  %715 = phi ptr [ %714, %if.entry.i81.i ], [ %.pre370, %Parser_parse_import_clause.exit75.i.Array_ImportClause____sl__.exit84.i_crit_edge ]
+  %716 = phi i64 [ %.pre369, %if.entry.i81.i ], [ %709, %Parser_parse_import_clause.exit75.i.Array_ImportClause____sl__.exit84.i_crit_edge ]
+  %717 = add nsw i64 %716, 1
+  store i64 %717, ptr %memberidx.i76.i, align 4
+  %ptridx.i83.i = getelementptr inbounds ptr, ptr %715, i64 %716
+  store ptr %696, ptr %ptridx.i83.i, align 8
+  %718 = load ptr, ptr %memberidx.i75, align 8
+  %719 = load i64, ptr %718, align 4
+  %720 = icmp eq i64 %719, 3
+  %721 = load ptr, ptr %memberidx1.i, align 8
+  %memberidx3.i87.i = getelementptr inbounds %Array_FloError_, ptr %721, i64 0, i32 2
+  %722 = load i64, ptr %memberidx3.i87.i, align 4
+  %723 = icmp eq i64 %722, 0
+  %724 = and i1 %720, %723
+  br i1 %724, label %while.entry.i214, label %while.end.i
 
 while.end.i:                                      ; preds = %Array_ImportClause____sl__.exit84.i, %Array_ImportClause____sl__.exit.i
-  %635 = phi i64 [ %577, %Array_ImportClause____sl__.exit.i ], [ %629, %Array_ImportClause____sl__.exit84.i ]
-  %636 = phi ptr [ %576, %Array_ImportClause____sl__.exit.i ], [ %628, %Array_ImportClause____sl__.exit84.i ]
-  %637 = icmp eq i64 %635, 69
-  br i1 %637, label %if.entry.i92.i, label %else.i98.i
+  %725 = phi i64 [ %667, %Array_ImportClause____sl__.exit.i ], [ %719, %Array_ImportClause____sl__.exit84.i ]
+  %726 = phi ptr [ %666, %Array_ImportClause____sl__.exit.i ], [ %718, %Array_ImportClause____sl__.exit84.i ]
+  %727 = icmp eq i64 %725, 69
+  br i1 %727, label %if.entry.i92.i, label %else.i98.i
 
 if.entry.i92.i:                                   ; preds = %while.end.i
-  %638 = load i64, ptr %memberidx2.i, align 8
-  %639 = load ptr, ptr %3, align 8
-  %memberidx2.i.i91.i = getelementptr inbounds %Array_Token_, ptr %639, i64 0, i32 2
-  %640 = load i64, ptr %memberidx2.i.i91.i, align 4
-  %641 = icmp slt i64 %638, %640
-  br i1 %641, label %if.entry.i.i96.i, label %ifend.i194thread-pre-split
+  %728 = load i64, ptr %memberidx2.i, align 8
+  %729 = load ptr, ptr %3, align 8
+  %memberidx2.i.i91.i = getelementptr inbounds %Array_Token_, ptr %729, i64 0, i32 2
+  %730 = load i64, ptr %memberidx2.i.i91.i, align 4
+  %731 = icmp slt i64 %728, %730
+  br i1 %731, label %if.entry.i.i96.i, label %ifend.i213thread-pre-split
 
 if.entry.i.i96.i:                                 ; preds = %if.entry.i92.i
-  %642 = add nsw i64 %638, 1
-  store i64 %642, ptr %memberidx2.i, align 8
-  %memberidx.i.i.i94.i = getelementptr inbounds %Array_Token_, ptr %639, i64 0, i32 1
-  %643 = load ptr, ptr %memberidx.i.i.i94.i, align 8
-  %ptridx.i.i.i95.i = getelementptr inbounds ptr, ptr %643, i64 %642
-  %644 = load ptr, ptr %ptridx.i.i.i95.i, align 8
-  store ptr %644, ptr %memberidx.i75, align 8
-  br label %ifend.i194thread-pre-split
+  %732 = add nsw i64 %728, 1
+  store i64 %732, ptr %memberidx2.i, align 8
+  %memberidx.i.i.i94.i = getelementptr inbounds %Array_Token_, ptr %729, i64 0, i32 1
+  %733 = load ptr, ptr %memberidx.i.i.i94.i, align 8
+  %ptridx.i.i.i95.i = getelementptr inbounds ptr, ptr %733, i64 %732
+  %734 = load ptr, ptr %ptridx.i.i.i95.i, align 8
+  store ptr %734, ptr %memberidx.i75, align 8
+  br label %ifend.i213thread-pre-split
 
 else.i98.i:                                       ; preds = %while.end.i
-  %645 = call ptr @malloc(i32 16)
-  %memberidx35.i99.i = getelementptr inbounds %Token, ptr %636, i64 0, i32 1
-  %646 = load ptr, ptr %memberidx35.i99.i, align 8
-  store i64 46, ptr %645, align 4
-  %memberidx1.i82.i100.i = getelementptr inbounds %Token, ptr %645, i64 0, i32 1
-  store ptr %646, ptr %memberidx1.i82.i100.i, align 8
-  %.pre333 = load ptr, ptr %memberidx.i75, align 8
-  br label %ifend.i194thread-pre-split
+  %735 = call ptr @malloc(i32 16)
+  %memberidx35.i99.i = getelementptr inbounds %Token, ptr %726, i64 0, i32 1
+  %736 = load ptr, ptr %memberidx35.i99.i, align 8
+  store i64 46, ptr %735, align 4
+  %memberidx1.i82.i100.i = getelementptr inbounds %Token, ptr %735, i64 0, i32 1
+  store ptr %736, ptr %memberidx1.i82.i100.i, align 8
+  %.pre371 = load ptr, ptr %memberidx.i75, align 8
+  br label %ifend.i213thread-pre-split
 
 if.entry11.i:                                     ; preds = %Parser_eat.exit.i
-  %647 = load i64, ptr %memberidx2.i, align 8
-  %648 = load ptr, ptr %3, align 8
-  %memberidx2.i103.i = getelementptr inbounds %Array_Token_, ptr %648, i64 0, i32 2
-  %649 = load i64, ptr %memberidx2.i103.i, align 4
-  %650 = icmp slt i64 %647, %649
-  br i1 %650, label %if.entry.i107.i, label %Parser_advance.exit108.i
+  %737 = load i64, ptr %memberidx2.i, align 8
+  %738 = load ptr, ptr %3, align 8
+  %memberidx2.i103.i = getelementptr inbounds %Array_Token_, ptr %738, i64 0, i32 2
+  %739 = load i64, ptr %memberidx2.i103.i, align 4
+  %740 = icmp slt i64 %737, %739
+  br i1 %740, label %if.entry.i107.i, label %Parser_advance.exit108.i
 
 if.entry.i107.i:                                  ; preds = %if.entry11.i
-  %651 = add nsw i64 %647, 1
-  store i64 %651, ptr %memberidx2.i, align 8
-  %memberidx.i.i105.i = getelementptr inbounds %Array_Token_, ptr %648, i64 0, i32 1
-  %652 = load ptr, ptr %memberidx.i.i105.i, align 8
-  %ptridx.i.i106.i = getelementptr inbounds ptr, ptr %652, i64 %651
-  %653 = load ptr, ptr %ptridx.i.i106.i, align 8
-  store ptr %653, ptr %memberidx.i75, align 8
+  %741 = add nsw i64 %737, 1
+  store i64 %741, ptr %memberidx2.i, align 8
+  %memberidx.i.i105.i = getelementptr inbounds %Array_Token_, ptr %738, i64 0, i32 1
+  %742 = load ptr, ptr %memberidx.i.i105.i, align 8
+  %ptridx.i.i106.i = getelementptr inbounds ptr, ptr %742, i64 %741
+  %743 = load ptr, ptr %ptridx.i.i106.i, align 8
+  store ptr %743, ptr %memberidx.i75, align 8
   br label %Parser_advance.exit108.i
 
 Parser_advance.exit108.i:                         ; preds = %if.entry.i107.i, %if.entry11.i
-  %654 = call fastcc ptr @Parser_eat(ptr nonnull %3, i64 54)
-  store ptr %654, ptr %memberidx3.i34.i, align 8
+  %744 = call fastcc ptr @Parser_eat(ptr nonnull %3, i64 54)
+  store ptr %744, ptr %memberidx3.i34.i, align 8
   br label %Parser_parse_import.exit
 
 Parser_parse_import.exit:                         ; preds = %Parser_eat.exit.i, %Parser_advance.exit108.i
-  %memberidx.i196 = getelementptr inbounds %Array_ImportNode_, ptr %540, i64 0, i32 2
-  %655 = load i64, ptr %memberidx.i196, align 4
-  %memberidx1.i197 = getelementptr inbounds %Array_ImportNode_, ptr %540, i64 0, i32 3
-  %656 = load i64, ptr %memberidx1.i197, align 4
-  %.not.i198 = icmp slt i64 %655, %656
-  br i1 %.not.i198, label %Parser_parse_import.exit.Array_ImportNode____sl__.exit_crit_edge, label %if.entry.i201
+  %memberidx.i216 = getelementptr inbounds %Array_ImportNode_, ptr %630, i64 0, i32 2
+  %745 = load i64, ptr %memberidx.i216, align 4
+  %memberidx1.i217 = getelementptr inbounds %Array_ImportNode_, ptr %630, i64 0, i32 3
+  %746 = load i64, ptr %memberidx1.i217, align 4
+  %.not.i218 = icmp slt i64 %745, %746
+  br i1 %.not.i218, label %Parser_parse_import.exit.Array_ImportNode____sl__.exit_crit_edge, label %if.entry.i221
 
 Parser_parse_import.exit.Array_ImportNode____sl__.exit_crit_edge: ; preds = %Parser_parse_import.exit
-  %memberidx4.i202.phi.trans.insert = getelementptr inbounds %Array_ImportNode_, ptr %540, i64 0, i32 1
-  %.pre336 = load ptr, ptr %memberidx4.i202.phi.trans.insert, align 8
+  %memberidx4.i222.phi.trans.insert = getelementptr inbounds %Array_ImportNode_, ptr %630, i64 0, i32 1
+  %.pre374 = load ptr, ptr %memberidx4.i222.phi.trans.insert, align 8
   br label %Array_ImportNode____sl__.exit
 
-if.entry.i201:                                    ; preds = %Parser_parse_import.exit
-  %657 = shl nuw i64 %656, 1
-  store i64 %657, ptr %memberidx1.i197, align 4
-  %memberidx2.i.i200 = getelementptr inbounds %Array_ImportNode_, ptr %540, i64 0, i32 1
-  %658 = load ptr, ptr %memberidx2.i.i200, align 8
-  %659 = shl i64 %656, 4
-  %660 = call ptr @realloc(ptr %658, i64 %659)
-  store ptr %660, ptr %memberidx2.i.i200, align 8
-  %.pre335 = load i64, ptr %memberidx.i196, align 4
+if.entry.i221:                                    ; preds = %Parser_parse_import.exit
+  %747 = shl nuw i64 %746, 1
+  store i64 %747, ptr %memberidx1.i217, align 4
+  %memberidx2.i.i220 = getelementptr inbounds %Array_ImportNode_, ptr %630, i64 0, i32 1
+  %748 = load ptr, ptr %memberidx2.i.i220, align 8
+  %749 = shl i64 %746, 4
+  %750 = call ptr @realloc(ptr %748, i64 %749)
+  store ptr %750, ptr %memberidx2.i.i220, align 8
+  %.pre373 = load i64, ptr %memberidx.i216, align 4
   br label %Array_ImportNode____sl__.exit
 
-Array_ImportNode____sl__.exit:                    ; preds = %Parser_parse_import.exit.Array_ImportNode____sl__.exit_crit_edge, %if.entry.i201
-  %661 = phi ptr [ %.pre336, %Parser_parse_import.exit.Array_ImportNode____sl__.exit_crit_edge ], [ %660, %if.entry.i201 ]
-  %662 = phi i64 [ %655, %Parser_parse_import.exit.Array_ImportNode____sl__.exit_crit_edge ], [ %.pre335, %if.entry.i201 ]
-  %663 = add nsw i64 %662, 1
-  store i64 %663, ptr %memberidx.i196, align 4
-  %ptridx.i203 = getelementptr inbounds ptr, ptr %661, i64 %662
-  store ptr %548, ptr %ptridx.i203, align 8
+Array_ImportNode____sl__.exit:                    ; preds = %Parser_parse_import.exit.Array_ImportNode____sl__.exit_crit_edge, %if.entry.i221
+  %751 = phi ptr [ %.pre374, %Parser_parse_import.exit.Array_ImportNode____sl__.exit_crit_edge ], [ %750, %if.entry.i221 ]
+  %752 = phi i64 [ %745, %Parser_parse_import.exit.Array_ImportNode____sl__.exit_crit_edge ], [ %.pre373, %if.entry.i221 ]
+  %753 = add nsw i64 %752, 1
+  store i64 %753, ptr %memberidx.i216, align 4
+  %ptridx.i223 = getelementptr inbounds ptr, ptr %751, i64 %752
+  store ptr %638, ptr %ptridx.i223, align 8
   br label %ifend
 
 if.entry23:                                       ; preds = %while.entry
-  %664 = load ptr, ptr %memberidx26, align 8
-  %665 = call fastcc ptr @Parser_parse_const_declaration_statement(ptr nonnull %3)
-  %memberidx.i205 = getelementptr inbounds %Array_ConstDeclarationStatement_, ptr %664, i64 0, i32 2
-  %666 = load i64, ptr %memberidx.i205, align 4
-  %memberidx1.i206 = getelementptr inbounds %Array_ConstDeclarationStatement_, ptr %664, i64 0, i32 3
-  %667 = load i64, ptr %memberidx1.i206, align 4
-  %.not.i207 = icmp slt i64 %666, %667
-  br i1 %.not.i207, label %if.entry23.Array_ConstDeclarationStatement____sl__.exit_crit_edge, label %if.entry.i210
+  %754 = load ptr, ptr %memberidx26, align 8
+  %755 = call fastcc ptr @Parser_parse_const_declaration_statement(ptr nonnull %3)
+  %memberidx.i225 = getelementptr inbounds %Array_ConstDeclarationStatement_, ptr %754, i64 0, i32 2
+  %756 = load i64, ptr %memberidx.i225, align 4
+  %memberidx1.i226 = getelementptr inbounds %Array_ConstDeclarationStatement_, ptr %754, i64 0, i32 3
+  %757 = load i64, ptr %memberidx1.i226, align 4
+  %.not.i227 = icmp slt i64 %756, %757
+  br i1 %.not.i227, label %if.entry23.Array_ConstDeclarationStatement____sl__.exit_crit_edge, label %if.entry.i230
 
 if.entry23.Array_ConstDeclarationStatement____sl__.exit_crit_edge: ; preds = %if.entry23
-  %memberidx4.i211.phi.trans.insert = getelementptr inbounds %Array_ConstDeclarationStatement_, ptr %664, i64 0, i32 1
-  %.pre328 = load ptr, ptr %memberidx4.i211.phi.trans.insert, align 8
+  %memberidx4.i231.phi.trans.insert = getelementptr inbounds %Array_ConstDeclarationStatement_, ptr %754, i64 0, i32 1
+  %.pre366 = load ptr, ptr %memberidx4.i231.phi.trans.insert, align 8
   br label %Array_ConstDeclarationStatement____sl__.exit
 
-if.entry.i210:                                    ; preds = %if.entry23
-  %668 = shl nuw i64 %667, 1
-  store i64 %668, ptr %memberidx1.i206, align 4
-  %memberidx2.i.i209 = getelementptr inbounds %Array_ConstDeclarationStatement_, ptr %664, i64 0, i32 1
-  %669 = load ptr, ptr %memberidx2.i.i209, align 8
-  %670 = shl i64 %667, 4
-  %671 = call ptr @realloc(ptr %669, i64 %670)
-  store ptr %671, ptr %memberidx2.i.i209, align 8
-  %.pre327 = load i64, ptr %memberidx.i205, align 4
+if.entry.i230:                                    ; preds = %if.entry23
+  %758 = shl nuw i64 %757, 1
+  store i64 %758, ptr %memberidx1.i226, align 4
+  %memberidx2.i.i229 = getelementptr inbounds %Array_ConstDeclarationStatement_, ptr %754, i64 0, i32 1
+  %759 = load ptr, ptr %memberidx2.i.i229, align 8
+  %760 = shl i64 %757, 4
+  %761 = call ptr @realloc(ptr %759, i64 %760)
+  store ptr %761, ptr %memberidx2.i.i229, align 8
+  %.pre365 = load i64, ptr %memberidx.i225, align 4
   br label %Array_ConstDeclarationStatement____sl__.exit
 
-Array_ConstDeclarationStatement____sl__.exit:     ; preds = %if.entry23.Array_ConstDeclarationStatement____sl__.exit_crit_edge, %if.entry.i210
-  %672 = phi ptr [ %.pre328, %if.entry23.Array_ConstDeclarationStatement____sl__.exit_crit_edge ], [ %671, %if.entry.i210 ]
-  %673 = phi i64 [ %666, %if.entry23.Array_ConstDeclarationStatement____sl__.exit_crit_edge ], [ %.pre327, %if.entry.i210 ]
-  %674 = add nsw i64 %673, 1
-  store i64 %674, ptr %memberidx.i205, align 4
-  %ptridx.i212 = getelementptr inbounds ptr, ptr %672, i64 %673
-  store ptr %665, ptr %ptridx.i212, align 8
+Array_ConstDeclarationStatement____sl__.exit:     ; preds = %if.entry23.Array_ConstDeclarationStatement____sl__.exit_crit_edge, %if.entry.i230
+  %762 = phi ptr [ %.pre366, %if.entry23.Array_ConstDeclarationStatement____sl__.exit_crit_edge ], [ %761, %if.entry.i230 ]
+  %763 = phi i64 [ %756, %if.entry23.Array_ConstDeclarationStatement____sl__.exit_crit_edge ], [ %.pre365, %if.entry.i230 ]
+  %764 = add nsw i64 %763, 1
+  store i64 %764, ptr %memberidx.i225, align 4
+  %ptridx.i232 = getelementptr inbounds ptr, ptr %762, i64 %763
+  store ptr %755, ptr %ptridx.i232, align 8
   br label %ifend
 
 if.entry29:                                       ; preds = %while.entry
-  %675 = load ptr, ptr %memberidx32, align 8
-  %676 = call fastcc ptr @Parser_parse_variable_declaration_statement(ptr nonnull %3)
-  %memberidx.i214 = getelementptr inbounds %Array_VarDeclarationStatement_, ptr %675, i64 0, i32 2
-  %677 = load i64, ptr %memberidx.i214, align 4
-  %memberidx1.i215 = getelementptr inbounds %Array_VarDeclarationStatement_, ptr %675, i64 0, i32 3
-  %678 = load i64, ptr %memberidx1.i215, align 4
-  %.not.i216 = icmp slt i64 %677, %678
-  br i1 %.not.i216, label %if.entry29.Array_VarDeclarationStatement____sl__.exit_crit_edge, label %if.entry.i219
+  %765 = load ptr, ptr %memberidx32, align 8
+  %766 = call fastcc ptr @Parser_parse_variable_declaration_statement(ptr nonnull %3)
+  %memberidx.i234 = getelementptr inbounds %Array_VarDeclarationStatement_, ptr %765, i64 0, i32 2
+  %767 = load i64, ptr %memberidx.i234, align 4
+  %memberidx1.i235 = getelementptr inbounds %Array_VarDeclarationStatement_, ptr %765, i64 0, i32 3
+  %768 = load i64, ptr %memberidx1.i235, align 4
+  %.not.i236 = icmp slt i64 %767, %768
+  br i1 %.not.i236, label %if.entry29.Array_VarDeclarationStatement____sl__.exit_crit_edge, label %if.entry.i239
 
 if.entry29.Array_VarDeclarationStatement____sl__.exit_crit_edge: ; preds = %if.entry29
-  %memberidx4.i220.phi.trans.insert = getelementptr inbounds %Array_VarDeclarationStatement_, ptr %675, i64 0, i32 1
-  %.pre326 = load ptr, ptr %memberidx4.i220.phi.trans.insert, align 8
+  %memberidx4.i240.phi.trans.insert = getelementptr inbounds %Array_VarDeclarationStatement_, ptr %765, i64 0, i32 1
+  %.pre364 = load ptr, ptr %memberidx4.i240.phi.trans.insert, align 8
   br label %Array_VarDeclarationStatement____sl__.exit
 
-if.entry.i219:                                    ; preds = %if.entry29
-  %679 = shl nuw i64 %678, 1
-  store i64 %679, ptr %memberidx1.i215, align 4
-  %memberidx2.i.i218 = getelementptr inbounds %Array_VarDeclarationStatement_, ptr %675, i64 0, i32 1
-  %680 = load ptr, ptr %memberidx2.i.i218, align 8
-  %681 = shl i64 %678, 4
-  %682 = call ptr @realloc(ptr %680, i64 %681)
-  store ptr %682, ptr %memberidx2.i.i218, align 8
-  %.pre325 = load i64, ptr %memberidx.i214, align 4
+if.entry.i239:                                    ; preds = %if.entry29
+  %769 = shl nuw i64 %768, 1
+  store i64 %769, ptr %memberidx1.i235, align 4
+  %memberidx2.i.i238 = getelementptr inbounds %Array_VarDeclarationStatement_, ptr %765, i64 0, i32 1
+  %770 = load ptr, ptr %memberidx2.i.i238, align 8
+  %771 = shl i64 %768, 4
+  %772 = call ptr @realloc(ptr %770, i64 %771)
+  store ptr %772, ptr %memberidx2.i.i238, align 8
+  %.pre363 = load i64, ptr %memberidx.i234, align 4
   br label %Array_VarDeclarationStatement____sl__.exit
 
-Array_VarDeclarationStatement____sl__.exit:       ; preds = %if.entry29.Array_VarDeclarationStatement____sl__.exit_crit_edge, %if.entry.i219
-  %683 = phi ptr [ %.pre326, %if.entry29.Array_VarDeclarationStatement____sl__.exit_crit_edge ], [ %682, %if.entry.i219 ]
-  %684 = phi i64 [ %677, %if.entry29.Array_VarDeclarationStatement____sl__.exit_crit_edge ], [ %.pre325, %if.entry.i219 ]
-  %685 = add nsw i64 %684, 1
-  store i64 %685, ptr %memberidx.i214, align 4
-  %ptridx.i221 = getelementptr inbounds ptr, ptr %683, i64 %684
-  store ptr %676, ptr %ptridx.i221, align 8
+Array_VarDeclarationStatement____sl__.exit:       ; preds = %if.entry29.Array_VarDeclarationStatement____sl__.exit_crit_edge, %if.entry.i239
+  %773 = phi ptr [ %.pre364, %if.entry29.Array_VarDeclarationStatement____sl__.exit_crit_edge ], [ %772, %if.entry.i239 ]
+  %774 = phi i64 [ %767, %if.entry29.Array_VarDeclarationStatement____sl__.exit_crit_edge ], [ %.pre363, %if.entry.i239 ]
+  %775 = add nsw i64 %774, 1
+  store i64 %775, ptr %memberidx.i234, align 4
+  %ptridx.i241 = getelementptr inbounds ptr, ptr %773, i64 %774
+  store ptr %766, ptr %ptridx.i241, align 8
   br label %ifend
 
 else30:                                           ; preds = %while.entry
   %memberidx36 = getelementptr inbounds %IdentifierToken, ptr %35, i64 0, i32 2
-  %686 = load ptr, ptr %memberidx36, align 8
-  %687 = call ptr @malloc(i32 4)
-  store i32 1701869940, ptr %687, align 8
-  %688 = call ptr @malloc(i32 32)
-  store ptr @VTablestring, ptr %688, align 8
-  %memberidx.i.i223 = getelementptr inbounds %string, ptr %688, i64 0, i32 1
-  store ptr %687, ptr %memberidx.i.i223, align 8
-  %memberidx1.i.i224 = getelementptr inbounds %string, ptr %688, i64 0, i32 2
-  store i64 4, ptr %memberidx1.i.i224, align 4
-  %memberidx2.i.i225 = getelementptr inbounds %string, ptr %688, i64 0, i32 3
-  store i64 4, ptr %memberidx2.i.i225, align 4
-  %memberidx.i226 = getelementptr inbounds %string, ptr %686, i64 0, i32 2
-  %689 = load i64, ptr %memberidx.i226, align 4
-  %.not.i228 = icmp eq i64 %689, 4
-  br i1 %.not.i228, label %string___eq__.exit, label %else38
+  %776 = load ptr, ptr %memberidx36, align 8
+  %777 = call ptr @malloc(i32 4)
+  store i32 1701869940, ptr %777, align 8
+  %778 = call ptr @malloc(i32 32)
+  store ptr @VTablestring, ptr %778, align 8
+  %memberidx.i.i243 = getelementptr inbounds %string, ptr %778, i64 0, i32 1
+  store ptr %777, ptr %memberidx.i.i243, align 8
+  %memberidx1.i.i244 = getelementptr inbounds %string, ptr %778, i64 0, i32 2
+  store i64 4, ptr %memberidx1.i.i244, align 4
+  %memberidx2.i.i245 = getelementptr inbounds %string, ptr %778, i64 0, i32 3
+  store i64 4, ptr %memberidx2.i.i245, align 4
+  %memberidx.i246 = getelementptr inbounds %string, ptr %776, i64 0, i32 2
+  %779 = load i64, ptr %memberidx.i246, align 4
+  %.not.i248 = icmp eq i64 %779, 4
+  br i1 %.not.i248, label %string___eq__.exit, label %else38
 
 string___eq__.exit:                               ; preds = %else30
-  %690 = icmp eq i64 %34, 54
-  %memberidx2.i229 = getelementptr inbounds %string, ptr %686, i64 0, i32 1
-  %691 = load ptr, ptr %memberidx2.i229, align 8
-  %692 = call i64 @memcmp(ptr %691, ptr nonnull %687, i64 4)
-  %693 = icmp eq i64 %692, 0
-  %694 = and i1 %690, %693
-  br i1 %694, label %if.entry37, label %else38
+  %780 = icmp eq i64 %34, 54
+  %memberidx2.i249 = getelementptr inbounds %string, ptr %776, i64 0, i32 1
+  %781 = load ptr, ptr %memberidx2.i249, align 8
+  %782 = call i64 @memcmp(ptr %781, ptr nonnull %777, i64 4)
+  %783 = icmp eq i64 %782, 0
+  %784 = and i1 %780, %783
+  br i1 %784, label %if.entry37, label %else38
 
 if.entry37:                                       ; preds = %string___eq__.exit
-  %695 = load ptr, ptr %memberidx40, align 8
-  %696 = load i64, ptr %memberidx2.i, align 8
-  %697 = load ptr, ptr %3, align 8
-  %memberidx2.i.i233 = getelementptr inbounds %Array_Token_, ptr %697, i64 0, i32 2
-  %698 = load i64, ptr %memberidx2.i.i233, align 4
-  %699 = icmp slt i64 %696, %698
-  br i1 %699, label %if.entry.i.i237, label %Parser_parse_type_alias.exit
+  %785 = load ptr, ptr %memberidx40, align 8
+  %786 = load i64, ptr %memberidx2.i, align 8
+  %787 = load ptr, ptr %3, align 8
+  %memberidx2.i.i253 = getelementptr inbounds %Array_Token_, ptr %787, i64 0, i32 2
+  %788 = load i64, ptr %memberidx2.i.i253, align 4
+  %789 = icmp slt i64 %786, %788
+  br i1 %789, label %if.entry.i.i257, label %Parser_parse_type_alias.exit
 
-if.entry.i.i237:                                  ; preds = %if.entry37
-  %700 = add nsw i64 %696, 1
-  store i64 %700, ptr %memberidx2.i, align 8
-  %memberidx.i.i.i235 = getelementptr inbounds %Array_Token_, ptr %697, i64 0, i32 1
-  %701 = load ptr, ptr %memberidx.i.i.i235, align 8
-  %ptridx.i.i.i236 = getelementptr inbounds ptr, ptr %701, i64 %700
-  %702 = load ptr, ptr %ptridx.i.i.i236, align 8
-  store ptr %702, ptr %memberidx.i75, align 8
+if.entry.i.i257:                                  ; preds = %if.entry37
+  %790 = add nsw i64 %786, 1
+  store i64 %790, ptr %memberidx2.i, align 8
+  %memberidx.i.i.i255 = getelementptr inbounds %Array_Token_, ptr %787, i64 0, i32 1
+  %791 = load ptr, ptr %memberidx.i.i.i255, align 8
+  %ptridx.i.i.i256 = getelementptr inbounds ptr, ptr %791, i64 %790
+  %792 = load ptr, ptr %ptridx.i.i.i256, align 8
+  store ptr %792, ptr %memberidx.i75, align 8
   br label %Parser_parse_type_alias.exit
 
-Parser_parse_type_alias.exit:                     ; preds = %if.entry37, %if.entry.i.i237
-  %703 = call ptr @malloc(i32 16)
-  %704 = call fastcc ptr @Parser_eat(ptr nonnull %3, i64 54)
-  store ptr %704, ptr %703, align 8
-  %705 = call fastcc ptr @Parser_eat(ptr nonnull %3, i64 38)
-  %memberidx.i238 = getelementptr inbounds %TypeAliasNode, ptr %703, i64 0, i32 1
-  %706 = call fastcc ptr @Parser_parse_type(ptr nonnull %3)
-  store ptr %706, ptr %memberidx.i238, align 8
-  %memberidx.i93 = getelementptr inbounds %Array_TypeAliasNode_, ptr %695, i64 0, i32 2
-  %707 = load i64, ptr %memberidx.i93, align 4
-  %memberidx1.i94 = getelementptr inbounds %Array_TypeAliasNode_, ptr %695, i64 0, i32 3
-  %708 = load i64, ptr %memberidx1.i94, align 4
-  %.not.i = icmp slt i64 %707, %708
+Parser_parse_type_alias.exit:                     ; preds = %if.entry37, %if.entry.i.i257
+  %793 = call ptr @malloc(i32 16)
+  %794 = call fastcc ptr @Parser_eat(ptr nonnull %3, i64 54)
+  store ptr %794, ptr %793, align 8
+  %795 = call fastcc ptr @Parser_eat(ptr nonnull %3, i64 38)
+  %memberidx.i258 = getelementptr inbounds %TypeAliasNode, ptr %793, i64 0, i32 1
+  %796 = call fastcc ptr @Parser_parse_type(ptr nonnull %3)
+  store ptr %796, ptr %memberidx.i258, align 8
+  %memberidx.i93 = getelementptr inbounds %Array_TypeAliasNode_, ptr %785, i64 0, i32 2
+  %797 = load i64, ptr %memberidx.i93, align 4
+  %memberidx1.i94 = getelementptr inbounds %Array_TypeAliasNode_, ptr %785, i64 0, i32 3
+  %798 = load i64, ptr %memberidx1.i94, align 4
+  %.not.i = icmp slt i64 %797, %798
   br i1 %.not.i, label %Parser_parse_type_alias.exit.Array_TypeAliasNode____sl__.exit_crit_edge, label %if.entry.i97
 
 Parser_parse_type_alias.exit.Array_TypeAliasNode____sl__.exit_crit_edge: ; preds = %Parser_parse_type_alias.exit
-  %memberidx4.i.phi.trans.insert = getelementptr inbounds %Array_TypeAliasNode_, ptr %695, i64 0, i32 1
-  %.pre357 = load ptr, ptr %memberidx4.i.phi.trans.insert, align 8
+  %memberidx4.i.phi.trans.insert = getelementptr inbounds %Array_TypeAliasNode_, ptr %785, i64 0, i32 1
+  %.pre401 = load ptr, ptr %memberidx4.i.phi.trans.insert, align 8
   br label %Array_TypeAliasNode____sl__.exit
 
 if.entry.i97:                                     ; preds = %Parser_parse_type_alias.exit
-  %709 = shl nuw i64 %708, 1
-  store i64 %709, ptr %memberidx1.i94, align 4
-  %memberidx2.i.i96 = getelementptr inbounds %Array_TypeAliasNode_, ptr %695, i64 0, i32 1
-  %710 = load ptr, ptr %memberidx2.i.i96, align 8
-  %711 = shl i64 %708, 4
-  %712 = call ptr @realloc(ptr %710, i64 %711)
-  store ptr %712, ptr %memberidx2.i.i96, align 8
-  %.pre356 = load i64, ptr %memberidx.i93, align 4
+  %799 = shl nuw i64 %798, 1
+  store i64 %799, ptr %memberidx1.i94, align 4
+  %memberidx2.i.i96 = getelementptr inbounds %Array_TypeAliasNode_, ptr %785, i64 0, i32 1
+  %800 = load ptr, ptr %memberidx2.i.i96, align 8
+  %801 = shl i64 %798, 4
+  %802 = call ptr @realloc(ptr %800, i64 %801)
+  store ptr %802, ptr %memberidx2.i.i96, align 8
+  %.pre400 = load i64, ptr %memberidx.i93, align 4
   br label %Array_TypeAliasNode____sl__.exit
 
 Array_TypeAliasNode____sl__.exit:                 ; preds = %Parser_parse_type_alias.exit.Array_TypeAliasNode____sl__.exit_crit_edge, %if.entry.i97
-  %713 = phi ptr [ %.pre357, %Parser_parse_type_alias.exit.Array_TypeAliasNode____sl__.exit_crit_edge ], [ %712, %if.entry.i97 ]
-  %714 = phi i64 [ %707, %Parser_parse_type_alias.exit.Array_TypeAliasNode____sl__.exit_crit_edge ], [ %.pre356, %if.entry.i97 ]
-  %715 = add nsw i64 %714, 1
-  store i64 %715, ptr %memberidx.i93, align 4
-  %ptridx.i = getelementptr inbounds ptr, ptr %713, i64 %714
-  store ptr %703, ptr %ptridx.i, align 8
+  %803 = phi ptr [ %.pre401, %Parser_parse_type_alias.exit.Array_TypeAliasNode____sl__.exit_crit_edge ], [ %802, %if.entry.i97 ]
+  %804 = phi i64 [ %797, %Parser_parse_type_alias.exit.Array_TypeAliasNode____sl__.exit_crit_edge ], [ %.pre400, %if.entry.i97 ]
+  %805 = add nsw i64 %804, 1
+  store i64 %805, ptr %memberidx.i93, align 4
+  %ptridx.i = getelementptr inbounds ptr, ptr %803, i64 %804
+  store ptr %793, ptr %ptridx.i, align 8
   br label %ifend
 
 else38:                                           ; preds = %else30, %string___eq__.exit
-  %716 = call ptr @malloc(i32 79)
-  call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(79) %716, ptr noundef nonnull align 8 dereferenceable(79) @67, i64 79, i1 false)
-  %717 = call ptr @malloc(i32 32)
-  store ptr @VTablestring, ptr %717, align 8
-  %memberidx.i.i80 = getelementptr inbounds %string, ptr %717, i64 0, i32 1
-  store ptr %716, ptr %memberidx.i.i80, align 8
-  %memberidx1.i.i81 = getelementptr inbounds %string, ptr %717, i64 0, i32 2
+  %806 = call ptr @malloc(i32 79)
+  call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(79) %806, ptr noundef nonnull align 8 dereferenceable(79) @67, i64 79, i1 false)
+  %807 = call ptr @malloc(i32 32)
+  store ptr @VTablestring, ptr %807, align 8
+  %memberidx.i.i80 = getelementptr inbounds %string, ptr %807, i64 0, i32 1
+  store ptr %806, ptr %memberidx.i.i80, align 8
+  %memberidx1.i.i81 = getelementptr inbounds %string, ptr %807, i64 0, i32 2
   store i64 79, ptr %memberidx1.i.i81, align 4
-  %memberidx2.i.i82 = getelementptr inbounds %string, ptr %717, i64 0, i32 3
+  %memberidx2.i.i82 = getelementptr inbounds %string, ptr %807, i64 0, i32 3
   store i64 79, ptr %memberidx2.i.i82, align 4
-  %718 = load ptr, ptr %memberidx1.i, align 8
-  %719 = call ptr @malloc(i32 24)
-  %720 = load ptr, ptr %memberidx.i75, align 8
-  %memberidx2.i70 = getelementptr inbounds %Token, ptr %720, i64 0, i32 1
-  %721 = load ptr, ptr %memberidx2.i70, align 8
-  store i64 2, ptr %719, align 4
-  %memberidx1.i.i = getelementptr inbounds %FloError, ptr %719, i64 0, i32 2
-  store ptr %721, ptr %memberidx1.i.i, align 8
-  %memberidx2.i.i = getelementptr inbounds %FloError, ptr %719, i64 0, i32 1
-  store ptr %717, ptr %memberidx2.i.i, align 8
-  %memberidx.i.i = getelementptr inbounds %Array_FloError_, ptr %718, i64 0, i32 2
-  %722 = load i64, ptr %memberidx.i.i, align 4
-  %memberidx1.i4.i = getelementptr inbounds %Array_FloError_, ptr %718, i64 0, i32 3
-  %723 = load i64, ptr %memberidx1.i4.i, align 4
-  %.not.i.i = icmp slt i64 %722, %723
+  %808 = load ptr, ptr %memberidx1.i, align 8
+  %809 = call ptr @malloc(i32 24)
+  %810 = load ptr, ptr %memberidx.i75, align 8
+  %memberidx2.i70 = getelementptr inbounds %Token, ptr %810, i64 0, i32 1
+  %811 = load ptr, ptr %memberidx2.i70, align 8
+  store i64 2, ptr %809, align 4
+  %memberidx1.i.i = getelementptr inbounds %FloError, ptr %809, i64 0, i32 2
+  store ptr %811, ptr %memberidx1.i.i, align 8
+  %memberidx2.i.i = getelementptr inbounds %FloError, ptr %809, i64 0, i32 1
+  store ptr %807, ptr %memberidx2.i.i, align 8
+  %memberidx.i.i = getelementptr inbounds %Array_FloError_, ptr %808, i64 0, i32 2
+  %812 = load i64, ptr %memberidx.i.i, align 4
+  %memberidx1.i4.i = getelementptr inbounds %Array_FloError_, ptr %808, i64 0, i32 3
+  %813 = load i64, ptr %memberidx1.i4.i, align 4
+  %.not.i.i = icmp slt i64 %812, %813
   br i1 %.not.i.i, label %else38.Parser_error.exit_crit_edge, label %if.entry.i.i
 
 else38.Parser_error.exit_crit_edge:               ; preds = %else38
-  %memberidx4.i.i.phi.trans.insert = getelementptr inbounds %Array_FloError_, ptr %718, i64 0, i32 1
-  %.pre355 = load ptr, ptr %memberidx4.i.i.phi.trans.insert, align 8
+  %memberidx4.i.i.phi.trans.insert = getelementptr inbounds %Array_FloError_, ptr %808, i64 0, i32 1
+  %.pre399 = load ptr, ptr %memberidx4.i.i.phi.trans.insert, align 8
   br label %Parser_error.exit
 
 if.entry.i.i:                                     ; preds = %else38
-  %724 = shl nuw i64 %723, 1
-  store i64 %724, ptr %memberidx1.i4.i, align 4
-  %memberidx2.i.i.i = getelementptr inbounds %Array_FloError_, ptr %718, i64 0, i32 1
-  %725 = load ptr, ptr %memberidx2.i.i.i, align 8
-  %726 = shl i64 %723, 4
-  %727 = call ptr @realloc(ptr %725, i64 %726)
-  store ptr %727, ptr %memberidx2.i.i.i, align 8
-  %.pre354 = load i64, ptr %memberidx.i.i, align 4
+  %814 = shl nuw i64 %813, 1
+  store i64 %814, ptr %memberidx1.i4.i, align 4
+  %memberidx2.i.i.i = getelementptr inbounds %Array_FloError_, ptr %808, i64 0, i32 1
+  %815 = load ptr, ptr %memberidx2.i.i.i, align 8
+  %816 = shl i64 %813, 4
+  %817 = call ptr @realloc(ptr %815, i64 %816)
+  store ptr %817, ptr %memberidx2.i.i.i, align 8
+  %.pre398 = load i64, ptr %memberidx.i.i, align 4
   br label %Parser_error.exit
 
 Parser_error.exit:                                ; preds = %else38.Parser_error.exit_crit_edge, %if.entry.i.i
-  %728 = phi ptr [ %.pre355, %else38.Parser_error.exit_crit_edge ], [ %727, %if.entry.i.i ]
-  %729 = phi i64 [ %722, %else38.Parser_error.exit_crit_edge ], [ %.pre354, %if.entry.i.i ]
-  %730 = add nsw i64 %729, 1
-  store i64 %730, ptr %memberidx.i.i, align 4
-  %ptridx.i.i = getelementptr inbounds ptr, ptr %728, i64 %729
-  store ptr %719, ptr %ptridx.i.i, align 8
+  %818 = phi ptr [ %.pre399, %else38.Parser_error.exit_crit_edge ], [ %817, %if.entry.i.i ]
+  %819 = phi i64 [ %812, %else38.Parser_error.exit_crit_edge ], [ %.pre398, %if.entry.i.i ]
+  %820 = add nsw i64 %819, 1
+  store i64 %820, ptr %memberidx.i.i, align 4
+  %ptridx.i.i = getelementptr inbounds ptr, ptr %818, i64 %819
+  store ptr %809, ptr %ptridx.i.i, align 8
   br label %ifend
 }
 
@@ -14155,90 +14343,242 @@ ifend38:                                          ; preds = %1
 }
 
 define internal fastcc void @Parser_parse_args(ptr %0, ptr nocapture %1) unnamed_addr {
-  %3 = tail call fastcc ptr @Parser_parse_arg(ptr %0)
-  %memberidx.i = getelementptr inbounds %Array_ArgNode_, ptr %1, i64 0, i32 2
-  %4 = load i64, ptr %memberidx.i, align 4
-  %memberidx1.i = getelementptr inbounds %Array_ArgNode_, ptr %1, i64 0, i32 3
-  %5 = load i64, ptr %memberidx1.i, align 4
-  %.not.i = icmp slt i64 %4, %5
-  br i1 %.not.i, label %.Array_ArgNode____sl__.exit_crit_edge, label %if.entry.i
+  %memberidx.i = getelementptr inbounds %Parser, ptr %0, i64 0, i32 2
+  %3 = load ptr, ptr %memberidx.i, align 8
+  %4 = load i64, ptr %3, align 4
+  %5 = icmp eq i64 %4, 33
+  %memberidx2.i.i = getelementptr inbounds %Parser, ptr %0, i64 0, i32 1
+  %6 = load ptr, ptr %memberidx2.i.i, align 8
+  %memberidx3.i.i = getelementptr inbounds %Array_FloError_, ptr %6, i64 0, i32 2
+  %7 = load i64, ptr %memberidx3.i.i, align 4
+  %8 = icmp eq i64 %7, 0
+  %9 = and i1 %5, %8
+  br i1 %9, label %while.entry.i.preheader, label %Parser_new_lines.exit
 
-.Array_ArgNode____sl__.exit_crit_edge:            ; preds = %2
-  %memberidx4.i.phi.trans.insert = getelementptr inbounds %Array_ArgNode_, ptr %1, i64 0, i32 1
-  %.pre24 = load ptr, ptr %memberidx4.i.phi.trans.insert, align 8
+while.entry.i.preheader:                          ; preds = %2
+  %memberidx.i11.i = getelementptr inbounds %Parser, ptr %0, i64 0, i32 3
+  %10 = load ptr, ptr %0, align 8
+  %memberidx2.i12.i = getelementptr inbounds %Array_Token_, ptr %10, i64 0, i32 2
+  %memberidx.i.i.i = getelementptr inbounds %Array_Token_, ptr %10, i64 0, i32 1
+  %11 = load i64, ptr %memberidx.i11.i, align 4
+  %12 = load i64, ptr %memberidx2.i12.i, align 4
+  %13 = icmp slt i64 %11, %12
+  br i1 %13, label %while.entry.i, label %while.entry.i.us
+
+while.entry.i.us:                                 ; preds = %while.entry.i.preheader, %while.entry.i.us
+  br label %while.entry.i.us
+
+while.entry.i:                                    ; preds = %while.entry.i.preheader, %Parser_advance.exit.i
+  %14 = phi i64 [ %22, %Parser_advance.exit.i ], [ %11, %while.entry.i.preheader ]
+  %15 = load i64, ptr %memberidx2.i12.i, align 4
+  %16 = icmp slt i64 %14, %15
+  br i1 %16, label %if.entry.i.i, label %Parser_advance.exit.i
+
+if.entry.i.i:                                     ; preds = %while.entry.i
+  %17 = add nsw i64 %14, 1
+  store i64 %17, ptr %memberidx.i11.i, align 4
+  %18 = load ptr, ptr %memberidx.i.i.i, align 8
+  %ptridx.i.i.i = getelementptr inbounds ptr, ptr %18, i64 %17
+  %19 = load ptr, ptr %ptridx.i.i.i, align 8
+  store ptr %19, ptr %memberidx.i, align 8
+  %.pre = load i64, ptr %19, align 4
+  %.pre70 = load i64, ptr %memberidx3.i.i, align 4
+  br label %Parser_advance.exit.i
+
+Parser_advance.exit.i:                            ; preds = %if.entry.i.i, %while.entry.i
+  %20 = phi i64 [ %.pre70, %if.entry.i.i ], [ 0, %while.entry.i ]
+  %21 = phi i64 [ %.pre, %if.entry.i.i ], [ 33, %while.entry.i ]
+  %22 = phi i64 [ %17, %if.entry.i.i ], [ %14, %while.entry.i ]
+  %23 = icmp eq i64 %21, 33
+  %24 = icmp eq i64 %20, 0
+  %25 = and i1 %23, %24
+  br i1 %25, label %while.entry.i, label %Parser_new_lines.exit
+
+Parser_new_lines.exit:                            ; preds = %Parser_advance.exit.i, %2
+  %26 = tail call fastcc ptr @Parser_parse_arg(ptr nonnull %0)
+  %memberidx.i34 = getelementptr inbounds %Array_ArgNode_, ptr %1, i64 0, i32 2
+  %27 = load i64, ptr %memberidx.i34, align 4
+  %memberidx1.i35 = getelementptr inbounds %Array_ArgNode_, ptr %1, i64 0, i32 3
+  %28 = load i64, ptr %memberidx1.i35, align 4
+  %.not.i36 = icmp slt i64 %27, %28
+  br i1 %.not.i36, label %Parser_new_lines.exit.Array_ArgNode____sl__.exit42_crit_edge, label %if.entry.i39
+
+Parser_new_lines.exit.Array_ArgNode____sl__.exit42_crit_edge: ; preds = %Parser_new_lines.exit
+  %memberidx4.i40.phi.trans.insert = getelementptr inbounds %Array_ArgNode_, ptr %1, i64 0, i32 1
+  %.pre72 = load ptr, ptr %memberidx4.i40.phi.trans.insert, align 8
+  br label %Array_ArgNode____sl__.exit42
+
+if.entry.i39:                                     ; preds = %Parser_new_lines.exit
+  %29 = shl nuw i64 %28, 1
+  store i64 %29, ptr %memberidx1.i35, align 4
+  %memberidx2.i.i38 = getelementptr inbounds %Array_ArgNode_, ptr %1, i64 0, i32 1
+  %30 = load ptr, ptr %memberidx2.i.i38, align 8
+  %31 = shl i64 %28, 4
+  %32 = tail call ptr @realloc(ptr %30, i64 %31)
+  store ptr %32, ptr %memberidx2.i.i38, align 8
+  %.pre71 = load i64, ptr %memberidx.i34, align 4
+  br label %Array_ArgNode____sl__.exit42
+
+Array_ArgNode____sl__.exit42:                     ; preds = %Parser_new_lines.exit.Array_ArgNode____sl__.exit42_crit_edge, %if.entry.i39
+  %33 = phi ptr [ %.pre72, %Parser_new_lines.exit.Array_ArgNode____sl__.exit42_crit_edge ], [ %32, %if.entry.i39 ]
+  %34 = phi i64 [ %27, %Parser_new_lines.exit.Array_ArgNode____sl__.exit42_crit_edge ], [ %.pre71, %if.entry.i39 ]
+  %35 = add nsw i64 %34, 1
+  store i64 %35, ptr %memberidx.i34, align 4
+  %memberidx4.i40 = getelementptr inbounds %Array_ArgNode_, ptr %1, i64 0, i32 1
+  %ptridx.i41 = getelementptr inbounds ptr, ptr %33, i64 %34
+  store ptr %26, ptr %ptridx.i41, align 8
+  %36 = load ptr, ptr %memberidx.i, align 8
+  %37 = load i64, ptr %36, align 4
+  %38 = icmp eq i64 %37, 3
+  %39 = load ptr, ptr %memberidx2.i.i, align 8
+  %memberidx3.i45 = getelementptr inbounds %Array_FloError_, ptr %39, i64 0, i32 2
+  %40 = load i64, ptr %memberidx3.i45, align 4
+  %41 = icmp eq i64 %40, 0
+  %42 = and i1 %38, %41
+  br i1 %42, label %while.entry.preheader, label %while.end
+
+while.entry.preheader:                            ; preds = %Array_ArgNode____sl__.exit42
+  %memberidx.i11.i50 = getelementptr inbounds %Parser, ptr %0, i64 0, i32 3
+  br label %while.entry
+
+while.entry:                                      ; preds = %while.entry.preheader, %Array_ArgNode____sl__.exit
+  %43 = tail call fastcc ptr @Parser_eat(ptr nonnull %0, i64 3)
+  %44 = load ptr, ptr %memberidx.i, align 8
+  %45 = load i64, ptr %44, align 4
+  %46 = icmp eq i64 %45, 33
+  %47 = load ptr, ptr %memberidx2.i.i, align 8
+  %memberidx3.i.i49 = getelementptr inbounds %Array_FloError_, ptr %47, i64 0, i32 2
+  %48 = load i64, ptr %memberidx3.i.i49, align 4
+  %49 = icmp eq i64 %48, 0
+  %50 = and i1 %46, %49
+  br i1 %50, label %while.entry.i52.preheader, label %Parser_new_lines.exit61
+
+while.entry.i52.preheader:                        ; preds = %while.entry
+  %51 = load ptr, ptr %0, align 8
+  %memberidx2.i12.i51 = getelementptr inbounds %Array_Token_, ptr %51, i64 0, i32 2
+  %memberidx.i.i.i54 = getelementptr inbounds %Array_Token_, ptr %51, i64 0, i32 1
+  %52 = load i64, ptr %memberidx.i11.i50, align 4
+  %53 = load i64, ptr %memberidx2.i12.i51, align 4
+  %54 = icmp slt i64 %52, %53
+  br i1 %54, label %while.entry.i52, label %while.entry.i52.us
+
+while.entry.i52.us:                               ; preds = %while.entry.i52.preheader, %while.entry.i52.us
+  br label %while.entry.i52.us
+
+while.entry.i52:                                  ; preds = %while.entry.i52.preheader, %Parser_advance.exit.i60
+  %55 = phi i64 [ %63, %Parser_advance.exit.i60 ], [ %52, %while.entry.i52.preheader ]
+  %56 = load i64, ptr %memberidx2.i12.i51, align 4
+  %57 = icmp slt i64 %55, %56
+  br i1 %57, label %if.entry.i.i56, label %Parser_advance.exit.i60
+
+if.entry.i.i56:                                   ; preds = %while.entry.i52
+  %58 = add nsw i64 %55, 1
+  store i64 %58, ptr %memberidx.i11.i50, align 4
+  %59 = load ptr, ptr %memberidx.i.i.i54, align 8
+  %ptridx.i.i.i55 = getelementptr inbounds ptr, ptr %59, i64 %58
+  %60 = load ptr, ptr %ptridx.i.i.i55, align 8
+  store ptr %60, ptr %memberidx.i, align 8
+  %.pre73 = load i64, ptr %60, align 4
+  %.pre74 = load i64, ptr %memberidx3.i.i49, align 4
+  br label %Parser_advance.exit.i60
+
+Parser_advance.exit.i60:                          ; preds = %if.entry.i.i56, %while.entry.i52
+  %61 = phi i64 [ %.pre74, %if.entry.i.i56 ], [ 0, %while.entry.i52 ]
+  %62 = phi i64 [ %.pre73, %if.entry.i.i56 ], [ 33, %while.entry.i52 ]
+  %63 = phi i64 [ %58, %if.entry.i.i56 ], [ %55, %while.entry.i52 ]
+  %64 = icmp eq i64 %62, 33
+  %65 = icmp eq i64 %61, 0
+  %66 = and i1 %64, %65
+  br i1 %66, label %while.entry.i52, label %Parser_new_lines.exit61
+
+Parser_new_lines.exit61:                          ; preds = %Parser_advance.exit.i60, %while.entry
+  %67 = tail call fastcc ptr @Parser_parse_arg(ptr nonnull %0)
+  %68 = load i64, ptr %memberidx.i34, align 4
+  %69 = load i64, ptr %memberidx1.i35, align 4
+  %.not.i = icmp slt i64 %68, %69
+  br i1 %.not.i, label %Parser_new_lines.exit61.Array_ArgNode____sl__.exit_crit_edge, label %if.entry.i
+
+Parser_new_lines.exit61.Array_ArgNode____sl__.exit_crit_edge: ; preds = %Parser_new_lines.exit61
+  %.pre76 = load ptr, ptr %memberidx4.i40, align 8
   br label %Array_ArgNode____sl__.exit
 
-if.entry.i:                                       ; preds = %2
-  %6 = shl nuw i64 %5, 1
-  store i64 %6, ptr %memberidx1.i, align 4
-  %memberidx2.i.i = getelementptr inbounds %Array_ArgNode_, ptr %1, i64 0, i32 1
-  %7 = load ptr, ptr %memberidx2.i.i, align 8
-  %8 = shl i64 %5, 4
-  %9 = tail call ptr @realloc(ptr %7, i64 %8)
-  store ptr %9, ptr %memberidx2.i.i, align 8
-  %.pre = load i64, ptr %memberidx.i, align 4
+if.entry.i:                                       ; preds = %Parser_new_lines.exit61
+  %70 = shl nuw i64 %69, 1
+  store i64 %70, ptr %memberidx1.i35, align 4
+  %71 = load ptr, ptr %memberidx4.i40, align 8
+  %72 = shl i64 %69, 4
+  %73 = tail call ptr @realloc(ptr %71, i64 %72)
+  store ptr %73, ptr %memberidx4.i40, align 8
+  %.pre75 = load i64, ptr %memberidx.i34, align 4
   br label %Array_ArgNode____sl__.exit
 
-Array_ArgNode____sl__.exit:                       ; preds = %.Array_ArgNode____sl__.exit_crit_edge, %if.entry.i
-  %10 = phi ptr [ %.pre24, %.Array_ArgNode____sl__.exit_crit_edge ], [ %9, %if.entry.i ]
-  %11 = phi i64 [ %4, %.Array_ArgNode____sl__.exit_crit_edge ], [ %.pre, %if.entry.i ]
-  %12 = add nsw i64 %11, 1
-  store i64 %12, ptr %memberidx.i, align 4
-  %memberidx4.i = getelementptr inbounds %Array_ArgNode_, ptr %1, i64 0, i32 1
-  %ptridx.i = getelementptr inbounds ptr, ptr %10, i64 %11
-  store ptr %3, ptr %ptridx.i, align 8
-  %memberidx = getelementptr inbounds %Parser, ptr %0, i64 0, i32 2
-  %13 = load ptr, ptr %memberidx, align 8
-  %14 = load i64, ptr %13, align 4
-  %15 = icmp eq i64 %14, 3
-  %memberidx2.i = getelementptr inbounds %Parser, ptr %0, i64 0, i32 1
-  %16 = load ptr, ptr %memberidx2.i, align 8
-  %memberidx3.i = getelementptr inbounds %Array_FloError_, ptr %16, i64 0, i32 2
-  %17 = load i64, ptr %memberidx3.i, align 4
-  %18 = icmp eq i64 %17, 0
-  %19 = and i1 %15, %18
-  br i1 %19, label %while.entry, label %while.end
+Array_ArgNode____sl__.exit:                       ; preds = %Parser_new_lines.exit61.Array_ArgNode____sl__.exit_crit_edge, %if.entry.i
+  %74 = phi ptr [ %.pre76, %Parser_new_lines.exit61.Array_ArgNode____sl__.exit_crit_edge ], [ %73, %if.entry.i ]
+  %75 = phi i64 [ %68, %Parser_new_lines.exit61.Array_ArgNode____sl__.exit_crit_edge ], [ %.pre75, %if.entry.i ]
+  %76 = add nsw i64 %75, 1
+  store i64 %76, ptr %memberidx.i34, align 4
+  %ptridx.i = getelementptr inbounds ptr, ptr %74, i64 %75
+  store ptr %67, ptr %ptridx.i, align 8
+  %77 = load ptr, ptr %memberidx.i, align 8
+  %78 = load i64, ptr %77, align 4
+  %79 = icmp eq i64 %78, 3
+  %80 = load ptr, ptr %memberidx2.i.i, align 8
+  %memberidx3.i = getelementptr inbounds %Array_FloError_, ptr %80, i64 0, i32 2
+  %81 = load i64, ptr %memberidx3.i, align 4
+  %82 = icmp eq i64 %81, 0
+  %83 = and i1 %79, %82
+  br i1 %83, label %while.entry, label %while.end
 
-while.entry:                                      ; preds = %Array_ArgNode____sl__.exit, %Array_ArgNode____sl__.exit23
-  %20 = tail call fastcc ptr @Parser_eat(ptr nonnull %0, i64 3)
-  %21 = tail call fastcc ptr @Parser_parse_arg(ptr nonnull %0)
-  %22 = load i64, ptr %memberidx.i, align 4
-  %23 = load i64, ptr %memberidx1.i, align 4
-  %.not.i17 = icmp slt i64 %22, %23
-  br i1 %.not.i17, label %while.entry.Array_ArgNode____sl__.exit23_crit_edge, label %if.entry.i20
+while.end:                                        ; preds = %Array_ArgNode____sl__.exit, %Array_ArgNode____sl__.exit42
+  %84 = phi i64 [ %40, %Array_ArgNode____sl__.exit42 ], [ %81, %Array_ArgNode____sl__.exit ]
+  %85 = phi ptr [ %39, %Array_ArgNode____sl__.exit42 ], [ %80, %Array_ArgNode____sl__.exit ]
+  %86 = phi i64 [ %37, %Array_ArgNode____sl__.exit42 ], [ %78, %Array_ArgNode____sl__.exit ]
+  %87 = icmp eq i64 %86, 33
+  %memberidx3.i.i17 = getelementptr inbounds %Array_FloError_, ptr %85, i64 0, i32 2
+  %88 = icmp eq i64 %84, 0
+  %89 = and i1 %87, %88
+  br i1 %89, label %while.entry.i20.preheader, label %Parser_new_lines.exit29
 
-while.entry.Array_ArgNode____sl__.exit23_crit_edge: ; preds = %while.entry
-  %.pre26 = load ptr, ptr %memberidx4.i, align 8
-  br label %Array_ArgNode____sl__.exit23
+while.entry.i20.preheader:                        ; preds = %while.end
+  %memberidx.i11.i18 = getelementptr inbounds %Parser, ptr %0, i64 0, i32 3
+  %90 = load ptr, ptr %0, align 8
+  %memberidx2.i12.i19 = getelementptr inbounds %Array_Token_, ptr %90, i64 0, i32 2
+  %memberidx.i.i.i22 = getelementptr inbounds %Array_Token_, ptr %90, i64 0, i32 1
+  %91 = load i64, ptr %memberidx.i11.i18, align 4
+  %92 = load i64, ptr %memberidx2.i12.i19, align 4
+  %93 = icmp slt i64 %91, %92
+  br i1 %93, label %while.entry.i20, label %while.entry.i20.us
 
-if.entry.i20:                                     ; preds = %while.entry
-  %24 = shl nuw i64 %23, 1
-  store i64 %24, ptr %memberidx1.i, align 4
-  %25 = load ptr, ptr %memberidx4.i, align 8
-  %26 = shl i64 %23, 4
-  %27 = tail call ptr @realloc(ptr %25, i64 %26)
-  store ptr %27, ptr %memberidx4.i, align 8
-  %.pre25 = load i64, ptr %memberidx.i, align 4
-  br label %Array_ArgNode____sl__.exit23
+while.entry.i20.us:                               ; preds = %while.entry.i20.preheader, %while.entry.i20.us
+  br label %while.entry.i20.us
 
-Array_ArgNode____sl__.exit23:                     ; preds = %while.entry.Array_ArgNode____sl__.exit23_crit_edge, %if.entry.i20
-  %28 = phi ptr [ %.pre26, %while.entry.Array_ArgNode____sl__.exit23_crit_edge ], [ %27, %if.entry.i20 ]
-  %29 = phi i64 [ %22, %while.entry.Array_ArgNode____sl__.exit23_crit_edge ], [ %.pre25, %if.entry.i20 ]
-  %30 = add nsw i64 %29, 1
-  store i64 %30, ptr %memberidx.i, align 4
-  %ptridx.i22 = getelementptr inbounds ptr, ptr %28, i64 %29
-  store ptr %21, ptr %ptridx.i22, align 8
-  %31 = load ptr, ptr %memberidx, align 8
-  %32 = load i64, ptr %31, align 4
-  %33 = icmp eq i64 %32, 3
-  %34 = load ptr, ptr %memberidx2.i, align 8
-  %memberidx3.i14 = getelementptr inbounds %Array_FloError_, ptr %34, i64 0, i32 2
-  %35 = load i64, ptr %memberidx3.i14, align 4
-  %36 = icmp eq i64 %35, 0
-  %37 = and i1 %33, %36
-  br i1 %37, label %while.entry, label %while.end
+while.entry.i20:                                  ; preds = %while.entry.i20.preheader, %Parser_advance.exit.i28
+  %94 = phi i64 [ %102, %Parser_advance.exit.i28 ], [ %91, %while.entry.i20.preheader ]
+  %95 = load i64, ptr %memberidx2.i12.i19, align 4
+  %96 = icmp slt i64 %94, %95
+  br i1 %96, label %if.entry.i.i24, label %Parser_advance.exit.i28
 
-while.end:                                        ; preds = %Array_ArgNode____sl__.exit23, %Array_ArgNode____sl__.exit
+if.entry.i.i24:                                   ; preds = %while.entry.i20
+  %97 = add nsw i64 %94, 1
+  store i64 %97, ptr %memberidx.i11.i18, align 4
+  %98 = load ptr, ptr %memberidx.i.i.i22, align 8
+  %ptridx.i.i.i23 = getelementptr inbounds ptr, ptr %98, i64 %97
+  %99 = load ptr, ptr %ptridx.i.i.i23, align 8
+  store ptr %99, ptr %memberidx.i, align 8
+  %.pre77 = load i64, ptr %99, align 4
+  %.pre78 = load i64, ptr %memberidx3.i.i17, align 4
+  br label %Parser_advance.exit.i28
+
+Parser_advance.exit.i28:                          ; preds = %if.entry.i.i24, %while.entry.i20
+  %100 = phi i64 [ %.pre78, %if.entry.i.i24 ], [ 0, %while.entry.i20 ]
+  %101 = phi i64 [ %.pre77, %if.entry.i.i24 ], [ 33, %while.entry.i20 ]
+  %102 = phi i64 [ %97, %if.entry.i.i24 ], [ %94, %while.entry.i20 ]
+  %103 = icmp eq i64 %101, 33
+  %104 = icmp eq i64 %100, 0
+  %105 = and i1 %103, %104
+  br i1 %105, label %while.entry.i20, label %Parser_new_lines.exit29
+
+Parser_new_lines.exit29:                          ; preds = %Parser_advance.exit.i28, %while.end
   ret void
 }
 
@@ -29126,7 +29466,7 @@ for.body:                                         ; preds = %if.entry, %ifend7
   %memberidx6.i = getelementptr inbounds %string, ptr %14, i64 0, i32 1
   %20 = load ptr, ptr %memberidx6.i, align 8
   %21 = load i64, ptr %memberidx1.i, align 4
-  tail call void @llvm.memcpy.p0.p0.i64(ptr align 2147483648 %19, ptr align 8 %20, i64 %21, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr align 536870912 %19, ptr align 8 %20, i64 %21, i1 false)
   store i64 %16, ptr %memberidx1.i.i, align 4
   %22 = load ptr, ptr %memberidx, align 8
   %memberidx4 = getelementptr inbounds %Array_Type_, ptr %22, i64 0, i32 2
@@ -29186,7 +29526,7 @@ if.entry5:                                        ; preds = %for.body
   store ptr %41, ptr %memberidx.i.i, align 8
   %42 = getelementptr inbounds i8, ptr %41, i64 %16
   %43 = load i16, ptr %38, align 8
-  store i16 %43, ptr %42, align 2147483648
+  store i16 %43, ptr %42, align 536870912
   store i64 %40, ptr %memberidx1.i.i, align 4
   %.pre = load ptr, ptr %memberidx, align 8
   %memberidx1.phi.trans.insert = getelementptr inbounds %Array_Type_, ptr %.pre, i64 0, i32 2
@@ -29353,7 +29693,7 @@ for.body44:                                       ; preds = %if.entry38, %for.bo
   %memberidx6.i129 = getelementptr inbounds %string, ptr %111, i64 0, i32 1
   %116 = load ptr, ptr %memberidx6.i129, align 8
   %117 = load i64, ptr %memberidx1.i127, align 4
-  tail call void @llvm.memcpy.p0.p0.i64(ptr align 2147483648 %115, ptr align 8 %116, i64 %117, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr align 536870912 %115, ptr align 8 %116, i64 %117, i1 false)
   store i64 %113, ptr %memberidx1.i.i119, align 4
   %118 = add nuw nsw i64 %storemerge138, 1
   %119 = load ptr, ptr %memberidx47, align 8
@@ -29635,7 +29975,7 @@ for.body:                                         ; preds = %for.body.lr.ph, %fo
   store ptr %79, ptr %memberidx.i.i81, align 8
   %80 = load i64, ptr %memberidx1.i.i82, align 4
   %81 = getelementptr inbounds i8, ptr %79, i64 %80
-  call void @llvm.memcpy.p0.p0.i64(ptr align 2147483648 %81, ptr align 8 %74, i64 %73, i1 false)
+  call void @llvm.memcpy.p0.p0.i64(ptr align 536870912 %81, ptr align 8 %74, i64 %73, i1 false)
   store i64 %77, ptr %memberidx1.i.i82, align 4
   %82 = load ptr, ptr %memberidx18, align 8
   %83 = load ptr, ptr %memberidx.i86, align 8
@@ -45478,7 +45818,7 @@ Array_Type____adda__.exit:                        ; preds = %while.entry.i, %get
   %memberidx8.i = getelementptr inbounds %Array_Type_, ptr %65, i64 0, i32 1
   %79 = load ptr, ptr %memberidx8.i, align 8
   %80 = shl i64 %76, 3
-  call void @llvm.memcpy.p0.p0.i64(ptr nonnull align 2147483648 %78, ptr align 8 %79, i64 %80, i1 false)
+  call void @llvm.memcpy.p0.p0.i64(ptr nonnull align 536870912 %78, ptr align 8 %79, i64 %80, i1 false)
   %81 = load i64, ptr %memberidx2.i49, align 4
   %82 = add nuw i64 %81, 1
   store i64 %82, ptr %memberidx.i51, align 4
@@ -47483,7 +47823,7 @@ Array_Type____adda__.exit:                        ; preds = %while.entry.i185, %
   %memberidx8.i187 = getelementptr inbounds %Array_Type_, ptr %92, i64 0, i32 1
   %111 = load ptr, ptr %memberidx8.i187, align 8
   %112 = shl i64 %107, 3
-  call void @llvm.memcpy.p0.p0.i64(ptr align 2147483648 %110, ptr align 8 %111, i64 %112, i1 false)
+  call void @llvm.memcpy.p0.p0.i64(ptr align 536870912 %110, ptr align 8 %111, i64 %112, i1 false)
   %113 = load i64, ptr %memberidx.i176, align 4
   %114 = load i64, ptr %memberidx2.i182, align 4
   %115 = add nuw i64 %114, %113
@@ -47853,7 +48193,7 @@ Array_LLVMTypeRef____adda__.exit:                 ; preds = %while.entry.i273, %
   %267 = getelementptr inbounds ptr, ptr %266, i64 %265
   %268 = load ptr, ptr %memberidx2.i120, align 8
   %269 = shl i64 %254, 3
-  call void @llvm.memcpy.p0.p0.i64(ptr align 2147483648 %267, ptr align 8 %268, i64 %269, i1 false)
+  call void @llvm.memcpy.p0.p0.i64(ptr align 536870912 %267, ptr align 8 %268, i64 %269, i1 false)
   %270 = load i64, ptr %memberidx1.i269, align 4
   %271 = add nuw i64 %270, %254
   store i64 %271, ptr %memberidx1.i269, align 4
@@ -48721,7 +49061,7 @@ CodeGen_createGlobalLLVMString.exit:              ; preds = %Map_string_LLVMValu
   store ptr %str.0.i, ptr %ptridx1, align 8
   %41 = getelementptr inbounds ptr, ptr %40, i64 2
   %42 = shl i64 %4, 3
-  call void @llvm.memcpy.p0.p0.i64(ptr nonnull align 2147483648 %41, ptr align 8 %3, i64 %42, i1 false)
+  call void @llvm.memcpy.p0.p0.i64(ptr nonnull align 536870912 %41, ptr align 8 %3, i64 %42, i1 false)
   %arg_types = alloca [2 x ptr], align 8
   store ptr %8, ptr %arg_types, align 8
   %43 = getelementptr inbounds ptr, ptr %arg_types, i64 1

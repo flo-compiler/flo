@@ -966,16 +966,20 @@ class Parser {
         return arg_node
     }
     private parse_args(this, args: ArgNode[]) {
+        this.new_lines()
         args << this.parse_arg()
         while this.current_token.ttype == TokType.COMMA and this.can_parse() {
             this.eat(TokType.COMMA)
+            this.new_lines()
             args << this.parse_arg()
         }
+        this.new_lines()
     }
     private parse_function(this): FunctionDeclarationNode {
         let fnc_node = new FunctionDeclarationNode()
         fnc_node.name = this.eat(TokType.IDENTIFER) as IdentifierToken
         this.eat(TokType.LPAR)
+        this.new_lines()
         if this.current_token.ttype != TokType.RPAR
             this.parse_args(fnc_node.args)
         
@@ -987,6 +991,7 @@ class Parser {
             let identifier_tok = new IdentifierToken("void", new FloRange(0, 0, 0, 0))
             fnc_node.return_type = new RecordTypeNode(identifier_tok, identifier_tok.range)
         }
+        this.new_lines()
         if this.current_token.ttype == TokType.LBRACE {
             fnc_node.block = this.parse_block()
         } else
@@ -996,16 +1001,18 @@ class Parser {
     private parse_method(this): MethodNode{
         let method_node = new MethodNode(this.eat(TokType.IDENTIFER) as IdentifierToken)
         this.eat(TokType.LPAR)
-        if this.current_token.ttype != TokType.RPAR
+        this.new_lines()
+        if this.current_token.ttype != TokType.RPAR {
             if (this.current_token as IdentifierToken).value == "this" {
                 method_node.is_static = false
                 this.advance()
             }
-            if this.current_token.ttype != TokType.RPAR {
-                if !method_node.is_static
-                    this.eat(TokType.COMMA)
-                this.parse_args(method_node.args)
-            }
+        }
+        if this.current_token.ttype != TokType.RPAR {
+            if !method_node.is_static
+                this.eat(TokType.COMMA)
+            this.parse_args(method_node.args)
+        }
         this.eat(TokType.RPAR)
         if this.current_token.ttype == TokType.COL {
             this.advance()
@@ -1014,6 +1021,7 @@ class Parser {
             let identifier_tok = new IdentifierToken("void", new FloRange(0, 0, 0, 0))
             method_node.return_type = new RecordTypeNode(identifier_tok, identifier_tok.range)
         }
+        this.new_lines()
         if this.current_token.ttype == TokType.LBRACE {
             method_node.block = this.parse_block()
         } else
