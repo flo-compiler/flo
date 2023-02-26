@@ -13,17 +13,17 @@ fnc parse_args(size: int, args: u8**): string[] {
 }
 fnc system(cmd: u8*)
 fnc help(exec_file: string){
-    println("Usage: $exec_file <path> [OPTIONS]\n")
-    println("OPTIONS:")
-    println(" -h, --help\t\t\tShow this help message.")
-    println(" --print-ast\t\t\tPrint generated AST.")
-    println(" --emit <format>\t\tEmit output in a particular format. Options are:\n  \t\t\t\t\texe - Generates an executable.\n  \t\t\t\t\tllvm-ir - Generates a file containing LLVM IR.\n  \t\t\t\t\tllvm-bc - Generates a file containing LLVM bitcode.\n  \t\t\t\t\tobj - Generates an object file\n  \t\t\t\t\tasm - Generates Assembly code.")
-    println(" -o <file>\t\t\tSpecify file to put the output into.")
-    println(" --target <triple>\t\tCompile to specific target triple.")
-    println(" -l <lib>\t\t\tSpecify a library to link against.")
-    println(" -I\t\t\t\tSpecify runtime directory.")
-    println(" -O OPT_LEVEL \t\t\tSpecify the compiler's optimization level which is a\n \t\t\t\tvalue from 0-3.")
-    println(" -v, --version\t\t\tShow version.")
+    flo_println("Usage: $exec_file <path> [OPTIONS]\n")
+    flo_println("OPTIONS:")
+    flo_println(" -h, --help\t\t\tShow this help message.")
+    flo_println(" --print-ast\t\t\tPrint generated AST.")
+    flo_println(" --emit <format>\t\tEmit output in a particular format. Options are:\n  \t\t\t\t\texe - Generates an executable.\n  \t\t\t\t\tllvm-ir - Generates a file containing LLVM IR.\n  \t\t\t\t\tllvm-bc - Generates a file containing LLVM bitcode.\n  \t\t\t\t\tobj - Generates an object file\n  \t\t\t\t\tasm - Generates Assembly code.")
+    flo_println(" -o <file>\t\t\tSpecify file to put the output into.")
+    flo_println(" --target <triple>\t\tCompile to specific target triple.")
+    flo_println(" -l <lib>\t\t\tSpecify a library to link against.")
+    flo_println(" -I\t\t\t\tSpecify runtime directory.")
+    flo_println(" -O OPT_LEVEL \t\t\tSpecify the compiler's optimization level which is a\n \t\t\t\tvalue from 0-3.")
+    flo_println(" -v, --version\t\t\tShow version.")
 }
 fnc flag(args: string[], name: string): bool {
     return name in args

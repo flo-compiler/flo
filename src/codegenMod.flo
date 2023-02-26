@@ -63,7 +63,7 @@ class GeneratedModule {
         }
         let main_fnc = LLVMGetNamedFunction(this.llvm_mod, "main")
         if main_fnc == null {
-            println("Main function not found in module; can't execute")
+            panic("Main function not found in module; can't execute")
             LLVMDisposeExecutionEngine(engine)
             return 1
         }

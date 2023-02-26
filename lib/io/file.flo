@@ -10,12 +10,16 @@ class File {
         this.fd = fd
     }
     public open_for_reading(path: string): File {
-        let fd = fopen(path.to_cstring(), "r")
+        let filename = path.to_cstring()
+        let fd = fopen(filename, "r")
+        del filename
         if fd == null return null
         return new File(fd)
     }
     public open_for_writing(path: string): File {
-        let fd = fopen(path.to_cstring(), "wb")
+        let filename = path.to_cstring()
+        let fd = fopen(filename, "wb")
+        del filename
         if fd == null return null
         return new File(fd)
     }
@@ -42,7 +46,10 @@ class File {
         return fwrite(s.get_bytes(), 1, s.length, this.fd)
     }
     public exists(path: string): bool {
-        return access(path.to_cstring(), F_OK) == 0
+        let filename = path.to_cstring()
+        let res = access(filename, F_OK) == 0
+        del filename 
+        return res
     }
     public close(this){
         fclose(this.fd)

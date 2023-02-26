@@ -17,11 +17,20 @@ enum COLORS {
     RED
     RESET
 }
+fnc flo_println(msg: string){
+    println(msg)
+    del msg
+}
+fnc flo_print(msg: string){
+    println(msg)
+    del msg
+}
 fnc change_print_color(color: COLORS) {
-    print(color == COLORS.RED ? "\033[1;31m" : "\033[0m")
+    flo_print(color == COLORS.RED ? "\033[1;31m" : "\033[0m")
 }
 fnc exit(code: int)
 fnc panic(message: string){
-    println("Panic: $message")
+    flo_print("Panic: ")
+    flo_println(message)
     exit(-1)
 }

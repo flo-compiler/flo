@@ -1,4 +1,4 @@
-import FloRange, COLORS, change_print_color in "utils"
+import FloRange, COLORS, change_print_color, flo_println, flo_print in "utils"
 enum ErrorKind {
     ILLEGALCHAR
     NAME
@@ -7,7 +7,6 @@ enum ErrorKind {
     GEN
     TYPE
 }
-
 class FloError {
     kind: ErrorKind
     message: string
@@ -27,40 +26,39 @@ fnc print_error_line(text: string, range: FloRange){
     let end = get_next_line_index(text, range.end)
     let start_line = range.start - range.col
     let line = text.substring(start_line, end - start_line)
-    println(line)
+    flo_println(line)
     let space_num = range.col
     let arrow_num = range.end - range.start
     for _ in 0..space_num {
-        print(" ")
+        flo_print(" ")
     }
     change_print_color(COLORS.RED)
     for _ in  0..arrow_num {
-        print("^")
+        flo_print("^")
     }
     change_print_color(COLORS.RESET)
-    print("\n")
-    del line
+    flo_print("\n")
 }
 fnc print_message_error(kind: ErrorKind, message: string){
     change_print_color(COLORS.RED)
     if kind == ErrorKind.ILLEGALCHAR {
-        print("[Illegal Character]: ")
+        flo_print("[Illegal Character]: ")
     } else if kind == ErrorKind.SYNTAX {
-        print("[Syntax Error]: ")
+        flo_print("[Syntax Error]: ")
     } else if kind == ErrorKind.IO {
-        print("[IO Error]: ")
+        flo_print("[IO Error]: ")
     } else if kind == ErrorKind.TYPE {
-        print("[Type Error]: ")
+        flo_print("[Type Error]: ")
     } else if kind == ErrorKind.NAME {
-        print("[Name Error]: ")
+        flo_print("[Name Error]: ")
     } else {
-        print("[Error]: ")
+        flo_print("[Error]: ")
     }
     change_print_color(COLORS.RESET)
-    println(message)
+    flo_println(message)
 }
 fnc print_error(error: FloError, filename: string, content: string){
     print_message_error(error.kind, error.message)
-    println("File '$filename', line $(error.range.line)")
+    flo_println("File '$filename', line $(error.range.line)")
     print_error_line(content, error.range)
 }
