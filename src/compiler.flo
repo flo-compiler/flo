@@ -14,6 +14,10 @@ class FloFile {
         this.abspath = abspath
         this.relpath = relpath
     }
+    private __del__(this){
+        del this.abspath
+        del this.relpath
+    }
 }
 class Compiler {
     public current_file: FileId
@@ -33,12 +37,16 @@ class Compiler {
     }
     public set_std_path(this, std_dir_path: string){
         this.std_dir_path = std_dir_path
-        this.builtin_path = Path.join(std_dir_path, "builtins/builtins.flo")
+        let builtins_file_path = "builtins/builtins.flo"
+        this.builtin_path = Path.join(std_dir_path, builtins_file_path)
+        del builtins_file_path
     }
     private find_module_path(this, fpath: string): string {
-        let path = fpath.replace("@", this.std_dir_path)
-        if !path.ends_with(".flo")
-            path += ".flo"
+        let path = fpath.replace(string.from_bytes("@", 1), this.std_dir_path)
+        let extension = string.from_bytes(".flo", 4)
+        if !path.ends_with(extension){
+            path += extension
+        }
         return Path.abspath(path)
     }
     public register_file(this, fpath: string): FileId {
@@ -50,13 +58,16 @@ class Compiler {
         this.files << new FloFile(abspath, fpath)
         return file_id
     }
+    private unlink_current_file_contents(this){
+        if this.current_file_contents != null {
+            del this.current_file_contents
+        }
+    }
     public set_current_file(this, file_id: FileId): bool {
         let file_path = this.files[file_id.id]
         if !File.exists(file_path.abspath) return false
         let file = File.open_for_reading(file_path.abspath)
-        if this.current_file_contents != null {
-            del this.current_file_contents
-        }
+        this.unlink_current_file_contents()
         this.current_file_contents = file.read_all()
         this.current_file = file_id
         file.close()
@@ -71,5 +82,20 @@ class Compiler {
     }
     public add_builtins(this): FileId {
         return this.register_file(this.builtin_path)
-    }   
+    }
+    public __del__(this){
+        for file in this.files {
+            del file
+        }
+        del this.files
+        for error in this.errors {
+            del error
+        }
+        del this.errors
+        for file_id in this.file_ids {
+            del file_id
+        }
+        del this.file_ids
+        this.unlink_current_file_contents()
+    }
 }

@@ -75,7 +75,13 @@ class GeneratedModule {
         return ret
     }
     public set_target_machine(this, triple_str: string){
-        let triple = triple_str == "" ? LLVMGetDefaultTargetTriple() : triple_str.to_cstring()
+        let triple: u8*(triple_str.length + 1)
+        if triple_str.length == 0 {
+            triple = LLVMGetDefaultTargetTriple()
+        } else {
+            triple.copy_from(triple_str.get_bytes(), triple_str.length)
+            triple[triple_str.length] = 0
+        }
         let target: LLVMTargetRef = null
         if LLVMGetTargetFromTriple(triple, &target, &this.errors) {
             this.print_errors()
@@ -83,24 +89,37 @@ class GeneratedModule {
         this.tm = LLVMCreateTargetMachine(target, triple, "generic", LLVMGetHostCPUFeatures(), LLVMCodeGenOptLevel.LLVMCodeGenLevelAggressive, LLVMRelocMode.LLVMRelocDefault, LLVMCodeModel.LLVMCodeModelDefault)
         LLVMSetDataLayout(this.llvm_mod, LLVMCreateTargetDataLayout(this.tm))
         LLVMSetTarget(this.llvm_mod, LLVMGetTargetMachineTriple(this.tm))
+        del triple_str
     }
     public write_obj(this, filename: string){
-        if LLVMTargetMachineEmitToFile(this.tm, this.llvm_mod, filename.to_cstring(), LLVMCodeGenFileType.LLVMObjectFile, &this.errors) {
+        let filename_cstr = filename.to_cstring()
+        if LLVMTargetMachineEmitToFile(this.tm, this.llvm_mod, filename_cstr, LLVMCodeGenFileType.LLVMObjectFile, &this.errors) {
             this.print_errors()
         }
+        del filename_cstr
+        del filename
     }
     public write_ir(this, filename: string){
-        if LLVMPrintModuleToFile(this.llvm_mod, filename.to_cstring(), &this.errors) {
+        let filename_cstr = filename.to_cstring()
+        if LLVMPrintModuleToFile(this.llvm_mod, filename_cstr, &this.errors) {
             this.print_errors()
         }
+        del filename_cstr
+        del filename
     }
     public write_bc(this, filename: string) {
-        LLVMWriteBitcodeToFile(this.llvm_mod, filename.to_cstring())
+        let filename_cstr = filename.to_cstring()
+        LLVMWriteBitcodeToFile(this.llvm_mod, filename_cstr)
+        del filename_cstr
+        del filename
     }
     public write_asm(this, filename: string) {
-        if LLVMTargetMachineEmitToFile(this.tm, this.llvm_mod, filename.to_cstring(), LLVMCodeGenFileType.LLVMAssemblyFile, &this.errors){
+        let filename_cstr = filename.to_cstring()
+        if LLVMTargetMachineEmitToFile(this.tm, this.llvm_mod, filename_cstr, LLVMCodeGenFileType.LLVMAssemblyFile, &this.errors){
             this.print_errors()
         }
+        del filename_cstr
+        del filename
     }
     private __del__(this){
         LLVMShutdown()

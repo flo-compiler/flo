@@ -31,12 +31,14 @@ fnc flag(args: string[], name: string): bool {
 fnc flag_value_or(args: string[], name: string, default: string): string {
     let idx = args.find(name)
     if idx != -1 {
-        if args.length > ++idx
+        if args.length > ++idx {
+            if default != null del default
             return args[idx as uint]
-        else {
+        } else {
             print_message_error(ErrorKind.GEN, "Missing value after '$name' argument.")
         }
     }
+    del name
     return default
 }
 fnc main(argc: int, argv: u8**): int {
@@ -44,7 +46,7 @@ fnc main(argc: int, argv: u8**): int {
     if argc >= 2 {
         let args = parse_args(argc, argv)
         if flag(args, "-v") or flag(args, "--version"){
-            println("v0.01@selfhost")
+            flo_println("v0.01@selfhost")
             return 0
         }
         if flag(args, "-h") or flag(args, "--help"){
@@ -52,10 +54,10 @@ fnc main(argc: int, argv: u8**): int {
             return 0
         }
         let filename = args[1]
-        let compiler: Compiler()
+        let compiler = new Compiler()
         if flag(args, "-I") {
-            let rt_path = flag_value_or(args, "-I", "")
-            if rt_path != "" {
+            let rt_path = flag_value_or(args, "-I", null)
+            if rt_path != null {
                 compiler.set_std_path(rt_path)
             }
         }

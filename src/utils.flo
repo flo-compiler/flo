@@ -22,7 +22,7 @@ fnc flo_println(msg: string){
     del msg
 }
 fnc flo_print(msg: string){
-    println(msg)
+    print(msg)
     del msg
 }
 fnc change_print_color(color: COLORS) {

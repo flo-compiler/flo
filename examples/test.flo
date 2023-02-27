@@ -1,4 +1,5 @@
 fnc main(): int {
-    println("Hello world")
+    print
+    ln("Hello world")
     return 0
 }
