@@ -1120,23 +1120,23 @@ class CodeGen {
         let var_id = var_decl.var_id
         let var = get_var(this.program, var_id)
         let expression = var.value
-        let expression_val_type = var.value_type
-        let ty = this.codegen_type(expression_val_type)
-        let name = var_decl.name.to_cstring()
         let ptr: LLVMValueRef = null
         if var_decl.is_static {
+            let name = var_decl.name.to_cstring()
+            let expression_val_type = var.value_type
+            let ty = this.codegen_type(expression_val_type)
             ptr = LLVMAddGlobal(this.module, ty, name)
             if expression != null {
                 let value = this.codegen_expression(builder, expression)
                 LLVMSetInitializer(ptr, value)
             }
+            this.add_var(var_id, ptr)
         } else {
-            ptr = LLVMBuildAlloca(builder, ty, name)
+            ptr = this.get_var_from_varid(var_id)
             if expression != null {
                 this.store_expr_to_mem(builder, ptr, expression)
             }
         }
-        this.add_var(var_id, ptr)
     }
     private codegen_const_declaration(this, builder: LLVMBuilderRef, const_decl: ConstDeclaration){
         let const_id = const_decl.const_id
@@ -1183,6 +1183,26 @@ class CodeGen {
         }
         this.in_static_ctx = was_instatic_ctx
     }
+    private codegen_vars_alloc_funtion_scope(this, builder: LLVMBuilderRef, scope: ScopeId){
+        let current_scope = get_scope(this.program, scope)
+        for var_entry in current_scope.vars {
+            let var_name = var_entry.key
+            let var_id = var_entry.value
+            let var_value_type: Type
+            if var_id.kind == VarIdKind.VAR {
+                var_value_type = get_var(this.program, var_id).value_type
+            } else if var_id.kind == VarIdKind.FNC {
+                var_value_type = get_func(this.program, var_id).fnc_type
+            } else if var_id.kind == VarIdKind.CONST {
+                var_value_type = get_const(this.program, var_id as ConstId).value_type
+            }
+            let ptr = LLVMBuildAlloca(builder, this.codegen_type(var_value_type), var_name.to_cstring())
+            this.add_var(var_id, ptr)
+        }
+        for child_scope in current_scope.children {
+            this.codegen_vars_alloc_funtion_scope(builder, child_scope)
+        }
+    }
     private codegen_function(this, func: Function){
         let fn_name = func.name.to_cstring()
         let llvm_fnc = LLVMAddFunction(this.module, fn_name, this.codegen_type(func.fnc_type, false))
@@ -1193,12 +1213,11 @@ class CodeGen {
         }
         let func_builder = LLVMCreateBuilder()
         LLVMPositionBuilderAtEnd(func_builder, LLVMAppendBasicBlock(llvm_fnc, ""))
+        this.codegen_vars_alloc_funtion_scope(func_builder, func.scope)
         for let i = 0; i < func.args.length; i++ {
-            let arg = func.args[i]
+            let alloc = this.get_var_from_varid(func.args[i].id)
             let param = LLVMGetParam(llvm_fnc, i)
-            let alloc = LLVMBuildAlloca(func_builder, this.codegen_type(arg.value_type), arg.name.to_cstring())
             LLVMBuildStore(func_builder, param, alloc)
-            this.add_var(arg.id, alloc)
         }
         let prev_func = this.function
         this.function = llvm_fnc
@@ -1217,16 +1236,16 @@ class CodeGen {
             let entry_block = LLVMAppendBasicBlock(llvm_fnc, "")
             let func_builder = LLVMCreateBuilder()
             LLVMPositionBuilderAtEnd(func_builder, entry_block)
+            this.codegen_vars_alloc_funtion_scope(func_builder, method.scope)
             let offset = 0
             if !method.is_static {
-                let object_type = LLVMPointerType(struct_class.llvm_type)
                 let this_param = LLVMGetParam(llvm_fnc, 0)
-                let this_alloc = LLVMBuildAlloca(func_builder, object_type, "this")
                 let this_id = get_scope(this.program, method.scope).vars["this"]
+                let this_alloc = this.get_var_from_varid(this_id)
                 LLVMBuildStore(func_builder, this_param, this_alloc)
-                this.add_var(this_id, this_alloc)
                 if is_constructor {
                     if struct_class.vtable != null {
+                        let object_type = LLVMPointerType(struct_class.llvm_type)
                         let indices: LLVMValueRef[1] = [this.createLLVMInt(0)]
                         let vt_ptr =  LLVMBuildInBoundsGEP2(func_builder, object_type, this_param, &indices[0], indices.size, "")
                         LLVMBuildStore(func_builder, struct_class.vtable, vt_ptr)
@@ -1236,9 +1255,8 @@ class CodeGen {
                         let super_id = get_scope(this.program, method.scope).vars["super"]
                         if super_id != null {
                             let super_constructor = this.get_or_codegen_class_from_typeid(parent_ty.class_id).class_constructor
-                            let super_ptr = LLVMBuildAlloca(func_builder, object_type, "super")
-                            LLVMBuildStore(func_builder, super_constructor, super_ptr)
-                            this.add_var(super_id, super_ptr)
+                            let super_alloc = this.get_var_from_varid(super_id)
+                            LLVMBuildStore(func_builder, super_constructor, super_alloc)
                             this.super_functions[create_var_key(super_id)] = this_param
                         }
                     }
@@ -1246,11 +1264,9 @@ class CodeGen {
                 offset = 1
             }
             for let i = 0; i < method.args.length; i++ {
-                let arg = method.args[i]
                 let param = LLVMGetParam(llvm_fnc, i + offset)
-                let alloc = LLVMBuildAlloca(func_builder, this.codegen_type(arg.value_type), arg.name.to_cstring())
-                LLVMBuildStore(func_builder, param, alloc)
-                this.add_var(arg.id, alloc)
+                let param_alloc = this.get_var_from_varid(method.args[i].id)
+                LLVMBuildStore(func_builder, param, param_alloc)
             }
             let prev_func = this.function
             this.function = llvm_fnc

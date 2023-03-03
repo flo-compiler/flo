@@ -610,6 +610,7 @@ class Scope {
     public enums: [string: EnumId]
     public parent: ScopeId
     public type_aliases: [string: Type]
+    public children: ScopeId[]
     constructor(this, module_id: uint, id: uint){
         this.id = new ScopeId(module_id, id)
         this.vars = new Map<string, VarId>()
@@ -618,6 +619,7 @@ class Scope {
         this.enums = new Map<string, EnumId>()
         this.type_aliases = new Map<string, Type>()
         this.parent = null 
+        this.children = []
     }
     private __del__(this){
         del this.id
@@ -761,7 +763,6 @@ class Enum {
     }
 }
 class Module {
-    id: int
     name: string
     vars: Var[]
     consts: Const[]
@@ -1020,7 +1021,6 @@ class Generic {
 // Hint: For Generics and typed constraints consider Hidley-Milner Algorithm.
 class TypeChecker {
     private program: Program
-    private current_module: uint
     private current_class: ClassId
     private current_function: VarId
     private current_method: PropId
@@ -1031,7 +1031,6 @@ class TypeChecker {
     private generic_templates: [string: Generic]
     constructor(this, compiler: Compiler){
         this.compiler = compiler
-        this.current_module = 0
         this.in_loop = false
         this.program = new Program()
         this.generic_templates = new Map<string, Generic>()
@@ -1050,7 +1049,7 @@ class TypeChecker {
         return this.program.modules[id]
     }
     private get_current_module(this): Module {
-        return this.get_module(this.current_module)
+        return this.get_module(this.current_scope.module_id)
     }
     private get_current_scope(this): Scope {
         return get_scope(this.program, this.current_scope)
@@ -1171,9 +1170,9 @@ class TypeChecker {
         }
         return dump_type(ty, false)
     }
-    private create_scope(this): Scope {
-        let module = this.get_current_module()
-        let scope = new Scope(this.current_module, module.scopes.length)
+    private create_scope(this, module_id: uint): Scope {
+        let module = this.get_module(module_id)
+        let scope = new Scope(module_id, module.scopes.length)
         module.scopes << scope
         return scope
     }
@@ -1253,8 +1252,9 @@ class TypeChecker {
         return Type.unknown()
     }
     private create_child_scope_within_current_scope(this): Scope {
-        let new_scope = this.create_scope()
+        let new_scope = this.create_scope(this.current_scope.module_id)
         new_scope.parent = this.current_scope
+        this.get_current_scope().children << new_scope.id
         return new_scope
     } 
     private error(this, kind: ErrorKind, message: string, range: FloRange){
@@ -1271,18 +1271,15 @@ class TypeChecker {
         this.check_module(new ModuleAST(), "__generics__")
     }
     private switch_to_generic_module(this){
-        let generic_module_id = 0
-        this.current_module = generic_module_id
-        this.current_scope = this.get_module(generic_module_id).scope
+        this.current_scope = this.get_module(0).scope
     }
     private check_module(this, module_ast: ModuleAST, filename: string): Module {
         this.module_contains_generics = false
-        let prev_module = this.current_module
         let prev_scope = this.current_scope
         let module = new Module(filename)
-        this.current_module = this.program.modules.length
+        let current_module_id = this.program.modules.length
         this.program.modules << module
-        let module_scope = this.create_scope()
+        let module_scope = this.create_scope(current_module_id)
         module.scope = module_scope.id
         module_scope.vars["true"] = null
         module_scope.vars["false"] = null
@@ -1333,12 +1330,11 @@ class TypeChecker {
         for let i = 0; i < module_ast.functions.length; i++ {
            this.check_function_body(module.functions[i], module_ast.functions[i])
         }
-        if this.module_contains_generics and this.current_module != 0 {
+        if this.module_contains_generics and this.current_scope.module_id != 0 {
             this.switch_to_generic_module()
             this.import_all_from_module(module)
         }
         this.current_scope = prev_scope
-        this.current_module = prev_module
         if this.has_errored() return null
         return module
     }
@@ -1350,7 +1346,6 @@ class TypeChecker {
             this.error(ErrorKind.TYPE, "Generic expects $(generic_params.length) parameters but got $(types.length)", null)
             return null
         }
-        let module_id = this.current_module
         let scope_id = this.current_scope
         this.switch_to_generic_module()
         let generic_scope = this.create_child_scope_within_current_scope()
@@ -1375,7 +1370,6 @@ class TypeChecker {
             this.check_class_body(instantiated_generic_class)
             possible_type = this.get_type_from_current_scope(instantiated_generic_name)
         }
-        this.current_module = module_id
         this.current_scope = scope_id
         del generic_scope
         return new GenericType(name, types, possible_type)
@@ -1384,7 +1378,7 @@ class TypeChecker {
         let var = new Var(value, value_type)
         let current_module = this.get_current_module()
         let current_scope = this.get_current_scope()
-        let id = new VarId(VarIdKind.VAR, this.current_module, current_module.vars.length)
+        let id = new VarId(VarIdKind.VAR, this.current_scope.module_id, current_module.vars.length)
         var.var_id = id
         current_module.vars << var
         current_scope.vars[name] = id
@@ -1394,7 +1388,7 @@ class TypeChecker {
         let constant = new Const(value, value_type)
         let current_module = this.get_current_module()
         let current_scope = this.get_current_scope()
-        let id = new ConstId(this.current_module, current_module.consts.length)
+        let id = new ConstId(this.current_scope.module_id, current_module.consts.length)
         constant.const_id = id
         current_module.consts << constant
         current_scope.vars[name] = id
@@ -1576,7 +1570,7 @@ class TypeChecker {
             this.error(ErrorKind.NAME, "Name '$name' has already been used for another type. consider renaming", enum_node.name.range)
             return
         }
-        declared_enum.id = new EnumId(this.current_module, this.get_current_module().enums.length)
+        declared_enum.id = new EnumId(this.current_scope.module_id, this.get_current_module().enums.length)
         this.get_current_module().enums << declared_enum
         module_scope.enums[declared_enum.name] = declared_enum.id
         module_scope.vars[declared_enum.name] = new EnumVarId(declared_enum.id)
@@ -1589,7 +1583,7 @@ class TypeChecker {
         }
         if class_decl_node.generic_parameters.length > 0 {
             this.module_contains_generics = true
-            this.generic_templates[name] = new Generic(this.current_module, class_decl_node)
+            this.generic_templates[name] = new Generic(this.current_scope.module_id, class_decl_node)
             return
         }
         let declared_class = new Class()
@@ -1601,7 +1595,7 @@ class TypeChecker {
             declared_class.parent = null
         }
         declared_class.name = name
-        declared_class.id = new ClassId(this.current_module, this.get_current_module().classes.length)
+        declared_class.id = new ClassId(this.current_scope.module_id, this.get_current_module().classes.length)
         this.get_current_module().classes << declared_class
         module_scope.classes[name] = declared_class.id
         module_scope.vars[name] = new ClassVarId(declared_class.id)
@@ -1625,7 +1619,7 @@ class TypeChecker {
         declared_function.args = []
         declared_function.fnc_type = this.init_function_signature(function_node.args, function_node.return_type, declared_function.args)
         if this.has_errored() return
-        declared_function.id = new VarId(VarIdKind.FNC, this.current_module, this.get_current_module().functions.length)
+        declared_function.id = new VarId(VarIdKind.FNC, this.current_scope.module_id, this.get_current_module().functions.length)
         this.current_scope = fnc_scope.parent
         declared_function.scope = fnc_scope.id
         let module_scope =  this.get_current_module_global_scope()
@@ -2532,11 +2526,9 @@ class TypeChecker {
         } else if prop_owner_type.kind == TypeKind.MODULE {
             let scope_id = ((prop_owner as VarAccessExpression).value_id as ModuleVarId).scope_id
             let current_scope = this.current_scope
-            this.current_module = scope_id.module_id
             this.current_scope = scope_id
             let var_access_node: VarAccessExpressionNode(member_expr_node.member)
             let value = this.check_var_access_expr(Type.unknown(), var_access_node)
-            this.current_module = current_scope.module_id
             this.current_scope = current_scope
             return value
         } else {
@@ -2923,7 +2915,6 @@ class TypeChecker {
         this.in_loop = true
         for_stmt.block = this.check_block(for_stmt_node.block, for_scope)
         this.in_loop = prev_in_loop
-        this.current_scope = for_scope.parent
         return for_stmt
     }
     private check_while_statment(this, while_stmt_node: WhileStatementNode): WhileStatement {
@@ -3021,7 +3012,6 @@ class TypeChecker {
             }
         }
         this.current_scope = block_scope.parent
-        del block_scope
         return block
     }
 }

@@ -1,5 +1,6 @@
 fnc main(): int {
-    print
-    ln("Hello world")
+    let str: string = "Hello"
+    if ("Hello" == str)
+        println("not ok")
     return 0
 }
