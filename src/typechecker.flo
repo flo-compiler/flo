@@ -2079,8 +2079,13 @@ class TypeChecker {
             return new BooleanExpression(true) 
         if name == "false" 
             return new BooleanExpression(false)
-        if name == "null"
+        if name == "null" {
+            if (expected_type.kind == TypeKind.VOID) {
+                this.error(ErrorKind.TYPE, "Const 'null' cannot be of type 'void'", var_access_node.name.range)
+                return null
+            }
             return new NullExpression(expected_type)
+        }
         let current_scope = this.get_current_scope()
         let resolved = this.get_var_from_current_scope(name)
         let var_ty = Type.unknown()
@@ -2829,6 +2834,10 @@ class TypeChecker {
             if var_type.kind == TypeKind.UNKNOWN {
                 var_type = value.value_type
             }
+            if var_type.kind == TypeKind.VOID {
+                this.error(ErrorKind.TYPE, "Cannot declare a variable of type void", var_decl_node.range)
+                return null
+            }
         }
         if current_scope.vars[name] != null {
             this.error(ErrorKind.NAME, "Illegal re-declaration of already declared variable '$name'", var_decl_node.var_name.range)
@@ -2860,7 +2869,14 @@ class TypeChecker {
             this.error(ErrorKind.TYPE, "Expected type '$(this.dump_type(const_type))' but got type '$(this.dump_type(value.value_type))' on const declaration", const_decl_stmt.range)
             return null
         }
-        let constant = this.declare_const_within_current_scope(name, value, value.value_type)
+        if const_type.kind == TypeKind.UNKNOWN {
+            const_type = value.value_type
+        }
+        if const_type.kind == TypeKind.VOID {
+            this.error(ErrorKind.TYPE, "Cannot declare a const of type void", const_decl_stmt.range)
+            return null
+        }
+        let constant = this.declare_const_within_current_scope(name, value, const_type)
         return new ConstDeclaration(name, constant.const_id)
     }
     private check_for_statement(this, for_stmt_node: ForStatementNode): ForStatement {

@@ -1,6 +1,12 @@
-fnc main(): int {
-    let str: string = "Hello"
-    if ("Hello" == str)
-        println("not ok")
-    return 0
+fnc errors_smash(data: string, pindex: uint*) {
+    let index = pindex[0]
+    if (data.length - index) <= 8 {
+        return null
+    }
+    pindex[0] += 8
+    return null
+}
+fnc main(){
+    let index = 0
+    errors_smash("ok", &index)
 }
