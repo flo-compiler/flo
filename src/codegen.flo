@@ -816,6 +816,7 @@ class CodeGen {
         return LLVMBuildLoad2(builder, ty, val, "")
     }
     private codegen_null(this, null_exp: NullExpression): LLVMValueRef{
+        if null_exp.value_type.kind == TypeKind.VOID return null
         return LLVMConstNull(this.codegen_type(null_exp.value_type))
     }
     private codegen_ternary_exp(this, builder: LLVMBuilderRef, ternary_exp: TernaryExpression): LLVMValueRef {
