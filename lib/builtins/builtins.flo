@@ -230,14 +230,14 @@ class Array <T> {
     }
     private __add__(this, other: T[]): T[]{
         let arr: T[] = []
-        while arr.size < this.length arr.resize()
+        arr.ensure_capacity(this.length + other.length)
         arr.buffer.copy_from(this.buffer, this.length)
         arr.length = this.length
         arr.__adda__(other)
         return arr
     }
     private __adda__(this, other: T[]): T[]{
-        while ((this.size - this.length) < other.length) this.resize()
+        this.ensure_capacity(this.length + other.length)
         (this.buffer + this.length).copy_from(other.buffer, other.length)
         this.length += other.length
         return this as T[]
@@ -263,6 +263,11 @@ class Array <T> {
     }
     public pop(this): T {
         return this.buffer[--this.length]
+    }
+    public ensure_capacity(this, size: uint){
+        while this.size < size {
+            this.resize()
+        }
     }
     public find(this, search: T): int {
         for let i: int = 0; i < this.length; i++ {

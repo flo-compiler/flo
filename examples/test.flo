@@ -1,12 +1,5 @@
-fnc errors_smash(data: string, pindex: uint*) {
-    let index = pindex[0]
-    if (data.length - index) <= 8 {
-        return null
-    }
-    pindex[0] += 8
-    return null
-}
-fnc main(){
-    let index = 0
-    errors_smash("ok", &index)
+fnc main(): int {
+    let x = 10
+    println("x = \"x\" and is $x")
+    return 0
 }

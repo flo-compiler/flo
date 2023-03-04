@@ -604,7 +604,7 @@ define internal noalias ptr @string_substring(ptr nocapture readonly %0, i64 %1,
   %memberidx = getelementptr inbounds %string, ptr %0, i64 0, i32 1
   %6 = load ptr, ptr %memberidx, align 8
   %7 = getelementptr inbounds i8, ptr %6, i64 %1
-  tail call void @llvm.memcpy.p0.p0.i64(ptr align 8 %5, ptr align 2147483648 %7, i64 %2, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr align 8 %5, ptr align 536870912 %7, i64 %2, i1 false)
   %8 = tail call ptr @malloc(i32 32)
   store ptr @VTablestring, ptr %8, align 8
   %memberidx.i = getelementptr inbounds %string, ptr %8, i64 0, i32 1
@@ -645,7 +645,7 @@ if.entry:                                         ; preds = %3
   %memberidx6 = getelementptr inbounds %string, ptr %2, i64 0, i32 1
   %16 = load ptr, ptr %memberidx6, align 8
   %17 = load i64, ptr %memberidx3, align 4
-  tail call void @llvm.memcpy.p0.p0.i64(ptr align 2147483648 %ptridx, ptr align 8 %16, i64 %17, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr align 536870912 %ptridx, ptr align 8 %16, i64 %17, i1 false)
   %18 = add nsw i64 %17, %6
   %ptridx9 = getelementptr inbounds i8, ptr %14, i64 %18
   %19 = load i64, ptr %memberidx2, align 4
@@ -653,7 +653,7 @@ if.entry:                                         ; preds = %3
   %ptridx14 = getelementptr inbounds i8, ptr %15, i64 %20
   %21 = load i64, ptr %memberidx1, align 4
   %22 = sub nuw i64 %21, %20
-  tail call void @llvm.memcpy.p0.p0.i64(ptr align 2147483648 %ptridx9, ptr align 2147483648 %ptridx14, i64 %22, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr align 536870912 %ptridx9, ptr align 536870912 %ptridx14, i64 %22, i1 false)
   %23 = tail call ptr @malloc(i32 32)
   store ptr @VTablestring, ptr %23, align 8
   %memberidx.i = getelementptr inbounds %string, ptr %23, i64 0, i32 1
@@ -4418,7 +4418,7 @@ if.entry.i:                                       ; preds = %2
   %20 = getelementptr inbounds i8, ptr %18, i64 %19
   %21 = load ptr, ptr %memberidx.i.i6.i, align 8
   %22 = load i64, ptr %memberidx1.i.i7.i, align 4
-  tail call void @llvm.memcpy.p0.p0.i64(ptr align 2147483648 %20, ptr align 8 %21, i64 %22, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr align 536870912 %20, ptr align 8 %21, i64 %22, i1 false)
   store i64 %16, ptr %memberidx.i.i, align 4
   br label %Compiler_find_module_path.exit
 
@@ -5095,7 +5095,7 @@ ifend:                                            ; preds = %1, %ifend
   %8 = add nuw i64 %7, %size.012
   %9 = call ptr @realloc(ptr %allocated_mem.013, i64 %8)
   %10 = getelementptr inbounds i8, ptr %9, i64 %size.012
-  call void @llvm.memcpy.p0.p0.i64(ptr align 2147483648 %10, ptr nonnull align 2147483648 %buffer, i64 %7, i1 false)
+  call void @llvm.memcpy.p0.p0.i64(ptr align 536870912 %10, ptr nonnull align 536870912 %buffer, i64 %7, i1 false)
   %11 = load i64, ptr %memberidx, align 4
   %12 = call i64 @fread(ptr nonnull %buffer, i64 1, i64 1024, i64 %11)
   %13 = icmp eq i64 %12, 0
@@ -30631,7 +30631,7 @@ for.body:                                         ; preds = %if.entry, %ifend7
   %memberidx6.i = getelementptr inbounds %string, ptr %14, i64 0, i32 1
   %20 = load ptr, ptr %memberidx6.i, align 8
   %21 = load i64, ptr %memberidx1.i, align 4
-  tail call void @llvm.memcpy.p0.p0.i64(ptr align 2147483648 %19, ptr align 8 %20, i64 %21, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr align 536870912 %19, ptr align 8 %20, i64 %21, i1 false)
   store i64 %16, ptr %memberidx1.i.i, align 4
   %22 = load ptr, ptr %memberidx, align 8
   %memberidx4 = getelementptr inbounds %Array_Type_, ptr %22, i64 0, i32 2
@@ -30691,7 +30691,7 @@ if.entry5:                                        ; preds = %for.body
   store ptr %41, ptr %memberidx.i.i, align 8
   %42 = getelementptr inbounds i8, ptr %41, i64 %16
   %43 = load i16, ptr %38, align 8
-  store i16 %43, ptr %42, align 2147483648
+  store i16 %43, ptr %42, align 536870912
   store i64 %40, ptr %memberidx1.i.i, align 4
   %.pre = load ptr, ptr %memberidx, align 8
   %memberidx1.phi.trans.insert = getelementptr inbounds %Array_Type_, ptr %.pre, i64 0, i32 2
@@ -30858,7 +30858,7 @@ for.body44:                                       ; preds = %if.entry38, %for.bo
   %memberidx6.i142 = getelementptr inbounds %string, ptr %111, i64 0, i32 1
   %116 = load ptr, ptr %memberidx6.i142, align 8
   %117 = load i64, ptr %memberidx1.i140, align 4
-  tail call void @llvm.memcpy.p0.p0.i64(ptr align 2147483648 %115, ptr align 8 %116, i64 %117, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr align 536870912 %115, ptr align 8 %116, i64 %117, i1 false)
   store i64 %113, ptr %memberidx1.i.i132, align 4
   %118 = add nuw nsw i64 %x.0151, 1
   %119 = load ptr, ptr %memberidx47, align 8
@@ -31188,7 +31188,7 @@ for.body:                                         ; preds = %for.body.lr.ph, %fo
   store ptr %100, ptr %memberidx.i.i103, align 8
   %101 = load i64, ptr %memberidx1.i.i104, align 4
   %102 = getelementptr inbounds i8, ptr %100, i64 %101
-  call void @llvm.memcpy.p0.p0.i64(ptr align 2147483648 %102, ptr align 8 %95, i64 %94, i1 false)
+  call void @llvm.memcpy.p0.p0.i64(ptr align 536870912 %102, ptr align 8 %95, i64 %94, i1 false)
   store i64 %98, ptr %memberidx1.i.i104, align 4
   %103 = load ptr, ptr %memberidx17, align 8
   %104 = load ptr, ptr %memberidx.i108, align 8
@@ -47343,7 +47343,7 @@ Array_Type____adda__.exit:                        ; preds = %while.entry.i, %get
   %memberidx8.i = getelementptr inbounds %Array_Type_, ptr %65, i64 0, i32 1
   %79 = load ptr, ptr %memberidx8.i, align 8
   %80 = shl i64 %76, 3
-  call void @llvm.memcpy.p0.p0.i64(ptr nonnull align 2147483648 %78, ptr align 8 %79, i64 %80, i1 false)
+  call void @llvm.memcpy.p0.p0.i64(ptr nonnull align 536870912 %78, ptr align 8 %79, i64 %80, i1 false)
   %81 = load i64, ptr %memberidx2.i53, align 4
   %82 = add nuw i64 %81, 1
   store i64 %82, ptr %memberidx.i55, align 4
@@ -49377,7 +49377,7 @@ Array_Type____adda__.exit:                        ; preds = %while.entry.i217, %
   %memberidx8.i219 = getelementptr inbounds %Array_Type_, ptr %91, i64 0, i32 1
   %110 = load ptr, ptr %memberidx8.i219, align 8
   %111 = shl i64 %106, 3
-  call void @llvm.memcpy.p0.p0.i64(ptr align 2147483648 %109, ptr align 8 %110, i64 %111, i1 false)
+  call void @llvm.memcpy.p0.p0.i64(ptr align 536870912 %109, ptr align 8 %110, i64 %111, i1 false)
   %112 = load i64, ptr %memberidx.i208, align 4
   %113 = load i64, ptr %memberidx2.i214, align 4
   %114 = add nuw i64 %113, %112
@@ -49743,7 +49743,7 @@ Array_LLVMTypeRef____adda__.exit:                 ; preds = %while.entry.i302, %
   %261 = getelementptr inbounds ptr, ptr %260, i64 %259
   %262 = load ptr, ptr %memberidx2.i152, align 8
   %263 = shl i64 %248, 3
-  call void @llvm.memcpy.p0.p0.i64(ptr align 2147483648 %261, ptr align 8 %262, i64 %263, i1 false)
+  call void @llvm.memcpy.p0.p0.i64(ptr align 536870912 %261, ptr align 8 %262, i64 %263, i1 false)
   %264 = load i64, ptr %memberidx1.i298, align 4
   %265 = add nuw i64 %264, %248
   store i64 %265, ptr %memberidx1.i298, align 4
@@ -50612,7 +50612,7 @@ CodeGen_createGlobalLLVMString.exit:              ; preds = %Map_string_LLVMValu
   store ptr %str.0.i, ptr %ptridx1, align 8
   %41 = getelementptr inbounds ptr, ptr %40, i64 2
   %42 = shl i64 %4, 3
-  call void @llvm.memcpy.p0.p0.i64(ptr nonnull align 2147483648 %41, ptr align 8 %3, i64 %42, i1 false)
+  call void @llvm.memcpy.p0.p0.i64(ptr nonnull align 536870912 %41, ptr align 8 %3, i64 %42, i1 false)
   store ptr %8, ptr %arg_types, align 8
   %43 = getelementptr inbounds ptr, ptr %arg_types, i64 1
   store ptr %8, ptr %43, align 8

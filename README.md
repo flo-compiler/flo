@@ -197,18 +197,6 @@ fnc add(x: int, y: int = 0): int {
 }
 add(5)
 ```
-- [ ] Var args.
-```
-fnc max(...numbers: int){
-    max_num = numbers[0]
-    for number in numbers {
-        if number > max_num {
-            max_num = number
-        }
-    }
-    return max_num
-}
-```
 - [ ] Functions with closure (Anonymous functions).
 ```
 fnc main(){
