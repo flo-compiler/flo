@@ -33,6 +33,13 @@ class FunctionTypeNode (TypeNode) {
         this.args = []
     }
 }
+class TupleTypeNode (TypeNode) {
+    element_types: TypeNode[]
+    constructor(this, range: FloRange){
+        super(TypeKind.TUPLE, range)
+        this.element_types = []
+    }
+}
 class PointerTypeNode (TypeNode) {
     pointee_type: TypeNode
     constructor(this, pointee_type: TypeNode, range: FloRange){
@@ -475,6 +482,14 @@ class Parser {
         fnc_type_node.range = FloRange.merge(fnc_type_node.range, fnc_type_node.return_type.range)
         return fnc_type_node
     }
+    private parse_tuple_type(this): TupleTypeNode {
+        let tuple_type_node = new TupleTypeNode(this.current_token.range)
+        this.advance()
+        if this.current_token.ttype != TokType.RBRACKET
+            this.parse_type_list(tuple_type_node.element_types)
+        this.eat(TokType.RBRACKET)
+        return tuple_type_node
+    }
     private parse_type(this): TypeNode {
         let type_node: TypeNode = null
         if this.current_token.ttype == TokType.IDENTIFER
@@ -482,13 +497,17 @@ class Parser {
         else if this.current_token.ttype == TokType.LPAR
             type_node = this.parse_function_type()
         else if this.current_token.ttype == TokType.LBRACKET {
-            let rec_node = new RecordTypeNode(new IdentifierToken("Map", this.current_token.range) as IdentifierToken, this.current_token.range)
-            this.advance()
-            rec_node.generic_args << this.parse_type()
-            this.eat(TokType.COL)
-            rec_node.generic_args << this.parse_type()
-            this.eat(TokType.RBRACKET)
-            type_node = rec_node
+            if (this.peek(2).ttype == TokType.COMMA or this.peek(2).ttype == TokType.RBRACKET) { // What if 
+                type_node = this.parse_tuple_type()
+            } else {
+                let rec_node = new RecordTypeNode(new IdentifierToken("Map", this.current_token.range) as IdentifierToken, this.current_token.range)
+                this.advance()
+                rec_node.generic_args << this.parse_type()
+                this.eat(TokType.COL)
+                rec_node.generic_args << this.parse_type()
+                this.eat(TokType.RBRACKET)
+                type_node = rec_node
+            }
         }
         
         while this.current_token.ttype == TokType.LBRACKET or this.current_token.ttype == TokType.POW or this.current_token.ttype == TokType.MULT and this.can_parse() {

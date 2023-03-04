@@ -111,7 +111,7 @@ names << "Josh"
 let a = [...(1..100)]
 ```
 ## Maps
-- [ ] Intialization
+- [x] Intialization
 ```
 let map: Map<string, int> = new Map<string, int>()
 // or
@@ -205,23 +205,24 @@ fnc main(){
 let result = sum(y: 6, x: 5)
 ```
 ## Tuples
-- [ ] Creating tuples
+- [x] Creating tuples
 ```
-let items: {int, float, bool} = {1, 1.0, true}
+let items: [int, f32, bool] = [1, 1.0, true]
 // or 
-let items = {1, 1.0, true}
+let items = [1, 1.0, true]
 ```
-- [ ] Named tuples
+- [x] Accessing tuples
+```
+items[0] // 1
+```
+Index must be a constant unsigned integer since resulting type is evaluated at compile time.
+<!-- ## Structs
 ```
 let numerics: {x: int, y: int} = {x: 0, y: 1.0}
 // or
 let numerics = {x: 0, y: 1.0}
-```
-- [ ] Accessing tuples
-```
-items[0] // 1
-numerics.y // 1.0
-```
+``` -->
+
 ## Enums
 - [x] Enums constants (Assigned as numbers at compile time) values are all of type `int` by default
 ```
@@ -405,12 +406,12 @@ let x: int?
 ```
 - [ ] Type Union
 ```
-type Numeric = int or float
+type Numeric = int or f32
 fnc main(){
     let n: Numeric = 5
     match n {
         int: println("int!")
-        float: println("float!")
+        f32: println("f32!")
     }
 }
 ```
@@ -428,12 +429,12 @@ type i1 = bool
 ### Type Casting
 Type casting works with ``as`` keyword.
 ```
-let x = 1 as float // returns 1.0
+let x = 1 as f32 // returns 1.0
 ```
 Type Casting always works when converting these types to the following types.
 
 `Safes`
-- Boolean to int/float.
+- Boolean to int/float types.
 - Any type to boolean.
     - Does a null comparason.
 - Int of any bit size to Int of any bit size.

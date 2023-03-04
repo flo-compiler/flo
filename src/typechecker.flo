@@ -44,6 +44,13 @@ class FunctionType (Type) {
         this.return_type = return_type
     }
 }
+class TupleType (Type) {
+    element_types: Type[]
+    constructor(this){
+        super(TypeKind.TUPLE)
+        this.element_types = []
+    }
+}
 class Value {
     value_type: Type
 }
@@ -465,7 +472,7 @@ fnc check_is_var(expr: Expression): bool{
         let prop_id = (expr as MemberExpression).member_id
         return prop_id.kind == PropIdKind.FIELD
     }
-    return expr.expr_kind == ExpressionKind.INDEX
+    return expr.expr_kind == ExpressionKind.INDEX and expr.value_type.kind != TypeKind.TUPLE
 }
 fnc dump_type(ty: Type, force_bit_size = false): string {
     if ty.kind == TypeKind.BOOL
@@ -1090,6 +1097,17 @@ class TypeChecker {
             let t2_arr_type = t2 as ArrayType
             return t1_arr_type.length == t2_arr_type.length and this.types_are_eq(t1_arr_type.element_type, t2_arr_type.element_type)
         }
+        if t1.kind == TypeKind.TUPLE {
+            let t1_tup_type = t1 as TupleType
+            let t2_tup_type = t2 as TupleType
+            let t1_element_types_length =  t1_tup_type.element_types.length
+            if t1_element_types_length != t2_tup_type.element_types.length 
+                return false
+            for let i = 0; i < t1_element_types_length; i++ {
+                if !this.types_are_eq(t1_tup_type.element_types[i], t2_tup_type.element_types[i])
+                    return false
+            }
+        }
         if t1.kind == TypeKind.PTR {
             let t1_ptr_type = t1 as PointerType
             let t2_ptr_type = t2 as PointerType
@@ -1153,6 +1171,17 @@ class TypeChecker {
         if ty.kind == TypeKind.ARRAY {
             let arr_ty = ty as ArrayType
             return "$(this.dump_type(arr_ty.element_type))[$(arr_ty.length)]"
+        }
+        if ty.kind == TypeKind.TUPLE {
+            let tup_ty = ty as TupleType
+            let tup_str = ""
+            for let i = 0; i < tup_ty.element_types.length; i++ {
+                tup_str += this.dump_type(tup_ty.element_types[i])
+                if i < tup_ty.element_types.length - 1 {
+                    tup_str += ", "
+                }
+            }
+            return "[$tup_str]"
         }
         if ty.kind == TypeKind.RESOLVED_GENERIC {
             let gen_ty = ty as GenericType
@@ -1968,6 +1997,13 @@ class TypeChecker {
                 arg_types << this.check_type(arg)
             let return_type = this.check_type(fnc_node.return_type)
             return new FunctionType(arg_types, return_type)
+        } else if type_node.kind == TypeKind.TUPLE {
+            let tuple_type_node = type_node as TupleTypeNode
+            let tuple_type = new TupleType()
+            for element_type in tuple_type_node.element_types {
+                tuple_type.element_types << this.check_type(element_type)
+            }
+            return tuple_type
         }
         if type_node.kind == TypeKind.RECORD {
             let record_type = type_node as RecordTypeNode
@@ -2034,6 +2070,7 @@ class TypeChecker {
         let elements: Expression[] = []
         let element_type = Type.unknown()
         let is_constant = true
+        let is_tuple = false
         let array_type = expected_type
         if expected_type.kind == TypeKind.ARRAY {
             element_type = (expected_type as ArrayType).element_type
@@ -2042,29 +2079,39 @@ class TypeChecker {
             let generic_ty =  expected_type as GenericType
             if is_object(generic_ty) and generic_ty.name == "Array"
                 element_type = generic_ty.arg_types[0]
-        } 
+        } else if expected_type.kind == TypeKind.TUPLE {
+            is_tuple = true
+        }
         if array_node.elements.length > 0 {
             for let i = 0; i < array_node.elements.length; ++i {
+                if expected_type.kind == TypeKind.TUPLE {
+                    let tuple_type = expected_type as TupleType
+                    if i < tuple_type.element_types.length {
+                        element_type = tuple_type.element_types[i]
+                    }
+                }
                 let element = this.check_expression(element_type, array_node.elements[i])
                 if this.has_errored() return null
                 if i == 0 and element_type.kind == TypeKind.UNKNOWN {
                     element_type = element.value_type
                 }
-                is_constant and= element.is_constant
-                if this.types_are_eq(element_type, element.value_type) {
-                    elements << element
-                } else {
-                    this.error(ErrorKind.TYPE, "Expected element type of '$(this.dump_type(element_type))' but got type '$(this.dump_type(element.value_type))'", array_node.elements[i].range)
-                    return null
+                if !is_tuple and !this.types_are_eq(element_type, element.value_type) {
+                    is_tuple = true
                 }
+                is_constant and= element.is_constant
+                elements << element
             }
         }
-        if array_type.kind != TypeKind.ARRAY {
-            let generic_array_type = this.create_generic_instance_in_module("Array", [element_type])
-            if (generic_array_type != null) {
-                array_type = generic_array_type
-                is_constant = false
+        if is_tuple {
+            let tuple_type = new TupleType()
+            for element in elements {
+                tuple_type.element_types << element.value_type
             }
+            array_type = tuple_type     
+        } else if array_type.kind != TypeKind.ARRAY {
+            let generic_array_type = this.create_generic_instance_in_module("Array", [element_type])
+            array_type = generic_array_type
+            is_constant = false
         } else {
             array_type = new ArrayType(element_type, elements.length)
         }
@@ -2575,12 +2622,40 @@ class TypeChecker {
         let member_expr = new MemberExpression(object, prop_id, method_type)
         return new CallExpression(member_expr, [index], method_type.return_type)
     }
-    private check_index_expr(this, expected_type: Type, index_expr_node: ExpressionIndexNode): IndexExpression {
+    private check_tuple_index_expr(this, root_expression: Expression, index_expr_node: ExpressionIndexNode): Expression {
+        let inty: IntType(TypeKind.INT, false)
+        let index = this.check_expression(inty, index_expr_node.index)
+        if !is_int(index.value_type) {
+            this.error(ErrorKind.TYPE, "Expected an integer type for index", index_expr_node.index.range)
+            return null
+        }
+        if (index.value_type as IntType).is_signed {
+            this.error(ErrorKind.TYPE, "Expected an unsigned integer for tuple index but index value is '$(this.dump_type(index.value_type))' (which is signed)", index_expr_node.index.range)
+            return null
+        }
+        if !(index.is_constant) {
+            this.error(ErrorKind.TYPE, "Expected an constant int for tuple index", index_expr_node.index.range)
+            return null   
+        }
+        let index_value = evaluate_const_int_expression(this.program, index)
+        let tuple_type = root_expression.value_type as TupleType
+        if index_value < 0 or index_value >= tuple_type.element_types.length {
+            this.error(ErrorKind.TYPE, "Index out of range for tuple type $(this.dump_type(tuple_type))", index_expr_node.index.range)
+            return null
+        }
+        let value_type = tuple_type.element_types[index_value]
+        del index
+        return new IndexExpression(root_expression, new IntExpression(index_value as u64), value_type)
+    }
+    private check_index_expr(this, index_expr_node: ExpressionIndexNode): Expression {
         let root_expression = this.check_expression(Type.unknown(), index_expr_node.expression)
         if this.has_errored() return null
         if is_object(root_expression.value_type)
-            return this.check_object_index_expr(root_expression, index_expr_node) as IndexExpression
-        let index = this.check_expression(new IntType(TypeKind.INT, false), index_expr_node.index)
+            return this.check_object_index_expr(root_expression, index_expr_node)
+        if root_expression.value_type.kind == TypeKind.TUPLE
+            return this.check_tuple_index_expr(root_expression, index_expr_node)
+        let inty: IntType(TypeKind.INT, false)
+        let index = this.check_expression(inty, index_expr_node.index)
         if this.has_errored() return null
         if !is_int(index.value_type) {
             this.error(ErrorKind.TYPE, "Expected an integer type for index", index_expr_node.index.range)
@@ -2791,7 +2866,7 @@ class TypeChecker {
         if expr_node.expr_kind == ExpressionKind.MEMBER
             return this.check_member_expr(expected_type, expr_node as MemberExpressionNode)
         if expr_node.expr_kind == ExpressionKind.INDEX
-            return this.check_index_expr(expected_type, expr_node as ExpressionIndexNode)
+            return this.check_index_expr(expr_node as ExpressionIndexNode)
         if expr_node.expr_kind == ExpressionKind.CALL
             return this.check_call_expr(expected_type, expr_node as CallExpressionNode)
         return null

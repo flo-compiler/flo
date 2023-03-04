@@ -1,3 +1,4 @@
+//@expect: return_code=4
 fnc main(): int {
     const index = 2
     let tuple: [int, bool, f32] = [1, false, 3.0]

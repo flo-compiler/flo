@@ -91,6 +91,7 @@ enum TypeKind {
     ENUM
     PTR
     ARRAY
+    TUPLE
     FNC
     RECORD
     MODULE

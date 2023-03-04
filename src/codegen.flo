@@ -236,6 +236,15 @@ class CodeGen {
             let llvm_fnty = LLVMFunctionType(this.codegen_type(func_ty.return_type), param_types, func_ty.arg_types.length, false)
             return as_pointer ? LLVMPointerType(llvm_fnty) : llvm_fnty
         }
+        if tt.kind == TypeKind.TUPLE {
+            let tup_ty = tt as TupleType
+            let element_types: LLVMTypeRef*(tup_ty.element_types.length)
+            let idx = 0
+            for element_type in tup_ty.element_types {
+                element_types[idx++] = this.codegen_type(element_type)
+            }
+            return LLVMStructType(element_types, idx, false)
+        }
         if tt.kind == TypeKind.OBJECT {
             let obj_type = this.get_or_codegen_class_from_typeid((tt as ObjectType).class_id)
             if obj_type != null {
@@ -248,6 +257,7 @@ class CodeGen {
                 return enum_type.llvm_type
             }
         }
+        println(tt.kind as string)
         panic("Type could not be code generated")
         return null
     }
@@ -447,20 +457,34 @@ class CodeGen {
         }
         return addr
     }
+    private store_tuple_elements(this, builder: LLVMBuilderRef, ptr: LLVMValueRef, array_exp: ArrayExpression): LLVMValueRef {
+        let next_args: LLVMValueRef[2] = [this.createLLVMInt(0), this.createLLVMInt(0)]
+        let idx = 0
+        let tuple_type = this.codegen_type(array_exp.value_type)
+        for value in array_exp.elements {
+            let addr = LLVMBuildInBoundsGEP2(builder, tuple_type, ptr, &next_args[0], next_args.size, "")
+            next_args[1] = this.createLLVMInt(idx++)
+            LLVMBuildStore(builder, this.codegen_expression(builder, value), addr)
+        }
+        return ptr
+    }
     private codegen_array_exp(this, builder: LLVMBuilderRef, array_exp: ArrayExpression): LLVMValueRef {
         if array_exp.value_type.kind == TypeKind.RESOLVED_GENERIC {
             return this.codegen_builtin_array(builder, array_exp.value_type as GenericType, array_exp)
-        } 
+        }
         //FIXME: What if array is not constant?
         if !array_exp.is_constant {
             panic("Array expression is not a constant (codegen_array_exp)")
         }
-        let elem_ty = this.codegen_type((array_exp.value_type as ArrayType).element_type)
         let elems_buffer: LLVMValueRef*(array_exp.elements.length)
         let idx = 0
         for value in array_exp.elements {
             elems_buffer[idx++] = this.codegen_expression(builder, value)
         }
+        if array_exp.value_type.kind == TypeKind.TUPLE {
+            return LLVMConstStruct(elems_buffer, idx, false)
+        }
+        let elem_ty = this.codegen_type((array_exp.value_type as ArrayType).element_type)
         return LLVMConstArray(elem_ty, elems_buffer, array_exp.elements.length)
     }
     private get_or_codegen_var(this, target_id: VarId): LLVMValueRef {
@@ -533,11 +557,17 @@ class CodeGen {
         if expr_val_ty.kind == TypeKind.ARRAY {
             let indices: LLVMValueRef[2] = [this.createLLVMInt(0), index]
             ind_ptr = this.get_expr_mem(builder, index_exp.expression)
-            return LLVMBuildInBoundsGEP2(builder, ty, ind_ptr, &indices[0], indices.size, "arrayidx")
+            return LLVMBuildInBoundsGEP2(builder, ty, ind_ptr, &indices[0], indices.size, "")
+        }
+        if expr_val_ty.kind == TypeKind.TUPLE {
+            let int32ty = LLVMInt32Type()
+            let indices: LLVMValueRef[2] = [LLVMConstInt(int32ty, 0, false), LLVMConstIntCast(index, int32ty, false)]
+            ind_ptr = this.get_expr_mem(builder, index_exp.expression)
+            return LLVMBuildInBoundsGEP2(builder, ty, ind_ptr, &indices[0], indices.size, "")
         }
         let indices_1: LLVMValueRef[1] = [index]
         ind_ptr = this.codegen_expression(builder, index_exp.expression)
-        return LLVMBuildInBoundsGEP2(builder, ty, ind_ptr, &indices_1[0], indices_1.size, "ptridx")
+        return LLVMBuildInBoundsGEP2(builder, ty, ind_ptr, &indices_1[0], indices_1.size, "")
     }
     private get_member_expr_mem(this, builder: LLVMBuilderRef, member_expr: MemberExpression, ptr: LLVMValueRef): LLVMValueRef {
         let struct_class = this.get_or_codegen_class_from_typeid(member_expr.member_id.type_id)
@@ -614,7 +644,9 @@ class CodeGen {
         if expr.expr_kind == ExpressionKind.ARRAY and !expr.is_constant {
             let arr_expr = expr as ArrayExpression
             let value_ty = expr.value_type
-            if value_ty.kind != TypeKind.RESOLVED_GENERIC {
+            if value_ty.kind == TypeKind.TUPLE {
+                return this.store_tuple_elements(builder, ptr, arr_expr)
+            } else if value_ty.kind != TypeKind.RESOLVED_GENERIC {
                 let zero = this.createLLVMInt(0)
                 let args: LLVMValueRef[2] = [zero, zero]
                 let array_type = this.codegen_type(value_ty)
@@ -1348,10 +1380,10 @@ class CodeGen {
             }
         }
         if vtable_types.length > 0 {
-            let vtable_struct_ty = LLVMStructType(vtable_types.buffer, vtable_types.length, true)
+            let vtable_struct_ty = LLVMStructType(vtable_types.buffer, vtable_types.length, false)
             if !checked_class.is_abstract {
                 struct_class.vtable = LLVMAddGlobal(this.module, vtable_struct_ty, "VTable$(checked_class.name)".to_cstring())
-                let vtable_intializer = LLVMConstStruct(vtable_values.buffer, vtable_values.length, true)
+                let vtable_intializer = LLVMConstStruct(vtable_values.buffer, vtable_values.length, false)
                 LLVMSetInitializer(struct_class.vtable, vtable_intializer)
             }
             struct_class.vtable_type = vtable_struct_ty
