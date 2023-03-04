@@ -113,19 +113,16 @@ let a = [...(1..100)]
 ## Maps
 - [ ] Intialization
 ```
-let map: Map<string, int> = ["foo": 34, "bar": 36, "zoo": 55]
+let map: Map<string, int>
 // or
-let map: [string: int] = ["foo": 34, "bar": 36, "zoo": 55]
-// or 
-let map = ["foo": 34, "bar": 36, "zoo": 55]
+let map: [string: int]
 ```
-The empty map must have a type annotation
 
 - [x] Adding to map
 ```
 map["anny"] = 70
 ```
-- [x] Getting from dictionary (returns null if value was not found)
+- [x] Getting from map (returns null if value was not found)
 ```
 let age = map["bar"]
 ```
@@ -171,8 +168,8 @@ for element in [1, 2, 3, 4] {
 ```
 ```
 // iterating over a map.
-for entry in ["foo": 1, "bar": 2] { 
-    println("$entry")
+for entry in map { 
+    println("$(entry.key): $(entry.value)")
 }
 ```
 - [x] While loop

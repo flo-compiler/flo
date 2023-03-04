@@ -2426,7 +2426,7 @@ class TypeChecker {
             }
             args << arg
         } else {
-            this.error(ErrorKind.TYPE, "New operator expects either an a pointer or an object not a '$(this.dump_type(memory_type))'", new_expr_node.range)
+            this.error(ErrorKind.TYPE, "New operator expects either an a pointer or an object not a(n) '$(this.dump_type(memory_type))'", new_expr_node.range)
             return null
         }
         return new NewExpression(memory_type, expression_type, args, new_expr_node.onheap)
