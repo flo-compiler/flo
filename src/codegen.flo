@@ -23,9 +23,9 @@ class CGClassType  {
     vtable_type: LLVMTypeRef
     class_constructor: LLVMValueRef
     constructor(this){
-        this.vt_methods_pos_map = new Map<string, uint>()
-        this.fields_pos_map = new Map<string, uint>()
-        this.static_props_map = new Map<string, LLVMValueRef>()
+        this.vt_methods_pos_map = new [string: uint]()
+        this.fields_pos_map = new [string: uint]()
+        this.static_props_map = new [string: LLVMValueRef]()
         this.vtable = null
         this.vtable_type = null
     }
@@ -35,7 +35,7 @@ class CGEnumType {
     field_map: [string: LLVMValueRef]
     metanames: LLVMValueRef
     constructor(this){
-        this.field_map = new Map<string, LLVMValueRef>()
+        this.field_map = new [string: LLVMValueRef]()
     }
 }
 fnc get_intrinsic(mod: LLVMModuleRef, name: string, params_types: LLVMTypeRef*, params_length: uint, return_type: LLVMTypeRef, var_args = false): IntrinsicResult {
@@ -107,11 +107,11 @@ class CodeGen {
     private super_functions: [string: LLVMValueRef]
     constructor(this, program: Program, module_name: string){
         this.program = program
-        this.global_var_scope = new Map<string, LLVMValueRef>()
-        this.global_string_scope = new Map<string, LLVMValueRef>()
-        this.global_class_scope = new Map<string, CGClassType>()
-        this.global_enum_scope = new Map<string, CGEnumType>()
-        this.super_functions = new Map<string, LLVMValueRef>()
+        this.global_var_scope = new [string: LLVMValueRef]()
+        this.global_string_scope = new [string: LLVMValueRef]()
+        this.global_class_scope = new [string: CGClassType]()
+        this.global_enum_scope = new [string: CGEnumType]()
+        this.super_functions = new [string: LLVMValueRef]()
         this.in_static_ctx = true
         this.continue_bb = null
         this.break_bb = null

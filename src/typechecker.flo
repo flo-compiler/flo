@@ -613,11 +613,11 @@ class Scope {
     public children: ScopeId[]
     constructor(this, module_id: uint, id: uint){
         this.id = new ScopeId(module_id, id)
-        this.vars = new Map<string, VarId>()
-        this.classes = new Map<string, ClassId>()
-        this.functions = new Map<string, VarId>()
-        this.enums = new Map<string, EnumId>()
-        this.type_aliases = new Map<string, Type>()
+        this.vars = new [string: VarId]()
+        this.classes = new [string: ClassId]()
+        this.functions = new [string: VarId]()
+        this.enums = new [string: EnumId]()
+        this.type_aliases = new [string: Type]()
         this.parent = null 
         this.children = []
     }
@@ -712,8 +712,8 @@ class Class {
         this.inherited_methods_num = 0
         this.fields = []
         this.methods = []
-        this.prop_map = new Map<string, PropId>()
-        this.static_prop_map = new Map<string, PropId>()
+        this.prop_map = new [string: PropId]()
+        this.static_prop_map = new [string: PropId]()
         this.is_abstract = false
     }
     private __del__(this){
@@ -750,7 +750,7 @@ class Enum {
     field_map: [string: PropId]
     constructor(this){
         this.fields = []
-        this.field_map = new Map<string, PropId>()
+        this.field_map = new [string: PropId]()
     }
     private __del__(this){
         del this.id
@@ -1033,7 +1033,7 @@ class TypeChecker {
         this.compiler = compiler
         this.in_loop = false
         this.program = new Program()
-        this.generic_templates = new Map<string, Generic>()
+        this.generic_templates = new [string: Generic]()
     }
     public check(module_ast: ModuleAST, compiler: Compiler, filename: string): Program {
         let typechecker: TypeChecker(compiler)

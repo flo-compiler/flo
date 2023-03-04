@@ -113,9 +113,9 @@ let a = [...(1..100)]
 ## Maps
 - [ ] Intialization
 ```
-let map: Map<string, int>
+let map: Map<string, int> = new Map<string, int>()
 // or
-let map: [string: int]
+let map: [string: int] = new [string: int]()
 ```
 
 - [x] Adding to map
