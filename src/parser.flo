@@ -482,34 +482,38 @@ class Parser {
         fnc_type_node.range = FloRange.merge(fnc_type_node.range, fnc_type_node.return_type.range)
         return fnc_type_node
     }
-    private parse_tuple_type(this): TupleTypeNode {
-        let tuple_type_node = new TupleTypeNode(this.current_token.range)
-        this.advance()
-        if this.current_token.ttype != TokType.RBRACKET
-            this.parse_type_list(tuple_type_node.element_types)
-        this.eat(TokType.RBRACKET)
-        return tuple_type_node
-    }
+
     private parse_type(this): TypeNode {
         let type_node: TypeNode = null
         if this.current_token.ttype == TokType.IDENTIFER
             type_node = this.parse_object_type()
         else if this.current_token.ttype == TokType.LPAR
             type_node = this.parse_function_type()
-        else if this.current_token.ttype == TokType.LBRACKET {
-            if (this.peek(2).ttype == TokType.COMMA or this.peek(2).ttype == TokType.RBRACKET) { // What if 
-                type_node = this.parse_tuple_type()
-            } else {
-                let rec_node = new RecordTypeNode(new IdentifierToken("Map", this.current_token.range) as IdentifierToken, this.current_token.range)
-                this.advance()
-                rec_node.generic_args << this.parse_type()
+        else if this.current_token.ttype == TokType.LBRACKET and this.peek().ttype != TokType.RBRACKET {
+            let start_range = this.eat(TokType.LBRACKET).range
+            let arg_type_node = this.parse_type()
+            if this.current_token.ttype == TokType.COL {
+                let rec_node = new RecordTypeNode(new IdentifierToken("Map", start_range) as IdentifierToken, start_range)
+                rec_node.generic_args << arg_type_node
                 this.eat(TokType.COL)
                 rec_node.generic_args << this.parse_type()
                 this.eat(TokType.RBRACKET)
                 type_node = rec_node
+            } else {
+                let tuple_type_node = new TupleTypeNode(start_range)
+                tuple_type_node.element_types << arg_type_node
+                if this.current_token.ttype == TokType.COMMA {
+                    this.advance()
+                    this.parse_type_list(tuple_type_node.element_types)
+                }
+                this.eat(TokType.RBRACKET)
+                type_node = tuple_type_node
             }
+        } else if this.current_token.ttype == TokType.LBRACKET and this.peek().ttype == TokType.RBRACKET {
+            let start_range = this.eat(TokType.LBRACKET).range
+            type_node = new TupleTypeNode(FloRange.merge(start_range, this.eat(TokType.RBRACKET).range))
         }
-        
+
         while this.current_token.ttype == TokType.LBRACKET or this.current_token.ttype == TokType.POW or this.current_token.ttype == TokType.MULT and this.can_parse() {
             if this.current_token.ttype == TokType.LBRACKET {
                 this.advance()

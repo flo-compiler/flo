@@ -215,13 +215,7 @@ let items = [1, 1.0, true]
 ```
 items[0] // 1
 ```
-Index must be a constant unsigned integer since resulting type is evaluated at compile time.
-<!-- ## Structs
-```
-let numerics: {x: int, y: int} = {x: 0, y: 1.0}
-// or
-let numerics = {x: 0, y: 1.0}
-``` -->
+Index **must** be a constant unsigned integer since resulting type is evaluated at compile time.
 
 ## Enums
 - [x] Enums constants (Assigned as numbers at compile time) values are all of type `int` by default
@@ -305,10 +299,6 @@ class Number {
         return i1 > i2 ? i1 : i2
     }
 }
-```
-- [ ] Object Literal Intialization as named tuples. (Also should work on function return and parameter passing)
-```
-chef: Chef = {specialty: "cake"}
 ```
 - [x] Class containing methods without body are considered an abstract class/interface (Objects of that class cannot be created but other classes can inherit that class and implement those methods).
 ```
