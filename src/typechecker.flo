@@ -2830,14 +2830,18 @@ class TypeChecker {
     }
     private check_string_expression(this, expected_type: Type, str_node: StringExpressionNode): StringExpression{
         let template_args: Expression[] = []
+        let is_const = true
         for arg in str_node.template_args {
             template_args << this.check_expression(Type.unknown(), arg)
+            is_const = false
         }
         if !is_u8_ptr(expected_type) {
             expected_type = this.get_type_from_current_scope("string")
+            is_const = false
         }
         let str_exp = new StringExpression(str_node.value.value, str_node.value.fmt_indices, template_args, expected_type)
         str_exp.value_type = expected_type
+        str_exp.is_constant = is_const
         return str_exp
     }
     private check_expression(this, expected_type: Type, expr_node: ExpressionNode): Expression {

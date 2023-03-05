@@ -458,12 +458,13 @@ class CodeGen {
         return addr
     }
     private store_tuple_elements(this, builder: LLVMBuilderRef, ptr: LLVMValueRef, array_exp: ArrayExpression): LLVMValueRef {
-        let next_args: LLVMValueRef[2] = [this.createLLVMInt(0), this.createLLVMInt(0)]
-        let idx = 0
+        let int32ty = LLVMInt32Type()
+        let next_args: LLVMValueRef[2] = [LLVMConstInt(int32ty, 0, false), null]
+        let idx: u64 = 0
         let tuple_type = this.codegen_type(array_exp.value_type)
         for value in array_exp.elements {
+            next_args[1] = LLVMConstInt(int32ty, idx++, false)
             let addr = LLVMBuildInBoundsGEP2(builder, tuple_type, ptr, &next_args[0], next_args.size, "")
-            next_args[1] = this.createLLVMInt(idx++)
             LLVMBuildStore(builder, this.codegen_expression(builder, value), addr)
         }
         return ptr
