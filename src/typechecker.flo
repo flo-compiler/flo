@@ -472,7 +472,10 @@ fnc check_is_var(expr: Expression): bool{
         let prop_id = (expr as MemberExpression).member_id
         return prop_id.kind == PropIdKind.FIELD
     }
-    return expr.expr_kind == ExpressionKind.INDEX and expr.value_type.kind != TypeKind.TUPLE
+    if expr.expr_kind == ExpressionKind.INDEX {
+        return (expr as IndexExpression).expression.value_type.kind != TypeKind.TUPLE
+    }
+    return false
 }
 fnc dump_type(ty: Type, force_bit_size = false): string {
     if ty.kind == TypeKind.BOOL
@@ -2163,12 +2166,8 @@ class TypeChecker {
             right = this.check_bin_expr(left.value_type, lower_bin_assign_node(binary_node))
             if this.has_errored() return null
         }
-        if left.value_type.kind == TypeKind.RECORD {
-            this.error(ErrorKind.TYPE, "Cannot assign a value to a record", binary_node.range)
-            return null
-        }
         if !check_is_var(left) {
-            this.error(ErrorKind.TYPE, "Cannot assign a value to a constant", binary_node.range)
+            this.error(ErrorKind.TYPE, "Assigment target is not a mutable", binary_node.lhs.range)
             return null
         }
         if !this.types_are_eq(left.value_type, right.value_type) {
@@ -2282,10 +2281,10 @@ class TypeChecker {
             return this.check_object_binary_expr(right, binary_node, left) as BinaryExpression
         }
         if this.has_errored() return null
-        let is_const = left.is_constant and right.is_constant
         if is_assign_op {
             return this.check_assignment(left, right, binary_node) as BinaryExpression
         }
+        let is_const = left.is_constant and right.is_constant
         if left.value_type.kind == TypeKind.UNKNOWN and right.value_type.kind != TypeKind.UNKNOWN
             left.value_type = right.value_type
         if is_numeric(left.value_type) and is_numeric(right.value_type){

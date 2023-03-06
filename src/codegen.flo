@@ -257,7 +257,6 @@ class CodeGen {
                 return enum_type.llvm_type
             }
         }
-        println(tt.kind as string)
         panic("Type could not be code generated")
         return null
     }
@@ -473,7 +472,7 @@ class CodeGen {
         if array_exp.value_type.kind == TypeKind.RESOLVED_GENERIC {
             return this.codegen_builtin_array(builder, array_exp.value_type as GenericType, array_exp)
         }
-        //FIXME: What if array is not constant?
+        //FIXME: What if array or tuple is not constant?
         if !array_exp.is_constant {
             panic("Array expression is not a constant (codegen_array_exp)")
         }

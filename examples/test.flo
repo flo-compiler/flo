@@ -1,4 +1,6 @@
-fnc main(): int {
-    let tuple: [string, string] = ["Programiz","Apple"]
-    return tuple[1] == "Apple" and tuple[0] == "Programiz" ? 0 : 1
+fnc main(): uint {
+    const eight = 8
+    let tuple = [-1, 2, eight]
+    //let s: int[-4]
+    return tuple[2]
 }
