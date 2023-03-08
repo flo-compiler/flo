@@ -200,6 +200,24 @@ class UnaryExpressionNode (ExpressionNode) {
         super(ExpressionKind.UNARY, range)
     }
 }
+class MatchExpressionCaseNode {
+    condition: ExpressionNode
+    block: BlockNode
+    constructor(this, condition: ExpressionNode, block: BlockNode){
+        this.condition = condition
+        this.block = block
+    }
+}
+class MatchExpressionNode (ExpressionNode) {
+    subject: ExpressionNode
+    cases: MatchExpressionCaseNode[]
+    else_block: BlockNode
+    constructor(this, range: FloRange){
+        super(ExpressionKind.MATCH, range)
+        this.cases = []
+        this.else_block = null
+    }
+}
 /* Can be either 'as' or 'is' unary expression */
 class IfStatementNode (StatementNode) {
     condition: ExpressionNode
@@ -831,7 +849,33 @@ class Parser {
             return BinaryOp.SR_ASSIGN
         return BinaryOp.UNDEF
     }
+    private parse_match_expression(this): ExpressionNode {
+        let match_expression = new MatchExpressionNode(this.eat(TokType.MATCH_KW).range)
+        match_expression.subject = this.parse_expression()
+        this.new_lines()
+        this.eat(TokType.LBRACE)
+        this.new_lines()
+        while (this.current_token.ttype != TokType.RBRACE) and this.can_parse() {
+            if this.current_token.ttype == TokType.ELSE_KW {
+                this.advance()
+                this.eat(TokType.COL)
+                match_expression.else_block = this.parse_block()
+                this.new_lines()
+            } else {
+                let condition = this.parse_expression()
+                this.eat(TokType.COL)
+                let block = this.parse_block()
+                this.new_lines()
+                match_expression.cases << new MatchExpressionCaseNode(condition, block)
+            }
+        }
+        this.eat(TokType.RBRACE)
+        return match_expression
+    }
     private parse_expression(this): ExpressionNode {
+        if this.current_token.ttype == TokType.MATCH_KW {
+            return this.parse_match_expression()
+        }
         let left = this.parse_ternary_expression()
         if this.current_token.ttype == TokType.IN_KW and this.can_parse() {
             this.advance()

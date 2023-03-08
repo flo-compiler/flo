@@ -869,6 +869,37 @@ class CodeGen {
         LLVMAddIncoming(phi_node, &incomming_vals[0], &blocks[0], blocks.size)
         return phi_node
     }
+    private codegen_match_exp(this, builder: LLVMBuilderRef, match_exp: MatchExpression): LLVMValueRef {
+        let else_block = LLVMAppendBasicBlock(this.function, "match.else")
+        let end_block = LLVMAppendBasicBlock(this.function, "match.end")
+        let cases_size = match_exp.cases.length + 1
+        let cases_blocks: LLVMBasicBlockRef*(cases_size)
+        let yield_values: LLVMValueRef*(cases_size)
+        let idx = 0
+        let match_type = this.codegen_type(match_exp.value_type)
+        let subject = this.codegen_expression(builder, match_exp.subject)
+        let switch = LLVMBuildSwitch(builder, subject, else_block, idx)
+        for case in match_exp.cases {
+            let case_block = LLVMAppendBasicBlock(this.function, "match.case")
+            LLVMPositionBuilderAtEnd(builder, case_block)
+            let yield_value = this.codegen_block(builder, case.block)
+            LLVMBuildBr(builder, end_block)
+            cases_blocks[idx] = case_block
+            yield_values[idx++] = yield_value
+            LLVMAddCase(switch, this.codegen_expression(builder, case.condition), case_block)
+        }
+        LLVMPositionBuilderAtEnd(builder, else_block)
+        cases_blocks[idx] = else_block
+        yield_values[idx++] = this.codegen_block(builder, match_exp.else_block)
+        LLVMBuildBr(builder, end_block)
+        LLVMPositionBuilderAtEnd(builder, end_block)
+        if match_exp.value_type.kind != TypeKind.VOID {
+            let phi_node = LLVMBuildPhi(builder, match_type, "match.phi.node")
+            LLVMAddIncoming(phi_node, yield_values, cases_blocks, idx)
+            return phi_node
+        }
+        return null
+    }
     /* TODO: Needs refactoring to remove array expression */
     private codegen_call_exp(this, builder: LLVMBuilderRef, call_exp: CallExpression): LLVMValueRef {
         let func: LLVMValueRef = null
@@ -1043,6 +1074,8 @@ class CodeGen {
             return this.codegen_typecast_exp(builder, expression as TypeCastExpression)
         if expression.expr_kind == ExpressionKind.ARRAY
             return this.codegen_array_exp(builder, expression as ArrayExpression)
+        if expression.expr_kind == ExpressionKind.MATCH
+            return this.codegen_match_exp(builder, expression as MatchExpression)
         if expression.expr_kind == ExpressionKind.INTRINSIC
             return this.codegen_intrinsic_exp(builder, expression as IntrinsicCall)
         return null
@@ -1173,19 +1206,19 @@ class CodeGen {
     private codegen_const_declaration(this, builder: LLVMBuilderRef, const_decl: ConstDeclaration){
         let const_id = const_decl.const_id
         let expression = get_const(this.program, const_id).value
-        let ty = this.codegen_type(expression.value_type)
-        let name = const_decl.name.to_cstring()
         let ptr: LLVMValueRef = null
         if const_decl.is_static {
+            let ty = this.codegen_type(expression.value_type)
+            let name = const_decl.name.to_cstring()
             let value = this.codegen_expression(builder, expression)
             ptr = LLVMAddGlobal(this.module, ty, name)
             LLVMSetInitializer(ptr, value)
             LLVMSetGlobalConstant(ptr, true)
+            this.add_var(const_id, ptr)
         } else {
-            ptr = LLVMBuildAlloca(builder, ty, name)
+            ptr = this.get_var_from_varid(const_id)
             this.store_expr_to_mem(builder, ptr, expression)
         }
-        this.add_var(const_id, ptr)
     }
     private codegen_statement(this, builder: LLVMBuilderRef, statement: Statement){
         if statement.kind == StatementKind.IF
@@ -1207,13 +1240,18 @@ class CodeGen {
         if statement.kind == StatementKind.EXPRESSION
             this.codegen_expression(builder, statement as Expression)
     }
-    private codegen_block(this, builder: LLVMBuilderRef, block: Block){
+    private codegen_block(this, builder: LLVMBuilderRef, block: Block): LLVMValueRef {
         let was_instatic_ctx = this.in_static_ctx
+        let yields: LLVMValueRef = null
         this.in_static_ctx = false
         for statement in block.statements {
             this.codegen_statement(builder, statement)
         }
+        if block.yields != null {
+            yields = this.codegen_expression(builder, block.yields)
+        }
         this.in_static_ctx = was_instatic_ctx
+        return yields
     }
     private codegen_vars_alloc_funtion_scope(this, builder: LLVMBuilderRef, scope: ScopeId){
         let current_scope = get_scope(this.program, scope)

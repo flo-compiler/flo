@@ -136,7 +136,7 @@ if a in 0..11 {
 // DO SOMETHING
 } else // DO SOMETHING
 ```
-- [ ] Match Expression.
+- [x] Basic Match Expression.
 ```
 match test {
     expr1: result1

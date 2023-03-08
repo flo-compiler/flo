@@ -331,11 +331,32 @@ class Block {
     returns: bool /* Block contains a return */
     continues: bool /* Block contains a continue */
     breaks: bool /* Block contains a break */
+    yields: Expression
     constructor(this){
         this.statements = []
         this.returns = false
         this.continues = false
         this.breaks = false
+        this.yields = null
+    }
+}
+class MatchExpressionCase {
+    condition: Expression
+    block: Block
+    constructor(this, condition: Expression, block: Block){
+        this.condition = condition
+        this.block = block
+    }
+}
+class MatchExpression(Expression){
+    subject: Expression
+    cases: MatchExpressionCase[]
+    else_block: Block
+    constructor(this, subject: Expression){
+        super(ExpressionKind.MATCH)
+        this.subject = subject
+        this.cases = []
+        this.else_block = null
     }
 }
 class IfStatement (Statement) {
@@ -2373,8 +2394,8 @@ class TypeChecker {
     private check_typecast_expr(this, type_expr_node: TypeCastExpressionNode): Expression {
         let exp = this.check_expression(Type.unknown(), type_expr_node.expression)
         let dest_ty = this.check_type(type_expr_node.bound_type)
-        let val_ty = exp.value_type
         if this.has_errored() return null
+        let val_ty = exp.value_type
         /* TODO:
             int to pointer.
             boolean to int/float.
@@ -2872,12 +2893,47 @@ class TypeChecker {
             return this.check_index_expr(expr_node as ExpressionIndexNode)
         if expr_node.expr_kind == ExpressionKind.CALL
             return this.check_call_expr(expected_type, expr_node as CallExpressionNode)
+        if expr_node.expr_kind == ExpressionKind.MATCH
+            return this.check_match_expr(expected_type, expr_node as MatchExpressionNode)
         return null
     }
     private check_condition(this, cond_node: ExpressionNode): Expression {
        let condition = this.check_expression(Type.unknown(), cond_node)
        if this.has_errored() return null
        return !is_bool(condition.value_type) ? cast_exp_to_type(condition, new BooleanType()) : condition
+    }
+    private check_match_expr(this, expected_type: Type, match_node: MatchExpressionNode): MatchExpression {
+        let unknown_ty: Type(TypeKind.UNKNOWN)
+        let match_expression = new MatchExpression(this.check_expression(unknown_ty, match_node.subject))
+        let result_type = unknown_ty
+        for case in match_node.cases {
+            let expression = this.check_expression(unknown_ty, case.condition)
+            if this.has_errored() return null
+            let block = this.check_block(case.block, null, true)
+            if this.has_errored() return null
+            let case_type = block.yields != null ? block.yields.value_type : new Type(TypeKind.VOID)
+            if result_type.kind == TypeKind.UNKNOWN {
+                result_type = case_type
+            } else if !this.types_are_eq(result_type, case_type){
+                this.error(ErrorKind.TYPE, "Expected match case block to yield '$(this.dump_type(result_type))' but yielded '$(this.dump_type(case_type))'", case.condition.range)
+                return null
+            }
+            match_expression.cases << new MatchExpressionCase(expression, block)
+        }
+        if match_node.else_block == null {
+            this.error(ErrorKind.GEN, "Non-exhaustable match expression, expected an else-case", match_node.range)
+            return null
+        } else {
+            let block = this.check_block(match_node.else_block, null, true)
+            let case_type = block.yields != null ? block.yields.value_type : new Type(TypeKind.VOID)
+            if !this.types_are_eq(result_type, case_type){
+                this.error(ErrorKind.TYPE, "Expected match else-case block to yield '$(this.dump_type(result_type))' but yielded '$(this.dump_type(case_type))'", match_node.range)
+                return null
+            }
+            match_expression.else_block = block
+        }
+        match_expression.value_type = result_type
+        return match_expression
     }
     private check_if_stamement(this, if_stmt_node: IfStatementNode): IfStatement {
         let condition = this.check_condition(if_stmt_node.condition)
@@ -3074,13 +3130,13 @@ class TypeChecker {
             return this.check_expression(Type.unknown(), stmt_node as ExpressionNode)
         return null
     }
-    private check_block(this, block_node: BlockNode, block_scope: Scope = null): Block {
-        if this.has_errored() return null
+    private check_block(this, block_node: BlockNode, block_scope: Scope = null, yields: bool = false): Block {
         let block = new Block()
         block_scope = block_scope != null ? block_scope : this.create_child_scope_within_current_scope() //TODO: Use ?? in the future
         this.current_scope = block_scope.id
+        let stmt: Statement = null
         for stmt_node in block_node.statements {
-            let stmt = this.check_statement(stmt_node)
+            stmt = this.check_statement(stmt_node)
             if this.has_errored() return null
             block.statements << stmt
             if stmt.kind == StatementKind.RETURN {
@@ -3103,6 +3159,12 @@ class TypeChecker {
             if stmt.kind == StatementKind.BREAK {
                 block.breaks = true
                 break
+            }
+        }
+        if stmt != null {
+            if yields and (stmt.kind == StatementKind.EXPRESSION) {
+                block.yields = stmt as Expression
+                block.statements.pop()
             }
         }
         this.current_scope = block_scope.parent

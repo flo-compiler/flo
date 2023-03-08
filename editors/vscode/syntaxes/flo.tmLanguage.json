@@ -97,9 +97,6 @@
 		"control-statement": {
 			"patterns": [
 				{
-					"include": "#switch-statement"
-				},
-				{
 					"include": "#for-loop"
 				},
 				{
@@ -136,8 +133,8 @@
 					]
 				},
 				{
-					"name": "keyword.control.switch.flo",
-					"match": "(?<![_$[:alnum:]])(?:(?<=\\.\\.\\.)|(?<!\\.))(case|default|switch)(?![_$[:alnum:]])(?:(?=\\.\\.\\.)|(?!\\.))"
+					"name": "keyword.control.match.flo",
+					"match": "(?<![_$[:alnum:]])(?:(?<=\\.\\.\\.)|(?<!\\.))(match)(?![_$[:alnum:]])(?:(?=\\.\\.\\.)|(?!\\.))"
 				},
 				{
 					"include": "#if-statement"
@@ -249,6 +246,9 @@
 				},
 				{
 					"include": "#paren-expression"
+				},
+				{
+					"include": "#match-expression"
 				}
 			]
 		},
@@ -2334,9 +2334,9 @@
 				}
 			]
 		},
-		"switch-statement": {
-			"name": "switch-statement.expr.flo",
-			"begin": "(?<![_$[:alnum:]])(?:(?<=\\.\\.\\.)|(?<!\\.))(?=\\bswitch\\s*\\()",
+		"match-expression": {
+			"name": "match-expression.expr.flo",
+			"begin": "(?<![_$[:alnum:]])(?:(?<=\\.\\.\\.)|(?<!\\.))(?=\\match\\s*\\()",
 			"end": "\\}",
 			"endCaptures": {
 				"0": {
@@ -2348,11 +2348,11 @@
 					"include": "#comment"
 				},
 				{
-					"name": "switch-expression.expr.flo",
-					"begin": "(?<![_$[:alnum:]])(?:(?<=\\.\\.\\.)|(?<!\\.))(switch)\\s*(\\()",
+					"name": "match-expression.expr.flo",
+					"begin": "(?<![_$[:alnum:]])(?:(?<=\\.\\.\\.)|(?<!\\.))(match)\\s*(\\()",
 					"beginCaptures": {
 						"1": {
-							"name": "keyword.control.switch.flo"
+							"name": "keyword.control.match.flo"
 						},
 						"2": {
 							"name": "meta.brace.round.flo"
@@ -2371,7 +2371,7 @@
 					]
 				},
 				{
-					"name": "switch-block.expr.flo",
+					"name": "match-block.expr.flo",
 					"begin": "\\{",
 					"beginCaptures": {
 						"0": {
@@ -2385,7 +2385,7 @@
 							"begin": "(?<![_$[:alnum:]])(?:(?<=\\.\\.\\.)|(?<!\\.))(case|default(?=:))(?![_$[:alnum:]])(?:(?=\\.\\.\\.)|(?!\\.))",
 							"beginCaptures": {
 								"1": {
-									"name": "keyword.control.switch.flo"
+									"name": "keyword.control.match.flo"
 								}
 							},
 							"end": "(?=:)",

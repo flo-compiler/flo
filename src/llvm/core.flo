@@ -324,7 +324,7 @@ fnc LLVMBuildRet(B: LLVMBuilderRef, V: LLVMValueRef): LLVMValueRef
 fnc LLVMBuildAggregateRet(B: LLVMBuilderRef, RetVals: LLVMValueRef *, N: int): LLVMValueRef
 fnc LLVMBuildBr(B: LLVMBuilderRef, Dest: LLVMBasicBlockRef): LLVMValueRef
 fnc LLVMBuildCondBr(B: LLVMBuilderRef, If: LLVMValueRef, Then: LLVMBasicBlockRef, Else: LLVMBasicBlockRef): LLVMValueRef
-fnc LLVMBuildSwitch(B: LLVMBuilderRef, V: LLVMValueRef, Else: LLVMBasicBlockRef, NumCases: int ): LLVMValueRef
+fnc LLVMBuildSwitch(B: LLVMBuilderRef, V: LLVMValueRef, Else: LLVMBasicBlockRef, NumCases: uint): LLVMValueRef
 fnc LLVMBuildIndirectBr(B: LLVMBuilderRef, Addr: LLVMValueRef, NumDests: int): LLVMValueRef
 
 fnc LLVMBuildInvoke2(B: LLVMBuilderRef, Ty: LLVMTypeRef, Fn: LLVMValueRef, Args: LLVMValueRef *, NumArgs: int, Then: LLVMBasicBlockRef, Catch: LLVMBasicBlockRef, Name: u8*): LLVMValueRef

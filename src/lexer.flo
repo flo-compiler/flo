@@ -12,6 +12,8 @@ fnc string_to_kw_token(word: string): TokType {
         return TokType.LET_KW
     if word == "if" 
         return TokType.IF_KW
+    if word == "match" 
+        return TokType.MATCH_KW
     if word == "else"
         return TokType.ELSE_KW
     if word == "for"

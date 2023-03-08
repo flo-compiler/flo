@@ -57,6 +57,7 @@ enum TokType {
     CONST_KW
     LET_KW
     IF_KW
+    MATCH_KW
     ELSE_KW
     FOR_KW
     WHILE_KW
@@ -131,6 +132,7 @@ enum ExpressionKind {
     INDEX
     CALL
     TERNARY
+    MATCH
     INTRINSIC
 }
 enum PropIdKind {
