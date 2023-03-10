@@ -869,6 +869,17 @@ class CodeGen {
         LLVMAddIncoming(phi_node, &incomming_vals[0], &blocks[0], blocks.size)
         return phi_node
     }
+    private codegen_match_case(this, builder: LLVMBuilderRef, switch: LLVMValueRef, expression: Expression, block: LLVMBasicBlockRef){
+        if expression.expr_kind == ExpressionKind.BIN {
+            let bin_expression = expression as BinaryExpression
+            if bin_expression.op == BinaryOp.OR {
+                this.codegen_match_case(builder, switch, bin_expression.lhs, block)
+                this.codegen_match_case(builder, switch, bin_expression.rhs, block)
+                return
+            }
+        }
+        LLVMAddCase(switch, this.codegen_expression(builder, expression), block)
+    }
     private codegen_match_exp(this, builder: LLVMBuilderRef, match_exp: MatchExpression): LLVMValueRef {
         let else_block = LLVMAppendBasicBlock(this.function, "match.else")
         let end_block = LLVMAppendBasicBlock(this.function, "match.end")
@@ -881,12 +892,13 @@ class CodeGen {
         let switch = LLVMBuildSwitch(builder, subject, else_block, idx)
         for case in match_exp.cases {
             let case_block = LLVMAppendBasicBlock(this.function, "match.case")
+            LLVMPositionBuilderBefore(builder, subject)
+            this.codegen_match_case(builder, switch, case.condition, case_block)
             LLVMPositionBuilderAtEnd(builder, case_block)
             let yield_value = this.codegen_block(builder, case.block)
             LLVMBuildBr(builder, end_block)
             cases_blocks[idx] = case_block
             yield_values[idx++] = yield_value
-            LLVMAddCase(switch, this.codegen_expression(builder, case.condition), case_block)
         }
         LLVMPositionBuilderAtEnd(builder, else_block)
         cases_blocks[idx] = else_block

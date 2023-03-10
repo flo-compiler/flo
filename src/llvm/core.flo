@@ -290,6 +290,8 @@ fnc LLVMAppendBasicBlockInContext(C: LLVMContextRef, Fn: LLVMValueRef, Name: u8*
 fnc LLVMInsertBasicBlock(InsertBeforeBB: LLVMBasicBlockRef, Name: u8*): LLVMBasicBlockRef
 fnc LLVMDeleteBasicBlock(BB: LLVMBasicBlockRef)
 fnc LLVMRemoveBasicBlockFromParent(BB: LLVMBasicBlockRef)
+
+fnc LLVMDeleteInstruction(Inst: LLVMValueRef)
 /* functions calls */
 fnc LLVMIsTailCall(CallInst: LLVMValueRef): LLVMBool
 fnc LLVMSetTailCall(CallInst: LLVMValueRef, IsTailCall: LLVMBool)

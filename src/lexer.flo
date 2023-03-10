@@ -316,11 +316,6 @@ class Lexer {
             token = TokType.DOT_DOT
             length++
             this.advance()
-            if this.peek() == '.' {
-                token = TokType.DOT_DOT_DOT
-                length++
-                this.advance()
-            }
         }
         return new Token(token, this.get_range(length))
     }

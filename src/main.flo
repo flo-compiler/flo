@@ -46,7 +46,7 @@ fnc main(argc: int, argv: u8**): int {
     if argc >= 2 {
         let args = parse_args(argc, argv)
         if flag(args, "-v") or flag(args, "--version"){
-            flo_println("v0.01@selfhost")
+            flo_println("0.0.1")
             return 0
         }
         if flag(args, "-h") or flag(args, "--help"){

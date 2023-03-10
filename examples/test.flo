@@ -1,9 +1,10 @@
 fnc main(): uint {
-    const eight = 8
-    return match(eight) {
-        1: 4
-        2: 3
-        8: 0
+    const eight = 7
+    match "Hello" {
+        "Jo": 0
+        "MM": 3
+        "MN": 11
         else: 4
     }
+    return 1
 }

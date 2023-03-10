@@ -106,10 +106,6 @@ let number = numbers[0] // paul
 ```
 names << "Josh"
 ```
-- [ ] The spread operator
-```
-let a = [...(1..100)]
-```
 ## Maps
 - [x] Intialization
 ```

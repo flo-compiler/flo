@@ -52,7 +52,6 @@ enum TokType {
     DOT
     XOR
     DOT_DOT
-    DOT_DOT_DOT
     IDENTIFER
     CONST_KW
     LET_KW
