@@ -1040,16 +1040,15 @@ class Parser {
             this.new_lines()
             args << this.parse_arg()
         }
-        this.new_lines()
     }
     private parse_function(this): FunctionDeclarationNode {
         let fnc_node = new FunctionDeclarationNode()
         fnc_node.name = this.eat(TokType.IDENTIFER) as IdentifierToken
         this.eat(TokType.LPAR)
-        this.new_lines()
         if this.current_token.ttype != TokType.RPAR
             this.parse_args(fnc_node.args)
         
+        this.new_lines()
         this.eat(TokType.RPAR)
         if this.current_token.ttype == TokType.COL {
             this.advance()
@@ -1242,12 +1241,20 @@ class Parser {
                 module_node.consts << parser.parse_const_declaration_statement()
             else if parser.current_token.ttype == TokType.LET_KW
                 module_node.vars << parser.parse_variable_declaration_statement()
-            else if parser.current_token.ttype == TokType.IDENTIFER and (parser.current_token as IdentifierToken).value == "type"
+            else if tok_is_type_id(parser.current_token) 
                 module_node.type_aliases << parser.parse_type_alias()
-            else 
-                parser.error("Illegal expression expected: 'fnc', 'class', 'enum', 'import', 'const' or 'let'")
+            else {
+                parser.error("Illegal expression expected: 'fnc', 'class', 'type', 'enum', 'import', 'const' or 'let'")
+                break
+            }
             parser.new_lines()
         }
         return module_node
     }
+}
+fnc tok_is_type_id(token: Token): bool {
+    if token.ttype == TokType.IDENTIFER {
+        return (token as IdentifierToken).value == "type"
+    }
+    return false
 }
