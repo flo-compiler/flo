@@ -1,0 +1,47 @@
+class URI {
+    protocol: string
+    hostname: string
+    path: string
+    port: uint
+    constructor(this){}
+    parse(uristr: string): URI{
+        let url = new URI()
+        let rest_uristr: string = null
+        let https_protocol_string = "https"
+        let domain_sep = "://"
+        let domain_idx = uristr.find(domain_sep)
+        if domain_idx > 0 {
+            url.protocol = uristr.substring(0, domain_idx as uint)
+            rest_uristr = uristr.substring(domain_idx + domain_sep.length, uristr.length - domain_idx - 3 as uint)
+        } else {
+            url.protocol = "http"
+            rest_uristr = uristr
+        }
+        let path_sep = "/"
+        let path_idx = rest_uristr.find(path_sep)
+        if path_idx > 0 {
+            url.path = rest_uristr.substring(path_idx, rest_uristr.length - path_idx)
+            rest_uristr = rest_uristr.substring(0, path_idx as uint)
+        } else {
+            url.path = "/"
+        }
+        let port_sep = ":"
+        let port_idx = rest_uristr.find(port_sep)
+        if port_idx > 0 {
+            url.port = rest_uristr.substring(port_idx + 1, rest_uristr.length - port_idx) as uint
+            rest_uristr = rest_uristr.substring(0, port_idx as uint)
+        } else {
+            url.port = 80
+        }
+        if url.protocol == https_protocol_string {
+            url.port = 443
+        }
+
+        url.hostname = rest_uristr
+        del domain_sep
+        del port_sep
+        del https_protocol_string
+        del path_sep
+        return url
+    }
+}

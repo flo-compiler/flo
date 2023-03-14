@@ -1,0 +1,64 @@
+import accept, lseek, AF_INET, SOCK_STREAM, SEEK_SET in "@sys/lib"
+import "socket"
+import "uri"
+class HTTPClient {
+    private socket: Socket
+    private method: string
+    private uri: URI
+    private headers: [string: string]
+    constructor(this){
+        this.uri = null
+        this.method = null
+        this.headers = new [string: string]()
+        this.header("Accept", "*/*")
+        this.header("Connection", "keep-alive")
+    }
+    get(this, url: string): HTTPClient {
+        this.socket = new Socket(AF_INET as int, SOCK_STREAM as int, 0)
+        this.method = "GET"
+        this.set_uri(url)
+        return this
+    }
+    post(this, url: string): HTTPClient {
+        this.method = "POST"
+        this.set_uri(url)
+        return this
+    }
+    private set_uri(this, url: string){
+        this.uri = URI.parse(url)
+        this.header("Host", this.uri.hostname)
+    }
+    private build_request_string(this): string {
+        let request_str_builder: StringBuilder(10)
+        request_str_builder.append_string(this.method)
+        request_str_builder.add_bytes_length(" ", 1)
+        request_str_builder.append_string(this.uri.path)
+        request_str_builder.add_bytes_length("\r\n", 2)
+        for header in this.headers {
+            request_str_builder.append_string(header.key)
+            request_str_builder.add_bytes_length(" ", 1)
+            request_str_builder.append_string(header.value)
+            request_str_builder.add_bytes_length("\r\n", 2)
+        }
+        return request_str_builder.get_string()
+    }
+    public header(this, key: string, value: string): HTTPClient {
+        this.headers[key] = value
+        return this
+    }
+    public send(this): string {
+        lseek(this.socket.sockfd, 0, SEEK_SET as int)
+        this.socket.connect(this.uri.hostname, this.uri.port)
+        let request_string = this.build_request_string()
+        let buff: u8[1026] = null
+        let response_text_builder: StringBuilder(buff.size)
+        let recieved = 0
+        if write(this.socket.sockfd, request_string.get_bytes(), request_string.length) >= 0 {
+            while (recieved = read(this.socket.sockfd, &buff[0], buff.size)) != 0 {
+                response_text_builder.add_bytes_length(&buff[0], recieved)
+            }
+        }
+        del request_string
+        return response_text_builder.get_string()
+    }
+}

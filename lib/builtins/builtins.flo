@@ -3,7 +3,7 @@ const STDOUT: int = 1
 const STDERR: int = 2
 /*@extern*/
 fnc strlen(str: u8*): uint
-fnc write(fc: int, buf: u8*, len: uint)
+fnc write(fc: int, buf: u8*, len: uint): uint
 fnc read(fd: int, buff: u8*, size: uint): uint 
 // ----- functions -----
 fnc print(str: string){
@@ -21,13 +21,14 @@ fnc eprintln(str: string){
     write(STDERR, "\n", 1)
 }
 fnc input(): string {
-    let size = 0
-    let buffer = new u8*(1)
-    while (buffer[size] != '\n'){
-        buffer = buffer.resize((++size) + 1)
-        read(STDIN, buffer + size, 1)
+    let char: u8
+    let builder: StringBuilder(1)
+    while true {
+        read(STDIN, &char, 1)
+        if char == '\n' break
+        builder.add_byte(char)
     }
-    return new string(buffer, size)
+    return builder.get_string()
 }
 // ----- string -------
 class string {
@@ -155,7 +156,7 @@ class StringBuilder {
         this.working_buffer = this.buffer + this.length
     }
     public add_bytes_length(this, bytes: u8*, length: uint){
-        if (this.size - this.length <= length) this.resize()
+        while (this.size - this.length <= length) this.resize()
         this.working_buffer.copy_from(bytes, length)
         this.working_buffer += length
         this.length += length
@@ -164,7 +165,7 @@ class StringBuilder {
         this.add_bytes_length(str.get_bytes(), str.length)
     }
     public add_byte(this, byte: u8){
-        if (this.size - this.length <= 1) this.resize()
+        while (this.size - this.length <= 1) this.resize()
         this.working_buffer[0] = byte
         this.working_buffer += 1
         this.length += 1

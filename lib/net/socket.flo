@@ -1,9 +1,24 @@
 import socket, connect, accept, bind, listen, close in "@sys/lib"
-fnc inet_addr(addr: u8*): int
-fnc htons(x: uint): int {
+fnc gethostbyname(name: u8*): hostent
+fnc perror(s: u8*)
+class hostent {
+    h_name: u8*
+    h_aliases: u8** 
+    h_addrtype: i32
+    h_length: i32
+    h_addr_list: u8**
+}
+class sockaddr_in {
+    sin_family: i16
+    sin_port: u16
+    sin_address: u32[1]
+    sin_zero: u8[8]
+    constructor(this){}
+}
+fnc htons(x: uint): u16 {
     let x1 = (x and 255) << 8
     let x2 = (x >> 8) and 255 
-    return (x1 or x2) as int
+    return (x1 or x2) as u16
 }
 fnc calc_sin_addr(sin_family: int, sin_port: int): int {
     return (sin_port << 16) or (sin_family and 0xFFFF)
@@ -20,21 +35,41 @@ class Socket {
         this.sockfd = sockfd
         this.domain = domain
     }
-    bind(this, port: uint, address: string = ""){
-        let addr: int[2] = [calc_sin_addr(this.domain, htons(port)), inet_addr(address.to_cstring())]
-        if bind(this.sockfd, &addr[0] as u8*, 16) < 0 {
-            println("Error: could not bind socket")
+    bind(this, address: string, port: uint){
+        let cstring_addr = address.to_cstring()
+        let host = gethostbyname(cstring_addr)
+        if host == null {
+            perror("hostname")
+            return
         }
+        let addr: sockaddr_in()
+        (&addr.sin_address[0] as u8*).copy_from(host.h_addr_list[0], host.h_length as uint)
+        addr.sin_port = htons(port)
+        addr.sin_family = this.domain as i16
+        if bind(this.sockfd, &addr.sin_family as u8*, 16) < 0 {
+            perror("bind")
+        }
+        del cstring_addr
     }
-    connect(this, port: uint, address: string){
-        let addr: int[2] = [calc_sin_addr(this.domain, htons(port)), inet_addr(address.to_cstring())]
-        if connect(this.sockfd, &addr[0] as u8*, 16) < 0 {
-            println("Error: could not connect socket")
+    connect(this, address: string, port: uint){
+        let cstring_addr = address.to_cstring()
+        let host = gethostbyname(cstring_addr)
+        if host == null {
+            perror("hostname")
+            return
         }
+        let addr: sockaddr_in()
+        (&addr.sin_address[0] as u8*).copy_from(host.h_addr_list[0], host.h_length as uint)
+        addr.sin_port = htons(port) as u16
+        addr.sin_family = this.domain as i16
+        if connect(this.sockfd, &addr.sin_family as u8*, 16) < 0 {
+            perror("connect")
+        }
+        del cstring_addr
     }
     listen(this, backlog: int = 10){
         if listen(this.sockfd, backlog) < 0 {
-            println("Error: could not start listening")
+            perror("listen")
         }
     }
     close(this){

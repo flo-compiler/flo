@@ -1,9 +1,6 @@
-import access, F_OK in "@sys/lib"
+import access, F_OK, W_OK, O_CREAT, R_OK, open, close in "@sys/lib"
 // ------- File -------
-fnc fopen(path: u8*, mode: u8*): int
-fnc fclose(stream: int)
-fnc fread(buf: u8*, size: uint, nmemb: uint, stream: int): uint
-fnc fwrite(buf: u8*, size: uint, nmemb: uint, stream: int): uint
+const DEFFILEMODE = 0o666
 class File {
     fd: int
     constructor(this, fd: int){
@@ -11,39 +8,32 @@ class File {
     }
     public open_for_reading(path: string): File {
         let filename = path.to_cstring()
-        let fd = fopen(filename, "r")
+        let fd = open(filename, R_OK, DEFFILEMODE)
         del filename
-        if fd == null return null
+        if fd < 0 return null
         return new File(fd)
     }
     public open_for_writing(path: string): File {
         let filename = path.to_cstring()
-        let fd = fopen(filename, "wb")
+        let fd = open(filename, W_OK or O_CREAT, DEFFILEMODE)
         del filename
-        if fd == null return null
+        if fd < 0 return null
         return new File(fd)
     }
     public read_all(this): string {
-        let size = 0
-        let allocated_mem = new u8*(size)
         let buffer: u8[1024]
-        while true {
-            let read_len = fread(&buffer[0], 1, buffer.size, this.fd)
-            if read_len == 0 {
-                return new string(allocated_mem, size)
-            }
-            let prev_size = size
-            size += read_len
-            allocated_mem = allocated_mem.resize(size)
-            (allocated_mem + prev_size).copy_from(&buffer[0], read_len)
+        let string_builder: StringBuilder(1024)
+        let read_len: uint
+        while (read_len = read(this.fd, &buffer[0], buffer.size)) != 0 {
+            string_builder.add_bytes_length(&buffer[0], read_len)
         }
-        return null
+        return string_builder.get_string()
     }
     public write_bytes_length(this, buffer: u8*, length: uint): uint {
-        return fwrite(buffer, 1, length, this.fd)
+        return write(this.fd, buffer, length)
     }
     public write_string(this, s: string): uint {
-        return fwrite(s.get_bytes(), 1, s.length, this.fd)
+        return write(this.fd, s.get_bytes(), s.length)
     }
     public exists(path: string): bool {
         let filename = path.to_cstring()
@@ -52,6 +42,6 @@ class File {
         return res
     }
     public close(this){
-        fclose(this.fd)
+        close(this.fd)
     }
 }

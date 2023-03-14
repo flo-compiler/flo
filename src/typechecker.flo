@@ -2904,11 +2904,17 @@ class TypeChecker {
     }
     private check_match_expr(this, expected_type: Type, match_node: MatchExpressionNode): MatchExpression {
         let unknown_ty: Type(TypeKind.UNKNOWN)
-        let match_expression = new MatchExpression(this.check_expression(unknown_ty, match_node.subject))
+        let subject = this.check_expression(unknown_ty, match_node.subject)
+        let match_expression = new MatchExpression(subject)
+        if this.has_errored() return null
         let result_type = unknown_ty
         for case in match_node.cases {
-            let expression = this.check_expression(unknown_ty, case.condition)
+            let expression = this.check_expression(subject.value_type, case.condition)
             if this.has_errored() return null
+            if !this.types_are_eq(subject.value_type, expression.value_type){
+                this.error(ErrorKind.TYPE, "Expected type '$(this.dump_type(subject.value_type))' from match expression subject but got type '$(this.dump_type(expression.value_type))'", case.condition.range)
+                return null
+            }
             let block = this.check_block(case.block, null, true)
             if this.has_errored() return null
             let case_type = block.yields != null ? block.yields.value_type : new Type(TypeKind.VOID)

@@ -1,0 +1,10 @@
+//@expect: return_code=1
+fnc main(): uint {
+    const eight = 8
+    return match(eight) {
+        1: 4
+        true: 3
+        8: 0
+        else: 4
+    }
+}

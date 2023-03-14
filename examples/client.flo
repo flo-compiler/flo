@@ -1,0 +1,7 @@
+import "@net/httpclient"
+fnc main(): uint {
+    let client: HTTPClient()
+    let response = client.get("http://swapi.dev/api/people/1").send()
+    println(response)
+    return 0
+}

@@ -1,39 +1,69 @@
-import accept, AF_INET, SOCK_STREAM in "@sys/lib"
+import accept, close, AF_INET, SOCK_STREAM in "@sys/lib"
 import "socket"
-import "response"
-import "request"
-type RequestHandler = (Request, Response) -> void
-class HTTPServer {
-    private socket: Socket
-    private response: Response
-    private request: Request
-    constructor(this, port: uint, address: string = ""){
-        this.socket = new Socket(AF_INET as int, SOCK_STREAM as int, 0)
-        this.socket.bind(port, address)
-        this.socket.listen()
-        this.response = new Response(-1)
-        this.request = new Request()
+import "uri"
+class HTTPRequestStream {
+    private conn: int
+    public raw: string
+    private response_str_builder: StringBuilder
+    constructor(this, conn: int){
+        this.conn = conn
+        let buff: u8[1026]
+        let str_builder: StringBuilder(buff.size)
+        while true {
+            let recieved = read(conn, &buff[0], buff.size)
+            str_builder.add_bytes_length(&buff[0], recieved)
+            if (recieved < buff.size) break
+        }
+        this.raw = str_builder.get_string()
+        this.response_str_builder = new StringBuilder(10)
     }
-    private accept_connection(this){
+    write(this, s: string): HTTPRequestStream {
+        this.response_str_builder.append_string(s)
+        return this
+    }
+    end(this){
+        let str = this.response_str_builder.get_string()
+        write(this.conn, str.get_bytes(), str.length)
+        close(this.conn)
+        del str
+    }
+    __del__(this){
+        del this.raw
+        del this.response_str_builder
+    }
+}
+class HTTPServer {
+    private done: bool
+    private url: URI
+    private socket: Socket
+    constructor(this){
+        this.done =  true
+    }
+    public bind(address = "localhost"): HTTPServer {
+        let http_server = new HTTPServer()
+        let url = URI.parse(address)
+        http_server.socket = new Socket(AF_INET as int, SOCK_STREAM as int, 0)
+        http_server.socket.bind(url.hostname, url.port)
+        return http_server
+    }
+    private next(this): HTTPRequestStream {
         let cli: u8[16]
         let cli_len = 4
         let connfd = accept(this.socket.sockfd, &cli[0], &cli_len)
         if connfd < 0 {
-            println("Error Accepting connection")
-            return
+            perror("Accepting connection")
+            return null
         }
-        let size = read(connfd, this.request.raw_buffer, MAX_BUFFSIZE)
-        this.request.set_size(size)
-        this.response.set_connection(connfd)
+        return new HTTPRequestStream(connfd)
     }
-    public listen(this, handler: RequestHandler){
-        while true {
-            this.accept_connection()
-            handler(this.request, this.response)
-        }
+    private  __iter__(this): HTTPServer {
+        this.socket.listen()
+        this.done = false
+        return this
     }
     public close(this){
         this.socket.close()
+        this.done = true
     }
     public destroy(this){
         this.socket.destroy()

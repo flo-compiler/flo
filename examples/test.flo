@@ -1,13 +1,5 @@
-fnc testMatch(n: uint): bool {
-    return match n {
-        8: true
-        2: false
-        9: false
-        else: false
-    }
-}
 fnc main(): uint {
-    const eight = 8
-    if testMatch(8) return 0
-    return 1
+    let s = input()
+    print(s)
+    return 0
 }

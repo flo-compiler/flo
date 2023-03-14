@@ -201,6 +201,16 @@ enum ACCESS_ATTR {
     PUBLIC
     PROTECTED
 }
+enum MatchArmPatternKind {
+    EQ
+    GT
+    LT
+    LTE
+    GTE
+    OR
+    AND
+    IN
+}
 enum Intrinsics {
     STR_TO_F
     STR_TO_I

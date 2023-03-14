@@ -1,7 +1,7 @@
 
 const ARCH_WORD_SIZE = 64
 /* IO */
-fnc open(filename: u8*, flags: int): int 
+fnc open(filename: u8*, flags: int, mode: uint): int 
 fnc close(fd: int): int 
 fnc lstat(filename: u8*, stat_struct: u8*): int 
 fnc lseek(fd: int, offset: int, whence: int): int 
@@ -19,16 +19,18 @@ fnc exit (error_code: int)
 fnc getcwd(buf: u8*, size: int): int
 fnc rename(oldname: u8*, newname: u8*): int 
 fnc unlink(pathname: u8*): int 
+
 /* IO consts */
-const O_RDONLY = 0
-const O_WRONLY = 1
-const O_RDWR = 2
-const O_CREAT = 100
+const O_RDONLY = 0o0
+const O_WRONLY = 0o01
+const O_RDWR = 0o2
+const O_CREAT = 0o100
+const O_NONBLOCK = 0o4000
+
 const R_OK: int = 4 /* Test for read permission.  */
 const W_OK: int = 2 /* Test for write permission.  */
 const X_OK: int = 1 /* Test for execute permission.  */
 const F_OK: int = 0 /* Test if file exists */
-const O_NONBLOCK = 2048
 
 const F_SETFL = 4
 const F_GETFL = 3

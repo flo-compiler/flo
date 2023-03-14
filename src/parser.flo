@@ -762,11 +762,11 @@ class Parser {
             return BinaryOp.NEQ
         return BinaryOp.UNDEF
     }
-    private parse_comparasion_expression(this): ExpressionNode {
+    private parse_comparison_expression(this): ExpressionNode {
         let start_range = this.current_token.range
         if this.current_token.ttype == TokType.NOT {
             this.advance()
-            let comp_val = this.parse_comparasion_expression()
+            let comp_val = this.parse_comparison_expression()
             return new UnaryExpressionNode(UnaryOp.NOT, comp_val, FloRange.merge(start_range, comp_val.range))
         }
         let bit = this.parse_bitshift_expression()
@@ -787,11 +787,11 @@ class Parser {
         return BinaryOp.UNDEF
     }
     private parse_bit_expression(this): ExpressionNode {
-        let cmp = this.parse_comparasion_expression()
+        let cmp = this.parse_comparison_expression()
         let op = this.is_logic_expr_op()
         while op != BinaryOp.UNDEF and this.can_parse() {
             this.advance()
-            cmp = new BinaryExpressionNode(cmp, op, this.parse_comparasion_expression())
+            cmp = new BinaryExpressionNode(cmp, op, this.parse_comparison_expression())
             op = this.is_logic_expr_op()
         }
         return cmp
@@ -1079,6 +1079,7 @@ class Parser {
                 this.eat(TokType.COMMA)
             this.parse_args(method_node.args)
         }
+        this.new_lines()
         this.eat(TokType.RPAR)
         if this.current_token.ttype == TokType.COL {
             this.advance()
@@ -1252,6 +1253,7 @@ class Parser {
         return module_node
     }
 }
+
 fnc tok_is_type_id(token: Token): bool {
     if token.ttype == TokType.IDENTIFER {
         return (token as IdentifierToken).value == "type"

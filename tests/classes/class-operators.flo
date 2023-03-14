@@ -25,12 +25,12 @@ class Float {
         return this.value
     }
 }
-fnc main(): int {
+fnc main(): uint {
     let x: Int(4)
     let y: Int(5)
     y += x
     let z: Float(8.8)
     let w: Float(1.2)
-    z+=w
-    return z.get_value() as int
+    z += w
+    return z.get_value() as uint
 }
