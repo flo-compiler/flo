@@ -178,13 +178,13 @@ class Lexer {
         return '\0'
     }
     private advance(this){
-        if this.eof() return
-        this.current_char = this.text.get_byte(++this.idx as uint)
+        this.current_char = this.eof() ? '\0' : this.text.get_byte(++this.idx as uint)
         if this.current_char == '\n' {
             this.col = 0
             this.line++
-        } else
+        } else if this.current_char != '\0' {
             this.col++
+        }
     }
     private get_range(this, back: uint): FloRange {
         return new FloRange(this.idx - back + 1, (this.idx + 1) as uint, this.col - back, this.line)
@@ -502,6 +502,7 @@ class Lexer {
         if char == '\0'
             return new Token(TokType.EOF, new FloRange(0, 0, this.col, this.line))
         let char_msg = this.text.substring(this.idx, 1)
+        println("$(this.idx)")
         this.errors << new FloError(ErrorKind.ILLEGALCHAR, "Illegal character: '$char_msg'", this.get_range(1))
         del char_msg
         return null

@@ -145,7 +145,7 @@ class StringBuilder {
     private working_buffer: u8*
     public length: uint
     constructor(this, size: uint){
-        this.size = size
+        this.size = size == 0 ? 1 : size
         this.buffer = new u8*(this.size)
         this.working_buffer = this.buffer
         this.length = 0
@@ -156,7 +156,9 @@ class StringBuilder {
         this.working_buffer = this.buffer + this.length
     }
     public add_bytes_length(this, bytes: u8*, length: uint){
-        while (this.size - this.length <= length) this.resize()
+        while (this.size - this.length <= length) {
+            this.resize()
+        }
         this.working_buffer.copy_from(bytes, length)
         this.working_buffer += length
         this.length += length
@@ -165,7 +167,7 @@ class StringBuilder {
         this.add_bytes_length(str.get_bytes(), str.length)
     }
     public add_byte(this, byte: u8){
-        while (this.size - this.length <= 1) this.resize()
+        if (this.size - this.length <= 1) this.resize()
         this.working_buffer[0] = byte
         this.working_buffer += 1
         this.length += 1

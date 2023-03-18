@@ -282,10 +282,11 @@ fnc LLVMBasicBlockAsValue(BB: LLVMBasicBlockRef): LLVMValueRef
 fnc LLVMGetBasicBlockName(BB: LLVMBasicBlockRef): u8*
 fnc LLVMGetBasicBlockParent(BB: LLVMBasicBlockRef): LLVMValueRef
 fnc LLVMGetBasicBlockTerminator(BB: LLVMBasicBlockRef): LLVMValueRef
+fnc LLVMGetLastBasicBlock(Fn: LLVMValueRef): LLVMValueRef
 fnc LLVMGetEntryBasicBlock(Fn: LLVMValueRef): LLVMBasicBlockRef
 fnc LLVMInsertExistingBasicBlockAfterInsertBlock(Builder: LLVMBuilderRef, BB: LLVMBasicBlockRef)
 fnc LLVMCreateBasicBlockInContext(C: LLVMContextRef, Name: u8*): LLVMBasicBlockRef
-fnc LLVMAppendBasicBlock(fn: LLVMValueRef, name: u8*): LLVMBasicBlockRef
+fnc LLVMAppendBasicBlock(Fn: LLVMValueRef, name: u8*): LLVMBasicBlockRef
 fnc LLVMAppendBasicBlockInContext(C: LLVMContextRef, Fn: LLVMValueRef, Name: u8*): LLVMBasicBlockRef
 fnc LLVMInsertBasicBlock(InsertBeforeBB: LLVMBasicBlockRef, Name: u8*): LLVMBasicBlockRef
 fnc LLVMDeleteBasicBlock(BB: LLVMBasicBlockRef)

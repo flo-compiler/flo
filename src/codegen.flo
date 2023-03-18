@@ -887,13 +887,21 @@ class CodeGen {
         let cases_blocks: LLVMBasicBlockRef*(cases_size)
         let yield_values: LLVMValueRef*(cases_size)
         let idx = 0
+        let curr_block: LLVMBasicBlockRef = null
         let match_type = this.codegen_type(match_exp.value_type)
         let subject = this.codegen_expression(builder, match_exp.subject)
-        let switch = LLVMBuildSwitch(builder, subject, else_block, idx)
+        let switch: LLVMValueRef = match_exp.use_ifs ? null : LLVMBuildSwitch(builder, subject, else_block, idx)
         for case in match_exp.cases {
+            if curr_block != null {
+                LLVMPositionBuilderAtEnd(builder, curr_block)
+            }
             let case_block = LLVMAppendBasicBlock(this.function, "match.case")
-            LLVMPositionBuilderBefore(builder, subject)
-            this.codegen_match_case(builder, switch, case.condition, case_block)
+            if case.kind == MatchCaseKind.EEQ and (switch != null) {
+                this.codegen_match_case(builder, switch, case.condition, case_block)
+            } else {
+                curr_block = (idx == match_exp.cases.length - 1) ? else_block : LLVMAppendBasicBlock(this.function, "match.case.else")
+                LLVMBuildCondBr(builder, this.codegen_expression(builder, case.condition), case_block, curr_block)
+            }
             LLVMPositionBuilderAtEnd(builder, case_block)
             let yield_value = this.codegen_block(builder, case.block)
             LLVMBuildBr(builder, end_block)

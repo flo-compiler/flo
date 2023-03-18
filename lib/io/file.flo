@@ -21,9 +21,9 @@ class File {
         return new File(fd)
     }
     public read_all(this): string {
-        let buffer: u8[1024]
+        let buffer: u8[1024] = null
         let string_builder: StringBuilder(1024)
-        let read_len: uint
+        let read_len: uint = null
         while (read_len = read(this.fd, &buffer[0], buffer.size)) != 0 {
             string_builder.add_bytes_length(&buffer[0], read_len)
         }

@@ -341,9 +341,11 @@ class Block {
     }
 }
 class MatchExpressionCase {
+    kind: MatchCaseKind
     condition: Expression
     block: Block
-    constructor(this, condition: Expression, block: Block){
+    constructor(this, kind: MatchCaseKind, condition: Expression, block: Block){
+        this.kind = kind
         this.condition = condition
         this.block = block
     }
@@ -352,9 +354,11 @@ class MatchExpression(Expression){
     subject: Expression
     cases: MatchExpressionCase[]
     else_block: Block
-    constructor(this, subject: Expression){
+    use_ifs: bool
+    constructor(this, subject: Expression, use_ifs: bool){
         super(ExpressionKind.MATCH)
         this.subject = subject
+        this.use_ifs = use_ifs
         this.cases = []
         this.else_block = null
     }
@@ -2905,15 +2909,33 @@ class TypeChecker {
     private check_match_expr(this, expected_type: Type, match_node: MatchExpressionNode): MatchExpression {
         let unknown_ty: Type(TypeKind.UNKNOWN)
         let subject = this.check_expression(unknown_ty, match_node.subject)
-        let match_expression = new MatchExpression(subject)
         if this.has_errored() return null
+        if is_null(subject){
+            this.error(ErrorKind.TYPE, "Cannot match on constant 'null'", match_node.subject.range)
+            return null
+        }
+        let use_ifs = is_object(subject.value_type)
+        let match_expression = new MatchExpression(subject, use_ifs)
         let result_type = unknown_ty
         for case in match_node.cases {
-            let expression = this.check_expression(subject.value_type, case.condition)
-            if this.has_errored() return null
-            if !this.types_are_eq(subject.value_type, expression.value_type){
-                this.error(ErrorKind.TYPE, "Expected type '$(this.dump_type(subject.value_type))' from match expression subject but got type '$(this.dump_type(expression.value_type))'", case.condition.range)
-                return null
+            let expression: Expression = null
+            let match_case_kind = MatchCaseKind.EEQ
+            if (use_ifs) {
+                let bin_exp: BinaryExpressionNode(match_node.subject, BinaryOp.EEQ, case.condition)
+                expression = this.check_object_binary_expr(subject, bin_exp, null)
+                if this.has_errored() return null
+                match_case_kind = MatchCaseKind.VAL
+                if !is_bool(expression.value_type) {
+                    this.error(ErrorKind.TYPE, "Operator overload == for '$(this.dump_type(subject.value_type))' should return a boolean to be used in match expression", case.condition.range)
+                    return null
+                }
+            } else {
+                expression = this.check_expression(subject.value_type, case.condition)
+                if this.has_errored() return null
+                if !this.types_are_eq(subject.value_type, expression.value_type){
+                    this.error(ErrorKind.TYPE, "Expected type '$(this.dump_type(subject.value_type))' from match expression subject but got type '$(this.dump_type(expression.value_type))'", case.condition.range)
+                    return null
+                }
             }
             let block = this.check_block(case.block, null, true)
             if this.has_errored() return null
@@ -2924,7 +2946,7 @@ class TypeChecker {
                 this.error(ErrorKind.TYPE, "Expected match case block to yield '$(this.dump_type(result_type))' but yielded '$(this.dump_type(case_type))'", case.condition.range)
                 return null
             }
-            match_expression.cases << new MatchExpressionCase(expression, block)
+            match_expression.cases << new MatchExpressionCase(match_case_kind, expression, block)
         }
         if match_node.else_block == null {
             this.error(ErrorKind.GEN, "Non-exhaustable match expression, expected an else-case", match_node.range)
