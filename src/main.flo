@@ -82,7 +82,8 @@ fnc main(argc: int, argv: u8**): int {
         let emit_type = flag_value_or(args, "--emit", null)
         let output_fn = flag_value_or(args, "-o", null)
         let link_libs = flag_value_or(args, "-l", null)
-        flo_module.set_target_machine(flag_value_or(args, "--target", ""))
+        let target_triple = flag_value_or(args, "--target", "")
+        flo_module.set_target_machine(target_triple)
         if emit_type != null {
             if emit_type == "exe" {
                 let tmp_file = "/tmp/output.o"
@@ -90,7 +91,9 @@ fnc main(argc: int, argv: u8**): int {
                 output_fn = output_fn ? output_fn : "output"
                 link_libs = link_libs ? "-l$link_libs" : ""
                 let linker_exec = "clang-15"
-                system("$linker_exec -no-pie /tmp/output.o $link_libs -o $output_fn")
+                let target_option = target_triple == "" ? "-target $target_triple" : ""
+                system("$linker_exec -no-pie $target_option /tmp/output.o $link_libs -o $output_fn")
+                del target_option
             } else if emit_type == "llvm-ir" {
                 flo_module.write_ir(output_fn ? output_fn : "output.ll")
             } else if emit_type == "llvm-bc" {

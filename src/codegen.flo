@@ -79,11 +79,10 @@ fnc resize_value_array(array: LLVMValueRef[], amt: uint){
 }
 fnc get_format_from_type(ty: Type): string {
     if is_int(ty){
-        if ty.kind == TypeKind.I128
-            return "%lld"
-        if ty.kind == TypeKind.I64 
-            return "%ld"
-        return "%d"
+        let is_signed_int = (ty as IntType).is_signed
+        if ty.kind == TypeKind.I128 return is_signed_int ? "%lld" : "%llu"
+        if ty.kind == TypeKind.I64 return is_signed_int ? "%ld" : "%lu"
+        return is_signed_int ? "%d" : "%u"
     }
     if ty.kind == TypeKind.F32 
         return "%f"

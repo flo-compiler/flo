@@ -1,6 +1,8 @@
 import access, F_OK, W_OK, O_CREAT, R_OK, open, close in "@sys/lib"
 // ------- File -------
 const DEFFILEMODE = 0o666
+
+
 class File {
     fd: int
     constructor(this, fd: int){

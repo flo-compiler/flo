@@ -1,10 +1,9 @@
 fnc main(): uint {
-    let str = "AA"
-    return match (str) {
-        "MN": 1
-        "JO": 2
-        "MM": 3
-        "AA": 0
-        else: 4
+    let str = input()
+    let name = "aba"
+    let found = -1
+    while (found = str.find(name, found + 1 as uint)) != -1 {
+        println("Found '$name' at $found")
     }
+    return 0
 }

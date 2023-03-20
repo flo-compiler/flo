@@ -89,7 +89,6 @@ class GeneratedModule {
         this.tm = LLVMCreateTargetMachine(target, triple, "generic", LLVMGetHostCPUFeatures(), LLVMCodeGenOptLevel.LLVMCodeGenLevelAggressive, LLVMRelocMode.LLVMRelocDefault, LLVMCodeModel.LLVMCodeModelDefault)
         LLVMSetDataLayout(this.llvm_mod, LLVMCreateTargetDataLayout(this.tm))
         LLVMSetTarget(this.llvm_mod, LLVMGetTargetMachineTriple(this.tm))
-        del triple_str
     }
     public write_obj(this, filename: string){
         let filename_cstr = filename.to_cstring()
