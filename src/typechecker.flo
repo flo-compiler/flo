@@ -179,6 +179,13 @@ class ArrayExpression (Expression) {
         this.elements = elements
     }
 }
+class TupleExpression (Expression) {
+    elements: Expression[]
+    constructor(this, elements: Expression[]){
+        super(ExpressionKind.TUPLE)
+        this.elements = elements
+    }
+}
 class BinaryExpression (Expression) {
     lhs: Expression
     op: BinaryOp
@@ -458,7 +465,7 @@ fnc is_function(val_ty: Type): bool {
 fnc is_pointer(val_ty: Type): bool {
     return val_ty.kind == TypeKind.PTR
 }
-fnc is_null(exp: Expression): bool {
+fnc is_null_expression(exp: Expression): bool {
     return exp.expr_kind == ExpressionKind.NULL
 }
 fnc cast_exp_to_type(exp: Expression, val_ty: Type): Expression {
@@ -1209,7 +1216,7 @@ class TypeChecker {
                     tup_str += ", "
                 }
             }
-            return "[$tup_str]"
+            return "($tup_str)"
         }
         if ty.kind == TypeKind.RESOLVED_GENERIC {
             let gen_ty = ty as GenericType
@@ -2093,12 +2100,39 @@ class TypeChecker {
         }
         return Type.unknown()
     }
+    private check_tuple_expression(this, expected_type: Type, tuple_node: TupleExpressionNode): TupleExpression {
+        let unknown_ty: Type(TypeKind.UNKNOWN)
+        let expected_tuple_type: TupleType = null
+        let elements: Expression[] = []
+        let actual_tuple_type = new TupleType()
+        let is_constant = true
+        if expected_type.kind == TypeKind.TUPLE {
+            expected_tuple_type = expected_type as TupleType
+        }
+        for let i = 0; i < tuple_node.elements.length; ++i  {
+            let expected_element_type = unknown_ty
+            if expected_tuple_type != null {
+                if i < expected_tuple_type.element_types.length {
+                    expected_element_type = expected_tuple_type.element_types[i]
+                }
+            }
+            let expression = this.check_expression(expected_element_type, tuple_node.elements[i])
+            if this.has_errored() return null
+            is_constant and= expression.is_constant
+            actual_tuple_type.element_types << expression.value_type
+            elements << expression
+        }
+        let tuple_expression = new TupleExpression(elements)
+        tuple_expression.is_constant = is_constant
+        tuple_expression.value_type = actual_tuple_type
+        return tuple_expression
+
+    }
     private check_array_expression(this, expected_type: Type, array_node: ArrayExpressionNode): ArrayExpression {
         if this.has_errored() return null
         let elements: Expression[] = []
         let element_type = Type.unknown()
         let is_constant = true
-        let is_tuple = false
         let array_type = expected_type
         if expected_type.kind == TypeKind.ARRAY {
             element_type = (expected_type as ArrayType).element_type
@@ -2107,39 +2141,29 @@ class TypeChecker {
             let generic_ty =  expected_type as GenericType
             if is_object(generic_ty) and generic_ty.name == "Array"
                 element_type = generic_ty.arg_types[0]
-        } else if expected_type.kind == TypeKind.TUPLE {
-            is_tuple = true
         }
         if array_node.elements.length > 0 {
             for let i = 0; i < array_node.elements.length; ++i {
-                if expected_type.kind == TypeKind.TUPLE {
-                    let tuple_type = expected_type as TupleType
-                    if i < tuple_type.element_types.length {
-                        element_type = tuple_type.element_types[i]
-                    }
-                }
                 let element = this.check_expression(element_type, array_node.elements[i])
                 if this.has_errored() return null
                 if i == 0 and element_type.kind == TypeKind.UNKNOWN {
                     element_type = element.value_type
                 }
-                if !is_tuple and !this.types_are_eq(element_type, element.value_type) {
-                    is_tuple = true
-                }
                 is_constant and= element.is_constant
-                elements << element
+                if this.types_are_eq(element_type, element.value_type) {
+                    elements << element
+                } else {
+                    this.error(ErrorKind.TYPE, "Expected element type of '$(this.dump_type(element_type))' but got type '$(this.dump_type(element.value_type))'", array_node.elements[i].range)
+                    return null
+                }
             }
         }
-        if is_tuple {
-            let tuple_type = new TupleType()
-            for element in elements {
-                tuple_type.element_types << element.value_type
-            }
-            array_type = tuple_type     
-        } else if array_type.kind != TypeKind.ARRAY {
+        if array_type.kind != TypeKind.ARRAY {
             let generic_array_type = this.create_generic_instance_in_module("Array", [element_type])
-            array_type = generic_array_type
-            is_constant = false
+            if (generic_array_type != null) {
+                array_type = generic_array_type
+                is_constant = false
+            }
         } else {
             array_type = new ArrayType(element_type, elements.length)
         }
@@ -2242,7 +2266,7 @@ class TypeChecker {
         if right == null 
             right = this.check_expression(arg_type, binary_node.rhs)
         if this.has_errored() return null
-        if is_null(right) and (op == BinaryOp.EEQ or op == BinaryOp.NEQ) {
+        if is_null_expression(right) and (op == BinaryOp.EEQ or op == BinaryOp.NEQ) {
             return new BinaryExpression(left, op, right, new BooleanType())
         }
         if op == BinaryOp.IN { //FIXME: Just For Ranges. Will not be required once we have ranges are generics. 
@@ -2879,6 +2903,8 @@ class TypeChecker {
             return this.check_string_expression(expected_type, expr_node as StringExpressionNode)
         if expr_node.expr_kind == ExpressionKind.ARRAY
             return this.check_array_expression(expected_type, expr_node as ArrayExpressionNode)
+        if expr_node.expr_kind == ExpressionKind.TUPLE
+            return this.check_tuple_expression(expected_type, expr_node as TupleExpressionNode)
         if expr_node.expr_kind == ExpressionKind.ACCESS
             return this.check_var_access_expr(expected_type, expr_node as VarAccessExpressionNode)
         if expr_node.expr_kind == ExpressionKind.BIN
@@ -2910,7 +2936,7 @@ class TypeChecker {
         let unknown_ty: Type(TypeKind.UNKNOWN)
         let subject = this.check_expression(unknown_ty, match_node.subject)
         if this.has_errored() return null
-        if is_null(subject){
+        if is_null_expression(subject){
             this.error(ErrorKind.TYPE, "Cannot match on constant 'null'", match_node.subject.range)
             return null
         }
@@ -2985,7 +3011,7 @@ class TypeChecker {
         let value = var_decl_node.value != null ? this.check_expression(var_type, var_decl_node.value) : null
         if this.has_errored() return null
         if value != null {
-            if is_null(value) and value.value_type.kind == TypeKind.UNKNOWN {
+            if is_null_expression(value) and value.value_type.kind == TypeKind.UNKNOWN {
                 this.error(ErrorKind.TYPE, "Cannot declare a value as null without any type hint for future usage", var_decl_node.range)
                 return null
             }
@@ -3023,7 +3049,7 @@ class TypeChecker {
             this.error(ErrorKind.GEN, "Cannot assign a non-constant value to a constant", const_decl_stmt.value.range)
             return null
         }
-        if is_null(value) and const_type.kind == TypeKind.UNKNOWN {
+        if is_null_expression(value) and const_type.kind == TypeKind.UNKNOWN {
             this.error(ErrorKind.TYPE, "Cannot declare a value as null without any type hint for future usage", const_decl_stmt.range)
             return null
         }

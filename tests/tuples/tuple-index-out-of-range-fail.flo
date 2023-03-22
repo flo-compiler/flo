@@ -1,6 +1,6 @@
 //@expect: return_code=1
 fnc main(): int {
-    let tuple: [int, bool, f32] = [1, false, 1.0]
+    let tuple: (int, bool, f32) = (1, false, 1.0)
     println(tuple[3] as string)
     return 0
 }

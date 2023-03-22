@@ -203,9 +203,9 @@ let result = sum(y: 6, x: 5)
 ## Tuples
 - [x] Creating tuples
 ```
-let items: [int, f32, bool] = [1, 1.0, true]
+let items: (int, f32, bool) = (1, 1.0, true)
 // or 
-let items = [1, 1.0, true]
+let items = (1, 1.0, true)
 ```
 - [x] Accessing tuples
 ```

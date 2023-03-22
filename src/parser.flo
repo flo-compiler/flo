@@ -28,16 +28,16 @@ class RecordTypeNode (TypeNode) {
 class FunctionTypeNode (TypeNode) {
     args: TypeNode[]
     return_type: TypeNode
-    constructor(this, range: FloRange){
+    constructor(this, args: TypeNode[], range: FloRange){
         super(TypeKind.FNC, range)
-        this.args = []
+        this.args = args
     }
 }
 class TupleTypeNode (TypeNode) {
     element_types: TypeNode[]
-    constructor(this, range: FloRange){
+    constructor(this, element_types: TypeNode[], range: FloRange){
         super(TypeKind.TUPLE, range)
-        this.element_types = []
+        this.element_types = element_types
     }
 }
 class PointerTypeNode (TypeNode) {
@@ -118,6 +118,13 @@ class ArrayExpressionNode (ExpressionNode) {
     elements: ExpressionNode[]
     constructor(this, range: FloRange){
         super(ExpressionKind.ARRAY, range)
+        this.elements = []
+    }
+}
+class TupleExpressionNode (ExpressionNode) {
+    elements: ExpressionNode[]
+    constructor(this, range: FloRange){
+        super(ExpressionKind.TUPLE, range)
         this.elements = []
     }
 }
@@ -489,13 +496,18 @@ class Parser {
         }
         return object_type_node
     }
-    private parse_function_type(this): FunctionTypeNode {
-        let fnc_type_node = new FunctionTypeNode(this.current_token.range)
+    private parse_function_type(this): TypeNode {
+        let types: TypeNode[] = []
+        let start_range = this.current_token.range
         this.advance()
         if this.current_token.ttype != TokType.RPAR
-            this.parse_type_list(fnc_type_node.args)
-        this.eat(TokType.RPAR)
+            this.parse_type_list(types)
+        let end_range = this.eat(TokType.RPAR).range
+        if this.current_token.ttype != TokType.ARROW {
+            return new TupleTypeNode(types, FloRange.merge(start_range, end_range))
+        }
         this.eat(TokType.ARROW)
+        let fnc_type_node = new FunctionTypeNode(types, start_range)
         fnc_type_node.return_type = this.parse_type()
         fnc_type_node.range = FloRange.merge(fnc_type_node.range, fnc_type_node.return_type.range)
         return fnc_type_node
@@ -507,31 +519,15 @@ class Parser {
             type_node = this.parse_object_type()
         else if this.current_token.ttype == TokType.LPAR
             type_node = this.parse_function_type()
-        else if this.current_token.ttype == TokType.LBRACKET and this.peek().ttype != TokType.RBRACKET {
-            let start_range = this.eat(TokType.LBRACKET).range
-            let arg_type_node = this.parse_type()
-            if this.current_token.ttype == TokType.COL {
-                let rec_node = new RecordTypeNode(new IdentifierToken("Map", start_range) as IdentifierToken, start_range)
-                rec_node.generic_args << arg_type_node
-                this.eat(TokType.COL)
-                rec_node.generic_args << this.parse_type()
-                this.eat(TokType.RBRACKET)
-                type_node = rec_node
-            } else {
-                let tuple_type_node = new TupleTypeNode(start_range)
-                tuple_type_node.element_types << arg_type_node
-                if this.current_token.ttype == TokType.COMMA {
-                    this.advance()
-                    this.parse_type_list(tuple_type_node.element_types)
-                }
-                this.eat(TokType.RBRACKET)
-                type_node = tuple_type_node
-            }
-        } else if this.current_token.ttype == TokType.LBRACKET and this.peek().ttype == TokType.RBRACKET {
-            let start_range = this.eat(TokType.LBRACKET).range
-            type_node = new TupleTypeNode(FloRange.merge(start_range, this.eat(TokType.RBRACKET).range))
+        else if this.current_token.ttype == TokType.LBRACKET {
+            let rec_node = new RecordTypeNode(new IdentifierToken("Map", this.current_token.range) as IdentifierToken, this.current_token.range)
+            this.advance()
+            rec_node.generic_args << this.parse_type()
+            this.eat(TokType.COL)
+            rec_node.generic_args << this.parse_type()
+            this.eat(TokType.RBRACKET)
+            type_node = rec_node
         }
-
         while this.current_token.ttype == TokType.LBRACKET or this.current_token.ttype == TokType.POW or this.current_token.ttype == TokType.MULT and this.can_parse() {
             if this.current_token.ttype == TokType.LBRACKET {
                 this.advance()
@@ -554,8 +550,9 @@ class Parser {
         }
         return type_node
     }
-    private parse_expression_list(this, expressions: ExpressionNode[]) {
+    private parse_expression_list(this, expressions: ExpressionNode[], stop_tok: TokType) {
         this.new_lines()
+        if this.current_token.ttype == stop_tok return
         expressions << this.parse_expression()
         this.new_lines()
         while this.current_token.ttype == TokType.COMMA and this.can_parse(){
@@ -568,8 +565,7 @@ class Parser {
     private parse_array_expression(this): ArrayExpressionNode {
         let array_expression = new ArrayExpressionNode(this.current_token.range)
         this.advance()
-        if this.current_token.ttype != TokType.RBRACKET
-            this.parse_expression_list(array_expression.elements)
+        this.parse_expression_list(array_expression.elements, TokType.RBRACKET)
         array_expression.range = FloRange.merge(array_expression.range, this.eat(TokType.RBRACKET).range)
         return array_expression
     }
@@ -578,8 +574,7 @@ class Parser {
         this.advance()
         let new_node = new NewExpressionNode(this.parse_type(), start_range)
         this.eat(TokType.LPAR)
-        if this.current_token.ttype != TokType.RPAR and this.can_parse()
-            this.parse_expression_list(new_node.args)
+        this.parse_expression_list(new_node.args, TokType.RPAR)
         new_node.range = FloRange.merge(new_node.range, this.eat(TokType.RPAR).range)
         return new_node
     }
@@ -594,6 +589,21 @@ class Parser {
             template_args << tmp_parser.parse_expression()
         }
         return new StringExpressionNode(strtoken, template_args)
+    }
+    private parse_tuple_expression_or_expression_par(this): ExpressionNode {
+        let start_range = this.current_token.range
+        this.advance()
+        let expression = this.parse_expression()
+        if this.current_token.ttype == TokType.COMMA {
+            this.advance()
+            let tuple_expression = new TupleExpressionNode(start_range)
+            tuple_expression.elements << expression
+            this.parse_expression_list(tuple_expression.elements, TokType.RPAR)
+            tuple_expression.range = FloRange.merge(start_range, this.current_token.range)
+            expression = tuple_expression
+        }
+        this.eat(TokType.RPAR)
+        return expression
     }
     private parse_atom(this): ExpressionNode {
         if this.current_token.ttype == TokType.STR
@@ -611,10 +621,7 @@ class Parser {
         else if this.current_token.ttype == TokType.NEW_KW
             return this.parse_new_expression()
         else if this.current_token.ttype == TokType.LPAR {
-            this.advance()
-            let expression = this.parse_expression()
-            this.eat(TokType.RPAR)
-            return expression
+            return this.parse_tuple_expression_or_expression_par()
         } else
             this.error("Expected an Expression value")
         return new ExpressionNode(ExpressionKind.ACCESS, this.current_token.range)
@@ -628,8 +635,7 @@ class Parser {
     private parse_call_expression(this, expression: ExpressionNode): CallExpressionNode {
         this.eat(TokType.LPAR)
         let call_expression = new CallExpressionNode(expression, this.current_token.range)
-        if this.current_token.ttype != TokType.RPAR
-            this.parse_expression_list(call_expression.args)
+        this.parse_expression_list(call_expression.args, TokType.RPAR)
         call_expression.range = FloRange.merge(expression.range, this.eat(TokType.RPAR).range)
         return call_expression
     }
@@ -952,8 +958,7 @@ class Parser {
             let new_node = new NewExpressionNode(var_decl_node.var_type, var_decl_node.var_type.range)
             new_node.onheap = false
             this.advance()
-            if this.current_token.ttype != TokType.RPAR
-                this.parse_expression_list(new_node.args)
+            this.parse_expression_list(new_node.args, TokType.RPAR)
             new_node.range = FloRange.merge(new_node.range, this.eat(TokType.RPAR).range)
             var_decl_node.value = new_node
         }

@@ -1,4 +1,4 @@
 fnc main(): int {
-    let tuple: [string, string] = ["Programiz","Apple"]
+    let tuple: (string, string) = ("Programiz","Apple")
     return tuple[1] == "Apple" and tuple[0] == "Programiz" ? 0 : 1
 }

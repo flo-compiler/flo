@@ -122,6 +122,7 @@ enum ExpressionKind {
     BOOL
     NULL
     ARRAY
+    TUPLE
     ACCESS
     BIN
     UNARY
@@ -203,7 +204,6 @@ enum ACCESS_ATTR {
 }
 enum MatchCaseKind {
   VAL
-  CALL
   EEQ
 }
 enum Intrinsics {

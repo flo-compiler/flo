@@ -455,12 +455,12 @@ class CodeGen {
         }
         return addr
     }
-    private store_tuple_elements(this, builder: LLVMBuilderRef, ptr: LLVMValueRef, array_exp: ArrayExpression): LLVMValueRef {
+    private store_tuple_elements(this, builder: LLVMBuilderRef, ptr: LLVMValueRef, tuple_exp: TupleExpression): LLVMValueRef {
         let int32ty = LLVMInt32Type()
         let next_args: LLVMValueRef[2] = [LLVMConstInt(int32ty, 0, false), null]
         let idx: u64 = 0
-        let tuple_type = this.codegen_type(array_exp.value_type)
-        for value in array_exp.elements {
+        let tuple_type = this.codegen_type(tuple_exp.value_type)
+        for value in tuple_exp.elements {
             next_args[1] = LLVMConstInt(int32ty, idx++, false)
             let addr = LLVMBuildInBoundsGEP2(builder, tuple_type, ptr, &next_args[0], next_args.size, "")
             LLVMBuildStore(builder, this.codegen_expression(builder, value), addr)
@@ -470,21 +470,30 @@ class CodeGen {
     private codegen_array_exp(this, builder: LLVMBuilderRef, array_exp: ArrayExpression): LLVMValueRef {
         if array_exp.value_type.kind == TypeKind.RESOLVED_GENERIC {
             return this.codegen_builtin_array(builder, array_exp.value_type as GenericType, array_exp)
-        }
-        //FIXME: What if array or tuple is not constant?
+        } 
+        //FIXME: What if array is not constant?
         if !array_exp.is_constant {
             panic("Array expression is not a constant (codegen_array_exp)")
         }
+        let elem_ty = this.codegen_type((array_exp.value_type as ArrayType).element_type)
         let elems_buffer: LLVMValueRef*(array_exp.elements.length)
         let idx = 0
         for value in array_exp.elements {
             elems_buffer[idx++] = this.codegen_expression(builder, value)
         }
-        if array_exp.value_type.kind == TypeKind.TUPLE {
-            return LLVMConstStruct(elems_buffer, idx, false)
-        }
-        let elem_ty = this.codegen_type((array_exp.value_type as ArrayType).element_type)
         return LLVMConstArray(elem_ty, elems_buffer, array_exp.elements.length)
+    }
+    private codegen_tuple_exp(this, builder: LLVMBuilderRef, tuple_exp: TupleExpression): LLVMValueRef {
+        //FIXME: What if tuple is not constant?
+        if !tuple_exp.is_constant {
+            panic("Array expression is not a constant (codegen_tuple_exp)")
+        }
+        let elems_buffer: LLVMValueRef*(tuple_exp.elements.length)
+        let idx = 0
+        for value in tuple_exp.elements {
+            elems_buffer[idx++] = this.codegen_expression(builder, value)
+        }
+        return LLVMConstStruct(elems_buffer, idx, false)
     }
     private get_or_codegen_var(this, target_id: VarId): LLVMValueRef {
         let var = this.get_var_from_varid(target_id)
@@ -643,9 +652,7 @@ class CodeGen {
         if expr.expr_kind == ExpressionKind.ARRAY and !expr.is_constant {
             let arr_expr = expr as ArrayExpression
             let value_ty = expr.value_type
-            if value_ty.kind == TypeKind.TUPLE {
-                return this.store_tuple_elements(builder, ptr, arr_expr)
-            } else if value_ty.kind != TypeKind.RESOLVED_GENERIC {
+            if value_ty.kind != TypeKind.RESOLVED_GENERIC {
                 let zero = this.createLLVMInt(0)
                 let args: LLVMValueRef[2] = [zero, zero]
                 let array_type = this.codegen_type(value_ty)
@@ -653,6 +660,8 @@ class CodeGen {
                 return this.store_array_elements(builder, ptr, arr_expr)
             }
             value = this.codegen_builtin_array(builder, value_ty as GenericType, arr_expr)
+        } else if expr.expr_kind == ExpressionKind.TUPLE and !expr.is_constant {
+            return this.store_tuple_elements(builder, ptr, expr as TupleExpression)
         } else {
             value = this.codegen_expression(builder, expr)
         }
@@ -683,7 +692,7 @@ class CodeGen {
             return this.codegen_assignment(builder, bin_exp)
         let lhs = this.codegen_expression(builder, bin_exp.lhs)
         let rhs = this.codegen_expression(builder, bin_exp.rhs)
-        if is_null(bin_exp.rhs) and (op == BinaryOp.EEQ or op == BinaryOp.NEQ) {
+        if is_null_expression(bin_exp.rhs) and (op == BinaryOp.EEQ or op == BinaryOp.NEQ) {
             if LLVMIsConstant(lhs)
                 return this.createLLVMBool(op == BinaryOp.EEQ ? LLVMIsNull(lhs) : LLVMIsNull(lhs))
             return op == BinaryOp.EEQ ? LLVMBuildIsNull(builder, lhs, "") : LLVMBuildIsNotNull(builder, lhs, "")
@@ -1093,6 +1102,8 @@ class CodeGen {
             return this.codegen_typecast_exp(builder, expression as TypeCastExpression)
         if expression.expr_kind == ExpressionKind.ARRAY
             return this.codegen_array_exp(builder, expression as ArrayExpression)
+        if expression.expr_kind == ExpressionKind.TUPLE
+            return this.codegen_tuple_exp(builder, expression as TupleExpression)
         if expression.expr_kind == ExpressionKind.MATCH
             return this.codegen_match_exp(builder, expression as MatchExpression)
         if expression.expr_kind == ExpressionKind.INTRINSIC

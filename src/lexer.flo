@@ -199,7 +199,7 @@ class Lexer {
         }
         return new Token(TokType.PLUS, this.get_range(1))
     }
-    private skip_comment(this): bool{
+    private skip_comment(this): bool {
         if this.peek() == '*' {
             this.advance()
             while !this.eof() {

@@ -1,6 +1,6 @@
 //@expect: return_code=4
 fnc main(): int {
     const index = 2
-    let tuple: [int, bool, f32] = [1, false, 3.0]
+    let tuple: (int, bool, f32) = (1, false, 3.0)
     return tuple[0] + tuple[index] as int
 }
