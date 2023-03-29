@@ -21,6 +21,12 @@ class HTTPRequestStream {
         this.response_str_builder.append_string(s)
         return this
     }
+    send(this){
+        let str = this.response_str_builder.get_string()
+        write(this.conn, str.get_bytes(), str.length)
+        del this.response_str_builder
+        this.response_str_builder = new StringBuilder(10)
+    }
     end(this){
         let str = this.response_str_builder.get_string()
         write(this.conn, str.get_bytes(), str.length)

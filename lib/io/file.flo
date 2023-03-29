@@ -31,6 +31,9 @@ class File {
         }
         return string_builder.get_string()
     }
+    public read_bytes_length(this, buffer: u8*, length: uint): uint {
+        return read(this.fd, buffer, length)
+    }
     public write_bytes_length(this, buffer: u8*, length: uint): uint {
         return write(this.fd, buffer, length)
     }
