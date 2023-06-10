@@ -1,26 +1,25 @@
-CC=clang-15
-
-LLVM_BUILD_PATH=/lib/llvm-15
-
-LLVM_BIN_PATH=$(LLVM_BUILD_PATH)/bin
-
-LDFLAGS=`$(LLVM_BIN_PATH)/llvm-config --ldflags --libs --system-libs`
+LDFLAGS=-L/usr/lib/llvm/lib -lLLVM-15
 
 FLO_INSTALL_PATH=/usr/local/flo
 
+TMP_DIR=/tmp
+
 define compile_and_link_fc
 	$(1) src/main.flo --emit obj -o $(1).o -O 3 -I ./lib/
-	$(CC) -no-pie $(1).o /tmp/llvm-bind.so $(LDFLAGS) -o $(2)
+	$(CC) -no-pie $(1).o $(TMP_DIR)/llvm-bind.so $(LDFLAGS) -o $(2)
 endef
 
 all: flo
 
-flo:
-	$(CC) -c src/llvm/FloLLVMBind.cpp -o /tmp/llvm-bind.so
-	$(CC) bootstrap/flo.ll /tmp/llvm-bind.so $(LDFLAGS) -o /tmp/stage0
-	$(call compile_and_link_fc,/tmp/stage0,/tmp/stage1)
-	$(call compile_and_link_fc,/tmp/stage1,$@)
+flo: helper
+	$(CC) -c src/llvm/FloLLVMBind.cpp -o $(TMP_DIR)/llvm-bind.so
+	$(call compile_and_link_fc,$(TMP_DIR)/stage0,$(TMP_DIR)/stage1)
+	$(call compile_and_link_fc,$(TMP_DIR)/stage1,$@)
 
+helper:
+	$(CC) bootstrap/helper.c $(LDFLAGS) -o helper
+	./helper
+	mv stage0.o $(TMP_DIR)/	
 
 check:
 	./runtests.py
@@ -32,4 +31,4 @@ install:
 	sudo ln -f $(FLO_INSTALL_PATH)/flo /usr/bin/flo
 
 clean:
-	rm -rf flo 
+	rm -rf flo helper
