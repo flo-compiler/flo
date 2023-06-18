@@ -3,17 +3,18 @@
 #include "llvm-c/Core.h"
 #include "llvm-c/IRReader.h"
 #include "llvm-c/TargetMachine.h"
-int main(){
+int main(int argc, char** argv){
     char* Errors = "";
     LLVMMemoryBufferRef MemBuf;
     LLVMModuleRef Module;
     LLVMContextRef Context = LLVMContextCreate();
-    LLVMCreateMemoryBufferWithContentsOfFile("bootstrap/flo.ll", &MemBuf, &Errors);
+    LLVMCreateMemoryBufferWithContentsOfFile(argv[1], &MemBuf, &Errors);
     LLVMParseIRInContext(Context, MemBuf, &Module, &Errors);
 
     LLVMInitializeAllTargetMCs();
     LLVMInitializeAllTargets();
     LLVMInitializeAllTargetInfos();
+    LLVMInitializeAllAsmPrinters();
 
     char* Triple = LLVMGetDefaultTargetTriple();
     LLVMTargetRef Target;
@@ -24,7 +25,7 @@ int main(){
 
     LLVMTargetDataRef TargetDatatLayout = LLVMCreateTargetDataLayout(TargetMachine);
     LLVMSetDataLayout(Module, (const char *) TargetDatatLayout);
-    LLVMTargetMachineEmitToFile(TargetMachine, Module, "stage0.o", LLVMObjectFile, &Errors);
+    LLVMTargetMachineEmitToFile(TargetMachine, Module, argv[2], LLVMObjectFile, &Errors);
     
     LLVMDisposeModule(Module);
     LLVMDisposeTargetMachine(TargetMachine);
@@ -32,5 +33,4 @@ int main(){
     LLVMContextDispose(Context);
     LLVMDisposeMessage(Triple);
     LLVMDisposeMessage(CPUFeatures);
-    LLVMDisposeMessage(Errors);
 }   
