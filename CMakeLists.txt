@@ -8,6 +8,7 @@ project(Flo
 
 find_package(LLVM 15...<17 REQUIRED CONFIG)
 message(STATUS "Found LLVM ${LLVM_PACKAGE_VERSION}")
+set (CMAKE_CXX_STANDARD 14)
 
 add_link_options(-no-pie)
 
