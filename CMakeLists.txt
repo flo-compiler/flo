@@ -16,6 +16,7 @@ ARGS --libs all
 OUTPUT_VARIABLE llvm_libs)
 add_executable(helper bootstrap/helper.cc)
 target_link_libraries(helper PRIVATE ${llvm_libs})
+target_include_directories(helper PRIVATE ${LLVM_INCLUDE_DIRS})
 
 SET(STAGE0_OBJ
   ${CMAKE_BINARY_DIR}/stage0.o
@@ -36,6 +37,7 @@ set_source_files_properties(
   GENERATED true
 )
 target_link_libraries(stage0 PRIVATE ${llvm_libs})
+target_include_directories(stage0 PRIVATE ${LLVM_INCLUDE_DIRS})
 
 
 function(compile_stage PREV_STAGE CURR_STAGE)
@@ -52,6 +54,7 @@ function(compile_stage PREV_STAGE CURR_STAGE)
         GENERATED true
     )
     target_link_libraries(${CURR_STAGE} PRIVATE ${llvm_libs})
+    target_include_directories(${CURR_STAGE} PRIVATE ${LLVM_INCLUDE_DIRS})
 endfunction()
 
 compile_stage(stage0 stage1)
