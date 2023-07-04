@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.8)
 project(Flo
         VERSION 0.0.1
         DESCRIPTION "The Flo Programming Language"
-        LANGUAGES CXX
+        LANGUAGES C CXX
         )
 
 
