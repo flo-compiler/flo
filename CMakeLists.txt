@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.8)
 project(Flo
         VERSION 0.0.1
         DESCRIPTION "The Flo Programming Language"
-        LANGUAGES C CXX
+        LANGUAGES CXX
         )
 
 
@@ -14,14 +14,14 @@ add_link_options(-no-pie)
 exec_program(${LLVM_TOOLS_BINARY_DIR}/llvm-config 
 ARGS --libs all
 OUTPUT_VARIABLE llvm_libs)
-add_executable(helper bootstrap/helper.c)
+add_executable(helper bootstrap/helper.cc)
 target_link_libraries(helper PRIVATE ${llvm_libs})
 
 SET(STAGE0_OBJ
   ${CMAKE_BINARY_DIR}/stage0.o
 )
 SET(LLVM_BIND_SRC
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/llvm/FloLLVMBind.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/llvm/FloLLVMBind.cc
 )
 add_custom_target(
     stage0.o ALL
