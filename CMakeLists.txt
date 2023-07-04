@@ -8,16 +8,18 @@ project(Flo
 
 find_package(LLVM 15...<17 REQUIRED CONFIG)
 message(STATUS "Found LLVM ${LLVM_PACKAGE_VERSION}")
-set (CMAKE_CXX_STANDARD 14)
+message(STATUS "Using LLVMConfig.cmake in: ${LLVM_DIR}")
 
+set (CMAKE_CXX_STANDARD 14)
 add_link_options(-no-pie)
 
-exec_program(${LLVM_TOOLS_BINARY_DIR}/llvm-config 
-ARGS --libs all
-OUTPUT_VARIABLE llvm_libs)
+add_definitions(${LLVM_DEFINITIONS})
+separate_arguments(LLVM_DEFINITIONS_LIST NATIVE_COMMAND ${LLVM_DEFINITIONS})
+include_directories(${LLVM_INCLUDE_DIRS})
+
+
 add_executable(helper bootstrap/helper.cc)
-target_link_libraries(helper PRIVATE ${llvm_libs})
-target_include_directories(helper PRIVATE ${LLVM_INCLUDE_DIRS})
+target_link_libraries(helper PRIVATE LLVM)
 
 SET(STAGE0_OBJ
   ${CMAKE_BINARY_DIR}/stage0.o
@@ -37,8 +39,7 @@ set_source_files_properties(
   EXTERNAL_OBJECT true
   GENERATED true
 )
-target_link_libraries(stage0 PRIVATE ${llvm_libs})
-target_include_directories(stage0 PRIVATE ${LLVM_INCLUDE_DIRS})
+target_link_libraries(stage0 PRIVATE LLVM)
 
 
 function(compile_stage PREV_STAGE CURR_STAGE)
@@ -54,8 +55,8 @@ function(compile_stage PREV_STAGE CURR_STAGE)
         EXTERNAL_OBJECT true
         GENERATED true
     )
-    target_link_libraries(${CURR_STAGE} PRIVATE ${llvm_libs})
-    target_include_directories(${CURR_STAGE} PRIVATE ${LLVM_INCLUDE_DIRS})
+    target_link_libraries(${CURR_STAGE} PRIVATE LLVM)
+
 endfunction()
 
 compile_stage(stage0 stage1)
