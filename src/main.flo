@@ -28,7 +28,7 @@ fnc main(argc: int, argv: u8**): int {
     if show_help.value {
         flo_print("Usage: ")
         flo_print(string.from_cstring(argv[0]))
-        flo_println("[OPTIONS]? <file>\n\nOPTIONS:\n")
+        flo_println(" [OPTIONS]? <file>\n\nOPTIONS:\n")
         print_flags()
         return 0
     }
