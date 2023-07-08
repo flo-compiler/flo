@@ -1,11 +1,19 @@
 cmake_minimum_required(VERSION 3.8)
+
+SET(MAIN_SRC_FILE ${CMAKE_CURRENT_SOURCE_DIR}/src/main.flo)
+set(VERSION_REGEX "[ \t]*let COMPILER_VERSION[ \t]*\=[ \t]*\"(.+)\"")
+file(STRINGS "${MAIN_SRC_FILE}"
+    VERSION_STRING REGEX ${VERSION_REGEX})
+
+string(REGEX REPLACE ${VERSION_REGEX} "\\1" VERSION_STRING "${VERSION_STRING}")
+
 project(Flo
-        VERSION 0.0.1
+        VERSION ${VERSION_STRING}
         DESCRIPTION "The Flo Programming Language"
         LANGUAGES C CXX
         )
-
 find_package(LLVM REQUIRED CONFIG)
+message(STATUS "COMPILER VERSION: ${VERSION_STRING}")
 message(STATUS "Found LLVM ${LLVM_PACKAGE_VERSION}")
 message(STATUS "Using LLVMConfig.cmake in: ${LLVM_DIR}")
 
@@ -44,7 +52,7 @@ target_link_libraries(stage0 PRIVATE LLVM)
 function(compile_stage PREV_STAGE CURR_STAGE)
     add_custom_target(
         ${CURR_STAGE}.o ALL
-        COMMAND ${PREV_STAGE} ${CMAKE_CURRENT_SOURCE_DIR}/src/main.flo --emit obj -o  ${CMAKE_BINARY_DIR}/${CURR_STAGE}.o -O 3 -I ${CMAKE_CURRENT_SOURCE_DIR}/lib/
+        COMMAND ${PREV_STAGE} ${MAIN_SRC_FILE} --emit obj -o  ${CMAKE_BINARY_DIR}/${CURR_STAGE}.o -O 3 -I ${CMAKE_CURRENT_SOURCE_DIR}/lib/
         DEPENDS ${PREV_STAGE}
     )
     add_executable(${CURR_STAGE} ${CMAKE_BINARY_DIR}/${CURR_STAGE}.o ${LLVM_BIND_SRC})

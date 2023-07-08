@@ -1,0 +1,98 @@
+enum FlagType {
+    INT
+    BOOL
+    STR
+}
+fnc add_flag(flag: Flag){
+    if (flags_length < MAX_FLAGS_SIZE){
+        flags_buffer[flags_length++] = flag
+    }
+}
+class Flag {
+    type: FlagType
+    name: string
+    description: string
+    constructor(this, type: FlagType, name: string, description: string){
+        this.type = type
+        this.name = name
+        this.description = description
+        add_flag(this)
+    }
+}
+const MAX_FLAGS_SIZE = 250
+let flags_buffer: Flag[MAX_FLAGS_SIZE] = null /* Note to self ban const changes globally */
+let flags_length = 0
+
+class FlagString(Flag) {
+    value: string
+    constructor(this, name: string, description: string, default: string = null){
+        super(FlagType.STR, name, description)
+        this.value = default
+    }
+}
+class FlagInt(Flag) {
+    value: int
+    constructor(this, name: string, description: string, default: int = 0){
+        super(FlagType.INT, name, description)
+        this.value = default
+    }
+}
+class FlagBool(Flag) {
+    value: bool
+    constructor(this, name: string, description: string, default = false){
+        super(FlagType.BOOL, name, description)
+        this.value = default
+    }
+}
+fnc parse_flags(argc: int, argv: u8**): string {
+    let arg: string = null
+    for let i = 1; i < argc; i++ {
+        let raw_flag = argv[i]
+        if (raw_flag[0] != '-'){
+            if (arg == null)
+                arg = string.from_cstring(raw_flag)
+            continue
+        } 
+        let argname = string.from_cstring(raw_flag + 1)
+        for let j = 0; j < flags_length; j++ {
+            let flag = flags_buffer[j]
+            if (flag.name == argname) {
+                if (flag.type == FlagType.BOOL) {
+                    (flag as FlagBool).value = true
+                    continue
+                }
+                if (i + 1 >= argc) {
+                    println("Missing value after -$argname argument.")
+                    return arg
+                }
+                let argvalue = string.from_cstring(argv[++i])
+                if (flag.type == FlagType.INT) {
+                    (flag as FlagInt).value = argvalue as int
+                    del argvalue
+                }
+                if (flag.type == FlagType.STR) {
+                    (flag as FlagString).value = argvalue
+                }
+                break
+            }
+
+        }
+        del argname
+    }
+    return arg
+}
+fnc print_flags(){
+    for let i = 0; i < flags_length; i++ {
+        let flag = flags_buffer[i]
+        print("-$(flag.name)")
+        if (flag.type == FlagType.INT){
+            println(" <n>")
+        } else if (flag.type == FlagType.STR){
+            println(" <val>")
+        } else {
+            println(" ")
+        }
+        print("\t\t")
+        println("$(flag.description)")
+    }
+}

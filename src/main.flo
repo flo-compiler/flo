@@ -5,112 +5,79 @@ import "lexer"
 import "parser"
 import "typechecker"
 import "codegen"
-fnc parse_args(size: int, args: u8**): string[] {
-    let arr: string[] = []
-    for let i = 0; i < size; i++
-        arr << string.from_cstring(args[i])
-    return arr
-}
+import "flags"
+import LLVMGetDefaultTargetTriple in "llvm/targetMachine"
 fnc system(cmd: u8*)
-fnc help(exec_file: string){
-    flo_println("Usage: $exec_file <path> [OPTIONS]\n")
-    flo_println("OPTIONS:")
-    flo_println(" -h, --help\t\t\tShow this help message.")
-    flo_println(" --print-ast\t\t\tPrint generated AST.")
-    flo_println(" --emit <format>\t\tEmit output in a particular format. Options are:\n  \t\t\t\t\texe - Generates an executable.\n  \t\t\t\t\tllvm-ir - Generates a file containing LLVM IR.\n  \t\t\t\t\tllvm-bc - Generates a file containing LLVM bitcode.\n  \t\t\t\t\tobj - Generates an object file\n  \t\t\t\t\tasm - Generates Assembly code.")
-    flo_println(" -o <file>\t\t\tSpecify file to put the output into.")
-    flo_println(" --target <triple>\t\tCompile to specific target triple.")
-    flo_println(" -l <lib>\t\t\tSpecify a library to link against.")
-    flo_println(" -I\t\t\t\tSpecify runtime directory.")
-    flo_println(" -O OPT_LEVEL \t\t\tSpecify the compiler's optimization level which is a\n \t\t\t\tvalue from 0-3.")
-    flo_println(" -v, --version\t\t\tShow version.")
-}
-fnc flag(args: string[], name: string): bool {
-    return name in args
-}
-fnc flag_value_or(args: string[], name: string, default: string): string {
-    let idx = args.find(name)
-    if idx != -1 {
-        if args.length > ++idx {
-            if default != null del default
-            return args[idx as uint]
-        } else {
-            print_message_error(ErrorKind.GEN, "Missing value after '$name' argument.")
-        }
-    }
-    del name
-    return default
-}
 fnc main(argc: int, argv: u8**): int {
+    let COMPILER_VERSION = "0.0.1"
     let code: int = 0
-    if argc >= 2 {
-        let args = parse_args(argc, argv)
-        if flag(args, "-v") or flag(args, "--version"){
-            flo_println("0.0.1")
-            return 0
-        }
-        if flag(args, "-h") or flag(args, "--help"){
-            help(args[0])
-            return 0
-        }
-        let filename = args[1]
-        let compiler = new Compiler()
-        if flag(args, "-I") {
-            let rt_path = flag_value_or(args, "-I", null)
-            if rt_path != null {
-                compiler.set_std_path(rt_path)
-            }
-        }
-        let file_id = compiler.register_file(filename)
-        if (!compiler.set_current_file(file_id)) {
-            print_message_error(ErrorKind.IO, "No such file or directory: '$filename'")
-            return 1
-        }
-        /***** Lexing ******/
-        let tokens = Lexer.tokenize(compiler.current_file_contents, compiler.errors)
-        if (compiler.print_errors()) return 1
-        /***** Parsing *****/
-        let module_node = Parser.parse(tokens, compiler.errors)
-        if (compiler.print_errors()) return 1
-        /**** Analyzing ****/
-        let program = TypeChecker.check(module_node, compiler, filename)
-        if (compiler.print_errors()) return 1       
-        /**** Codegen ****/
-        let flo_module = CodeGen.codegen(program)
-        /**** Misc ****/
-        flo_module.run_passes(flag_value_or(args, "-O", "1") as int)
-        let emit_type = flag_value_or(args, "--emit", null)
-        let output_fn = flag_value_or(args, "-o", null)
-        let link_libs = flag_value_or(args, "-l", null)
-        let target_triple = flag_value_or(args, "--target", "")
-        flo_module.set_target_machine(target_triple)
-        if emit_type != null {
-            if emit_type == "exe" {
-                let tmp_file = "/tmp/output.o"
-                flo_module.write_obj(tmp_file)
-                output_fn = output_fn ? output_fn : "output"
-                link_libs = link_libs ? "-l$link_libs" : ""
-                let linker_exec = "clang-15"
-                let target_option = target_triple == "" ? "-target $target_triple" : ""
-                system("$linker_exec -no-pie $target_option /tmp/output.o $link_libs -o $output_fn")
-                del target_option
-            } else if emit_type == "llvm-ir" {
-                flo_module.write_ir(output_fn ? output_fn : "output.ll")
-            } else if emit_type == "llvm-bc" {
-                flo_module.write_bc(output_fn ? output_fn : "output.bc")
-            } else if emit_type == "obj" {
-                flo_module.write_obj(output_fn ? output_fn : "output.o")
-            } else if emit_type == "asm" {
-                flo_module.write_asm(output_fn ? output_fn : "output.s")
-            }
-        } else {
-            code = flo_module.exec()
-        }
-        del args
-        del module_node
-    } else {
+    let show_help: FlagBool("h", "Show this help message")
+    let emit_type: FlagString("-emit", "Emit output in a particular format. Options are:\n\t\t • exe - Generates an executable.\n\t\t • llvm-ir - Generates a file containing LLVM IR.\n\t\t • llvm-bc - Generates a file containing LLVM bitcode.\n\t\t • obj - Generates an object file\n\t\t • asm - Generates Assembly code.", "exec")
+    let output_fn: FlagString("o", "Specify file to put the output into", "output")
+    let rt_path: FlagString("I", "Specify runtime directory", "/usr/local/flo/lib/")
+    let target_triple: FlagString("-target", "Compile to specific target triple", string.from_cstring(LLVMGetDefaultTargetTriple()))
+    let link_libs: FlagString("l", "Specify a library to link against (should be a comma seperated list)")
+    let opt_level: FlagInt("O", "Specify the compiler's optimization level", 1)
+    let show_version: FlagBool("v", "Show version")
+
+    let filename = parse_flags(argc, argv)
+    if show_version.value {
+        flo_println(COMPILER_VERSION)
+        return 0
+    }
+    if show_help.value {
+        flo_print("Usage: ")
+        flo_print(string.from_cstring(argv[0]))
+        flo_println("[OPTIONS]? <file>\n\nOPTIONS:\n")
+        print_flags()
+        return 0
+    }
+    if filename == null {
         print_message_error(ErrorKind.GEN, "No input file specified.")
         return 1
     }
+    let compiler = new Compiler()
+    compiler.set_std_path(rt_path.value)
+    let file_id = compiler.register_file(filename)
+    if (!compiler.set_current_file(file_id)) {
+        print_message_error(ErrorKind.IO, "No such file or directory: '$filename'")
+        return 1
+    }
+    /***** Lexing ******/
+    let tokens = Lexer.tokenize(compiler.current_file_contents, compiler.errors)
+    if (compiler.print_errors()) return 1
+    /***** Parsing *****/
+    let module_node = Parser.parse(tokens, compiler.errors)
+    if (compiler.print_errors()) return 1
+    /**** Analyzing ****/
+    let program = TypeChecker.check(module_node, compiler, filename)
+    if (compiler.print_errors()) return 1       
+    /**** Codegen ****/
+    let flo_module = CodeGen.codegen(program)
+    /**** Misc ****/
+    flo_module.run_passes(opt_level.value as int)
+    flo_module.set_target_machine(target_triple.value)
+    if emit_type.value == "exe" {
+        let tmp_file = "/tmp/output.o"
+        flo_module.write_obj(tmp_file)
+        let link_libs_value = link_libs.value ? "-l$(link_libs.value)" : ""
+        let linker_exec = "clang-15"
+        let target_option = "-target $link_libs_value"
+        system("$linker_exec -no-pie $target_option /tmp/output.o $link_libs -o $(output_fn.value)")
+        del target_option
+        del link_libs_value
+        del linker_exec
+    } else if emit_type.value == "llvm-ir" {
+        flo_module.write_ir("$(output_fn.value)")
+    } else if emit_type.value == "llvm-bc" {
+        flo_module.write_bc("$(output_fn.value)")
+    } else if emit_type.value == "obj" {
+        flo_module.write_obj("$(output_fn.value)")
+    } else if emit_type.value == "asm" {
+        flo_module.write_asm("$(output_fn.value)")
+    } else {
+        code = flo_module.exec()
+    }
+    del module_node
     return code
 }

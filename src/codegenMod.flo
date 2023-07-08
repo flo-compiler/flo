@@ -6,7 +6,7 @@ import LLVMRemoveModule, LLVMLinkInMCJIT, LLVMCreateExecutionEngineForModule, LL
 import LLVMPassManagerBuilderPopulateFunctionPassManager, LLVMPassManagerBuilderUseInlinerWithThreshold, LLVMPassManagerBuilderDispose, LLVMPassManagerBuilderCreate, LLVMPassManagerBuilderSetOptLevel, LLVMPassManagerBuilderPopulateModulePassManager in "llvm/passManagerBuilder"
 import LLVMAddInternalizePass, LLVMAddInstructionCombiningPass, LLVMAddGlobalDCEPass, LLVMAddGlobalOptimizerPass, LLVMAddScalarReplAggregatesPass, LLVMAddFunctionInliningPass in "llvm/transforms"
 import LLVM_InitializeAllTargetInfos, LLVM_InitializeAllTargetMCs, LLVM_InitializeAllTargets, LLVM_InitializeAllAsmParsers, LLVM_InitializeAllAsmPrinters in "llvm/target"
-import LLVMDisposeTargetMachine, LLVMTargetMachineEmitToFile, LLVMGetDefaultTargetTriple, LLVMGetTargetMachineTriple, LLVMCreateTargetDataLayout, LLVMCreateTargetMachine, LLVMGetTargetFromTriple, LLVMGetHostCPUFeatures in "llvm/targetMachine"
+import LLVMDisposeTargetMachine, LLVMTargetMachineEmitToFile, LLVMGetTargetMachineTriple, LLVMCreateTargetDataLayout, LLVMCreateTargetMachine, LLVMGetTargetFromTriple, LLVMGetHostCPUFeatures in "llvm/targetMachine"
 import LLVMWriteBitcodeToFile in "llvm/bitwriter"
 class GeneratedModule {
     private llvm_mod: LLVMModuleRef
@@ -76,12 +76,8 @@ class GeneratedModule {
     }
     public set_target_machine(this, triple_str: string){
         let triple: u8*(triple_str.length + 1)
-        if triple_str.length == 0 {
-            triple = LLVMGetDefaultTargetTriple()
-        } else {
-            triple.copy_from(triple_str.get_bytes(), triple_str.length)
-            triple[triple_str.length] = 0
-        }
+        triple.copy_from(triple_str.get_bytes(), triple_str.length)
+        triple[triple_str.length] = 0
         let target: LLVMTargetRef = null
         if LLVMGetTargetFromTriple(triple, &target, &this.errors) {
             this.print_errors()
