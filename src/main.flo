@@ -37,7 +37,10 @@ fnc main(argc: int, argv: u8**): int {
         return 1
     }
     let compiler = new Compiler()
-    compiler.set_std_path(rt_path.value)
+    if (!compiler.set_std_path(rt_path.value)){
+        print_message_error(ErrorKind.IO, "Runtime directory not found '$(rt_path.value)'")
+        return 1
+    }
     let file_id = compiler.register_file(filename)
     if (!compiler.set_current_file(file_id)) {
         print_message_error(ErrorKind.IO, "No such file or directory: '$filename'")

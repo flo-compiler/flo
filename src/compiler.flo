@@ -34,11 +34,13 @@ class Compiler {
         this.errors = []
         this.file_ids = new [string: FileId]()
     }
-    public set_std_path(this, std_dir_path: string){
+    public set_std_path(this, std_dir_path: string): bool {
+        if (!File.exists(std_dir_path)) return false
         this.std_dir_path = std_dir_path
         let builtins_file_path = "builtins/builtins.flo"
         this.builtin_path = Path.join(std_dir_path, builtins_file_path)
         del builtins_file_path
+        return true
     }
     private find_module_path(this, fpath: string): string {
         let path = fpath.replace(string.from_bytes("@", 1), this.std_dir_path)
