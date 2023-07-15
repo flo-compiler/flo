@@ -19,15 +19,11 @@ class CGClassType  {
     vt_methods_pos_map: [string: uint]
     fields_pos_map: [string: uint]
     static_props_map: [string: LLVMValueRef]
-    vtable: LLVMValueRef
-    vtable_type: LLVMTypeRef
     class_constructor: LLVMValueRef
     constructor(this){
         this.vt_methods_pos_map = new [string: uint]()
         this.fields_pos_map = new [string: uint]()
         this.static_props_map = new [string: LLVMValueRef]()
-        this.vtable = null
-        this.vtable_type = null
     }
 }
 class CGEnumType {
@@ -587,16 +583,7 @@ class CodeGen {
             ptr = this.codegen_expression(builder, member_expr.expression)
         }
         let indices_buffer: LLVMValueRef[2] = [LLVMConstInt(LLVMInt32Type(), 0, false), null]
-        if !is_function(member_expr.value_type) {
-            let vtoffset = struct_class.vtable_type == null ? 0 : 1
-            indices_buffer[1] = LLVMConstInt(LLVMInt32Type(), struct_class.fields_pos_map[prop_id_key] + vtoffset as u64, false)
-        } else {
-            indices_buffer[1] = LLVMConstInt(LLVMInt32Type(), 0, false)
-            ptr = LLVMBuildInBoundsGEP2(builder, struct_type, ptr, &indices_buffer[0], indices_buffer.size, "")
-            ptr = LLVMBuildLoad2(builder, LLVMPointerType(struct_class.vtable_type), ptr, "")
-            indices_buffer[1] = LLVMConstInt(LLVMInt32Type(), struct_class.vt_methods_pos_map[prop_id_key] as u64, false)
-            struct_type = struct_class.vtable_type
-        }
+        indices_buffer[1] = LLVMConstInt(LLVMInt32Type(), struct_class.fields_pos_map[prop_id_key] as u64, false)
         return LLVMBuildInBoundsGEP2(builder, struct_type, ptr, &indices_buffer[0], indices_buffer.size, "memberidx")
     }
     private get_expr_mem(this, builder: LLVMBuilderRef, exp: Expression): LLVMValueRef {
@@ -990,7 +977,7 @@ class CodeGen {
     private codegen_member_exp(this, builder: LLVMBuilderRef, member_exp: MemberExpression, self: LLVMValueRef): LLVMValueRef {
         if is_object(member_exp.expression.value_type) {
             let ptr = this.get_member_expr_mem(builder, member_exp, self)
-            if get_class_prop_visibility(this.program, member_exp.member_id) == ACCESS_ATTR.PRIVATE and is_function(member_exp.value_type)
+            if is_function(member_exp.value_type)
                 return ptr
             return LLVMBuildLoad2(builder, this.codegen_type(member_exp.value_type), ptr, "")
         }
@@ -1344,12 +1331,6 @@ class CodeGen {
                 let this_alloc = this.get_var_from_varid(this_id)
                 LLVMBuildStore(func_builder, this_param, this_alloc)
                 if is_constructor {
-                    if struct_class.vtable != null {
-                        let object_type = LLVMPointerType(struct_class.llvm_type)
-                        let indices: LLVMValueRef[1] = [this.createLLVMInt(0)]
-                        let vt_ptr =  LLVMBuildInBoundsGEP2(func_builder, object_type, this_param, &indices[0], indices.size, "")
-                        LLVMBuildStore(func_builder, struct_class.vtable, vt_ptr)
-                    }
                     let parent_ty = checked_class.parent as ObjectType
                     if parent_ty != null {
                         let super_id = get_scope(this.program, method.scope).vars["super"]
@@ -1398,8 +1379,6 @@ class CodeGen {
         }
     }
     private declare_class_props(this, struct_class: CGClassType, checked_class: Class, prop_types: LLVMTypeRef[]){
-        let vtable_values: LLVMValueRef[] = []
-        let vtable_types: LLVMTypeRef[] = []
         let field_types: LLVMTypeRef[] = []
         for entry in checked_class.prop_map {
             let prop_id = entry.value
@@ -1407,60 +1386,29 @@ class CodeGen {
             let prop_owner = checked_class
             let prop_id_key = create_prop_key(prop_id)
             let prop_type = get_class_prop_type(this.program, prop_id)
-            let prop_index = get_vtable_index(this.program, prop_id)
             if prop_id.kind == PropIdKind.FIELD {
+                let field_offset = get_field_offset(this.program, prop_id)
                 let field_type = this.codegen_type(prop_type)
-                struct_class.fields_pos_map[prop_id_key] = prop_index
-                resize_type_array(field_types, prop_index)
-                field_types[prop_index] = field_type
+                struct_class.fields_pos_map[prop_id_key] = field_offset
+                resize_type_array(field_types, field_offset)
+                field_types[field_offset] = field_type
             } else {
                 let method_type = prop_type as FunctionType
                 let llvm_method_val: LLVMValueRef = null
                 let llvm_method_type: LLVMTypeRef = null
-                if prop_id.type_id == checked_class.id {
-                    let arg_types: Type[] = [new ObjectType(checked_class.id)]
-                    arg_types += method_type.arg_types
-                    del method_type.arg_types
-                    method_type.arg_types = arg_types
-                    llvm_method_type = this.codegen_type(method_type, false)
-                    if !checked_class.methods[prop_id.id].is_abstract {
-                        llvm_method_val = this.declare_method("$(checked_class.name)_$prop_name", llvm_method_type)
-                    }
-                    if (get_class_prop_visibility(this.program, prop_id) == ACCESS_ATTR.PRIVATE){ 
-                        struct_class.static_props_map[prop_id_key] = llvm_method_val
-                        continue
-                    }
-                } else {
-                    llvm_method_type = this.codegen_type(method_type, false)
-                    prop_owner = get_class_from_prop_id(this.program, prop_id)
-                    llvm_method_val = LLVMGetNamedFunction(this.module, "$(prop_owner.name)_$prop_name".to_cstring())
-                    if llvm_method_val == null {
-                        panic("This should not happen: could not find function $(prop_owner.name)_$prop_name (declare_class_props)")
-                    }
+                let arg_types: Type[] = [new ObjectType(checked_class.id)]
+                arg_types += method_type.arg_types
+                del method_type.arg_types
+                method_type.arg_types = arg_types
+                llvm_method_type = this.codegen_type(method_type, false)
+                if !checked_class.methods[prop_id.id].is_abstract {
+                    llvm_method_val = this.declare_method("$(checked_class.name)_$prop_name", llvm_method_type)
                 }
-                struct_class.vt_methods_pos_map[prop_id_key] = prop_index
-                if !prop_owner.methods[prop_id.id].is_abstract {
-                    resize_value_array(vtable_values, prop_index)
-                    vtable_values[prop_index] = llvm_method_val
-                }
-                resize_type_array(vtable_types, prop_index)
-                vtable_types[prop_index] = LLVMPointerType(llvm_method_type)
+                struct_class.static_props_map[prop_id_key] = llvm_method_val
             }
-        }
-        if vtable_types.length > 0 {
-            let vtable_struct_ty = LLVMStructType(vtable_types.buffer, vtable_types.length, false)
-            if !checked_class.is_abstract {
-                struct_class.vtable = LLVMAddGlobal(this.module, vtable_struct_ty, "VTable$(checked_class.name)".to_cstring())
-                let vtable_intializer = LLVMConstStruct(vtable_values.buffer, vtable_values.length, false)
-                LLVMSetInitializer(struct_class.vtable, vtable_intializer)
-            }
-            struct_class.vtable_type = vtable_struct_ty
-            prop_types << LLVMPointerType(vtable_struct_ty)
         }
         prop_types += field_types
         del field_types
-        del vtable_types
-        del vtable_values
     }
     private declare_class(this, checked_class: Class){
         let struct_class = new CGClassType()
@@ -1469,7 +1417,6 @@ class CodeGen {
         let prop_types: LLVMTypeRef[] = []
         // Taking care of static methods.
         this.declare_static_props(struct_class, checked_class)
-        // creating a vtable
         this.declare_class_props(struct_class, checked_class, prop_types)
         LLVMStructSetBody(struct_class.llvm_type, prop_types.buffer, prop_types.length, true)
         del prop_types

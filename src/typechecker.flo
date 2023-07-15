@@ -715,8 +715,8 @@ class ClassField {
     visibility: ACCESS_ATTR
     name: string
     field_type: Type
+    field_offset: uint
     initializer: Expression
-    vtable_index: uint
     constructor(this){
         this.is_static = false
     }
@@ -731,7 +731,6 @@ class ClassMethod {
     args: FunctionArg []
     is_abstract: bool
     scope: ScopeId
-    vtable_index: uint
     constructor(this){
         this.is_abstract = false
     }
@@ -926,12 +925,12 @@ fnc get_class_prop_visibility(program: Program, prop_id: PropId): ACCESS_ATTR {
     }
     return owner.fields[prop_id.id].visibility
 }
-fnc get_vtable_index(program: Program, prop_id: PropId): uint {
+fnc get_field_offset(program: Program, prop_id: PropId): uint {
     let owner = get_class_from_prop_id(program, prop_id)
     if prop_id.kind == PropIdKind.METHOD {
-        return owner.methods[prop_id.id].vtable_index
+        return 1
     }
-    return owner.fields[prop_id.id].vtable_index
+    return owner.fields[prop_id.id].field_offset
 }
 fnc is_class_prop_static(program: Program, prop_id: PropId): bool {
     let owner = get_class_from_prop_id(program, prop_id)
@@ -1728,7 +1727,7 @@ class TypeChecker {
         }
     }
     private declare_class_fields(this, declared_class: Class, class_node: ClassDeclarationNode){
-        let current_vtable_index = declared_class.inherited_fields_num
+        let current_field_offset = declared_class.inherited_fields_num
         for let i = 0; i < class_node.fields.length; i++ {
             let field_node = class_node.fields[i]
             let field = new ClassField()
@@ -1739,7 +1738,7 @@ class TypeChecker {
             field.visibility = field_node.access_modifier
             field.id = new PropId(PropIdKind.FIELD, declared_class.id, i)
             field.field_type = this.check_type(field_node.parsed_type)
-            field.vtable_index = current_vtable_index
+            field.field_offset = current_field_offset
             if this.has_errored() return
             let possible_prop_id = declared_class.prop_map[field.name]
             if possible_prop_id != null {
@@ -1773,7 +1772,7 @@ class TypeChecker {
             } else {
                 field.is_static = false
                 declared_class.prop_map[field.name] = field.id
-                current_vtable_index++
+                current_field_offset++
             }
             declared_class.fields << field
         }
@@ -1794,7 +1793,6 @@ class TypeChecker {
         return true
     }
     private declare_class_methods(this, declared_class: Class, class_node: ClassDeclarationNode){
-        let current_vtable_index = declared_class.inherited_methods_num
           for let i = 0; i < class_node.methods.length; i++ {
             let method_node = class_node.methods[i]
             let method = new ClassMethod()
@@ -1845,9 +1843,6 @@ class TypeChecker {
                     this.error(ErrorKind.GEN, "Expected inherited method $name in class $(declared_class.name) to be $(dump_access(parent_prop_visibility))", method_node.name.range)
                     return
                 }
-                method.vtable_index = get_vtable_index(this.program, possible_prop_id)
-            } else {
-                method.vtable_index = current_vtable_index
             }
             method.id = new PropId(PropIdKind.METHOD, declared_class.id, i)
             if method_node.is_static {
@@ -1868,9 +1863,7 @@ class TypeChecker {
                     }
                     declared_class.construct = method.id
                 } else {
-                    if method.visibility != ACCESS_ATTR.PRIVATE
-                        current_vtable_index++
-                    else if method_node.is_abstract {
+                    if method_node.is_abstract {
                         this.error(ErrorKind.GEN, "Can't have a abstract private method use protected instead", method_node.name.range)
                         return
                     }

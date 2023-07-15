@@ -67,4 +67,5 @@ function(compile_stage PREV_STAGE CURR_STAGE)
 endfunction()
 
 compile_stage(stage0 stage1)
-compile_stage(stage1 flo)
+compile_stage(stage1 stage2)
+compile_stage(stage2 flo)
