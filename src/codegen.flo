@@ -357,11 +357,11 @@ class CodeGen {
             }
             //TODO: will need to check for nullable
             let obj_class = get_class_from_type(this.program, val_ty)
-            let str_builder: StringBuilder(obj_class.name.length + 14)
-            str_builder.append_string("$(obj_class.name) {\n")
+            let string_value = String.with_capacity(obj_class.name.length + 14)
+            string_value += "$(obj_class.name) {\n"
             if depth == 3 {
-                str_builder.append_string(" ... }")
-                return this.createGlobalLLVMString(builder, str_builder.get_string())
+                string_value += " ... }"
+                return this.createGlobalLLVMString(builder, string_value)
             }
             let fmt_args_length = obj_class.prop_map.length
             let fmt_args: LLVMValueRef*(fmt_args_length)
@@ -374,10 +374,10 @@ class CodeGen {
                     malloc_list << arg
                 }
                 fmt_args[idx++] = arg
-                str_builder.append_string(" '$(field_entry.key)': $(get_format_from_type(field_ty)), \n")
+                string_value += " '$(field_entry.key)': $(get_format_from_type(field_ty)), \n"
             }
-            str_builder.append_string("}")
-            let result = this.codegen_safe_fmt_string(builder, str_builder.get_string(), fmt_args, fmt_args_length, null)
+            string_value +="}"
+            let result = this.codegen_safe_fmt_string(builder, string_value, fmt_args, fmt_args_length, null)
             malloc_list << result
             return result
         }
@@ -395,7 +395,7 @@ class CodeGen {
     }
     private codegen_string(this, builder: LLVMBuilderRef, string_exp: StringExpression): LLVMValueRef {
         let str_value = string_exp.value
-        let fmt_str_builder: StringBuilder(str_value.length + string_exp.fmt_indices.length*2)
+        let fmt_string = String.with_capacity(str_value.length + string_exp.fmt_indices.length*2)
         let chars = str_value.get_bytes()
         let curr_ind = 0
         let prev_ind = 0
@@ -409,14 +409,14 @@ class CodeGen {
             prev_ind = curr_ind
             curr_ind = string_exp.fmt_indices[i]
             let incr = curr_ind - prev_ind
-            fmt_str_builder.add_bytes_length(chars, incr)
-            fmt_str_builder.append_string(fmt)
+            fmt_string.append_bytes_length(chars, incr)
+            fmt_string += fmt
             chars += incr
             let templ_arg_exp = this.codegen_expression(builder, templ_arg)
             call_args[i] = this.get_string_val(builder, templ_arg_exp, templ_arg_ty, malloc_list)
         }
-        fmt_str_builder.add_bytes_length(chars, str_value.length - curr_ind)
-        str_value = fmt_str_builder.get_string()
+        fmt_string.append_bytes_length(chars, str_value.length - curr_ind)
+        str_value = fmt_string
         let str_len = this.createLLVMInt(str_value.length)
         let str = call_args_length > 0 ? this.codegen_safe_fmt_string(builder, str_value, call_args, call_args_length, &str_len) : this.createGlobalLLVMString(builder, str_value)
         if is_object(string_exp.value_type) {

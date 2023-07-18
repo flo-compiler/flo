@@ -24,12 +24,12 @@ class File {
     }
     public read_all(this): String {
         let buffer: u8[1024] = null
-        let string_builder: StringBuilder(1024)
+        let file_contents = String.with_capacity(1024)
         let read_len: uint = null
         while (read_len = read(this.fd, &buffer[0], buffer.size)) != 0 {
-            string_builder.add_bytes_length(&buffer[0], read_len)
+            file_contents.append_bytes_length(&buffer[0], read_len)
         }
-        return string_builder.get_string()
+        return file_contents
     }
     public read_bytes_length(this, buffer: u8*, length: uint): uint {
         return read(this.fd, buffer, length)

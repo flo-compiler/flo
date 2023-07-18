@@ -29,18 +29,18 @@ class HTTPClient {
         this.header("Host", this.uri.hostname)
     }
     private build_request_string(this): String {
-        let request_str_builder: StringBuilder(10)
-        request_str_builder.append_string(this.method)
-        request_str_builder.add_bytes_length(" ", 1)
-        request_str_builder.append_string(this.uri.path)
-        request_str_builder.add_bytes_length("\r\n", 2)
+        let request_string = String.with_capacity(10)
+        request_string += this.method
+        request_string.add_bytes_length(" ", 1)
+        request_string += this.uri.path
+        request_string.add_bytes_length("\r\n", 2)
         for header in this.headers {
-            request_str_builder.append_string(header.key)
-            request_str_builder.add_bytes_length(" ", 1)
-            request_str_builder.append_string(header.value)
-            request_str_builder.add_bytes_length("\r\n", 2)
+            request_string += header.key
+            request_string.add_bytes_length(" ", 1)
+            request_string += header.value
+            request_string.add_bytes_length("\r\n", 2)
         }
-        return request_str_builder.get_string()
+        return request_string
     }
     public header(this, key: String, value: String): HTTPClient {
         this.headers[key] = value
@@ -51,14 +51,14 @@ class HTTPClient {
         this.socket.connect(this.uri.hostname, this.uri.port)
         let request_string = this.build_request_string()
         let buff: u8[1026] = null
-        let response_text_builder: StringBuilder(buff.size)
+        let response_string = String.with_capacity(buff.size)
         let recieved = 0
         if write(this.socket.sockfd, request_string.get_bytes(), request_string.length) >= 0 {
             while (recieved = read(this.socket.sockfd, &buff[0], buff.size)) != 0 {
-                response_text_builder.add_bytes_length(&buff[0], recieved)
+                response_string.add_bytes_length(&buff[0], recieved)
             }
         }
         del request_string
-        return response_text_builder.get_string()
+        return response_string
     }
 }
