@@ -5,6 +5,6 @@ class Test {
 fnc main(): int {
     let test: Test()
     test.inner_test = test
-    println(test as string)
+    println(test as String)
     return 0
 }

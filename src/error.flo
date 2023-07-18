@@ -9,20 +9,20 @@ enum ErrorKind {
 }
 class FloError {
     kind: ErrorKind
-    message: string
+    message: String
     range: FloRange
-    constructor(this, kind: ErrorKind, message: string, range: FloRange){
+    constructor(this, kind: ErrorKind, message: String, range: FloRange){
         this.kind = kind
         this.range = range
         this.message = message
     }
 }
-fnc get_next_line_index(text: string, start: uint): uint {
+fnc get_next_line_index(text: String, start: uint): uint {
     while text.get_byte(start) != '\n' and start < text.length 
         start++
     return start
 }
-fnc print_error_line(text: string, range: FloRange){
+fnc print_error_line(text: String, range: FloRange){
     let end = get_next_line_index(text, range.end)
     let start_line = range.start - range.col
     let line = text.substring(start_line, end - start_line)
@@ -39,7 +39,7 @@ fnc print_error_line(text: string, range: FloRange){
     change_print_color(COLORS.RESET)
     flo_print("\n")
 }
-fnc print_message_error(kind: ErrorKind, message: string){
+fnc print_message_error(kind: ErrorKind, message: String){
     change_print_color(COLORS.RED)
     if kind == ErrorKind.ILLEGALCHAR {
         flo_print("[Illegal Character]: ")
@@ -57,7 +57,7 @@ fnc print_message_error(kind: ErrorKind, message: string){
     change_print_color(COLORS.RESET)
     flo_println(message)
 }
-fnc print_error(error: FloError, filename: string, content: string){
+fnc print_error(error: FloError, filename: String, content: String){
     print_message_error(error.kind, error.message)
     flo_println("File '$filename', line $(error.range.line)")
     print_error_line(content, error.range)

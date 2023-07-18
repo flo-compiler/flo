@@ -6,21 +6,21 @@ fnc strlen(str: u8*): uint
 fnc write(fc: int, buf: u8*, len: uint): uint
 fnc read(fd: int, buff: u8*, size: uint): uint 
 // ----- functions -----
-fnc print(str: string){
+fnc print(str: String){
     write(STDOUT, str.get_bytes(), str.length)
 }
-fnc println(str: string){
+fnc println(str: String){
     print(str)
     write(STDOUT, "\n", 1)
 }
-fnc eprint(str: string){
+fnc eprint(str: String){
     write(STDERR, str.get_bytes(), str.length)
 }
-fnc eprintln(str: string){
+fnc eprintln(str: String){
     eprint(str)
     write(STDERR, "\n", 1)
 }
-fnc input(): string {
+fnc input(): String {
     let char: u8
     let builder: StringBuilder(1)
     while true {
@@ -30,8 +30,8 @@ fnc input(): string {
     }
     return builder.get_string()
 }
-// ----- string -------
-class string {
+// ----- String -------
+class String {
     private buffer: u8*
     public length: uint
     private size: uint
@@ -40,40 +40,40 @@ class string {
         this.length = len
         this.size = len
     }
-    private __add__(this, data: string): string {
+    private __add__(this, data: String): String {
         let new_str_len = this.length + data.length
         let new_buffer = new u8*(new_str_len)
         new_buffer.copy_from(this.buffer, this.length)
         let trailing_buffer = new_buffer + this.length
         trailing_buffer.copy_from(data.buffer, data.length)
-        return new string(new_buffer, new_str_len)   
+        return new String(new_buffer, new_str_len)   
     }
-    private __adda__(this, other: string): string {
+    private __adda__(this, other: String): String {
         let new_length = this.length + other.length
         this.buffer = this.buffer.resize(new_length)
         (this.buffer + this.length).copy_from(other.buffer, other.length)
         this.length = new_length
         return this
     }
-    private __getitem__(this, index: uint): string {
+    private __getitem__(this, index: uint): String {
         let new_buffer = new u8*(1)
         new_buffer[0] = this.buffer[index]
-        return new string(new_buffer, 2)
+        return new String(new_buffer, 2)
     }
-    private __ne__(this, other: string): bool {
+    private __ne__(this, other: String): bool {
         return !(this.__eq__(other))
     }
-    private __eq__(this, other: string): bool {
+    private __eq__(this, other: String): bool {
         if this.length != other.length return false
         return this.buffer.compare(other.buffer, this.length) == 0
     }
-    private __in__(this, other: string): bool {
+    private __in__(this, other: String): bool {
         return this.find(other) != -1
     }
     private __del__(this){
         del this.buffer
     }
-    public find(this, search: string, start = 0): int {
+    public find(this, search: String, start = 0): int {
         let end = this.length - search.length
         for let index = start; index <= end; index++ {
             if (search.buffer[0] == this.buffer[index]) {
@@ -84,10 +84,10 @@ class string {
         }
         return -1
     }
-    public substring (this, start: int, length: uint): string {
+    public substring (this, start: int, length: uint): String {
         let new_str_buff = new u8*(length)
         new_str_buff.copy_from(this.buffer + start, length)
-        return new string(new_str_buff, length)
+        return new String(new_str_buff, length)
     }
     public get_byte(this, index: uint): u8 {
         return (this.buffer[index])
@@ -95,7 +95,7 @@ class string {
     public get_bytes(this): u8* {
         return this.buffer
     }
-    public replace(this, val: string, repl: string): string {
+    public replace(this, val: String, repl: String): String {
         let idx = this.find(val)
         if idx >= 0 {
             let nlen = this.length - val.length + repl.length
@@ -103,7 +103,7 @@ class string {
             nbuff.copy_from(this.buffer, idx as uint)
             (&nbuff[idx]).copy_from(repl.buffer, repl.length)
             (&nbuff[idx + repl.length]).copy_from(&this.buffer[idx + val.length], this.length - (idx + val.length))
-            return new string(nbuff, nlen)
+            return new String(nbuff, nlen)
         } 
         return this
     }
@@ -113,25 +113,25 @@ class string {
         c_string[this.length] = '\0'
         return c_string
     }
-    public ends_with(this, suffix: string): bool {
+    public ends_with(this, suffix: String): bool {
         if (this.length < suffix.length) return false
         let end_buff = this.buffer + this.length - suffix.length
         return end_buff.compare(suffix.buffer, suffix.length) == 0
     }
-    public starts_with(this, preffix: string): bool {
+    public starts_with(this, preffix: String): bool {
         if (this.length < preffix.length) return false
         return this.buffer.compare(preffix.buffer, preffix.length) == 0
     }
-    public from_cstring(str: u8*): string {
+    public from_cstring(str: u8*): String {
         let len = strlen(str)
         let buf = new u8*(len)
         buf.copy_from(str, len)
-        return new string(buf, len)
+        return new String(buf, len)
     }
-    public from_bytes(bytes: u8*, len: uint): string {
+    public from_bytes(bytes: u8*, len: uint): String {
         let buf = new u8*(len)
         buf.copy_from(bytes, len)
-        return new string(buf, len)
+        return new String(buf, len)
     }
 }
 class StringBuilder {
@@ -158,7 +158,7 @@ class StringBuilder {
         this.working_buffer += length
         this.length += length
     }
-    public append_string(this, str: string){
+    public append_string(this, str: String){
         this.add_bytes_length(str.get_bytes(), str.length)
     }
     public add_byte(this, byte: u8){
@@ -167,8 +167,8 @@ class StringBuilder {
         this.working_buffer += 1
         this.length += 1
     }
-    public get_string(this): string {
-        return new string(this.buffer, this.length)
+    public get_string(this): String {
+        return new String(this.buffer, this.length)
     }
 }
 // ------- Range -------

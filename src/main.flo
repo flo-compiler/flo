@@ -15,7 +15,7 @@ fnc main(argc: int, argv: u8**): int {
     let emit_type: FlagString("-emit", "Emit output in a particular format. Options are:\n\t\t • exe - Generates an executable.\n\t\t • llvm-ir - Generates a file containing LLVM IR.\n\t\t • llvm-bc - Generates a file containing LLVM bitcode.\n\t\t • obj - Generates an object file\n\t\t • asm - Generates Assembly code.", "exec")
     let output_fn: FlagString("o", "Specify file to put the output into", "output")
     let rt_path: FlagString("I", "Specify runtime directory", "/usr/local/flo/lib/")
-    let target_triple: FlagString("-target", "Compile to specific target triple", string.from_cstring(LLVMGetDefaultTargetTriple()))
+    let target_triple: FlagString("-target", "Compile to specific target triple", String.from_cstring(LLVMGetDefaultTargetTriple()))
     let link_libs: FlagString("l", "Specify a library to link against (should be a comma seperated list)")
     let opt_level: FlagInt("O", "Specify the compiler's optimization level", 1)
     let show_version: FlagBool("v", "Show version")
@@ -27,7 +27,7 @@ fnc main(argc: int, argv: u8**): int {
     }
     if show_help.value {
         flo_print("Usage: ")
-        flo_print(string.from_cstring(argv[0]))
+        flo_print(String.from_cstring(argv[0]))
         flo_println(" [OPTIONS]? <file>\n\nOPTIONS:\n")
         print_flags()
         return 0

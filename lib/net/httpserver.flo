@@ -3,7 +3,7 @@ import "socket"
 import "uri"
 class HTTPRequestStream {
     private conn: int
-    public raw: string
+    public raw: String
     private response_str_builder: StringBuilder
     constructor(this, conn: int){
         this.conn = conn
@@ -17,7 +17,7 @@ class HTTPRequestStream {
         this.raw = str_builder.get_string()
         this.response_str_builder = new StringBuilder(10)
     }
-    write(this, s: string): HTTPRequestStream {
+    write(this, s: String): HTTPRequestStream {
         this.response_str_builder.append_string(s)
         return this
     }

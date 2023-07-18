@@ -1,5 +1,5 @@
 fnc main(): int {
-    let arr: string[] = []
+    let arr: String[] = []
     for let i = 0; i < 10; i++ {
         arr << "hello"
     }

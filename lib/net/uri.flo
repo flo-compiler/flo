@@ -1,12 +1,12 @@
 class URI {
-    protocol: string
-    hostname: string
-    path: string
+    protocol: String
+    hostname: String
+    path: String
     port: uint
     constructor(this){}
-    parse(uristr: string): URI{
+    parse(uristr: String): URI{
         let url = new URI()
-        let rest_uristr: string = null
+        let rest_uristr: String = null
         let https_protocol_string = "https"
         let domain_sep = "://"
         let domain_idx = uristr.find(domain_sep)

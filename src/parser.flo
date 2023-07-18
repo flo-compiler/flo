@@ -425,7 +425,7 @@ class Parser {
     private can_parse(this): bool{
         return this.current_token.ttype != TokType.EOF and this.errors.length == 0
     }
-    private error(this, message: string){
+    private error(this, message: String){
         this.errors << new FloError(ErrorKind.SYNTAX, message, this.current_token.range)
     }    
     private advance(this){

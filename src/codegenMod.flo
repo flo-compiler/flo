@@ -26,7 +26,7 @@ class GeneratedModule {
         LLVM_InitializeAllAsmPrinters()
     }
     private print_errors(this){
-        let error = string.from_cstring(this.errors)
+        let error = String.from_cstring(this.errors)
         LLVMDisposeMessage(this.errors)
         panic("error: $error")
     }
@@ -74,7 +74,7 @@ class GeneratedModule {
         LLVMDisposeExecutionEngine(engine)
         return ret
     }
-    public set_target_machine(this, triple_str: string){
+    public set_target_machine(this, triple_str: String){
         let triple: u8*(triple_str.length + 1)
         triple.copy_from(triple_str.get_bytes(), triple_str.length)
         triple[triple_str.length] = 0
@@ -86,7 +86,7 @@ class GeneratedModule {
         LLVMSetDataLayout(this.llvm_mod, LLVMCreateTargetDataLayout(this.tm))
         LLVMSetTarget(this.llvm_mod, LLVMGetTargetMachineTriple(this.tm))
     }
-    public write_obj(this, filename: string){
+    public write_obj(this, filename: String){
         let filename_cstr = filename.to_cstring()
         if LLVMTargetMachineEmitToFile(this.tm, this.llvm_mod, filename_cstr, LLVMCodeGenFileType.LLVMObjectFile, &this.errors) {
             this.print_errors()
@@ -94,7 +94,7 @@ class GeneratedModule {
         del filename_cstr
         del filename
     }
-    public write_ir(this, filename: string){
+    public write_ir(this, filename: String){
         let filename_cstr = filename.to_cstring()
         if LLVMPrintModuleToFile(this.llvm_mod, filename_cstr, &this.errors) {
             this.print_errors()
@@ -102,13 +102,13 @@ class GeneratedModule {
         del filename_cstr
         del filename
     }
-    public write_bc(this, filename: string) {
+    public write_bc(this, filename: String) {
         let filename_cstr = filename.to_cstring()
         LLVMWriteBitcodeToFile(this.llvm_mod, filename_cstr)
         del filename_cstr
         del filename
     }
-    public write_asm(this, filename: string) {
+    public write_asm(this, filename: String) {
         let filename_cstr = filename.to_cstring()
         if LLVMTargetMachineEmitToFile(this.tm, this.llvm_mod, filename_cstr, LLVMCodeGenFileType.LLVMAssemblyFile, &this.errors){
             this.print_errors()

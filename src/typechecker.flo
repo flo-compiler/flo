@@ -100,10 +100,10 @@ class ArrayType (Type) {
     }
 }
 class GenericType(Type) {
-    name: string
+    name: String
     arg_types: Type[]
     instantiated_type: Type
-    constructor(this, name: string, arg_types: Type[], instantiated_type: Type){
+    constructor(this, name: String, arg_types: Type[], instantiated_type: Type){
         super(TypeKind.RESOLVED_GENERIC)
         this.name = name
         this.arg_types = arg_types
@@ -153,10 +153,10 @@ class FloatExpression (Expression) {
     }
 }
 class StringExpression (Expression) {
-    value: string
+    value: String
     fmt_indices: uint[]
     template_args: Expression[]
-    constructor(this, value: string, fmt_indices: uint[], template_args: Expression[], value_type: Type){
+    constructor(this, value: String, fmt_indices: uint[], template_args: Expression[], value_type: Type){
         super(ExpressionKind.STRING)
         this.template_args = template_args
         this.fmt_indices = fmt_indices
@@ -382,10 +382,10 @@ class IfStatement (Statement) {
     }
 }
 class VarDeclaration (Statement) {
-    name: string
+    name: String
     var_id: VarId
     is_static: bool
-    constructor(this, name: string, var_id: VarId){
+    constructor(this, name: String, var_id: VarId){
         super(StatementKind.VAR)
         this.var_id = var_id
         this.name = name
@@ -393,10 +393,10 @@ class VarDeclaration (Statement) {
     }
 }
 class ConstDeclaration (Statement) {
-    name: string
+    name: String
     const_id: ConstId
     is_static: bool
-    constructor(this, name: string, const_id: ConstId){
+    constructor(this, name: String, const_id: ConstId){
         super(StatementKind.CONST)
         this.const_id = const_id
         this.name = name
@@ -509,7 +509,7 @@ fnc check_is_var(expr: Expression): bool{
     }
     return false
 }
-fnc dump_type(ty: Type, force_bit_size = false): string {
+fnc dump_type(ty: Type, force_bit_size = false): String {
     if ty.kind == TypeKind.BOOL
         return "bool"
     if is_int(ty){
@@ -542,7 +542,7 @@ fnc dump_type(ty: Type, force_bit_size = false): string {
         return "record"
     return "unknown"
 }
-fnc dump_bin_op(op: BinaryOp): string {
+fnc dump_bin_op(op: BinaryOp): String {
     if op == BinaryOp.ADD
         return "+"
     if op == BinaryOp.SUB
@@ -583,7 +583,7 @@ fnc dump_bin_op(op: BinaryOp): string {
         return "="
     return ".."
 }
-fnc dump_unary_op(op: UnaryOp): string{
+fnc dump_unary_op(op: UnaryOp): String{
     if op == UnaryOp.PREINCR
         return "++(pre)"
     if op == UnaryOp.PREDECR
@@ -598,7 +598,7 @@ fnc dump_unary_op(op: UnaryOp): string{
         return "!"
     return "&"
 }
-fnc dump_access(visibility: ACCESS_ATTR): string {
+fnc dump_access(visibility: ACCESS_ATTR): String {
     if visibility == ACCESS_ATTR.PRIVATE
         return "private"
     if visibility == ACCESS_ATTR.PUBLIC
@@ -646,20 +646,20 @@ class ModuleVarId(VarId){
 }
 class Scope {
     public id: ScopeId
-    public vars: [string: VarId]
-    public classes: [string: ClassId]
-    public functions: [string: VarId]
-    public enums: [string: EnumId]
+    public vars: [String: VarId]
+    public classes: [String: ClassId]
+    public functions: [String: VarId]
+    public enums: [String: EnumId]
     public parent: ScopeId
-    public type_aliases: [string: Type]
+    public type_aliases: [String: Type]
     public children: ScopeId[]
     constructor(this, module_id: uint, id: uint){
         this.id = new ScopeId(module_id, id)
-        this.vars = new [string: VarId]()
-        this.classes = new [string: ClassId]()
-        this.functions = new [string: VarId]()
-        this.enums = new [string: EnumId]()
-        this.type_aliases = new [string: Type]()
+        this.vars = new [String: VarId]()
+        this.classes = new [String: ClassId]()
+        this.functions = new [String: VarId]()
+        this.enums = new [String: EnumId]()
+        this.type_aliases = new [String: Type]()
         this.parent = null 
         this.children = []
     }
@@ -674,7 +674,7 @@ class Scope {
 }
 class FunctionArg(Expression) {
     id: VarId
-    name: string
+    name: String
     default: Expression
     constructor(this){
         super(ExpressionKind.ACCESS)
@@ -682,7 +682,7 @@ class FunctionArg(Expression) {
 }
 class Function {
     id: VarId
-    name: string
+    name: String
     args: FunctionArg[]
     block: Block
     fnc_type: FunctionType
@@ -713,7 +713,7 @@ class ClassField {
     id: PropId
     is_static: bool
     visibility: ACCESS_ATTR
-    name: string
+    name: String
     field_type: Type
     field_offset: uint
     initializer: Expression
@@ -725,7 +725,7 @@ class ClassMethod {
     id: PropId
     is_static: bool
     visibility: ACCESS_ATTR
-    name: string
+    name: String
     method_type: FunctionType
     block: Block
     args: FunctionArg []
@@ -737,13 +737,13 @@ class ClassMethod {
 }
 class Class {
     id: ClassId
-    name: string
+    name: String
     parent: Type
     construct: PropId
     fields: ClassField[]
     methods: ClassMethod[]
-    prop_map: [string: PropId]
-    static_prop_map: [string: PropId]
+    prop_map: [String: PropId]
+    static_prop_map: [String: PropId]
     inherited_methods_num: uint
     inherited_fields_num: uint
     is_abstract: bool
@@ -753,8 +753,8 @@ class Class {
         this.inherited_methods_num = 0
         this.fields = []
         this.methods = []
-        this.prop_map = new [string: PropId]()
-        this.static_prop_map = new [string: PropId]()
+        this.prop_map = new [String: PropId]()
+        this.static_prop_map = new [String: PropId]()
         this.is_abstract = false
     }
     private __del__(this){
@@ -773,9 +773,9 @@ class Class {
 }
 class EnumField {
     id: PropId
-    name: string
+    name: String
     initializer: Expression
-    constructor(this, name: string){
+    constructor(this, name: String){
         this.name = name
     }
     private __del__(this){
@@ -786,12 +786,12 @@ class EnumField {
 }
 class Enum {
     id: EnumId
-    name: string
+    name: String
     fields: EnumField[]
-    field_map: [string: PropId]
+    field_map: [String: PropId]
     constructor(this){
         this.fields = []
-        this.field_map = new [string: PropId]()
+        this.field_map = new [String: PropId]()
     }
     private __del__(this){
         del this.id
@@ -804,7 +804,7 @@ class Enum {
     }
 }
 class Module {
-    name: string
+    name: String
     vars: Var[]
     consts: Const[]
     classes: Class[]
@@ -814,7 +814,7 @@ class Module {
     scopes: Scope[]
     global_consts: ConstDeclaration[]
     global_vars: VarDeclaration[]
-    constructor(this, name: string){
+    constructor(this, name: String){
         this.name = name
         this.functions = []
         this.vars = []
@@ -857,10 +857,8 @@ class Module {
     }
 }
 class Program {
-    uses_builtins: bool
     modules: Module[]
     constructor(this){
-        this.uses_builtins = false
         this.modules = []
     }
     private __del__(this){
@@ -911,7 +909,7 @@ fnc get_class_prop_type(program: Program, prop_id: PropId): Type {
     }
     return owner.fields[prop_id.id].field_type
 }
-fnc get_class_prop_type_with_name(program: Program, obj_ty: ObjectType, name: string): Type {
+fnc get_class_prop_type_with_name(program: Program, obj_ty: ObjectType, name: String): Type {
     let obj_class = get_class_from_type(program, obj_ty)
     if (obj_class == null) return null 
     let prop_id = obj_class.prop_map[name]
@@ -939,12 +937,12 @@ fnc is_class_prop_static(program: Program, prop_id: PropId): bool {
     }
     return owner.fields[prop_id.id].is_static
 }
-fnc is_buitin(program: Program, ty: Type, name: string): bool {
+fnc is_buitin(program: Program, ty: Type, name: String): bool {
     if !is_object(ty) return false
     let class_obj = get_class_from_type(program, ty)
     return class_obj.name == name and class_obj.id.module_id == 1
 }
-fnc is_operator_overload_name(name: string): bool {
+fnc is_operator_overload_name(name: String): bool {
     if name == "__eq__" return true
     if name == "__add__" return true
     if name == "__sub__" return true
@@ -978,7 +976,7 @@ fnc is_operator_overload_name(name: string): bool {
     if name == "__del__" return true
     return false
 }
-fnc bin_op_to_op_overload_name(op: BinaryOp): string {
+fnc bin_op_to_op_overload_name(op: BinaryOp): String {
     if op == BinaryOp.ADD return "__add__"
     if op == BinaryOp.SUB return "__sub__"
     if op == BinaryOp.MUL return "__mul__"
@@ -1069,14 +1067,14 @@ class TypeChecker {
     private compiler: Compiler
     private in_loop: bool
     private module_contains_generics: bool
-    private generic_templates: [string: Generic]
+    private generic_templates: [String: Generic]
     constructor(this, compiler: Compiler){
         this.compiler = compiler
         this.in_loop = false
         this.program = new Program()
-        this.generic_templates = new [string: Generic]()
+        this.generic_templates = new [String: Generic]()
     }
-    public check(module_ast: ModuleAST, compiler: Compiler, filename: string): Program {
+    public check(module_ast: ModuleAST, compiler: Compiler, filename: String): Program {
         let typechecker: TypeChecker(compiler)
         typechecker.load_generic_module()
         typechecker.load_builtins_module()
@@ -1182,7 +1180,7 @@ class TypeChecker {
         }
         return true
     }
-    private dump_type(this, ty: Type): string {
+    private dump_type(this, ty: Type): String {
         if is_function(ty) {
             let fnc_ty = ty as FunctionType
             let args_tys_str = ""
@@ -1239,7 +1237,7 @@ class TypeChecker {
         module.scopes << scope
         return scope
     }
-    private is_constant_in_scope(this, name: string): bool {
+    private is_constant_in_scope(this, name: String): bool {
         let is_constant = false
         let var_id = this.get_var_from_current_scope(name)
         if var_id != null { 
@@ -1247,7 +1245,7 @@ class TypeChecker {
         }
         return is_constant
     }
-    private get_var_from_current_scope(this, name: string): VarId {
+    private get_var_from_current_scope(this, name: String): VarId {
         let current_scope = this.get_current_scope()
         let value: VarId = null
         while value == null {
@@ -1265,7 +1263,6 @@ class TypeChecker {
             value = this.get_var_from_current_scope(name)
             this.current_scope = previous_scope
             if value != null {
-                this.program.uses_builtins = true
                 if value.kind == VarIdKind.FNC
                     this.add_imported_fnc_to_module(name, value)
                 if value.kind == VarIdKind.VAR or value.kind == VarIdKind.CONST
@@ -1278,7 +1275,7 @@ class TypeChecker {
         }
         return value
     }
-    private get_type_from_current_scope(this, name: string): Type {
+    private get_type_from_current_scope(this, name: String): Type {
         let current_scope = this.get_current_scope()
         while true {
             let aliased_ty = current_scope.type_aliases[name]
@@ -1302,7 +1299,6 @@ class TypeChecker {
             this.current_scope = this.program.modules[0].scope
             let builtin_type = this.get_type_from_current_scope(name)
             if builtin_type.kind != TypeKind.UNKNOWN {
-                this.program.uses_builtins = true
                 if builtin_type.kind == TypeKind.OBJECT {
                     this.add_imported_class_to_module(name, (builtin_type as ObjectType).class_id)
                 } else {
@@ -1320,7 +1316,7 @@ class TypeChecker {
         this.get_current_scope().children << new_scope.id
         return new_scope
     } 
-    private error(this, kind: ErrorKind, message: string, range: FloRange){
+    private error(this, kind: ErrorKind, message: String, range: FloRange){
         this.compiler.errors << new FloError(kind, message, range)
     }
     private has_errored(this): bool {
@@ -1336,7 +1332,7 @@ class TypeChecker {
     private switch_to_generic_module(this){
         this.current_scope = this.get_module(0).scope
     }
-    private check_module(this, module_ast: ModuleAST, filename: string): Module {
+    private check_module(this, module_ast: ModuleAST, filename: String): Module {
         this.module_contains_generics = false
         let prev_scope = this.current_scope
         let module = new Module(filename)
@@ -1401,7 +1397,7 @@ class TypeChecker {
         if this.has_errored() return null
         return module
     }
-    private create_generic_instance_in_module(this, name: string, types: Type[]): GenericType {
+    private create_generic_instance_in_module(this, name: String, types: Type[]): GenericType {
         let generic = this.generic_templates[name]
         if generic == null return null
         let generic_params = generic.template.generic_parameters
@@ -1437,7 +1433,7 @@ class TypeChecker {
         del generic_scope
         return new GenericType(name, types, possible_type)
     }
-    private declare_var_within_current_scope(this, name: string, value: Expression, value_type: Type): Var {
+    private declare_var_within_current_scope(this, name: String, value: Expression, value_type: Type): Var {
         let var = new Var(value, value_type)
         let current_module = this.get_current_module()
         let current_scope = this.get_current_scope()
@@ -1447,7 +1443,7 @@ class TypeChecker {
         current_scope.vars[name] = id
         return var
     }
-    private declare_const_within_current_scope(this, name: string, value: Expression, value_type: Type): Const {
+    private declare_const_within_current_scope(this, name: String, value: Expression, value_type: Type): Const {
         let constant = new Const(value, value_type)
         let current_module = this.get_current_module()
         let current_scope = this.get_current_scope()
@@ -1476,24 +1472,24 @@ class TypeChecker {
         var_stmt.is_static = true
         this.get_current_module().global_vars << var_stmt
     }
-    private add_imported_typealias_to_module(this, alias_name: string, type_: Type){
+    private add_imported_typealias_to_module(this, alias_name: String, type_: Type){
         let scope = this.get_current_module_global_scope()
         scope.type_aliases[alias_name] = type_
     }
-    private add_imported_var_to_module(this, var_name: string, var_id: VarId){
+    private add_imported_var_to_module(this, var_name: String, var_id: VarId){
         let scope = this.get_current_module_global_scope()
         scope.vars[var_name] = var_id
     }
-    private add_imported_fnc_to_module(this, fnc_name: string, fnc_id: VarId){
+    private add_imported_fnc_to_module(this, fnc_name: String, fnc_id: VarId){
         let scope = this.get_current_module_global_scope()
         scope.functions[fnc_name] = fnc_id
     }
-    private add_imported_class_to_module(this, class_name: string, class_id: ClassId){
+    private add_imported_class_to_module(this, class_name: String, class_id: ClassId){
         let scope = this.get_current_module_global_scope()
         scope.classes[class_name] = class_id
         scope.vars[class_name] = new ClassVarId(class_id)
     }
-    private add_imported_enum_to_module(this, enum_name: string, enum_id: EnumId){
+    private add_imported_enum_to_module(this, enum_name: String, enum_id: EnumId){
         let scope = this.get_current_module_global_scope()
         scope.enums[enum_name] = enum_id
         scope.vars[enum_name] = new EnumVarId(enum_id)
@@ -1550,7 +1546,7 @@ class TypeChecker {
     }
     private check_module_import(this, import_node: ImportNode){
         if import_node.module_path.args.length > 0 {
-            this.error(ErrorKind.GEN, "Import statement path can't be a a formatted string", import_node.module_path.range)
+            this.error(ErrorKind.GEN, "Import statement path can't be a formatted string", import_node.module_path.range)
             return
         }
         let path = import_node.module_path.value
@@ -1600,7 +1596,7 @@ class TypeChecker {
             this.import_all_from_module(module)
         }
     }
-    private lex_and_parse_typecheck_file(this, filename: string, range: FloRange): Module {
+    private lex_and_parse_typecheck_file(this, filename: String, range: FloRange): Module {
         // TODO: You need to properly handle the built-in case; don't use null as a reference point.
         let filepath = filename
         let prev_file_id = this.compiler.current_file
@@ -2421,7 +2417,7 @@ class TypeChecker {
             int to pointer.
             boolean to int/float.
         */
-        if is_buitin(this.program, dest_ty, "string") {
+        if is_buitin(this.program, dest_ty, "String") {
             return new StringExpression("", [0], [exp], dest_ty)
         }
         let is_valid_cast = false
@@ -2435,7 +2431,7 @@ class TypeChecker {
         if is_int(val_ty) and dest_ty.kind == TypeKind.ENUM {
             is_valid_cast = true
         }
-        if is_numeric(dest_ty) and is_buitin(this.program, val_ty, "string") {
+        if is_numeric(dest_ty) and is_buitin(this.program, val_ty, "String") {
             let call: IntrinsicCall = null
             if is_float(dest_ty) {
                 call = new IntrinsicCall(Intrinsics.STR_TO_F)
@@ -2464,7 +2460,7 @@ class TypeChecker {
         }
         return new TypeCastExpression(exp, dest_ty)
     }
-    private check_constructor_call(this, class_id: ClassId, args: ExpressionNode[], argsp: Expression[]*): string { 
+    private check_constructor_call(this, class_id: ClassId, args: ExpressionNode[], argsp: Expression[]*): String { 
         let obj_class = get_class(this.program, class_id)
         let field_id = obj_class.construct
         if field_id == null {
@@ -2519,7 +2515,7 @@ class TypeChecker {
         }
         return new NewExpression(memory_type, expression_type, args, new_expr_node.onheap)
     }   
-    private check_member_access(this, accessor: PropId): string {
+    private check_member_access(this, accessor: PropId): String {
         let visibility = ACCESS_ATTR.PUBLIC
         let accessee = get_class_from_prop_id(this.program, accessor)
         let member_name = ""
@@ -2551,7 +2547,7 @@ class TypeChecker {
         let prop_ty = Type.unknown()
         let parent_class: Class = null
         let prop_id: PropId = null
-        let err_msg: string = null
+        let err_msg: String = null
         if is_object(prop_owner_type) {
             while prop_owner_type.kind == TypeKind.RESOLVED_GENERIC {
                 prop_owner_type = (prop_owner_type as GenericType).instantiated_type
@@ -2877,7 +2873,7 @@ class TypeChecker {
             is_const = false
         }
         if !is_u8_ptr(expected_type) {
-            expected_type = this.get_type_from_current_scope("string")
+            expected_type = this.get_type_from_current_scope("String")
             is_const = false
         }
         let str_exp = new StringExpression(str_node.value.value, str_node.value.fmt_indices, template_args, expected_type)

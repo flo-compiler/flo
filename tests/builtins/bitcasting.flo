@@ -1,5 +1,5 @@
 fnc main(): int {
-    println(9.2 as string)
-    println(true as string)
+    println(9.2 as String)
+    println(true as String)
     return 0
 }

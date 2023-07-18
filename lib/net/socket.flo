@@ -35,7 +35,7 @@ class Socket {
         this.sockfd = sockfd
         this.domain = domain
     }
-    bind(this, address: string, port: uint){
+    bind(this, address: String, port: uint){
         let cstring_addr = address.to_cstring()
         let host = gethostbyname(cstring_addr)
         if host == null {
@@ -51,7 +51,7 @@ class Socket {
         }
         del cstring_addr
     }
-    connect(this, address: string, port: uint){
+    connect(this, address: String, port: uint){
         let cstring_addr = address.to_cstring()
         let host = gethostbyname(cstring_addr)
         if host == null {

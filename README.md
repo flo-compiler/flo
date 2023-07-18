@@ -59,7 +59,7 @@ let message: u8* = "Hello, world!"
 ```
 2. String object
 ```
-let message: string = "Hello, world!"
+let message: String = "Hello, world!"
 // or
 let message = "Hello, world!"
 ```
@@ -96,7 +96,7 @@ let numbers: int[3] = [1, 2, 3]
 ```
 let numbers: Array<int> = [1, 2, 3]
 //or
-let names: string[] = ["paul", "john", "xavier"]
+let names: String[] = ["paul", "john", "xavier"]
 ```
 - Indexing arrays
 ```
@@ -109,9 +109,9 @@ names << "Josh"
 ## Maps
 - [x] Intialization
 ```
-let map: Map<string, int> = new Map<string, int>()
+let map: Map<String, int> = new Map<String, int>()
 // or
-let map: [string: int] = new [string: int]()
+let map: [String: int] = new [String: int]()
 ```
 
 - [x] Adding to map
@@ -243,8 +243,8 @@ let jan = Months.JANUARY
 - [x] Basic Class support
 ```
 class Chef {
-    specialty: string
-    constructor(this, specialty: string) {
+    specialty: String
+    constructor(this, specialty: String) {
         this.specialty = specialty
     }
     print_specialty(this) {
@@ -426,7 +426,7 @@ Type Casting always works when converting these types to the following types.
 - Int of any bit size to Int of any bit size.
 - Int of any bit size to Float.
 - Any float type to any float type.
-- Any type to string.
+- Any type to String.
     - Int and Float will result in the stringified Int/Float.
     - Object will return a default string representation of the object.
 - Enums to ints.
@@ -443,7 +443,7 @@ This might not work
 - String to Int/Float might fail if String is not an Int or Float.
 
 These **will** not work
-- Static Arrays to string shall not work. (Working on it)
+- Static Arrays to String shall not work. (Working on it)
 - Any type cast not mentionned above.
 
 

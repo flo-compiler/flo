@@ -8,9 +8,9 @@ class FileId {
     }
 }
 class FloFile {
-    abspath: string
-    relpath: string
-    constructor(this, abspath: string, relpath: string){
+    abspath: String
+    relpath: String
+    constructor(this, abspath: String, relpath: String){
         this.abspath = abspath
         this.relpath = relpath
     }
@@ -21,20 +21,20 @@ class FloFile {
 }
 class Compiler {
     public current_file: FileId
-    private std_dir_path: string
-    public current_file_contents: string
-    public builtin_path: string
+    private std_dir_path: String
+    public current_file_contents: String
+    public builtin_path: String
     private files: FloFile []
     public errors: FloError []
-    private file_ids: [string: FileId]
+    private file_ids: [String: FileId]
     constructor(this){
         this.files = []
         this.current_file = null
         this.current_file_contents = null
         this.errors = []
-        this.file_ids = new [string: FileId]()
+        this.file_ids = new [String: FileId]()
     }
-    public set_std_path(this, std_dir_path: string): bool {
+    public set_std_path(this, std_dir_path: String): bool {
         if (!File.exists(std_dir_path)) return false
         this.std_dir_path = std_dir_path
         let builtins_file_path = "builtins/builtins.flo"
@@ -42,15 +42,15 @@ class Compiler {
         del builtins_file_path
         return true
     }
-    private find_module_path(this, fpath: string): string {
-        let path = fpath.replace(string.from_bytes("@", 1), this.std_dir_path)
-        let extension = string.from_bytes(".flo", 4)
+    private find_module_path(this, fpath: String): String {
+        let path = fpath.replace(String.from_bytes("@", 1), this.std_dir_path)
+        let extension = String.from_bytes(".flo", 4)
         if !path.ends_with(extension){
             path += extension
         }
         return Path.abspath(path)
     }
-    public register_file(this, fpath: string): FileId {
+    public register_file(this, fpath: String): FileId {
         let abspath = this.find_module_path(fpath)
         let file_id = this.file_ids[abspath]
         if file_id != null return file_id

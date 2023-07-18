@@ -1,5 +1,5 @@
 class Static {
-    name: string = null
+    name: String = null
     init(){
         Static.name = "Hello"
     }

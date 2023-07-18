@@ -1,7 +1,7 @@
 import TokType in "types"
 import FloRange in "utils"
 import FloError, ErrorKind in "error"
-fnc string_to_kw_token(word: string): TokType {
+fnc string_to_kw_token(word: String): TokType {
     if word == "and"
         return TokType.AND_KW
     if word == "or"
@@ -80,7 +80,7 @@ fnc get_escape_char(char: u8): u8 {
     if (char == '\\') return '\\'
     return char
 }
-fnc unescape(str: string): string {
+fnc unescape(str: String): String {
     let str_builder: StringBuilder(str.length)
     let char = '\0'
     let aval = &char
@@ -138,10 +138,10 @@ class CharToken (Token) {
     }
 }
 class StrToken (Token) {
-    value: string
+    value: String
     fmt_indices: uint[]
     args: Token[][]
-    constructor(this, args: Token[][], fmt_indices: uint[], value: string, range: FloRange){
+    constructor(this, args: Token[][], fmt_indices: uint[], value: String, range: FloRange){
         super(TokType.STR, range)
         this.value = value
         this.fmt_indices = fmt_indices
@@ -149,20 +149,20 @@ class StrToken (Token) {
     }
 }
 class IdentifierToken (Token) {
-    value: string
-    constructor(this, value: string, range: FloRange){
+    value: String
+    constructor(this, value: String, range: FloRange){
         super(TokType.IDENTIFER, range)
         this.value = value
     }
 }
 class Lexer {
     private current_char: u8
-    private text: string
+    private text: String
     private errors: FloError[]
     private idx: int
     private col: uint
     private line: uint
-    constructor(this, text: string, errors: FloError[]){
+    constructor(this, text: String, errors: FloError[]){
         this.text = text
         this.errors = errors
         this.idx = -1
@@ -507,7 +507,7 @@ class Lexer {
         del char_msg
         return null
     }
-    public tokenize(text: string, errors: FloError[]): Token[] {
+    public tokenize(text: String, errors: FloError[]): Token[] {
         let lexer: Lexer(text, errors)
         lexer.advance()
         let tokens: Token[] = []

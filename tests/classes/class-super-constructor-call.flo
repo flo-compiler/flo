@@ -1,6 +1,6 @@
 class Chef {
-    specialty: string
-    constructor(this, specialty: string) {
+    specialty: String
+    constructor(this, specialty: String) {
         this.specialty = specialty
     }
     print_specialty(this) {

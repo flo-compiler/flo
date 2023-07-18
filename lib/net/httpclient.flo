@@ -3,32 +3,32 @@ import "socket"
 import "uri"
 class HTTPClient {
     private socket: Socket
-    private method: string
+    private method: String
     private uri: URI
-    private headers: [string: string]
+    private headers: [String: String]
     constructor(this){
         this.uri = null
         this.method = null
-        this.headers = new [string: string]()
+        this.headers = new [String: String]()
         this.header("Accept", "*/*")
         this.header("Connection", "keep-alive")
     }
-    get(this, url: string): HTTPClient {
+    get(this, url: String): HTTPClient {
         this.socket = new Socket(AF_INET as int, SOCK_STREAM as int, 0)
         this.method = "GET"
         this.set_uri(url)
         return this
     }
-    post(this, url: string): HTTPClient {
+    post(this, url: String): HTTPClient {
         this.method = "POST"
         this.set_uri(url)
         return this
     }
-    private set_uri(this, url: string){
+    private set_uri(this, url: String){
         this.uri = URI.parse(url)
         this.header("Host", this.uri.hostname)
     }
-    private build_request_string(this): string {
+    private build_request_string(this): String {
         let request_str_builder: StringBuilder(10)
         request_str_builder.append_string(this.method)
         request_str_builder.add_bytes_length(" ", 1)
@@ -42,11 +42,11 @@ class HTTPClient {
         }
         return request_str_builder.get_string()
     }
-    public header(this, key: string, value: string): HTTPClient {
+    public header(this, key: String, value: String): HTTPClient {
         this.headers[key] = value
         return this
     }
-    public send(this): string {
+    public send(this): String {
         lseek(this.socket.sockfd, 0, SEEK_SET as int)
         this.socket.connect(this.uri.hostname, this.uri.port)
         let request_string = this.build_request_string()

@@ -1,15 +1,15 @@
 fnc realpath(path: u8*, abspath: u8*): u8*
 fnc dirname(path: u8*): u8*
 class Path {
-    public join(root: string, rest: string): string {        
+    public join(root: String, rest: String): String {        
         return "$root/$rest"
     }
-    public abspath(p: string): string {
+    public abspath(p: String): String {
         let buf: u8[400]
         realpath(p.to_cstring(), &buf[0])
-        return string.from_cstring(&buf[0])
+        return String.from_cstring(&buf[0])
     }
-    public dirname(p: string): string {
-        return string.from_cstring(dirname(p.to_cstring()))
+    public dirname(p: String): String {
+        return String.from_cstring(dirname(p.to_cstring()))
     }
 }
