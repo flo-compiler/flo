@@ -31,14 +31,14 @@ class HTTPClient {
     private build_request_string(this): String {
         let request_string = String.with_capacity(10)
         request_string += this.method
-        request_string.add_bytes_length(" ", 1)
+        request_string.append_bytes_length(" ", 1)
         request_string += this.uri.path
-        request_string.add_bytes_length("\r\n", 2)
+        request_string.append_bytes_length("\r\n", 2)
         for header in this.headers {
             request_string += header.key
-            request_string.add_bytes_length(" ", 1)
+            request_string.append_bytes_length(" ", 1)
             request_string += header.value
-            request_string.add_bytes_length("\r\n", 2)
+            request_string.append_bytes_length("\r\n", 2)
         }
         return request_string
     }
@@ -55,7 +55,7 @@ class HTTPClient {
         let recieved = 0
         if write(this.socket.sockfd, request_string.get_bytes(), request_string.length) >= 0 {
             while (recieved = read(this.socket.sockfd, &buff[0], buff.size)) != 0 {
-                response_string.add_bytes_length(&buff[0], recieved)
+                response_string.append_bytes_length(&buff[0], recieved)
             }
         }
         del request_string

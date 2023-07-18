@@ -4,38 +4,34 @@ import "uri"
 class HTTPRequestStream {
     private conn: int
     public raw: String
-    private response_str_builder: StringBuilder
+    private response: String
     constructor(this, conn: int){
         this.conn = conn
         let buff: u8[1026]
-        let str_builder: StringBuilder(buff.size)
+        let recieved_string = String.with_capacity(buff.size)
         while true {
             let recieved = read(conn, &buff[0], buff.size)
-            str_builder.add_bytes_length(&buff[0], recieved)
+            recieved_string.append_bytes_length(&buff[0], recieved)
             if (recieved < buff.size) break
         }
-        this.raw = str_builder.get_string()
-        this.response_str_builder = new StringBuilder(10)
+        this.raw = recieved_string
+        this.response = String.with_capacity(10)
     }
     write(this, s: String): HTTPRequestStream {
-        this.response_str_builder.append_string(s)
+        this.response += s
         return this
     }
     send(this){
-        let str = this.response_str_builder.get_string()
-        write(this.conn, str.get_bytes(), str.length)
-        del this.response_str_builder
-        this.response_str_builder = new StringBuilder(10)
+        write(this.conn, this.response.get_bytes(), this.response.length)
+        this.response.length = 0
     }
     end(this){
-        let str = this.response_str_builder.get_string()
-        write(this.conn, str.get_bytes(), str.length)
+        write(this.conn, this.response.get_bytes(), this.response.length)
         close(this.conn)
-        del str
     }
     __del__(this){
         del this.raw
-        del this.response_str_builder
+        del this.response
     }
 }
 class HTTPServer {
