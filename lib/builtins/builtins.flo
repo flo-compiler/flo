@@ -193,15 +193,12 @@ class Array <T> {
         this.capacity = capacity
         this.buffer = new T*(capacity)
     }
-    private resize(this){
-        this.capacity *= 2
-        this.buffer = this.buffer.resize(this.capacity)
-    }
     private __iter__(this): ArrayIterator<T> {
         return new ArrayIterator<T>(this.buffer, this.length)
     } 
     private __sl__(this, element: T){
-        if (this.length >= this.capacity) this.resize()
+        let required_capacity = this.length + 1
+        this.ensure_capacity(required_capacity)
         this.buffer[this.length++] = element
     }
     private __setitem__(this, index: uint, value: T){
@@ -213,13 +210,12 @@ class Array <T> {
     private __add__(this, other: T[]): T[]{
         let arr: T[] = []
         arr.ensure_capacity(this.length + other.length)
-        arr.buffer.copy_from(this.buffer, this.length)
-        arr.length = this.length
+        arr.__adda__(this as T[])
         arr.__adda__(other)
         return arr
     }
     private __adda__(this, other: T[]): T[]{
-        this.ensure_capacity(this.length + other.length)
+        this.ensure_capacity(this.length + other.length + 1)
         (this.buffer + this.length).copy_from(other.buffer, other.length)
         this.length += other.length
         return this as T[]
@@ -248,7 +244,8 @@ class Array <T> {
     }
     public ensure_capacity(this, capacity: uint){
         while this.capacity < capacity {
-            this.resize()
+            this.capacity *= 2
+            this.buffer = this.buffer.resize(this.capacity)
         }
     }
     public find(this, search: T): int {

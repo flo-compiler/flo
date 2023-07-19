@@ -502,7 +502,6 @@ class Lexer {
         if char == '\0'
             return new Token(TokType.EOF, new FloRange(0, 0, this.col, this.line))
         let char_msg = this.text.substring(this.idx, 1)
-        println("$(this.idx)")
         this.errors << new FloError(ErrorKind.ILLEGALCHAR, "Illegal character: '$char_msg'", this.get_range(1))
         del char_msg
         return null

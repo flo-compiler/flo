@@ -65,9 +65,10 @@ class Compiler {
         }
     }
     public set_current_file(this, file_id: FileId): bool {
+        if (file_id.id < 0 or file_id.id > this.files.length) return false
         let file_path = this.files[file_id.id]
-        if !File.exists(file_path.abspath) return false
         let file = File.open_for_reading(file_path.abspath)
+        if file == null return false
         this.unlink_current_file_contents()
         this.current_file_contents = file.read_all()
         this.current_file = file_id

@@ -62,17 +62,7 @@ fnc create_type_key_from_var(var_id: VarId): String {
 fnc create_prop_key(prop_id: PropId): String {
     return "$(create_type_id_key(prop_id.type_id));$(prop_id.kind as int);$(prop_id.id)"
 }
-// These two functions will eventually become a generic function once we implement those.
-fnc resize_type_array(array: LLVMTypeRef[], amt: uint){
-    for let i = array.length; i <= amt; i++ {
-        array << null
-    }
-}
-fnc resize_value_array(array: LLVMValueRef[], amt: uint){
-    for let i = array.length; i <= amt; i++ {
-        array << null
-    }
-}
+
 fnc get_format_from_type(ty: Type): String {
     if is_int(ty){
         let is_signed_int = (ty as IntType).is_signed
@@ -1390,8 +1380,12 @@ class CodeGen {
                 let field_offset = get_field_offset(this.program, prop_id)
                 let field_type = this.codegen_type(prop_type)
                 struct_class.fields_pos_map[prop_id_key] = field_offset
-                resize_type_array(field_types, field_offset)
+                let offset_cap = field_offset + 1
+                field_types.ensure_capacity(offset_cap)
                 field_types[field_offset] = field_type
+                if (offset_cap > field_types.length) {
+                    field_types.length = offset_cap
+                }
             } else {
                 let method_type = prop_type as FunctionType
                 let llvm_method_val: LLVMValueRef = null
