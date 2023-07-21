@@ -1,6 +1,6 @@
 fnc main(): int {
     let str = "B"
-    for let i = 0; i < 5; i++ {
+    for i in 0..5 {
         str += "A"
     }
     return str.get_bytes().compare("BAAAAA", 6)

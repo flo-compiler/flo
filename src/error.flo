@@ -59,6 +59,6 @@ fnc print_message_error(kind: ErrorKind, message: String){
 }
 fnc print_error(error: FloError, filename: String, content: String){
     print_message_error(error.kind, error.message)
-    flo_println("File '$filename', line $(error.range.line)")
+    flo_println("File $filename, line $(error.range.line)")
     print_error_line(content, error.range)
 }

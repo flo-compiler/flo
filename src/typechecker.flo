@@ -243,6 +243,16 @@ class NewExpression (Expression) {
         this.value_type = value_type
     }
 }
+class RangeExpression (Expression) {
+    left: Expression
+    right: Expression
+    constructor(this, left: Expression, right: Expression, value_type: Type){
+        super(ExpressionKind.RANGE)
+        this.left = left
+        this.right = right
+        this.value_type = value_type
+    }
+}
 class IndexExpression (Expression) {
     expression: Expression
     index: Expression
@@ -404,17 +414,14 @@ class ConstDeclaration (Statement) {
     }
 }
 class ForStatement (Statement) {
-    for_in_setup: Statement
-    initialization: Statement
-    condition: Expression
-    incr_decr: Statement
+    it_var: VarDeclaration
+    iterator: Expression
     block: Block
-    constructor(this){
+    constructor(this, it_var: VarDeclaration, iterator: Expression, block: Block){
         super(StatementKind.FOR)
-        this.for_in_setup = null
-        this.initialization = null
-        this.condition = null
-        this.incr_decr = null
+        this.it_var = it_var
+        this.iterator = iterator
+        this.block = block
     }
 }
 class WhileStatement (Statement) {
@@ -1078,10 +1085,10 @@ class TypeChecker {
         let typechecker: TypeChecker(compiler)
         typechecker.load_generic_module()
         typechecker.load_builtins_module()
-        if typechecker.has_errored() return null
+        if typechecker.has_errored() return typechecker.program
         typechecker.switch_to_generic_module()
         typechecker.import_all_from_module(typechecker.get_module(1))
-        if typechecker.has_errored() return null
+        if typechecker.has_errored() return typechecker.program
         typechecker.check_module(module_ast, filename)
         return typechecker.program
     }
@@ -1121,7 +1128,8 @@ class TypeChecker {
             let t2_fnc_type = t2 as FunctionType
             if t1_fnc_type.arg_types.length != t2_fnc_type.arg_types.length return false
             if !this.types_are_eq(t2_fnc_type.return_type, t1_fnc_type.return_type) return false
-            for let i = 0; i < t1_fnc_type.arg_types.length; i++ {
+            for elem in 0..t1_fnc_type.arg_types.length {
+                let i = elem as uint
                 if !this.types_are_eq(t1_fnc_type.arg_types[i], t2_fnc_type.arg_types[i]) return false
             }
         }
@@ -1136,7 +1144,8 @@ class TypeChecker {
             let t1_element_types_length =  t1_tup_type.element_types.length
             if t1_element_types_length != t2_tup_type.element_types.length 
                 return false
-            for let i = 0; i < t1_element_types_length; i++ {
+            for elem in 0..t1_element_types_length {
+                let i = elem as uint
                 if !this.types_are_eq(t1_tup_type.element_types[i], t2_tup_type.element_types[i])
                     return false
             }
@@ -1172,7 +1181,8 @@ class TypeChecker {
             let t2_gen_type = t2 as GenericType
             if t1_gen_type.name != t2_gen_type.name return false
             if t1_gen_type.arg_types.length != t2_gen_type.arg_types.length return false
-            for let i = 0; i < t1_gen_type.arg_types.length; i++ {
+            for elem in 0..t1_gen_type.arg_types.length {
+                let i = elem as uint
                 if (!this.types_are_eq(t1_gen_type.arg_types[i], t2_gen_type.arg_types[i])) return false
             }
         }
@@ -1185,11 +1195,8 @@ class TypeChecker {
         if is_function(ty) {
             let fnc_ty = ty as FunctionType
             let args_tys_str = ""
-            for let i = 0; i < fnc_ty.arg_types.length; i++ {
-                args_tys_str += this.dump_type(fnc_ty.arg_types[i])
-                if i < fnc_ty.arg_types.length - 1 {
-                    args_tys_str += ", "
-                }
+            for arg_type in fnc_ty.arg_types {
+                args_tys_str += "$(this.dump_type(arg_type)), "
             }
             return "($args_tys_str) => $(this.dump_type(fnc_ty.return_type))"
         }
@@ -1208,19 +1215,16 @@ class TypeChecker {
         if ty.kind == TypeKind.TUPLE {
             let tup_ty = ty as TupleType
             let tup_str = ""
-            for let i = 0; i < tup_ty.element_types.length; i++ {
-                tup_str += this.dump_type(tup_ty.element_types[i])
-                if i < tup_ty.element_types.length - 1 {
-                    tup_str += ", "
-                }
+            for elem_ty in tup_ty.element_types {
+                tup_str += "this.dump_type(elem_ty), "
             }
             return "($tup_str)"
         }
         if ty.kind == TypeKind.RESOLVED_GENERIC {
             let gen_ty = ty as GenericType
             let s = gen_ty.name + "<"
-            for let x = 0; x < gen_ty.arg_types.length; x++ {
-                s +=  this.dump_type(gen_ty.arg_types[x])
+            for arg_type in gen_ty.arg_types {
+                s +=  this.dump_type(arg_type)
             }
             return s + ">"
         }
@@ -1350,7 +1354,7 @@ class TypeChecker {
         this.current_function = null
         for module_import in module_ast.imports {
             this.check_module_import(module_import)
-            if (this.has_errored()) return null
+            if (this.has_errored()) return module
         }
         // We declare module structures
         for enum_ in module_ast.enums {
@@ -1359,14 +1363,14 @@ class TypeChecker {
         for class_ in module_ast.classes {
             this.declare_class_within_module(class_)
         }
-        if this.has_errored() return null
+        if this.has_errored() return module
         for type_alias_node in module_ast.type_aliases {
             let ty = this.check_type(type_alias_node.parsed_type)
             let identifer_tok = type_alias_node.name
             let alias_name = identifer_tok.value
             if this.get_type_from_current_scope(alias_name).kind != TypeKind.UNKNOWN {
                 this.error(ErrorKind.NAME, "Name '$alias_name' has already been used for another type. consider renaming", type_alias_node.name.range)
-                return null
+                return module
             }
             module_scope.type_aliases[alias_name] = ty
         }
@@ -1379,15 +1383,17 @@ class TypeChecker {
         for function in module_ast.functions {
             this.declare_function_within_module(function)
         }
-        if this.has_errored() return null
+        if this.has_errored() return module
         // We Now check bodies
-        for let i = 0; i < module_ast.enums.length; i++ {
+        for elem in 0..module_ast.enums.length {
+            let i = elem as uint
             this.check_enum_body(module.enums[i], module_ast.enums[i])
         }
         for class_ in module_ast.classes {
             this.check_class_body(class_)
         }
-        for let i = 0; i < module_ast.functions.length; i++ {
+        for elem in 0..module_ast.functions.length {
+            let i = elem as uint
            this.check_function_body(module.functions[i], module_ast.functions[i])
         }
         if this.module_contains_generics and this.current_scope.module_id != 0 {
@@ -1395,7 +1401,6 @@ class TypeChecker {
             this.import_all_from_module(module)
         }
         this.current_scope = prev_scope
-        if this.has_errored() return null
         return module
     }
     private create_generic_instance_in_module(this, name: String, types: Type[]): GenericType {
@@ -1410,7 +1415,8 @@ class TypeChecker {
         this.switch_to_generic_module()
         let generic_scope = this.create_child_scope_within_current_scope()
         let param_strings = ""
-        for let i = 0; i < generic_params.length; i++ {
+        for elem in 0..generic_params.length {
+            let i = elem as uint
             let param_name = generic_params[i].name.value
             let param_type: Type = types[i].kind == TypeKind.RESOLVED_GENERIC ? (types[i] as GenericType).instantiated_type : types[i]
             param_strings += "$(this.dump_type(param_type))_"
@@ -1697,7 +1703,8 @@ class TypeChecker {
             }
         }
         let next_enum_value: u64 = 0 // What about negatives?
-        for let i = 0; i < enum_node.fields.length; ++i {
+        for elem in 0..enum_node.fields.length {
+            let i = elem as uint
             let enum_node_field = enum_node.fields[i]
             let enum_name = enum_node_field.name.value
             let enum_field = new EnumField(enum_name)
@@ -1725,7 +1732,8 @@ class TypeChecker {
     }
     private declare_class_fields(this, declared_class: Class, class_node: ClassDeclarationNode){
         let current_field_offset = declared_class.inherited_fields_num
-        for let i = 0; i < class_node.fields.length; i++ {
+        for elem in 0..class_node.fields.length {
+            let i = elem as uint
             let field_node = class_node.fields[i]
             let field = new ClassField()
             field.name = field_node.name.value
@@ -1790,7 +1798,8 @@ class TypeChecker {
         return true
     }
     private declare_class_methods(this, declared_class: Class, class_node: ClassDeclarationNode){
-          for let i = 0; i < class_node.methods.length; i++ {
+          for elem in 0..class_node.methods.length {
+            let i = elem as uint
             let method_node = class_node.methods[i]
             let method = new ClassMethod()
             let name = method_node.name.value
@@ -1940,7 +1949,8 @@ class TypeChecker {
             }
         }
         // Class Methods Body
-        for let i = 0; i < declared_class.methods.length; i++ {
+        for elem in 0..declared_class.methods.length {
+            let i = elem as uint
             let prev_method = this.current_method
             let method = declared_class.methods[i]
             this.current_method = method.id
@@ -2099,7 +2109,8 @@ class TypeChecker {
         if expected_type.kind == TypeKind.TUPLE {
             expected_tuple_type = expected_type as TupleType
         }
-        for let i = 0; i < tuple_node.elements.length; ++i  {
+        for elem in 0..tuple_node.elements.length {
+            let i = elem as uint
             let expected_element_type = unknown_ty
             if expected_tuple_type != null {
                 if i < expected_tuple_type.element_types.length {
@@ -2133,8 +2144,9 @@ class TypeChecker {
                 element_type = generic_ty.arg_types[0]
         }
         if array_node.elements.length > 0 {
-            for let i = 0; i < array_node.elements.length; ++i {
-                let element = this.check_expression(element_type, array_node.elements[i])
+            let i = 0
+            for array_node_elements in array_node.elements {
+                let element = this.check_expression(element_type, array_node_elements)
                 if this.has_errored() return null
                 if i == 0 and element_type.kind == TypeKind.UNKNOWN {
                     element_type = element.value_type
@@ -2143,9 +2155,10 @@ class TypeChecker {
                 if this.types_are_eq(element_type, element.value_type) {
                     elements << element
                 } else {
-                    this.error(ErrorKind.TYPE, "Expected element type of '$(this.dump_type(element_type))' but got type '$(this.dump_type(element.value_type))'", array_node.elements[i].range)
+                    this.error(ErrorKind.TYPE, "Expected element type of '$(this.dump_type(element_type))' but got type '$(this.dump_type(element.value_type))'", array_node_elements.range)
                     return null
                 }
+                i++
             }
         }
         if array_type.kind != TypeKind.ARRAY {
@@ -2364,9 +2377,6 @@ class TypeChecker {
         }
         if op == BinaryOp.ADD or op == BinaryOp.SUB and is_pointer(left.value_type) and right.value_type.kind == TypeKind.INT {
             return new BinaryExpression(left, op, right, left.value_type, false)
-        } if op == BinaryOp.RANGE and left.value_type.kind == TypeKind.INT and right.value_type.kind == TypeKind.INT {
-            let range_type = this.get_type_from_current_scope("Range")
-            return new NewExpression(range_type, range_type, [left, right], true) as BinaryExpression
         }
         this.error(ErrorKind.TYPE, "Illegal binary operation '$(dump_bin_op(op))' between types '$(this.dump_type(left.value_type))' and '$(this.dump_type(right.value_type))'", binary_node.range)
         return null
@@ -2725,14 +2735,14 @@ class TypeChecker {
     }
     private fill_in_call_args(this, fnc_ty: FunctionType, func_args: FunctionArg[], args: ExpressionNode[]): Expression[] {
         let called_args: Expression[] = []
-        for let i = 0; i < args.length; i++ {
+        for elem in 0..args.length {
+            let i = elem as uint
             let expected_type = fnc_ty.arg_types.length > i ? fnc_ty.arg_types[i] : Type.unknown()
             called_args << this.check_expression(expected_type, args[i])
         }
         if this.has_errored() or func_args == null return called_args
         if func_args.length > args.length {
-            for let i = args.length; i < func_args.length; ++i {
-                let arg = func_args[i]
+            for arg in func_args {
                 if arg.default != null
                     called_args << arg.default
             }
@@ -2743,7 +2753,8 @@ class TypeChecker {
         if func_ty.arg_types.length != args.length {
             return -1
         }
-        for let i = 0; i < args.length; ++i {
+        for elem in 0..args.length {
+            let i = elem as uint
             if !this.types_are_eq(func_ty.arg_types[i], args[i].value_type) {
                 return (i as int)
             }
@@ -2785,7 +2796,8 @@ class TypeChecker {
         let int_ty: IntType(TypeKind.INT, false)
         let unknown_ty: Type(TypeKind.UNKNOWN)
         
-        for let i = 0; i < args.length; i++ {
+        for elem in 0..args.length {
+            let i = elem as uint
             let expected_type = is_mem_grp1 and i == 1 ? unknown_ty : intrinsic_call.args[0].value_type
             if (intrinsic_func == Intrinsics.MEMCPY or intrinsic_func == Intrinsics.MEMMOVE) and (i == 1) {
                 expected_type = int_ty
@@ -2882,6 +2894,17 @@ class TypeChecker {
         str_exp.is_constant = is_const
         return str_exp
     }
+    private check_range_expr(this, expected_type: Type, range_node: RangeExpressionNode): Expression {
+        let unknown = Type.unknown()
+        let left = this.check_expression(unknown, range_node.left)
+        let right = this.check_expression(unknown, range_node.right)
+        if left.value_type.kind == TypeKind.INT and right.value_type.kind == TypeKind.INT {
+            // TODO: Check Range is an object type
+            return new RangeExpression(left, right, this.get_type_from_current_scope("Range"))
+        }
+        this.error(ErrorKind.TYPE, "Cannot create a range between types '$(this.dump_type(left.value_type))' and '$(this.dump_type(right.value_type))'", FloRange.merge(range_node.left.range, range_node.right.range))
+        return left
+    }
     private check_expression(this, expected_type: Type, expr_node: ExpressionNode): Expression {
         if expr_node.expr_kind == ExpressionKind.INT 
             return this.check_int_expression(expected_type, expr_node as IntExpressionNode)
@@ -2913,6 +2936,8 @@ class TypeChecker {
             return this.check_index_expr(expr_node as ExpressionIndexNode)
         if expr_node.expr_kind == ExpressionKind.CALL
             return this.check_call_expr(expected_type, expr_node as CallExpressionNode)
+        if expr_node.expr_kind == ExpressionKind.RANGE
+            return this.check_range_expr(expected_type, expr_node as RangeExpressionNode)
         if expr_node.expr_kind == ExpressionKind.MATCH
             return this.check_match_expr(expected_type, expr_node as MatchExpressionNode)
         return null
@@ -3058,56 +3083,31 @@ class TypeChecker {
         return new ConstDeclaration(name, constant.const_id)
     }
     private check_for_statement(this, for_stmt_node: ForStatementNode): ForStatement {
-        let for_stmt = new ForStatement()
         let for_scope = this.create_child_scope_within_current_scope()
         this.current_scope = for_scope.id
         let prev_in_loop = this.in_loop
-        if for_stmt_node.for_kind == ForKind.DEF {
-            if for_stmt_node.initialization != null
-                for_stmt.initialization = this.check_statement(for_stmt_node.initialization)
-            if for_stmt_node.condition != null
-                for_stmt.condition = this.check_condition(for_stmt_node.condition)
-            if for_stmt_node.incr_decr != null
-                for_stmt.incr_decr = this.check_statement(for_stmt_node.incr_decr)
-        } else {
-            let iterator = this.check_expression(Type.unknown(), for_stmt_node.iterator)
-            if this.has_errored() return null
-            if !is_object(iterator.value_type) {
-                this.error(ErrorKind.TYPE, "Iterator has to be an object", for_stmt_node.iterator.range)
-                return null
-            }
-            let iterator_class = get_class_from_type(this.program, iterator.value_type)
-            let iter_prop_id = iterator_class.prop_map["__iter__"]
-            if iter_prop_id == null {
-                this.error(ErrorKind.TYPE, "Iterator type has to have __iter__ as property", for_stmt_node.iterator.range)
-                return null
-            }
-            let iter_generator_type = get_class_prop_type(this.program, iter_prop_id) as FunctionType
-            let iteratable_type = iter_generator_type.return_type
-            //TODO: Check iteratable is an iteratable
-            let iterator_name =  "tmp_it"
-            let iter_call = new CallExpression(new MemberExpression(iterator, iter_prop_id, iter_generator_type), [], iteratable_type)
-            let iteratable_var_id = this.declare_var_within_current_scope(iterator_name, iter_call, iteratable_type).var_id
-            for_stmt.for_in_setup = new VarDeclaration(iterator_name, iteratable_var_id)
-
-            let iteratable_class = get_class_from_type(this.program, iteratable_type)
-            let done_prop_id = iteratable_class.prop_map["done"]
-            let iteratable_load = new VarAccessExpression(iteratable_var_id, iteratable_type)
-            let bool_type = new BooleanType()
-            for_stmt.condition = new UnaryExpression(UnaryOp.NOT, new MemberExpression(iteratable_load, done_prop_id, bool_type), bool_type)
-            
-            let iter_item_name =  for_stmt_node.it_name.value
-            let next_prop_id = iteratable_class.prop_map["next"]
-            let next_prop_type = get_class_prop_type(this.program, next_prop_id) as FunctionType
-            let iter_item_type = next_prop_type.return_type
-            let next_item_call = new CallExpression(new MemberExpression(iteratable_load, next_prop_id, next_prop_type), [], iter_item_type)
-            let iter_item_var_id = this.declare_var_within_current_scope(iter_item_name, next_item_call, iter_item_type).var_id
-            for_stmt.initialization = new VarDeclaration(iter_item_name, iter_item_var_id)
-            for_stmt.incr_decr = new BinaryExpression(new VarAccessExpression(iter_item_var_id, iter_item_type), BinaryOp.ASSIGN, next_item_call, iter_item_type, false)
-        }
+        let iterator = this.check_expression(Type.unknown(), for_stmt_node.iterator)
         if this.has_errored() return null
+        if !is_object(iterator.value_type) {
+            this.error(ErrorKind.TYPE, "Iterator has to be an object", for_stmt_node.iterator.range)
+            return null
+        }
+        let iterator_class = get_class_from_type(this.program, iterator.value_type)
+        let iter_prop_id = iterator_class.prop_map["__iter__"]
+        if iter_prop_id == null {
+            this.error(ErrorKind.TYPE, "Iterator type has to have __iter__ as property", for_stmt_node.iterator.range)
+            return null
+        }
+        let iter_item_name =  for_stmt_node.it_name.value
+        if this.has_errored() return null
+        let iteratable_ty = (get_class_prop_type(this.program, iter_prop_id) as FunctionType).return_type
+        let iteratable_class = get_class_from_type(this.program, iteratable_ty)
+        let next_it_prop_id = iteratable_class.prop_map["next"]
+        let iter_item_type = (get_class_prop_type(this.program, next_it_prop_id) as FunctionType).return_type
         this.in_loop = true
-        for_stmt.block = this.check_block(for_stmt_node.block, for_scope)
+        let var = this.declare_var_within_current_scope(iter_item_name, null, iter_item_type)
+        let for_block = this.check_block(for_stmt_node.block, for_scope, false)
+        let for_stmt = new ForStatement(new VarDeclaration(iter_item_name, var.var_id), iterator, for_block)
         this.in_loop = prev_in_loop
         return for_stmt
     }

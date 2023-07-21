@@ -110,10 +110,6 @@ enum StatementKind {
     RETURN
     EXPRESSION
 }
-enum ForKind {
-    DEF
-    IN
-}
 enum ExpressionKind {
     INT
     FLOAT
@@ -132,6 +128,7 @@ enum ExpressionKind {
     INDEX
     CALL
     TERNARY
+    RANGE
     MATCH
     INTRINSIC
 }
@@ -183,7 +180,6 @@ enum BinaryOp {
     XOR_ASSIGN
     SL_ASSIGN
     SR_ASSIGN
-    RANGE
 }
 enum UnaryOp {
     UNDEF

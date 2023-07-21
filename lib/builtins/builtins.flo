@@ -30,6 +30,34 @@ fnc input(): String {
     }
     return string
 }
+// ------- Range -------
+class RangeIterator {
+    private done: bool
+    private pos: int
+    private end: int
+    constructor(this, pos: int, end: int){
+        this.pos = pos
+        this.end = end
+    }
+    private next(this): int {
+        this.done = this.pos >= this.end
+        return this.pos++
+    }
+}
+class Range {
+    private start: int
+    private end: int
+    constructor(this, start: int, end: int){
+        this.start = start
+        this.end = end
+    }
+    private __in__(this, num: int): bool {
+        return num >= this.start and num < this.end
+    }
+    private __iter__(this): RangeIterator {
+        return new RangeIterator(this.start, this.end)
+    }
+}
 // ----- String -------
 class String {
     private buffer: u8*
@@ -55,7 +83,7 @@ class String {
     private __getitem__(this, index: uint): String {
         let new_buffer = new u8*(1)
         new_buffer[0] = this.buffer[index]
-        return new String(new_buffer, 2)
+        return new String(new_buffer, 1)
     }
     private __ne__(this, other: String): bool {
         return !(this.__eq__(other))
@@ -71,11 +99,12 @@ class String {
         del this.buffer
     }
     public find(this, search: String, start = 0): int {
-        let end = this.length - search.length
-        for let index = start; index <= end; index++ {
+        let end = this.length - search.length + 1
+        for elem in start..end {
+            let index = elem as uint
             if (search.buffer[0] == this.buffer[index]) {
                 if (search.buffer.compare(this.buffer + index, search.length) == 0) {
-                    return index as int
+                    return elem
                 }
             }
         }
@@ -155,34 +184,7 @@ class String {
         this.length += length
     }
 }
-// ------- Range -------
-class RangeIterator {
-    private done: bool
-    private pos: int
-    private end: int
-    constructor(this, pos: int, end: int){
-        this.pos = pos
-        this.end = end
-    }
-    private next(this): int {
-        this.done = this.pos >= this.end
-        return this.pos++
-    }
-}
-class Range {
-    private start: int
-    private end: int
-    constructor(this, start: int, end: int){
-        this.start = start
-        this.end = end
-    }
-    private __in__(this, num: int): bool {
-        return num >= this.start and num < this.end
-    }
-    private __iter__(this): RangeIterator{
-        return new RangeIterator(this.start, this.end)
-    }
-}
+
 // ----- Array -------
 class Array <T> {
     public buffer: T*
@@ -226,10 +228,10 @@ class Array <T> {
     private __eq__(this, other: T[]): bool {
         if this.length != other.length {
             return false
-        } else {
-           for let i = 0; i < this.length; i++ {
-               if this[i] != other[i] return false
-           }
+        }
+        let i = this.length
+        while(i-- > 0) {
+            if this[i] != other[i] return false
         }
         return true
     }
@@ -249,8 +251,9 @@ class Array <T> {
         }
     }
     public find(this, search: T): int {
-        for let i: int = 0; i < this.length; i++ {
-            if this.buffer[i] == search return i
+        let i = this.length
+        while (i-- > 0) {
+            if this.buffer[i] == search return i as int
         }
         return -1
     }
@@ -288,7 +291,8 @@ class Map<T, U> {
     constructor(this){
         let initial_capacity = 256
         this.entries = new MapEntry<T, U>*(initial_capacity)
-        for let i = 0; i < initial_capacity; i++ {
+        for elem in 0..initial_capacity {
+            let i = elem as uint
             this.entries[i] = null
         }
         this.size = initial_capacity
@@ -297,7 +301,8 @@ class Map<T, U> {
     private hash_fnc(this, key: T): uint {
         let str = "$key"
         let hash = 0
-        for let i = 0; i < str.length; ++i {
+        for elem in 0..str.length {
+            let i = elem as uint
             hash = (hash << 1) + str.get_byte(i)
         }
         del str
@@ -310,10 +315,12 @@ class Map<T, U> {
         this.size *= 2
         this.length = 0
         this.entries = this.entries.resize(this.size)
-        for let i = 0; i < this.size; i++{
+        for elem in 0..this.size {
+            let i = elem as uint
             this.entries[i] = null
         }
-        for let i = 0; i < old_size; i++ {
+        for elem in 0..old_size {
+            let i = elem as uint
             let entry = old_entries[i]
             if (entry != null) this.__setitem__(entry.key, entry.value)
         }

@@ -23,7 +23,8 @@ class Set<T>{
         free(this.elements as i8*)
     }
     public __in__(this, e: T): bool {
-        for let i = 0; i < this.len; i++ {
+        for elem in 0..this.len {
+            let i = elem as uint
             if e == this.elements[i] return true
         }
         return false

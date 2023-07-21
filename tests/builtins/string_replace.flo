@@ -1,5 +1,6 @@
 fnc main(): int {
     let str1 = "Hello John"
     let str2 = str1.replace("John", "David")
+    println(str2)
     return str2.get_bytes().compare("Hello David", 11)
 }

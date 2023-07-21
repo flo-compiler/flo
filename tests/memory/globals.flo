@@ -1,7 +1,7 @@
 const HEIGHT: uint = 10
 const WIDTH: uint = 10
 fnc fill_array(arr: uint*, width: uint, height: uint, value: uint){
-    for let i = 0; i < width*height; ++i {
+    for i in 0..width*height {
         arr[i] = value
     }
 }

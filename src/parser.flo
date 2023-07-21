@@ -1,4 +1,4 @@
-import TokType, ExpressionKind, StatementKind, TypeKind, ForKind, BinaryOp, UnaryOp, ACCESS_ATTR in "types"
+import TokType, ExpressionKind, StatementKind, TypeKind, BinaryOp, UnaryOp, ACCESS_ATTR in "types"
 import FloRange in "utils"
 import FloError, ErrorKind in "error"
 import Token, IntToken, FloatToken, StrToken, CharToken, IdentifierToken in "lexer"
@@ -225,6 +225,15 @@ class MatchExpressionNode (ExpressionNode) {
         this.else_block = null
     }
 }
+class RangeExpressionNode (ExpressionNode) {
+    left: ExpressionNode
+    right: ExpressionNode
+    constructor(this, left: ExpressionNode, right: ExpressionNode){
+        super(ExpressionKind.RANGE, FloRange.merge(left.range, right.range))
+        this.left = left
+        this.right = right
+    }
+}
 /* Can be either 'as' or 'is' unary expression */
 class IfStatementNode (StatementNode) {
     condition: ExpressionNode
@@ -243,18 +252,12 @@ class WhileStatementNode (StatementNode) {
     }
 }
 class ForStatementNode (StatementNode) {
-    initialization: StatementNode
-    condition: ExpressionNode
-    incr_decr: StatementNode
-    iterator: ExpressionNode
-    for_kind: ForKind
     it_name: IdentifierToken
+    iterator: ExpressionNode
     block: BlockNode
     constructor(this, range: FloRange){
-        this.initialization = null
-        this.condition = null
-        this.incr_decr = null
-        this.for_kind = ForKind.DEF
+        this.it_name = null
+        this.iterator = null
         super(StatementKind.FOR, range)
     }
 }
@@ -582,8 +585,9 @@ class Parser {
         let strtoken = this.eat(TokType.STR) as StrToken
         let tmp_parser: Parser(null, this.errors)
         let template_args: ExpressionNode [] = []
-        for let i = 0; i < strtoken.args.length and this.can_parse(); i++ {
-            tmp_parser.tokens = strtoken.args[i]
+        for arg in strtoken.args {
+            if (!this.can_parse()) break
+            tmp_parser.tokens = arg
             tmp_parser.idx = -1
             tmp_parser.advance()
             template_args << tmp_parser.parse_expression()
@@ -807,7 +811,7 @@ class Parser {
         if this.current_token.ttype != TokType.DOT_DOT or !this.can_parse()
             return left
         this.advance()
-        return new BinaryExpressionNode(left, BinaryOp.RANGE, this.parse_expression())
+        return new RangeExpressionNode(left, this.parse_expression())
     }
     private parse_typecast_expression(this): ExpressionNode {
         let left = this.parse_range_expression()
@@ -917,24 +921,9 @@ class Parser {
     private parse_for_statement(this): ForStatementNode {
         let for_node = new ForStatementNode(this.current_token.range)
         this.advance()
-        if this.peek().ttype != TokType.IN_KW {
-            if this.current_token.ttype != TokType.SEMICOL {
-                for_node.initialization = this.parse_statement()
-            }
-            this.eat(TokType.SEMICOL)
-            if this.current_token.ttype != TokType.SEMICOL {
-                for_node.condition = this.parse_expression()
-            }
-            this.eat(TokType.SEMICOL)
-            if this.current_token.ttype != TokType.LBRACE {
-                for_node.incr_decr = this.parse_statement()
-            }
-        } else {
-            for_node.for_kind = ForKind.IN
-            for_node.it_name = this.eat(TokType.IDENTIFER) as IdentifierToken
-            this.eat(TokType.IN_KW)
-            for_node.iterator = this.parse_expression()
-        }
+        for_node.it_name = this.eat(TokType.IDENTIFER) as IdentifierToken
+        this.eat(TokType.IN_KW)
+        for_node.iterator = this.parse_expression()
         for_node.range = FloRange.merge(for_node.range, this.current_token.range)
         if this.can_parse()
             for_node.block = this.parse_block()

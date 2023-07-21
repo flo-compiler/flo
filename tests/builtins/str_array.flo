@@ -1,6 +1,6 @@
 fnc main(): int {
     let arr: String[] = []
-    for let i = 0; i < 10; i++ {
+    for i in 0..10 {
         arr << "hello"
     }
     return 0

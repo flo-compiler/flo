@@ -143,11 +143,7 @@ match test {
 ```
 
 ## Loops
-- [x] traditional for Loop
-```
-for let i = 0; i < 10; i++ // do something
-```
-- [x] For in loop
+- [x] For
 ```
 for x in 1..10
 ```

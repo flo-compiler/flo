@@ -3,8 +3,8 @@ fnc main(): uint {
     let arr: int[] = [1, 2, 3, 4]
     arr << 8
     let sum = 0
-    for let i = 0; i < arr.length; i++ {
-        sum += arr[i]
+    for elem in arr {
+        sum += elem
     }
     return sum
 }

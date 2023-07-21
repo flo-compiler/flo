@@ -301,7 +301,7 @@ class CodeGen {
     }
     private codegen_del_call(this, builder: LLVMBuilderRef, self: LLVMValueRef, obj_ty: ObjectType): LLVMValueRef {
         let func_ty: FunctionType
-        let func = this.get_member_with_name(builder, self, obj_ty, "__del__", &func_ty)
+        let func = this.codgen_get_member_with_name(builder, self, obj_ty, "__del__", &func_ty)
         if func == null return null
         let args: LLVMValueRef[1] = [self]
         return LLVMBuildCall2(builder, this.codegen_type(func_ty, false), func, &args[0], args.size, "")
@@ -358,7 +358,7 @@ class CodeGen {
             let idx = 0
             for field_entry in obj_class.prop_map {
                 let field_ty = get_class_prop_type(this.program, field_entry.value)
-                let member_val = this.get_member_with_name(builder, llvm_val, val_ty as ObjectType, field_entry.key)
+                let member_val = this.codgen_get_member_with_name(builder, llvm_val, val_ty as ObjectType, field_entry.key)
                 let arg = this.get_string_val(builder, member_val, field_ty, malloc_list, depth + 1)
                 if !is_object(field_ty) and LLVMGetTypeKind(LLVMTypeOf(arg)) == LLVMTypeKind.LLVMPointerTypeKind and !LLVMIsGlobalConstant(arg) {
                     malloc_list << arg
@@ -392,7 +392,8 @@ class CodeGen {
         let malloc_list: LLVMValueRef[] = []
         let call_args_length = string_exp.template_args.length
         let call_args: LLVMValueRef*(call_args_length)
-        for let i = 0; i < call_args_length; i++ {
+        for elem in 0..call_args_length {
+            let i = elem as uint
             let templ_arg = string_exp.template_args[i]
             let templ_arg_ty = templ_arg.value_type
             let fmt = get_format_from_type(templ_arg_ty)
@@ -596,7 +597,7 @@ class CodeGen {
         return this.get_member_expr_mem(builder, member_expr, self)
     }
     // Only call for non-static members.
-    private get_member_with_name(this, builder: LLVMBuilderRef, self: LLVMValueRef, obj_type: ObjectType, name: String, save_type: Type* = null): LLVMValueRef {
+    private codgen_get_member_with_name(this, builder: LLVMBuilderRef, self: LLVMValueRef, obj_type: ObjectType, name: String, save_type: Type* = null): LLVMValueRef {
         let obj_class = get_class_from_type(this.program, obj_type)
         let prop_id = obj_class.prop_map[name]
         if prop_id == null  return null
@@ -753,7 +754,7 @@ class CodeGen {
             }
         }
         panic("Unknown bin expression case case!")
-        return null
+        return lhs
     }
     private codegen_typecast_exp(this, builder: LLVMBuilderRef, type_exp: TypeCastExpression): LLVMValueRef {
         let exp = type_exp.expr
@@ -785,7 +786,7 @@ class CodeGen {
             if is_object(exp.value_type)
                 this.codegen_del_call(builder, val, exp.value_type as ObjectType)
             LLVMBuildFree(builder, val)
-            return null
+            return val
         }
         if op == UnaryOp.NEG {
             if is_int(exp.value_type){
@@ -998,8 +999,8 @@ class CodeGen {
     private codegen_string_to_cstring(this, builder: LLVMBuilderRef, value: LLVMValueRef): LLVMValueRef {
         let string_class_id = get_scope(this.program, this.program.modules[0].scope).classes["String"]
         let string_obj_ty: ObjectType(string_class_id)
-        let prop_ty = get_class_prop_type_with_name(this.program, string_obj_ty, "to_cstring")
-        let func = this.get_member_with_name(builder, value, string_obj_ty, "to_cstring")
+        let prop_ty: FunctionType
+        let func = this.codgen_get_member_with_name(builder, value, string_obj_ty, "to_cstring", &prop_ty)
         let args: LLVMValueRef[1] = [value] 
         return LLVMBuildCall2(builder, this.codegen_type(prop_ty, false), func, &args[0], args.size, "")
     }
@@ -1048,6 +1049,15 @@ class CodeGen {
         panic("instrinsic not found!")
         return null
     }
+    private codegen_range_exp(this, builder: LLVMBuilderRef, range_exp: RangeExpression): LLVMValueRef {
+        let start = this.codegen_expression(builder, range_exp.left)
+        let end = this.codegen_expression(builder, range_exp.right)
+        let llvm_type = this.codegen_type(range_exp.value_type, false)
+        let self = LLVMBuildMalloc(builder, llvm_type, "")
+        let args: LLVMValueRef[3] = [self, start, end]
+        this.build_constructor_call(builder, range_exp.value_type as ObjectType, &args[0], args.size)
+        return self
+    }
     private codegen_expression(this, builder: LLVMBuilderRef, expression: Expression): LLVMValueRef {
         if expression.expr_kind == ExpressionKind.BOOL
             return this.codegen_bool(expression as BooleanExpression)
@@ -1085,6 +1095,8 @@ class CodeGen {
             return this.codegen_match_exp(builder, expression as MatchExpression)
         if expression.expr_kind == ExpressionKind.INTRINSIC
             return this.codegen_intrinsic_exp(builder, expression as IntrinsicCall)
+        if expression.expr_kind == ExpressionKind.RANGE
+            return this.codegen_range_exp(builder, expression as RangeExpression)
         return null
     }
     private codegen_if_stmt(this, builder: LLVMBuilderRef, if_stmt: IfStatement){
@@ -1113,63 +1125,68 @@ class CodeGen {
         LLVMPositionBuilderAtEnd(builder, merge_bb)
     }
     private codegen_for_stmt(this, builder: LLVMBuilderRef, for_stmt: ForStatement){
-        let for_entry_block = LLVMAppendBasicBlock(this.function, "for.entry")
-        LLVMBuildBr(builder, for_entry_block)
-        LLVMPositionBuilderAtEnd(builder, for_entry_block)
-        if for_stmt.for_in_setup != null {
-            this.codegen_statement(builder, for_stmt.for_in_setup)
-        }
-        if for_stmt.initialization != null {
-            this.codegen_statement(builder, for_stmt.initialization)
-        }
-        let for_cond_block = LLVMAppendBasicBlock(this.function, "for.cond")
-        let for_body_block = LLVMAppendBasicBlock(this.function, "for.body")
-        let for_incr_block = LLVMAppendBasicBlock(this.function, "for.incr")
-        let for_end_block = LLVMAppendBasicBlock(this.function, "for.end")
         let prev_break_bb = this.break_bb
         let prev_continue_bb = this.continue_bb
-        this.break_bb = for_end_block
-        this.continue_bb = for_incr_block
-        LLVMBuildBr(builder, for_cond_block)
-        LLVMPositionBuilderAtEnd(builder, for_cond_block)
-        let condition = this.createLLVMBool(true)
-        if for_stmt.condition != null {
-            condition = this.codegen_expression(builder, for_stmt.condition)
-        }
-        LLVMBuildCondBr(builder, condition, for_body_block, for_end_block)
+        let for_entry_block = LLVMAppendBasicBlock(this.function, "for.entry")
+        LLVMBuildBr(builder, for_entry_block)
+
+        LLVMPositionBuilderAtEnd(builder, for_entry_block)
+        let for_next_block = LLVMAppendBasicBlock(this.function, "for.next")
+        let for_body_block = LLVMAppendBasicBlock(this.function, "for.body")
+        let for_end_block = LLVMAppendBasicBlock(this.function, "for.end")
+
+        let iterator = this.codegen_expression(builder, for_stmt.iterator)
+        let iter_func_type: FunctionType
+        let iter_func = this.codgen_get_member_with_name(builder, iterator, for_stmt.iterator.value_type as ObjectType, "__iter__", &iter_func_type)
+        let args: LLVMValueRef[1] = [iterator]
+        this.codegen_var_declaration(builder, for_stmt.it_var)
+        let iterable_type = iter_func_type.return_type as ObjectType
+        let iteratable = LLVMBuildCall2(builder, this.codegen_type(iter_func_type, false), iter_func, &args[0], args.size, "")
+        args[0] = iteratable
+        let next_func_type: FunctionType
+        let next_func = this.codgen_get_member_with_name(builder, iteratable, iterable_type, "next", &next_func_type)
+        LLVMBuildBr(builder, for_next_block)
+
+        LLVMPositionBuilderAtEnd(builder, for_next_block)
+        let next_val = LLVMBuildCall2(builder, this.codegen_type(next_func_type, false), next_func, &args[0], args.size, "")
+        let next_var_mem = this.get_var_from_varid(for_stmt.it_var.var_id)
+        let iter_done = this.codgen_get_member_with_name(builder, iteratable, iterable_type, "done")
+        LLVMBuildStore(builder, next_val, next_var_mem)
+        LLVMBuildCondBr(builder, iter_done, for_end_block, for_body_block)
+        
         LLVMPositionBuilderAtEnd(builder, for_body_block)
+        this.break_bb = for_end_block
+        this.continue_bb = for_next_block
         this.codegen_block(builder, for_stmt.block)
         if !is_terminated(for_stmt.block)
-            LLVMBuildBr(builder, for_incr_block)
-        LLVMPositionBuilderAtEnd(builder, for_incr_block)
-        if for_stmt.incr_decr != null
-            this.codegen_statement(builder, for_stmt.incr_decr)
-        LLVMBuildBr(builder, for_cond_block)
+            LLVMBuildBr(builder, for_next_block)
+
+        LLVMPositionBuilderAtEnd(builder, for_end_block)
+        LLVMBuildFree(builder, iteratable)
         this.break_bb = prev_break_bb
         this.continue_bb = prev_continue_bb
-        LLVMPositionBuilderAtEnd(builder, for_end_block)
-        if for_stmt.for_in_setup != null {
-            let var_id = (for_stmt.for_in_setup as VarDeclaration).var_id
-            let it_load_exp: VarAccessExpression(var_id, get_var(this.program, var_id).value_type)
-            let mem = this.codegen_var_access_exp(builder, it_load_exp)
-            LLVMBuildFree(builder, mem)
-        }
     }
     private codegen_while_stmt(this, builder: LLVMBuilderRef, while_stmt: WhileStatement){
-        let while_bb = LLVMAppendBasicBlock(this.function, "while.entry")
+        let while_entry_bb = LLVMAppendBasicBlock(this.function, "while.entry")
         let while_end_bb = LLVMAppendBasicBlock(this.function, "while.end")
+        let while_body_bb = LLVMAppendBasicBlock(this.function, "while.body")
+        
         let prev_break_bb = this.break_bb
         let prev_continue_bb = this.continue_bb
         this.break_bb = while_end_bb
-        this.continue_bb = while_bb
+        this.continue_bb = while_entry_bb
+        LLVMBuildBr(builder, while_entry_bb)
+
+        LLVMPositionBuilderAtEnd(builder, while_entry_bb)
         let condition = this.codegen_expression(builder, while_stmt.condition)
-        LLVMBuildCondBr(builder, condition, while_bb, while_end_bb)
-        LLVMPositionBuilderAtEnd(builder, while_bb)
+        LLVMBuildCondBr(builder, condition, while_body_bb, while_end_bb)
+
+        LLVMPositionBuilderAtEnd(builder, while_body_bb)
         this.codegen_block(builder, while_stmt.block)
         if !is_terminated(while_stmt.block) {
-            condition = this.codegen_expression(builder, while_stmt.condition)
-            LLVMBuildCondBr(builder, condition, while_bb, while_end_bb)
+            LLVMBuildBr(builder, while_entry_bb)   
         }
+
         LLVMPositionBuilderAtEnd(builder, while_end_bb)
         this.break_bb = prev_break_bb
         this.continue_bb = prev_continue_bb
@@ -1291,7 +1308,8 @@ class CodeGen {
         let func_builder = LLVMCreateBuilder()
         LLVMPositionBuilderAtEnd(func_builder, LLVMAppendBasicBlock(llvm_fnc, ""))
         this.codegen_vars_alloc_funtion_scope(func_builder, func.scope)
-        for let i = 0; i < func.args.length; i++ {
+        for elem in 0..func.args.length {
+            let i = elem as uint
             let alloc = this.get_var_from_varid(func.args[i].id)
             let param = LLVMGetParam(llvm_fnc, i)
             LLVMBuildStore(func_builder, param, alloc)
@@ -1334,7 +1352,8 @@ class CodeGen {
                 }
                 offset = 1
             }
-            for let i = 0; i < method.args.length; i++ {
+            for elem in 0..method.args.length {
+                let i = elem as uint
                 let param = LLVMGetParam(llvm_fnc, i + offset)
                 let param_alloc = this.get_var_from_varid(method.args[i].id)
                 LLVMBuildStore(func_builder, param, param_alloc)
