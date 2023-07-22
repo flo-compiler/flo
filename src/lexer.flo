@@ -1,5 +1,6 @@
 import TokType in "types"
-import FloRange in "utils"
+import FloRange, FileId in "utils"
+import Compiler in "compiler"
 import FloError, ErrorKind in "error"
 fnc string_to_kw_token(word: String): TokType {
     if word == "and"
@@ -164,12 +165,14 @@ class Lexer {
     private idx: int
     private col: uint
     private line: uint
-    constructor(this, text: String, errors: FloError[]){
+    private fid: FileId
+    constructor(this, text: String, errors: FloError[], fid: FileId){
         this.text = text
         this.errors = errors
         this.idx = -1
         this.line = 1
         this.col = 0
+        this.fid = fid
     }
     private eof(this): bool{
         return this.idx >= this.text.length
@@ -189,7 +192,7 @@ class Lexer {
         }
     }
     private get_range(this, back: uint): FloRange {
-        return new FloRange(this.idx - back + 1, (this.idx + 1) as uint, this.col - back, this.line)
+        return new FloRange(this.idx - back + 1, (this.idx + 1) as uint, this.col - back, this.line, this.fid)
     }
     private plus_token(this): Token {
         if this.peek() == '+' {
@@ -411,7 +414,7 @@ class Lexer {
                     token_group << this.lex_token()
                 }
                 this.advance()
-                token_group << new Token(TokType.EOF, new FloRange(0, 0, this.col, this.line))
+                token_group << new Token(TokType.EOF, new FloRange(0, 0, this.col, this.line, this.fid))
                 args << token_group
                 continue
             }
@@ -502,21 +505,21 @@ class Lexer {
         if char == '.'
             return this.dot_token()
         if char == '\0'
-            return new Token(TokType.EOF, new FloRange(0, 0, this.col, this.line))
+            return new Token(TokType.EOF, new FloRange(0, 0, this.col, this.line, this.fid))
         let char_msg = this.text.substring(this.idx, 1)
         this.errors << new FloError(ErrorKind.ILLEGALCHAR, "Illegal character: '$char_msg'", this.get_range(1))
         del char_msg
         return null
     }
-    public tokenize(text: String, errors: FloError[]): Token[] {
-        let lexer: Lexer(text, errors)
+    public tokenize(compiler: Compiler): Token[] {
+        let lexer: Lexer(compiler.current_file_contents, compiler.errors, compiler.current_file)
         lexer.advance()
         let tokens: Token[] = []
         while !lexer.eof() and lexer.errors.length == 0 {
             tokens << lexer.lex_token()
             lexer.advance()
         }
-        tokens << new Token(TokType.EOF, new FloRange(0, 0, lexer.col, lexer.line))
+        tokens << new Token(TokType.EOF, new FloRange(0, 0, lexer.col, lexer.line, lexer.fid))
         return tokens
     }
 }

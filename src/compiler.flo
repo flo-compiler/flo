@@ -1,18 +1,15 @@
 import "@io/file"
 import "@path/path"
 import  "error"
-class FileId {
-    id: uint
-    constructor(this, id: uint){
-        this.id = id
-    }
-}
+import FileId in "utils"
 class FloFile {
     abspath: String
     relpath: String
+    contents: String
     constructor(this, abspath: String, relpath: String){
         this.abspath = abspath
         this.relpath = relpath
+        this.contents = null
     }
     private __del__(this){
         del this.abspath
@@ -59,26 +56,27 @@ class Compiler {
         this.files << new FloFile(abspath, fpath)
         return file_id
     }
-    private unlink_current_file_contents(this){
-        if this.current_file_contents != null {
-            del this.current_file_contents
-        }
-    }
     public set_current_file(this, file_id: FileId): bool {
         if (file_id.id < 0 or file_id.id > this.files.length) return false
-        let file_path = this.files[file_id.id]
-        if !File.exists(file_path.abspath) return false
-        let file = File.open_for_reading(file_path.abspath)
-        if file == null return false
-        this.unlink_current_file_contents()
-        this.current_file_contents = file.read_all()
-        this.current_file = file_id
-        file.close()
+        let module = this.files[file_id.id]
+        let file_contents = module.contents
+        if (file_contents == null) {
+            if !File.exists(module.abspath) return false
+            let file = File.open_for_reading(module.abspath)
+            if file == null return false
+            file_contents = file.read_all()
+            module.contents = file_contents
+            this.current_file = file_id
+            file.close()
+        }
+        this.current_file_contents = file_contents
         return true
     }
     public print_errors(this): bool {
         if this.errors.length > 0 {
-            print_error(this.errors[0], this.files[this.current_file.id].relpath, this.current_file_contents)
+            let error = this.errors[0]
+            let error_file = this.files[error.range.fid.id]
+            print_error(error, error_file.relpath, error_file.contents)
             return true
         }
         return false
@@ -99,6 +97,5 @@ class Compiler {
             del file_id
         }
         del this.file_ids
-        this.unlink_current_file_contents()
     }
 }

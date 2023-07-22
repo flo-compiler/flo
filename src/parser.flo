@@ -1048,7 +1048,7 @@ class Parser {
             this.advance()
             fnc_node.return_type = this.parse_type()
         } else {
-            let identifier_tok = new IdentifierToken("void", new FloRange(0, 0, 0, 0))
+            let identifier_tok = new IdentifierToken("void", new FloRange(0, 0, 0, 0, fnc_node.name.range.fid))
             fnc_node.return_type = new RecordTypeNode(identifier_tok, identifier_tok.range)
         }
         this.new_lines()
@@ -1079,7 +1079,7 @@ class Parser {
             this.advance()
             method_node.return_type = this.parse_type()
         } else {
-            let identifier_tok = new IdentifierToken("void", new FloRange(0, 0, 0, 0))
+            let identifier_tok = new IdentifierToken("void", new FloRange(0, 0, 0, 0, method_node.name.range.fid))
             method_node.return_type = new RecordTypeNode(identifier_tok, identifier_tok.range)
         }
         this.new_lines()

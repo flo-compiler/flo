@@ -1,16 +1,24 @@
+class FileId {
+    id: uint
+    constructor(this, id: uint){
+        this.id = id
+    }
+}
 class FloRange {
     start: int
     end: uint
     col: uint
     line: uint
-    constructor(this, start: int, end: uint, col: uint, line: uint){
+    fid: FileId
+    constructor(this, start: int, end: uint, col: uint, line: uint, fid: FileId){
         this.start = start
         this.end = end
         this.col = col
         this.line = line
+        this.fid = fid
     }
     merge(r1: FloRange, r2: FloRange): FloRange {
-        return new FloRange(r1.start, r2.end, r1.col, r2.line)
+        return new FloRange(r1.start, r2.end, r1.col, r2.line, r1.fid)
     }
 }
 enum COLORS {

@@ -4,7 +4,7 @@ from subprocess import run, STDOUT, PIPE
 
 def main():
     TEST_PATH_DIR = "./tests"
-    FLO_COMPILER_PROG_PATH = "./flo"
+    FLO_COMPILER_PROG_PATH = "flo"
     print("-------------------Running tests-------------------")
     failed_test_suits = 0
     passed_test_suits = 0
@@ -18,7 +18,7 @@ def main():
             abs_file_path = os.path.join(TEST_PATH_DIR, dir.name, file.name)
             if os.path.isdir(abs_file_path):
                 continue
-            p = run([FLO_COMPILER_PROG_PATH, abs_file_path, "-I", "./lib/"], stdout=PIPE, stderr=STDOUT)
+            p = run([FLO_COMPILER_PROG_PATH, abs_file_path], stdout=PIPE, stderr=STDOUT)
             expected_return_code = parse_return_code(abs_file_path)
             if p.returncode != expected_return_code:
                 failed_tests+=1

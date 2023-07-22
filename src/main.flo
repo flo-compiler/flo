@@ -51,7 +51,7 @@ fnc main(argc: int, argv: u8**): int {
         return 1
     }
     /***** Lexing ******/
-    let tokens = Lexer.tokenize(compiler.current_file_contents, compiler.errors)
+    let tokens = Lexer.tokenize(compiler)
     if (compiler.print_errors()) return 1
     /***** Parsing *****/
     let module_node = Parser.parse(tokens, compiler.errors)
