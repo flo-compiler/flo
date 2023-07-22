@@ -1,5 +1,5 @@
-; ModuleID = '../src/main.flo'
-source_filename = "../src/main.flo"
+; ModuleID = './src/main.flo'
+source_filename = "./src/main.flo"
 target triple = "x86_64-pc-linux-gnu"
 
 %CodeGen = type <{ ptr, ptr, ptr, ptr, ptr, i1, ptr, ptr, ptr, ptr, ptr }>
@@ -254,287 +254,290 @@ target triple = "x86_64-pc-linux-gnu"
 @24 = private unnamed_addr constant [36 x i8] c"Specify file to put the output into\00", align 1
 @25 = private unnamed_addr constant [7 x i8] c"output\00", align 1
 @26 = private unnamed_addr constant [26 x i8] c"Specify runtime directory\00", align 1
-@27 = private unnamed_addr constant [20 x i8] c"/usr/local/flo/lib/\00", align 1
-@28 = private unnamed_addr constant [8 x i8] c"-target\00", align 1
-@29 = private unnamed_addr constant [34 x i8] c"Compile to specific target triple\00", align 1
-@30 = private unnamed_addr constant [69 x i8] c"Specify a library to link against (should be a comma seperated list)\00", align 1
-@31 = private unnamed_addr constant [42 x i8] c"Specify the compiler's optimization level\00", align 1
-@32 = private unnamed_addr constant [13 x i8] c"Show version\00", align 1
-@33 = private unnamed_addr constant [34 x i8] c"Missing value after -%s argument.\00", align 1
-@34 = private unnamed_addr constant [8 x i8] c"Usage: \00", align 1
-@35 = private unnamed_addr constant [30 x i8] c" [OPTIONS]? <file>\0A\0AOPTIONS:\0A\00", align 1
-@36 = private unnamed_addr constant [4 x i8] c"-%s\00", align 1
-@37 = private unnamed_addr constant [7 x i8] c" <val>\00", align 1
-@38 = private unnamed_addr constant [25 x i8] c"No input file specified.\00", align 1
-@39 = private unnamed_addr constant [33 x i8] c"Runtime directory not found '%s'\00", align 1
-@40 = private unnamed_addr constant [32 x i8] c"No such file or directory: '%s'\00", align 1
-@41 = private unnamed_addr constant [4 x i8] c"and\00", align 1
-@42 = private unnamed_addr constant [6 x i8] c"const\00", align 1
-@43 = private unnamed_addr constant [4 x i8] c"let\00", align 1
-@44 = private unnamed_addr constant [6 x i8] c"match\00", align 1
-@45 = private unnamed_addr constant [5 x i8] c"else\00", align 1
-@46 = private unnamed_addr constant [4 x i8] c"for\00", align 1
-@47 = private unnamed_addr constant [6 x i8] c"while\00", align 1
-@48 = private unnamed_addr constant [4 x i8] c"fnc\00", align 1
-@49 = private unnamed_addr constant [6 x i8] c"break\00", align 1
-@50 = private unnamed_addr constant [7 x i8] c"return\00", align 1
-@51 = private unnamed_addr constant [7 x i8] c"import\00", align 1
-@52 = private unnamed_addr constant [8 x i8] c"private\00", align 1
-@53 = private unnamed_addr constant [7 x i8] c"public\00", align 1
-@54 = private unnamed_addr constant [10 x i8] c"protected\00", align 1
-@55 = private unnamed_addr constant [6 x i8] c"class\00", align 1
-@56 = private unnamed_addr constant [4 x i8] c"new\00", align 1
-@57 = private unnamed_addr constant [4 x i8] c"del\00", align 1
-@58 = private unnamed_addr constant [4 x i8] c"033\00", align 1
-@59 = private unnamed_addr constant [4 x i8] c"x1b\00", align 1
-@60 = private unnamed_addr constant [6 x i8] c"u001b\00", align 1
-@61 = private unnamed_addr constant [24 x i8] c"Illegal character: '%s'\00", align 1
-@62 = private unnamed_addr constant [23 x i8] c"Expected an Identifier\00", align 1
-@63 = private unnamed_addr constant [13 x i8] c"Expected '='\00", align 1
-@64 = private unnamed_addr constant [13 x i8] c"Expected ':'\00", align 1
-@65 = private unnamed_addr constant [13 x i8] c"Expected '('\00", align 1
-@66 = private unnamed_addr constant [13 x i8] c"Expected ')'\00", align 1
-@67 = private unnamed_addr constant [13 x i8] c"Expected '{'\00", align 1
-@68 = private unnamed_addr constant [13 x i8] c"Expected '}'\00", align 1
-@69 = private unnamed_addr constant [13 x i8] c"Expected ','\00", align 1
-@70 = private unnamed_addr constant [13 x i8] c"Expected '<'\00", align 1
-@71 = private unnamed_addr constant [13 x i8] c"Expected '>'\00", align 1
-@72 = private unnamed_addr constant [14 x i8] c"Expected '->'\00", align 1
-@73 = private unnamed_addr constant [4 x i8] c"Map\00", align 1
-@74 = private unnamed_addr constant [6 x i8] c"Array\00", align 1
-@75 = private unnamed_addr constant [29 x i8] c"Expected an Expression value\00", align 1
-@76 = private unnamed_addr constant [29 x i8] c"'%s' has no type information\00", align 1
-@77 = private unnamed_addr constant [20 x i8] c"Expected ':' or '('\00", align 1
-@78 = private unnamed_addr constant [88 x i8] c"Illegal expression expected: 'fnc', 'class', 'type', 'enum', 'import', 'const' or 'let'\00", align 1
-@79 = private unnamed_addr constant [1 x i8] zeroinitializer, align 1
-@80 = private unnamed_addr constant [5 x i8] c"%s, \00", align 1
-@81 = private unnamed_addr constant [11 x i8] c"(%s) => %s\00", align 1
-@82 = private unnamed_addr constant [4 x i8] c"%s*\00", align 1
-@83 = private unnamed_addr constant [7 x i8] c"%s[%u]\00", align 1
-@84 = private unnamed_addr constant [26 x i8] c"this.dump_type(elem_ty), \00", align 1
-@85 = private unnamed_addr constant [5 x i8] c"(%s)\00", align 1
-@86 = private unnamed_addr constant [10 x i8] c"Namespace\00", align 1
-@87 = private unnamed_addr constant [7 x i8] c"Record\00", align 1
-@88 = private unnamed_addr constant [4 x i8] c"i%u\00", align 1
-@89 = private unnamed_addr constant [4 x i8] c"int\00", align 1
-@90 = private unnamed_addr constant [4 x i8] c"%s4\00", align 1
-@91 = private unnamed_addr constant [4 x i8] c"%s8\00", align 1
-@92 = private unnamed_addr constant [5 x i8] c"%s16\00", align 1
-@93 = private unnamed_addr constant [5 x i8] c"%s32\00", align 1
-@94 = private unnamed_addr constant [5 x i8] c"%s64\00", align 1
-@95 = private unnamed_addr constant [6 x i8] c"%s128\00", align 1
-@96 = private unnamed_addr constant [4 x i8] c"f32\00", align 1
-@97 = private unnamed_addr constant [4 x i8] c"f64\00", align 1
-@98 = private unnamed_addr constant [7 x i8] c"record\00", align 1
-@99 = private unnamed_addr constant [8 x i8] c"unknown\00", align 1
-@100 = private unnamed_addr constant [13 x i8] c"__generics__\00", align 1
-@101 = private unnamed_addr constant [6 x i8] c"false\00", align 1
-@102 = private unnamed_addr constant [68 x i8] c"Name '%s' has already been used for another type. consider renaming\00", align 1
-@103 = private unnamed_addr constant [41 x i8] c"Generic expects %u parameters but got %u\00", align 1
-@104 = private unnamed_addr constant [4 x i8] c"%s_\00", align 1
-@105 = private unnamed_addr constant [6 x i8] c"%s_%s\00", align 1
-@106 = private unnamed_addr constant [55 x i8] c"Initilializer for global variable has to be a constant\00", align 1
-@107 = private unnamed_addr constant [56 x i8] c"Expected type of '%s' but got type of '%s' on signature\00", align 1
-@108 = private unnamed_addr constant [50 x i8] c"Import statement path can't be a formatted string\00", align 1
-@109 = private unnamed_addr constant [28 x i8] c"%s not found in module \22\22%s\00", align 1
-@110 = private unnamed_addr constant [37 x i8] c"Illegal re-declaration of const '%s'\00", align 1
-@111 = private unnamed_addr constant [48 x i8] c"Illegal re-declaration of type '%s' as function\00", align 1
-@112 = private unnamed_addr constant [53 x i8] c"Expected an int type for enum type but got type '%s'\00", align 1
-@113 = private unnamed_addr constant [38 x i8] c"Enum initializer has to be a constant\00", align 1
-@114 = private unnamed_addr constant [36 x i8] c"Expected type '%s' but got type '%s\00", align 1
-@115 = private unnamed_addr constant [7 x i8] c"__eq__\00", align 1
-@116 = private unnamed_addr constant [8 x i8] c"__add__\00", align 1
-@117 = private unnamed_addr constant [8 x i8] c"__sub__\00", align 1
-@118 = private unnamed_addr constant [8 x i8] c"__mul__\00", align 1
-@119 = private unnamed_addr constant [8 x i8] c"__div__\00", align 1
-@120 = private unnamed_addr constant [7 x i8] c"__or__\00", align 1
-@121 = private unnamed_addr constant [8 x i8] c"__ora__\00", align 1
-@122 = private unnamed_addr constant [12 x i8] c"__getitem__\00", align 1
-@123 = private unnamed_addr constant [12 x i8] c"__setitem__\00", align 1
-@124 = private unnamed_addr constant [7 x i8] c"__sl__\00", align 1
-@125 = private unnamed_addr constant [7 x i8] c"__sr__\00", align 1
-@126 = private unnamed_addr constant [8 x i8] c"__sla__\00", align 1
-@127 = private unnamed_addr constant [8 x i8] c"__sra__\00", align 1
-@128 = private unnamed_addr constant [7 x i8] c"__in__\00", align 1
-@129 = private unnamed_addr constant [7 x i8] c"__lt__\00", align 1
-@130 = private unnamed_addr constant [7 x i8] c"__lg__\00", align 1
-@131 = private unnamed_addr constant [7 x i8] c"__ne__\00", align 1
-@132 = private unnamed_addr constant [7 x i8] c"__le__\00", align 1
-@133 = private unnamed_addr constant [7 x i8] c"__ge__\00", align 1
-@134 = private unnamed_addr constant [8 x i8] c"__pow__\00", align 1
-@135 = private unnamed_addr constant [8 x i8] c"__mod__\00", align 1
-@136 = private unnamed_addr constant [8 x i8] c"__del__\00", align 1
-@137 = private unnamed_addr constant [76 x i8] c" is reserved only for operator overloads and cannot be used as a field name\00", align 1
-@138 = private unnamed_addr constant [36 x i8] c"Field %s in class %s already exists\00", align 1
-@139 = private unnamed_addr constant [89 x i8] c"Signature of inherited field %s in class %s does not match expected parent signature '%s\00", align 1
-@140 = private unnamed_addr constant [49 x i8] c"Expected inherited field %s in class %s to be %s\00", align 1
-@141 = private unnamed_addr constant [68 x i8] c"Expected type '%s' but got type '%s' on static field initialization\00", align 1
-@142 = private unnamed_addr constant [46 x i8] c"Static field initializer has to be a constant\00", align 1
-@143 = private unnamed_addr constant [65 x i8] c"Expected %u arguments for binary operator overload %s but got %u\00", align 1
-@144 = private unnamed_addr constant [45 x i8] c"Binary operator overload %s cannot be static\00", align 1
-@145 = private unnamed_addr constant [75 x i8] c"__iter__ method must return an iteratable object {done: bool, next(): any}\00", align 1
-@146 = private unnamed_addr constant [37 x i8] c"Method %s in class %s already exists\00", align 1
-@147 = private unnamed_addr constant [91 x i8] c"Signature of inherited method %s in class %s does not match expected parent signature '%s'\00", align 1
-@148 = private unnamed_addr constant [50 x i8] c"Expected inherited method %s in class %s to be %s\00", align 1
-@149 = private unnamed_addr constant [32 x i8] c"Static method can't be abstract\00", align 1
-@150 = private unnamed_addr constant [12 x i8] c"constructor\00", align 1
-@151 = private unnamed_addr constant [34 x i8] c"Class constructor can't be static\00", align 1
-@152 = private unnamed_addr constant [36 x i8] c"Class constructor can't be abstract\00", align 1
-@153 = private unnamed_addr constant [59 x i8] c"Can't have a abstract private method use protected instead\00", align 1
-@154 = private unnamed_addr constant [6 x i8] c"super\00", align 1
-@155 = private unnamed_addr constant [42 x i8] c"Can only inherit from class not type '%s'\00", align 1
-@156 = private unnamed_addr constant [81 x i8] c"Class with constructor must implement all it's methods missing %s implementation\00", align 1
-@157 = private unnamed_addr constant [39 x i8] c"Method missing ending return statement\00", align 1
-@158 = private unnamed_addr constant [41 x i8] c"Function missing ending return statement\00", align 1
-@159 = private unnamed_addr constant [24 x i8] c"length has to be an int\00", align 1
-@160 = private unnamed_addr constant [24 x i8] c"length has to be a uint\00", align 1
-@161 = private unnamed_addr constant [31 x i8] c"length is a non-constant value\00", align 1
-@162 = private unnamed_addr constant [29 x i8] c"length should be an unsigned\00", align 1
-@163 = private unnamed_addr constant [4 x i8] c"u16\00", align 1
-@164 = private unnamed_addr constant [4 x i8] c"u32\00", align 1
-@165 = private unnamed_addr constant [4 x i8] c"u64\00", align 1
-@166 = private unnamed_addr constant [4 x i8] c"i16\00", align 1
-@167 = private unnamed_addr constant [4 x i8] c"i32\00", align 1
-@168 = private unnamed_addr constant [4 x i8] c"i64\00", align 1
-@169 = private unnamed_addr constant [20 x i8] c"Undefined type '%s'\00", align 1
-@170 = private unnamed_addr constant [48 x i8] c"Expected element type of '%s' but got type '%s'\00", align 1
-@171 = private unnamed_addr constant [38 x i8] c"Const 'null' cannot be of type 'void'\00", align 1
-@172 = private unnamed_addr constant [24 x i8] c"Undefined variable '%s'\00", align 1
-@173 = private unnamed_addr constant [34 x i8] c"Assigment target is not a mutable\00", align 1
-@174 = private unnamed_addr constant [52 x i8] c"Illegal assignment of variable of type '%s' to '%s'\00", align 1
-@175 = private unnamed_addr constant [7 x i8] c"__gt__\00", align 1
-@176 = private unnamed_addr constant [8 x i8] c"__and__\00", align 1
-@177 = private unnamed_addr constant [8 x i8] c"__xor__\00", align 1
-@178 = private unnamed_addr constant [37 x i8] c"Expected type '%s' but got type '%s'\00", align 1
-@179 = private unnamed_addr constant [55 x i8] c"Unsupported binary operator overload for operator '%s'\00", align 1
-@180 = private unnamed_addr constant [108 x i8] c"No binary operator overload for '%s' in object of class '%s' please implement the method %s to support this\00", align 1
-@181 = private unnamed_addr constant [114 x i8] c"No operator overload for index set operator on %s object please implement method __setitem__ to use in this class\00", align 1
-@182 = private unnamed_addr constant [58 x i8] c"Illegal binary operation '%s' between types '%s' and '%s'\00", align 1
-@183 = private unnamed_addr constant [8 x i8] c"++(pre)\00", align 1
-@184 = private unnamed_addr constant [8 x i8] c"--(pre)\00", align 1
-@185 = private unnamed_addr constant [39 x i8] c"Illegal unary operation %s on constant\00", align 1
-@186 = private unnamed_addr constant [40 x i8] c"Illegal unary operation %s on type '%s'\00", align 1
-@187 = private unnamed_addr constant [7 x i8] c"String\00", align 1
-@188 = private unnamed_addr constant [30 x i8] c"Cannot cast type '%s' to '%s'\00", align 1
-@189 = private unnamed_addr constant [45 x i8] c"Cannot construct an object of abstract class\00", align 1
-@190 = private unnamed_addr constant [55 x i8] c"Expected %u argument(s) on constructor call but got %u\00", align 1
-@191 = private unnamed_addr constant [71 x i8] c"Expected type '%s' but got type '%s' as constructor call argument (%d)\00", align 1
-@192 = private unnamed_addr constant [68 x i8] c"New operator expects 1 argument for pointers but got %u argument(s)\00", align 1
-@193 = private unnamed_addr constant [74 x i8] c"New operator for pointers expects argument of type '%s' but got type '%s'\00", align 1
-@194 = private unnamed_addr constant [68 x i8] c"New operator expects either an a pointer or an object not a(n) '%s'\00", align 1
-@195 = private unnamed_addr constant [76 x i8] c"Property '%s' is defined as private and only accessible within the class %s\00", align 1
-@196 = private unnamed_addr constant [71 x i8] c"Property '%s' is defined as %s and only accessible within the class %s\00", align 1
-@197 = private unnamed_addr constant [52 x i8] c"Property '%s' doesn't exist in object of class '%s'\00", align 1
-@198 = private unnamed_addr constant [51 x i8] c"Property '%s' is not a static member in class '%s'\00", align 1
-@199 = private unnamed_addr constant [40 x i8] c"'%s' is not an element of enum the '%s'\00", align 1
-@200 = private unnamed_addr constant [10 x i8] c"copy_from\00", align 1
-@201 = private unnamed_addr constant [10 x i8] c"move_from\00", align 1
-@202 = private unnamed_addr constant [10 x i8] c"fill_with\00", align 1
-@203 = private unnamed_addr constant [7 x i8] c"resize\00", align 1
-@204 = private unnamed_addr constant [8 x i8] c"compare\00", align 1
-@205 = private unnamed_addr constant [28 x i8] c"intrinsic %s is not defined\00", align 1
-@206 = private unnamed_addr constant [38 x i8] c"Cannot get property '%s' of type '%s'\00", align 1
-@207 = private unnamed_addr constant [53 x i8] c"Expected type '%s' from first case but got type '%s'\00", align 1
-@208 = private unnamed_addr constant [122 x i8] c"No operator overload for indexing operator on %s object please implement method __getitem__ to use indexing in this class\00", align 1
-@209 = private unnamed_addr constant [35 x i8] c"Expected an integer type for index\00", align 1
-@210 = private unnamed_addr constant [87 x i8] c"Expected an unsigned integer for tuple index but index value is '%s' (which is signed)\00", align 1
-@211 = private unnamed_addr constant [41 x i8] c"Expected an constant int for tuple index\00", align 1
-@212 = private unnamed_addr constant [37 x i8] c"Index out of range for tuple type %s\00", align 1
-@213 = private unnamed_addr constant [39 x i8] c"Cannot index into a value of type '%s'\00", align 1
-@214 = private unnamed_addr constant [47 x i8] c"Expected a function type for call but got '%s'\00", align 1
-@215 = private unnamed_addr constant [52 x i8] c"Expected %u argument(s) on function call but got %u\00", align 1
-@216 = private unnamed_addr constant [63 x i8] c"Expected type '%s' but got type '%s' as function call argument\00", align 1
-@217 = private unnamed_addr constant [58 x i8] c"Expected argument %u to be of type '%s' but got type '%s'\00", align 1
-@218 = private unnamed_addr constant [66 x i8] c"Expected argument 1 to be of type to be of a pointer but got '%s'\00", align 1
-@219 = private unnamed_addr constant [49 x i8] c"Expected 2 arguments on function call but got %u\00", align 1
-@220 = private unnamed_addr constant [49 x i8] c"Expected 3 arguments on function call but got %u\00", align 1
-@221 = private unnamed_addr constant [7 x i8] c"3.4E38\00", align 1
-@222 = private unnamed_addr constant [6 x i8] c"Range\00", align 1
-@223 = private unnamed_addr constant [50 x i8] c"Cannot create a range between types '%s' and '%s'\00", align 1
-@224 = private unnamed_addr constant [32 x i8] c"Cannot match on constant 'null'\00", align 1
-@225 = private unnamed_addr constant [85 x i8] c"Operator overload == for '%s' should return a boolean to be used in match expression\00", align 1
-@226 = private unnamed_addr constant [67 x i8] c"Expected type '%s' from match expression subject but got type '%s'\00", align 1
-@227 = private unnamed_addr constant [57 x i8] c"Expected match case block to yield '%s' but yielded '%s'\00", align 1
-@228 = private unnamed_addr constant [56 x i8] c"Non-exhaustable match expression, expected an else-case\00", align 1
-@229 = private unnamed_addr constant [62 x i8] c"Expected match else-case block to yield '%s' but yielded '%s'\00", align 1
-@230 = private unnamed_addr constant [26 x i8] c"Variable '%s' has no type\00", align 1
-@231 = private unnamed_addr constant [70 x i8] c"Cannot declare a value as null without any type hint for future usage\00", align 1
-@232 = private unnamed_addr constant [61 x i8] c"Expected type '%s' but got type '%s' on variable declaration\00", align 1
-@233 = private unnamed_addr constant [39 x i8] c"Cannot declare a variable of type void\00", align 1
-@234 = private unnamed_addr constant [57 x i8] c"Illegal re-declaration of already declared variable '%s'\00", align 1
-@235 = private unnamed_addr constant [49 x i8] c"Cannot assign a non-constant value to a constant\00", align 1
-@236 = private unnamed_addr constant [58 x i8] c"Expected type '%s' but got type '%s' on const declaration\00", align 1
-@237 = private unnamed_addr constant [36 x i8] c"Cannot declare a const of type void\00", align 1
-@238 = private unnamed_addr constant [29 x i8] c"Iterator has to be an object\00", align 1
-@239 = private unnamed_addr constant [47 x i8] c"Iterator type has to have __iter__ as property\00", align 1
-@240 = private unnamed_addr constant [30 x i8] c"Illegal break outside of loop\00", align 1
-@241 = private unnamed_addr constant [33 x i8] c"Illegal continue outside of loop\00", align 1
-@242 = private unnamed_addr constant [57 x i8] c"Expected return type of '%s' but got return type of '%s'\00", align 1
-@243 = private unnamed_addr constant [33 x i8] c"Function return type is not void\00", align 1
-@244 = private unnamed_addr constant [9 x i8] c"%u;%d;%u\00", align 1
-@245 = private unnamed_addr constant [33 x i8] c"Type could not be code generated\00", align 1
-@246 = private unnamed_addr constant [8 x i8] c"realloc\00", align 1
-@247 = private unnamed_addr constant [7 x i8] c"memcmp\00", align 1
-@248 = private unnamed_addr constant [6 x i8] c"%s {\0A\00", align 1
-@249 = private unnamed_addr constant [7 x i8] c" ... }\00", align 1
-@250 = private unnamed_addr constant [4 x i8] c"%ld\00", align 1
-@251 = private unnamed_addr constant [4 x i8] c"%lu\00", align 1
-@252 = private unnamed_addr constant [4 x i8] c"%lf\00", align 1
-@253 = private unnamed_addr constant [13 x i8] c" '%s': %s, \0A\00", align 1
-@254 = private unnamed_addr constant [11 x i8] c"<function>\00", align 1
-@255 = private unnamed_addr constant [18 x i8] c"String_from_bytes\00", align 1
-@256 = private unnamed_addr constant [55 x i8] c"Could not find function 'String.from_bytes' in program\00", align 1
-@257 = private unnamed_addr constant [55 x i8] c"Array expression is not a constant (codegen_array_exp)\00", align 1
-@258 = private unnamed_addr constant [55 x i8] c"Array expression is not a constant (codegen_tuple_exp)\00", align 1
-@259 = private unnamed_addr constant [46 x i8] c"This should never happen! (get_expr_mem: var)\00", align 1
-@260 = private unnamed_addr constant [9 x i8] c"%s;%d;%u\00", align 1
-@261 = private unnamed_addr constant [10 x i8] c"memberidx\00", align 1
-@262 = private unnamed_addr constant [7 x i8] c"buffer\00", align 1
-@263 = private unnamed_addr constant [7 x i8] c"length\00", align 1
-@264 = private unnamed_addr constant [12 x i8] c"llvm.pow.%s\00", align 1
-@265 = private unnamed_addr constant [34 x i8] c"Unknown bin expression case case!\00", align 1
-@266 = private unnamed_addr constant [11 x i8] c"incdec.ptr\00", align 1
-@267 = private unnamed_addr constant [51 x i8] c"This should never happen; (codegen_var_access_exp)\00", align 1
-@268 = private unnamed_addr constant [11 x i8] c"true_block\00", align 1
-@269 = private unnamed_addr constant [12 x i8] c"false_block\00", align 1
-@270 = private unnamed_addr constant [4 x i8] c"end\00", align 1
-@271 = private unnamed_addr constant [8 x i8] c"ternary\00", align 1
-@272 = private unnamed_addr constant [11 x i8] c"match.else\00", align 1
-@273 = private unnamed_addr constant [10 x i8] c"match.end\00", align 1
-@274 = private unnamed_addr constant [11 x i8] c"match.case\00", align 1
-@275 = private unnamed_addr constant [16 x i8] c"match.case.else\00", align 1
-@276 = private unnamed_addr constant [15 x i8] c"match.phi.node\00", align 1
-@277 = private unnamed_addr constant [52 x i8] c"this should not happen; (codegen_member_exp); class\00", align 1
-@278 = private unnamed_addr constant [60 x i8] c"This should never happen; (codegen_member_expr; class prop)\00", align 1
-@279 = private unnamed_addr constant [51 x i8] c"this should not happen; (codegen_member_exp); enum\00", align 1
-@280 = private unnamed_addr constant [11 x i8] c"to_cstring\00", align 1
-@281 = private unnamed_addr constant [22 x i8] c"instrinsic not found!\00", align 1
-@282 = private unnamed_addr constant [9 x i8] c"if.entry\00", align 1
-@283 = private unnamed_addr constant [6 x i8] c"ifend\00", align 1
-@284 = private unnamed_addr constant [10 x i8] c"for.entry\00", align 1
-@285 = private unnamed_addr constant [9 x i8] c"for.next\00", align 1
-@286 = private unnamed_addr constant [9 x i8] c"for.body\00", align 1
-@287 = private unnamed_addr constant [8 x i8] c"for.end\00", align 1
-@288 = private unnamed_addr constant [12 x i8] c"while.entry\00", align 1
-@289 = private unnamed_addr constant [10 x i8] c"while.end\00", align 1
-@290 = private unnamed_addr constant [11 x i8] c"while.body\00", align 1
-@291 = private unnamed_addr constant [48 x i8] c"Could not find constructor for constructor call\00", align 1
-@292 = private unnamed_addr constant [15 x i8] c"%s_constructor\00", align 1
-@293 = private unnamed_addr constant [6 x i8] c"%s.%s\00", align 1
-@294 = private unnamed_addr constant [9 x i8] c"%s_names\00", align 1
-@295 = private unnamed_addr constant [4 x i8] c"exe\00", align 1
-@296 = private unnamed_addr constant [14 x i8] c"/tmp/output.o\00", align 1
-@297 = private unnamed_addr constant [5 x i8] c"-l%s\00", align 1
-@298 = private unnamed_addr constant [11 x i8] c"-target %s\00", align 1
-@299 = private unnamed_addr constant [79 x i8] c"FlagString {\0A 'name': %s, \0A 'value': %s, \0A 'description': %s, \0A 'type': %s, \0A}\00", align 1
-@300 = private unnamed_addr constant [37 x i8] c"%s -no-pie %s /tmp/output.o %s -o %s\00", align 1
-@301 = private unnamed_addr constant [8 x i8] c"llvm-ir\00", align 1
-@302 = private unnamed_addr constant [8 x i8] c"llvm-bc\00", align 1
-@303 = private unnamed_addr constant [4 x i8] c"obj\00", align 1
-@304 = private unnamed_addr constant [4 x i8] c"asm\00", align 1
+@27 = private unnamed_addr constant [8 x i8] c"-target\00", align 1
+@28 = private unnamed_addr constant [34 x i8] c"Compile to specific target triple\00", align 1
+@29 = private unnamed_addr constant [69 x i8] c"Specify a library to link against (should be a comma seperated list)\00", align 1
+@30 = private unnamed_addr constant [42 x i8] c"Specify the compiler's optimization level\00", align 1
+@31 = private unnamed_addr constant [13 x i8] c"Show version\00", align 1
+@32 = private unnamed_addr constant [34 x i8] c"Missing value after -%s argument.\00", align 1
+@33 = private unnamed_addr constant [8 x i8] c"Usage: \00", align 1
+@34 = private unnamed_addr constant [30 x i8] c" [OPTIONS]? <file>\0A\0AOPTIONS:\0A\00", align 1
+@35 = private unnamed_addr constant [4 x i8] c"-%s\00", align 1
+@36 = private unnamed_addr constant [7 x i8] c" <val>\00", align 1
+@37 = private unnamed_addr constant [25 x i8] c"No input file specified.\00", align 1
+@38 = private unnamed_addr constant [33 x i8] c"Runtime directory not found '%s'\00", align 1
+@39 = private unnamed_addr constant [32 x i8] c"No such file or directory: '%s'\00", align 1
+@40 = private unnamed_addr constant [4 x i8] c"and\00", align 1
+@41 = private unnamed_addr constant [6 x i8] c"const\00", align 1
+@42 = private unnamed_addr constant [4 x i8] c"let\00", align 1
+@43 = private unnamed_addr constant [6 x i8] c"match\00", align 1
+@44 = private unnamed_addr constant [5 x i8] c"else\00", align 1
+@45 = private unnamed_addr constant [4 x i8] c"for\00", align 1
+@46 = private unnamed_addr constant [6 x i8] c"while\00", align 1
+@47 = private unnamed_addr constant [4 x i8] c"fnc\00", align 1
+@48 = private unnamed_addr constant [6 x i8] c"break\00", align 1
+@49 = private unnamed_addr constant [7 x i8] c"return\00", align 1
+@50 = private unnamed_addr constant [7 x i8] c"import\00", align 1
+@51 = private unnamed_addr constant [8 x i8] c"private\00", align 1
+@52 = private unnamed_addr constant [7 x i8] c"public\00", align 1
+@53 = private unnamed_addr constant [10 x i8] c"protected\00", align 1
+@54 = private unnamed_addr constant [6 x i8] c"class\00", align 1
+@55 = private unnamed_addr constant [4 x i8] c"new\00", align 1
+@56 = private unnamed_addr constant [4 x i8] c"del\00", align 1
+@57 = private unnamed_addr constant [4 x i8] c"033\00", align 1
+@58 = private unnamed_addr constant [4 x i8] c"x1b\00", align 1
+@59 = private unnamed_addr constant [6 x i8] c"u001b\00", align 1
+@60 = private unnamed_addr constant [24 x i8] c"Illegal character: '%s'\00", align 1
+@61 = private unnamed_addr constant [23 x i8] c"Expected an Identifier\00", align 1
+@62 = private unnamed_addr constant [13 x i8] c"Expected '='\00", align 1
+@63 = private unnamed_addr constant [13 x i8] c"Expected ':'\00", align 1
+@64 = private unnamed_addr constant [13 x i8] c"Expected '('\00", align 1
+@65 = private unnamed_addr constant [13 x i8] c"Expected ')'\00", align 1
+@66 = private unnamed_addr constant [13 x i8] c"Expected '{'\00", align 1
+@67 = private unnamed_addr constant [13 x i8] c"Expected '}'\00", align 1
+@68 = private unnamed_addr constant [13 x i8] c"Expected ','\00", align 1
+@69 = private unnamed_addr constant [13 x i8] c"Expected '<'\00", align 1
+@70 = private unnamed_addr constant [13 x i8] c"Expected '>'\00", align 1
+@71 = private unnamed_addr constant [14 x i8] c"Expected '->'\00", align 1
+@72 = private unnamed_addr constant [4 x i8] c"Map\00", align 1
+@73 = private unnamed_addr constant [6 x i8] c"Array\00", align 1
+@74 = private unnamed_addr constant [29 x i8] c"Expected an Expression value\00", align 1
+@75 = private unnamed_addr constant [29 x i8] c"'%s' has no type information\00", align 1
+@76 = private unnamed_addr constant [20 x i8] c"Expected ':' or '('\00", align 1
+@77 = private unnamed_addr constant [88 x i8] c"Illegal expression expected: 'fnc', 'class', 'type', 'enum', 'import', 'const' or 'let'\00", align 1
+@BUILTIN_MODULE_ID = internal unnamed_addr global i64 0
+@78 = private unnamed_addr constant [1 x i8] zeroinitializer, align 1
+@79 = private unnamed_addr constant [5 x i8] c"%s, \00", align 1
+@80 = private unnamed_addr constant [11 x i8] c"(%s) => %s\00", align 1
+@81 = private unnamed_addr constant [4 x i8] c"%s*\00", align 1
+@82 = private unnamed_addr constant [7 x i8] c"%s[%u]\00", align 1
+@83 = private unnamed_addr constant [26 x i8] c"this.dump_type(elem_ty), \00", align 1
+@84 = private unnamed_addr constant [5 x i8] c"(%s)\00", align 1
+@85 = private unnamed_addr constant [10 x i8] c"Namespace\00", align 1
+@86 = private unnamed_addr constant [7 x i8] c"Record\00", align 1
+@87 = private unnamed_addr constant [4 x i8] c"i%u\00", align 1
+@88 = private unnamed_addr constant [4 x i8] c"int\00", align 1
+@89 = private unnamed_addr constant [4 x i8] c"%s4\00", align 1
+@90 = private unnamed_addr constant [4 x i8] c"%s8\00", align 1
+@91 = private unnamed_addr constant [5 x i8] c"%s16\00", align 1
+@92 = private unnamed_addr constant [5 x i8] c"%s32\00", align 1
+@93 = private unnamed_addr constant [5 x i8] c"%s64\00", align 1
+@94 = private unnamed_addr constant [6 x i8] c"%s128\00", align 1
+@95 = private unnamed_addr constant [4 x i8] c"f32\00", align 1
+@96 = private unnamed_addr constant [4 x i8] c"f64\00", align 1
+@97 = private unnamed_addr constant [7 x i8] c"record\00", align 1
+@98 = private unnamed_addr constant [8 x i8] c"unknown\00", align 1
+@99 = private unnamed_addr constant [13 x i8] c"__generics__\00", align 1
+@GENERIC_MODULE_ID = internal unnamed_addr global i64 0
+@100 = private unnamed_addr constant [6 x i8] c"false\00", align 1
+@101 = private unnamed_addr constant [68 x i8] c"Name '%s' has already been used for another type. consider renaming\00", align 1
+@102 = private unnamed_addr constant [41 x i8] c"Generic expects %u parameters but got %u\00", align 1
+@103 = private unnamed_addr constant [4 x i8] c"%s_\00", align 1
+@104 = private unnamed_addr constant [6 x i8] c"%s_%s\00", align 1
+@105 = private unnamed_addr constant [55 x i8] c"Initilializer for global variable has to be a constant\00", align 1
+@106 = private unnamed_addr constant [56 x i8] c"Expected type of '%s' but got type of '%s' on signature\00", align 1
+@107 = private unnamed_addr constant [50 x i8] c"Import statement path can't be a formatted string\00", align 1
+@108 = private unnamed_addr constant [30 x i8] c"'%s' not found in module '%s'\00", align 1
+@109 = private unnamed_addr constant [37 x i8] c"Illegal re-declaration of const '%s'\00", align 1
+@110 = private unnamed_addr constant [48 x i8] c"Illegal re-declaration of type '%s' as function\00", align 1
+@111 = private unnamed_addr constant [53 x i8] c"Expected an int type for enum type but got type '%s'\00", align 1
+@112 = private unnamed_addr constant [38 x i8] c"Enum initializer has to be a constant\00", align 1
+@113 = private unnamed_addr constant [36 x i8] c"Expected type '%s' but got type '%s\00", align 1
+@114 = private unnamed_addr constant [7 x i8] c"__eq__\00", align 1
+@115 = private unnamed_addr constant [8 x i8] c"__add__\00", align 1
+@116 = private unnamed_addr constant [8 x i8] c"__sub__\00", align 1
+@117 = private unnamed_addr constant [8 x i8] c"__mul__\00", align 1
+@118 = private unnamed_addr constant [8 x i8] c"__div__\00", align 1
+@119 = private unnamed_addr constant [7 x i8] c"__or__\00", align 1
+@120 = private unnamed_addr constant [8 x i8] c"__ora__\00", align 1
+@121 = private unnamed_addr constant [12 x i8] c"__getitem__\00", align 1
+@122 = private unnamed_addr constant [12 x i8] c"__setitem__\00", align 1
+@123 = private unnamed_addr constant [7 x i8] c"__sl__\00", align 1
+@124 = private unnamed_addr constant [7 x i8] c"__sr__\00", align 1
+@125 = private unnamed_addr constant [8 x i8] c"__sla__\00", align 1
+@126 = private unnamed_addr constant [8 x i8] c"__sra__\00", align 1
+@127 = private unnamed_addr constant [7 x i8] c"__in__\00", align 1
+@128 = private unnamed_addr constant [7 x i8] c"__lt__\00", align 1
+@129 = private unnamed_addr constant [7 x i8] c"__lg__\00", align 1
+@130 = private unnamed_addr constant [7 x i8] c"__ne__\00", align 1
+@131 = private unnamed_addr constant [7 x i8] c"__le__\00", align 1
+@132 = private unnamed_addr constant [7 x i8] c"__ge__\00", align 1
+@133 = private unnamed_addr constant [8 x i8] c"__pow__\00", align 1
+@134 = private unnamed_addr constant [8 x i8] c"__mod__\00", align 1
+@135 = private unnamed_addr constant [8 x i8] c"__del__\00", align 1
+@136 = private unnamed_addr constant [76 x i8] c" is reserved only for operator overloads and cannot be used as a field name\00", align 1
+@137 = private unnamed_addr constant [36 x i8] c"Field %s in class %s already exists\00", align 1
+@138 = private unnamed_addr constant [89 x i8] c"Signature of inherited field %s in class %s does not match expected parent signature '%s\00", align 1
+@139 = private unnamed_addr constant [49 x i8] c"Expected inherited field %s in class %s to be %s\00", align 1
+@140 = private unnamed_addr constant [68 x i8] c"Expected type '%s' but got type '%s' on static field initialization\00", align 1
+@141 = private unnamed_addr constant [46 x i8] c"Static field initializer has to be a constant\00", align 1
+@142 = private unnamed_addr constant [65 x i8] c"Expected %u arguments for binary operator overload %s but got %u\00", align 1
+@143 = private unnamed_addr constant [45 x i8] c"Binary operator overload %s cannot be static\00", align 1
+@144 = private unnamed_addr constant [75 x i8] c"__iter__ method must return an iteratable object {done: bool, next(): any}\00", align 1
+@145 = private unnamed_addr constant [37 x i8] c"Method %s in class %s already exists\00", align 1
+@146 = private unnamed_addr constant [91 x i8] c"Signature of inherited method %s in class %s does not match expected parent signature '%s'\00", align 1
+@147 = private unnamed_addr constant [50 x i8] c"Expected inherited method %s in class %s to be %s\00", align 1
+@148 = private unnamed_addr constant [32 x i8] c"Static method can't be abstract\00", align 1
+@149 = private unnamed_addr constant [12 x i8] c"constructor\00", align 1
+@150 = private unnamed_addr constant [34 x i8] c"Class constructor can't be static\00", align 1
+@151 = private unnamed_addr constant [36 x i8] c"Class constructor can't be abstract\00", align 1
+@152 = private unnamed_addr constant [59 x i8] c"Can't have a abstract private method use protected instead\00", align 1
+@153 = private unnamed_addr constant [6 x i8] c"super\00", align 1
+@154 = private unnamed_addr constant [42 x i8] c"Can only inherit from class not type '%s'\00", align 1
+@155 = private unnamed_addr constant [81 x i8] c"Class with constructor must implement all it's methods missing %s implementation\00", align 1
+@156 = private unnamed_addr constant [39 x i8] c"Method missing ending return statement\00", align 1
+@157 = private unnamed_addr constant [41 x i8] c"Function missing ending return statement\00", align 1
+@158 = private unnamed_addr constant [24 x i8] c"length has to be an int\00", align 1
+@159 = private unnamed_addr constant [24 x i8] c"length has to be a uint\00", align 1
+@160 = private unnamed_addr constant [31 x i8] c"length is a non-constant value\00", align 1
+@161 = private unnamed_addr constant [29 x i8] c"length should be an unsigned\00", align 1
+@162 = private unnamed_addr constant [4 x i8] c"u16\00", align 1
+@163 = private unnamed_addr constant [4 x i8] c"u32\00", align 1
+@164 = private unnamed_addr constant [4 x i8] c"u64\00", align 1
+@165 = private unnamed_addr constant [4 x i8] c"i16\00", align 1
+@166 = private unnamed_addr constant [4 x i8] c"i32\00", align 1
+@167 = private unnamed_addr constant [4 x i8] c"i64\00", align 1
+@168 = private unnamed_addr constant [20 x i8] c"Undefined type '%s'\00", align 1
+@169 = private unnamed_addr constant [48 x i8] c"Expected element type of '%s' but got type '%s'\00", align 1
+@170 = private unnamed_addr constant [38 x i8] c"Const 'null' cannot be of type 'void'\00", align 1
+@171 = private unnamed_addr constant [24 x i8] c"Undefined variable '%s'\00", align 1
+@172 = private unnamed_addr constant [34 x i8] c"Assigment target is not a mutable\00", align 1
+@173 = private unnamed_addr constant [52 x i8] c"Illegal assignment of variable of type '%s' to '%s'\00", align 1
+@174 = private unnamed_addr constant [7 x i8] c"__gt__\00", align 1
+@175 = private unnamed_addr constant [8 x i8] c"__and__\00", align 1
+@176 = private unnamed_addr constant [8 x i8] c"__xor__\00", align 1
+@177 = private unnamed_addr constant [37 x i8] c"Expected type '%s' but got type '%s'\00", align 1
+@178 = private unnamed_addr constant [55 x i8] c"Unsupported binary operator overload for operator '%s'\00", align 1
+@179 = private unnamed_addr constant [108 x i8] c"No binary operator overload for '%s' in object of class '%s' please implement the method %s to support this\00", align 1
+@180 = private unnamed_addr constant [114 x i8] c"No operator overload for index set operator on %s object please implement method __setitem__ to use in this class\00", align 1
+@181 = private unnamed_addr constant [58 x i8] c"Illegal binary operation '%s' between types '%s' and '%s'\00", align 1
+@182 = private unnamed_addr constant [8 x i8] c"++(pre)\00", align 1
+@183 = private unnamed_addr constant [8 x i8] c"--(pre)\00", align 1
+@184 = private unnamed_addr constant [39 x i8] c"Illegal unary operation %s on constant\00", align 1
+@185 = private unnamed_addr constant [40 x i8] c"Illegal unary operation %s on type '%s'\00", align 1
+@186 = private unnamed_addr constant [7 x i8] c"String\00", align 1
+@187 = private unnamed_addr constant [30 x i8] c"Cannot cast type '%s' to '%s'\00", align 1
+@188 = private unnamed_addr constant [45 x i8] c"Cannot construct an object of abstract class\00", align 1
+@189 = private unnamed_addr constant [55 x i8] c"Expected %u argument(s) on constructor call but got %u\00", align 1
+@190 = private unnamed_addr constant [71 x i8] c"Expected type '%s' but got type '%s' as constructor call argument (%d)\00", align 1
+@191 = private unnamed_addr constant [68 x i8] c"New operator expects 1 argument for pointers but got %u argument(s)\00", align 1
+@192 = private unnamed_addr constant [74 x i8] c"New operator for pointers expects argument of type '%s' but got type '%s'\00", align 1
+@193 = private unnamed_addr constant [68 x i8] c"New operator expects either an a pointer or an object not a(n) '%s'\00", align 1
+@194 = private unnamed_addr constant [76 x i8] c"Property '%s' is defined as private and only accessible within the class %s\00", align 1
+@195 = private unnamed_addr constant [71 x i8] c"Property '%s' is defined as %s and only accessible within the class %s\00", align 1
+@196 = private unnamed_addr constant [52 x i8] c"Property '%s' doesn't exist in object of class '%s'\00", align 1
+@197 = private unnamed_addr constant [51 x i8] c"Property '%s' is not a static member in class '%s'\00", align 1
+@198 = private unnamed_addr constant [40 x i8] c"'%s' is not an element of enum the '%s'\00", align 1
+@199 = private unnamed_addr constant [10 x i8] c"copy_from\00", align 1
+@200 = private unnamed_addr constant [10 x i8] c"move_from\00", align 1
+@201 = private unnamed_addr constant [10 x i8] c"fill_with\00", align 1
+@202 = private unnamed_addr constant [7 x i8] c"resize\00", align 1
+@203 = private unnamed_addr constant [8 x i8] c"compare\00", align 1
+@204 = private unnamed_addr constant [28 x i8] c"intrinsic %s is not defined\00", align 1
+@205 = private unnamed_addr constant [38 x i8] c"Cannot get property '%s' of type '%s'\00", align 1
+@206 = private unnamed_addr constant [53 x i8] c"Expected type '%s' from first case but got type '%s'\00", align 1
+@207 = private unnamed_addr constant [122 x i8] c"No operator overload for indexing operator on %s object please implement method __getitem__ to use indexing in this class\00", align 1
+@208 = private unnamed_addr constant [35 x i8] c"Expected an integer type for index\00", align 1
+@209 = private unnamed_addr constant [87 x i8] c"Expected an unsigned integer for tuple index but index value is '%s' (which is signed)\00", align 1
+@210 = private unnamed_addr constant [41 x i8] c"Expected an constant int for tuple index\00", align 1
+@211 = private unnamed_addr constant [37 x i8] c"Index out of range for tuple type %s\00", align 1
+@212 = private unnamed_addr constant [39 x i8] c"Cannot index into a value of type '%s'\00", align 1
+@213 = private unnamed_addr constant [47 x i8] c"Expected a function type for call but got '%s'\00", align 1
+@214 = private unnamed_addr constant [52 x i8] c"Expected %u argument(s) on function call but got %u\00", align 1
+@215 = private unnamed_addr constant [63 x i8] c"Expected type '%s' but got type '%s' as function call argument\00", align 1
+@216 = private unnamed_addr constant [58 x i8] c"Expected argument %u to be of type '%s' but got type '%s'\00", align 1
+@217 = private unnamed_addr constant [66 x i8] c"Expected argument 1 to be of type to be of a pointer but got '%s'\00", align 1
+@218 = private unnamed_addr constant [49 x i8] c"Expected 2 arguments on function call but got %u\00", align 1
+@219 = private unnamed_addr constant [49 x i8] c"Expected 3 arguments on function call but got %u\00", align 1
+@220 = private unnamed_addr constant [7 x i8] c"3.4E38\00", align 1
+@221 = private unnamed_addr constant [6 x i8] c"Range\00", align 1
+@222 = private unnamed_addr constant [50 x i8] c"Cannot create a range between types '%s' and '%s'\00", align 1
+@223 = private unnamed_addr constant [32 x i8] c"Cannot match on constant 'null'\00", align 1
+@224 = private unnamed_addr constant [85 x i8] c"Operator overload == for '%s' should return a boolean to be used in match expression\00", align 1
+@225 = private unnamed_addr constant [67 x i8] c"Expected type '%s' from match expression subject but got type '%s'\00", align 1
+@226 = private unnamed_addr constant [57 x i8] c"Expected match case block to yield '%s' but yielded '%s'\00", align 1
+@227 = private unnamed_addr constant [56 x i8] c"Non-exhaustable match expression, expected an else-case\00", align 1
+@228 = private unnamed_addr constant [62 x i8] c"Expected match else-case block to yield '%s' but yielded '%s'\00", align 1
+@229 = private unnamed_addr constant [26 x i8] c"Variable '%s' has no type\00", align 1
+@230 = private unnamed_addr constant [70 x i8] c"Cannot declare a value as null without any type hint for future usage\00", align 1
+@231 = private unnamed_addr constant [61 x i8] c"Expected type '%s' but got type '%s' on variable declaration\00", align 1
+@232 = private unnamed_addr constant [39 x i8] c"Cannot declare a variable of type void\00", align 1
+@233 = private unnamed_addr constant [57 x i8] c"Illegal re-declaration of already declared variable '%s'\00", align 1
+@234 = private unnamed_addr constant [49 x i8] c"Cannot assign a non-constant value to a constant\00", align 1
+@235 = private unnamed_addr constant [58 x i8] c"Expected type '%s' but got type '%s' on const declaration\00", align 1
+@236 = private unnamed_addr constant [36 x i8] c"Cannot declare a const of type void\00", align 1
+@237 = private unnamed_addr constant [29 x i8] c"Iterator has to be an object\00", align 1
+@238 = private unnamed_addr constant [47 x i8] c"Iterator type has to have __iter__ as property\00", align 1
+@239 = private unnamed_addr constant [30 x i8] c"Illegal break outside of loop\00", align 1
+@240 = private unnamed_addr constant [33 x i8] c"Illegal continue outside of loop\00", align 1
+@241 = private unnamed_addr constant [57 x i8] c"Expected return type of '%s' but got return type of '%s'\00", align 1
+@242 = private unnamed_addr constant [33 x i8] c"Function return type is not void\00", align 1
+@243 = private unnamed_addr constant [9 x i8] c"%u;%d;%u\00", align 1
+@244 = private unnamed_addr constant [33 x i8] c"Type could not be code generated\00", align 1
+@245 = private unnamed_addr constant [8 x i8] c"realloc\00", align 1
+@246 = private unnamed_addr constant [7 x i8] c"memcmp\00", align 1
+@247 = private unnamed_addr constant [6 x i8] c"%s {\0A\00", align 1
+@248 = private unnamed_addr constant [7 x i8] c" ... }\00", align 1
+@249 = private unnamed_addr constant [4 x i8] c"%ld\00", align 1
+@250 = private unnamed_addr constant [4 x i8] c"%lu\00", align 1
+@251 = private unnamed_addr constant [4 x i8] c"%lf\00", align 1
+@252 = private unnamed_addr constant [13 x i8] c" '%s': %s, \0A\00", align 1
+@253 = private unnamed_addr constant [11 x i8] c"<function>\00", align 1
+@254 = private unnamed_addr constant [18 x i8] c"String_from_bytes\00", align 1
+@255 = private unnamed_addr constant [55 x i8] c"Could not find function 'String.from_bytes' in program\00", align 1
+@256 = private unnamed_addr constant [55 x i8] c"Array expression is not a constant (codegen_array_exp)\00", align 1
+@257 = private unnamed_addr constant [55 x i8] c"Array expression is not a constant (codegen_tuple_exp)\00", align 1
+@258 = private unnamed_addr constant [46 x i8] c"This should never happen! (get_expr_mem: var)\00", align 1
+@259 = private unnamed_addr constant [9 x i8] c"%s;%d;%u\00", align 1
+@260 = private unnamed_addr constant [10 x i8] c"memberidx\00", align 1
+@261 = private unnamed_addr constant [7 x i8] c"buffer\00", align 1
+@262 = private unnamed_addr constant [7 x i8] c"length\00", align 1
+@263 = private unnamed_addr constant [12 x i8] c"llvm.pow.%s\00", align 1
+@264 = private unnamed_addr constant [34 x i8] c"Unknown bin expression case case!\00", align 1
+@265 = private unnamed_addr constant [11 x i8] c"incdec.ptr\00", align 1
+@266 = private unnamed_addr constant [51 x i8] c"This should never happen; (codegen_var_access_exp)\00", align 1
+@267 = private unnamed_addr constant [11 x i8] c"true_block\00", align 1
+@268 = private unnamed_addr constant [12 x i8] c"false_block\00", align 1
+@269 = private unnamed_addr constant [4 x i8] c"end\00", align 1
+@270 = private unnamed_addr constant [8 x i8] c"ternary\00", align 1
+@271 = private unnamed_addr constant [11 x i8] c"match.else\00", align 1
+@272 = private unnamed_addr constant [10 x i8] c"match.end\00", align 1
+@273 = private unnamed_addr constant [11 x i8] c"match.case\00", align 1
+@274 = private unnamed_addr constant [16 x i8] c"match.case.else\00", align 1
+@275 = private unnamed_addr constant [15 x i8] c"match.phi.node\00", align 1
+@276 = private unnamed_addr constant [52 x i8] c"this should not happen; (codegen_member_exp); class\00", align 1
+@277 = private unnamed_addr constant [60 x i8] c"This should never happen; (codegen_member_expr; class prop)\00", align 1
+@278 = private unnamed_addr constant [51 x i8] c"this should not happen; (codegen_member_exp); enum\00", align 1
+@279 = private unnamed_addr constant [11 x i8] c"to_cstring\00", align 1
+@280 = private unnamed_addr constant [22 x i8] c"instrinsic not found!\00", align 1
+@281 = private unnamed_addr constant [9 x i8] c"if.entry\00", align 1
+@282 = private unnamed_addr constant [6 x i8] c"ifend\00", align 1
+@283 = private unnamed_addr constant [10 x i8] c"for.entry\00", align 1
+@284 = private unnamed_addr constant [9 x i8] c"for.next\00", align 1
+@285 = private unnamed_addr constant [9 x i8] c"for.body\00", align 1
+@286 = private unnamed_addr constant [8 x i8] c"for.end\00", align 1
+@287 = private unnamed_addr constant [12 x i8] c"while.entry\00", align 1
+@288 = private unnamed_addr constant [10 x i8] c"while.end\00", align 1
+@289 = private unnamed_addr constant [11 x i8] c"while.body\00", align 1
+@290 = private unnamed_addr constant [48 x i8] c"Could not find constructor for constructor call\00", align 1
+@291 = private unnamed_addr constant [15 x i8] c"%s_constructor\00", align 1
+@292 = private unnamed_addr constant [6 x i8] c"%s.%s\00", align 1
+@293 = private unnamed_addr constant [9 x i8] c"%s_names\00", align 1
+@294 = private unnamed_addr constant [4 x i8] c"exe\00", align 1
+@295 = private unnamed_addr constant [14 x i8] c"/tmp/output.o\00", align 1
+@296 = private unnamed_addr constant [5 x i8] c"-l%s\00", align 1
+@297 = private unnamed_addr constant [11 x i8] c"-target %s\00", align 1
+@298 = private unnamed_addr constant [79 x i8] c"FlagString {\0A 'name': %s, \0A 'value': %s, \0A 'description': %s, \0A 'type': %s, \0A}\00", align 1
+@299 = private unnamed_addr constant [37 x i8] c"%s -no-pie %s /tmp/output.o %s -o %s\00", align 1
+@300 = private unnamed_addr constant [8 x i8] c"llvm-ir\00", align 1
+@301 = private unnamed_addr constant [8 x i8] c"llvm-bc\00", align 1
+@302 = private unnamed_addr constant [4 x i8] c"obj\00", align 1
+@303 = private unnamed_addr constant [4 x i8] c"asm\00", align 1
 
 ; Function Attrs: nofree
 declare void @system(ptr nocapture noundef readonly) local_unnamed_addr #0
+
+declare i64 @get_self_path(ptr, i64) local_unnamed_addr
 
 define i64 @main(i64 %0, ptr nocapture readonly %1) local_unnamed_addr {
   %3 = alloca ptr, align 8
@@ -547,2404 +550,2473 @@ define i64 @main(i64 %0, ptr nocapture readonly %1) local_unnamed_addr {
   %9 = alloca %CodeGen, align 8
   %10 = alloca %TypeChecker, align 8
   %11 = alloca ptr, align 8
-  %12 = tail call ptr @malloc(i32 5)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(5) %12, ptr noundef nonnull align 8 dereferenceable(5) @20, i64 5, i1 false)
-  %13 = tail call ptr @malloc(i32 24)
-  store ptr %12, ptr %13, align 8
-  %memberidx1.i.i = getelementptr inbounds %String, ptr %13, i64 0, i32 1
+  %12 = alloca ptr, align 8
+  %self_path = alloca [1024 x i8], align 1
+  %13 = tail call ptr @malloc(i32 5)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(5) %13, ptr noundef nonnull align 8 dereferenceable(5) @20, i64 5, i1 false)
+  %14 = tail call ptr @malloc(i32 24)
+  store ptr %13, ptr %14, align 8
+  %memberidx1.i.i = getelementptr inbounds %String, ptr %14, i64 0, i32 1
   store i64 5, ptr %memberidx1.i.i, align 4
-  %memberidx2.i.i = getelementptr inbounds %String, ptr %13, i64 0, i32 2
+  %memberidx2.i.i = getelementptr inbounds %String, ptr %14, i64 0, i32 2
   store i64 5, ptr %memberidx2.i.i, align 4
-  %14 = alloca %FlagBool, align 8
-  %15 = tail call ptr @malloc(i32 1)
-  store i8 104, ptr %15, align 8
-  %16 = tail call ptr @malloc(i32 24)
-  store ptr %15, ptr %16, align 8
-  %memberidx1.i.i96 = getelementptr inbounds %String, ptr %16, i64 0, i32 1
-  store i64 1, ptr %memberidx1.i.i96, align 4
-  %memberidx2.i.i97 = getelementptr inbounds %String, ptr %16, i64 0, i32 2
-  store i64 1, ptr %memberidx2.i.i97, align 4
-  %17 = tail call ptr @malloc(i32 22)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(22) %17, ptr noundef nonnull align 8 dereferenceable(22) @21, i64 22, i1 false)
-  %18 = tail call ptr @malloc(i32 24)
+  %15 = call i64 @get_self_path(ptr nonnull %self_path, i64 1024)
+  %16 = alloca %FlagBool, align 8
+  %17 = call ptr @malloc(i32 1)
+  store i8 104, ptr %17, align 8
+  %18 = call ptr @malloc(i32 24)
   store ptr %17, ptr %18, align 8
-  %memberidx1.i.i98 = getelementptr inbounds %String, ptr %18, i64 0, i32 1
+  %memberidx1.i.i96 = getelementptr inbounds %String, ptr %18, i64 0, i32 1
+  store i64 1, ptr %memberidx1.i.i96, align 4
+  %memberidx2.i.i97 = getelementptr inbounds %String, ptr %18, i64 0, i32 2
+  store i64 1, ptr %memberidx2.i.i97, align 4
+  %19 = call ptr @malloc(i32 22)
+  call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(22) %19, ptr noundef nonnull align 8 dereferenceable(22) @21, i64 22, i1 false)
+  %20 = call ptr @malloc(i32 24)
+  store ptr %19, ptr %20, align 8
+  %memberidx1.i.i98 = getelementptr inbounds %String, ptr %20, i64 0, i32 1
   store i64 22, ptr %memberidx1.i.i98, align 4
-  %memberidx2.i.i99 = getelementptr inbounds %String, ptr %18, i64 0, i32 2
+  %memberidx2.i.i99 = getelementptr inbounds %String, ptr %20, i64 0, i32 2
   store i64 22, ptr %memberidx2.i.i99, align 4
-  store i64 1, ptr %14, align 8
-  %memberidx1.i.i100 = getelementptr inbounds %Flag, ptr %14, i64 0, i32 1
-  store ptr %16, ptr %memberidx1.i.i100, align 8
-  %memberidx2.i.i101 = getelementptr inbounds %Flag, ptr %14, i64 0, i32 2
-  store ptr %18, ptr %memberidx2.i.i101, align 8
-  %19 = load i64, ptr @flags_length, align 8
-  %20 = icmp slt i64 %19, 250
-  br i1 %20, label %if.entry.i.i.i, label %FlagBool_constructor.exit
+  store i64 1, ptr %16, align 8
+  %memberidx1.i.i100 = getelementptr inbounds %Flag, ptr %16, i64 0, i32 1
+  store ptr %18, ptr %memberidx1.i.i100, align 8
+  %memberidx2.i.i101 = getelementptr inbounds %Flag, ptr %16, i64 0, i32 2
+  store ptr %20, ptr %memberidx2.i.i101, align 8
+  %21 = load i64, ptr @flags_length, align 8
+  %22 = icmp slt i64 %21, 250
+  br i1 %22, label %if.entry.i.i.i, label %FlagBool_constructor.exit
 
 if.entry.i.i.i:                                   ; preds = %2
-  %21 = add nsw i64 %19, 1
-  store i64 %21, ptr @flags_length, align 8
-  %22 = getelementptr inbounds [250 x ptr], ptr @flags_buffer, i64 0, i64 %19
-  store ptr %14, ptr %22, align 8
+  %23 = add nsw i64 %21, 1
+  store i64 %23, ptr @flags_length, align 8
+  %24 = getelementptr inbounds [250 x ptr], ptr @flags_buffer, i64 0, i64 %21
+  store ptr %16, ptr %24, align 8
   br label %FlagBool_constructor.exit
 
 FlagBool_constructor.exit:                        ; preds = %2, %if.entry.i.i.i
-  %memberidx.i = getelementptr inbounds %FlagBool, ptr %14, i64 0, i32 3
+  %memberidx.i = getelementptr inbounds %FlagBool, ptr %16, i64 0, i32 3
   store i1 false, ptr %memberidx.i, align 8
-  %23 = alloca %FlagString, align 8
-  %24 = call ptr @malloc(i32 5)
-  call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(5) %24, ptr noundef nonnull align 8 dereferenceable(5) @22, i64 5, i1 false)
-  %25 = call ptr @malloc(i32 24)
-  store ptr %24, ptr %25, align 8
-  %memberidx1.i.i102 = getelementptr inbounds %String, ptr %25, i64 0, i32 1
-  store i64 5, ptr %memberidx1.i.i102, align 4
-  %memberidx2.i.i103 = getelementptr inbounds %String, ptr %25, i64 0, i32 2
-  store i64 5, ptr %memberidx2.i.i103, align 4
-  %26 = call ptr @malloc(i32 275)
-  call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(275) %26, ptr noundef nonnull align 8 dereferenceable(275) @23, i64 275, i1 false)
+  %25 = alloca %FlagString, align 8
+  %26 = call ptr @malloc(i32 5)
+  call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(5) %26, ptr noundef nonnull align 8 dereferenceable(5) @22, i64 5, i1 false)
   %27 = call ptr @malloc(i32 24)
   store ptr %26, ptr %27, align 8
-  %memberidx1.i.i104 = getelementptr inbounds %String, ptr %27, i64 0, i32 1
-  store i64 275, ptr %memberidx1.i.i104, align 4
-  %memberidx2.i.i105 = getelementptr inbounds %String, ptr %27, i64 0, i32 2
-  store i64 275, ptr %memberidx2.i.i105, align 4
-  %28 = call ptr @malloc(i32 4)
-  store i32 1667594341, ptr %28, align 8
+  %memberidx1.i.i102 = getelementptr inbounds %String, ptr %27, i64 0, i32 1
+  store i64 5, ptr %memberidx1.i.i102, align 4
+  %memberidx2.i.i103 = getelementptr inbounds %String, ptr %27, i64 0, i32 2
+  store i64 5, ptr %memberidx2.i.i103, align 4
+  %28 = call ptr @malloc(i32 275)
+  call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(275) %28, ptr noundef nonnull align 8 dereferenceable(275) @23, i64 275, i1 false)
   %29 = call ptr @malloc(i32 24)
   store ptr %28, ptr %29, align 8
-  %memberidx1.i.i106 = getelementptr inbounds %String, ptr %29, i64 0, i32 1
+  %memberidx1.i.i104 = getelementptr inbounds %String, ptr %29, i64 0, i32 1
+  store i64 275, ptr %memberidx1.i.i104, align 4
+  %memberidx2.i.i105 = getelementptr inbounds %String, ptr %29, i64 0, i32 2
+  store i64 275, ptr %memberidx2.i.i105, align 4
+  %30 = call ptr @malloc(i32 4)
+  store i32 1667594341, ptr %30, align 8
+  %31 = call ptr @malloc(i32 24)
+  store ptr %30, ptr %31, align 8
+  %memberidx1.i.i106 = getelementptr inbounds %String, ptr %31, i64 0, i32 1
   store i64 4, ptr %memberidx1.i.i106, align 4
-  %memberidx2.i.i107 = getelementptr inbounds %String, ptr %29, i64 0, i32 2
+  %memberidx2.i.i107 = getelementptr inbounds %String, ptr %31, i64 0, i32 2
   store i64 4, ptr %memberidx2.i.i107, align 4
-  store i64 2, ptr %23, align 8
-  %memberidx1.i.i108 = getelementptr inbounds %Flag, ptr %23, i64 0, i32 1
-  store ptr %25, ptr %memberidx1.i.i108, align 8
-  %memberidx2.i.i109 = getelementptr inbounds %Flag, ptr %23, i64 0, i32 2
-  store ptr %27, ptr %memberidx2.i.i109, align 8
-  %30 = load i64, ptr @flags_length, align 8
-  %31 = icmp slt i64 %30, 250
-  br i1 %31, label %if.entry.i.i.i110, label %FlagString_constructor.exit
+  store i64 2, ptr %25, align 8
+  %memberidx1.i.i108 = getelementptr inbounds %Flag, ptr %25, i64 0, i32 1
+  store ptr %27, ptr %memberidx1.i.i108, align 8
+  %memberidx2.i.i109 = getelementptr inbounds %Flag, ptr %25, i64 0, i32 2
+  store ptr %29, ptr %memberidx2.i.i109, align 8
+  %32 = load i64, ptr @flags_length, align 8
+  %33 = icmp slt i64 %32, 250
+  br i1 %33, label %if.entry.i.i.i110, label %FlagString_constructor.exit
 
 if.entry.i.i.i110:                                ; preds = %FlagBool_constructor.exit
-  %32 = add nsw i64 %30, 1
-  store i64 %32, ptr @flags_length, align 8
-  %33 = getelementptr inbounds [250 x ptr], ptr @flags_buffer, i64 0, i64 %30
-  store ptr %23, ptr %33, align 8
+  %34 = add nsw i64 %32, 1
+  store i64 %34, ptr @flags_length, align 8
+  %35 = getelementptr inbounds [250 x ptr], ptr @flags_buffer, i64 0, i64 %32
+  store ptr %25, ptr %35, align 8
   br label %FlagString_constructor.exit
 
 FlagString_constructor.exit:                      ; preds = %FlagBool_constructor.exit, %if.entry.i.i.i110
-  %memberidx.i111 = getelementptr inbounds %FlagString, ptr %23, i64 0, i32 3
-  store ptr %29, ptr %memberidx.i111, align 8
-  %34 = alloca %FlagString, align 8
-  %35 = call ptr @malloc(i32 1)
-  store i8 111, ptr %35, align 8
-  %36 = call ptr @malloc(i32 24)
-  store ptr %35, ptr %36, align 8
-  %memberidx1.i.i112 = getelementptr inbounds %String, ptr %36, i64 0, i32 1
-  store i64 1, ptr %memberidx1.i.i112, align 4
-  %memberidx2.i.i113 = getelementptr inbounds %String, ptr %36, i64 0, i32 2
-  store i64 1, ptr %memberidx2.i.i113, align 4
-  %37 = call ptr @malloc(i32 35)
-  call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(35) %37, ptr noundef nonnull align 8 dereferenceable(35) @24, i64 35, i1 false)
+  %memberidx.i111 = getelementptr inbounds %FlagString, ptr %25, i64 0, i32 3
+  store ptr %31, ptr %memberidx.i111, align 8
+  %36 = alloca %FlagString, align 8
+  %37 = call ptr @malloc(i32 1)
+  store i8 111, ptr %37, align 8
   %38 = call ptr @malloc(i32 24)
   store ptr %37, ptr %38, align 8
-  %memberidx1.i.i114 = getelementptr inbounds %String, ptr %38, i64 0, i32 1
-  store i64 35, ptr %memberidx1.i.i114, align 4
-  %memberidx2.i.i115 = getelementptr inbounds %String, ptr %38, i64 0, i32 2
-  store i64 35, ptr %memberidx2.i.i115, align 4
-  %39 = call ptr @malloc(i32 6)
-  call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(6) %39, ptr noundef nonnull align 8 dereferenceable(6) @25, i64 6, i1 false)
+  %memberidx1.i.i112 = getelementptr inbounds %String, ptr %38, i64 0, i32 1
+  store i64 1, ptr %memberidx1.i.i112, align 4
+  %memberidx2.i.i113 = getelementptr inbounds %String, ptr %38, i64 0, i32 2
+  store i64 1, ptr %memberidx2.i.i113, align 4
+  %39 = call ptr @malloc(i32 35)
+  call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(35) %39, ptr noundef nonnull align 8 dereferenceable(35) @24, i64 35, i1 false)
   %40 = call ptr @malloc(i32 24)
   store ptr %39, ptr %40, align 8
-  %memberidx1.i.i116 = getelementptr inbounds %String, ptr %40, i64 0, i32 1
+  %memberidx1.i.i114 = getelementptr inbounds %String, ptr %40, i64 0, i32 1
+  store i64 35, ptr %memberidx1.i.i114, align 4
+  %memberidx2.i.i115 = getelementptr inbounds %String, ptr %40, i64 0, i32 2
+  store i64 35, ptr %memberidx2.i.i115, align 4
+  %41 = call ptr @malloc(i32 6)
+  call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(6) %41, ptr noundef nonnull align 8 dereferenceable(6) @25, i64 6, i1 false)
+  %42 = call ptr @malloc(i32 24)
+  store ptr %41, ptr %42, align 8
+  %memberidx1.i.i116 = getelementptr inbounds %String, ptr %42, i64 0, i32 1
   store i64 6, ptr %memberidx1.i.i116, align 4
-  %memberidx2.i.i117 = getelementptr inbounds %String, ptr %40, i64 0, i32 2
+  %memberidx2.i.i117 = getelementptr inbounds %String, ptr %42, i64 0, i32 2
   store i64 6, ptr %memberidx2.i.i117, align 4
-  store i64 2, ptr %34, align 8
-  %memberidx1.i.i118 = getelementptr inbounds %Flag, ptr %34, i64 0, i32 1
-  store ptr %36, ptr %memberidx1.i.i118, align 8
-  %memberidx2.i.i119 = getelementptr inbounds %Flag, ptr %34, i64 0, i32 2
-  store ptr %38, ptr %memberidx2.i.i119, align 8
-  %41 = load i64, ptr @flags_length, align 8
-  %42 = icmp slt i64 %41, 250
-  br i1 %42, label %if.entry.i.i.i120, label %FlagString_constructor.exit122
+  store i64 2, ptr %36, align 8
+  %memberidx1.i.i118 = getelementptr inbounds %Flag, ptr %36, i64 0, i32 1
+  store ptr %38, ptr %memberidx1.i.i118, align 8
+  %memberidx2.i.i119 = getelementptr inbounds %Flag, ptr %36, i64 0, i32 2
+  store ptr %40, ptr %memberidx2.i.i119, align 8
+  %43 = load i64, ptr @flags_length, align 8
+  %44 = icmp slt i64 %43, 250
+  br i1 %44, label %if.entry.i.i.i120, label %FlagString_constructor.exit122
 
 if.entry.i.i.i120:                                ; preds = %FlagString_constructor.exit
-  %43 = add nsw i64 %41, 1
-  store i64 %43, ptr @flags_length, align 8
-  %44 = getelementptr inbounds [250 x ptr], ptr @flags_buffer, i64 0, i64 %41
-  store ptr %34, ptr %44, align 8
+  %45 = add nsw i64 %43, 1
+  store i64 %45, ptr @flags_length, align 8
+  %46 = getelementptr inbounds [250 x ptr], ptr @flags_buffer, i64 0, i64 %43
+  store ptr %36, ptr %46, align 8
   br label %FlagString_constructor.exit122
 
 FlagString_constructor.exit122:                   ; preds = %FlagString_constructor.exit, %if.entry.i.i.i120
-  %memberidx.i121 = getelementptr inbounds %FlagString, ptr %34, i64 0, i32 3
-  store ptr %40, ptr %memberidx.i121, align 8
-  %45 = alloca %FlagString, align 8
-  %46 = call ptr @malloc(i32 1)
-  store i8 73, ptr %46, align 8
-  %47 = call ptr @malloc(i32 24)
-  store ptr %46, ptr %47, align 8
-  %memberidx1.i.i123 = getelementptr inbounds %String, ptr %47, i64 0, i32 1
-  store i64 1, ptr %memberidx1.i.i123, align 4
-  %memberidx2.i.i124 = getelementptr inbounds %String, ptr %47, i64 0, i32 2
-  store i64 1, ptr %memberidx2.i.i124, align 4
-  %48 = call ptr @malloc(i32 25)
-  call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(25) %48, ptr noundef nonnull align 8 dereferenceable(25) @26, i64 25, i1 false)
+  %memberidx.i121 = getelementptr inbounds %FlagString, ptr %36, i64 0, i32 3
+  store ptr %42, ptr %memberidx.i121, align 8
+  %47 = alloca %FlagString, align 8
+  %48 = call ptr @malloc(i32 1)
+  store i8 73, ptr %48, align 8
   %49 = call ptr @malloc(i32 24)
   store ptr %48, ptr %49, align 8
-  %memberidx1.i.i125 = getelementptr inbounds %String, ptr %49, i64 0, i32 1
-  store i64 25, ptr %memberidx1.i.i125, align 4
-  %memberidx2.i.i126 = getelementptr inbounds %String, ptr %49, i64 0, i32 2
-  store i64 25, ptr %memberidx2.i.i126, align 4
-  %50 = call ptr @malloc(i32 19)
-  call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(19) %50, ptr noundef nonnull align 8 dereferenceable(19) @27, i64 19, i1 false)
+  %memberidx1.i.i123 = getelementptr inbounds %String, ptr %49, i64 0, i32 1
+  store i64 1, ptr %memberidx1.i.i123, align 4
+  %memberidx2.i.i124 = getelementptr inbounds %String, ptr %49, i64 0, i32 2
+  store i64 1, ptr %memberidx2.i.i124, align 4
+  %50 = call ptr @malloc(i32 25)
+  call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(25) %50, ptr noundef nonnull align 8 dereferenceable(25) @26, i64 25, i1 false)
   %51 = call ptr @malloc(i32 24)
   store ptr %50, ptr %51, align 8
-  %memberidx1.i.i127 = getelementptr inbounds %String, ptr %51, i64 0, i32 1
-  store i64 19, ptr %memberidx1.i.i127, align 4
-  %memberidx2.i.i128 = getelementptr inbounds %String, ptr %51, i64 0, i32 2
-  store i64 19, ptr %memberidx2.i.i128, align 4
-  store i64 2, ptr %45, align 8
-  %memberidx1.i.i129 = getelementptr inbounds %Flag, ptr %45, i64 0, i32 1
-  store ptr %47, ptr %memberidx1.i.i129, align 8
-  %memberidx2.i.i130 = getelementptr inbounds %Flag, ptr %45, i64 0, i32 2
-  store ptr %49, ptr %memberidx2.i.i130, align 8
-  %52 = load i64, ptr @flags_length, align 8
-  %53 = icmp slt i64 %52, 250
-  br i1 %53, label %if.entry.i.i.i131, label %FlagString_constructor.exit133
+  %memberidx1.i.i125 = getelementptr inbounds %String, ptr %51, i64 0, i32 1
+  store i64 25, ptr %memberidx1.i.i125, align 4
+  %memberidx2.i.i126 = getelementptr inbounds %String, ptr %51, i64 0, i32 2
+  store i64 25, ptr %memberidx2.i.i126, align 4
+  %52 = trunc i64 %15 to i32
+  %53 = call ptr @malloc(i32 %52)
+  call void @llvm.memcpy.p0.p0.i64(ptr align 8 %53, ptr nonnull align 8 %self_path, i64 %15, i1 false)
+  %54 = call ptr @malloc(i32 24)
+  store ptr %53, ptr %54, align 8
+  %memberidx1.i.i127 = getelementptr inbounds %String, ptr %54, i64 0, i32 1
+  store i64 %15, ptr %memberidx1.i.i127, align 4
+  %memberidx2.i.i128 = getelementptr inbounds %String, ptr %54, i64 0, i32 2
+  store i64 %15, ptr %memberidx2.i.i128, align 4
+  %55 = add i32 %52, 1
+  %56 = call ptr @malloc(i32 %55)
+  call void @llvm.memcpy.p0.p0.i64(ptr align 8 %56, ptr align 8 %53, i64 %15, i1 false)
+  %57 = getelementptr inbounds i8, ptr %56, i64 %15
+  store i8 0, ptr %57, align 1
+  %58 = call ptr @dirname(ptr %56)
+  %59 = call i64 @strlen(ptr noundef nonnull dereferenceable(1) %58)
+  %60 = trunc i64 %59 to i32
+  %61 = call ptr @malloc(i32 %60)
+  call void @llvm.memcpy.p0.p0.i64(ptr align 8 %61, ptr align 8 %58, i64 %59, i1 false)
+  %62 = call ptr @malloc(i32 24)
+  store ptr %61, ptr %62, align 8
+  %memberidx1.i.i.i = getelementptr inbounds %String, ptr %62, i64 0, i32 1
+  store i64 %59, ptr %memberidx1.i.i.i, align 4
+  %memberidx2.i.i.i = getelementptr inbounds %String, ptr %62, i64 0, i32 2
+  store i64 %59, ptr %memberidx2.i.i.i, align 4
+  %63 = call ptr @malloc(i32 4)
+  store i32 794978668, ptr %63, align 8
+  %64 = call ptr @malloc(i32 24)
+  store ptr %63, ptr %64, align 8
+  %memberidx1.i.i129 = getelementptr inbounds %String, ptr %64, i64 0, i32 1
+  store i64 4, ptr %memberidx1.i.i129, align 4
+  %memberidx2.i.i130 = getelementptr inbounds %String, ptr %64, i64 0, i32 2
+  store i64 4, ptr %memberidx2.i.i130, align 4
+  call void @llvm.lifetime.start.p0(i64 8, ptr nonnull %12)
+  %65 = add i32 %60, 1
+  %66 = call ptr @malloc(i32 %65)
+  call void @llvm.memcpy.p0.p0.i64(ptr align 8 %66, ptr align 8 %61, i64 %59, i1 false)
+  %67 = getelementptr inbounds i8, ptr %66, i64 %59
+  store i8 0, ptr %67, align 1
+  %68 = call ptr @malloc(i32 5)
+  %69 = load i32, ptr %63, align 8
+  store i32 %69, ptr %68, align 8
+  %70 = getelementptr inbounds i8, ptr %68, i64 4
+  store i8 0, ptr %70, align 1
+  %71 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %12, ptr nonnull @8, ptr %66, ptr nonnull %68)
+  %72 = load ptr, ptr %12, align 8
+  %73 = call ptr @malloc(i32 24)
+  store ptr %72, ptr %73, align 8
+  %memberidx1.i.i132 = getelementptr inbounds %String, ptr %73, i64 0, i32 1
+  store i64 %71, ptr %memberidx1.i.i132, align 4
+  %memberidx2.i.i133 = getelementptr inbounds %String, ptr %73, i64 0, i32 2
+  store i64 %71, ptr %memberidx2.i.i133, align 4
+  call void @free(ptr %66)
+  call void @free(ptr %68)
+  call void @llvm.lifetime.end.p0(i64 8, ptr nonnull %12)
+  store i64 2, ptr %47, align 8
+  %memberidx1.i.i134 = getelementptr inbounds %Flag, ptr %47, i64 0, i32 1
+  store ptr %49, ptr %memberidx1.i.i134, align 8
+  %memberidx2.i.i135 = getelementptr inbounds %Flag, ptr %47, i64 0, i32 2
+  store ptr %51, ptr %memberidx2.i.i135, align 8
+  %74 = load i64, ptr @flags_length, align 8
+  %75 = icmp slt i64 %74, 250
+  br i1 %75, label %if.entry.i.i.i136, label %FlagString_constructor.exit138
 
-if.entry.i.i.i131:                                ; preds = %FlagString_constructor.exit122
-  %54 = add nsw i64 %52, 1
-  store i64 %54, ptr @flags_length, align 8
-  %55 = getelementptr inbounds [250 x ptr], ptr @flags_buffer, i64 0, i64 %52
-  store ptr %45, ptr %55, align 8
-  br label %FlagString_constructor.exit133
+if.entry.i.i.i136:                                ; preds = %FlagString_constructor.exit122
+  %76 = add nsw i64 %74, 1
+  store i64 %76, ptr @flags_length, align 8
+  %77 = getelementptr inbounds [250 x ptr], ptr @flags_buffer, i64 0, i64 %74
+  store ptr %47, ptr %77, align 8
+  br label %FlagString_constructor.exit138
 
-FlagString_constructor.exit133:                   ; preds = %FlagString_constructor.exit122, %if.entry.i.i.i131
-  %memberidx.i132 = getelementptr inbounds %FlagString, ptr %45, i64 0, i32 3
-  store ptr %51, ptr %memberidx.i132, align 8
-  %56 = alloca %FlagString, align 8
-  %57 = call ptr @malloc(i32 7)
-  call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(7) %57, ptr noundef nonnull align 8 dereferenceable(7) @28, i64 7, i1 false)
-  %58 = call ptr @malloc(i32 24)
-  store ptr %57, ptr %58, align 8
-  %memberidx1.i.i134 = getelementptr inbounds %String, ptr %58, i64 0, i32 1
-  store i64 7, ptr %memberidx1.i.i134, align 4
-  %memberidx2.i.i135 = getelementptr inbounds %String, ptr %58, i64 0, i32 2
-  store i64 7, ptr %memberidx2.i.i135, align 4
-  %59 = call ptr @malloc(i32 33)
-  call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(33) %59, ptr noundef nonnull align 8 dereferenceable(33) @29, i64 33, i1 false)
-  %60 = call ptr @malloc(i32 24)
-  store ptr %59, ptr %60, align 8
-  %memberidx1.i.i136 = getelementptr inbounds %String, ptr %60, i64 0, i32 1
-  store i64 33, ptr %memberidx1.i.i136, align 4
-  %memberidx2.i.i137 = getelementptr inbounds %String, ptr %60, i64 0, i32 2
-  store i64 33, ptr %memberidx2.i.i137, align 4
-  %61 = call ptr @LLVMGetDefaultTargetTriple()
-  %62 = call i64 @strlen(ptr noundef nonnull dereferenceable(1) %61)
-  %63 = trunc i64 %62 to i32
-  %64 = call ptr @malloc(i32 %63)
-  call void @llvm.memcpy.p0.p0.i64(ptr align 8 %64, ptr align 8 %61, i64 %62, i1 false)
-  %65 = call ptr @malloc(i32 24)
-  store ptr %64, ptr %65, align 8
-  %memberidx1.i.i138 = getelementptr inbounds %String, ptr %65, i64 0, i32 1
-  store i64 %62, ptr %memberidx1.i.i138, align 4
-  %memberidx2.i.i139 = getelementptr inbounds %String, ptr %65, i64 0, i32 2
-  store i64 %62, ptr %memberidx2.i.i139, align 4
-  store i64 2, ptr %56, align 8
-  %memberidx1.i.i140 = getelementptr inbounds %Flag, ptr %56, i64 0, i32 1
-  store ptr %58, ptr %memberidx1.i.i140, align 8
-  %memberidx2.i.i141 = getelementptr inbounds %Flag, ptr %56, i64 0, i32 2
-  store ptr %60, ptr %memberidx2.i.i141, align 8
-  %66 = load i64, ptr @flags_length, align 8
-  %67 = icmp slt i64 %66, 250
-  br i1 %67, label %if.entry.i.i.i142, label %FlagString_constructor.exit144
+FlagString_constructor.exit138:                   ; preds = %FlagString_constructor.exit122, %if.entry.i.i.i136
+  %memberidx.i137 = getelementptr inbounds %FlagString, ptr %47, i64 0, i32 3
+  store ptr %73, ptr %memberidx.i137, align 8
+  %78 = alloca %FlagString, align 8
+  %79 = call ptr @malloc(i32 7)
+  call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(7) %79, ptr noundef nonnull align 8 dereferenceable(7) @27, i64 7, i1 false)
+  %80 = call ptr @malloc(i32 24)
+  store ptr %79, ptr %80, align 8
+  %memberidx1.i.i139 = getelementptr inbounds %String, ptr %80, i64 0, i32 1
+  store i64 7, ptr %memberidx1.i.i139, align 4
+  %memberidx2.i.i140 = getelementptr inbounds %String, ptr %80, i64 0, i32 2
+  store i64 7, ptr %memberidx2.i.i140, align 4
+  %81 = call ptr @malloc(i32 33)
+  call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(33) %81, ptr noundef nonnull align 8 dereferenceable(33) @28, i64 33, i1 false)
+  %82 = call ptr @malloc(i32 24)
+  store ptr %81, ptr %82, align 8
+  %memberidx1.i.i141 = getelementptr inbounds %String, ptr %82, i64 0, i32 1
+  store i64 33, ptr %memberidx1.i.i141, align 4
+  %memberidx2.i.i142 = getelementptr inbounds %String, ptr %82, i64 0, i32 2
+  store i64 33, ptr %memberidx2.i.i142, align 4
+  %83 = call ptr @LLVMGetDefaultTargetTriple()
+  %84 = call i64 @strlen(ptr noundef nonnull dereferenceable(1) %83)
+  %85 = trunc i64 %84 to i32
+  %86 = call ptr @malloc(i32 %85)
+  call void @llvm.memcpy.p0.p0.i64(ptr align 8 %86, ptr align 8 %83, i64 %84, i1 false)
+  %87 = call ptr @malloc(i32 24)
+  store ptr %86, ptr %87, align 8
+  %memberidx1.i.i143 = getelementptr inbounds %String, ptr %87, i64 0, i32 1
+  store i64 %84, ptr %memberidx1.i.i143, align 4
+  %memberidx2.i.i144 = getelementptr inbounds %String, ptr %87, i64 0, i32 2
+  store i64 %84, ptr %memberidx2.i.i144, align 4
+  store i64 2, ptr %78, align 8
+  %memberidx1.i.i145 = getelementptr inbounds %Flag, ptr %78, i64 0, i32 1
+  store ptr %80, ptr %memberidx1.i.i145, align 8
+  %memberidx2.i.i146 = getelementptr inbounds %Flag, ptr %78, i64 0, i32 2
+  store ptr %82, ptr %memberidx2.i.i146, align 8
+  %88 = load i64, ptr @flags_length, align 8
+  %89 = icmp slt i64 %88, 250
+  br i1 %89, label %if.entry.i.i.i147, label %FlagString_constructor.exit149
 
-if.entry.i.i.i142:                                ; preds = %FlagString_constructor.exit133
-  %68 = add nsw i64 %66, 1
-  store i64 %68, ptr @flags_length, align 8
-  %69 = getelementptr inbounds [250 x ptr], ptr @flags_buffer, i64 0, i64 %66
-  store ptr %56, ptr %69, align 8
-  br label %FlagString_constructor.exit144
+if.entry.i.i.i147:                                ; preds = %FlagString_constructor.exit138
+  %90 = add nsw i64 %88, 1
+  store i64 %90, ptr @flags_length, align 8
+  %91 = getelementptr inbounds [250 x ptr], ptr @flags_buffer, i64 0, i64 %88
+  store ptr %78, ptr %91, align 8
+  br label %FlagString_constructor.exit149
 
-FlagString_constructor.exit144:                   ; preds = %FlagString_constructor.exit133, %if.entry.i.i.i142
-  %memberidx.i143 = getelementptr inbounds %FlagString, ptr %56, i64 0, i32 3
-  store ptr %65, ptr %memberidx.i143, align 8
-  %70 = alloca %FlagString, align 8
-  %71 = call ptr @malloc(i32 1)
-  store i8 108, ptr %71, align 8
-  %72 = call ptr @malloc(i32 24)
-  store ptr %71, ptr %72, align 8
-  %memberidx1.i.i145 = getelementptr inbounds %String, ptr %72, i64 0, i32 1
-  store i64 1, ptr %memberidx1.i.i145, align 4
-  %memberidx2.i.i146 = getelementptr inbounds %String, ptr %72, i64 0, i32 2
-  store i64 1, ptr %memberidx2.i.i146, align 4
-  %73 = call ptr @malloc(i32 68)
-  call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(68) %73, ptr noundef nonnull align 8 dereferenceable(68) @30, i64 68, i1 false)
-  %74 = call ptr @malloc(i32 24)
-  store ptr %73, ptr %74, align 8
-  %memberidx1.i.i147 = getelementptr inbounds %String, ptr %74, i64 0, i32 1
-  store i64 68, ptr %memberidx1.i.i147, align 4
-  %memberidx2.i.i148 = getelementptr inbounds %String, ptr %74, i64 0, i32 2
-  store i64 68, ptr %memberidx2.i.i148, align 4
-  store i64 2, ptr %70, align 8
-  %memberidx1.i.i149 = getelementptr inbounds %Flag, ptr %70, i64 0, i32 1
-  store ptr %72, ptr %memberidx1.i.i149, align 8
-  %memberidx2.i.i150 = getelementptr inbounds %Flag, ptr %70, i64 0, i32 2
-  store ptr %74, ptr %memberidx2.i.i150, align 8
-  %75 = load i64, ptr @flags_length, align 8
-  %76 = icmp slt i64 %75, 250
-  br i1 %76, label %if.entry.i.i.i151, label %FlagString_constructor.exit153
+FlagString_constructor.exit149:                   ; preds = %FlagString_constructor.exit138, %if.entry.i.i.i147
+  %memberidx.i148 = getelementptr inbounds %FlagString, ptr %78, i64 0, i32 3
+  store ptr %87, ptr %memberidx.i148, align 8
+  %92 = alloca %FlagString, align 8
+  %93 = call ptr @malloc(i32 1)
+  store i8 108, ptr %93, align 8
+  %94 = call ptr @malloc(i32 24)
+  store ptr %93, ptr %94, align 8
+  %memberidx1.i.i150 = getelementptr inbounds %String, ptr %94, i64 0, i32 1
+  store i64 1, ptr %memberidx1.i.i150, align 4
+  %memberidx2.i.i151 = getelementptr inbounds %String, ptr %94, i64 0, i32 2
+  store i64 1, ptr %memberidx2.i.i151, align 4
+  %95 = call ptr @malloc(i32 68)
+  call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(68) %95, ptr noundef nonnull align 8 dereferenceable(68) @29, i64 68, i1 false)
+  %96 = call ptr @malloc(i32 24)
+  store ptr %95, ptr %96, align 8
+  %memberidx1.i.i152 = getelementptr inbounds %String, ptr %96, i64 0, i32 1
+  store i64 68, ptr %memberidx1.i.i152, align 4
+  %memberidx2.i.i153 = getelementptr inbounds %String, ptr %96, i64 0, i32 2
+  store i64 68, ptr %memberidx2.i.i153, align 4
+  store i64 2, ptr %92, align 8
+  %memberidx1.i.i154 = getelementptr inbounds %Flag, ptr %92, i64 0, i32 1
+  store ptr %94, ptr %memberidx1.i.i154, align 8
+  %memberidx2.i.i155 = getelementptr inbounds %Flag, ptr %92, i64 0, i32 2
+  store ptr %96, ptr %memberidx2.i.i155, align 8
+  %97 = load i64, ptr @flags_length, align 8
+  %98 = icmp slt i64 %97, 250
+  br i1 %98, label %if.entry.i.i.i156, label %FlagString_constructor.exit158
 
-if.entry.i.i.i151:                                ; preds = %FlagString_constructor.exit144
-  %77 = add nsw i64 %75, 1
-  store i64 %77, ptr @flags_length, align 8
-  %78 = getelementptr inbounds [250 x ptr], ptr @flags_buffer, i64 0, i64 %75
-  store ptr %70, ptr %78, align 8
-  br label %FlagString_constructor.exit153
+if.entry.i.i.i156:                                ; preds = %FlagString_constructor.exit149
+  %99 = add nsw i64 %97, 1
+  store i64 %99, ptr @flags_length, align 8
+  %100 = getelementptr inbounds [250 x ptr], ptr @flags_buffer, i64 0, i64 %97
+  store ptr %92, ptr %100, align 8
+  br label %FlagString_constructor.exit158
 
-FlagString_constructor.exit153:                   ; preds = %FlagString_constructor.exit144, %if.entry.i.i.i151
-  %memberidx.i152 = getelementptr inbounds %FlagString, ptr %70, i64 0, i32 3
-  store ptr null, ptr %memberidx.i152, align 8
-  %79 = alloca %FlagInt, align 8
-  %80 = call ptr @malloc(i32 1)
-  store i8 79, ptr %80, align 8
-  %81 = call ptr @malloc(i32 24)
-  store ptr %80, ptr %81, align 8
-  %memberidx1.i.i154 = getelementptr inbounds %String, ptr %81, i64 0, i32 1
-  store i64 1, ptr %memberidx1.i.i154, align 4
-  %memberidx2.i.i155 = getelementptr inbounds %String, ptr %81, i64 0, i32 2
-  store i64 1, ptr %memberidx2.i.i155, align 4
-  %82 = call ptr @malloc(i32 41)
-  call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(41) %82, ptr noundef nonnull align 8 dereferenceable(41) @31, i64 41, i1 false)
-  %83 = call ptr @malloc(i32 24)
-  store ptr %82, ptr %83, align 8
-  %memberidx1.i.i156 = getelementptr inbounds %String, ptr %83, i64 0, i32 1
-  store i64 41, ptr %memberidx1.i.i156, align 4
-  %memberidx2.i.i157 = getelementptr inbounds %String, ptr %83, i64 0, i32 2
-  store i64 41, ptr %memberidx2.i.i157, align 4
-  store i64 0, ptr %79, align 8
-  %memberidx1.i.i158 = getelementptr inbounds %Flag, ptr %79, i64 0, i32 1
-  store ptr %81, ptr %memberidx1.i.i158, align 8
-  %memberidx2.i.i159 = getelementptr inbounds %Flag, ptr %79, i64 0, i32 2
-  store ptr %83, ptr %memberidx2.i.i159, align 8
-  %84 = load i64, ptr @flags_length, align 8
-  %85 = icmp slt i64 %84, 250
-  br i1 %85, label %if.entry.i.i.i160, label %FlagInt_constructor.exit
+FlagString_constructor.exit158:                   ; preds = %FlagString_constructor.exit149, %if.entry.i.i.i156
+  %memberidx.i157 = getelementptr inbounds %FlagString, ptr %92, i64 0, i32 3
+  store ptr null, ptr %memberidx.i157, align 8
+  %101 = alloca %FlagInt, align 8
+  %102 = call ptr @malloc(i32 1)
+  store i8 79, ptr %102, align 8
+  %103 = call ptr @malloc(i32 24)
+  store ptr %102, ptr %103, align 8
+  %memberidx1.i.i159 = getelementptr inbounds %String, ptr %103, i64 0, i32 1
+  store i64 1, ptr %memberidx1.i.i159, align 4
+  %memberidx2.i.i160 = getelementptr inbounds %String, ptr %103, i64 0, i32 2
+  store i64 1, ptr %memberidx2.i.i160, align 4
+  %104 = call ptr @malloc(i32 41)
+  call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(41) %104, ptr noundef nonnull align 8 dereferenceable(41) @30, i64 41, i1 false)
+  %105 = call ptr @malloc(i32 24)
+  store ptr %104, ptr %105, align 8
+  %memberidx1.i.i161 = getelementptr inbounds %String, ptr %105, i64 0, i32 1
+  store i64 41, ptr %memberidx1.i.i161, align 4
+  %memberidx2.i.i162 = getelementptr inbounds %String, ptr %105, i64 0, i32 2
+  store i64 41, ptr %memberidx2.i.i162, align 4
+  store i64 0, ptr %101, align 8
+  %memberidx1.i.i163 = getelementptr inbounds %Flag, ptr %101, i64 0, i32 1
+  store ptr %103, ptr %memberidx1.i.i163, align 8
+  %memberidx2.i.i164 = getelementptr inbounds %Flag, ptr %101, i64 0, i32 2
+  store ptr %105, ptr %memberidx2.i.i164, align 8
+  %106 = load i64, ptr @flags_length, align 8
+  %107 = icmp slt i64 %106, 250
+  br i1 %107, label %if.entry.i.i.i165, label %FlagInt_constructor.exit
 
-if.entry.i.i.i160:                                ; preds = %FlagString_constructor.exit153
-  %86 = add nsw i64 %84, 1
-  store i64 %86, ptr @flags_length, align 8
-  %87 = getelementptr inbounds [250 x ptr], ptr @flags_buffer, i64 0, i64 %84
-  store ptr %79, ptr %87, align 8
+if.entry.i.i.i165:                                ; preds = %FlagString_constructor.exit158
+  %108 = add nsw i64 %106, 1
+  store i64 %108, ptr @flags_length, align 8
+  %109 = getelementptr inbounds [250 x ptr], ptr @flags_buffer, i64 0, i64 %106
+  store ptr %101, ptr %109, align 8
   br label %FlagInt_constructor.exit
 
-FlagInt_constructor.exit:                         ; preds = %FlagString_constructor.exit153, %if.entry.i.i.i160
-  %memberidx.i161 = getelementptr inbounds %FlagInt, ptr %79, i64 0, i32 3
-  store i64 1, ptr %memberidx.i161, align 8
-  %88 = alloca %FlagBool, align 8
-  %89 = call ptr @malloc(i32 1)
-  store i8 118, ptr %89, align 8
-  %90 = call ptr @malloc(i32 24)
-  store ptr %89, ptr %90, align 8
-  %memberidx1.i.i162 = getelementptr inbounds %String, ptr %90, i64 0, i32 1
-  store i64 1, ptr %memberidx1.i.i162, align 4
-  %memberidx2.i.i163 = getelementptr inbounds %String, ptr %90, i64 0, i32 2
-  store i64 1, ptr %memberidx2.i.i163, align 4
-  %91 = call ptr @malloc(i32 12)
-  call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(12) %91, ptr noundef nonnull align 8 dereferenceable(12) @32, i64 12, i1 false)
-  %92 = call ptr @malloc(i32 24)
-  store ptr %91, ptr %92, align 8
-  %memberidx1.i.i164 = getelementptr inbounds %String, ptr %92, i64 0, i32 1
-  store i64 12, ptr %memberidx1.i.i164, align 4
-  %memberidx2.i.i165 = getelementptr inbounds %String, ptr %92, i64 0, i32 2
-  store i64 12, ptr %memberidx2.i.i165, align 4
-  store i64 1, ptr %88, align 8
-  %memberidx1.i.i166 = getelementptr inbounds %Flag, ptr %88, i64 0, i32 1
-  store ptr %90, ptr %memberidx1.i.i166, align 8
-  %memberidx2.i.i167 = getelementptr inbounds %Flag, ptr %88, i64 0, i32 2
-  store ptr %92, ptr %memberidx2.i.i167, align 8
-  %93 = load i64, ptr @flags_length, align 8
-  %94 = icmp slt i64 %93, 250
-  br i1 %94, label %if.entry.i.i.i168, label %FlagBool_constructor.exit170
+FlagInt_constructor.exit:                         ; preds = %FlagString_constructor.exit158, %if.entry.i.i.i165
+  %memberidx.i166 = getelementptr inbounds %FlagInt, ptr %101, i64 0, i32 3
+  store i64 1, ptr %memberidx.i166, align 8
+  %110 = alloca %FlagBool, align 8
+  %111 = call ptr @malloc(i32 1)
+  store i8 118, ptr %111, align 8
+  %112 = call ptr @malloc(i32 24)
+  store ptr %111, ptr %112, align 8
+  %memberidx1.i.i167 = getelementptr inbounds %String, ptr %112, i64 0, i32 1
+  store i64 1, ptr %memberidx1.i.i167, align 4
+  %memberidx2.i.i168 = getelementptr inbounds %String, ptr %112, i64 0, i32 2
+  store i64 1, ptr %memberidx2.i.i168, align 4
+  %113 = call ptr @malloc(i32 12)
+  call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(12) %113, ptr noundef nonnull align 8 dereferenceable(12) @31, i64 12, i1 false)
+  %114 = call ptr @malloc(i32 24)
+  store ptr %113, ptr %114, align 8
+  %memberidx1.i.i169 = getelementptr inbounds %String, ptr %114, i64 0, i32 1
+  store i64 12, ptr %memberidx1.i.i169, align 4
+  %memberidx2.i.i170 = getelementptr inbounds %String, ptr %114, i64 0, i32 2
+  store i64 12, ptr %memberidx2.i.i170, align 4
+  store i64 1, ptr %110, align 8
+  %memberidx1.i.i171 = getelementptr inbounds %Flag, ptr %110, i64 0, i32 1
+  store ptr %112, ptr %memberidx1.i.i171, align 8
+  %memberidx2.i.i172 = getelementptr inbounds %Flag, ptr %110, i64 0, i32 2
+  store ptr %114, ptr %memberidx2.i.i172, align 8
+  %115 = load i64, ptr @flags_length, align 8
+  %116 = icmp slt i64 %115, 250
+  br i1 %116, label %if.entry.i.i.i173, label %FlagBool_constructor.exit175
 
-if.entry.i.i.i168:                                ; preds = %FlagInt_constructor.exit
-  %95 = add nsw i64 %93, 1
-  store i64 %95, ptr @flags_length, align 8
-  %96 = getelementptr inbounds [250 x ptr], ptr @flags_buffer, i64 0, i64 %93
-  store ptr %88, ptr %96, align 8
-  br label %FlagBool_constructor.exit170
+if.entry.i.i.i173:                                ; preds = %FlagInt_constructor.exit
+  %117 = add nsw i64 %115, 1
+  store i64 %117, ptr @flags_length, align 8
+  %118 = getelementptr inbounds [250 x ptr], ptr @flags_buffer, i64 0, i64 %115
+  store ptr %110, ptr %118, align 8
+  br label %FlagBool_constructor.exit175
 
-FlagBool_constructor.exit170:                     ; preds = %FlagInt_constructor.exit, %if.entry.i.i.i168
-  %memberidx.i169 = getelementptr inbounds %FlagBool, ptr %88, i64 0, i32 3
-  store i1 false, ptr %memberidx.i169, align 8
-  %97 = call fastcc ptr @parse_flags(i64 %0, ptr %1)
-  %98 = load i1, ptr %memberidx.i169, align 8
-  br i1 %98, label %if.entry, label %ifend
+FlagBool_constructor.exit175:                     ; preds = %FlagInt_constructor.exit, %if.entry.i.i.i173
+  %memberidx.i174 = getelementptr inbounds %FlagBool, ptr %110, i64 0, i32 3
+  store i1 false, ptr %memberidx.i174, align 8
+  %119 = call fastcc ptr @parse_flags(i64 %0, ptr %1)
+  %120 = load i1, ptr %memberidx.i174, align 8
+  br i1 %120, label %if.entry, label %ifend
 
 common.ret:                                       ; preds = %TypeChecker_check.exit, %ifend20, %ifend15, %ifend33, %if.entry13, %if.entry9, %if.entry5, %if.entry2, %if.entry
   %common.ret.op = phi i64 [ 0, %if.entry ], [ 0, %if.entry2 ], [ 1, %if.entry5 ], [ 1, %if.entry9 ], [ 1, %if.entry13 ], [ %code.0, %ifend33 ], [ 1, %ifend15 ], [ 1, %ifend20 ], [ 1, %TypeChecker_check.exit ]
   ret i64 %common.ret.op
 
-if.entry:                                         ; preds = %FlagBool_constructor.exit170
-  %99 = call i64 @write(i64 1, ptr nonnull %12, i64 5)
-  %100 = call i64 @write(i64 1, ptr nonnull @1, i64 1)
-  call void @free(ptr nonnull %12)
+if.entry:                                         ; preds = %FlagBool_constructor.exit175
+  %121 = call i64 @write(i64 1, ptr nonnull %13, i64 5)
+  %122 = call i64 @write(i64 1, ptr nonnull @1, i64 1)
   call void @free(ptr nonnull %13)
+  call void @free(ptr nonnull %14)
   br label %common.ret
 
-ifend:                                            ; preds = %FlagBool_constructor.exit170
-  %101 = load i1, ptr %memberidx.i, align 8
-  br i1 %101, label %if.entry2, label %ifend4
+ifend:                                            ; preds = %FlagBool_constructor.exit175
+  %123 = load i1, ptr %memberidx.i, align 8
+  br i1 %123, label %if.entry2, label %ifend4
 
 if.entry2:                                        ; preds = %ifend
-  %102 = call ptr @malloc(i32 7)
-  call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(7) %102, ptr noundef nonnull align 8 dereferenceable(7) @34, i64 7, i1 false)
-  %103 = call ptr @malloc(i32 24)
-  %104 = call i64 @write(i64 1, ptr %102, i64 7)
-  call void @free(ptr %102)
-  call void @free(ptr %103)
-  %105 = load ptr, ptr %1, align 8
-  %106 = call i64 @strlen(ptr noundef nonnull dereferenceable(1) %105)
-  %107 = trunc i64 %106 to i32
-  %108 = call ptr @malloc(i32 %107)
-  call void @llvm.memcpy.p0.p0.i64(ptr align 8 %108, ptr align 8 %105, i64 %106, i1 false)
-  %109 = call ptr @malloc(i32 24)
-  %110 = call i64 @write(i64 1, ptr %108, i64 %106)
-  call void @free(ptr %108)
-  call void @free(ptr %109)
-  %111 = call ptr @malloc(i32 29)
-  call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(29) %111, ptr noundef nonnull align 8 dereferenceable(29) @35, i64 29, i1 false)
-  %112 = call ptr @malloc(i32 24)
-  %113 = call i64 @write(i64 1, ptr %111, i64 29)
-  %114 = call i64 @write(i64 1, ptr nonnull @1, i64 1)
-  call void @free(ptr %111)
-  call void @free(ptr %112)
+  %124 = call ptr @malloc(i32 7)
+  call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(7) %124, ptr noundef nonnull align 8 dereferenceable(7) @33, i64 7, i1 false)
+  %125 = call ptr @malloc(i32 24)
+  %126 = call i64 @write(i64 1, ptr %124, i64 7)
+  call void @free(ptr %124)
+  call void @free(ptr %125)
+  %127 = load ptr, ptr %1, align 8
+  %128 = call i64 @strlen(ptr noundef nonnull dereferenceable(1) %127)
+  %129 = trunc i64 %128 to i32
+  %130 = call ptr @malloc(i32 %129)
+  call void @llvm.memcpy.p0.p0.i64(ptr align 8 %130, ptr align 8 %127, i64 %128, i1 false)
+  %131 = call ptr @malloc(i32 24)
+  %132 = call i64 @write(i64 1, ptr %130, i64 %128)
+  call void @free(ptr %130)
+  call void @free(ptr %131)
+  %133 = call ptr @malloc(i32 29)
+  call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(29) %133, ptr noundef nonnull align 8 dereferenceable(29) @34, i64 29, i1 false)
+  %134 = call ptr @malloc(i32 24)
+  %135 = call i64 @write(i64 1, ptr %133, i64 29)
+  %136 = call i64 @write(i64 1, ptr nonnull @1, i64 1)
+  call void @free(ptr %133)
+  call void @free(ptr %134)
   call fastcc void @print_flags()
   br label %common.ret
 
 ifend4:                                           ; preds = %ifend
-  %115 = icmp eq ptr %97, null
-  br i1 %115, label %if.entry5, label %for.body.i.i.lr.ph
+  %137 = icmp eq ptr %119, null
+  br i1 %137, label %if.entry5, label %for.body.i.i.lr.ph
 
 if.entry5:                                        ; preds = %ifend4
-  %116 = call ptr @malloc(i32 24)
-  call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(24) %116, ptr noundef nonnull align 8 dereferenceable(24) @38, i64 24, i1 false)
-  %117 = call ptr @malloc(i32 24)
-  store ptr %116, ptr %117, align 8
-  %memberidx1.i.i179 = getelementptr inbounds %String, ptr %117, i64 0, i32 1
-  store i64 24, ptr %memberidx1.i.i179, align 4
-  %memberidx2.i.i180 = getelementptr inbounds %String, ptr %117, i64 0, i32 2
-  store i64 24, ptr %memberidx2.i.i180, align 4
-  call fastcc void @print_message_error(i64 4, ptr nonnull %117)
+  %138 = call ptr @malloc(i32 24)
+  call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(24) %138, ptr noundef nonnull align 8 dereferenceable(24) @37, i64 24, i1 false)
+  %139 = call ptr @malloc(i32 24)
+  store ptr %138, ptr %139, align 8
+  %memberidx1.i.i185 = getelementptr inbounds %String, ptr %139, i64 0, i32 1
+  store i64 24, ptr %memberidx1.i.i185, align 4
+  %memberidx2.i.i186 = getelementptr inbounds %String, ptr %139, i64 0, i32 2
+  store i64 24, ptr %memberidx2.i.i186, align 4
+  call fastcc void @print_message_error(i64 4, ptr nonnull %139)
   br label %common.ret
 
 for.body.i.i.lr.ph:                               ; preds = %ifend4
-  %118 = tail call ptr @malloc(i32 56)
-  %memberidx.i181 = getelementptr inbounds %Compiler, ptr %118, i64 0, i32 4
-  %119 = call ptr @malloc(i32 24)
-  %memberidx.i.i182 = getelementptr inbounds %Array_FloFile_, ptr %119, i64 0, i32 1
-  store i64 0, ptr %memberidx.i.i182, align 4
-  %memberidx1.i.i183 = getelementptr inbounds %Array_FloFile_, ptr %119, i64 0, i32 2
-  store i64 8, ptr %memberidx1.i.i183, align 4
-  %120 = call ptr @malloc(i32 64)
-  store ptr %120, ptr %119, align 8
-  store i64 0, ptr %memberidx.i.i182, align 4
-  store ptr %119, ptr %memberidx.i181, align 8
-  store ptr null, ptr %118, align 8
-  %memberidx4.i = getelementptr inbounds %Compiler, ptr %118, i64 0, i32 2
+  %140 = tail call ptr @malloc(i32 56)
+  %memberidx.i187 = getelementptr inbounds %Compiler, ptr %140, i64 0, i32 4
+  %141 = call ptr @malloc(i32 24)
+  %memberidx.i.i188 = getelementptr inbounds %Array_FloFile_, ptr %141, i64 0, i32 1
+  store i64 0, ptr %memberidx.i.i188, align 4
+  %memberidx1.i.i189 = getelementptr inbounds %Array_FloFile_, ptr %141, i64 0, i32 2
+  store i64 8, ptr %memberidx1.i.i189, align 4
+  %142 = call ptr @malloc(i32 64)
+  store ptr %142, ptr %141, align 8
+  store i64 0, ptr %memberidx.i.i188, align 4
+  store ptr %141, ptr %memberidx.i187, align 8
+  store ptr null, ptr %140, align 8
+  %memberidx4.i = getelementptr inbounds %Compiler, ptr %140, i64 0, i32 2
   store ptr null, ptr %memberidx4.i, align 8
-  %memberidx5.i = getelementptr inbounds %Compiler, ptr %118, i64 0, i32 5
-  %121 = call ptr @malloc(i32 24)
-  %memberidx.i13.i = getelementptr inbounds %Array_FloError_, ptr %121, i64 0, i32 1
+  %memberidx5.i = getelementptr inbounds %Compiler, ptr %140, i64 0, i32 5
+  %143 = call ptr @malloc(i32 24)
+  %memberidx.i13.i = getelementptr inbounds %Array_FloError_, ptr %143, i64 0, i32 1
   store i64 0, ptr %memberidx.i13.i, align 4
-  %memberidx1.i14.i = getelementptr inbounds %Array_FloError_, ptr %121, i64 0, i32 2
+  %memberidx1.i14.i = getelementptr inbounds %Array_FloError_, ptr %143, i64 0, i32 2
   store i64 8, ptr %memberidx1.i14.i, align 4
-  %122 = call ptr @malloc(i32 64)
-  store ptr %122, ptr %121, align 8
+  %144 = call ptr @malloc(i32 64)
+  store ptr %144, ptr %143, align 8
   store i64 0, ptr %memberidx.i13.i, align 4
-  store ptr %121, ptr %memberidx5.i, align 8
-  %memberidx8.i = getelementptr inbounds %Compiler, ptr %118, i64 0, i32 6
-  %123 = call ptr @malloc(i32 24)
-  %124 = call ptr @malloc(i32 2048)
-  store ptr %124, ptr %123, align 8
-  %125 = call ptr @malloc(i32 16)
-  store i64 0, ptr %125, align 4
-  %memberidx1.i.i.i = getelementptr inbounds %Range, ptr %125, i64 0, i32 1
-  store i64 256, ptr %memberidx1.i.i.i, align 4
-  %126 = call ptr @malloc(i32 17)
-  %memberidx.i.i.i.i = getelementptr inbounds %RangeIterator, ptr %126, i64 0, i32 1
+  store ptr %143, ptr %memberidx5.i, align 8
+  %memberidx8.i = getelementptr inbounds %Compiler, ptr %140, i64 0, i32 6
+  %145 = call ptr @malloc(i32 24)
+  %146 = call ptr @malloc(i32 2048)
+  store ptr %146, ptr %145, align 8
+  %147 = call ptr @malloc(i32 16)
+  store i64 0, ptr %147, align 4
+  %memberidx1.i.i.i190 = getelementptr inbounds %Range, ptr %147, i64 0, i32 1
+  store i64 256, ptr %memberidx1.i.i.i190, align 4
+  %148 = call ptr @malloc(i32 17)
+  %memberidx.i.i.i.i = getelementptr inbounds %RangeIterator, ptr %148, i64 0, i32 1
   store i64 0, ptr %memberidx.i.i.i.i, align 4
-  %memberidx1.i.i.i.i = getelementptr inbounds %RangeIterator, ptr %126, i64 0, i32 2
+  %memberidx1.i.i.i.i = getelementptr inbounds %RangeIterator, ptr %148, i64 0, i32 2
   store i64 256, ptr %memberidx1.i.i.i.i, align 4
   br label %for.body.i.i
 
 for.body.i.i:                                     ; preds = %for.body.i.i.lr.ph, %for.body.i.i
-  %127 = phi i64 [ 1, %for.body.i.i.lr.ph ], [ %132, %for.body.i.i ]
-  %128 = phi i64 [ 0, %for.body.i.i.lr.ph ], [ %127, %for.body.i.i ]
-  %129 = load ptr, ptr %123, align 8
-  %130 = getelementptr inbounds ptr, ptr %129, i64 %128
-  store ptr null, ptr %130, align 8
-  %131 = icmp ugt i64 %127, 255
-  %132 = add nuw nsw i64 %127, 1
-  br i1 %131, label %Compiler_constructor.exit, label %for.body.i.i
+  %149 = phi i64 [ 1, %for.body.i.i.lr.ph ], [ %154, %for.body.i.i ]
+  %150 = phi i64 [ 0, %for.body.i.i.lr.ph ], [ %149, %for.body.i.i ]
+  %151 = load ptr, ptr %145, align 8
+  %152 = getelementptr inbounds ptr, ptr %151, i64 %150
+  store ptr null, ptr %152, align 8
+  %153 = icmp ugt i64 %149, 255
+  %154 = add nuw nsw i64 %149, 1
+  br i1 %153, label %Compiler_constructor.exit, label %for.body.i.i
 
 Compiler_constructor.exit:                        ; preds = %for.body.i.i
-  call void @free(ptr nonnull %126)
-  %memberidx3.i.i = getelementptr inbounds %Map_String_FileId_, ptr %123, i64 0, i32 1
+  call void @free(ptr nonnull %148)
+  %memberidx3.i.i = getelementptr inbounds %Map_String_FileId_, ptr %145, i64 0, i32 1
   store i64 256, ptr %memberidx3.i.i, align 4
-  %memberidx4.i.i = getelementptr inbounds %Map_String_FileId_, ptr %123, i64 0, i32 2
+  %memberidx4.i.i = getelementptr inbounds %Map_String_FileId_, ptr %145, i64 0, i32 2
   store i64 0, ptr %memberidx4.i.i, align 4
-  store ptr %123, ptr %memberidx8.i, align 8
-  %133 = load ptr, ptr %memberidx.i132, align 8
-  %memberidx.i.i.i184 = getelementptr inbounds %String, ptr %133, i64 0, i32 1
-  %134 = load i64, ptr %memberidx.i.i.i184, align 4
-  %135 = trunc i64 %134 to i32
-  %136 = add i32 %135, 1
-  %137 = call ptr @malloc(i32 %136)
-  %138 = load ptr, ptr %133, align 8
-  %139 = load i64, ptr %memberidx.i.i.i184, align 4
-  call void @llvm.memcpy.p0.p0.i64(ptr align 8 %137, ptr align 8 %138, i64 %139, i1 false)
-  %140 = getelementptr inbounds i8, ptr %137, i64 %139
-  store i8 0, ptr %140, align 1
-  %141 = call i64 @access(ptr %137, i64 0)
-  %142 = icmp eq i64 %141, 0
-  call void @free(ptr %137)
-  br i1 %142, label %ifend.i, label %if.entry9
+  store ptr %145, ptr %memberidx8.i, align 8
+  %155 = load ptr, ptr %memberidx.i137, align 8
+  %memberidx.i.i.i192 = getelementptr inbounds %String, ptr %155, i64 0, i32 1
+  %156 = load i64, ptr %memberidx.i.i.i192, align 4
+  %157 = trunc i64 %156 to i32
+  %158 = add i32 %157, 1
+  %159 = call ptr @malloc(i32 %158)
+  %160 = load ptr, ptr %155, align 8
+  %161 = load i64, ptr %memberidx.i.i.i192, align 4
+  call void @llvm.memcpy.p0.p0.i64(ptr align 8 %159, ptr align 8 %160, i64 %161, i1 false)
+  %162 = getelementptr inbounds i8, ptr %159, i64 %161
+  store i8 0, ptr %162, align 1
+  %163 = call i64 @access(ptr %159, i64 0)
+  %164 = icmp eq i64 %163, 0
+  call void @free(ptr %159)
+  br i1 %164, label %ifend.i, label %if.entry9
 
 ifend.i:                                          ; preds = %Compiler_constructor.exit
-  %memberidx.i185 = getelementptr inbounds %Compiler, ptr %118, i64 0, i32 1
-  store ptr %133, ptr %memberidx.i185, align 8
-  %143 = call ptr @malloc(i32 21)
-  call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(21) %143, ptr noundef nonnull align 8 dereferenceable(21) @7, i64 21, i1 false)
-  %144 = call ptr @malloc(i32 24)
-  %memberidx1.i = getelementptr inbounds %Compiler, ptr %118, i64 0, i32 3
+  %memberidx.i193 = getelementptr inbounds %Compiler, ptr %140, i64 0, i32 1
+  store ptr %155, ptr %memberidx.i193, align 8
+  %165 = call ptr @malloc(i32 21)
+  call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(21) %165, ptr noundef nonnull align 8 dereferenceable(21) @7, i64 21, i1 false)
+  %166 = call ptr @malloc(i32 24)
+  %memberidx1.i = getelementptr inbounds %Compiler, ptr %140, i64 0, i32 3
   call void @llvm.lifetime.start.p0(i64 8, ptr nonnull %11)
-  %145 = load i64, ptr %memberidx.i.i.i184, align 4
-  %146 = trunc i64 %145 to i32
-  %147 = add i32 %146, 1
-  %148 = call ptr @malloc(i32 %147)
-  %149 = load ptr, ptr %133, align 8
-  %150 = load i64, ptr %memberidx.i.i.i184, align 4
-  call void @llvm.memcpy.p0.p0.i64(ptr align 8 %148, ptr align 8 %149, i64 %150, i1 false)
-  %151 = getelementptr inbounds i8, ptr %148, i64 %150
-  store i8 0, ptr %151, align 1
-  %152 = call ptr @malloc(i32 22)
-  call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(21) %152, ptr noundef nonnull align 8 dereferenceable(21) %143, i64 21, i1 false)
-  %153 = getelementptr inbounds i8, ptr %152, i64 21
-  store i8 0, ptr %153, align 1
-  %154 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %11, ptr nonnull @8, ptr %148, ptr %152)
-  %155 = load ptr, ptr %11, align 8
-  %156 = call ptr @malloc(i32 24)
-  store ptr %155, ptr %156, align 8
-  %memberidx1.i.i7.i = getelementptr inbounds %String, ptr %156, i64 0, i32 1
-  store i64 %154, ptr %memberidx1.i.i7.i, align 4
-  %memberidx2.i.i8.i = getelementptr inbounds %String, ptr %156, i64 0, i32 2
-  store i64 %154, ptr %memberidx2.i.i8.i, align 4
-  call void @free(ptr %148)
-  call void @free(ptr %152)
+  %167 = load i64, ptr %memberidx.i.i.i192, align 4
+  %168 = trunc i64 %167 to i32
+  %169 = add i32 %168, 1
+  %170 = call ptr @malloc(i32 %169)
+  %171 = load ptr, ptr %155, align 8
+  %172 = load i64, ptr %memberidx.i.i.i192, align 4
+  call void @llvm.memcpy.p0.p0.i64(ptr align 8 %170, ptr align 8 %171, i64 %172, i1 false)
+  %173 = getelementptr inbounds i8, ptr %170, i64 %172
+  store i8 0, ptr %173, align 1
+  %174 = call ptr @malloc(i32 22)
+  call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(21) %174, ptr noundef nonnull align 8 dereferenceable(21) %165, i64 21, i1 false)
+  %175 = getelementptr inbounds i8, ptr %174, i64 21
+  store i8 0, ptr %175, align 1
+  %176 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %11, ptr nonnull @8, ptr %170, ptr %174)
+  %177 = load ptr, ptr %11, align 8
+  %178 = call ptr @malloc(i32 24)
+  store ptr %177, ptr %178, align 8
+  %memberidx1.i.i7.i = getelementptr inbounds %String, ptr %178, i64 0, i32 1
+  store i64 %176, ptr %memberidx1.i.i7.i, align 4
+  %memberidx2.i.i8.i = getelementptr inbounds %String, ptr %178, i64 0, i32 2
+  store i64 %176, ptr %memberidx2.i.i8.i, align 4
+  call void @free(ptr %170)
+  call void @free(ptr %174)
   call void @llvm.lifetime.end.p0(i64 8, ptr nonnull %11)
-  store ptr %156, ptr %memberidx1.i, align 8
-  call void @free(ptr %143)
-  call void @free(ptr %144)
-  %157 = call fastcc ptr @Compiler_register_file(ptr nonnull %118, ptr nonnull %97)
-  %158 = call fastcc i1 @Compiler_set_current_file(ptr nonnull %118, ptr %157)
-  br i1 %158, label %ifend15, label %if.entry13
+  store ptr %178, ptr %memberidx1.i, align 8
+  call void @free(ptr %165)
+  call void @free(ptr %166)
+  %179 = call fastcc ptr @Compiler_register_file(ptr nonnull %140, ptr nonnull %119)
+  %180 = call fastcc i1 @Compiler_set_current_file(ptr nonnull %140, ptr %179)
+  br i1 %180, label %ifend15, label %if.entry13
 
 if.entry9:                                        ; preds = %Compiler_constructor.exit
-  %159 = load ptr, ptr %memberidx.i132, align 8
-  %memberidx.i188 = getelementptr inbounds %String, ptr %159, i64 0, i32 1
-  %160 = load i64, ptr %memberidx.i188, align 4
-  %161 = trunc i64 %160 to i32
-  %162 = add i32 %161, 1
-  %163 = call ptr @malloc(i32 %162)
-  %164 = load ptr, ptr %159, align 8
-  %165 = load i64, ptr %memberidx.i188, align 4
-  call void @llvm.memcpy.p0.p0.i64(ptr align 8 %163, ptr align 8 %164, i64 %165, i1 false)
-  %166 = getelementptr inbounds i8, ptr %163, i64 %165
-  store i8 0, ptr %166, align 1
-  %167 = alloca ptr, align 8
-  %168 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %167, ptr nonnull @39, ptr %163)
-  %169 = load ptr, ptr %167, align 8
-  %170 = tail call ptr @malloc(i32 24)
-  store ptr %169, ptr %170, align 8
-  %memberidx1.i189 = getelementptr inbounds %String, ptr %170, i64 0, i32 1
-  store i64 %168, ptr %memberidx1.i189, align 4
-  %memberidx2.i190 = getelementptr inbounds %String, ptr %170, i64 0, i32 2
-  store i64 %168, ptr %memberidx2.i190, align 4
-  tail call void @free(ptr %163)
-  call fastcc void @print_message_error(i64 3, ptr nonnull %170)
+  %181 = load ptr, ptr %memberidx.i137, align 8
+  %memberidx.i196 = getelementptr inbounds %String, ptr %181, i64 0, i32 1
+  %182 = load i64, ptr %memberidx.i196, align 4
+  %183 = trunc i64 %182 to i32
+  %184 = add i32 %183, 1
+  %185 = call ptr @malloc(i32 %184)
+  %186 = load ptr, ptr %181, align 8
+  %187 = load i64, ptr %memberidx.i196, align 4
+  call void @llvm.memcpy.p0.p0.i64(ptr align 8 %185, ptr align 8 %186, i64 %187, i1 false)
+  %188 = getelementptr inbounds i8, ptr %185, i64 %187
+  store i8 0, ptr %188, align 1
+  %189 = alloca ptr, align 8
+  %190 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %189, ptr nonnull @38, ptr %185)
+  %191 = load ptr, ptr %189, align 8
+  %192 = tail call ptr @malloc(i32 24)
+  store ptr %191, ptr %192, align 8
+  %memberidx1.i197 = getelementptr inbounds %String, ptr %192, i64 0, i32 1
+  store i64 %190, ptr %memberidx1.i197, align 4
+  %memberidx2.i198 = getelementptr inbounds %String, ptr %192, i64 0, i32 2
+  store i64 %190, ptr %memberidx2.i198, align 4
+  tail call void @free(ptr %185)
+  call fastcc void @print_message_error(i64 3, ptr nonnull %192)
   br label %common.ret
 
 if.entry13:                                       ; preds = %ifend.i
-  %memberidx.i191 = getelementptr inbounds %String, ptr %97, i64 0, i32 1
-  %171 = load i64, ptr %memberidx.i191, align 4
-  %172 = trunc i64 %171 to i32
-  %173 = add i32 %172, 1
-  %174 = call ptr @malloc(i32 %173)
-  %175 = load ptr, ptr %97, align 8
-  %176 = load i64, ptr %memberidx.i191, align 4
-  call void @llvm.memcpy.p0.p0.i64(ptr align 8 %174, ptr align 8 %175, i64 %176, i1 false)
-  %177 = getelementptr inbounds i8, ptr %174, i64 %176
-  store i8 0, ptr %177, align 1
-  %178 = alloca ptr, align 8
-  %179 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %178, ptr nonnull @40, ptr %174)
-  %180 = load ptr, ptr %178, align 8
-  %181 = tail call ptr @malloc(i32 24)
-  store ptr %180, ptr %181, align 8
-  %memberidx1.i192 = getelementptr inbounds %String, ptr %181, i64 0, i32 1
-  store i64 %179, ptr %memberidx1.i192, align 4
-  %memberidx2.i193 = getelementptr inbounds %String, ptr %181, i64 0, i32 2
-  store i64 %179, ptr %memberidx2.i193, align 4
-  tail call void @free(ptr %174)
-  call fastcc void @print_message_error(i64 3, ptr nonnull %181)
+  %memberidx.i199 = getelementptr inbounds %String, ptr %119, i64 0, i32 1
+  %193 = load i64, ptr %memberidx.i199, align 4
+  %194 = trunc i64 %193 to i32
+  %195 = add i32 %194, 1
+  %196 = call ptr @malloc(i32 %195)
+  %197 = load ptr, ptr %119, align 8
+  %198 = load i64, ptr %memberidx.i199, align 4
+  call void @llvm.memcpy.p0.p0.i64(ptr align 8 %196, ptr align 8 %197, i64 %198, i1 false)
+  %199 = getelementptr inbounds i8, ptr %196, i64 %198
+  store i8 0, ptr %199, align 1
+  %200 = alloca ptr, align 8
+  %201 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %200, ptr nonnull @39, ptr %196)
+  %202 = load ptr, ptr %200, align 8
+  %203 = tail call ptr @malloc(i32 24)
+  store ptr %202, ptr %203, align 8
+  %memberidx1.i200 = getelementptr inbounds %String, ptr %203, i64 0, i32 1
+  store i64 %201, ptr %memberidx1.i200, align 4
+  %memberidx2.i201 = getelementptr inbounds %String, ptr %203, i64 0, i32 2
+  store i64 %201, ptr %memberidx2.i201, align 4
+  tail call void @free(ptr %196)
+  call fastcc void @print_message_error(i64 3, ptr nonnull %203)
   br label %common.ret
 
 ifend15:                                          ; preds = %ifend.i
-  %182 = load ptr, ptr %memberidx4.i, align 8
-  %183 = load ptr, ptr %memberidx5.i, align 8
-  %184 = call fastcc ptr @Lexer_tokenize(ptr %182, ptr %183)
-  %185 = call fastcc i1 @Compiler_print_errors(ptr nonnull %118)
-  br i1 %185, label %common.ret, label %ifend20
+  %204 = load ptr, ptr %memberidx4.i, align 8
+  %205 = load ptr, ptr %memberidx5.i, align 8
+  %206 = call fastcc ptr @Lexer_tokenize(ptr %204, ptr %205)
+  %207 = call fastcc i1 @Compiler_print_errors(ptr nonnull %140)
+  br i1 %207, label %common.ret, label %ifend20
 
 ifend20:                                          ; preds = %ifend15
-  %186 = load ptr, ptr %memberidx5.i, align 8
-  %187 = call fastcc ptr @Parser_parse(ptr %184, ptr %186)
-  %188 = call fastcc i1 @Compiler_print_errors(ptr nonnull %118)
-  br i1 %188, label %common.ret, label %for.body.i.i.i.lr.ph
+  %208 = load ptr, ptr %memberidx5.i, align 8
+  %209 = call fastcc ptr @Parser_parse(ptr %206, ptr %208)
+  %210 = call fastcc i1 @Compiler_print_errors(ptr nonnull %140)
+  br i1 %210, label %common.ret, label %for.body.i.i.i.lr.ph
 
 for.body.i.i.i.lr.ph:                             ; preds = %ifend20
   call void @llvm.lifetime.start.p0(i64 58, ptr nonnull %10)
-  %memberidx.i.i194 = getelementptr inbounds %TypeChecker, ptr %10, i64 0, i32 5
-  store ptr %118, ptr %memberidx.i.i194, align 8
-  %memberidx1.i.i195 = getelementptr inbounds %TypeChecker, ptr %10, i64 0, i32 6
-  store i1 false, ptr %memberidx1.i.i195, align 8
-  %189 = call ptr @malloc(i32 8)
-  %190 = call ptr @malloc(i32 24)
-  %memberidx.i.i.i.i196 = getelementptr inbounds %Array_Module_, ptr %190, i64 0, i32 1
-  store i64 0, ptr %memberidx.i.i.i.i196, align 4
-  %memberidx1.i.i.i.i197 = getelementptr inbounds %Array_Module_, ptr %190, i64 0, i32 2
-  store i64 8, ptr %memberidx1.i.i.i.i197, align 4
-  %191 = call ptr @malloc(i32 64)
-  store ptr %191, ptr %190, align 8
-  store i64 0, ptr %memberidx.i.i.i.i196, align 4
-  store ptr %190, ptr %189, align 8
-  store ptr %189, ptr %10, align 8
-  %memberidx3.i.i199 = getelementptr inbounds %TypeChecker, ptr %10, i64 0, i32 8
-  %192 = call ptr @malloc(i32 24)
-  %193 = call ptr @malloc(i32 2048)
-  store ptr %193, ptr %192, align 8
-  %194 = call ptr @malloc(i32 16)
-  store i64 0, ptr %194, align 4
-  %memberidx1.i.i7.i.i = getelementptr inbounds %Range, ptr %194, i64 0, i32 1
+  %memberidx.i.i202 = getelementptr inbounds %TypeChecker, ptr %10, i64 0, i32 5
+  store ptr %140, ptr %memberidx.i.i202, align 8
+  %memberidx1.i.i203 = getelementptr inbounds %TypeChecker, ptr %10, i64 0, i32 6
+  store i1 false, ptr %memberidx1.i.i203, align 8
+  %211 = call ptr @malloc(i32 8)
+  %212 = call ptr @malloc(i32 24)
+  %memberidx.i.i.i.i204 = getelementptr inbounds %Array_Module_, ptr %212, i64 0, i32 1
+  store i64 0, ptr %memberidx.i.i.i.i204, align 4
+  %memberidx1.i.i.i.i205 = getelementptr inbounds %Array_Module_, ptr %212, i64 0, i32 2
+  store i64 8, ptr %memberidx1.i.i.i.i205, align 4
+  %213 = call ptr @malloc(i32 64)
+  store ptr %213, ptr %212, align 8
+  store i64 0, ptr %memberidx.i.i.i.i204, align 4
+  store ptr %212, ptr %211, align 8
+  store ptr %211, ptr %10, align 8
+  %memberidx3.i.i207 = getelementptr inbounds %TypeChecker, ptr %10, i64 0, i32 8
+  %214 = call ptr @malloc(i32 24)
+  %215 = call ptr @malloc(i32 2048)
+  store ptr %215, ptr %214, align 8
+  %216 = call ptr @malloc(i32 16)
+  store i64 0, ptr %216, align 4
+  %memberidx1.i.i7.i.i = getelementptr inbounds %Range, ptr %216, i64 0, i32 1
   store i64 256, ptr %memberidx1.i.i7.i.i, align 4
-  %195 = call ptr @malloc(i32 17)
-  %memberidx.i.i.i.i.i = getelementptr inbounds %RangeIterator, ptr %195, i64 0, i32 1
+  %217 = call ptr @malloc(i32 17)
+  %memberidx.i.i.i.i.i = getelementptr inbounds %RangeIterator, ptr %217, i64 0, i32 1
   store i64 0, ptr %memberidx.i.i.i.i.i, align 4
-  %memberidx1.i.i.i.i.i = getelementptr inbounds %RangeIterator, ptr %195, i64 0, i32 2
+  %memberidx1.i.i.i.i.i = getelementptr inbounds %RangeIterator, ptr %217, i64 0, i32 2
   store i64 256, ptr %memberidx1.i.i.i.i.i, align 4
   br label %for.body.i.i.i
 
 for.body.i.i.i:                                   ; preds = %for.body.i.i.i.lr.ph, %for.body.i.i.i
-  %196 = phi i64 [ 1, %for.body.i.i.i.lr.ph ], [ %201, %for.body.i.i.i ]
-  %197 = phi i64 [ 0, %for.body.i.i.i.lr.ph ], [ %196, %for.body.i.i.i ]
-  %198 = load ptr, ptr %192, align 8
-  %199 = getelementptr inbounds ptr, ptr %198, i64 %197
-  store ptr null, ptr %199, align 8
-  %200 = icmp ugt i64 %196, 255
-  %201 = add nuw nsw i64 %196, 1
-  br i1 %200, label %TypeChecker_constructor.exit.i, label %for.body.i.i.i
+  %218 = phi i64 [ 1, %for.body.i.i.i.lr.ph ], [ %223, %for.body.i.i.i ]
+  %219 = phi i64 [ 0, %for.body.i.i.i.lr.ph ], [ %218, %for.body.i.i.i ]
+  %220 = load ptr, ptr %214, align 8
+  %221 = getelementptr inbounds ptr, ptr %220, i64 %219
+  store ptr null, ptr %221, align 8
+  %222 = icmp ugt i64 %218, 255
+  %223 = add nuw nsw i64 %218, 1
+  br i1 %222, label %TypeChecker_constructor.exit.i, label %for.body.i.i.i
 
 TypeChecker_constructor.exit.i:                   ; preds = %for.body.i.i.i
-  call void @free(ptr nonnull %195)
-  %memberidx3.i.i.i = getelementptr inbounds %Map_String_Generic_, ptr %192, i64 0, i32 1
+  call void @free(ptr nonnull %217)
+  %memberidx3.i.i.i = getelementptr inbounds %Map_String_Generic_, ptr %214, i64 0, i32 1
   store i64 256, ptr %memberidx3.i.i.i, align 4
-  %memberidx4.i.i.i = getelementptr inbounds %Map_String_Generic_, ptr %192, i64 0, i32 2
+  %memberidx4.i.i.i = getelementptr inbounds %Map_String_Generic_, ptr %214, i64 0, i32 2
   store i64 0, ptr %memberidx4.i.i.i, align 4
-  store ptr %192, ptr %memberidx3.i.i199, align 8
-  %202 = load ptr, ptr %memberidx.i.i194, align 8
-  %203 = call ptr @malloc(i32 12)
-  call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(12) %203, ptr noundef nonnull align 8 dereferenceable(12) @100, i64 12, i1 false)
-  %204 = call ptr @malloc(i32 24)
-  store ptr %203, ptr %204, align 8
-  %memberidx1.i.i.i17.i = getelementptr inbounds %String, ptr %204, i64 0, i32 1
+  store ptr %214, ptr %memberidx3.i.i207, align 8
+  %224 = load ptr, ptr %memberidx.i.i202, align 8
+  %225 = call ptr @malloc(i32 12)
+  call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(12) %225, ptr noundef nonnull align 8 dereferenceable(12) @99, i64 12, i1 false)
+  %226 = call ptr @malloc(i32 24)
+  store ptr %225, ptr %226, align 8
+  %memberidx1.i.i.i17.i = getelementptr inbounds %String, ptr %226, i64 0, i32 1
   store i64 12, ptr %memberidx1.i.i.i17.i, align 4
-  %memberidx2.i.i.i18.i = getelementptr inbounds %String, ptr %204, i64 0, i32 2
+  %memberidx2.i.i.i18.i = getelementptr inbounds %String, ptr %226, i64 0, i32 2
   store i64 12, ptr %memberidx2.i.i.i18.i, align 4
-  %205 = call fastcc ptr @Compiler_register_file(ptr %202, ptr nonnull %204)
-  %206 = call ptr @malloc(i32 56)
-  call fastcc void @ModuleAST_constructor(ptr %206)
-  %207 = call ptr @malloc(i32 12)
-  call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(12) %207, ptr noundef nonnull align 8 dereferenceable(12) @100, i64 12, i1 false)
-  %208 = call ptr @malloc(i32 24)
-  store ptr %207, ptr %208, align 8
-  %memberidx1.i.i2.i.i = getelementptr inbounds %String, ptr %208, i64 0, i32 1
-  store i64 12, ptr %memberidx1.i.i2.i.i, align 4
-  %memberidx2.i.i3.i.i = getelementptr inbounds %String, ptr %208, i64 0, i32 2
-  store i64 12, ptr %memberidx2.i.i3.i.i, align 4
-  %209 = call fastcc ptr @TypeChecker_check_module(ptr nonnull %10, ptr %206, ptr nonnull %208)
-  %210 = load ptr, ptr %memberidx.i.i194, align 8
-  %memberidx1.i20.i = getelementptr inbounds %Compiler, ptr %210, i64 0, i32 3
-  %211 = load ptr, ptr %memberidx1.i20.i, align 8
-  %212 = call fastcc ptr @TypeChecker_lex_and_parse_typecheck_file(ptr nonnull %10, ptr %211, ptr null)
-  %213 = load ptr, ptr %memberidx.i.i194, align 8
-  %memberidx1.i22.i = getelementptr inbounds %Compiler, ptr %213, i64 0, i32 5
-  %214 = load ptr, ptr %memberidx1.i22.i, align 8
-  %memberidx2.i.i200 = getelementptr inbounds %Array_FloError_, ptr %214, i64 0, i32 1
-  %215 = load i64, ptr %memberidx2.i.i200, align 4
-  %216 = icmp sgt i64 %215, 0
-  br i1 %216, label %TypeChecker_check.exit, label %ifend.i201
+  %227 = call fastcc ptr @Compiler_register_file(ptr %224, ptr nonnull %226)
+  %228 = call ptr @malloc(i32 56)
+  call fastcc void @ModuleAST_constructor(ptr %228)
+  %229 = call ptr @malloc(i32 12)
+  call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(12) %229, ptr noundef nonnull align 8 dereferenceable(12) @99, i64 12, i1 false)
+  %230 = call ptr @malloc(i32 24)
+  store ptr %229, ptr %230, align 8
+  %memberidx1.i.i4.i.i = getelementptr inbounds %String, ptr %230, i64 0, i32 1
+  store i64 12, ptr %memberidx1.i.i4.i.i, align 4
+  %memberidx2.i.i5.i.i = getelementptr inbounds %String, ptr %230, i64 0, i32 2
+  store i64 12, ptr %memberidx2.i.i5.i.i, align 4
+  %231 = call fastcc ptr @TypeChecker_check_module(ptr nonnull %10, ptr %228, ptr nonnull %230)
+  %memberidx1.i19.i = getelementptr inbounds %Module, ptr %231, i64 0, i32 5
+  %232 = load ptr, ptr %memberidx1.i19.i, align 8
+  %233 = load i64, ptr %232, align 4
+  store i64 %233, ptr @GENERIC_MODULE_ID, align 8
+  %234 = load ptr, ptr %memberidx.i.i202, align 8
+  %memberidx1.i21.i = getelementptr inbounds %Compiler, ptr %234, i64 0, i32 3
+  %235 = load ptr, ptr %memberidx1.i21.i, align 8
+  %236 = call fastcc ptr @TypeChecker_lex_and_parse_typecheck_file(ptr nonnull %10, ptr %235, ptr null)
+  %.not.i.i = icmp eq ptr %236, null
+  br i1 %.not.i.i, label %TypeChecker_load_builtins_module.exit.i, label %if.entry.i.i
 
-ifend.i201:                                       ; preds = %TypeChecker_constructor.exit.i
-  %memberidx.i23.i = getelementptr inbounds %TypeChecker, ptr %10, i64 0, i32 4
-  %217 = load ptr, ptr %10, align 8
-  %218 = load ptr, ptr %217, align 8
-  %219 = load ptr, ptr %218, align 8
-  %220 = load ptr, ptr %219, align 8
-  %memberidx1.i24.i = getelementptr inbounds %Module, ptr %220, i64 0, i32 5
-  %221 = load ptr, ptr %memberidx1.i24.i, align 8
-  store ptr %221, ptr %memberidx.i23.i, align 8
-  %222 = load ptr, ptr %217, align 8
-  %223 = load ptr, ptr %222, align 8
-  %224 = getelementptr inbounds ptr, ptr %223, i64 1
-  %225 = load ptr, ptr %224, align 8
-  call fastcc void @TypeChecker_import_all_from_module(ptr nonnull %10, ptr %225)
-  %226 = load ptr, ptr %memberidx.i.i194, align 8
-  %memberidx1.i26.i = getelementptr inbounds %Compiler, ptr %226, i64 0, i32 5
-  %227 = load ptr, ptr %memberidx1.i26.i, align 8
-  %memberidx2.i27.i = getelementptr inbounds %Array_FloError_, ptr %227, i64 0, i32 1
-  %228 = load i64, ptr %memberidx2.i27.i, align 4
-  %229 = icmp sgt i64 %228, 0
-  br i1 %229, label %TypeChecker_check.exit, label %ifend3.i
+if.entry.i.i:                                     ; preds = %TypeChecker_constructor.exit.i
+  %memberidx2.i.i208 = getelementptr inbounds %Module, ptr %236, i64 0, i32 5
+  %237 = load ptr, ptr %memberidx2.i.i208, align 8
+  %238 = load i64, ptr %237, align 4
+  store i64 %238, ptr @BUILTIN_MODULE_ID, align 8
+  br label %TypeChecker_load_builtins_module.exit.i
 
-ifend3.i:                                         ; preds = %ifend.i201
-  %230 = call fastcc ptr @TypeChecker_check_module(ptr nonnull %10, ptr %187, ptr nonnull %97)
+TypeChecker_load_builtins_module.exit.i:          ; preds = %if.entry.i.i, %TypeChecker_constructor.exit.i
+  %239 = load ptr, ptr %memberidx.i.i202, align 8
+  %memberidx1.i23.i = getelementptr inbounds %Compiler, ptr %239, i64 0, i32 5
+  %240 = load ptr, ptr %memberidx1.i23.i, align 8
+  %memberidx2.i24.i = getelementptr inbounds %Array_FloError_, ptr %240, i64 0, i32 1
+  %241 = load i64, ptr %memberidx2.i24.i, align 4
+  %242 = icmp sgt i64 %241, 0
+  br i1 %242, label %TypeChecker_check.exit, label %ifend.i209
+
+ifend.i209:                                       ; preds = %TypeChecker_load_builtins_module.exit.i
+  %memberidx.i25.i = getelementptr inbounds %TypeChecker, ptr %10, i64 0, i32 4
+  %243 = load i64, ptr @GENERIC_MODULE_ID, align 8
+  %244 = load ptr, ptr %10, align 8
+  %245 = load ptr, ptr %244, align 8
+  %246 = load ptr, ptr %245, align 8
+  %247 = getelementptr inbounds ptr, ptr %246, i64 %243
+  %248 = load ptr, ptr %247, align 8
+  %memberidx1.i26.i = getelementptr inbounds %Module, ptr %248, i64 0, i32 5
+  %249 = load ptr, ptr %memberidx1.i26.i, align 8
+  store ptr %249, ptr %memberidx.i25.i, align 8
+  %250 = load i64, ptr @BUILTIN_MODULE_ID, align 8
+  %251 = load ptr, ptr %244, align 8
+  %252 = load ptr, ptr %251, align 8
+  %253 = getelementptr inbounds ptr, ptr %252, i64 %250
+  %254 = load ptr, ptr %253, align 8
+  call fastcc void @TypeChecker_import_all_from_module(ptr nonnull %10, ptr %254)
+  %255 = load ptr, ptr %memberidx.i.i202, align 8
+  %memberidx1.i28.i = getelementptr inbounds %Compiler, ptr %255, i64 0, i32 5
+  %256 = load ptr, ptr %memberidx1.i28.i, align 8
+  %memberidx2.i29.i = getelementptr inbounds %Array_FloError_, ptr %256, i64 0, i32 1
+  %257 = load i64, ptr %memberidx2.i29.i, align 4
+  %258 = icmp sgt i64 %257, 0
+  br i1 %258, label %TypeChecker_check.exit, label %ifend3.i
+
+ifend3.i:                                         ; preds = %ifend.i209
+  %259 = call fastcc ptr @TypeChecker_check_module(ptr nonnull %10, ptr %209, ptr nonnull %119)
   br label %TypeChecker_check.exit
 
-TypeChecker_check.exit:                           ; preds = %ifend.i201, %TypeChecker_constructor.exit.i, %ifend3.i
+TypeChecker_check.exit:                           ; preds = %ifend.i209, %TypeChecker_load_builtins_module.exit.i, %ifend3.i
   %common.ret.op.i = load ptr, ptr %10, align 8
   call void @llvm.lifetime.end.p0(i64 58, ptr nonnull %10)
-  %231 = call fastcc i1 @Compiler_print_errors(ptr nonnull %118)
-  br i1 %231, label %common.ret, label %for.body.i.i.i206.lr.ph
+  %260 = call fastcc i1 @Compiler_print_errors(ptr nonnull %140)
+  br i1 %260, label %common.ret, label %for.body.i.i.i214.lr.ph
 
-for.body.i.i.i206.lr.ph:                          ; preds = %TypeChecker_check.exit
+for.body.i.i.i214.lr.ph:                          ; preds = %TypeChecker_check.exit
   call void @llvm.lifetime.start.p0(i64 81, ptr nonnull %9)
-  %232 = load ptr, ptr %common.ret.op.i, align 8
-  %233 = load ptr, ptr %232, align 8
-  %234 = getelementptr inbounds ptr, ptr %233, i64 2
-  %235 = load ptr, ptr %234, align 8
-  %236 = load ptr, ptr %235, align 8
-  %memberidx.i.i202 = getelementptr inbounds %CodeGen, ptr %9, i64 0, i32 4
-  store ptr %common.ret.op.i, ptr %memberidx.i.i202, align 8
+  %261 = load ptr, ptr %common.ret.op.i, align 8
+  %262 = load ptr, ptr %261, align 8
+  %263 = getelementptr inbounds ptr, ptr %262, i64 2
+  %264 = load ptr, ptr %263, align 8
+  %265 = load ptr, ptr %264, align 8
+  %memberidx.i.i210 = getelementptr inbounds %CodeGen, ptr %9, i64 0, i32 4
+  store ptr %common.ret.op.i, ptr %memberidx.i.i210, align 8
   %memberidx1.i51.i = getelementptr inbounds %CodeGen, ptr %9, i64 0, i32 6
-  %237 = call ptr @malloc(i32 24)
-  %238 = call ptr @malloc(i32 2048)
-  store ptr %238, ptr %237, align 8
-  %239 = call ptr @malloc(i32 16)
-  store i64 0, ptr %239, align 4
-  %memberidx1.i.i.i52.i = getelementptr inbounds %Range, ptr %239, i64 0, i32 1
+  %266 = call ptr @malloc(i32 24)
+  %267 = call ptr @malloc(i32 2048)
+  store ptr %267, ptr %266, align 8
+  %268 = call ptr @malloc(i32 16)
+  store i64 0, ptr %268, align 4
+  %memberidx1.i.i.i52.i = getelementptr inbounds %Range, ptr %268, i64 0, i32 1
   store i64 256, ptr %memberidx1.i.i.i52.i, align 4
-  %240 = call ptr @malloc(i32 17)
-  %memberidx.i.i.i.i53.i = getelementptr inbounds %RangeIterator, ptr %240, i64 0, i32 1
+  %269 = call ptr @malloc(i32 17)
+  %memberidx.i.i.i.i53.i = getelementptr inbounds %RangeIterator, ptr %269, i64 0, i32 1
   store i64 0, ptr %memberidx.i.i.i.i53.i, align 4
-  %memberidx1.i.i.i.i54.i = getelementptr inbounds %RangeIterator, ptr %240, i64 0, i32 2
+  %memberidx1.i.i.i.i54.i = getelementptr inbounds %RangeIterator, ptr %269, i64 0, i32 2
   store i64 256, ptr %memberidx1.i.i.i.i54.i, align 4
-  br label %for.body.i.i.i206
+  br label %for.body.i.i.i214
 
-for.body.i.i.i206:                                ; preds = %for.body.i.i.i206.lr.ph, %for.body.i.i.i206
-  %241 = phi i64 [ 1, %for.body.i.i.i206.lr.ph ], [ %246, %for.body.i.i.i206 ]
-  %242 = phi i64 [ 0, %for.body.i.i.i206.lr.ph ], [ %241, %for.body.i.i.i206 ]
-  %243 = load ptr, ptr %237, align 8
-  %244 = getelementptr inbounds ptr, ptr %243, i64 %242
-  store ptr null, ptr %244, align 8
-  %245 = icmp ugt i64 %241, 255
-  %246 = add nuw nsw i64 %241, 1
-  br i1 %245, label %for.body.i26.i.i.lr.ph, label %for.body.i.i.i206
+for.body.i.i.i214:                                ; preds = %for.body.i.i.i214.lr.ph, %for.body.i.i.i214
+  %270 = phi i64 [ 1, %for.body.i.i.i214.lr.ph ], [ %275, %for.body.i.i.i214 ]
+  %271 = phi i64 [ 0, %for.body.i.i.i214.lr.ph ], [ %270, %for.body.i.i.i214 ]
+  %272 = load ptr, ptr %266, align 8
+  %273 = getelementptr inbounds ptr, ptr %272, i64 %271
+  store ptr null, ptr %273, align 8
+  %274 = icmp ugt i64 %270, 255
+  %275 = add nuw nsw i64 %270, 1
+  br i1 %274, label %for.body.i26.i.i.lr.ph, label %for.body.i.i.i214
 
-for.body.i26.i.i.lr.ph:                           ; preds = %for.body.i.i.i206
-  call void @free(ptr nonnull %240)
-  %memberidx3.i.i.i207 = getelementptr inbounds %Map_String_LLVMValueRef_, ptr %237, i64 0, i32 1
-  store i64 256, ptr %memberidx3.i.i.i207, align 4
-  %memberidx4.i.i.i208 = getelementptr inbounds %Map_String_LLVMValueRef_, ptr %237, i64 0, i32 2
-  store i64 0, ptr %memberidx4.i.i.i208, align 4
-  store ptr %237, ptr %memberidx1.i51.i, align 8
-  %memberidx2.i.i209 = getelementptr inbounds %CodeGen, ptr %9, i64 0, i32 7
-  %247 = call ptr @malloc(i32 24)
-  %248 = call ptr @malloc(i32 2048)
-  store ptr %248, ptr %247, align 8
-  %249 = call ptr @malloc(i32 16)
-  store i64 0, ptr %249, align 4
-  %memberidx1.i.i19.i.i = getelementptr inbounds %Range, ptr %249, i64 0, i32 1
+for.body.i26.i.i.lr.ph:                           ; preds = %for.body.i.i.i214
+  call void @free(ptr nonnull %269)
+  %memberidx3.i.i.i215 = getelementptr inbounds %Map_String_LLVMValueRef_, ptr %266, i64 0, i32 1
+  store i64 256, ptr %memberidx3.i.i.i215, align 4
+  %memberidx4.i.i.i216 = getelementptr inbounds %Map_String_LLVMValueRef_, ptr %266, i64 0, i32 2
+  store i64 0, ptr %memberidx4.i.i.i216, align 4
+  store ptr %266, ptr %memberidx1.i51.i, align 8
+  %memberidx2.i.i217 = getelementptr inbounds %CodeGen, ptr %9, i64 0, i32 7
+  %276 = call ptr @malloc(i32 24)
+  %277 = call ptr @malloc(i32 2048)
+  store ptr %277, ptr %276, align 8
+  %278 = call ptr @malloc(i32 16)
+  store i64 0, ptr %278, align 4
+  %memberidx1.i.i19.i.i = getelementptr inbounds %Range, ptr %278, i64 0, i32 1
   store i64 256, ptr %memberidx1.i.i19.i.i, align 4
-  %250 = call ptr @malloc(i32 17)
-  %memberidx.i.i.i21.i.i = getelementptr inbounds %RangeIterator, ptr %250, i64 0, i32 1
+  %279 = call ptr @malloc(i32 17)
+  %memberidx.i.i.i21.i.i = getelementptr inbounds %RangeIterator, ptr %279, i64 0, i32 1
   store i64 0, ptr %memberidx.i.i.i21.i.i, align 4
-  %memberidx1.i.i.i22.i.i = getelementptr inbounds %RangeIterator, ptr %250, i64 0, i32 2
+  %memberidx1.i.i.i22.i.i = getelementptr inbounds %RangeIterator, ptr %279, i64 0, i32 2
   store i64 256, ptr %memberidx1.i.i.i22.i.i, align 4
   br label %for.body.i26.i.i
 
 for.body.i26.i.i:                                 ; preds = %for.body.i26.i.i.lr.ph, %for.body.i26.i.i
-  %251 = phi i64 [ 1, %for.body.i26.i.i.lr.ph ], [ %256, %for.body.i26.i.i ]
-  %252 = phi i64 [ 0, %for.body.i26.i.i.lr.ph ], [ %251, %for.body.i26.i.i ]
-  %253 = load ptr, ptr %247, align 8
-  %254 = getelementptr inbounds ptr, ptr %253, i64 %252
-  store ptr null, ptr %254, align 8
-  %255 = icmp ugt i64 %251, 255
-  %256 = add nuw nsw i64 %251, 1
-  br i1 %255, label %for.body.i37.i.i.lr.ph, label %for.body.i26.i.i
+  %280 = phi i64 [ 1, %for.body.i26.i.i.lr.ph ], [ %285, %for.body.i26.i.i ]
+  %281 = phi i64 [ 0, %for.body.i26.i.i.lr.ph ], [ %280, %for.body.i26.i.i ]
+  %282 = load ptr, ptr %276, align 8
+  %283 = getelementptr inbounds ptr, ptr %282, i64 %281
+  store ptr null, ptr %283, align 8
+  %284 = icmp ugt i64 %280, 255
+  %285 = add nuw nsw i64 %280, 1
+  br i1 %284, label %for.body.i37.i.i.lr.ph, label %for.body.i26.i.i
 
 for.body.i37.i.i.lr.ph:                           ; preds = %for.body.i26.i.i
-  call void @free(ptr nonnull %250)
-  %memberidx3.i27.i.i = getelementptr inbounds %Map_String_LLVMValueRef_, ptr %247, i64 0, i32 1
+  call void @free(ptr nonnull %279)
+  %memberidx3.i27.i.i = getelementptr inbounds %Map_String_LLVMValueRef_, ptr %276, i64 0, i32 1
   store i64 256, ptr %memberidx3.i27.i.i, align 4
-  %memberidx4.i28.i.i = getelementptr inbounds %Map_String_LLVMValueRef_, ptr %247, i64 0, i32 2
+  %memberidx4.i28.i.i = getelementptr inbounds %Map_String_LLVMValueRef_, ptr %276, i64 0, i32 2
   store i64 0, ptr %memberidx4.i28.i.i, align 4
-  store ptr %247, ptr %memberidx2.i.i209, align 8
-  %memberidx3.i.i210 = getelementptr inbounds %CodeGen, ptr %9, i64 0, i32 8
-  %257 = call ptr @malloc(i32 24)
-  %258 = call ptr @malloc(i32 2048)
-  store ptr %258, ptr %257, align 8
-  %259 = call ptr @malloc(i32 16)
-  store i64 0, ptr %259, align 4
-  %memberidx1.i.i30.i.i = getelementptr inbounds %Range, ptr %259, i64 0, i32 1
+  store ptr %276, ptr %memberidx2.i.i217, align 8
+  %memberidx3.i.i218 = getelementptr inbounds %CodeGen, ptr %9, i64 0, i32 8
+  %286 = call ptr @malloc(i32 24)
+  %287 = call ptr @malloc(i32 2048)
+  store ptr %287, ptr %286, align 8
+  %288 = call ptr @malloc(i32 16)
+  store i64 0, ptr %288, align 4
+  %memberidx1.i.i30.i.i = getelementptr inbounds %Range, ptr %288, i64 0, i32 1
   store i64 256, ptr %memberidx1.i.i30.i.i, align 4
-  %260 = call ptr @malloc(i32 17)
-  %memberidx.i.i.i32.i.i = getelementptr inbounds %RangeIterator, ptr %260, i64 0, i32 1
+  %289 = call ptr @malloc(i32 17)
+  %memberidx.i.i.i32.i.i = getelementptr inbounds %RangeIterator, ptr %289, i64 0, i32 1
   store i64 0, ptr %memberidx.i.i.i32.i.i, align 4
-  %memberidx1.i.i.i33.i.i = getelementptr inbounds %RangeIterator, ptr %260, i64 0, i32 2
+  %memberidx1.i.i.i33.i.i = getelementptr inbounds %RangeIterator, ptr %289, i64 0, i32 2
   store i64 256, ptr %memberidx1.i.i.i33.i.i, align 4
   br label %for.body.i37.i.i
 
 for.body.i37.i.i:                                 ; preds = %for.body.i37.i.i.lr.ph, %for.body.i37.i.i
-  %261 = phi i64 [ 1, %for.body.i37.i.i.lr.ph ], [ %266, %for.body.i37.i.i ]
-  %262 = phi i64 [ 0, %for.body.i37.i.i.lr.ph ], [ %261, %for.body.i37.i.i ]
-  %263 = load ptr, ptr %257, align 8
-  %264 = getelementptr inbounds ptr, ptr %263, i64 %262
-  store ptr null, ptr %264, align 8
-  %265 = icmp ugt i64 %261, 255
-  %266 = add nuw nsw i64 %261, 1
-  br i1 %265, label %for.body.i47.i.i.lr.ph, label %for.body.i37.i.i
+  %290 = phi i64 [ 1, %for.body.i37.i.i.lr.ph ], [ %295, %for.body.i37.i.i ]
+  %291 = phi i64 [ 0, %for.body.i37.i.i.lr.ph ], [ %290, %for.body.i37.i.i ]
+  %292 = load ptr, ptr %286, align 8
+  %293 = getelementptr inbounds ptr, ptr %292, i64 %291
+  store ptr null, ptr %293, align 8
+  %294 = icmp ugt i64 %290, 255
+  %295 = add nuw nsw i64 %290, 1
+  br i1 %294, label %for.body.i47.i.i.lr.ph, label %for.body.i37.i.i
 
 for.body.i47.i.i.lr.ph:                           ; preds = %for.body.i37.i.i
-  call void @free(ptr nonnull %260)
-  %memberidx3.i38.i.i = getelementptr inbounds %Map_String_CGClassType_, ptr %257, i64 0, i32 1
+  call void @free(ptr nonnull %289)
+  %memberidx3.i38.i.i = getelementptr inbounds %Map_String_CGClassType_, ptr %286, i64 0, i32 1
   store i64 256, ptr %memberidx3.i38.i.i, align 4
-  %memberidx4.i39.i.i = getelementptr inbounds %Map_String_CGClassType_, ptr %257, i64 0, i32 2
+  %memberidx4.i39.i.i = getelementptr inbounds %Map_String_CGClassType_, ptr %286, i64 0, i32 2
   store i64 0, ptr %memberidx4.i39.i.i, align 4
-  store ptr %257, ptr %memberidx3.i.i210, align 8
-  %memberidx4.i.i211 = getelementptr inbounds %CodeGen, ptr %9, i64 0, i32 9
-  %267 = call ptr @malloc(i32 24)
-  %268 = call ptr @malloc(i32 2048)
-  store ptr %268, ptr %267, align 8
-  %269 = call ptr @malloc(i32 16)
-  store i64 0, ptr %269, align 4
-  %memberidx1.i.i40.i.i = getelementptr inbounds %Range, ptr %269, i64 0, i32 1
+  store ptr %286, ptr %memberidx3.i.i218, align 8
+  %memberidx4.i.i219 = getelementptr inbounds %CodeGen, ptr %9, i64 0, i32 9
+  %296 = call ptr @malloc(i32 24)
+  %297 = call ptr @malloc(i32 2048)
+  store ptr %297, ptr %296, align 8
+  %298 = call ptr @malloc(i32 16)
+  store i64 0, ptr %298, align 4
+  %memberidx1.i.i40.i.i = getelementptr inbounds %Range, ptr %298, i64 0, i32 1
   store i64 256, ptr %memberidx1.i.i40.i.i, align 4
-  %270 = call ptr @malloc(i32 17)
-  %memberidx.i.i.i42.i.i = getelementptr inbounds %RangeIterator, ptr %270, i64 0, i32 1
+  %299 = call ptr @malloc(i32 17)
+  %memberidx.i.i.i42.i.i = getelementptr inbounds %RangeIterator, ptr %299, i64 0, i32 1
   store i64 0, ptr %memberidx.i.i.i42.i.i, align 4
-  %memberidx1.i.i.i43.i.i = getelementptr inbounds %RangeIterator, ptr %270, i64 0, i32 2
+  %memberidx1.i.i.i43.i.i = getelementptr inbounds %RangeIterator, ptr %299, i64 0, i32 2
   store i64 256, ptr %memberidx1.i.i.i43.i.i, align 4
   br label %for.body.i47.i.i
 
 for.body.i47.i.i:                                 ; preds = %for.body.i47.i.i.lr.ph, %for.body.i47.i.i
-  %271 = phi i64 [ 1, %for.body.i47.i.i.lr.ph ], [ %276, %for.body.i47.i.i ]
-  %272 = phi i64 [ 0, %for.body.i47.i.i.lr.ph ], [ %271, %for.body.i47.i.i ]
-  %273 = load ptr, ptr %267, align 8
-  %274 = getelementptr inbounds ptr, ptr %273, i64 %272
-  store ptr null, ptr %274, align 8
-  %275 = icmp ugt i64 %271, 255
-  %276 = add nuw nsw i64 %271, 1
-  br i1 %275, label %for.body.i57.i.i.lr.ph, label %for.body.i47.i.i
+  %300 = phi i64 [ 1, %for.body.i47.i.i.lr.ph ], [ %305, %for.body.i47.i.i ]
+  %301 = phi i64 [ 0, %for.body.i47.i.i.lr.ph ], [ %300, %for.body.i47.i.i ]
+  %302 = load ptr, ptr %296, align 8
+  %303 = getelementptr inbounds ptr, ptr %302, i64 %301
+  store ptr null, ptr %303, align 8
+  %304 = icmp ugt i64 %300, 255
+  %305 = add nuw nsw i64 %300, 1
+  br i1 %304, label %for.body.i57.i.i.lr.ph, label %for.body.i47.i.i
 
 for.body.i57.i.i.lr.ph:                           ; preds = %for.body.i47.i.i
-  call void @free(ptr nonnull %270)
-  %memberidx3.i48.i.i = getelementptr inbounds %Map_String_CGEnumType_, ptr %267, i64 0, i32 1
+  call void @free(ptr nonnull %299)
+  %memberidx3.i48.i.i = getelementptr inbounds %Map_String_CGEnumType_, ptr %296, i64 0, i32 1
   store i64 256, ptr %memberidx3.i48.i.i, align 4
-  %memberidx4.i49.i.i = getelementptr inbounds %Map_String_CGEnumType_, ptr %267, i64 0, i32 2
+  %memberidx4.i49.i.i = getelementptr inbounds %Map_String_CGEnumType_, ptr %296, i64 0, i32 2
   store i64 0, ptr %memberidx4.i49.i.i, align 4
-  store ptr %267, ptr %memberidx4.i.i211, align 8
+  store ptr %296, ptr %memberidx4.i.i219, align 8
   %memberidx5.i.i = getelementptr inbounds %CodeGen, ptr %9, i64 0, i32 10
-  %277 = call ptr @malloc(i32 24)
-  %278 = call ptr @malloc(i32 2048)
-  store ptr %278, ptr %277, align 8
-  %279 = call ptr @malloc(i32 16)
-  store i64 0, ptr %279, align 4
-  %memberidx1.i.i50.i.i = getelementptr inbounds %Range, ptr %279, i64 0, i32 1
+  %306 = call ptr @malloc(i32 24)
+  %307 = call ptr @malloc(i32 2048)
+  store ptr %307, ptr %306, align 8
+  %308 = call ptr @malloc(i32 16)
+  store i64 0, ptr %308, align 4
+  %memberidx1.i.i50.i.i = getelementptr inbounds %Range, ptr %308, i64 0, i32 1
   store i64 256, ptr %memberidx1.i.i50.i.i, align 4
-  %280 = call ptr @malloc(i32 17)
-  %memberidx.i.i.i52.i.i = getelementptr inbounds %RangeIterator, ptr %280, i64 0, i32 1
+  %309 = call ptr @malloc(i32 17)
+  %memberidx.i.i.i52.i.i = getelementptr inbounds %RangeIterator, ptr %309, i64 0, i32 1
   store i64 0, ptr %memberidx.i.i.i52.i.i, align 4
-  %memberidx1.i.i.i53.i.i = getelementptr inbounds %RangeIterator, ptr %280, i64 0, i32 2
+  %memberidx1.i.i.i53.i.i = getelementptr inbounds %RangeIterator, ptr %309, i64 0, i32 2
   store i64 256, ptr %memberidx1.i.i.i53.i.i, align 4
   br label %for.body.i57.i.i
 
 for.body.i57.i.i:                                 ; preds = %for.body.i57.i.i.lr.ph, %for.body.i57.i.i
-  %281 = phi i64 [ 1, %for.body.i57.i.i.lr.ph ], [ %286, %for.body.i57.i.i ]
-  %282 = phi i64 [ 0, %for.body.i57.i.i.lr.ph ], [ %281, %for.body.i57.i.i ]
-  %283 = load ptr, ptr %277, align 8
-  %284 = getelementptr inbounds ptr, ptr %283, i64 %282
-  store ptr null, ptr %284, align 8
-  %285 = icmp ugt i64 %281, 255
-  %286 = add nuw nsw i64 %281, 1
-  br i1 %285, label %CodeGen_constructor.exit.i, label %for.body.i57.i.i
+  %310 = phi i64 [ 1, %for.body.i57.i.i.lr.ph ], [ %315, %for.body.i57.i.i ]
+  %311 = phi i64 [ 0, %for.body.i57.i.i.lr.ph ], [ %310, %for.body.i57.i.i ]
+  %312 = load ptr, ptr %306, align 8
+  %313 = getelementptr inbounds ptr, ptr %312, i64 %311
+  store ptr null, ptr %313, align 8
+  %314 = icmp ugt i64 %310, 255
+  %315 = add nuw nsw i64 %310, 1
+  br i1 %314, label %CodeGen_constructor.exit.i, label %for.body.i57.i.i
 
 CodeGen_constructor.exit.i:                       ; preds = %for.body.i57.i.i
-  call void @free(ptr nonnull %280)
-  %memberidx3.i58.i.i = getelementptr inbounds %Map_String_LLVMValueRef_, ptr %277, i64 0, i32 1
+  call void @free(ptr nonnull %309)
+  %memberidx3.i58.i.i = getelementptr inbounds %Map_String_LLVMValueRef_, ptr %306, i64 0, i32 1
   store i64 256, ptr %memberidx3.i58.i.i, align 4
-  %memberidx4.i59.i.i = getelementptr inbounds %Map_String_LLVMValueRef_, ptr %277, i64 0, i32 2
+  %memberidx4.i59.i.i = getelementptr inbounds %Map_String_LLVMValueRef_, ptr %306, i64 0, i32 2
   store i64 0, ptr %memberidx4.i59.i.i, align 4
-  store ptr %277, ptr %memberidx5.i.i, align 8
+  store ptr %306, ptr %memberidx5.i.i, align 8
   %memberidx6.i.i = getelementptr inbounds %CodeGen, ptr %9, i64 0, i32 5
   store i1 true, ptr %memberidx6.i.i, align 8
   %memberidx8.i.i = getelementptr inbounds %CodeGen, ptr %9, i64 0, i32 2
-  %memberidx.i.i56.i = getelementptr inbounds %String, ptr %236, i64 0, i32 1
+  %memberidx.i.i56.i = getelementptr inbounds %String, ptr %265, i64 0, i32 1
   call void @llvm.memset.p0.i64(ptr noundef nonnull align 8 dereferenceable(16) %memberidx8.i.i, i8 0, i64 16, i1 false)
-  %287 = load i64, ptr %memberidx.i.i56.i, align 4
-  %288 = trunc i64 %287 to i32
-  %289 = add i32 %288, 1
-  %290 = call ptr @malloc(i32 %289)
-  %291 = load ptr, ptr %236, align 8
-  %292 = load i64, ptr %memberidx.i.i56.i, align 4
-  call void @llvm.memcpy.p0.p0.i64(ptr align 8 %290, ptr align 8 %291, i64 %292, i1 false)
-  %293 = getelementptr inbounds i8, ptr %290, i64 %292
-  store i8 0, ptr %293, align 1
-  %294 = call ptr @LLVMModuleCreateWithName(ptr %290)
-  store ptr %294, ptr %9, align 8
-  %memberidx3.i = getelementptr inbounds %Module, ptr %235, i64 0, i32 6
-  %295 = load ptr, ptr %memberidx3.i, align 8
-  %296 = call ptr @malloc(i32 25)
-  %297 = load ptr, ptr %295, align 8
-  %memberidx1.i57.i = getelementptr inbounds %Array_Enum_, ptr %295, i64 0, i32 1
-  %298 = load i64, ptr %memberidx1.i57.i, align 4
-  store i1 false, ptr %296, align 1
-  %memberidx1.i.i.i212 = getelementptr inbounds %ArrayIterator_Enum_, ptr %296, i64 0, i32 1
-  store i64 0, ptr %memberidx1.i.i.i212, align 4
-  %memberidx2.i.i.i213 = getelementptr inbounds %ArrayIterator_Enum_, ptr %296, i64 0, i32 3
-  store ptr %297, ptr %memberidx2.i.i.i213, align 8
-  %memberidx3.i.i58.i = getelementptr inbounds %ArrayIterator_Enum_, ptr %296, i64 0, i32 2
-  store i64 %298, ptr %memberidx3.i.i58.i, align 4
-  %299 = icmp slt i64 %298, 1
-  br i1 %299, label %for.end.i, label %for.body.i
+  %316 = load i64, ptr %memberidx.i.i56.i, align 4
+  %317 = trunc i64 %316 to i32
+  %318 = add i32 %317, 1
+  %319 = call ptr @malloc(i32 %318)
+  %320 = load ptr, ptr %265, align 8
+  %321 = load i64, ptr %memberidx.i.i56.i, align 4
+  call void @llvm.memcpy.p0.p0.i64(ptr align 8 %319, ptr align 8 %320, i64 %321, i1 false)
+  %322 = getelementptr inbounds i8, ptr %319, i64 %321
+  store i8 0, ptr %322, align 1
+  %323 = call ptr @LLVMModuleCreateWithName(ptr %319)
+  store ptr %323, ptr %9, align 8
+  %memberidx3.i = getelementptr inbounds %Module, ptr %264, i64 0, i32 6
+  %324 = load ptr, ptr %memberidx3.i, align 8
+  %325 = call ptr @malloc(i32 25)
+  %326 = load ptr, ptr %324, align 8
+  %memberidx1.i57.i = getelementptr inbounds %Array_Enum_, ptr %324, i64 0, i32 1
+  %327 = load i64, ptr %memberidx1.i57.i, align 4
+  store i1 false, ptr %325, align 1
+  %memberidx1.i.i.i220 = getelementptr inbounds %ArrayIterator_Enum_, ptr %325, i64 0, i32 1
+  store i64 0, ptr %memberidx1.i.i.i220, align 4
+  %memberidx2.i.i.i221 = getelementptr inbounds %ArrayIterator_Enum_, ptr %325, i64 0, i32 3
+  store ptr %326, ptr %memberidx2.i.i.i221, align 8
+  %memberidx3.i.i58.i = getelementptr inbounds %ArrayIterator_Enum_, ptr %325, i64 0, i32 2
+  store i64 %327, ptr %memberidx3.i.i58.i, align 4
+  %328 = icmp slt i64 %327, 1
+  br i1 %328, label %for.end.i, label %for.body.i
 
 for.body.i:                                       ; preds = %CodeGen_constructor.exit.i, %for.body.i
-  %.in = phi ptr [ %303, %for.body.i ], [ %297, %CodeGen_constructor.exit.i ]
-  %300 = phi i64 [ %302, %for.body.i ], [ 1, %CodeGen_constructor.exit.i ]
-  %301 = load ptr, ptr %.in, align 8
-  call fastcc void @CodeGen_declare_enum(ptr nonnull %9, ptr %301)
-  %302 = add nuw nsw i64 %300, 1
-  %303 = getelementptr inbounds ptr, ptr %297, i64 %300
-  %.not559 = icmp slt i64 %300, %298
-  br i1 %.not559, label %for.body.i, label %for.end.i
+  %.in = phi ptr [ %332, %for.body.i ], [ %326, %CodeGen_constructor.exit.i ]
+  %329 = phi i64 [ %331, %for.body.i ], [ 1, %CodeGen_constructor.exit.i ]
+  %330 = load ptr, ptr %.in, align 8
+  call fastcc void @CodeGen_declare_enum(ptr nonnull %9, ptr %330)
+  %331 = add nuw nsw i64 %329, 1
+  %332 = getelementptr inbounds ptr, ptr %326, i64 %329
+  %.not569 = icmp slt i64 %329, %327
+  br i1 %.not569, label %for.body.i, label %for.end.i
 
 for.end.i:                                        ; preds = %for.body.i, %CodeGen_constructor.exit.i
-  call void @free(ptr nonnull %296)
-  %memberidx9.i = getelementptr inbounds %Module, ptr %235, i64 0, i32 3
-  %304 = load ptr, ptr %memberidx9.i, align 8
-  %305 = call ptr @malloc(i32 25)
-  %306 = load ptr, ptr %304, align 8
-  %memberidx1.i62.i = getelementptr inbounds %Array_Class_, ptr %304, i64 0, i32 1
-  %307 = load i64, ptr %memberidx1.i62.i, align 4
-  store i1 false, ptr %305, align 1
-  %memberidx1.i.i63.i = getelementptr inbounds %ArrayIterator_Class_, ptr %305, i64 0, i32 1
+  call void @free(ptr nonnull %325)
+  %memberidx9.i = getelementptr inbounds %Module, ptr %264, i64 0, i32 3
+  %333 = load ptr, ptr %memberidx9.i, align 8
+  %334 = call ptr @malloc(i32 25)
+  %335 = load ptr, ptr %333, align 8
+  %memberidx1.i62.i = getelementptr inbounds %Array_Class_, ptr %333, i64 0, i32 1
+  %336 = load i64, ptr %memberidx1.i62.i, align 4
+  store i1 false, ptr %334, align 1
+  %memberidx1.i.i63.i = getelementptr inbounds %ArrayIterator_Class_, ptr %334, i64 0, i32 1
   store i64 0, ptr %memberidx1.i.i63.i, align 4
-  %memberidx2.i.i64.i = getelementptr inbounds %ArrayIterator_Class_, ptr %305, i64 0, i32 3
-  store ptr %306, ptr %memberidx2.i.i64.i, align 8
-  %memberidx3.i.i65.i = getelementptr inbounds %ArrayIterator_Class_, ptr %305, i64 0, i32 2
-  store i64 %307, ptr %memberidx3.i.i65.i, align 4
-  %308 = icmp slt i64 %307, 1
-  br i1 %308, label %for.end8.i, label %for.body7.i
+  %memberidx2.i.i64.i = getelementptr inbounds %ArrayIterator_Class_, ptr %334, i64 0, i32 3
+  store ptr %335, ptr %memberidx2.i.i64.i, align 8
+  %memberidx3.i.i65.i = getelementptr inbounds %ArrayIterator_Class_, ptr %334, i64 0, i32 2
+  store i64 %336, ptr %memberidx3.i.i65.i, align 4
+  %337 = icmp slt i64 %336, 1
+  br i1 %337, label %for.end8.i, label %for.body7.i
 
 for.body7.i:                                      ; preds = %for.end.i, %for.body7.i
-  %.in477 = phi ptr [ %312, %for.body7.i ], [ %306, %for.end.i ]
-  %309 = phi i64 [ %311, %for.body7.i ], [ 1, %for.end.i ]
-  %310 = load ptr, ptr %.in477, align 8
-  call fastcc void @CodeGen_declare_class(ptr nonnull %9, ptr %310)
-  %311 = add nuw nsw i64 %309, 1
-  %312 = getelementptr inbounds ptr, ptr %306, i64 %309
-  %.not560 = icmp slt i64 %309, %307
-  br i1 %.not560, label %for.body7.i, label %for.end8.i
+  %.in487 = phi ptr [ %341, %for.body7.i ], [ %335, %for.end.i ]
+  %338 = phi i64 [ %340, %for.body7.i ], [ 1, %for.end.i ]
+  %339 = load ptr, ptr %.in487, align 8
+  call fastcc void @CodeGen_declare_class(ptr nonnull %9, ptr %339)
+  %340 = add nuw nsw i64 %338, 1
+  %341 = getelementptr inbounds ptr, ptr %335, i64 %338
+  %.not570 = icmp slt i64 %338, %336
+  br i1 %.not570, label %for.body7.i, label %for.end8.i
 
 for.end8.i:                                       ; preds = %for.body7.i, %for.end.i
-  call void @free(ptr nonnull %305)
-  %memberidx15.i = getelementptr inbounds %Module, ptr %235, i64 0, i32 8
-  %313 = load ptr, ptr %memberidx15.i, align 8
-  %314 = call ptr @malloc(i32 25)
-  %315 = load ptr, ptr %313, align 8
-  %memberidx1.i69.i = getelementptr inbounds %Array_ConstDeclaration_, ptr %313, i64 0, i32 1
-  %316 = load i64, ptr %memberidx1.i69.i, align 4
-  store i1 false, ptr %314, align 1
-  %memberidx1.i.i70.i = getelementptr inbounds %ArrayIterator_ConstDeclaration_, ptr %314, i64 0, i32 1
+  call void @free(ptr nonnull %334)
+  %memberidx15.i = getelementptr inbounds %Module, ptr %264, i64 0, i32 8
+  %342 = load ptr, ptr %memberidx15.i, align 8
+  %343 = call ptr @malloc(i32 25)
+  %344 = load ptr, ptr %342, align 8
+  %memberidx1.i69.i = getelementptr inbounds %Array_ConstDeclaration_, ptr %342, i64 0, i32 1
+  %345 = load i64, ptr %memberidx1.i69.i, align 4
+  store i1 false, ptr %343, align 1
+  %memberidx1.i.i70.i = getelementptr inbounds %ArrayIterator_ConstDeclaration_, ptr %343, i64 0, i32 1
   store i64 0, ptr %memberidx1.i.i70.i, align 4
-  %memberidx2.i.i71.i = getelementptr inbounds %ArrayIterator_ConstDeclaration_, ptr %314, i64 0, i32 3
-  store ptr %315, ptr %memberidx2.i.i71.i, align 8
-  %memberidx3.i.i72.i = getelementptr inbounds %ArrayIterator_ConstDeclaration_, ptr %314, i64 0, i32 2
-  store i64 %316, ptr %memberidx3.i.i72.i, align 4
-  %317 = icmp slt i64 %316, 1
-  br i1 %317, label %for.end14.i, label %for.body13.i
+  %memberidx2.i.i71.i = getelementptr inbounds %ArrayIterator_ConstDeclaration_, ptr %343, i64 0, i32 3
+  store ptr %344, ptr %memberidx2.i.i71.i, align 8
+  %memberidx3.i.i72.i = getelementptr inbounds %ArrayIterator_ConstDeclaration_, ptr %343, i64 0, i32 2
+  store i64 %345, ptr %memberidx3.i.i72.i, align 4
+  %346 = icmp slt i64 %345, 1
+  br i1 %346, label %for.end14.i, label %for.body13.i
 
 for.body13.i:                                     ; preds = %for.end8.i, %for.body13.i
-  %.in478 = phi ptr [ %321, %for.body13.i ], [ %315, %for.end8.i ]
-  %318 = phi i64 [ %320, %for.body13.i ], [ 1, %for.end8.i ]
-  %319 = load ptr, ptr %.in478, align 8
-  call fastcc void @CodeGen_codegen_const_declaration(ptr nonnull %9, ptr null, ptr %319)
-  %320 = add nuw nsw i64 %318, 1
-  %321 = getelementptr inbounds ptr, ptr %315, i64 %318
-  %.not561 = icmp slt i64 %318, %316
-  br i1 %.not561, label %for.body13.i, label %for.end14.i
+  %.in488 = phi ptr [ %350, %for.body13.i ], [ %344, %for.end8.i ]
+  %347 = phi i64 [ %349, %for.body13.i ], [ 1, %for.end8.i ]
+  %348 = load ptr, ptr %.in488, align 8
+  call fastcc void @CodeGen_codegen_const_declaration(ptr nonnull %9, ptr null, ptr %348)
+  %349 = add nuw nsw i64 %347, 1
+  %350 = getelementptr inbounds ptr, ptr %344, i64 %347
+  %.not571 = icmp slt i64 %347, %345
+  br i1 %.not571, label %for.body13.i, label %for.end14.i
 
 for.end14.i:                                      ; preds = %for.body13.i, %for.end8.i
-  call void @free(ptr nonnull %314)
-  %memberidx21.i = getelementptr inbounds %Module, ptr %235, i64 0, i32 9
-  %322 = load ptr, ptr %memberidx21.i, align 8
-  %323 = call ptr @malloc(i32 25)
-  %324 = load ptr, ptr %322, align 8
-  %memberidx1.i76.i = getelementptr inbounds %Array_VarDeclaration_, ptr %322, i64 0, i32 1
-  %325 = load i64, ptr %memberidx1.i76.i, align 4
-  store i1 false, ptr %323, align 1
-  %memberidx1.i.i77.i = getelementptr inbounds %ArrayIterator_VarDeclaration_, ptr %323, i64 0, i32 1
+  call void @free(ptr nonnull %343)
+  %memberidx21.i = getelementptr inbounds %Module, ptr %264, i64 0, i32 9
+  %351 = load ptr, ptr %memberidx21.i, align 8
+  %352 = call ptr @malloc(i32 25)
+  %353 = load ptr, ptr %351, align 8
+  %memberidx1.i76.i = getelementptr inbounds %Array_VarDeclaration_, ptr %351, i64 0, i32 1
+  %354 = load i64, ptr %memberidx1.i76.i, align 4
+  store i1 false, ptr %352, align 1
+  %memberidx1.i.i77.i = getelementptr inbounds %ArrayIterator_VarDeclaration_, ptr %352, i64 0, i32 1
   store i64 0, ptr %memberidx1.i.i77.i, align 4
-  %memberidx2.i.i78.i = getelementptr inbounds %ArrayIterator_VarDeclaration_, ptr %323, i64 0, i32 3
-  store ptr %324, ptr %memberidx2.i.i78.i, align 8
-  %memberidx3.i.i79.i = getelementptr inbounds %ArrayIterator_VarDeclaration_, ptr %323, i64 0, i32 2
-  store i64 %325, ptr %memberidx3.i.i79.i, align 4
-  %326 = icmp slt i64 %325, 1
-  br i1 %326, label %for.end20.i, label %for.body19.i
+  %memberidx2.i.i78.i = getelementptr inbounds %ArrayIterator_VarDeclaration_, ptr %352, i64 0, i32 3
+  store ptr %353, ptr %memberidx2.i.i78.i, align 8
+  %memberidx3.i.i79.i = getelementptr inbounds %ArrayIterator_VarDeclaration_, ptr %352, i64 0, i32 2
+  store i64 %354, ptr %memberidx3.i.i79.i, align 4
+  %355 = icmp slt i64 %354, 1
+  br i1 %355, label %for.end20.i, label %for.body19.i
 
 for.body19.i:                                     ; preds = %for.end14.i, %for.body19.i
-  %.in479 = phi ptr [ %330, %for.body19.i ], [ %324, %for.end14.i ]
-  %327 = phi i64 [ %329, %for.body19.i ], [ 1, %for.end14.i ]
-  %328 = load ptr, ptr %.in479, align 8
-  call fastcc void @CodeGen_codegen_var_declaration(ptr nonnull %9, ptr null, ptr %328)
-  %329 = add nuw nsw i64 %327, 1
-  %330 = getelementptr inbounds ptr, ptr %324, i64 %327
-  %.not562 = icmp slt i64 %327, %325
-  br i1 %.not562, label %for.body19.i, label %for.end20.i
+  %.in489 = phi ptr [ %359, %for.body19.i ], [ %353, %for.end14.i ]
+  %356 = phi i64 [ %358, %for.body19.i ], [ 1, %for.end14.i ]
+  %357 = load ptr, ptr %.in489, align 8
+  call fastcc void @CodeGen_codegen_var_declaration(ptr nonnull %9, ptr null, ptr %357)
+  %358 = add nuw nsw i64 %356, 1
+  %359 = getelementptr inbounds ptr, ptr %353, i64 %356
+  %.not572 = icmp slt i64 %356, %354
+  br i1 %.not572, label %for.body19.i, label %for.end20.i
 
 for.end20.i:                                      ; preds = %for.body19.i, %for.end14.i
-  call void @free(ptr nonnull %323)
-  %331 = load ptr, ptr %memberidx9.i, align 8
-  %332 = call ptr @malloc(i32 25)
-  %333 = load ptr, ptr %331, align 8
-  %memberidx1.i83.i = getelementptr inbounds %Array_Class_, ptr %331, i64 0, i32 1
-  %334 = load i64, ptr %memberidx1.i83.i, align 4
-  store i1 false, ptr %332, align 1
-  %memberidx1.i.i84.i = getelementptr inbounds %ArrayIterator_Class_, ptr %332, i64 0, i32 1
+  call void @free(ptr nonnull %352)
+  %360 = load ptr, ptr %memberidx9.i, align 8
+  %361 = call ptr @malloc(i32 25)
+  %362 = load ptr, ptr %360, align 8
+  %memberidx1.i83.i = getelementptr inbounds %Array_Class_, ptr %360, i64 0, i32 1
+  %363 = load i64, ptr %memberidx1.i83.i, align 4
+  store i1 false, ptr %361, align 1
+  %memberidx1.i.i84.i = getelementptr inbounds %ArrayIterator_Class_, ptr %361, i64 0, i32 1
   store i64 0, ptr %memberidx1.i.i84.i, align 4
-  %memberidx2.i.i85.i = getelementptr inbounds %ArrayIterator_Class_, ptr %332, i64 0, i32 3
-  store ptr %333, ptr %memberidx2.i.i85.i, align 8
-  %memberidx3.i.i86.i = getelementptr inbounds %ArrayIterator_Class_, ptr %332, i64 0, i32 2
-  store i64 %334, ptr %memberidx3.i.i86.i, align 4
-  %335 = icmp slt i64 %334, 1
-  br i1 %335, label %for.end26.i, label %for.body25.i
+  %memberidx2.i.i85.i = getelementptr inbounds %ArrayIterator_Class_, ptr %361, i64 0, i32 3
+  store ptr %362, ptr %memberidx2.i.i85.i, align 8
+  %memberidx3.i.i86.i = getelementptr inbounds %ArrayIterator_Class_, ptr %361, i64 0, i32 2
+  store i64 %363, ptr %memberidx3.i.i86.i, align 4
+  %364 = icmp slt i64 %363, 1
+  br i1 %364, label %for.end26.i, label %for.body25.i
 
 for.body25.i:                                     ; preds = %for.end20.i, %for.body25.i
-  %.in480 = phi ptr [ %339, %for.body25.i ], [ %333, %for.end20.i ]
-  %336 = phi i64 [ %338, %for.body25.i ], [ 1, %for.end20.i ]
-  %337 = load ptr, ptr %.in480, align 8
-  call fastcc void @CodeGen_codegen_class(ptr nonnull %9, ptr %337)
-  %338 = add nuw nsw i64 %336, 1
-  %339 = getelementptr inbounds ptr, ptr %333, i64 %336
-  %.not563 = icmp slt i64 %336, %334
-  br i1 %.not563, label %for.body25.i, label %for.end26.i
+  %.in490 = phi ptr [ %368, %for.body25.i ], [ %362, %for.end20.i ]
+  %365 = phi i64 [ %367, %for.body25.i ], [ 1, %for.end20.i ]
+  %366 = load ptr, ptr %.in490, align 8
+  call fastcc void @CodeGen_codegen_class(ptr nonnull %9, ptr %366)
+  %367 = add nuw nsw i64 %365, 1
+  %368 = getelementptr inbounds ptr, ptr %362, i64 %365
+  %.not573 = icmp slt i64 %365, %363
+  br i1 %.not573, label %for.body25.i, label %for.end26.i
 
 for.end26.i:                                      ; preds = %for.body25.i, %for.end20.i
-  call void @free(ptr nonnull %332)
-  %memberidx33.i = getelementptr inbounds %Module, ptr %235, i64 0, i32 4
-  %340 = load ptr, ptr %memberidx33.i, align 8
-  %341 = call ptr @malloc(i32 25)
-  %342 = load ptr, ptr %340, align 8
-  %memberidx1.i90.i = getelementptr inbounds %Array_Function_, ptr %340, i64 0, i32 1
-  %343 = load i64, ptr %memberidx1.i90.i, align 4
-  store i1 false, ptr %341, align 1
-  %memberidx1.i.i91.i = getelementptr inbounds %ArrayIterator_Function_, ptr %341, i64 0, i32 1
+  call void @free(ptr nonnull %361)
+  %memberidx33.i = getelementptr inbounds %Module, ptr %264, i64 0, i32 4
+  %369 = load ptr, ptr %memberidx33.i, align 8
+  %370 = call ptr @malloc(i32 25)
+  %371 = load ptr, ptr %369, align 8
+  %memberidx1.i90.i = getelementptr inbounds %Array_Function_, ptr %369, i64 0, i32 1
+  %372 = load i64, ptr %memberidx1.i90.i, align 4
+  store i1 false, ptr %370, align 1
+  %memberidx1.i.i91.i = getelementptr inbounds %ArrayIterator_Function_, ptr %370, i64 0, i32 1
   store i64 0, ptr %memberidx1.i.i91.i, align 4
-  %memberidx2.i.i92.i = getelementptr inbounds %ArrayIterator_Function_, ptr %341, i64 0, i32 3
-  store ptr %342, ptr %memberidx2.i.i92.i, align 8
-  %memberidx3.i.i93.i = getelementptr inbounds %ArrayIterator_Function_, ptr %341, i64 0, i32 2
-  store i64 %343, ptr %memberidx3.i.i93.i, align 4
-  %344 = icmp slt i64 %343, 1
-  br i1 %344, label %for.end32.i, label %for.body31.i
+  %memberidx2.i.i92.i = getelementptr inbounds %ArrayIterator_Function_, ptr %370, i64 0, i32 3
+  store ptr %371, ptr %memberidx2.i.i92.i, align 8
+  %memberidx3.i.i93.i = getelementptr inbounds %ArrayIterator_Function_, ptr %370, i64 0, i32 2
+  store i64 %372, ptr %memberidx3.i.i93.i, align 4
+  %373 = icmp slt i64 %372, 1
+  br i1 %373, label %for.end32.i, label %for.body31.i
 
 for.body31.i:                                     ; preds = %for.end26.i, %for.body31.i
-  %.in481 = phi ptr [ %348, %for.body31.i ], [ %342, %for.end26.i ]
-  %345 = phi i64 [ %347, %for.body31.i ], [ 1, %for.end26.i ]
-  %346 = load ptr, ptr %.in481, align 8
-  call fastcc void @CodeGen_codegen_function(ptr nonnull %9, ptr %346)
-  %347 = add nuw nsw i64 %345, 1
-  %348 = getelementptr inbounds ptr, ptr %342, i64 %345
-  %.not564 = icmp slt i64 %345, %343
-  br i1 %.not564, label %for.body31.i, label %for.end32.i
+  %.in491 = phi ptr [ %377, %for.body31.i ], [ %371, %for.end26.i ]
+  %374 = phi i64 [ %376, %for.body31.i ], [ 1, %for.end26.i ]
+  %375 = load ptr, ptr %.in491, align 8
+  call fastcc void @CodeGen_codegen_function(ptr nonnull %9, ptr %375)
+  %376 = add nuw nsw i64 %374, 1
+  %377 = getelementptr inbounds ptr, ptr %371, i64 %374
+  %.not574 = icmp slt i64 %374, %372
+  br i1 %.not574, label %for.body31.i, label %for.end32.i
 
 for.end32.i:                                      ; preds = %for.body31.i, %for.end26.i
-  call void @free(ptr nonnull %341)
-  %349 = load ptr, ptr %memberidx1.i51.i, align 8
-  %350 = call ptr @malloc(i32 25)
-  %351 = load ptr, ptr %349, align 8
-  %memberidx1.i.i98.i = getelementptr inbounds %Map_String_LLVMValueRef_, ptr %349, i64 0, i32 1
-  %352 = load i64, ptr %memberidx1.i.i98.i, align 4
-  %memberidx2.i.i99.i = getelementptr inbounds %Map_String_LLVMValueRef_, ptr %349, i64 0, i32 2
-  %353 = load i64, ptr %memberidx2.i.i99.i, align 4
-  store i1 false, ptr %350, align 1
-  %memberidx1.i.i.i100.i = getelementptr inbounds %MapIterator_String_LLVMValueRef_, ptr %350, i64 0, i32 1
-  store ptr %351, ptr %memberidx1.i.i.i100.i, align 8
-  %memberidx2.i.i.i101.i = getelementptr inbounds %MapIterator_String_LLVMValueRef_, ptr %350, i64 0, i32 2
-  store i64 %352, ptr %memberidx2.i.i.i101.i, align 4
-  %memberidx3.i.i.i.i = getelementptr inbounds %MapIterator_String_LLVMValueRef_, ptr %350, i64 0, i32 3
-  store i64 %353, ptr %memberidx3.i.i.i.i, align 4
-  br label %for.next.i.i214
+  call void @free(ptr nonnull %370)
+  %378 = load ptr, ptr %memberidx1.i51.i, align 8
+  %379 = call ptr @malloc(i32 25)
+  %380 = load ptr, ptr %378, align 8
+  %memberidx1.i.i98.i = getelementptr inbounds %Map_String_LLVMValueRef_, ptr %378, i64 0, i32 1
+  %381 = load i64, ptr %memberidx1.i.i98.i, align 4
+  %memberidx2.i.i99.i = getelementptr inbounds %Map_String_LLVMValueRef_, ptr %378, i64 0, i32 2
+  %382 = load i64, ptr %memberidx2.i.i99.i, align 4
+  store i1 false, ptr %379, align 1
+  %memberidx1.i.i.i100.i = getelementptr inbounds %MapIterator_String_LLVMValueRef_, ptr %379, i64 0, i32 1
+  store ptr %380, ptr %memberidx1.i.i.i100.i, align 8
+  %memberidx2.i.i.i101.i = getelementptr inbounds %MapIterator_String_LLVMValueRef_, ptr %379, i64 0, i32 2
+  store i64 %381, ptr %memberidx2.i.i.i101.i, align 4
+  %memberidx3.i.i.i.i = getelementptr inbounds %MapIterator_String_LLVMValueRef_, ptr %379, i64 0, i32 3
+  store i64 %382, ptr %memberidx3.i.i.i.i, align 4
+  br label %for.next.i.i222
 
-for.next.i.i214:                                  ; preds = %for.body.i.i215, %for.end32.i
-  %354 = phi ptr [ %362, %for.body.i.i215 ], [ %351, %for.end32.i ]
-  %355 = phi i64 [ %364, %for.body.i.i215 ], [ %353, %for.end32.i ]
-  %.lcssa420422 = phi i64 [ %.lcssa521, %for.body.i.i215 ], [ %352, %for.end32.i ]
-  %smin557 = call i64 @llvm.smin.i64(i64 %.lcssa420422, i64 0)
-  %356 = add i64 %smin557, -1
+for.next.i.i222:                                  ; preds = %for.body.i.i223, %for.end32.i
+  %383 = phi ptr [ %391, %for.body.i.i223 ], [ %380, %for.end32.i ]
+  %384 = phi i64 [ %393, %for.body.i.i223 ], [ %382, %for.end32.i ]
+  %.lcssa430432 = phi i64 [ %.lcssa531, %for.body.i.i223 ], [ %381, %for.end32.i ]
+  %smin567 = call i64 @llvm.smin.i64(i64 %.lcssa430432, i64 0)
+  %385 = add i64 %smin567, -1
   br label %while.entry.i.i.i
 
-while.entry.i.i.i:                                ; preds = %while.body.i.i.i, %for.next.i.i214
-  %357 = phi ptr [ %incdec.ptr.i.i.i, %while.body.i.i.i ], [ %354, %for.next.i.i214 ]
-  %358 = phi i64 [ %360, %while.body.i.i.i ], [ %.lcssa420422, %for.next.i.i214 ]
-  %359 = icmp sgt i64 %358, 0
-  br i1 %359, label %while.body.i.i.i, label %MapIterator_String_LLVMValueRef__next.exit.i.i
+while.entry.i.i.i:                                ; preds = %while.body.i.i.i, %for.next.i.i222
+  %386 = phi ptr [ %incdec.ptr.i.i.i, %while.body.i.i.i ], [ %383, %for.next.i.i222 ]
+  %387 = phi i64 [ %389, %while.body.i.i.i ], [ %.lcssa430432, %for.next.i.i222 ]
+  %388 = icmp sgt i64 %387, 0
+  br i1 %388, label %while.body.i.i.i, label %MapIterator_String_LLVMValueRef__next.exit.i.i
 
 while.body.i.i.i:                                 ; preds = %while.entry.i.i.i
-  %360 = add nsw i64 %358, -1
-  %incdec.ptr.i.i.i = getelementptr inbounds ptr, ptr %357, i64 1
+  %389 = add nsw i64 %387, -1
+  %incdec.ptr.i.i.i = getelementptr inbounds ptr, ptr %386, i64 1
   store ptr %incdec.ptr.i.i.i, ptr %memberidx1.i.i.i100.i, align 8
-  %361 = load ptr, ptr %357, align 8
-  %.not.i.i.i = icmp eq ptr %361, null
+  %390 = load ptr, ptr %386, align 8
+  %.not.i.i.i = icmp eq ptr %390, null
   br i1 %.not.i.i.i, label %while.entry.i.i.i, label %MapIterator_String_LLVMValueRef__next.exit.i.i
 
 MapIterator_String_LLVMValueRef__next.exit.i.i:   ; preds = %while.body.i.i.i, %while.entry.i.i.i
-  %362 = phi ptr [ %incdec.ptr.i.i.i, %while.body.i.i.i ], [ %357, %while.entry.i.i.i ]
-  %.lcssa521 = phi i64 [ %360, %while.body.i.i.i ], [ %356, %while.entry.i.i.i ]
-  %363 = icmp slt i64 %355, 1
-  br i1 %363, label %for.end.i.i, label %for.body.i.i215
+  %391 = phi ptr [ %incdec.ptr.i.i.i, %while.body.i.i.i ], [ %386, %while.entry.i.i.i ]
+  %.lcssa531 = phi i64 [ %389, %while.body.i.i.i ], [ %385, %while.entry.i.i.i ]
+  %392 = icmp slt i64 %384, 1
+  br i1 %392, label %for.end.i.i, label %for.body.i.i223
 
-for.body.i.i215:                                  ; preds = %MapIterator_String_LLVMValueRef__next.exit.i.i
-  %364 = add nsw i64 %355, -1
-  %365 = getelementptr inbounds ptr, ptr %362, i64 -1
-  %366 = load ptr, ptr %365, align 8
-  %367 = load ptr, ptr %366, align 8
-  %368 = load ptr, ptr %367, align 8
-  call void @free(ptr %368)
-  call void @free(ptr %367)
-  br label %for.next.i.i214
+for.body.i.i223:                                  ; preds = %MapIterator_String_LLVMValueRef__next.exit.i.i
+  %393 = add nsw i64 %384, -1
+  %394 = getelementptr inbounds ptr, ptr %391, i64 -1
+  %395 = load ptr, ptr %394, align 8
+  %396 = load ptr, ptr %395, align 8
+  %397 = load ptr, ptr %396, align 8
+  call void @free(ptr %397)
+  call void @free(ptr %396)
+  br label %for.next.i.i222
 
 for.end.i.i:                                      ; preds = %MapIterator_String_LLVMValueRef__next.exit.i.i
-  call void @free(ptr nonnull %350)
-  %369 = load ptr, ptr %349, align 8
-  call void @free(ptr %369)
-  call void @free(ptr %349)
-  %370 = load ptr, ptr %memberidx2.i.i209, align 8
-  %371 = call ptr @malloc(i32 25)
-  %372 = load ptr, ptr %370, align 8
-  %memberidx1.i50.i.i = getelementptr inbounds %Map_String_LLVMValueRef_, ptr %370, i64 0, i32 1
-  %373 = load i64, ptr %memberidx1.i50.i.i, align 4
-  %memberidx2.i51.i.i = getelementptr inbounds %Map_String_LLVMValueRef_, ptr %370, i64 0, i32 2
-  %374 = load i64, ptr %memberidx2.i51.i.i, align 4
-  store i1 false, ptr %371, align 1
-  %memberidx1.i.i52.i.i = getelementptr inbounds %MapIterator_String_LLVMValueRef_, ptr %371, i64 0, i32 1
-  store ptr %372, ptr %memberidx1.i.i52.i.i, align 8
-  %memberidx2.i.i53.i.i = getelementptr inbounds %MapIterator_String_LLVMValueRef_, ptr %371, i64 0, i32 2
-  store i64 %373, ptr %memberidx2.i.i53.i.i, align 4
-  %memberidx3.i.i54.i.i = getelementptr inbounds %MapIterator_String_LLVMValueRef_, ptr %371, i64 0, i32 3
-  store i64 %374, ptr %memberidx3.i.i54.i.i, align 4
+  call void @free(ptr nonnull %379)
+  %398 = load ptr, ptr %378, align 8
+  call void @free(ptr %398)
+  call void @free(ptr %378)
+  %399 = load ptr, ptr %memberidx2.i.i217, align 8
+  %400 = call ptr @malloc(i32 25)
+  %401 = load ptr, ptr %399, align 8
+  %memberidx1.i50.i.i = getelementptr inbounds %Map_String_LLVMValueRef_, ptr %399, i64 0, i32 1
+  %402 = load i64, ptr %memberidx1.i50.i.i, align 4
+  %memberidx2.i51.i.i = getelementptr inbounds %Map_String_LLVMValueRef_, ptr %399, i64 0, i32 2
+  %403 = load i64, ptr %memberidx2.i51.i.i, align 4
+  store i1 false, ptr %400, align 1
+  %memberidx1.i.i52.i.i = getelementptr inbounds %MapIterator_String_LLVMValueRef_, ptr %400, i64 0, i32 1
+  store ptr %401, ptr %memberidx1.i.i52.i.i, align 8
+  %memberidx2.i.i53.i.i = getelementptr inbounds %MapIterator_String_LLVMValueRef_, ptr %400, i64 0, i32 2
+  store i64 %402, ptr %memberidx2.i.i53.i.i, align 4
+  %memberidx3.i.i54.i.i = getelementptr inbounds %MapIterator_String_LLVMValueRef_, ptr %400, i64 0, i32 3
+  store i64 %403, ptr %memberidx3.i.i54.i.i, align 4
   br label %for.next5.i.i
 
 for.next5.i.i:                                    ; preds = %for.body6.i.i, %for.end.i.i
-  %375 = phi ptr [ %383, %for.body6.i.i ], [ %372, %for.end.i.i ]
-  %376 = phi i64 [ %385, %for.body6.i.i ], [ %374, %for.end.i.i ]
-  %.lcssa415417 = phi i64 [ %.lcssa518, %for.body6.i.i ], [ %373, %for.end.i.i ]
-  %smin555 = call i64 @llvm.smin.i64(i64 %.lcssa415417, i64 0)
-  %377 = add i64 %smin555, -1
+  %404 = phi ptr [ %412, %for.body6.i.i ], [ %401, %for.end.i.i ]
+  %405 = phi i64 [ %414, %for.body6.i.i ], [ %403, %for.end.i.i ]
+  %.lcssa425427 = phi i64 [ %.lcssa528, %for.body6.i.i ], [ %402, %for.end.i.i ]
+  %smin565 = call i64 @llvm.smin.i64(i64 %.lcssa425427, i64 0)
+  %406 = add i64 %smin565, -1
   br label %while.entry.i56.i.i
 
 while.entry.i56.i.i:                              ; preds = %while.body.i62.i.i, %for.next5.i.i
-  %378 = phi ptr [ %incdec.ptr.i60.i.i, %while.body.i62.i.i ], [ %375, %for.next5.i.i ]
-  %379 = phi i64 [ %381, %while.body.i62.i.i ], [ %.lcssa415417, %for.next5.i.i ]
-  %380 = icmp sgt i64 %379, 0
-  br i1 %380, label %while.body.i62.i.i, label %MapIterator_String_LLVMValueRef__next.exit63.i.i
+  %407 = phi ptr [ %incdec.ptr.i60.i.i, %while.body.i62.i.i ], [ %404, %for.next5.i.i ]
+  %408 = phi i64 [ %410, %while.body.i62.i.i ], [ %.lcssa425427, %for.next5.i.i ]
+  %409 = icmp sgt i64 %408, 0
+  br i1 %409, label %while.body.i62.i.i, label %MapIterator_String_LLVMValueRef__next.exit63.i.i
 
 while.body.i62.i.i:                               ; preds = %while.entry.i56.i.i
-  %381 = add nsw i64 %379, -1
-  %incdec.ptr.i60.i.i = getelementptr inbounds ptr, ptr %378, i64 1
+  %410 = add nsw i64 %408, -1
+  %incdec.ptr.i60.i.i = getelementptr inbounds ptr, ptr %407, i64 1
   store ptr %incdec.ptr.i60.i.i, ptr %memberidx1.i.i52.i.i, align 8
-  %382 = load ptr, ptr %378, align 8
-  %.not.i61.i.i = icmp eq ptr %382, null
+  %411 = load ptr, ptr %407, align 8
+  %.not.i61.i.i = icmp eq ptr %411, null
   br i1 %.not.i61.i.i, label %while.entry.i56.i.i, label %MapIterator_String_LLVMValueRef__next.exit63.i.i
 
 MapIterator_String_LLVMValueRef__next.exit63.i.i: ; preds = %while.body.i62.i.i, %while.entry.i56.i.i
-  %383 = phi ptr [ %incdec.ptr.i60.i.i, %while.body.i62.i.i ], [ %378, %while.entry.i56.i.i ]
-  %.lcssa518 = phi i64 [ %381, %while.body.i62.i.i ], [ %377, %while.entry.i56.i.i ]
-  %384 = icmp slt i64 %376, 1
-  br i1 %384, label %for.end7.i.i, label %for.body6.i.i
+  %412 = phi ptr [ %incdec.ptr.i60.i.i, %while.body.i62.i.i ], [ %407, %while.entry.i56.i.i ]
+  %.lcssa528 = phi i64 [ %410, %while.body.i62.i.i ], [ %406, %while.entry.i56.i.i ]
+  %413 = icmp slt i64 %405, 1
+  br i1 %413, label %for.end7.i.i, label %for.body6.i.i
 
 for.body6.i.i:                                    ; preds = %MapIterator_String_LLVMValueRef__next.exit63.i.i
-  %385 = add nsw i64 %376, -1
-  %386 = getelementptr inbounds ptr, ptr %383, i64 -1
-  %387 = load ptr, ptr %386, align 8
-  %388 = load ptr, ptr %387, align 8
-  %389 = load ptr, ptr %388, align 8
-  call void @free(ptr %389)
-  call void @free(ptr %388)
+  %414 = add nsw i64 %405, -1
+  %415 = getelementptr inbounds ptr, ptr %412, i64 -1
+  %416 = load ptr, ptr %415, align 8
+  %417 = load ptr, ptr %416, align 8
+  %418 = load ptr, ptr %417, align 8
+  call void @free(ptr %418)
+  call void @free(ptr %417)
   br label %for.next5.i.i
 
 for.end7.i.i:                                     ; preds = %MapIterator_String_LLVMValueRef__next.exit63.i.i
-  call void @free(ptr nonnull %371)
-  %390 = load ptr, ptr %370, align 8
-  call void @free(ptr %390)
-  call void @free(ptr %370)
-  %391 = load ptr, ptr %memberidx5.i.i, align 8
-  %392 = call ptr @malloc(i32 25)
-  %393 = load ptr, ptr %391, align 8
-  %memberidx1.i64.i.i = getelementptr inbounds %Map_String_LLVMValueRef_, ptr %391, i64 0, i32 1
-  %394 = load i64, ptr %memberidx1.i64.i.i, align 4
-  %memberidx2.i65.i.i = getelementptr inbounds %Map_String_LLVMValueRef_, ptr %391, i64 0, i32 2
-  %395 = load i64, ptr %memberidx2.i65.i.i, align 4
-  store i1 false, ptr %392, align 1
-  %memberidx1.i.i66.i.i = getelementptr inbounds %MapIterator_String_LLVMValueRef_, ptr %392, i64 0, i32 1
-  store ptr %393, ptr %memberidx1.i.i66.i.i, align 8
-  %memberidx2.i.i67.i.i = getelementptr inbounds %MapIterator_String_LLVMValueRef_, ptr %392, i64 0, i32 2
-  store i64 %394, ptr %memberidx2.i.i67.i.i, align 4
-  %memberidx3.i.i68.i.i = getelementptr inbounds %MapIterator_String_LLVMValueRef_, ptr %392, i64 0, i32 3
-  store i64 %395, ptr %memberidx3.i.i68.i.i, align 4
+  call void @free(ptr nonnull %400)
+  %419 = load ptr, ptr %399, align 8
+  call void @free(ptr %419)
+  call void @free(ptr %399)
+  %420 = load ptr, ptr %memberidx5.i.i, align 8
+  %421 = call ptr @malloc(i32 25)
+  %422 = load ptr, ptr %420, align 8
+  %memberidx1.i64.i.i = getelementptr inbounds %Map_String_LLVMValueRef_, ptr %420, i64 0, i32 1
+  %423 = load i64, ptr %memberidx1.i64.i.i, align 4
+  %memberidx2.i65.i.i = getelementptr inbounds %Map_String_LLVMValueRef_, ptr %420, i64 0, i32 2
+  %424 = load i64, ptr %memberidx2.i65.i.i, align 4
+  store i1 false, ptr %421, align 1
+  %memberidx1.i.i66.i.i = getelementptr inbounds %MapIterator_String_LLVMValueRef_, ptr %421, i64 0, i32 1
+  store ptr %422, ptr %memberidx1.i.i66.i.i, align 8
+  %memberidx2.i.i67.i.i = getelementptr inbounds %MapIterator_String_LLVMValueRef_, ptr %421, i64 0, i32 2
+  store i64 %423, ptr %memberidx2.i.i67.i.i, align 4
+  %memberidx3.i.i68.i.i = getelementptr inbounds %MapIterator_String_LLVMValueRef_, ptr %421, i64 0, i32 3
+  store i64 %424, ptr %memberidx3.i.i68.i.i, align 4
   br label %for.next13.i.i
 
 for.next13.i.i:                                   ; preds = %for.body14.i.i, %for.end7.i.i
-  %396 = phi ptr [ %404, %for.body14.i.i ], [ %393, %for.end7.i.i ]
-  %397 = phi i64 [ %406, %for.body14.i.i ], [ %395, %for.end7.i.i ]
-  %.lcssa410412 = phi i64 [ %.lcssa515, %for.body14.i.i ], [ %394, %for.end7.i.i ]
-  %smin553 = call i64 @llvm.smin.i64(i64 %.lcssa410412, i64 0)
-  %398 = add i64 %smin553, -1
+  %425 = phi ptr [ %433, %for.body14.i.i ], [ %422, %for.end7.i.i ]
+  %426 = phi i64 [ %435, %for.body14.i.i ], [ %424, %for.end7.i.i ]
+  %.lcssa420422 = phi i64 [ %.lcssa525, %for.body14.i.i ], [ %423, %for.end7.i.i ]
+  %smin563 = call i64 @llvm.smin.i64(i64 %.lcssa420422, i64 0)
+  %427 = add i64 %smin563, -1
   br label %while.entry.i70.i.i
 
 while.entry.i70.i.i:                              ; preds = %while.body.i76.i.i, %for.next13.i.i
-  %399 = phi ptr [ %incdec.ptr.i74.i.i, %while.body.i76.i.i ], [ %396, %for.next13.i.i ]
-  %400 = phi i64 [ %402, %while.body.i76.i.i ], [ %.lcssa410412, %for.next13.i.i ]
-  %401 = icmp sgt i64 %400, 0
-  br i1 %401, label %while.body.i76.i.i, label %MapIterator_String_LLVMValueRef__next.exit77.i.i
+  %428 = phi ptr [ %incdec.ptr.i74.i.i, %while.body.i76.i.i ], [ %425, %for.next13.i.i ]
+  %429 = phi i64 [ %431, %while.body.i76.i.i ], [ %.lcssa420422, %for.next13.i.i ]
+  %430 = icmp sgt i64 %429, 0
+  br i1 %430, label %while.body.i76.i.i, label %MapIterator_String_LLVMValueRef__next.exit77.i.i
 
 while.body.i76.i.i:                               ; preds = %while.entry.i70.i.i
-  %402 = add nsw i64 %400, -1
-  %incdec.ptr.i74.i.i = getelementptr inbounds ptr, ptr %399, i64 1
+  %431 = add nsw i64 %429, -1
+  %incdec.ptr.i74.i.i = getelementptr inbounds ptr, ptr %428, i64 1
   store ptr %incdec.ptr.i74.i.i, ptr %memberidx1.i.i66.i.i, align 8
-  %403 = load ptr, ptr %399, align 8
-  %.not.i75.i.i = icmp eq ptr %403, null
+  %432 = load ptr, ptr %428, align 8
+  %.not.i75.i.i = icmp eq ptr %432, null
   br i1 %.not.i75.i.i, label %while.entry.i70.i.i, label %MapIterator_String_LLVMValueRef__next.exit77.i.i
 
 MapIterator_String_LLVMValueRef__next.exit77.i.i: ; preds = %while.body.i76.i.i, %while.entry.i70.i.i
-  %404 = phi ptr [ %incdec.ptr.i74.i.i, %while.body.i76.i.i ], [ %399, %while.entry.i70.i.i ]
-  %.lcssa515 = phi i64 [ %402, %while.body.i76.i.i ], [ %398, %while.entry.i70.i.i ]
-  %405 = icmp slt i64 %397, 1
-  br i1 %405, label %for.end15.i.i, label %for.body14.i.i
+  %433 = phi ptr [ %incdec.ptr.i74.i.i, %while.body.i76.i.i ], [ %428, %while.entry.i70.i.i ]
+  %.lcssa525 = phi i64 [ %431, %while.body.i76.i.i ], [ %427, %while.entry.i70.i.i ]
+  %434 = icmp slt i64 %426, 1
+  br i1 %434, label %for.end15.i.i, label %for.body14.i.i
 
 for.body14.i.i:                                   ; preds = %MapIterator_String_LLVMValueRef__next.exit77.i.i
-  %406 = add nsw i64 %397, -1
-  %407 = getelementptr inbounds ptr, ptr %404, i64 -1
-  %408 = load ptr, ptr %407, align 8
-  %409 = load ptr, ptr %408, align 8
-  %410 = load ptr, ptr %409, align 8
-  call void @free(ptr %410)
-  call void @free(ptr %409)
+  %435 = add nsw i64 %426, -1
+  %436 = getelementptr inbounds ptr, ptr %433, i64 -1
+  %437 = load ptr, ptr %436, align 8
+  %438 = load ptr, ptr %437, align 8
+  %439 = load ptr, ptr %438, align 8
+  call void @free(ptr %439)
+  call void @free(ptr %438)
   br label %for.next13.i.i
 
 for.end15.i.i:                                    ; preds = %MapIterator_String_LLVMValueRef__next.exit77.i.i
-  call void @free(ptr nonnull %392)
-  %411 = load ptr, ptr %391, align 8
-  call void @free(ptr %411)
-  call void @free(ptr %391)
-  %412 = load ptr, ptr %memberidx3.i.i210, align 8
-  %413 = call ptr @malloc(i32 25)
-  %414 = load ptr, ptr %412, align 8
-  %memberidx1.i91.i.i = getelementptr inbounds %Map_String_CGClassType_, ptr %412, i64 0, i32 1
-  %415 = load i64, ptr %memberidx1.i91.i.i, align 4
-  %memberidx2.i92.i.i = getelementptr inbounds %Map_String_CGClassType_, ptr %412, i64 0, i32 2
-  %416 = load i64, ptr %memberidx2.i92.i.i, align 4
-  store i1 false, ptr %413, align 1
-  %memberidx1.i.i93.i.i = getelementptr inbounds %MapIterator_String_CGClassType_, ptr %413, i64 0, i32 1
-  store ptr %414, ptr %memberidx1.i.i93.i.i, align 8
-  %memberidx2.i.i94.i.i = getelementptr inbounds %MapIterator_String_CGClassType_, ptr %413, i64 0, i32 2
-  store i64 %415, ptr %memberidx2.i.i94.i.i, align 4
-  %memberidx3.i.i95.i.i = getelementptr inbounds %MapIterator_String_CGClassType_, ptr %413, i64 0, i32 3
-  store i64 %416, ptr %memberidx3.i.i95.i.i, align 4
+  call void @free(ptr nonnull %421)
+  %440 = load ptr, ptr %420, align 8
+  call void @free(ptr %440)
+  call void @free(ptr %420)
+  %441 = load ptr, ptr %memberidx3.i.i218, align 8
+  %442 = call ptr @malloc(i32 25)
+  %443 = load ptr, ptr %441, align 8
+  %memberidx1.i91.i.i = getelementptr inbounds %Map_String_CGClassType_, ptr %441, i64 0, i32 1
+  %444 = load i64, ptr %memberidx1.i91.i.i, align 4
+  %memberidx2.i92.i.i = getelementptr inbounds %Map_String_CGClassType_, ptr %441, i64 0, i32 2
+  %445 = load i64, ptr %memberidx2.i92.i.i, align 4
+  store i1 false, ptr %442, align 1
+  %memberidx1.i.i93.i.i = getelementptr inbounds %MapIterator_String_CGClassType_, ptr %442, i64 0, i32 1
+  store ptr %443, ptr %memberidx1.i.i93.i.i, align 8
+  %memberidx2.i.i94.i.i = getelementptr inbounds %MapIterator_String_CGClassType_, ptr %442, i64 0, i32 2
+  store i64 %444, ptr %memberidx2.i.i94.i.i, align 4
+  %memberidx3.i.i95.i.i = getelementptr inbounds %MapIterator_String_CGClassType_, ptr %442, i64 0, i32 3
+  store i64 %445, ptr %memberidx3.i.i95.i.i, align 4
   br label %for.next21.i.i
 
 for.next21.i.i:                                   ; preds = %for.body22.i.i, %for.end15.i.i
-  %417 = phi ptr [ %425, %for.body22.i.i ], [ %414, %for.end15.i.i ]
-  %418 = phi i64 [ %427, %for.body22.i.i ], [ %416, %for.end15.i.i ]
-  %.lcssa405407 = phi i64 [ %.lcssa512, %for.body22.i.i ], [ %415, %for.end15.i.i ]
-  %smin551 = call i64 @llvm.smin.i64(i64 %.lcssa405407, i64 0)
-  %419 = add i64 %smin551, -1
+  %446 = phi ptr [ %454, %for.body22.i.i ], [ %443, %for.end15.i.i ]
+  %447 = phi i64 [ %456, %for.body22.i.i ], [ %445, %for.end15.i.i ]
+  %.lcssa415417 = phi i64 [ %.lcssa522, %for.body22.i.i ], [ %444, %for.end15.i.i ]
+  %smin561 = call i64 @llvm.smin.i64(i64 %.lcssa415417, i64 0)
+  %448 = add i64 %smin561, -1
   br label %while.entry.i97.i.i
 
 while.entry.i97.i.i:                              ; preds = %while.body.i103.i.i, %for.next21.i.i
-  %420 = phi ptr [ %incdec.ptr.i101.i.i, %while.body.i103.i.i ], [ %417, %for.next21.i.i ]
-  %421 = phi i64 [ %423, %while.body.i103.i.i ], [ %.lcssa405407, %for.next21.i.i ]
-  %422 = icmp sgt i64 %421, 0
-  br i1 %422, label %while.body.i103.i.i, label %MapIterator_String_CGClassType__next.exit.i.i
+  %449 = phi ptr [ %incdec.ptr.i101.i.i, %while.body.i103.i.i ], [ %446, %for.next21.i.i ]
+  %450 = phi i64 [ %452, %while.body.i103.i.i ], [ %.lcssa415417, %for.next21.i.i ]
+  %451 = icmp sgt i64 %450, 0
+  br i1 %451, label %while.body.i103.i.i, label %MapIterator_String_CGClassType__next.exit.i.i
 
 while.body.i103.i.i:                              ; preds = %while.entry.i97.i.i
-  %423 = add nsw i64 %421, -1
-  %incdec.ptr.i101.i.i = getelementptr inbounds ptr, ptr %420, i64 1
+  %452 = add nsw i64 %450, -1
+  %incdec.ptr.i101.i.i = getelementptr inbounds ptr, ptr %449, i64 1
   store ptr %incdec.ptr.i101.i.i, ptr %memberidx1.i.i93.i.i, align 8
-  %424 = load ptr, ptr %420, align 8
-  %.not.i102.i.i = icmp eq ptr %424, null
+  %453 = load ptr, ptr %449, align 8
+  %.not.i102.i.i = icmp eq ptr %453, null
   br i1 %.not.i102.i.i, label %while.entry.i97.i.i, label %MapIterator_String_CGClassType__next.exit.i.i
 
 MapIterator_String_CGClassType__next.exit.i.i:    ; preds = %while.body.i103.i.i, %while.entry.i97.i.i
-  %425 = phi ptr [ %incdec.ptr.i101.i.i, %while.body.i103.i.i ], [ %420, %while.entry.i97.i.i ]
-  %.lcssa512 = phi i64 [ %423, %while.body.i103.i.i ], [ %419, %while.entry.i97.i.i ]
-  %426 = icmp slt i64 %418, 1
-  br i1 %426, label %for.end23.i.i, label %for.body22.i.i
+  %454 = phi ptr [ %incdec.ptr.i101.i.i, %while.body.i103.i.i ], [ %449, %while.entry.i97.i.i ]
+  %.lcssa522 = phi i64 [ %452, %while.body.i103.i.i ], [ %448, %while.entry.i97.i.i ]
+  %455 = icmp slt i64 %447, 1
+  br i1 %455, label %for.end23.i.i, label %for.body22.i.i
 
 for.body22.i.i:                                   ; preds = %MapIterator_String_CGClassType__next.exit.i.i
-  %427 = add nsw i64 %418, -1
-  %428 = getelementptr inbounds ptr, ptr %425, i64 -1
-  %429 = load ptr, ptr %428, align 8
-  %430 = load ptr, ptr %429, align 8
-  %431 = load ptr, ptr %430, align 8
-  call void @free(ptr %431)
-  call void @free(ptr %430)
-  %memberidx27.i.i = getelementptr inbounds %MapEntry_String_CGClassType_, ptr %429, i64 0, i32 1
-  %432 = load ptr, ptr %memberidx27.i.i, align 8
-  call void @free(ptr %432)
+  %456 = add nsw i64 %447, -1
+  %457 = getelementptr inbounds ptr, ptr %454, i64 -1
+  %458 = load ptr, ptr %457, align 8
+  %459 = load ptr, ptr %458, align 8
+  %460 = load ptr, ptr %459, align 8
+  call void @free(ptr %460)
+  call void @free(ptr %459)
+  %memberidx27.i.i = getelementptr inbounds %MapEntry_String_CGClassType_, ptr %458, i64 0, i32 1
+  %461 = load ptr, ptr %memberidx27.i.i, align 8
+  call void @free(ptr %461)
   br label %for.next21.i.i
 
 for.end23.i.i:                                    ; preds = %MapIterator_String_CGClassType__next.exit.i.i
-  call void @free(ptr nonnull %413)
-  %433 = load ptr, ptr %412, align 8
-  call void @free(ptr %433)
-  call void @free(ptr %412)
-  %434 = load ptr, ptr %memberidx4.i.i211, align 8
-  %435 = call ptr @malloc(i32 25)
-  %436 = load ptr, ptr %434, align 8
-  %memberidx1.i86.i.i = getelementptr inbounds %Map_String_CGEnumType_, ptr %434, i64 0, i32 1
-  %437 = load i64, ptr %memberidx1.i86.i.i, align 4
-  %memberidx2.i87.i.i = getelementptr inbounds %Map_String_CGEnumType_, ptr %434, i64 0, i32 2
-  %438 = load i64, ptr %memberidx2.i87.i.i, align 4
-  store i1 false, ptr %435, align 1
-  %memberidx1.i.i88.i.i = getelementptr inbounds %MapIterator_String_CGEnumType_, ptr %435, i64 0, i32 1
-  store ptr %436, ptr %memberidx1.i.i88.i.i, align 8
-  %memberidx2.i.i89.i.i = getelementptr inbounds %MapIterator_String_CGEnumType_, ptr %435, i64 0, i32 2
-  store i64 %437, ptr %memberidx2.i.i89.i.i, align 4
-  %memberidx3.i.i90.i.i = getelementptr inbounds %MapIterator_String_CGEnumType_, ptr %435, i64 0, i32 3
-  store i64 %438, ptr %memberidx3.i.i90.i.i, align 4
+  call void @free(ptr nonnull %442)
+  %462 = load ptr, ptr %441, align 8
+  call void @free(ptr %462)
+  call void @free(ptr %441)
+  %463 = load ptr, ptr %memberidx4.i.i219, align 8
+  %464 = call ptr @malloc(i32 25)
+  %465 = load ptr, ptr %463, align 8
+  %memberidx1.i86.i.i = getelementptr inbounds %Map_String_CGEnumType_, ptr %463, i64 0, i32 1
+  %466 = load i64, ptr %memberidx1.i86.i.i, align 4
+  %memberidx2.i87.i.i = getelementptr inbounds %Map_String_CGEnumType_, ptr %463, i64 0, i32 2
+  %467 = load i64, ptr %memberidx2.i87.i.i, align 4
+  store i1 false, ptr %464, align 1
+  %memberidx1.i.i88.i.i = getelementptr inbounds %MapIterator_String_CGEnumType_, ptr %464, i64 0, i32 1
+  store ptr %465, ptr %memberidx1.i.i88.i.i, align 8
+  %memberidx2.i.i89.i.i = getelementptr inbounds %MapIterator_String_CGEnumType_, ptr %464, i64 0, i32 2
+  store i64 %466, ptr %memberidx2.i.i89.i.i, align 4
+  %memberidx3.i.i90.i.i = getelementptr inbounds %MapIterator_String_CGEnumType_, ptr %464, i64 0, i32 3
+  store i64 %467, ptr %memberidx3.i.i90.i.i, align 4
   br label %for.next30.i.i
 
 for.next30.i.i:                                   ; preds = %for.body31.i.i, %for.end23.i.i
-  %439 = phi ptr [ %447, %for.body31.i.i ], [ %436, %for.end23.i.i ]
-  %440 = phi i64 [ %449, %for.body31.i.i ], [ %438, %for.end23.i.i ]
-  %.lcssa400402 = phi i64 [ %.lcssa509, %for.body31.i.i ], [ %437, %for.end23.i.i ]
-  %smin = call i64 @llvm.smin.i64(i64 %.lcssa400402, i64 0)
-  %441 = add i64 %smin, -1
+  %468 = phi ptr [ %476, %for.body31.i.i ], [ %465, %for.end23.i.i ]
+  %469 = phi i64 [ %478, %for.body31.i.i ], [ %467, %for.end23.i.i ]
+  %.lcssa410412 = phi i64 [ %.lcssa519, %for.body31.i.i ], [ %466, %for.end23.i.i ]
+  %smin = call i64 @llvm.smin.i64(i64 %.lcssa410412, i64 0)
+  %470 = add i64 %smin, -1
   br label %while.entry.i79.i.i
 
 while.entry.i79.i.i:                              ; preds = %while.body.i85.i.i, %for.next30.i.i
-  %442 = phi ptr [ %incdec.ptr.i83.i.i, %while.body.i85.i.i ], [ %439, %for.next30.i.i ]
-  %443 = phi i64 [ %445, %while.body.i85.i.i ], [ %.lcssa400402, %for.next30.i.i ]
-  %444 = icmp sgt i64 %443, 0
-  br i1 %444, label %while.body.i85.i.i, label %MapIterator_String_CGEnumType__next.exit.i.i
+  %471 = phi ptr [ %incdec.ptr.i83.i.i, %while.body.i85.i.i ], [ %468, %for.next30.i.i ]
+  %472 = phi i64 [ %474, %while.body.i85.i.i ], [ %.lcssa410412, %for.next30.i.i ]
+  %473 = icmp sgt i64 %472, 0
+  br i1 %473, label %while.body.i85.i.i, label %MapIterator_String_CGEnumType__next.exit.i.i
 
 while.body.i85.i.i:                               ; preds = %while.entry.i79.i.i
-  %445 = add nsw i64 %443, -1
-  %incdec.ptr.i83.i.i = getelementptr inbounds ptr, ptr %442, i64 1
+  %474 = add nsw i64 %472, -1
+  %incdec.ptr.i83.i.i = getelementptr inbounds ptr, ptr %471, i64 1
   store ptr %incdec.ptr.i83.i.i, ptr %memberidx1.i.i88.i.i, align 8
-  %446 = load ptr, ptr %442, align 8
-  %.not.i84.i.i = icmp eq ptr %446, null
+  %475 = load ptr, ptr %471, align 8
+  %.not.i84.i.i = icmp eq ptr %475, null
   br i1 %.not.i84.i.i, label %while.entry.i79.i.i, label %MapIterator_String_CGEnumType__next.exit.i.i
 
 MapIterator_String_CGEnumType__next.exit.i.i:     ; preds = %while.body.i85.i.i, %while.entry.i79.i.i
-  %447 = phi ptr [ %incdec.ptr.i83.i.i, %while.body.i85.i.i ], [ %442, %while.entry.i79.i.i ]
-  %.lcssa509 = phi i64 [ %445, %while.body.i85.i.i ], [ %441, %while.entry.i79.i.i ]
-  %448 = icmp slt i64 %440, 1
-  br i1 %448, label %CodeGen_destroy.exit.i, label %for.body31.i.i
+  %476 = phi ptr [ %incdec.ptr.i83.i.i, %while.body.i85.i.i ], [ %471, %while.entry.i79.i.i ]
+  %.lcssa519 = phi i64 [ %474, %while.body.i85.i.i ], [ %470, %while.entry.i79.i.i ]
+  %477 = icmp slt i64 %469, 1
+  br i1 %477, label %CodeGen_destroy.exit.i, label %for.body31.i.i
 
 for.body31.i.i:                                   ; preds = %MapIterator_String_CGEnumType__next.exit.i.i
-  %449 = add nsw i64 %440, -1
-  %450 = getelementptr inbounds ptr, ptr %447, i64 -1
-  %451 = load ptr, ptr %450, align 8
-  %452 = load ptr, ptr %451, align 8
-  %453 = load ptr, ptr %452, align 8
-  call void @free(ptr %453)
-  call void @free(ptr %452)
-  %memberidx36.i.i = getelementptr inbounds %MapEntry_String_CGEnumType_, ptr %451, i64 0, i32 1
-  %454 = load ptr, ptr %memberidx36.i.i, align 8
-  call void @free(ptr %454)
+  %478 = add nsw i64 %469, -1
+  %479 = getelementptr inbounds ptr, ptr %476, i64 -1
+  %480 = load ptr, ptr %479, align 8
+  %481 = load ptr, ptr %480, align 8
+  %482 = load ptr, ptr %481, align 8
+  call void @free(ptr %482)
+  call void @free(ptr %481)
+  %memberidx36.i.i = getelementptr inbounds %MapEntry_String_CGEnumType_, ptr %480, i64 0, i32 1
+  %483 = load ptr, ptr %memberidx36.i.i, align 8
+  call void @free(ptr %483)
   br label %for.next30.i.i
 
 CodeGen_destroy.exit.i:                           ; preds = %MapIterator_String_CGEnumType__next.exit.i.i
-  call void @free(ptr nonnull %435)
-  %455 = load ptr, ptr %434, align 8
-  call void @free(ptr %455)
-  call void @free(ptr %434)
-  %456 = load ptr, ptr %common.ret.op.i, align 8
-  %457 = call ptr @malloc(i32 25)
-  %458 = load ptr, ptr %456, align 8
-  %memberidx1.i.i104.i = getelementptr inbounds %Array_Module_, ptr %456, i64 0, i32 1
-  %459 = load i64, ptr %memberidx1.i.i104.i, align 4
-  %memberidx1.i.i.i105.i = getelementptr inbounds %ArrayIterator_Module_, ptr %457, i64 0, i32 1
-  %memberidx2.i.i.i106.i = getelementptr inbounds %ArrayIterator_Module_, ptr %457, i64 0, i32 3
-  store ptr %458, ptr %memberidx2.i.i.i106.i, align 8
-  %memberidx3.i.i.i107.i = getelementptr inbounds %ArrayIterator_Module_, ptr %457, i64 0, i32 2
-  store i64 %459, ptr %memberidx3.i.i.i107.i, align 4
+  call void @free(ptr nonnull %464)
+  %484 = load ptr, ptr %463, align 8
+  call void @free(ptr %484)
+  call void @free(ptr %463)
+  %485 = load ptr, ptr %common.ret.op.i, align 8
+  %486 = call ptr @malloc(i32 25)
+  %487 = load ptr, ptr %485, align 8
+  %memberidx1.i.i104.i = getelementptr inbounds %Array_Module_, ptr %485, i64 0, i32 1
+  %488 = load i64, ptr %memberidx1.i.i104.i, align 4
+  %memberidx1.i.i.i105.i = getelementptr inbounds %ArrayIterator_Module_, ptr %486, i64 0, i32 1
+  %memberidx2.i.i.i106.i = getelementptr inbounds %ArrayIterator_Module_, ptr %486, i64 0, i32 3
+  store ptr %487, ptr %memberidx2.i.i.i106.i, align 8
+  %memberidx3.i.i.i107.i = getelementptr inbounds %ArrayIterator_Module_, ptr %486, i64 0, i32 2
+  store i64 %488, ptr %memberidx3.i.i.i107.i, align 4
   store i64 1, ptr %memberidx1.i.i.i105.i, align 4
-  %460 = load ptr, ptr %458, align 8
-  %461 = icmp slt i64 %459, 1
-  store i1 %461, ptr %457, align 1
-  br i1 %461, label %Program___del__.exit.i, label %for.body.i113.i
+  %489 = load ptr, ptr %487, align 8
+  %490 = icmp slt i64 %488, 1
+  store i1 %490, ptr %486, align 1
+  br i1 %490, label %Program___del__.exit.i, label %for.body.i113.i
 
 for.body.i113.i:                                  ; preds = %CodeGen_destroy.exit.i, %Module___del__.exit.i.i
-  %462 = phi i64 [ %588, %Module___del__.exit.i.i ], [ 1, %CodeGen_destroy.exit.i ]
-  %463 = phi ptr [ %590, %Module___del__.exit.i.i ], [ %460, %CodeGen_destroy.exit.i ]
-  %memberidx.i4.i.i = getelementptr inbounds %Module, ptr %463, i64 0, i32 4
-  %464 = load ptr, ptr %memberidx.i4.i.i, align 8
-  %465 = call ptr @malloc(i32 25)
-  %466 = load ptr, ptr %464, align 8
-  %memberidx1.i.i5.i.i = getelementptr inbounds %Array_Function_, ptr %464, i64 0, i32 1
-  %467 = load i64, ptr %memberidx1.i.i5.i.i, align 4
-  %468 = icmp slt i64 %467, 1
-  br i1 %468, label %for.end.i.i.i, label %for.body.i.i116.i
-
-for.body.i.i116.i:                                ; preds = %for.body.i113.i, %for.body.i.i116.i
-  %.in482 = phi ptr [ %472, %for.body.i.i116.i ], [ %466, %for.body.i113.i ]
-  %469 = phi i64 [ %471, %for.body.i.i116.i ], [ 1, %for.body.i113.i ]
-  %470 = load ptr, ptr %.in482, align 8
-  call void @free(ptr %470)
-  %471 = add nuw nsw i64 %469, 1
-  %472 = getelementptr inbounds ptr, ptr %466, i64 %469
-  %.not565 = icmp slt i64 %469, %467
-  br i1 %.not565, label %for.body.i.i116.i, label %for.end.i.i.i
-
-for.end.i.i.i:                                    ; preds = %for.body.i.i116.i, %for.body.i113.i
-  call void @free(ptr nonnull %465)
-  %memberidx6.i.i117.i = getelementptr inbounds %Module, ptr %463, i64 0, i32 1
-  %473 = load ptr, ptr %memberidx6.i.i117.i, align 8
-  %474 = call ptr @malloc(i32 25)
-  %475 = load ptr, ptr %473, align 8
-  %memberidx1.i60.i.i.i = getelementptr inbounds %Array_Var_, ptr %473, i64 0, i32 1
-  %476 = load i64, ptr %memberidx1.i60.i.i.i, align 4
-  %477 = icmp slt i64 %476, 1
-  br i1 %477, label %for.end5.i.i.i, label %for.body4.i.i.i
-
-for.body4.i.i.i:                                  ; preds = %for.end.i.i.i, %for.body4.i.i.i
-  %.in483 = phi ptr [ %481, %for.body4.i.i.i ], [ %475, %for.end.i.i.i ]
-  %478 = phi i64 [ %480, %for.body4.i.i.i ], [ 1, %for.end.i.i.i ]
-  %479 = load ptr, ptr %.in483, align 8
-  call void @free(ptr %479)
-  %480 = add nuw nsw i64 %478, 1
-  %481 = getelementptr inbounds ptr, ptr %475, i64 %478
-  %.not566 = icmp slt i64 %478, %476
-  br i1 %.not566, label %for.body4.i.i.i, label %for.end5.i.i.i
-
-for.end5.i.i.i:                                   ; preds = %for.body4.i.i.i, %for.end.i.i.i
-  call void @free(ptr nonnull %474)
-  %memberidx12.i.i.i = getelementptr inbounds %Module, ptr %463, i64 0, i32 3
-  %482 = load ptr, ptr %memberidx12.i.i.i, align 8
-  %483 = call ptr @malloc(i32 25)
-  %484 = load ptr, ptr %482, align 8
-  %memberidx1.i67.i.i.i = getelementptr inbounds %Array_Class_, ptr %482, i64 0, i32 1
-  %485 = load i64, ptr %memberidx1.i67.i.i.i, align 4
-  %486 = icmp slt i64 %485, 1
-  br i1 %486, label %for.end11.i.i.i, label %for.body10.i.i.i
-
-for.body10.i.i.i:                                 ; preds = %for.end5.i.i.i, %Class___del__.exit.i.i.i
-  %.in484 = phi ptr [ %516, %Class___del__.exit.i.i.i ], [ %484, %for.end5.i.i.i ]
-  %487 = phi i64 [ %515, %Class___del__.exit.i.i.i ], [ 1, %for.end5.i.i.i ]
-  %488 = load ptr, ptr %.in484, align 8
-  %489 = load ptr, ptr %488, align 8
-  call void @free(ptr %489)
-  %memberidx1.i74.i.i.i = getelementptr inbounds %Class, ptr %488, i64 0, i32 1
-  %490 = load ptr, ptr %memberidx1.i74.i.i.i, align 8
-  %491 = load ptr, ptr %490, align 8
-  call void @free(ptr %491)
-  call void @free(ptr %490)
-  %memberidx2.i75.i.i.i = getelementptr inbounds %Class, ptr %488, i64 0, i32 2
-  %492 = load ptr, ptr %memberidx2.i75.i.i.i, align 8
-  %.not.i.i.i.i = icmp eq ptr %492, null
-  br i1 %.not.i.i.i.i, label %for.entry.i.i.i.i, label %if.entry.i.i.i.i
-
-if.entry.i.i.i.i:                                 ; preds = %for.body10.i.i.i
-  call void @free(ptr nonnull %492)
-  br label %for.entry.i.i.i.i
-
-for.entry.i.i.i.i:                                ; preds = %if.entry.i.i.i.i, %for.body10.i.i.i
-  %memberidx4.i.i.i.i = getelementptr inbounds %Class, ptr %488, i64 0, i32 4
-  %493 = load ptr, ptr %memberidx4.i.i.i.i, align 8
+  %491 = phi i64 [ %617, %Module___del__.exit.i.i ], [ 1, %CodeGen_destroy.exit.i ]
+  %492 = phi ptr [ %619, %Module___del__.exit.i.i ], [ %489, %CodeGen_destroy.exit.i ]
+  %memberidx.i4.i.i = getelementptr inbounds %Module, ptr %492, i64 0, i32 4
+  %493 = load ptr, ptr %memberidx.i4.i.i, align 8
   %494 = call ptr @malloc(i32 25)
   %495 = load ptr, ptr %493, align 8
-  %memberidx1.i.i76.i.i.i = getelementptr inbounds %Array_ClassField_, ptr %493, i64 0, i32 1
-  %496 = load i64, ptr %memberidx1.i.i76.i.i.i, align 4
+  %memberidx1.i.i5.i.i = getelementptr inbounds %Array_Function_, ptr %493, i64 0, i32 1
+  %496 = load i64, ptr %memberidx1.i.i5.i.i, align 4
   %497 = icmp slt i64 %496, 1
-  br i1 %497, label %for.end.i.i.i.i, label %for.body.i.i.i.i
+  br i1 %497, label %for.end.i.i.i, label %for.body.i.i116.i
 
-for.body.i.i.i.i:                                 ; preds = %for.entry.i.i.i.i, %for.body.i.i.i.i
-  %.in485 = phi ptr [ %501, %for.body.i.i.i.i ], [ %495, %for.entry.i.i.i.i ]
-  %498 = phi i64 [ %500, %for.body.i.i.i.i ], [ 1, %for.entry.i.i.i.i ]
-  %499 = load ptr, ptr %.in485, align 8
+for.body.i.i116.i:                                ; preds = %for.body.i113.i, %for.body.i.i116.i
+  %.in492 = phi ptr [ %501, %for.body.i.i116.i ], [ %495, %for.body.i113.i ]
+  %498 = phi i64 [ %500, %for.body.i.i116.i ], [ 1, %for.body.i113.i ]
+  %499 = load ptr, ptr %.in492, align 8
   call void @free(ptr %499)
   %500 = add nuw nsw i64 %498, 1
   %501 = getelementptr inbounds ptr, ptr %495, i64 %498
-  %.not567 = icmp slt i64 %498, %496
-  br i1 %.not567, label %for.body.i.i.i.i, label %for.end.i.i.i.i
+  %.not575 = icmp slt i64 %498, %496
+  br i1 %.not575, label %for.body.i.i116.i, label %for.end.i.i.i
 
-for.end.i.i.i.i:                                  ; preds = %for.body.i.i.i.i, %for.entry.i.i.i.i
+for.end.i.i.i:                                    ; preds = %for.body.i.i116.i, %for.body.i113.i
   call void @free(ptr nonnull %494)
-  %memberidx10.i.i.i.i = getelementptr inbounds %Class, ptr %488, i64 0, i32 5
-  %502 = load ptr, ptr %memberidx10.i.i.i.i, align 8
+  %memberidx6.i.i117.i = getelementptr inbounds %Module, ptr %492, i64 0, i32 1
+  %502 = load ptr, ptr %memberidx6.i.i117.i, align 8
   %503 = call ptr @malloc(i32 25)
   %504 = load ptr, ptr %502, align 8
-  %memberidx1.i21.i.i.i.i = getelementptr inbounds %Array_ClassMethod_, ptr %502, i64 0, i32 1
-  %505 = load i64, ptr %memberidx1.i21.i.i.i.i, align 4
+  %memberidx1.i60.i.i.i = getelementptr inbounds %Array_Var_, ptr %502, i64 0, i32 1
+  %505 = load i64, ptr %memberidx1.i60.i.i.i, align 4
   %506 = icmp slt i64 %505, 1
-  br i1 %506, label %Class___del__.exit.i.i.i, label %for.body8.i.i.i.i
+  br i1 %506, label %for.end5.i.i.i, label %for.body4.i.i.i
 
-for.body8.i.i.i.i:                                ; preds = %for.end.i.i.i.i, %for.body8.i.i.i.i
-  %.in486 = phi ptr [ %510, %for.body8.i.i.i.i ], [ %504, %for.end.i.i.i.i ]
-  %507 = phi i64 [ %509, %for.body8.i.i.i.i ], [ 1, %for.end.i.i.i.i ]
-  %508 = load ptr, ptr %.in486, align 8
+for.body4.i.i.i:                                  ; preds = %for.end.i.i.i, %for.body4.i.i.i
+  %.in493 = phi ptr [ %510, %for.body4.i.i.i ], [ %504, %for.end.i.i.i ]
+  %507 = phi i64 [ %509, %for.body4.i.i.i ], [ 1, %for.end.i.i.i ]
+  %508 = load ptr, ptr %.in493, align 8
   call void @free(ptr %508)
   %509 = add nuw nsw i64 %507, 1
   %510 = getelementptr inbounds ptr, ptr %504, i64 %507
-  %.not568 = icmp slt i64 %507, %505
-  br i1 %.not568, label %for.body8.i.i.i.i, label %Class___del__.exit.i.i.i
+  %.not576 = icmp slt i64 %507, %505
+  br i1 %.not576, label %for.body4.i.i.i, label %for.end5.i.i.i
+
+for.end5.i.i.i:                                   ; preds = %for.body4.i.i.i, %for.end.i.i.i
+  call void @free(ptr nonnull %503)
+  %memberidx12.i.i.i = getelementptr inbounds %Module, ptr %492, i64 0, i32 3
+  %511 = load ptr, ptr %memberidx12.i.i.i, align 8
+  %512 = call ptr @malloc(i32 25)
+  %513 = load ptr, ptr %511, align 8
+  %memberidx1.i67.i.i.i = getelementptr inbounds %Array_Class_, ptr %511, i64 0, i32 1
+  %514 = load i64, ptr %memberidx1.i67.i.i.i, align 4
+  %515 = icmp slt i64 %514, 1
+  br i1 %515, label %for.end11.i.i.i, label %for.body10.i.i.i
+
+for.body10.i.i.i:                                 ; preds = %for.end5.i.i.i, %Class___del__.exit.i.i.i
+  %.in494 = phi ptr [ %545, %Class___del__.exit.i.i.i ], [ %513, %for.end5.i.i.i ]
+  %516 = phi i64 [ %544, %Class___del__.exit.i.i.i ], [ 1, %for.end5.i.i.i ]
+  %517 = load ptr, ptr %.in494, align 8
+  %518 = load ptr, ptr %517, align 8
+  call void @free(ptr %518)
+  %memberidx1.i74.i.i.i = getelementptr inbounds %Class, ptr %517, i64 0, i32 1
+  %519 = load ptr, ptr %memberidx1.i74.i.i.i, align 8
+  %520 = load ptr, ptr %519, align 8
+  call void @free(ptr %520)
+  call void @free(ptr %519)
+  %memberidx2.i75.i.i.i = getelementptr inbounds %Class, ptr %517, i64 0, i32 2
+  %521 = load ptr, ptr %memberidx2.i75.i.i.i, align 8
+  %.not.i.i.i.i = icmp eq ptr %521, null
+  br i1 %.not.i.i.i.i, label %for.entry.i.i.i.i, label %if.entry.i.i.i.i
+
+if.entry.i.i.i.i:                                 ; preds = %for.body10.i.i.i
+  call void @free(ptr nonnull %521)
+  br label %for.entry.i.i.i.i
+
+for.entry.i.i.i.i:                                ; preds = %if.entry.i.i.i.i, %for.body10.i.i.i
+  %memberidx4.i.i.i.i = getelementptr inbounds %Class, ptr %517, i64 0, i32 4
+  %522 = load ptr, ptr %memberidx4.i.i.i.i, align 8
+  %523 = call ptr @malloc(i32 25)
+  %524 = load ptr, ptr %522, align 8
+  %memberidx1.i.i76.i.i.i = getelementptr inbounds %Array_ClassField_, ptr %522, i64 0, i32 1
+  %525 = load i64, ptr %memberidx1.i.i76.i.i.i, align 4
+  %526 = icmp slt i64 %525, 1
+  br i1 %526, label %for.end.i.i.i.i, label %for.body.i.i.i.i
+
+for.body.i.i.i.i:                                 ; preds = %for.entry.i.i.i.i, %for.body.i.i.i.i
+  %.in495 = phi ptr [ %530, %for.body.i.i.i.i ], [ %524, %for.entry.i.i.i.i ]
+  %527 = phi i64 [ %529, %for.body.i.i.i.i ], [ 1, %for.entry.i.i.i.i ]
+  %528 = load ptr, ptr %.in495, align 8
+  call void @free(ptr %528)
+  %529 = add nuw nsw i64 %527, 1
+  %530 = getelementptr inbounds ptr, ptr %524, i64 %527
+  %.not577 = icmp slt i64 %527, %525
+  br i1 %.not577, label %for.body.i.i.i.i, label %for.end.i.i.i.i
+
+for.end.i.i.i.i:                                  ; preds = %for.body.i.i.i.i, %for.entry.i.i.i.i
+  call void @free(ptr nonnull %523)
+  %memberidx10.i.i.i.i = getelementptr inbounds %Class, ptr %517, i64 0, i32 5
+  %531 = load ptr, ptr %memberidx10.i.i.i.i, align 8
+  %532 = call ptr @malloc(i32 25)
+  %533 = load ptr, ptr %531, align 8
+  %memberidx1.i21.i.i.i.i = getelementptr inbounds %Array_ClassMethod_, ptr %531, i64 0, i32 1
+  %534 = load i64, ptr %memberidx1.i21.i.i.i.i, align 4
+  %535 = icmp slt i64 %534, 1
+  br i1 %535, label %Class___del__.exit.i.i.i, label %for.body8.i.i.i.i
+
+for.body8.i.i.i.i:                                ; preds = %for.end.i.i.i.i, %for.body8.i.i.i.i
+  %.in496 = phi ptr [ %539, %for.body8.i.i.i.i ], [ %533, %for.end.i.i.i.i ]
+  %536 = phi i64 [ %538, %for.body8.i.i.i.i ], [ 1, %for.end.i.i.i.i ]
+  %537 = load ptr, ptr %.in496, align 8
+  call void @free(ptr %537)
+  %538 = add nuw nsw i64 %536, 1
+  %539 = getelementptr inbounds ptr, ptr %533, i64 %536
+  %.not578 = icmp slt i64 %536, %534
+  br i1 %.not578, label %for.body8.i.i.i.i, label %Class___del__.exit.i.i.i
 
 Class___del__.exit.i.i.i:                         ; preds = %for.body8.i.i.i.i, %for.end.i.i.i.i
-  call void @free(ptr nonnull %503)
-  %memberidx12.i.i.i.i = getelementptr inbounds %Class, ptr %488, i64 0, i32 6
-  %511 = load ptr, ptr %memberidx12.i.i.i.i, align 8
-  %512 = load ptr, ptr %511, align 8
-  call void @free(ptr %512)
-  call void @free(ptr %511)
-  %memberidx13.i.i.i.i = getelementptr inbounds %Class, ptr %488, i64 0, i32 7
-  %513 = load ptr, ptr %memberidx13.i.i.i.i, align 8
-  %514 = load ptr, ptr %513, align 8
-  call void @free(ptr %514)
-  call void @free(ptr %513)
-  call void @free(ptr %488)
-  %515 = add nuw nsw i64 %487, 1
-  %516 = getelementptr inbounds ptr, ptr %484, i64 %487
-  %.not569 = icmp slt i64 %487, %485
-  br i1 %.not569, label %for.body10.i.i.i, label %for.end11.i.i.i
-
-for.end11.i.i.i:                                  ; preds = %Class___del__.exit.i.i.i, %for.end5.i.i.i
-  call void @free(ptr nonnull %483)
-  %memberidx18.i.i.i = getelementptr inbounds %Module, ptr %463, i64 0, i32 6
-  %517 = load ptr, ptr %memberidx18.i.i.i, align 8
-  %518 = call ptr @malloc(i32 25)
-  %519 = load ptr, ptr %517, align 8
-  %memberidx1.i78.i.i.i = getelementptr inbounds %Array_Enum_, ptr %517, i64 0, i32 1
-  %520 = load i64, ptr %memberidx1.i78.i.i.i, align 4
-  %521 = icmp slt i64 %520, 1
-  br i1 %521, label %for.end17.i.i.i, label %for.body16.i.i.i
-
-for.body16.i.i.i:                                 ; preds = %for.end11.i.i.i, %Enum___del__.exit.i.i.i
-  %.in487 = phi ptr [ %545, %Enum___del__.exit.i.i.i ], [ %519, %for.end11.i.i.i ]
-  %522 = phi i64 [ %544, %Enum___del__.exit.i.i.i ], [ 1, %for.end11.i.i.i ]
-  %523 = load ptr, ptr %.in487, align 8
-  %524 = load ptr, ptr %523, align 8
-  call void @free(ptr %524)
-  %memberidx1.i85.i.i.i = getelementptr inbounds %Enum, ptr %523, i64 0, i32 1
-  %525 = load ptr, ptr %memberidx1.i85.i.i.i, align 8
-  %526 = load ptr, ptr %525, align 8
-  call void @free(ptr %526)
-  call void @free(ptr %525)
-  %memberidx2.i86.i.i.i = getelementptr inbounds %Enum, ptr %523, i64 0, i32 2
-  %527 = load ptr, ptr %memberidx2.i86.i.i.i, align 8
-  %528 = call ptr @malloc(i32 25)
-  %529 = load ptr, ptr %527, align 8
-  %memberidx1.i.i87.i.i.i = getelementptr inbounds %Array_EnumField_, ptr %527, i64 0, i32 1
-  %530 = load i64, ptr %memberidx1.i.i87.i.i.i, align 4
-  %531 = icmp slt i64 %530, 1
-  br i1 %531, label %Enum___del__.exit.i.i.i, label %for.body.i96.i.i.i
-
-for.body.i96.i.i.i:                               ; preds = %for.body16.i.i.i, %for.body.i96.i.i.i
-  %.in488 = phi ptr [ %539, %for.body.i96.i.i.i ], [ %529, %for.body16.i.i.i ]
-  %532 = phi i64 [ %538, %for.body.i96.i.i.i ], [ 1, %for.body16.i.i.i ]
-  %533 = load ptr, ptr %.in488, align 8
-  %534 = load ptr, ptr %533, align 8
-  call void @free(ptr %534)
-  %memberidx1.i10.i.i.i.i = getelementptr inbounds %EnumField, ptr %533, i64 0, i32 1
-  %535 = load ptr, ptr %memberidx1.i10.i.i.i.i, align 8
-  %536 = load ptr, ptr %535, align 8
-  call void @free(ptr %536)
-  call void @free(ptr %535)
-  %memberidx2.i11.i.i.i.i = getelementptr inbounds %EnumField, ptr %533, i64 0, i32 2
-  %537 = load ptr, ptr %memberidx2.i11.i.i.i.i, align 8
-  call void @free(ptr %537)
-  call void @free(ptr %533)
-  %538 = add nuw nsw i64 %532, 1
-  %539 = getelementptr inbounds ptr, ptr %529, i64 %532
-  %.not570 = icmp slt i64 %532, %530
-  br i1 %.not570, label %for.body.i96.i.i.i, label %Enum___del__.exit.i.i.i
-
-Enum___del__.exit.i.i.i:                          ; preds = %for.body.i96.i.i.i, %for.body16.i.i.i
-  call void @free(ptr nonnull %528)
-  %540 = load ptr, ptr %memberidx2.i86.i.i.i, align 8
+  call void @free(ptr nonnull %532)
+  %memberidx12.i.i.i.i = getelementptr inbounds %Class, ptr %517, i64 0, i32 6
+  %540 = load ptr, ptr %memberidx12.i.i.i.i, align 8
   %541 = load ptr, ptr %540, align 8
   call void @free(ptr %541)
   call void @free(ptr %540)
-  %memberidx5.i97.i.i.i = getelementptr inbounds %Enum, ptr %523, i64 0, i32 3
-  %542 = load ptr, ptr %memberidx5.i97.i.i.i, align 8
+  %memberidx13.i.i.i.i = getelementptr inbounds %Class, ptr %517, i64 0, i32 7
+  %542 = load ptr, ptr %memberidx13.i.i.i.i, align 8
   %543 = load ptr, ptr %542, align 8
   call void @free(ptr %543)
   call void @free(ptr %542)
-  call void @free(ptr %523)
-  %544 = add nuw nsw i64 %522, 1
-  %545 = getelementptr inbounds ptr, ptr %519, i64 %522
-  %.not571 = icmp slt i64 %522, %520
-  br i1 %.not571, label %for.body16.i.i.i, label %for.end17.i.i.i
+  call void @free(ptr %517)
+  %544 = add nuw nsw i64 %516, 1
+  %545 = getelementptr inbounds ptr, ptr %513, i64 %516
+  %.not579 = icmp slt i64 %516, %514
+  br i1 %.not579, label %for.body10.i.i.i, label %for.end11.i.i.i
 
-for.end17.i.i.i:                                  ; preds = %Enum___del__.exit.i.i.i, %for.end11.i.i.i
-  call void @free(ptr nonnull %518)
-  %memberidx24.i.i.i = getelementptr inbounds %Module, ptr %463, i64 0, i32 8
-  %546 = load ptr, ptr %memberidx24.i.i.i, align 8
+for.end11.i.i.i:                                  ; preds = %Class___del__.exit.i.i.i, %for.end5.i.i.i
+  call void @free(ptr nonnull %512)
+  %memberidx18.i.i.i = getelementptr inbounds %Module, ptr %492, i64 0, i32 6
+  %546 = load ptr, ptr %memberidx18.i.i.i, align 8
   %547 = call ptr @malloc(i32 25)
   %548 = load ptr, ptr %546, align 8
-  %memberidx1.i99.i.i.i = getelementptr inbounds %Array_ConstDeclaration_, ptr %546, i64 0, i32 1
-  %549 = load i64, ptr %memberidx1.i99.i.i.i, align 4
+  %memberidx1.i78.i.i.i = getelementptr inbounds %Array_Enum_, ptr %546, i64 0, i32 1
+  %549 = load i64, ptr %memberidx1.i78.i.i.i, align 4
   %550 = icmp slt i64 %549, 1
-  br i1 %550, label %for.end23.i.i.i, label %for.body22.i.i.i
+  br i1 %550, label %for.end17.i.i.i, label %for.body16.i.i.i
+
+for.body16.i.i.i:                                 ; preds = %for.end11.i.i.i, %Enum___del__.exit.i.i.i
+  %.in497 = phi ptr [ %574, %Enum___del__.exit.i.i.i ], [ %548, %for.end11.i.i.i ]
+  %551 = phi i64 [ %573, %Enum___del__.exit.i.i.i ], [ 1, %for.end11.i.i.i ]
+  %552 = load ptr, ptr %.in497, align 8
+  %553 = load ptr, ptr %552, align 8
+  call void @free(ptr %553)
+  %memberidx1.i85.i.i.i = getelementptr inbounds %Enum, ptr %552, i64 0, i32 1
+  %554 = load ptr, ptr %memberidx1.i85.i.i.i, align 8
+  %555 = load ptr, ptr %554, align 8
+  call void @free(ptr %555)
+  call void @free(ptr %554)
+  %memberidx2.i86.i.i.i = getelementptr inbounds %Enum, ptr %552, i64 0, i32 2
+  %556 = load ptr, ptr %memberidx2.i86.i.i.i, align 8
+  %557 = call ptr @malloc(i32 25)
+  %558 = load ptr, ptr %556, align 8
+  %memberidx1.i.i87.i.i.i = getelementptr inbounds %Array_EnumField_, ptr %556, i64 0, i32 1
+  %559 = load i64, ptr %memberidx1.i.i87.i.i.i, align 4
+  %560 = icmp slt i64 %559, 1
+  br i1 %560, label %Enum___del__.exit.i.i.i, label %for.body.i96.i.i.i
+
+for.body.i96.i.i.i:                               ; preds = %for.body16.i.i.i, %for.body.i96.i.i.i
+  %.in498 = phi ptr [ %568, %for.body.i96.i.i.i ], [ %558, %for.body16.i.i.i ]
+  %561 = phi i64 [ %567, %for.body.i96.i.i.i ], [ 1, %for.body16.i.i.i ]
+  %562 = load ptr, ptr %.in498, align 8
+  %563 = load ptr, ptr %562, align 8
+  call void @free(ptr %563)
+  %memberidx1.i10.i.i.i.i = getelementptr inbounds %EnumField, ptr %562, i64 0, i32 1
+  %564 = load ptr, ptr %memberidx1.i10.i.i.i.i, align 8
+  %565 = load ptr, ptr %564, align 8
+  call void @free(ptr %565)
+  call void @free(ptr %564)
+  %memberidx2.i11.i.i.i.i = getelementptr inbounds %EnumField, ptr %562, i64 0, i32 2
+  %566 = load ptr, ptr %memberidx2.i11.i.i.i.i, align 8
+  call void @free(ptr %566)
+  call void @free(ptr %562)
+  %567 = add nuw nsw i64 %561, 1
+  %568 = getelementptr inbounds ptr, ptr %558, i64 %561
+  %.not580 = icmp slt i64 %561, %559
+  br i1 %.not580, label %for.body.i96.i.i.i, label %Enum___del__.exit.i.i.i
+
+Enum___del__.exit.i.i.i:                          ; preds = %for.body.i96.i.i.i, %for.body16.i.i.i
+  call void @free(ptr nonnull %557)
+  %569 = load ptr, ptr %memberidx2.i86.i.i.i, align 8
+  %570 = load ptr, ptr %569, align 8
+  call void @free(ptr %570)
+  call void @free(ptr %569)
+  %memberidx5.i97.i.i.i = getelementptr inbounds %Enum, ptr %552, i64 0, i32 3
+  %571 = load ptr, ptr %memberidx5.i97.i.i.i, align 8
+  %572 = load ptr, ptr %571, align 8
+  call void @free(ptr %572)
+  call void @free(ptr %571)
+  call void @free(ptr %552)
+  %573 = add nuw nsw i64 %551, 1
+  %574 = getelementptr inbounds ptr, ptr %548, i64 %551
+  %.not581 = icmp slt i64 %551, %549
+  br i1 %.not581, label %for.body16.i.i.i, label %for.end17.i.i.i
+
+for.end17.i.i.i:                                  ; preds = %Enum___del__.exit.i.i.i, %for.end11.i.i.i
+  call void @free(ptr nonnull %547)
+  %memberidx24.i.i.i = getelementptr inbounds %Module, ptr %492, i64 0, i32 8
+  %575 = load ptr, ptr %memberidx24.i.i.i, align 8
+  %576 = call ptr @malloc(i32 25)
+  %577 = load ptr, ptr %575, align 8
+  %memberidx1.i99.i.i.i = getelementptr inbounds %Array_ConstDeclaration_, ptr %575, i64 0, i32 1
+  %578 = load i64, ptr %memberidx1.i99.i.i.i, align 4
+  %579 = icmp slt i64 %578, 1
+  br i1 %579, label %for.end23.i.i.i, label %for.body22.i.i.i
 
 for.body22.i.i.i:                                 ; preds = %for.end17.i.i.i, %for.body22.i.i.i
-  %.in489 = phi ptr [ %554, %for.body22.i.i.i ], [ %548, %for.end17.i.i.i ]
-  %551 = phi i64 [ %553, %for.body22.i.i.i ], [ 1, %for.end17.i.i.i ]
-  %552 = load ptr, ptr %.in489, align 8
-  call void @free(ptr %552)
-  %553 = add nuw nsw i64 %551, 1
-  %554 = getelementptr inbounds ptr, ptr %548, i64 %551
-  %.not572 = icmp slt i64 %551, %549
-  br i1 %.not572, label %for.body22.i.i.i, label %for.end23.i.i.i
+  %.in499 = phi ptr [ %583, %for.body22.i.i.i ], [ %577, %for.end17.i.i.i ]
+  %580 = phi i64 [ %582, %for.body22.i.i.i ], [ 1, %for.end17.i.i.i ]
+  %581 = load ptr, ptr %.in499, align 8
+  call void @free(ptr %581)
+  %582 = add nuw nsw i64 %580, 1
+  %583 = getelementptr inbounds ptr, ptr %577, i64 %580
+  %.not582 = icmp slt i64 %580, %578
+  br i1 %.not582, label %for.body22.i.i.i, label %for.end23.i.i.i
 
 for.end23.i.i.i:                                  ; preds = %for.body22.i.i.i, %for.end17.i.i.i
-  call void @free(ptr nonnull %547)
-  %memberidx30.i.i.i = getelementptr inbounds %Module, ptr %463, i64 0, i32 9
-  %555 = load ptr, ptr %memberidx30.i.i.i, align 8
-  %556 = call ptr @malloc(i32 25)
-  %557 = load ptr, ptr %555, align 8
-  %memberidx1.i106.i.i.i = getelementptr inbounds %Array_VarDeclaration_, ptr %555, i64 0, i32 1
-  %558 = load i64, ptr %memberidx1.i106.i.i.i, align 4
-  %559 = icmp slt i64 %558, 1
-  br i1 %559, label %Module___del__.exit.i.i, label %for.body28.i.i.i
+  call void @free(ptr nonnull %576)
+  %memberidx30.i.i.i = getelementptr inbounds %Module, ptr %492, i64 0, i32 9
+  %584 = load ptr, ptr %memberidx30.i.i.i, align 8
+  %585 = call ptr @malloc(i32 25)
+  %586 = load ptr, ptr %584, align 8
+  %memberidx1.i106.i.i.i = getelementptr inbounds %Array_VarDeclaration_, ptr %584, i64 0, i32 1
+  %587 = load i64, ptr %memberidx1.i106.i.i.i, align 4
+  %588 = icmp slt i64 %587, 1
+  br i1 %588, label %Module___del__.exit.i.i, label %for.body28.i.i.i
 
 for.body28.i.i.i:                                 ; preds = %for.end23.i.i.i, %for.body28.i.i.i
-  %.in490 = phi ptr [ %563, %for.body28.i.i.i ], [ %557, %for.end23.i.i.i ]
-  %560 = phi i64 [ %562, %for.body28.i.i.i ], [ 1, %for.end23.i.i.i ]
-  %561 = load ptr, ptr %.in490, align 8
-  call void @free(ptr %561)
-  %562 = add nuw nsw i64 %560, 1
-  %563 = getelementptr inbounds ptr, ptr %557, i64 %560
-  %.not573 = icmp slt i64 %560, %558
-  br i1 %.not573, label %for.body28.i.i.i, label %Module___del__.exit.i.i
+  %.in500 = phi ptr [ %592, %for.body28.i.i.i ], [ %586, %for.end23.i.i.i ]
+  %589 = phi i64 [ %591, %for.body28.i.i.i ], [ 1, %for.end23.i.i.i ]
+  %590 = load ptr, ptr %.in500, align 8
+  call void @free(ptr %590)
+  %591 = add nuw nsw i64 %589, 1
+  %592 = getelementptr inbounds ptr, ptr %586, i64 %589
+  %.not583 = icmp slt i64 %589, %587
+  br i1 %.not583, label %for.body28.i.i.i, label %Module___del__.exit.i.i
 
 Module___del__.exit.i.i:                          ; preds = %for.body28.i.i.i, %for.end23.i.i.i
-  call void @free(ptr nonnull %556)
-  %memberidx32.i.i.i = getelementptr inbounds %Module, ptr %463, i64 0, i32 7
-  %564 = load ptr, ptr %memberidx32.i.i.i, align 8
-  %memberidx33.i.i.i = getelementptr inbounds %Module, ptr %463, i64 0, i32 5
-  %565 = load ptr, ptr %memberidx33.i.i.i, align 8
-  %memberidx34.i.i.i = getelementptr inbounds %ScopeId, ptr %565, i64 0, i32 1
-  %566 = load i64, ptr %memberidx34.i.i.i, align 4
-  %567 = load ptr, ptr %564, align 8
-  %568 = getelementptr inbounds ptr, ptr %567, i64 %566
-  %569 = load ptr, ptr %568, align 8
-  call fastcc void @Scope___del__(ptr %569)
-  call void @free(ptr %569)
-  %570 = load ptr, ptr %463, align 8
-  %571 = load ptr, ptr %570, align 8
-  call void @free(ptr %571)
-  call void @free(ptr %570)
-  %572 = load ptr, ptr %memberidx.i4.i.i, align 8
-  %573 = load ptr, ptr %572, align 8
-  call void @free(ptr %573)
-  call void @free(ptr %572)
-  %574 = load ptr, ptr %memberidx6.i.i117.i, align 8
-  %575 = load ptr, ptr %574, align 8
-  call void @free(ptr %575)
-  call void @free(ptr %574)
-  %576 = load ptr, ptr %memberidx12.i.i.i, align 8
-  %577 = load ptr, ptr %576, align 8
-  call void @free(ptr %577)
-  call void @free(ptr %576)
-  %578 = load ptr, ptr %memberidx18.i.i.i, align 8
-  %579 = load ptr, ptr %578, align 8
-  call void @free(ptr %579)
-  call void @free(ptr %578)
-  %580 = load ptr, ptr %memberidx32.i.i.i, align 8
-  %581 = load ptr, ptr %580, align 8
-  call void @free(ptr %581)
-  call void @free(ptr %580)
-  %582 = load ptr, ptr %memberidx24.i.i.i, align 8
-  %583 = load ptr, ptr %582, align 8
-  call void @free(ptr %583)
-  call void @free(ptr %582)
-  %584 = load ptr, ptr %memberidx30.i.i.i, align 8
-  %585 = load ptr, ptr %584, align 8
-  call void @free(ptr %585)
-  call void @free(ptr %584)
-  %memberidx43.i.i.i = getelementptr inbounds %Module, ptr %463, i64 0, i32 2
-  %586 = load ptr, ptr %memberidx43.i.i.i, align 8
-  %587 = load ptr, ptr %586, align 8
-  call void @free(ptr %587)
-  call void @free(ptr %586)
-  call void @free(ptr %463)
-  %588 = add nuw nsw i64 %462, 1
-  store i64 %588, ptr %memberidx1.i.i.i105.i, align 4
-  %589 = getelementptr inbounds ptr, ptr %458, i64 %462
-  %590 = load ptr, ptr %589, align 8
-  %591 = icmp sge i64 %462, %459
-  store i1 %591, ptr %457, align 1
-  br i1 %591, label %Program___del__.exit.i, label %for.body.i113.i
+  call void @free(ptr nonnull %585)
+  %memberidx32.i.i.i = getelementptr inbounds %Module, ptr %492, i64 0, i32 7
+  %593 = load ptr, ptr %memberidx32.i.i.i, align 8
+  %memberidx33.i.i.i = getelementptr inbounds %Module, ptr %492, i64 0, i32 5
+  %594 = load ptr, ptr %memberidx33.i.i.i, align 8
+  %memberidx34.i.i.i = getelementptr inbounds %ScopeId, ptr %594, i64 0, i32 1
+  %595 = load i64, ptr %memberidx34.i.i.i, align 4
+  %596 = load ptr, ptr %593, align 8
+  %597 = getelementptr inbounds ptr, ptr %596, i64 %595
+  %598 = load ptr, ptr %597, align 8
+  call fastcc void @Scope___del__(ptr %598)
+  call void @free(ptr %598)
+  %599 = load ptr, ptr %492, align 8
+  %600 = load ptr, ptr %599, align 8
+  call void @free(ptr %600)
+  call void @free(ptr %599)
+  %601 = load ptr, ptr %memberidx.i4.i.i, align 8
+  %602 = load ptr, ptr %601, align 8
+  call void @free(ptr %602)
+  call void @free(ptr %601)
+  %603 = load ptr, ptr %memberidx6.i.i117.i, align 8
+  %604 = load ptr, ptr %603, align 8
+  call void @free(ptr %604)
+  call void @free(ptr %603)
+  %605 = load ptr, ptr %memberidx12.i.i.i, align 8
+  %606 = load ptr, ptr %605, align 8
+  call void @free(ptr %606)
+  call void @free(ptr %605)
+  %607 = load ptr, ptr %memberidx18.i.i.i, align 8
+  %608 = load ptr, ptr %607, align 8
+  call void @free(ptr %608)
+  call void @free(ptr %607)
+  %609 = load ptr, ptr %memberidx32.i.i.i, align 8
+  %610 = load ptr, ptr %609, align 8
+  call void @free(ptr %610)
+  call void @free(ptr %609)
+  %611 = load ptr, ptr %memberidx24.i.i.i, align 8
+  %612 = load ptr, ptr %611, align 8
+  call void @free(ptr %612)
+  call void @free(ptr %611)
+  %613 = load ptr, ptr %memberidx30.i.i.i, align 8
+  %614 = load ptr, ptr %613, align 8
+  call void @free(ptr %614)
+  call void @free(ptr %613)
+  %memberidx43.i.i.i = getelementptr inbounds %Module, ptr %492, i64 0, i32 2
+  %615 = load ptr, ptr %memberidx43.i.i.i, align 8
+  %616 = load ptr, ptr %615, align 8
+  call void @free(ptr %616)
+  call void @free(ptr %615)
+  call void @free(ptr %492)
+  %617 = add nuw nsw i64 %491, 1
+  store i64 %617, ptr %memberidx1.i.i.i105.i, align 4
+  %618 = getelementptr inbounds ptr, ptr %487, i64 %491
+  %619 = load ptr, ptr %618, align 8
+  %620 = icmp sge i64 %491, %488
+  store i1 %620, ptr %486, align 1
+  br i1 %620, label %Program___del__.exit.i, label %for.body.i113.i
 
 Program___del__.exit.i:                           ; preds = %Module___del__.exit.i.i, %CodeGen_destroy.exit.i
-  call void @free(ptr nonnull %457)
-  %592 = load ptr, ptr %common.ret.op.i, align 8
-  %593 = load ptr, ptr %592, align 8
-  call void @free(ptr %593)
-  call void @free(ptr %592)
+  call void @free(ptr nonnull %486)
+  %621 = load ptr, ptr %common.ret.op.i, align 8
+  %622 = load ptr, ptr %621, align 8
+  call void @free(ptr %622)
+  call void @free(ptr %621)
   call void @free(ptr nonnull %common.ret.op.i)
-  %594 = call ptr @malloc(i32 24)
-  %595 = load ptr, ptr %9, align 8
-  store ptr %595, ptr %594, align 8
-  %memberidx1.i.i216 = getelementptr inbounds %GeneratedModule, ptr %594, i64 0, i32 1
-  store ptr null, ptr %memberidx1.i.i216, align 8
-  %596 = call i1 @LLVMVerifyModule(ptr %595, i64 1, ptr nonnull %memberidx1.i.i216)
-  br i1 %596, label %if.entry.i.i, label %CodeGen_codegen.exit
+  %623 = call ptr @malloc(i32 24)
+  %624 = load ptr, ptr %9, align 8
+  store ptr %624, ptr %623, align 8
+  %memberidx1.i.i224 = getelementptr inbounds %GeneratedModule, ptr %623, i64 0, i32 1
+  store ptr null, ptr %memberidx1.i.i224, align 8
+  %625 = call i1 @LLVMVerifyModule(ptr %624, i64 1, ptr nonnull %memberidx1.i.i224)
+  br i1 %625, label %if.entry.i.i231, label %CodeGen_codegen.exit
 
-if.entry.i.i:                                     ; preds = %Program___del__.exit.i
-  %597 = call ptr @malloc(i32 8)
-  store i64 7812670522611888741, ptr %597, align 8
-  %598 = call ptr @malloc(i32 24)
-  store ptr %597, ptr %598, align 8
-  %memberidx1.i.i.i.i217 = getelementptr inbounds %String, ptr %598, i64 0, i32 1
-  store i64 8, ptr %memberidx1.i.i.i.i217, align 4
-  %memberidx2.i.i.i.i218 = getelementptr inbounds %String, ptr %598, i64 0, i32 2
-  store i64 8, ptr %memberidx2.i.i.i.i218, align 4
-  call fastcc void @GeneratedModule_write_ir(ptr nonnull %594, ptr nonnull %598)
+if.entry.i.i231:                                  ; preds = %Program___del__.exit.i
+  %626 = call ptr @malloc(i32 8)
+  store i64 7812670522611888741, ptr %626, align 8
+  %627 = call ptr @malloc(i32 24)
+  store ptr %626, ptr %627, align 8
+  %memberidx1.i.i.i.i225 = getelementptr inbounds %String, ptr %627, i64 0, i32 1
+  store i64 8, ptr %memberidx1.i.i.i.i225, align 4
+  %memberidx2.i.i.i.i226 = getelementptr inbounds %String, ptr %627, i64 0, i32 2
+  store i64 8, ptr %memberidx2.i.i.i.i226, align 4
+  call fastcc void @GeneratedModule_write_ir(ptr nonnull %623, ptr nonnull %627)
   call void @llvm.lifetime.start.p0(i64 8, ptr nonnull %8)
-  %599 = load ptr, ptr %memberidx1.i.i216, align 8
-  %600 = call i64 @strlen(ptr noundef nonnull dereferenceable(1) %599)
-  %601 = trunc i64 %600 to i32
-  %602 = call ptr @malloc(i32 %601)
-  call void @llvm.memcpy.p0.p0.i64(ptr align 8 %602, ptr align 8 %599, i64 %600, i1 false)
-  %603 = call ptr @malloc(i32 24)
-  store ptr %602, ptr %603, align 8
-  %memberidx1.i.i13.i.i = getelementptr inbounds %String, ptr %603, i64 0, i32 1
-  store i64 %600, ptr %memberidx1.i.i13.i.i, align 4
-  %memberidx2.i.i14.i.i = getelementptr inbounds %String, ptr %603, i64 0, i32 2
-  store i64 %600, ptr %memberidx2.i.i14.i.i, align 4
-  %604 = load ptr, ptr %memberidx1.i.i216, align 8
-  call void @LLVMDisposeMessage(ptr %604)
-  %605 = add i32 %601, 1
-  %606 = call ptr @malloc(i32 %605)
-  call void @llvm.memcpy.p0.p0.i64(ptr align 8 %606, ptr align 8 %602, i64 %600, i1 false)
-  %607 = getelementptr inbounds i8, ptr %606, i64 %600
-  store i8 0, ptr %607, align 1
-  %608 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %8, ptr nonnull @2, ptr %606)
-  %609 = load ptr, ptr %8, align 8
-  %610 = call ptr @malloc(i32 24)
-  call void @free(ptr %606)
-  %611 = call ptr @malloc(i32 7)
-  call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(7) %611, ptr noundef nonnull align 8 dereferenceable(7) @0, i64 7, i1 false)
-  %612 = call ptr @malloc(i32 24)
-  %613 = call i64 @write(i64 1, ptr %611, i64 7)
-  call void @free(ptr %611)
-  call void @free(ptr %612)
-  %614 = call i64 @write(i64 1, ptr %609, i64 %608)
-  %615 = call i64 @write(i64 1, ptr nonnull @1, i64 1)
-  call void @free(ptr %609)
-  call void @free(ptr %610)
+  %628 = load ptr, ptr %memberidx1.i.i224, align 8
+  %629 = call i64 @strlen(ptr noundef nonnull dereferenceable(1) %628)
+  %630 = trunc i64 %629 to i32
+  %631 = call ptr @malloc(i32 %630)
+  call void @llvm.memcpy.p0.p0.i64(ptr align 8 %631, ptr align 8 %628, i64 %629, i1 false)
+  %632 = call ptr @malloc(i32 24)
+  store ptr %631, ptr %632, align 8
+  %memberidx1.i.i13.i.i = getelementptr inbounds %String, ptr %632, i64 0, i32 1
+  store i64 %629, ptr %memberidx1.i.i13.i.i, align 4
+  %memberidx2.i.i14.i.i = getelementptr inbounds %String, ptr %632, i64 0, i32 2
+  store i64 %629, ptr %memberidx2.i.i14.i.i, align 4
+  %633 = load ptr, ptr %memberidx1.i.i224, align 8
+  call void @LLVMDisposeMessage(ptr %633)
+  %634 = add i32 %630, 1
+  %635 = call ptr @malloc(i32 %634)
+  call void @llvm.memcpy.p0.p0.i64(ptr align 8 %635, ptr align 8 %631, i64 %629, i1 false)
+  %636 = getelementptr inbounds i8, ptr %635, i64 %629
+  store i8 0, ptr %636, align 1
+  %637 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %8, ptr nonnull @2, ptr %635)
+  %638 = load ptr, ptr %8, align 8
+  %639 = call ptr @malloc(i32 24)
+  call void @free(ptr %635)
+  %640 = call ptr @malloc(i32 7)
+  call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(7) %640, ptr noundef nonnull align 8 dereferenceable(7) @0, i64 7, i1 false)
+  %641 = call ptr @malloc(i32 24)
+  %642 = call i64 @write(i64 1, ptr %640, i64 7)
+  call void @free(ptr %640)
+  call void @free(ptr %641)
+  %643 = call i64 @write(i64 1, ptr %638, i64 %637)
+  %644 = call i64 @write(i64 1, ptr nonnull @1, i64 1)
+  call void @free(ptr %638)
+  call void @free(ptr %639)
   call void @exit(i64 -1)
   call void @llvm.lifetime.end.p0(i64 8, ptr nonnull %8)
   br label %CodeGen_codegen.exit
 
-CodeGen_codegen.exit:                             ; preds = %Program___del__.exit.i, %if.entry.i.i
+CodeGen_codegen.exit:                             ; preds = %Program___del__.exit.i, %if.entry.i.i231
   call void @LLVM_InitializeAllTargetInfos()
   call void @LLVM_InitializeAllTargets()
   call void @LLVM_InitializeAllTargetMCs()
   call void @LLVM_InitializeAllAsmParsers()
   call void @LLVM_InitializeAllAsmPrinters()
   call void @llvm.lifetime.end.p0(i64 81, ptr nonnull %9)
-  %616 = load i64, ptr %memberidx.i161, align 8
-  %617 = icmp eq i64 %616, 0
-  br i1 %617, label %GeneratedModule_run_passes.exit, label %ifend.i223
+  %645 = load i64, ptr %memberidx.i166, align 8
+  %646 = icmp eq i64 %645, 0
+  br i1 %646, label %GeneratedModule_run_passes.exit, label %ifend.i232
 
-ifend.i223:                                       ; preds = %CodeGen_codegen.exit
-  %618 = call ptr @LLVMCreatePassManager()
-  %619 = load ptr, ptr %594, align 8
-  %620 = call ptr @LLVMCreateFunctionPassManagerForModule(ptr %619)
-  %621 = call ptr @LLVMPassManagerBuilderCreate()
-  call void @LLVMAddInternalizePass(ptr %618, i64 1)
-  call void @LLVMAddGlobalDCEPass(ptr %618)
-  call void @LLVMAddGlobalOptimizerPass(ptr %618)
-  call void @LLVMAddInstructionCombiningPass(ptr %618)
-  call void @LLVMAddScalarReplAggregatesPass(ptr %618)
-  call void @LLVMAddFunctionInliningPass(ptr %618)
-  call void @LLVMPassManagerBuilderSetOptLevel(ptr %621, i64 %616)
-  call void @LLVMPassManagerBuilderUseInlinerWithThreshold(ptr %621, i64 255)
-  call void @LLVMPassManagerBuilderPopulateFunctionPassManager(ptr %621, ptr %620)
-  %622 = load ptr, ptr %594, align 8
-  %623 = call ptr @LLVMGetFirstFunction(ptr %622)
-  %.not.i364 = icmp eq ptr %623, null
-  br i1 %.not.i364, label %while.end.i, label %while.body.i
+ifend.i232:                                       ; preds = %CodeGen_codegen.exit
+  %647 = call ptr @LLVMCreatePassManager()
+  %648 = load ptr, ptr %623, align 8
+  %649 = call ptr @LLVMCreateFunctionPassManagerForModule(ptr %648)
+  %650 = call ptr @LLVMPassManagerBuilderCreate()
+  call void @LLVMAddInternalizePass(ptr %647, i64 1)
+  call void @LLVMAddGlobalDCEPass(ptr %647)
+  call void @LLVMAddGlobalOptimizerPass(ptr %647)
+  call void @LLVMAddInstructionCombiningPass(ptr %647)
+  call void @LLVMAddScalarReplAggregatesPass(ptr %647)
+  call void @LLVMAddFunctionInliningPass(ptr %647)
+  call void @LLVMPassManagerBuilderSetOptLevel(ptr %650, i64 %645)
+  call void @LLVMPassManagerBuilderUseInlinerWithThreshold(ptr %650, i64 255)
+  call void @LLVMPassManagerBuilderPopulateFunctionPassManager(ptr %650, ptr %649)
+  %651 = load ptr, ptr %623, align 8
+  %652 = call ptr @LLVMGetFirstFunction(ptr %651)
+  %.not.i374 = icmp eq ptr %652, null
+  br i1 %.not.i374, label %while.end.i, label %while.body.i
 
-while.end.i:                                      ; preds = %while.body.i, %ifend.i223
-  call void @LLVMPassManagerBuilderPopulateModulePassManager(ptr %621, ptr %618)
-  %624 = load ptr, ptr %594, align 8
-  %625 = call i1 @LLVMRunPassManager(ptr %618, ptr %624)
-  call void @LLVMDisposePassManager(ptr %620)
-  call void @LLVMPassManagerBuilderDispose(ptr %621)
-  call void @LLVMDisposePassManager(ptr %618)
+while.end.i:                                      ; preds = %while.body.i, %ifend.i232
+  call void @LLVMPassManagerBuilderPopulateModulePassManager(ptr %650, ptr %647)
+  %653 = load ptr, ptr %623, align 8
+  %654 = call i1 @LLVMRunPassManager(ptr %647, ptr %653)
+  call void @LLVMDisposePassManager(ptr %649)
+  call void @LLVMPassManagerBuilderDispose(ptr %650)
+  call void @LLVMDisposePassManager(ptr %647)
   br label %GeneratedModule_run_passes.exit
 
-while.body.i:                                     ; preds = %ifend.i223, %while.body.i
-  %func.0.i365 = phi ptr [ %627, %while.body.i ], [ %623, %ifend.i223 ]
-  %626 = call i1 @LLVMRunFunctionPassManager(ptr %620, ptr nonnull %func.0.i365)
-  %627 = call ptr @LLVMGetNextFunction(ptr nonnull %func.0.i365)
-  %.not.i = icmp eq ptr %627, null
+while.body.i:                                     ; preds = %ifend.i232, %while.body.i
+  %func.0.i375 = phi ptr [ %656, %while.body.i ], [ %652, %ifend.i232 ]
+  %655 = call i1 @LLVMRunFunctionPassManager(ptr %649, ptr nonnull %func.0.i375)
+  %656 = call ptr @LLVMGetNextFunction(ptr nonnull %func.0.i375)
+  %.not.i = icmp eq ptr %656, null
   br i1 %.not.i, label %while.end.i, label %while.body.i
 
 GeneratedModule_run_passes.exit:                  ; preds = %CodeGen_codegen.exit, %while.end.i
-  %628 = load ptr, ptr %memberidx.i143, align 8
-  call fastcc void @GeneratedModule_set_target_machine(ptr nonnull %594, ptr %628)
-  %629 = load ptr, ptr %memberidx.i111, align 8
-  %630 = call ptr @malloc(i32 3)
-  call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(3) %630, ptr noundef nonnull align 8 dereferenceable(3) @295, i64 3, i1 false)
-  %631 = call ptr @malloc(i32 24)
-  store ptr %630, ptr %631, align 8
-  %memberidx1.i.i224 = getelementptr inbounds %String, ptr %631, i64 0, i32 1
-  store i64 3, ptr %memberidx1.i.i224, align 4
-  %memberidx2.i.i225 = getelementptr inbounds %String, ptr %631, i64 0, i32 2
-  store i64 3, ptr %memberidx2.i.i225, align 4
-  %memberidx.i226 = getelementptr inbounds %String, ptr %629, i64 0, i32 1
-  %632 = load i64, ptr %memberidx.i226, align 4
-  %.not.i228 = icmp eq i64 %632, 3
-  br i1 %.not.i228, label %ifend.i230, label %else32
+  %657 = load ptr, ptr %memberidx.i148, align 8
+  call fastcc void @GeneratedModule_set_target_machine(ptr nonnull %623, ptr %657)
+  %658 = load ptr, ptr %memberidx.i111, align 8
+  %659 = call ptr @malloc(i32 3)
+  call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(3) %659, ptr noundef nonnull align 8 dereferenceable(3) @294, i64 3, i1 false)
+  %660 = call ptr @malloc(i32 24)
+  store ptr %659, ptr %660, align 8
+  %memberidx1.i.i233 = getelementptr inbounds %String, ptr %660, i64 0, i32 1
+  store i64 3, ptr %memberidx1.i.i233, align 4
+  %memberidx2.i.i234 = getelementptr inbounds %String, ptr %660, i64 0, i32 2
+  store i64 3, ptr %memberidx2.i.i234, align 4
+  %memberidx.i235 = getelementptr inbounds %String, ptr %658, i64 0, i32 1
+  %661 = load i64, ptr %memberidx.i235, align 4
+  %.not.i237 = icmp eq i64 %661, 3
+  br i1 %.not.i237, label %ifend.i239, label %else32
 
-ifend.i230:                                       ; preds = %GeneratedModule_run_passes.exit
-  %633 = load ptr, ptr %629, align 8
-  %634 = call i64 @memcmp(ptr %633, ptr nonnull %630, i64 3)
-  %635 = icmp eq i64 %634, 0
-  br i1 %635, label %if.entry31, label %else32
+ifend.i239:                                       ; preds = %GeneratedModule_run_passes.exit
+  %662 = load ptr, ptr %658, align 8
+  %663 = call i64 @memcmp(ptr %662, ptr nonnull %659, i64 3)
+  %664 = icmp eq i64 %663, 0
+  br i1 %664, label %if.entry31, label %else32
 
-if.entry31:                                       ; preds = %ifend.i230
-  %636 = call ptr @malloc(i32 13)
-  call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(13) %636, ptr noundef nonnull align 8 dereferenceable(13) @296, i64 13, i1 false)
-  %637 = call ptr @malloc(i32 24)
-  store ptr %636, ptr %637, align 8
-  %memberidx1.i.i231 = getelementptr inbounds %String, ptr %637, i64 0, i32 1
-  store i64 13, ptr %memberidx1.i.i231, align 4
-  %memberidx2.i.i232 = getelementptr inbounds %String, ptr %637, i64 0, i32 2
-  store i64 13, ptr %memberidx2.i.i232, align 4
-  %638 = call ptr @malloc(i32 14)
-  call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(13) %638, ptr noundef nonnull align 8 dereferenceable(13) %636, i64 13, i1 false)
-  %639 = getelementptr inbounds i8, ptr %638, i64 13
-  store i8 0, ptr %639, align 1
-  %memberidx.i233 = getelementptr inbounds %GeneratedModule, ptr %594, i64 0, i32 2
-  %640 = load ptr, ptr %memberidx.i233, align 8
-  %641 = load ptr, ptr %594, align 8
-  %642 = call i1 @LLVMTargetMachineEmitToFile(ptr %640, ptr %641, ptr %638, i64 1, ptr nonnull %memberidx1.i.i216)
-  br i1 %642, label %if.entry.i235, label %GeneratedModule_write_obj.exit
+if.entry31:                                       ; preds = %ifend.i239
+  %665 = call ptr @malloc(i32 13)
+  call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(13) %665, ptr noundef nonnull align 8 dereferenceable(13) @295, i64 13, i1 false)
+  %666 = call ptr @malloc(i32 24)
+  store ptr %665, ptr %666, align 8
+  %memberidx1.i.i240 = getelementptr inbounds %String, ptr %666, i64 0, i32 1
+  store i64 13, ptr %memberidx1.i.i240, align 4
+  %memberidx2.i.i241 = getelementptr inbounds %String, ptr %666, i64 0, i32 2
+  store i64 13, ptr %memberidx2.i.i241, align 4
+  %667 = call ptr @malloc(i32 14)
+  call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(13) %667, ptr noundef nonnull align 8 dereferenceable(13) %665, i64 13, i1 false)
+  %668 = getelementptr inbounds i8, ptr %667, i64 13
+  store i8 0, ptr %668, align 1
+  %memberidx.i242 = getelementptr inbounds %GeneratedModule, ptr %623, i64 0, i32 2
+  %669 = load ptr, ptr %memberidx.i242, align 8
+  %670 = load ptr, ptr %623, align 8
+  %671 = call i1 @LLVMTargetMachineEmitToFile(ptr %669, ptr %670, ptr %667, i64 1, ptr nonnull %memberidx1.i.i224)
+  br i1 %671, label %if.entry.i244, label %GeneratedModule_write_obj.exit
 
-if.entry.i235:                                    ; preds = %if.entry31
+if.entry.i244:                                    ; preds = %if.entry31
   call void @llvm.lifetime.start.p0(i64 8, ptr nonnull %4)
-  %643 = load ptr, ptr %memberidx1.i.i216, align 8
-  %644 = call i64 @strlen(ptr noundef nonnull dereferenceable(1) %643)
-  %645 = trunc i64 %644 to i32
-  %646 = call ptr @malloc(i32 %645)
-  call void @llvm.memcpy.p0.p0.i64(ptr align 8 %646, ptr align 8 %643, i64 %644, i1 false)
-  %647 = call ptr @malloc(i32 24)
-  store ptr %646, ptr %647, align 8
-  %memberidx1.i.i335 = getelementptr inbounds %String, ptr %647, i64 0, i32 1
-  store i64 %644, ptr %memberidx1.i.i335, align 4
-  %memberidx2.i.i336 = getelementptr inbounds %String, ptr %647, i64 0, i32 2
-  store i64 %644, ptr %memberidx2.i.i336, align 4
-  %648 = load ptr, ptr %memberidx1.i.i216, align 8
-  call void @LLVMDisposeMessage(ptr %648)
-  %649 = add i32 %645, 1
-  %650 = call ptr @malloc(i32 %649)
-  call void @llvm.memcpy.p0.p0.i64(ptr align 8 %650, ptr align 8 %646, i64 %644, i1 false)
-  %651 = getelementptr inbounds i8, ptr %650, i64 %644
-  store i8 0, ptr %651, align 1
-  %652 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %4, ptr nonnull @2, ptr %650)
-  %653 = load ptr, ptr %4, align 8
-  %654 = call ptr @malloc(i32 24)
-  call void @free(ptr %650)
-  %655 = call ptr @malloc(i32 7)
-  call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(7) %655, ptr noundef nonnull align 8 dereferenceable(7) @0, i64 7, i1 false)
-  %656 = call ptr @malloc(i32 24)
-  %657 = call i64 @write(i64 1, ptr %655, i64 7)
-  call void @free(ptr %655)
-  call void @free(ptr %656)
-  %658 = call i64 @write(i64 1, ptr %653, i64 %652)
-  %659 = call i64 @write(i64 1, ptr nonnull @1, i64 1)
-  call void @free(ptr %653)
-  call void @free(ptr %654)
+  %672 = load ptr, ptr %memberidx1.i.i224, align 8
+  %673 = call i64 @strlen(ptr noundef nonnull dereferenceable(1) %672)
+  %674 = trunc i64 %673 to i32
+  %675 = call ptr @malloc(i32 %674)
+  call void @llvm.memcpy.p0.p0.i64(ptr align 8 %675, ptr align 8 %672, i64 %673, i1 false)
+  %676 = call ptr @malloc(i32 24)
+  store ptr %675, ptr %676, align 8
+  %memberidx1.i.i344 = getelementptr inbounds %String, ptr %676, i64 0, i32 1
+  store i64 %673, ptr %memberidx1.i.i344, align 4
+  %memberidx2.i.i345 = getelementptr inbounds %String, ptr %676, i64 0, i32 2
+  store i64 %673, ptr %memberidx2.i.i345, align 4
+  %677 = load ptr, ptr %memberidx1.i.i224, align 8
+  call void @LLVMDisposeMessage(ptr %677)
+  %678 = add i32 %674, 1
+  %679 = call ptr @malloc(i32 %678)
+  call void @llvm.memcpy.p0.p0.i64(ptr align 8 %679, ptr align 8 %675, i64 %673, i1 false)
+  %680 = getelementptr inbounds i8, ptr %679, i64 %673
+  store i8 0, ptr %680, align 1
+  %681 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %4, ptr nonnull @2, ptr %679)
+  %682 = load ptr, ptr %4, align 8
+  %683 = call ptr @malloc(i32 24)
+  call void @free(ptr %679)
+  %684 = call ptr @malloc(i32 7)
+  call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(7) %684, ptr noundef nonnull align 8 dereferenceable(7) @0, i64 7, i1 false)
+  %685 = call ptr @malloc(i32 24)
+  %686 = call i64 @write(i64 1, ptr %684, i64 7)
+  call void @free(ptr %684)
+  call void @free(ptr %685)
+  %687 = call i64 @write(i64 1, ptr %682, i64 %681)
+  %688 = call i64 @write(i64 1, ptr nonnull @1, i64 1)
+  call void @free(ptr %682)
+  call void @free(ptr %683)
   call void @exit(i64 -1)
   call void @llvm.lifetime.end.p0(i64 8, ptr nonnull %4)
   br label %GeneratedModule_write_obj.exit
 
-GeneratedModule_write_obj.exit:                   ; preds = %if.entry31, %if.entry.i235
-  call void @free(ptr nonnull %638)
-  call void @free(ptr nonnull %636)
-  call void @free(ptr nonnull %637)
-  %660 = load ptr, ptr %memberidx.i152, align 8
-  %.not = icmp eq ptr %660, null
+GeneratedModule_write_obj.exit:                   ; preds = %if.entry31, %if.entry.i244
+  call void @free(ptr nonnull %667)
+  call void @free(ptr nonnull %665)
+  call void @free(ptr nonnull %666)
+  %689 = load ptr, ptr %memberidx.i157, align 8
+  %.not = icmp eq ptr %689, null
   br i1 %.not, label %false_block, label %true_block
 
-else32:                                           ; preds = %GeneratedModule_run_passes.exit, %ifend.i230
-  %661 = load ptr, ptr %memberidx.i111, align 8
-  %662 = call ptr @malloc(i32 7)
-  call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(7) %662, ptr noundef nonnull align 8 dereferenceable(7) @301, i64 7, i1 false)
-  %663 = call ptr @malloc(i32 24)
-  store ptr %662, ptr %663, align 8
-  %memberidx1.i.i237 = getelementptr inbounds %String, ptr %663, i64 0, i32 1
-  store i64 7, ptr %memberidx1.i.i237, align 4
-  %memberidx2.i.i238 = getelementptr inbounds %String, ptr %663, i64 0, i32 2
-  store i64 7, ptr %memberidx2.i.i238, align 4
-  %memberidx.i239 = getelementptr inbounds %String, ptr %661, i64 0, i32 1
-  %664 = load i64, ptr %memberidx.i239, align 4
-  %.not.i241 = icmp eq i64 %664, 7
-  br i1 %.not.i241, label %ifend.i243, label %else43
+else32:                                           ; preds = %GeneratedModule_run_passes.exit, %ifend.i239
+  %690 = load ptr, ptr %memberidx.i111, align 8
+  %691 = call ptr @malloc(i32 7)
+  call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(7) %691, ptr noundef nonnull align 8 dereferenceable(7) @300, i64 7, i1 false)
+  %692 = call ptr @malloc(i32 24)
+  store ptr %691, ptr %692, align 8
+  %memberidx1.i.i246 = getelementptr inbounds %String, ptr %692, i64 0, i32 1
+  store i64 7, ptr %memberidx1.i.i246, align 4
+  %memberidx2.i.i247 = getelementptr inbounds %String, ptr %692, i64 0, i32 2
+  store i64 7, ptr %memberidx2.i.i247, align 4
+  %memberidx.i248 = getelementptr inbounds %String, ptr %690, i64 0, i32 1
+  %693 = load i64, ptr %memberidx.i248, align 4
+  %.not.i250 = icmp eq i64 %693, 7
+  br i1 %.not.i250, label %ifend.i252, label %else43
 
-ifend.i243:                                       ; preds = %else32
-  %665 = load ptr, ptr %661, align 8
-  %666 = call i64 @memcmp(ptr %665, ptr nonnull %662, i64 7)
-  %667 = icmp eq i64 %666, 0
-  br i1 %667, label %if.entry42, label %else43
+ifend.i252:                                       ; preds = %else32
+  %694 = load ptr, ptr %690, align 8
+  %695 = call i64 @memcmp(ptr %694, ptr nonnull %691, i64 7)
+  %696 = icmp eq i64 %695, 0
+  br i1 %696, label %if.entry42, label %else43
 
-ifend33:                                          ; preds = %GeneratedModule_write_asm.exit, %GeneratedModule_exec.exit, %GeneratedModule_write_obj.exit291, %if.entry47, %if.entry42, %end
-  %code.0 = phi i64 [ 0, %end ], [ 0, %if.entry42 ], [ 0, %if.entry47 ], [ 0, %GeneratedModule_write_obj.exit291 ], [ 0, %GeneratedModule_write_asm.exit ], [ %common.ret.op.i321, %GeneratedModule_exec.exit ]
-  tail call void @free(ptr %187)
+ifend33:                                          ; preds = %GeneratedModule_write_asm.exit, %GeneratedModule_exec.exit, %GeneratedModule_write_obj.exit300, %if.entry47, %if.entry42, %end
+  %code.0 = phi i64 [ 0, %end ], [ 0, %if.entry42 ], [ 0, %if.entry47 ], [ 0, %GeneratedModule_write_obj.exit300 ], [ 0, %GeneratedModule_write_asm.exit ], [ %common.ret.op.i330, %GeneratedModule_exec.exit ]
+  tail call void @free(ptr %209)
   br label %common.ret
 
 true_block:                                       ; preds = %GeneratedModule_write_obj.exit
-  %memberidx.i245 = getelementptr inbounds %String, ptr %660, i64 0, i32 1
-  %668 = load i64, ptr %memberidx.i245, align 4
-  %669 = trunc i64 %668 to i32
-  %670 = add i32 %669, 1
-  %671 = call ptr @malloc(i32 %670)
-  %672 = load ptr, ptr %660, align 8
-  %673 = load i64, ptr %memberidx.i245, align 4
-  call void @llvm.memcpy.p0.p0.i64(ptr align 8 %671, ptr align 8 %672, i64 %673, i1 false)
-  %674 = getelementptr inbounds i8, ptr %671, i64 %673
-  store i8 0, ptr %674, align 1
-  %675 = alloca ptr, align 8
-  %676 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %675, ptr nonnull @297, ptr %671)
-  %677 = load ptr, ptr %675, align 8
-  %678 = tail call ptr @malloc(i32 24)
-  store ptr %677, ptr %678, align 8
-  %memberidx1.i246 = getelementptr inbounds %String, ptr %678, i64 0, i32 1
-  store i64 %676, ptr %memberidx1.i246, align 4
-  %memberidx2.i247 = getelementptr inbounds %String, ptr %678, i64 0, i32 2
-  store i64 %676, ptr %memberidx2.i247, align 4
-  tail call void @free(ptr %671)
+  %memberidx.i254 = getelementptr inbounds %String, ptr %689, i64 0, i32 1
+  %697 = load i64, ptr %memberidx.i254, align 4
+  %698 = trunc i64 %697 to i32
+  %699 = add i32 %698, 1
+  %700 = call ptr @malloc(i32 %699)
+  %701 = load ptr, ptr %689, align 8
+  %702 = load i64, ptr %memberidx.i254, align 4
+  call void @llvm.memcpy.p0.p0.i64(ptr align 8 %700, ptr align 8 %701, i64 %702, i1 false)
+  %703 = getelementptr inbounds i8, ptr %700, i64 %702
+  store i8 0, ptr %703, align 1
+  %704 = alloca ptr, align 8
+  %705 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %704, ptr nonnull @296, ptr %700)
+  %706 = load ptr, ptr %704, align 8
+  %707 = tail call ptr @malloc(i32 24)
+  store ptr %706, ptr %707, align 8
+  %memberidx1.i255 = getelementptr inbounds %String, ptr %707, i64 0, i32 1
+  store i64 %705, ptr %memberidx1.i255, align 4
+  %memberidx2.i256 = getelementptr inbounds %String, ptr %707, i64 0, i32 2
+  store i64 %705, ptr %memberidx2.i256, align 4
+  tail call void @free(ptr %700)
   br label %end
 
 false_block:                                      ; preds = %GeneratedModule_write_obj.exit
-  %679 = call ptr @malloc(i32 0)
-  %680 = call ptr @malloc(i32 24)
-  store ptr %679, ptr %680, align 8
-  %memberidx1.i.i248 = getelementptr inbounds %String, ptr %680, i64 0, i32 1
-  call void @llvm.memset.p0.i64(ptr noundef nonnull align 4 dereferenceable(16) %memberidx1.i.i248, i8 0, i64 16, i1 false)
+  %708 = call ptr @malloc(i32 0)
+  %709 = call ptr @malloc(i32 24)
+  store ptr %708, ptr %709, align 8
+  %memberidx1.i.i257 = getelementptr inbounds %String, ptr %709, i64 0, i32 1
+  call void @llvm.memset.p0.i64(ptr noundef nonnull align 4 dereferenceable(16) %memberidx1.i.i257, i8 0, i64 16, i1 false)
   br label %end
 
 end:                                              ; preds = %false_block, %true_block
-  %ternary = phi ptr [ %678, %true_block ], [ %680, %false_block ]
-  %681 = call ptr @malloc(i32 8)
-  store i64 3832894680125762659, ptr %681, align 8
-  %682 = call ptr @malloc(i32 24)
-  store ptr %681, ptr %682, align 8
-  %memberidx.i252 = getelementptr inbounds %String, ptr %ternary, i64 0, i32 1
-  %683 = load i64, ptr %memberidx.i252, align 4
-  %684 = trunc i64 %683 to i32
-  %685 = add i32 %684, 1
-  %686 = call ptr @malloc(i32 %685)
-  %687 = load ptr, ptr %ternary, align 8
-  %688 = load i64, ptr %memberidx.i252, align 4
-  call void @llvm.memcpy.p0.p0.i64(ptr align 8 %686, ptr align 8 %687, i64 %688, i1 false)
-  %689 = getelementptr inbounds i8, ptr %686, i64 %688
-  store i8 0, ptr %689, align 1
-  %690 = alloca ptr, align 8
-  %691 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %690, ptr nonnull @298, ptr %686)
-  %692 = load ptr, ptr %690, align 8
-  %693 = tail call ptr @malloc(i32 24)
-  store ptr %692, ptr %693, align 8
-  tail call void @free(ptr %686)
-  %694 = call ptr @malloc(i32 9)
-  %695 = load i64, ptr %681, align 8
-  store i64 %695, ptr %694, align 8
-  %696 = getelementptr inbounds i8, ptr %694, i64 8
-  store i8 0, ptr %696, align 1
-  %697 = trunc i64 %691 to i32
-  %698 = add i32 %697, 1
-  %699 = call ptr @malloc(i32 %698)
-  call void @llvm.memcpy.p0.p0.i64(ptr align 8 %699, ptr align 8 %692, i64 %691, i1 false)
-  %700 = getelementptr inbounds i8, ptr %699, i64 %691
-  store i8 0, ptr %700, align 1
-  %701 = load ptr, ptr %memberidx1.i.i149, align 8
-  %memberidx.i257 = getelementptr inbounds %String, ptr %701, i64 0, i32 1
-  %702 = load i64, ptr %memberidx.i257, align 4
-  %703 = trunc i64 %702 to i32
-  %704 = add i32 %703, 1
-  %705 = call ptr @malloc(i32 %704)
-  %706 = load ptr, ptr %701, align 8
-  %707 = load i64, ptr %memberidx.i257, align 4
-  call void @llvm.memcpy.p0.p0.i64(ptr align 8 %705, ptr align 8 %706, i64 %707, i1 false)
-  %708 = getelementptr inbounds i8, ptr %705, i64 %707
-  store i8 0, ptr %708, align 1
-  %709 = load ptr, ptr %memberidx.i152, align 8
-  %memberidx.i258 = getelementptr inbounds %String, ptr %709, i64 0, i32 1
-  %710 = load i64, ptr %memberidx.i258, align 4
-  %711 = trunc i64 %710 to i32
-  %712 = add i32 %711, 1
-  %713 = call ptr @malloc(i32 %712)
-  %714 = load ptr, ptr %709, align 8
-  %715 = load i64, ptr %memberidx.i258, align 4
-  call void @llvm.memcpy.p0.p0.i64(ptr align 8 %713, ptr align 8 %714, i64 %715, i1 false)
-  %716 = getelementptr inbounds i8, ptr %713, i64 %715
-  store i8 0, ptr %716, align 1
-  %717 = load ptr, ptr %memberidx2.i.i150, align 8
-  %memberidx.i259 = getelementptr inbounds %String, ptr %717, i64 0, i32 1
-  %718 = load i64, ptr %memberidx.i259, align 4
-  %719 = trunc i64 %718 to i32
-  %720 = add i32 %719, 1
-  %721 = call ptr @malloc(i32 %720)
-  %722 = load ptr, ptr %717, align 8
-  %723 = load i64, ptr %memberidx.i259, align 4
-  call void @llvm.memcpy.p0.p0.i64(ptr align 8 %721, ptr align 8 %722, i64 %723, i1 false)
-  %724 = getelementptr inbounds i8, ptr %721, i64 %723
-  store i8 0, ptr %724, align 1
-  %725 = load i64, ptr %70, align 8
-  %726 = getelementptr inbounds ptr, ptr @FlagType_names, i64 %725
-  %727 = load ptr, ptr %726, align 8
-  %728 = alloca ptr, align 8
-  %729 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %728, ptr nonnull @299, ptr %705, ptr %713, ptr %721, ptr %727)
-  %730 = load ptr, ptr %728, align 8
-  %731 = load ptr, ptr %memberidx.i121, align 8
-  %memberidx.i260 = getelementptr inbounds %String, ptr %731, i64 0, i32 1
-  %732 = load i64, ptr %memberidx.i260, align 4
-  %733 = trunc i64 %732 to i32
-  %734 = add i32 %733, 1
-  %735 = call ptr @malloc(i32 %734)
-  %736 = load ptr, ptr %731, align 8
-  %737 = load i64, ptr %memberidx.i260, align 4
-  call void @llvm.memcpy.p0.p0.i64(ptr align 8 %735, ptr align 8 %736, i64 %737, i1 false)
-  %738 = getelementptr inbounds i8, ptr %735, i64 %737
-  store i8 0, ptr %738, align 1
-  %739 = alloca ptr, align 8
-  %740 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %739, ptr nonnull @300, ptr nonnull %694, ptr %699, ptr %730, ptr %735)
-  %741 = load ptr, ptr %739, align 8
-  tail call void @free(ptr %694)
-  tail call void @free(ptr %699)
-  tail call void @free(ptr %705)
-  tail call void @free(ptr %713)
-  tail call void @free(ptr %721)
-  tail call void @free(ptr %730)
-  tail call void @free(ptr %735)
-  call void @system(ptr %741)
-  call void @free(ptr %692)
-  tail call void @free(ptr %693)
-  %742 = load ptr, ptr %ternary, align 8
-  call void @free(ptr %742)
+  %ternary = phi ptr [ %707, %true_block ], [ %709, %false_block ]
+  %710 = call ptr @malloc(i32 8)
+  store i64 3832894680125762659, ptr %710, align 8
+  %711 = call ptr @malloc(i32 24)
+  store ptr %710, ptr %711, align 8
+  %memberidx.i261 = getelementptr inbounds %String, ptr %ternary, i64 0, i32 1
+  %712 = load i64, ptr %memberidx.i261, align 4
+  %713 = trunc i64 %712 to i32
+  %714 = add i32 %713, 1
+  %715 = call ptr @malloc(i32 %714)
+  %716 = load ptr, ptr %ternary, align 8
+  %717 = load i64, ptr %memberidx.i261, align 4
+  call void @llvm.memcpy.p0.p0.i64(ptr align 8 %715, ptr align 8 %716, i64 %717, i1 false)
+  %718 = getelementptr inbounds i8, ptr %715, i64 %717
+  store i8 0, ptr %718, align 1
+  %719 = alloca ptr, align 8
+  %720 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %719, ptr nonnull @297, ptr %715)
+  %721 = load ptr, ptr %719, align 8
+  %722 = tail call ptr @malloc(i32 24)
+  store ptr %721, ptr %722, align 8
+  tail call void @free(ptr %715)
+  %723 = call ptr @malloc(i32 9)
+  %724 = load i64, ptr %710, align 8
+  store i64 %724, ptr %723, align 8
+  %725 = getelementptr inbounds i8, ptr %723, i64 8
+  store i8 0, ptr %725, align 1
+  %726 = trunc i64 %720 to i32
+  %727 = add i32 %726, 1
+  %728 = call ptr @malloc(i32 %727)
+  call void @llvm.memcpy.p0.p0.i64(ptr align 8 %728, ptr align 8 %721, i64 %720, i1 false)
+  %729 = getelementptr inbounds i8, ptr %728, i64 %720
+  store i8 0, ptr %729, align 1
+  %730 = load ptr, ptr %memberidx1.i.i154, align 8
+  %memberidx.i266 = getelementptr inbounds %String, ptr %730, i64 0, i32 1
+  %731 = load i64, ptr %memberidx.i266, align 4
+  %732 = trunc i64 %731 to i32
+  %733 = add i32 %732, 1
+  %734 = call ptr @malloc(i32 %733)
+  %735 = load ptr, ptr %730, align 8
+  %736 = load i64, ptr %memberidx.i266, align 4
+  call void @llvm.memcpy.p0.p0.i64(ptr align 8 %734, ptr align 8 %735, i64 %736, i1 false)
+  %737 = getelementptr inbounds i8, ptr %734, i64 %736
+  store i8 0, ptr %737, align 1
+  %738 = load ptr, ptr %memberidx.i157, align 8
+  %memberidx.i267 = getelementptr inbounds %String, ptr %738, i64 0, i32 1
+  %739 = load i64, ptr %memberidx.i267, align 4
+  %740 = trunc i64 %739 to i32
+  %741 = add i32 %740, 1
+  %742 = call ptr @malloc(i32 %741)
+  %743 = load ptr, ptr %738, align 8
+  %744 = load i64, ptr %memberidx.i267, align 4
+  call void @llvm.memcpy.p0.p0.i64(ptr align 8 %742, ptr align 8 %743, i64 %744, i1 false)
+  %745 = getelementptr inbounds i8, ptr %742, i64 %744
+  store i8 0, ptr %745, align 1
+  %746 = load ptr, ptr %memberidx2.i.i155, align 8
+  %memberidx.i268 = getelementptr inbounds %String, ptr %746, i64 0, i32 1
+  %747 = load i64, ptr %memberidx.i268, align 4
+  %748 = trunc i64 %747 to i32
+  %749 = add i32 %748, 1
+  %750 = call ptr @malloc(i32 %749)
+  %751 = load ptr, ptr %746, align 8
+  %752 = load i64, ptr %memberidx.i268, align 4
+  call void @llvm.memcpy.p0.p0.i64(ptr align 8 %750, ptr align 8 %751, i64 %752, i1 false)
+  %753 = getelementptr inbounds i8, ptr %750, i64 %752
+  store i8 0, ptr %753, align 1
+  %754 = load i64, ptr %92, align 8
+  %755 = getelementptr inbounds ptr, ptr @FlagType_names, i64 %754
+  %756 = load ptr, ptr %755, align 8
+  %757 = alloca ptr, align 8
+  %758 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %757, ptr nonnull @298, ptr %734, ptr %742, ptr %750, ptr %756)
+  %759 = load ptr, ptr %757, align 8
+  %760 = load ptr, ptr %memberidx.i121, align 8
+  %memberidx.i269 = getelementptr inbounds %String, ptr %760, i64 0, i32 1
+  %761 = load i64, ptr %memberidx.i269, align 4
+  %762 = trunc i64 %761 to i32
+  %763 = add i32 %762, 1
+  %764 = call ptr @malloc(i32 %763)
+  %765 = load ptr, ptr %760, align 8
+  %766 = load i64, ptr %memberidx.i269, align 4
+  call void @llvm.memcpy.p0.p0.i64(ptr align 8 %764, ptr align 8 %765, i64 %766, i1 false)
+  %767 = getelementptr inbounds i8, ptr %764, i64 %766
+  store i8 0, ptr %767, align 1
+  %768 = alloca ptr, align 8
+  %769 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %768, ptr nonnull @299, ptr nonnull %723, ptr %728, ptr %759, ptr %764)
+  %770 = load ptr, ptr %768, align 8
+  tail call void @free(ptr %723)
+  tail call void @free(ptr %728)
+  tail call void @free(ptr %734)
+  tail call void @free(ptr %742)
+  tail call void @free(ptr %750)
+  tail call void @free(ptr %756)
+  tail call void @free(ptr %759)
+  tail call void @free(ptr %764)
+  call void @system(ptr %770)
+  call void @free(ptr %721)
+  tail call void @free(ptr %722)
+  %771 = load ptr, ptr %ternary, align 8
+  call void @free(ptr %771)
   tail call void @free(ptr nonnull %ternary)
-  call void @free(ptr %681)
-  tail call void @free(ptr %682)
+  call void @free(ptr %710)
+  tail call void @free(ptr %711)
   br label %ifend33
 
-if.entry42:                                       ; preds = %ifend.i243
-  %743 = load ptr, ptr %memberidx.i121, align 8
-  %memberidx.i261 = getelementptr inbounds %String, ptr %743, i64 0, i32 1
-  %744 = load i64, ptr %memberidx.i261, align 4
-  %745 = trunc i64 %744 to i32
-  %746 = add i32 %745, 1
-  %747 = call ptr @malloc(i32 %746)
-  %748 = load ptr, ptr %743, align 8
-  %749 = load i64, ptr %memberidx.i261, align 4
-  call void @llvm.memcpy.p0.p0.i64(ptr align 8 %747, ptr align 8 %748, i64 %749, i1 false)
-  %750 = getelementptr inbounds i8, ptr %747, i64 %749
-  store i8 0, ptr %750, align 1
-  %751 = alloca ptr, align 8
-  %752 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %751, ptr nonnull @6, ptr %747)
-  %753 = load ptr, ptr %751, align 8
-  %754 = tail call ptr @malloc(i32 24)
-  store ptr %753, ptr %754, align 8
-  %memberidx1.i262 = getelementptr inbounds %String, ptr %754, i64 0, i32 1
-  store i64 %752, ptr %memberidx1.i262, align 4
-  %memberidx2.i263 = getelementptr inbounds %String, ptr %754, i64 0, i32 2
-  store i64 %752, ptr %memberidx2.i263, align 4
-  tail call void @free(ptr %747)
-  call fastcc void @GeneratedModule_write_ir(ptr nonnull %594, ptr nonnull %754)
-  br label %ifend33
-
-else43:                                           ; preds = %else32, %ifend.i243
-  %755 = load ptr, ptr %memberidx.i111, align 8
-  %756 = call ptr @malloc(i32 7)
-  call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(7) %756, ptr noundef nonnull align 8 dereferenceable(7) @302, i64 7, i1 false)
-  %757 = call ptr @malloc(i32 24)
-  store ptr %756, ptr %757, align 8
-  %memberidx1.i.i264 = getelementptr inbounds %String, ptr %757, i64 0, i32 1
-  store i64 7, ptr %memberidx1.i.i264, align 4
-  %memberidx2.i.i265 = getelementptr inbounds %String, ptr %757, i64 0, i32 2
-  store i64 7, ptr %memberidx2.i.i265, align 4
-  %memberidx.i266 = getelementptr inbounds %String, ptr %755, i64 0, i32 1
-  %758 = load i64, ptr %memberidx.i266, align 4
-  %.not.i268 = icmp eq i64 %758, 7
-  br i1 %.not.i268, label %ifend.i270, label %else48
-
-ifend.i270:                                       ; preds = %else43
-  %759 = load ptr, ptr %755, align 8
-  %760 = call i64 @memcmp(ptr %759, ptr nonnull %756, i64 7)
-  %761 = icmp eq i64 %760, 0
-  br i1 %761, label %if.entry47, label %else48
-
-if.entry47:                                       ; preds = %ifend.i270
-  %762 = load ptr, ptr %memberidx.i121, align 8
-  %memberidx.i272 = getelementptr inbounds %String, ptr %762, i64 0, i32 1
-  %763 = load i64, ptr %memberidx.i272, align 4
-  %764 = trunc i64 %763 to i32
-  %765 = add i32 %764, 1
-  %766 = call ptr @malloc(i32 %765)
-  %767 = load ptr, ptr %762, align 8
-  %768 = load i64, ptr %memberidx.i272, align 4
-  call void @llvm.memcpy.p0.p0.i64(ptr align 8 %766, ptr align 8 %767, i64 %768, i1 false)
-  %769 = getelementptr inbounds i8, ptr %766, i64 %768
-  store i8 0, ptr %769, align 1
-  %770 = alloca ptr, align 8
-  %771 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %770, ptr nonnull @6, ptr %766)
-  %772 = load ptr, ptr %770, align 8
-  %773 = tail call ptr @malloc(i32 24)
-  tail call void @free(ptr %766)
-  %774 = trunc i64 %771 to i32
+if.entry42:                                       ; preds = %ifend.i252
+  %772 = load ptr, ptr %memberidx.i121, align 8
+  %memberidx.i270 = getelementptr inbounds %String, ptr %772, i64 0, i32 1
+  %773 = load i64, ptr %memberidx.i270, align 4
+  %774 = trunc i64 %773 to i32
   %775 = add i32 %774, 1
   %776 = call ptr @malloc(i32 %775)
-  call void @llvm.memcpy.p0.p0.i64(ptr align 8 %776, ptr align 8 %772, i64 %771, i1 false)
-  %777 = getelementptr inbounds i8, ptr %776, i64 %771
-  store i8 0, ptr %777, align 1
-  %778 = load ptr, ptr %594, align 8
-  %779 = call i64 @LLVMWriteBitcodeToFile(ptr %778, ptr %776)
-  call void @free(ptr %776)
-  call void @free(ptr %772)
-  call void @free(ptr %773)
+  %777 = load ptr, ptr %772, align 8
+  %778 = load i64, ptr %memberidx.i270, align 4
+  call void @llvm.memcpy.p0.p0.i64(ptr align 8 %776, ptr align 8 %777, i64 %778, i1 false)
+  %779 = getelementptr inbounds i8, ptr %776, i64 %778
+  store i8 0, ptr %779, align 1
+  %780 = alloca ptr, align 8
+  %781 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %780, ptr nonnull @6, ptr %776)
+  %782 = load ptr, ptr %780, align 8
+  %783 = tail call ptr @malloc(i32 24)
+  store ptr %782, ptr %783, align 8
+  %memberidx1.i271 = getelementptr inbounds %String, ptr %783, i64 0, i32 1
+  store i64 %781, ptr %memberidx1.i271, align 4
+  %memberidx2.i272 = getelementptr inbounds %String, ptr %783, i64 0, i32 2
+  store i64 %781, ptr %memberidx2.i272, align 4
+  tail call void @free(ptr %776)
+  call fastcc void @GeneratedModule_write_ir(ptr nonnull %623, ptr nonnull %783)
   br label %ifend33
 
-else48:                                           ; preds = %else43, %ifend.i270
-  %780 = load ptr, ptr %memberidx.i111, align 8
-  %781 = call ptr @malloc(i32 3)
-  call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(3) %781, ptr noundef nonnull align 8 dereferenceable(3) @303, i64 3, i1 false)
-  %782 = call ptr @malloc(i32 24)
-  store ptr %781, ptr %782, align 8
-  %memberidx1.i.i276 = getelementptr inbounds %String, ptr %782, i64 0, i32 1
-  store i64 3, ptr %memberidx1.i.i276, align 4
-  %memberidx2.i.i277 = getelementptr inbounds %String, ptr %782, i64 0, i32 2
-  store i64 3, ptr %memberidx2.i.i277, align 4
-  %memberidx.i278 = getelementptr inbounds %String, ptr %780, i64 0, i32 1
-  %783 = load i64, ptr %memberidx.i278, align 4
-  %.not.i280 = icmp eq i64 %783, 3
-  br i1 %.not.i280, label %ifend.i282, label %else53
+else43:                                           ; preds = %else32, %ifend.i252
+  %784 = load ptr, ptr %memberidx.i111, align 8
+  %785 = call ptr @malloc(i32 7)
+  call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(7) %785, ptr noundef nonnull align 8 dereferenceable(7) @301, i64 7, i1 false)
+  %786 = call ptr @malloc(i32 24)
+  store ptr %785, ptr %786, align 8
+  %memberidx1.i.i273 = getelementptr inbounds %String, ptr %786, i64 0, i32 1
+  store i64 7, ptr %memberidx1.i.i273, align 4
+  %memberidx2.i.i274 = getelementptr inbounds %String, ptr %786, i64 0, i32 2
+  store i64 7, ptr %memberidx2.i.i274, align 4
+  %memberidx.i275 = getelementptr inbounds %String, ptr %784, i64 0, i32 1
+  %787 = load i64, ptr %memberidx.i275, align 4
+  %.not.i277 = icmp eq i64 %787, 7
+  br i1 %.not.i277, label %ifend.i279, label %else48
 
-ifend.i282:                                       ; preds = %else48
-  %784 = load ptr, ptr %780, align 8
-  %785 = call i64 @memcmp(ptr %784, ptr nonnull %781, i64 3)
-  %786 = icmp eq i64 %785, 0
-  br i1 %786, label %if.entry52, label %else53
+ifend.i279:                                       ; preds = %else43
+  %788 = load ptr, ptr %784, align 8
+  %789 = call i64 @memcmp(ptr %788, ptr nonnull %785, i64 7)
+  %790 = icmp eq i64 %789, 0
+  br i1 %790, label %if.entry47, label %else48
 
-if.entry52:                                       ; preds = %ifend.i282
-  %787 = load ptr, ptr %memberidx.i121, align 8
-  %memberidx.i284 = getelementptr inbounds %String, ptr %787, i64 0, i32 1
-  %788 = load i64, ptr %memberidx.i284, align 4
-  %789 = trunc i64 %788 to i32
-  %790 = add i32 %789, 1
-  %791 = call ptr @malloc(i32 %790)
-  %792 = load ptr, ptr %787, align 8
-  %793 = load i64, ptr %memberidx.i284, align 4
-  call void @llvm.memcpy.p0.p0.i64(ptr align 8 %791, ptr align 8 %792, i64 %793, i1 false)
-  %794 = getelementptr inbounds i8, ptr %791, i64 %793
-  store i8 0, ptr %794, align 1
-  %795 = alloca ptr, align 8
-  %796 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %795, ptr nonnull @6, ptr %791)
-  %797 = load ptr, ptr %795, align 8
-  %798 = tail call ptr @malloc(i32 24)
-  store ptr %797, ptr %798, align 8
-  %memberidx1.i285 = getelementptr inbounds %String, ptr %798, i64 0, i32 1
-  store i64 %796, ptr %memberidx1.i285, align 4
-  %memberidx2.i286 = getelementptr inbounds %String, ptr %798, i64 0, i32 2
-  store i64 %796, ptr %memberidx2.i286, align 4
-  tail call void @free(ptr %791)
-  %799 = trunc i64 %796 to i32
-  %800 = add i32 %799, 1
-  %801 = call ptr @malloc(i32 %800)
-  call void @llvm.memcpy.p0.p0.i64(ptr align 8 %801, ptr align 8 %797, i64 %796, i1 false)
-  %802 = getelementptr inbounds i8, ptr %801, i64 %796
-  store i8 0, ptr %802, align 1
-  %memberidx.i287 = getelementptr inbounds %GeneratedModule, ptr %594, i64 0, i32 2
-  %803 = load ptr, ptr %memberidx.i287, align 8
-  %804 = load ptr, ptr %594, align 8
-  %805 = call i1 @LLVMTargetMachineEmitToFile(ptr %803, ptr %804, ptr %801, i64 1, ptr nonnull %memberidx1.i.i216)
-  br i1 %805, label %if.entry.i289, label %GeneratedModule_write_obj.exit291
+if.entry47:                                       ; preds = %ifend.i279
+  %791 = load ptr, ptr %memberidx.i121, align 8
+  %memberidx.i281 = getelementptr inbounds %String, ptr %791, i64 0, i32 1
+  %792 = load i64, ptr %memberidx.i281, align 4
+  %793 = trunc i64 %792 to i32
+  %794 = add i32 %793, 1
+  %795 = call ptr @malloc(i32 %794)
+  %796 = load ptr, ptr %791, align 8
+  %797 = load i64, ptr %memberidx.i281, align 4
+  call void @llvm.memcpy.p0.p0.i64(ptr align 8 %795, ptr align 8 %796, i64 %797, i1 false)
+  %798 = getelementptr inbounds i8, ptr %795, i64 %797
+  store i8 0, ptr %798, align 1
+  %799 = alloca ptr, align 8
+  %800 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %799, ptr nonnull @6, ptr %795)
+  %801 = load ptr, ptr %799, align 8
+  %802 = tail call ptr @malloc(i32 24)
+  tail call void @free(ptr %795)
+  %803 = trunc i64 %800 to i32
+  %804 = add i32 %803, 1
+  %805 = call ptr @malloc(i32 %804)
+  call void @llvm.memcpy.p0.p0.i64(ptr align 8 %805, ptr align 8 %801, i64 %800, i1 false)
+  %806 = getelementptr inbounds i8, ptr %805, i64 %800
+  store i8 0, ptr %806, align 1
+  %807 = load ptr, ptr %623, align 8
+  %808 = call i64 @LLVMWriteBitcodeToFile(ptr %807, ptr %805)
+  call void @free(ptr %805)
+  call void @free(ptr %801)
+  call void @free(ptr %802)
+  br label %ifend33
 
-if.entry.i289:                                    ; preds = %if.entry52
+else48:                                           ; preds = %else43, %ifend.i279
+  %809 = load ptr, ptr %memberidx.i111, align 8
+  %810 = call ptr @malloc(i32 3)
+  call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(3) %810, ptr noundef nonnull align 8 dereferenceable(3) @302, i64 3, i1 false)
+  %811 = call ptr @malloc(i32 24)
+  store ptr %810, ptr %811, align 8
+  %memberidx1.i.i285 = getelementptr inbounds %String, ptr %811, i64 0, i32 1
+  store i64 3, ptr %memberidx1.i.i285, align 4
+  %memberidx2.i.i286 = getelementptr inbounds %String, ptr %811, i64 0, i32 2
+  store i64 3, ptr %memberidx2.i.i286, align 4
+  %memberidx.i287 = getelementptr inbounds %String, ptr %809, i64 0, i32 1
+  %812 = load i64, ptr %memberidx.i287, align 4
+  %.not.i289 = icmp eq i64 %812, 3
+  br i1 %.not.i289, label %ifend.i291, label %else53
+
+ifend.i291:                                       ; preds = %else48
+  %813 = load ptr, ptr %809, align 8
+  %814 = call i64 @memcmp(ptr %813, ptr nonnull %810, i64 3)
+  %815 = icmp eq i64 %814, 0
+  br i1 %815, label %if.entry52, label %else53
+
+if.entry52:                                       ; preds = %ifend.i291
+  %816 = load ptr, ptr %memberidx.i121, align 8
+  %memberidx.i293 = getelementptr inbounds %String, ptr %816, i64 0, i32 1
+  %817 = load i64, ptr %memberidx.i293, align 4
+  %818 = trunc i64 %817 to i32
+  %819 = add i32 %818, 1
+  %820 = call ptr @malloc(i32 %819)
+  %821 = load ptr, ptr %816, align 8
+  %822 = load i64, ptr %memberidx.i293, align 4
+  call void @llvm.memcpy.p0.p0.i64(ptr align 8 %820, ptr align 8 %821, i64 %822, i1 false)
+  %823 = getelementptr inbounds i8, ptr %820, i64 %822
+  store i8 0, ptr %823, align 1
+  %824 = alloca ptr, align 8
+  %825 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %824, ptr nonnull @6, ptr %820)
+  %826 = load ptr, ptr %824, align 8
+  %827 = tail call ptr @malloc(i32 24)
+  store ptr %826, ptr %827, align 8
+  %memberidx1.i294 = getelementptr inbounds %String, ptr %827, i64 0, i32 1
+  store i64 %825, ptr %memberidx1.i294, align 4
+  %memberidx2.i295 = getelementptr inbounds %String, ptr %827, i64 0, i32 2
+  store i64 %825, ptr %memberidx2.i295, align 4
+  tail call void @free(ptr %820)
+  %828 = trunc i64 %825 to i32
+  %829 = add i32 %828, 1
+  %830 = call ptr @malloc(i32 %829)
+  call void @llvm.memcpy.p0.p0.i64(ptr align 8 %830, ptr align 8 %826, i64 %825, i1 false)
+  %831 = getelementptr inbounds i8, ptr %830, i64 %825
+  store i8 0, ptr %831, align 1
+  %memberidx.i296 = getelementptr inbounds %GeneratedModule, ptr %623, i64 0, i32 2
+  %832 = load ptr, ptr %memberidx.i296, align 8
+  %833 = load ptr, ptr %623, align 8
+  %834 = call i1 @LLVMTargetMachineEmitToFile(ptr %832, ptr %833, ptr %830, i64 1, ptr nonnull %memberidx1.i.i224)
+  br i1 %834, label %if.entry.i298, label %GeneratedModule_write_obj.exit300
+
+if.entry.i298:                                    ; preds = %if.entry52
   call void @llvm.lifetime.start.p0(i64 8, ptr nonnull %3)
-  %806 = load ptr, ptr %memberidx1.i.i216, align 8
-  %807 = call i64 @strlen(ptr noundef nonnull dereferenceable(1) %806)
-  %808 = trunc i64 %807 to i32
-  %809 = call ptr @malloc(i32 %808)
-  call void @llvm.memcpy.p0.p0.i64(ptr align 8 %809, ptr align 8 %806, i64 %807, i1 false)
-  %810 = call ptr @malloc(i32 24)
-  store ptr %809, ptr %810, align 8
-  %memberidx1.i.i340 = getelementptr inbounds %String, ptr %810, i64 0, i32 1
-  store i64 %807, ptr %memberidx1.i.i340, align 4
-  %memberidx2.i.i341 = getelementptr inbounds %String, ptr %810, i64 0, i32 2
-  store i64 %807, ptr %memberidx2.i.i341, align 4
-  %811 = load ptr, ptr %memberidx1.i.i216, align 8
-  call void @LLVMDisposeMessage(ptr %811)
-  %812 = add i32 %808, 1
-  %813 = call ptr @malloc(i32 %812)
-  call void @llvm.memcpy.p0.p0.i64(ptr align 8 %813, ptr align 8 %809, i64 %807, i1 false)
-  %814 = getelementptr inbounds i8, ptr %813, i64 %807
-  store i8 0, ptr %814, align 1
-  %815 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %3, ptr nonnull @2, ptr %813)
-  %816 = load ptr, ptr %3, align 8
-  %817 = call ptr @malloc(i32 24)
-  call void @free(ptr %813)
-  %818 = call ptr @malloc(i32 7)
-  call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(7) %818, ptr noundef nonnull align 8 dereferenceable(7) @0, i64 7, i1 false)
-  %819 = call ptr @malloc(i32 24)
-  %820 = call i64 @write(i64 1, ptr %818, i64 7)
-  call void @free(ptr %818)
-  call void @free(ptr %819)
-  %821 = call i64 @write(i64 1, ptr %816, i64 %815)
-  %822 = call i64 @write(i64 1, ptr nonnull @1, i64 1)
-  call void @free(ptr %816)
-  call void @free(ptr %817)
+  %835 = load ptr, ptr %memberidx1.i.i224, align 8
+  %836 = call i64 @strlen(ptr noundef nonnull dereferenceable(1) %835)
+  %837 = trunc i64 %836 to i32
+  %838 = call ptr @malloc(i32 %837)
+  call void @llvm.memcpy.p0.p0.i64(ptr align 8 %838, ptr align 8 %835, i64 %836, i1 false)
+  %839 = call ptr @malloc(i32 24)
+  store ptr %838, ptr %839, align 8
+  %memberidx1.i.i349 = getelementptr inbounds %String, ptr %839, i64 0, i32 1
+  store i64 %836, ptr %memberidx1.i.i349, align 4
+  %memberidx2.i.i350 = getelementptr inbounds %String, ptr %839, i64 0, i32 2
+  store i64 %836, ptr %memberidx2.i.i350, align 4
+  %840 = load ptr, ptr %memberidx1.i.i224, align 8
+  call void @LLVMDisposeMessage(ptr %840)
+  %841 = add i32 %837, 1
+  %842 = call ptr @malloc(i32 %841)
+  call void @llvm.memcpy.p0.p0.i64(ptr align 8 %842, ptr align 8 %838, i64 %836, i1 false)
+  %843 = getelementptr inbounds i8, ptr %842, i64 %836
+  store i8 0, ptr %843, align 1
+  %844 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %3, ptr nonnull @2, ptr %842)
+  %845 = load ptr, ptr %3, align 8
+  %846 = call ptr @malloc(i32 24)
+  call void @free(ptr %842)
+  %847 = call ptr @malloc(i32 7)
+  call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(7) %847, ptr noundef nonnull align 8 dereferenceable(7) @0, i64 7, i1 false)
+  %848 = call ptr @malloc(i32 24)
+  %849 = call i64 @write(i64 1, ptr %847, i64 7)
+  call void @free(ptr %847)
+  call void @free(ptr %848)
+  %850 = call i64 @write(i64 1, ptr %845, i64 %844)
+  %851 = call i64 @write(i64 1, ptr nonnull @1, i64 1)
+  call void @free(ptr %845)
+  call void @free(ptr %846)
   call void @exit(i64 -1)
   call void @llvm.lifetime.end.p0(i64 8, ptr nonnull %3)
-  br label %GeneratedModule_write_obj.exit291
+  br label %GeneratedModule_write_obj.exit300
 
-GeneratedModule_write_obj.exit291:                ; preds = %if.entry52, %if.entry.i289
-  call void @free(ptr nonnull %801)
-  call void @free(ptr %797)
-  call void @free(ptr nonnull %798)
+GeneratedModule_write_obj.exit300:                ; preds = %if.entry52, %if.entry.i298
+  call void @free(ptr nonnull %830)
+  call void @free(ptr %826)
+  call void @free(ptr nonnull %827)
   br label %ifend33
 
-else53:                                           ; preds = %else48, %ifend.i282
-  %823 = load ptr, ptr %memberidx.i111, align 8
-  %824 = call ptr @malloc(i32 3)
-  call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(3) %824, ptr noundef nonnull align 8 dereferenceable(3) @304, i64 3, i1 false)
-  %825 = call ptr @malloc(i32 24)
-  store ptr %824, ptr %825, align 8
-  %memberidx1.i.i292 = getelementptr inbounds %String, ptr %825, i64 0, i32 1
-  store i64 3, ptr %memberidx1.i.i292, align 4
-  %memberidx2.i.i293 = getelementptr inbounds %String, ptr %825, i64 0, i32 2
-  store i64 3, ptr %memberidx2.i.i293, align 4
-  %memberidx.i294 = getelementptr inbounds %String, ptr %823, i64 0, i32 1
-  %826 = load i64, ptr %memberidx.i294, align 4
-  %.not.i296 = icmp eq i64 %826, 3
-  br i1 %.not.i296, label %ifend.i298, label %else58
+else53:                                           ; preds = %else48, %ifend.i291
+  %852 = load ptr, ptr %memberidx.i111, align 8
+  %853 = call ptr @malloc(i32 3)
+  call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(3) %853, ptr noundef nonnull align 8 dereferenceable(3) @303, i64 3, i1 false)
+  %854 = call ptr @malloc(i32 24)
+  store ptr %853, ptr %854, align 8
+  %memberidx1.i.i301 = getelementptr inbounds %String, ptr %854, i64 0, i32 1
+  store i64 3, ptr %memberidx1.i.i301, align 4
+  %memberidx2.i.i302 = getelementptr inbounds %String, ptr %854, i64 0, i32 2
+  store i64 3, ptr %memberidx2.i.i302, align 4
+  %memberidx.i303 = getelementptr inbounds %String, ptr %852, i64 0, i32 1
+  %855 = load i64, ptr %memberidx.i303, align 4
+  %.not.i305 = icmp eq i64 %855, 3
+  br i1 %.not.i305, label %ifend.i307, label %else58
 
-ifend.i298:                                       ; preds = %else53
-  %827 = load ptr, ptr %823, align 8
-  %828 = call i64 @memcmp(ptr %827, ptr nonnull %824, i64 3)
-  %829 = icmp eq i64 %828, 0
-  br i1 %829, label %if.entry57, label %else58
+ifend.i307:                                       ; preds = %else53
+  %856 = load ptr, ptr %852, align 8
+  %857 = call i64 @memcmp(ptr %856, ptr nonnull %853, i64 3)
+  %858 = icmp eq i64 %857, 0
+  br i1 %858, label %if.entry57, label %else58
 
-if.entry57:                                       ; preds = %ifend.i298
-  %830 = load ptr, ptr %memberidx.i121, align 8
-  %memberidx.i300 = getelementptr inbounds %String, ptr %830, i64 0, i32 1
-  %831 = load i64, ptr %memberidx.i300, align 4
-  %832 = trunc i64 %831 to i32
-  %833 = add i32 %832, 1
-  %834 = call ptr @malloc(i32 %833)
-  %835 = load ptr, ptr %830, align 8
-  %836 = load i64, ptr %memberidx.i300, align 4
-  call void @llvm.memcpy.p0.p0.i64(ptr align 8 %834, ptr align 8 %835, i64 %836, i1 false)
-  %837 = getelementptr inbounds i8, ptr %834, i64 %836
-  store i8 0, ptr %837, align 1
-  %838 = alloca ptr, align 8
-  %839 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %838, ptr nonnull @6, ptr %834)
-  %840 = load ptr, ptr %838, align 8
-  %841 = tail call ptr @malloc(i32 24)
-  store ptr %840, ptr %841, align 8
-  %memberidx1.i301 = getelementptr inbounds %String, ptr %841, i64 0, i32 1
-  store i64 %839, ptr %memberidx1.i301, align 4
-  %memberidx2.i302 = getelementptr inbounds %String, ptr %841, i64 0, i32 2
-  store i64 %839, ptr %memberidx2.i302, align 4
-  tail call void @free(ptr %834)
-  %842 = trunc i64 %839 to i32
-  %843 = add i32 %842, 1
-  %844 = call ptr @malloc(i32 %843)
-  call void @llvm.memcpy.p0.p0.i64(ptr align 8 %844, ptr align 8 %840, i64 %839, i1 false)
-  %845 = getelementptr inbounds i8, ptr %844, i64 %839
-  store i8 0, ptr %845, align 1
-  %memberidx.i304 = getelementptr inbounds %GeneratedModule, ptr %594, i64 0, i32 2
-  %846 = load ptr, ptr %memberidx.i304, align 8
-  %847 = load ptr, ptr %594, align 8
-  %848 = call i1 @LLVMTargetMachineEmitToFile(ptr %846, ptr %847, ptr %844, i64 0, ptr nonnull %memberidx1.i.i216)
-  br i1 %848, label %if.entry.i312, label %GeneratedModule_write_asm.exit
+if.entry57:                                       ; preds = %ifend.i307
+  %859 = load ptr, ptr %memberidx.i121, align 8
+  %memberidx.i309 = getelementptr inbounds %String, ptr %859, i64 0, i32 1
+  %860 = load i64, ptr %memberidx.i309, align 4
+  %861 = trunc i64 %860 to i32
+  %862 = add i32 %861, 1
+  %863 = call ptr @malloc(i32 %862)
+  %864 = load ptr, ptr %859, align 8
+  %865 = load i64, ptr %memberidx.i309, align 4
+  call void @llvm.memcpy.p0.p0.i64(ptr align 8 %863, ptr align 8 %864, i64 %865, i1 false)
+  %866 = getelementptr inbounds i8, ptr %863, i64 %865
+  store i8 0, ptr %866, align 1
+  %867 = alloca ptr, align 8
+  %868 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %867, ptr nonnull @6, ptr %863)
+  %869 = load ptr, ptr %867, align 8
+  %870 = tail call ptr @malloc(i32 24)
+  store ptr %869, ptr %870, align 8
+  %memberidx1.i310 = getelementptr inbounds %String, ptr %870, i64 0, i32 1
+  store i64 %868, ptr %memberidx1.i310, align 4
+  %memberidx2.i311 = getelementptr inbounds %String, ptr %870, i64 0, i32 2
+  store i64 %868, ptr %memberidx2.i311, align 4
+  tail call void @free(ptr %863)
+  %871 = trunc i64 %868 to i32
+  %872 = add i32 %871, 1
+  %873 = call ptr @malloc(i32 %872)
+  call void @llvm.memcpy.p0.p0.i64(ptr align 8 %873, ptr align 8 %869, i64 %868, i1 false)
+  %874 = getelementptr inbounds i8, ptr %873, i64 %868
+  store i8 0, ptr %874, align 1
+  %memberidx.i313 = getelementptr inbounds %GeneratedModule, ptr %623, i64 0, i32 2
+  %875 = load ptr, ptr %memberidx.i313, align 8
+  %876 = load ptr, ptr %623, align 8
+  %877 = call i1 @LLVMTargetMachineEmitToFile(ptr %875, ptr %876, ptr %873, i64 0, ptr nonnull %memberidx1.i.i224)
+  br i1 %877, label %if.entry.i321, label %GeneratedModule_write_asm.exit
 
-if.entry.i312:                                    ; preds = %if.entry57
+if.entry.i321:                                    ; preds = %if.entry57
   call void @llvm.lifetime.start.p0(i64 8, ptr nonnull %7)
-  %849 = load ptr, ptr %memberidx1.i.i216, align 8
-  %850 = call i64 @strlen(ptr noundef nonnull dereferenceable(1) %849)
-  %851 = trunc i64 %850 to i32
-  %852 = call ptr @malloc(i32 %851)
-  call void @llvm.memcpy.p0.p0.i64(ptr align 8 %852, ptr align 8 %849, i64 %850, i1 false)
-  %853 = call ptr @malloc(i32 24)
-  store ptr %852, ptr %853, align 8
-  %memberidx1.i.i11.i = getelementptr inbounds %String, ptr %853, i64 0, i32 1
-  store i64 %850, ptr %memberidx1.i.i11.i, align 4
-  %memberidx2.i.i12.i = getelementptr inbounds %String, ptr %853, i64 0, i32 2
-  store i64 %850, ptr %memberidx2.i.i12.i, align 4
-  %854 = load ptr, ptr %memberidx1.i.i216, align 8
-  call void @LLVMDisposeMessage(ptr %854)
-  %855 = add i32 %851, 1
-  %856 = call ptr @malloc(i32 %855)
-  call void @llvm.memcpy.p0.p0.i64(ptr align 8 %856, ptr align 8 %852, i64 %850, i1 false)
-  %857 = getelementptr inbounds i8, ptr %856, i64 %850
-  store i8 0, ptr %857, align 1
-  %858 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %7, ptr nonnull @2, ptr %856)
-  %859 = load ptr, ptr %7, align 8
-  %860 = call ptr @malloc(i32 24)
-  call void @free(ptr %856)
-  %861 = call ptr @malloc(i32 7)
-  call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(7) %861, ptr noundef nonnull align 8 dereferenceable(7) @0, i64 7, i1 false)
-  %862 = call ptr @malloc(i32 24)
-  %863 = call i64 @write(i64 1, ptr %861, i64 7)
-  call void @free(ptr %861)
-  call void @free(ptr %862)
-  %864 = call i64 @write(i64 1, ptr %859, i64 %858)
-  %865 = call i64 @write(i64 1, ptr nonnull @1, i64 1)
-  call void @free(ptr %859)
-  call void @free(ptr %860)
-  call void @exit(i64 -1)
-  call void @llvm.lifetime.end.p0(i64 8, ptr nonnull %7)
-  br label %GeneratedModule_write_asm.exit
-
-GeneratedModule_write_asm.exit:                   ; preds = %if.entry57, %if.entry.i312
-  call void @free(ptr nonnull %844)
-  call void @free(ptr %840)
-  call void @free(ptr nonnull %841)
-  br label %ifend33
-
-else58:                                           ; preds = %else53, %ifend.i298
-  call void @llvm.lifetime.start.p0(i64 8, ptr nonnull %engine.i)
-  call void @LLVMLinkInMCJIT()
-  store ptr null, ptr %engine.i, align 8
-  %866 = load ptr, ptr %594, align 8
-  %867 = call i1 @LLVMCreateExecutionEngineForModule(ptr nonnull %engine.i, ptr %866, ptr nonnull %memberidx1.i.i216)
-  br i1 %867, label %if.entry.i319, label %ifend.i320
-
-if.entry.i319:                                    ; preds = %else58
-  call void @llvm.lifetime.start.p0(i64 8, ptr nonnull %6)
-  %868 = load ptr, ptr %memberidx1.i.i216, align 8
-  %869 = call i64 @strlen(ptr noundef nonnull dereferenceable(1) %868)
-  %870 = trunc i64 %869 to i32
-  %871 = call ptr @malloc(i32 %870)
-  call void @llvm.memcpy.p0.p0.i64(ptr align 8 %871, ptr align 8 %868, i64 %869, i1 false)
-  %872 = call ptr @malloc(i32 24)
-  store ptr %871, ptr %872, align 8
-  %memberidx1.i.i32.i = getelementptr inbounds %String, ptr %872, i64 0, i32 1
-  store i64 %869, ptr %memberidx1.i.i32.i, align 4
-  %memberidx2.i.i33.i = getelementptr inbounds %String, ptr %872, i64 0, i32 2
-  store i64 %869, ptr %memberidx2.i.i33.i, align 4
-  %873 = load ptr, ptr %memberidx1.i.i216, align 8
-  call void @LLVMDisposeMessage(ptr %873)
-  %874 = add i32 %870, 1
-  %875 = call ptr @malloc(i32 %874)
-  call void @llvm.memcpy.p0.p0.i64(ptr align 8 %875, ptr align 8 %871, i64 %869, i1 false)
-  %876 = getelementptr inbounds i8, ptr %875, i64 %869
-  store i8 0, ptr %876, align 1
-  %877 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %6, ptr nonnull @2, ptr %875)
-  %878 = load ptr, ptr %6, align 8
-  %879 = call ptr @malloc(i32 24)
-  call void @free(ptr %875)
-  %880 = call ptr @malloc(i32 7)
-  call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(7) %880, ptr noundef nonnull align 8 dereferenceable(7) @0, i64 7, i1 false)
-  %881 = call ptr @malloc(i32 24)
-  %882 = call i64 @write(i64 1, ptr %880, i64 7)
-  call void @free(ptr %880)
-  call void @free(ptr %881)
-  %883 = call i64 @write(i64 1, ptr %878, i64 %877)
-  %884 = call i64 @write(i64 1, ptr nonnull @1, i64 1)
-  call void @free(ptr %878)
-  call void @free(ptr %879)
-  call void @exit(i64 -1)
-  call void @llvm.lifetime.end.p0(i64 8, ptr nonnull %6)
-  br label %ifend.i320
-
-ifend.i320:                                       ; preds = %if.entry.i319, %else58
-  %885 = load ptr, ptr %594, align 8
-  %886 = call ptr @LLVMGetNamedFunction(ptr %885, ptr nonnull @3)
-  %887 = icmp eq ptr %886, null
-  br i1 %887, label %if.entry4.i, label %ifend6.i
-
-if.entry4.i:                                      ; preds = %ifend.i320
-  %888 = call ptr @malloc(i32 48)
-  call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(48) %888, ptr noundef nonnull align 8 dereferenceable(48) @4, i64 48, i1 false)
+  %878 = load ptr, ptr %memberidx1.i.i224, align 8
+  %879 = call i64 @strlen(ptr noundef nonnull dereferenceable(1) %878)
+  %880 = trunc i64 %879 to i32
+  %881 = call ptr @malloc(i32 %880)
+  call void @llvm.memcpy.p0.p0.i64(ptr align 8 %881, ptr align 8 %878, i64 %879, i1 false)
+  %882 = call ptr @malloc(i32 24)
+  store ptr %881, ptr %882, align 8
+  %memberidx1.i.i11.i = getelementptr inbounds %String, ptr %882, i64 0, i32 1
+  store i64 %879, ptr %memberidx1.i.i11.i, align 4
+  %memberidx2.i.i12.i = getelementptr inbounds %String, ptr %882, i64 0, i32 2
+  store i64 %879, ptr %memberidx2.i.i12.i, align 4
+  %883 = load ptr, ptr %memberidx1.i.i224, align 8
+  call void @LLVMDisposeMessage(ptr %883)
+  %884 = add i32 %880, 1
+  %885 = call ptr @malloc(i32 %884)
+  call void @llvm.memcpy.p0.p0.i64(ptr align 8 %885, ptr align 8 %881, i64 %879, i1 false)
+  %886 = getelementptr inbounds i8, ptr %885, i64 %879
+  store i8 0, ptr %886, align 1
+  %887 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %7, ptr nonnull @2, ptr %885)
+  %888 = load ptr, ptr %7, align 8
   %889 = call ptr @malloc(i32 24)
+  call void @free(ptr %885)
   %890 = call ptr @malloc(i32 7)
   call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(7) %890, ptr noundef nonnull align 8 dereferenceable(7) @0, i64 7, i1 false)
   %891 = call ptr @malloc(i32 24)
   %892 = call i64 @write(i64 1, ptr %890, i64 7)
   call void @free(ptr %890)
   call void @free(ptr %891)
-  %893 = call i64 @write(i64 1, ptr %888, i64 48)
+  %893 = call i64 @write(i64 1, ptr %888, i64 %887)
   %894 = call i64 @write(i64 1, ptr nonnull @1, i64 1)
   call void @free(ptr %888)
   call void @free(ptr %889)
   call void @exit(i64 -1)
+  call void @llvm.lifetime.end.p0(i64 8, ptr nonnull %7)
+  br label %GeneratedModule_write_asm.exit
+
+GeneratedModule_write_asm.exit:                   ; preds = %if.entry57, %if.entry.i321
+  call void @free(ptr nonnull %873)
+  call void @free(ptr %869)
+  call void @free(ptr nonnull %870)
+  br label %ifend33
+
+else58:                                           ; preds = %else53, %ifend.i307
+  call void @llvm.lifetime.start.p0(i64 8, ptr nonnull %engine.i)
+  call void @LLVMLinkInMCJIT()
+  store ptr null, ptr %engine.i, align 8
+  %895 = load ptr, ptr %623, align 8
+  %896 = call i1 @LLVMCreateExecutionEngineForModule(ptr nonnull %engine.i, ptr %895, ptr nonnull %memberidx1.i.i224)
+  br i1 %896, label %if.entry.i328, label %ifend.i329
+
+if.entry.i328:                                    ; preds = %else58
+  call void @llvm.lifetime.start.p0(i64 8, ptr nonnull %6)
+  %897 = load ptr, ptr %memberidx1.i.i224, align 8
+  %898 = call i64 @strlen(ptr noundef nonnull dereferenceable(1) %897)
+  %899 = trunc i64 %898 to i32
+  %900 = call ptr @malloc(i32 %899)
+  call void @llvm.memcpy.p0.p0.i64(ptr align 8 %900, ptr align 8 %897, i64 %898, i1 false)
+  %901 = call ptr @malloc(i32 24)
+  store ptr %900, ptr %901, align 8
+  %memberidx1.i.i32.i = getelementptr inbounds %String, ptr %901, i64 0, i32 1
+  store i64 %898, ptr %memberidx1.i.i32.i, align 4
+  %memberidx2.i.i33.i = getelementptr inbounds %String, ptr %901, i64 0, i32 2
+  store i64 %898, ptr %memberidx2.i.i33.i, align 4
+  %902 = load ptr, ptr %memberidx1.i.i224, align 8
+  call void @LLVMDisposeMessage(ptr %902)
+  %903 = add i32 %899, 1
+  %904 = call ptr @malloc(i32 %903)
+  call void @llvm.memcpy.p0.p0.i64(ptr align 8 %904, ptr align 8 %900, i64 %898, i1 false)
+  %905 = getelementptr inbounds i8, ptr %904, i64 %898
+  store i8 0, ptr %905, align 1
+  %906 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %6, ptr nonnull @2, ptr %904)
+  %907 = load ptr, ptr %6, align 8
+  %908 = call ptr @malloc(i32 24)
+  call void @free(ptr %904)
+  %909 = call ptr @malloc(i32 7)
+  call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(7) %909, ptr noundef nonnull align 8 dereferenceable(7) @0, i64 7, i1 false)
+  %910 = call ptr @malloc(i32 24)
+  %911 = call i64 @write(i64 1, ptr %909, i64 7)
+  call void @free(ptr %909)
+  call void @free(ptr %910)
+  %912 = call i64 @write(i64 1, ptr %907, i64 %906)
+  %913 = call i64 @write(i64 1, ptr nonnull @1, i64 1)
+  call void @free(ptr %907)
+  call void @free(ptr %908)
+  call void @exit(i64 -1)
+  call void @llvm.lifetime.end.p0(i64 8, ptr nonnull %6)
+  br label %ifend.i329
+
+ifend.i329:                                       ; preds = %if.entry.i328, %else58
+  %914 = load ptr, ptr %623, align 8
+  %915 = call ptr @LLVMGetNamedFunction(ptr %914, ptr nonnull @3)
+  %916 = icmp eq ptr %915, null
+  br i1 %916, label %if.entry4.i, label %ifend6.i
+
+if.entry4.i:                                      ; preds = %ifend.i329
+  %917 = call ptr @malloc(i32 48)
+  call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(48) %917, ptr noundef nonnull align 8 dereferenceable(48) @4, i64 48, i1 false)
+  %918 = call ptr @malloc(i32 24)
+  %919 = call ptr @malloc(i32 7)
+  call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(7) %919, ptr noundef nonnull align 8 dereferenceable(7) @0, i64 7, i1 false)
+  %920 = call ptr @malloc(i32 24)
+  %921 = call i64 @write(i64 1, ptr %919, i64 7)
+  call void @free(ptr %919)
+  call void @free(ptr %920)
+  %922 = call i64 @write(i64 1, ptr %917, i64 48)
+  %923 = call i64 @write(i64 1, ptr nonnull @1, i64 1)
+  call void @free(ptr %917)
+  call void @free(ptr %918)
+  call void @exit(i64 -1)
   br label %GeneratedModule_exec.exit
 
-ifend6.i:                                         ; preds = %ifend.i320
-  %895 = load ptr, ptr %engine.i, align 8
-  %896 = call i64 @LLVMRunFunctionAsMain(ptr %895, ptr nonnull %886, i64 0, ptr null, ptr null)
-  %897 = load ptr, ptr %engine.i, align 8
-  %898 = load ptr, ptr %594, align 8
-  %899 = call i1 @LLVMRemoveModule(ptr %897, ptr %898, ptr nonnull %594, ptr nonnull %memberidx1.i.i216)
-  br i1 %899, label %if.entry12.i, label %GeneratedModule_exec.exit
+ifend6.i:                                         ; preds = %ifend.i329
+  %924 = load ptr, ptr %engine.i, align 8
+  %925 = call i64 @LLVMRunFunctionAsMain(ptr %924, ptr nonnull %915, i64 0, ptr null, ptr null)
+  %926 = load ptr, ptr %engine.i, align 8
+  %927 = load ptr, ptr %623, align 8
+  %928 = call i1 @LLVMRemoveModule(ptr %926, ptr %927, ptr nonnull %623, ptr nonnull %memberidx1.i.i224)
+  br i1 %928, label %if.entry12.i, label %GeneratedModule_exec.exit
 
 if.entry12.i:                                     ; preds = %ifend6.i
   call void @llvm.lifetime.start.p0(i64 8, ptr nonnull %5)
-  %900 = load ptr, ptr %memberidx1.i.i216, align 8
-  %901 = call i64 @strlen(ptr noundef nonnull dereferenceable(1) %900)
-  %902 = trunc i64 %901 to i32
-  %903 = call ptr @malloc(i32 %902)
-  call void @llvm.memcpy.p0.p0.i64(ptr align 8 %903, ptr align 8 %900, i64 %901, i1 false)
-  %904 = call ptr @malloc(i32 24)
-  store ptr %903, ptr %904, align 8
-  %memberidx1.i.i38.i = getelementptr inbounds %String, ptr %904, i64 0, i32 1
-  store i64 %901, ptr %memberidx1.i.i38.i, align 4
-  %memberidx2.i.i39.i = getelementptr inbounds %String, ptr %904, i64 0, i32 2
-  store i64 %901, ptr %memberidx2.i.i39.i, align 4
-  %905 = load ptr, ptr %memberidx1.i.i216, align 8
-  call void @LLVMDisposeMessage(ptr %905)
-  %906 = add i32 %902, 1
-  %907 = call ptr @malloc(i32 %906)
-  call void @llvm.memcpy.p0.p0.i64(ptr align 8 %907, ptr align 8 %903, i64 %901, i1 false)
-  %908 = getelementptr inbounds i8, ptr %907, i64 %901
-  store i8 0, ptr %908, align 1
-  %909 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %5, ptr nonnull @2, ptr %907)
-  %910 = load ptr, ptr %5, align 8
-  %911 = call ptr @malloc(i32 24)
-  call void @free(ptr %907)
-  %912 = call ptr @malloc(i32 7)
-  call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(7) %912, ptr noundef nonnull align 8 dereferenceable(7) @0, i64 7, i1 false)
-  %913 = call ptr @malloc(i32 24)
-  %914 = call i64 @write(i64 1, ptr %912, i64 7)
-  call void @free(ptr %912)
-  call void @free(ptr %913)
-  %915 = call i64 @write(i64 1, ptr %910, i64 %909)
-  %916 = call i64 @write(i64 1, ptr nonnull @1, i64 1)
-  call void @free(ptr %910)
-  call void @free(ptr %911)
+  %929 = load ptr, ptr %memberidx1.i.i224, align 8
+  %930 = call i64 @strlen(ptr noundef nonnull dereferenceable(1) %929)
+  %931 = trunc i64 %930 to i32
+  %932 = call ptr @malloc(i32 %931)
+  call void @llvm.memcpy.p0.p0.i64(ptr align 8 %932, ptr align 8 %929, i64 %930, i1 false)
+  %933 = call ptr @malloc(i32 24)
+  store ptr %932, ptr %933, align 8
+  %memberidx1.i.i38.i = getelementptr inbounds %String, ptr %933, i64 0, i32 1
+  store i64 %930, ptr %memberidx1.i.i38.i, align 4
+  %memberidx2.i.i39.i = getelementptr inbounds %String, ptr %933, i64 0, i32 2
+  store i64 %930, ptr %memberidx2.i.i39.i, align 4
+  %934 = load ptr, ptr %memberidx1.i.i224, align 8
+  call void @LLVMDisposeMessage(ptr %934)
+  %935 = add i32 %931, 1
+  %936 = call ptr @malloc(i32 %935)
+  call void @llvm.memcpy.p0.p0.i64(ptr align 8 %936, ptr align 8 %932, i64 %930, i1 false)
+  %937 = getelementptr inbounds i8, ptr %936, i64 %930
+  store i8 0, ptr %937, align 1
+  %938 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %5, ptr nonnull @2, ptr %936)
+  %939 = load ptr, ptr %5, align 8
+  %940 = call ptr @malloc(i32 24)
+  call void @free(ptr %936)
+  %941 = call ptr @malloc(i32 7)
+  call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(7) %941, ptr noundef nonnull align 8 dereferenceable(7) @0, i64 7, i1 false)
+  %942 = call ptr @malloc(i32 24)
+  %943 = call i64 @write(i64 1, ptr %941, i64 7)
+  call void @free(ptr %941)
+  call void @free(ptr %942)
+  %944 = call i64 @write(i64 1, ptr %939, i64 %938)
+  %945 = call i64 @write(i64 1, ptr nonnull @1, i64 1)
+  call void @free(ptr %939)
+  call void @free(ptr %940)
   call void @exit(i64 -1)
   call void @llvm.lifetime.end.p0(i64 8, ptr nonnull %5)
   br label %GeneratedModule_exec.exit
 
 GeneratedModule_exec.exit:                        ; preds = %ifend6.i, %if.entry12.i, %if.entry4.i
-  %common.ret.op.i321 = phi i64 [ 1, %if.entry4.i ], [ %896, %if.entry12.i ], [ %896, %ifend6.i ]
+  %common.ret.op.i330 = phi i64 [ 1, %if.entry4.i ], [ %925, %if.entry12.i ], [ %925, %ifend6.i ]
   %.sink = load ptr, ptr %engine.i, align 8
   call void @LLVMDisposeExecutionEngine(ptr %.sink)
   call void @llvm.lifetime.end.p0(i64 8, ptr nonnull %engine.i)
@@ -3272,7 +3344,7 @@ get_next_line_index.exit.i.i:                     ; preds = %while.entry.i.i.i
   %47 = call ptr @malloc(i32 %46)
   %48 = load ptr, ptr %15, align 8
   %49 = getelementptr inbounds i8, ptr %48, i64 %44
-  call void @llvm.memcpy.p0.p0.i64(ptr align 8 %47, ptr align 1073741824 %49, i64 %45, i1 false)
+  call void @llvm.memcpy.p0.p0.i64(ptr align 8 %47, ptr align 536870912 %49, i64 %45, i1 false)
   %50 = call ptr @malloc(i32 24)
   %51 = call i64 @write(i64 1, ptr %47, i64 %45)
   %52 = call i64 @write(i64 1, ptr nonnull @1, i64 1)
@@ -3420,14 +3492,14 @@ if.entry.i.i:                                     ; preds = %if.entry.i.i.i
   %27 = getelementptr inbounds i8, ptr %25, i64 %11
   %28 = load ptr, ptr %5, align 8
   %29 = load i64, ptr %memberidx2.i.i, align 4
-  tail call void @llvm.memcpy.p0.p0.i64(ptr align 1073741824 %27, ptr align 8 %28, i64 %29, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr align 536870912 %27, ptr align 8 %28, i64 %29, i1 false)
   %30 = add nsw i64 %29, %11
   %31 = getelementptr inbounds i8, ptr %25, i64 %30
   %32 = add nuw nsw i64 %11, 1
   %33 = getelementptr inbounds i8, ptr %26, i64 %32
   %34 = load i64, ptr %memberidx.i.i.i, align 4
   %35 = sub nuw i64 %34, %32
-  tail call void @llvm.memcpy.p0.p0.i64(ptr align 1073741824 %31, ptr nonnull align 1073741824 %33, i64 %35, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr align 536870912 %31, ptr nonnull align 536870912 %33, i64 %35, i1 false)
   %36 = tail call ptr @malloc(i32 24)
   store ptr %25, ptr %36, align 8
   %memberidx1.i42.i.i = getelementptr inbounds %String, ptr %36, i64 0, i32 1
@@ -3482,7 +3554,7 @@ String___adda__.exit.i:                           ; preds = %if.entry.i, %if.ent
   %53 = phi ptr [ %51, %if.entry.i.i.i.i ], [ %50, %if.entry.i ]
   %54 = getelementptr inbounds i8, ptr %53, i64 %52
   %55 = load i32, ptr %37, align 8
-  store i32 %55, ptr %54, align 1073741824
+  store i32 %55, ptr %54, align 536870912
   %56 = load i64, ptr %memberidx.i8.i, align 4
   %57 = add nuw i64 %56, 4
   store i64 %57, ptr %memberidx.i8.i, align 4
@@ -3724,7 +3796,7 @@ String_append_bytes_length.exit.i:                ; preds = %while.body.i, %if.e
   %46 = phi i64 [ %.pre36, %if.entry.i.i.i ], [ %39, %while.body.i ]
   %47 = phi ptr [ %45, %if.entry.i.i.i ], [ %44, %while.body.i ]
   %48 = getelementptr inbounds i8, ptr %47, i64 %46
-  call void @llvm.memcpy.p0.p0.i64(ptr align 1073741824 %48, ptr nonnull align 8 %buffer.i, i64 %40, i1 false)
+  call void @llvm.memcpy.p0.p0.i64(ptr align 536870912 %48, ptr nonnull align 8 %buffer.i, i64 %40, i1 false)
   %49 = load i64, ptr %memberidx1.i.i.i, align 4
   %50 = add nuw i64 %49, %40
   store i64 %50, ptr %memberidx1.i.i.i, align 4
@@ -5283,7 +5355,7 @@ if.entry13:                                       ; preds = %ifend11
   %42 = getelementptr inbounds i8, ptr %41, i64 %11
   store i8 0, ptr %42, align 1
   %43 = alloca ptr, align 8
-  %44 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %43, ptr nonnull @33, ptr %41)
+  %44 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %43, ptr nonnull @32, ptr %41)
   %45 = load ptr, ptr %43, align 8
   %46 = tail call ptr @malloc(i32 24)
   store ptr %45, ptr %46, align 8
@@ -5374,7 +5446,7 @@ for.body:                                         ; preds = %for.entry, %ifend
   %15 = getelementptr inbounds i8, ptr %12, i64 %14
   store i8 0, ptr %15, align 1
   %16 = alloca ptr, align 8
-  %17 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %16, ptr nonnull @36, ptr %12)
+  %17 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %16, ptr nonnull @35, ptr %12)
   %18 = load ptr, ptr %16, align 8
   %19 = tail call ptr @malloc(i32 24)
   store ptr %18, ptr %19, align 8
@@ -5447,7 +5519,7 @@ ifend:                                            ; preds = %if.entry4, %else5, 
 
 if.entry4:                                        ; preds = %for.body
   %44 = call ptr @malloc(i32 6)
-  call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(6) %44, ptr noundef nonnull align 8 dereferenceable(6) @37, i64 6, i1 false)
+  call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(6) %44, ptr noundef nonnull align 8 dereferenceable(6) @36, i64 6, i1 false)
   %45 = call ptr @malloc(i32 24)
   store ptr %44, ptr %45, align 8
   %memberidx1.i.i28 = getelementptr inbounds %String, ptr %45, i64 0, i32 1
@@ -5964,7 +6036,7 @@ while.end.i:                                      ; preds = %Lexer_peek.exit78.i
   %40 = tail call ptr @malloc(i32 %39)
   %41 = load ptr, ptr %21, align 8
   %42 = getelementptr inbounds i8, ptr %41, i64 %20
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(1) %40, ptr noundef nonnull align 1073741824 dereferenceable(1) %42, i64 %23, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(1) %40, ptr noundef nonnull align 536870912 dereferenceable(1) %42, i64 %23, i1 false)
   %43 = tail call ptr @malloc(i32 24)
   store ptr %40, ptr %43, align 8
   %memberidx1.i.i82.i = getelementptr inbounds %String, ptr %43, i64 0, i32 1
@@ -5987,7 +6059,7 @@ while.end.i:                                      ; preds = %Lexer_peek.exit78.i
   %memberidx3.i.i.i = getelementptr inbounds %FloRange, ptr %44, i64 0, i32 3
   store i64 %51, ptr %memberidx3.i.i.i, align 4
   %52 = tail call ptr @malloc(i32 3)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(3) %52, ptr noundef nonnull align 8 dereferenceable(3) @41, i64 3, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(3) %52, ptr noundef nonnull align 8 dereferenceable(3) @40, i64 3, i1 false)
   %53 = tail call ptr @malloc(i32 24)
   store ptr %52, ptr %53, align 8
   %memberidx1.i.i.i.i = getelementptr inbounds %String, ptr %53, i64 0, i32 1
@@ -6021,7 +6093,7 @@ ifend.i95.i.i:                                    ; preds = %ifend.i.i
 
 ifend3.i.i:                                       ; preds = %ifend.i.i, %ifend.i95.i.i
   %60 = tail call ptr @malloc(i32 5)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(5) %60, ptr noundef nonnull align 8 dereferenceable(5) @42, i64 5, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(5) %60, ptr noundef nonnull align 8 dereferenceable(5) @41, i64 5, i1 false)
   %61 = tail call ptr @malloc(i32 24)
   store ptr %60, ptr %61, align 8
   %memberidx1.i.i97.i.i = getelementptr inbounds %String, ptr %61, i64 0, i32 1
@@ -6038,7 +6110,7 @@ ifend.i103.i.i:                                   ; preds = %ifend3.i.i
 
 ifend6.i.i:                                       ; preds = %ifend3.i.i, %ifend.i103.i.i
   %64 = tail call ptr @malloc(i32 3)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(3) %64, ptr noundef nonnull align 8 dereferenceable(3) @43, i64 3, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(3) %64, ptr noundef nonnull align 8 dereferenceable(3) @42, i64 3, i1 false)
   %65 = tail call ptr @malloc(i32 24)
   store ptr %64, ptr %65, align 8
   %memberidx1.i.i105.i.i = getelementptr inbounds %String, ptr %65, i64 0, i32 1
@@ -6070,7 +6142,7 @@ ifend.i119.i.i:                                   ; preds = %ifend9.i.i
 
 ifend12.i.i:                                      ; preds = %ifend9.i.i, %ifend.i119.i.i
   %72 = tail call ptr @malloc(i32 5)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(5) %72, ptr noundef nonnull align 8 dereferenceable(5) @44, i64 5, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(5) %72, ptr noundef nonnull align 8 dereferenceable(5) @43, i64 5, i1 false)
   %73 = tail call ptr @malloc(i32 24)
   store ptr %72, ptr %73, align 8
   %memberidx1.i.i121.i.i = getelementptr inbounds %String, ptr %73, i64 0, i32 1
@@ -6103,7 +6175,7 @@ ifend.i135.i.i:                                   ; preds = %ifend15.i.i
 
 ifend18.i.i:                                      ; preds = %ifend15.i.i, %ifend.i135.i.i
   %80 = tail call ptr @malloc(i32 3)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(3) %80, ptr noundef nonnull align 8 dereferenceable(3) @46, i64 3, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(3) %80, ptr noundef nonnull align 8 dereferenceable(3) @45, i64 3, i1 false)
   %81 = tail call ptr @malloc(i32 24)
   store ptr %80, ptr %81, align 8
   %memberidx1.i.i137.i.i = getelementptr inbounds %String, ptr %81, i64 0, i32 1
@@ -6119,7 +6191,7 @@ ifend.i143.i.i:                                   ; preds = %ifend18.i.i
 
 ifend21.i.i:                                      ; preds = %ifend18.i.i, %ifend.i143.i.i
   %84 = tail call ptr @malloc(i32 5)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(5) %84, ptr noundef nonnull align 8 dereferenceable(5) @47, i64 5, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(5) %84, ptr noundef nonnull align 8 dereferenceable(5) @46, i64 5, i1 false)
   %85 = tail call ptr @malloc(i32 24)
   store ptr %84, ptr %85, align 8
   %memberidx1.i.i145.i.i = getelementptr inbounds %String, ptr %85, i64 0, i32 1
@@ -6135,7 +6207,7 @@ ifend.i151.i.i:                                   ; preds = %ifend21.i.i
 
 ifend24.i.i:                                      ; preds = %ifend21.i.i, %ifend.i151.i.i
   %88 = tail call ptr @malloc(i32 3)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(3) %88, ptr noundef nonnull align 8 dereferenceable(3) @48, i64 3, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(3) %88, ptr noundef nonnull align 8 dereferenceable(3) @47, i64 3, i1 false)
   %89 = tail call ptr @malloc(i32 24)
   store ptr %88, ptr %89, align 8
   %memberidx1.i.i153.i.i = getelementptr inbounds %String, ptr %89, i64 0, i32 1
@@ -6151,7 +6223,7 @@ ifend.i159.i.i:                                   ; preds = %ifend24.i.i
 
 ifend27.i.i:                                      ; preds = %ifend24.i.i, %ifend.i159.i.i
   %92 = tail call ptr @malloc(i32 5)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(5) %92, ptr noundef nonnull align 8 dereferenceable(5) @49, i64 5, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(5) %92, ptr noundef nonnull align 8 dereferenceable(5) @48, i64 5, i1 false)
   %93 = tail call ptr @malloc(i32 24)
   store ptr %92, ptr %93, align 8
   %memberidx1.i.i161.i.i = getelementptr inbounds %String, ptr %93, i64 0, i32 1
@@ -6184,7 +6256,7 @@ ifend.i175.i.i:                                   ; preds = %ifend30.i.i
 
 ifend33.i.i:                                      ; preds = %ifend30.i.i, %ifend.i175.i.i
   %100 = tail call ptr @malloc(i32 6)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(6) %100, ptr noundef nonnull align 8 dereferenceable(6) @50, i64 6, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(6) %100, ptr noundef nonnull align 8 dereferenceable(6) @49, i64 6, i1 false)
   %101 = tail call ptr @malloc(i32 24)
   store ptr %100, ptr %101, align 8
   %memberidx1.i.i177.i.i = getelementptr inbounds %String, ptr %101, i64 0, i32 1
@@ -6201,7 +6273,7 @@ ifend.i183.i.i:                                   ; preds = %ifend33.i.i
 
 ifend36.i.i:                                      ; preds = %ifend33.i.i, %ifend.i183.i.i
   %104 = tail call ptr @malloc(i32 6)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(6) %104, ptr noundef nonnull align 8 dereferenceable(6) @51, i64 6, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(6) %104, ptr noundef nonnull align 8 dereferenceable(6) @50, i64 6, i1 false)
   %105 = tail call ptr @malloc(i32 24)
   store ptr %104, ptr %105, align 8
   %memberidx1.i.i185.i.i = getelementptr inbounds %String, ptr %105, i64 0, i32 1
@@ -6217,7 +6289,7 @@ ifend.i191.i.i:                                   ; preds = %ifend36.i.i
 
 ifend39.i.i:                                      ; preds = %ifend36.i.i, %ifend.i191.i.i
   %108 = tail call ptr @malloc(i32 7)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(7) %108, ptr noundef nonnull align 8 dereferenceable(7) @52, i64 7, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(7) %108, ptr noundef nonnull align 8 dereferenceable(7) @51, i64 7, i1 false)
   %109 = tail call ptr @malloc(i32 24)
   store ptr %108, ptr %109, align 8
   %memberidx1.i.i193.i.i = getelementptr inbounds %String, ptr %109, i64 0, i32 1
@@ -6234,7 +6306,7 @@ ifend.i199.i.i:                                   ; preds = %ifend39.i.i
 
 ifend42.i.i:                                      ; preds = %ifend39.i.i, %ifend.i199.i.i
   %112 = tail call ptr @malloc(i32 6)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(6) %112, ptr noundef nonnull align 8 dereferenceable(6) @53, i64 6, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(6) %112, ptr noundef nonnull align 8 dereferenceable(6) @52, i64 6, i1 false)
   %113 = tail call ptr @malloc(i32 24)
   store ptr %112, ptr %113, align 8
   %memberidx1.i.i201.i.i = getelementptr inbounds %String, ptr %113, i64 0, i32 1
@@ -6250,7 +6322,7 @@ ifend.i207.i.i:                                   ; preds = %ifend42.i.i
 
 ifend45.i.i:                                      ; preds = %ifend42.i.i, %ifend.i207.i.i
   %116 = tail call ptr @malloc(i32 9)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(9) %116, ptr noundef nonnull align 8 dereferenceable(9) @54, i64 9, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(9) %116, ptr noundef nonnull align 8 dereferenceable(9) @53, i64 9, i1 false)
   %117 = tail call ptr @malloc(i32 24)
   store ptr %116, ptr %117, align 8
   %memberidx1.i.i209.i.i = getelementptr inbounds %String, ptr %117, i64 0, i32 1
@@ -6283,7 +6355,7 @@ ifend.i223.i.i:                                   ; preds = %ifend48.i.i
 
 ifend51.i.i:                                      ; preds = %ifend48.i.i, %ifend.i223.i.i
   %124 = tail call ptr @malloc(i32 5)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(5) %124, ptr noundef nonnull align 8 dereferenceable(5) @55, i64 5, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(5) %124, ptr noundef nonnull align 8 dereferenceable(5) @54, i64 5, i1 false)
   %125 = tail call ptr @malloc(i32 24)
   store ptr %124, ptr %125, align 8
   %memberidx1.i.i225.i.i = getelementptr inbounds %String, ptr %125, i64 0, i32 1
@@ -6315,7 +6387,7 @@ ifend.i239.i.i:                                   ; preds = %ifend54.i.i
 
 ifend57.i.i:                                      ; preds = %ifend54.i.i, %ifend.i239.i.i
   %132 = tail call ptr @malloc(i32 3)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(3) %132, ptr noundef nonnull align 8 dereferenceable(3) @56, i64 3, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(3) %132, ptr noundef nonnull align 8 dereferenceable(3) @55, i64 3, i1 false)
   %133 = tail call ptr @malloc(i32 24)
   store ptr %132, ptr %133, align 8
   %memberidx1.i.i241.i.i = getelementptr inbounds %String, ptr %133, i64 0, i32 1
@@ -6331,7 +6403,7 @@ ifend.i247.i.i:                                   ; preds = %ifend57.i.i
 
 ifend60.i.i:                                      ; preds = %ifend57.i.i, %ifend.i247.i.i
   %136 = tail call ptr @malloc(i32 3)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(3) %136, ptr noundef nonnull align 8 dereferenceable(3) @57, i64 3, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(3) %136, ptr noundef nonnull align 8 dereferenceable(3) @56, i64 3, i1 false)
   %137 = tail call ptr @malloc(i32 24)
   store ptr %136, ptr %137, align 8
   %memberidx1.i.i249.i.i = getelementptr inbounds %String, ptr %137, i64 0, i32 1
@@ -6659,9 +6731,9 @@ while.entry.i.i1004.backedge:                     ; preds = %String_append_byte.
 
 if.entry3.i.i:                                    ; preds = %if.entry.i79.i
   %233 = getelementptr i8, ptr %213, i64 %i.0.i.i1203
-  %234 = tail call i64 @memcmp(ptr %233, ptr nonnull @58, i64 3)
+  %234 = tail call i64 @memcmp(ptr %233, ptr nonnull @57, i64 3)
   %235 = icmp eq i64 %234, 0
-  %236 = tail call i64 @memcmp(ptr %233, ptr nonnull @59, i64 3)
+  %236 = tail call i64 @memcmp(ptr %233, ptr nonnull @58, i64 3)
   %237 = icmp eq i64 %236, 0
   %238 = or i1 %235, %237
   br i1 %238, label %if.entry6.i.i, label %ifend8.i.i
@@ -6731,7 +6803,7 @@ String_append_bytes_length.exit44.i.i:            ; preds = %if.entry6.i.i, %if.
   %247 = phi i64 [ %.pre1249, %if.entry.i.i43.i.i ], [ %214, %if.entry6.i.i ]
   %248 = phi ptr [ %246, %if.entry.i.i43.i.i ], [ %245, %if.entry6.i.i ]
   %249 = getelementptr inbounds i8, ptr %248, i64 %247
-  store i8 27, ptr %249, align 1073741824
+  store i8 27, ptr %249, align 536870912
   %250 = load i64, ptr %memberidx1.i.i.i.i1001, align 4
   %251 = add nuw i64 %250, 1
   store i64 %251, ptr %memberidx1.i.i.i.i1001, align 4
@@ -6744,7 +6816,7 @@ ifend8.i.i:                                       ; preds = %if.entry3.i.i
   br i1 %254, label %if.entry10.i.i, label %ifend5.i.i
 
 if.entry10.i.i:                                   ; preds = %ifend8.i.i
-  %255 = tail call i64 @memcmp(ptr %233, ptr nonnull @60, i64 5)
+  %255 = tail call i64 @memcmp(ptr %233, ptr nonnull @59, i64 5)
   %256 = icmp eq i64 %255, 0
   br i1 %256, label %if.entry13.i.i, label %ifend5.i.i
 
@@ -6766,7 +6838,7 @@ String_append_bytes_length.exit.i.i:              ; preds = %if.entry13.i.i, %if
   %262 = phi i64 [ %.pre1247, %if.entry.i.i40.i.i ], [ %214, %if.entry13.i.i ]
   %263 = phi ptr [ %261, %if.entry.i.i40.i.i ], [ %260, %if.entry13.i.i ]
   %264 = getelementptr inbounds i8, ptr %263, i64 %262
-  store i8 27, ptr %264, align 1073741824
+  store i8 27, ptr %264, align 536870912
   %265 = load i64, ptr %memberidx1.i.i.i.i1001, align 4
   %266 = add nuw i64 %265, 1
   store i64 %266, ptr %memberidx1.i.i.i.i1001, align 4
@@ -7330,7 +7402,7 @@ while.end.i195:                                   ; preds = %Lexer_peek.exit73.i
   %479 = tail call ptr @malloc(i32 %478)
   %480 = load ptr, ptr %477, align 8
   %481 = getelementptr inbounds i8, ptr %480, i64 %472
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(1) %479, ptr noundef nonnull align 1073741824 dereferenceable(1) %481, i64 %length.0.i190, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(1) %479, ptr noundef nonnull align 536870912 dereferenceable(1) %481, i64 %length.0.i190, i1 false)
   %482 = tail call ptr @malloc(i32 24)
   store ptr %479, ptr %482, align 8
   %memberidx1.i.i74.i = getelementptr inbounds %String, ptr %482, i64 0, i32 1
@@ -9724,7 +9796,7 @@ ifend89:                                          ; preds = %ifend11
   %1153 = tail call ptr @malloc(i32 1)
   %1154 = load ptr, ptr %1151, align 8
   %1155 = getelementptr inbounds i8, ptr %1154, i64 %1152
-  %1156 = load i8, ptr %1155, align 1073741824
+  %1156 = load i8, ptr %1155, align 536870912
   store i8 %1156, ptr %1153, align 8
   %1157 = tail call ptr @malloc(i32 24)
   store ptr %1153, ptr %1157, align 8
@@ -9741,7 +9813,7 @@ ifend89:                                          ; preds = %ifend11
   %1162 = getelementptr inbounds i8, ptr %1160, i64 1
   store i8 0, ptr %1162, align 1
   %1163 = alloca ptr, align 8
-  %1164 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %1163, ptr nonnull @61, ptr nonnull %1160)
+  %1164 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %1163, ptr nonnull @60, ptr nonnull %1160)
   %1165 = load ptr, ptr %1163, align 8
   %1166 = tail call ptr @malloc(i32 24)
   store ptr %1165, ptr %1166, align 8
@@ -11069,7 +11141,7 @@ Array_MethodNode____sl__.exit.i.i:                ; preds = %Parser_parse_method
 
 else17.i.i:                                       ; preds = %Parser_peek.exit83.i.i
   %517 = call ptr @malloc(i32 19)
-  call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(19) %517, ptr noundef nonnull align 8 dereferenceable(19) @77, i64 19, i1 false)
+  call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(19) %517, ptr noundef nonnull align 8 dereferenceable(19) @76, i64 19, i1 false)
   %518 = call ptr @malloc(i32 24)
   store ptr %517, ptr %518, align 8
   %memberidx1.i.i51.i.i = getelementptr inbounds %String, ptr %518, i64 0, i32 1
@@ -11978,7 +12050,7 @@ Array_TypeAliasNode____sl__.exit:                 ; preds = %Parser_parse_type_a
 
 else35:                                           ; preds = %while.body, %if.entry.i219, %ifend.i.i220
   %905 = call ptr @malloc(i32 87)
-  call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(87) %905, ptr noundef nonnull align 8 dereferenceable(87) @78, i64 87, i1 false)
+  call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(87) %905, ptr noundef nonnull align 8 dereferenceable(87) @77, i64 87, i1 false)
   %906 = call ptr @malloc(i32 24)
   store ptr %905, ptr %906, align 8
   %memberidx1.i.i71 = getelementptr inbounds %String, ptr %906, i64 0, i32 1
@@ -12462,7 +12534,7 @@ if.entry10:                                       ; preds = %1
   %49 = tail call ptr @malloc(i32 32)
   %50 = tail call ptr @malloc(i32 24)
   %51 = tail call ptr @malloc(i32 3)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(3) %51, ptr noundef nonnull align 8 dereferenceable(3) @73, i64 3, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(3) %51, ptr noundef nonnull align 8 dereferenceable(3) @72, i64 3, i1 false)
   %52 = tail call ptr @malloc(i32 24)
   store ptr %51, ptr %52, align 8
   %memberidx1.i.i186 = getelementptr inbounds %String, ptr %52, i64 0, i32 1
@@ -12689,7 +12761,7 @@ if.entry32:                                       ; preds = %Parser_advance.exit
   %144 = tail call ptr @malloc(i32 32)
   %145 = tail call ptr @malloc(i32 24)
   %146 = tail call ptr @malloc(i32 5)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(5) %146, ptr noundef nonnull align 8 dereferenceable(5) @74, i64 5, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(5) %146, ptr noundef nonnull align 8 dereferenceable(5) @73, i64 5, i1 false)
   %147 = tail call ptr @malloc(i32 24)
   store ptr %146, ptr %147, align 8
   %memberidx1.i.i133 = getelementptr inbounds %String, ptr %147, i64 0, i32 1
@@ -14559,7 +14631,7 @@ if.entry17:                                       ; preds = %ifend13
   %50 = getelementptr inbounds i8, ptr %47, i64 %49
   store i8 0, ptr %50, align 1
   %51 = alloca ptr, align 8
-  %52 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %51, ptr nonnull @76, ptr %47)
+  %52 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %51, ptr nonnull @75, ptr %47)
   %53 = load ptr, ptr %51, align 8
   %54 = tail call ptr @malloc(i32 24)
   store ptr %53, ptr %54, align 8
@@ -14925,7 +14997,7 @@ if.entry34.i.i:                                   ; preds = %1
 
 else35.i.i:                                       ; preds = %1
   %57 = tail call ptr @malloc(i32 28)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(28) %57, ptr noundef nonnull align 8 dereferenceable(28) @75, i64 28, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(28) %57, ptr noundef nonnull align 8 dereferenceable(28) @74, i64 28, i1 false)
   %58 = tail call ptr @malloc(i32 24)
   store ptr %57, ptr %58, align 8
   %memberidx1.i.i.i67.i = getelementptr inbounds %String, ptr %58, i64 0, i32 1
@@ -15364,7 +15436,7 @@ else:                                             ; preds = %2
 
 if.entry2:                                        ; preds = %else
   %14 = tail call ptr @malloc(i32 22)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(22) %14, ptr noundef nonnull align 8 dereferenceable(22) @62, i64 22, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(22) %14, ptr noundef nonnull align 8 dereferenceable(22) @61, i64 22, i1 false)
   %15 = tail call ptr @malloc(i32 24)
   store ptr %14, ptr %15, align 8
   %memberidx1.i.i63 = getelementptr inbounds %String, ptr %15, i64 0, i32 1
@@ -15428,7 +15500,7 @@ ifend4:                                           ; preds = %else, %Parser_error
 
 if.entry5:                                        ; preds = %else
   %36 = tail call ptr @malloc(i32 12)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(12) %36, ptr noundef nonnull align 8 dereferenceable(12) @63, i64 12, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(12) %36, ptr noundef nonnull align 8 dereferenceable(12) @62, i64 12, i1 false)
   %37 = tail call ptr @malloc(i32 24)
   store ptr %36, ptr %37, align 8
   %memberidx1.i.i76 = getelementptr inbounds %String, ptr %37, i64 0, i32 1
@@ -15483,7 +15555,7 @@ Parser_error.exit87:                              ; preds = %if.entry5, %Parser_
 
 if.entry8:                                        ; preds = %else
   %56 = tail call ptr @malloc(i32 12)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(12) %56, ptr noundef nonnull align 8 dereferenceable(12) @64, i64 12, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(12) %56, ptr noundef nonnull align 8 dereferenceable(12) @63, i64 12, i1 false)
   %57 = tail call ptr @malloc(i32 24)
   store ptr %56, ptr %57, align 8
   %memberidx1.i.i88 = getelementptr inbounds %String, ptr %57, i64 0, i32 1
@@ -15538,7 +15610,7 @@ Parser_error.exit99:                              ; preds = %if.entry8, %Parser_
 
 if.entry11:                                       ; preds = %else
   %76 = tail call ptr @malloc(i32 12)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(12) %76, ptr noundef nonnull align 8 dereferenceable(12) @65, i64 12, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(12) %76, ptr noundef nonnull align 8 dereferenceable(12) @64, i64 12, i1 false)
   %77 = tail call ptr @malloc(i32 24)
   store ptr %76, ptr %77, align 8
   %memberidx1.i.i100 = getelementptr inbounds %String, ptr %77, i64 0, i32 1
@@ -15593,7 +15665,7 @@ Parser_error.exit111:                             ; preds = %if.entry11, %Parser
 
 if.entry14:                                       ; preds = %else
   %96 = tail call ptr @malloc(i32 12)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(12) %96, ptr noundef nonnull align 8 dereferenceable(12) @66, i64 12, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(12) %96, ptr noundef nonnull align 8 dereferenceable(12) @65, i64 12, i1 false)
   %97 = tail call ptr @malloc(i32 24)
   store ptr %96, ptr %97, align 8
   %memberidx1.i.i112 = getelementptr inbounds %String, ptr %97, i64 0, i32 1
@@ -15648,7 +15720,7 @@ Parser_error.exit123:                             ; preds = %if.entry14, %Parser
 
 if.entry17:                                       ; preds = %else
   %116 = tail call ptr @malloc(i32 12)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(12) %116, ptr noundef nonnull align 8 dereferenceable(12) @67, i64 12, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(12) %116, ptr noundef nonnull align 8 dereferenceable(12) @66, i64 12, i1 false)
   %117 = tail call ptr @malloc(i32 24)
   store ptr %116, ptr %117, align 8
   %memberidx1.i.i124 = getelementptr inbounds %String, ptr %117, i64 0, i32 1
@@ -15703,7 +15775,7 @@ Parser_error.exit135:                             ; preds = %if.entry17, %Parser
 
 if.entry20:                                       ; preds = %else
   %136 = tail call ptr @malloc(i32 12)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(12) %136, ptr noundef nonnull align 8 dereferenceable(12) @68, i64 12, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(12) %136, ptr noundef nonnull align 8 dereferenceable(12) @67, i64 12, i1 false)
   %137 = tail call ptr @malloc(i32 24)
   store ptr %136, ptr %137, align 8
   %memberidx1.i.i136 = getelementptr inbounds %String, ptr %137, i64 0, i32 1
@@ -15758,7 +15830,7 @@ Parser_error.exit147:                             ; preds = %if.entry20, %Parser
 
 if.entry23:                                       ; preds = %else
   %156 = tail call ptr @malloc(i32 12)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(12) %156, ptr noundef nonnull align 8 dereferenceable(12) @69, i64 12, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(12) %156, ptr noundef nonnull align 8 dereferenceable(12) @68, i64 12, i1 false)
   %157 = tail call ptr @malloc(i32 24)
   store ptr %156, ptr %157, align 8
   %memberidx1.i.i148 = getelementptr inbounds %String, ptr %157, i64 0, i32 1
@@ -15813,7 +15885,7 @@ Parser_error.exit159:                             ; preds = %if.entry23, %Parser
 
 if.entry26:                                       ; preds = %else
   %176 = tail call ptr @malloc(i32 12)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(12) %176, ptr noundef nonnull align 8 dereferenceable(12) @70, i64 12, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(12) %176, ptr noundef nonnull align 8 dereferenceable(12) @69, i64 12, i1 false)
   %177 = tail call ptr @malloc(i32 24)
   store ptr %176, ptr %177, align 8
   %memberidx1.i.i160 = getelementptr inbounds %String, ptr %177, i64 0, i32 1
@@ -15868,7 +15940,7 @@ Parser_error.exit171:                             ; preds = %if.entry26, %Parser
 
 if.entry29:                                       ; preds = %else
   %196 = tail call ptr @malloc(i32 12)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(12) %196, ptr noundef nonnull align 8 dereferenceable(12) @71, i64 12, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(12) %196, ptr noundef nonnull align 8 dereferenceable(12) @70, i64 12, i1 false)
   %197 = tail call ptr @malloc(i32 24)
   store ptr %196, ptr %197, align 8
   %memberidx1.i.i172 = getelementptr inbounds %String, ptr %197, i64 0, i32 1
@@ -15923,7 +15995,7 @@ Parser_error.exit183:                             ; preds = %if.entry29, %Parser
 
 if.entry32:                                       ; preds = %else
   %216 = tail call ptr @malloc(i32 13)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(13) %216, ptr noundef nonnull align 8 dereferenceable(13) @72, i64 13, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(13) %216, ptr noundef nonnull align 8 dereferenceable(13) @71, i64 13, i1 false)
   %217 = tail call ptr @malloc(i32 24)
   store ptr %216, ptr %217, align 8
   %memberidx1.i.i184 = getelementptr inbounds %String, ptr %217, i64 0, i32 1
@@ -17630,7 +17702,7 @@ Array_Module____sl__.exit:                        ; preds = %for.entry, %Array_M
   tail call fastcc void @Map_String_VarId____setitem__(ptr %39, ptr nonnull %41, ptr null)
   %42 = load ptr, ptr %memberidx12, align 8
   %43 = tail call ptr @malloc(i32 5)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(5) %43, ptr noundef nonnull align 8 dereferenceable(5) @101, i64 5, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(5) %43, ptr noundef nonnull align 8 dereferenceable(5) @100, i64 5, i1 false)
   %44 = tail call ptr @malloc(i32 24)
   store ptr %43, ptr %44, align 8
   %memberidx1.i.i168 = getelementptr inbounds %String, ptr %44, i64 0, i32 1
@@ -17829,7 +17901,7 @@ if.entry47:                                       ; preds = %for.body39
   %107 = getelementptr inbounds i8, ptr %104, i64 %106
   store i8 0, ptr %107, align 1
   %108 = alloca ptr, align 8
-  %109 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %108, ptr nonnull @102, ptr %104)
+  %109 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %108, ptr nonnull @101, ptr %104)
   %110 = load ptr, ptr %108, align 8
   %111 = tail call ptr @malloc(i32 24)
   store ptr %110, ptr %111, align 8
@@ -18066,7 +18138,7 @@ Array_VarDeclaration____sl__.exit.i:              ; preds = %ifend5.i, %Array_Va
 
 if.entry7.i:                                      ; preds = %if.entry3.i
   %213 = tail call ptr @malloc(i32 54)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(54) %213, ptr noundef nonnull align 8 dereferenceable(54) @106, i64 54, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(54) %213, ptr noundef nonnull align 8 dereferenceable(54) @105, i64 54, i1 false)
   %214 = tail call ptr @malloc(i32 24)
   store ptr %213, ptr %214, align 8
   %memberidx1.i.i27.i = getelementptr inbounds %String, ptr %214, i64 0, i32 1
@@ -18350,7 +18422,7 @@ Array_Statement____sl__.exit.i:                   ; preds = %if.entry20.i, %Arra
 
 else21.i:                                         ; preds = %if.entry14.i
   %332 = tail call ptr @malloc(i32 40)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(40) %332, ptr noundef nonnull align 8 dereferenceable(40) @158, i64 40, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(40) %332, ptr noundef nonnull align 8 dereferenceable(40) @157, i64 40, i1 false)
   %333 = tail call ptr @malloc(i32 24)
   store ptr %332, ptr %333, align 8
   %memberidx1.i.i51.i = getelementptr inbounds %String, ptr %333, i64 0, i32 1
@@ -18419,13 +18491,15 @@ for.end92:                                        ; preds = %TypeChecker_check_f
   br i1 %358, label %if.entry101, label %ifend103
 
 if.entry101:                                      ; preds = %for.end92
-  %359 = load ptr, ptr %0, align 8
-  %360 = load ptr, ptr %359, align 8
+  %359 = load i64, ptr @GENERIC_MODULE_ID, align 8
+  %360 = load ptr, ptr %0, align 8
   %361 = load ptr, ptr %360, align 8
   %362 = load ptr, ptr %361, align 8
-  %memberidx1.i = getelementptr inbounds %Module, ptr %362, i64 0, i32 5
-  %363 = load ptr, ptr %memberidx1.i, align 8
-  store ptr %363, ptr %memberidx4, align 8
+  %363 = getelementptr inbounds ptr, ptr %362, i64 %359
+  %364 = load ptr, ptr %363, align 8
+  %memberidx1.i = getelementptr inbounds %Module, ptr %364, i64 0, i32 5
+  %365 = load ptr, ptr %memberidx1.i, align 8
+  store ptr %365, ptr %memberidx4, align 8
   tail call fastcc void @TypeChecker_import_all_from_module(ptr nonnull %0, ptr nonnull %4)
   br label %ifend103
 
@@ -18851,7 +18925,7 @@ define internal fastcc ptr @TypeChecker_check_typecast_expr(ptr %0, ptr nocaptur
   br i1 %11, label %common.ret, label %ifend
 
 common.ret:                                       ; preds = %2, %ifend46, %TypeChecker_error.exit, %if.entry4
-  %common.ret.op = phi ptr [ %43, %if.entry4 ], [ null, %TypeChecker_error.exit ], [ %182, %ifend46 ], [ null, %2 ]
+  %common.ret.op = phi ptr [ %44, %if.entry4 ], [ null, %TypeChecker_error.exit ], [ %184, %ifend46 ], [ null, %2 ]
   ret ptr %common.ret.op
 
 ifend:                                            ; preds = %2
@@ -18859,7 +18933,7 @@ ifend:                                            ; preds = %2
   %12 = load ptr, ptr %memberidx2, align 8
   %13 = load ptr, ptr %0, align 8
   %14 = tail call ptr @malloc(i32 6)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(6) %14, ptr noundef nonnull align 8 dereferenceable(6) @187, i64 6, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(6) %14, ptr noundef nonnull align 8 dereferenceable(6) @186, i64 6, i1 false)
   %15 = tail call ptr @malloc(i32 24)
   store ptr %14, ptr %15, align 8
   %memberidx1.i.i = getelementptr inbounds %String, ptr %15, i64 0, i32 1
@@ -18924,250 +18998,252 @@ String___eq__.exit.i:                             ; preds = %if.entry3.i
   %38 = icmp eq i64 %37, 0
   %39 = load ptr, ptr %33, align 8
   %40 = load i64, ptr %39, align 4
-  %41 = icmp eq i64 %40, 1
-  %42 = and i1 %38, %41
-  br i1 %42, label %if.entry4, label %String___eq__.exit.i.ifend6_crit_edge
+  %41 = load i64, ptr @BUILTIN_MODULE_ID, align 8
+  %42 = icmp eq i64 %40, %41
+  %43 = and i1 %38, %42
+  br i1 %43, label %if.entry4, label %String___eq__.exit.i.ifend6_crit_edge
 
 String___eq__.exit.i.ifend6_crit_edge:            ; preds = %String___eq__.exit.i
   %.pre = load i64, ptr %7, align 4
   br label %ifend6
 
 if.entry4:                                        ; preds = %String___eq__.exit.i
-  %43 = tail call ptr @malloc(i32 49)
-  %44 = tail call ptr @malloc(i32 0)
-  %45 = tail call ptr @malloc(i32 24)
-  store ptr %44, ptr %45, align 8
-  %memberidx1.i.i82 = getelementptr inbounds %String, ptr %45, i64 0, i32 1
-  call void @llvm.memset.p0.i64(ptr noundef nonnull align 4 dereferenceable(16) %memberidx1.i.i82, i8 0, i64 16, i1 false)
+  %44 = tail call ptr @malloc(i32 49)
+  %45 = tail call ptr @malloc(i32 0)
   %46 = tail call ptr @malloc(i32 24)
-  %memberidx.i84 = getelementptr inbounds %Array_uint_, ptr %46, i64 0, i32 1
+  store ptr %45, ptr %46, align 8
+  %memberidx1.i.i82 = getelementptr inbounds %String, ptr %46, i64 0, i32 1
+  call void @llvm.memset.p0.i64(ptr noundef nonnull align 4 dereferenceable(16) %memberidx1.i.i82, i8 0, i64 16, i1 false)
+  %47 = tail call ptr @malloc(i32 24)
+  %memberidx.i84 = getelementptr inbounds %Array_uint_, ptr %47, i64 0, i32 1
   store i64 0, ptr %memberidx.i84, align 4
-  %memberidx1.i85 = getelementptr inbounds %Array_uint_, ptr %46, i64 0, i32 2
+  %memberidx1.i85 = getelementptr inbounds %Array_uint_, ptr %47, i64 0, i32 2
   store i64 8, ptr %memberidx1.i85, align 4
-  %47 = tail call ptr @malloc(i32 64)
-  store ptr %47, ptr %46, align 8
-  store i64 0, ptr %47, align 4
+  %48 = tail call ptr @malloc(i32 64)
+  store ptr %48, ptr %47, align 8
+  store i64 0, ptr %48, align 4
   store i64 1, ptr %memberidx.i84, align 4
-  %48 = tail call ptr @malloc(i32 24)
-  %memberidx.i86 = getelementptr inbounds %Array_Expression_, ptr %48, i64 0, i32 1
+  %49 = tail call ptr @malloc(i32 24)
+  %memberidx.i86 = getelementptr inbounds %Array_Expression_, ptr %49, i64 0, i32 1
   store i64 0, ptr %memberidx.i86, align 4
-  %memberidx1.i87 = getelementptr inbounds %Array_Expression_, ptr %48, i64 0, i32 2
+  %memberidx1.i87 = getelementptr inbounds %Array_Expression_, ptr %49, i64 0, i32 2
   store i64 8, ptr %memberidx1.i87, align 4
-  %49 = tail call ptr @malloc(i32 64)
-  store ptr %49, ptr %48, align 8
-  store ptr %5, ptr %49, align 8
+  %50 = tail call ptr @malloc(i32 64)
+  store ptr %50, ptr %49, align 8
+  store ptr %5, ptr %50, align 8
   store i64 1, ptr %memberidx.i86, align 4
-  store i64 8, ptr %43, align 4
-  %memberidx.i.i88 = getelementptr inbounds %Expression, ptr %43, i64 0, i32 2
+  store i64 8, ptr %44, align 4
+  %memberidx.i.i88 = getelementptr inbounds %Expression, ptr %44, i64 0, i32 2
   store i64 2, ptr %memberidx.i.i88, align 4
-  %memberidx1.i.i89 = getelementptr inbounds %Expression, ptr %43, i64 0, i32 1
-  %memberidx.i90 = getelementptr inbounds %StringExpression, ptr %43, i64 0, i32 6
-  store ptr %48, ptr %memberidx.i90, align 8
-  %memberidx1.i91 = getelementptr inbounds %StringExpression, ptr %43, i64 0, i32 5
-  store ptr %46, ptr %memberidx1.i91, align 8
-  %memberidx2.i92 = getelementptr inbounds %Expression, ptr %43, i64 0, i32 3
+  %memberidx1.i.i89 = getelementptr inbounds %Expression, ptr %44, i64 0, i32 1
+  %memberidx.i90 = getelementptr inbounds %StringExpression, ptr %44, i64 0, i32 6
+  store ptr %49, ptr %memberidx.i90, align 8
+  %memberidx1.i91 = getelementptr inbounds %StringExpression, ptr %44, i64 0, i32 5
+  store ptr %47, ptr %memberidx1.i91, align 8
+  %memberidx2.i92 = getelementptr inbounds %Expression, ptr %44, i64 0, i32 3
   store ptr %7, ptr %memberidx2.i92, align 8
-  %memberidx3.i = getelementptr inbounds %StringExpression, ptr %43, i64 0, i32 4
-  store ptr %45, ptr %memberidx3.i, align 8
+  %memberidx3.i = getelementptr inbounds %StringExpression, ptr %44, i64 0, i32 4
+  store ptr %46, ptr %memberidx3.i, align 8
   store i1 true, ptr %memberidx1.i.i89, align 1
   br label %common.ret
 
 ifend6:                                           ; preds = %if.entry.i, %is_object.exit.thread, %String___eq__.exit.i.ifend6_crit_edge, %if.entry3.i
-  %50 = phi i64 [ %.pre, %String___eq__.exit.i.ifend6_crit_edge ], [ %16, %if.entry3.i ], [ %16, %is_object.exit.thread ], [ %16, %if.entry.i ]
-  %51 = add i64 %50, -1
-  %52 = icmp ult i64 %51, 9
-  %53 = load i64, ptr %12, align 4
-  %54 = add i64 %53, -1
-  %55 = icmp ult i64 %54, 9
-  %56 = and i1 %52, %55
-  %57 = icmp ult i64 %51, 7
-  %58 = icmp eq i64 %53, 12
-  %59 = and i1 %57, %58
-  %60 = icmp ult i64 %54, 7
-  %61 = icmp eq i64 %50, 12
-  %62 = and i1 %61, %60
-  %63 = select i1 %62, i1 true, i1 %59
-  %spec.select = select i1 %63, i1 true, i1 %56
-  %64 = load ptr, ptr %0, align 8
-  %65 = tail call ptr @malloc(i32 6)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(6) %65, ptr noundef nonnull align 8 dereferenceable(6) @187, i64 6, i1 false)
-  %66 = tail call ptr @malloc(i32 24)
-  store ptr %65, ptr %66, align 8
-  %memberidx1.i.i93 = getelementptr inbounds %String, ptr %66, i64 0, i32 1
+  %51 = phi i64 [ %.pre, %String___eq__.exit.i.ifend6_crit_edge ], [ %16, %if.entry3.i ], [ %16, %is_object.exit.thread ], [ %16, %if.entry.i ]
+  %52 = add i64 %51, -1
+  %53 = icmp ult i64 %52, 9
+  %54 = load i64, ptr %12, align 4
+  %55 = add i64 %54, -1
+  %56 = icmp ult i64 %55, 9
+  %57 = and i1 %53, %56
+  %58 = icmp ult i64 %52, 7
+  %59 = icmp eq i64 %54, 12
+  %60 = and i1 %58, %59
+  %61 = icmp ult i64 %55, 7
+  %62 = icmp eq i64 %51, 12
+  %63 = and i1 %62, %61
+  %64 = select i1 %63, i1 true, i1 %60
+  %spec.select = select i1 %64, i1 true, i1 %57
+  %65 = load ptr, ptr %0, align 8
+  %66 = tail call ptr @malloc(i32 6)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(6) %66, ptr noundef nonnull align 8 dereferenceable(6) @186, i64 6, i1 false)
+  %67 = tail call ptr @malloc(i32 24)
+  store ptr %66, ptr %67, align 8
+  %memberidx1.i.i93 = getelementptr inbounds %String, ptr %67, i64 0, i32 1
   store i64 6, ptr %memberidx1.i.i93, align 4
-  %memberidx2.i.i94 = getelementptr inbounds %String, ptr %66, i64 0, i32 2
+  %memberidx2.i.i94 = getelementptr inbounds %String, ptr %67, i64 0, i32 2
   store i64 6, ptr %memberidx2.i.i94, align 4
-  %67 = load i64, ptr %12, align 4
-  %68 = icmp eq i64 %67, 20
-  br i1 %68, label %if.entry.i158, label %is_object.exit161.thread
+  %68 = load i64, ptr %12, align 4
+  %69 = icmp eq i64 %68, 20
+  br i1 %69, label %if.entry.i158, label %is_object.exit161.thread
 
 if.entry.i158:                                    ; preds = %ifend6, %if.entry.i158
-  %.tr5.i156 = phi ptr [ %69, %if.entry.i158 ], [ %12, %ifend6 ]
+  %.tr5.i156 = phi ptr [ %70, %if.entry.i158 ], [ %12, %ifend6 ]
   %memberidx1.i157 = getelementptr inbounds %GenericType, ptr %.tr5.i156, i64 0, i32 3
-  %69 = load ptr, ptr %memberidx1.i157, align 8
-  %70 = load i64, ptr %69, align 4
-  switch i64 %70, label %ifend25 [
+  %70 = load ptr, ptr %memberidx1.i157, align 8
+  %71 = load i64, ptr %70, align 4
+  switch i64 %71, label %ifend25 [
     i64 20, label %if.entry.i158
     i64 11, label %tailrecurse.i163.preheader
   ]
 
 is_object.exit161.thread:                         ; preds = %ifend6
-  %71 = icmp eq i64 %67, 11
-  br i1 %71, label %if.entry3.i170, label %ifend25
+  %72 = icmp eq i64 %68, 11
+  br i1 %72, label %if.entry3.i170, label %ifend25
 
 tailrecurse.i163.preheader:                       ; preds = %if.entry.i158
-  br i1 %68, label %if.entry.i166, label %if.entry3.i170
+  br i1 %69, label %if.entry.i166, label %if.entry3.i170
 
 if.entry.i166:                                    ; preds = %tailrecurse.i163.preheader, %if.entry.i166
-  %.tr11.i162195 = phi ptr [ %72, %if.entry.i166 ], [ %12, %tailrecurse.i163.preheader ]
+  %.tr11.i162195 = phi ptr [ %73, %if.entry.i166 ], [ %12, %tailrecurse.i163.preheader ]
   %memberidx1.i165 = getelementptr inbounds %GenericType, ptr %.tr11.i162195, i64 0, i32 3
-  %72 = load ptr, ptr %memberidx1.i165, align 8
-  %73 = load i64, ptr %72, align 4
-  %switch190 = icmp eq i64 %73, 20
+  %73 = load ptr, ptr %memberidx1.i165, align 8
+  %74 = load i64, ptr %73, align 4
+  %switch190 = icmp eq i64 %74, 20
   br i1 %switch190, label %if.entry.i166, label %if.entry3.i170
 
 if.entry3.i170:                                   ; preds = %if.entry.i166, %is_object.exit161.thread, %tailrecurse.i163.preheader
-  %.tr11.i162.lcssa = phi ptr [ %12, %tailrecurse.i163.preheader ], [ %12, %is_object.exit161.thread ], [ %72, %if.entry.i166 ]
+  %.tr11.i162.lcssa = phi ptr [ %12, %tailrecurse.i163.preheader ], [ %12, %is_object.exit161.thread ], [ %73, %if.entry.i166 ]
   %memberidx6.i167 = getelementptr inbounds %ObjectType, ptr %.tr11.i162.lcssa, i64 0, i32 1
-  %74 = load ptr, ptr %memberidx6.i167, align 8
-  %75 = load ptr, ptr %64, align 8
-  %76 = load i64, ptr %74, align 4
-  %77 = load ptr, ptr %75, align 8
-  %78 = getelementptr inbounds ptr, ptr %77, i64 %76
-  %79 = load ptr, ptr %78, align 8
-  %memberidx2.i.i168 = getelementptr inbounds %Module, ptr %79, i64 0, i32 3
-  %80 = load ptr, ptr %memberidx2.i.i168, align 8
-  %memberidx3.i.i169 = getelementptr inbounds %TypeId, ptr %74, i64 0, i32 2
-  %81 = load i64, ptr %memberidx3.i.i169, align 4
-  %82 = load ptr, ptr %80, align 8
-  %83 = getelementptr inbounds ptr, ptr %82, i64 %81
-  %84 = load ptr, ptr %83, align 8
-  %memberidx.i96 = getelementptr inbounds %Class, ptr %84, i64 0, i32 1
-  %85 = load ptr, ptr %memberidx.i96, align 8
-  %memberidx.i.i97 = getelementptr inbounds %String, ptr %85, i64 0, i32 1
-  %86 = load i64, ptr %memberidx.i.i97, align 4
-  %.not.i.i99 = icmp eq i64 %86, 6
+  %75 = load ptr, ptr %memberidx6.i167, align 8
+  %76 = load ptr, ptr %65, align 8
+  %77 = load i64, ptr %75, align 4
+  %78 = load ptr, ptr %76, align 8
+  %79 = getelementptr inbounds ptr, ptr %78, i64 %77
+  %80 = load ptr, ptr %79, align 8
+  %memberidx2.i.i168 = getelementptr inbounds %Module, ptr %80, i64 0, i32 3
+  %81 = load ptr, ptr %memberidx2.i.i168, align 8
+  %memberidx3.i.i169 = getelementptr inbounds %TypeId, ptr %75, i64 0, i32 2
+  %82 = load i64, ptr %memberidx3.i.i169, align 4
+  %83 = load ptr, ptr %81, align 8
+  %84 = getelementptr inbounds ptr, ptr %83, i64 %82
+  %85 = load ptr, ptr %84, align 8
+  %memberidx.i96 = getelementptr inbounds %Class, ptr %85, i64 0, i32 1
+  %86 = load ptr, ptr %memberidx.i96, align 8
+  %memberidx.i.i97 = getelementptr inbounds %String, ptr %86, i64 0, i32 1
+  %87 = load i64, ptr %memberidx.i.i97, align 4
+  %.not.i.i99 = icmp eq i64 %87, 6
   br i1 %.not.i.i99, label %is_buitin.exit104, label %ifend25
 
 is_buitin.exit104:                                ; preds = %if.entry3.i170
-  %87 = load ptr, ptr %85, align 8
-  %88 = tail call i64 @memcmp(ptr %87, ptr %65, i64 6)
-  %89 = icmp eq i64 %88, 0
-  %90 = load ptr, ptr %84, align 8
-  %91 = load i64, ptr %90, align 4
-  %92 = icmp eq i64 %91, 1
-  %93 = and i1 %89, %92
-  %94 = and i1 %52, %93
-  br i1 %94, label %if.entry23, label %ifend25
+  %88 = load ptr, ptr %86, align 8
+  %89 = tail call i64 @memcmp(ptr %88, ptr %66, i64 6)
+  %90 = icmp eq i64 %89, 0
+  %91 = load ptr, ptr %85, align 8
+  %92 = load i64, ptr %91, align 4
+  %93 = load i64, ptr @BUILTIN_MODULE_ID, align 8
+  %94 = icmp eq i64 %92, %93
+  %95 = and i1 %90, %94
+  %96 = and i1 %53, %95
+  br i1 %96, label %if.entry23, label %ifend25
 
 if.entry23:                                       ; preds = %is_buitin.exit104
-  %95 = load i64, ptr %7, align 4
-  %96 = and i64 %95, -2
-  %97 = icmp eq i64 %96, 8
-  br i1 %97, label %if.entry26, label %else27
+  %97 = load i64, ptr %7, align 4
+  %98 = and i64 %97, -2
+  %99 = icmp eq i64 %98, 8
+  br i1 %99, label %if.entry26, label %else27
 
 ifend25:                                          ; preds = %if.entry.i158, %is_object.exit161.thread, %if.entry3.i170, %is_buitin.exit104, %Array_Expression____sl__.exit
   %is_valid_cast.3 = phi i1 [ true, %Array_Expression____sl__.exit ], [ %spec.select, %is_buitin.exit104 ], [ %spec.select, %if.entry3.i170 ], [ %spec.select, %is_object.exit161.thread ], [ %spec.select, %if.entry.i158 ]
   %exp.0 = phi ptr [ %call.0, %Array_Expression____sl__.exit ], [ %5, %is_buitin.exit104 ], [ %5, %if.entry3.i170 ], [ %5, %is_object.exit161.thread ], [ %5, %if.entry.i158 ]
-  %98 = load i64, ptr %7, align 4
-  %99 = icmp eq i64 %98, 20
-  br i1 %99, label %if.entry.i174, label %is_object.exit177
+  %100 = load i64, ptr %7, align 4
+  %101 = icmp eq i64 %100, 20
+  br i1 %101, label %if.entry.i174, label %is_object.exit177
 
 if.entry.i174:                                    ; preds = %ifend25, %if.entry.i174
-  %.tr5.i172 = phi ptr [ %100, %if.entry.i174 ], [ %7, %ifend25 ]
+  %.tr5.i172 = phi ptr [ %102, %if.entry.i174 ], [ %7, %ifend25 ]
   %memberidx1.i173 = getelementptr inbounds %GenericType, ptr %.tr5.i172, i64 0, i32 3
-  %100 = load ptr, ptr %memberidx1.i173, align 8
-  %101 = load i64, ptr %100, align 4
-  %102 = icmp eq i64 %101, 20
-  br i1 %102, label %if.entry.i174, label %is_object.exit177
+  %102 = load ptr, ptr %memberidx1.i173, align 8
+  %103 = load i64, ptr %102, align 4
+  %104 = icmp eq i64 %103, 20
+  br i1 %104, label %if.entry.i174, label %is_object.exit177
 
 is_object.exit177:                                ; preds = %if.entry.i174, %ifend25
-  %.lcssa.i175 = phi i64 [ %98, %ifend25 ], [ %101, %if.entry.i174 ]
-  %103 = icmp eq i64 %.lcssa.i175, 11
-  %104 = load i64, ptr %12, align 4
-  %105 = icmp eq i64 %104, 20
-  br i1 %105, label %if.entry.i180, label %is_object.exit183
+  %.lcssa.i175 = phi i64 [ %100, %ifend25 ], [ %103, %if.entry.i174 ]
+  %105 = icmp eq i64 %.lcssa.i175, 11
+  %106 = load i64, ptr %12, align 4
+  %107 = icmp eq i64 %106, 20
+  br i1 %107, label %if.entry.i180, label %is_object.exit183
 
 if.entry.i180:                                    ; preds = %is_object.exit177, %if.entry.i180
-  %.tr5.i178 = phi ptr [ %106, %if.entry.i180 ], [ %12, %is_object.exit177 ]
+  %.tr5.i178 = phi ptr [ %108, %if.entry.i180 ], [ %12, %is_object.exit177 ]
   %memberidx1.i179 = getelementptr inbounds %GenericType, ptr %.tr5.i178, i64 0, i32 3
-  %106 = load ptr, ptr %memberidx1.i179, align 8
-  %107 = load i64, ptr %106, align 4
-  %108 = icmp eq i64 %107, 20
-  br i1 %108, label %if.entry.i180, label %is_object.exit183
+  %108 = load ptr, ptr %memberidx1.i179, align 8
+  %109 = load i64, ptr %108, align 4
+  %110 = icmp eq i64 %109, 20
+  br i1 %110, label %if.entry.i180, label %is_object.exit183
 
 is_object.exit183:                                ; preds = %if.entry.i180, %is_object.exit177
-  %.lcssa.i181 = phi i64 [ %104, %is_object.exit177 ], [ %107, %if.entry.i180 ]
-  %109 = icmp eq i64 %.lcssa.i181, 11
-  %110 = and i1 %103, %109
-  %111 = icmp eq i64 %98, 13
-  %112 = icmp eq i64 %104, 13
-  %113 = and i1 %111, %112
-  %114 = icmp eq i64 %98, 0
-  %115 = select i1 %114, i1 true, i1 %113
-  %116 = select i1 %115, i1 true, i1 %110
-  %spec.select148 = select i1 %116, i1 true, i1 %is_valid_cast.3
+  %.lcssa.i181 = phi i64 [ %106, %is_object.exit177 ], [ %109, %if.entry.i180 ]
+  %111 = icmp eq i64 %.lcssa.i181, 11
+  %112 = and i1 %105, %111
+  %113 = icmp eq i64 %100, 13
+  %114 = icmp eq i64 %106, 13
+  %115 = and i1 %113, %114
+  %116 = icmp eq i64 %100, 0
+  %117 = select i1 %116, i1 true, i1 %115
+  %118 = select i1 %117, i1 true, i1 %112
+  %spec.select148 = select i1 %118, i1 true, i1 %is_valid_cast.3
   br i1 %spec.select148, label %ifend46, label %if.entry44
 
 if.entry26:                                       ; preds = %if.entry23
-  %117 = tail call ptr @malloc(i32 41)
-  store i64 8, ptr %117, align 4
-  %memberidx.i.i105 = getelementptr inbounds %Expression, ptr %117, i64 0, i32 2
+  %119 = tail call ptr @malloc(i32 41)
+  store i64 8, ptr %119, align 4
+  %memberidx.i.i105 = getelementptr inbounds %Expression, ptr %119, i64 0, i32 2
   store i64 19, ptr %memberidx.i.i105, align 4
-  %memberidx1.i.i106 = getelementptr inbounds %Expression, ptr %117, i64 0, i32 1
+  %memberidx1.i.i106 = getelementptr inbounds %Expression, ptr %119, i64 0, i32 1
   store i1 false, ptr %memberidx1.i.i106, align 1
-  %memberidx.i107 = getelementptr inbounds %IntrinsicCall, ptr %117, i64 0, i32 4
+  %memberidx.i107 = getelementptr inbounds %IntrinsicCall, ptr %119, i64 0, i32 4
   store i64 0, ptr %memberidx.i107, align 4
-  %memberidx1.i108 = getelementptr inbounds %IntrinsicCall, ptr %117, i64 0, i32 5
-  %118 = tail call ptr @malloc(i32 24)
-  %memberidx.i7.i = getelementptr inbounds %Array_Expression_, ptr %118, i64 0, i32 1
+  %memberidx1.i108 = getelementptr inbounds %IntrinsicCall, ptr %119, i64 0, i32 5
+  %120 = tail call ptr @malloc(i32 24)
+  %memberidx.i7.i = getelementptr inbounds %Array_Expression_, ptr %120, i64 0, i32 1
   store i64 0, ptr %memberidx.i7.i, align 4
-  %memberidx1.i8.i = getelementptr inbounds %Array_Expression_, ptr %118, i64 0, i32 2
+  %memberidx1.i8.i = getelementptr inbounds %Array_Expression_, ptr %120, i64 0, i32 2
   store i64 8, ptr %memberidx1.i8.i, align 4
-  %119 = tail call ptr @malloc(i32 64)
-  store ptr %119, ptr %118, align 8
+  %121 = tail call ptr @malloc(i32 64)
+  store ptr %121, ptr %120, align 8
   store i64 0, ptr %memberidx.i7.i, align 4
-  store ptr %118, ptr %memberidx1.i108, align 8
-  %memberidx4.i110 = getelementptr inbounds %Expression, ptr %117, i64 0, i32 3
-  %120 = tail call ptr @malloc(i32 8)
-  store i64 21, ptr %120, align 4
-  store ptr %120, ptr %memberidx4.i110, align 8
+  store ptr %120, ptr %memberidx1.i108, align 8
+  %memberidx4.i110 = getelementptr inbounds %Expression, ptr %119, i64 0, i32 3
+  %122 = tail call ptr @malloc(i32 8)
+  store i64 21, ptr %122, align 4
+  store ptr %122, ptr %memberidx4.i110, align 8
   br label %ifend28
 
 else27:                                           ; preds = %if.entry23
-  %121 = icmp slt i64 %95, 5
-  %122 = tail call ptr @malloc(i32 41)
-  store i64 8, ptr %122, align 4
-  %memberidx.i.i113 = getelementptr inbounds %Expression, ptr %122, i64 0, i32 2
+  %123 = icmp slt i64 %97, 5
+  %124 = tail call ptr @malloc(i32 41)
+  store i64 8, ptr %124, align 4
+  %memberidx.i.i113 = getelementptr inbounds %Expression, ptr %124, i64 0, i32 2
   store i64 19, ptr %memberidx.i.i113, align 4
-  %memberidx1.i.i114 = getelementptr inbounds %Expression, ptr %122, i64 0, i32 1
+  %memberidx1.i.i114 = getelementptr inbounds %Expression, ptr %124, i64 0, i32 1
   store i1 false, ptr %memberidx1.i.i114, align 1
-  %memberidx.i115 = getelementptr inbounds %IntrinsicCall, ptr %122, i64 0, i32 4
-  br i1 %121, label %if.entry31, label %else32
+  %memberidx.i115 = getelementptr inbounds %IntrinsicCall, ptr %124, i64 0, i32 4
+  br i1 %123, label %if.entry31, label %else32
 
 ifend28:                                          ; preds = %if.entry31, %else32, %if.entry26
-  %123 = phi ptr [ %118, %if.entry26 ], [ %138, %if.entry31 ], [ %141, %else32 ]
-  %call.0 = phi ptr [ %117, %if.entry26 ], [ %122, %if.entry31 ], [ %122, %else32 ]
-  %memberidx.i111 = getelementptr inbounds %Array_Expression_, ptr %123, i64 0, i32 1
-  %124 = load i64, ptr %memberidx.i111, align 4
-  %125 = add i64 %124, 1
-  %memberidx.i.i112 = getelementptr inbounds %Array_Expression_, ptr %123, i64 0, i32 2
-  %126 = load i64, ptr %memberidx.i.i112, align 4
-  %127 = icmp slt i64 %126, %125
-  %.pre204 = load ptr, ptr %123, align 8
-  br i1 %127, label %while.body.i.i, label %Array_Expression____sl__.exit
+  %125 = phi ptr [ %120, %if.entry26 ], [ %140, %if.entry31 ], [ %143, %else32 ]
+  %call.0 = phi ptr [ %119, %if.entry26 ], [ %124, %if.entry31 ], [ %124, %else32 ]
+  %memberidx.i111 = getelementptr inbounds %Array_Expression_, ptr %125, i64 0, i32 1
+  %126 = load i64, ptr %memberidx.i111, align 4
+  %127 = add i64 %126, 1
+  %memberidx.i.i112 = getelementptr inbounds %Array_Expression_, ptr %125, i64 0, i32 2
+  %128 = load i64, ptr %memberidx.i.i112, align 4
+  %129 = icmp slt i64 %128, %127
+  %.pre204 = load ptr, ptr %125, align 8
+  br i1 %129, label %while.body.i.i, label %Array_Expression____sl__.exit
 
 while.body.i.i:                                   ; preds = %ifend28, %while.body.i.i
-  %128 = phi ptr [ %132, %while.body.i.i ], [ %.pre204, %ifend28 ]
-  %129 = phi i64 [ %133, %while.body.i.i ], [ %126, %ifend28 ]
-  %130 = shl nuw i64 %129, 1
-  store i64 %130, ptr %memberidx.i.i112, align 4
-  %131 = shl i64 %129, 4
-  %132 = tail call ptr @realloc(ptr %128, i64 %131)
-  store ptr %132, ptr %123, align 8
-  %133 = load i64, ptr %memberidx.i.i112, align 4
-  %134 = icmp slt i64 %133, %125
-  br i1 %134, label %while.body.i.i, label %Array_Expression____sl__.exit.loopexit
+  %130 = phi ptr [ %134, %while.body.i.i ], [ %.pre204, %ifend28 ]
+  %131 = phi i64 [ %135, %while.body.i.i ], [ %128, %ifend28 ]
+  %132 = shl nuw i64 %131, 1
+  store i64 %132, ptr %memberidx.i.i112, align 4
+  %133 = shl i64 %131, 4
+  %134 = tail call ptr @realloc(ptr %130, i64 %133)
+  store ptr %134, ptr %125, align 8
+  %135 = load i64, ptr %memberidx.i.i112, align 4
+  %136 = icmp slt i64 %135, %127
+  br i1 %136, label %while.body.i.i, label %Array_Expression____sl__.exit.loopexit
 
 Array_Expression____sl__.exit.loopexit:           ; preds = %while.body.i.i
   %.pre205 = load i64, ptr %memberidx.i111, align 4
@@ -19175,114 +19251,114 @@ Array_Expression____sl__.exit.loopexit:           ; preds = %while.body.i.i
   br label %Array_Expression____sl__.exit
 
 Array_Expression____sl__.exit:                    ; preds = %ifend28, %Array_Expression____sl__.exit.loopexit
-  %.pre-phi = phi i64 [ %.pre210, %Array_Expression____sl__.exit.loopexit ], [ %125, %ifend28 ]
-  %135 = phi ptr [ %132, %Array_Expression____sl__.exit.loopexit ], [ %.pre204, %ifend28 ]
-  %136 = phi i64 [ %.pre205, %Array_Expression____sl__.exit.loopexit ], [ %124, %ifend28 ]
+  %.pre-phi = phi i64 [ %.pre210, %Array_Expression____sl__.exit.loopexit ], [ %127, %ifend28 ]
+  %137 = phi ptr [ %134, %Array_Expression____sl__.exit.loopexit ], [ %.pre204, %ifend28 ]
+  %138 = phi i64 [ %.pre205, %Array_Expression____sl__.exit.loopexit ], [ %126, %ifend28 ]
   store i64 %.pre-phi, ptr %memberidx.i111, align 4
-  %137 = getelementptr inbounds ptr, ptr %135, i64 %136
-  store ptr %5, ptr %137, align 8
+  %139 = getelementptr inbounds ptr, ptr %137, i64 %138
+  store ptr %5, ptr %139, align 8
   br label %ifend25
 
 if.entry31:                                       ; preds = %else27
   store i64 1, ptr %memberidx.i115, align 4
-  %memberidx1.i116 = getelementptr inbounds %IntrinsicCall, ptr %122, i64 0, i32 5
-  %138 = tail call ptr @malloc(i32 24)
-  %memberidx.i7.i117 = getelementptr inbounds %Array_Expression_, ptr %138, i64 0, i32 1
+  %memberidx1.i116 = getelementptr inbounds %IntrinsicCall, ptr %124, i64 0, i32 5
+  %140 = tail call ptr @malloc(i32 24)
+  %memberidx.i7.i117 = getelementptr inbounds %Array_Expression_, ptr %140, i64 0, i32 1
   store i64 0, ptr %memberidx.i7.i117, align 4
-  %memberidx1.i8.i118 = getelementptr inbounds %Array_Expression_, ptr %138, i64 0, i32 2
+  %memberidx1.i8.i118 = getelementptr inbounds %Array_Expression_, ptr %140, i64 0, i32 2
   store i64 8, ptr %memberidx1.i8.i118, align 4
-  %139 = tail call ptr @malloc(i32 64)
-  store ptr %139, ptr %138, align 8
+  %141 = tail call ptr @malloc(i32 64)
+  store ptr %141, ptr %140, align 8
   store i64 0, ptr %memberidx.i7.i117, align 4
-  store ptr %138, ptr %memberidx1.i116, align 8
-  %memberidx4.i120 = getelementptr inbounds %Expression, ptr %122, i64 0, i32 3
-  %140 = tail call ptr @malloc(i32 8)
-  store i64 21, ptr %140, align 4
-  store ptr %140, ptr %memberidx4.i120, align 8
+  store ptr %140, ptr %memberidx1.i116, align 8
+  %memberidx4.i120 = getelementptr inbounds %Expression, ptr %124, i64 0, i32 3
+  %142 = tail call ptr @malloc(i32 8)
+  store i64 21, ptr %142, align 4
+  store ptr %142, ptr %memberidx4.i120, align 8
   br label %ifend28
 
 else32:                                           ; preds = %else27
   store i64 2, ptr %memberidx.i115, align 4
-  %memberidx1.i124 = getelementptr inbounds %IntrinsicCall, ptr %122, i64 0, i32 5
-  %141 = tail call ptr @malloc(i32 24)
-  %memberidx.i7.i125 = getelementptr inbounds %Array_Expression_, ptr %141, i64 0, i32 1
+  %memberidx1.i124 = getelementptr inbounds %IntrinsicCall, ptr %124, i64 0, i32 5
+  %143 = tail call ptr @malloc(i32 24)
+  %memberidx.i7.i125 = getelementptr inbounds %Array_Expression_, ptr %143, i64 0, i32 1
   store i64 0, ptr %memberidx.i7.i125, align 4
-  %memberidx1.i8.i126 = getelementptr inbounds %Array_Expression_, ptr %141, i64 0, i32 2
+  %memberidx1.i8.i126 = getelementptr inbounds %Array_Expression_, ptr %143, i64 0, i32 2
   store i64 8, ptr %memberidx1.i8.i126, align 4
-  %142 = tail call ptr @malloc(i32 64)
-  store ptr %142, ptr %141, align 8
+  %144 = tail call ptr @malloc(i32 64)
+  store ptr %144, ptr %143, align 8
   store i64 0, ptr %memberidx.i7.i125, align 4
-  store ptr %141, ptr %memberidx1.i124, align 8
-  %memberidx4.i128 = getelementptr inbounds %Expression, ptr %122, i64 0, i32 3
-  %143 = tail call ptr @malloc(i32 8)
-  store i64 21, ptr %143, align 4
-  store ptr %143, ptr %memberidx4.i128, align 8
+  store ptr %143, ptr %memberidx1.i124, align 8
+  %memberidx4.i128 = getelementptr inbounds %Expression, ptr %124, i64 0, i32 3
+  %145 = tail call ptr @malloc(i32 8)
+  store i64 21, ptr %145, align 4
+  store ptr %145, ptr %memberidx4.i128, align 8
   br label %ifend28
 
 if.entry44:                                       ; preds = %is_object.exit183
-  %144 = tail call fastcc ptr @TypeChecker_dump_type(ptr nonnull %0, ptr nonnull %12)
-  %memberidx.i129 = getelementptr inbounds %String, ptr %144, i64 0, i32 1
-  %145 = load i64, ptr %memberidx.i129, align 4
-  %146 = trunc i64 %145 to i32
-  %147 = add i32 %146, 1
-  %148 = tail call ptr @malloc(i32 %147)
-  %149 = load ptr, ptr %144, align 8
-  %150 = load i64, ptr %memberidx.i129, align 4
-  tail call void @llvm.memcpy.p0.p0.i64(ptr align 8 %148, ptr align 8 %149, i64 %150, i1 false)
-  %151 = getelementptr inbounds i8, ptr %148, i64 %150
-  store i8 0, ptr %151, align 1
-  %152 = tail call fastcc ptr @TypeChecker_dump_type(ptr nonnull %0, ptr nonnull %7)
-  %memberidx.i130 = getelementptr inbounds %String, ptr %152, i64 0, i32 1
-  %153 = load i64, ptr %memberidx.i130, align 4
-  %154 = trunc i64 %153 to i32
-  %155 = add i32 %154, 1
-  %156 = tail call ptr @malloc(i32 %155)
-  %157 = load ptr, ptr %152, align 8
-  %158 = load i64, ptr %memberidx.i130, align 4
-  tail call void @llvm.memcpy.p0.p0.i64(ptr align 8 %156, ptr align 8 %157, i64 %158, i1 false)
-  %159 = getelementptr inbounds i8, ptr %156, i64 %158
-  store i8 0, ptr %159, align 1
-  %160 = alloca ptr, align 8
-  %161 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %160, ptr nonnull @188, ptr %148, ptr %156)
-  %162 = load ptr, ptr %160, align 8
-  %163 = tail call ptr @malloc(i32 24)
-  store ptr %162, ptr %163, align 8
-  %memberidx1.i131 = getelementptr inbounds %String, ptr %163, i64 0, i32 1
-  store i64 %161, ptr %memberidx1.i131, align 4
-  %memberidx2.i132 = getelementptr inbounds %String, ptr %163, i64 0, i32 2
-  store i64 %161, ptr %memberidx2.i132, align 4
-  tail call void @free(ptr %148)
-  tail call void @free(ptr %156)
-  %164 = load ptr, ptr %1, align 8
-  %165 = load ptr, ptr %memberidx.i, align 8
-  %memberidx1.i134 = getelementptr inbounds %Compiler, ptr %165, i64 0, i32 5
-  %166 = load ptr, ptr %memberidx1.i134, align 8
-  %167 = call ptr @malloc(i32 24)
-  store i64 5, ptr %167, align 4
-  %memberidx1.i.i135 = getelementptr inbounds %FloError, ptr %167, i64 0, i32 2
-  store ptr %164, ptr %memberidx1.i.i135, align 8
-  %memberidx2.i.i136 = getelementptr inbounds %FloError, ptr %167, i64 0, i32 1
-  store ptr %163, ptr %memberidx2.i.i136, align 8
-  %memberidx.i.i137 = getelementptr inbounds %Array_FloError_, ptr %166, i64 0, i32 1
-  %168 = load i64, ptr %memberidx.i.i137, align 4
-  %169 = add i64 %168, 1
-  %memberidx.i.i.i = getelementptr inbounds %Array_FloError_, ptr %166, i64 0, i32 2
-  %170 = load i64, ptr %memberidx.i.i.i, align 4
-  %171 = icmp slt i64 %170, %169
-  %.pre207 = load ptr, ptr %166, align 8
-  br i1 %171, label %while.body.i.i.i, label %TypeChecker_error.exit
+  %146 = tail call fastcc ptr @TypeChecker_dump_type(ptr nonnull %0, ptr nonnull %12)
+  %memberidx.i129 = getelementptr inbounds %String, ptr %146, i64 0, i32 1
+  %147 = load i64, ptr %memberidx.i129, align 4
+  %148 = trunc i64 %147 to i32
+  %149 = add i32 %148, 1
+  %150 = tail call ptr @malloc(i32 %149)
+  %151 = load ptr, ptr %146, align 8
+  %152 = load i64, ptr %memberidx.i129, align 4
+  tail call void @llvm.memcpy.p0.p0.i64(ptr align 8 %150, ptr align 8 %151, i64 %152, i1 false)
+  %153 = getelementptr inbounds i8, ptr %150, i64 %152
+  store i8 0, ptr %153, align 1
+  %154 = tail call fastcc ptr @TypeChecker_dump_type(ptr nonnull %0, ptr nonnull %7)
+  %memberidx.i130 = getelementptr inbounds %String, ptr %154, i64 0, i32 1
+  %155 = load i64, ptr %memberidx.i130, align 4
+  %156 = trunc i64 %155 to i32
+  %157 = add i32 %156, 1
+  %158 = tail call ptr @malloc(i32 %157)
+  %159 = load ptr, ptr %154, align 8
+  %160 = load i64, ptr %memberidx.i130, align 4
+  tail call void @llvm.memcpy.p0.p0.i64(ptr align 8 %158, ptr align 8 %159, i64 %160, i1 false)
+  %161 = getelementptr inbounds i8, ptr %158, i64 %160
+  store i8 0, ptr %161, align 1
+  %162 = alloca ptr, align 8
+  %163 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %162, ptr nonnull @187, ptr %150, ptr %158)
+  %164 = load ptr, ptr %162, align 8
+  %165 = tail call ptr @malloc(i32 24)
+  store ptr %164, ptr %165, align 8
+  %memberidx1.i131 = getelementptr inbounds %String, ptr %165, i64 0, i32 1
+  store i64 %163, ptr %memberidx1.i131, align 4
+  %memberidx2.i132 = getelementptr inbounds %String, ptr %165, i64 0, i32 2
+  store i64 %163, ptr %memberidx2.i132, align 4
+  tail call void @free(ptr %150)
+  tail call void @free(ptr %158)
+  %166 = load ptr, ptr %1, align 8
+  %167 = load ptr, ptr %memberidx.i, align 8
+  %memberidx1.i134 = getelementptr inbounds %Compiler, ptr %167, i64 0, i32 5
+  %168 = load ptr, ptr %memberidx1.i134, align 8
+  %169 = call ptr @malloc(i32 24)
+  store i64 5, ptr %169, align 4
+  %memberidx1.i.i135 = getelementptr inbounds %FloError, ptr %169, i64 0, i32 2
+  store ptr %166, ptr %memberidx1.i.i135, align 8
+  %memberidx2.i.i136 = getelementptr inbounds %FloError, ptr %169, i64 0, i32 1
+  store ptr %165, ptr %memberidx2.i.i136, align 8
+  %memberidx.i.i137 = getelementptr inbounds %Array_FloError_, ptr %168, i64 0, i32 1
+  %170 = load i64, ptr %memberidx.i.i137, align 4
+  %171 = add i64 %170, 1
+  %memberidx.i.i.i = getelementptr inbounds %Array_FloError_, ptr %168, i64 0, i32 2
+  %172 = load i64, ptr %memberidx.i.i.i, align 4
+  %173 = icmp slt i64 %172, %171
+  %.pre207 = load ptr, ptr %168, align 8
+  br i1 %173, label %while.body.i.i.i, label %TypeChecker_error.exit
 
 while.body.i.i.i:                                 ; preds = %if.entry44, %while.body.i.i.i
-  %172 = phi ptr [ %176, %while.body.i.i.i ], [ %.pre207, %if.entry44 ]
-  %173 = phi i64 [ %177, %while.body.i.i.i ], [ %170, %if.entry44 ]
-  %174 = shl nuw i64 %173, 1
-  store i64 %174, ptr %memberidx.i.i.i, align 4
-  %175 = shl i64 %173, 4
-  %176 = call ptr @realloc(ptr %172, i64 %175)
-  store ptr %176, ptr %166, align 8
-  %177 = load i64, ptr %memberidx.i.i.i, align 4
-  %178 = icmp slt i64 %177, %169
-  br i1 %178, label %while.body.i.i.i, label %TypeChecker_error.exit.loopexit
+  %174 = phi ptr [ %178, %while.body.i.i.i ], [ %.pre207, %if.entry44 ]
+  %175 = phi i64 [ %179, %while.body.i.i.i ], [ %172, %if.entry44 ]
+  %176 = shl nuw i64 %175, 1
+  store i64 %176, ptr %memberidx.i.i.i, align 4
+  %177 = shl i64 %175, 4
+  %178 = call ptr @realloc(ptr %174, i64 %177)
+  store ptr %178, ptr %168, align 8
+  %179 = load i64, ptr %memberidx.i.i.i, align 4
+  %180 = icmp slt i64 %179, %171
+  br i1 %180, label %while.body.i.i.i, label %TypeChecker_error.exit.loopexit
 
 TypeChecker_error.exit.loopexit:                  ; preds = %while.body.i.i.i
   %.pre208 = load i64, ptr %memberidx.i.i137, align 4
@@ -19290,28 +19366,28 @@ TypeChecker_error.exit.loopexit:                  ; preds = %while.body.i.i.i
   br label %TypeChecker_error.exit
 
 TypeChecker_error.exit:                           ; preds = %if.entry44, %TypeChecker_error.exit.loopexit
-  %.pre-phi212 = phi i64 [ %.pre211, %TypeChecker_error.exit.loopexit ], [ %169, %if.entry44 ]
-  %179 = phi ptr [ %176, %TypeChecker_error.exit.loopexit ], [ %.pre207, %if.entry44 ]
-  %180 = phi i64 [ %.pre208, %TypeChecker_error.exit.loopexit ], [ %168, %if.entry44 ]
+  %.pre-phi212 = phi i64 [ %.pre211, %TypeChecker_error.exit.loopexit ], [ %171, %if.entry44 ]
+  %181 = phi ptr [ %178, %TypeChecker_error.exit.loopexit ], [ %.pre207, %if.entry44 ]
+  %182 = phi i64 [ %.pre208, %TypeChecker_error.exit.loopexit ], [ %170, %if.entry44 ]
   store i64 %.pre-phi212, ptr %memberidx.i.i137, align 4
-  %181 = getelementptr inbounds ptr, ptr %179, i64 %180
-  store ptr %167, ptr %181, align 8
+  %183 = getelementptr inbounds ptr, ptr %181, i64 %182
+  store ptr %169, ptr %183, align 8
   br label %common.ret
 
 ifend46:                                          ; preds = %is_object.exit183
-  %182 = tail call ptr @malloc(i32 33)
-  store i64 8, ptr %182, align 4
-  %memberidx.i.i138 = getelementptr inbounds %Expression, ptr %182, i64 0, i32 2
+  %184 = tail call ptr @malloc(i32 33)
+  store i64 8, ptr %184, align 4
+  %memberidx.i.i138 = getelementptr inbounds %Expression, ptr %184, i64 0, i32 2
   store i64 11, ptr %memberidx.i.i138, align 4
-  %memberidx1.i.i139 = getelementptr inbounds %Expression, ptr %182, i64 0, i32 1
+  %memberidx1.i.i139 = getelementptr inbounds %Expression, ptr %184, i64 0, i32 1
   store i1 false, ptr %memberidx1.i.i139, align 1
-  %memberidx.i140 = getelementptr inbounds %TypeCastExpression, ptr %182, i64 0, i32 4
+  %memberidx.i140 = getelementptr inbounds %TypeCastExpression, ptr %184, i64 0, i32 4
   store ptr %exp.0, ptr %memberidx.i140, align 8
-  %memberidx1.i141 = getelementptr inbounds %Expression, ptr %182, i64 0, i32 3
+  %memberidx1.i141 = getelementptr inbounds %Expression, ptr %184, i64 0, i32 3
   store ptr %7, ptr %memberidx1.i141, align 8
   %memberidx3.i143 = getelementptr inbounds %Expression, ptr %exp.0, i64 0, i32 1
-  %183 = load i1, ptr %memberidx3.i143, align 1
-  store i1 %183, ptr %memberidx1.i.i139, align 1
+  %185 = load i1, ptr %memberidx3.i143, align 1
+  store i1 %185, ptr %memberidx1.i.i139, align 1
   br label %common.ret
 }
 
@@ -19527,7 +19603,7 @@ if.entry:                                         ; preds = %is_object.exit
   %18 = getelementptr inbounds i8, ptr %15, i64 %17
   store i8 0, ptr %18, align 1
   %19 = alloca ptr, align 8
-  %20 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %19, ptr nonnull @155, ptr %15)
+  %20 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %19, ptr nonnull @154, ptr %15)
   %21 = load ptr, ptr %19, align 8
   %22 = tail call ptr @malloc(i32 24)
   store ptr %21, ptr %22, align 8
@@ -19897,7 +19973,7 @@ ifend:                                            ; preds = %2
 
 if.entry3:                                        ; preds = %ifend
   %12 = call ptr @malloc(i32 31)
-  call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(31) %12, ptr noundef nonnull align 8 dereferenceable(31) @224, i64 31, i1 false)
+  call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(31) %12, ptr noundef nonnull align 8 dereferenceable(31) @223, i64 31, i1 false)
   %13 = call ptr @malloc(i32 24)
   store ptr %12, ptr %13, align 8
   %memberidx1.i.i = getelementptr inbounds %String, ptr %13, i64 0, i32 1
@@ -20109,7 +20185,7 @@ if.entry20:                                       ; preds = %ifend18
   %92 = getelementptr inbounds i8, ptr %89, i64 %91
   store i8 0, ptr %92, align 1
   %93 = alloca ptr, align 8
-  %94 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %93, ptr nonnull @225, ptr %89)
+  %94 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %93, ptr nonnull @224, ptr %89)
   %95 = load ptr, ptr %93, align 8
   %96 = tail call ptr @malloc(i32 24)
   store ptr %95, ptr %96, align 8
@@ -20197,7 +20273,7 @@ if.entry33:                                       ; preds = %ifend30
   %136 = getelementptr inbounds i8, ptr %133, i64 %135
   store i8 0, ptr %136, align 1
   %137 = alloca ptr, align 8
-  %138 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %137, ptr nonnull @226, ptr %124, ptr %133)
+  %138 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %137, ptr nonnull @225, ptr %124, ptr %133)
   %139 = load ptr, ptr %137, align 8
   %140 = tail call ptr @malloc(i32 24)
   store ptr %139, ptr %140, align 8
@@ -20350,7 +20426,7 @@ if.entry51:                                       ; preds = %else49
   %200 = getelementptr inbounds i8, ptr %197, i64 %199
   store i8 0, ptr %200, align 1
   %201 = alloca ptr, align 8
-  %202 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %201, ptr nonnull @227, ptr %189, ptr %197)
+  %202 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %201, ptr nonnull @226, ptr %189, ptr %197)
   %203 = load ptr, ptr %201, align 8
   %204 = tail call ptr @malloc(i32 24)
   store ptr %203, ptr %204, align 8
@@ -20408,7 +20484,7 @@ TypeChecker_error.exit213:                        ; preds = %if.entry51, %TypeCh
 
 if.entry58:                                       ; preds = %for.end
   %224 = call ptr @malloc(i32 55)
-  call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(55) %224, ptr noundef nonnull align 8 dereferenceable(55) @228, i64 55, i1 false)
+  call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(55) %224, ptr noundef nonnull align 8 dereferenceable(55) @227, i64 55, i1 false)
   %225 = call ptr @malloc(i32 24)
   store ptr %224, ptr %225, align 8
   %memberidx1.i.i214 = getelementptr inbounds %String, ptr %225, i64 0, i32 1
@@ -20506,7 +20582,7 @@ if.entry70:                                       ; preds = %end65
   %264 = getelementptr inbounds i8, ptr %261, i64 %263
   store i8 0, ptr %264, align 1
   %265 = alloca ptr, align 8
-  %266 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %265, ptr nonnull @229, ptr %253, ptr %261)
+  %266 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %265, ptr nonnull @228, ptr %253, ptr %261)
   %267 = load ptr, ptr %265, align 8
   %268 = tail call ptr @malloc(i32 24)
   store ptr %267, ptr %268, align 8
@@ -20682,7 +20758,7 @@ if.entry25:                                       ; preds = %if.entry11
   %53 = getelementptr inbounds i8, ptr %50, i64 %52
   store i8 0, ptr %53, align 1
   %54 = alloca ptr, align 8
-  %55 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %54, ptr nonnull @195, ptr %42, ptr %50)
+  %55 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %54, ptr nonnull @194, ptr %42, ptr %50)
   %56 = load ptr, ptr %54, align 8
   %57 = tail call ptr @malloc(i32 24)
   store ptr %56, ptr %57, align 8
@@ -20708,14 +20784,14 @@ if.entry29:                                       ; preds = %else12
 
 if.entry.i:                                       ; preds = %if.entry29
   %66 = tail call ptr @malloc(i32 7)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(7) %66, ptr noundef nonnull align 8 dereferenceable(7) @52, i64 7, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(7) %66, ptr noundef nonnull align 8 dereferenceable(7) @51, i64 7, i1 false)
   %67 = tail call ptr @malloc(i32 24)
   store ptr %66, ptr %67, align 8
   br label %dump_access.exit
 
 ifend3.i:                                         ; preds = %if.entry29
   %68 = tail call ptr @malloc(i32 9)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(9) %68, ptr noundef nonnull align 8 dereferenceable(9) @54, i64 9, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(9) %68, ptr noundef nonnull align 8 dereferenceable(9) @53, i64 9, i1 false)
   %69 = tail call ptr @malloc(i32 24)
   store ptr %68, ptr %69, align 8
   br label %dump_access.exit
@@ -20748,7 +20824,7 @@ dump_access.exit:                                 ; preds = %if.entry.i, %ifend3
   %81 = getelementptr inbounds i8, ptr %78, i64 %80
   store i8 0, ptr %81, align 1
   %82 = alloca ptr, align 8
-  %83 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %82, ptr nonnull @196, ptr nonnull %61, ptr %70, ptr %78)
+  %83 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %82, ptr nonnull @195, ptr nonnull %61, ptr %70, ptr %78)
   %84 = load ptr, ptr %82, align 8
   %85 = tail call ptr @malloc(i32 24)
   store ptr %84, ptr %85, align 8
@@ -20894,7 +20970,7 @@ if.entry6:                                        ; preds = %ifend4
   %68 = getelementptr inbounds i8, ptr %65, i64 %67
   store i8 0, ptr %68, align 1
   %69 = alloca ptr, align 8
-  %70 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %69, ptr nonnull @242, ptr %56, ptr %65)
+  %70 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %69, ptr nonnull @241, ptr %56, ptr %65)
   %71 = load ptr, ptr %69, align 8
   %72 = tail call ptr @malloc(i32 24)
   store ptr %71, ptr %72, align 8
@@ -20955,7 +21031,7 @@ ifend8:                                           ; preds = %ifend4
 
 if.entry13:                                       ; preds = %else
   %91 = tail call ptr @malloc(i32 32)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(32) %91, ptr noundef nonnull align 8 dereferenceable(32) @243, i64 32, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(32) %91, ptr noundef nonnull align 8 dereferenceable(32) @242, i64 32, i1 false)
   %92 = tail call ptr @malloc(i32 24)
   store ptr %91, ptr %92, align 8
   %memberidx1.i.i46 = getelementptr inbounds %String, ptr %92, i64 0, i32 1
@@ -21039,7 +21115,7 @@ if.entry:                                         ; preds = %if.entry.i
   %14 = getelementptr inbounds i8, ptr %11, i64 %13
   store i8 0, ptr %14, align 1
   %15 = alloca ptr, align 8
-  %16 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %15, ptr nonnull @110, ptr %11)
+  %16 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %15, ptr nonnull @109, ptr %11)
   %17 = load ptr, ptr %15, align 8
   %18 = tail call ptr @malloc(i32 24)
   store ptr %17, ptr %18, align 8
@@ -21158,7 +21234,7 @@ if.entry11:                                       ; preds = %ifend8
   %68 = getelementptr inbounds i8, ptr %65, i64 %67
   store i8 0, ptr %68, align 1
   %69 = alloca ptr, align 8
-  %70 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %69, ptr nonnull @230, ptr %65)
+  %70 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %69, ptr nonnull @229, ptr %65)
   %71 = load ptr, ptr %69, align 8
   %72 = tail call ptr @malloc(i32 24)
   store ptr %71, ptr %72, align 8
@@ -21310,7 +21386,7 @@ if.entry6.i:                                      ; preds = %while.end.i
 
 if.entry30:                                       ; preds = %if.entry25
   %124 = tail call ptr @malloc(i32 69)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(69) %124, ptr noundef nonnull align 8 dereferenceable(69) @231, i64 69, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(69) %124, ptr noundef nonnull align 8 dereferenceable(69) @230, i64 69, i1 false)
   %125 = tail call ptr @malloc(i32 24)
   store ptr %124, ptr %125, align 8
   %memberidx1.i.i135 = getelementptr inbounds %String, ptr %125, i64 0, i32 1
@@ -21394,7 +21470,7 @@ if.entry36:                                       ; preds = %ifend32
   %164 = getelementptr inbounds i8, ptr %161, i64 %163
   store i8 0, ptr %164, align 1
   %165 = alloca ptr, align 8
-  %166 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %165, ptr nonnull @232, ptr %152, ptr %161)
+  %166 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %165, ptr nonnull @231, ptr %152, ptr %161)
   %167 = load ptr, ptr %165, align 8
   %168 = tail call ptr @malloc(i32 24)
   store ptr %167, ptr %168, align 8
@@ -21467,7 +21543,7 @@ ifend44:                                          ; preds = %ifend38, %if.entry4
 
 if.entry47:                                       ; preds = %ifend44
   %192 = tail call ptr @malloc(i32 38)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(38) %192, ptr noundef nonnull align 8 dereferenceable(38) @233, i64 38, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(38) %192, ptr noundef nonnull align 8 dereferenceable(38) @232, i64 38, i1 false)
   %193 = tail call ptr @malloc(i32 24)
   store ptr %192, ptr %193, align 8
   %memberidx1.i.i159 = getelementptr inbounds %String, ptr %193, i64 0, i32 1
@@ -21531,7 +21607,7 @@ if.entry52:                                       ; preds = %if.entry6.i
   %218 = getelementptr inbounds i8, ptr %215, i64 %217
   store i8 0, ptr %218, align 1
   %219 = alloca ptr, align 8
-  %220 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %219, ptr nonnull @234, ptr %215)
+  %220 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %219, ptr nonnull @233, ptr %215)
   %221 = load ptr, ptr %219, align 8
   %222 = tail call ptr @malloc(i32 24)
   store ptr %221, ptr %222, align 8
@@ -21717,7 +21793,7 @@ if.entry:                                         ; preds = %Map_String_VarId___
   %51 = getelementptr inbounds i8, ptr %48, i64 %50
   store i8 0, ptr %51, align 1
   %52 = alloca ptr, align 8
-  %53 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %52, ptr nonnull @110, ptr %48)
+  %53 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %52, ptr nonnull @109, ptr %48)
   %54 = load ptr, ptr %52, align 8
   %55 = tail call ptr @malloc(i32 24)
   store ptr %54, ptr %55, align 8
@@ -21819,7 +21895,7 @@ ifend13:                                          ; preds = %ifend9
 
 if.entry15:                                       ; preds = %ifend13
   %89 = tail call ptr @malloc(i32 48)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(48) %89, ptr noundef nonnull align 8 dereferenceable(48) @235, i64 48, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(48) %89, ptr noundef nonnull align 8 dereferenceable(48) @234, i64 48, i1 false)
   %90 = tail call ptr @malloc(i32 24)
   store ptr %89, ptr %90, align 8
   %memberidx1.i.i97 = getelementptr inbounds %String, ptr %90, i64 0, i32 1
@@ -21883,7 +21959,7 @@ ifend17:                                          ; preds = %ifend13
 
 if.entry21:                                       ; preds = %ifend17
   %115 = tail call ptr @malloc(i32 69)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(69) %115, ptr noundef nonnull align 8 dereferenceable(69) @231, i64 69, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(69) %115, ptr noundef nonnull align 8 dereferenceable(69) @230, i64 69, i1 false)
   %116 = tail call ptr @malloc(i32 24)
   store ptr %115, ptr %116, align 8
   %memberidx1.i.i109 = getelementptr inbounds %String, ptr %116, i64 0, i32 1
@@ -21967,7 +22043,7 @@ if.entry27:                                       ; preds = %ifend23
   %154 = getelementptr inbounds i8, ptr %151, i64 %153
   store i8 0, ptr %154, align 1
   %155 = alloca ptr, align 8
-  %156 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %155, ptr nonnull @236, ptr %142, ptr %151)
+  %156 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %155, ptr nonnull @235, ptr %142, ptr %151)
   %157 = load ptr, ptr %155, align 8
   %158 = tail call ptr @malloc(i32 24)
   store ptr %157, ptr %158, align 8
@@ -22040,7 +22116,7 @@ ifend35:                                          ; preds = %ifend29, %if.entry3
 
 if.entry38:                                       ; preds = %ifend35
   %182 = tail call ptr @malloc(i32 35)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(35) %182, ptr noundef nonnull align 8 dereferenceable(35) @237, i64 35, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(35) %182, ptr noundef nonnull align 8 dereferenceable(35) @236, i64 35, i1 false)
   %183 = tail call ptr @malloc(i32 24)
   store ptr %182, ptr %183, align 8
   %memberidx1.i.i133 = getelementptr inbounds %String, ptr %183, i64 0, i32 1
@@ -22480,7 +22556,7 @@ define internal fastcc ptr @TypeChecker_get_type_from_current_scope(ptr nocaptur
   br label %while.entry
 
 while.entry:                                      ; preds = %ifend12, %2
-  %current_scope.0.in = phi ptr [ %13, %2 ], [ %101, %ifend12 ]
+  %current_scope.0.in = phi ptr [ %13, %2 ], [ %103, %ifend12 ]
   %current_scope.0 = load ptr, ptr %current_scope.0.in, align 8
   %memberidx = getelementptr inbounds %Scope, ptr %current_scope.0, i64 0, i32 6
   %14 = load ptr, ptr %memberidx, align 8
@@ -22542,144 +22618,144 @@ Map_String_Type____getitem__.exit:                ; preds = %while.end.i
   br i1 %.not, label %ifend, label %common.ret
 
 common.ret:                                       ; preds = %Map_String_Type____getitem__.exit, %ifend28, %ifend19, %if.entry6, %if.entry2
-  %common.ret.op = phi ptr [ %62, %if.entry2 ], [ %87, %if.entry6 ], [ %109, %ifend19 ], [ %107, %ifend28 ], [ %37, %Map_String_Type____getitem__.exit ]
+  %common.ret.op = phi ptr [ %62, %if.entry2 ], [ %87, %if.entry6 ], [ %112, %ifend19 ], [ %110, %ifend28 ], [ %37, %Map_String_Type____getitem__.exit ]
   ret ptr %common.ret.op
 
 ifend:                                            ; preds = %else.i, %while.entry, %while.end.i, %Map_String_Type____getitem__.exit
   %memberidx1 = getelementptr inbounds %Scope, ptr %current_scope.0, i64 0, i32 2
   %38 = load ptr, ptr %memberidx1, align 8
   %39 = tail call fastcc i64 @Map_String_ClassId__hash_fnc(ptr %1)
-  %memberidx.i65 = getelementptr inbounds %Map_String_ClassId_, ptr %38, i64 0, i32 1
-  %40 = load i64, ptr %memberidx.i65, align 4
+  %memberidx.i64 = getelementptr inbounds %Map_String_ClassId_, ptr %38, i64 0, i32 1
+  %40 = load i64, ptr %memberidx.i64, align 4
   %41 = urem i64 %39, %40
   %42 = load ptr, ptr %38, align 8
   %43 = getelementptr inbounds ptr, ptr %42, i64 %41
   %44 = load ptr, ptr %43, align 8
-  %.not.i67134 = icmp eq ptr %44, null
-  br i1 %.not.i67134, label %ifend4, label %while.body.i74
+  %.not.i66134 = icmp eq ptr %44, null
+  br i1 %.not.i66134, label %ifend4, label %while.body.i73
 
-while.end.i70:                                    ; preds = %ifend.i.i75
+while.end.i69:                                    ; preds = %ifend.i.i74
   %.pre149.pre = load ptr, ptr %38, align 8
-  %.phi.trans.insert150.phi.trans.insert = getelementptr inbounds ptr, ptr %.pre149.pre, i64 %hash.0.i66135
+  %.phi.trans.insert150.phi.trans.insert = getelementptr inbounds ptr, ptr %.pre149.pre, i64 %hash.0.i65135
   %.pre151.pre = load ptr, ptr %.phi.trans.insert150.phi.trans.insert, align 8
-  %.not22.i69 = icmp eq ptr %.pre151.pre, null
-  br i1 %.not22.i69, label %ifend4, label %Map_String_ClassId____getitem__.exit
+  %.not22.i68 = icmp eq ptr %.pre151.pre, null
+  br i1 %.not22.i68, label %ifend4, label %Map_String_ClassId____getitem__.exit
 
-while.body.i74:                                   ; preds = %ifend, %else.i78
-  %45 = phi ptr [ %55, %else.i78 ], [ %42, %ifend ]
-  %46 = phi i64 [ %56, %else.i78 ], [ %40, %ifend ]
-  %47 = phi ptr [ %60, %else.i78 ], [ %44, %ifend ]
-  %hash.0.i66135 = phi i64 [ %58, %else.i78 ], [ %41, %ifend ]
+while.body.i73:                                   ; preds = %ifend, %else.i77
+  %45 = phi ptr [ %55, %else.i77 ], [ %42, %ifend ]
+  %46 = phi i64 [ %56, %else.i77 ], [ %40, %ifend ]
+  %47 = phi ptr [ %60, %else.i77 ], [ %44, %ifend ]
+  %hash.0.i65135 = phi i64 [ %58, %else.i77 ], [ %41, %ifend ]
   %48 = load ptr, ptr %47, align 8
-  %memberidx.i.i71 = getelementptr inbounds %String, ptr %48, i64 0, i32 1
-  %49 = load i64, ptr %memberidx.i.i71, align 4
+  %memberidx.i.i70 = getelementptr inbounds %String, ptr %48, i64 0, i32 1
+  %49 = load i64, ptr %memberidx.i.i70, align 4
   %50 = load i64, ptr %memberidx1.i.i, align 4
-  %.not.i.i73 = icmp eq i64 %49, %50
-  br i1 %.not.i.i73, label %ifend.i.i75, label %else.i78
+  %.not.i.i72 = icmp eq i64 %49, %50
+  br i1 %.not.i.i72, label %ifend.i.i74, label %else.i77
 
-ifend.i.i75:                                      ; preds = %while.body.i74
+ifend.i.i74:                                      ; preds = %while.body.i73
   %51 = load ptr, ptr %48, align 8
   %52 = load ptr, ptr %1, align 8
   %53 = tail call i64 @memcmp(ptr %51, ptr %52, i64 %49)
   %54 = icmp eq i64 %53, 0
-  br i1 %54, label %while.end.i70, label %ifend.i.i75.else.i78_crit_edge
+  br i1 %54, label %while.end.i69, label %ifend.i.i74.else.i77_crit_edge
 
-ifend.i.i75.else.i78_crit_edge:                   ; preds = %ifend.i.i75
-  %.pre147 = load i64, ptr %memberidx.i65, align 4
+ifend.i.i74.else.i77_crit_edge:                   ; preds = %ifend.i.i74
+  %.pre147 = load i64, ptr %memberidx.i64, align 4
   %.pre148 = load ptr, ptr %38, align 8
-  br label %else.i78
+  br label %else.i77
 
-else.i78:                                         ; preds = %ifend.i.i75.else.i78_crit_edge, %while.body.i74
-  %55 = phi ptr [ %.pre148, %ifend.i.i75.else.i78_crit_edge ], [ %45, %while.body.i74 ]
-  %56 = phi i64 [ %.pre147, %ifend.i.i75.else.i78_crit_edge ], [ %46, %while.body.i74 ]
-  %57 = add nuw i64 %hash.0.i66135, 1
+else.i77:                                         ; preds = %ifend.i.i74.else.i77_crit_edge, %while.body.i73
+  %55 = phi ptr [ %.pre148, %ifend.i.i74.else.i77_crit_edge ], [ %45, %while.body.i73 ]
+  %56 = phi i64 [ %.pre147, %ifend.i.i74.else.i77_crit_edge ], [ %46, %while.body.i73 ]
+  %57 = add nuw i64 %hash.0.i65135, 1
   %58 = urem i64 %57, %56
   %59 = getelementptr inbounds ptr, ptr %55, i64 %58
   %60 = load ptr, ptr %59, align 8
-  %.not.i67 = icmp eq ptr %60, null
-  br i1 %.not.i67, label %ifend4, label %while.body.i74
+  %.not.i66 = icmp eq ptr %60, null
+  br i1 %.not.i66, label %ifend4, label %while.body.i73
 
-Map_String_ClassId____getitem__.exit:             ; preds = %while.end.i70
-  %memberidx10.i80 = getelementptr inbounds %MapEntry_String_ClassId_, ptr %.pre151.pre, i64 0, i32 1
-  %61 = load ptr, ptr %memberidx10.i80, align 8
+Map_String_ClassId____getitem__.exit:             ; preds = %while.end.i69
+  %memberidx10.i79 = getelementptr inbounds %MapEntry_String_ClassId_, ptr %.pre151.pre, i64 0, i32 1
+  %61 = load ptr, ptr %memberidx10.i79, align 8
   %.not61 = icmp eq ptr %61, null
   br i1 %.not61, label %ifend4, label %if.entry2
 
 if.entry2:                                        ; preds = %Map_String_ClassId____getitem__.exit
   %62 = tail call ptr @malloc(i32 16)
   store i64 11, ptr %62, align 4
-  %memberidx.i82 = getelementptr inbounds %ObjectType, ptr %62, i64 0, i32 1
-  store ptr %61, ptr %memberidx.i82, align 8
+  %memberidx.i81 = getelementptr inbounds %ObjectType, ptr %62, i64 0, i32 1
+  store ptr %61, ptr %memberidx.i81, align 8
   br label %common.ret
 
-ifend4:                                           ; preds = %else.i78, %ifend, %while.end.i70, %Map_String_ClassId____getitem__.exit
+ifend4:                                           ; preds = %else.i77, %ifend, %while.end.i69, %Map_String_ClassId____getitem__.exit
   %memberidx5 = getelementptr inbounds %Scope, ptr %current_scope.0, i64 0, i32 4
   %63 = load ptr, ptr %memberidx5, align 8
   %64 = tail call fastcc i64 @Map_String_EnumId__hash_fnc(ptr %1)
-  %memberidx.i83 = getelementptr inbounds %Map_String_EnumId_, ptr %63, i64 0, i32 1
-  %65 = load i64, ptr %memberidx.i83, align 4
+  %memberidx.i82 = getelementptr inbounds %Map_String_EnumId_, ptr %63, i64 0, i32 1
+  %65 = load i64, ptr %memberidx.i82, align 4
   %66 = urem i64 %64, %65
   %67 = load ptr, ptr %63, align 8
   %68 = getelementptr inbounds ptr, ptr %67, i64 %66
   %69 = load ptr, ptr %68, align 8
-  %.not.i85138 = icmp eq ptr %69, null
-  br i1 %.not.i85138, label %ifend8, label %while.body.i92
+  %.not.i84138 = icmp eq ptr %69, null
+  br i1 %.not.i84138, label %ifend8, label %while.body.i91
 
-while.end.i88:                                    ; preds = %ifend.i.i93
+while.end.i87:                                    ; preds = %ifend.i.i92
   %.pre154.pre = load ptr, ptr %63, align 8
-  %.phi.trans.insert155.phi.trans.insert = getelementptr inbounds ptr, ptr %.pre154.pre, i64 %hash.0.i84139
+  %.phi.trans.insert155.phi.trans.insert = getelementptr inbounds ptr, ptr %.pre154.pre, i64 %hash.0.i83139
   %.pre156.pre = load ptr, ptr %.phi.trans.insert155.phi.trans.insert, align 8
-  %.not22.i87 = icmp eq ptr %.pre156.pre, null
-  br i1 %.not22.i87, label %ifend8, label %Map_String_EnumId____getitem__.exit
+  %.not22.i86 = icmp eq ptr %.pre156.pre, null
+  br i1 %.not22.i86, label %ifend8, label %Map_String_EnumId____getitem__.exit
 
-while.body.i92:                                   ; preds = %ifend4, %else.i96
-  %70 = phi ptr [ %80, %else.i96 ], [ %67, %ifend4 ]
-  %71 = phi i64 [ %81, %else.i96 ], [ %65, %ifend4 ]
-  %72 = phi ptr [ %85, %else.i96 ], [ %69, %ifend4 ]
-  %hash.0.i84139 = phi i64 [ %83, %else.i96 ], [ %66, %ifend4 ]
+while.body.i91:                                   ; preds = %ifend4, %else.i95
+  %70 = phi ptr [ %80, %else.i95 ], [ %67, %ifend4 ]
+  %71 = phi i64 [ %81, %else.i95 ], [ %65, %ifend4 ]
+  %72 = phi ptr [ %85, %else.i95 ], [ %69, %ifend4 ]
+  %hash.0.i83139 = phi i64 [ %83, %else.i95 ], [ %66, %ifend4 ]
   %73 = load ptr, ptr %72, align 8
-  %memberidx.i.i89 = getelementptr inbounds %String, ptr %73, i64 0, i32 1
-  %74 = load i64, ptr %memberidx.i.i89, align 4
+  %memberidx.i.i88 = getelementptr inbounds %String, ptr %73, i64 0, i32 1
+  %74 = load i64, ptr %memberidx.i.i88, align 4
   %75 = load i64, ptr %memberidx1.i.i, align 4
-  %.not.i.i91 = icmp eq i64 %74, %75
-  br i1 %.not.i.i91, label %ifend.i.i93, label %else.i96
+  %.not.i.i90 = icmp eq i64 %74, %75
+  br i1 %.not.i.i90, label %ifend.i.i92, label %else.i95
 
-ifend.i.i93:                                      ; preds = %while.body.i92
+ifend.i.i92:                                      ; preds = %while.body.i91
   %76 = load ptr, ptr %73, align 8
   %77 = load ptr, ptr %1, align 8
   %78 = tail call i64 @memcmp(ptr %76, ptr %77, i64 %74)
   %79 = icmp eq i64 %78, 0
-  br i1 %79, label %while.end.i88, label %ifend.i.i93.else.i96_crit_edge
+  br i1 %79, label %while.end.i87, label %ifend.i.i92.else.i95_crit_edge
 
-ifend.i.i93.else.i96_crit_edge:                   ; preds = %ifend.i.i93
-  %.pre152 = load i64, ptr %memberidx.i83, align 4
+ifend.i.i92.else.i95_crit_edge:                   ; preds = %ifend.i.i92
+  %.pre152 = load i64, ptr %memberidx.i82, align 4
   %.pre153 = load ptr, ptr %63, align 8
-  br label %else.i96
+  br label %else.i95
 
-else.i96:                                         ; preds = %ifend.i.i93.else.i96_crit_edge, %while.body.i92
-  %80 = phi ptr [ %.pre153, %ifend.i.i93.else.i96_crit_edge ], [ %70, %while.body.i92 ]
-  %81 = phi i64 [ %.pre152, %ifend.i.i93.else.i96_crit_edge ], [ %71, %while.body.i92 ]
-  %82 = add nuw i64 %hash.0.i84139, 1
+else.i95:                                         ; preds = %ifend.i.i92.else.i95_crit_edge, %while.body.i91
+  %80 = phi ptr [ %.pre153, %ifend.i.i92.else.i95_crit_edge ], [ %70, %while.body.i91 ]
+  %81 = phi i64 [ %.pre152, %ifend.i.i92.else.i95_crit_edge ], [ %71, %while.body.i91 ]
+  %82 = add nuw i64 %hash.0.i83139, 1
   %83 = urem i64 %82, %81
   %84 = getelementptr inbounds ptr, ptr %80, i64 %83
   %85 = load ptr, ptr %84, align 8
-  %.not.i85 = icmp eq ptr %85, null
-  br i1 %.not.i85, label %ifend8, label %while.body.i92
+  %.not.i84 = icmp eq ptr %85, null
+  br i1 %.not.i84, label %ifend8, label %while.body.i91
 
-Map_String_EnumId____getitem__.exit:              ; preds = %while.end.i88
-  %memberidx10.i98 = getelementptr inbounds %MapEntry_String_EnumId_, ptr %.pre156.pre, i64 0, i32 1
-  %86 = load ptr, ptr %memberidx10.i98, align 8
+Map_String_EnumId____getitem__.exit:              ; preds = %while.end.i87
+  %memberidx10.i97 = getelementptr inbounds %MapEntry_String_EnumId_, ptr %.pre156.pre, i64 0, i32 1
+  %86 = load ptr, ptr %memberidx10.i97, align 8
   %.not62 = icmp eq ptr %86, null
   br i1 %.not62, label %ifend8, label %if.entry6
 
 if.entry6:                                        ; preds = %Map_String_EnumId____getitem__.exit
   %87 = tail call ptr @malloc(i32 16)
   store i64 12, ptr %87, align 4
-  %memberidx.i100 = getelementptr inbounds %EnumType, ptr %87, i64 0, i32 1
-  store ptr %86, ptr %memberidx.i100, align 8
+  %memberidx.i99 = getelementptr inbounds %EnumType, ptr %87, i64 0, i32 1
+  store ptr %86, ptr %memberidx.i99, align 8
   br label %common.ret
 
-ifend8:                                           ; preds = %else.i96, %ifend4, %while.end.i88, %Map_String_EnumId____getitem__.exit
+ifend8:                                           ; preds = %else.i95, %ifend4, %while.end.i87, %Map_String_EnumId____getitem__.exit
   %memberidx9 = getelementptr inbounds %Scope, ptr %current_scope.0, i64 0, i32 5
   %88 = load ptr, ptr %memberidx9, align 8
   %89 = icmp eq ptr %88, null
@@ -22688,42 +22764,44 @@ ifend8:                                           ; preds = %else.i96, %ifend4, 
 if.entry10:                                       ; preds = %ifend8
   %90 = load ptr, ptr %memberidx1.i, align 8
   %91 = load i64, ptr %90, align 4
-  %.not63 = icmp eq i64 %91, 0
-  br i1 %.not63, label %ifend19, label %if.entry17
+  %92 = load i64, ptr @BUILTIN_MODULE_ID, align 8
+  %93 = icmp sgt i64 %91, %92
+  br i1 %93, label %if.entry17, label %ifend19
 
 ifend12:                                          ; preds = %ifend8
-  %92 = load ptr, ptr %0, align 8
-  %93 = load ptr, ptr %92, align 8
-  %94 = load i64, ptr %88, align 4
-  %95 = load ptr, ptr %93, align 8
-  %96 = getelementptr inbounds ptr, ptr %95, i64 %94
-  %97 = load ptr, ptr %96, align 8
-  %memberidx2.i = getelementptr inbounds %Module, ptr %97, i64 0, i32 7
-  %98 = load ptr, ptr %memberidx2.i, align 8
+  %94 = load ptr, ptr %0, align 8
+  %95 = load ptr, ptr %94, align 8
+  %96 = load i64, ptr %88, align 4
+  %97 = load ptr, ptr %95, align 8
+  %98 = getelementptr inbounds ptr, ptr %97, i64 %96
+  %99 = load ptr, ptr %98, align 8
+  %memberidx2.i = getelementptr inbounds %Module, ptr %99, i64 0, i32 7
+  %100 = load ptr, ptr %memberidx2.i, align 8
   %memberidx3.i = getelementptr inbounds %ScopeId, ptr %88, i64 0, i32 1
-  %99 = load i64, ptr %memberidx3.i, align 4
-  %100 = load ptr, ptr %98, align 8
-  %101 = getelementptr inbounds ptr, ptr %100, i64 %99
+  %101 = load i64, ptr %memberidx3.i, align 4
+  %102 = load ptr, ptr %100, align 8
+  %103 = getelementptr inbounds ptr, ptr %102, i64 %101
   br label %while.entry
 
 if.entry17:                                       ; preds = %if.entry10
-  %102 = load ptr, ptr %0, align 8
-  %103 = load ptr, ptr %102, align 8
-  %104 = load ptr, ptr %103, align 8
+  %104 = load ptr, ptr %0, align 8
   %105 = load ptr, ptr %104, align 8
-  %memberidx24 = getelementptr inbounds %Module, ptr %105, i64 0, i32 5
-  %106 = load ptr, ptr %memberidx24, align 8
-  store ptr %106, ptr %memberidx1.i, align 8
-  %107 = tail call fastcc ptr @TypeChecker_get_type_from_current_scope(ptr nonnull %0, ptr %1)
-  %108 = load i64, ptr %107, align 4
-  switch i64 %108, label %else31 [
+  %106 = load ptr, ptr %105, align 8
+  %107 = getelementptr inbounds ptr, ptr %106, i64 %92
+  %108 = load ptr, ptr %107, align 8
+  %memberidx24 = getelementptr inbounds %Module, ptr %108, i64 0, i32 5
+  %109 = load ptr, ptr %memberidx24, align 8
+  store ptr %109, ptr %memberidx1.i, align 8
+  %110 = tail call fastcc ptr @TypeChecker_get_type_from_current_scope(ptr nonnull %0, ptr %1)
+  %111 = load i64, ptr %110, align 4
+  switch i64 %111, label %else31 [
     i64 21, label %ifend28
     i64 11, label %if.entry30
   ]
 
 ifend19:                                          ; preds = %if.entry10
-  %109 = tail call ptr @malloc(i32 8)
-  store i64 21, ptr %109, align 4
+  %112 = tail call ptr @malloc(i32 8)
+  store i64 21, ptr %112, align 4
   br label %common.ret
 
 ifend28:                                          ; preds = %if.entry17, %if.entry30, %else31
@@ -22731,81 +22809,81 @@ ifend28:                                          ; preds = %if.entry17, %if.ent
   br label %common.ret
 
 if.entry30:                                       ; preds = %if.entry17
-  %memberidx33 = getelementptr inbounds %ObjectType, ptr %107, i64 0, i32 1
-  %110 = load ptr, ptr %memberidx33, align 8
-  %111 = load ptr, ptr %0, align 8
-  %112 = load ptr, ptr %memberidx1.i, align 8
-  %113 = load i64, ptr %112, align 4
-  %114 = load ptr, ptr %111, align 8
-  %115 = load ptr, ptr %114, align 8
-  %116 = getelementptr inbounds ptr, ptr %115, i64 %113
-  %117 = load ptr, ptr %116, align 8
-  %memberidx1.i.i101 = getelementptr inbounds %Module, ptr %117, i64 0, i32 5
-  %118 = load ptr, ptr %memberidx1.i.i101, align 8
-  %119 = load i64, ptr %118, align 4
-  %120 = getelementptr inbounds ptr, ptr %115, i64 %119
-  %121 = load ptr, ptr %120, align 8
-  %memberidx2.i.i.i = getelementptr inbounds %Module, ptr %121, i64 0, i32 7
-  %122 = load ptr, ptr %memberidx2.i.i.i, align 8
-  %memberidx3.i.i.i = getelementptr inbounds %ScopeId, ptr %118, i64 0, i32 1
-  %123 = load i64, ptr %memberidx3.i.i.i, align 4
-  %124 = load ptr, ptr %122, align 8
-  %125 = getelementptr inbounds ptr, ptr %124, i64 %123
-  %126 = load ptr, ptr %125, align 8
-  %memberidx.i102 = getelementptr inbounds %Scope, ptr %126, i64 0, i32 2
-  %127 = load ptr, ptr %memberidx.i102, align 8
-  tail call fastcc void @Map_String_ClassId____setitem__(ptr %127, ptr %1, ptr %110)
-  %memberidx1.i103 = getelementptr inbounds %Scope, ptr %126, i64 0, i32 1
-  %128 = load ptr, ptr %memberidx1.i103, align 8
-  %129 = tail call ptr @malloc(i32 24)
-  %130 = load i64, ptr %110, align 4
-  %memberidx1.i5.i = getelementptr inbounds %TypeId, ptr %110, i64 0, i32 2
-  %131 = load i64, ptr %memberidx1.i5.i, align 4
-  store i64 3, ptr %129, align 4
-  %memberidx1.i.i.i = getelementptr inbounds %VarId, ptr %129, i64 0, i32 1
-  store i64 %130, ptr %memberidx1.i.i.i, align 4
-  %memberidx2.i.i6.i = getelementptr inbounds %VarId, ptr %129, i64 0, i32 2
-  store i64 %131, ptr %memberidx2.i.i6.i, align 4
-  tail call fastcc void @Map_String_VarId____setitem__(ptr %128, ptr %1, ptr nonnull %129)
+  %memberidx33 = getelementptr inbounds %ObjectType, ptr %110, i64 0, i32 1
+  %113 = load ptr, ptr %memberidx33, align 8
+  %114 = load ptr, ptr %0, align 8
+  %115 = load ptr, ptr %memberidx1.i, align 8
+  %116 = load i64, ptr %115, align 4
+  %117 = load ptr, ptr %114, align 8
+  %118 = load ptr, ptr %117, align 8
+  %119 = getelementptr inbounds ptr, ptr %118, i64 %116
+  %120 = load ptr, ptr %119, align 8
+  %memberidx1.i.i100 = getelementptr inbounds %Module, ptr %120, i64 0, i32 5
+  %121 = load ptr, ptr %memberidx1.i.i100, align 8
+  %122 = load i64, ptr %121, align 4
+  %123 = getelementptr inbounds ptr, ptr %118, i64 %122
+  %124 = load ptr, ptr %123, align 8
+  %memberidx2.i.i.i = getelementptr inbounds %Module, ptr %124, i64 0, i32 7
+  %125 = load ptr, ptr %memberidx2.i.i.i, align 8
+  %memberidx3.i.i.i = getelementptr inbounds %ScopeId, ptr %121, i64 0, i32 1
+  %126 = load i64, ptr %memberidx3.i.i.i, align 4
+  %127 = load ptr, ptr %125, align 8
+  %128 = getelementptr inbounds ptr, ptr %127, i64 %126
+  %129 = load ptr, ptr %128, align 8
+  %memberidx.i101 = getelementptr inbounds %Scope, ptr %129, i64 0, i32 2
+  %130 = load ptr, ptr %memberidx.i101, align 8
+  tail call fastcc void @Map_String_ClassId____setitem__(ptr %130, ptr %1, ptr %113)
+  %memberidx1.i102 = getelementptr inbounds %Scope, ptr %129, i64 0, i32 1
+  %131 = load ptr, ptr %memberidx1.i102, align 8
+  %132 = tail call ptr @malloc(i32 24)
+  %133 = load i64, ptr %113, align 4
+  %memberidx1.i5.i = getelementptr inbounds %TypeId, ptr %113, i64 0, i32 2
+  %134 = load i64, ptr %memberidx1.i5.i, align 4
+  store i64 3, ptr %132, align 4
+  %memberidx1.i.i.i = getelementptr inbounds %VarId, ptr %132, i64 0, i32 1
+  store i64 %133, ptr %memberidx1.i.i.i, align 4
+  %memberidx2.i.i6.i = getelementptr inbounds %VarId, ptr %132, i64 0, i32 2
+  store i64 %134, ptr %memberidx2.i.i6.i, align 4
+  tail call fastcc void @Map_String_VarId____setitem__(ptr %131, ptr %1, ptr nonnull %132)
   br label %ifend28
 
 else31:                                           ; preds = %if.entry17
-  %memberidx34 = getelementptr inbounds %EnumType, ptr %107, i64 0, i32 1
-  %132 = load ptr, ptr %memberidx34, align 8
-  %133 = load ptr, ptr %0, align 8
-  %134 = load ptr, ptr %memberidx1.i, align 8
-  %135 = load i64, ptr %134, align 4
-  %136 = load ptr, ptr %133, align 8
-  %137 = load ptr, ptr %136, align 8
-  %138 = getelementptr inbounds ptr, ptr %137, i64 %135
-  %139 = load ptr, ptr %138, align 8
-  %memberidx1.i.i105 = getelementptr inbounds %Module, ptr %139, i64 0, i32 5
-  %140 = load ptr, ptr %memberidx1.i.i105, align 8
-  %141 = load i64, ptr %140, align 4
-  %142 = getelementptr inbounds ptr, ptr %137, i64 %141
-  %143 = load ptr, ptr %142, align 8
-  %memberidx2.i.i.i106 = getelementptr inbounds %Module, ptr %143, i64 0, i32 7
-  %144 = load ptr, ptr %memberidx2.i.i.i106, align 8
-  %memberidx3.i.i.i107 = getelementptr inbounds %ScopeId, ptr %140, i64 0, i32 1
-  %145 = load i64, ptr %memberidx3.i.i.i107, align 4
-  %146 = load ptr, ptr %144, align 8
-  %147 = getelementptr inbounds ptr, ptr %146, i64 %145
-  %148 = load ptr, ptr %147, align 8
-  %memberidx.i108 = getelementptr inbounds %Scope, ptr %148, i64 0, i32 4
-  %149 = load ptr, ptr %memberidx.i108, align 8
-  tail call fastcc void @Map_String_EnumId____setitem__(ptr %149, ptr %1, ptr %132)
-  %memberidx1.i109 = getelementptr inbounds %Scope, ptr %148, i64 0, i32 1
-  %150 = load ptr, ptr %memberidx1.i109, align 8
-  %151 = tail call ptr @malloc(i32 24)
-  %152 = load i64, ptr %132, align 4
-  %memberidx1.i5.i110 = getelementptr inbounds %TypeId, ptr %132, i64 0, i32 2
-  %153 = load i64, ptr %memberidx1.i5.i110, align 4
-  store i64 4, ptr %151, align 4
-  %memberidx1.i.i.i111 = getelementptr inbounds %VarId, ptr %151, i64 0, i32 1
-  store i64 %152, ptr %memberidx1.i.i.i111, align 4
-  %memberidx2.i.i6.i112 = getelementptr inbounds %VarId, ptr %151, i64 0, i32 2
-  store i64 %153, ptr %memberidx2.i.i6.i112, align 4
-  tail call fastcc void @Map_String_VarId____setitem__(ptr %150, ptr %1, ptr nonnull %151)
+  %memberidx34 = getelementptr inbounds %EnumType, ptr %110, i64 0, i32 1
+  %135 = load ptr, ptr %memberidx34, align 8
+  %136 = load ptr, ptr %0, align 8
+  %137 = load ptr, ptr %memberidx1.i, align 8
+  %138 = load i64, ptr %137, align 4
+  %139 = load ptr, ptr %136, align 8
+  %140 = load ptr, ptr %139, align 8
+  %141 = getelementptr inbounds ptr, ptr %140, i64 %138
+  %142 = load ptr, ptr %141, align 8
+  %memberidx1.i.i104 = getelementptr inbounds %Module, ptr %142, i64 0, i32 5
+  %143 = load ptr, ptr %memberidx1.i.i104, align 8
+  %144 = load i64, ptr %143, align 4
+  %145 = getelementptr inbounds ptr, ptr %140, i64 %144
+  %146 = load ptr, ptr %145, align 8
+  %memberidx2.i.i.i105 = getelementptr inbounds %Module, ptr %146, i64 0, i32 7
+  %147 = load ptr, ptr %memberidx2.i.i.i105, align 8
+  %memberidx3.i.i.i106 = getelementptr inbounds %ScopeId, ptr %143, i64 0, i32 1
+  %148 = load i64, ptr %memberidx3.i.i.i106, align 4
+  %149 = load ptr, ptr %147, align 8
+  %150 = getelementptr inbounds ptr, ptr %149, i64 %148
+  %151 = load ptr, ptr %150, align 8
+  %memberidx.i107 = getelementptr inbounds %Scope, ptr %151, i64 0, i32 4
+  %152 = load ptr, ptr %memberidx.i107, align 8
+  tail call fastcc void @Map_String_EnumId____setitem__(ptr %152, ptr %1, ptr %135)
+  %memberidx1.i108 = getelementptr inbounds %Scope, ptr %151, i64 0, i32 1
+  %153 = load ptr, ptr %memberidx1.i108, align 8
+  %154 = tail call ptr @malloc(i32 24)
+  %155 = load i64, ptr %135, align 4
+  %memberidx1.i5.i109 = getelementptr inbounds %TypeId, ptr %135, i64 0, i32 2
+  %156 = load i64, ptr %memberidx1.i5.i109, align 4
+  store i64 4, ptr %154, align 4
+  %memberidx1.i.i.i110 = getelementptr inbounds %VarId, ptr %154, i64 0, i32 1
+  store i64 %155, ptr %memberidx1.i.i.i110, align 4
+  %memberidx2.i.i6.i111 = getelementptr inbounds %VarId, ptr %154, i64 0, i32 2
+  store i64 %156, ptr %memberidx2.i.i6.i111, align 4
+  tail call fastcc void @Map_String_VarId____setitem__(ptr %153, ptr %1, ptr nonnull %154)
   br label %ifend28
 }
 
@@ -22999,7 +23077,7 @@ get_class_from_type.exit:                         ; preds = %tailrecurse.i, %if.
   %memberidx3 = getelementptr inbounds %Class, ptr %common.ret.op.i134, i64 0, i32 6
   %18 = load ptr, ptr %memberidx3, align 8
   %19 = tail call ptr @malloc(i32 11)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(11) %19, ptr noundef nonnull align 8 dereferenceable(11) @123, i64 11, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(11) %19, ptr noundef nonnull align 8 dereferenceable(11) @122, i64 11, i1 false)
   %20 = tail call ptr @malloc(i32 24)
   store ptr %19, ptr %20, align 8
   %memberidx1.i.i = getelementptr inbounds %String, ptr %20, i64 0, i32 1
@@ -23079,7 +23157,7 @@ if.entry:                                         ; preds = %else.i, %get_class_
   %50 = getelementptr inbounds i8, ptr %47, i64 %49
   store i8 0, ptr %50, align 1
   %51 = alloca ptr, align 8
-  %52 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %51, ptr nonnull @181, ptr %47)
+  %52 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %51, ptr nonnull @180, ptr %47)
   %53 = load ptr, ptr %51, align 8
   %54 = tail call ptr @malloc(i32 24)
   store ptr %53, ptr %54, align 8
@@ -23237,7 +23315,7 @@ if.entry17:                                       ; preds = %ifend15
   %130 = getelementptr inbounds i8, ptr %127, i64 %129
   store i8 0, ptr %130, align 1
   %131 = alloca ptr, align 8
-  %132 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %131, ptr nonnull @178, ptr %118, ptr %127)
+  %132 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %131, ptr nonnull @177, ptr %118, ptr %127)
   %133 = load ptr, ptr %131, align 8
   %134 = tail call ptr @malloc(i32 24)
   store ptr %133, ptr %134, align 8
@@ -23336,7 +23414,7 @@ if.entry28:                                       ; preds = %ifend26
   %178 = getelementptr inbounds i8, ptr %175, i64 %177
   store i8 0, ptr %178, align 1
   %179 = alloca ptr, align 8
-  %180 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %179, ptr nonnull @178, ptr %166, ptr %175)
+  %180 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %179, ptr nonnull @177, ptr %166, ptr %175)
   %181 = load ptr, ptr %179, align 8
   %182 = tail call ptr @malloc(i32 24)
   store ptr %181, ptr %182, align 8
@@ -23926,7 +24004,7 @@ ifend104:                                         ; preds = %ifend50, %ifend93
   %162 = getelementptr inbounds i8, ptr %159, i64 %161
   store i8 0, ptr %162, align 1
   %163 = alloca ptr, align 8
-  %164 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %163, ptr nonnull @182, ptr %142, ptr %150, ptr %159)
+  %164 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %163, ptr nonnull @181, ptr %142, ptr %150, ptr %159)
   %165 = load ptr, ptr %163, align 8
   %166 = tail call ptr @malloc(i32 24)
   store ptr %165, ptr %166, align 8
@@ -24034,7 +24112,7 @@ if.entry9:                                        ; preds = %ifend6
   %24 = getelementptr inbounds i8, ptr %21, i64 %23
   store i8 0, ptr %24, align 1
   %25 = alloca ptr, align 8
-  %26 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %25, ptr nonnull @214, ptr %21)
+  %26 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %25, ptr nonnull @213, ptr %21)
   %27 = load ptr, ptr %25, align 8
   %28 = tail call ptr @malloc(i32 24)
   store ptr %27, ptr %28, align 8
@@ -24260,7 +24338,7 @@ TypeChecker_check_function_call_args_match.exit:  ; preds = %for.body.i
   %128 = getelementptr inbounds i8, ptr %125, i64 %127
   store i8 0, ptr %128, align 1
   %129 = alloca ptr, align 8
-  %130 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %129, ptr nonnull @216, ptr %113, ptr %125)
+  %130 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %129, ptr nonnull @215, ptr %113, ptr %125)
   %131 = load ptr, ptr %129, align 8
   %132 = tail call ptr @malloc(i32 24)
   store ptr %131, ptr %132, align 8
@@ -24295,7 +24373,7 @@ TypeChecker_check_function_call_args_match.exit:  ; preds = %for.body.i
 
 if.entry23:                                       ; preds = %ifend19
   %145 = alloca ptr, align 8
-  %146 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %145, ptr nonnull @215, i64 %88, i64 %89)
+  %146 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %145, ptr nonnull @214, i64 %88, i64 %89)
   %147 = load ptr, ptr %145, align 8
   %148 = tail call ptr @malloc(i32 24)
   store ptr %147, ptr %148, align 8
@@ -24432,7 +24510,7 @@ ifend11:                                          ; preds = %if.entry5
 
 if.entry13:                                       ; preds = %ifend11
   %19 = call ptr @malloc(i32 23)
-  call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(23) %19, ptr noundef nonnull align 8 dereferenceable(23) @159, i64 23, i1 false)
+  call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(23) %19, ptr noundef nonnull align 8 dereferenceable(23) @158, i64 23, i1 false)
   %20 = call ptr @malloc(i32 24)
   store ptr %19, ptr %20, align 8
   %memberidx1.i.i438 = getelementptr inbounds %String, ptr %20, i64 0, i32 1
@@ -24494,7 +24572,7 @@ ifend15:                                          ; preds = %ifend11
 
 if.entry21:                                       ; preds = %ifend15
   %43 = call ptr @malloc(i32 23)
-  call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(23) %43, ptr noundef nonnull align 8 dereferenceable(23) @160, i64 23, i1 false)
+  call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(23) %43, ptr noundef nonnull align 8 dereferenceable(23) @159, i64 23, i1 false)
   %44 = call ptr @malloc(i32 24)
   store ptr %43, ptr %44, align 8
   %memberidx1.i.i449 = getelementptr inbounds %String, ptr %44, i64 0, i32 1
@@ -24554,7 +24632,7 @@ ifend23:                                          ; preds = %ifend15
 
 if.entry27:                                       ; preds = %ifend23
   %65 = call ptr @malloc(i32 30)
-  call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(30) %65, ptr noundef nonnull align 8 dereferenceable(30) @161, i64 30, i1 false)
+  call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(30) %65, ptr noundef nonnull align 8 dereferenceable(30) @160, i64 30, i1 false)
   %66 = call ptr @malloc(i32 24)
   store ptr %65, ptr %66, align 8
   %memberidx1.i.i460 = getelementptr inbounds %String, ptr %66, i64 0, i32 1
@@ -24615,7 +24693,7 @@ ifend29:                                          ; preds = %ifend23
 
 if.entry33:                                       ; preds = %ifend29
   %89 = call ptr @malloc(i32 28)
-  call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(28) %89, ptr noundef nonnull align 8 dereferenceable(28) @162, i64 28, i1 false)
+  call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(28) %89, ptr noundef nonnull align 8 dereferenceable(28) @161, i64 28, i1 false)
   %90 = call ptr @malloc(i32 24)
   store ptr %89, ptr %90, align 8
   %memberidx1.i.i471 = getelementptr inbounds %String, ptr %90, i64 0, i32 1
@@ -24929,7 +25007,7 @@ if.entry73:                                       ; preds = %ifend.i367
 
 ifend75:                                          ; preds = %ifend72, %ifend.i367
   %195 = tail call ptr @malloc(i32 3)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(3) %195, ptr noundef nonnull align 8 dereferenceable(3) @163, i64 3, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(3) %195, ptr noundef nonnull align 8 dereferenceable(3) @162, i64 3, i1 false)
   %196 = tail call ptr @malloc(i32 24)
   store ptr %195, ptr %196, align 8
   %memberidx1.i.i360 = getelementptr inbounds %String, ptr %196, i64 0, i32 1
@@ -24955,7 +25033,7 @@ if.entry76:                                       ; preds = %ifend.i358
 
 ifend78:                                          ; preds = %ifend75, %ifend.i358
   %202 = tail call ptr @malloc(i32 3)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(3) %202, ptr noundef nonnull align 8 dereferenceable(3) @164, i64 3, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(3) %202, ptr noundef nonnull align 8 dereferenceable(3) @163, i64 3, i1 false)
   %203 = tail call ptr @malloc(i32 24)
   store ptr %202, ptr %203, align 8
   %memberidx1.i.i351 = getelementptr inbounds %String, ptr %203, i64 0, i32 1
@@ -24981,7 +25059,7 @@ if.entry79:                                       ; preds = %ifend.i349
 
 ifend81:                                          ; preds = %ifend78, %ifend.i349
   %209 = tail call ptr @malloc(i32 3)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(3) %209, ptr noundef nonnull align 8 dereferenceable(3) @165, i64 3, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(3) %209, ptr noundef nonnull align 8 dereferenceable(3) @164, i64 3, i1 false)
   %210 = tail call ptr @malloc(i32 24)
   store ptr %209, ptr %210, align 8
   %memberidx1.i.i342 = getelementptr inbounds %String, ptr %210, i64 0, i32 1
@@ -25111,7 +25189,7 @@ if.entry94:                                       ; preds = %ifend.i304
 
 ifend96:                                          ; preds = %ifend93, %ifend.i304
   %244 = tail call ptr @malloc(i32 3)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(3) %244, ptr noundef nonnull align 8 dereferenceable(3) @166, i64 3, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(3) %244, ptr noundef nonnull align 8 dereferenceable(3) @165, i64 3, i1 false)
   %245 = tail call ptr @malloc(i32 24)
   store ptr %244, ptr %245, align 8
   %memberidx1.i.i297 = getelementptr inbounds %String, ptr %245, i64 0, i32 1
@@ -25137,7 +25215,7 @@ if.entry97:                                       ; preds = %ifend.i295
 
 ifend99:                                          ; preds = %ifend96, %ifend.i295
   %251 = tail call ptr @malloc(i32 3)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(3) %251, ptr noundef nonnull align 8 dereferenceable(3) @167, i64 3, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(3) %251, ptr noundef nonnull align 8 dereferenceable(3) @166, i64 3, i1 false)
   %252 = tail call ptr @malloc(i32 24)
   store ptr %251, ptr %252, align 8
   %memberidx1.i.i288 = getelementptr inbounds %String, ptr %252, i64 0, i32 1
@@ -25163,7 +25241,7 @@ if.entry100:                                      ; preds = %ifend.i286
 
 ifend102:                                         ; preds = %ifend99, %ifend.i286
   %258 = tail call ptr @malloc(i32 3)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(3) %258, ptr noundef nonnull align 8 dereferenceable(3) @168, i64 3, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(3) %258, ptr noundef nonnull align 8 dereferenceable(3) @167, i64 3, i1 false)
   %259 = tail call ptr @malloc(i32 24)
   store ptr %258, ptr %259, align 8
   %memberidx1.i.i279 = getelementptr inbounds %String, ptr %259, i64 0, i32 1
@@ -25215,7 +25293,7 @@ if.entry106:                                      ; preds = %ifend.i268
 
 ifend108:                                         ; preds = %ifend105, %ifend.i268
   %272 = tail call ptr @malloc(i32 3)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(3) %272, ptr noundef nonnull align 8 dereferenceable(3) @89, i64 3, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(3) %272, ptr noundef nonnull align 8 dereferenceable(3) @88, i64 3, i1 false)
   %273 = tail call ptr @malloc(i32 24)
   store ptr %272, ptr %273, align 8
   %memberidx1.i.i261 = getelementptr inbounds %String, ptr %273, i64 0, i32 1
@@ -25241,7 +25319,7 @@ if.entry109:                                      ; preds = %ifend.i259
 
 ifend111:                                         ; preds = %ifend108, %ifend.i259
   %279 = tail call ptr @malloc(i32 3)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(3) %279, ptr noundef nonnull align 8 dereferenceable(3) @96, i64 3, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(3) %279, ptr noundef nonnull align 8 dereferenceable(3) @95, i64 3, i1 false)
   %280 = tail call ptr @malloc(i32 24)
   store ptr %279, ptr %280, align 8
   %memberidx1.i.i252 = getelementptr inbounds %String, ptr %280, i64 0, i32 1
@@ -25265,7 +25343,7 @@ if.entry112:                                      ; preds = %ifend.i250
 
 ifend114:                                         ; preds = %ifend111, %ifend.i250
   %286 = tail call ptr @malloc(i32 3)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(3) %286, ptr noundef nonnull align 8 dereferenceable(3) @97, i64 3, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(3) %286, ptr noundef nonnull align 8 dereferenceable(3) @96, i64 3, i1 false)
   %287 = tail call ptr @malloc(i32 24)
   store ptr %286, ptr %287, align 8
   %memberidx1.i.i244 = getelementptr inbounds %String, ptr %287, i64 0, i32 1
@@ -25426,7 +25504,7 @@ if.entry148:                                      ; preds = %ifend125
   %349 = getelementptr inbounds i8, ptr %346, i64 %348
   store i8 0, ptr %349, align 1
   %350 = alloca ptr, align 8
-  %351 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %350, ptr nonnull @169, ptr %346)
+  %351 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %350, ptr nonnull @168, ptr %346)
   %352 = load ptr, ptr %350, align 8
   %353 = tail call ptr @malloc(i32 24)
   store ptr %352, ptr %353, align 8
@@ -26027,7 +26105,7 @@ if.entry:                                         ; preds = %4
   %14 = getelementptr inbounds i8, ptr %12, i64 %9
   store i8 0, ptr %14, align 1
   %15 = alloca ptr, align 8
-  %16 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %15, ptr nonnull @179, ptr %12)
+  %16 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %15, ptr nonnull @178, ptr %12)
   %17 = load ptr, ptr %15, align 8
   %18 = tail call ptr @malloc(i32 24)
   store ptr %17, ptr %18, align 8
@@ -26295,7 +26373,7 @@ ifend10:                                          ; preds = %if.entry5
   %130 = getelementptr inbounds i8, ptr %128, i64 %125
   store i8 0, ptr %130, align 1
   %131 = alloca ptr, align 8
-  %132 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %131, ptr nonnull @180, ptr %114, ptr %121, ptr %128)
+  %132 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %131, ptr nonnull @179, ptr %114, ptr %121, ptr %128)
   %133 = load ptr, ptr %131, align 8
   %134 = tail call ptr @malloc(i32 24)
   store ptr %133, ptr %134, align 8
@@ -26462,7 +26540,7 @@ if.entry36:                                       ; preds = %ifend29
   %196 = getelementptr inbounds i8, ptr %193, i64 %195
   store i8 0, ptr %196, align 1
   %197 = alloca ptr, align 8
-  %198 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %197, ptr nonnull @178, ptr %184, ptr %193)
+  %198 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %197, ptr nonnull @177, ptr %184, ptr %193)
   %199 = load ptr, ptr %197, align 8
   %200 = tail call ptr @malloc(i32 24)
   store ptr %199, ptr %200, align 8
@@ -26700,7 +26778,7 @@ if.entry26:                                       ; preds = %if.entry4.i, %if.en
   %44 = getelementptr inbounds i8, ptr %42, i64 %39
   store i8 0, ptr %44, align 1
   %45 = alloca ptr, align 8
-  %46 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %45, ptr nonnull @185, ptr %42)
+  %46 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %45, ptr nonnull @184, ptr %42)
   %47 = load ptr, ptr %45, align 8
   %48 = tail call ptr @malloc(i32 24)
   store ptr %47, ptr %48, align 8
@@ -26883,7 +26961,7 @@ ifend40:                                          ; preds = %if.entry38.split, %
   %104 = getelementptr inbounds i8, ptr %101, i64 %103
   store i8 0, ptr %104, align 1
   %105 = alloca ptr, align 8
-  %106 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %105, ptr nonnull @186, ptr %93, ptr %101)
+  %106 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %105, ptr nonnull @185, ptr %93, ptr %101)
   %107 = load ptr, ptr %105, align 8
   %108 = tail call ptr @malloc(i32 24)
   store ptr %107, ptr %108, align 8
@@ -27153,7 +27231,7 @@ else20:                                           ; preds = %is_object.exit.thre
   %69 = getelementptr inbounds i8, ptr %66, i64 %68
   store i8 0, ptr %69, align 1
   %70 = alloca ptr, align 8
-  %71 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %70, ptr nonnull @194, ptr %66)
+  %71 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %70, ptr nonnull @193, ptr %66)
   %72 = load ptr, ptr %70, align 8
   %73 = tail call ptr @malloc(i32 24)
   store ptr %72, ptr %73, align 8
@@ -27209,7 +27287,7 @@ TypeChecker_error.exit99:                         ; preds = %else20, %TypeChecke
 
 if.entry25:                                       ; preds = %if.entry19
   %92 = alloca ptr, align 8
-  %93 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %92, ptr nonnull @192, i64 %61)
+  %93 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %92, ptr nonnull @191, i64 %61)
   %94 = load ptr, ptr %92, align 8
   %95 = tail call ptr @malloc(i32 24)
   store ptr %94, ptr %95, align 8
@@ -27310,7 +27388,7 @@ if.entry34:                                       ; preds = %ifend32
   %141 = getelementptr inbounds i8, ptr %138, i64 %140
   store i8 0, ptr %141, align 1
   %142 = alloca ptr, align 8
-  %143 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %142, ptr nonnull @193, ptr %129, ptr %138)
+  %143 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %142, ptr nonnull @192, ptr %129, ptr %138)
   %144 = load ptr, ptr %142, align 8
   %145 = tail call ptr @malloc(i32 24)
   store ptr %144, ptr %145, align 8
@@ -27510,7 +27588,7 @@ if.entry11:                                       ; preds = %ifend9
   %48 = getelementptr inbounds i8, ptr %45, i64 %47
   store i8 0, ptr %48, align 1
   %49 = alloca ptr, align 8
-  %50 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %49, ptr nonnull @207, ptr %37, ptr %45)
+  %50 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %49, ptr nonnull @206, ptr %37, ptr %45)
   %51 = load ptr, ptr %49, align 8
   %52 = tail call ptr @malloc(i32 24)
   store ptr %51, ptr %52, align 8
@@ -27640,7 +27718,7 @@ for.body:                                         ; preds = %if.entry, %String__
   %23 = getelementptr inbounds i8, ptr %20, i64 %22
   store i8 0, ptr %23, align 1
   %24 = alloca ptr, align 8
-  %25 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %24, ptr nonnull @80, ptr %20)
+  %25 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %24, ptr nonnull @79, ptr %20)
   %26 = load ptr, ptr %24, align 8
   %27 = tail call ptr @malloc(i32 24)
   store ptr %26, ptr %27, align 8
@@ -27667,7 +27745,7 @@ String___adda__.exit:                             ; preds = %for.body, %if.entry
   %32 = phi ptr [ %11, %for.body ], [ %30, %if.entry.i.i.i ]
   %33 = phi i64 [ %12, %for.body ], [ %28, %if.entry.i.i.i ]
   %34 = getelementptr inbounds i8, ptr %32, i64 %31
-  call void @llvm.memcpy.p0.p0.i64(ptr align 1073741824 %34, ptr align 8 %26, i64 %25, i1 false)
+  call void @llvm.memcpy.p0.p0.i64(ptr align 536870912 %34, ptr align 8 %26, i64 %25, i1 false)
   store i64 %.pre-phi, ptr %memberidx1.i.i, align 4
   %35 = add nuw nsw i64 %14, 1
   %36 = load ptr, ptr %memberidx2.i.i86, align 8
@@ -27704,7 +27782,7 @@ for.end:                                          ; preds = %String___adda__.exi
   %53 = getelementptr inbounds i8, ptr %50, i64 %52
   store i8 0, ptr %53, align 1
   %54 = alloca ptr, align 8
-  %55 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %54, ptr nonnull @81, ptr %43, ptr %50)
+  %55 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %54, ptr nonnull @80, ptr %43, ptr %50)
   %56 = load ptr, ptr %54, align 8
   %57 = tail call ptr @malloc(i32 24)
   store ptr %56, ptr %57, align 8
@@ -27731,7 +27809,7 @@ if.entry5:                                        ; preds = %2
   %66 = getelementptr inbounds i8, ptr %63, i64 %65
   store i8 0, ptr %66, align 1
   %67 = alloca ptr, align 8
-  %68 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %67, ptr nonnull @82, ptr %63)
+  %68 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %67, ptr nonnull @81, ptr %63)
   %69 = load ptr, ptr %67, align 8
   %70 = tail call ptr @malloc(i32 24)
   store ptr %69, ptr %70, align 8
@@ -27799,7 +27877,7 @@ if.entry23:                                       ; preds = %2
   %memberidx27 = getelementptr inbounds %ArrayType, ptr %1, i64 0, i32 2
   %106 = load i64, ptr %memberidx27, align 4
   %107 = alloca ptr, align 8
-  %108 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %107, ptr nonnull @83, ptr %102, i64 %106)
+  %108 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %107, ptr nonnull @82, ptr %102, i64 %106)
   %109 = load ptr, ptr %107, align 8
   %110 = tail call ptr @malloc(i32 24)
   store ptr %109, ptr %110, align 8
@@ -27839,7 +27917,7 @@ for.body34:                                       ; preds = %if.entry29, %String
   %120 = phi i64 [ %.pre-phi178, %String___adda__.exit125 ], [ 0, %if.entry29 ]
   %121 = phi i64 [ %131, %String___adda__.exit125 ], [ 1, %if.entry29 ]
   %122 = tail call ptr @malloc(i32 25)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(25) %122, ptr noundef nonnull align 8 dereferenceable(25) @84, i64 25, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(25) %122, ptr noundef nonnull align 8 dereferenceable(25) @83, i64 25, i1 false)
   %123 = tail call ptr @malloc(i32 24)
   store ptr %122, ptr %123, align 8
   %memberidx1.i.i119 = getelementptr inbounds %String, ptr %123, i64 0, i32 1
@@ -27864,7 +27942,7 @@ String___adda__.exit125:                          ; preds = %for.body34, %if.ent
   %128 = phi ptr [ %118, %for.body34 ], [ %126, %if.entry.i.i.i124 ]
   %129 = phi i64 [ %119, %for.body34 ], [ %124, %if.entry.i.i.i124 ]
   %130 = getelementptr inbounds i8, ptr %128, i64 %127
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 1073741824 dereferenceable(25) %130, ptr noundef nonnull align 8 dereferenceable(25) %122, i64 25, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 536870912 dereferenceable(25) %130, ptr noundef nonnull align 8 dereferenceable(25) %122, i64 25, i1 false)
   store i64 %.pre-phi178, ptr %memberidx1.i.i110, align 4
   %131 = add nuw nsw i64 %121, 1
   %132 = load i64, ptr %memberidx3.i.i115, align 4
@@ -27882,7 +27960,7 @@ for.end35:                                        ; preds = %String___adda__.exi
   %138 = getelementptr inbounds i8, ptr %137, i64 %134
   store i8 0, ptr %138, align 1
   %139 = alloca ptr, align 8
-  %140 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %139, ptr nonnull @85, ptr %137)
+  %140 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %139, ptr nonnull @84, ptr %137)
   %141 = load ptr, ptr %139, align 8
   %142 = tail call ptr @malloc(i32 24)
   store ptr %141, ptr %142, align 8
@@ -27966,7 +28044,7 @@ String___adda__.exit148:                          ; preds = %for.body45, %if.ent
   %172 = phi ptr [ %160, %for.body45 ], [ %170, %if.entry.i.i.i147 ]
   %173 = phi i64 [ %161, %for.body45 ], [ %168, %if.entry.i.i.i147 ]
   %174 = getelementptr inbounds i8, ptr %172, i64 %171
-  tail call void @llvm.memcpy.p0.p0.i64(ptr align 1073741824 %174, ptr align 8 %166, i64 %167, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr align 536870912 %174, ptr align 8 %166, i64 %167, i1 false)
   store i64 %.pre-phi180, ptr %memberidx1.i.i133, align 4
   %175 = add nuw nsw i64 %163, 1
   %176 = load ptr, ptr %memberidx2.i.i137, align 8
@@ -28004,7 +28082,7 @@ for.end46:                                        ; preds = %String___adda__.exi
 
 if.entry50:                                       ; preds = %2
   %189 = tail call ptr @malloc(i32 9)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(9) %189, ptr noundef nonnull align 8 dereferenceable(9) @86, i64 9, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(9) %189, ptr noundef nonnull align 8 dereferenceable(9) @85, i64 9, i1 false)
   %190 = tail call ptr @malloc(i32 24)
   store ptr %189, ptr %190, align 8
   %memberidx1.i.i97 = getelementptr inbounds %String, ptr %190, i64 0, i32 1
@@ -28015,7 +28093,7 @@ if.entry50:                                       ; preds = %2
 
 if.entry54:                                       ; preds = %2
   %191 = tail call ptr @malloc(i32 6)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(6) %191, ptr noundef nonnull align 8 dereferenceable(6) @87, i64 6, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(6) %191, ptr noundef nonnull align 8 dereferenceable(6) @86, i64 6, i1 false)
   %192 = tail call ptr @malloc(i32 24)
   store ptr %191, ptr %192, align 8
   %memberidx1.i.i92 = getelementptr inbounds %String, ptr %192, i64 0, i32 1
@@ -28094,7 +28172,7 @@ Map_String_Generic____getitem__.exit:             ; preds = %while.end.i
   br i1 %28, label %common.ret, label %ifend
 
 common.ret:                                       ; preds = %else.i, %3, %while.end.i, %Map_String_Generic____getitem__.exit, %ifend21, %TypeChecker_error.exit
-  %common.ret.op = phi ptr [ null, %TypeChecker_error.exit ], [ %176, %ifend21 ], [ null, %Map_String_Generic____getitem__.exit ], [ null, %while.end.i ], [ null, %3 ], [ null, %else.i ]
+  %common.ret.op = phi ptr [ null, %TypeChecker_error.exit ], [ %178, %ifend21 ], [ null, %Map_String_Generic____getitem__.exit ], [ null, %while.end.i ], [ null, %3 ], [ null, %else.i ]
   ret ptr %common.ret.op
 
 ifend:                                            ; preds = %Map_String_Generic____getitem__.exit
@@ -28111,7 +28189,7 @@ ifend:                                            ; preds = %Map_String_Generic_
 
 if.entry5:                                        ; preds = %ifend
   %33 = alloca ptr, align 8
-  %34 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %33, ptr nonnull @103, i64 %31, i64 %32)
+  %34 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %33, ptr nonnull @102, i64 %31, i64 %32)
   %35 = load ptr, ptr %33, align 8
   %36 = tail call ptr @malloc(i32 24)
   store ptr %35, ptr %36, align 8
@@ -28167,55 +28245,57 @@ TypeChecker_error.exit:                           ; preds = %if.entry5, %TypeChe
 ifend7:                                           ; preds = %ifend
   %memberidx10 = getelementptr inbounds %TypeChecker, ptr %0, i64 0, i32 4
   %54 = load ptr, ptr %memberidx10, align 8
-  %55 = load ptr, ptr %0, align 8
-  %56 = load ptr, ptr %55, align 8
+  %55 = load i64, ptr @GENERIC_MODULE_ID, align 8
+  %56 = load ptr, ptr %0, align 8
   %57 = load ptr, ptr %56, align 8
   %58 = load ptr, ptr %57, align 8
-  %memberidx1.i83 = getelementptr inbounds %Module, ptr %58, i64 0, i32 5
-  %59 = load ptr, ptr %memberidx1.i83, align 8
-  store ptr %59, ptr %memberidx10, align 8
-  %60 = load i64, ptr %59, align 4
-  %61 = tail call fastcc ptr @TypeChecker_create_scope(ptr nonnull %0, i64 %60)
-  %memberidx2.i85 = getelementptr inbounds %Scope, ptr %61, i64 0, i32 5
-  %62 = load ptr, ptr %memberidx10, align 8
-  store ptr %62, ptr %memberidx2.i85, align 8
-  %63 = load ptr, ptr %0, align 8
+  %59 = getelementptr inbounds ptr, ptr %58, i64 %55
+  %60 = load ptr, ptr %59, align 8
+  %memberidx1.i83 = getelementptr inbounds %Module, ptr %60, i64 0, i32 5
+  %61 = load ptr, ptr %memberidx1.i83, align 8
+  store ptr %61, ptr %memberidx10, align 8
+  %62 = load i64, ptr %61, align 4
+  %63 = tail call fastcc ptr @TypeChecker_create_scope(ptr nonnull %0, i64 %62)
+  %memberidx2.i85 = getelementptr inbounds %Scope, ptr %63, i64 0, i32 5
   %64 = load ptr, ptr %memberidx10, align 8
-  %65 = load ptr, ptr %63, align 8
-  %66 = load i64, ptr %64, align 4
+  store ptr %64, ptr %memberidx2.i85, align 8
+  %65 = load ptr, ptr %0, align 8
+  %66 = load ptr, ptr %memberidx10, align 8
   %67 = load ptr, ptr %65, align 8
-  %68 = getelementptr inbounds ptr, ptr %67, i64 %66
-  %69 = load ptr, ptr %68, align 8
-  %memberidx2.i.i.i = getelementptr inbounds %Module, ptr %69, i64 0, i32 7
-  %70 = load ptr, ptr %memberidx2.i.i.i, align 8
-  %memberidx3.i.i.i = getelementptr inbounds %ScopeId, ptr %64, i64 0, i32 1
-  %71 = load i64, ptr %memberidx3.i.i.i, align 4
-  %72 = load ptr, ptr %70, align 8
-  %73 = getelementptr inbounds ptr, ptr %72, i64 %71
-  %74 = load ptr, ptr %73, align 8
-  %memberidx4.i = getelementptr inbounds %Scope, ptr %74, i64 0, i32 7
-  %75 = load ptr, ptr %memberidx4.i, align 8
-  %76 = load ptr, ptr %61, align 8
-  %memberidx.i.i87 = getelementptr inbounds %Array_ScopeId_, ptr %75, i64 0, i32 1
-  %77 = load i64, ptr %memberidx.i.i87, align 4
-  %78 = add i64 %77, 1
-  %memberidx.i.i.i88 = getelementptr inbounds %Array_ScopeId_, ptr %75, i64 0, i32 2
-  %79 = load i64, ptr %memberidx.i.i.i88, align 4
-  %80 = icmp slt i64 %79, %78
-  %.pre141 = load ptr, ptr %75, align 8
-  br i1 %80, label %while.body.i.i.i90, label %TypeChecker_create_child_scope_within_current_scope.exit
+  %68 = load i64, ptr %66, align 4
+  %69 = load ptr, ptr %67, align 8
+  %70 = getelementptr inbounds ptr, ptr %69, i64 %68
+  %71 = load ptr, ptr %70, align 8
+  %memberidx2.i.i.i = getelementptr inbounds %Module, ptr %71, i64 0, i32 7
+  %72 = load ptr, ptr %memberidx2.i.i.i, align 8
+  %memberidx3.i.i.i = getelementptr inbounds %ScopeId, ptr %66, i64 0, i32 1
+  %73 = load i64, ptr %memberidx3.i.i.i, align 4
+  %74 = load ptr, ptr %72, align 8
+  %75 = getelementptr inbounds ptr, ptr %74, i64 %73
+  %76 = load ptr, ptr %75, align 8
+  %memberidx4.i = getelementptr inbounds %Scope, ptr %76, i64 0, i32 7
+  %77 = load ptr, ptr %memberidx4.i, align 8
+  %78 = load ptr, ptr %63, align 8
+  %memberidx.i.i87 = getelementptr inbounds %Array_ScopeId_, ptr %77, i64 0, i32 1
+  %79 = load i64, ptr %memberidx.i.i87, align 4
+  %80 = add i64 %79, 1
+  %memberidx.i.i.i88 = getelementptr inbounds %Array_ScopeId_, ptr %77, i64 0, i32 2
+  %81 = load i64, ptr %memberidx.i.i.i88, align 4
+  %82 = icmp slt i64 %81, %80
+  %.pre141 = load ptr, ptr %77, align 8
+  br i1 %82, label %while.body.i.i.i90, label %TypeChecker_create_child_scope_within_current_scope.exit
 
 while.body.i.i.i90:                               ; preds = %ifend7, %while.body.i.i.i90
-  %81 = phi ptr [ %85, %while.body.i.i.i90 ], [ %.pre141, %ifend7 ]
-  %82 = phi i64 [ %86, %while.body.i.i.i90 ], [ %79, %ifend7 ]
-  %83 = shl nuw i64 %82, 1
-  store i64 %83, ptr %memberidx.i.i.i88, align 4
-  %84 = shl i64 %82, 4
-  %85 = tail call ptr @realloc(ptr %81, i64 %84)
-  store ptr %85, ptr %75, align 8
-  %86 = load i64, ptr %memberidx.i.i.i88, align 4
-  %87 = icmp slt i64 %86, %78
-  br i1 %87, label %while.body.i.i.i90, label %TypeChecker_create_child_scope_within_current_scope.exit.loopexit
+  %83 = phi ptr [ %87, %while.body.i.i.i90 ], [ %.pre141, %ifend7 ]
+  %84 = phi i64 [ %88, %while.body.i.i.i90 ], [ %81, %ifend7 ]
+  %85 = shl nuw i64 %84, 1
+  store i64 %85, ptr %memberidx.i.i.i88, align 4
+  %86 = shl i64 %84, 4
+  %87 = tail call ptr @realloc(ptr %83, i64 %86)
+  store ptr %87, ptr %77, align 8
+  %88 = load i64, ptr %memberidx.i.i.i88, align 4
+  %89 = icmp slt i64 %88, %80
+  br i1 %89, label %while.body.i.i.i90, label %TypeChecker_create_child_scope_within_current_scope.exit.loopexit
 
 TypeChecker_create_child_scope_within_current_scope.exit.loopexit: ; preds = %while.body.i.i.i90
   %.pre142 = load i64, ptr %memberidx.i.i87, align 4
@@ -28223,215 +28303,215 @@ TypeChecker_create_child_scope_within_current_scope.exit.loopexit: ; preds = %wh
   br label %TypeChecker_create_child_scope_within_current_scope.exit
 
 TypeChecker_create_child_scope_within_current_scope.exit: ; preds = %ifend7, %TypeChecker_create_child_scope_within_current_scope.exit.loopexit
-  %.pre-phi = phi i64 [ %.pre147, %TypeChecker_create_child_scope_within_current_scope.exit.loopexit ], [ %78, %ifend7 ]
-  %88 = phi ptr [ %85, %TypeChecker_create_child_scope_within_current_scope.exit.loopexit ], [ %.pre141, %ifend7 ]
-  %89 = phi i64 [ %.pre142, %TypeChecker_create_child_scope_within_current_scope.exit.loopexit ], [ %77, %ifend7 ]
+  %.pre-phi = phi i64 [ %.pre147, %TypeChecker_create_child_scope_within_current_scope.exit.loopexit ], [ %80, %ifend7 ]
+  %90 = phi ptr [ %87, %TypeChecker_create_child_scope_within_current_scope.exit.loopexit ], [ %.pre141, %ifend7 ]
+  %91 = phi i64 [ %.pre142, %TypeChecker_create_child_scope_within_current_scope.exit.loopexit ], [ %79, %ifend7 ]
   store i64 %.pre-phi, ptr %memberidx.i.i87, align 4
-  %90 = getelementptr inbounds ptr, ptr %88, i64 %89
-  store ptr %76, ptr %90, align 8
-  %91 = tail call ptr @malloc(i32 0)
-  %92 = tail call ptr @malloc(i32 24)
-  store ptr %91, ptr %92, align 8
-  %memberidx1.i.i91 = getelementptr inbounds %String, ptr %92, i64 0, i32 1
-  %memberidx2.i.i92 = getelementptr inbounds %String, ptr %92, i64 0, i32 2
+  %92 = getelementptr inbounds ptr, ptr %90, i64 %91
+  store ptr %78, ptr %92, align 8
+  %93 = tail call ptr @malloc(i32 0)
+  %94 = tail call ptr @malloc(i32 24)
+  store ptr %93, ptr %94, align 8
+  %memberidx1.i.i91 = getelementptr inbounds %String, ptr %94, i64 0, i32 1
+  %memberidx2.i.i92 = getelementptr inbounds %String, ptr %94, i64 0, i32 2
   call void @llvm.memset.p0.i64(ptr noundef nonnull align 4 dereferenceable(16) %memberidx1.i.i91, i8 0, i64 16, i1 false)
-  %93 = load i64, ptr %memberidx3, align 4
-  %94 = tail call ptr @malloc(i32 16)
-  store i64 0, ptr %94, align 4
-  %memberidx1.i93 = getelementptr inbounds %Range, ptr %94, i64 0, i32 1
-  store i64 %93, ptr %memberidx1.i93, align 4
-  %95 = tail call ptr @malloc(i32 17)
-  %memberidx.i.i95 = getelementptr inbounds %RangeIterator, ptr %95, i64 0, i32 1
+  %95 = load i64, ptr %memberidx3, align 4
+  %96 = tail call ptr @malloc(i32 16)
+  store i64 0, ptr %96, align 4
+  %memberidx1.i93 = getelementptr inbounds %Range, ptr %96, i64 0, i32 1
+  store i64 %95, ptr %memberidx1.i93, align 4
+  %97 = tail call ptr @malloc(i32 17)
+  %memberidx.i.i95 = getelementptr inbounds %RangeIterator, ptr %97, i64 0, i32 1
   store i64 0, ptr %memberidx.i.i95, align 4
-  %memberidx1.i.i96 = getelementptr inbounds %RangeIterator, ptr %95, i64 0, i32 2
-  store i64 %93, ptr %memberidx1.i.i96, align 4
-  %96 = icmp slt i64 %93, 1
-  br i1 %96, label %for.end, label %for.body.lr.ph
+  %memberidx1.i.i96 = getelementptr inbounds %RangeIterator, ptr %97, i64 0, i32 2
+  store i64 %95, ptr %memberidx1.i.i96, align 4
+  %98 = icmp slt i64 %95, 1
+  br i1 %98, label %for.end, label %for.body.lr.ph
 
 for.body.lr.ph:                                   ; preds = %TypeChecker_create_child_scope_within_current_scope.exit
-  %memberidx17 = getelementptr inbounds %Scope, ptr %61, i64 0, i32 6
+  %memberidx17 = getelementptr inbounds %Scope, ptr %63, i64 0, i32 6
   br label %for.body
 
 for.body:                                         ; preds = %for.body.lr.ph, %String___adda__.exit
-  %97 = phi ptr [ %91, %for.body.lr.ph ], [ %148, %String___adda__.exit ]
-  %98 = phi i64 [ 0, %for.body.lr.ph ], [ %149, %String___adda__.exit ]
-  %99 = phi i64 [ 0, %for.body.lr.ph ], [ %.pre-phi149, %String___adda__.exit ]
-  %100 = phi i64 [ 1, %for.body.lr.ph ], [ %156, %String___adda__.exit ]
-  %101 = phi i64 [ 0, %for.body.lr.ph ], [ %100, %String___adda__.exit ]
-  %102 = load ptr, ptr %30, align 8
-  %103 = getelementptr inbounds ptr, ptr %102, i64 %101
-  %104 = load ptr, ptr %103, align 8
-  %105 = load ptr, ptr %104, align 8
-  %memberidx14 = getelementptr inbounds %IdentifierToken, ptr %105, i64 0, i32 2
-  %106 = load ptr, ptr %memberidx14, align 8
-  %107 = load ptr, ptr %2, align 8
-  %108 = getelementptr inbounds ptr, ptr %107, i64 %101
-  %109 = load ptr, ptr %108, align 8
-  %110 = load i64, ptr %109, align 4
-  %111 = icmp eq i64 %110, 20
-  %memberidx16 = getelementptr inbounds %GenericType, ptr %109, i64 0, i32 3
-  %spec.select = select i1 %111, ptr %memberidx16, ptr %108
+  %99 = phi ptr [ %93, %for.body.lr.ph ], [ %150, %String___adda__.exit ]
+  %100 = phi i64 [ 0, %for.body.lr.ph ], [ %151, %String___adda__.exit ]
+  %101 = phi i64 [ 0, %for.body.lr.ph ], [ %.pre-phi149, %String___adda__.exit ]
+  %102 = phi i64 [ 1, %for.body.lr.ph ], [ %158, %String___adda__.exit ]
+  %103 = phi i64 [ 0, %for.body.lr.ph ], [ %102, %String___adda__.exit ]
+  %104 = load ptr, ptr %30, align 8
+  %105 = getelementptr inbounds ptr, ptr %104, i64 %103
+  %106 = load ptr, ptr %105, align 8
+  %107 = load ptr, ptr %106, align 8
+  %memberidx14 = getelementptr inbounds %IdentifierToken, ptr %107, i64 0, i32 2
+  %108 = load ptr, ptr %memberidx14, align 8
+  %109 = load ptr, ptr %2, align 8
+  %110 = getelementptr inbounds ptr, ptr %109, i64 %103
+  %111 = load ptr, ptr %110, align 8
+  %112 = load i64, ptr %111, align 4
+  %113 = icmp eq i64 %112, 20
+  %memberidx16 = getelementptr inbounds %GenericType, ptr %111, i64 0, i32 3
+  %spec.select = select i1 %113, ptr %memberidx16, ptr %110
   %ternary = load ptr, ptr %spec.select, align 8
-  %112 = call fastcc ptr @TypeChecker_dump_type(ptr nonnull %0, ptr %ternary)
-  %memberidx.i103 = getelementptr inbounds %String, ptr %112, i64 0, i32 1
-  %113 = load i64, ptr %memberidx.i103, align 4
-  %114 = trunc i64 %113 to i32
-  %115 = add i32 %114, 1
-  %116 = call ptr @malloc(i32 %115)
-  %117 = load ptr, ptr %112, align 8
-  %118 = load i64, ptr %memberidx.i103, align 4
-  call void @llvm.memcpy.p0.p0.i64(ptr align 8 %116, ptr align 8 %117, i64 %118, i1 false)
-  %119 = getelementptr inbounds i8, ptr %116, i64 %118
-  store i8 0, ptr %119, align 1
-  %120 = alloca ptr, align 8
-  %121 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %120, ptr nonnull @104, ptr %116)
-  %122 = load ptr, ptr %120, align 8
-  %123 = tail call ptr @malloc(i32 24)
-  store ptr %122, ptr %123, align 8
-  %memberidx1.i104 = getelementptr inbounds %String, ptr %123, i64 0, i32 1
-  store i64 %121, ptr %memberidx1.i104, align 4
-  %memberidx2.i105 = getelementptr inbounds %String, ptr %123, i64 0, i32 2
-  store i64 %121, ptr %memberidx2.i105, align 4
-  tail call void @free(ptr %116)
-  %124 = add nuw i64 %99, %121
-  %125 = icmp slt i64 %98, %124
-  br i1 %125, label %if.entry.i.i.i, label %String___adda__.exit
+  %114 = call fastcc ptr @TypeChecker_dump_type(ptr nonnull %0, ptr %ternary)
+  %memberidx.i103 = getelementptr inbounds %String, ptr %114, i64 0, i32 1
+  %115 = load i64, ptr %memberidx.i103, align 4
+  %116 = trunc i64 %115 to i32
+  %117 = add i32 %116, 1
+  %118 = call ptr @malloc(i32 %117)
+  %119 = load ptr, ptr %114, align 8
+  %120 = load i64, ptr %memberidx.i103, align 4
+  call void @llvm.memcpy.p0.p0.i64(ptr align 8 %118, ptr align 8 %119, i64 %120, i1 false)
+  %121 = getelementptr inbounds i8, ptr %118, i64 %120
+  store i8 0, ptr %121, align 1
+  %122 = alloca ptr, align 8
+  %123 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %122, ptr nonnull @103, ptr %118)
+  %124 = load ptr, ptr %122, align 8
+  %125 = tail call ptr @malloc(i32 24)
+  store ptr %124, ptr %125, align 8
+  %memberidx1.i104 = getelementptr inbounds %String, ptr %125, i64 0, i32 1
+  store i64 %123, ptr %memberidx1.i104, align 4
+  %memberidx2.i105 = getelementptr inbounds %String, ptr %125, i64 0, i32 2
+  store i64 %123, ptr %memberidx2.i105, align 4
+  tail call void @free(ptr %118)
+  %126 = add nuw i64 %101, %123
+  %127 = icmp slt i64 %100, %126
+  br i1 %127, label %if.entry.i.i.i, label %String___adda__.exit
 
 for.end:                                          ; preds = %String___adda__.exit, %TypeChecker_create_child_scope_within_current_scope.exit
-  %126 = phi ptr [ %91, %TypeChecker_create_child_scope_within_current_scope.exit ], [ %148, %String___adda__.exit ]
-  %127 = phi i64 [ 0, %TypeChecker_create_child_scope_within_current_scope.exit ], [ %.pre-phi149, %String___adda__.exit ]
-  tail call void @free(ptr nonnull %95)
+  %128 = phi ptr [ %93, %TypeChecker_create_child_scope_within_current_scope.exit ], [ %150, %String___adda__.exit ]
+  %129 = phi i64 [ 0, %TypeChecker_create_child_scope_within_current_scope.exit ], [ %.pre-phi149, %String___adda__.exit ]
+  tail call void @free(ptr nonnull %97)
   %memberidx.i99 = getelementptr inbounds %String, ptr %1, i64 0, i32 1
-  %128 = load i64, ptr %memberidx.i99, align 4
-  %129 = trunc i64 %128 to i32
-  %130 = add i32 %129, 1
-  %131 = call ptr @malloc(i32 %130)
-  %132 = load ptr, ptr %1, align 8
-  %133 = load i64, ptr %memberidx.i99, align 4
-  call void @llvm.memcpy.p0.p0.i64(ptr align 8 %131, ptr align 8 %132, i64 %133, i1 false)
-  %134 = getelementptr inbounds i8, ptr %131, i64 %133
-  store i8 0, ptr %134, align 1
-  %135 = trunc i64 %127 to i32
-  %136 = add i32 %135, 1
-  %137 = call ptr @malloc(i32 %136)
-  call void @llvm.memcpy.p0.p0.i64(ptr align 8 %137, ptr align 8 %126, i64 %127, i1 false)
-  %138 = getelementptr inbounds i8, ptr %137, i64 %127
-  store i8 0, ptr %138, align 1
-  %139 = alloca ptr, align 8
-  %140 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %139, ptr nonnull @105, ptr %131, ptr %137)
-  %141 = load ptr, ptr %139, align 8
-  %142 = tail call ptr @malloc(i32 24)
-  store ptr %141, ptr %142, align 8
-  %memberidx1.i101 = getelementptr inbounds %String, ptr %142, i64 0, i32 1
-  store i64 %140, ptr %memberidx1.i101, align 4
-  %memberidx2.i102 = getelementptr inbounds %String, ptr %142, i64 0, i32 2
-  store i64 %140, ptr %memberidx2.i102, align 4
-  tail call void @free(ptr %131)
-  tail call void @free(ptr %137)
-  %143 = call fastcc ptr @TypeChecker_get_type_from_current_scope(ptr nonnull %0, ptr nonnull %142)
-  %144 = load i64, ptr %143, align 4
-  %145 = icmp eq i64 %144, 21
-  br i1 %145, label %if.entry19, label %ifend21
+  %130 = load i64, ptr %memberidx.i99, align 4
+  %131 = trunc i64 %130 to i32
+  %132 = add i32 %131, 1
+  %133 = call ptr @malloc(i32 %132)
+  %134 = load ptr, ptr %1, align 8
+  %135 = load i64, ptr %memberidx.i99, align 4
+  call void @llvm.memcpy.p0.p0.i64(ptr align 8 %133, ptr align 8 %134, i64 %135, i1 false)
+  %136 = getelementptr inbounds i8, ptr %133, i64 %135
+  store i8 0, ptr %136, align 1
+  %137 = trunc i64 %129 to i32
+  %138 = add i32 %137, 1
+  %139 = call ptr @malloc(i32 %138)
+  call void @llvm.memcpy.p0.p0.i64(ptr align 8 %139, ptr align 8 %128, i64 %129, i1 false)
+  %140 = getelementptr inbounds i8, ptr %139, i64 %129
+  store i8 0, ptr %140, align 1
+  %141 = alloca ptr, align 8
+  %142 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %141, ptr nonnull @104, ptr %133, ptr %139)
+  %143 = load ptr, ptr %141, align 8
+  %144 = tail call ptr @malloc(i32 24)
+  store ptr %143, ptr %144, align 8
+  %memberidx1.i101 = getelementptr inbounds %String, ptr %144, i64 0, i32 1
+  store i64 %142, ptr %memberidx1.i101, align 4
+  %memberidx2.i102 = getelementptr inbounds %String, ptr %144, i64 0, i32 2
+  store i64 %142, ptr %memberidx2.i102, align 4
+  tail call void @free(ptr %133)
+  tail call void @free(ptr %139)
+  %145 = call fastcc ptr @TypeChecker_get_type_from_current_scope(ptr nonnull %0, ptr nonnull %144)
+  %146 = load i64, ptr %145, align 4
+  %147 = icmp eq i64 %146, 21
+  br i1 %147, label %if.entry19, label %ifend21
 
 if.entry.i.i.i:                                   ; preds = %for.body
-  %146 = call ptr @realloc(ptr %97, i64 %124)
-  store ptr %146, ptr %92, align 8
-  store i64 %124, ptr %memberidx2.i.i92, align 4
+  %148 = call ptr @realloc(ptr %99, i64 %126)
+  store ptr %148, ptr %94, align 8
+  store i64 %126, ptr %memberidx2.i.i92, align 4
   %.pre144 = load i64, ptr %memberidx1.i.i91, align 4
-  %.pre148 = add nuw i64 %.pre144, %121
+  %.pre148 = add nuw i64 %.pre144, %123
   br label %String___adda__.exit
 
 String___adda__.exit:                             ; preds = %for.body, %if.entry.i.i.i
-  %.pre-phi149 = phi i64 [ %124, %for.body ], [ %.pre148, %if.entry.i.i.i ]
-  %147 = phi i64 [ %99, %for.body ], [ %.pre144, %if.entry.i.i.i ]
-  %148 = phi ptr [ %97, %for.body ], [ %146, %if.entry.i.i.i ]
-  %149 = phi i64 [ %98, %for.body ], [ %124, %if.entry.i.i.i ]
-  %150 = getelementptr inbounds i8, ptr %148, i64 %147
-  call void @llvm.memcpy.p0.p0.i64(ptr align 1073741824 %150, ptr align 8 %122, i64 %121, i1 false)
+  %.pre-phi149 = phi i64 [ %126, %for.body ], [ %.pre148, %if.entry.i.i.i ]
+  %149 = phi i64 [ %101, %for.body ], [ %.pre144, %if.entry.i.i.i ]
+  %150 = phi ptr [ %99, %for.body ], [ %148, %if.entry.i.i.i ]
+  %151 = phi i64 [ %100, %for.body ], [ %126, %if.entry.i.i.i ]
+  %152 = getelementptr inbounds i8, ptr %150, i64 %149
+  call void @llvm.memcpy.p0.p0.i64(ptr align 536870912 %152, ptr align 8 %124, i64 %123, i1 false)
   store i64 %.pre-phi149, ptr %memberidx1.i.i91, align 4
-  %151 = load ptr, ptr %memberidx17, align 8
-  %152 = load ptr, ptr %2, align 8
-  %153 = getelementptr inbounds ptr, ptr %152, i64 %101
-  %154 = load ptr, ptr %153, align 8
-  call fastcc void @Map_String_Type____setitem__(ptr %151, ptr %106, ptr %154)
-  %155 = load i64, ptr %memberidx1.i.i96, align 4
-  %.not152 = icmp slt i64 %100, %155
-  %156 = add nuw nsw i64 %100, 1
+  %153 = load ptr, ptr %memberidx17, align 8
+  %154 = load ptr, ptr %2, align 8
+  %155 = getelementptr inbounds ptr, ptr %154, i64 %103
+  %156 = load ptr, ptr %155, align 8
+  call fastcc void @Map_String_Type____setitem__(ptr %153, ptr %108, ptr %156)
+  %157 = load i64, ptr %memberidx1.i.i96, align 4
+  %.not152 = icmp slt i64 %102, %157
+  %158 = add nuw nsw i64 %102, 1
   br i1 %.not152, label %for.body, label %for.end
 
 if.entry19:                                       ; preds = %for.end
-  %157 = alloca %IdentifierToken, align 8
-  %158 = load ptr, ptr %memberidx1, align 8
-  %159 = load ptr, ptr %158, align 8
-  %memberidx24 = getelementptr inbounds %Token, ptr %159, i64 0, i32 1
-  %160 = load ptr, ptr %memberidx24, align 8
-  store i64 53, ptr %157, align 8
-  %memberidx1.i.i109 = getelementptr inbounds %Token, ptr %157, i64 0, i32 1
-  store ptr %160, ptr %memberidx1.i.i109, align 8
-  %memberidx.i110 = getelementptr inbounds %IdentifierToken, ptr %157, i64 0, i32 2
-  store ptr %142, ptr %memberidx.i110, align 8
-  %161 = alloca %ClassDeclarationNode, align 8
-  store ptr %157, ptr %161, align 8
-  %memberidx1.i111 = getelementptr inbounds %ClassDeclarationNode, ptr %161, i64 0, i32 3
-  %162 = call ptr @malloc(i32 24)
-  %memberidx.i.i112 = getelementptr inbounds %Array_FieldNode_, ptr %162, i64 0, i32 1
-  store i64 0, ptr %memberidx.i.i112, align 4
-  %memberidx1.i.i113 = getelementptr inbounds %Array_FieldNode_, ptr %162, i64 0, i32 2
-  store i64 8, ptr %memberidx1.i.i113, align 4
-  %163 = call ptr @malloc(i32 64)
-  store ptr %163, ptr %162, align 8
-  store i64 0, ptr %memberidx.i.i112, align 4
-  %memberidx4.i114 = getelementptr inbounds %ClassDeclarationNode, ptr %161, i64 0, i32 4
+  %159 = alloca %IdentifierToken, align 8
+  %160 = load ptr, ptr %memberidx1, align 8
+  %161 = load ptr, ptr %160, align 8
+  %memberidx24 = getelementptr inbounds %Token, ptr %161, i64 0, i32 1
+  %162 = load ptr, ptr %memberidx24, align 8
+  store i64 53, ptr %159, align 8
+  %memberidx1.i.i109 = getelementptr inbounds %Token, ptr %159, i64 0, i32 1
+  store ptr %162, ptr %memberidx1.i.i109, align 8
+  %memberidx.i110 = getelementptr inbounds %IdentifierToken, ptr %159, i64 0, i32 2
+  store ptr %144, ptr %memberidx.i110, align 8
+  %163 = alloca %ClassDeclarationNode, align 8
+  store ptr %159, ptr %163, align 8
+  %memberidx1.i111 = getelementptr inbounds %ClassDeclarationNode, ptr %163, i64 0, i32 3
   %164 = call ptr @malloc(i32 24)
-  %memberidx.i15.i = getelementptr inbounds %Array_MethodNode_, ptr %164, i64 0, i32 1
-  store i64 0, ptr %memberidx.i15.i, align 4
-  %memberidx1.i16.i = getelementptr inbounds %Array_MethodNode_, ptr %164, i64 0, i32 2
-  store i64 8, ptr %memberidx1.i16.i, align 4
+  %memberidx.i.i112 = getelementptr inbounds %Array_FieldNode_, ptr %164, i64 0, i32 1
+  store i64 0, ptr %memberidx.i.i112, align 4
+  %memberidx1.i.i113 = getelementptr inbounds %Array_FieldNode_, ptr %164, i64 0, i32 2
+  store i64 8, ptr %memberidx1.i.i113, align 4
   %165 = call ptr @malloc(i32 64)
   store ptr %165, ptr %164, align 8
-  store i64 0, ptr %memberidx.i15.i, align 4
-  %memberidx7.i = getelementptr inbounds %ClassDeclarationNode, ptr %161, i64 0, i32 1
+  store i64 0, ptr %memberidx.i.i112, align 4
+  %memberidx4.i114 = getelementptr inbounds %ClassDeclarationNode, ptr %163, i64 0, i32 4
   %166 = call ptr @malloc(i32 24)
-  %memberidx.i17.i = getelementptr inbounds %Array_GenericParameterNode_, ptr %166, i64 0, i32 1
-  store i64 0, ptr %memberidx.i17.i, align 4
-  %memberidx1.i18.i = getelementptr inbounds %Array_GenericParameterNode_, ptr %166, i64 0, i32 2
-  store i64 8, ptr %memberidx1.i18.i, align 4
+  %memberidx.i15.i = getelementptr inbounds %Array_MethodNode_, ptr %166, i64 0, i32 1
+  store i64 0, ptr %memberidx.i15.i, align 4
+  %memberidx1.i16.i = getelementptr inbounds %Array_MethodNode_, ptr %166, i64 0, i32 2
+  store i64 8, ptr %memberidx1.i16.i, align 4
   %167 = call ptr @malloc(i32 64)
   store ptr %167, ptr %166, align 8
+  store i64 0, ptr %memberidx.i15.i, align 4
+  %memberidx7.i = getelementptr inbounds %ClassDeclarationNode, ptr %163, i64 0, i32 1
+  %168 = call ptr @malloc(i32 24)
+  %memberidx.i17.i = getelementptr inbounds %Array_GenericParameterNode_, ptr %168, i64 0, i32 1
   store i64 0, ptr %memberidx.i17.i, align 4
-  store ptr %166, ptr %memberidx7.i, align 8
-  %memberidx10.i115 = getelementptr inbounds %ClassDeclarationNode, ptr %161, i64 0, i32 2
-  %168 = load ptr, ptr %memberidx1, align 8
-  %memberidx27 = getelementptr inbounds %ClassDeclarationNode, ptr %168, i64 0, i32 2
-  %169 = load ptr, ptr %memberidx27, align 8
-  store ptr %169, ptr %memberidx10.i115, align 8
+  %memberidx1.i18.i = getelementptr inbounds %Array_GenericParameterNode_, ptr %168, i64 0, i32 2
+  store i64 8, ptr %memberidx1.i18.i, align 4
+  %169 = call ptr @malloc(i32 64)
+  store ptr %169, ptr %168, align 8
+  store i64 0, ptr %memberidx.i17.i, align 4
+  store ptr %168, ptr %memberidx7.i, align 8
+  %memberidx10.i115 = getelementptr inbounds %ClassDeclarationNode, ptr %163, i64 0, i32 2
   %170 = load ptr, ptr %memberidx1, align 8
-  %memberidx30 = getelementptr inbounds %ClassDeclarationNode, ptr %170, i64 0, i32 3
-  %171 = load ptr, ptr %memberidx30, align 8
-  store ptr %171, ptr %memberidx1.i111, align 8
+  %memberidx27 = getelementptr inbounds %ClassDeclarationNode, ptr %170, i64 0, i32 2
+  %171 = load ptr, ptr %memberidx27, align 8
+  store ptr %171, ptr %memberidx10.i115, align 8
   %172 = load ptr, ptr %memberidx1, align 8
-  %memberidx33 = getelementptr inbounds %ClassDeclarationNode, ptr %172, i64 0, i32 4
-  %173 = load ptr, ptr %memberidx33, align 8
-  store ptr %173, ptr %memberidx4.i114, align 8
-  %174 = load ptr, ptr %61, align 8
-  store ptr %174, ptr %memberidx10, align 8
-  call fastcc void @TypeChecker_declare_class_within_module(ptr nonnull %0, ptr nonnull %161)
-  call fastcc void @TypeChecker_check_class_body(ptr nonnull %0, ptr nonnull %161)
-  %175 = call fastcc ptr @TypeChecker_get_type_from_current_scope(ptr nonnull %0, ptr nonnull %142)
+  %memberidx30 = getelementptr inbounds %ClassDeclarationNode, ptr %172, i64 0, i32 3
+  %173 = load ptr, ptr %memberidx30, align 8
+  store ptr %173, ptr %memberidx1.i111, align 8
+  %174 = load ptr, ptr %memberidx1, align 8
+  %memberidx33 = getelementptr inbounds %ClassDeclarationNode, ptr %174, i64 0, i32 4
+  %175 = load ptr, ptr %memberidx33, align 8
+  store ptr %175, ptr %memberidx4.i114, align 8
+  %176 = load ptr, ptr %63, align 8
+  store ptr %176, ptr %memberidx10, align 8
+  call fastcc void @TypeChecker_declare_class_within_module(ptr nonnull %0, ptr nonnull %163)
+  call fastcc void @TypeChecker_check_class_body(ptr nonnull %0, ptr nonnull %163)
+  %177 = call fastcc ptr @TypeChecker_get_type_from_current_scope(ptr nonnull %0, ptr nonnull %144)
   br label %ifend21
 
 ifend21:                                          ; preds = %for.end, %if.entry19
-  %possible_type.0 = phi ptr [ %175, %if.entry19 ], [ %143, %for.end ]
+  %possible_type.0 = phi ptr [ %177, %if.entry19 ], [ %145, %for.end ]
   store ptr %54, ptr %memberidx10, align 8
-  call fastcc void @Scope___del__(ptr nonnull %61)
-  tail call void @free(ptr %61)
-  %176 = tail call ptr @malloc(i32 32)
-  store i64 20, ptr %176, align 4
-  %memberidx.i116 = getelementptr inbounds %GenericType, ptr %176, i64 0, i32 1
+  call fastcc void @Scope___del__(ptr nonnull %63)
+  tail call void @free(ptr %63)
+  %178 = tail call ptr @malloc(i32 32)
+  store i64 20, ptr %178, align 4
+  %memberidx.i116 = getelementptr inbounds %GenericType, ptr %178, i64 0, i32 1
   store ptr %1, ptr %memberidx.i116, align 8
-  %memberidx1.i117 = getelementptr inbounds %GenericType, ptr %176, i64 0, i32 2
+  %memberidx1.i117 = getelementptr inbounds %GenericType, ptr %178, i64 0, i32 2
   store ptr %2, ptr %memberidx1.i117, align 8
-  %memberidx2.i118 = getelementptr inbounds %GenericType, ptr %176, i64 0, i32 3
+  %memberidx2.i118 = getelementptr inbounds %GenericType, ptr %178, i64 0, i32 3
   store ptr %possible_type.0, ptr %memberidx2.i118, align 8
   br label %common.ret
 }
@@ -28521,7 +28601,7 @@ if.entry:                                         ; preds = %Enum_constructor.ex
   %42 = getelementptr inbounds i8, ptr %39, i64 %41
   store i8 0, ptr %42, align 1
   %43 = alloca ptr, align 8
-  %44 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %43, ptr nonnull @102, ptr %39)
+  %44 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %43, ptr nonnull @101, ptr %39)
   %45 = load ptr, ptr %43, align 8
   %46 = tail call ptr @malloc(i32 24)
   store ptr %45, ptr %46, align 8
@@ -28749,7 +28829,7 @@ if.entry:                                         ; preds = %Map_String_Generic_
   %39 = getelementptr inbounds i8, ptr %36, i64 %38
   store i8 0, ptr %39, align 1
   %40 = alloca ptr, align 8
-  %41 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %40, ptr nonnull @102, ptr %36)
+  %41 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %40, ptr nonnull @101, ptr %36)
   %42 = load ptr, ptr %40, align 8
   %43 = tail call ptr @malloc(i32 24)
   store ptr %42, ptr %43, align 8
@@ -29078,7 +29158,7 @@ if.entry:                                         ; preds = %if.entry.i
   %16 = getelementptr inbounds i8, ptr %13, i64 %15
   store i8 0, ptr %16, align 1
   %17 = alloca ptr, align 8
-  %18 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %17, ptr nonnull @110, ptr %13)
+  %18 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %17, ptr nonnull @109, ptr %13)
   %19 = load ptr, ptr %17, align 8
   %20 = tail call ptr @malloc(i32 24)
   store ptr %19, ptr %20, align 8
@@ -29153,7 +29233,7 @@ if.entry8:                                        ; preds = %ifend
   %48 = getelementptr inbounds i8, ptr %45, i64 %47
   store i8 0, ptr %48, align 1
   %49 = alloca ptr, align 8
-  %50 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %49, ptr nonnull @111, ptr %45)
+  %50 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %49, ptr nonnull @110, ptr %45)
   %51 = load ptr, ptr %49, align 8
   %52 = tail call ptr @malloc(i32 24)
   store ptr %51, ptr %52, align 8
@@ -29570,7 +29650,7 @@ if.entry11:                                       ; preds = %ifend9
   %95 = getelementptr inbounds i8, ptr %92, i64 %94
   store i8 0, ptr %95, align 1
   %96 = alloca ptr, align 8
-  %97 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %96, ptr nonnull @178, ptr %83, ptr %92)
+  %97 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %96, ptr nonnull @177, ptr %83, ptr %92)
   %98 = load ptr, ptr %96, align 8
   %99 = tail call ptr @malloc(i32 24)
   store ptr %98, ptr %99, align 8
@@ -29705,7 +29785,7 @@ get_class_from_type.exit:                         ; preds = %tailrecurse.i, %if.
   %memberidx2 = getelementptr inbounds %Class, ptr %common.ret.op.i84, i64 0, i32 6
   %17 = load ptr, ptr %memberidx2, align 8
   %18 = tail call ptr @malloc(i32 11)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(11) %18, ptr noundef nonnull align 8 dereferenceable(11) @122, i64 11, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(11) %18, ptr noundef nonnull align 8 dereferenceable(11) @121, i64 11, i1 false)
   %19 = tail call ptr @malloc(i32 24)
   store ptr %18, ptr %19, align 8
   %memberidx1.i.i = getelementptr inbounds %String, ptr %19, i64 0, i32 1
@@ -29785,7 +29865,7 @@ if.entry:                                         ; preds = %else.i, %get_class_
   %49 = getelementptr inbounds i8, ptr %46, i64 %48
   store i8 0, ptr %49, align 1
   %50 = alloca ptr, align 8
-  %51 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %50, ptr nonnull @208, ptr %46)
+  %51 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %50, ptr nonnull @207, ptr %46)
   %52 = load ptr, ptr %50, align 8
   %53 = tail call ptr @malloc(i32 24)
   store ptr %52, ptr %53, align 8
@@ -29932,7 +30012,7 @@ if.entry12:                                       ; preds = %ifend10
   %123 = getelementptr inbounds i8, ptr %120, i64 %122
   store i8 0, ptr %123, align 1
   %124 = alloca ptr, align 8
-  %125 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %124, ptr nonnull @178, ptr %111, ptr %120)
+  %125 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %124, ptr nonnull @177, ptr %111, ptr %120)
   %126 = load ptr, ptr %124, align 8
   %127 = tail call ptr @malloc(i32 24)
   store ptr %126, ptr %127, align 8
@@ -30048,7 +30128,7 @@ common.ret:                                       ; preds = %ifend24, %TypeCheck
 
 if.entry:                                         ; preds = %3
   %11 = call ptr @malloc(i32 34)
-  call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(34) %11, ptr noundef nonnull align 8 dereferenceable(34) @209, i64 34, i1 false)
+  call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(34) %11, ptr noundef nonnull align 8 dereferenceable(34) @208, i64 34, i1 false)
   %12 = call ptr @malloc(i32 24)
   store ptr %11, ptr %12, align 8
   %memberidx1.i.i = getelementptr inbounds %String, ptr %12, i64 0, i32 1
@@ -30120,7 +30200,7 @@ if.entry6:                                        ; preds = %ifend
   %40 = getelementptr inbounds i8, ptr %37, i64 %39
   store i8 0, ptr %40, align 1
   %41 = alloca ptr, align 8
-  %42 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %41, ptr nonnull @210, ptr %37)
+  %42 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %41, ptr nonnull @209, ptr %37)
   %43 = load ptr, ptr %41, align 8
   %44 = tail call ptr @malloc(i32 24)
   store ptr %43, ptr %44, align 8
@@ -30183,7 +30263,7 @@ ifend8:                                           ; preds = %ifend
 
 if.entry13:                                       ; preds = %ifend8
   %65 = call ptr @malloc(i32 40)
-  call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(40) %65, ptr noundef nonnull align 8 dereferenceable(40) @211, i64 40, i1 false)
+  call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(40) %65, ptr noundef nonnull align 8 dereferenceable(40) @210, i64 40, i1 false)
   %66 = call ptr @malloc(i32 24)
   store ptr %65, ptr %66, align 8
   %memberidx1.i.i64 = getelementptr inbounds %String, ptr %66, i64 0, i32 1
@@ -30264,7 +30344,7 @@ if.entry22:                                       ; preds = %ifend15
   %101 = getelementptr inbounds i8, ptr %98, i64 %100
   store i8 0, ptr %101, align 1
   %102 = alloca ptr, align 8
-  %103 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %102, ptr nonnull @212, ptr %98)
+  %103 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %102, ptr nonnull @211, ptr %98)
   %104 = load ptr, ptr %102, align 8
   %105 = tail call ptr @malloc(i32 24)
   store ptr %104, ptr %105, align 8
@@ -30432,7 +30512,7 @@ ifend13:                                          ; preds = %ifend9
 
 if.entry15:                                       ; preds = %ifend13
   %31 = call ptr @malloc(i32 34)
-  call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(34) %31, ptr noundef nonnull align 8 dereferenceable(34) @209, i64 34, i1 false)
+  call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(34) %31, ptr noundef nonnull align 8 dereferenceable(34) @208, i64 34, i1 false)
   %32 = call ptr @malloc(i32 24)
   store ptr %31, ptr %32, align 8
   %memberidx1.i.i = getelementptr inbounds %String, ptr %32, i64 0, i32 1
@@ -30533,7 +30613,7 @@ else28:                                           ; preds = %ifend17
   %63 = getelementptr inbounds i8, ptr %60, i64 %62
   store i8 0, ptr %63, align 1
   %64 = alloca ptr, align 8
-  %65 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %64, ptr nonnull @213, ptr %60)
+  %65 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %64, ptr nonnull @212, ptr %60)
   %66 = load ptr, ptr %64, align 8
   %67 = tail call ptr @malloc(i32 24)
   store ptr %66, ptr %67, align 8
@@ -30888,7 +30968,7 @@ ifend7.i.thread:                                  ; preds = %is_object.exit.i.th
 
 if.entry5.i:                                      ; preds = %if.entry.i143.i, %is_object.exit.i.thread
   %118 = tail call ptr @malloc(i32 28)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(28) %118, ptr noundef nonnull align 8 dereferenceable(28) @238, i64 28, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(28) %118, ptr noundef nonnull align 8 dereferenceable(28) @237, i64 28, i1 false)
   %119 = tail call ptr @malloc(i32 24)
   store ptr %118, ptr %119, align 8
   %memberidx1.i.i59.i = getelementptr inbounds %String, ptr %119, i64 0, i32 1
@@ -31037,7 +31117,7 @@ Map_String_PropId____getitem__.exit.i:            ; preds = %while.end.i.i
 
 if.entry13.i:                                     ; preds = %else.i.i, %if.entry3.i.i, %while.end.i.i, %Map_String_PropId____getitem__.exit.i
   %179 = tail call ptr @malloc(i32 46)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(46) %179, ptr noundef nonnull align 8 dereferenceable(46) @239, i64 46, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(46) %179, ptr noundef nonnull align 8 dereferenceable(46) @238, i64 46, i1 false)
   %180 = tail call ptr @malloc(i32 24)
   store ptr %179, ptr %180, align 8
   %memberidx1.i.i73.i = getelementptr inbounds %String, ptr %180, i64 0, i32 1
@@ -31371,7 +31451,7 @@ if.entry18.i:                                     ; preds = %for.body
 
 if.entry.i.i:                                     ; preds = %if.entry18.i
   %313 = tail call ptr @malloc(i32 32)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(32) %313, ptr noundef nonnull align 8 dereferenceable(32) @241, i64 32, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(32) %313, ptr noundef nonnull align 8 dereferenceable(32) @240, i64 32, i1 false)
   %314 = tail call ptr @malloc(i32 24)
   store ptr %313, ptr %314, align 8
   %memberidx1.i.i.i.i = getelementptr inbounds %String, ptr %314, i64 0, i32 1
@@ -31434,7 +31514,7 @@ if.entry22.i:                                     ; preds = %for.body
 
 if.entry.i67.i:                                   ; preds = %if.entry22.i
   %335 = tail call ptr @malloc(i32 29)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(29) %335, ptr noundef nonnull align 8 dereferenceable(29) @240, i64 29, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(29) %335, ptr noundef nonnull align 8 dereferenceable(29) @239, i64 29, i1 false)
   %336 = tail call ptr @malloc(i32 24)
   store ptr %335, ptr %336, align 8
   %memberidx1.i.i.i60.i = getelementptr inbounds %String, ptr %336, i64 0, i32 1
@@ -32046,7 +32126,7 @@ if.entry31:                                       ; preds = %if.entry27
   %86 = getelementptr inbounds i8, ptr %83, i64 %85
   store i8 0, ptr %86, align 1
   %87 = alloca ptr, align 8
-  %88 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %87, ptr nonnull @156, ptr %83)
+  %88 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %87, ptr nonnull @155, ptr %83)
   %89 = load ptr, ptr %87, align 8
   %90 = tail call ptr @malloc(i32 24)
   store ptr %89, ptr %90, align 8
@@ -32232,7 +32312,7 @@ else69:                                           ; preds = %if.entry62
   store i64 %111, ptr %memberidx.i.i, align 4
   store i1 false, ptr %58, align 1
   %166 = tail call ptr @malloc(i32 38)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(38) %166, ptr noundef nonnull align 8 dereferenceable(38) @157, i64 38, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(38) %166, ptr noundef nonnull align 8 dereferenceable(38) @156, i64 38, i1 false)
   %167 = tail call ptr @malloc(i32 24)
   store ptr %166, ptr %167, align 8
   %memberidx1.i.i158 = getelementptr inbounds %String, ptr %167, i64 0, i32 1
@@ -32414,7 +32494,7 @@ if.entry13:                                       ; preds = %ifend10
   %67 = getelementptr inbounds i8, ptr %64, i64 %66
   store i8 0, ptr %67, align 1
   %68 = alloca ptr, align 8
-  %69 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %68, ptr nonnull @40, ptr %64)
+  %69 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %68, ptr nonnull @39, ptr %64)
   %70 = load ptr, ptr %68, align 8
   %71 = tail call ptr @malloc(i32 24)
   store ptr %70, ptr %71, align 8
@@ -32568,7 +32648,7 @@ for.end:                                          ; preds = %Array_ClassField___
 if.entry:                                         ; preds = %for.body
   %19 = load ptr, ptr %memberidx5, align 8
   %20 = call ptr @malloc(i32 75)
-  call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(75) %20, ptr noundef nonnull align 8 dereferenceable(75) @137, i64 75, i1 false)
+  call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(75) %20, ptr noundef nonnull align 8 dereferenceable(75) @136, i64 75, i1 false)
   %21 = call ptr @malloc(i32 24)
   store ptr %20, ptr %21, align 8
   %memberidx1.i.i164 = getelementptr inbounds %String, ptr %21, i64 0, i32 1
@@ -32770,7 +32850,7 @@ if.entry29:                                       ; preds = %if.entry24
   %102 = getelementptr inbounds i8, ptr %99, i64 %101
   store i8 0, ptr %102, align 1
   %103 = alloca ptr, align 8
-  %104 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %103, ptr nonnull @138, ptr %91, ptr %99)
+  %104 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %103, ptr nonnull @137, ptr %91, ptr %99)
   %105 = load ptr, ptr %103, align 8
   %106 = tail call ptr @malloc(i32 24)
   store ptr %105, ptr %106, align 8
@@ -32916,7 +32996,7 @@ if.entry39:                                       ; preds = %get_class_prop_visi
   %174 = getelementptr inbounds i8, ptr %171, i64 %173
   store i8 0, ptr %174, align 1
   %175 = alloca ptr, align 8
-  %176 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %175, ptr nonnull @139, ptr %155, ptr %163, ptr %171)
+  %176 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %175, ptr nonnull @138, ptr %155, ptr %163, ptr %171)
   %177 = load ptr, ptr %175, align 8
   %178 = tail call ptr @malloc(i32 24)
   store ptr %177, ptr %178, align 8
@@ -33012,21 +33092,21 @@ if.entry47:                                       ; preds = %ifend41
 
 if.entry.i230:                                    ; preds = %if.entry47
   %215 = call ptr @malloc(i32 7)
-  call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(7) %215, ptr noundef nonnull align 8 dereferenceable(7) @52, i64 7, i1 false)
+  call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(7) %215, ptr noundef nonnull align 8 dereferenceable(7) @51, i64 7, i1 false)
   %216 = call ptr @malloc(i32 24)
   store ptr %215, ptr %216, align 8
   br label %dump_access.exit
 
 if.entry1.i:                                      ; preds = %if.entry47
   %217 = call ptr @malloc(i32 6)
-  call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(6) %217, ptr noundef nonnull align 8 dereferenceable(6) @53, i64 6, i1 false)
+  call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(6) %217, ptr noundef nonnull align 8 dereferenceable(6) @52, i64 6, i1 false)
   %218 = call ptr @malloc(i32 24)
   store ptr %217, ptr %218, align 8
   br label %dump_access.exit
 
 ifend3.i:                                         ; preds = %if.entry47
   %219 = call ptr @malloc(i32 9)
-  call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(9) %219, ptr noundef nonnull align 8 dereferenceable(9) @54, i64 9, i1 false)
+  call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(9) %219, ptr noundef nonnull align 8 dereferenceable(9) @53, i64 9, i1 false)
   %220 = call ptr @malloc(i32 24)
   store ptr %219, ptr %220, align 8
   br label %dump_access.exit
@@ -33047,7 +33127,7 @@ dump_access.exit:                                 ; preds = %if.entry.i230, %if.
   %224 = getelementptr inbounds i8, ptr %221, i64 %223
   store i8 0, ptr %224, align 1
   %225 = alloca ptr, align 8
-  %226 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %225, ptr nonnull @140, ptr nonnull %203, ptr nonnull %211, ptr %221)
+  %226 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %225, ptr nonnull @139, ptr nonnull %203, ptr nonnull %211, ptr %221)
   %227 = load ptr, ptr %225, align 8
   %228 = tail call ptr @malloc(i32 24)
   store ptr %227, ptr %228, align 8
@@ -33202,7 +33282,7 @@ if.entry67:                                       ; preds = %ifend63
   %295 = getelementptr inbounds i8, ptr %292, i64 %294
   store i8 0, ptr %295, align 1
   %296 = alloca ptr, align 8
-  %297 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %296, ptr nonnull @141, ptr %282, ptr %292)
+  %297 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %296, ptr nonnull @140, ptr %282, ptr %292)
   %298 = load ptr, ptr %296, align 8
   %299 = tail call ptr @malloc(i32 24)
   store ptr %298, ptr %299, align 8
@@ -33268,7 +33348,7 @@ if.entry77:                                       ; preds = %ifend69
   store i64 %9, ptr %memberidx.i.i, align 4
   store i1 false, ptr %7, align 1
   %321 = call ptr @malloc(i32 45)
-  call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(45) %321, ptr noundef nonnull align 8 dereferenceable(45) @142, i64 45, i1 false)
+  call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(45) %321, ptr noundef nonnull align 8 dereferenceable(45) @141, i64 45, i1 false)
   %322 = call ptr @malloc(i32 24)
   store ptr %321, ptr %322, align 8
   %memberidx1.i.i262 = getelementptr inbounds %String, ptr %322, i64 0, i32 1
@@ -33357,7 +33437,7 @@ common.ret:                                       ; preds = %TypeChecker_error.e
 if.entry:                                         ; preds = %2
   %15 = tail call ptr @malloc(i32 41)
   %16 = tail call ptr @malloc(i32 5)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(5) %16, ptr noundef nonnull align 8 dereferenceable(5) @222, i64 5, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(5) %16, ptr noundef nonnull align 8 dereferenceable(5) @221, i64 5, i1 false)
   %17 = tail call ptr @malloc(i32 24)
   store ptr %16, ptr %17, align 8
   %memberidx1.i.i = getelementptr inbounds %String, ptr %17, i64 0, i32 1
@@ -33403,7 +33483,7 @@ ifend:                                            ; preds = %2
   %35 = getelementptr inbounds i8, ptr %32, i64 %34
   store i8 0, ptr %35, align 1
   %36 = alloca ptr, align 8
-  %37 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %36, ptr nonnull @223, ptr %23, ptr %32)
+  %37 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %36, ptr nonnull @222, ptr %23, ptr %32)
   %38 = load ptr, ptr %36, align 8
   %39 = tail call ptr @malloc(i32 24)
   store ptr %38, ptr %39, align 8
@@ -33493,7 +33573,7 @@ common.ret:                                       ; preds = %if.entry53, %else54
 
 if.entry:                                         ; preds = %2
   %7 = tail call ptr @malloc(i32 49)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(49) %7, ptr noundef nonnull align 8 dereferenceable(49) @108, i64 49, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(49) %7, ptr noundef nonnull align 8 dereferenceable(49) @107, i64 49, i1 false)
   %8 = tail call ptr @malloc(i32 24)
   store ptr %7, ptr %8, align 8
   %memberidx1.i.i = getelementptr inbounds %String, ptr %8, i64 0, i32 1
@@ -34195,7 +34275,7 @@ else48:                                           ; preds = %ifend45, %while.end
   %315 = getelementptr inbounds i8, ptr %312, i64 %314
   store i8 0, ptr %315, align 1
   %316 = alloca ptr, align 8
-  %317 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %316, ptr nonnull @109, ptr %305, ptr %312)
+  %317 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %316, ptr nonnull @108, ptr %305, ptr %312)
   %318 = load ptr, ptr %316, align 8
   %319 = tail call ptr @malloc(i32 24)
   store ptr %318, ptr %319, align 8
@@ -34488,7 +34568,7 @@ if.entry11:                                       ; preds = %else.i, %if.entry3.
   %73 = getelementptr inbounds i8, ptr %70, i64 %72
   store i8 0, ptr %73, align 1
   %74 = alloca ptr, align 8
-  %75 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %74, ptr nonnull @197, ptr %62, ptr %70)
+  %75 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %74, ptr nonnull @196, ptr %62, ptr %70)
   %76 = load ptr, ptr %74, align 8
   %77 = tail call ptr @malloc(i32 24)
   store ptr %76, ptr %77, align 8
@@ -34825,7 +34905,7 @@ if.entry33:                                       ; preds = %else.i212, %if.entr
   %224 = getelementptr inbounds i8, ptr %221, i64 %223
   store i8 0, ptr %224, align 1
   %225 = alloca ptr, align 8
-  %226 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %225, ptr nonnull @198, ptr %213, ptr %221)
+  %226 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %225, ptr nonnull @197, ptr %213, ptr %221)
   %227 = load ptr, ptr %225, align 8
   %228 = tail call ptr @malloc(i32 24)
   store ptr %227, ptr %228, align 8
@@ -35006,7 +35086,7 @@ if.entry46:                                       ; preds = %else.i233, %else30,
   %306 = getelementptr inbounds i8, ptr %303, i64 %305
   store i8 0, ptr %306, align 1
   %307 = alloca ptr, align 8
-  %308 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %307, ptr nonnull @199, ptr %295, ptr %303)
+  %308 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %307, ptr nonnull @198, ptr %295, ptr %303)
   %309 = load ptr, ptr %307, align 8
   %310 = tail call ptr @malloc(i32 24)
   store ptr %309, ptr %310, align 8
@@ -35073,7 +35153,7 @@ ifend48:                                          ; preds = %Map_String_PropId__
 
 if.entry53:                                       ; preds = %is_object.exit.thread, %else5
   %332 = tail call ptr @malloc(i32 9)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(9) %332, ptr noundef nonnull align 8 dereferenceable(9) @200, i64 9, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(9) %332, ptr noundef nonnull align 8 dereferenceable(9) @199, i64 9, i1 false)
   %333 = tail call ptr @malloc(i32 24)
   store ptr %332, ptr %333, align 8
   %memberidx1.i.i288 = getelementptr inbounds %String, ptr %333, i64 0, i32 1
@@ -35093,7 +35173,7 @@ ifend.i294:                                       ; preds = %if.entry53
 
 else57:                                           ; preds = %if.entry53, %ifend.i294
   %338 = tail call ptr @malloc(i32 9)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(9) %338, ptr noundef nonnull align 8 dereferenceable(9) @201, i64 9, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(9) %338, ptr noundef nonnull align 8 dereferenceable(9) @200, i64 9, i1 false)
   %339 = tail call ptr @malloc(i32 24)
   store ptr %338, ptr %339, align 8
   %memberidx1.i.i295 = getelementptr inbounds %String, ptr %339, i64 0, i32 1
@@ -35169,7 +35249,7 @@ Array_Expression____sl__.exit:                    ; preds = %ifend58, %Array_Exp
 
 else60:                                           ; preds = %else57, %ifend.i301
   %362 = tail call ptr @malloc(i32 9)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(9) %362, ptr noundef nonnull align 8 dereferenceable(9) @202, i64 9, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(9) %362, ptr noundef nonnull align 8 dereferenceable(9) @201, i64 9, i1 false)
   %363 = tail call ptr @malloc(i32 24)
   store ptr %362, ptr %363, align 8
   %memberidx1.i.i311 = getelementptr inbounds %String, ptr %363, i64 0, i32 1
@@ -35188,7 +35268,7 @@ ifend.i317:                                       ; preds = %else60
 
 else63:                                           ; preds = %else60, %ifend.i317
   %368 = tail call ptr @malloc(i32 6)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(6) %368, ptr noundef nonnull align 8 dereferenceable(6) @203, i64 6, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(6) %368, ptr noundef nonnull align 8 dereferenceable(6) @202, i64 6, i1 false)
   %369 = tail call ptr @malloc(i32 24)
   store ptr %368, ptr %369, align 8
   %memberidx1.i.i319 = getelementptr inbounds %String, ptr %369, i64 0, i32 1
@@ -35207,7 +35287,7 @@ ifend.i325:                                       ; preds = %else63
 
 else66:                                           ; preds = %else63, %ifend.i325
   %374 = tail call ptr @malloc(i32 7)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(7) %374, ptr noundef nonnull align 8 dereferenceable(7) @204, i64 7, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(7) %374, ptr noundef nonnull align 8 dereferenceable(7) @203, i64 7, i1 false)
   %375 = tail call ptr @malloc(i32 24)
   store ptr %374, ptr %375, align 8
   %memberidx1.i.i327 = getelementptr inbounds %String, ptr %375, i64 0, i32 1
@@ -35240,7 +35320,7 @@ else69:                                           ; preds = %ifend.i333.else69_c
   %384 = getelementptr inbounds i8, ptr %381, i64 %383
   store i8 0, ptr %384, align 1
   %385 = alloca ptr, align 8
-  %386 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %385, ptr nonnull @205, ptr %381)
+  %386 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %385, ptr nonnull @204, ptr %381)
   %387 = load ptr, ptr %385, align 8
   %388 = tail call ptr @malloc(i32 24)
   store ptr %387, ptr %388, align 8
@@ -35384,7 +35464,7 @@ else84:                                           ; preds = %is_object.exit.thre
   %440 = getelementptr inbounds i8, ptr %437, i64 %439
   store i8 0, ptr %440, align 1
   %441 = alloca ptr, align 8
-  %442 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %441, ptr nonnull @206, ptr %428, ptr %437)
+  %442 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %441, ptr nonnull @205, ptr %428, ptr %437)
   %443 = load ptr, ptr %441, align 8
   %444 = tail call ptr @malloc(i32 24)
   store ptr %443, ptr %444, align 8
@@ -35590,7 +35670,7 @@ common.ret:                                       ; preds = %if.entry2, %ifend4,
 
 if.entry12:                                       ; preds = %if.entry4.i, %if.entry.i, %ifend, %check_is_var.exit
   %57 = tail call ptr @malloc(i32 33)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(33) %57, ptr noundef nonnull align 8 dereferenceable(33) @173, i64 33, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(33) %57, ptr noundef nonnull align 8 dereferenceable(33) @172, i64 33, i1 false)
   %58 = tail call ptr @malloc(i32 24)
   store ptr %57, ptr %58, align 8
   %memberidx1.i.i = getelementptr inbounds %String, ptr %58, i64 0, i32 1
@@ -35679,7 +35759,7 @@ if.entry19:                                       ; preds = %ifend14
   %98 = getelementptr inbounds i8, ptr %95, i64 %97
   store i8 0, ptr %98, align 1
   %99 = alloca ptr, align 8
-  %100 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %99, ptr nonnull @174, ptr %86, ptr %95)
+  %100 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %99, ptr nonnull @173, ptr %86, ptr %95)
   %101 = load ptr, ptr %99, align 8
   %102 = tail call ptr @malloc(i32 24)
   store ptr %101, ptr %102, align 8
@@ -35967,7 +36047,7 @@ if.entry29:                                       ; preds = %else23
   %84 = getelementptr inbounds i8, ptr %81, i64 %83
   store i8 0, ptr %84, align 1
   %85 = alloca ptr, align 8
-  %86 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %85, ptr nonnull @107, ptr %71, ptr %81)
+  %86 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %85, ptr nonnull @106, ptr %71, ptr %81)
   %87 = load ptr, ptr %85, align 8
   %88 = tail call ptr @malloc(i32 24)
   store ptr %87, ptr %88, align 8
@@ -36049,7 +36129,7 @@ common.ret:                                       ; preds = %ifend, %TypeChecker
 
 if.entry:                                         ; preds = %4
   %18 = tail call ptr @malloc(i32 44)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(44) %18, ptr noundef nonnull align 8 dereferenceable(44) @189, i64 44, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(44) %18, ptr noundef nonnull align 8 dereferenceable(44) @188, i64 44, i1 false)
   %19 = tail call ptr @malloc(i32 24)
   store ptr %18, ptr %19, align 8
   %memberidx1.i.i = getelementptr inbounds %String, ptr %19, i64 0, i32 1
@@ -36161,7 +36241,7 @@ TypeChecker_check_function_call_args_match.exit:  ; preds = %for.body.i
   %71 = getelementptr inbounds i8, ptr %68, i64 %70
   store i8 0, ptr %71, align 1
   %72 = alloca ptr, align 8
-  %73 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %72, ptr nonnull @191, ptr %56, ptr %68, i64 %37)
+  %73 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %72, ptr nonnull @190, ptr %56, ptr %68, i64 %37)
   %74 = load ptr, ptr %72, align 8
   %75 = tail call ptr @malloc(i32 24)
   store ptr %74, ptr %75, align 8
@@ -36177,7 +36257,7 @@ if.entry12:                                       ; preds = %ifend8
   %memberidx17 = getelementptr inbounds %Array_ExpressionNode_, ptr %2, i64 0, i32 1
   %76 = load i64, ptr %memberidx17, align 4
   %77 = alloca ptr, align 8
-  %78 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %77, ptr nonnull @190, i64 %33, i64 %76)
+  %78 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %77, ptr nonnull @189, i64 %33, i64 %76)
   %79 = load ptr, ptr %77, align 8
   %80 = tail call ptr @malloc(i32 24)
   store ptr %79, ptr %80, align 8
@@ -36332,7 +36412,7 @@ ifend.i:                                          ; preds = %if.entry
 String___eq__.exit:                               ; preds = %if.entry, %ifend.i
   %common.ret.op.i = phi i1 [ %58, %ifend.i ], [ false, %if.entry ]
   %59 = tail call ptr @malloc(i32 7)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(7) %59, ptr noundef nonnull align 8 dereferenceable(7) @136, i64 7, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(7) %59, ptr noundef nonnull align 8 dereferenceable(7) @135, i64 7, i1 false)
   %60 = tail call ptr @malloc(i32 24)
   store ptr %59, ptr %60, align 8
   %memberidx1.i.i250 = getelementptr inbounds %String, ptr %60, i64 0, i32 1
@@ -36395,7 +36475,7 @@ ifend.i264:                                       ; preds = %ifend
 
 else13:                                           ; preds = %String___eq__.exit257
   %79 = tail call ptr @malloc(i32 11)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(11) %79, ptr noundef nonnull align 8 dereferenceable(11) @123, i64 11, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(11) %79, ptr noundef nonnull align 8 dereferenceable(11) @122, i64 11, i1 false)
   %80 = tail call ptr @malloc(i32 24)
   store ptr %79, ptr %80, align 8
   %memberidx1.i.i266 = getelementptr inbounds %String, ptr %80, i64 0, i32 1
@@ -36437,7 +36517,7 @@ if.entry20:                                       ; preds = %ifend14
   %memberidx24 = getelementptr inbounds %Array_ArgNode_, ptr %94, i64 0, i32 1
   %95 = load i64, ptr %memberidx24, align 4
   %96 = alloca ptr, align 8
-  %97 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %96, ptr nonnull @143, i64 %args_num.0, ptr %90, i64 %95)
+  %97 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %96, ptr nonnull @142, i64 %args_num.0, ptr %90, i64 %95)
   %98 = load ptr, ptr %96, align 8
   %99 = tail call ptr @malloc(i32 24)
   store ptr %98, ptr %99, align 8
@@ -36510,7 +36590,7 @@ if.entry28:                                       ; preds = %ifend22
   %126 = getelementptr inbounds i8, ptr %123, i64 %125
   store i8 0, ptr %126, align 1
   %127 = alloca ptr, align 8
-  %128 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %127, ptr nonnull @144, ptr %123)
+  %128 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %127, ptr nonnull @143, ptr %123)
   %129 = load ptr, ptr %127, align 8
   %130 = tail call ptr @malloc(i32 24)
   store ptr %129, ptr %130, align 8
@@ -36922,7 +37002,7 @@ Map_String_PropId____getitem__.exit:              ; preds = %while.end.i
 
 if.entry48:                                       ; preds = %ifend9.i, %get_class_from_type.exit522, %while.end.i43.i, %while.end.i.i, %is_object.exit, %Map_String_PropId____getitem__.exit.i, %get_class_prop_type.exit.i, %Map_String_PropId____getitem__.exit55.i, %get_class_prop_type.exit69.i, %ifend18.i, %else.i.i, %else.i51.i
   %298 = tail call ptr @malloc(i32 74)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(74) %298, ptr noundef nonnull align 8 dereferenceable(74) @145, i64 74, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(74) %298, ptr noundef nonnull align 8 dereferenceable(74) @144, i64 74, i1 false)
   %299 = tail call ptr @malloc(i32 24)
   store ptr %298, ptr %299, align 8
   %memberidx1.i.i314 = getelementptr inbounds %String, ptr %299, i64 0, i32 1
@@ -37019,7 +37099,7 @@ if.entry59:                                       ; preds = %if.entry54
   %339 = getelementptr inbounds i8, ptr %336, i64 %338
   store i8 0, ptr %339, align 1
   %340 = alloca ptr, align 8
-  %341 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %340, ptr nonnull @146, ptr %328, ptr %336)
+  %341 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %340, ptr nonnull @145, ptr %328, ptr %336)
   %342 = load ptr, ptr %340, align 8
   %343 = tail call ptr @malloc(i32 24)
   store ptr %342, ptr %343, align 8
@@ -37162,7 +37242,7 @@ if.entry68:                                       ; preds = %get_class_prop_visi
   %410 = getelementptr inbounds i8, ptr %407, i64 %409
   store i8 0, ptr %410, align 1
   %411 = alloca ptr, align 8
-  %412 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %411, ptr nonnull @147, ptr %391, ptr %399, ptr %407)
+  %412 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %411, ptr nonnull @146, ptr %391, ptr %399, ptr %407)
   %413 = load ptr, ptr %411, align 8
   %414 = tail call ptr @malloc(i32 24)
   store ptr %413, ptr %414, align 8
@@ -37255,21 +37335,21 @@ if.entry75:                                       ; preds = %ifend70
 
 if.entry.i380:                                    ; preds = %if.entry75
   %450 = tail call ptr @malloc(i32 7)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(7) %450, ptr noundef nonnull align 8 dereferenceable(7) @52, i64 7, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(7) %450, ptr noundef nonnull align 8 dereferenceable(7) @51, i64 7, i1 false)
   %451 = tail call ptr @malloc(i32 24)
   store ptr %450, ptr %451, align 8
   br label %dump_access.exit
 
 if.entry1.i:                                      ; preds = %if.entry75
   %452 = tail call ptr @malloc(i32 6)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(6) %452, ptr noundef nonnull align 8 dereferenceable(6) @53, i64 6, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(6) %452, ptr noundef nonnull align 8 dereferenceable(6) @52, i64 6, i1 false)
   %453 = tail call ptr @malloc(i32 24)
   store ptr %452, ptr %453, align 8
   br label %dump_access.exit
 
 ifend3.i:                                         ; preds = %if.entry75
   %454 = tail call ptr @malloc(i32 9)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(9) %454, ptr noundef nonnull align 8 dereferenceable(9) @54, i64 9, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(9) %454, ptr noundef nonnull align 8 dereferenceable(9) @53, i64 9, i1 false)
   %455 = tail call ptr @malloc(i32 24)
   store ptr %454, ptr %455, align 8
   br label %dump_access.exit
@@ -37290,7 +37370,7 @@ dump_access.exit:                                 ; preds = %if.entry.i380, %if.
   %459 = getelementptr inbounds i8, ptr %456, i64 %458
   store i8 0, ptr %459, align 1
   %460 = alloca ptr, align 8
-  %461 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %460, ptr nonnull @148, ptr nonnull %438, ptr nonnull %446, ptr %456)
+  %461 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %460, ptr nonnull @147, ptr nonnull %438, ptr nonnull %446, ptr %456)
   %462 = load ptr, ptr %460, align 8
   %463 = tail call ptr @malloc(i32 24)
   store ptr %462, ptr %463, align 8
@@ -37356,7 +37436,7 @@ if.entry84:                                       ; preds = %ifend56
 else85:                                           ; preds = %ifend56
   %484 = load ptr, ptr %memberidx6, align 8
   %485 = tail call ptr @malloc(i32 11)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(11) %485, ptr noundef nonnull align 8 dereferenceable(11) @150, i64 11, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(11) %485, ptr noundef nonnull align 8 dereferenceable(11) @149, i64 11, i1 false)
   %486 = tail call ptr @malloc(i32 24)
   store ptr %485, ptr %486, align 8
   %memberidx1.i.i394 = getelementptr inbounds %String, ptr %486, i64 0, i32 1
@@ -37422,7 +37502,7 @@ Array_ClassMethod____sl__.exit:                   ; preds = %ifend86, %Array_Cla
 
 if.entry88:                                       ; preds = %if.entry84
   %510 = tail call ptr @malloc(i32 31)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(31) %510, ptr noundef nonnull align 8 dereferenceable(31) @149, i64 31, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(31) %510, ptr noundef nonnull align 8 dereferenceable(31) @148, i64 31, i1 false)
   %511 = tail call ptr @malloc(i32 24)
   store ptr %510, ptr %511, align 8
   %memberidx1.i.i406 = getelementptr inbounds %String, ptr %511, i64 0, i32 1
@@ -37480,7 +37560,7 @@ TypeChecker_error.exit416:                        ; preds = %if.entry88, %TypeCh
 ifend90:                                          ; preds = %if.entry84
   %531 = load ptr, ptr %memberidx6, align 8
   %532 = tail call ptr @malloc(i32 11)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(11) %532, ptr noundef nonnull align 8 dereferenceable(11) @150, i64 11, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(11) %532, ptr noundef nonnull align 8 dereferenceable(11) @149, i64 11, i1 false)
   %533 = tail call ptr @malloc(i32 24)
   store ptr %532, ptr %533, align 8
   %memberidx1.i.i417 = getelementptr inbounds %String, ptr %533, i64 0, i32 1
@@ -37500,7 +37580,7 @@ ifend.i423:                                       ; preds = %ifend90
 
 if.entry94:                                       ; preds = %ifend.i423
   %538 = tail call ptr @malloc(i32 33)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(33) %538, ptr noundef nonnull align 8 dereferenceable(33) @151, i64 33, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(33) %538, ptr noundef nonnull align 8 dereferenceable(33) @150, i64 33, i1 false)
   %539 = tail call ptr @malloc(i32 24)
   store ptr %538, ptr %539, align 8
   %memberidx1.i.i425 = getelementptr inbounds %String, ptr %539, i64 0, i32 1
@@ -37590,7 +37670,7 @@ ifend104:                                         ; preds = %ifend116, %ifend108
 
 if.entry106:                                      ; preds = %if.entry102
   %569 = tail call ptr @malloc(i32 35)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(35) %569, ptr noundef nonnull align 8 dereferenceable(35) @152, i64 35, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(35) %569, ptr noundef nonnull align 8 dereferenceable(35) @151, i64 35, i1 false)
   %570 = tail call ptr @malloc(i32 24)
   store ptr %569, ptr %570, align 8
   %memberidx1.i.i439 = getelementptr inbounds %String, ptr %570, i64 0, i32 1
@@ -37652,7 +37732,7 @@ ifend108:                                         ; preds = %if.entry102
 
 if.entry114:                                      ; preds = %else103
   %591 = tail call ptr @malloc(i32 58)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(58) %591, ptr noundef nonnull align 8 dereferenceable(58) @153, i64 58, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(58) %591, ptr noundef nonnull align 8 dereferenceable(58) @152, i64 58, i1 false)
   %592 = tail call ptr @malloc(i32 24)
   store ptr %591, ptr %592, align 8
   %memberidx1.i.i450 = getelementptr inbounds %String, ptr %592, i64 0, i32 1
@@ -37791,7 +37871,7 @@ get_class_prop_type.exit474:                      ; preds = %if.entry.i469, %ife
   %common.ret.op.in.i464 = phi ptr [ %memberidx3.i468, %if.entry.i469 ], [ %memberidx6.i472, %ifend.i473 ]
   %common.ret.op.i465 = load ptr, ptr %common.ret.op.in.i464, align 8
   %651 = tail call ptr @malloc(i32 5)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(5) %651, ptr noundef nonnull align 8 dereferenceable(5) @154, i64 5, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(5) %651, ptr noundef nonnull align 8 dereferenceable(5) @153, i64 5, i1 false)
   %652 = tail call ptr @malloc(i32 24)
   store ptr %651, ptr %652, align 8
   %memberidx1.i.i475 = getelementptr inbounds %String, ptr %652, i64 0, i32 1
@@ -37865,7 +37945,7 @@ is_object.exit:                                   ; preds = %if.entry.i
   %memberidx11 = getelementptr inbounds %GenericType, ptr %1, i64 0, i32 1
   %19 = load ptr, ptr %memberidx11, align 8
   %20 = tail call ptr @malloc(i32 5)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(5) %20, ptr noundef nonnull align 8 dereferenceable(5) @74, i64 5, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(5) %20, ptr noundef nonnull align 8 dereferenceable(5) @73, i64 5, i1 false)
   %21 = tail call ptr @malloc(i32 24)
   store ptr %20, ptr %21, align 8
   %memberidx1.i.i = getelementptr inbounds %String, ptr %21, i64 0, i32 1
@@ -38015,7 +38095,7 @@ else34:                                           ; preds = %ifend25
   %86 = getelementptr inbounds i8, ptr %83, i64 %85
   store i8 0, ptr %86, align 1
   %87 = alloca ptr, align 8
-  %88 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %87, ptr nonnull @170, ptr %74, ptr %83)
+  %88 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %87, ptr nonnull @169, ptr %74, ptr %83)
   %89 = load ptr, ptr %87, align 8
   %90 = tail call ptr @malloc(i32 24)
   store ptr %89, ptr %90, align 8
@@ -38072,7 +38152,7 @@ TypeChecker_error.exit:                           ; preds = %else34, %TypeChecke
 
 if.entry39:                                       ; preds = %ifend20
   %109 = tail call ptr @malloc(i32 5)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(5) %109, ptr noundef nonnull align 8 dereferenceable(5) @74, i64 5, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(5) %109, ptr noundef nonnull align 8 dereferenceable(5) @73, i64 5, i1 false)
   %110 = tail call ptr @malloc(i32 24)
   store ptr %109, ptr %110, align 8
   %memberidx1.i.i105 = getelementptr inbounds %String, ptr %110, i64 0, i32 1
@@ -38176,7 +38256,7 @@ if.entry2:                                        ; preds = %else
   %23 = getelementptr inbounds i8, ptr %20, i64 %22
   store i8 0, ptr %23, align 1
   %24 = alloca ptr, align 8
-  %25 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %24, ptr nonnull @112, ptr %20)
+  %25 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %24, ptr nonnull @111, ptr %20)
   %26 = load ptr, ptr %24, align 8
   %27 = tail call ptr @malloc(i32 24)
   store ptr %26, ptr %27, align 8
@@ -38341,7 +38421,7 @@ if.entry23:                                       ; preds = %if.entry16
   store i64 %47, ptr %memberidx.i.i84, align 4
   store i1 false, ptr %14, align 1
   %81 = call ptr @malloc(i32 37)
-  call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(37) %81, ptr noundef nonnull align 8 dereferenceable(37) @113, i64 37, i1 false)
+  call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(37) %81, ptr noundef nonnull align 8 dereferenceable(37) @112, i64 37, i1 false)
   %82 = call ptr @malloc(i32 24)
   store ptr %81, ptr %82, align 8
   %memberidx1.i.i113 = getelementptr inbounds %String, ptr %82, i64 0, i32 1
@@ -38430,7 +38510,7 @@ if.entry30:                                       ; preds = %ifend25
   %121 = getelementptr inbounds i8, ptr %118, i64 %120
   store i8 0, ptr %121, align 1
   %122 = alloca ptr, align 8
-  %123 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %122, ptr nonnull @114, ptr %108, ptr %118)
+  %123 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %122, ptr nonnull @113, ptr %108, ptr %118)
   %124 = load ptr, ptr %122, align 8
   %125 = tail call ptr @malloc(i32 24)
   store ptr %124, ptr %125, align 8
@@ -38614,7 +38694,7 @@ if.entry2:                                        ; preds = %3
   store double %42, ptr %memberidx1.i.i131, align 8
   store i1 true, ptr %memberidx1.i.i.i129, align 1
   %45 = tail call ptr @malloc(i32 6)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(6) %45, ptr noundef nonnull align 8 dereferenceable(6) @221, i64 6, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(6) %45, ptr noundef nonnull align 8 dereferenceable(6) @220, i64 6, i1 false)
   %46 = tail call ptr @malloc(i32 24)
   store ptr %45, ptr %46, align 8
   %memberidx1.i.i19.i = getelementptr inbounds %String, ptr %46, i64 0, i32 1
@@ -38767,7 +38847,7 @@ if.entry2.i.i:                                    ; preds = %if.entry.i.i
 
 if.entry.i168:                                    ; preds = %for.end.i167, %if.entry.i.i, %if.entry2.i.i
   %101 = tail call ptr @malloc(i32 6)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(6) %101, ptr noundef nonnull align 8 dereferenceable(6) @187, i64 6, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(6) %101, ptr noundef nonnull align 8 dereferenceable(6) @186, i64 6, i1 false)
   %102 = tail call ptr @malloc(i32 24)
   store ptr %101, ptr %102, align 8
   %memberidx1.i.i22.i = getelementptr inbounds %String, ptr %102, i64 0, i32 1
@@ -39078,7 +39158,7 @@ if.entry:                                         ; preds = %ifend.i
 
 ifend:                                            ; preds = %3, %ifend.i
   %14 = tail call ptr @malloc(i32 5)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(5) %14, ptr noundef nonnull align 8 dereferenceable(5) @101, i64 5, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(5) %14, ptr noundef nonnull align 8 dereferenceable(5) @100, i64 5, i1 false)
   %15 = tail call ptr @malloc(i32 24)
   store ptr %14, ptr %15, align 8
   %memberidx1.i.i71 = getelementptr inbounds %String, ptr %15, i64 0, i32 1
@@ -39143,7 +39223,7 @@ ifend7:                                           ; preds = %ifend4, %ifend.i90
 
 if.entry9:                                        ; preds = %if.entry5
   %32 = tail call ptr @malloc(i32 37)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(37) %32, ptr noundef nonnull align 8 dereferenceable(37) @171, i64 37, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(37) %32, ptr noundef nonnull align 8 dereferenceable(37) @170, i64 37, i1 false)
   %33 = tail call ptr @malloc(i32 24)
   store ptr %32, ptr %33, align 8
   %memberidx1.i.i94 = getelementptr inbounds %String, ptr %33, i64 0, i32 1
@@ -39228,7 +39308,7 @@ ifend16:                                          ; preds = %ifend7
   %61 = getelementptr inbounds i8, ptr %58, i64 %60
   store i8 0, ptr %61, align 1
   %62 = alloca ptr, align 8
-  %63 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %62, ptr nonnull @172, ptr %58)
+  %63 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %62, ptr nonnull @171, ptr %58)
   %64 = load ptr, ptr %62, align 8
   %65 = tail call ptr @malloc(i32 24)
   store ptr %64, ptr %65, align 8
@@ -39541,7 +39621,7 @@ if.entry20:                                       ; preds = %if.entry16
   %79 = getelementptr inbounds i8, ptr %76, i64 %78
   store i8 0, ptr %79, align 1
   %80 = alloca ptr, align 8
-  %81 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %80, ptr nonnull @217, i64 %18, ptr %67, ptr %76)
+  %81 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %80, ptr nonnull @216, i64 %18, ptr %67, ptr %76)
   %82 = load ptr, ptr %80, align 8
   %83 = tail call ptr @malloc(i32 24)
   store ptr %82, ptr %83, align 8
@@ -39612,7 +39692,7 @@ if.entry28:                                       ; preds = %for.end
   %112 = getelementptr inbounds i8, ptr %109, i64 %111
   store i8 0, ptr %112, align 1
   %113 = alloca ptr, align 8
-  %114 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %113, ptr nonnull @218, ptr %109)
+  %114 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %113, ptr nonnull @217, ptr %109)
   %115 = load ptr, ptr %113, align 8
   %116 = tail call ptr @malloc(i32 24)
   store ptr %115, ptr %116, align 8
@@ -39686,7 +39766,7 @@ if.entry35:                                       ; preds = %ifend30
 
 if.entry40:                                       ; preds = %if.entry35
   %137 = alloca ptr, align 8
-  %138 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %137, ptr nonnull @219, i64 %136)
+  %138 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %137, ptr nonnull @218, i64 %136)
   %139 = load ptr, ptr %137, align 8
   %140 = tail call ptr @malloc(i32 24)
   store ptr %139, ptr %140, align 8
@@ -39753,7 +39833,7 @@ if.entry49:                                       ; preds = %ifend30, %ifend30, 
 
 if.entry54:                                       ; preds = %if.entry49
   %160 = alloca ptr, align 8
-  %161 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %160, ptr nonnull @220, i64 %159)
+  %161 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %160, ptr nonnull @219, i64 %159)
   %162 = load ptr, ptr %160, align 8
   %163 = tail call ptr @malloc(i32 24)
   store ptr %162, ptr %163, align 8
@@ -39860,7 +39940,7 @@ ifend3:                                           ; preds = %ifend11, %ifend
 
 if.entry4:                                        ; preds = %if.entry1
   %10 = alloca ptr, align 8
-  %11 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %10, ptr nonnull @88, i64 64)
+  %11 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %10, ptr nonnull @87, i64 64)
   %12 = load ptr, ptr %10, align 8
   %13 = tail call ptr @malloc(i32 24)
   store ptr %12, ptr %13, align 8
@@ -39901,7 +39981,7 @@ ifend11:                                          ; preds = %ifend6
 
 true_block:                                       ; preds = %if.entry9
   %19 = tail call ptr @malloc(i32 3)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(3) %19, ptr noundef nonnull align 8 dereferenceable(3) @89, i64 3, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(3) %19, ptr noundef nonnull align 8 dereferenceable(3) @88, i64 3, i1 false)
   %20 = tail call ptr @malloc(i32 24)
   store ptr %19, ptr %20, align 8
   %memberidx1.i.i77 = getelementptr inbounds %String, ptr %20, i64 0, i32 1
@@ -39930,7 +40010,7 @@ if.entry17:                                       ; preds = %ifend11
   %26 = getelementptr inbounds i8, ptr %23, i64 %25
   store i8 0, ptr %26, align 1
   %27 = alloca ptr, align 8
-  %28 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %27, ptr nonnull @90, ptr %23)
+  %28 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %27, ptr nonnull @89, ptr %23)
   %29 = load ptr, ptr %27, align 8
   %30 = tail call ptr @malloc(i32 24)
   store ptr %29, ptr %30, align 8
@@ -39950,7 +40030,7 @@ if.entry21:                                       ; preds = %ifend11
   %34 = getelementptr inbounds i8, ptr %31, i64 %33
   store i8 0, ptr %34, align 1
   %35 = alloca ptr, align 8
-  %36 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %35, ptr nonnull @91, ptr %31)
+  %36 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %35, ptr nonnull @90, ptr %31)
   %37 = load ptr, ptr %35, align 8
   %38 = tail call ptr @malloc(i32 24)
   store ptr %37, ptr %38, align 8
@@ -39970,7 +40050,7 @@ if.entry25:                                       ; preds = %ifend11
   %42 = getelementptr inbounds i8, ptr %39, i64 %41
   store i8 0, ptr %42, align 1
   %43 = alloca ptr, align 8
-  %44 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %43, ptr nonnull @92, ptr %39)
+  %44 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %43, ptr nonnull @91, ptr %39)
   %45 = load ptr, ptr %43, align 8
   %46 = tail call ptr @malloc(i32 24)
   store ptr %45, ptr %46, align 8
@@ -39990,7 +40070,7 @@ if.entry29:                                       ; preds = %ifend11
   %50 = getelementptr inbounds i8, ptr %47, i64 %49
   store i8 0, ptr %50, align 1
   %51 = alloca ptr, align 8
-  %52 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %51, ptr nonnull @93, ptr %47)
+  %52 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %51, ptr nonnull @92, ptr %47)
   %53 = load ptr, ptr %51, align 8
   %54 = tail call ptr @malloc(i32 24)
   store ptr %53, ptr %54, align 8
@@ -40010,7 +40090,7 @@ if.entry33:                                       ; preds = %ifend11
   %58 = getelementptr inbounds i8, ptr %55, i64 %57
   store i8 0, ptr %58, align 1
   %59 = alloca ptr, align 8
-  %60 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %59, ptr nonnull @94, ptr %55)
+  %60 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %59, ptr nonnull @93, ptr %55)
   %61 = load ptr, ptr %59, align 8
   %62 = tail call ptr @malloc(i32 24)
   store ptr %61, ptr %62, align 8
@@ -40030,7 +40110,7 @@ if.entry37:                                       ; preds = %ifend11
   %66 = getelementptr inbounds i8, ptr %63, i64 %65
   store i8 0, ptr %66, align 1
   %67 = alloca ptr, align 8
-  %68 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %67, ptr nonnull @95, ptr %63)
+  %68 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %67, ptr nonnull @94, ptr %63)
   %69 = load ptr, ptr %67, align 8
   %70 = tail call ptr @malloc(i32 24)
   store ptr %69, ptr %70, align 8
@@ -40043,7 +40123,7 @@ if.entry37:                                       ; preds = %ifend11
 
 if.entry41:                                       ; preds = %ifend3
   %71 = tail call ptr @malloc(i32 3)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(3) %71, ptr noundef nonnull align 8 dereferenceable(3) @96, i64 3, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(3) %71, ptr noundef nonnull align 8 dereferenceable(3) @95, i64 3, i1 false)
   %72 = tail call ptr @malloc(i32 24)
   store ptr %71, ptr %72, align 8
   %memberidx1.i.i104 = getelementptr inbounds %String, ptr %72, i64 0, i32 1
@@ -40054,7 +40134,7 @@ if.entry41:                                       ; preds = %ifend3
 
 if.entry45:                                       ; preds = %ifend3
   %73 = tail call ptr @malloc(i32 3)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(3) %73, ptr noundef nonnull align 8 dereferenceable(3) @97, i64 3, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(3) %73, ptr noundef nonnull align 8 dereferenceable(3) @96, i64 3, i1 false)
   %74 = tail call ptr @malloc(i32 24)
   store ptr %73, ptr %74, align 8
   %memberidx1.i.i106 = getelementptr inbounds %String, ptr %74, i64 0, i32 1
@@ -40076,7 +40156,7 @@ if.entry49:                                       ; preds = %ifend3
 
 if.entry53:                                       ; preds = %ifend3
   %77 = tail call ptr @malloc(i32 6)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(6) %77, ptr noundef nonnull align 8 dereferenceable(6) @98, i64 6, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(6) %77, ptr noundef nonnull align 8 dereferenceable(6) @97, i64 6, i1 false)
   %78 = tail call ptr @malloc(i32 24)
   store ptr %77, ptr %78, align 8
   %memberidx1.i.i102 = getelementptr inbounds %String, ptr %78, i64 0, i32 1
@@ -40087,7 +40167,7 @@ if.entry53:                                       ; preds = %ifend3
 
 ifend55:                                          ; preds = %ifend3
   %79 = tail call ptr @malloc(i32 7)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(7) %79, ptr noundef nonnull align 8 dereferenceable(7) @99, i64 7, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(7) %79, ptr noundef nonnull align 8 dereferenceable(7) @98, i64 7, i1 false)
   %80 = tail call ptr @malloc(i32 24)
   store ptr %79, ptr %80, align 8
   %memberidx1.i.i75 = getelementptr inbounds %String, ptr %80, i64 0, i32 1
@@ -40308,7 +40388,7 @@ if.entry86:                                       ; preds = %tailrecurse
 
 define internal fastcc i1 @is_operator_overload_name(ptr nocapture readonly %0) unnamed_addr {
   %2 = tail call ptr @malloc(i32 6)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(6) %2, ptr noundef nonnull align 8 dereferenceable(6) @115, i64 6, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(6) %2, ptr noundef nonnull align 8 dereferenceable(6) @114, i64 6, i1 false)
   %3 = tail call ptr @malloc(i32 24)
   store ptr %2, ptr %3, align 8
   %memberidx1.i.i = getelementptr inbounds %String, ptr %3, i64 0, i32 1
@@ -40332,7 +40412,7 @@ common.ret:                                       ; preds = %ifend.i359, %ifend8
 
 ifend:                                            ; preds = %1, %ifend.i
   %8 = tail call ptr @malloc(i32 7)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(7) %8, ptr noundef nonnull align 8 dereferenceable(7) @116, i64 7, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(7) %8, ptr noundef nonnull align 8 dereferenceable(7) @115, i64 7, i1 false)
   %9 = tail call ptr @malloc(i32 24)
   store ptr %8, ptr %9, align 8
   %memberidx1.i.i121 = getelementptr inbounds %String, ptr %9, i64 0, i32 1
@@ -40351,7 +40431,7 @@ ifend.i127:                                       ; preds = %ifend
 
 ifend3:                                           ; preds = %ifend, %ifend.i127
   %14 = tail call ptr @malloc(i32 7)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(7) %14, ptr noundef nonnull align 8 dereferenceable(7) @117, i64 7, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(7) %14, ptr noundef nonnull align 8 dereferenceable(7) @116, i64 7, i1 false)
   %15 = tail call ptr @malloc(i32 24)
   store ptr %14, ptr %15, align 8
   %memberidx1.i.i129 = getelementptr inbounds %String, ptr %15, i64 0, i32 1
@@ -40370,7 +40450,7 @@ ifend.i135:                                       ; preds = %ifend3
 
 ifend6:                                           ; preds = %ifend3, %ifend.i135
   %20 = tail call ptr @malloc(i32 7)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(7) %20, ptr noundef nonnull align 8 dereferenceable(7) @118, i64 7, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(7) %20, ptr noundef nonnull align 8 dereferenceable(7) @117, i64 7, i1 false)
   %21 = tail call ptr @malloc(i32 24)
   store ptr %20, ptr %21, align 8
   %memberidx1.i.i137 = getelementptr inbounds %String, ptr %21, i64 0, i32 1
@@ -40389,7 +40469,7 @@ ifend.i143:                                       ; preds = %ifend6
 
 ifend9:                                           ; preds = %ifend6, %ifend.i143
   %26 = tail call ptr @malloc(i32 7)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(7) %26, ptr noundef nonnull align 8 dereferenceable(7) @119, i64 7, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(7) %26, ptr noundef nonnull align 8 dereferenceable(7) @118, i64 7, i1 false)
   %27 = tail call ptr @malloc(i32 24)
   store ptr %26, ptr %27, align 8
   %memberidx1.i.i145 = getelementptr inbounds %String, ptr %27, i64 0, i32 1
@@ -40408,7 +40488,7 @@ ifend.i151:                                       ; preds = %ifend9
 
 ifend12:                                          ; preds = %ifend9, %ifend.i151
   %32 = tail call ptr @malloc(i32 6)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(6) %32, ptr noundef nonnull align 8 dereferenceable(6) @120, i64 6, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(6) %32, ptr noundef nonnull align 8 dereferenceable(6) @119, i64 6, i1 false)
   %33 = tail call ptr @malloc(i32 24)
   store ptr %32, ptr %33, align 8
   %memberidx1.i.i153 = getelementptr inbounds %String, ptr %33, i64 0, i32 1
@@ -40503,7 +40583,7 @@ ifend.i191:                                       ; preds = %ifend24
 
 ifend27:                                          ; preds = %ifend24, %ifend.i191
   %62 = tail call ptr @malloc(i32 7)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(7) %62, ptr noundef nonnull align 8 dereferenceable(7) @121, i64 7, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(7) %62, ptr noundef nonnull align 8 dereferenceable(7) @120, i64 7, i1 false)
   %63 = tail call ptr @malloc(i32 24)
   store ptr %62, ptr %63, align 8
   %memberidx1.i.i193 = getelementptr inbounds %String, ptr %63, i64 0, i32 1
@@ -40560,7 +40640,7 @@ ifend.i215:                                       ; preds = %ifend33
 
 ifend36:                                          ; preds = %ifend33, %ifend.i215
   %80 = tail call ptr @malloc(i32 11)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(11) %80, ptr noundef nonnull align 8 dereferenceable(11) @122, i64 11, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(11) %80, ptr noundef nonnull align 8 dereferenceable(11) @121, i64 11, i1 false)
   %81 = tail call ptr @malloc(i32 24)
   store ptr %80, ptr %81, align 8
   %memberidx1.i.i217 = getelementptr inbounds %String, ptr %81, i64 0, i32 1
@@ -40579,7 +40659,7 @@ ifend.i223:                                       ; preds = %ifend36
 
 ifend39:                                          ; preds = %ifend36, %ifend.i223
   %86 = tail call ptr @malloc(i32 11)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(11) %86, ptr noundef nonnull align 8 dereferenceable(11) @123, i64 11, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(11) %86, ptr noundef nonnull align 8 dereferenceable(11) @122, i64 11, i1 false)
   %87 = tail call ptr @malloc(i32 24)
   store ptr %86, ptr %87, align 8
   %memberidx1.i.i225 = getelementptr inbounds %String, ptr %87, i64 0, i32 1
@@ -40598,7 +40678,7 @@ ifend.i231:                                       ; preds = %ifend39
 
 ifend42:                                          ; preds = %ifend39, %ifend.i231
   %92 = tail call ptr @malloc(i32 6)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(6) %92, ptr noundef nonnull align 8 dereferenceable(6) @124, i64 6, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(6) %92, ptr noundef nonnull align 8 dereferenceable(6) @123, i64 6, i1 false)
   %93 = tail call ptr @malloc(i32 24)
   store ptr %92, ptr %93, align 8
   %memberidx1.i.i233 = getelementptr inbounds %String, ptr %93, i64 0, i32 1
@@ -40617,7 +40697,7 @@ ifend.i239:                                       ; preds = %ifend42
 
 ifend45:                                          ; preds = %ifend42, %ifend.i239
   %98 = tail call ptr @malloc(i32 6)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(6) %98, ptr noundef nonnull align 8 dereferenceable(6) @125, i64 6, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(6) %98, ptr noundef nonnull align 8 dereferenceable(6) @124, i64 6, i1 false)
   %99 = tail call ptr @malloc(i32 24)
   store ptr %98, ptr %99, align 8
   %memberidx1.i.i241 = getelementptr inbounds %String, ptr %99, i64 0, i32 1
@@ -40636,7 +40716,7 @@ ifend.i247:                                       ; preds = %ifend45
 
 ifend48:                                          ; preds = %ifend45, %ifend.i247
   %104 = tail call ptr @malloc(i32 7)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(7) %104, ptr noundef nonnull align 8 dereferenceable(7) @126, i64 7, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(7) %104, ptr noundef nonnull align 8 dereferenceable(7) @125, i64 7, i1 false)
   %105 = tail call ptr @malloc(i32 24)
   store ptr %104, ptr %105, align 8
   %memberidx1.i.i249 = getelementptr inbounds %String, ptr %105, i64 0, i32 1
@@ -40655,7 +40735,7 @@ ifend.i255:                                       ; preds = %ifend48
 
 ifend51:                                          ; preds = %ifend48, %ifend.i255
   %110 = tail call ptr @malloc(i32 7)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(7) %110, ptr noundef nonnull align 8 dereferenceable(7) @127, i64 7, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(7) %110, ptr noundef nonnull align 8 dereferenceable(7) @126, i64 7, i1 false)
   %111 = tail call ptr @malloc(i32 24)
   store ptr %110, ptr %111, align 8
   %memberidx1.i.i257 = getelementptr inbounds %String, ptr %111, i64 0, i32 1
@@ -40674,7 +40754,7 @@ ifend.i263:                                       ; preds = %ifend51
 
 ifend54:                                          ; preds = %ifend51, %ifend.i263
   %116 = tail call ptr @malloc(i32 6)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(6) %116, ptr noundef nonnull align 8 dereferenceable(6) @128, i64 6, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(6) %116, ptr noundef nonnull align 8 dereferenceable(6) @127, i64 6, i1 false)
   %117 = tail call ptr @malloc(i32 24)
   store ptr %116, ptr %117, align 8
   %memberidx1.i.i265 = getelementptr inbounds %String, ptr %117, i64 0, i32 1
@@ -40693,7 +40773,7 @@ ifend.i271:                                       ; preds = %ifend54
 
 ifend57:                                          ; preds = %ifend54, %ifend.i271
   %122 = tail call ptr @malloc(i32 6)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(6) %122, ptr noundef nonnull align 8 dereferenceable(6) @129, i64 6, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(6) %122, ptr noundef nonnull align 8 dereferenceable(6) @128, i64 6, i1 false)
   %123 = tail call ptr @malloc(i32 24)
   store ptr %122, ptr %123, align 8
   %memberidx1.i.i273 = getelementptr inbounds %String, ptr %123, i64 0, i32 1
@@ -40712,7 +40792,7 @@ ifend.i279:                                       ; preds = %ifend57
 
 ifend60:                                          ; preds = %ifend57, %ifend.i279
   %128 = tail call ptr @malloc(i32 6)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(6) %128, ptr noundef nonnull align 8 dereferenceable(6) @130, i64 6, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(6) %128, ptr noundef nonnull align 8 dereferenceable(6) @129, i64 6, i1 false)
   %129 = tail call ptr @malloc(i32 24)
   store ptr %128, ptr %129, align 8
   %memberidx1.i.i281 = getelementptr inbounds %String, ptr %129, i64 0, i32 1
@@ -40731,7 +40811,7 @@ ifend.i287:                                       ; preds = %ifend60
 
 ifend63:                                          ; preds = %ifend60, %ifend.i287
   %134 = tail call ptr @malloc(i32 6)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(6) %134, ptr noundef nonnull align 8 dereferenceable(6) @131, i64 6, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(6) %134, ptr noundef nonnull align 8 dereferenceable(6) @130, i64 6, i1 false)
   %135 = tail call ptr @malloc(i32 24)
   store ptr %134, ptr %135, align 8
   %memberidx1.i.i289 = getelementptr inbounds %String, ptr %135, i64 0, i32 1
@@ -40750,7 +40830,7 @@ ifend.i295:                                       ; preds = %ifend63
 
 ifend66:                                          ; preds = %ifend63, %ifend.i295
   %140 = tail call ptr @malloc(i32 6)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(6) %140, ptr noundef nonnull align 8 dereferenceable(6) @132, i64 6, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(6) %140, ptr noundef nonnull align 8 dereferenceable(6) @131, i64 6, i1 false)
   %141 = tail call ptr @malloc(i32 24)
   store ptr %140, ptr %141, align 8
   %memberidx1.i.i297 = getelementptr inbounds %String, ptr %141, i64 0, i32 1
@@ -40769,7 +40849,7 @@ ifend.i303:                                       ; preds = %ifend66
 
 ifend69:                                          ; preds = %ifend66, %ifend.i303
   %146 = tail call ptr @malloc(i32 6)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(6) %146, ptr noundef nonnull align 8 dereferenceable(6) @133, i64 6, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(6) %146, ptr noundef nonnull align 8 dereferenceable(6) @132, i64 6, i1 false)
   %147 = tail call ptr @malloc(i32 24)
   store ptr %146, ptr %147, align 8
   %memberidx1.i.i305 = getelementptr inbounds %String, ptr %147, i64 0, i32 1
@@ -40788,7 +40868,7 @@ ifend.i311:                                       ; preds = %ifend69
 
 ifend72:                                          ; preds = %ifend69, %ifend.i311
   %152 = tail call ptr @malloc(i32 7)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(7) %152, ptr noundef nonnull align 8 dereferenceable(7) @134, i64 7, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(7) %152, ptr noundef nonnull align 8 dereferenceable(7) @133, i64 7, i1 false)
   %153 = tail call ptr @malloc(i32 24)
   store ptr %152, ptr %153, align 8
   %memberidx1.i.i313 = getelementptr inbounds %String, ptr %153, i64 0, i32 1
@@ -40807,7 +40887,7 @@ ifend.i319:                                       ; preds = %ifend72
 
 ifend75:                                          ; preds = %ifend72, %ifend.i319
   %158 = tail call ptr @malloc(i32 7)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(7) %158, ptr noundef nonnull align 8 dereferenceable(7) @135, i64 7, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(7) %158, ptr noundef nonnull align 8 dereferenceable(7) @134, i64 7, i1 false)
   %159 = tail call ptr @malloc(i32 24)
   store ptr %158, ptr %159, align 8
   %memberidx1.i.i321 = getelementptr inbounds %String, ptr %159, i64 0, i32 1
@@ -40883,7 +40963,7 @@ ifend.i351:                                       ; preds = %ifend84
 
 ifend87:                                          ; preds = %ifend84, %ifend.i351
   %182 = tail call ptr @malloc(i32 7)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(7) %182, ptr noundef nonnull align 8 dereferenceable(7) @136, i64 7, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(7) %182, ptr noundef nonnull align 8 dereferenceable(7) @135, i64 7, i1 false)
   %183 = tail call ptr @malloc(i32 24)
   store ptr %182, ptr %183, align 8
   %memberidx1.i.i353 = getelementptr inbounds %String, ptr %183, i64 0, i32 1
@@ -40948,42 +41028,42 @@ common.ret:                                       ; preds = %common.ret.sink.spl
 
 if.entry:                                         ; preds = %1
   %2 = tail call ptr @malloc(i32 7)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(7) %2, ptr noundef nonnull align 8 dereferenceable(7) @116, i64 7, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(7) %2, ptr noundef nonnull align 8 dereferenceable(7) @115, i64 7, i1 false)
   %3 = tail call ptr @malloc(i32 24)
   store ptr %2, ptr %3, align 8
   br label %common.ret.sink.split
 
 if.entry1:                                        ; preds = %1
   %4 = tail call ptr @malloc(i32 7)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(7) %4, ptr noundef nonnull align 8 dereferenceable(7) @117, i64 7, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(7) %4, ptr noundef nonnull align 8 dereferenceable(7) @116, i64 7, i1 false)
   %5 = tail call ptr @malloc(i32 24)
   store ptr %4, ptr %5, align 8
   br label %common.ret.sink.split
 
 if.entry4:                                        ; preds = %1
   %6 = tail call ptr @malloc(i32 7)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(7) %6, ptr noundef nonnull align 8 dereferenceable(7) @118, i64 7, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(7) %6, ptr noundef nonnull align 8 dereferenceable(7) @117, i64 7, i1 false)
   %7 = tail call ptr @malloc(i32 24)
   store ptr %6, ptr %7, align 8
   br label %common.ret.sink.split
 
 if.entry7:                                        ; preds = %1
   %8 = tail call ptr @malloc(i32 7)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(7) %8, ptr noundef nonnull align 8 dereferenceable(7) @119, i64 7, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(7) %8, ptr noundef nonnull align 8 dereferenceable(7) @118, i64 7, i1 false)
   %9 = tail call ptr @malloc(i32 24)
   store ptr %8, ptr %9, align 8
   br label %common.ret.sink.split
 
 if.entry10:                                       ; preds = %1
   %10 = tail call ptr @malloc(i32 7)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(7) %10, ptr noundef nonnull align 8 dereferenceable(7) @135, i64 7, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(7) %10, ptr noundef nonnull align 8 dereferenceable(7) @134, i64 7, i1 false)
   %11 = tail call ptr @malloc(i32 24)
   store ptr %10, ptr %11, align 8
   br label %common.ret.sink.split
 
 if.entry13:                                       ; preds = %1
   %12 = tail call ptr @malloc(i32 7)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(7) %12, ptr noundef nonnull align 8 dereferenceable(7) @134, i64 7, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(7) %12, ptr noundef nonnull align 8 dereferenceable(7) @133, i64 7, i1 false)
   %13 = tail call ptr @malloc(i32 24)
   store ptr %12, ptr %13, align 8
   br label %common.ret.sink.split
@@ -41032,91 +41112,91 @@ if.entry31:                                       ; preds = %1
 
 if.entry34:                                       ; preds = %1
   %26 = tail call ptr @malloc(i32 6)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(6) %26, ptr noundef nonnull align 8 dereferenceable(6) @175, i64 6, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(6) %26, ptr noundef nonnull align 8 dereferenceable(6) @174, i64 6, i1 false)
   %27 = tail call ptr @malloc(i32 24)
   store ptr %26, ptr %27, align 8
   br label %common.ret.sink.split
 
 if.entry37:                                       ; preds = %1
   %28 = tail call ptr @malloc(i32 6)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(6) %28, ptr noundef nonnull align 8 dereferenceable(6) @133, i64 6, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(6) %28, ptr noundef nonnull align 8 dereferenceable(6) @132, i64 6, i1 false)
   %29 = tail call ptr @malloc(i32 24)
   store ptr %28, ptr %29, align 8
   br label %common.ret.sink.split
 
 if.entry40:                                       ; preds = %1
   %30 = tail call ptr @malloc(i32 6)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(6) %30, ptr noundef nonnull align 8 dereferenceable(6) @129, i64 6, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(6) %30, ptr noundef nonnull align 8 dereferenceable(6) @128, i64 6, i1 false)
   %31 = tail call ptr @malloc(i32 24)
   store ptr %30, ptr %31, align 8
   br label %common.ret.sink.split
 
 if.entry43:                                       ; preds = %1
   %32 = tail call ptr @malloc(i32 6)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(6) %32, ptr noundef nonnull align 8 dereferenceable(6) @132, i64 6, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(6) %32, ptr noundef nonnull align 8 dereferenceable(6) @131, i64 6, i1 false)
   %33 = tail call ptr @malloc(i32 24)
   store ptr %32, ptr %33, align 8
   br label %common.ret.sink.split
 
 if.entry46:                                       ; preds = %1
   %34 = tail call ptr @malloc(i32 6)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(6) %34, ptr noundef nonnull align 8 dereferenceable(6) @115, i64 6, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(6) %34, ptr noundef nonnull align 8 dereferenceable(6) @114, i64 6, i1 false)
   %35 = tail call ptr @malloc(i32 24)
   store ptr %34, ptr %35, align 8
   br label %common.ret.sink.split
 
 if.entry49:                                       ; preds = %1
   %36 = tail call ptr @malloc(i32 6)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(6) %36, ptr noundef nonnull align 8 dereferenceable(6) @131, i64 6, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(6) %36, ptr noundef nonnull align 8 dereferenceable(6) @130, i64 6, i1 false)
   %37 = tail call ptr @malloc(i32 24)
   store ptr %36, ptr %37, align 8
   br label %common.ret.sink.split
 
 if.entry52:                                       ; preds = %1
   %38 = tail call ptr @malloc(i32 6)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(6) %38, ptr noundef nonnull align 8 dereferenceable(6) @124, i64 6, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(6) %38, ptr noundef nonnull align 8 dereferenceable(6) @123, i64 6, i1 false)
   %39 = tail call ptr @malloc(i32 24)
   store ptr %38, ptr %39, align 8
   br label %common.ret.sink.split
 
 if.entry55:                                       ; preds = %1
   %40 = tail call ptr @malloc(i32 6)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(6) %40, ptr noundef nonnull align 8 dereferenceable(6) @125, i64 6, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(6) %40, ptr noundef nonnull align 8 dereferenceable(6) @124, i64 6, i1 false)
   %41 = tail call ptr @malloc(i32 24)
   store ptr %40, ptr %41, align 8
   br label %common.ret.sink.split
 
 if.entry58:                                       ; preds = %1
   %42 = tail call ptr @malloc(i32 7)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(7) %42, ptr noundef nonnull align 8 dereferenceable(7) @126, i64 7, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(7) %42, ptr noundef nonnull align 8 dereferenceable(7) @125, i64 7, i1 false)
   %43 = tail call ptr @malloc(i32 24)
   store ptr %42, ptr %43, align 8
   br label %common.ret.sink.split
 
 if.entry61:                                       ; preds = %1
   %44 = tail call ptr @malloc(i32 7)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(7) %44, ptr noundef nonnull align 8 dereferenceable(7) @127, i64 7, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(7) %44, ptr noundef nonnull align 8 dereferenceable(7) @126, i64 7, i1 false)
   %45 = tail call ptr @malloc(i32 24)
   store ptr %44, ptr %45, align 8
   br label %common.ret.sink.split
 
 if.entry64:                                       ; preds = %1
   %46 = tail call ptr @malloc(i32 6)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(6) %46, ptr noundef nonnull align 8 dereferenceable(6) @120, i64 6, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(6) %46, ptr noundef nonnull align 8 dereferenceable(6) @119, i64 6, i1 false)
   %47 = tail call ptr @malloc(i32 24)
   store ptr %46, ptr %47, align 8
   br label %common.ret.sink.split
 
 if.entry67:                                       ; preds = %1
   %48 = tail call ptr @malloc(i32 7)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(7) %48, ptr noundef nonnull align 8 dereferenceable(7) @176, i64 7, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(7) %48, ptr noundef nonnull align 8 dereferenceable(7) @175, i64 7, i1 false)
   %49 = tail call ptr @malloc(i32 24)
   store ptr %48, ptr %49, align 8
   br label %common.ret.sink.split
 
 if.entry70:                                       ; preds = %1
   %50 = tail call ptr @malloc(i32 7)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(7) %50, ptr noundef nonnull align 8 dereferenceable(7) @177, i64 7, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(7) %50, ptr noundef nonnull align 8 dereferenceable(7) @176, i64 7, i1 false)
   %51 = tail call ptr @malloc(i32 24)
   store ptr %50, ptr %51, align 8
   br label %common.ret.sink.split
@@ -41137,7 +41217,7 @@ if.entry76:                                       ; preds = %1
 
 if.entry79:                                       ; preds = %1
   %56 = tail call ptr @malloc(i32 6)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(6) %56, ptr noundef nonnull align 8 dereferenceable(6) @128, i64 6, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(6) %56, ptr noundef nonnull align 8 dereferenceable(6) @127, i64 6, i1 false)
   %57 = tail call ptr @malloc(i32 24)
   store ptr %56, ptr %57, align 8
   br label %common.ret.sink.split
@@ -41282,7 +41362,7 @@ if.entry40:                                       ; preds = %1
 
 if.entry43:                                       ; preds = %1
   %32 = tail call ptr @malloc(i32 3)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(3) %32, ptr noundef nonnull align 8 dereferenceable(3) @41, i64 3, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(3) %32, ptr noundef nonnull align 8 dereferenceable(3) @40, i64 3, i1 false)
   %33 = tail call ptr @malloc(i32 24)
   store ptr %32, ptr %33, align 8
   br label %common.ret
@@ -41455,14 +41535,14 @@ common.ret:                                       ; preds = %ifend15, %if.entry1
 
 if.entry:                                         ; preds = %1
   %2 = tail call ptr @malloc(i32 7)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(7) %2, ptr noundef nonnull align 8 dereferenceable(7) @183, i64 7, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(7) %2, ptr noundef nonnull align 8 dereferenceable(7) @182, i64 7, i1 false)
   %3 = tail call ptr @malloc(i32 24)
   store ptr %2, ptr %3, align 8
   br label %common.ret
 
 if.entry1:                                        ; preds = %1
   %4 = tail call ptr @malloc(i32 7)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(7) %4, ptr noundef nonnull align 8 dereferenceable(7) @184, i64 7, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(7) %4, ptr noundef nonnull align 8 dereferenceable(7) @183, i64 7, i1 false)
   %5 = tail call ptr @malloc(i32 24)
   store ptr %4, ptr %5, align 8
   br label %common.ret
@@ -41513,7 +41593,7 @@ define internal fastcc ptr @CodeGen_get_var_from_varid(ptr nocapture readonly %0
   %6 = load i64, ptr %1, align 4
   %memberidx2.i = getelementptr inbounds %VarId, ptr %1, i64 0, i32 2
   %7 = load i64, ptr %memberidx2.i, align 4
-  %8 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %3, ptr nonnull @244, i64 %5, i64 %6, i64 %7)
+  %8 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %3, ptr nonnull @243, i64 %5, i64 %6, i64 %7)
   %9 = load ptr, ptr %3, align 8
   %10 = call ptr @malloc(i32 24)
   store ptr %9, ptr %10, align 8
@@ -41620,7 +41700,7 @@ if.entry4:                                        ; preds = %if.entry
   %16 = getelementptr inbounds ptr, ptr %args, i64 1
   store ptr %15, ptr %16, align 8
   %17 = tail call fastcc ptr @CodeGen_codegen_type(ptr %0, ptr nonnull %9, i1 true)
-  %18 = call ptr @LLVMBuildInBoundsGEP2(ptr %1, ptr %17, ptr %2, ptr nonnull %args, i64 2, ptr nonnull @79)
+  %18 = call ptr @LLVMBuildInBoundsGEP2(ptr %1, ptr %17, ptr %2, ptr nonnull %args, i64 2, ptr nonnull @78)
   %19 = call fastcc ptr @CodeGen_store_array_elements(ptr %0, ptr %1, ptr %18, ptr nonnull %3)
   br label %common.ret
 
@@ -41662,7 +41742,7 @@ for.body.i:                                       ; preds = %if.entry9, %for.bod
   %33 = add nuw nsw i64 %idx.0.i40, 1
   %34 = call ptr @LLVMConstInt(ptr %21, i64 %idx.0.i40, i1 false)
   store ptr %34, ptr %23, align 8
-  %35 = call ptr @LLVMBuildInBoundsGEP2(ptr %1, ptr %25, ptr %2, ptr nonnull %next_args.i, i64 2, ptr nonnull @79)
+  %35 = call ptr @LLVMBuildInBoundsGEP2(ptr %1, ptr %25, ptr %2, ptr nonnull %next_args.i, i64 2, ptr nonnull @78)
   %36 = call fastcc ptr @CodeGen_codegen_expression(ptr %0, ptr %1, ptr %32)
   %37 = call ptr @LLVMBuildStore(ptr %1, ptr %36, ptr %35)
   %38 = add nuw nsw i64 %31, 1
@@ -41702,7 +41782,7 @@ ifend:                                            ; preds = %3
 
 if.entry4:                                        ; preds = %ifend
   %9 = tail call ptr @malloc(i32 54)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(54) %9, ptr noundef nonnull align 8 dereferenceable(54) @257, i64 54, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(54) %9, ptr noundef nonnull align 8 dereferenceable(54) @256, i64 54, i1 false)
   %10 = tail call ptr @malloc(i32 24)
   %11 = tail call ptr @malloc(i32 7)
   tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(7) %11, ptr noundef nonnull align 8 dereferenceable(7) @0, i64 7, i1 false)
@@ -41829,7 +41909,7 @@ ifend9:                                           ; preds = %if.entry, %if.entry
   %34 = load i64, ptr %memberidx1.i, align 4
   %35 = load i64, ptr %5, align 4
   %36 = load i64, ptr %memberidx3.i, align 4
-  %37 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %4, ptr nonnull @244, i64 %34, i64 %35, i64 %36)
+  %37 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %4, ptr nonnull @243, i64 %34, i64 %35, i64 %36)
   %38 = load ptr, ptr %4, align 8
   %39 = call ptr @malloc(i32 24)
   store ptr %38, ptr %39, align 8
@@ -41898,7 +41978,7 @@ if.entry:                                         ; preds = %3
   %33 = load i64, ptr %memberidx1.i, align 4
   %34 = load i64, ptr %5, align 4
   %35 = load i64, ptr %memberidx3.i, align 4
-  %36 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %4, ptr nonnull @244, i64 %33, i64 %34, i64 %35)
+  %36 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %4, ptr nonnull @243, i64 %33, i64 %34, i64 %35)
   %37 = load ptr, ptr %4, align 8
   %38 = call ptr @malloc(i32 24)
   store ptr %37, ptr %38, align 8
@@ -42145,7 +42225,7 @@ for.body:                                         ; preds = %for.entry, %for.bod
   %13 = load ptr, ptr %.in, align 8
   %14 = call fastcc ptr @CodeGen_codegen_expression(ptr %0, ptr %1, ptr %13)
   %15 = call ptr @LLVMBuildStore(ptr %1, ptr %14, ptr %addr.09)
-  %16 = call ptr @LLVMBuildInBoundsGEP2(ptr %1, ptr %6, ptr %addr.09, ptr nonnull %next_args, i64 1, ptr nonnull @79)
+  %16 = call ptr @LLVMBuildInBoundsGEP2(ptr %1, ptr %6, ptr %addr.09, ptr nonnull %next_args, i64 1, ptr nonnull @78)
   %17 = add nuw nsw i64 %12, 1
   %18 = getelementptr inbounds ptr, ptr %9, i64 %12
   %.not = icmp slt i64 %12, %10
@@ -42299,7 +42379,7 @@ ifend:                                            ; preds = %ifend.sink.split, %
   %64 = load i64, ptr %34, align 4
   %memberidx2.i.i52 = getelementptr inbounds %VarId, ptr %34, i64 0, i32 2
   %65 = load i64, ptr %memberidx2.i.i52, align 4
-  %66 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %3, ptr nonnull @244, i64 %63, i64 %64, i64 %65)
+  %66 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %3, ptr nonnull @243, i64 %63, i64 %64, i64 %65)
   %67 = load ptr, ptr %3, align 8
   %68 = call ptr @malloc(i32 24)
   store ptr %67, ptr %68, align 8
@@ -42623,7 +42703,7 @@ CodeGen_get_or_codegen_enum_from_typeid.exit:     ; preds = %if.entry96
 
 ifend98:                                          ; preds = %CodeGen_get_or_codegen_enum_from_typeid.exit, %ifend84
   %94 = tail call ptr @malloc(i32 32)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(32) %94, ptr noundef nonnull align 8 dereferenceable(32) @245, i64 32, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(32) %94, ptr noundef nonnull align 8 dereferenceable(32) @244, i64 32, i1 false)
   %95 = tail call ptr @malloc(i32 24)
   %96 = tail call ptr @malloc(i32 7)
   tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(7) %96, ptr noundef nonnull align 8 dereferenceable(7) @0, i64 7, i1 false)
@@ -42651,7 +42731,7 @@ define internal fastcc ptr @CodeGen_codegen_tuple_exp(ptr nocapture %0, ptr %1, 
 
 if.entry:                                         ; preds = %3
   %5 = tail call ptr @malloc(i32 54)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(54) %5, ptr noundef nonnull align 8 dereferenceable(54) @258, i64 54, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(54) %5, ptr noundef nonnull align 8 dereferenceable(54) @257, i64 54, i1 false)
   %6 = tail call ptr @malloc(i32 24)
   %7 = tail call ptr @malloc(i32 7)
   tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(7) %7, ptr noundef nonnull align 8 dereferenceable(7) @0, i64 7, i1 false)
@@ -42912,9 +42992,9 @@ for.end:                                          ; preds = %for.body, %for.entr
 define internal fastcc ptr @CodeGen_codegen_match_exp(ptr nocapture %0, ptr %1, ptr nocapture readonly %2) unnamed_addr {
   %memberidx = getelementptr inbounds %CodeGen, ptr %0, i64 0, i32 1
   %4 = load ptr, ptr %memberidx, align 8
-  %5 = tail call ptr @LLVMAppendBasicBlock(ptr %4, ptr nonnull @272)
+  %5 = tail call ptr @LLVMAppendBasicBlock(ptr %4, ptr nonnull @271)
   %6 = load ptr, ptr %memberidx, align 8
-  %7 = tail call ptr @LLVMAppendBasicBlock(ptr %6, ptr nonnull @273)
+  %7 = tail call ptr @LLVMAppendBasicBlock(ptr %6, ptr nonnull @272)
   %memberidx2 = getelementptr inbounds %MatchExpression, ptr %2, i64 0, i32 5
   %8 = load ptr, ptr %memberidx2, align 8
   %memberidx3 = getelementptr inbounds %Array_MatchExpressionCase_, ptr %8, i64 0, i32 1
@@ -42990,7 +43070,7 @@ if.entry:                                         ; preds = %for.body
 
 ifend:                                            ; preds = %for.body, %if.entry
   %34 = load ptr, ptr %memberidx, align 8
-  %35 = tail call ptr @LLVMAppendBasicBlock(ptr %34, ptr nonnull @274)
+  %35 = tail call ptr @LLVMAppendBasicBlock(ptr %34, ptr nonnull @273)
   %36 = load i64, ptr %26, align 4
   %37 = icmp eq i64 %36, 1
   %38 = and i1 %24, %37
@@ -43029,7 +43109,7 @@ ifend13:                                          ; preds = %end17, %if.entry11
 
 false_block16:                                    ; preds = %else12
   %52 = load ptr, ptr %memberidx, align 8
-  %53 = tail call ptr @LLVMAppendBasicBlock(ptr %52, ptr nonnull @275)
+  %53 = tail call ptr @LLVMAppendBasicBlock(ptr %52, ptr nonnull @274)
   br label %end17
 
 end17:                                            ; preds = %else12, %false_block16
@@ -43046,7 +43126,7 @@ common.ret:                                       ; preds = %for.end, %if.entry2
 
 if.entry27:                                       ; preds = %for.end
   %57 = add nuw nsw i64 %idx.0.lcssa, 1
-  %58 = tail call ptr @LLVMBuildPhi(ptr %1, ptr %14, ptr nonnull @276)
+  %58 = tail call ptr @LLVMBuildPhi(ptr %1, ptr %14, ptr nonnull @275)
   call void @LLVMAddIncoming(ptr %58, ptr nonnull %12, ptr nonnull %11, i64 %57)
   br label %common.ret
 }
@@ -43093,11 +43173,11 @@ if.entry.i:                                       ; preds = %for.body
   %13 = load ptr, ptr %memberidx.i18, align 8
   %14 = call fastcc ptr @CodeGen_codegen_expression(ptr %0, ptr %1, ptr %13)
   %15 = load ptr, ptr %memberidx1.i19, align 8
-  %16 = call ptr @LLVMAppendBasicBlock(ptr %15, ptr nonnull @282)
+  %16 = call ptr @LLVMAppendBasicBlock(ptr %15, ptr nonnull @281)
   %17 = load ptr, ptr %memberidx1.i19, align 8
-  %18 = call ptr @LLVMAppendBasicBlock(ptr %17, ptr nonnull @45)
+  %18 = call ptr @LLVMAppendBasicBlock(ptr %17, ptr nonnull @44)
   %19 = load ptr, ptr %memberidx1.i19, align 8
-  %20 = call ptr @LLVMAppendBasicBlock(ptr %19, ptr nonnull @283)
+  %20 = call ptr @LLVMAppendBasicBlock(ptr %19, ptr nonnull @282)
   %21 = call ptr @LLVMBuildCondBr(ptr %1, ptr %14, ptr %16, ptr %18)
   call void @LLVMPositionBuilderAtEnd(ptr %1, ptr %16)
   %memberidx4.i = getelementptr inbounds %IfStatement, ptr %10, i64 0, i32 2
@@ -43166,15 +43246,15 @@ if.entry2.i:                                      ; preds = %ifend.i
   %42 = load ptr, ptr %memberidx.i26, align 8
   %43 = load ptr, ptr %memberidx1.i27, align 8
   %44 = load ptr, ptr %memberidx1.i19, align 8
-  %45 = call ptr @LLVMAppendBasicBlock(ptr %44, ptr nonnull @284)
+  %45 = call ptr @LLVMAppendBasicBlock(ptr %44, ptr nonnull @283)
   %46 = call ptr @LLVMBuildBr(ptr %1, ptr %45)
   call void @LLVMPositionBuilderAtEnd(ptr %1, ptr %45)
   %47 = load ptr, ptr %memberidx1.i19, align 8
-  %48 = call ptr @LLVMAppendBasicBlock(ptr %47, ptr nonnull @285)
+  %48 = call ptr @LLVMAppendBasicBlock(ptr %47, ptr nonnull @284)
   %49 = load ptr, ptr %memberidx1.i19, align 8
-  %50 = call ptr @LLVMAppendBasicBlock(ptr %49, ptr nonnull @286)
+  %50 = call ptr @LLVMAppendBasicBlock(ptr %49, ptr nonnull @285)
   %51 = load ptr, ptr %memberidx1.i19, align 8
-  %52 = call ptr @LLVMAppendBasicBlock(ptr %51, ptr nonnull @287)
+  %52 = call ptr @LLVMAppendBasicBlock(ptr %51, ptr nonnull @286)
   %memberidx6.i29 = getelementptr inbounds %ForStatement, ptr %10, i64 0, i32 2
   %53 = load ptr, ptr %memberidx6.i29, align 8
   %54 = call fastcc ptr @CodeGen_codegen_expression(ptr %0, ptr %1, ptr %53)
@@ -43198,7 +43278,7 @@ if.entry2.i:                                      ; preds = %ifend.i
   %memberidx10.i = getelementptr inbounds %FunctionType, ptr %61, i64 0, i32 2
   %62 = load ptr, ptr %memberidx10.i, align 8
   %63 = call fastcc ptr @CodeGen_codegen_type(ptr %0, ptr %61, i1 false)
-  %64 = call ptr @LLVMBuildCall2(ptr %1, ptr %63, ptr %59, ptr nonnull %args.i, i64 1, ptr nonnull @79)
+  %64 = call ptr @LLVMBuildCall2(ptr %1, ptr %63, ptr %59, ptr nonnull %args.i, i64 1, ptr nonnull @78)
   store ptr %64, ptr %args.i, align 8
   %65 = call ptr @malloc(i32 4)
   store i32 1954047342, ptr %65, align 8
@@ -43213,7 +43293,7 @@ if.entry2.i:                                      ; preds = %ifend.i
   call void @LLVMPositionBuilderAtEnd(ptr %1, ptr %48)
   %69 = load ptr, ptr %next_func_type.i, align 8
   %70 = call fastcc ptr @CodeGen_codegen_type(ptr %0, ptr %69, i1 false)
-  %71 = call ptr @LLVMBuildCall2(ptr %1, ptr %70, ptr %67, ptr nonnull %args.i, i64 1, ptr nonnull @79)
+  %71 = call ptr @LLVMBuildCall2(ptr %1, ptr %70, ptr %67, ptr nonnull %args.i, i64 1, ptr nonnull @78)
   %72 = load ptr, ptr %memberidx9.i, align 8
   %memberidx12.i = getelementptr inbounds %VarDeclaration, ptr %72, i64 0, i32 2
   %73 = load ptr, ptr %memberidx12.i, align 8
@@ -43268,11 +43348,11 @@ ifend4.i:                                         ; preds = %CodeGen_codegen_for
 
 if.entry6.i:                                      ; preds = %ifend4.i
   %92 = load ptr, ptr %memberidx1.i19, align 8
-  %93 = call ptr @LLVMAppendBasicBlock(ptr %92, ptr nonnull @288)
+  %93 = call ptr @LLVMAppendBasicBlock(ptr %92, ptr nonnull @287)
   %94 = load ptr, ptr %memberidx1.i19, align 8
-  %95 = call ptr @LLVMAppendBasicBlock(ptr %94, ptr nonnull @289)
+  %95 = call ptr @LLVMAppendBasicBlock(ptr %94, ptr nonnull @288)
   %96 = load ptr, ptr %memberidx1.i19, align 8
-  %97 = call ptr @LLVMAppendBasicBlock(ptr %96, ptr nonnull @290)
+  %97 = call ptr @LLVMAppendBasicBlock(ptr %96, ptr nonnull @289)
   %98 = load ptr, ptr %memberidx.i26, align 8
   %99 = load ptr, ptr %memberidx1.i27, align 8
   store ptr %95, ptr %memberidx.i26, align 8
@@ -43466,7 +43546,7 @@ ifend:                                            ; preds = %for.body
   %18 = load i64, ptr %memberidx1.i.i89, align 4
   %memberidx2.i.i90 = getelementptr inbounds %TypeId, ptr %16, i64 0, i32 2
   %19 = load i64, ptr %memberidx2.i.i90, align 4
-  %20 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %3, ptr nonnull @244, i64 %17, i64 %18, i64 %19)
+  %20 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %3, ptr nonnull @243, i64 %17, i64 %18, i64 %19)
   %21 = load ptr, ptr %3, align 8
   %22 = call ptr @malloc(i32 24)
   store ptr %21, ptr %22, align 8
@@ -43484,7 +43564,7 @@ ifend:                                            ; preds = %for.body
   %27 = load i64, ptr %15, align 4
   %memberidx2.i91 = getelementptr inbounds %PropId, ptr %15, i64 0, i32 2
   %28 = load i64, ptr %memberidx2.i91, align 4
-  %29 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %4, ptr nonnull @260, ptr %25, i64 %27, i64 %28)
+  %29 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %4, ptr nonnull @259, ptr %25, i64 %27, i64 %28)
   %30 = load ptr, ptr %4, align 8
   %31 = call ptr @malloc(i32 24)
   store ptr %30, ptr %31, align 8
@@ -43509,7 +43589,7 @@ while.end.i:                                      ; preds = %else.i, %ifend.i.i,
   %memberidx6 = getelementptr inbounds %ClassMethod, ptr %13, i64 0, i32 3
   %39 = load ptr, ptr %memberidx6, align 8
   %40 = call ptr @malloc(i32 11)
-  call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(11) %40, ptr noundef nonnull align 8 dereferenceable(11) @150, i64 11, i1 false)
+  call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(11) %40, ptr noundef nonnull align 8 dereferenceable(11) @149, i64 11, i1 false)
   %41 = call ptr @malloc(i32 24)
   store ptr %40, ptr %41, align 8
   %memberidx1.i.i95 = getelementptr inbounds %String, ptr %41, i64 0, i32 1
@@ -43585,7 +43665,7 @@ String___eq__.exit:                               ; preds = %while.end.i, %ifend
   %76 = getelementptr inbounds i8, ptr %73, i64 %75
   store i8 0, ptr %76, align 1
   %77 = alloca ptr, align 8
-  %78 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %77, ptr nonnull @105, ptr %65, ptr %73)
+  %78 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %77, ptr nonnull @104, ptr %65, ptr %73)
   %79 = load ptr, ptr %77, align 8
   %80 = tail call ptr @malloc(i32 24)
   store ptr %79, ptr %80, align 8
@@ -43602,7 +43682,7 @@ String___eq__.exit:                               ; preds = %while.end.i, %ifend
   %84 = getelementptr inbounds i8, ptr %83, i64 %78
   store i8 0, ptr %84, align 1
   %85 = call ptr @LLVMGetNamedFunction(ptr %60, ptr %83)
-  %86 = call ptr @LLVMAppendBasicBlock(ptr %85, ptr nonnull @79)
+  %86 = call ptr @LLVMAppendBasicBlock(ptr %85, ptr nonnull @78)
   %87 = call ptr @LLVMCreateBuilder()
   call void @LLVMPositionBuilderAtEnd(ptr %87, ptr %86)
   %memberidx10 = getelementptr inbounds %ClassMethod, ptr %13, i64 0, i32 8
@@ -43721,7 +43801,7 @@ if.entry22:                                       ; preds = %if.entry18
   %memberidx27 = getelementptr inbounds %Scope, ptr %141, i64 0, i32 1
   %142 = load ptr, ptr %memberidx27, align 8
   %143 = call ptr @malloc(i32 5)
-  call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(5) %143, ptr noundef nonnull align 8 dereferenceable(5) @154, i64 5, i1 false)
+  call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(5) %143, ptr noundef nonnull align 8 dereferenceable(5) @153, i64 5, i1 false)
   %144 = call ptr @malloc(i32 24)
   store ptr %143, ptr %144, align 8
   %memberidx1.i.i128 = getelementptr inbounds %String, ptr %144, i64 0, i32 1
@@ -43823,7 +43903,7 @@ CodeGen_get_or_codegen_class_from_typeid.exit:    ; preds = %if.entry28, %ifend.
   %186 = load i64, ptr %165, align 4
   %memberidx2.i149 = getelementptr inbounds %VarId, ptr %165, i64 0, i32 2
   %187 = load i64, ptr %memberidx2.i149, align 4
-  %188 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %2, ptr nonnull @244, i64 %185, i64 %186, i64 %187)
+  %188 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %2, ptr nonnull @243, i64 %185, i64 %186, i64 %187)
   %189 = load ptr, ptr %2, align 8
   %190 = call ptr @malloc(i32 24)
   store ptr %189, ptr %190, align 8
@@ -43907,7 +43987,7 @@ define internal fastcc ptr @CodeGen_codegen_string_to_cstring(ptr nocapture %0, 
   %memberidx4 = getelementptr inbounds %Scope, ptr %16, i64 0, i32 2
   %17 = load ptr, ptr %memberidx4, align 8
   %18 = tail call ptr @malloc(i32 6)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(6) %18, ptr noundef nonnull align 8 dereferenceable(6) @187, i64 6, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(6) %18, ptr noundef nonnull align 8 dereferenceable(6) @186, i64 6, i1 false)
   %19 = tail call ptr @malloc(i32 24)
   store ptr %18, ptr %19, align 8
   %memberidx1.i.i12 = getelementptr inbounds %String, ptr %19, i64 0, i32 1
@@ -43975,7 +44055,7 @@ Map_String_ClassId____getitem__.exit:             ; preds = %else.i, %3, %while.
   %memberidx.i = getelementptr inbounds %ObjectType, ptr %41, i64 0, i32 1
   store ptr %common.ret.op.i, ptr %memberidx.i, align 8
   %42 = tail call ptr @malloc(i32 10)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(10) %42, ptr noundef nonnull align 8 dereferenceable(10) @280, i64 10, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(10) %42, ptr noundef nonnull align 8 dereferenceable(10) @279, i64 10, i1 false)
   %43 = tail call ptr @malloc(i32 24)
   store ptr %42, ptr %43, align 8
   %memberidx1.i.i = getelementptr inbounds %String, ptr %43, i64 0, i32 1
@@ -43986,7 +44066,7 @@ Map_String_ClassId____getitem__.exit:             ; preds = %else.i, %3, %while.
   store ptr %2, ptr %args, align 8
   %45 = load ptr, ptr %prop_ty, align 8
   %46 = call fastcc ptr @CodeGen_codegen_type(ptr %0, ptr %45, i1 false)
-  %47 = call ptr @LLVMBuildCall2(ptr %1, ptr %46, ptr %44, ptr nonnull %args, i64 1, ptr nonnull @79)
+  %47 = call ptr @LLVMBuildCall2(ptr %1, ptr %46, ptr %44, ptr nonnull %args, i64 1, ptr nonnull @78)
   ret ptr %47
 }
 
@@ -44202,7 +44282,7 @@ define internal fastcc ptr @CodeGen_get_string_val(ptr nocapture %0, ptr %1, ptr
   ]
 
 common.ret:                                       ; preds = %ifend4, %if.entry.i, %Map_String_LLVMValueRef____getitem__.exit, %if.entry.i124, %Map_String_LLVMValueRef____getitem__.exit209, %CodeGen_get_or_codegen_enum_from_typeid.exit, %Array_LLVMValueRef____sl__.exit103, %Array_LLVMValueRef____sl__.exit150, %CodeGen_createGlobalLLVMString.exit163
-  %common.ret.op = phi ptr [ %67, %CodeGen_createGlobalLLVMString.exit163 ], [ %102, %Array_LLVMValueRef____sl__.exit150 ], [ %269, %Array_LLVMValueRef____sl__.exit103 ], [ %378, %CodeGen_get_or_codegen_enum_from_typeid.exit ], [ %192, %if.entry.i124 ], [ %185, %Map_String_LLVMValueRef____getitem__.exit209 ], [ %357, %if.entry.i ], [ %353, %Map_String_LLVMValueRef____getitem__.exit ], [ %2, %ifend4 ]
+  %common.ret.op = phi ptr [ %67, %CodeGen_createGlobalLLVMString.exit163 ], [ %103, %Array_LLVMValueRef____sl__.exit150 ], [ %270, %Array_LLVMValueRef____sl__.exit103 ], [ %379, %CodeGen_get_or_codegen_enum_from_typeid.exit ], [ %193, %if.entry.i124 ], [ %186, %Map_String_LLVMValueRef____getitem__.exit209 ], [ %358, %if.entry.i ], [ %354, %Map_String_LLVMValueRef____getitem__.exit ], [ %2, %ifend4 ]
   ret ptr %common.ret.op
 
 if.entry:                                         ; preds = %6
@@ -44277,7 +44357,7 @@ if.entry.i168:                                    ; preds = %else.i241, %if.entr
   store i32 %34, ptr %33, align 8
   %35 = getelementptr inbounds i8, ptr %33, i64 4
   store i8 0, ptr %35, align 1
-  %36 = tail call ptr @LLVMBuildGlobalString(ptr %1, ptr nonnull %33, ptr nonnull @79)
+  %36 = tail call ptr @LLVMBuildGlobalString(ptr %1, ptr nonnull %33, ptr nonnull @78)
   %37 = load ptr, ptr %memberidx.i166, align 8
   tail call fastcc void @Map_String_LLVMValueRef____setitem__(ptr %37, ptr nonnull %9, ptr %36)
   br label %CodeGen_createGlobalLLVMString.exit171
@@ -44285,7 +44365,7 @@ if.entry.i168:                                    ; preds = %else.i241, %if.entr
 CodeGen_createGlobalLLVMString.exit171:           ; preds = %Map_String_LLVMValueRef____getitem__.exit245, %if.entry.i168
   %str.0.i169 = phi ptr [ %36, %if.entry.i168 ], [ %31, %Map_String_LLVMValueRef____getitem__.exit245 ]
   %38 = tail call ptr @malloc(i32 5)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(5) %38, ptr noundef nonnull align 8 dereferenceable(5) @101, i64 5, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(5) %38, ptr noundef nonnull align 8 dereferenceable(5) @100, i64 5, i1 false)
   %39 = tail call ptr @malloc(i32 24)
   store ptr %38, ptr %39, align 8
   %memberidx1.i.i164 = getelementptr inbounds %String, ptr %39, i64 0, i32 1
@@ -44353,14 +44433,14 @@ if.entry.i160:                                    ; preds = %else.i223, %CodeGen
   tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(5) %63, ptr noundef nonnull align 8 dereferenceable(5) %38, i64 5, i1 false)
   %64 = getelementptr inbounds i8, ptr %63, i64 5
   store i8 0, ptr %64, align 1
-  %65 = tail call ptr @LLVMBuildGlobalString(ptr %1, ptr %63, ptr nonnull @79)
+  %65 = tail call ptr @LLVMBuildGlobalString(ptr %1, ptr %63, ptr nonnull @78)
   %66 = load ptr, ptr %memberidx.i166, align 8
   tail call fastcc void @Map_String_LLVMValueRef____setitem__(ptr %66, ptr nonnull %39, ptr %65)
   br label %CodeGen_createGlobalLLVMString.exit163
 
 CodeGen_createGlobalLLVMString.exit163:           ; preds = %Map_String_LLVMValueRef____getitem__.exit227, %if.entry.i160
   %str.0.i161 = phi ptr [ %65, %if.entry.i160 ], [ %61, %Map_String_LLVMValueRef____getitem__.exit227 ]
-  %67 = tail call ptr @LLVMBuildSelect(ptr %1, ptr %2, ptr %str.0.i169, ptr %str.0.i161, ptr nonnull @79)
+  %67 = tail call ptr @LLVMBuildSelect(ptr %1, ptr %2, ptr %str.0.i169, ptr %str.0.i161, ptr nonnull @78)
   br label %common.ret
 
 if.entry.i294:                                    ; preds = %6, %if.entry.i294
@@ -44380,7 +44460,7 @@ if.entry2:                                        ; preds = %is_object.exit297
   %memberidx = getelementptr inbounds %CodeGen, ptr %0, i64 0, i32 4
   %72 = load ptr, ptr %memberidx, align 8
   %73 = tail call ptr @malloc(i32 6)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(6) %73, ptr noundef nonnull align 8 dereferenceable(6) @187, i64 6, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(6) %73, ptr noundef nonnull align 8 dereferenceable(6) @186, i64 6, i1 false)
   %74 = tail call ptr @malloc(i32 24)
   store ptr %73, ptr %74, align 8
   %memberidx1.i.i156 = getelementptr inbounds %String, ptr %74, i64 0, i32 1
@@ -44445,9 +44525,10 @@ String___eq__.exit.i:                             ; preds = %if.entry3.i284
   %97 = icmp eq i64 %96, 0
   %98 = load ptr, ptr %92, align 8
   %99 = load i64, ptr %98, align 4
-  %100 = icmp eq i64 %99, 1
-  %101 = and i1 %97, %100
-  br i1 %101, label %if.entry5, label %ifend7
+  %100 = load i64, ptr @BUILTIN_MODULE_ID, align 8
+  %101 = icmp eq i64 %99, %100
+  %102 = and i1 %97, %101
+  br i1 %102, label %if.entry5, label %ifend7
 
 ifend4:                                           ; preds = %is_object.exit297
   switch i64 %7, label %common.ret [
@@ -44456,27 +44537,27 @@ ifend4:                                           ; preds = %is_object.exit297
   ]
 
 if.entry5:                                        ; preds = %String___eq__.exit.i
-  %102 = tail call fastcc ptr @CodeGen_codegen_string_to_cstring(ptr %0, ptr %1, ptr %2)
+  %103 = tail call fastcc ptr @CodeGen_codegen_string_to_cstring(ptr %0, ptr %1, ptr %2)
   %memberidx.i146 = getelementptr inbounds %Array_LLVMValueRef_, ptr %4, i64 0, i32 1
-  %103 = load i64, ptr %memberidx.i146, align 4
-  %104 = add i64 %103, 1
+  %104 = load i64, ptr %memberidx.i146, align 4
+  %105 = add i64 %104, 1
   %memberidx.i.i147 = getelementptr inbounds %Array_LLVMValueRef_, ptr %4, i64 0, i32 2
-  %105 = load i64, ptr %memberidx.i.i147, align 4
-  %106 = icmp slt i64 %105, %104
+  %106 = load i64, ptr %memberidx.i.i147, align 4
+  %107 = icmp slt i64 %106, %105
   %.pre368 = load ptr, ptr %4, align 8
-  br i1 %106, label %while.body.i.i149, label %Array_LLVMValueRef____sl__.exit150
+  br i1 %107, label %while.body.i.i149, label %Array_LLVMValueRef____sl__.exit150
 
 while.body.i.i149:                                ; preds = %if.entry5, %while.body.i.i149
-  %107 = phi ptr [ %111, %while.body.i.i149 ], [ %.pre368, %if.entry5 ]
-  %108 = phi i64 [ %112, %while.body.i.i149 ], [ %105, %if.entry5 ]
-  %109 = shl nuw i64 %108, 1
-  store i64 %109, ptr %memberidx.i.i147, align 4
-  %110 = shl i64 %108, 4
-  %111 = tail call ptr @realloc(ptr %107, i64 %110)
-  store ptr %111, ptr %4, align 8
-  %112 = load i64, ptr %memberidx.i.i147, align 4
-  %113 = icmp slt i64 %112, %104
-  br i1 %113, label %while.body.i.i149, label %Array_LLVMValueRef____sl__.exit150.loopexit
+  %108 = phi ptr [ %112, %while.body.i.i149 ], [ %.pre368, %if.entry5 ]
+  %109 = phi i64 [ %113, %while.body.i.i149 ], [ %106, %if.entry5 ]
+  %110 = shl nuw i64 %109, 1
+  store i64 %110, ptr %memberidx.i.i147, align 4
+  %111 = shl i64 %109, 4
+  %112 = tail call ptr @realloc(ptr %108, i64 %111)
+  store ptr %112, ptr %4, align 8
+  %113 = load i64, ptr %memberidx.i.i147, align 4
+  %114 = icmp slt i64 %113, %105
+  br i1 %114, label %while.body.i.i149, label %Array_LLVMValueRef____sl__.exit150.loopexit
 
 Array_LLVMValueRef____sl__.exit150.loopexit:      ; preds = %while.body.i.i149
   %.pre369 = load i64, ptr %memberidx.i146, align 4
@@ -44484,378 +44565,378 @@ Array_LLVMValueRef____sl__.exit150.loopexit:      ; preds = %while.body.i.i149
   br label %Array_LLVMValueRef____sl__.exit150
 
 Array_LLVMValueRef____sl__.exit150:               ; preds = %if.entry5, %Array_LLVMValueRef____sl__.exit150.loopexit
-  %.pre-phi = phi i64 [ %.pre379, %Array_LLVMValueRef____sl__.exit150.loopexit ], [ %104, %if.entry5 ]
-  %114 = phi ptr [ %111, %Array_LLVMValueRef____sl__.exit150.loopexit ], [ %.pre368, %if.entry5 ]
-  %115 = phi i64 [ %.pre369, %Array_LLVMValueRef____sl__.exit150.loopexit ], [ %103, %if.entry5 ]
+  %.pre-phi = phi i64 [ %.pre379, %Array_LLVMValueRef____sl__.exit150.loopexit ], [ %105, %if.entry5 ]
+  %115 = phi ptr [ %112, %Array_LLVMValueRef____sl__.exit150.loopexit ], [ %.pre368, %if.entry5 ]
+  %116 = phi i64 [ %.pre369, %Array_LLVMValueRef____sl__.exit150.loopexit ], [ %104, %if.entry5 ]
   store i64 %.pre-phi, ptr %memberidx.i146, align 4
-  %116 = getelementptr inbounds ptr, ptr %114, i64 %115
-  store ptr %102, ptr %116, align 8
+  %117 = getelementptr inbounds ptr, ptr %115, i64 %116
+  store ptr %103, ptr %117, align 8
   br label %common.ret
 
 ifend7:                                           ; preds = %if.entry.i288, %is_object.exit291.thread, %if.entry3.i284, %String___eq__.exit.i
-  %117 = load ptr, ptr %memberidx, align 8
+  %118 = load ptr, ptr %memberidx, align 8
   br label %tailrecurse.i
 
 tailrecurse.i:                                    ; preds = %if.entry.i272, %ifend7
-  %.tr11.i = phi ptr [ %3, %ifend7 ], [ %119, %if.entry.i272 ]
-  %118 = load i64, ptr %.tr11.i, align 4
-  switch i64 %118, label %get_class_from_type.exit [
+  %.tr11.i = phi ptr [ %3, %ifend7 ], [ %120, %if.entry.i272 ]
+  %119 = load i64, ptr %.tr11.i, align 4
+  switch i64 %119, label %get_class_from_type.exit [
     i64 20, label %if.entry.i272
     i64 11, label %if.entry3.i
   ]
 
 if.entry.i272:                                    ; preds = %tailrecurse.i
   %memberidx1.i271 = getelementptr inbounds %GenericType, ptr %.tr11.i, i64 0, i32 3
-  %119 = load ptr, ptr %memberidx1.i271, align 8
+  %120 = load ptr, ptr %memberidx1.i271, align 8
   br label %tailrecurse.i
 
 if.entry3.i:                                      ; preds = %tailrecurse.i
   %memberidx6.i273 = getelementptr inbounds %ObjectType, ptr %.tr11.i, i64 0, i32 1
-  %120 = load ptr, ptr %memberidx6.i273, align 8
-  %121 = load ptr, ptr %117, align 8
-  %122 = load i64, ptr %120, align 4
-  %123 = load ptr, ptr %121, align 8
-  %124 = getelementptr inbounds ptr, ptr %123, i64 %122
-  %125 = load ptr, ptr %124, align 8
-  %memberidx2.i.i274 = getelementptr inbounds %Module, ptr %125, i64 0, i32 3
-  %126 = load ptr, ptr %memberidx2.i.i274, align 8
-  %memberidx3.i.i275 = getelementptr inbounds %TypeId, ptr %120, i64 0, i32 2
-  %127 = load i64, ptr %memberidx3.i.i275, align 4
-  %128 = load ptr, ptr %126, align 8
-  %129 = getelementptr inbounds ptr, ptr %128, i64 %127
-  %130 = load ptr, ptr %129, align 8
+  %121 = load ptr, ptr %memberidx6.i273, align 8
+  %122 = load ptr, ptr %118, align 8
+  %123 = load i64, ptr %121, align 4
+  %124 = load ptr, ptr %122, align 8
+  %125 = getelementptr inbounds ptr, ptr %124, i64 %123
+  %126 = load ptr, ptr %125, align 8
+  %memberidx2.i.i274 = getelementptr inbounds %Module, ptr %126, i64 0, i32 3
+  %127 = load ptr, ptr %memberidx2.i.i274, align 8
+  %memberidx3.i.i275 = getelementptr inbounds %TypeId, ptr %121, i64 0, i32 2
+  %128 = load i64, ptr %memberidx3.i.i275, align 4
+  %129 = load ptr, ptr %127, align 8
+  %130 = getelementptr inbounds ptr, ptr %129, i64 %128
+  %131 = load ptr, ptr %130, align 8
   br label %get_class_from_type.exit
 
 get_class_from_type.exit:                         ; preds = %tailrecurse.i, %if.entry3.i
-  %common.ret.op.i270 = phi ptr [ %130, %if.entry3.i ], [ null, %tailrecurse.i ]
+  %common.ret.op.i270 = phi ptr [ %131, %if.entry3.i ], [ null, %tailrecurse.i ]
   %memberidx9 = getelementptr inbounds %Class, ptr %common.ret.op.i270, i64 0, i32 1
-  %131 = load ptr, ptr %memberidx9, align 8
-  %memberidx10 = getelementptr inbounds %String, ptr %131, i64 0, i32 1
-  %132 = load i64, ptr %memberidx10, align 4
-  %133 = add nuw i64 %132, 14
-  %134 = trunc i64 %133 to i32
-  %135 = tail call ptr @malloc(i32 %134)
-  %136 = tail call ptr @malloc(i32 24)
-  store ptr %135, ptr %136, align 8
-  %memberidx1.i.i143 = getelementptr inbounds %String, ptr %136, i64 0, i32 1
+  %132 = load ptr, ptr %memberidx9, align 8
+  %memberidx10 = getelementptr inbounds %String, ptr %132, i64 0, i32 1
+  %133 = load i64, ptr %memberidx10, align 4
+  %134 = add nuw i64 %133, 14
+  %135 = trunc i64 %134 to i32
+  %136 = tail call ptr @malloc(i32 %135)
+  %137 = tail call ptr @malloc(i32 24)
+  store ptr %136, ptr %137, align 8
+  %memberidx1.i.i143 = getelementptr inbounds %String, ptr %137, i64 0, i32 1
   store i64 0, ptr %memberidx1.i.i143, align 4
-  %memberidx.i145 = getelementptr inbounds %String, ptr %136, i64 0, i32 2
-  store i64 %133, ptr %memberidx.i145, align 4
-  %137 = load ptr, ptr %memberidx9, align 8
-  %memberidx.i142 = getelementptr inbounds %String, ptr %137, i64 0, i32 1
-  %138 = load i64, ptr %memberidx.i142, align 4
-  %139 = trunc i64 %138 to i32
-  %140 = add i32 %139, 1
-  %141 = tail call ptr @malloc(i32 %140)
-  %142 = load ptr, ptr %137, align 8
-  %143 = load i64, ptr %memberidx.i142, align 4
-  tail call void @llvm.memcpy.p0.p0.i64(ptr align 8 %141, ptr align 8 %142, i64 %143, i1 false)
-  %144 = getelementptr inbounds i8, ptr %141, i64 %143
-  store i8 0, ptr %144, align 1
-  %145 = alloca ptr, align 8
-  %146 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %145, ptr nonnull @248, ptr %141)
-  %147 = load ptr, ptr %145, align 8
-  %148 = tail call ptr @malloc(i32 24)
-  store ptr %147, ptr %148, align 8
-  %memberidx1.i140 = getelementptr inbounds %String, ptr %148, i64 0, i32 1
-  store i64 %146, ptr %memberidx1.i140, align 4
-  %memberidx2.i141 = getelementptr inbounds %String, ptr %148, i64 0, i32 2
-  store i64 %146, ptr %memberidx2.i141, align 4
-  tail call void @free(ptr %141)
-  %149 = icmp slt i64 %133, %146
-  br i1 %149, label %if.entry.i.i.i138, label %String___adda__.exit139
+  %memberidx.i145 = getelementptr inbounds %String, ptr %137, i64 0, i32 2
+  store i64 %134, ptr %memberidx.i145, align 4
+  %138 = load ptr, ptr %memberidx9, align 8
+  %memberidx.i142 = getelementptr inbounds %String, ptr %138, i64 0, i32 1
+  %139 = load i64, ptr %memberidx.i142, align 4
+  %140 = trunc i64 %139 to i32
+  %141 = add i32 %140, 1
+  %142 = tail call ptr @malloc(i32 %141)
+  %143 = load ptr, ptr %138, align 8
+  %144 = load i64, ptr %memberidx.i142, align 4
+  tail call void @llvm.memcpy.p0.p0.i64(ptr align 8 %142, ptr align 8 %143, i64 %144, i1 false)
+  %145 = getelementptr inbounds i8, ptr %142, i64 %144
+  store i8 0, ptr %145, align 1
+  %146 = alloca ptr, align 8
+  %147 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %146, ptr nonnull @247, ptr %142)
+  %148 = load ptr, ptr %146, align 8
+  %149 = tail call ptr @malloc(i32 24)
+  store ptr %148, ptr %149, align 8
+  %memberidx1.i140 = getelementptr inbounds %String, ptr %149, i64 0, i32 1
+  store i64 %147, ptr %memberidx1.i140, align 4
+  %memberidx2.i141 = getelementptr inbounds %String, ptr %149, i64 0, i32 2
+  store i64 %147, ptr %memberidx2.i141, align 4
+  tail call void @free(ptr %142)
+  %150 = icmp slt i64 %134, %147
+  br i1 %150, label %if.entry.i.i.i138, label %String___adda__.exit139
 
 if.entry.i.i.i138:                                ; preds = %get_class_from_type.exit
-  %150 = call ptr @realloc(ptr %135, i64 %146)
-  store ptr %150, ptr %136, align 8
-  store i64 %146, ptr %memberidx.i145, align 4
+  %151 = call ptr @realloc(ptr %136, i64 %147)
+  store ptr %151, ptr %137, align 8
+  store i64 %147, ptr %memberidx.i145, align 4
   br label %String___adda__.exit139
 
 String___adda__.exit139:                          ; preds = %get_class_from_type.exit, %if.entry.i.i.i138
-  %151 = phi i64 [ %133, %get_class_from_type.exit ], [ %146, %if.entry.i.i.i138 ]
-  %152 = phi ptr [ %135, %get_class_from_type.exit ], [ %150, %if.entry.i.i.i138 ]
-  call void @llvm.memcpy.p0.p0.i64(ptr align 1073741824 %152, ptr align 8 %147, i64 %146, i1 false)
-  store i64 %146, ptr %memberidx1.i.i143, align 4
-  %153 = icmp eq i64 %5, 3
-  br i1 %153, label %if.entry12, label %ifend14
+  %152 = phi i64 [ %134, %get_class_from_type.exit ], [ %147, %if.entry.i.i.i138 ]
+  %153 = phi ptr [ %136, %get_class_from_type.exit ], [ %151, %if.entry.i.i.i138 ]
+  call void @llvm.memcpy.p0.p0.i64(ptr align 536870912 %153, ptr align 8 %148, i64 %147, i1 false)
+  store i64 %147, ptr %memberidx1.i.i143, align 4
+  %154 = icmp eq i64 %5, 3
+  br i1 %154, label %if.entry12, label %ifend14
 
 if.entry12:                                       ; preds = %String___adda__.exit139
-  %154 = call ptr @malloc(i32 6)
-  call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(6) %154, ptr noundef nonnull align 8 dereferenceable(6) @249, i64 6, i1 false)
-  %155 = call ptr @malloc(i32 24)
-  store ptr %154, ptr %155, align 8
-  %memberidx1.i.i133 = getelementptr inbounds %String, ptr %155, i64 0, i32 1
+  %155 = call ptr @malloc(i32 6)
+  call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(6) %155, ptr noundef nonnull align 8 dereferenceable(6) @248, i64 6, i1 false)
+  %156 = call ptr @malloc(i32 24)
+  store ptr %155, ptr %156, align 8
+  %memberidx1.i.i133 = getelementptr inbounds %String, ptr %156, i64 0, i32 1
   store i64 6, ptr %memberidx1.i.i133, align 4
-  %memberidx2.i.i134 = getelementptr inbounds %String, ptr %155, i64 0, i32 2
+  %memberidx2.i.i134 = getelementptr inbounds %String, ptr %156, i64 0, i32 2
   store i64 6, ptr %memberidx2.i.i134, align 4
-  %156 = add nuw i64 %146, 6
-  %157 = icmp slt i64 %151, %156
-  br i1 %157, label %if.entry.i.i.i131, label %String___adda__.exit132
+  %157 = add nuw i64 %147, 6
+  %158 = icmp slt i64 %152, %157
+  br i1 %158, label %if.entry.i.i.i131, label %String___adda__.exit132
 
 if.entry.i.i.i131:                                ; preds = %if.entry12
-  %158 = call ptr @realloc(ptr %152, i64 %156)
-  store ptr %158, ptr %136, align 8
-  store i64 %156, ptr %memberidx.i145, align 4
+  %159 = call ptr @realloc(ptr %153, i64 %157)
+  store ptr %159, ptr %137, align 8
+  store i64 %157, ptr %memberidx.i145, align 4
   br label %String___adda__.exit132
 
 String___adda__.exit132:                          ; preds = %if.entry12, %if.entry.i.i.i131
-  %159 = phi ptr [ %152, %if.entry12 ], [ %158, %if.entry.i.i.i131 ]
-  %160 = getelementptr inbounds i8, ptr %159, i64 %146
-  call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 1073741824 dereferenceable(6) %160, ptr noundef nonnull align 8 dereferenceable(6) %154, i64 6, i1 false)
-  %161 = load i64, ptr %memberidx1.i.i143, align 4
-  %162 = add nuw i64 %161, 6
-  store i64 %162, ptr %memberidx1.i.i143, align 4
+  %160 = phi ptr [ %153, %if.entry12 ], [ %159, %if.entry.i.i.i131 ]
+  %161 = getelementptr inbounds i8, ptr %160, i64 %147
+  call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 536870912 dereferenceable(6) %161, ptr noundef nonnull align 8 dereferenceable(6) %155, i64 6, i1 false)
+  %162 = load i64, ptr %memberidx1.i.i143, align 4
+  %163 = add nuw i64 %162, 6
+  store i64 %163, ptr %memberidx1.i.i143, align 4
   %memberidx.i122 = getelementptr inbounds %CodeGen, ptr %0, i64 0, i32 7
-  %163 = load ptr, ptr %memberidx.i122, align 8
-  %164 = call fastcc i64 @Map_String_LLVMValueRef__hash_fnc(ptr nonnull %136)
-  %memberidx.i192 = getelementptr inbounds %Map_String_LLVMValueRef_, ptr %163, i64 0, i32 1
-  %165 = load i64, ptr %memberidx.i192, align 4
-  %166 = urem i64 %164, %165
-  %167 = load ptr, ptr %163, align 8
-  %168 = getelementptr inbounds ptr, ptr %167, i64 %166
-  %169 = load ptr, ptr %168, align 8
-  %.not.i194306 = icmp eq ptr %169, null
+  %164 = load ptr, ptr %memberidx.i122, align 8
+  %165 = call fastcc i64 @Map_String_LLVMValueRef__hash_fnc(ptr nonnull %137)
+  %memberidx.i192 = getelementptr inbounds %Map_String_LLVMValueRef_, ptr %164, i64 0, i32 1
+  %166 = load i64, ptr %memberidx.i192, align 4
+  %167 = urem i64 %165, %166
+  %168 = load ptr, ptr %164, align 8
+  %169 = getelementptr inbounds ptr, ptr %168, i64 %167
+  %170 = load ptr, ptr %169, align 8
+  %.not.i194306 = icmp eq ptr %170, null
   br i1 %.not.i194306, label %if.entry.i124, label %while.body.i201
 
 while.end.i197:                                   ; preds = %ifend.i.i202
-  %.pre365.pre = load ptr, ptr %163, align 8
+  %.pre365.pre = load ptr, ptr %164, align 8
   %.phi.trans.insert366.phi.trans.insert = getelementptr inbounds ptr, ptr %.pre365.pre, i64 %hash.0.i193307
   %.pre367.pre = load ptr, ptr %.phi.trans.insert366.phi.trans.insert, align 8
   %.not22.i196 = icmp eq ptr %.pre367.pre, null
   br i1 %.not22.i196, label %if.entry.i124, label %Map_String_LLVMValueRef____getitem__.exit209
 
 while.body.i201:                                  ; preds = %String___adda__.exit132, %else.i205
-  %170 = phi ptr [ %179, %else.i205 ], [ %167, %String___adda__.exit132 ]
-  %171 = phi i64 [ %180, %else.i205 ], [ %165, %String___adda__.exit132 ]
-  %172 = phi ptr [ %184, %else.i205 ], [ %169, %String___adda__.exit132 ]
-  %hash.0.i193307 = phi i64 [ %182, %else.i205 ], [ %166, %String___adda__.exit132 ]
-  %173 = load ptr, ptr %172, align 8
-  %memberidx.i.i198 = getelementptr inbounds %String, ptr %173, i64 0, i32 1
-  %174 = load i64, ptr %memberidx.i.i198, align 4
-  %.not.i.i200 = icmp eq i64 %174, %162
+  %171 = phi ptr [ %180, %else.i205 ], [ %168, %String___adda__.exit132 ]
+  %172 = phi i64 [ %181, %else.i205 ], [ %166, %String___adda__.exit132 ]
+  %173 = phi ptr [ %185, %else.i205 ], [ %170, %String___adda__.exit132 ]
+  %hash.0.i193307 = phi i64 [ %183, %else.i205 ], [ %167, %String___adda__.exit132 ]
+  %174 = load ptr, ptr %173, align 8
+  %memberidx.i.i198 = getelementptr inbounds %String, ptr %174, i64 0, i32 1
+  %175 = load i64, ptr %memberidx.i.i198, align 4
+  %.not.i.i200 = icmp eq i64 %175, %163
   br i1 %.not.i.i200, label %ifend.i.i202, label %else.i205
 
 ifend.i.i202:                                     ; preds = %while.body.i201
-  %175 = load ptr, ptr %173, align 8
-  %176 = load ptr, ptr %136, align 8
-  %177 = call i64 @memcmp(ptr %175, ptr %176, i64 %162)
-  %178 = icmp eq i64 %177, 0
-  br i1 %178, label %while.end.i197, label %ifend.i.i202.else.i205_crit_edge
+  %176 = load ptr, ptr %174, align 8
+  %177 = load ptr, ptr %137, align 8
+  %178 = call i64 @memcmp(ptr %176, ptr %177, i64 %163)
+  %179 = icmp eq i64 %178, 0
+  br i1 %179, label %while.end.i197, label %ifend.i.i202.else.i205_crit_edge
 
 ifend.i.i202.else.i205_crit_edge:                 ; preds = %ifend.i.i202
   %.pre363 = load i64, ptr %memberidx.i192, align 4
-  %.pre364 = load ptr, ptr %163, align 8
+  %.pre364 = load ptr, ptr %164, align 8
   br label %else.i205
 
 else.i205:                                        ; preds = %ifend.i.i202.else.i205_crit_edge, %while.body.i201
-  %179 = phi ptr [ %.pre364, %ifend.i.i202.else.i205_crit_edge ], [ %170, %while.body.i201 ]
-  %180 = phi i64 [ %.pre363, %ifend.i.i202.else.i205_crit_edge ], [ %171, %while.body.i201 ]
-  %181 = add nuw i64 %hash.0.i193307, 1
-  %182 = urem i64 %181, %180
-  %183 = getelementptr inbounds ptr, ptr %179, i64 %182
-  %184 = load ptr, ptr %183, align 8
-  %.not.i194 = icmp eq ptr %184, null
+  %180 = phi ptr [ %.pre364, %ifend.i.i202.else.i205_crit_edge ], [ %171, %while.body.i201 ]
+  %181 = phi i64 [ %.pre363, %ifend.i.i202.else.i205_crit_edge ], [ %172, %while.body.i201 ]
+  %182 = add nuw i64 %hash.0.i193307, 1
+  %183 = urem i64 %182, %181
+  %184 = getelementptr inbounds ptr, ptr %180, i64 %183
+  %185 = load ptr, ptr %184, align 8
+  %.not.i194 = icmp eq ptr %185, null
   br i1 %.not.i194, label %if.entry.i124, label %while.body.i201
 
 Map_String_LLVMValueRef____getitem__.exit209:     ; preds = %while.end.i197
   %memberidx10.i207 = getelementptr inbounds %MapEntry_String_LLVMValueRef_, ptr %.pre367.pre, i64 0, i32 1
-  %185 = load ptr, ptr %memberidx10.i207, align 8
-  %186 = icmp eq ptr %185, null
-  br i1 %186, label %if.entry.i124, label %common.ret
+  %186 = load ptr, ptr %memberidx10.i207, align 8
+  %187 = icmp eq ptr %186, null
+  br i1 %187, label %if.entry.i124, label %common.ret
 
 if.entry.i124:                                    ; preds = %else.i205, %String___adda__.exit132, %while.end.i197, %Map_String_LLVMValueRef____getitem__.exit209
-  %187 = trunc i64 %162 to i32
-  %188 = add i32 %187, 1
-  %189 = call ptr @malloc(i32 %188)
-  %190 = load ptr, ptr %136, align 8
-  call void @llvm.memcpy.p0.p0.i64(ptr align 8 %189, ptr align 8 %190, i64 %162, i1 false)
-  %191 = getelementptr inbounds i8, ptr %189, i64 %162
-  store i8 0, ptr %191, align 1
-  %192 = call ptr @LLVMBuildGlobalString(ptr %1, ptr %189, ptr nonnull @79)
-  %193 = load ptr, ptr %memberidx.i122, align 8
-  call fastcc void @Map_String_LLVMValueRef____setitem__(ptr %193, ptr nonnull %136, ptr %192)
+  %188 = trunc i64 %163 to i32
+  %189 = add i32 %188, 1
+  %190 = call ptr @malloc(i32 %189)
+  %191 = load ptr, ptr %137, align 8
+  call void @llvm.memcpy.p0.p0.i64(ptr align 8 %190, ptr align 8 %191, i64 %163, i1 false)
+  %192 = getelementptr inbounds i8, ptr %190, i64 %163
+  store i8 0, ptr %192, align 1
+  %193 = call ptr @LLVMBuildGlobalString(ptr %1, ptr %190, ptr nonnull @78)
+  %194 = load ptr, ptr %memberidx.i122, align 8
+  call fastcc void @Map_String_LLVMValueRef____setitem__(ptr %194, ptr nonnull %137, ptr %193)
   br label %common.ret
 
 ifend14:                                          ; preds = %String___adda__.exit139
   %memberidx15 = getelementptr inbounds %Class, ptr %common.ret.op.i270, i64 0, i32 6
-  %194 = load ptr, ptr %memberidx15, align 8
-  %memberidx16 = getelementptr inbounds %Map_String_PropId_, ptr %194, i64 0, i32 2
-  %195 = load i64, ptr %memberidx16, align 4
-  %196 = alloca ptr, i64 %195, align 8
-  %197 = call ptr @malloc(i32 25)
-  %198 = load ptr, ptr %194, align 8
-  %memberidx1.i118 = getelementptr inbounds %Map_String_PropId_, ptr %194, i64 0, i32 1
-  %199 = load i64, ptr %memberidx1.i118, align 4
-  %200 = load i64, ptr %memberidx16, align 4
-  store i1 false, ptr %197, align 1
-  %memberidx1.i.i120 = getelementptr inbounds %MapIterator_String_PropId_, ptr %197, i64 0, i32 1
-  store ptr %198, ptr %memberidx1.i.i120, align 8
-  %memberidx2.i.i121 = getelementptr inbounds %MapIterator_String_PropId_, ptr %197, i64 0, i32 2
-  store i64 %199, ptr %memberidx2.i.i121, align 4
-  %memberidx3.i.i = getelementptr inbounds %MapIterator_String_PropId_, ptr %197, i64 0, i32 3
-  store i64 %200, ptr %memberidx3.i.i, align 4
-  %201 = add nuw i64 %5, 1
+  %195 = load ptr, ptr %memberidx15, align 8
+  %memberidx16 = getelementptr inbounds %Map_String_PropId_, ptr %195, i64 0, i32 2
+  %196 = load i64, ptr %memberidx16, align 4
+  %197 = alloca ptr, i64 %196, align 8
+  %198 = call ptr @malloc(i32 25)
+  %199 = load ptr, ptr %195, align 8
+  %memberidx1.i118 = getelementptr inbounds %Map_String_PropId_, ptr %195, i64 0, i32 1
+  %200 = load i64, ptr %memberidx1.i118, align 4
+  %201 = load i64, ptr %memberidx16, align 4
+  store i1 false, ptr %198, align 1
+  %memberidx1.i.i120 = getelementptr inbounds %MapIterator_String_PropId_, ptr %198, i64 0, i32 1
+  store ptr %199, ptr %memberidx1.i.i120, align 8
+  %memberidx2.i.i121 = getelementptr inbounds %MapIterator_String_PropId_, ptr %198, i64 0, i32 2
+  store i64 %200, ptr %memberidx2.i.i121, align 4
+  %memberidx3.i.i = getelementptr inbounds %MapIterator_String_PropId_, ptr %198, i64 0, i32 3
+  store i64 %201, ptr %memberidx3.i.i, align 4
+  %202 = add nuw i64 %5, 1
   %memberidx.i97 = getelementptr inbounds %Array_LLVMValueRef_, ptr %4, i64 0, i32 1
   %memberidx.i.i98 = getelementptr inbounds %Array_LLVMValueRef_, ptr %4, i64 0, i32 2
   br label %for.next
 
 for.next:                                         ; preds = %String___adda__.exit, %ifend14
-  %202 = phi i64 [ %146, %ifend14 ], [ %329, %String___adda__.exit ]
-  %203 = phi i64 [ %200, %ifend14 ], [ %212, %String___adda__.exit ]
-  %204 = phi ptr [ %198, %ifend14 ], [ %211, %String___adda__.exit ]
-  %.lcssa309311 = phi i64 [ %199, %ifend14 ], [ %.lcssa, %String___adda__.exit ]
-  %idx.0 = phi i64 [ 0, %ifend14 ], [ %298, %String___adda__.exit ]
+  %203 = phi i64 [ %147, %ifend14 ], [ %330, %String___adda__.exit ]
+  %204 = phi i64 [ %201, %ifend14 ], [ %213, %String___adda__.exit ]
+  %205 = phi ptr [ %199, %ifend14 ], [ %212, %String___adda__.exit ]
+  %.lcssa309311 = phi i64 [ %200, %ifend14 ], [ %.lcssa, %String___adda__.exit ]
+  %idx.0 = phi i64 [ 0, %ifend14 ], [ %299, %String___adda__.exit ]
   %smin = call i64 @llvm.smin.i64(i64 %.lcssa309311, i64 0)
-  %205 = add i64 %smin, -1
+  %206 = add i64 %smin, -1
   br label %while.entry.i
 
 while.entry.i:                                    ; preds = %while.body.i, %for.next
-  %206 = phi ptr [ %incdec.ptr.i, %while.body.i ], [ %204, %for.next ]
-  %207 = phi i64 [ %209, %while.body.i ], [ %.lcssa309311, %for.next ]
-  %208 = icmp sgt i64 %207, 0
-  br i1 %208, label %while.body.i, label %MapIterator_String_PropId__next.exit
+  %207 = phi ptr [ %incdec.ptr.i, %while.body.i ], [ %205, %for.next ]
+  %208 = phi i64 [ %210, %while.body.i ], [ %.lcssa309311, %for.next ]
+  %209 = icmp sgt i64 %208, 0
+  br i1 %209, label %while.body.i, label %MapIterator_String_PropId__next.exit
 
 while.body.i:                                     ; preds = %while.entry.i
-  %209 = add nsw i64 %207, -1
-  %incdec.ptr.i = getelementptr inbounds ptr, ptr %206, i64 1
-  %210 = load ptr, ptr %206, align 8
-  %.not.i = icmp eq ptr %210, null
+  %210 = add nsw i64 %208, -1
+  %incdec.ptr.i = getelementptr inbounds ptr, ptr %207, i64 1
+  %211 = load ptr, ptr %207, align 8
+  %.not.i = icmp eq ptr %211, null
   br i1 %.not.i, label %while.entry.i, label %MapIterator_String_PropId__next.exit
 
 MapIterator_String_PropId__next.exit:             ; preds = %while.entry.i, %while.body.i
-  %.lcssa = phi i64 [ %205, %while.entry.i ], [ %209, %while.body.i ]
-  %211 = phi ptr [ %206, %while.entry.i ], [ %incdec.ptr.i, %while.body.i ]
-  %212 = add nsw i64 %203, -1
-  %213 = icmp slt i64 %203, 1
-  %214 = getelementptr inbounds ptr, ptr %211, i64 -1
-  %215 = load ptr, ptr %214, align 8
-  br i1 %213, label %for.end, label %for.body
+  %.lcssa = phi i64 [ %206, %while.entry.i ], [ %210, %while.body.i ]
+  %212 = phi ptr [ %207, %while.entry.i ], [ %incdec.ptr.i, %while.body.i ]
+  %213 = add nsw i64 %204, -1
+  %214 = icmp slt i64 %204, 1
+  %215 = getelementptr inbounds ptr, ptr %212, i64 -1
+  %216 = load ptr, ptr %215, align 8
+  br i1 %214, label %for.end, label %for.body
 
 for.body:                                         ; preds = %MapIterator_String_PropId__next.exit
-  %216 = load ptr, ptr %memberidx, align 8
-  %memberidx20 = getelementptr inbounds %MapEntry_String_PropId_, ptr %215, i64 0, i32 1
-  %217 = load ptr, ptr %memberidx20, align 8
-  %memberidx.i.i111 = getelementptr inbounds %PropId, ptr %217, i64 0, i32 1
-  %218 = load ptr, ptr %memberidx.i.i111, align 8
-  %219 = load ptr, ptr %216, align 8
-  %220 = load i64, ptr %218, align 4
-  %221 = load ptr, ptr %219, align 8
-  %222 = getelementptr inbounds ptr, ptr %221, i64 %220
-  %223 = load ptr, ptr %222, align 8
-  %memberidx2.i.i.i = getelementptr inbounds %Module, ptr %223, i64 0, i32 3
-  %224 = load ptr, ptr %memberidx2.i.i.i, align 8
-  %memberidx3.i.i.i = getelementptr inbounds %TypeId, ptr %218, i64 0, i32 2
-  %225 = load i64, ptr %memberidx3.i.i.i, align 4
-  %226 = load ptr, ptr %224, align 8
-  %227 = getelementptr inbounds ptr, ptr %226, i64 %225
-  %228 = load ptr, ptr %227, align 8
-  %229 = load i64, ptr %217, align 4
-  %230 = icmp eq i64 %229, 0
-  br i1 %230, label %if.entry.i114, label %ifend.i
+  %217 = load ptr, ptr %memberidx, align 8
+  %memberidx20 = getelementptr inbounds %MapEntry_String_PropId_, ptr %216, i64 0, i32 1
+  %218 = load ptr, ptr %memberidx20, align 8
+  %memberidx.i.i111 = getelementptr inbounds %PropId, ptr %218, i64 0, i32 1
+  %219 = load ptr, ptr %memberidx.i.i111, align 8
+  %220 = load ptr, ptr %217, align 8
+  %221 = load i64, ptr %219, align 4
+  %222 = load ptr, ptr %220, align 8
+  %223 = getelementptr inbounds ptr, ptr %222, i64 %221
+  %224 = load ptr, ptr %223, align 8
+  %memberidx2.i.i.i = getelementptr inbounds %Module, ptr %224, i64 0, i32 3
+  %225 = load ptr, ptr %memberidx2.i.i.i, align 8
+  %memberidx3.i.i.i = getelementptr inbounds %TypeId, ptr %219, i64 0, i32 2
+  %226 = load i64, ptr %memberidx3.i.i.i, align 4
+  %227 = load ptr, ptr %225, align 8
+  %228 = getelementptr inbounds ptr, ptr %227, i64 %226
+  %229 = load ptr, ptr %228, align 8
+  %230 = load i64, ptr %218, align 4
+  %231 = icmp eq i64 %230, 0
+  br i1 %231, label %if.entry.i114, label %ifend.i
 
 if.entry.i114:                                    ; preds = %for.body
-  %memberidx1.i112 = getelementptr inbounds %Class, ptr %228, i64 0, i32 5
-  %231 = load ptr, ptr %memberidx1.i112, align 8
-  %memberidx2.i113 = getelementptr inbounds %PropId, ptr %217, i64 0, i32 2
-  %232 = load i64, ptr %memberidx2.i113, align 4
-  %233 = load ptr, ptr %231, align 8
-  %234 = getelementptr inbounds ptr, ptr %233, i64 %232
-  %235 = load ptr, ptr %234, align 8
-  %memberidx3.i = getelementptr inbounds %ClassMethod, ptr %235, i64 0, i32 4
+  %memberidx1.i112 = getelementptr inbounds %Class, ptr %229, i64 0, i32 5
+  %232 = load ptr, ptr %memberidx1.i112, align 8
+  %memberidx2.i113 = getelementptr inbounds %PropId, ptr %218, i64 0, i32 2
+  %233 = load i64, ptr %memberidx2.i113, align 4
+  %234 = load ptr, ptr %232, align 8
+  %235 = getelementptr inbounds ptr, ptr %234, i64 %233
+  %236 = load ptr, ptr %235, align 8
+  %memberidx3.i = getelementptr inbounds %ClassMethod, ptr %236, i64 0, i32 4
   br label %get_class_prop_type.exit
 
 ifend.i:                                          ; preds = %for.body
-  %memberidx4.i = getelementptr inbounds %Class, ptr %228, i64 0, i32 4
-  %236 = load ptr, ptr %memberidx4.i, align 8
-  %memberidx5.i = getelementptr inbounds %PropId, ptr %217, i64 0, i32 2
-  %237 = load i64, ptr %memberidx5.i, align 4
-  %238 = load ptr, ptr %236, align 8
-  %239 = getelementptr inbounds ptr, ptr %238, i64 %237
-  %240 = load ptr, ptr %239, align 8
-  %memberidx6.i = getelementptr inbounds %ClassField, ptr %240, i64 0, i32 4
+  %memberidx4.i = getelementptr inbounds %Class, ptr %229, i64 0, i32 4
+  %237 = load ptr, ptr %memberidx4.i, align 8
+  %memberidx5.i = getelementptr inbounds %PropId, ptr %218, i64 0, i32 2
+  %238 = load i64, ptr %memberidx5.i, align 4
+  %239 = load ptr, ptr %237, align 8
+  %240 = getelementptr inbounds ptr, ptr %239, i64 %238
+  %241 = load ptr, ptr %240, align 8
+  %memberidx6.i = getelementptr inbounds %ClassField, ptr %241, i64 0, i32 4
   br label %get_class_prop_type.exit
 
 get_class_prop_type.exit:                         ; preds = %if.entry.i114, %ifend.i
   %common.ret.op.in.i = phi ptr [ %memberidx3.i, %if.entry.i114 ], [ %memberidx6.i, %ifend.i ]
   %common.ret.op.i = load ptr, ptr %common.ret.op.in.i, align 8
-  %241 = load ptr, ptr %215, align 8
-  %242 = call fastcc ptr @CodeGen_codgen_get_member_with_name(ptr nonnull %0, ptr %1, ptr %2, ptr nonnull %3, ptr %241, ptr null)
-  %243 = call fastcc ptr @CodeGen_get_string_val(ptr nonnull %0, ptr %1, ptr %242, ptr %common.ret.op.i, ptr %4, i64 %201)
-  %244 = load i64, ptr %common.ret.op.i, align 4
-  %245 = icmp eq i64 %244, 20
-  br i1 %245, label %if.entry.i268, label %is_object.exit
+  %242 = load ptr, ptr %216, align 8
+  %243 = call fastcc ptr @CodeGen_codgen_get_member_with_name(ptr nonnull %0, ptr %1, ptr %2, ptr nonnull %3, ptr %242, ptr null)
+  %244 = call fastcc ptr @CodeGen_get_string_val(ptr nonnull %0, ptr %1, ptr %243, ptr %common.ret.op.i, ptr %4, i64 %202)
+  %245 = load i64, ptr %common.ret.op.i, align 4
+  %246 = icmp eq i64 %245, 20
+  br i1 %246, label %if.entry.i268, label %is_object.exit
 
 if.entry.i268:                                    ; preds = %get_class_prop_type.exit, %if.entry.i268
-  %.tr5.i = phi ptr [ %246, %if.entry.i268 ], [ %common.ret.op.i, %get_class_prop_type.exit ]
+  %.tr5.i = phi ptr [ %247, %if.entry.i268 ], [ %common.ret.op.i, %get_class_prop_type.exit ]
   %memberidx1.i267 = getelementptr inbounds %GenericType, ptr %.tr5.i, i64 0, i32 3
-  %246 = load ptr, ptr %memberidx1.i267, align 8
-  %247 = load i64, ptr %246, align 4
-  %248 = icmp eq i64 %247, 20
-  br i1 %248, label %if.entry.i268, label %is_object.exit
+  %247 = load ptr, ptr %memberidx1.i267, align 8
+  %248 = load i64, ptr %247, align 4
+  %249 = icmp eq i64 %248, 20
+  br i1 %249, label %if.entry.i268, label %is_object.exit
 
 is_object.exit:                                   ; preds = %if.entry.i268, %get_class_prop_type.exit
-  %.lcssa.i = phi i64 [ %244, %get_class_prop_type.exit ], [ %247, %if.entry.i268 ]
-  %249 = icmp eq i64 %.lcssa.i, 11
-  %250 = call ptr @LLVMTypeOf(ptr %243)
-  %251 = call i64 @LLVMGetTypeKind(ptr %250)
-  %252 = icmp ne i64 %251, 12
-  %253 = call i1 @LLVMIsGlobalConstant(ptr %243)
-  %254 = or i1 %249, %253
-  %255 = or i1 %252, %254
-  br i1 %255, label %ifend24, label %if.entry22
+  %.lcssa.i = phi i64 [ %245, %get_class_prop_type.exit ], [ %248, %if.entry.i268 ]
+  %250 = icmp eq i64 %.lcssa.i, 11
+  %251 = call ptr @LLVMTypeOf(ptr %244)
+  %252 = call i64 @LLVMGetTypeKind(ptr %251)
+  %253 = icmp ne i64 %252, 12
+  %254 = call i1 @LLVMIsGlobalConstant(ptr %244)
+  %255 = or i1 %250, %254
+  %256 = or i1 %253, %255
+  br i1 %256, label %ifend24, label %if.entry22
 
 for.end:                                          ; preds = %MapIterator_String_PropId__next.exit
-  tail call void @free(ptr nonnull %197)
-  %256 = call ptr @malloc(i32 1)
-  store i8 125, ptr %256, align 8
-  %257 = call ptr @malloc(i32 24)
-  store ptr %256, ptr %257, align 8
-  %memberidx1.i.i109 = getelementptr inbounds %String, ptr %257, i64 0, i32 1
+  tail call void @free(ptr nonnull %198)
+  %257 = call ptr @malloc(i32 1)
+  store i8 125, ptr %257, align 8
+  %258 = call ptr @malloc(i32 24)
+  store ptr %257, ptr %258, align 8
+  %memberidx1.i.i109 = getelementptr inbounds %String, ptr %258, i64 0, i32 1
   store i64 1, ptr %memberidx1.i.i109, align 4
-  %memberidx2.i.i110 = getelementptr inbounds %String, ptr %257, i64 0, i32 2
+  %memberidx2.i.i110 = getelementptr inbounds %String, ptr %258, i64 0, i32 2
   store i64 1, ptr %memberidx2.i.i110, align 4
-  %258 = add nuw i64 %202, 1
-  %259 = load i64, ptr %memberidx.i145, align 4
-  %260 = icmp slt i64 %259, %258
-  %261 = load ptr, ptr %136, align 8
-  br i1 %260, label %if.entry.i.i.i107, label %String___adda__.exit108
+  %259 = add nuw i64 %203, 1
+  %260 = load i64, ptr %memberidx.i145, align 4
+  %261 = icmp slt i64 %260, %259
+  %262 = load ptr, ptr %137, align 8
+  br i1 %261, label %if.entry.i.i.i107, label %String___adda__.exit108
 
 if.entry.i.i.i107:                                ; preds = %for.end
-  %262 = call ptr @realloc(ptr %261, i64 %258)
-  store ptr %262, ptr %136, align 8
-  store i64 %258, ptr %memberidx.i145, align 4
+  %263 = call ptr @realloc(ptr %262, i64 %259)
+  store ptr %263, ptr %137, align 8
+  store i64 %259, ptr %memberidx.i145, align 4
   %.pre358 = load i64, ptr %memberidx1.i.i143, align 4
-  %.pre359 = load i8, ptr %256, align 8
+  %.pre359 = load i8, ptr %257, align 8
   br label %String___adda__.exit108
 
 String___adda__.exit108:                          ; preds = %for.end, %if.entry.i.i.i107
-  %263 = phi i8 [ %.pre359, %if.entry.i.i.i107 ], [ 125, %for.end ]
-  %264 = phi i64 [ %.pre358, %if.entry.i.i.i107 ], [ %202, %for.end ]
-  %265 = phi ptr [ %262, %if.entry.i.i.i107 ], [ %261, %for.end ]
-  %266 = getelementptr inbounds i8, ptr %265, i64 %264
-  store i8 %263, ptr %266, align 1073741824
-  %267 = load i64, ptr %memberidx1.i.i143, align 4
-  %268 = add nuw i64 %267, 1
-  store i64 %268, ptr %memberidx1.i.i143, align 4
-  %269 = call fastcc ptr @CodeGen_codegen_safe_fmt_string(ptr %0, ptr %1, ptr nonnull %136, ptr nonnull %196, i64 %195, ptr null)
-  %270 = load i64, ptr %memberidx.i97, align 4
-  %271 = add i64 %270, 1
-  %272 = load i64, ptr %memberidx.i.i98, align 4
-  %273 = icmp slt i64 %272, %271
+  %264 = phi i8 [ %.pre359, %if.entry.i.i.i107 ], [ 125, %for.end ]
+  %265 = phi i64 [ %.pre358, %if.entry.i.i.i107 ], [ %203, %for.end ]
+  %266 = phi ptr [ %263, %if.entry.i.i.i107 ], [ %262, %for.end ]
+  %267 = getelementptr inbounds i8, ptr %266, i64 %265
+  store i8 %264, ptr %267, align 536870912
+  %268 = load i64, ptr %memberidx1.i.i143, align 4
+  %269 = add nuw i64 %268, 1
+  store i64 %269, ptr %memberidx1.i.i143, align 4
+  %270 = call fastcc ptr @CodeGen_codegen_safe_fmt_string(ptr %0, ptr %1, ptr nonnull %137, ptr nonnull %197, i64 %196, ptr null)
+  %271 = load i64, ptr %memberidx.i97, align 4
+  %272 = add i64 %271, 1
+  %273 = load i64, ptr %memberidx.i.i98, align 4
+  %274 = icmp slt i64 %273, %272
   %.pre360 = load ptr, ptr %4, align 8
-  br i1 %273, label %while.body.i.i102, label %Array_LLVMValueRef____sl__.exit103
+  br i1 %274, label %while.body.i.i102, label %Array_LLVMValueRef____sl__.exit103
 
 while.body.i.i102:                                ; preds = %String___adda__.exit108, %while.body.i.i102
-  %274 = phi ptr [ %278, %while.body.i.i102 ], [ %.pre360, %String___adda__.exit108 ]
-  %275 = phi i64 [ %279, %while.body.i.i102 ], [ %272, %String___adda__.exit108 ]
-  %276 = shl nuw i64 %275, 1
-  store i64 %276, ptr %memberidx.i.i98, align 4
-  %277 = shl i64 %275, 4
-  %278 = call ptr @realloc(ptr %274, i64 %277)
-  store ptr %278, ptr %4, align 8
-  %279 = load i64, ptr %memberidx.i.i98, align 4
-  %280 = icmp slt i64 %279, %271
-  br i1 %280, label %while.body.i.i102, label %Array_LLVMValueRef____sl__.exit103.loopexit
+  %275 = phi ptr [ %279, %while.body.i.i102 ], [ %.pre360, %String___adda__.exit108 ]
+  %276 = phi i64 [ %280, %while.body.i.i102 ], [ %273, %String___adda__.exit108 ]
+  %277 = shl nuw i64 %276, 1
+  store i64 %277, ptr %memberidx.i.i98, align 4
+  %278 = shl i64 %276, 4
+  %279 = call ptr @realloc(ptr %275, i64 %278)
+  store ptr %279, ptr %4, align 8
+  %280 = load i64, ptr %memberidx.i.i98, align 4
+  %281 = icmp slt i64 %280, %272
+  br i1 %281, label %while.body.i.i102, label %Array_LLVMValueRef____sl__.exit103.loopexit
 
 Array_LLVMValueRef____sl__.exit103.loopexit:      ; preds = %while.body.i.i102
   %.pre361 = load i64, ptr %memberidx.i97, align 4
@@ -44863,33 +44944,33 @@ Array_LLVMValueRef____sl__.exit103.loopexit:      ; preds = %while.body.i.i102
   br label %Array_LLVMValueRef____sl__.exit103
 
 Array_LLVMValueRef____sl__.exit103:               ; preds = %String___adda__.exit108, %Array_LLVMValueRef____sl__.exit103.loopexit
-  %.pre-phi381 = phi i64 [ %.pre380, %Array_LLVMValueRef____sl__.exit103.loopexit ], [ %271, %String___adda__.exit108 ]
-  %281 = phi ptr [ %278, %Array_LLVMValueRef____sl__.exit103.loopexit ], [ %.pre360, %String___adda__.exit108 ]
-  %282 = phi i64 [ %.pre361, %Array_LLVMValueRef____sl__.exit103.loopexit ], [ %270, %String___adda__.exit108 ]
+  %.pre-phi381 = phi i64 [ %.pre380, %Array_LLVMValueRef____sl__.exit103.loopexit ], [ %272, %String___adda__.exit108 ]
+  %282 = phi ptr [ %279, %Array_LLVMValueRef____sl__.exit103.loopexit ], [ %.pre360, %String___adda__.exit108 ]
+  %283 = phi i64 [ %.pre361, %Array_LLVMValueRef____sl__.exit103.loopexit ], [ %271, %String___adda__.exit108 ]
   store i64 %.pre-phi381, ptr %memberidx.i97, align 4
-  %283 = getelementptr inbounds ptr, ptr %281, i64 %282
-  store ptr %269, ptr %283, align 8
+  %284 = getelementptr inbounds ptr, ptr %282, i64 %283
+  store ptr %270, ptr %284, align 8
   br label %common.ret
 
 if.entry22:                                       ; preds = %is_object.exit
-  %284 = load i64, ptr %memberidx.i97, align 4
-  %285 = add i64 %284, 1
-  %286 = load i64, ptr %memberidx.i.i98, align 4
-  %287 = icmp slt i64 %286, %285
+  %285 = load i64, ptr %memberidx.i97, align 4
+  %286 = add i64 %285, 1
+  %287 = load i64, ptr %memberidx.i.i98, align 4
+  %288 = icmp slt i64 %287, %286
   %.pre352 = load ptr, ptr %4, align 8
-  br i1 %287, label %while.body.i.i, label %Array_LLVMValueRef____sl__.exit
+  br i1 %288, label %while.body.i.i, label %Array_LLVMValueRef____sl__.exit
 
 while.body.i.i:                                   ; preds = %if.entry22, %while.body.i.i
-  %288 = phi ptr [ %292, %while.body.i.i ], [ %.pre352, %if.entry22 ]
-  %289 = phi i64 [ %293, %while.body.i.i ], [ %286, %if.entry22 ]
-  %290 = shl nuw i64 %289, 1
-  store i64 %290, ptr %memberidx.i.i98, align 4
-  %291 = shl i64 %289, 4
-  %292 = call ptr @realloc(ptr %288, i64 %291)
-  store ptr %292, ptr %4, align 8
-  %293 = load i64, ptr %memberidx.i.i98, align 4
-  %294 = icmp slt i64 %293, %285
-  br i1 %294, label %while.body.i.i, label %Array_LLVMValueRef____sl__.exit.loopexit
+  %289 = phi ptr [ %293, %while.body.i.i ], [ %.pre352, %if.entry22 ]
+  %290 = phi i64 [ %294, %while.body.i.i ], [ %287, %if.entry22 ]
+  %291 = shl nuw i64 %290, 1
+  store i64 %291, ptr %memberidx.i.i98, align 4
+  %292 = shl i64 %290, 4
+  %293 = call ptr @realloc(ptr %289, i64 %292)
+  store ptr %293, ptr %4, align 8
+  %294 = load i64, ptr %memberidx.i.i98, align 4
+  %295 = icmp slt i64 %294, %286
+  br i1 %295, label %while.body.i.i, label %Array_LLVMValueRef____sl__.exit.loopexit
 
 Array_LLVMValueRef____sl__.exit.loopexit:         ; preds = %while.body.i.i
   %.pre353 = load i64, ptr %memberidx.i97, align 4
@@ -44897,186 +44978,186 @@ Array_LLVMValueRef____sl__.exit.loopexit:         ; preds = %while.body.i.i
   br label %Array_LLVMValueRef____sl__.exit
 
 Array_LLVMValueRef____sl__.exit:                  ; preds = %if.entry22, %Array_LLVMValueRef____sl__.exit.loopexit
-  %.pre-phi383 = phi i64 [ %.pre382, %Array_LLVMValueRef____sl__.exit.loopexit ], [ %285, %if.entry22 ]
-  %295 = phi ptr [ %292, %Array_LLVMValueRef____sl__.exit.loopexit ], [ %.pre352, %if.entry22 ]
-  %296 = phi i64 [ %.pre353, %Array_LLVMValueRef____sl__.exit.loopexit ], [ %284, %if.entry22 ]
+  %.pre-phi383 = phi i64 [ %.pre382, %Array_LLVMValueRef____sl__.exit.loopexit ], [ %286, %if.entry22 ]
+  %296 = phi ptr [ %293, %Array_LLVMValueRef____sl__.exit.loopexit ], [ %.pre352, %if.entry22 ]
+  %297 = phi i64 [ %.pre353, %Array_LLVMValueRef____sl__.exit.loopexit ], [ %285, %if.entry22 ]
   store i64 %.pre-phi383, ptr %memberidx.i97, align 4
-  %297 = getelementptr inbounds ptr, ptr %295, i64 %296
-  store ptr %243, ptr %297, align 8
+  %298 = getelementptr inbounds ptr, ptr %296, i64 %297
+  store ptr %244, ptr %298, align 8
   br label %ifend24
 
 ifend24:                                          ; preds = %is_object.exit, %Array_LLVMValueRef____sl__.exit
-  %298 = add nuw nsw i64 %idx.0, 1
-  %299 = getelementptr inbounds ptr, ptr %196, i64 %idx.0
-  store ptr %243, ptr %299, align 8
-  %300 = load ptr, ptr %215, align 8
-  %memberidx.i96 = getelementptr inbounds %String, ptr %300, i64 0, i32 1
-  %301 = load i64, ptr %memberidx.i96, align 4
-  %302 = trunc i64 %301 to i32
-  %303 = add i32 %302, 1
-  %304 = call ptr @malloc(i32 %303)
-  %305 = load ptr, ptr %300, align 8
-  %306 = load i64, ptr %memberidx.i96, align 4
-  call void @llvm.memcpy.p0.p0.i64(ptr align 8 %304, ptr align 8 %305, i64 %306, i1 false)
-  %307 = getelementptr inbounds i8, ptr %304, i64 %306
-  store i8 0, ptr %307, align 1
-  %308 = call fastcc ptr @get_format_from_type(ptr nonnull %common.ret.op.i)
-  %memberidx.i95 = getelementptr inbounds %String, ptr %308, i64 0, i32 1
-  %309 = load i64, ptr %memberidx.i95, align 4
-  %310 = trunc i64 %309 to i32
-  %311 = add i32 %310, 1
-  %312 = call ptr @malloc(i32 %311)
-  %313 = load ptr, ptr %308, align 8
-  call void @llvm.memcpy.p0.p0.i64(ptr align 8 %312, ptr align 8 %313, i64 %309, i1 false)
-  %314 = getelementptr inbounds i8, ptr %312, i64 %309
-  store i8 0, ptr %314, align 1
-  %315 = alloca ptr, align 8
-  %316 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %315, ptr nonnull @253, ptr %304, ptr %312)
-  %317 = load ptr, ptr %315, align 8
-  %318 = tail call ptr @malloc(i32 24)
-  store ptr %317, ptr %318, align 8
-  %memberidx1.i = getelementptr inbounds %String, ptr %318, i64 0, i32 1
-  store i64 %316, ptr %memberidx1.i, align 4
-  %memberidx2.i = getelementptr inbounds %String, ptr %318, i64 0, i32 2
-  store i64 %316, ptr %memberidx2.i, align 4
-  tail call void @free(ptr %304)
-  tail call void @free(ptr %312)
-  %319 = load i64, ptr %memberidx1.i.i143, align 4
-  %320 = add nuw i64 %319, %316
-  %321 = load i64, ptr %memberidx.i145, align 4
-  %322 = icmp slt i64 %321, %320
-  %323 = load ptr, ptr %136, align 8
-  br i1 %322, label %if.entry.i.i.i, label %String___adda__.exit
+  %299 = add nuw nsw i64 %idx.0, 1
+  %300 = getelementptr inbounds ptr, ptr %197, i64 %idx.0
+  store ptr %244, ptr %300, align 8
+  %301 = load ptr, ptr %216, align 8
+  %memberidx.i96 = getelementptr inbounds %String, ptr %301, i64 0, i32 1
+  %302 = load i64, ptr %memberidx.i96, align 4
+  %303 = trunc i64 %302 to i32
+  %304 = add i32 %303, 1
+  %305 = call ptr @malloc(i32 %304)
+  %306 = load ptr, ptr %301, align 8
+  %307 = load i64, ptr %memberidx.i96, align 4
+  call void @llvm.memcpy.p0.p0.i64(ptr align 8 %305, ptr align 8 %306, i64 %307, i1 false)
+  %308 = getelementptr inbounds i8, ptr %305, i64 %307
+  store i8 0, ptr %308, align 1
+  %309 = call fastcc ptr @get_format_from_type(ptr nonnull %common.ret.op.i)
+  %memberidx.i95 = getelementptr inbounds %String, ptr %309, i64 0, i32 1
+  %310 = load i64, ptr %memberidx.i95, align 4
+  %311 = trunc i64 %310 to i32
+  %312 = add i32 %311, 1
+  %313 = call ptr @malloc(i32 %312)
+  %314 = load ptr, ptr %309, align 8
+  call void @llvm.memcpy.p0.p0.i64(ptr align 8 %313, ptr align 8 %314, i64 %310, i1 false)
+  %315 = getelementptr inbounds i8, ptr %313, i64 %310
+  store i8 0, ptr %315, align 1
+  %316 = alloca ptr, align 8
+  %317 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %316, ptr nonnull @252, ptr %305, ptr %313)
+  %318 = load ptr, ptr %316, align 8
+  %319 = tail call ptr @malloc(i32 24)
+  store ptr %318, ptr %319, align 8
+  %memberidx1.i = getelementptr inbounds %String, ptr %319, i64 0, i32 1
+  store i64 %317, ptr %memberidx1.i, align 4
+  %memberidx2.i = getelementptr inbounds %String, ptr %319, i64 0, i32 2
+  store i64 %317, ptr %memberidx2.i, align 4
+  tail call void @free(ptr %305)
+  tail call void @free(ptr %313)
+  %320 = load i64, ptr %memberidx1.i.i143, align 4
+  %321 = add nuw i64 %320, %317
+  %322 = load i64, ptr %memberidx.i145, align 4
+  %323 = icmp slt i64 %322, %321
+  %324 = load ptr, ptr %137, align 8
+  br i1 %323, label %if.entry.i.i.i, label %String___adda__.exit
 
 if.entry.i.i.i:                                   ; preds = %ifend24
-  %324 = call ptr @realloc(ptr %323, i64 %320)
-  store ptr %324, ptr %136, align 8
-  store i64 %320, ptr %memberidx.i145, align 4
+  %325 = call ptr @realloc(ptr %324, i64 %321)
+  store ptr %325, ptr %137, align 8
+  store i64 %321, ptr %memberidx.i145, align 4
   %.pre356 = load i64, ptr %memberidx1.i.i143, align 4
   br label %String___adda__.exit
 
 String___adda__.exit:                             ; preds = %ifend24, %if.entry.i.i.i
-  %325 = phi i64 [ %.pre356, %if.entry.i.i.i ], [ %319, %ifend24 ]
-  %326 = phi ptr [ %324, %if.entry.i.i.i ], [ %323, %ifend24 ]
-  %327 = getelementptr inbounds i8, ptr %326, i64 %325
-  call void @llvm.memcpy.p0.p0.i64(ptr align 1073741824 %327, ptr align 8 %317, i64 %316, i1 false)
-  %328 = load i64, ptr %memberidx1.i.i143, align 4
-  %329 = add nuw i64 %328, %316
-  store i64 %329, ptr %memberidx1.i.i143, align 4
+  %326 = phi i64 [ %.pre356, %if.entry.i.i.i ], [ %320, %ifend24 ]
+  %327 = phi ptr [ %325, %if.entry.i.i.i ], [ %324, %ifend24 ]
+  %328 = getelementptr inbounds i8, ptr %327, i64 %326
+  call void @llvm.memcpy.p0.p0.i64(ptr align 536870912 %328, ptr align 8 %318, i64 %317, i1 false)
+  %329 = load i64, ptr %memberidx1.i.i143, align 4
+  %330 = add nuw i64 %329, %317
+  store i64 %330, ptr %memberidx1.i.i143, align 4
   br label %for.next
 
 if.entry26:                                       ; preds = %ifend4
-  %330 = tail call ptr @malloc(i32 10)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(10) %330, ptr noundef nonnull align 8 dereferenceable(10) @254, i64 10, i1 false)
-  %331 = tail call ptr @malloc(i32 24)
-  store ptr %330, ptr %331, align 8
-  %memberidx1.i.i = getelementptr inbounds %String, ptr %331, i64 0, i32 1
+  %331 = tail call ptr @malloc(i32 10)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(10) %331, ptr noundef nonnull align 8 dereferenceable(10) @253, i64 10, i1 false)
+  %332 = tail call ptr @malloc(i32 24)
+  store ptr %331, ptr %332, align 8
+  %memberidx1.i.i = getelementptr inbounds %String, ptr %332, i64 0, i32 1
   store i64 10, ptr %memberidx1.i.i, align 4
-  %memberidx2.i.i = getelementptr inbounds %String, ptr %331, i64 0, i32 2
+  %memberidx2.i.i = getelementptr inbounds %String, ptr %332, i64 0, i32 2
   store i64 10, ptr %memberidx2.i.i, align 4
   %memberidx.i = getelementptr inbounds %CodeGen, ptr %0, i64 0, i32 7
-  %332 = load ptr, ptr %memberidx.i, align 8
-  %333 = tail call fastcc i64 @Map_String_LLVMValueRef__hash_fnc(ptr nonnull %331)
-  %memberidx.i181 = getelementptr inbounds %Map_String_LLVMValueRef_, ptr %332, i64 0, i32 1
-  %334 = load i64, ptr %memberidx.i181, align 4
-  %335 = urem i64 %333, %334
-  %336 = load ptr, ptr %332, align 8
-  %337 = getelementptr inbounds ptr, ptr %336, i64 %335
-  %338 = load ptr, ptr %337, align 8
-  %.not.i182318 = icmp eq ptr %338, null
+  %333 = load ptr, ptr %memberidx.i, align 8
+  %334 = tail call fastcc i64 @Map_String_LLVMValueRef__hash_fnc(ptr nonnull %332)
+  %memberidx.i181 = getelementptr inbounds %Map_String_LLVMValueRef_, ptr %333, i64 0, i32 1
+  %335 = load i64, ptr %memberidx.i181, align 4
+  %336 = urem i64 %334, %335
+  %337 = load ptr, ptr %333, align 8
+  %338 = getelementptr inbounds ptr, ptr %337, i64 %336
+  %339 = load ptr, ptr %338, align 8
+  %.not.i182318 = icmp eq ptr %339, null
   br i1 %.not.i182318, label %if.entry.i, label %while.body.i187
 
 while.end.i:                                      ; preds = %ifend.i.i188
-  %.pre349.pre = load ptr, ptr %332, align 8
+  %.pre349.pre = load ptr, ptr %333, align 8
   %.phi.trans.insert350.phi.trans.insert = getelementptr inbounds ptr, ptr %.pre349.pre, i64 %hash.0.i319
   %.pre351.pre = load ptr, ptr %.phi.trans.insert350.phi.trans.insert, align 8
   %.not22.i = icmp eq ptr %.pre351.pre, null
   br i1 %.not22.i, label %if.entry.i, label %Map_String_LLVMValueRef____getitem__.exit
 
 while.body.i187:                                  ; preds = %if.entry26, %else.i
-  %339 = phi ptr [ %347, %else.i ], [ %336, %if.entry26 ]
-  %340 = phi i64 [ %348, %else.i ], [ %334, %if.entry26 ]
-  %341 = phi ptr [ %352, %else.i ], [ %338, %if.entry26 ]
-  %hash.0.i319 = phi i64 [ %350, %else.i ], [ %335, %if.entry26 ]
-  %342 = load ptr, ptr %341, align 8
-  %memberidx.i.i184 = getelementptr inbounds %String, ptr %342, i64 0, i32 1
-  %343 = load i64, ptr %memberidx.i.i184, align 4
-  %.not.i.i186 = icmp eq i64 %343, 10
+  %340 = phi ptr [ %348, %else.i ], [ %337, %if.entry26 ]
+  %341 = phi i64 [ %349, %else.i ], [ %335, %if.entry26 ]
+  %342 = phi ptr [ %353, %else.i ], [ %339, %if.entry26 ]
+  %hash.0.i319 = phi i64 [ %351, %else.i ], [ %336, %if.entry26 ]
+  %343 = load ptr, ptr %342, align 8
+  %memberidx.i.i184 = getelementptr inbounds %String, ptr %343, i64 0, i32 1
+  %344 = load i64, ptr %memberidx.i.i184, align 4
+  %.not.i.i186 = icmp eq i64 %344, 10
   br i1 %.not.i.i186, label %ifend.i.i188, label %else.i
 
 ifend.i.i188:                                     ; preds = %while.body.i187
-  %344 = load ptr, ptr %342, align 8
-  %345 = tail call i64 @memcmp(ptr %344, ptr %330, i64 10)
-  %346 = icmp eq i64 %345, 0
-  br i1 %346, label %while.end.i, label %ifend.i.i188.else.i_crit_edge
+  %345 = load ptr, ptr %343, align 8
+  %346 = tail call i64 @memcmp(ptr %345, ptr %331, i64 10)
+  %347 = icmp eq i64 %346, 0
+  br i1 %347, label %while.end.i, label %ifend.i.i188.else.i_crit_edge
 
 ifend.i.i188.else.i_crit_edge:                    ; preds = %ifend.i.i188
   %.pre347 = load i64, ptr %memberidx.i181, align 4
-  %.pre348 = load ptr, ptr %332, align 8
+  %.pre348 = load ptr, ptr %333, align 8
   br label %else.i
 
 else.i:                                           ; preds = %ifend.i.i188.else.i_crit_edge, %while.body.i187
-  %347 = phi ptr [ %.pre348, %ifend.i.i188.else.i_crit_edge ], [ %339, %while.body.i187 ]
-  %348 = phi i64 [ %.pre347, %ifend.i.i188.else.i_crit_edge ], [ %340, %while.body.i187 ]
-  %349 = add nuw i64 %hash.0.i319, 1
-  %350 = urem i64 %349, %348
-  %351 = getelementptr inbounds ptr, ptr %347, i64 %350
-  %352 = load ptr, ptr %351, align 8
-  %.not.i182 = icmp eq ptr %352, null
+  %348 = phi ptr [ %.pre348, %ifend.i.i188.else.i_crit_edge ], [ %340, %while.body.i187 ]
+  %349 = phi i64 [ %.pre347, %ifend.i.i188.else.i_crit_edge ], [ %341, %while.body.i187 ]
+  %350 = add nuw i64 %hash.0.i319, 1
+  %351 = urem i64 %350, %349
+  %352 = getelementptr inbounds ptr, ptr %348, i64 %351
+  %353 = load ptr, ptr %352, align 8
+  %.not.i182 = icmp eq ptr %353, null
   br i1 %.not.i182, label %if.entry.i, label %while.body.i187
 
 Map_String_LLVMValueRef____getitem__.exit:        ; preds = %while.end.i
   %memberidx10.i = getelementptr inbounds %MapEntry_String_LLVMValueRef_, ptr %.pre351.pre, i64 0, i32 1
-  %353 = load ptr, ptr %memberidx10.i, align 8
-  %354 = icmp eq ptr %353, null
-  br i1 %354, label %if.entry.i, label %common.ret
+  %354 = load ptr, ptr %memberidx10.i, align 8
+  %355 = icmp eq ptr %354, null
+  br i1 %355, label %if.entry.i, label %common.ret
 
 if.entry.i:                                       ; preds = %else.i, %if.entry26, %while.end.i, %Map_String_LLVMValueRef____getitem__.exit
-  %355 = tail call ptr @malloc(i32 11)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(10) %355, ptr noundef nonnull align 8 dereferenceable(10) %330, i64 10, i1 false)
-  %356 = getelementptr inbounds i8, ptr %355, i64 10
-  store i8 0, ptr %356, align 1
-  %357 = tail call ptr @LLVMBuildGlobalString(ptr %1, ptr %355, ptr nonnull @79)
-  %358 = load ptr, ptr %memberidx.i, align 8
-  tail call fastcc void @Map_String_LLVMValueRef____setitem__(ptr %358, ptr nonnull %331, ptr %357)
+  %356 = tail call ptr @malloc(i32 11)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(10) %356, ptr noundef nonnull align 8 dereferenceable(10) %331, i64 10, i1 false)
+  %357 = getelementptr inbounds i8, ptr %356, i64 10
+  store i8 0, ptr %357, align 1
+  %358 = tail call ptr @LLVMBuildGlobalString(ptr %1, ptr %356, ptr nonnull @78)
+  %359 = load ptr, ptr %memberidx.i, align 8
+  tail call fastcc void @Map_String_LLVMValueRef____setitem__(ptr %359, ptr nonnull %332, ptr %358)
   br label %common.ret
 
 if.entry30:                                       ; preds = %ifend4
   %memberidx33 = getelementptr inbounds %EnumType, ptr %3, i64 0, i32 1
-  %359 = load ptr, ptr %memberidx33, align 8
-  %360 = tail call fastcc ptr @CodeGen_get_enum_from_typeid(ptr %0, ptr %359)
-  %.not.i174 = icmp eq ptr %360, null
+  %360 = load ptr, ptr %memberidx33, align 8
+  %361 = tail call fastcc ptr @CodeGen_get_enum_from_typeid(ptr %0, ptr %360)
+  %.not.i174 = icmp eq ptr %361, null
   br i1 %.not.i174, label %ifend.i180, label %CodeGen_get_or_codegen_enum_from_typeid.exit
 
 ifend.i180:                                       ; preds = %if.entry30
   %memberidx.i177 = getelementptr inbounds %CodeGen, ptr %0, i64 0, i32 4
-  %361 = load ptr, ptr %memberidx.i177, align 8
-  %362 = load ptr, ptr %361, align 8
-  %363 = load i64, ptr %359, align 4
-  %364 = load ptr, ptr %362, align 8
-  %365 = getelementptr inbounds ptr, ptr %364, i64 %363
-  %366 = load ptr, ptr %365, align 8
-  %memberidx2.i.i178 = getelementptr inbounds %Module, ptr %366, i64 0, i32 6
-  %367 = load ptr, ptr %memberidx2.i.i178, align 8
-  %memberidx3.i.i179 = getelementptr inbounds %TypeId, ptr %359, i64 0, i32 2
-  %368 = load i64, ptr %memberidx3.i.i179, align 4
-  %369 = load ptr, ptr %367, align 8
-  %370 = getelementptr inbounds ptr, ptr %369, i64 %368
-  %371 = load ptr, ptr %370, align 8
-  tail call fastcc void @CodeGen_declare_enum(ptr %0, ptr %371)
+  %362 = load ptr, ptr %memberidx.i177, align 8
+  %363 = load ptr, ptr %362, align 8
+  %364 = load i64, ptr %360, align 4
+  %365 = load ptr, ptr %363, align 8
+  %366 = getelementptr inbounds ptr, ptr %365, i64 %364
+  %367 = load ptr, ptr %366, align 8
+  %memberidx2.i.i178 = getelementptr inbounds %Module, ptr %367, i64 0, i32 6
+  %368 = load ptr, ptr %memberidx2.i.i178, align 8
+  %memberidx3.i.i179 = getelementptr inbounds %TypeId, ptr %360, i64 0, i32 2
+  %369 = load i64, ptr %memberidx3.i.i179, align 4
+  %370 = load ptr, ptr %368, align 8
+  %371 = getelementptr inbounds ptr, ptr %370, i64 %369
   %372 = load ptr, ptr %371, align 8
-  %373 = tail call fastcc ptr @CodeGen_get_enum_from_typeid(ptr %0, ptr %372)
+  tail call fastcc void @CodeGen_declare_enum(ptr %0, ptr %372)
+  %373 = load ptr, ptr %372, align 8
+  %374 = tail call fastcc ptr @CodeGen_get_enum_from_typeid(ptr %0, ptr %373)
   br label %CodeGen_get_or_codegen_enum_from_typeid.exit
 
 CodeGen_get_or_codegen_enum_from_typeid.exit:     ; preds = %if.entry30, %ifend.i180
-  %common.ret.op.i175 = phi ptr [ %373, %ifend.i180 ], [ %360, %if.entry30 ]
+  %common.ret.op.i175 = phi ptr [ %374, %ifend.i180 ], [ %361, %if.entry30 ]
   %memberidx34 = getelementptr inbounds %CGEnumType, ptr %common.ret.op.i175, i64 0, i32 2
-  %374 = load ptr, ptr %memberidx34, align 8
+  %375 = load ptr, ptr %memberidx34, align 8
   store ptr %2, ptr %indices, align 8
-  %375 = tail call ptr @LLVMTypeOf(ptr %374)
-  %376 = call ptr @LLVMBuildInBoundsGEP2(ptr %1, ptr %375, ptr %374, ptr nonnull %indices, i64 1, ptr nonnull @79)
-  %377 = call ptr @LLVMTypeOf(ptr %376)
-  %378 = call ptr @LLVMBuildLoad2(ptr %1, ptr %377, ptr %376, ptr nonnull @79)
+  %376 = tail call ptr @LLVMTypeOf(ptr %375)
+  %377 = call ptr @LLVMBuildInBoundsGEP2(ptr %1, ptr %376, ptr %375, ptr nonnull %indices, i64 1, ptr nonnull @78)
+  %378 = call ptr @LLVMTypeOf(ptr %377)
+  %379 = call ptr @LLVMBuildLoad2(ptr %1, ptr %378, ptr %377, ptr nonnull @78)
   br label %common.ret
 }
 
@@ -45089,7 +45170,7 @@ define internal fastcc ptr @CodeGen_get_var_expr_mem(ptr nocapture %0, ptr nocap
 
 if.entry:                                         ; preds = %2
   %6 = tail call ptr @malloc(i32 45)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(45) %6, ptr noundef nonnull align 8 dereferenceable(45) @259, i64 45, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(45) %6, ptr noundef nonnull align 8 dereferenceable(45) @258, i64 45, i1 false)
   %7 = tail call ptr @malloc(i32 24)
   %8 = tail call ptr @malloc(i32 7)
   tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(7) %8, ptr noundef nonnull align 8 dereferenceable(7) @0, i64 7, i1 false)
@@ -45178,7 +45259,7 @@ ifend8.i47:                                       ; preds = %if.entry
 
 CodeGen_get_expr_mem.exit48:                      ; preds = %if.entry.i42, %if.entry2.i44, %if.entry6.i46, %ifend8.i47
   %common.ret.op.i41 = phi ptr [ %19, %if.entry.i42 ], [ %20, %if.entry2.i44 ], [ %21, %if.entry6.i46 ], [ %22, %ifend8.i47 ]
-  %23 = call ptr @LLVMBuildInBoundsGEP2(ptr %1, ptr %ternary, ptr %common.ret.op.i41, ptr nonnull %indices, i64 2, ptr nonnull @79)
+  %23 = call ptr @LLVMBuildInBoundsGEP2(ptr %1, ptr %ternary, ptr %common.ret.op.i41, ptr nonnull %indices, i64 2, ptr nonnull @78)
   br label %common.ret
 
 if.entry8:                                        ; preds = %end
@@ -45215,14 +45296,14 @@ ifend8.i:                                         ; preds = %if.entry8
 
 CodeGen_get_expr_mem.exit:                        ; preds = %if.entry.i, %if.entry2.i, %if.entry6.i, %ifend8.i
   %common.ret.op.i = phi ptr [ %30, %if.entry.i ], [ %31, %if.entry2.i ], [ %32, %if.entry6.i ], [ %33, %ifend8.i ]
-  %34 = call ptr @LLVMBuildInBoundsGEP2(ptr %1, ptr %ternary, ptr %common.ret.op.i, ptr nonnull %indices1, i64 2, ptr nonnull @79)
+  %34 = call ptr @LLVMBuildInBoundsGEP2(ptr %1, ptr %ternary, ptr %common.ret.op.i, ptr nonnull %indices1, i64 2, ptr nonnull @78)
   br label %common.ret
 
 ifend10:                                          ; preds = %end
   store ptr %5, ptr %indices_1, align 8
   %35 = load ptr, ptr %memberidx2, align 8
   %36 = tail call fastcc ptr @CodeGen_codegen_expression(ptr %0, ptr %1, ptr %35)
-  %37 = call ptr @LLVMBuildInBoundsGEP2(ptr %1, ptr %ternary, ptr %36, ptr nonnull %indices_1, i64 1, ptr nonnull @79)
+  %37 = call ptr @LLVMBuildInBoundsGEP2(ptr %1, ptr %ternary, ptr %36, ptr nonnull %indices_1, i64 1, ptr nonnull @78)
   br label %common.ret
 }
 
@@ -45271,7 +45352,7 @@ CodeGen_get_or_codegen_class_from_typeid.exit:    ; preds = %4, %ifend.i
   %26 = load i64, ptr %memberidx1.i.i, align 4
   %memberidx2.i.i = getelementptr inbounds %TypeId, ptr %24, i64 0, i32 2
   %27 = load i64, ptr %memberidx2.i.i, align 4
-  %28 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %5, ptr nonnull @244, i64 %25, i64 %26, i64 %27)
+  %28 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %5, ptr nonnull @243, i64 %25, i64 %26, i64 %27)
   %29 = load ptr, ptr %5, align 8
   %30 = call ptr @malloc(i32 24)
   store ptr %29, ptr %30, align 8
@@ -45289,7 +45370,7 @@ CodeGen_get_or_codegen_class_from_typeid.exit:    ; preds = %4, %ifend.i
   %35 = load i64, ptr %23, align 4
   %memberidx2.i = getelementptr inbounds %PropId, ptr %23, i64 0, i32 2
   %36 = load i64, ptr %memberidx2.i, align 4
-  %37 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %6, ptr nonnull @260, ptr %33, i64 %35, i64 %36)
+  %37 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %6, ptr nonnull @259, ptr %33, i64 %35, i64 %36)
   %38 = load ptr, ptr %6, align 8
   %39 = call ptr @malloc(i32 24)
   store ptr %38, ptr %39, align 8
@@ -45439,7 +45520,7 @@ Map_String_uint____getitem__.exit:                ; preds = %else.i35, %ifend7, 
   %common.ret.op.i36 = phi i64 [ %91, %if.entry6.i38 ], [ 0, %while.end.i27 ], [ 0, %ifend7 ], [ 0, %else.i35 ]
   %92 = call ptr @LLVMConstInt(ptr %69, i64 %common.ret.op.i36, i1 false)
   store ptr %92, ptr %68, align 8
-  %93 = call ptr @LLVMBuildInBoundsGEP2(ptr %1, ptr %40, ptr %ptr.0, ptr nonnull %indices_buffer, i64 2, ptr nonnull @261)
+  %93 = call ptr @LLVMBuildInBoundsGEP2(ptr %1, ptr %40, ptr %ptr.0, ptr nonnull %indices_buffer, i64 2, ptr nonnull @260)
   br label %common.ret
 }
 
@@ -45454,7 +45535,7 @@ end:
   %7 = load ptr, ptr %6, align 8
   %8 = load ptr, ptr %7, align 8
   %9 = tail call fastcc ptr @CodeGen_codegen_type(ptr %0, ptr %8, i1 true)
-  %10 = tail call ptr @LLVMBuildMalloc(ptr %1, ptr %5, ptr nonnull @79)
+  %10 = tail call ptr @LLVMBuildMalloc(ptr %1, ptr %5, ptr nonnull @78)
   %memberidx2 = getelementptr inbounds %ArrayExpression, ptr %3, i64 0, i32 4
   %11 = load ptr, ptr %memberidx2, align 8
   %memberidx3 = getelementptr inbounds %Array_Expression_, ptr %11, i64 0, i32 1
@@ -45518,12 +45599,12 @@ CodeGen_get_or_codegen_class_from_typeid.exit:    ; preds = %get_class_from_type
 
 if.entry.i:                                       ; preds = %CodeGen_get_or_codegen_class_from_typeid.exit
   %40 = tail call ptr @LLVM_GetFunctionType(ptr nonnull %39)
-  %41 = call ptr @LLVMBuildCall2(ptr %1, ptr %40, ptr nonnull %39, ptr nonnull %args, i64 2, ptr nonnull @79)
+  %41 = call ptr @LLVMBuildCall2(ptr %1, ptr %40, ptr nonnull %39, ptr nonnull %args, i64 2, ptr nonnull @78)
   br label %CodeGen_build_constructor_call.exit
 
 else.i:                                           ; preds = %CodeGen_get_or_codegen_class_from_typeid.exit
   %42 = tail call ptr @malloc(i32 47)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(47) %42, ptr noundef nonnull align 8 dereferenceable(47) @291, i64 47, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(47) %42, ptr noundef nonnull align 8 dereferenceable(47) @290, i64 47, i1 false)
   %43 = tail call ptr @malloc(i32 24)
   %44 = tail call ptr @malloc(i32 7)
   tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(7) %44, ptr noundef nonnull align 8 dereferenceable(7) @0, i64 7, i1 false)
@@ -45540,7 +45621,7 @@ else.i:                                           ; preds = %CodeGen_get_or_code
 
 CodeGen_build_constructor_call.exit:              ; preds = %if.entry.i, %else.i
   %49 = call ptr @malloc(i32 6)
-  call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(6) %49, ptr noundef nonnull align 8 dereferenceable(6) @262, i64 6, i1 false)
+  call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(6) %49, ptr noundef nonnull align 8 dereferenceable(6) @261, i64 6, i1 false)
   %50 = call ptr @malloc(i32 24)
   store ptr %49, ptr %50, align 8
   %memberidx1.i.i = getelementptr inbounds %String, ptr %50, i64 0, i32 1
@@ -45549,10 +45630,10 @@ CodeGen_build_constructor_call.exit:              ; preds = %if.entry.i, %else.i
   store i64 6, ptr %memberidx2.i.i, align 4
   %51 = call fastcc ptr @CodeGen_get_member_mem_with_name(ptr %0, ptr %1, ptr %10, ptr nonnull %4, ptr nonnull %50)
   %52 = call ptr @LLVMPointerType(ptr %9, i64 0)
-  %53 = call ptr @LLVMBuildLoad2(ptr %1, ptr %52, ptr %51, ptr nonnull @79)
+  %53 = call ptr @LLVMBuildLoad2(ptr %1, ptr %52, ptr %51, ptr nonnull @78)
   %54 = call fastcc ptr @CodeGen_store_array_elements(ptr %0, ptr %1, ptr %53, ptr %3)
   %55 = call ptr @malloc(i32 6)
-  call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(6) %55, ptr noundef nonnull align 8 dereferenceable(6) @263, i64 6, i1 false)
+  call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(6) %55, ptr noundef nonnull align 8 dereferenceable(6) @262, i64 6, i1 false)
   %56 = call ptr @malloc(i32 24)
   store ptr %55, ptr %56, align 8
   %memberidx1.i.i28 = getelementptr inbounds %String, ptr %56, i64 0, i32 1
@@ -45684,7 +45765,7 @@ CGClassType_constructor.exit:                     ; preds = %for.body.i23.i
   %49 = load i64, ptr %memberidx1.i.i, align 4
   %memberidx2.i.i = getelementptr inbounds %TypeId, ptr %46, i64 0, i32 2
   %50 = load i64, ptr %memberidx2.i.i, align 4
-  %51 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %3, ptr nonnull @244, i64 %48, i64 %49, i64 %50)
+  %51 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %3, ptr nonnull @243, i64 %48, i64 %49, i64 %50)
   %52 = load ptr, ptr %3, align 8
   %53 = call ptr @malloc(i32 24)
   store ptr %52, ptr %53, align 8
@@ -45803,7 +45884,7 @@ Array_Type____adda__.exit:                        ; preds = %Array_Type____adda_
   %100 = getelementptr inbounds ptr, ptr %99, i64 1
   %101 = load ptr, ptr %88, align 8
   %102 = shl i64 %98, 3
-  call void @llvm.memcpy.p0.p0.i64(ptr nonnull align 1073741824 %100, ptr align 8 %101, i64 %102, i1 false)
+  call void @llvm.memcpy.p0.p0.i64(ptr nonnull align 536870912 %100, ptr align 8 %101, i64 %102, i1 false)
   %103 = load i64, ptr %memberidx1.i48, align 4
   %104 = add nuw i64 %103, 1
   store i64 %104, ptr %memberidx.i51, align 4
@@ -45826,7 +45907,7 @@ Array_Type____adda__.exit:                        ; preds = %Array_Type____adda_
   %115 = getelementptr inbounds i8, ptr %112, i64 %114
   store i8 0, ptr %115, align 1
   %116 = alloca ptr, align 8
-  %117 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %116, ptr nonnull @292, ptr %112)
+  %117 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %116, ptr nonnull @291, ptr %112)
   %118 = load ptr, ptr %116, align 8
   %119 = tail call ptr @malloc(i32 24)
   store ptr %118, ptr %119, align 8
@@ -45896,7 +45977,7 @@ define internal fastcc ptr @CodeGen_get_class_from_typeid(ptr nocapture readonly
   %6 = load i64, ptr %memberidx1.i, align 4
   %memberidx2.i = getelementptr inbounds %TypeId, ptr %1, i64 0, i32 2
   %7 = load i64, ptr %memberidx2.i, align 4
-  %8 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %3, ptr nonnull @244, i64 %5, i64 %6, i64 %7)
+  %8 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %3, ptr nonnull @243, i64 %5, i64 %6, i64 %7)
   %9 = load ptr, ptr %3, align 8
   %10 = call ptr @malloc(i32 24)
   store ptr %9, ptr %10, align 8
@@ -45974,7 +46055,7 @@ define internal fastcc ptr @CodeGen_get_enum_from_typeid(ptr nocapture readonly 
   %6 = load i64, ptr %memberidx1.i, align 4
   %memberidx2.i = getelementptr inbounds %TypeId, ptr %1, i64 0, i32 2
   %7 = load i64, ptr %memberidx2.i, align 4
-  %8 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %3, ptr nonnull @244, i64 %5, i64 %6, i64 %7)
+  %8 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %3, ptr nonnull @243, i64 %5, i64 %6, i64 %7)
   %9 = load ptr, ptr %3, align 8
   %10 = call ptr @malloc(i32 24)
   store ptr %9, ptr %10, align 8
@@ -46422,7 +46503,7 @@ ifend:                                            ; preds = %is_object.exit
   %23 = load i64, ptr %memberidx1.i.i93, align 4
   %memberidx2.i.i94 = getelementptr inbounds %TypeId, ptr %21, i64 0, i32 2
   %24 = load i64, ptr %memberidx2.i.i94, align 4
-  %25 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %5, ptr nonnull @244, i64 %22, i64 %23, i64 %24)
+  %25 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %5, ptr nonnull @243, i64 %22, i64 %23, i64 %24)
   %26 = load ptr, ptr %5, align 8
   %27 = call ptr @malloc(i32 24)
   store ptr %26, ptr %27, align 8
@@ -46440,7 +46521,7 @@ ifend:                                            ; preds = %is_object.exit
   %32 = load i64, ptr %20, align 4
   %memberidx2.i = getelementptr inbounds %PropId, ptr %20, i64 0, i32 2
   %33 = load i64, ptr %memberidx2.i, align 4
-  %34 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %6, ptr nonnull @260, ptr %30, i64 %32, i64 %33)
+  %34 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %6, ptr nonnull @259, ptr %30, i64 %32, i64 %33)
   %35 = load ptr, ptr %6, align 8
   %36 = call ptr @malloc(i32 24)
   store ptr %35, ptr %36, align 8
@@ -46462,7 +46543,7 @@ common.ret:                                       ; preds = %else.i, %ifend32, %
 
 ifend5:                                           ; preds = %if.entry
   %38 = tail call fastcc ptr @CodeGen_codegen_type(ptr %0, ptr nonnull %16, i1 true)
-  %39 = tail call ptr @LLVMBuildLoad2(ptr %1, ptr %38, ptr %15, ptr nonnull @79)
+  %39 = tail call ptr @LLVMBuildLoad2(ptr %1, ptr %38, ptr %15, ptr nonnull @78)
   br label %common.ret
 
 if.entry11:                                       ; preds = %ifend
@@ -46501,7 +46582,7 @@ CodeGen_get_or_codegen_class_from_typeid.exit:    ; preds = %if.entry11
 
 if.entry14:                                       ; preds = %CodeGen_get_or_codegen_class_from_typeid.exit
   %56 = call ptr @malloc(i32 51)
-  call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(51) %56, ptr noundef nonnull align 8 dereferenceable(51) @277, i64 51, i1 false)
+  call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(51) %56, ptr noundef nonnull align 8 dereferenceable(51) @276, i64 51, i1 false)
   %57 = call ptr @malloc(i32 24)
   %58 = call ptr @malloc(i32 7)
   call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(7) %58, ptr noundef nonnull align 8 dereferenceable(7) @0, i64 7, i1 false)
@@ -46577,7 +46658,7 @@ Map_String_LLVMValueRef____getitem__.exit82:      ; preds = %while.end.i70
 
 if.entry18:                                       ; preds = %else.i78, %ifend16, %while.end.i70, %Map_String_LLVMValueRef____getitem__.exit82
   %86 = call ptr @malloc(i32 59)
-  call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(59) %86, ptr noundef nonnull align 8 dereferenceable(59) @278, i64 59, i1 false)
+  call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(59) %86, ptr noundef nonnull align 8 dereferenceable(59) @277, i64 59, i1 false)
   %87 = call ptr @malloc(i32 24)
   %88 = call ptr @malloc(i32 7)
   call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(7) %88, ptr noundef nonnull align 8 dereferenceable(7) @0, i64 7, i1 false)
@@ -46602,7 +46683,7 @@ ifend20:                                          ; preds = %Map_String_LLVMValu
 
 ifend24:                                          ; preds = %ifend20
   %96 = call fastcc ptr @CodeGen_codegen_type(ptr %0, ptr nonnull %93, i1 true)
-  %97 = call ptr @LLVMBuildLoad2(ptr %1, ptr %96, ptr %common.ret.op.i79125, ptr nonnull @79)
+  %97 = call ptr @LLVMBuildLoad2(ptr %1, ptr %96, ptr %common.ret.op.i79125, ptr nonnull @78)
   br label %common.ret
 
 if.entry27:                                       ; preds = %ifend
@@ -46640,7 +46721,7 @@ CodeGen_get_or_codegen_enum_from_typeid.exit:     ; preds = %if.entry27
 
 if.entry30:                                       ; preds = %CodeGen_get_or_codegen_enum_from_typeid.exit
   %114 = call ptr @malloc(i32 50)
-  call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(50) %114, ptr noundef nonnull align 8 dereferenceable(50) @279, i64 50, i1 false)
+  call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(50) %114, ptr noundef nonnull align 8 dereferenceable(50) @278, i64 50, i1 false)
   %115 = call ptr @malloc(i32 24)
   %116 = call ptr @malloc(i32 7)
   call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(7) %116, ptr noundef nonnull align 8 dereferenceable(7) @0, i64 7, i1 false)
@@ -46783,7 +46864,7 @@ for.body:                                         ; preds = %MapIterator_String_
   %27 = load i64, ptr %memberidx1.i.i, align 4
   %memberidx2.i.i = getelementptr inbounds %TypeId, ptr %25, i64 0, i32 2
   %28 = load i64, ptr %memberidx2.i.i, align 4
-  %29 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %3, ptr nonnull @244, i64 %26, i64 %27, i64 %28)
+  %29 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %3, ptr nonnull @243, i64 %26, i64 %27, i64 %28)
   %30 = load ptr, ptr %3, align 8
   %31 = call ptr @malloc(i32 24)
   store ptr %30, ptr %31, align 8
@@ -46801,7 +46882,7 @@ for.body:                                         ; preds = %MapIterator_String_
   %36 = load i64, ptr %23, align 4
   %memberidx2.i34 = getelementptr inbounds %PropId, ptr %23, i64 0, i32 2
   %37 = load i64, ptr %memberidx2.i34, align 4
-  %38 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %4, ptr nonnull @260, ptr %34, i64 %36, i64 %37)
+  %38 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %4, ptr nonnull @259, ptr %34, i64 %36, i64 %37)
   %39 = load ptr, ptr %4, align 8
   %40 = call ptr @malloc(i32 24)
   store ptr %39, ptr %40, align 8
@@ -46890,7 +46971,7 @@ is_object.exit:                                   ; preds = %if.entry.i43, %get_
   %86 = getelementptr inbounds i8, ptr %83, i64 %85
   store i8 0, ptr %86, align 1
   %87 = alloca ptr, align 8
-  %88 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %87, ptr nonnull @105, ptr %76, ptr %83)
+  %88 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %87, ptr nonnull @104, ptr %76, ptr %83)
   %89 = load ptr, ptr %87, align 8
   %90 = tail call ptr @malloc(i32 24)
   store ptr %89, ptr %90, align 8
@@ -46967,7 +47048,7 @@ define internal fastcc void @CodeGen_codegen_function(ptr nocapture %0, ptr noca
   %19 = load i64, ptr %16, align 4
   %memberidx2.i.i = getelementptr inbounds %VarId, ptr %16, i64 0, i32 2
   %20 = load i64, ptr %memberidx2.i.i, align 4
-  %21 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %3, ptr nonnull @244, i64 %18, i64 %19, i64 %20)
+  %21 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %3, ptr nonnull @243, i64 %18, i64 %19, i64 %20)
   %22 = load ptr, ptr %3, align 8
   %23 = call ptr @malloc(i32 24)
   store ptr %22, ptr %23, align 8
@@ -46990,7 +47071,7 @@ if.entry:                                         ; preds = %2
 
 ifend:                                            ; preds = %2
   %25 = call ptr @LLVMCreateBuilder()
-  %26 = call ptr @LLVMAppendBasicBlock(ptr %15, ptr nonnull @79)
+  %26 = call ptr @LLVMAppendBasicBlock(ptr %15, ptr nonnull @78)
   call void @LLVMPositionBuilderAtEnd(ptr %25, ptr %26)
   %memberidx5 = getelementptr inbounds %Function, ptr %1, i64 0, i32 5
   %27 = load ptr, ptr %memberidx5, align 8
@@ -47126,7 +47207,7 @@ for.body:                                         ; preds = %MapIterator_String_
   %30 = load i64, ptr %memberidx1.i.i62, align 4
   %memberidx2.i.i63 = getelementptr inbounds %TypeId, ptr %28, i64 0, i32 2
   %31 = load i64, ptr %memberidx2.i.i63, align 4
-  %32 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %4, ptr nonnull @244, i64 %29, i64 %30, i64 %31)
+  %32 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %4, ptr nonnull @243, i64 %29, i64 %30, i64 %31)
   %33 = load ptr, ptr %4, align 8
   %34 = call ptr @malloc(i32 24)
   store ptr %33, ptr %34, align 8
@@ -47144,7 +47225,7 @@ for.body:                                         ; preds = %MapIterator_String_
   %39 = load i64, ptr %26, align 4
   %memberidx2.i64 = getelementptr inbounds %PropId, ptr %26, i64 0, i32 2
   %40 = load i64, ptr %memberidx2.i64, align 4
-  %41 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %5, ptr nonnull @260, ptr %37, i64 %39, i64 %40)
+  %41 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %5, ptr nonnull @259, ptr %37, i64 %39, i64 %40)
   %42 = load ptr, ptr %5, align 8
   %43 = call ptr @malloc(i32 24)
   store ptr %42, ptr %43, align 8
@@ -47228,7 +47309,7 @@ Array_LLVMTypeRef____adda__.exit:                 ; preds = %for.end, %Array_LLV
   %82 = phi ptr [ %78, %Array_LLVMTypeRef____adda__.exit.loopexit ], [ %.pre121, %for.end ]
   %83 = getelementptr inbounds ptr, ptr %82, i64 %81
   %84 = shl i64 %.ph, 3
-  call void @llvm.memcpy.p0.p0.i64(ptr align 1073741824 %83, ptr align 8 %.promoted.ph, i64 %84, i1 false)
+  call void @llvm.memcpy.p0.p0.i64(ptr align 536870912 %83, ptr align 8 %.promoted.ph, i64 %84, i1 false)
   %85 = load i64, ptr %memberidx.i70, align 4
   %86 = add nuw i64 %85, %.ph
   store i64 %86, ptr %memberidx.i70, align 4
@@ -47319,7 +47400,7 @@ Array_Type____adda__.exit:                        ; preds = %else, %Array_Type__
   %121 = getelementptr inbounds ptr, ptr %120, i64 %119
   %122 = load ptr, ptr %106, align 8
   %123 = shl i64 %118, 3
-  call void @llvm.memcpy.p0.p0.i64(ptr align 1073741824 %121, ptr align 8 %122, i64 %123, i1 false)
+  call void @llvm.memcpy.p0.p0.i64(ptr align 536870912 %121, ptr align 8 %122, i64 %123, i1 false)
   %124 = load i64, ptr %memberidx.i84, align 4
   %125 = load i64, ptr %memberidx1.i88, align 4
   %126 = add nuw i64 %125, %124
@@ -47370,7 +47451,7 @@ if.entry24:                                       ; preds = %Array_Type____adda_
   %150 = getelementptr inbounds i8, ptr %147, i64 %149
   store i8 0, ptr %150, align 1
   %151 = alloca ptr, align 8
-  %152 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %151, ptr nonnull @105, ptr %140, ptr %147)
+  %152 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %151, ptr nonnull @104, ptr %140, ptr %147)
   %153 = load ptr, ptr %151, align 8
   %154 = tail call ptr @malloc(i32 24)
   store ptr %153, ptr %154, align 8
@@ -47660,7 +47741,7 @@ for.body:                                         ; preds = %for.body.lr.ph, %fo
   %39 = load i64, ptr %memberidx1.i.i53, align 4
   %memberidx2.i.i54 = getelementptr inbounds %TypeId, ptr %37, i64 0, i32 2
   %40 = load i64, ptr %memberidx2.i.i54, align 4
-  %41 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %3, ptr nonnull @244, i64 %38, i64 %39, i64 %40)
+  %41 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %3, ptr nonnull @243, i64 %38, i64 %39, i64 %40)
   %42 = load ptr, ptr %3, align 8
   %43 = call ptr @malloc(i32 24)
   store ptr %42, ptr %43, align 8
@@ -47678,7 +47759,7 @@ for.body:                                         ; preds = %for.body.lr.ph, %fo
   %48 = load i64, ptr %35, align 4
   %memberidx2.i57 = getelementptr inbounds %PropId, ptr %35, i64 0, i32 2
   %49 = load i64, ptr %memberidx2.i57, align 4
-  %50 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %4, ptr nonnull @260, ptr %46, i64 %48, i64 %49)
+  %50 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %4, ptr nonnull @259, ptr %46, i64 %48, i64 %49)
   %51 = load ptr, ptr %4, align 8
   %52 = call ptr @malloc(i32 24)
   store ptr %51, ptr %52, align 8
@@ -47716,7 +47797,7 @@ for.body:                                         ; preds = %for.body.lr.ph, %fo
   %70 = getelementptr inbounds i8, ptr %67, i64 %69
   store i8 0, ptr %70, align 1
   %71 = alloca ptr, align 8
-  %72 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %71, ptr nonnull @293, ptr %59, ptr %67)
+  %72 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %71, ptr nonnull @292, ptr %59, ptr %67)
   %73 = load ptr, ptr %71, align 8
   %74 = tail call ptr @malloc(i32 24)
   store ptr %73, ptr %74, align 8
@@ -47735,7 +47816,7 @@ for.body:                                         ; preds = %for.body.lr.ph, %fo
   %79 = call ptr @LLVMConstString(ptr %77, i64 %72, i1 false)
   %80 = load ptr, ptr %0, align 8
   %81 = call ptr @LLVMTypeOf(ptr %79)
-  %82 = call ptr @LLVMAddGlobal(ptr %80, ptr %81, ptr nonnull @79)
+  %82 = call ptr @LLVMAddGlobal(ptr %80, ptr %81, ptr nonnull @78)
   call void @LLVMSetInitializer(ptr %82, ptr %79)
   %83 = add nuw nsw i64 %idx.068, 1
   %84 = getelementptr inbounds ptr, ptr %28, i64 %idx.068
@@ -47766,7 +47847,7 @@ for.end:                                          ; preds = %for.body, %ifend
   %99 = getelementptr inbounds i8, ptr %96, i64 %98
   store i8 0, ptr %99, align 1
   %100 = alloca ptr, align 8
-  %101 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %100, ptr nonnull @294, ptr %96)
+  %101 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %100, ptr nonnull @293, ptr %96)
   %102 = load ptr, ptr %100, align 8
   %103 = tail call ptr @malloc(i32 24)
   tail call void @free(ptr %96)
@@ -47789,7 +47870,7 @@ for.end:                                          ; preds = %for.body, %ifend
   %112 = load i64, ptr %memberidx1.i.i, align 4
   %memberidx2.i.i = getelementptr inbounds %TypeId, ptr %109, i64 0, i32 2
   %113 = load i64, ptr %memberidx2.i.i, align 4
-  %114 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %5, ptr nonnull @244, i64 %111, i64 %112, i64 %113)
+  %114 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %5, ptr nonnull @243, i64 %111, i64 %112, i64 %113)
   %115 = load ptr, ptr %5, align 8
   %116 = call ptr @malloc(i32 24)
   store ptr %115, ptr %116, align 8
@@ -47807,7 +47888,7 @@ define internal fastcc ptr @CodeGen_codegen_safe_fmt_string(ptr nocapture readon
   %7 = tail call ptr @LLVMInt8Type()
   %8 = tail call ptr @LLVMPointerType(ptr %7, i64 0)
   %9 = tail call ptr @LLVMIntType(i64 64)
-  %10 = tail call ptr @LLVMBuildAlloca(ptr %1, ptr %8, ptr nonnull @79)
+  %10 = tail call ptr @LLVMBuildAlloca(ptr %1, ptr %8, ptr nonnull @78)
   %memberidx.i = getelementptr inbounds %CodeGen, ptr %0, i64 0, i32 7
   %11 = load ptr, ptr %memberidx.i, align 8
   %12 = tail call fastcc i64 @Map_String_LLVMValueRef__hash_fnc(ptr %2)
@@ -47882,7 +47963,7 @@ if.entry.i:                                       ; preds = %else.i26, %6, %whil
   tail call void @llvm.memcpy.p0.p0.i64(ptr align 8 %39, ptr align 8 %40, i64 %41, i1 false)
   %42 = getelementptr inbounds i8, ptr %39, i64 %41
   store i8 0, ptr %42, align 1
-  %43 = tail call ptr @LLVMBuildGlobalString(ptr %1, ptr %39, ptr nonnull @79)
+  %43 = tail call ptr @LLVMBuildGlobalString(ptr %1, ptr %39, ptr nonnull @78)
   %44 = load ptr, ptr %memberidx.i, align 8
   tail call fastcc void @Map_String_LLVMValueRef____setitem__(ptr %44, ptr nonnull %2, ptr %43)
   br label %CodeGen_createGlobalLLVMString.exit
@@ -47896,7 +47977,7 @@ CodeGen_createGlobalLLVMString.exit:              ; preds = %Map_String_LLVMValu
   store ptr %str.0.i, ptr %47, align 8
   %48 = getelementptr inbounds ptr, ptr %46, i64 2
   %49 = shl i64 %4, 3
-  call void @llvm.memcpy.p0.p0.i64(ptr nonnull align 1073741824 %48, ptr align 8 %3, i64 %49, i1 false)
+  call void @llvm.memcpy.p0.p0.i64(ptr nonnull align 536870912 %48, ptr align 8 %3, i64 %49, i1 false)
   store ptr %8, ptr %arg_types, align 8
   %50 = getelementptr inbounds ptr, ptr %arg_types, i64 1
   store ptr %8, ptr %50, align 8
@@ -47930,7 +48011,7 @@ else.i:                                           ; preds = %CodeGen_createGloba
 get_intrinsic.exit:                               ; preds = %CodeGen_createGlobalLLVMString.exit, %else.i
   %storemerge.i = phi ptr [ %60, %else.i ], [ %59, %CodeGen_createGlobalLLVMString.exit ]
   store ptr %storemerge.i, ptr %54, align 8
-  %61 = call ptr @LLVMBuildCall2(ptr %1, ptr %55, ptr %storemerge.i, ptr nonnull %46, i64 %45, ptr nonnull @79)
+  %61 = call ptr @LLVMBuildCall2(ptr %1, ptr %55, ptr %storemerge.i, ptr nonnull %46, i64 %45, ptr nonnull @78)
   %.not = icmp eq ptr %5, null
   br i1 %.not, label %ifend, label %if.entry
 
@@ -47939,7 +48020,7 @@ if.entry:                                         ; preds = %get_intrinsic.exit
   br label %ifend
 
 ifend:                                            ; preds = %get_intrinsic.exit, %if.entry
-  %62 = call ptr @LLVMBuildLoad2(ptr %1, ptr %8, ptr %10, ptr nonnull @79)
+  %62 = call ptr @LLVMBuildLoad2(ptr %1, ptr %8, ptr %10, ptr nonnull @78)
   ret ptr %62
 }
 
@@ -48022,7 +48103,7 @@ String_append_bytes_length.exit92:                ; preds = %for.body, %if.entry
   %40 = phi i64 [ %.pre166, %if.entry.i.i91 ], [ %21, %for.body ]
   %41 = phi ptr [ %39, %if.entry.i.i91 ], [ %38, %for.body ]
   %42 = getelementptr inbounds i8, ptr %41, i64 %40
-  tail call void @llvm.memcpy.p0.p0.i64(ptr align 1073741824 %42, ptr align 8 %chars.0155, i64 %34, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr align 536870912 %42, ptr align 8 %chars.0155, i64 %34, i1 false)
   %43 = load i64, ptr %memberidx1.i.i101, align 4
   %44 = add nuw i64 %43, %34
   store i64 %44, ptr %memberidx1.i.i101, align 4
@@ -48046,7 +48127,7 @@ String___adda__.exit:                             ; preds = %String_append_bytes
   %52 = phi i64 [ %.pre168, %if.entry.i.i.i ], [ %44, %String_append_bytes_length.exit92 ]
   %53 = phi ptr [ %51, %if.entry.i.i.i ], [ %50, %String_append_bytes_length.exit92 ]
   %54 = getelementptr inbounds i8, ptr %53, i64 %52
-  tail call void @llvm.memcpy.p0.p0.i64(ptr align 1073741824 %54, ptr align 8 %45, i64 %46, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr align 536870912 %54, ptr align 8 %45, i64 %46, i1 false)
   %55 = load i64, ptr %memberidx1.i.i101, align 4
   %56 = add nuw i64 %55, %46
   store i64 %56, ptr %memberidx1.i.i101, align 4
@@ -48087,7 +48168,7 @@ String_append_bytes_length.exit:                  ; preds = %for.end, %if.entry.
   %70 = phi i64 [ %.pre171, %if.entry.i.i ], [ %63, %for.end ]
   %71 = phi ptr [ %69, %if.entry.i.i ], [ %68, %for.end ]
   %72 = getelementptr inbounds i8, ptr %71, i64 %70
-  tail call void @llvm.memcpy.p0.p0.i64(ptr align 1073741824 %72, ptr align 8 %chars.0.lcssa, i64 %65, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr align 536870912 %72, ptr align 8 %chars.0.lcssa, i64 %65, i1 false)
   %73 = load i64, ptr %memberidx1.i.i101, align 4
   %74 = add nuw i64 %73, %65
   store i64 %74, ptr %memberidx1.i.i101, align 4
@@ -48168,7 +48249,7 @@ if.entry.i:                                       ; preds = %else.i113, %false_b
   tail call void @llvm.memcpy.p0.p0.i64(ptr align 8 %105, ptr align 8 %106, i64 %74, i1 false)
   %107 = getelementptr inbounds i8, ptr %105, i64 %74
   store i8 0, ptr %107, align 1
-  %108 = tail call ptr @LLVMBuildGlobalString(ptr %1, ptr %105, ptr nonnull @79)
+  %108 = tail call ptr @LLVMBuildGlobalString(ptr %1, ptr %105, ptr nonnull @78)
   %109 = load ptr, ptr %memberidx.i83, align 8
   tail call fastcc void @Map_String_LLVMValueRef____setitem__(ptr %109, ptr nonnull %11, ptr %108)
   br label %end
@@ -48203,12 +48284,12 @@ if.entry:                                         ; preds = %is_object.exit
 
 if.entry17:                                       ; preds = %if.entry
   %121 = load ptr, ptr %0, align 8
-  %122 = call ptr @LLVMGetNamedFunction(ptr %121, ptr nonnull @255)
+  %122 = call ptr @LLVMGetNamedFunction(ptr %121, ptr nonnull @254)
   %123 = icmp eq ptr %122, null
   br i1 %123, label %if.entry21, label %ifend23
 
 else18:                                           ; preds = %if.entry
-  %124 = call ptr @LLVMBuildMalloc(ptr %1, ptr %117, ptr nonnull @79)
+  %124 = call ptr @LLVMBuildMalloc(ptr %1, ptr %117, ptr nonnull @78)
   store ptr %124, ptr %args1, align 8
   %125 = getelementptr inbounds ptr, ptr %args1, i64 1
   store ptr %ternary, ptr %125, align 8
@@ -48265,12 +48346,12 @@ CodeGen_get_or_codegen_class_from_typeid.exit:    ; preds = %get_class_from_type
 
 if.entry.i107:                                    ; preds = %CodeGen_get_or_codegen_class_from_typeid.exit
   %148 = call ptr @LLVM_GetFunctionType(ptr nonnull %147)
-  %149 = call ptr @LLVMBuildCall2(ptr %1, ptr %148, ptr nonnull %147, ptr nonnull %args1, i64 3, ptr nonnull @79)
+  %149 = call ptr @LLVMBuildCall2(ptr %1, ptr %148, ptr nonnull %147, ptr nonnull %args1, i64 3, ptr nonnull @78)
   br label %for.entry25
 
 else.i:                                           ; preds = %CodeGen_get_or_codegen_class_from_typeid.exit
   %150 = call ptr @malloc(i32 47)
-  call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(47) %150, ptr noundef nonnull align 8 dereferenceable(47) @291, i64 47, i1 false)
+  call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(47) %150, ptr noundef nonnull align 8 dereferenceable(47) @290, i64 47, i1 false)
   %151 = call ptr @malloc(i32 24)
   %152 = call ptr @malloc(i32 7)
   call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(7) %152, ptr noundef nonnull align 8 dereferenceable(7) @0, i64 7, i1 false)
@@ -48287,7 +48368,7 @@ else.i:                                           ; preds = %CodeGen_get_or_code
 
 if.entry21:                                       ; preds = %if.entry17
   %157 = call ptr @malloc(i32 54)
-  call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(54) %157, ptr noundef nonnull align 8 dereferenceable(54) @256, i64 54, i1 false)
+  call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(54) %157, ptr noundef nonnull align 8 dereferenceable(54) @255, i64 54, i1 false)
   %158 = call ptr @malloc(i32 24)
   %159 = call ptr @malloc(i32 7)
   call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(7) %159, ptr noundef nonnull align 8 dereferenceable(7) @0, i64 7, i1 false)
@@ -48308,7 +48389,7 @@ ifend23:                                          ; preds = %if.entry17, %if.ent
   %165 = load ptr, ptr %str_len, align 8
   store ptr %165, ptr %164, align 8
   %166 = call ptr @LLVM_GetFunctionType(ptr %122)
-  %167 = call ptr @LLVMBuildCall2(ptr %1, ptr %166, ptr %122, ptr nonnull %args, i64 2, ptr nonnull @79)
+  %167 = call ptr @LLVMBuildCall2(ptr %1, ptr %166, ptr %122, ptr nonnull %args, i64 2, ptr nonnull @78)
   br label %for.entry25
 
 for.entry25:                                      ; preds = %else.i, %if.entry.i107, %ifend23, %is_object.exit
@@ -48429,7 +48510,7 @@ if.entry18:                                       ; preds = %3
 
 if.entry.i:                                       ; preds = %if.entry18
   %27 = tail call ptr @malloc(i32 50)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(50) %27, ptr noundef nonnull align 8 dereferenceable(50) @267, i64 50, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(50) %27, ptr noundef nonnull align 8 dereferenceable(50) @266, i64 50, i1 false)
   %28 = tail call ptr @malloc(i32 24)
   %29 = tail call ptr @malloc(i32 7)
   tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(7) %29, ptr noundef nonnull align 8 dereferenceable(7) @0, i64 7, i1 false)
@@ -48460,7 +48541,7 @@ if.entry8.i:                                      ; preds = %ifend6.i
   br label %common.ret296
 
 ifend10.i:                                        ; preds = %ifend6.i
-  %39 = tail call ptr @LLVMBuildLoad2(ptr %1, ptr %25, ptr %23, ptr nonnull @79)
+  %39 = tail call ptr @LLVMBuildLoad2(ptr %1, ptr %25, ptr %23, ptr nonnull @78)
   br label %common.ret296
 
 if.entry22:                                       ; preds = %3
@@ -48575,11 +48656,11 @@ ifend24.i:                                        ; preds = %if.entry19.i
   br i1 %65, label %true_block25.i, label %false_block26.i
 
 true_block25.i:                                   ; preds = %ifend24.i
-  %82 = tail call ptr @LLVMBuildIsNull(ptr %1, ptr %59, ptr nonnull @79)
+  %82 = tail call ptr @LLVMBuildIsNull(ptr %1, ptr %59, ptr nonnull @78)
   br label %CodeGen_codegen_bin_exp.exit
 
 false_block26.i:                                  ; preds = %ifend24.i
-  %83 = tail call ptr @LLVMBuildIsNotNull(ptr %1, ptr %59, ptr nonnull @79)
+  %83 = tail call ptr @LLVMBuildIsNotNull(ptr %1, ptr %59, ptr nonnull @78)
   br label %CodeGen_codegen_bin_exp.exit
 
 if.entry33.i:                                     ; preds = %ifend21.i
@@ -48599,7 +48680,7 @@ if.entry33.i:                                     ; preds = %ifend21.i
   tail call void @llvm.memcpy.p0.p0.i64(ptr align 8 %89, ptr align 8 %90, i64 %86, i1 false)
   %91 = getelementptr inbounds i8, ptr %89, i64 %86
   store i8 0, ptr %91, align 1
-  %92 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %5, ptr nonnull @264, ptr %89)
+  %92 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %5, ptr nonnull @263, ptr %89)
   %93 = load ptr, ptr %5, align 8
   %94 = call ptr @malloc(i32 24)
   store ptr %93, ptr %94, align 8
@@ -48635,7 +48716,7 @@ else.i.i.i:                                       ; preds = %if.entry33.i
 CodeGen_codegen_pow_expr.exit.i:                  ; preds = %if.entry33.i, %else.i.i.i
   %storemerge.i.i.i = phi ptr [ %105, %else.i.i.i ], [ %104, %if.entry33.i ]
   store ptr %storemerge.i.i.i, ptr %98, align 8
-  %106 = call ptr @LLVMBuildCall2(ptr %1, ptr %99, ptr %storemerge.i.i.i, ptr nonnull %args.i.i, i64 2, ptr nonnull @79)
+  %106 = call ptr @LLVMBuildCall2(ptr %1, ptr %99, ptr %storemerge.i.i.i, ptr nonnull %args.i.i, i64 2, ptr nonnull @78)
   call void @llvm.lifetime.end.p0(i64 16, ptr nonnull %args.i.i)
   call void @llvm.lifetime.end.p0(i64 16, ptr nonnull %arg_types.i.i)
   call void @llvm.lifetime.end.p0(i64 8, ptr nonnull %5)
@@ -48710,7 +48791,7 @@ true_block.i.i:                                   ; preds = %false_block40.i
   br label %end41.i
 
 false_block.i.i:                                  ; preds = %false_block40.i
-  %130 = tail call ptr @LLVMBuildNeg(ptr %1, ptr %61, ptr nonnull @79)
+  %130 = tail call ptr @LLVMBuildNeg(ptr %1, ptr %61, ptr nonnull @78)
   br label %end41.i
 
 end41.i:                                          ; preds = %true_block.i.i, %false_block.i.i, %if.entry36.i
@@ -48719,7 +48800,7 @@ end41.i:                                          ; preds = %true_block.i.i, %fa
   %memberidx43.i = getelementptr inbounds %PointerType, ptr %72, i64 0, i32 1
   %131 = load ptr, ptr %memberidx43.i, align 8
   %132 = tail call fastcc ptr @CodeGen_codegen_type(ptr %0, ptr %131, i1 true)
-  %133 = call ptr @LLVMBuildInBoundsGEP2(ptr %1, ptr %132, ptr %59, ptr nonnull %indices.i, i64 1, ptr nonnull @79)
+  %133 = call ptr @LLVMBuildInBoundsGEP2(ptr %1, ptr %132, ptr %59, ptr nonnull %indices.i, i64 1, ptr nonnull @78)
   br label %CodeGen_codegen_bin_exp.exit
 
 if.entry45.i:                                     ; preds = %switch.early.test, %switch.early.test, %switch.early.test, %switch.early.test, %switch.early.test, %switch.early.test, %switch.early.test, %switch.early.test, %is_object.exit282
@@ -48738,7 +48819,7 @@ else46.i:                                         ; preds = %switch.early.test
 
 ifend47.i:                                        ; preds = %else125.i, %else213.i, %else185.i, %else167.i
   %136 = tail call ptr @malloc(i32 33)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(33) %136, ptr noundef nonnull align 8 dereferenceable(33) @265, i64 33, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(33) %136, ptr noundef nonnull align 8 dereferenceable(33) @264, i64 33, i1 false)
   %137 = tail call ptr @malloc(i32 24)
   %138 = tail call ptr @malloc(i32 7)
   tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(7) %138, ptr noundef nonnull align 8 dereferenceable(7) @0, i64 7, i1 false)
@@ -48771,7 +48852,7 @@ true_block56.i:                                   ; preds = %if.entry53.i
   br label %CodeGen_codegen_bin_exp.exit
 
 false_block57.i:                                  ; preds = %if.entry53.i
-  %146 = tail call ptr @LLVMBuildNSWAdd(ptr %1, ptr %59, ptr %61, ptr nonnull @79)
+  %146 = tail call ptr @LLVMBuildNSWAdd(ptr %1, ptr %59, ptr %61, ptr nonnull @78)
   br label %CodeGen_codegen_bin_exp.exit
 
 true_block60.i:                                   ; preds = %ifend55.i
@@ -48779,7 +48860,7 @@ true_block60.i:                                   ; preds = %ifend55.i
   br label %CodeGen_codegen_bin_exp.exit
 
 false_block61.i:                                  ; preds = %ifend55.i
-  %148 = tail call ptr @LLVMBuildNUWAdd(ptr %1, ptr %59, ptr %61, ptr nonnull @79)
+  %148 = tail call ptr @LLVMBuildNUWAdd(ptr %1, ptr %59, ptr %61, ptr nonnull @78)
   br label %CodeGen_codegen_bin_exp.exit
 
 if.entry64.i:                                     ; preds = %if.entry45.i
@@ -48800,7 +48881,7 @@ true_block72.i:                                   ; preds = %if.entry69.i
   br label %CodeGen_codegen_bin_exp.exit
 
 false_block73.i:                                  ; preds = %if.entry69.i
-  %152 = tail call ptr @LLVMBuildNSWSub(ptr %1, ptr %59, ptr %61, ptr nonnull @79)
+  %152 = tail call ptr @LLVMBuildNSWSub(ptr %1, ptr %59, ptr %61, ptr nonnull @78)
   br label %CodeGen_codegen_bin_exp.exit
 
 true_block76.i:                                   ; preds = %ifend71.i
@@ -48808,7 +48889,7 @@ true_block76.i:                                   ; preds = %ifend71.i
   br label %CodeGen_codegen_bin_exp.exit
 
 false_block77.i:                                  ; preds = %ifend71.i
-  %154 = tail call ptr @LLVMBuildNUWSub(ptr %1, ptr %59, ptr %61, ptr nonnull @79)
+  %154 = tail call ptr @LLVMBuildNUWSub(ptr %1, ptr %59, ptr %61, ptr nonnull @78)
   br label %CodeGen_codegen_bin_exp.exit
 
 if.entry80.i:                                     ; preds = %if.entry45.i
@@ -48829,7 +48910,7 @@ true_block88.i:                                   ; preds = %if.entry85.i
   br label %CodeGen_codegen_bin_exp.exit
 
 false_block89.i:                                  ; preds = %if.entry85.i
-  %158 = tail call ptr @LLVMBuildNSWMul(ptr %1, ptr %59, ptr %61, ptr nonnull @79)
+  %158 = tail call ptr @LLVMBuildNSWMul(ptr %1, ptr %59, ptr %61, ptr nonnull @78)
   br label %CodeGen_codegen_bin_exp.exit
 
 true_block92.i:                                   ; preds = %ifend87.i
@@ -48837,7 +48918,7 @@ true_block92.i:                                   ; preds = %ifend87.i
   br label %CodeGen_codegen_bin_exp.exit
 
 false_block93.i:                                  ; preds = %ifend87.i
-  %160 = tail call ptr @LLVMBuildNUWMul(ptr %1, ptr %59, ptr %61, ptr nonnull @79)
+  %160 = tail call ptr @LLVMBuildNUWMul(ptr %1, ptr %59, ptr %61, ptr nonnull @78)
   br label %CodeGen_codegen_bin_exp.exit
 
 if.entry96.i:                                     ; preds = %if.entry45.i
@@ -48848,11 +48929,11 @@ if.entry96.i:                                     ; preds = %if.entry45.i
   br i1 %162, label %if.entry101.i, label %ifend103.i
 
 if.entry101.i:                                    ; preds = %if.entry96.i
-  %163 = tail call ptr @LLVMBuildSDiv(ptr %1, ptr %59, ptr %61, ptr nonnull @79)
+  %163 = tail call ptr @LLVMBuildSDiv(ptr %1, ptr %59, ptr %61, ptr nonnull @78)
   br label %CodeGen_codegen_bin_exp.exit
 
 ifend103.i:                                       ; preds = %if.entry96.i
-  %164 = tail call ptr @LLVMBuildUDiv(ptr %1, ptr %59, ptr %61, ptr nonnull @79)
+  %164 = tail call ptr @LLVMBuildUDiv(ptr %1, ptr %59, ptr %61, ptr nonnull @78)
   br label %CodeGen_codegen_bin_exp.exit
 
 if.entry104.i:                                    ; preds = %if.entry45.i
@@ -48868,11 +48949,11 @@ else105.i:                                        ; preds = %if.entry45.i
   br i1 %168, label %if.entry112.i, label %else113.i
 
 if.entry109.i:                                    ; preds = %if.entry104.i
-  %169 = tail call ptr @LLVMBuildSRem(ptr %1, ptr %59, ptr %61, ptr nonnull @79)
+  %169 = tail call ptr @LLVMBuildSRem(ptr %1, ptr %59, ptr %61, ptr nonnull @78)
   br label %CodeGen_codegen_bin_exp.exit
 
 ifend111.i:                                       ; preds = %if.entry104.i
-  %170 = tail call ptr @LLVMBuildURem(ptr %1, ptr %59, ptr %61, ptr nonnull @79)
+  %170 = tail call ptr @LLVMBuildURem(ptr %1, ptr %59, ptr %61, ptr nonnull @78)
   br label %CodeGen_codegen_bin_exp.exit
 
 if.entry112.i:                                    ; preds = %else105.i
@@ -48887,7 +48968,7 @@ true_block120.i:                                  ; preds = %if.entry112.i
   br label %CodeGen_codegen_bin_exp.exit
 
 false_block121.i:                                 ; preds = %if.entry112.i
-  %173 = tail call ptr @LLVMBuildICmp(ptr %1, i64 %171, ptr %59, ptr %61, ptr nonnull @79)
+  %173 = tail call ptr @LLVMBuildICmp(ptr %1, i64 %171, ptr %59, ptr %61, ptr nonnull @78)
   br label %CodeGen_codegen_bin_exp.exit
 
 if.entry124.i:                                    ; preds = %else113.i
@@ -48908,7 +48989,7 @@ true_block127.i:                                  ; preds = %if.entry124.i
   br label %CodeGen_codegen_bin_exp.exit
 
 false_block128.i:                                 ; preds = %if.entry124.i
-  %176 = tail call ptr @LLVMBuildICmp(ptr %1, i64 %174, ptr %59, ptr %61, ptr nonnull @79)
+  %176 = tail call ptr @LLVMBuildICmp(ptr %1, i64 %174, ptr %59, ptr %61, ptr nonnull @78)
   br label %CodeGen_codegen_bin_exp.exit
 
 if.entry131.i:                                    ; preds = %else125.i
@@ -48919,7 +49000,7 @@ true_block134.i:                                  ; preds = %if.entry131.i
   br label %CodeGen_codegen_bin_exp.exit
 
 false_block135.i:                                 ; preds = %if.entry131.i
-  %178 = tail call ptr @LLVMBuildShl(ptr %1, ptr %59, ptr %61, ptr nonnull @79)
+  %178 = tail call ptr @LLVMBuildShl(ptr %1, ptr %59, ptr %61, ptr nonnull @78)
   br label %CodeGen_codegen_bin_exp.exit
 
 if.entry138.i:                                    ; preds = %else125.i
@@ -48930,7 +49011,7 @@ true_block141.i:                                  ; preds = %if.entry138.i
   br label %CodeGen_codegen_bin_exp.exit
 
 false_block142.i:                                 ; preds = %if.entry138.i
-  %180 = tail call ptr @LLVMBuildLShr(ptr %1, ptr %59, ptr %61, ptr nonnull @79)
+  %180 = tail call ptr @LLVMBuildLShr(ptr %1, ptr %59, ptr %61, ptr nonnull @78)
   br label %CodeGen_codegen_bin_exp.exit
 
 if.entry145.i:                                    ; preds = %else125.i
@@ -48941,7 +49022,7 @@ true_block148.i:                                  ; preds = %if.entry145.i
   br label %CodeGen_codegen_bin_exp.exit
 
 false_block149.i:                                 ; preds = %if.entry145.i
-  %182 = tail call ptr @LLVMBuildOr(ptr %1, ptr %59, ptr %61, ptr nonnull @79)
+  %182 = tail call ptr @LLVMBuildOr(ptr %1, ptr %59, ptr %61, ptr nonnull @78)
   br label %CodeGen_codegen_bin_exp.exit
 
 if.entry152.i:                                    ; preds = %else125.i
@@ -48952,7 +49033,7 @@ true_block155.i:                                  ; preds = %if.entry152.i
   br label %CodeGen_codegen_bin_exp.exit
 
 false_block156.i:                                 ; preds = %if.entry152.i
-  %184 = tail call ptr @LLVMBuildAnd(ptr %1, ptr %59, ptr %61, ptr nonnull @79)
+  %184 = tail call ptr @LLVMBuildAnd(ptr %1, ptr %59, ptr %61, ptr nonnull @78)
   br label %CodeGen_codegen_bin_exp.exit
 
 if.entry159.i:                                    ; preds = %else125.i
@@ -48963,7 +49044,7 @@ true_block162.i:                                  ; preds = %if.entry159.i
   br label %CodeGen_codegen_bin_exp.exit
 
 false_block163.i:                                 ; preds = %if.entry159.i
-  %186 = tail call ptr @LLVMBuildXor(ptr %1, ptr %59, ptr %61, ptr nonnull @79)
+  %186 = tail call ptr @LLVMBuildXor(ptr %1, ptr %59, ptr %61, ptr nonnull @78)
   br label %CodeGen_codegen_bin_exp.exit
 
 if.entry166.i:                                    ; preds = %else46.i
@@ -48980,23 +49061,23 @@ else167.i:                                        ; preds = %else46.i
   br i1 %187, label %if.entry202.i, label %ifend47.i
 
 if.entry169.i:                                    ; preds = %if.entry166.i
-  %188 = tail call ptr @LLVMBuildFAdd(ptr %1, ptr %59, ptr %61, ptr nonnull @79)
+  %188 = tail call ptr @LLVMBuildFAdd(ptr %1, ptr %59, ptr %61, ptr nonnull @78)
   br label %CodeGen_codegen_bin_exp.exit
 
 if.entry172.i:                                    ; preds = %if.entry166.i
-  %189 = tail call ptr @LLVMBuildFSub(ptr %1, ptr %59, ptr %61, ptr nonnull @79)
+  %189 = tail call ptr @LLVMBuildFSub(ptr %1, ptr %59, ptr %61, ptr nonnull @78)
   br label %CodeGen_codegen_bin_exp.exit
 
 if.entry175.i:                                    ; preds = %if.entry166.i
-  %190 = tail call ptr @LLVMBuildFMul(ptr %1, ptr %59, ptr %61, ptr nonnull @79)
+  %190 = tail call ptr @LLVMBuildFMul(ptr %1, ptr %59, ptr %61, ptr nonnull @78)
   br label %CodeGen_codegen_bin_exp.exit
 
 if.entry178.i:                                    ; preds = %if.entry166.i
-  %191 = tail call ptr @LLVMBuildFDiv(ptr %1, ptr %59, ptr %61, ptr nonnull @79)
+  %191 = tail call ptr @LLVMBuildFDiv(ptr %1, ptr %59, ptr %61, ptr nonnull @78)
   br label %CodeGen_codegen_bin_exp.exit
 
 if.entry181.i:                                    ; preds = %if.entry166.i
-  %192 = tail call ptr @LLVMBuildFRem(ptr %1, ptr %59, ptr %61, ptr nonnull @79)
+  %192 = tail call ptr @LLVMBuildFRem(ptr %1, ptr %59, ptr %61, ptr nonnull @78)
   br label %CodeGen_codegen_bin_exp.exit
 
 else182.i:                                        ; preds = %if.entry166.i
@@ -49016,7 +49097,7 @@ true_block187.i:                                  ; preds = %if.entry184.i
   br label %CodeGen_codegen_bin_exp.exit
 
 false_block188.i:                                 ; preds = %if.entry184.i
-  %197 = tail call ptr @LLVMBuildFCmp(ptr %1, i64 %195, ptr %59, ptr %61, ptr nonnull @79)
+  %197 = tail call ptr @LLVMBuildFCmp(ptr %1, i64 %195, ptr %59, ptr %61, ptr nonnull @78)
   br label %CodeGen_codegen_bin_exp.exit
 
 if.entry191.i:                                    ; preds = %else185.i
@@ -49028,7 +49109,7 @@ true_block198.i:                                  ; preds = %if.entry191.i
   br label %CodeGen_codegen_bin_exp.exit
 
 false_block199.i:                                 ; preds = %if.entry191.i
-  %199 = tail call ptr @LLVMBuildFCmp(ptr %1, i64 %.226.i, ptr %59, ptr %61, ptr nonnull @79)
+  %199 = tail call ptr @LLVMBuildFCmp(ptr %1, i64 %.226.i, ptr %59, ptr %61, ptr nonnull @78)
   br label %CodeGen_codegen_bin_exp.exit
 
 if.entry202.i:                                    ; preds = %else167.i
@@ -49046,7 +49127,7 @@ true_block208.i:                                  ; preds = %if.entry205.i
   br label %CodeGen_codegen_bin_exp.exit
 
 false_block209.i:                                 ; preds = %if.entry205.i
-  %201 = tail call ptr @LLVMBuildAnd(ptr %1, ptr %59, ptr %61, ptr nonnull @79)
+  %201 = tail call ptr @LLVMBuildAnd(ptr %1, ptr %59, ptr %61, ptr nonnull @78)
   br label %CodeGen_codegen_bin_exp.exit
 
 if.entry212.i:                                    ; preds = %if.entry202.i
@@ -49060,7 +49141,7 @@ true_block215.i:                                  ; preds = %if.entry212.i
   br label %CodeGen_codegen_bin_exp.exit
 
 false_block216.i:                                 ; preds = %if.entry212.i
-  %203 = tail call ptr @LLVMBuildOr(ptr %1, ptr %59, ptr %61, ptr nonnull @79)
+  %203 = tail call ptr @LLVMBuildOr(ptr %1, ptr %59, ptr %61, ptr nonnull @78)
   br label %CodeGen_codegen_bin_exp.exit
 
 if.entry219.i:                                    ; preds = %else213.i
@@ -49071,7 +49152,7 @@ true_block222.i:                                  ; preds = %if.entry219.i
   br label %CodeGen_codegen_bin_exp.exit
 
 false_block223.i:                                 ; preds = %if.entry219.i
-  %205 = tail call ptr @LLVMBuildXor(ptr %1, ptr %59, ptr %61, ptr nonnull @79)
+  %205 = tail call ptr @LLVMBuildXor(ptr %1, ptr %59, ptr %61, ptr nonnull @78)
   br label %CodeGen_codegen_bin_exp.exit
 
 CodeGen_codegen_bin_exp.exit:                     ; preds = %if.entry7.i, %if.entry10.i, %CodeGen_get_expr_mem.exit, %if.entry22.i, %true_block25.i, %false_block26.i, %CodeGen_codegen_pow_expr.exit.i, %end41.i, %ifend47.i, %true_block56.i, %false_block57.i, %true_block60.i, %false_block61.i, %true_block72.i, %false_block73.i, %true_block76.i, %false_block77.i, %true_block88.i, %false_block89.i, %true_block92.i, %false_block93.i, %if.entry101.i, %ifend103.i, %if.entry109.i, %ifend111.i, %true_block120.i, %false_block121.i, %true_block127.i, %false_block128.i, %true_block134.i, %false_block135.i, %true_block141.i, %false_block142.i, %true_block148.i, %false_block149.i, %true_block155.i, %false_block156.i, %true_block162.i, %false_block163.i, %if.entry169.i, %if.entry172.i, %if.entry175.i, %if.entry178.i, %if.entry181.i, %true_block187.i, %false_block188.i, %true_block198.i, %false_block199.i, %true_block208.i, %false_block209.i, %true_block215.i, %false_block216.i, %true_block222.i, %false_block223.i
@@ -49116,7 +49197,7 @@ if.entry3.i:                                      ; preds = %is_object.exit
   call void @llvm.lifetime.start.p0(i64 8, ptr nonnull %args.i289)
   call void @llvm.lifetime.start.p0(i64 8, ptr nonnull %func_ty.i)
   %216 = tail call ptr @malloc(i32 7)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(7) %216, ptr noundef nonnull align 8 dereferenceable(7) @136, i64 7, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(7) %216, ptr noundef nonnull align 8 dereferenceable(7) @135, i64 7, i1 false)
   %217 = tail call ptr @malloc(i32 24)
   store ptr %216, ptr %217, align 8
   %memberidx1.i.i.i290 = getelementptr inbounds %String, ptr %217, i64 0, i32 1
@@ -49131,7 +49212,7 @@ ifend.i292:                                       ; preds = %if.entry3.i
   store ptr %208, ptr %args.i289, align 8
   %220 = load ptr, ptr %func_ty.i, align 8
   %221 = call fastcc ptr @CodeGen_codegen_type(ptr %0, ptr %220, i1 false)
-  %222 = call ptr @LLVMBuildCall2(ptr %1, ptr %221, ptr nonnull %218, ptr nonnull %args.i289, i64 1, ptr nonnull @79)
+  %222 = call ptr @LLVMBuildCall2(ptr %1, ptr %221, ptr nonnull %218, ptr nonnull %args.i289, i64 1, ptr nonnull @78)
   br label %CodeGen_codegen_del_call.exit
 
 CodeGen_codegen_del_call.exit:                    ; preds = %if.entry3.i, %ifend.i292
@@ -49173,7 +49254,7 @@ true_block.i167:                                  ; preds = %if.entry16.i
   br label %CodeGen_codegen_unary_exp.exit
 
 false_block.i168:                                 ; preds = %if.entry16.i
-  %233 = tail call ptr @LLVMBuildNSWNeg(ptr %1, ptr %208, ptr nonnull @79)
+  %233 = tail call ptr @LLVMBuildNSWNeg(ptr %1, ptr %208, ptr nonnull @78)
   br label %CodeGen_codegen_unary_exp.exit
 
 true_block19.i:                                   ; preds = %ifend18.i
@@ -49181,11 +49262,11 @@ true_block19.i:                                   ; preds = %ifend18.i
   br label %CodeGen_codegen_unary_exp.exit
 
 false_block20.i:                                  ; preds = %ifend18.i
-  %235 = tail call ptr @LLVMBuildNUWNeg(ptr %1, ptr %208, ptr nonnull @79)
+  %235 = tail call ptr @LLVMBuildNUWNeg(ptr %1, ptr %208, ptr nonnull @78)
   br label %CodeGen_codegen_unary_exp.exit
 
 if.entry24.i:                                     ; preds = %else12.i
-  %236 = tail call ptr @LLVMBuildFNeg(ptr %1, ptr %208, ptr nonnull @79)
+  %236 = tail call ptr @LLVMBuildFNeg(ptr %1, ptr %208, ptr nonnull @78)
   br label %CodeGen_codegen_unary_exp.exit
 
 if.entry27.i:                                     ; preds = %if.entry26
@@ -49207,7 +49288,7 @@ true_block30.i:                                   ; preds = %if.entry27.i
   br label %CodeGen_codegen_unary_exp.exit
 
 false_block31.i:                                  ; preds = %if.entry27.i
-  %240 = tail call ptr @LLVMBuildNot(ptr %1, ptr %208, ptr nonnull @79)
+  %240 = tail call ptr @LLVMBuildNot(ptr %1, ptr %208, ptr nonnull @78)
   br label %CodeGen_codegen_unary_exp.exit
 
 if.entry34.i:                                     ; preds = %ifend29.i, %ifend29.i, %ifend29.i, %ifend29.i, %ifend29.i
@@ -49259,7 +49340,7 @@ if.entry46.i:                                     ; preds = %ifend39.i
   %256 = tail call ptr @LLVMInt32Type()
   %257 = tail call ptr @LLVMConstInt(ptr %256, i64 %..i, i1 true)
   store ptr %257, ptr %indices.i, align 8
-  %258 = call ptr @LLVMBuildInBoundsGEP2(ptr %1, ptr %255, ptr %208, ptr nonnull %indices.i, i64 1, ptr nonnull @266)
+  %258 = call ptr @LLVMBuildInBoundsGEP2(ptr %1, ptr %255, ptr %208, ptr nonnull %indices.i, i64 1, ptr nonnull @265)
   br label %ifend48.i
 
 else47.i:                                         ; preds = %ifend39.i
@@ -49289,7 +49370,7 @@ false_block56.i:                                  ; preds = %if.entry52.i
 
 end57.i:                                          ; preds = %false_block56.i, %true_block55.i
   %ternary59.i = phi ptr [ %264, %true_block55.i ], [ %266, %false_block56.i ]
-  %267 = tail call ptr @LLVMBuildNSWAdd(ptr %1, ptr %208, ptr %ternary59.i, ptr nonnull @79)
+  %267 = tail call ptr @LLVMBuildNSWAdd(ptr %1, ptr %208, ptr %ternary59.i, ptr nonnull @78)
   br label %ifend48.i
 
 CodeGen_codegen_unary_exp.exit:                   ; preds = %else12.i, %CodeGen_get_expr_mem.exit.i, %ifend29.i, %ifend5.i, %true_block.i167, %false_block.i168, %true_block19.i, %false_block20.i, %if.entry24.i, %true_block30.i, %false_block31.i, %ifend48.i
@@ -49400,7 +49481,7 @@ if.entry19.i183:                                  ; preds = %if.entry14.i
   %317 = load i64, ptr %314, align 4
   %memberidx2.i.i = getelementptr inbounds %VarId, ptr %314, i64 0, i32 2
   %318 = load i64, ptr %memberidx2.i.i, align 4
-  %319 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %4, ptr nonnull @244, i64 %316, i64 %317, i64 %318)
+  %319 = call i64 (ptr, ptr, ...) @asprintf(ptr nonnull %4, ptr nonnull @243, i64 %316, i64 %317, i64 %318)
   %320 = load ptr, ptr %4, align 8
   %321 = call ptr @malloc(i32 24)
   store ptr %320, ptr %321, align 8
@@ -49548,7 +49629,7 @@ CodeGen_codegen_call_exp.exit:                    ; preds = %Array_LLVMValueRef_
   %376 = load ptr, ptr %memberidx32.i189, align 8
   %377 = call fastcc ptr @CodeGen_codegen_type(ptr %0, ptr %376, i1 false)
   %378 = load i64, ptr %memberidx.i.i170, align 4
-  %379 = call ptr @LLVMBuildCall2(ptr %1, ptr %377, ptr %func.1.i, ptr %374, i64 %378, ptr nonnull @79)
+  %379 = call ptr @LLVMBuildCall2(ptr %1, ptr %377, ptr %func.1.i, ptr %374, i64 %378, ptr nonnull @78)
   br label %common.ret296
 
 CodeGen_get_expr_mem.exit232:                     ; preds = %3
@@ -49556,7 +49637,7 @@ CodeGen_get_expr_mem.exit232:                     ; preds = %3
   %memberidx.i190 = getelementptr inbounds %Expression, ptr %2, i64 0, i32 3
   %381 = load ptr, ptr %memberidx.i190, align 8
   %382 = tail call fastcc ptr @CodeGen_codegen_type(ptr %0, ptr %381, i1 true)
-  %383 = tail call ptr @LLVMBuildLoad2(ptr %1, ptr %382, ptr %380, ptr nonnull @79)
+  %383 = tail call ptr @LLVMBuildLoad2(ptr %1, ptr %382, ptr %380, ptr nonnull @78)
   br label %common.ret296
 
 if.entry38:                                       ; preds = %3
@@ -49572,11 +49653,11 @@ if.entry46:                                       ; preds = %3
   call void @llvm.lifetime.start.p0(i64 16, ptr nonnull %arg_types.i.i)
   %memberidx.i191 = getelementptr inbounds %CodeGen, ptr %0, i64 0, i32 1
   %386 = load ptr, ptr %memberidx.i191, align 8
-  %387 = tail call ptr @LLVMAppendBasicBlock(ptr %386, ptr nonnull @268)
+  %387 = tail call ptr @LLVMAppendBasicBlock(ptr %386, ptr nonnull @267)
   %388 = load ptr, ptr %memberidx.i191, align 8
-  %389 = tail call ptr @LLVMAppendBasicBlock(ptr %388, ptr nonnull @269)
+  %389 = tail call ptr @LLVMAppendBasicBlock(ptr %388, ptr nonnull @268)
   %390 = load ptr, ptr %memberidx.i191, align 8
-  %391 = tail call ptr @LLVMAppendBasicBlock(ptr %390, ptr nonnull @270)
+  %391 = tail call ptr @LLVMAppendBasicBlock(ptr %390, ptr nonnull @269)
   %memberidx3.i192 = getelementptr inbounds %TernaryExpression, ptr %2, i64 0, i32 4
   %392 = load ptr, ptr %memberidx3.i192, align 8
   %393 = tail call fastcc ptr @CodeGen_codegen_expression(ptr %0, ptr %1, ptr %392)
@@ -49596,7 +49677,7 @@ if.entry46:                                       ; preds = %3
   %memberidx7.i195 = getelementptr inbounds %Expression, ptr %401, i64 0, i32 3
   %402 = load ptr, ptr %memberidx7.i195, align 8
   %403 = tail call fastcc ptr @CodeGen_codegen_type(ptr %0, ptr %402, i1 true)
-  %404 = tail call ptr @LLVMBuildPhi(ptr %1, ptr %403, ptr nonnull @271)
+  %404 = tail call ptr @LLVMBuildPhi(ptr %1, ptr %403, ptr nonnull @270)
   store ptr %396, ptr %arg_types.i.i, align 8
   %405 = getelementptr inbounds ptr, ptr %arg_types.i.i, i64 1
   store ptr %399, ptr %405, align 8
@@ -49643,7 +49724,7 @@ true_block.i202:                                  ; preds = %if.entry.i198
   br label %common.ret296
 
 false_block.i203:                                 ; preds = %if.entry.i198
-  %425 = tail call ptr @LLVMBuildIsNotNull(ptr %1, ptr %409, ptr nonnull @79)
+  %425 = tail call ptr @LLVMBuildIsNotNull(ptr %1, ptr %409, ptr nonnull @78)
   br label %common.ret296
 
 if.entry3.i205:                                   ; preds = %ifend.i200
@@ -49662,7 +49743,7 @@ true_block6.i:                                    ; preds = %if.entry3.i205
   br label %common.ret296
 
 false_block7.i:                                   ; preds = %if.entry3.i205
-  %432 = tail call ptr @LLVMBuildSIToFP(ptr %1, ptr %409, ptr %410, ptr nonnull @79)
+  %432 = tail call ptr @LLVMBuildSIToFP(ptr %1, ptr %409, ptr %410, ptr nonnull @78)
   br label %common.ret296
 
 if.entry11.i206:                                  ; preds = %else4.i
@@ -49677,7 +49758,7 @@ true_block14.i:                                   ; preds = %if.entry11.i206
   br label %common.ret296
 
 false_block15.i:                                  ; preds = %if.entry11.i206
-  %435 = tail call ptr @LLVMBuildFPToSI(ptr %1, ptr %409, ptr %410, ptr nonnull @79)
+  %435 = tail call ptr @LLVMBuildFPToSI(ptr %1, ptr %409, ptr %410, ptr nonnull @78)
   br label %common.ret296
 
 if.entry19.i208:                                  ; preds = %else12.i207
@@ -49694,7 +49775,7 @@ true_block22.i:                                   ; preds = %if.entry19.i208
   br label %common.ret296
 
 false_block23.i:                                  ; preds = %if.entry19.i208
-  %439 = tail call ptr @LLVMBuildIntCast2(ptr %1, ptr %409, ptr %410, i1 %436, ptr nonnull @79)
+  %439 = tail call ptr @LLVMBuildIntCast2(ptr %1, ptr %409, ptr %410, i1 %436, ptr nonnull @78)
   br label %common.ret296
 
 if.entry29.i:                                     ; preds = %else20.i
@@ -49708,7 +49789,7 @@ true_block32.i:                                   ; preds = %if.entry29.i
   br label %common.ret296
 
 false_block33.i:                                  ; preds = %if.entry29.i
-  %441 = tail call ptr @LLVMBuildFPCast(ptr %1, ptr %409, ptr %410, ptr nonnull @79)
+  %441 = tail call ptr @LLVMBuildFPCast(ptr %1, ptr %409, ptr %410, ptr nonnull @78)
   br label %common.ret296
 
 true_block36.i:                                   ; preds = %ifend31.i
@@ -49716,7 +49797,7 @@ true_block36.i:                                   ; preds = %ifend31.i
   br label %common.ret296
 
 false_block37.i:                                  ; preds = %ifend31.i
-  %443 = tail call ptr @LLVMBuildBitCast(ptr %1, ptr %409, ptr %410, ptr nonnull @79)
+  %443 = tail call ptr @LLVMBuildBitCast(ptr %1, ptr %409, ptr %410, ptr nonnull @78)
   br label %common.ret296
 
 if.entry54:                                       ; preds = %3
@@ -49746,7 +49827,7 @@ if.entry70:                                       ; preds = %3
   %memberidx2.i211 = getelementptr inbounds %Expression, ptr %2, i64 0, i32 3
   %452 = load ptr, ptr %memberidx2.i211, align 8
   %453 = tail call fastcc ptr @CodeGen_codegen_type(ptr %0, ptr %452, i1 false)
-  %454 = tail call ptr @LLVMBuildMalloc(ptr %1, ptr %453, ptr nonnull @79)
+  %454 = tail call ptr @LLVMBuildMalloc(ptr %1, ptr %453, ptr nonnull @78)
   store ptr %454, ptr %args.i, align 8
   %455 = getelementptr inbounds ptr, ptr %args.i, i64 1
   store ptr %449, ptr %455, align 8
@@ -49802,12 +49883,12 @@ CodeGen_get_or_codegen_class_from_typeid.exit246: ; preds = %get_class_from_type
 
 if.entry.i237:                                    ; preds = %CodeGen_get_or_codegen_class_from_typeid.exit246
   %477 = tail call ptr @LLVM_GetFunctionType(ptr nonnull %476)
-  %478 = call ptr @LLVMBuildCall2(ptr %1, ptr %477, ptr nonnull %476, ptr nonnull %args.i, i64 3, ptr nonnull @79)
+  %478 = call ptr @LLVMBuildCall2(ptr %1, ptr %477, ptr nonnull %476, ptr nonnull %args.i, i64 3, ptr nonnull @78)
   br label %CodeGen_build_constructor_call.exit
 
 else.i:                                           ; preds = %CodeGen_get_or_codegen_class_from_typeid.exit246
   %479 = tail call ptr @malloc(i32 47)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(47) %479, ptr noundef nonnull align 8 dereferenceable(47) @291, i64 47, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(47) %479, ptr noundef nonnull align 8 dereferenceable(47) @290, i64 47, i1 false)
   %480 = tail call ptr @malloc(i32 24)
   %481 = tail call ptr @malloc(i32 7)
   tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(7) %481, ptr noundef nonnull align 8 dereferenceable(7) @0, i64 7, i1 false)
@@ -50073,11 +50154,11 @@ ifend:                                            ; preds = %else.i, %if.entry.i
   ret ptr %ptr.0
 
 if.entry4:                                        ; preds = %if.entry
-  %20 = tail call ptr @LLVMBuildArrayMalloc(ptr %1, ptr %8, ptr %12, ptr nonnull @79)
+  %20 = tail call ptr @LLVMBuildArrayMalloc(ptr %1, ptr %8, ptr %12, ptr nonnull @78)
   br label %ifend
 
 else5:                                            ; preds = %if.entry
-  %21 = tail call ptr @LLVMBuildArrayAlloca(ptr %1, ptr %8, ptr %12, ptr nonnull @79)
+  %21 = tail call ptr @LLVMBuildArrayAlloca(ptr %1, ptr %8, ptr %12, ptr nonnull @78)
   br label %ifend
 
 if.entry7:                                        ; preds = %is_object.exit
@@ -50093,11 +50174,11 @@ if.entry7:                                        ; preds = %is_object.exit
   br i1 %27, label %if.entry13, label %else14
 
 if.entry13:                                       ; preds = %if.entry7
-  %28 = tail call ptr @LLVMBuildMalloc(ptr %1, ptr %26, ptr nonnull @79)
+  %28 = tail call ptr @LLVMBuildMalloc(ptr %1, ptr %26, ptr nonnull @78)
   br label %ifend15
 
 else14:                                           ; preds = %if.entry7
-  %29 = tail call ptr @LLVMBuildAlloca(ptr %1, ptr %26, ptr nonnull @79)
+  %29 = tail call ptr @LLVMBuildAlloca(ptr %1, ptr %26, ptr nonnull @78)
   br label %ifend15
 
 ifend15:                                          ; preds = %else14, %if.entry13
@@ -50181,12 +50262,12 @@ CodeGen_get_or_codegen_class_from_typeid.exit:    ; preds = %get_class_from_type
 
 if.entry.i:                                       ; preds = %CodeGen_get_or_codegen_class_from_typeid.exit
   %60 = tail call ptr @LLVM_GetFunctionType(ptr nonnull %59)
-  %61 = call ptr @LLVMBuildCall2(ptr %1, ptr %60, ptr nonnull %59, ptr nonnull %25, i64 %24, ptr nonnull @79)
+  %61 = call ptr @LLVMBuildCall2(ptr %1, ptr %60, ptr nonnull %59, ptr nonnull %25, i64 %24, ptr nonnull @78)
   br label %ifend
 
 else.i:                                           ; preds = %CodeGen_get_or_codegen_class_from_typeid.exit
   %62 = tail call ptr @malloc(i32 47)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(47) %62, ptr noundef nonnull align 8 dereferenceable(47) @291, i64 47, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(47) %62, ptr noundef nonnull align 8 dereferenceable(47) @290, i64 47, i1 false)
   %63 = tail call ptr @malloc(i32 24)
   %64 = tail call ptr @malloc(i32 7)
   tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(7) %64, ptr noundef nonnull align 8 dereferenceable(7) @0, i64 7, i1 false)
@@ -50308,7 +50389,7 @@ else.i.i:                                         ; preds = %if.entry2
 ifend4.thread:                                    ; preds = %else.i.i, %if.entry2
   %storemerge.i.i = phi ptr [ %44, %else.i.i ], [ %43, %if.entry2 ]
   store ptr %storemerge.i.i, ptr %38, align 8
-  %45 = call ptr @LLVMBuildCall2(ptr %1, ptr %39, ptr %storemerge.i.i, ptr nonnull %args.i, i64 1, ptr nonnull @79)
+  %45 = call ptr @LLVMBuildCall2(ptr %1, ptr %39, ptr %storemerge.i.i, ptr nonnull %args.i, i64 1, ptr nonnull @78)
   call void @llvm.lifetime.end.p0(i64 8, ptr nonnull %args.i)
   call void @llvm.lifetime.end.p0(i64 8, ptr nonnull %arg_types.i)
   br label %ifend10
@@ -50351,7 +50432,7 @@ else.i.i99:                                       ; preds = %if.entry5
 CodeGen_codegen_atoi_call.exit:                   ; preds = %if.entry5, %else.i.i99
   %storemerge.i.i100 = phi ptr [ %58, %else.i.i99 ], [ %57, %if.entry5 ]
   store ptr %storemerge.i.i100, ptr %52, align 8
-  %59 = call ptr @LLVMBuildCall2(ptr %1, ptr %53, ptr %storemerge.i.i100, ptr nonnull %args.i, i64 1, ptr nonnull @79)
+  %59 = call ptr @LLVMBuildCall2(ptr %1, ptr %53, ptr %storemerge.i.i100, ptr nonnull %args.i, i64 1, ptr nonnull @78)
   call void @llvm.lifetime.end.p0(i64 8, ptr nonnull %args.i)
   call void @llvm.lifetime.end.p0(i64 8, ptr nonnull %arg_types.i)
   br label %ifend10
@@ -50394,7 +50475,7 @@ else.i.i111:                                      ; preds = %if.entry8
 CodeGen_codegen_atol_call.exit:                   ; preds = %if.entry8, %else.i.i111
   %storemerge.i.i112 = phi ptr [ %72, %else.i.i111 ], [ %71, %if.entry8 ]
   store ptr %storemerge.i.i112, ptr %66, align 8
-  %73 = call ptr @LLVMBuildCall2(ptr %1, ptr %67, ptr %storemerge.i.i112, ptr nonnull %args.i, i64 1, ptr nonnull @79)
+  %73 = call ptr @LLVMBuildCall2(ptr %1, ptr %67, ptr %storemerge.i.i112, ptr nonnull %args.i, i64 1, ptr nonnull @78)
   call void @llvm.lifetime.end.p0(i64 8, ptr nonnull %args.i)
   call void @llvm.lifetime.end.p0(i64 8, ptr nonnull %arg_types.i)
   br label %ifend10
@@ -50411,7 +50492,7 @@ ifend10:                                          ; preds = %if.entry, %CodeGen_
 if.entry17:                                       ; preds = %CodeGen_evaluate_expression_list.exit
   %75 = getelementptr inbounds ptr, ptr %12, i64 1
   %76 = load ptr, ptr %75, align 8
-  %77 = tail call ptr @LLVMBuildMul(ptr %1, ptr %76, ptr %30, ptr nonnull @79)
+  %77 = tail call ptr @LLVMBuildMul(ptr %1, ptr %76, ptr %30, ptr nonnull @78)
   store ptr %77, ptr %75, align 8
   call void @llvm.lifetime.start.p0(i64 16, ptr nonnull %arg_types.i114)
   %78 = tail call ptr @LLVMInt8Type()
@@ -50422,7 +50503,7 @@ if.entry17:                                       ; preds = %CodeGen_evaluate_ex
   store ptr %81, ptr %80, align 8
   %82 = load ptr, ptr %0, align 8
   %83 = tail call ptr @malloc(i32 7)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(7) %83, ptr noundef nonnull align 8 dereferenceable(7) @246, i64 7, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(7) %83, ptr noundef nonnull align 8 dereferenceable(7) @245, i64 7, i1 false)
   %84 = tail call ptr @malloc(i32 24)
   store ptr %83, ptr %84, align 8
   %memberidx1.i.i.i115 = getelementptr inbounds %String, ptr %84, i64 0, i32 1
@@ -50449,14 +50530,14 @@ else.i.i121:                                      ; preds = %if.entry17
 CodeGen_codegen_realloc_call.exit:                ; preds = %if.entry17, %else.i.i121
   %storemerge.i.i122 = phi ptr [ %90, %else.i.i121 ], [ %89, %if.entry17 ]
   store ptr %storemerge.i.i122, ptr %85, align 8
-  %91 = call ptr @LLVMBuildCall2(ptr %1, ptr %86, ptr %storemerge.i.i122, ptr nonnull %12, i64 2, ptr nonnull @79)
+  %91 = call ptr @LLVMBuildCall2(ptr %1, ptr %86, ptr %storemerge.i.i122, ptr nonnull %12, i64 2, ptr nonnull @78)
   call void @llvm.lifetime.end.p0(i64 16, ptr nonnull %arg_types.i114)
   br label %common.ret
 
 ifend19:                                          ; preds = %CodeGen_evaluate_expression_list.exit
   %92 = getelementptr inbounds ptr, ptr %12, i64 2
   %93 = load ptr, ptr %92, align 8
-  %94 = tail call ptr @LLVMBuildMul(ptr %1, ptr %93, ptr %30, ptr nonnull @79)
+  %94 = tail call ptr @LLVMBuildMul(ptr %1, ptr %93, ptr %30, ptr nonnull @78)
   store ptr %94, ptr %92, align 8
   %95 = icmp eq i64 %4, 7
   br i1 %95, label %if.entry20, label %ifend22
@@ -50473,7 +50554,7 @@ if.entry20:                                       ; preds = %ifend19
   store ptr %98, ptr %100, align 8
   %101 = load ptr, ptr %0, align 8
   %102 = tail call ptr @malloc(i32 6)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(6) %102, ptr noundef nonnull align 8 dereferenceable(6) @247, i64 6, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(6) %102, ptr noundef nonnull align 8 dereferenceable(6) @246, i64 6, i1 false)
   %103 = tail call ptr @malloc(i32 24)
   store ptr %102, ptr %103, align 8
   %memberidx1.i.i.i125 = getelementptr inbounds %String, ptr %103, i64 0, i32 1
@@ -50500,7 +50581,7 @@ else.i.i131:                                      ; preds = %if.entry20
 CodeGen_codegen_memcmp_call.exit:                 ; preds = %if.entry20, %else.i.i131
   %storemerge.i.i132 = phi ptr [ %109, %else.i.i131 ], [ %108, %if.entry20 ]
   store ptr %storemerge.i.i132, ptr %104, align 8
-  %110 = call ptr @LLVMBuildCall2(ptr %1, ptr %105, ptr %storemerge.i.i132, ptr nonnull %12, i64 3, ptr nonnull @79)
+  %110 = call ptr @LLVMBuildCall2(ptr %1, ptr %105, ptr %storemerge.i.i132, ptr nonnull %12, i64 3, ptr nonnull @78)
   call void @llvm.lifetime.end.p0(i64 24, ptr nonnull %arg_types.i124)
   br label %common.ret
 
@@ -50514,7 +50595,7 @@ ifend22:                                          ; preds = %ifend19
 
 if.entry23:                                       ; preds = %ifend22
   %116 = tail call ptr @LLVMInt8Type()
-  %117 = tail call ptr @LLVMBuildIntCast2(ptr %1, ptr %115, ptr %116, i1 false, ptr nonnull @79)
+  %117 = tail call ptr @LLVMBuildIntCast2(ptr %1, ptr %115, ptr %116, i1 false, ptr nonnull @78)
   %118 = tail call ptr @LLVMBuildMemSet(ptr %1, ptr %111, ptr %117, ptr %94, i64 %112)
   br label %common.ret
 
@@ -50535,7 +50616,7 @@ if.entry29:                                       ; preds = %ifend25
 
 ifend31:                                          ; preds = %ifend25
   %122 = tail call ptr @malloc(i32 21)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(21) %122, ptr noundef nonnull align 8 dereferenceable(21) @281, i64 21, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(21) %122, ptr noundef nonnull align 8 dereferenceable(21) @280, i64 21, i1 false)
   %123 = tail call ptr @malloc(i32 24)
   %124 = tail call ptr @malloc(i32 7)
   tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(7) %124, ptr noundef nonnull align 8 dereferenceable(7) @0, i64 7, i1 false)
@@ -50668,13 +50749,13 @@ ifend8:                                           ; preds = %if.entry
   br i1 %5, label %true_block13, label %false_block14
 
 true_block9:                                      ; preds = %if.entry6
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(3) %9, ptr noundef nonnull align 8 dereferenceable(3) @250, i64 3, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(3) %9, ptr noundef nonnull align 8 dereferenceable(3) @249, i64 3, i1 false)
   %11 = tail call ptr @malloc(i32 24)
   store ptr %9, ptr %11, align 8
   br label %common.ret
 
 false_block10:                                    ; preds = %if.entry6
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(3) %9, ptr noundef nonnull align 8 dereferenceable(3) @251, i64 3, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(3) %9, ptr noundef nonnull align 8 dereferenceable(3) @250, i64 3, i1 false)
   %12 = tail call ptr @malloc(i32 24)
   store ptr %9, ptr %12, align 8
   br label %common.ret
@@ -50700,7 +50781,7 @@ if.entry18:                                       ; preds = %ifend
 
 if.entry22:                                       ; preds = %ifend
   %17 = tail call ptr @malloc(i32 3)
-  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(3) %17, ptr noundef nonnull align 8 dereferenceable(3) @252, i64 3, i1 false)
+  tail call void @llvm.memcpy.p0.p0.i64(ptr noundef nonnull align 8 dereferenceable(3) %17, ptr noundef nonnull align 8 dereferenceable(3) @251, i64 3, i1 false)
   %18 = tail call ptr @malloc(i32 24)
   store ptr %17, ptr %18, align 8
   br label %common.ret

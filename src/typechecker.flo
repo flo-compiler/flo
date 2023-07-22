@@ -947,7 +947,7 @@ fnc is_class_prop_static(program: Program, prop_id: PropId): bool {
 fnc is_buitin(program: Program, ty: Type, name: String): bool {
     if !is_object(ty) return false
     let class_obj = get_class_from_type(program, ty)
-    return class_obj.name == name and class_obj.id.module_id == 1
+    return class_obj.name == name and class_obj.id.module_id == BUILTIN_MODULE_ID
 }
 fnc is_operator_overload_name(name: String): bool {
     if name == "__eq__" return true
@@ -1064,6 +1064,8 @@ class Generic {
         this.template = template
     }
 }
+let BUILTIN_MODULE_ID = 0
+let GENERIC_MODULE_ID = 0
 // Hint: For Generics and typed constraints consider Hidley-Milner Algorithm.
 class TypeChecker {
     private program: Program
@@ -1087,7 +1089,7 @@ class TypeChecker {
         typechecker.load_builtins_module()
         if typechecker.has_errored() return typechecker.program
         typechecker.switch_to_generic_module()
-        typechecker.import_all_from_module(typechecker.get_module(1))
+        typechecker.import_all_from_module(typechecker.get_module(BUILTIN_MODULE_ID))
         if typechecker.has_errored() return typechecker.program
         typechecker.check_module(module_ast, filename)
         return typechecker.program
@@ -1299,9 +1301,9 @@ class TypeChecker {
             current_scope = get_scope(this.program, current_scope.parent)
         }
         // Get type from builtins
-        if this.current_scope.module_id != 0 {
+        if this.current_scope.module_id > BUILTIN_MODULE_ID {
             let previous_scope = this.current_scope
-            this.current_scope = this.program.modules[0].scope
+            this.current_scope = this.program.modules[BUILTIN_MODULE_ID].scope
             let builtin_type = this.get_type_from_current_scope(name)
             if builtin_type.kind != TypeKind.UNKNOWN {
                 if builtin_type.kind == TypeKind.OBJECT {
@@ -1328,14 +1330,18 @@ class TypeChecker {
         return this.compiler.errors.length > 0
     }
     private load_builtins_module(this){
-        this.lex_and_parse_typecheck_file(this.compiler.builtin_path, null)
+        let module = this.lex_and_parse_typecheck_file(this.compiler.builtin_path, null)
+        if (module) {
+            BUILTIN_MODULE_ID = module.scope.module_id
+        }
     }
     private load_generic_module(this){
         this.compiler.register_file("__generics__")
-        this.check_module(new ModuleAST(), "__generics__")
+        let module = this.check_module(new ModuleAST(), "__generics__")
+        GENERIC_MODULE_ID = module.scope.module_id
     }
     private switch_to_generic_module(this){
-        this.current_scope = this.get_module(0).scope
+        this.current_scope = this.get_module(GENERIC_MODULE_ID).scope
     }
     private check_module(this, module_ast: ModuleAST, filename: String): Module {
         this.module_contains_generics = false
@@ -1592,7 +1598,7 @@ class TypeChecker {
                     this.add_imported_typealias_to_module(renamed_name, type_alias)
                     continue
                 } else {
-                    this.error(ErrorKind.NAME, "$name_to_import not found in module \"$path\"", import_clause.original_identifer.range)
+                    this.error(ErrorKind.NAME, "'$name_to_import' not found in module '$path'", import_clause.original_identifer.range)
                     return
                 }
             }

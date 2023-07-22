@@ -40,6 +40,11 @@ add_custom_target(
     DEPENDS helper
 )
 add_executable(stage0 ${STAGE0_OBJ} ${LLVM_BIND_SRC})
+
+add_custom_target(copy-lib ALL
+    COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/lib/ ${CMAKE_BINARY_DIR}/lib/
+    DEPENDS ${MY_TARGET})
+
 set_source_files_properties(
   ${STAGE0_OBJ}
   PROPERTIES
@@ -52,7 +57,7 @@ target_link_libraries(stage0 PRIVATE LLVM)
 function(compile_stage PREV_STAGE CURR_STAGE)
     add_custom_target(
         ${CURR_STAGE}.o ALL
-        COMMAND ${PREV_STAGE} ${MAIN_SRC_FILE} --emit obj -o  ${CMAKE_BINARY_DIR}/${CURR_STAGE}.o -O 3 -I ${CMAKE_CURRENT_SOURCE_DIR}/lib/
+        COMMAND ${PREV_STAGE} ${MAIN_SRC_FILE} --emit obj -o  ${CMAKE_BINARY_DIR}/${CURR_STAGE}.o -O 3 -I ${CMAKE_BINARY_DIR}/lib/
         DEPENDS ${PREV_STAGE}
     )
     add_executable(${CURR_STAGE} ${CMAKE_BINARY_DIR}/${CURR_STAGE}.o ${LLVM_BIND_SRC})

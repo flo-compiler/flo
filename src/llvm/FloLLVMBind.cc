@@ -1,3 +1,4 @@
+#include <unistd.h>
 #include <llvm/IR/Function.h>
 #include <llvm/Support/TargetSelect.h>
 extern "C" llvm::FunctionType* LLVM_GetFunctionType(llvm::Function* func){
@@ -37,4 +38,7 @@ extern "C" int LLVM_InitializeNativeAsmPrinter(){
 }
 extern "C" int LLVM_InitializeNativeDisassembler(){
     return llvm::InitializeNativeTargetDisassembler();
+}
+extern "C" size_t get_self_path(char* buff, size_t buffsize){
+    return readlink("/proc/self/exe", buff, buffsize);
 }
