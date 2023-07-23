@@ -1139,7 +1139,7 @@ class CodeGen {
         let iter_func_type: FunctionType
         let iter_func = this.codgen_get_member_with_name(builder, iterator, for_stmt.iterator.value_type as ObjectType, "__iter__", &iter_func_type)
         let args: LLVMValueRef[1] = [iterator]
-        this.codegen_const_declaration(builder, for_stmt.it_const)
+        this.codegen_var_declaration(builder, for_stmt.it_var)
         let iterable_type = iter_func_type.return_type as ObjectType
         let iteratable = LLVMBuildCall2(builder, this.codegen_type(iter_func_type, false), iter_func, &args[0], args.size, "")
         args[0] = iteratable
@@ -1149,7 +1149,7 @@ class CodeGen {
 
         LLVMPositionBuilderAtEnd(builder, for_next_block)
         let next_val = LLVMBuildCall2(builder, this.codegen_type(next_func_type, false), next_func, &args[0], args.size, "")
-        let next_var_mem = this.get_var_from_varid(for_stmt.it_const.const_id)
+        let next_var_mem = this.get_var_from_varid(for_stmt.it_var.var_id)
         let iter_done = this.codgen_get_member_with_name(builder, iteratable, iterable_type, "done")
         LLVMBuildStore(builder, next_val, next_var_mem)
         LLVMBuildCondBr(builder, iter_done, for_end_block, for_body_block)
@@ -1229,22 +1229,19 @@ class CodeGen {
     }
     private codegen_const_declaration(this, builder: LLVMBuilderRef, const_decl: ConstDeclaration){
         let const_id = const_decl.const_id
-        let const_ = get_const(this.program, const_id)
-        let expression = const_.value
+        let expression = get_const(this.program, const_id).value
         let ptr: LLVMValueRef = null
         if const_decl.is_static {
-            let ty = this.codegen_type(const_.value_type)
+            let ty = this.codegen_type(expression.value_type)
             let name = const_decl.name.to_cstring()
-            let value = this.codegen_expression(builder, const_.value)
+            let value = this.codegen_expression(builder, expression)
             ptr = LLVMAddGlobal(this.module, ty, name)
             LLVMSetInitializer(ptr, value)
             LLVMSetGlobalConstant(ptr, true)
             this.add_var(const_id, ptr)
         } else {
             ptr = this.get_var_from_varid(const_id)
-            if expression != null {
-                this.store_expr_to_mem(builder, ptr, expression)
-            }
+            this.store_expr_to_mem(builder, ptr, expression)
         }
     }
     private codegen_statement(this, builder: LLVMBuilderRef, statement: Statement){

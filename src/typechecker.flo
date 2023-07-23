@@ -414,12 +414,12 @@ class ConstDeclaration (Statement) {
     }
 }
 class ForStatement (Statement) {
-    it_const: ConstDeclaration
+    it_var: VarDeclaration
     iterator: Expression
     block: Block
-    constructor(this, it_const: ConstDeclaration, iterator: Expression, block: Block){
+    constructor(this, it_var: VarDeclaration, iterator: Expression, block: Block){
         super(StatementKind.FOR)
-        this.it_const = it_const
+        this.it_var = it_var
         this.iterator = iterator
         this.block = block
     }
@@ -3110,9 +3110,9 @@ class TypeChecker {
         let next_it_prop_id = iteratable_class.prop_map["next"]
         let iter_item_type = (get_class_prop_type(this.program, next_it_prop_id) as FunctionType).return_type
         this.in_loop = true
-        let const_ = this.declare_const_within_current_scope(iter_item_name, null, iter_item_type)
+        let var = this.declare_var_within_current_scope(iter_item_name, null, iter_item_type)
         let for_block = this.check_block(for_stmt_node.block, for_scope, false)
-        let for_stmt = new ForStatement(new ConstDeclaration(iter_item_name, const_.const_id), iterator, for_block)
+        let for_stmt = new ForStatement(new VarDeclaration(iter_item_name, var.var_id), iterator, for_block)
         this.in_loop = prev_in_loop
         return for_stmt
     }
