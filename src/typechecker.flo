@@ -298,11 +298,6 @@ class EnumVarId(VarId){
         return new EnumId(var_id.module_id, var_id.id)
     }
 }
-class ConstId(VarId) {
-    constructor(this, module_id: uint, id: uint){
-       super(VarIdKind.CONST, module_id, id)
-    }
-}
 class PropId {
     kind: PropIdKind
     type_id: TypeId
@@ -384,20 +379,11 @@ class VarDeclaration (Statement) {
     name: String
     var_id: VarId
     is_static: bool
-    constructor(this, name: String, var_id: VarId){
+    range: FloRange
+    constructor(this, range: FloRange, name: String, var_id: VarId){
         super(StatementKind.VAR)
+        this.range = range
         this.var_id = var_id
-        this.name = name
-        this.is_static = false
-    }
-}
-class ConstDeclaration (Statement) {
-    name: String
-    const_id: ConstId
-    is_static: bool
-    constructor(this, name: String, const_id: ConstId){
-        super(StatementKind.CONST)
-        this.const_id = const_id
         this.name = name
         this.is_static = false
     }
@@ -672,8 +658,9 @@ class FunctionArg(Expression) {
     id: VarId
     name: String
     default: Expression
-    constructor(this, value_type: Type, range: FloRange){
+    constructor(this, name: String, value_type: Type, range: FloRange){
         super(ExpressionKind.ACCESS, value_type, range)
+        this.name = name
     }
 }
 class Function {
@@ -692,14 +679,6 @@ class Function {
 }
 class Var (Value) {
     var_id: VarId
-    value: Expression
-    constructor(this, value: Expression, value_type: Type){
-        this.value = value
-        this.value_type = value_type
-    }
-}
-class Const (Value) {
-    const_id: ConstId
     value: Expression
     constructor(this, value: Expression, value_type: Type){
         this.value = value
@@ -806,13 +785,11 @@ class Enum {
 class Module {
     name: String
     vars: Var[]
-    consts: Const[]
     classes: Class[]
     functions: Function[]
     scope: ScopeId
     enums: Enum[]
     scopes: Scope[]
-    global_consts: ConstDeclaration[]
     global_vars: VarDeclaration[]
     constructor(this, name: String){
         this.name = name
@@ -821,9 +798,7 @@ class Module {
         this.classes = []
         this.enums = []
         this.scopes = []
-        this.global_consts = []
         this.global_vars = []
-        this.consts = []
     }
     private __del__(this){
         for func in this.functions {
@@ -838,9 +813,6 @@ class Module {
         for mod_enum in this.enums {
             del mod_enum
         }
-        for global_const in this.global_consts {
-            del global_const
-        }
         for global_var in this.global_vars {
             del global_var
         }
@@ -851,9 +823,7 @@ class Module {
         del this.classes
         del this.enums
         del this.scopes
-        del this.global_consts
         del this.global_vars
-        del this.consts
     }
 }
 class Program {
@@ -870,9 +840,6 @@ class Program {
 }
 fnc get_var(program: Program, var_id: VarId): Var {
     return program.modules[var_id.module_id].vars[var_id.id]
-}
-fnc get_const(program: Program, const_id: ConstId): Const {
-    return program.modules[const_id.module_id].consts[const_id.id]
 }
 fnc get_func(program: Program, func_id: VarId): Function {
     return program.modules[func_id.module_id].functions[func_id.id]
@@ -1045,7 +1012,7 @@ fnc evaluate_const_int_expression(program: Program, exp: Expression): uint {
     }
     if exp.expr_kind == ExpressionKind.ACCESS {
         let var_exp = exp as VarAccessExpression
-        return evaluate_const_int_expression(program, get_const(program, var_exp.value_id as ConstId).value)
+        return evaluate_const_int_expression(program, get_var(program, var_exp.value_id as VarId).value)
     }
     return -99999999
 }
@@ -1373,9 +1340,6 @@ class TypeChecker {
             }
             module_scope.type_aliases[alias_name] = ty
         }
-        for global_const in module_ast.consts {
-            this.declare_global_const(global_const)
-        }
         for global_var in module_ast.vars {
             this.declare_global_var(global_var)
         }
@@ -1439,31 +1403,16 @@ class TypeChecker {
         del generic_scope
         return new GenericType(name, types, possible_type)
     }
-    private declare_var_within_current_scope(this, name: String, value: Expression, value_type: Type): Var {
+    private declare_var_within_current_scope(this, name: String, value: Expression, value_type: Type, is_const: bool): Var {
         let var = new Var(value, value_type)
         let current_module = this.get_current_module()
         let current_scope = this.get_current_scope()
-        let id = new VarId(VarIdKind.VAR, this.current_scope.module_id, current_module.vars.length)
+        let var_kind = is_const ? VarIdKind.CONST : VarIdKind.VAR
+        let id = new VarId(var_kind, this.current_scope.module_id, current_module.vars.length)
         var.var_id = id
         current_module.vars << var
         current_scope.vars[name] = id
         return var
-    }
-    private declare_const_within_current_scope(this, name: String, value: Expression, value_type: Type): Const {
-        let constant = new Const(value, value_type)
-        let current_module = this.get_current_module()
-        let current_scope = this.get_current_scope()
-        let id = new ConstId(this.current_scope.module_id, current_module.consts.length)
-        constant.const_id = id
-        current_module.consts << constant
-        current_scope.vars[name] = id
-        return constant
-    }
-    private declare_global_const(this, const_decl_node: ConstDeclarationStatement){
-        let const_stmt = this.check_const_declaration(const_decl_node)
-        if this.has_errored() return
-        const_stmt.is_static = true
-        this.get_current_module().global_consts << const_stmt
     }
     private declare_global_var(this, var_decl_node: VarDeclarationStatement){
         let var_stmt = this.check_var_declaration(var_decl_node)
@@ -1520,10 +1469,10 @@ class TypeChecker {
                     this.error(ErrorKind.TYPE, "Expected type of '$(this.dump_type(fnc_arg_type))' but got type of '$(this.dump_type(fnc_arg_default.value_type))' on signature", fnc_arg_default.range)
                 }
             }
-            let fnc_arg = new FunctionArg(fnc_arg_type, fnc_arg_range)
+            let fnc_arg = new FunctionArg(fnc_arg_name, fnc_arg_type, fnc_arg_range)
             fnc_arg.default = fnc_arg_default
             args << fnc_arg
-            let var = this.declare_var_within_current_scope(fnc_arg_name, fnc_arg, fnc_arg_type)
+            let var = this.declare_var_within_current_scope(fnc_arg_name, fnc_arg, fnc_arg_type, false)
             fnc_arg.id = var.var_id
             arg_types << fnc_arg_type
         }
@@ -1534,9 +1483,6 @@ class TypeChecker {
         let global_module_scope = get_scope(this.program, module.scope)
         for imported_var in module.global_vars {
             this.add_imported_var_to_module(imported_var.name, imported_var.var_id)
-        }
-        for imported_const in module.global_consts {
-            this.add_imported_var_to_module(imported_const.name, imported_const.const_id)
         }
         for imported_func in module.functions {
             this.add_imported_fnc_to_module(imported_func.name, imported_func.id)
@@ -1879,12 +1825,12 @@ class TypeChecker {
                     declared_class.prop_map[name] = method.id
                 }
                 let object_type = new ObjectType(declared_class.id)
-                let this_const = this.declare_const_within_current_scope("this", null, object_type)
+                let this_const = this.declare_var_within_current_scope("this", null, object_type, true)
                 if declared_class.parent != null {
                     let constructor_method = get_class_from_type(this.program, declared_class.parent).construct
                     if constructor_method != null {
                         let constructor_type = get_class_prop_type(this.program, constructor_method)
-                        this.declare_const_within_current_scope("super", null, constructor_type)
+                        this.declare_var_within_current_scope("super", null, constructor_type, true)
                     }
                 }
             }
@@ -2195,10 +2141,8 @@ class TypeChecker {
             let var_id = resolved
             if var_id.kind == VarIdKind.FNC
                 var_ty = get_func(this.program, var_id).fnc_type
-            else if var_id.kind == VarIdKind.VAR
+            else if var_id.kind == VarIdKind.VAR or var_id.kind == VarIdKind.CONST
                 var_ty = get_var(this.program, var_id).value_type
-            else if var_id.kind == VarIdKind.CONST
-                var_ty = get_const(this.program, var_id as ConstId).value_type
             else if var_id.kind == VarIdKind.CLASS or var_id.kind == VarIdKind.ENUM
                 var_ty = new Type(TypeKind.RECORD)
             else if var_id.kind == VarIdKind.MODULE
@@ -3012,7 +2956,7 @@ class TypeChecker {
     }
     private check_var_declaration(this, var_decl_node: VarDeclarationStatement): VarDeclaration {
         let name = var_decl_node.var_name.value
-        if this.is_constant_in_scope(name){
+        if this.is_constant_in_scope(name) {
             this.error(ErrorKind.NAME, "Illegal re-declaration of const '$name'", var_decl_node.var_name.range)
             return null
         }
@@ -3043,44 +2987,12 @@ class TypeChecker {
             }
         }
         if current_scope.vars[name] != null {
-            this.error(ErrorKind.NAME, "Illegal re-declaration of already declared variable '$name'", var_decl_node.var_name.range)
+            let var_type  = var_decl_node.is_const ? "constant" : "variable"
+            this.error(ErrorKind.NAME, "Illegal re-declaration of already declared $var_type '$name'", var_decl_node.var_name.range)
             return null
         }
-        let var = this.declare_var_within_current_scope(name, value, var_type)
-        return new VarDeclaration(name, var.var_id)
-    }
-    private check_const_declaration(this, const_decl_stmt: ConstDeclarationStatement): ConstDeclaration {
-        let name = const_decl_stmt.const_name.value
-        let current_scope = this.get_current_scope()
-        if this.is_constant_in_scope(name) or current_scope.vars[name] != null {
-            this.error(ErrorKind.NAME, "Illegal re-declaration of const '$name'", const_decl_stmt.const_name.range)
-            return null
-        }
-        let const_type = const_decl_stmt.const_type != null ? this.check_type(const_decl_stmt.const_type) : Type.unknown()
-        if this.has_errored() return null
-        let value = this.check_expression(const_type, const_decl_stmt.value)
-        if this.has_errored() return null
-        if !value.is_constant {
-            this.error(ErrorKind.GEN, "Cannot assign a non-constant value to a constant", const_decl_stmt.value.range)
-            return null
-        }
-        if is_null_expression(value) and const_type.kind == TypeKind.UNKNOWN {
-            this.error(ErrorKind.TYPE, "Cannot declare a value as null without any type hint for future usage", const_decl_stmt.range)
-            return null
-        }
-        if const_type.kind != TypeKind.UNKNOWN and !this.types_are_eq(const_type, value.value_type) {
-            this.error(ErrorKind.TYPE, "Expected type '$(this.dump_type(const_type))' but got type '$(this.dump_type(value.value_type))' on const declaration", const_decl_stmt.range)
-            return null
-        }
-        if const_type.kind == TypeKind.UNKNOWN {
-            const_type = value.value_type
-        }
-        if const_type.kind == TypeKind.VOID {
-            this.error(ErrorKind.TYPE, "Cannot declare a const of type void", const_decl_stmt.range)
-            return null
-        }
-        let constant = this.declare_const_within_current_scope(name, value, const_type)
-        return new ConstDeclaration(name, constant.const_id)
+        let var = this.declare_var_within_current_scope(name, value, var_type, var_decl_node.is_const)
+        return new VarDeclaration(var_decl_node.var_name.range, name, var.var_id)
     }
     private check_for_statement(this, for_stmt_node: ForStatementNode): ForStatement {
         let for_scope = this.create_child_scope_within_current_scope()
@@ -3105,9 +3017,9 @@ class TypeChecker {
         let next_it_prop_id = iteratable_class.prop_map["next"]
         let iter_item_type = (get_class_prop_type(this.program, next_it_prop_id) as FunctionType).return_type
         this.in_loop = true
-        let var = this.declare_var_within_current_scope(iter_item_name, null, iter_item_type)
+        let var = this.declare_var_within_current_scope(iter_item_name, null, iter_item_type, false)
         let for_block = this.check_block(for_stmt_node.block, for_scope, false)
-        let for_stmt = new ForStatement(new VarDeclaration(iter_item_name, var.var_id), iterator, for_block)
+        let for_stmt = new ForStatement(new VarDeclaration(for_stmt_node.it_name.range, iter_item_name, var.var_id), iterator, for_block)
         this.in_loop = prev_in_loop
         return for_stmt
     }
@@ -3158,8 +3070,6 @@ class TypeChecker {
             return this.check_if_stamement(stmt_node as IfStatementNode)
         if stmt_node.kind == StatementKind.VAR
             return this.check_var_declaration(stmt_node as VarDeclarationStatement)
-        if stmt_node.kind == StatementKind.CONST
-            return this.check_const_declaration(stmt_node as ConstDeclarationStatement)
         if stmt_node.kind == StatementKind.FOR
             return this.check_for_statement(stmt_node as ForStatementNode)
         if stmt_node.kind == StatementKind.WHILE

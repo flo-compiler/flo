@@ -70,7 +70,44 @@ enum LLVMDWARFTypeEncoding {
 }
 fnc LLVMCreateDIBuilder(M: LLVMModuleRef): LLVMDIBuilderRef
 fnc LLVMDIBuilderCreateFile(Builder: LLVMDIBuilderRef, Filename: u8*, FilenameLen: int, Directory: u8*, DirectoryLen: int): LLVMMetadataRef
-fnc LLVMDIBuilderCreateCompileUnit(Builder: LLVMDIBuilderRef, Lang: LLVMDWARFSourceLanguage, FileRef: LLVMMetadataRef, Producer: u8*, ProducerLen: int, isOptimized: LLVMBool, Flags: u8*, FlagsLen: int, RuntimeVer: int, SplitName: u8*, SplitNameLen: int, Kind: LLVMDWARFEmissionKind, DWOId: int, SplitDebugInlining: LLVMBool, DebugInfoForProfiling: LLVMBool, SysRoot: u8*, SysRootLen: int, SDK: u8*, SDKLen: int): LLVMMetadataRef
+/**
+ * A CompileUnit provides an anchor for all debugging
+ * information generated during this instance of compilation.
+ * \param Lang          Source programming language, eg.
+ *                      \c LLVMDWARFSourceLanguageC99
+ * \param FileRef       File info.
+ * \param Producer      Identify the producer of debugging information
+ *                      and code.  Usually this is a compiler
+ *                      version string.
+ * \param ProducerLen   The length of the C string passed to \c Producer.
+ * \param isOptimized   A boolean flag which indicates whether optimization
+ *                      is enabled or not.
+ * \param Flags         This string lists command line options. This
+ *                      string is directly embedded in debug info
+ *                      output which may be used by a tool
+ *                      analyzing generated debugging information.
+ * \param FlagsLen      The length of the C string passed to \c Flags.
+ * \param RuntimeVer    This indicates runtime version for languages like
+ *                      Objective-C.
+ * \param SplitName     The name of the file that we'll split debug info
+ *                      out into.
+ * \param SplitNameLen  The length of the C string passed to \c SplitName.
+ * \param Kind          The kind of debug information to generate.
+ * \param DWOId         The DWOId if this is a split skeleton compile unit.
+ * \param SplitDebugInlining    Whether to emit inline debug info.
+ * \param DebugInfoForProfiling Whether to emit extra debug info for
+ *                              profile collection.
+ * \param SysRoot         The Clang system root (value of -isysroot).
+ * \param SysRootLen      The length of the C string passed to \c SysRoot.
+ * \param SDK           The SDK. On Darwin, the last component of the sysroot.
+ * \param SDKLen        The length of the C string passed to \c SDK.
+ */
+fnc LLVMDIBuilderCreateCompileUnit(Builder: LLVMDIBuilderRef, Lang: LLVMDWARFSourceLanguage,
+                                  FileRef: LLVMMetadataRef, Producer: u8*, ProducerLen: int,
+                                  isOptimized: LLVMBool, Flags: u8*, FlagsLen: int, RuntimeVer: int,
+                                  SplitName: u8*, SplitNameLen: int, Kind: LLVMDWARFEmissionKind,
+                                  DWOId: int, SplitDebugInlining: LLVMBool, DebugInfoForProfiling: LLVMBool,
+                                  SysRoot: u8*, SysRootLen: int, SDK: u8*, SDKLen: int): LLVMMetadataRef
 fnc LLVMDIBuilderFinalize(Builder: LLVMDIBuilderRef)
 
 fnc LLVMDIBuilderCreateBasicType(Builder: LLVMDIBuilderRef, Name: u8*, NameLen: int, SizeInBits: uint, Encoding: LLVMDWARFTypeEncoding, Flags: LLVMDIFlags): LLVMMetadataRef
@@ -93,23 +130,138 @@ fnc LLVMDIBuilderCreatePointerType(
 
 fnc LLVMDITypeGetName(DType: LLVMMetadataRef, Length: uint*): u8*
 fnc LLVMDIBuilderCreateUnspecifiedType(Builder: LLVMDIBuilderRef, Name: u8*, NameLen: uint): LLVMMetadataRef
+/**
+ * Create debugging information entry for an array.
+ * \param Builder      The DIBuilder.
+ * \param Size         Array size.
+ * \param AlignInBits  Alignment.
+ * \param Ty           Element type.
+ * \param Subscripts   Subscripts.
+ * \param NumSubscripts Number of subscripts.
+ */
 fnc LLVMDIBuilderCreateArrayType(Builder: LLVMDIBuilderRef, Size: uint,
                             AlignInBits: u32, Ty: LLVMMetadataRef,
                             Subscripts: LLVMMetadataRef *,
                             NumSubscripts: uint): LLVMMetadataRef
 
 
-fnc LLVMDITypeGetSizeInBits(DType: LLVMMetadataRef): u64
+fnc LLVMDITypeGetSizeInBits(DType: LLVMMetadataRef): u32
+fnc LLVMDITypeGetAlignInBits(DType: LLVMMetadataRef): u32
+
 fnc LLVMSetSubprogram(Func: LLVMValueRef, SP: LLVMMetadataRef)
+
 fnc LLVMDIBuilderFinalizeSubprogram(Builder: LLVMDIBuilderRef,
                                     Subprogram: LLVMMetadataRef)
 fnc LLVMDebugMetadataVersion(): u64
+
+/**
+ * Creates a new DebugLocation that describes a source location.
+ * \param Line The line in the source file.
+ * \param Column The column in the source file.
+ * \param Scope The scope in which the location resides.
+ * \param InlinedAt The scope where this location was inlined, if at all.
+ *                  (optional).
+ * \note If the item to which this location is attached cannot be
+ *       attributed to a source line, pass 0 for the line and column.
+ */
 fnc LLVMDIBuilderCreateDebugLocation(Ctx: LLVMContextRef, Line: uint,
                                 Column: uint, Scope: LLVMMetadataRef,
                                 InlinedAt: LLVMMetadataRef): LLVMMetadataRef
 
 fnc LLVMDIScopeGetFile(Scope: LLVMMetadataRef): LLVMMetadataRef                                 
-
+/**
+ * Get the name of a given file.
+ * \param File     The file object.
+ * \param Len      The length of the returned string.
+ *
+ * @see DIFile::getFilename()
+ */
 fnc LLVMDIFileGetFilename(File: LLVMMetadataRef, Len: uint*): u8*
-
+/**
+ * Create a descriptor for a lexical block with the specified parent context.
+ * \param Builder      The \c DIBuilder.
+ * \param Scope        Parent lexical block.
+ * \param File         Source file.
+ * \param Line         The line in the source file.
+ * \param Column       The column in the source file.
+ */
 fnc LLVMDIBuilderCreateLexicalBlock(Builder: LLVMDIBuilderRef, Scope: LLVMMetadataRef, File: LLVMMetadataRef, Line: uint, Column: uint): LLVMMetadataRef
+/**
+ * Create a new descriptor for a function parameter variable.
+ * \param Builder         The DIBuilder.
+ * \param Scope           The local scope the variable is declared in.
+ * \param Name            Variable name.
+ * \param NameLen         Length of variable name.
+ * \param ArgNo           Unique argument number for this variable; starts at 1.
+ * \param File            File where this variable is defined.
+ * \param LineNo          Line number.
+ * \param Ty              Metadata describing the type of the variable.
+ * \param AlwaysPreserve  If true, this descriptor will survive optimizations.
+ * \param Flags           Flags.
+ */
+fnc LLVMDIBuilderCreateParameterVariable(
+    Builder: LLVMDIBuilderRef, Scope: LLVMMetadataRef, Name: u8*,
+    NameLen: uint, ArgNo: uint, File: LLVMMetadataRef, LineNo: uint,
+    Ty: LLVMMetadataRef, AlwaysPreserve: LLVMBool, Flags: LLVMDIFlags): LLVMMetadataRef
+/**
+ * Create a new descriptor for a local auto variable.
+ * \param Builder         The DIBuilder.
+ * \param Scope           The local scope the variable is declared in.
+ * \param Name            Variable name.
+ * \param NameLen         Length of variable name.
+ * \param File            File where this variable is defined.
+ * \param LineNo          Line number.
+ * \param Ty              Metadata describing the type of the variable.
+ * \param AlwaysPreserve  If true, this descriptor will survive optimizations.
+ * \param Flags           Flags.
+ * \param AlignInBits     Variable alignment.
+ **/
+fnc LLVMDIBuilderCreateAutoVariable(
+    Builder: LLVMDIBuilderRef, Scope: LLVMMetadataRef, Name: u8*,
+    NameLen: uint, File: LLVMMetadataRef, LineNo: uint, Ty: LLVMMetadataRef,
+    AlwaysPreserve: LLVMBool, Flags: LLVMDIFlags, AlignInBits: u32): LLVMMetadataRef
+/**
+ * Insert a new llvm.dbg.declare intrinsic call before the given instruction.
+ * \param Builder     The DIBuilder.
+ * \param Storage     The storage of the variable to declare.
+ * \param VarInfo     The variable's debug info descriptor.
+ * \param Expr        A complex location expression for the variable.
+ * \param DebugLoc    Debug info location.
+ * \param Instr       Instruction acting as a location for the new intrinsic.
+ */
+fnc LLVMDIBuilderInsertDeclareBefore(
+  Builder: LLVMDIBuilderRef, Storage: LLVMValueRef, VarInfo: LLVMMetadataRef,
+  Expr: LLVMMetadataRef, DebugLoc: LLVMMetadataRef, Instr: LLVMValueRef): LLVMValueRef
+
+fnc LLVMDIBuilderCreateExpression(Builder: LLVMDIBuilderRef,
+                                              Addr: u64*, Length: uint): LLVMMetadataRef
+
+ /**
+ * Create a new descriptor for the specified variable.
+ * \param Scope       Variable scope.
+ * \param Name        Name of the variable.
+ * \param NameLen     The length of the C string passed to \c Name.
+ * \param Linkage     Mangled  name of the variable.
+ * \param LinkLen     The length of the C string passed to \c Linkage.
+ * \param File        File where this variable is defined.
+ * \param LineNo      Line number.
+ * \param Ty          Variable Type.
+ * \param LocalToUnit Boolean flag indicate whether this variable is
+ *                    externally visible or not.
+ * \param Expr        The location of the global relative to the attached
+ *                    GlobalVariable.
+ * \param Decl        Reference to the corresponding declaration.
+ *                    variables.
+ * \param AlignInBits Variable alignment(or 0 if no alignment attr was
+ *                    specified)
+ */
+fnc LLVMDIBuilderCreateGlobalVariableExpression(
+    Builder: LLVMDIBuilderRef, Scope: LLVMMetadataRef, Name: u8*,
+    NameLen: uint, Linkage: u8*, LinkLen: uint, File: LLVMMetadataRef,
+    LineNo: uint, Ty: LLVMMetadataRef, LocalToUnit: LLVMBool,
+    Expr: LLVMMetadataRef, Decl: LLVMMetadataRef, AlignInBits: u32): LLVMMetadataRef
+
+
+fnc LLVMDIVariableGetLine(Var: LLVMMetadataRef): uint
+
+fnc LLVMDIVariableGetScope(Var: LLVMMetadataRef): LLVMMetadataRef

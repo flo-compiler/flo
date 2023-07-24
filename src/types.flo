@@ -102,7 +102,6 @@ enum TypeKind {
 enum StatementKind {
     IF
     VAR
-    CONST
     FOR
     WHILE
     CONTINUE

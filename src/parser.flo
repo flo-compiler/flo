@@ -272,20 +272,12 @@ class VarDeclarationStatement (StatementNode) {
     var_name: IdentifierToken
     var_type: TypeNode
     value: ExpressionNode
-    constructor(this, range: FloRange){
+    is_const: bool
+    constructor(this, is_const: bool, range: FloRange){
         super(StatementKind.VAR, range)
+        this.is_const = is_const
         this.var_type = null
         this.value = null
-    }
-}
-
-class ConstDeclarationStatement (StatementNode) {
-    const_name: IdentifierToken
-    const_type: TypeNode
-    value: ExpressionNode
-    constructor(this, range: FloRange){
-        super(StatementKind.CONST, range)
-        this.const_type = null
     }
 }
 class ArgNode {
@@ -403,14 +395,12 @@ class ModuleAST {
     classes: ClassDeclarationNode[]
     enums: EnumNode[]
     imports: ImportNode[] 
-    consts: ConstDeclarationStatement[] 
     vars: VarDeclarationStatement[] 
     type_aliases: TypeAliasNode[] 
     constructor(this) {
         this.functions = []
         this.classes = []
         this.imports = []
-        this.consts = []
         this.vars = []
         this.enums = []
         this.type_aliases = []
@@ -930,31 +920,6 @@ class Parser {
             for_node.block = this.parse_block()
         return for_node
     }
-    private parse_variable_declaration_statement(this): VarDeclarationStatement {
-        let var_decl_node = new VarDeclarationStatement(this.current_token.range)
-        this.advance()
-        var_decl_node.var_name =  this.eat(TokType.IDENTIFER) as IdentifierToken
-        if this.current_token.ttype == TokType.COL {
-            this.advance()
-            var_decl_node.var_type = this.parse_type()
-        }
-        let end_range = this.current_token.range
-        if this.current_token.ttype == TokType.EQ {
-            this.advance()
-            var_decl_node.value = this.parse_expression()
-            end_range = var_decl_node.value.range
-        } else if var_decl_node.var_type != null and this.current_token.ttype == TokType.LPAR {
-            // REMEMBER: DRY
-            let new_node = new NewExpressionNode(var_decl_node.var_type, var_decl_node.var_type.range)
-            new_node.onheap = false
-            this.advance()
-            this.parse_expression_list(new_node.args, TokType.RPAR)
-            new_node.range = FloRange.merge(new_node.range, this.eat(TokType.RPAR).range)
-            var_decl_node.value = new_node
-        }
-        var_decl_node.range = FloRange.merge(var_decl_node.range, end_range)
-        return var_decl_node
-    }
     private parse_return_statement(this): ReturnStatementNode{
         let return_node = new ReturnStatementNode(this.current_token.range)
         this.advance()
@@ -1155,13 +1120,38 @@ class Parser {
         this.parse_class_block(class_node)
         return class_node
     }
-    private parse_const_declaration_statement(this): ConstDeclarationStatement {
-        let const_decl_node = new ConstDeclarationStatement(this.current_token.range)
+    private parse_variable_declaration_statement(this): VarDeclarationStatement {
+        let var_decl_node = new VarDeclarationStatement(false, this.current_token.range)
         this.advance()
-        const_decl_node.const_name = this.eat(TokType.IDENTIFER) as IdentifierToken
+        var_decl_node.var_name =  this.eat(TokType.IDENTIFER) as IdentifierToken
         if this.current_token.ttype == TokType.COL {
             this.advance()
-            const_decl_node.const_type = this.parse_type()
+            var_decl_node.var_type = this.parse_type()
+        }
+        let end_range = this.current_token.range
+        if this.current_token.ttype == TokType.EQ {
+            this.advance()
+            var_decl_node.value = this.parse_expression()
+            end_range = var_decl_node.value.range
+        } else if var_decl_node.var_type != null and this.current_token.ttype == TokType.LPAR {
+            // REMEMBER: DRY
+            let new_node = new NewExpressionNode(var_decl_node.var_type, var_decl_node.var_type.range)
+            new_node.onheap = false
+            this.advance()
+            this.parse_expression_list(new_node.args, TokType.RPAR)
+            new_node.range = FloRange.merge(new_node.range, this.eat(TokType.RPAR).range)
+            var_decl_node.value = new_node
+        }
+        var_decl_node.range = FloRange.merge(var_decl_node.range, end_range)
+        return var_decl_node
+    }
+    private parse_const_declaration_statement(this): VarDeclarationStatement {
+        let const_decl_node = new VarDeclarationStatement(true, this.current_token.range)
+        this.advance()
+        const_decl_node.var_name = this.eat(TokType.IDENTIFER) as IdentifierToken
+        if this.current_token.ttype == TokType.COL {
+            this.advance()
+            const_decl_node.var_type = this.parse_type()
         }
         this.eat(TokType.EQ)
         const_decl_node.value = this.parse_expression()
@@ -1234,7 +1224,7 @@ class Parser {
             else if parser.current_token.ttype == TokType.IMPORT_KW
                 module_node.imports << parser.parse_import()
             else if parser.current_token.ttype == TokType.CONST_KW
-                module_node.consts << parser.parse_const_declaration_statement()
+                module_node.vars << parser.parse_const_declaration_statement()
             else if parser.current_token.ttype == TokType.LET_KW
                 module_node.vars << parser.parse_variable_declaration_statement()
             else if tok_is_type_id(parser.current_token) 

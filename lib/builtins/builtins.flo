@@ -207,7 +207,9 @@ class Array <T> {
         this.buffer[index] = value
     }
     private __getitem__(this, index: uint): T {
-        return this.buffer[index]
+        if ((index as int) in 0..this.length)
+            return this.buffer[index]
+        return null
     }
     private __add__(this, other: T[]): T[]{
         let arr: T[] = []

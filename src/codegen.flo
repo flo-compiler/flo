@@ -64,38 +64,22 @@ class DebugInfo {
         this.program = program
         this.ctx = LLVMGetModuleContext(mod)
         this.builder = LLVMCreateDIBuilder(mod)
-        let file = LLVMDIBuilderCreateFile(this.builder, fn.get_bytes(), fn.length as int, ".", 1)
+        let file = LLVMDIBuilderCreateFile(this.builder, fn.get_bytes(), fn.length as int, "./", 2)
         this.files = [file]
         this.lexical_blocks = []
         this.basic_types = new DebugInfoBasicTypes(this.builder)
-        this.CU = LLVMDIBuilderCreateCompileUnit(this.builder,
-            LLVMDWARFSourceLanguage.LLVMDWARFSourceLanguageC, //Lang
-            file, // FileRef
-            "Flo Compiler", // Producer
-            12, // ProducerLen
-            false, // isOptimized
-            "", // Flags
-            0, // FlagsLen
-            1, // RuntimeVer
-            "", // SplitName
-            0, // SplitNameLen
-            LLVMDWARFEmissionKind.LLVMDWARFEmissionFull, // LLVMDWARFEmissionKind 
-            0, // DWOId
-            false, // SplitDebugInlining
-            true, // DebugInfoForProfiling
-            "/", // SysRoot
-            1, // SysRootLen
-            "", // SDK
-            0 /* SDKLen */)
+        this.CU = LLVMDIBuilderCreateCompileUnit(this.builder, LLVMDWARFSourceLanguage.LLVMDWARFSourceLanguageC, 
+            file, "Flo Compiler", 12, false, "", 0, 1, "", 0, LLVMDWARFEmissionKind.LLVMDWARFEmissionFull,
+            0, false, true, "/", 1, "", 0 )
     }
     public get_current_file(this): LLVMMetadataRef {
         return LLVMDIScopeGetFile(this.get_current_scope())
     }
-    get_or_create_file(this, id: uint): LLVMMetadataRef {
+    private get_or_create_file(this, id: uint): LLVMMetadataRef {
         if (this.files.length > id) return this.files[id]
         let module = this.program.modules[id]
         if (module == null) panic("module not found in get_file")
-        let file = LLVMDIBuilderCreateFile(this.builder, module.name.get_bytes(), module.name.length as int, ".", 1)
+        let file = LLVMDIBuilderCreateFile(this.builder, module.name.get_bytes(), module.name.length as int, "./", 2)
         this.files.ensure_capacity(id)
         this.files[id] = file
         return file
@@ -157,7 +141,7 @@ class DebugInfo {
     public create_array_type(this, arr_type: ArrayType): LLVMMetadataRef {
         let element_type = this.create_or_get_type(arr_type.element_type)
         return LLVMDIBuilderCreateArrayType(this.builder, arr_type.length,
-                            LLVMDITypeGetSizeInBits(element_type) as u32, element_type,
+                            LLVMDITypeGetSizeInBits(element_type), element_type,
                             &element_type,
                            0)
     }
@@ -200,6 +184,28 @@ class DebugInfo {
     }
     public create_lexical_block(this, block: Block): LLVMMetadataRef {
         return LLVMDIBuilderCreateLexicalBlock(this.builder, this.get_current_scope(), this.get_current_file(), block.range.line, block.range.col)
+    }
+    public create_param_variable(this, dbg_fnc: LLVMMetadataRef, arg_num: uint, arg: FunctionArg): LLVMMetadataRef {
+        return LLVMDIBuilderCreateParameterVariable(
+            this.builder, dbg_fnc,
+            arg.name.get_bytes(), arg.name.length,
+            arg_num, this.get_current_file(), arg.range.line, this.create_or_get_type(arg.value_type),
+            true, LLVMDIFlags.LLVMDIFlagTypePassByValue
+        )
+    }
+    public create_auto_variable(this, module_id: uint, var_name: String, var_type: Type, var_range: FloRange): LLVMMetadataRef {
+        let dbg_type = this.create_or_get_type(var_type)
+        return LLVMDIBuilderCreateAutoVariable(
+            this.builder, this.get_current_scope(), var_name.get_bytes(), var_name.length,
+            this.get_or_create_file(module_id), var_range.line, dbg_type,
+            true, LLVMDIFlags.LLVMDIFlagZero, LLVMDITypeGetAlignInBits(dbg_type)
+        )
+    }
+    public insert_declare_before(this, value: LLVMValueRef, dbg_var: LLVMMetadataRef){
+        let dbg_expression = LLVMDIBuilderCreateExpression(this.builder, null, 0)
+        let scope = LLVMDIVariableGetScope(dbg_var)
+        let dbg_loc = LLVMDIBuilderCreateDebugLocation(this.ctx, LLVMDIVariableGetLine(dbg_var), 0, scope, null)
+        LLVMDIBuilderInsertDeclareBefore(this.builder, value, dbg_var, dbg_expression, dbg_loc, value)
     }
 }
 class IntrinsicResult {
@@ -309,9 +315,6 @@ class CodeGen {
         }
         for class_ in module.classes {
             codegen.declare_class(class_)
-        }
-        for const_ in module.global_consts {
-            codegen.codegen_const_declaration(null, const_)
         }
         for var_ in module.global_vars {
             codegen.codegen_var_declaration(null, var_)
@@ -686,16 +689,7 @@ class CodeGen {
         if var != null return var
         // We need to find this var..
         let module = this.program.modules[target_id.module_id]
-        if target_id.kind == VarIdKind.CONST {
-            for global_const in module.global_consts {
-                let const_id = global_const.const_id
-                if const_id.id == target_id.id {
-                    this.codegen_const_declaration(null, global_const)
-                    return this.get_var_from_varid(target_id)
-                }
-            }
-        }
-        if target_id.kind == VarIdKind.VAR {
+        if target_id.kind == VarIdKind.VAR or target_id.kind == VarIdKind.CONST {
             for global_var in module.global_vars {
                 let var_id = global_var.var_id
                 if var_id.id == target_id.id {
@@ -1409,39 +1403,27 @@ class CodeGen {
         let var_id = var_decl.var_id
         let var = get_var(this.program, var_id)
         let expression = var.value
-        let ptr: LLVMValueRef = null
         if var_decl.is_static {
             let name = var_decl.name.to_cstring()
             let expression_val_type = var.value_type
             let ty = this.codegen_type(expression_val_type)
-            ptr = LLVMAddGlobal(this.module, ty, name)
+            let ptr = LLVMAddGlobal(this.module, ty, name)
             if expression != null {
                 let value = this.codegen_expression(builder, expression)
                 LLVMSetInitializer(ptr, value)
+                if(var_id.kind == VarIdKind.CONST) {
+                    LLVMSetGlobalConstant(ptr, true)
+                }
             }
             this.add_var(var_id, ptr)
         } else {
-            ptr = this.get_var_from_varid(var_id)
+            let ptr = this.get_var_from_varid(var_id)
+            let var_type = get_var(this.program, var_id).value_type
+            let dbg_var = this.debug_info.create_auto_variable(var_id.module_id, var_decl.name, var_type, var_decl.range)
+            this.debug_info.insert_declare_before(ptr, dbg_var)
             if expression != null {
                 this.store_expr_to_mem(builder, ptr, expression)
             }
-        }
-    }
-    private codegen_const_declaration(this, builder: LLVMBuilderRef, const_decl: ConstDeclaration){
-        let const_id = const_decl.const_id
-        let expression = get_const(this.program, const_id).value
-        let ptr: LLVMValueRef = null
-        if const_decl.is_static {
-            let ty = this.codegen_type(expression.value_type)
-            let name = const_decl.name.to_cstring()
-            let value = this.codegen_expression(builder, expression)
-            ptr = LLVMAddGlobal(this.module, ty, name)
-            LLVMSetInitializer(ptr, value)
-            LLVMSetGlobalConstant(ptr, true)
-            this.add_var(const_id, ptr)
-        } else {
-            ptr = this.get_var_from_varid(const_id)
-            this.store_expr_to_mem(builder, ptr, expression)
         }
     }
     private codegen_statement(this, builder: LLVMBuilderRef, statement: Statement){
@@ -1457,8 +1439,6 @@ class CodeGen {
             LLVMBuildBr(builder, this.break_bb)
         if statement.kind == StatementKind.VAR
             this.codegen_var_declaration(builder, statement as VarDeclaration)
-        if statement.kind == StatementKind.CONST
-            this.codegen_const_declaration(builder, statement as ConstDeclaration)
         if statement.kind == StatementKind.RETURN
             this.codegen_return_stmt(builder, statement as ReturnStatement)
         if statement.kind == StatementKind.EXPRESSION
@@ -1467,18 +1447,17 @@ class CodeGen {
     private codegen_block(this, builder: LLVMBuilderRef, block: Block, lexical_block: LLVMMetadataRef = null): LLVMValueRef {
         let was_instatic_ctx = this.in_static_ctx
         if(lexical_block == null) lexical_block = this.debug_info.create_lexical_block(block)
-        let yields: LLVMValueRef = null
         this.in_static_ctx = false
         this.debug_info.lexical_blocks << lexical_block
         for statement in block.statements {
             this.codegen_statement(builder, statement)
         }
         if block.yields != null {
-            yields = this.codegen_expression(builder, block.yields)
+           return this.codegen_expression(builder, block.yields)
         }
         this.debug_info.lexical_blocks.pop()
         this.in_static_ctx = was_instatic_ctx
-        return yields
+        return null
     }
     private codegen_vars_alloc_function_scope(this, builder: LLVMBuilderRef, scope: ScopeId){
         let current_scope = get_scope(this.program, scope)
@@ -1486,14 +1465,12 @@ class CodeGen {
             let var_name = var_entry.key
             let var_id = var_entry.value
             let var_value_type: Type
-            if var_id.kind == VarIdKind.VAR {
+            if var_id.kind == VarIdKind.VAR or var_id.kind == VarIdKind.CONST {
                 var_value_type = get_var(this.program, var_id).value_type
             } else if var_id.kind == VarIdKind.FNC {
                 var_value_type = get_func(this.program, var_id).fnc_type
-            } else if var_id.kind == VarIdKind.CONST {
-                var_value_type = get_const(this.program, var_id as ConstId).value_type
             }
-            let ptr = LLVMBuildAlloca(builder, this.codegen_type(var_value_type), var_name.to_cstring())
+            let ptr = LLVMBuildAlloca(builder, this.codegen_type(var_value_type), "")
             this.add_var(var_id, ptr)
         }
         for child_scope in current_scope.children {
@@ -1516,9 +1493,13 @@ class CodeGen {
         this.codegen_vars_alloc_function_scope(func_builder, func.scope)
         for elem in 0..func.args.length {
             let i = elem as uint
-            let alloc = this.get_var_from_varid(func.args[i].id)
+            let arg = func.args[i]
+            let alloc = this.get_var_from_varid(arg.id)
             let param = LLVMGetParam(llvm_fnc, i)
             LLVMBuildStore(func_builder, param, alloc)
+
+            let var_dbg = this.debug_info.create_param_variable(fnc_dbg, i, arg)
+            this.debug_info.insert_declare_before(alloc, var_dbg)
         }
         let prev_func = this.function
         this.function = llvm_fnc
@@ -1564,8 +1545,12 @@ class CodeGen {
             for elem in 0..method.args.length {
                 let i = elem as uint
                 let param = LLVMGetParam(llvm_method, i + offset)
-                let param_alloc = this.get_var_from_varid(method.args[i].id)
+                let arg = method.args[i]
+                let param_alloc = this.get_var_from_varid(arg.id)
                 LLVMBuildStore(func_builder, param, param_alloc)
+
+                let var_dbg = this.debug_info.create_param_variable(method_dbg, i, arg)
+                this.debug_info.insert_declare_before(param_alloc, var_dbg)
             }
             let prev_func = this.function
             this.function = llvm_method
