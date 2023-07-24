@@ -54,10 +54,16 @@ set_source_files_properties(
 target_link_libraries(stage0 PRIVATE LLVM)
 
 
+IF(CMAKE_BUILD_TYPE MATCHES Debug)
+    SET(OPT_LEVEL 0)
+ELSE()
+    SET(OPT_LEVEL 3)
+ENDIF()
+
 function(compile_stage PREV_STAGE CURR_STAGE)
     add_custom_target(
         ${CURR_STAGE}.o ALL
-        COMMAND ${PREV_STAGE} ${MAIN_SRC_FILE} --emit obj -o  ${CMAKE_BINARY_DIR}/${CURR_STAGE}.o -O 3 -I ${CMAKE_BINARY_DIR}/lib/
+        COMMAND ${PREV_STAGE} ${MAIN_SRC_FILE} --emit obj -o  ${CMAKE_BINARY_DIR}/${CURR_STAGE}.o -O ${OPT_LEVEL} -I ${CMAKE_BINARY_DIR}/lib/
         DEPENDS ${PREV_STAGE}
     )
     add_executable(${CURR_STAGE} ${CMAKE_BINARY_DIR}/${CURR_STAGE}.o ${LLVM_BIND_SRC})

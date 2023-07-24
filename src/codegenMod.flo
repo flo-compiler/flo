@@ -6,7 +6,7 @@ import LLVMRemoveModule, LLVMLinkInMCJIT, LLVMCreateExecutionEngineForModule, LL
 import LLVMPassManagerBuilderPopulateFunctionPassManager, LLVMPassManagerBuilderUseInlinerWithThreshold, LLVMPassManagerBuilderDispose, LLVMPassManagerBuilderCreate, LLVMPassManagerBuilderSetOptLevel, LLVMPassManagerBuilderPopulateModulePassManager in "llvm/passManagerBuilder"
 import LLVMAddInternalizePass, LLVMAddInstructionCombiningPass, LLVMAddGlobalDCEPass, LLVMAddGlobalOptimizerPass, LLVMAddScalarReplAggregatesPass, LLVMAddFunctionInliningPass in "llvm/transforms"
 import LLVM_InitializeAllTargetInfos, LLVM_InitializeAllTargetMCs, LLVM_InitializeAllTargets, LLVM_InitializeAllAsmParsers, LLVM_InitializeAllAsmPrinters in "llvm/target"
-import LLVMDisposeTargetMachine, LLVMTargetMachineEmitToFile, LLVMGetTargetMachineTriple, LLVMCreateTargetDataLayout, LLVMCreateTargetMachine, LLVMGetTargetFromTriple, LLVMGetHostCPUFeatures in "llvm/targetMachine"
+import LLVMDisposeTargetMachine, LLVMGetDefaultTargetTriple, LLVMTargetMachineEmitToFile, LLVMGetTargetMachineTriple, LLVMCreateTargetDataLayout, LLVMCreateTargetMachine, LLVMGetTargetFromTriple, LLVMGetHostCPUFeatures in "llvm/targetMachine"
 import LLVMWriteBitcodeToFile in "llvm/bitwriter"
 class GeneratedModule {
     private llvm_mod: LLVMModuleRef
@@ -115,6 +115,9 @@ class GeneratedModule {
         }
         del filename_cstr
         del filename
+    }
+    public get_default_triple(): String {
+        return String.from_cstring(LLVMGetDefaultTargetTriple())
     }
     private __del__(this){
         LLVMShutdown()

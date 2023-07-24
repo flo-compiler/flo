@@ -52,13 +52,64 @@ enum LLVMDWARFEmissionKind{
     LLVMDWARFEmissionFull
     LLVMDWARFEmissionLineTablesOnly
 }
-type LLVMDWARFTypeEncoding = int
-type LLVMDIFlags = int
+enum LLVMDWARFTypeEncoding {
+    DW_ATE_address = 0x01
+    DW_ATE_complex_float = 0x03
+    DW_ATE_float = 0x04
+    DW_ATE_signed = 0x05
+    DW_ATE_signed_char = 0x06
+    DW_ATE_unsigned = 0x07
+    DW_ATE_unsigned_char = 0x08
+    DW_ATE_imaginary_float = 0x09
+    DW_ATE_packed_decimal = 0x0a
+    DW_ATE_numeric_string = 0x0b
+    DW_ATE_edited = 0x0c
+    DW_ATE_signed_fixed = 0x0d
+    DW_ATE_unsigned_fixed = 0x0e
+    DW_ATE_decimal_float = 0x0f
+}
 fnc LLVMCreateDIBuilder(M: LLVMModuleRef): LLVMDIBuilderRef
 fnc LLVMDIBuilderCreateFile(Builder: LLVMDIBuilderRef, Filename: u8*, FilenameLen: int, Directory: u8*, DirectoryLen: int): LLVMMetadataRef
 fnc LLVMDIBuilderCreateCompileUnit(Builder: LLVMDIBuilderRef, Lang: LLVMDWARFSourceLanguage, FileRef: LLVMMetadataRef, Producer: u8*, ProducerLen: int, isOptimized: LLVMBool, Flags: u8*, FlagsLen: int, RuntimeVer: int, SplitName: u8*, SplitNameLen: int, Kind: LLVMDWARFEmissionKind, DWOId: int, SplitDebugInlining: LLVMBool, DebugInfoForProfiling: LLVMBool, SysRoot: u8*, SysRootLen: int, SDK: u8*, SDKLen: int): LLVMMetadataRef
 fnc LLVMDIBuilderFinalize(Builder: LLVMDIBuilderRef)
-/* See https://github.com/hdoc/llvm-project/blob/release/14.x/llvm/include/llvm-c/DebugInfo.h#L34 for flags */
-fnc LLVMDIBuilderCreateBasicType(Builder: LLVMDIBuilderRef, Name: u8*, NameLen: int, SizeInBits: int, Encoding: LLVMDWARFTypeEncoding, Flags: int): LLVMMetadataRef
 
-fnc LLVMDIBuilderCreateFunction(Builder: LLVMDIBuilderRef, Scope: LLVMMetadataRef, Name: u8*, NameLen: int, LinkageName: u8*, LinkageNameLen: int, File: LLVMMetadataRef, LineNo: int, Ty: LLVMMetadataRef, IsLocalToUnit: LLVMBool, IsDefinition: LLVMBool, ScopeLine: int, Flags: LLVMDIFlags, IsOptimized: LLVMBool): LLVMMetadataRef
+fnc LLVMDIBuilderCreateBasicType(Builder: LLVMDIBuilderRef, Name: u8*, NameLen: int, SizeInBits: uint, Encoding: LLVMDWARFTypeEncoding, Flags: LLVMDIFlags): LLVMMetadataRef
+
+fnc LLVMDIBuilderCreateFunction(Builder: LLVMDIBuilderRef, Scope: LLVMMetadataRef, Name: u8*, NameLen: uint, LinkageName: u8*, LinkageNameLen: uint, File: LLVMMetadataRef, LineNo: uint, Ty: LLVMMetadataRef, IsLocalToUnit: LLVMBool, IsDefinition: LLVMBool, ScopeLine: uint, Flags: LLVMDIFlags, IsOptimized: LLVMBool): LLVMMetadataRef
+
+fnc LLVMDIBuilderCreateNullPtrType(Builder: LLVMDIBuilderRef): LLVMMetadataRef
+
+fnc LLVMDIBuilderCreateSubroutineType(Builder: LLVMDIBuilderRef,
+                                  File: LLVMMetadataRef,
+                                  ParameterTypes: LLVMMetadataRef*,
+                                  NumParameterTypes: uint,
+                                  Flags: LLVMDIFlags): LLVMMetadataRef
+
+fnc LLVMDIBuilderCreatePointerType(
+    Builder: LLVMDIBuilderRef, PointeeTy: LLVMMetadataRef,
+    SizeInBits: u64, AlignInBits: u32, AddressSpace: u32,
+    Name: u8*, NameLen: uint): LLVMMetadataRef
+
+
+fnc LLVMDITypeGetName(DType: LLVMMetadataRef, Length: uint*): u8*
+fnc LLVMDIBuilderCreateUnspecifiedType(Builder: LLVMDIBuilderRef, Name: u8*, NameLen: uint): LLVMMetadataRef
+fnc LLVMDIBuilderCreateArrayType(Builder: LLVMDIBuilderRef, Size: uint,
+                            AlignInBits: u32, Ty: LLVMMetadataRef,
+                            Subscripts: LLVMMetadataRef *,
+                            NumSubscripts: uint): LLVMMetadataRef
+
+
+fnc LLVMDITypeGetSizeInBits(DType: LLVMMetadataRef): u64
+fnc LLVMSetSubprogram(Func: LLVMValueRef, SP: LLVMMetadataRef)
+fnc LLVMDIBuilderFinalizeSubprogram(Builder: LLVMDIBuilderRef,
+                                    Subprogram: LLVMMetadataRef)
+fnc LLVMDebugMetadataVersion(): u64
+fnc LLVMDIBuilderCreateDebugLocation(Ctx: LLVMContextRef, Line: uint,
+                                Column: uint, Scope: LLVMMetadataRef,
+                                InlinedAt: LLVMMetadataRef): LLVMMetadataRef
+
+fnc LLVMDIScopeGetFile(Scope: LLVMMetadataRef): LLVMMetadataRef                                 
+
+fnc LLVMDIFileGetFilename(File: LLVMMetadataRef, Len: uint*): u8*
+
+fnc LLVMDIBuilderCreateLexicalBlock(Builder: LLVMDIBuilderRef, Scope: LLVMMetadataRef, File: LLVMMetadataRef, Line: uint, Column: uint): LLVMMetadataRef

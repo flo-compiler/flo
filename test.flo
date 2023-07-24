@@ -1,0 +1,4 @@
+fnc main(){
+    let segault: u8* = null
+    segault[0] = '0'
+}

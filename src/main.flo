@@ -6,9 +6,8 @@ import "lexer"
 import "parser"
 import "typechecker"
 import "codegen"
+import "codegenMod"
 import "flags"
-import LLVMGetDefaultTargetTriple in "llvm/targetMachine"
-fnc system(cmd: u8*)
 fnc get_self_path(buff: u8*, buffsize: uint): uint
 fnc main(argc: int, argv: u8**): int {
     let COMPILER_VERSION = "0.0.1"
@@ -16,10 +15,10 @@ fnc main(argc: int, argv: u8**): int {
     let self_path: u8[1024]
     let self_path_len = get_self_path(&self_path[0], self_path.size)
     let show_help: FlagBool("h", "Show this help message")
-    let emit_type: FlagString("-emit", "Emit output in a particular format. Options are:\n\t\t • exe - Generates an executable.\n\t\t • llvm-ir - Generates a file containing LLVM IR.\n\t\t • llvm-bc - Generates a file containing LLVM bitcode.\n\t\t • obj - Generates an object file\n\t\t • asm - Generates Assembly code.", "exec")
+    let emit_type: FlagString("-emit", "Emit output in a particular format. Options are:\n\t\t • llvm-ir - Generates a file containing LLVM IR.\n\t\t • llvm-bc - Generates a file containing LLVM bitcode.\n\t\t • obj - Generates an object file\n\t\t • asm - Generates Assembly code.", "exec")
     let output_fn: FlagString("o", "Specify file to put the output into", "output")
     let rt_path: FlagString("I", "Specify runtime directory",  Path.join(Path.dirname(String.from_bytes(&self_path[0], self_path_len)), "lib/"))
-    let target_triple: FlagString("-target", "Compile to specific target triple", String.from_cstring(LLVMGetDefaultTargetTriple()))
+    let target_triple: FlagString("-target", "Compile to specific target triple", GeneratedModule.get_default_triple())
     let link_libs: FlagString("l", "Specify a library to link against (should be a comma seperated list)")
     let opt_level: FlagInt("O", "Specify the compiler's optimization level", 1)
     let show_version: FlagBool("v", "Show version")
@@ -64,17 +63,7 @@ fnc main(argc: int, argv: u8**): int {
     /**** Misc ****/
     flo_module.run_passes(opt_level.value as int)
     flo_module.set_target_machine(target_triple.value)
-    if emit_type.value == "exe" {
-        let tmp_file = "/tmp/output.o"
-        flo_module.write_obj(tmp_file)
-        let link_libs_value = link_libs.value ? "-l$(link_libs.value)" : ""
-        let linker_exec = "clang-15"
-        let target_option = "-target $link_libs_value"
-        system("$linker_exec -no-pie $target_option /tmp/output.o $link_libs -o $(output_fn.value)")
-        del target_option
-        del link_libs_value
-        del linker_exec
-    } else if emit_type.value == "llvm-ir" {
+    if emit_type.value == "llvm-ir" {
         flo_module.write_ir("$(output_fn.value)")
     } else if emit_type.value == "llvm-bc" {
         flo_module.write_bc("$(output_fn.value)")
