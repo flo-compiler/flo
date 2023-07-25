@@ -1,4 +1,4 @@
-#include <unistd.h>
+
 #include <llvm/IR/Function.h>
 #include <llvm/Support/TargetSelect.h>
 extern "C" llvm::FunctionType* LLVM_GetFunctionType(llvm::Function* func){
@@ -39,6 +39,22 @@ extern "C" int LLVM_InitializeNativeAsmPrinter(){
 extern "C" int LLVM_InitializeNativeDisassembler(){
     return llvm::InitializeNativeTargetDisassembler();
 }
+
+
+#if defined(__linux__)
+#include <unistd.h>
 extern "C" size_t get_self_path(char* buff, size_t buffsize){
     return readlink("/proc/self/exe", buff, buffsize);
 }
+
+#elif defined(_WIN32)
+#include <windows.h>
+extern "C" size_t get_self_path(char* buff, size_t buffsize){
+    return GetModuleFileNameA(NULL, buff, buffsize);
+}
+#elif defined(__APPLE__)
+#include <mach-o/dyld.h>
+extern "C" size_t get_self_path(char* buff, size_t buffsize){
+    return _NSGetExecutablePath(NULL, buff, buffsize);
+}
+#endif

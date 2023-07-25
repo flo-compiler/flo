@@ -453,8 +453,6 @@ class Lexer {
             return this.numeric_token()
         if char == ':' 
             return new Token(TokType.COL, this.get_range(1))
-        if char == ';'
-            return new Token(TokType.SEMICOL, this.get_range(1))
         if char == ','
             return new Token(TokType.COMMA, this.get_range(1))
         if char == '+'

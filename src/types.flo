@@ -1,7 +1,6 @@
 enum TokType {
     ILLEGAL
     COL
-    SEMICOL
     COMMA
     MULT
     MINUS
