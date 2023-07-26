@@ -890,13 +890,6 @@ fnc get_class_prop_visibility(program: Program, prop_id: PropId): ACCESS_ATTR {
     }
     return owner.fields[prop_id.id].visibility
 }
-fnc get_field_offset(program: Program, prop_id: PropId): uint {
-    let owner = get_class_from_prop_id(program, prop_id)
-    if prop_id.kind == PropIdKind.METHOD {
-        return 1
-    }
-    return owner.fields[prop_id.id].field_offset
-}
 fnc is_class_prop_static(program: Program, prop_id: PropId): bool {
     let owner = get_class_from_prop_id(program, prop_id)
     if prop_id.kind == PropIdKind.METHOD {

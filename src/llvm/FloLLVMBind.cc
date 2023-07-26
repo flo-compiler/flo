@@ -50,11 +50,15 @@ extern "C" size_t get_self_path(char* buff, size_t buffsize){
 #elif defined(_WIN32)
 #include <windows.h>
 extern "C" size_t get_self_path(char* buff, size_t buffsize){
-    return GetModuleFileNameA(NULL, buff, buffsize);
+    return GetModuleFileNameA(NULL, buff, &buffsize);
 }
 #elif defined(__APPLE__)
 #include <mach-o/dyld.h>
-extern "C" size_t get_self_path(char* buff, size_t buffsize){
-    return _NSGetExecutablePath(NULL, buff, buffsize);
+extern "C" size_t get_self_path(char* buff, uint32_t buffsize){
+    if (_NSGetExecutablePath(buff, &buffsize) == 0){
+        return buffsize;
+    } else {
+        return 0;
+    }
 }
 #endif

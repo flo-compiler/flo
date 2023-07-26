@@ -78,7 +78,6 @@ class DebugInfo {
     private get_or_create_file(this, id: uint): LLVMMetadataRef {
         if (this.files.length > id) return this.files[id]
         let module = this.program.modules[id]
-        if (module == null) panic("module not found in get_file")
         let file = LLVMDIBuilderCreateFile(this.builder, module.name.get_bytes(), module.name.length as int, "./", 2)
         this.files.ensure_capacity(id)
         this.files[id] = file
@@ -186,10 +185,11 @@ class DebugInfo {
         return LLVMDIBuilderCreateLexicalBlock(this.builder, this.get_current_scope(), this.get_current_file(), block.range.line, block.range.col)
     }
     public create_param_variable(this, dbg_fnc: LLVMMetadataRef, arg_num: uint, arg: FunctionArg): LLVMMetadataRef {
+        let dbg_type = this.create_or_get_type(arg.value_type)
         return LLVMDIBuilderCreateParameterVariable(
             this.builder, dbg_fnc,
             arg.name.get_bytes(), arg.name.length,
-            arg_num, this.get_current_file(), arg.range.line, this.create_or_get_type(arg.value_type),
+            arg_num, this.get_current_file(), arg.range.line, dbg_type,
             true, LLVMDIFlags.LLVMDIFlagTypePassByValue
         )
     }
@@ -208,23 +208,11 @@ class DebugInfo {
         LLVMDIBuilderInsertDeclareBefore(this.builder, value, dbg_var, dbg_expression, dbg_loc, value)
     }
 }
-class IntrinsicResult {
-    call: LLVMValueRef
-    fnc_type: LLVMTypeRef
-    constructor(this){
-        this.call = null
-        this.fnc_type = null
-    }
-}
 class CGClassType  {
     llvm_type: LLVMTypeRef
-    vt_methods_pos_map: [String: uint]
-    fields_pos_map: [String: uint]
     static_props_map: [String: LLVMValueRef]
     class_constructor: LLVMValueRef
     constructor(this){
-        this.vt_methods_pos_map = new [String: uint]()
-        this.fields_pos_map = new [String: uint]()
         this.static_props_map = new [String: LLVMValueRef]()
     }
 }
@@ -236,16 +224,21 @@ class CGEnumType {
         this.field_map = new [String: LLVMValueRef]()
     }
 }
-fnc get_intrinsic(mod: LLVMModuleRef, name: String, params_types: LLVMTypeRef*, params_length: uint, return_type: LLVMTypeRef, var_args = false): IntrinsicResult {
-    let result = new IntrinsicResult()
-    result.fnc_type = LLVMFunctionType(return_type, params_types, params_length, var_args)
-    let fn_name = name.to_cstring()
-    let fnc_in_mod = LLVMGetNamedFunction(mod, fn_name)
-    if fnc_in_mod != null {
-        result.call = fnc_in_mod
-    } else {
-        result.call = LLVMAddFunction(mod, fn_name, result.fnc_type)
+fnc get_field_offset(program: Program, prop_id: PropId): uint {
+    let owner = get_class_from_prop_id(program, prop_id)
+    if prop_id.kind == PropIdKind.METHOD {
+        return 1
     }
+    return owner.fields[prop_id.id].field_offset
+}
+fnc get_intrinsic(mod: LLVMModuleRef, name: String, params_types: LLVMTypeRef*, params_length: uint, return_type: LLVMTypeRef, var_args = false): (LLVMTypeRef, LLVMValueRef) {
+    let fnc_type = LLVMFunctionType(return_type, params_types, params_length, var_args)
+    let fn_name = name.to_cstring()
+    let llvm_fnc = LLVMGetNamedFunction(mod, fn_name)
+    if llvm_fnc == null {
+        llvm_fnc = LLVMAddFunction(mod, fn_name, fnc_type)
+    }
+    let result = (fnc_type, llvm_fnc)
     return result
 }
 fnc is_terminated(block: Block): bool {
@@ -286,7 +279,6 @@ class CodeGen {
     private break_bb: LLVMBasicBlockRef
     private continue_bb: LLVMBasicBlockRef
     private program: Program
-    private in_static_ctx: bool
     private global_var_scope: [String: LLVMValueRef]
     private global_string_scope: [String: LLVMValueRef]
     private global_class_scope: [String: CGClassType]
@@ -300,7 +292,6 @@ class CodeGen {
         this.global_class_scope = new [String: CGClassType]()
         this.global_enum_scope = new [String: CGEnumType]()
         this.super_functions = new [String: LLVMValueRef]()
-        this.in_static_ctx = true
         this.continue_bb = null
         this.break_bb = null
         this.module = LLVMModuleCreateWithName(module_name.to_cstring())
@@ -472,34 +463,34 @@ class CodeGen {
         let args: LLVMValueRef[1] = [arg]
         let float_ty = LLVMDoubleType()
         let atof = get_intrinsic(this.module, "atof", &arg_types[0], arg_types.size, float_ty)
-        return LLVMBuildCall2(builder, atof.fnc_type, atof.call, &args[0], args.size, "")
+        return LLVMBuildCall2(builder, atof[0], atof[1], &args[0], args.size, "")
     }
     private codegen_atoi_call(this, builder: LLVMBuilderRef, arg: LLVMValueRef): LLVMValueRef {
         let arg_types: LLVMTypeRef[1] = [LLVMPointerType(LLVMInt8Type())]
         let args: LLVMValueRef[1] = [arg]
         let int_ty = LLVMInt32Type()
         let atoi = get_intrinsic(this.module, "atoi", &arg_types[0], arg_types.size, int_ty)
-        return LLVMBuildCall2(builder, atoi.fnc_type, atoi.call, &args[0], args.size, "")
+        return LLVMBuildCall2(builder, atoi[0], atoi[1], &args[0], args.size, "")
     }
     private codegen_atol_call(this, builder: LLVMBuilderRef, arg: LLVMValueRef): LLVMValueRef {
         let arg_types: LLVMTypeRef[1] = [LLVMPointerType(LLVMInt8Type())]
         let args: LLVMValueRef[1] = [arg]
         let big_int_ty = LLVMInt64Type()
         let atol = get_intrinsic(this.module, "atol", &arg_types[0], arg_types.size, big_int_ty)
-        return LLVMBuildCall2(builder, atol.fnc_type, atol.call, &args[0], args.size, "")
+        return LLVMBuildCall2(builder, atol[0], atol[1], &args[0], args.size, "")
     }
     private codegen_realloc_call(this, builder: LLVMBuilderRef, args: LLVMValueRef*): LLVMValueRef {
         let i8_ptr_ty = LLVMPointerType(LLVMInt8Type())
         let arg_types: LLVMTypeRef[2] = [i8_ptr_ty, LLVMIntType(ARCH_WORD_SIZE)]
         let realloc = get_intrinsic(this.module, "realloc", &arg_types[0], arg_types.size, i8_ptr_ty)
-        return LLVMBuildCall2(builder, realloc.fnc_type, realloc.call, args, arg_types.size, "")
+        return LLVMBuildCall2(builder, realloc[0], realloc[1], args, arg_types.size, "")
     }
     private codegen_memcmp_call(this, builder: LLVMBuilderRef, args: LLVMValueRef*): LLVMValueRef {
         let i8_ptr_ty = LLVMPointerType(LLVMInt8Type())
         let int_ty = LLVMIntType(ARCH_WORD_SIZE)
         let arg_types: LLVMTypeRef[3] = [i8_ptr_ty, i8_ptr_ty, int_ty]
         let memcmp = get_intrinsic(this.module, "memcmp", &arg_types[0], arg_types.size, int_ty)
-        return LLVMBuildCall2(builder, memcmp.fnc_type, memcmp.call, args, arg_types.size, "")
+        return LLVMBuildCall2(builder, memcmp[0], memcmp[1], args, arg_types.size, "")
     }
     private codegen_del_call(this, builder: LLVMBuilderRef, self: LLVMValueRef, obj_ty: ObjectType, range: FloRange): LLVMValueRef {
         let func_ty: FunctionType
@@ -529,7 +520,7 @@ class CodeGen {
         (call_args_buffer + 2).copy_from(args, args_length)
         let arg_types: LLVMTypeRef[2] = [i8_ptr_ty, i8_ptr_ty]
         let asprintf = get_intrinsic(this.module, "asprintf", &arg_types[0], arg_types.size, int_ty, true)
-        let str_len = LLVMBuildCall2(builder, asprintf.fnc_type, asprintf.call, call_args_buffer, num_passed_args, "")
+        let str_len = LLVMBuildCall2(builder, asprintf[0], asprintf[1], call_args_buffer, num_passed_args, "")
         if len_ptr != null {
             len_ptr[0] = str_len
         }
@@ -767,7 +758,7 @@ class CodeGen {
             ptr = this.codegen_expression(builder, member_expr.expression)
         }
         let indices_buffer: LLVMValueRef[2] = [LLVMConstInt(LLVMInt32Type(), 0, false), null]
-        indices_buffer[1] = LLVMConstInt(LLVMInt32Type(), struct_class.fields_pos_map[prop_id_key] as u64, false)
+        indices_buffer[1] = LLVMConstInt(LLVMInt32Type(), get_field_offset(this.program, member_expr.member_id) as u64, false)
         return LLVMBuildInBoundsGEP2(builder, struct_type, ptr, &indices_buffer[0], indices_buffer.size, "memberidx")
     }
     private get_expr_mem(this, builder: LLVMBuilderRef, exp: Expression): LLVMValueRef {
@@ -848,8 +839,8 @@ class CodeGen {
         let name = "llvm.pow.$(dump_type(ty, true))"
         let llvmty = this.codegen_type(ty)
         let arg_types: LLVMTypeRef[2] = [llvmty, llvmty]
-        let res = get_intrinsic(this.module, name, &arg_types[0], arg_types.size, llvmty)
-        return LLVMBuildCall2(builder, res.fnc_type, res.call, &args[0], args.size, "")
+        let pow = get_intrinsic(this.module, name, &arg_types[0], arg_types.size, llvmty)
+        return LLVMBuildCall2(builder, pow[0], pow[1], &args[0], args.size, "")
     }
     private codegen_bin_exp(this, builder: LLVMBuilderRef, bin_exp: BinaryExpression): LLVMValueRef {   
         let op = bin_exp.op
@@ -1022,7 +1013,7 @@ class CodeGen {
         }
         if var_exp.value_id.kind == VarIdKind.FNC
             return val
-        if this.in_static_ctx
+        if builder == null
             return LLVMGetInitializer(val)
         return LLVMBuildLoad2(builder, ty, val, "")
     }
@@ -1445,9 +1436,7 @@ class CodeGen {
             this.codegen_expression(builder, statement as Expression)
     }
     private codegen_block(this, builder: LLVMBuilderRef, block: Block, lexical_block: LLVMMetadataRef = null): LLVMValueRef {
-        let was_instatic_ctx = this.in_static_ctx
         if(lexical_block == null) lexical_block = this.debug_info.create_lexical_block(block)
-        this.in_static_ctx = false
         this.debug_info.lexical_blocks << lexical_block
         for statement in block.statements {
             this.codegen_statement(builder, statement)
@@ -1456,7 +1445,6 @@ class CodeGen {
            return this.codegen_expression(builder, block.yields)
         }
         this.debug_info.lexical_blocks.pop()
-        this.in_static_ctx = was_instatic_ctx
         return null
     }
     private codegen_vars_alloc_function_scope(this, builder: LLVMBuilderRef, scope: ScopeId){
@@ -1593,7 +1581,6 @@ class CodeGen {
             if prop_id.kind == PropIdKind.FIELD {
                 let field_offset = get_field_offset(this.program, prop_id)
                 let field_type = this.codegen_type(prop_type)
-                struct_class.fields_pos_map[prop_id_key] = field_offset
                 let offset_cap = field_offset + 1
                 field_types.ensure_capacity(offset_cap)
                 field_types[field_offset] = field_type
