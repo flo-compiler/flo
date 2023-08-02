@@ -182,9 +182,9 @@ fnc LLVMConstString(Str: u8*, Length: uint, DontNullTerminate: LLVMBool): LLVMVa
 
 fnc LLVMIsConstantString(c: LLVMValueRef): LLVMBool
 
-fnc LLVMConstIntGetZExtValue(ConstantVal: LLVMValueRef): int
+fnc LLVMConstIntGetZExtValue(ConstantVal: LLVMValueRef): u64
 
-fnc LLVMConstIntGetSExtValue(ConstantVal: LLVMValueRef): int
+fnc LLVMConstIntGetSExtValue(ConstantVal: LLVMValueRef): i64
 
 fnc LLVMConstStructInContext(C: LLVMContextRef, vals: LLVMValueRef*, count: uint, Packed: LLVMBool): LLVMValueRef
 

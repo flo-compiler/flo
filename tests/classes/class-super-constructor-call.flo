@@ -9,7 +9,7 @@ class Chef {
 }
 class ItalianChef(Chef) {
     constructor(this) {
-        super("Pasta")
+        this.super("Pasta")
     }
 }
 fnc main(): int {

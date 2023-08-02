@@ -1,6 +1,7 @@
-//@expect: return_code=-11
+//@expect: return_code=-6
 fnc main(): int {
     let arr: int[] = [1, 2, 3, 4]
+    del arr
     del arr
     return arr[3]
 }

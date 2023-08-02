@@ -4,7 +4,7 @@ class FileId {
         this.id = id
     }
 }
-class FloRange {
+class TextRange {
     start: int
     end: uint
     col: uint
@@ -17,8 +17,8 @@ class FloRange {
         this.line = line
         this.fid = fid
     }
-    merge(r1: FloRange, r2: FloRange): FloRange {
-        return new FloRange(r1.start, r2.end, r1.col, r2.line, r1.fid)
+    merge(r1: TextRange, r2: TextRange): TextRange {
+        return new TextRange(r1.start, r2.end, r1.col, r2.line, r1.fid)
     }
 }
 enum COLORS {
@@ -41,4 +41,19 @@ fnc panic(message: String){
     flo_print("Panic: ")
     flo_println(message)
     exit(-1)
+}
+class Stack<T> {
+    private elements: T[]
+    constructor(this){
+        this.elements = []
+    }
+    push(this, element: T){
+        this.elements << element
+    }
+    pop(this): T {
+        return this.elements.pop()
+    }
+    peek(this): T {
+        return this.elements[this.elements.length - 1]
+    }
 }

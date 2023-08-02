@@ -145,7 +145,7 @@ fnc LLVMDIBuilderCreateArrayType(Builder: LLVMDIBuilderRef, Size: uint,
                             NumSubscripts: uint): LLVMMetadataRef
 
 
-fnc LLVMDITypeGetSizeInBits(DType: LLVMMetadataRef): u32
+fnc LLVMDITypeGetSizeInBits(DType: LLVMMetadataRef): u64
 fnc LLVMDITypeGetAlignInBits(DType: LLVMMetadataRef): u32
 
 fnc LLVMSetSubprogram(Func: LLVMValueRef, SP: LLVMMetadataRef)
@@ -265,3 +265,64 @@ fnc LLVMDIBuilderCreateGlobalVariableExpression(
 fnc LLVMDIVariableGetLine(Var: LLVMMetadataRef): uint
 
 fnc LLVMDIVariableGetScope(Var: LLVMMetadataRef): LLVMMetadataRef
+/**
+ * Create debugging information entry for a class.
+ * \param Scope               Scope in which this class is defined.
+ * \param Name                Class name.
+ * \param NameLen             The length of the C string passed to \c Name.
+ * \param File                File where this member is defined.
+ * \param LineNumber          Line number.
+ * \param SizeInBits          Member size.
+ * \param AlignInBits         Member alignment.
+ * \param OffsetInBits        Member offset.
+ * \param Flags               Flags to encode member attribute, e.g. private.
+ * \param DerivedFrom         Debug info of the base class of this type.
+ * \param Elements            Class members.
+ * \param NumElements         Number of class elements.
+ * \param VTableHolder        Debug info of the base class that contains vtable
+ *                            for this type. This is used in
+ *                            DW_AT_containing_type. See DWARF documentation
+ *                            for more info.
+ * \param TemplateParamsNode  Template type parameters.
+ * \param UniqueIdentifier    A unique identifier for the type.
+ * \param UniqueIdentifierLen Length of the unique identifier.
+ */
+fnc LLVMDIBuilderCreateClassType(Builder: LLVMDIBuilderRef,
+    Scope: LLVMMetadataRef, Name: u8*, NameLen: uint,
+    File: LLVMMetadataRef, LineNumber: uint, SizeInBits: u64,
+    AlignInBits: u32, OffsetInBits: u64, Flags: LLVMDIFlags,
+    DerivedFrom: LLVMMetadataRef,
+    Elements: LLVMMetadataRef*, NumElements: uint,
+    VTableHolder: LLVMMetadataRef, TemplateParamsNode: LLVMMetadataRef,
+    UniqueIdentifier: u8*, UniqueIdentifierLen: uint): LLVMMetadataRef
+
+/**
+ * Create debugging information entry for an enumerator.
+ * @param Builder        The DIBuilder.
+ * @param Name           Enumerator name.
+ * @param NameLen        Length of enumerator name.
+ * @param Value          Enumerator value.
+ * @param IsUnsigned     True if the value is unsigned.
+ */
+fnc LLVMDIBuilderCreateEnumerator(Builder: LLVMDIBuilderRef,
+                                        Name: u8*, NameLen: uint,
+                                        Value: i64, IsUnsigned: LLVMBool): LLVMMetadataRef
+/**
+ * Create debugging information entry for an enumeration.
+ * \param Builder        The DIBuilder.
+ * \param Scope          Scope in which this enumeration is defined.
+ * \param Name           Enumeration name.
+ * \param NameLen        Length of enumeration name.
+ * \param File           File where this member is defined.
+ * \param LineNumber     Line number.
+ * \param SizeInBits     Member size.
+ * \param AlignInBits    Member alignment.
+ * \param Elements       Enumeration elements.
+ * \param NumElements    Number of enumeration elements.
+ * \param ClassTy        Underlying type of a C++11/ObjC fixed enum.
+ */
+fnc LLVMDIBuilderCreateEnumerationType(
+    Builder: LLVMDIBuilderRef, Scope: LLVMMetadataRef, Name: u8*,
+    NameLen: uint, File: LLVMMetadataRef, LineNumber: uint,
+    SizeInBits: u64, AlignInBits: u32, Elements: LLVMMetadataRef*,
+    NumElements: uint, ClassTy: LLVMMetadataRef): LLVMMetadataRef

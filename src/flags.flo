@@ -26,21 +26,21 @@ let flags_length = 0
 class FlagString(Flag) {
     value: String
     constructor(this, name: String, description: String, default: String = null){
-        super(FlagType.STR, name, description)
+        this.super(FlagType.STR, name, description)
         this.value = default
     }
 }
 class FlagInt(Flag) {
     value: int
     constructor(this, name: String, description: String, default: int = 0){
-        super(FlagType.INT, name, description)
+        this.super(FlagType.INT, name, description)
         this.value = default
     }
 }
 class FlagBool(Flag) {
     value: bool
     constructor(this, name: String, description: String, default = false){
-        super(FlagType.BOOL, name, description)
+        this.super(FlagType.BOOL, name, description)
         this.value = default
     }
 }

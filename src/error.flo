@@ -1,4 +1,4 @@
-import FloRange, COLORS, change_print_color, flo_println, flo_print in "utils"
+import TextRange, COLORS, change_print_color, flo_println, flo_print in "utils"
 enum ErrorKind {
     ILLEGALCHAR
     NAME
@@ -10,8 +10,8 @@ enum ErrorKind {
 class FloError {
     kind: ErrorKind
     message: String
-    range: FloRange
-    constructor(this, kind: ErrorKind, message: String, range: FloRange){
+    range: TextRange
+    constructor(this, kind: ErrorKind, message: String, range: TextRange){
         this.kind = kind
         this.range = range
         this.message = message
@@ -22,7 +22,7 @@ fnc get_next_line_index(text: String, start: uint): uint {
         start++
     return start
 }
-fnc print_error_line(text: String, range: FloRange){
+fnc print_error_line(text: String, range: TextRange){
     let end = get_next_line_index(text, range.end)
     let start_line = range.start - range.col
     let line = text.substring(start_line, end - start_line)

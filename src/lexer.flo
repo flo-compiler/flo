@@ -1,5 +1,5 @@
 import TokType in "types"
-import FloRange, FileId in "utils"
+import TextRange, FileId in "utils"
 import Compiler in "compiler"
 import FloError, ErrorKind in "error"
 fnc string_to_kw_token(word: String): TokType {
@@ -113,30 +113,30 @@ fnc unescape(str: String): String {
 }
 class Token {
     ttype: TokType
-    range: FloRange
-    constructor(this, ttype: TokType, range: FloRange){
+    range: TextRange
+    constructor(this, ttype: TokType, range: TextRange){
         this.ttype = ttype
         this.range = range
     }
 }
 class IntToken (Token) {
     value: u64
-    constructor(this, value: u64, range: FloRange){
-        super(TokType.INT, range)
+    constructor(this, value: u64, range: TextRange){
+        this.super(TokType.INT, range)
         this.value = value
     }
 }
 class FloatToken (Token) {
     value: f64
-    constructor(this, value: f64, range: FloRange){
-        super(TokType.FLOAT, range)
+    constructor(this, value: f64, range: TextRange){
+        this.super(TokType.FLOAT, range)
         this.value = value
     }
 }
 class CharToken (Token) {
     value: u8
-    constructor(this, value: u8, range: FloRange){
-        super(TokType.CHAR, range)
+    constructor(this, value: u8, range: TextRange){
+        this.super(TokType.CHAR, range)
         this.value = value
     }
 }
@@ -144,8 +144,8 @@ class StrToken (Token) {
     value: String
     fmt_indices: uint[]
     args: Token[][]
-    constructor(this, args: Token[][], fmt_indices: uint[], value: String, range: FloRange){
-        super(TokType.STR, range)
+    constructor(this, args: Token[][], fmt_indices: uint[], value: String, range: TextRange){
+        this.super(TokType.STR, range)
         this.value = value
         this.fmt_indices = fmt_indices
         this.args = args
@@ -153,8 +153,8 @@ class StrToken (Token) {
 }
 class IdentifierToken (Token) {
     value: String
-    constructor(this, value: String, range: FloRange){
-        super(TokType.IDENTIFER, range)
+    constructor(this, value: String, range: TextRange){
+        this.super(TokType.IDENTIFER, range)
         this.value = value
     }
 }
@@ -191,8 +191,8 @@ class Lexer {
             this.col++
         }
     }
-    private get_range(this, back: uint): FloRange {
-        return new FloRange(this.idx - back + 1, (this.idx + 1) as uint, this.col - back, this.line, this.fid)
+    private get_range(this, back: uint): TextRange {
+        return new TextRange(this.idx - back + 1, (this.idx + 1) as uint, this.col - back, this.line, this.fid)
     }
     private plus_token(this): Token {
         if this.peek() == '+' {
@@ -414,7 +414,7 @@ class Lexer {
                     token_group << this.lex_token()
                 }
                 this.advance()
-                token_group << new Token(TokType.EOF, new FloRange(0, 0, this.col, this.line, this.fid))
+                token_group << new Token(TokType.EOF, new TextRange(0, 0, this.col, this.line, this.fid))
                 args << token_group
                 continue
             }
@@ -503,7 +503,7 @@ class Lexer {
         if char == '.'
             return this.dot_token()
         if char == '\0'
-            return new Token(TokType.EOF, new FloRange(0, 0, this.col, this.line, this.fid))
+            return new Token(TokType.EOF, new TextRange(0, 0, this.col, this.line, this.fid))
         let char_msg = this.text.substring(this.idx, 1)
         this.errors << new FloError(ErrorKind.ILLEGALCHAR, "Illegal character: '$char_msg'", this.get_range(1))
         del char_msg
@@ -517,7 +517,7 @@ class Lexer {
             tokens << lexer.lex_token()
             lexer.advance()
         }
-        tokens << new Token(TokType.EOF, new FloRange(0, 0, lexer.col, lexer.line, lexer.fid))
+        tokens << new Token(TokType.EOF, new TextRange(0, 0, lexer.col, lexer.line, lexer.fid))
         return tokens
     }
 }
