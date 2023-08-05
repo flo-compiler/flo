@@ -1779,16 +1779,22 @@ class TypeChecker {
         return true
     }
     private declare_class_methods(this, declared_class: Class, class_node: ClassDeclarationNode){
+        //TODO: Need to refactor
         let object_type = new ObjectType(declared_class.id)
         for elem in 0..class_node.methods.length {
             let i = elem as uint
             let method_node = class_node.methods[i]
-            let method = new ClassMethod(method_node.name.range)
-            let name = method_node.name.value
+            let method = new ClassMethod(method_node.function.name.range)
+            let name = method_node.function.name.value
             method.name = name
             let method_scope = this.create_child_scope_within_current_scope()
             this.current_scope = method_scope.id
             method.args = []
+            method.is_abstract = method_node.function.is_external
+            method.visibility = method_node.access_modifier
+            method.method_type = this.init_function_signature(method_node.function.args, method_node.function.return_type, method.args, object_type)
+            method.is_static = !method.method_type.has_implicit_this
+            let name_range = method_node.function.name.range
             if is_operator_overload_name(name) {
                 let args_num = 2
                 if name == "__iter__" or name == "__del__" {
@@ -1796,63 +1802,59 @@ class TypeChecker {
                 } else if name =="__setitem__" {
                     args_num = 3
                 }
-                if method_node.args.length != args_num {
-                    this.error(ErrorKind.GEN, "Expected $args_num arguments for binary operator overload $name but got $(method_node.args.length)", method_node.name.range)
+                if method_node.function.args.length != args_num {
+                    this.error(ErrorKind.GEN, "Expected $args_num arguments for binary operator overload $name but got $(method_node.function.args.length)", name_range)
                     return
                 }
-                if method_node.is_static {
-                    this.error(ErrorKind.GEN, "Binary operator overload $name cannot be static", method_node.name.range)
+                if method.is_static {
+                    this.error(ErrorKind.GEN, "Binary operator overload $name cannot be static", name_range)
                     return
                 }
             }
-            method.is_abstract = method_node.is_abstract
-            method.is_static = method_node.is_static
-            method.visibility = method_node.access_modifier
-            method.method_type = this.init_function_signature(method_node.args, method_node.return_type, method.args, object_type)
             if name == "__iter__" {
                 if !this.is_iteratable(method.method_type.return_type) {
-                    this.error(ErrorKind.TYPE, "__iter__ method must return an iteratable object {done: bool, next(): any}", method_node.name.range)
+                    this.error(ErrorKind.TYPE, "__iter__ method must return an iteratable object {done: bool, next(): any}", name_range)
                     return 
                 }
             }
             let possible_prop_id = declared_class.prop_map[name]
             if possible_prop_id != null {
                 if possible_prop_id.type_id == declared_class.id {
-                    this.error(ErrorKind.NAME, "Method $name in class $(declared_class.name) already exists", method_node.name.range)
+                    this.error(ErrorKind.NAME, "Method $name in class $(declared_class.name) already exists", name_range)
                     return
                 }
                 let parent_prop_type = this.program.get_class_prop_type(possible_prop_id)
                 let parent_prop_visibility = this.program.get_class_prop_visibility(possible_prop_id)
                 if !this.types_are_eq(parent_prop_type, method.method_type) {
-                    this.error(ErrorKind.TYPE, "Signature of inherited method $name in class $(declared_class.name) does not match expected parent signature '$(this.dump_type(parent_prop_type))'", method_node.name.range)
+                    this.error(ErrorKind.TYPE, "Signature of inherited method $name in class $(declared_class.name) does not match expected parent signature '$(this.dump_type(parent_prop_type))'", name_range)
                     return
                 }
                 if method.visibility != parent_prop_visibility {
-                    this.error(ErrorKind.GEN, "Expected inherited method $name in class $(declared_class.name) to be $(dump_access(parent_prop_visibility))", method_node.name.range)
+                    this.error(ErrorKind.GEN, "Expected inherited method $name in class $(declared_class.name) to be $(dump_access(parent_prop_visibility))", name_range)
                     return
                 }
             }
             method.id = new PropId(PropIdKind.METHOD, declared_class.id, i)
-            if method_node.is_static {
-                if method_node.is_abstract {
-                    this.error(ErrorKind.GEN, "Static method can't be abstract", method_node.name.range)
+            if method.is_static {
+                if method.is_abstract {
+                    this.error(ErrorKind.GEN, "Static method can't be abstract", name_range)
                     return
                 }
                 if method.name == "constructor" {
-                    this.error(ErrorKind.GEN, "Class constructor can't be static", method_node.name.range)
+                    this.error(ErrorKind.GEN, "Class constructor can't be static", name_range)
                     return
                 }
                 declared_class.static_prop_map[name] = method.id
             } else {
                 if method.name == "constructor" {
-                    if method_node.is_abstract {
-                        this.error(ErrorKind.GEN, "Class constructor can't be abstract", method_node.name.range)
+                    if method.is_abstract {
+                        this.error(ErrorKind.GEN, "Class constructor can't be abstract", name_range)
                         return
                     }
                     declared_class.constructor_id = method.id
                 } else {
-                    if method_node.is_abstract {
-                        this.error(ErrorKind.GEN, "Can't have a abstract private method use protected instead", method_node.name.range)
+                    if method.is_abstract {
+                        this.error(ErrorKind.GEN, "Can't have a abstract private method use protected instead", name_range)
                         return
                     }
                     declared_class.prop_map[name] = method.id
@@ -1936,7 +1938,7 @@ class TypeChecker {
             if method.is_abstract {
                 continue
             }
-            method.block = this.check_block(method_node.block)
+            method.block = this.check_block(method_node.function.block)
             if this.has_errored() {
                 return
             }
@@ -1944,7 +1946,7 @@ class TypeChecker {
                 if method.method_type.return_type.kind == TypeKind.VOID {
                     method.block.statements << (new ReturnStatement() as Statement)
                 } else {
-                    this.error(ErrorKind.GEN, "Method missing ending return statement", method_node.return_type.range)
+                    this.error(ErrorKind.GEN, "Method missing ending return statement", method_node.function.return_type.range)
                     return
                 }
             }

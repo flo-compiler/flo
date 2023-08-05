@@ -303,18 +303,11 @@ class FunctionDeclarationNode {
     }
 }
 class MethodNode {
-    name: IdentifierToken
-    args: ArgNode[]
-    block: BlockNode
+    function: FunctionDeclarationNode
     access_modifier: ACCESS_ATTR
-    return_type: TypeNode
-    is_static: bool
-    is_abstract: bool
-    constructor(this, name: IdentifierToken){
-        this.name = name
-        this.args = []
-        this.is_static = true
-        this.is_abstract = false
+    constructor(this, function: FunctionDeclarationNode, access_modifier: ACCESS_ATTR){
+        this.function = function
+        this.access_modifier = access_modifier
     }
 }
 
@@ -977,6 +970,10 @@ class Parser {
     private parse_arg(this): ArgNode {
         let arg_node = new ArgNode(this.eat(TokType.IDENTIFER) as IdentifierToken)
         if !this.can_parse() return arg_node
+        if arg_node.name.value == "this" {
+            arg_node.parsed_type = new TypeNode(TypeKind.UNKNOWN, arg_node.name.range)
+            return arg_node
+        }
         if this.current_token.ttype == TokType.COL {
             this.advance()
             arg_node.parsed_type = this.parse_type()
@@ -1014,7 +1011,7 @@ class Parser {
             this.advance()
             fnc_node.return_type = this.parse_type()
         } else {
-            let identifier_tok = new IdentifierToken("void", new TextRange(0, 0, 0, 0, fnc_node.name.range.fid))
+            let identifier_tok = new IdentifierToken("void", this.current_token.range)
             fnc_node.return_type = new RecordTypeNode(identifier_tok, identifier_tok.range)
         }
         this.new_lines()
@@ -1023,39 +1020,6 @@ class Parser {
         } else
             fnc_node.is_external = true
         return fnc_node
-    }
-    private parse_method(this): MethodNode{
-        let method_node = new MethodNode(this.eat(TokType.IDENTIFER) as IdentifierToken)
-        this.eat(TokType.LPAR)
-        this.new_lines()
-        if this.current_token.ttype != TokType.RPAR {
-            if (this.current_token as IdentifierToken).value == "this" {
-                method_node.is_static = false
-                let this_arg = new ArgNode(this.eat(TokType.IDENTIFER) as IdentifierToken)
-                this_arg.parsed_type = new TypeNode(TypeKind.UNKNOWN, this_arg.name.range)
-                method_node.args << this_arg
-            }
-        }
-        if this.current_token.ttype != TokType.RPAR {
-            if !method_node.is_static
-                this.eat(TokType.COMMA)
-            this.parse_args(method_node.args)
-        }
-        this.new_lines()
-        this.eat(TokType.RPAR)
-        if this.current_token.ttype == TokType.COL {
-            this.advance()
-            method_node.return_type = this.parse_type()
-        } else {
-            let identifier_tok = new IdentifierToken("void", new TextRange(0, 0, 0, 0, method_node.name.range.fid))
-            method_node.return_type = new RecordTypeNode(identifier_tok, identifier_tok.range)
-        }
-        this.new_lines()
-        if this.current_token.ttype == TokType.LBRACE {
-            method_node.block = this.parse_block()
-        } else
-            method_node.is_abstract = true
-        return method_node
     }
     private parse_access_modifier(this): ACCESS_ATTR {
         if this.current_token.ttype == TokType.PUBLIC_KW
@@ -1066,7 +1030,6 @@ class Parser {
             return ACCESS_ATTR.PROTECTED
         return ACCESS_ATTR.UNDEF
     }
-    // (private | public | protected)? identider 
     private parse_class_block(this, class_node: ClassDeclarationNode) {
         this.eat(TokType.LBRACE)
         this.new_lines()
@@ -1088,9 +1051,7 @@ class Parser {
                 field.access_modifier = access_modifier
                 class_node.fields << field
             } else if this.peek().ttype == TokType.LPAR {
-                let method = this.parse_method()
-                method.access_modifier = access_modifier
-                class_node.methods << method
+                class_node.methods << new MethodNode(this.parse_function(), access_modifier)
             } else {
                 this.error("Expected ':' or '('")
                 return

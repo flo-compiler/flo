@@ -77,7 +77,7 @@ fnc get_escape_char(char: u8): u8 {
     if (char == 'v') return '\v'
     if (char == '0') return '\0'
     if (char == '\'') return '\''
-    if (char == '\"') return '\"'
+    if (char == '\"') return '"'
     if (char == '\\') return '\\'
     return char
 }
