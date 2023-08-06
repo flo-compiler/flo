@@ -1975,87 +1975,99 @@ class TypeChecker {
         }
         this.current_scope = this.program.get_scope(func.scope).parent
     }
+    private check_array_type(this, array_type_node: ArrayTypeNode): Type {
+        let len_expr = this.check_expression(PrimitiveTypes.uint, array_type_node.length)
+        if this.has_errored() return PrimitiveTypes.unknown
+        if !is_int(len_expr.value_type) {
+            this.error(ErrorKind.GEN, "length has to be an int", array_type_node.length.range)
+            return null
+        }
+        let size_ty = len_expr.value_type as IntType
+        if size_ty.is_signed or size_ty.kind != TypeKind.INT {
+            this.error(ErrorKind.GEN, "length has to be a uint", array_type_node.length.range)
+            return null
+        }
+        if !len_expr.is_constant {
+            this.error(ErrorKind.GEN, "length is a non-constant value", array_type_node.length.range)
+            return null
+        }
+        let length = evaluate_const_int_expression(this.program, len_expr)
+        if length < 0 {
+            this.error(ErrorKind.GEN, "length should be an unsigned", array_type_node.length.range)
+            return null
+        }
+        let element_type = this.check_type(array_type_node.element_type)
+        return new ArrayType(element_type, length as uint)
+    }
+    private check_function_type(this, function_type_node: FunctionTypeNode): Type {
+        let arg_types: Type[] = []
+        for arg in function_type_node.args 
+            arg_types << this.check_type(arg)
+        let return_type = this.check_type(function_type_node.return_type)
+        return new FunctionType(false, arg_types, return_type)
+    }
+    private check_tuple_type(this, tuple_type_node: TupleTypeNode): Type {
+        let tuple_type = new TupleType()
+        for element_type in tuple_type_node.element_types {
+            tuple_type.element_types << this.check_type(element_type)
+        }
+        return tuple_type
+    }
+    private check_record_type(this, record_type_node: RecordTypeNode): Type {
+        let record_identifier = record_type_node.name
+        let name = record_identifier.value
+
+        if record_type_node.generic_args.length > 0 {
+            let types: Type[] = []
+            for arg in record_type_node.generic_args
+                types << this.check_type(arg)
+            if this.has_errored() return null
+            let generic_type = this.create_generic_instance_in_module(name, types)
+            if generic_type != null {
+                return generic_type
+            }
+        }
+
+        let found_type = this.get_type_from_current_scope(name)
+        if found_type.kind == TypeKind.UNKNOWN {
+            this.error(ErrorKind.TYPE, "Undefined type '$name'", record_identifier.range)
+            return null
+        }
+        return found_type
+    }
     private check_type(this, type_node: TypeNode): Type {
         if type_node.kind == TypeKind.PTR
             return new PointerType(this.check_type((type_node as PointerTypeNode).pointee_type))
-        if type_node.kind == TypeKind.ARRAY {
-            let array_node = type_node as ArrayTypeNode
-            let len_expr = this.check_expression(PrimitiveTypes.uint, array_node.length)
-            if this.has_errored() return PrimitiveTypes.unknown
-            if !is_int(len_expr.value_type) {
-                this.error(ErrorKind.GEN, "length has to be an int", array_node.length.range)
-                return null
-            }
-            let size_ty = len_expr.value_type as IntType
-            if size_ty.is_signed or size_ty.kind != TypeKind.INT {
-                this.error(ErrorKind.GEN, "length has to be a uint", array_node.length.range)
-                return null
-            }
-            if !len_expr.is_constant {
-                this.error(ErrorKind.GEN, "length is a non-constant value", array_node.length.range)
-                return null
-            }
-            let length = evaluate_const_int_expression(this.program, len_expr)
-            if length < 0 {
-                this.error(ErrorKind.GEN, "length should be an unsigned", array_node.length.range)
-                return null
-            }
-            let element_type = this.check_type(array_node.element_type)
-            return new ArrayType(element_type, length as uint)
-        }
+        if type_node.kind == TypeKind.ARRAY
+            return this.check_array_type(type_node as ArrayTypeNode)
         if type_node.kind == TypeKind.FNC {
-            let fnc_node = type_node as FunctionTypeNode
-            let arg_types: Type[] = []
-            for arg in fnc_node.args 
-                arg_types << this.check_type(arg)
-            let return_type = this.check_type(fnc_node.return_type)
-            return new FunctionType(false, arg_types, return_type)
+            return this.check_function_type(type_node as FunctionTypeNode)
         } else if type_node.kind == TypeKind.TUPLE {
-            let tuple_type_node = type_node as TupleTypeNode
-            let tuple_type = new TupleType()
-            for element_type in tuple_type_node.element_types {
-                tuple_type.element_types << this.check_type(element_type)
-            }
-            return tuple_type
+            return this.check_tuple_type(type_node as TupleTypeNode)
         }
         if type_node.kind == TypeKind.RECORD {
-            let record_type = type_node as RecordTypeNode
-            let types: Type[] = []
-            let identifer_tok = record_type.name
-            let name = identifer_tok.value
-            if record_type.generic_args.length > 0 {
-                for arg in record_type.generic_args
-                    types << this.check_type(arg)
-                if this.has_errored() return null
-                let generic_type = this.create_generic_instance_in_module(identifer_tok.value, types)
-                if generic_type != null {
-                    return generic_type
-                }
-            }
-            if name == "bool" return PrimitiveTypes.bool
-            if name == "u4" return PrimitiveTypes.u4
-            if name == "u8" return PrimitiveTypes.u8
-            if name == "u16" return PrimitiveTypes.u16
-            if name == "u32" return PrimitiveTypes.u32
-            if name == "u64" return PrimitiveTypes.u64
-            if name == "u128" return PrimitiveTypes.u128
-            if name == "uint" return PrimitiveTypes.uint
-            if name == "i4" return PrimitiveTypes.i4
-            if name == "i8" return PrimitiveTypes.i8
-            if name == "i16" return PrimitiveTypes.i16
-            if name == "i32" return PrimitiveTypes.i32
-            if name == "i64" return PrimitiveTypes.i64
-            if name == "i128" return PrimitiveTypes.i128
-            if name == "int" return PrimitiveTypes.int
-            if name == "f32" return PrimitiveTypes.f32
-            if name == "f64" return PrimitiveTypes.f64
-            if name == "void" return PrimitiveTypes.void
-            let found_type = this.get_type_from_current_scope(identifer_tok.value)
-            if found_type.kind == TypeKind.UNKNOWN {
-                this.error(ErrorKind.TYPE, "Undefined type '$name'", identifer_tok.range)
-                return null
-            }
-            return found_type
+            let record_type_node = type_node as RecordTypeNode
+            let name_value = record_type_node.name.value
+
+            if name_value == "bool" return PrimitiveTypes.bool
+            if name_value == "u4" return PrimitiveTypes.u4
+            if name_value == "u8" return PrimitiveTypes.u8
+            if name_value == "u16" return PrimitiveTypes.u16
+            if name_value == "u32" return PrimitiveTypes.u32
+            if name_value == "u64" return PrimitiveTypes.u64
+            if name_value == "u128" return PrimitiveTypes.u128
+            if name_value == "uint" return PrimitiveTypes.uint
+            if name_value == "i4" return PrimitiveTypes.i4
+            if name_value == "i8" return PrimitiveTypes.i8
+            if name_value == "i16" return PrimitiveTypes.i16
+            if name_value == "i32" return PrimitiveTypes.i32
+            if name_value == "i64" return PrimitiveTypes.i64
+            if name_value == "i128" return PrimitiveTypes.i128
+            if name_value == "int" return PrimitiveTypes.int
+            if name_value == "f32" return PrimitiveTypes.f32
+            if name_value == "f64" return PrimitiveTypes.f64
+            if name_value == "void" return PrimitiveTypes.void
+            else return this.check_record_type(record_type_node)
         }
         return PrimitiveTypes.unknown
     }
@@ -2374,8 +2386,8 @@ class TypeChecker {
         return null
     }
     private check_typecast_expr(this, type_expr_node: TypeCastExpressionNode): Expression {
-        let exp = this.check_expression(PrimitiveTypes.unknown, type_expr_node.expression)
         let dest_ty = this.check_type(type_expr_node.bound_type)
+        let exp = this.check_expression(dest_ty, type_expr_node.expression)
         if this.has_errored() return null
         let val_ty = exp.value_type
         /* TODO:
