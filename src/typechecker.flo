@@ -12,7 +12,6 @@ class Type {
         this.kind = kind
     }
 }
-
 class IntType(Type){
     is_signed: bool
     constructor(this, ty: TypeKind, is_signed: bool){
