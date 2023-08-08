@@ -925,7 +925,6 @@ class Parser {
         return return_node
     }
     private parse_statement(this): StatementNode {
-        let start_range = this.current_token.range
         if this.current_token.ttype == TokType.IF_KW 
             return this.parse_if_statement()
         else if this.current_token.ttype == TokType.WHILE_KW
@@ -934,17 +933,12 @@ class Parser {
             return this.parse_for_statement()
         else if this.current_token.ttype == TokType.RETURN_KW
             return this.parse_return_statement()
-        else if this.current_token.ttype == TokType.LET_KW 
+        else if (this.current_token.ttype == TokType.LET_KW) or (this.current_token.ttype == TokType.CONST_KW)
             return this.parse_variable_declaration_statement(this.eat(this.current_token.ttype))
-        else if this.current_token.ttype == TokType.CONST_KW
-            return this.parse_const_declaration_statement(this.eat(this.current_token.ttype))
-        else if this.current_token.ttype == TokType.CONTINUE_KW {
-            this.advance()
-            return new StatementNode(StatementKind.CONTINUE, start_range)
-        } else if this.current_token.ttype == TokType.BREAK_KW {
-            this.advance()
-            return new StatementNode(StatementKind.BREAK, start_range)
-        }
+        else if this.current_token.ttype == TokType.CONTINUE_KW
+            return new StatementNode(StatementKind.CONTINUE, this.eat(this.current_token.ttype).range)
+        else if this.current_token.ttype == TokType.BREAK_KW
+            return new StatementNode(StatementKind.BREAK, this.eat(this.current_token.ttype).range)
         return this.parse_expression()
     }
     private parse_block(this): BlockNode {
@@ -1083,14 +1077,15 @@ class Parser {
         return class_node
     }
     private parse_variable_declaration_statement(this, kw_token: Token): VarDeclarationStatement {
-        let var_decl_node = new VarDeclarationStatement(false, kw_token.range)
+        let is_const = kw_token.ttype == TokType.CONST_KW
+        let var_decl_node = new VarDeclarationStatement(is_const, kw_token.range)
         var_decl_node.var_name =  this.eat(TokType.IDENTIFER) as IdentifierToken
         if this.current_token.ttype == TokType.COL {
             this.advance()
             var_decl_node.var_type = this.parse_type()
         }
         let end_range = this.current_token.range
-        if this.current_token.ttype == TokType.EQ {
+        if (this.current_token.ttype == TokType.EQ) or (is_const) {
             this.advance()
             var_decl_node.value = this.parse_expression()
             end_range = var_decl_node.value.range
@@ -1105,18 +1100,6 @@ class Parser {
         }
         var_decl_node.range = TextRange.merge(var_decl_node.range, end_range)
         return var_decl_node
-    }
-    private parse_const_declaration_statement(this, kw_token: Token): VarDeclarationStatement {
-        let const_decl_node = new VarDeclarationStatement(true, kw_token.range)
-        const_decl_node.var_name = this.eat(TokType.IDENTIFER) as IdentifierToken
-        if this.current_token.ttype == TokType.COL {
-            this.advance()
-            const_decl_node.var_type = this.parse_type()
-        }
-        this.eat(TokType.EQ)
-        const_decl_node.value = this.parse_expression()
-        const_decl_node.range = TextRange.merge(const_decl_node.range, const_decl_node.value.range)
-        return const_decl_node
     }
     private parse_import_clause(this): ImportClause {
         let import_clause = new ImportClause(this.eat(TokType.IDENTIFER) as IdentifierToken)
@@ -1180,9 +1163,7 @@ class Parser {
                 module_node.enums << parser.parse_enum()
             else if token.ttype == TokType.IMPORT_KW
                 module_node.imports << parser.parse_import()
-            else if token.ttype == TokType.CONST_KW
-                module_node.vars << parser.parse_const_declaration_statement(token)
-            else if token.ttype == TokType.LET_KW
+            else if (token.ttype == TokType.CONST_KW) or (token.ttype == TokType.LET_KW)
                 module_node.vars << parser.parse_variable_declaration_statement(token)
             else if tok_is_type_identifier(token) 
                 module_node.type_aliases << parser.parse_type_alias()
