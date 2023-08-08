@@ -2,12 +2,22 @@
 Flo is a programming language designed to be general-purpose with a natural feel when used and fast when run. Like all other programming languages, it is a tool to help programmers to write fast and efficient computer instructions. Syntactically and Semantically, it resembles a lot of modern interpreted high-level languages.
 
 ## Installation
-- Requires `llvm-15` installed.
+> **WARNING**:  Requires `llvm` installed.
+1. Clone the repo
 ```bash
 git clone https://github.com/flo-compiler/flo
+```
+2. Build the compiler
+```bash
 cd flo
-make
-make install # install to path.
+mkdir build
+cd build
+cmake ..
+cmake --build .
+```
+3. To be able to run `flo` from anywhere you want to add it to your path via .bashrc
+```bash
+export PATH=$PATH:path/where/you/have/build/flo
 ```
 ## Usage
 ```bash
