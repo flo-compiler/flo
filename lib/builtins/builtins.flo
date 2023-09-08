@@ -251,9 +251,9 @@ class Array <T> {
         }
     }
     public find(this, search: T): int {
-        let i = this.length
+        let i = this.length as int
         while (i-- > 0) {
-            if this.buffer[i] == search return i as int
+            if this.buffer[i] == search return i
         }
         return -1
     }
@@ -291,8 +291,7 @@ class Map<T, U> {
     constructor(this){
         let initial_capacity = 256
         this.entries = new MapEntry<T, U>*(initial_capacity)
-        for elem in 0..initial_capacity {
-            let i = elem as uint
+        for let i = 0; i < initial_capacity; i++ {
             this.entries[i] = null
         }
         this.size = initial_capacity
@@ -301,8 +300,7 @@ class Map<T, U> {
     private hash_fnc(this, key: T): uint {
         let str = "$key"
         let hash = 0
-        for elem in 0..str.length {
-            let i = elem as uint
+        for let i = 0; i < str.length; i++ {
             hash = (hash << 1) + str.get_byte(i)
         }
         del str
@@ -315,12 +313,10 @@ class Map<T, U> {
         this.size *= 2
         this.length = 0
         this.entries = this.entries.resize(this.size)
-        for elem in 0..this.size {
-            let i = elem as uint
+        for let i = 0; i < this.size; i++ {
             this.entries[i] = null
         }
-        for elem in 0..old_size {
-            let i = elem as uint
+        for let i = 0; i < old_size; i++ {
             let entry = old_entries[i]
             if (entry != null) this.__setitem__(entry.key, entry.value)
         }

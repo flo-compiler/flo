@@ -6,8 +6,7 @@ fnc resize_array(arr: NO[], n: uint){
 }
 fnc main(): int {
     let arr: NO[] = []
-    for elem in 0..64 {
-        let i = elem * 2 as uint 
+    for let i = 0; i < 64; i+=2 { 
         resize_array(arr, i)
         arr[i] = null
     } 

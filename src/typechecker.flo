@@ -2,7 +2,7 @@ import ARCH_WORD_SIZE in "@sys/lib"
 import "@path/path"
 import "types"
 import Compiler in "compiler"
-import TextRange in "utils"
+import panic, TextRange in "utils"
 import FloError, ErrorKind in "error"
 import Lexer, IdentifierToken in "lexer"
 import "parser"
@@ -423,15 +423,27 @@ class VarDeclaration (Statement) {
         this.is_static = false
     }
 }
-class ForStatement (Statement) {
+class ForInStatement (Statement) {
     it_var: VarDeclaration
     iterator: Expression
     block: Block
     constructor(this, it_var: VarDeclaration, iterator: Expression, block: Block){
-        this.super(StatementKind.FOR)
+        this.super(StatementKind.FOR_IN)
         this.it_var = it_var
         this.iterator = iterator
         this.block = block
+    }
+}
+class ForStatement (Statement) {
+    initialization: Statement
+    condition: Expression
+    update: Expression
+    block: Block
+    constructor(this){
+        this.super(StatementKind.FOR)
+        this.initialization = null
+        this.condition = null
+        this.update = null
     }
 }
 class WhileStatement (Statement) {
@@ -1144,8 +1156,7 @@ class TypeChecker {
             let t2_fnc_type = t2 as FunctionType
             if t1_fnc_type.arg_types.length != t2_fnc_type.arg_types.length return false
             if !this.types_are_eq(t2_fnc_type.return_type, t1_fnc_type.return_type) return false
-            for elem in 0..t1_fnc_type.arg_types.length {
-                let i = elem as uint
+            for let i = 0; i < t1_fnc_type.arg_types.length; i++ {
                 if !this.types_are_eq(t1_fnc_type.arg_types[i], t2_fnc_type.arg_types[i]) return false
             }
         }
@@ -1160,8 +1171,7 @@ class TypeChecker {
             let t1_element_types_length =  t1_tup_type.element_types.length
             if t1_element_types_length != t2_tup_type.element_types.length 
                 return false
-            for elem in 0..t1_element_types_length {
-                let i = elem as uint
+            for let i = 0; i < t1_element_types_length; i++ {
                 if !this.types_are_eq(t1_tup_type.element_types[i], t2_tup_type.element_types[i])
                     return false
             }
@@ -1197,8 +1207,7 @@ class TypeChecker {
             let t2_gen_type = t2 as GenericType
             if t1_gen_type.name != t2_gen_type.name return false
             if t1_gen_type.arg_types.length != t2_gen_type.arg_types.length return false
-            for elem in 0..t1_gen_type.arg_types.length {
-                let i = elem as uint
+            for let i = 0; i < t1_gen_type.arg_types.length; i++ {
                 if (!this.types_are_eq(t1_gen_type.arg_types[i], t2_gen_type.arg_types[i])) return false
             }
         }
@@ -1371,15 +1380,13 @@ class TypeChecker {
         }
         if this.has_errored() return module
         // We Now check bodies
-        for elem in 0..module_ast.enums.length {
-            let i = elem as uint
+        for let i = 0; i < module_ast.enums.length; i++ {
             this.check_enum_body(module.enums[i], module_ast.enums[i])
         }
         for class_ in module_ast.classes {
             this.check_class_body(class_)
         }
-        for elem in 0..module_ast.functions.length {
-            let i = elem as uint
+        for let i = 0; i < module_ast.functions.length; i++ {
            this.check_function_body(module.functions[i], module_ast.functions[i])
         }
         if this.module_contains_generics and this.current_scope.module_id != 0 {
@@ -1401,8 +1408,7 @@ class TypeChecker {
         this.switch_to_generic_module()
         let generic_scope = this.create_child_scope_within_current_scope()
         let param_strings = ""
-        for elem in 0..generic_params.length {
-            let i = elem as uint
+        for let i = 0; i < generic_params.length; i++ {
             let param_name = generic_params[i].name.value
             let param_type: Type = types[i].kind == TypeKind.RESOLVED_GENERIC ? (types[i] as GenericType).instantiated_type : types[i]
             param_strings += "$(this.dump_type(param_type))_"
@@ -1679,8 +1685,7 @@ class TypeChecker {
             }
         }
         let next_enum_value: u64 = 0 // What about negatives?
-        for elem in 0..enum_node.fields.length {
-            let i = elem as uint
+        for let i = 0; i < enum_node.fields.length; i++ {
             let enum_node_field = enum_node.fields[i]
             let enum_name = enum_node_field.name.value
             let enum_field = new EnumField(enum_name)
@@ -1712,8 +1717,7 @@ class TypeChecker {
     }
     private declare_class_fields(this, declared_class: Class, class_node: ClassDeclarationNode){
         let current_field_offset = declared_class.inherited_fields_num
-        for elem in 0..class_node.fields.length {
-            let i = elem as uint
+        for let i = 0; i < class_node.fields.length; i++ {
             let field_node = class_node.fields[i]
             let field = new ClassField()
             field.name = field_node.name.value
@@ -1780,8 +1784,7 @@ class TypeChecker {
     private declare_class_methods(this, declared_class: Class, class_node: ClassDeclarationNode){
         //TODO: Need to refactor
         let object_type = new ObjectType(declared_class.id)
-        for elem in 0..class_node.methods.length {
-            let i = elem as uint
+        for let i = 0; i < class_node.methods.length; i++ {
             let method_node = class_node.methods[i]
             let method = new ClassMethod(method_node.function.name.range)
             let name = method_node.function.name.value
@@ -1927,8 +1930,7 @@ class TypeChecker {
             }
         }
         // Class Methods Body
-        for elem in 0..declared_class.methods.length {
-            let i = elem as uint
+        for let i = 0; i < declared_class.methods.length; i++ {
             let prev_method = this.current_method
             let method = declared_class.methods[i]
             this.current_method = method.id
@@ -2078,8 +2080,7 @@ class TypeChecker {
         if expected_type.kind == TypeKind.TUPLE {
             expected_tuple_type = expected_type as TupleType
         }
-        for elem in 0..tuple_node.elements.length {
-            let i = elem as uint
+        for let i = 0; i < tuple_node.elements.length; i++ {
             let expected_element_type = PrimitiveTypes.unknown
             if expected_tuple_type != null {
                 if i < expected_tuple_type.element_types.length {
@@ -2699,8 +2700,7 @@ class TypeChecker {
     private fill_in_call_args(this, fnc_ty: FunctionType, func_args: FunctionArg[], args: ExpressionNode[]): Expression[] {
         let called_args: Expression[] = []
         let offset = fnc_ty.has_implicit_this ? 1 : 0
-        for elem in 0..args.length {
-            let i = elem as uint
+        for let i = 0; i < args.length; i++ {
             let fnc_arg_idx = i + offset
             let expected_type = fnc_ty.arg_types.length > fnc_arg_idx ? fnc_ty.arg_types[fnc_arg_idx] : PrimitiveTypes.unknown
             called_args << this.check_expression(expected_type, args[i])
@@ -2724,14 +2724,13 @@ class TypeChecker {
         if fnc_arg_types_len != args.length {
             return -1
         }
-        for elem in 0..args.length {
-            let i = elem as uint
+        for let i = 0; i < args.length; i++ {
             if !this.types_are_eq(func_ty.arg_types[i + check_start_offset], args[i].value_type) {
-                return (i as int)
+                return i as int
             }
         }
         return -2
-    }
+    }   
     private check_call_expr(this, expected_type: Type, call_expr_node: CallExpressionNode): CallExpression {
         let called = this.check_expression(PrimitiveTypes.unknown, call_expr_node.callee)
         if this.has_errored() return null
@@ -2768,8 +2767,7 @@ class TypeChecker {
         let uint_ty = PrimitiveTypes.uint
         let unknown_ty = PrimitiveTypes.unknown
         
-        for elem in 0..args.length {
-            let i = elem as uint
+        for let i = 0; i < args.length; i++ {
             let expected_type = is_mem_grp1 and i == 1 ? unknown_ty : intrinsic_call.args[0].value_type
             if (intrinsic_func == Intrinsics.MEMCPY or intrinsic_func == Intrinsics.MEMMOVE) and (i == 1) {
                 expected_type = uint_ty
@@ -3018,23 +3016,23 @@ class TypeChecker {
         let var = this.declare_var_within_current_scope(name, value, var_type, var_decl_node.is_const)
         return new VarDeclaration(var_decl_node.var_name.range, name, var.var_id)
     }
-    private check_for_statement(this, for_stmt_node: ForStatementNode): ForStatement {
+    private check_for_in_statement(this, for_in_stmt_node: ForInStatementNode): ForInStatement {
         let for_scope = this.create_child_scope_within_current_scope()
         this.current_scope = for_scope.id
         let prev_in_loop = this.in_loop
-        let iterator = this.check_expression(PrimitiveTypes.unknown, for_stmt_node.iterator)
+        let iterator = this.check_expression(PrimitiveTypes.unknown, for_in_stmt_node.iterator)
         if this.has_errored() return null
         if !is_object(iterator.value_type) {
-            this.error(ErrorKind.TYPE, "Iterator has to be an object", for_stmt_node.iterator.range)
+            this.error(ErrorKind.TYPE, "Iterator has to be an object", for_in_stmt_node.iterator.range)
             return null
         }
         let iterator_class = this.program.get_class_from_type(iterator.value_type)
         let iter_prop_id = iterator_class.prop_map["__iter__"]
         if iter_prop_id == null {
-            this.error(ErrorKind.TYPE, "Iterator type has to have __iter__ as property", for_stmt_node.iterator.range)
+            this.error(ErrorKind.TYPE, "Iterator type has to have __iter__ as property", for_in_stmt_node.iterator.range)
             return null
         }
-        let iter_item_name =  for_stmt_node.it_name.value
+        let iter_item_name =  for_in_stmt_node.it_name.value
         if this.has_errored() return null
         let iteratable_ty = (this.program.get_class_prop_type(iter_prop_id) as FunctionType).return_type
         let iteratable_class = this.program.get_class_from_type(iteratable_ty)
@@ -3042,8 +3040,25 @@ class TypeChecker {
         let iter_item_type = (this.program.get_class_prop_type(next_it_prop_id) as FunctionType).return_type
         this.in_loop = true
         let var = this.declare_var_within_current_scope(iter_item_name, null, iter_item_type, false)
-        let for_block = this.check_block(for_stmt_node.block, for_scope, false)
-        let for_stmt = new ForStatement(new VarDeclaration(for_stmt_node.it_name.range, iter_item_name, var.var_id), iterator, for_block)
+        let for_block = this.check_block(for_in_stmt_node.block, for_scope, false)
+        let for_in_stmt = new ForInStatement(new VarDeclaration(for_in_stmt_node.it_name.range, iter_item_name, var.var_id), iterator, for_block)
+        this.in_loop = prev_in_loop
+        return for_in_stmt
+    }
+    private check_for_statement(this, for_stmt_node: ForStatementNode): ForStatement {
+        let for_stmt = new ForStatement()
+        let for_scope = this.create_child_scope_within_current_scope()
+        this.current_scope = for_scope.id
+        let prev_in_loop = this.in_loop
+        this.in_loop = true
+        if for_stmt_node.initialization != null
+            for_stmt.initialization = this.check_statement(for_stmt_node.initialization)
+        if for_stmt_node.condition != null
+            for_stmt.condition = this.check_condition(for_stmt_node.condition)
+        if for_stmt_node.update != null
+            for_stmt.update = this.check_expression(PrimitiveTypes.unknown, for_stmt_node.update)
+        
+        for_stmt.block = this.check_block(for_stmt_node.block, for_scope, false)
         this.in_loop = prev_in_loop
         return for_stmt
     }
@@ -3096,6 +3111,8 @@ class TypeChecker {
             return this.check_var_declaration(stmt_node as VarDeclarationStatement)
         if stmt_node.kind == StatementKind.FOR
             return this.check_for_statement(stmt_node as ForStatementNode)
+        if stmt_node.kind == StatementKind.FOR_IN
+            return this.check_for_in_statement(stmt_node as ForInStatementNode)
         if stmt_node.kind == StatementKind.WHILE
             return this.check_while_statment(stmt_node as WhileStatementNode)
         if stmt_node.kind == StatementKind.CONTINUE
@@ -3106,6 +3123,7 @@ class TypeChecker {
             return this.check_can_return((stmt_node as ReturnStatementNode))
         if stmt_node.kind == StatementKind.EXPRESSION
             return this.check_expression(PrimitiveTypes.unknown, stmt_node as ExpressionNode)
+        panic("Unknown statement kind")
         return null
     }
     private check_block(this, block_node: BlockNode, block_scope: Scope = null, yields: bool = false): Block {

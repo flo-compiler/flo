@@ -22,7 +22,6 @@ class RecordTypeNode (TypeNode) {
         this.super(TypeKind.RECORD, range)
         this.name = name
         this.generic_args = []
-        
     }
 }
 class FunctionTypeNode (TypeNode) {
@@ -251,15 +250,28 @@ class WhileStatementNode (StatementNode) {
         this.super(StatementKind.WHILE, range)
     }
 }
-class ForStatementNode (StatementNode) {
+class ForInStatementNode (StatementNode) {
     it_name: IdentifierToken
     iterator: ExpressionNode
     block: BlockNode
     constructor(this, range: TextRange){
         this.it_name = null
         this.iterator = null
+        this.super(StatementKind.FOR_IN, range)
+    }
+}
+class ForStatementNode (StatementNode) {
+    initialization: StatementNode
+    condition: ExpressionNode
+    update: ExpressionNode
+    block: BlockNode
+    constructor(this, range: TextRange){
+        this.initialization = null
+        this.condition = null
+        this.update = null
         this.super(StatementKind.FOR, range)
     }
+
 }
 class ReturnStatementNode (StatementNode) {
     value: ExpressionNode
@@ -455,6 +467,11 @@ class Parser {
                 this.error("Expected '->'")
         }
         return new Token(TokType.EOF, current_token.range)
+    }
+    private eat_current(this): Token {
+        let current_token = this.current_token
+        this.advance()
+        return current_token
     }
     private new_lines(this) {
         while this.current_token.ttype == TokType.LN and this.can_parse()
@@ -902,10 +919,29 @@ class Parser {
         while_node.block = this.parse_block()
         return while_node
     }
-    private parse_for_statement(this): ForStatementNode {
-        let for_node = new ForStatementNode(this.current_token.range)
+    private parse_for_loop(this, range: TextRange): StatementNode {
+        let for_node = new ForStatementNode(range)
+        if (this.current_token.ttype != TokType.SEMI_COL)
+            for_node.initialization = this.parse_statement()
+
+        this.eat(TokType.SEMI_COL)
+        if (this.current_token.ttype != TokType.SEMI_COL)
+            for_node.condition = this.parse_expression()
+
+        this.eat(TokType.SEMI_COL)
+        if (this.current_token.ttype != TokType.RBRACE and this.current_token.ttype != TokType.LN)
+            for_node.update = this.parse_expression()
+        if this.can_parse()
+            for_node.block = this.parse_block()
+        return for_node
+    }
+    private parse_for_statement(this): StatementNode {
+        let range = this.current_token.range
         this.advance()
-        if this.current_token
+        if (this.current_token.ttype != TokType.IDENTIFER) or (this.peek().ttype != TokType.IN_KW){
+            return this.parse_for_loop(range)
+        }
+        let for_node = new ForInStatementNode(range)
         for_node.it_name = this.eat(TokType.IDENTIFER) as IdentifierToken
         this.eat(TokType.IN_KW)
         for_node.iterator = this.parse_expression()
@@ -934,11 +970,11 @@ class Parser {
         else if this.current_token.ttype == TokType.RETURN_KW
             return this.parse_return_statement()
         else if (this.current_token.ttype == TokType.LET_KW) or (this.current_token.ttype == TokType.CONST_KW)
-            return this.parse_variable_declaration_statement(this.eat(this.current_token.ttype))
+            return this.parse_variable_declaration_statement(this.eat_current())
         else if this.current_token.ttype == TokType.CONTINUE_KW
-            return new StatementNode(StatementKind.CONTINUE, this.eat(this.current_token.ttype).range)
+            return new StatementNode(StatementKind.CONTINUE, this.eat_current().range)
         else if this.current_token.ttype == TokType.BREAK_KW
-            return new StatementNode(StatementKind.BREAK, this.eat(this.current_token.ttype).range)
+            return new StatementNode(StatementKind.BREAK, this.eat_current().range)
         return this.parse_expression()
     }
     private parse_block(this): BlockNode {
@@ -1154,18 +1190,18 @@ class Parser {
         let module_node = new ModuleAST()
         parser.new_lines()
         while parser.can_parse() {
-            let token = parser.eat(parser.current_token.ttype)
-            if token.ttype == TokType.FNC_KW
+            let current_token = parser.eat_current()
+            if current_token.ttype == TokType.FNC_KW
                 module_node.functions << parser.parse_function()
-            else if token.ttype == TokType.CLASS_KW
+            else if current_token.ttype == TokType.CLASS_KW
                 module_node.classes << parser.parse_class()
-            else if token.ttype == TokType.ENUM_KW
+            else if current_token.ttype == TokType.ENUM_KW
                 module_node.enums << parser.parse_enum()
-            else if token.ttype == TokType.IMPORT_KW
+            else if current_token.ttype == TokType.IMPORT_KW
                 module_node.imports << parser.parse_import()
-            else if (token.ttype == TokType.CONST_KW) or (token.ttype == TokType.LET_KW)
-                module_node.vars << parser.parse_variable_declaration_statement(token)
-            else if tok_is_type_identifier(token) 
+            else if (current_token.ttype == TokType.CONST_KW) or (current_token.ttype == TokType.LET_KW)
+                module_node.vars << parser.parse_variable_declaration_statement(current_token)
+            else if tok_is_type_identifier(current_token) 
                 module_node.type_aliases << parser.parse_type_alias()
             else {
                 parser.error("Illegal expression expected: 'fnc', 'class', 'type', 'enum', 'import', 'const' or 'let'")

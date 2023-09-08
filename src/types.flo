@@ -3,6 +3,7 @@ enum TokType {
     ILLEGAL
     COL
     COMMA
+    SEMI_COL
     MULT
     MINUS
     PLUS
@@ -103,6 +104,7 @@ enum StatementKind {
     IF
     VAR
     FOR
+    FOR_IN
     WHILE
     CONTINUE
     BREAK

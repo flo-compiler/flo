@@ -1,0 +1,9 @@
+fnc main(): uint {
+    const count = 5
+    let sum = 0
+    for let i = 0; i < count; i++ {
+        sum += i
+    }
+    let expected_sum = count * (count - 1) / 2
+    return expected_sum - sum
+}

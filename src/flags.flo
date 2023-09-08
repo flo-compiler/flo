@@ -46,8 +46,7 @@ class FlagBool(Flag) {
 }
 fnc parse_flags(argc: int, argv: u8**): String {
     let arg: String = null
-    let i = 0
-    while (++i < argc) {
+    for let i = 1; i < argc; i++ {
         let raw_flag = argv[i]
         if (raw_flag[0] != '-'){
             if (arg == null)
@@ -55,7 +54,7 @@ fnc parse_flags(argc: int, argv: u8**): String {
             continue
         } 
         let argname = String.from_cstring(raw_flag + 1)
-        for j in 0..flags_length {
+        for let j = 0; j < flags_length; j++ {
             let flag = flags_buffer[j]
             if (flag.name == argname) {
                 if (flag.type == FlagType.BOOL) {
