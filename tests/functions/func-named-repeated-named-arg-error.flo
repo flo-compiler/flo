@@ -1,0 +1,7 @@
+//@expect: return_code=1
+fnc say_hello(name: String){
+    println("Hello $name!")
+}
+fnc main(){
+    say_hello(name: "Tom", name: "John")
+}

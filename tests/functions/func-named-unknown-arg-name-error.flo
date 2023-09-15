@@ -1,0 +1,10 @@
+//@expect: return_code=1
+fnc say_hello_with_number(name: String, number: int){
+    println("Hello $name and your number is $number")
+}
+fnc main(){    
+    say_hello_with_number(
+        number: 69,
+        unknown: "Tom"
+    )
+}

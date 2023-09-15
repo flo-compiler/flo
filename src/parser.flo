@@ -156,9 +156,16 @@ class MemberExpressionNode (ExpressionNode) {
         this.member = member
     }
 }
+class CallExpressionArg {
+    name: IdentifierToken
+    value: ExpressionNode
+    constructor(this){
+        this.name = null
+    }
+}
 class CallExpressionNode (ExpressionNode) {
     callee: ExpressionNode
-    args: ExpressionNode[]
+    args: CallExpressionArg[]
     constructor(this, callee: ExpressionNode, range: TextRange) {
         this.super(ExpressionKind.CALL, range)
         this.callee = callee
@@ -194,7 +201,7 @@ class TernaryExpressionNode (ExpressionNode) {
         this.cond = cond
         this.is_true = is_true
         this.is_false = is_false
-        this.range = TextRange.merge(is_true.range, is_false.range)
+        this.range = TextRange.merge(cond.range, is_false.range)
     }
 }
 class UnaryExpressionNode (ExpressionNode) {
@@ -640,7 +647,20 @@ class Parser {
     private parse_call_expression(this, expression: ExpressionNode): CallExpressionNode {
         this.eat(TokType.LPAR)
         let call_expression = new CallExpressionNode(expression, this.current_token.range)
-        this.parse_expression_list(call_expression.args, TokType.RPAR)
+        this.new_lines()
+        while(this.current_token.ttype != TokType.RPAR and this.can_parse()){
+            this.new_lines()
+            let arg = new CallExpressionArg()
+            if (this.current_token.ttype == TokType.IDENTIFER and this.peek().ttype == TokType.COL){
+                arg.name = this.eat(TokType.IDENTIFER) as IdentifierToken
+                this.eat(TokType.COL)
+            }
+            arg.value = this.parse_expression()
+            this.new_lines()
+            call_expression.args << arg
+            if (this.current_token.ttype == TokType.RPAR) break
+            this.eat(TokType.COMMA)
+        }
         call_expression.range = TextRange.merge(expression.range, this.eat(TokType.RPAR).range)
         return call_expression
     }

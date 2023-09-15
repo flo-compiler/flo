@@ -1805,7 +1805,7 @@ class TypeChecker {
                     args_num = 3
                 }
                 if method_node.function.args.length != args_num {
-                    this.error(ErrorKind.GEN, "Expected $args_num arguments for binary operator overload $name but got $(method_node.function.args.length)", name_range)
+                    this.error(ErrorKind.GEN, "Expected $args_num parameters for binary operator overload $name but got $(method_node.function.args.length)", name_range)
                     return
                 }
                 if method.is_static {
@@ -2445,7 +2445,7 @@ class TypeChecker {
         }
         let constructor = obj_class.methods[field_id.id] 
         let construct_type = constructor.method_type
-        let checked_args = this.fill_in_call_args(construct_type, constructor.args, args)
+        let checked_args = this.fill_in_default_call_args(construct_type, constructor.args, args)
         if this.has_errored() return null
         let index = this.check_function_call_args_match(construct_type, checked_args)
         if index >= -1 {
@@ -2697,7 +2697,7 @@ class TypeChecker {
         }
         return null
     }
-    private fill_in_call_args(this, fnc_ty: FunctionType, func_args: FunctionArg[], args: ExpressionNode[]): Expression[] {
+    private fill_in_default_call_args(this, fnc_ty: FunctionType, func_args: FunctionArg[], args: ExpressionNode[]): Expression[] {
         let called_args: Expression[] = []
         let offset = fnc_ty.has_implicit_this ? 1 : 0
         for let i = 0; i < args.length; i++ {
@@ -2730,7 +2730,84 @@ class TypeChecker {
             }
         }
         return -2
-    }   
+    } 
+    private position_args_by_name(this, func_ty: FunctionType, func_args: FunctionArg[], args: CallExpressionArg[]): ExpressionNode[] {
+        let call_args: ExpressionNode[] = []
+        let non_labeled_args: ExpressionNode[] = []
+        let start = func_ty.has_implicit_this ? 1 : 0
+        for let i = start; i < func_args.length; i++ {
+            call_args << null
+        }
+        for arg in args {
+            if (arg.name == null) {
+                non_labeled_args << arg.value
+                continue
+            }
+
+            let arg_name_found = false
+            for let i = start; i < func_args.length; i++ {
+                if (func_args[i].name == arg.name.value) {
+                    arg_name_found = true
+                    if (call_args[i] == null){
+                        call_args[i] = arg.value
+                    } else {
+                        this.error(ErrorKind.NAME, "Repeated named argument '$(arg.name.value)' on function call", arg.name.range)
+                        return call_args
+                    }
+                    break
+                }
+            }
+            if (!arg_name_found){
+                this.error(ErrorKind.NAME, "Unknown named argument '$(arg.name.value)' on function call", arg.name.range)
+                return call_args
+            }
+        }
+        let last_index = 0
+        for non_labeled_arg in non_labeled_args {
+            for last_index; last_index < call_args.length; last_index++ {
+                if (call_args[last_index] == null) {
+                    call_args[last_index] = non_labeled_arg
+                    break
+                }
+            }
+        }
+        del non_labeled_args
+        return call_args
+    }
+    private get_call_expression_node_list(this, args: CallExpressionArg[]): ExpressionNode[] {
+        let call_args: ExpressionNode[] = []
+        for arg in args {
+            if (arg.name != null){
+                this.error(ErrorKind.NAME, "Function doesn't have a named parameter", arg.name.range)
+                return call_args
+            }
+            call_args << arg.value
+        }
+        return call_args
+    }
+    private check_and_fill_default_args(this, func_ty: FunctionType, func_args: FunctionArg[], call_args: ExpressionNode[]): Expression[] {
+        let checked_call_args: Expression[] = []
+        let offset = func_ty.has_implicit_this ? 1 : 0
+        for let i = 0; i < call_args.length; i++ {
+            let fnc_arg_idx = i + offset
+            let expected_type = func_ty.arg_types.length > fnc_arg_idx ? func_ty.arg_types[fnc_arg_idx] : PrimitiveTypes.unknown
+            if (call_args[i] == null){
+                if (func_args != null) {
+                    if (fnc_arg_idx < func_args.length) {
+                        if (func_args[fnc_arg_idx].default != null) {
+                            checked_call_args << func_args[fnc_arg_idx].default
+                            continue
+                        }
+                    }
+                }
+                panic("Cannot fill default value of argument $i for function call")
+            } else {
+                checked_call_args << this.check_expression(expected_type, call_args[i])
+            }
+            if this.has_errored() return checked_call_args
+        }
+        return checked_call_args
+    }
     private check_call_expr(this, expected_type: Type, call_expr_node: CallExpressionNode): CallExpression {
         let called = this.check_expression(PrimitiveTypes.unknown, call_expr_node.callee)
         if this.has_errored() return null
@@ -2744,18 +2821,20 @@ class TypeChecker {
         //TODO: Check for generic functions.
         let func_ty = called.value_type as FunctionType
         let func_args = this.get_func_args_from_expression(called)
-        let args = this.fill_in_call_args(func_ty, func_args, call_expr_node.args)
+        let call_args = func_args == null ? this.get_call_expression_node_list(call_expr_node.args) : this.position_args_by_name(func_ty, func_args, call_expr_node.args)
         if this.has_errored() return null
-        let index = this.check_function_call_args_match(func_ty, args)
+        let adjusted_args = this.check_and_fill_default_args(func_ty, func_args, call_args)
+        if this.has_errored() return null
+        let index = this.check_function_call_args_match(func_ty, adjusted_args)
         if index >= -1 {
             if index == -1 {
-                this.error(ErrorKind.GEN, "Expected $(func_ty.arg_types.length) argument(s) on function call but got $(args.length)", call_expr_node.range)
+                this.error(ErrorKind.GEN, "Expected $(func_ty.arg_types.length) argument(s) on function call but got $(adjusted_args.length)", call_expr_node.range)
             } else {
-                this.error(ErrorKind.TYPE, "Expected type '$(this.dump_type(func_ty.arg_types[index as uint]))' but got type '$(this.dump_type(args[index as uint].value_type))' as function call argument", call_expr_node.args[index as uint].range)
+                this.error(ErrorKind.TYPE, "Expected type '$(this.dump_type(func_ty.arg_types[index as uint]))' but got type '$(this.dump_type(adjusted_args[index as uint].value_type))' as function call argument", call_expr_node.args[index as uint].value.range)
             }
             return null
         }
-        return new CallExpression(called, args, func_ty.return_type, call_expr_node.range)
+        return new CallExpression(called, adjusted_args, func_ty.return_type, call_expr_node.range)
     }
     private check_intrinsic_call(this, intrinsic_call: IntrinsicCall, call_expr_node: CallExpressionNode): IntrinsicCall {
         //Note: This assumes that intrisics always have alteast 1 arg and that call_expr_node.args has the rest of the args
@@ -2768,6 +2847,10 @@ class TypeChecker {
         let unknown_ty = PrimitiveTypes.unknown
         
         for let i = 0; i < args.length; i++ {
+            if args[i].name != null {
+                this.error(ErrorKind.NAME, "Intrinsic doesn't have a named parameter", args[i].name.range)
+                return intrinsic_call
+            }
             let expected_type = is_mem_grp1 and i == 1 ? unknown_ty : intrinsic_call.args[0].value_type
             if (intrinsic_func == Intrinsics.MEMCPY or intrinsic_func == Intrinsics.MEMMOVE) and (i == 1) {
                 expected_type = uint_ty
@@ -2778,11 +2861,11 @@ class TypeChecker {
             if (intrinsic_func == Intrinsics.MEMSET){
                 expected_type = uint_ty
             }
-            let arg_value = this.check_expression(expected_type, args[i])
+            let arg_value = this.check_expression(expected_type, args[i].value)
             if this.has_errored() return null
             if expected_type.kind != TypeKind.UNKNOWN {
                 if !this.types_are_eq(expected_type, arg_value.value_type) {
-                    this.error(ErrorKind.TYPE, "Expected argument $i to be of type '$(this.dump_type(expected_type))' but got type '$(this.dump_type(arg_value.value_type))'", args[i].range)
+                    this.error(ErrorKind.TYPE, "Expected argument $i to be of type '$(this.dump_type(expected_type))' but got type '$(this.dump_type(arg_value.value_type))'", args[i].value.range)
                     return null
                 }
             }

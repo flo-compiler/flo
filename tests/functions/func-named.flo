@@ -1,0 +1,6 @@
+fnc pass_number(number: int): int {
+    return number
+}
+fnc main(): int {
+    return pass_number(0)
+}

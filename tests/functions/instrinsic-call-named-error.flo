@@ -1,0 +1,5 @@
+//@expect: return_code=1
+fnc main(){
+    let cap: int[3] = [1, 2, 3]
+    (&cap).fill_with(value: 0)    
+}

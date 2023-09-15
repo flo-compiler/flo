@@ -1,0 +1,11 @@
+fnc test_numbers(number1: int, number2: int): int {
+    if (number1 != 69) return 1
+    if (number2 != 31) return 1
+    return 0
+}
+fnc main(): int {    
+    return test_numbers(
+        number2: 31,
+        69
+    )
+}
