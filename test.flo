@@ -1,0 +1,6 @@
+fnc test<T, U>(x: T){
+    
+}
+fnc main(){
+    let t = test<int, float>();
+}

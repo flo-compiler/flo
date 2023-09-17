@@ -118,9 +118,27 @@ class DebugInfo {
         let file = LLVMDIBuilderCreateFile(this.builder, fn.get_bytes(), fn.length as int, "./", 2)
         this.files = [file]
         this.lexical_blocks = new Stack<LLVMMetadataRef>()
-        this.CU = LLVMDIBuilderCreateCompileUnit(this.builder, LLVMDWARFSourceLanguage.LLVMDWARFSourceLanguageC, 
-            file, "Flo Compiler", 12, false, "", 0, 1, "", 0, LLVMDWARFEmissionKind.LLVMDWARFEmissionFull,
-            0, false, true, "/", 1, "", 0 )
+        this.CU = LLVMDIBuilderCreateCompileUnit(
+                    Builder: this.builder, 
+                    Lang: LLVMDWARFSourceLanguage.LLVMDWARFSourceLanguageC,
+                    FileRef: file,
+                    Producer: "Flo Compiler",
+                    ProducerLen: 12,
+                    isOptimized: false,
+                    Flags: "",
+                    FlagsLen: 0,
+                    RuntimeVer: 1,
+                    SplitName: "",
+                    SplitNameLen: 0,
+                    Kind: LLVMDWARFEmissionKind.LLVMDWARFEmissionFull,
+                    DWOId: 0,
+                    SplitDebugInlining: false,
+                    DebugInfoForProfiling: true,
+                    SysRoot: "/",
+                    SysRootLen: 1,
+                    SDK: "",
+                    SDKLen: 0
+                )
         this.lexical_blocks.push(this.CU)
     }
     public get_current_file(this): LLVMMetadataRef {
@@ -152,10 +170,14 @@ class DebugInfo {
         if is_function(tt) {
             let funct_type = this.create_function_type(tt as FunctionType, this.get_current_file())
             return LLVMDIBuilderCreatePointerType(
-                    this.builder, funct_type,
-                    ARCH_WORD_SIZE / 8 as u64, 1, 0,
-                    "<fnc>",  5
-                    )
+                Builder: this.builder, 
+                PointeeTy: funct_type,
+                SizeInBits: ARCH_WORD_SIZE / 8 as u64,
+                AlignInBits: 1, 
+                AddressSpace: 0,
+                Name: "<fnc>", 
+                NameLen: 5
+            )
         }
         if tt.kind == TypeKind.ENUM
             return this.get_enum_type(tt as EnumType)
@@ -188,10 +210,14 @@ class DebugInfo {
         pointer_name.copy_from(point_name, pointee_name_length)
         pointer_name[pointee_name_length] = '*'
         return LLVMDIBuilderCreatePointerType(
-                    this.builder, pointee_type,
-                    ARCH_WORD_SIZE / 8 as u64, 1, 0,
-                    pointer_name, pointee_name_length + 1
-                    )
+                    Builder: this.builder,
+                    PointeeTy: pointee_type,
+                    SizeInBits: ARCH_WORD_SIZE / 8 as u64,
+                    AlignInBits: 1,
+                    AddressSpace: 0,
+                    Name: pointer_name,
+                    NameLen: pointee_name_length + 1
+                )
     }
     public get_type_list(this, types: Type[], dest: LLVMMetadataRef*){
         let i = 0
