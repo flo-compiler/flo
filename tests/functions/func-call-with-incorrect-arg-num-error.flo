@@ -1,0 +1,16 @@
+//@expect: return_code=1
+fnc process_input_and_read_file(argc: uint, argv: u8**): String {
+    if argc < 2 {
+        let prog_name = String.from_cstring(argv[0])
+        println("usage: $prog_name <png_file>")
+        del prog_name
+        return null
+    }
+    return String.from_cstring(argv[1])
+}
+fnc main(argc: uint, argv: u8**): int {
+    let encoded_data = process_input_and_read_file()
+    println(encoded_data)
+    del encoded_data
+    return 0
+}

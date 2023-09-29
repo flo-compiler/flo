@@ -855,14 +855,42 @@ class CodeGen {
         let pow = get_intrinsic(this.module, name, &arg_types[0], arg_types.size, llvmty)
         return LLVMBuildCall2(builder, pow[0], pow[1], &args[0], args.size, "")
     }
+    private codegen_int_comparason(this, builder: LLVMBuilderRef, op: BinaryOp, lhs: LLVMValueRef, rhs: LLVMValueRef, as_const: bool): LLVMValueRef {
+        let ipred: LLVMIntPredicate = null
+        if is_bin_op_comp_eq_op(op) {
+            ipred = ((op as int) - (BinaryOp.EEQ as int) + 32) as LLVMIntPredicate
+            return as_const ? LLVMConstICmp(ipred, lhs, rhs) : LLVMBuildICmp(builder, ipred, lhs, rhs, "")
+        } else {
+            ipred = ((op as int) - (BinaryOp.GT as int) + 38) as LLVMIntPredicate // Consider Enum variants
+            return as_const ? LLVMConstICmp(ipred, lhs, rhs) : LLVMBuildICmp(builder, ipred, lhs, rhs, "")
+        }
+    }
+    private codegen_float_comparason(this, builder: LLVMBuilderRef, op: BinaryOp, lhs: LLVMValueRef, rhs: LLVMValueRef, as_const: bool): LLVMValueRef {
+        let rpred: LLVMRealPredicate = null
+        if is_bin_op_comp_eq_op(op) {
+            rpred = op == BinaryOp.NEQ ? LLVMRealPredicate.LLVMRealONE : LLVMRealPredicate.LLVMRealOEQ
+            return as_const ? LLVMConstFCmp(rpred, lhs, rhs) : LLVMBuildFCmp(builder, rpred, lhs, rhs, "")
+        } else {
+            rpred = ((op as int) - (BinaryOp.GT as int) + (LLVMRealPredicate.LLVMRealOGT as int)) as LLVMRealPredicate
+            return as_const ? LLVMConstFCmp(rpred, lhs, rhs) : LLVMBuildFCmp(builder, rpred, lhs, rhs, "")
+        }
+    }
     private codegen_bin_exp(this, builder: LLVMBuilderRef, bin_exp: BinaryExpression): LLVMValueRef {   
         let op = bin_exp.op
-        if bin_exp.lhs.value_type.kind != bin_exp.rhs.value_type.kind {
+        
+        let lty = bin_exp.lhs.value_type
+        let rty = bin_exp.rhs.value_type
+        if lty.kind != rty.kind {
             if op == BinaryOp.EEQ
                 return this.createLLVMBool(false)
             else if op == BinaryOp.NEQ
                 return this.createLLVMBool(true)
         }
+        if (lty.kind == TypeKind.ARRAY or lty.kind == TypeKind.TUPLE) and (op == BinaryOp.EEQ or op == BinaryOp.NEQ) {
+            println("array or tuple comparison not yet supported.")
+            return this.createLLVMBool(false)
+        }
+
         if op == BinaryOp.ASSIGN
             return this.codegen_assignment(builder, bin_exp)
         let lhs = this.codegen_expression(builder, bin_exp.lhs)
@@ -872,19 +900,20 @@ class CodeGen {
                 return this.createLLVMBool(op == BinaryOp.EEQ ? LLVMIsNull(lhs) : LLVMIsNull(lhs))
             return op == BinaryOp.EEQ ? LLVMBuildIsNull(builder, lhs, "") : LLVMBuildIsNotNull(builder, lhs, "")
         }
-        let lty = bin_exp.lhs.value_type
-        let rty = bin_exp.rhs.value_type
         if is_numeric(rty) and op == BinaryOp.POW
             return this.codegen_pow_expr(builder, rty, lhs, rhs)
-        if is_pointer(lty){
+        if is_pointer(lty) and (op == BinaryOp.ADD or op == BinaryOp.SUB) {
             let indices: LLVMValueRef[1] = [op == BinaryOp.ADD ? rhs: CodeGen.neg_int(builder, rhs)]
             let pointee_type = this.codegen_type((lty as PointerType).pointee_type)
             return LLVMBuildInBoundsGEP2(builder, pointee_type, lhs, &indices[0], indices.size, "")
         }
-        let ipred: LLVMIntPredicate = null
-        let rpred: LLVMRealPredicate = null
         let is_const_expr = LLVMIsConstant(lhs) and LLVMIsConstant(rhs)
-        if is_int(rty) or (is_object(lty) and is_object(rty) and (op == BinaryOp.EEQ or op == BinaryOp.NEQ)) or (rty.kind == TypeKind.ENUM) {
+            
+        if ((is_object(lty) and is_object(rty)) or (is_pointer(lty) and is_pointer(rty))) and is_bin_op_comp_op(op) {
+            let left_int = LLVMBuildPtrToInt(builder, lhs, this.debug_info.type_scope.int_type.llvm_type, "")
+            let right_int = LLVMBuildPtrToInt(builder, rhs, this.debug_info.type_scope.int_type.llvm_type, "")
+            return this.codegen_int_comparason(builder, op, left_int, right_int, false)
+        } else if is_int(rty) or (rty.kind == TypeKind.ENUM) {
             if op == BinaryOp.ADD {
                 if ((bin_exp.value_type as IntType).is_signed)
                     return is_const_expr ? LLVMConstNSWAdd(lhs, rhs) : LLVMBuildNSWAdd(builder, lhs, rhs, "")
@@ -905,13 +934,8 @@ class CodeGen {
                 if ((bin_exp.value_type as IntType).is_signed)
                     return LLVMBuildSRem(builder, lhs, rhs, "")
                 return LLVMBuildURem(builder, lhs, rhs, "")
-            } else if op >= BinaryOp.GT and op <= BinaryOp.LTE {
-                let offset = (rty as IntType).is_signed ? 38 : 34
-                ipred = ((op as int) - (BinaryOp.GT as int) + 38) as LLVMIntPredicate // Consider Enum variants
-                return is_const_expr ? LLVMConstICmp(ipred, lhs, rhs) : LLVMBuildICmp(builder, ipred, lhs, rhs, "")
-            } else if op >= BinaryOp.EEQ and op <= BinaryOp.NEQ {
-                ipred = ((op as int) - (BinaryOp.EEQ as int) + 32) as LLVMIntPredicate
-                return is_const_expr ? LLVMConstICmp(ipred, lhs, rhs) : LLVMBuildICmp(builder, ipred, lhs, rhs, "")
+            } else if is_bin_op_comp_op(op) {
+                return this.codegen_int_comparason(builder, op, lhs, rhs, is_const_expr)
             } else if op == BinaryOp.SL {
                 return is_const_expr ? LLVMConstShl(lhs, rhs) : LLVMBuildShl(builder, lhs, rhs, "")
             } else if op == BinaryOp.SR {
@@ -934,12 +958,8 @@ class CodeGen {
                 return LLVMBuildFDiv(builder, lhs, rhs, "")
             } else if op == BinaryOp.MOD {
                 return LLVMBuildFRem(builder, lhs, rhs, "")
-            } else if op >= BinaryOp.GT and op <= BinaryOp.LTE {
-                rpred = ((op as int) - (BinaryOp.GT as int) + (LLVMRealPredicate.LLVMRealOGT as int)) as LLVMRealPredicate
-                return is_const_expr ? LLVMConstFCmp(rpred, lhs, rhs) : LLVMBuildFCmp(builder, rpred, lhs, rhs, "")
-            } else if op >= BinaryOp.EEQ and op <= BinaryOp.NEQ {
-                rpred = op == BinaryOp.NEQ ? LLVMRealPredicate.LLVMRealONE : LLVMRealPredicate.LLVMRealOEQ
-                return is_const_expr ? LLVMConstFCmp(rpred, lhs, rhs) : LLVMBuildFCmp(builder, rpred, lhs, rhs, "")
+            } else if is_bin_op_comp_op(op) {
+                return this.codegen_float_comparason(builder, op, lhs, rhs, is_const_expr)
             }
         } else if is_bool(rty) {
             if op == BinaryOp.AND or op == BinaryOp.EEQ {
@@ -1352,6 +1372,7 @@ class CodeGen {
             LLVMBuildBr(builder, for_in_next_block)
 
         LLVMPositionBuilderAtEnd(builder, for_in_end_block)
+        this.codegen_del_call(builder, iteratable, iterable_type, for_stmt.iterator.range)
         LLVMBuildFree(builder, iteratable)
         this.break_bbs.pop()
         this.continue_bbs.pop()

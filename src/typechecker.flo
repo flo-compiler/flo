@@ -977,7 +977,24 @@ class Program {
         return owner.fields[prop_id.id].field_offset
     }
 }
-
+fnc is_bin_op_comp_eq_op(op: BinaryOp): bool {
+    if op == BinaryOp.EEQ
+        return true
+    if op == BinaryOp.NEQ
+        return true
+    return false
+}
+fnc is_bin_op_comp_op(op: BinaryOp): bool {
+    if op == BinaryOp.GT
+        return true
+    if op == BinaryOp.LT
+        return true
+    if op == BinaryOp.GTE
+        return true
+    if op == BinaryOp.LTE
+        return true
+    return is_bin_op_comp_eq_op(op)
+}
 fnc is_operator_overload_name(name: String): bool {
     if name == "__eq__" return true
     if name == "__add__" return true
@@ -1511,7 +1528,7 @@ class TypeChecker {
             fnc_arg.id = var.var_id
             arg_types << fnc_arg_type
         }
-        let ret_type = this.check_type(return_type_node)
+        let ret_type = return_type_node == null ? PrimitiveTypes.void : this.check_type(return_type_node)
         return new FunctionType(has_implicit_this, arg_types, ret_type)
     }
     private import_all_from_module(this, module: Module){
@@ -1795,6 +1812,7 @@ class TypeChecker {
             method.is_abstract = method_node.function.is_external
             method.visibility = method_node.access_modifier
             method.method_type = this.init_function_signature(method_node.function.args, method_node.function.return_type, method.args, object_type)
+            if this.has_errored() return
             method.is_static = !method.method_type.has_implicit_this
             let name_range = method_node.function.name.range
             if is_operator_overload_name(name) {
@@ -1970,7 +1988,7 @@ class TypeChecker {
             if func.fnc_type.return_type.kind == TypeKind.VOID {
                 func.block.statements << (new ReturnStatement() as Statement)
             } else {
-                this.error(ErrorKind.GEN, "Function missing ending return statement", func_node.return_type.range)
+                this.error(ErrorKind.GEN, "Function missing ending return statement", func_node.name.range)
                 return
             }
         }
@@ -2800,7 +2818,6 @@ class TypeChecker {
                         }
                     }
                 }
-                panic("Cannot fill default value of argument $i for function call")
             } else {
                 checked_call_args << this.check_expression(expected_type, call_args[i])
             }

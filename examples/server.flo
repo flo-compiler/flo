@@ -2,8 +2,9 @@ import HTTPServer in "@net/httpserver"
 fnc main(){ 
     let http_server = HTTPServer.bind("localhost:8080")
     for stream in http_server {
+        let request = stream.read()
         stream.write("HTTP/1.1 200 OK\r\n\r\n")
         stream.write("<h1>Hello From Flo Server</h1>")
-        stream.end()
+        stream.close()
     }
 }

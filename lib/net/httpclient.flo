@@ -14,7 +14,7 @@ class HTTPClient {
         this.header("Connection", "keep-alive")
     }
     get(this, url: String): HTTPClient {
-        this.socket = new Socket(AF_INET as int, SOCK_STREAM as int, 0)
+        this.socket = new Socket(AF_INET, SOCK_STREAM, 0)
         this.method = "GET"
         this.set_uri(url)
         return this
@@ -36,10 +36,11 @@ class HTTPClient {
         request_string.append_bytes_length("\r\n", 2)
         for header in this.headers {
             request_string += header.key
-            request_string.append_bytes_length(" ", 1)
+            request_string.append_bytes_length(": ", 2)
             request_string += header.value
             request_string.append_bytes_length("\r\n", 2)
         }
+        println(request_string)
         return request_string
     }
     public header(this, key: String, value: String): HTTPClient {
@@ -47,10 +48,10 @@ class HTTPClient {
         return this
     }
     public send(this): String {
-        lseek(this.socket.sockfd, 0, SEEK_SET as int)
+        lseek(this.socket.sockfd, 0, SEEK_SET)
         this.socket.connect(this.uri.hostname, this.uri.port)
         let request_string = this.build_request_string()
-        let buff: u8[1026] = null
+        let buff: u8[1024]
         let response_string = String.with_capacity(buff.size)
         let recieved = 0
         if write(this.socket.sockfd, request_string.get_bytes(), request_string.length) >= 0 {

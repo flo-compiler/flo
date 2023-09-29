@@ -1,4 +1,3 @@
-
 const ARCH_WORD_SIZE = 64
 /* IO */
 fnc open(filename: u8*, flags: int, mode: uint): int 
@@ -13,6 +12,7 @@ fnc connect(sockfd: int, socketaddr_in: u8*, size: uint): int
 fnc accept(sockfd: int, socketaddr_in: u8*, size_ptr: uint*): int 
 fnc bind(sockfd: int, socketaddr_in: u8*, size: uint): int 
 fnc listen(sockfd: int, backlog: int): int
+fnc setsockopt(socket: int, level: int, option_name: int, option_value: u8*, option_len: uint): int
 fnc fcntl(fd: int, cmd: int, arg: int): int 
 fnc execve(filename: u8*, argv: u8**, envp: u8**): int
 fnc exit (error_code: int)
@@ -35,23 +35,31 @@ const F_OK: int = 0 /* Test if file exists */
 const F_SETFL = 4
 const F_GETFL = 3
 /** SEEKS **/
-const SEEK_SET = 0 
-const SEEK_CUR = 1
-const SEEK_END = 2
+const SEEK_SET: int = 0 
+const SEEK_CUR: int = 1
+const SEEK_END: int = 2
 
 /* net consts */
 /* Socket Framilies */
-const AF_UNSPEC = 0 /* Unspecified Family */
-const AF_INET = 2 /* IPV4*/
-const AF_IPX = 6 /* IPX/SPX */
-const AF_APPLETALK = 16 /* AppleTalk */
-const AF_NETBIOS = 17 /* NetBIOS */
-const AF_INET6 = 23 /* IPV6 */
-const AF_IRDA = 23 /* IrDA (Infrared) */
-const AF_BTH = 31 /* Bluetooth */
+const AF_UNSPEC: int = 0 /* Unspecified Family */
+const AF_INET: int = 2 /* IPV4*/
+const AF_IPX: int = 6 /* IPX/SPX */
+const AF_APPLETALK: int = 16 /* AppleTalk */
+const AF_NETBIOS: int = 17 /* NetBIOS */
+const AF_INET6: int = 23 /* IPV6 */
+const AF_IRDA: int = 23 /* IrDA (Infrared) */
+const AF_BTH: int = 31 /* Bluetooth */
 /* Socket types */
-const SOCK_STREAM = 1 /* TCP & AF_INET or AF_INET6 */
-const SOCK_DGRAM = 2 /* UDP & AF_INET or AF_INET6 */
-const SOCK_RAW = 3 /* Header manipulation */
-const SOCK_RDM = 4 /* Reliable multicast programming */
-const SOCK_SEQPACKET = 5 /* Pseudo-stream packets */
+const SOCK_STREAM: int = 1 /* TCP & AF_INET or AF_INET6 */
+const SOCK_DGRAM: int = 2 /* UDP & AF_INET or AF_INET6 */
+const SOCK_RAW: int = 3 /* Header manipulation */
+const SOCK_RDM: int = 4 /* Reliable multicast programming */
+const SOCK_SEQPACKET: int = 5 /* Pseudo-stream packets */
+/* Socket level options */
+const SOL_SOCKET: int = 1
+const SOL_TCP: int = 6
+/* SOL_SOCKET options */
+const SO_REUSEADDR: int = 2
+const SO_REUSEPORT: int = 15
+/* SOL_TCP options */
+const TCP_NODELAY: int = 1

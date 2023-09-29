@@ -1,4 +1,4 @@
-import socket, connect, accept, bind, listen, close in "@sys/lib"
+import socket, connect, setsockopt, accept, bind, listen, close in "@sys/lib"
 fnc gethostbyname(name: u8*): hostent
 fnc perror(s: u8*)
 class hostent {
@@ -50,6 +50,11 @@ class Socket {
             perror("bind")
         }
         del cstring_addr
+    }
+    set_opt(this, level: int, optname: int, optvalue: u8*, optlen: uint){
+        if setsockopt(this.sockfd, level, optname, optvalue, optlen) < 0 {
+            perror("set option")
+        }
     }
     connect(this, address: String, port: uint){
         let cstring_addr = address.to_cstring()

@@ -1,52 +1,46 @@
-import accept, close, AF_INET, SOCK_STREAM in "@sys/lib"
+import accept, close, AF_INET, SOCK_STREAM, SOL_SOCKET, SO_REUSEADDR, SO_REUSEPORT, SOL_TCP, TCP_NODELAY in "@sys/lib"
 import "socket"
 import "uri"
 class HTTPRequestStream {
     private conn: int
-    public raw: String
-    private response: String
     constructor(this, conn: int){
         this.conn = conn
-        let buff: u8[1026]
-        let recieved_string = String.with_capacity(buff.size)
-        while true {
-            let recieved = read(conn, &buff[0], buff.size)
-            recieved_string.append_bytes_length(&buff[0], recieved)
-            if (recieved < buff.size) break
-        }
-        this.raw = recieved_string
-        this.response = String.with_capacity(10)
     }
-    write(this, s: String): HTTPRequestStream {
-        this.response += s
+    write(this, data: String): HTTPRequestStream {
+        write(this.conn, data.get_bytes(), data.length)
         return this
     }
-    send(this){
-        write(this.conn, this.response.get_bytes(), this.response.length)
-        this.response.length = 0
+    read(this): String {
+        let recieved_buff: u8[1024]
+        let request_string = String.with_capacity(recieved_buff.size)
+        while true {
+            let recieved_size = read(this.conn, &recieved_buff[0], recieved_buff.size)
+            request_string.append_bytes_length(&recieved_buff[0], recieved_size)
+            if (recieved_size < recieved_buff.size) break
+        }
+        return request_string
     }
-    end(this){
-        write(this.conn, this.response.get_bytes(), this.response.length)
+    close(this){   
         close(this.conn)
-    }
-    __del__(this){
-        del this.raw
-        del this.response
+        del this
     }
 }
 class HTTPServer {
     private done: bool
-    private url: URI
     private socket: Socket
-    constructor(this){
-        this.done =  true
+    constructor(this, socket: Socket){
+        this.done = true
+        this.socket = socket
     }
     public bind(address = "localhost"): HTTPServer {
-        let http_server = new HTTPServer()
         let url = URI.parse(address)
-        http_server.socket = new Socket(AF_INET as int, SOCK_STREAM as int, 0)
-        http_server.socket.bind(url.hostname, url.port)
-        return http_server
+        let socket = new Socket(AF_INET, SOCK_STREAM, 0)
+        let optval = 1
+        socket.set_opt(SOL_SOCKET, SO_REUSEADDR, &optval as u8*, 4)
+        socket.set_opt(SOL_SOCKET, SO_REUSEPORT, &optval as u8*, 4)
+        socket.bind(url.hostname, url.port)
+        del url
+        return new HTTPServer(socket)
     }
     private next(this): HTTPRequestStream {
         let cli: u8[16]
@@ -63,11 +57,9 @@ class HTTPServer {
         this.done = false
         return this
     }
-    public close(this){
+    public destroy(this){
         this.socket.close()
         this.done = true
-    }
-    public destroy(this){
         this.socket.destroy()
     }
 }

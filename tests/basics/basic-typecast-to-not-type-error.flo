@@ -1,0 +1,5 @@
+//@expect: return_code=1
+fnc main(){
+    let palette: u8[3]
+    println("$(palette[1] as 0xFF)")
+}

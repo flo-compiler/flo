@@ -309,8 +309,15 @@ class ArgNode {
         this.default = null
     }
 }
+class GenericParameterNode {
+    name: IdentifierToken
+    constructor(this, name: IdentifierToken){
+        this.name = name
+    }
+}
 class FunctionDeclarationNode {
     name: IdentifierToken
+    generic_parameters: GenericParameterNode[]
     args: ArgNode[]
     block: BlockNode
     return_type: TypeNode
@@ -318,7 +325,9 @@ class FunctionDeclarationNode {
     constructor(this){
         this.args = []
         this.is_external = false
+        this.generic_parameters = []
         this.block = null
+        this.return_type = null
     }
 }
 class MethodNode {
@@ -338,12 +347,6 @@ class FieldNode {
     constructor(this, name: IdentifierToken){
         this.name = name
         this.initializer = null
-    }
-}
-class GenericParameterNode {
-    name: IdentifierToken
-    constructor(this, name: IdentifierToken){
-        this.name = name
     }
 }
 class ClassDeclarationNode {
@@ -525,7 +528,8 @@ class Parser {
     }
 
     private parse_type(this): TypeNode {
-        let type_node: TypeNode = null
+        let undef = new TypeNode(TypeKind.UNKNOWN, this.current_token.range)
+        let type_node = undef
         if this.current_token.ttype == TokType.IDENTIFER
             type_node = this.parse_object_type()
         else if this.current_token.ttype == TokType.LPAR
@@ -538,6 +542,9 @@ class Parser {
             rec_node.generic_args << this.parse_type()
             this.eat(TokType.RBRACKET)
             type_node = rec_node
+        } else {
+            this.error("Expected a type")
+            return type_node
         }
         while this.current_token.ttype == TokType.LBRACKET or this.current_token.ttype == TokType.POW or this.current_token.ttype == TokType.MULT and this.can_parse() {
             if this.current_token.ttype == TokType.LBRACKET {
@@ -559,6 +566,7 @@ class Parser {
                     this.advance()
             }
         }
+        del undef
         return type_node
     }
     private parse_expression_list(this, expressions: ExpressionNode[], stop_tok: TokType) {
@@ -835,12 +843,11 @@ class Parser {
         return new RangeExpressionNode(left, this.parse_expression())
     }
     private parse_typecast_expression(this): ExpressionNode {
-        let left = this.parse_range_expression()
-        if this.current_token.ttype != TokType.AS_KW 
-            return left
+        let expr_node = this.parse_range_expression()
+        if this.current_token.ttype != TokType.AS_KW or !this.can_parse()
+            return expr_node
         this.advance()
-        let node = new TypeCastExpressionNode(left, this.parse_type())
-        return node
+        return new TypeCastExpressionNode(expr_node, this.parse_type())
     }
     /* TODO: Need to figure out the logic here */
     private parse_ternary_expression(this): ExpressionNode {
@@ -848,8 +855,10 @@ class Parser {
         if this.current_token.ttype != TokType.QUES or !this.can_parse()
             return cond
         this.advance()
+        this.new_lines()
         let is_true = this.parse_expression()
         this.eat(TokType.COL)
+        this.new_lines()
         let is_false = this.parse_expression()
         return new TernaryExpressionNode(cond, is_true, is_false)
     }
@@ -1051,6 +1060,8 @@ class Parser {
     private parse_function(this): FunctionDeclarationNode {
         let fnc_node = new FunctionDeclarationNode()
         fnc_node.name = this.eat(TokType.IDENTIFER) as IdentifierToken
+        if this.current_token.ttype == TokType.LT
+            this.parse_generic_parameters(fnc_node.generic_parameters)
         this.eat(TokType.LPAR)
         if this.current_token.ttype != TokType.RPAR
             this.parse_args(fnc_node.args)
@@ -1060,9 +1071,6 @@ class Parser {
         if this.current_token.ttype == TokType.COL {
             this.advance()
             fnc_node.return_type = this.parse_type()
-        } else {
-            let identifier_tok = new IdentifierToken("void", this.current_token.range)
-            fnc_node.return_type = new RecordTypeNode(identifier_tok, identifier_tok.range)
         }
         this.new_lines()
         if this.current_token.ttype == TokType.LBRACE {

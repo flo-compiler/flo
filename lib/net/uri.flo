@@ -44,4 +44,9 @@ class URI {
         del path_sep
         return url
     }
+    __del__(this){
+        del this.protocol
+        del this.hostname
+        del this.path
+    }
 }
