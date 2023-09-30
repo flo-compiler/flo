@@ -116,6 +116,10 @@ fnc LLVMDIBuilderCreateFunction(Builder: LLVMDIBuilderRef, Scope: LLVMMetadataRe
 
 fnc LLVMDIBuilderCreateNullPtrType(Builder: LLVMDIBuilderRef): LLVMMetadataRef
 
+fnc LLVMDIBuilderCreateTypedef(Builder: LLVMDIBuilderRef, Type: LLVMMetadataRef,
+                            Name: u8*, NameLen: uint,
+                            File: LLVMMetadataRef, LineNo: uint,
+                            Scope: LLVMMetadataRef, AlignInBits: u32): LLVMMetadataRef
 fnc LLVMDIBuilderCreateSubroutineType(Builder: LLVMDIBuilderRef,
                                   File: LLVMMetadataRef,
                                   ParameterTypes: LLVMMetadataRef*,
@@ -127,8 +131,71 @@ fnc LLVMDIBuilderCreatePointerType(
     SizeInBits: u64, AlignInBits: u32, AddressSpace: u32,
     Name: u8*, NameLen: uint): LLVMMetadataRef
 
-
+/**
+ * Create debugging information entry for a struct.
+ * \param Builder     The DIBuilder.
+ * \param Scope        Scope in which this struct is defined.
+ * \param Name         Struct name.
+ * \param NameLen      Struct name length.
+ * \param File         File where this member is defined.
+ * \param LineNumber   Line number.
+ * \param SizeInBits   Member size.
+ * \param AlignInBits  Member alignment.
+ * \param Flags        Flags to encode member attribute, e.g. private
+ * \param Elements     Struct elements.
+ * \param NumElements  Number of struct elements.
+ * \param RunTimeLang  Optional parameter, Objective-C runtime version.
+ * \param VTableHolder The object containing the vtable for the struct.
+ * \param UniqueId     A unique identifier for the struct.
+ * \param UniqueIdLen  Length of the unique identifier for the struct.
+ */
+fnc LLVMDIBuilderCreateStructType(
+    Builder: LLVMDIBuilderRef , Scope: LLVMMetadataRef, Name: u8*,
+    NameLen: uint, File: LLVMMetadataRef, LineNumber: uint,
+    SizeInBits: u64, AlignInBits: u32, Flags: LLVMDIFlags,
+    DerivedFrom: LLVMMetadataRef, Elements: LLVMMetadataRef*,
+    NumElements: uint, RunTimeLang: uint, VTableHolder: LLVMMetadataRef,
+    UniqueId: u8, UniqueIdLen: uint): LLVMMetadataRef
 fnc LLVMDITypeGetName(DType: LLVMMetadataRef, Length: uint*): u8*
+/**
+ * Create debugging information entry for a member.
+ * \param Builder      The DIBuilder.
+ * \param Scope        Member scope.
+ * \param Name         Member name.
+ * \param NameLen      Length of member name.
+ * \param File         File where this member is defined.
+ * \param LineNo       Line number.
+ * \param SizeInBits   Member size.
+ * \param AlignInBits  Member alignment.
+ * \param OffsetInBits Member offset.
+ * \param Flags        Flags to encode member attribute, e.g. private
+ * \param Ty           Parent type.
+ */
+fnc LLVMDIBuilderCreateMemberType(
+    Builder: LLVMDIBuilderRef , Scope: LLVMMetadataRef, Name: u8*,
+    NameLen: uint, File: LLVMMetadataRef, LineNo: uint,
+    SizeInBits: u64, AlignInBits: u32, OffsetInBits: u64,
+    Flags: LLVMDIFlags, Ty: LLVMMetadataRef): LLVMMetadataRef
+
+/**
+ * Create debugging information entry for a
+ * C++ static data member.
+ * \param Builder      The DIBuilder.
+ * \param Scope        Member scope.
+ * \param Name         Member name.
+ * \param NameLen      Length of member name.
+ * \param File         File where this member is declared.
+ * \param LineNumber   Line number.
+ * \param Type         Type of the static member.
+ * \param Flags        Flags to encode member attribute, e.g. private.
+ * \param ConstantVal  Const initializer of the member.
+ * \param AlignInBits  Member alignment.
+ */
+fnc LLVMDIBuilderCreateStaticMemberType(
+    Builder: LLVMDIBuilderRef , Scope: LLVMMetadataRef, Name: u8*,
+    NameLen: uint, File: LLVMMetadataRef, LineNumber: uint,
+    Type: LLVMMetadataRef, Flags: LLVMDIFlags, ConstantVal: LLVMValueRef,
+    AlignInBits: u32): LLVMMetadataRef
 fnc LLVMDIBuilderCreateUnspecifiedType(Builder: LLVMDIBuilderRef, Name: u8*, NameLen: uint): LLVMMetadataRef
 /**
  * Create debugging information entry for an array.

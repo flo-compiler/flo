@@ -40,7 +40,6 @@ class HTTPClient {
             request_string += header.value
             request_string.append_bytes_length("\r\n", 2)
         }
-        println(request_string)
         return request_string
     }
     public header(this, key: String, value: String): HTTPClient {

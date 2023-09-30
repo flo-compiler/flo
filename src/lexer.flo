@@ -212,7 +212,7 @@ class Lexer {
             this.advance()
             this.advance()
             return true
-        } else if this.peek() == '/' {
+        } else if this.peek() == '/' or (this.current_char == '#' and this.peek() == '!') {
             this.advance()
             while this.peek() != '\n' and !this.eof()
                 this.advance()
@@ -465,7 +465,7 @@ class Lexer {
             return this.mod_token()
         if char == '^'
             return this.xor_token()
-        if char == '/' {
+        if char == '/' or char == '#' {
             if this.skip_comment() {
                 this.advance()
                 return this.lex_token()

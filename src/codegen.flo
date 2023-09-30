@@ -4,6 +4,7 @@ import ARCH_WORD_SIZE in "@sys/lib"
 import "llvm/types"
 import "llvm/core"
 import "llvm/debugInfo"
+import LLVMCreateTargetData, LLVMABIAlignmentOfType, LLVMABISizeOfType in "llvm/target"
 import "types"
 import "codegenMod"
 class GeneratedType {
@@ -110,6 +111,8 @@ class DebugInfo {
     private ctx: LLVMContextRef
     public lexical_blocks: Stack<LLVMMetadataRef>
     public type_scope: CodegenTypeScope
+    public target_data: LLVMTargetDataRef
+    public ptr_size: u64
     constructor(this, program: Program, mod: LLVMModuleRef, fn: String){
         this.program = program
         this.ctx = LLVMGetModuleContext(mod)
@@ -117,6 +120,7 @@ class DebugInfo {
         this.type_scope = new CodegenTypeScope(this.builder)
         let file = LLVMDIBuilderCreateFile(this.builder, fn.get_bytes(), fn.length as int, "./", 2)
         this.files = [file]
+        this.target_data = LLVMCreateTargetData("")
         this.lexical_blocks = new Stack<LLVMMetadataRef>()
         this.CU = LLVMDIBuilderCreateCompileUnit(
                     Builder: this.builder, 
@@ -139,6 +143,9 @@ class DebugInfo {
                     SDK: "",
                     SDKLen: 0
                 )
+        
+        let void_ptr = LLVMPointerType(this.type_scope.void_type.llvm_type)
+        this.ptr_size = LLVMABISizeOfType(this.target_data, void_ptr) * 8
         this.lexical_blocks.push(this.CU)
     }
     public get_current_file(this): LLVMMetadataRef {
@@ -172,8 +179,8 @@ class DebugInfo {
             return LLVMDIBuilderCreatePointerType(
                 Builder: this.builder, 
                 PointeeTy: funct_type,
-                SizeInBits: ARCH_WORD_SIZE / 8 as u64,
-                AlignInBits: 1, 
+                SizeInBits: this.ptr_size,
+                AlignInBits: 0, 
                 AddressSpace: 0,
                 Name: "<fnc>", 
                 NameLen: 5
@@ -181,6 +188,8 @@ class DebugInfo {
         }
         if tt.kind == TypeKind.ENUM
             return this.get_enum_type(tt as EnumType)
+        if is_object(tt)
+            return this.get_object_type(tt as ObjectType)
         return this.type_scope.null_type.llvm_metadata
     }
     public get_int_type(this, int_type: IntType): LLVMMetadataRef {
@@ -202,6 +211,21 @@ class DebugInfo {
     public get_enum_type(this, enum_type: EnumType): LLVMMetadataRef {
         return this.type_scope.get_record_from_typeid(enum_type.enum_id).llvm_metadata
     }
+    public get_object_type(this, object_type: ObjectType): LLVMMetadataRef {
+        let class_ty = this.type_scope.get_record_from_typeid(object_type.class_id)
+        if class_ty != null {
+            return LLVMDIBuilderCreatePointerType(
+                    Builder: this.builder,
+                    PointeeTy: class_ty.llvm_metadata ,
+                    SizeInBits: this.ptr_size,
+                    AlignInBits: 0,
+                    AddressSpace: 0,
+                    Name: "",
+                    NameLen: 0
+                )
+        }
+        return this.type_scope.null_type.llvm_metadata
+    }
     public create_pointer_type(this, pointer_type: PointerType): LLVMMetadataRef {
         let pointee_type = this.create_or_get_type(pointer_type.pointee_type)
         let pointee_name_length = 0
@@ -212,15 +236,15 @@ class DebugInfo {
         return LLVMDIBuilderCreatePointerType(
                     Builder: this.builder,
                     PointeeTy: pointee_type,
-                    SizeInBits: ARCH_WORD_SIZE / 8 as u64,
-                    AlignInBits: 1,
+                    SizeInBits: this.ptr_size,
+                    AlignInBits: 0,
                     AddressSpace: 0,
                     Name: pointer_name,
                     NameLen: pointee_name_length + 1
                 )
     }
     public get_type_list(this, types: Type[], dest: LLVMMetadataRef*){
-        let i = 0
+        let i = 1
         for atype in types {
             dest[i++] = this.create_or_get_type(atype)
         }
@@ -233,10 +257,11 @@ class DebugInfo {
                            0)
     }
     public create_function_type(this, fnc_type: FunctionType, file: LLVMMetadataRef): LLVMMetadataRef {
-        let params: LLVMMetadataRef*(fnc_type.arg_types.length)
+        let params: LLVMMetadataRef*(fnc_type.arg_types.length + 1)
+        params[0] = this.create_or_get_type(fnc_type.return_type)
         this.get_type_list(fnc_type.arg_types, params)
         return LLVMDIBuilderCreateSubroutineType(this.builder, file,
-                                  params, fnc_type.arg_types.length,
+                                  params, fnc_type.arg_types.length + 1,
                                   LLVMDIFlags.LLVMDIFlagZero
                                 )
     }
@@ -271,6 +296,51 @@ class DebugInfo {
             LLVMDITypeGetSizeInBits(meta_field_type), LLVMDITypeGetAlignInBits(meta_field_type), elements,
             num_elements, null)
     }
+    public create_struct_type(this, class_id: ClassId, name: String, range: TextRange, elements: LLVMMetadataRef*, num_elements: uint, llvm_type: LLVMTypeRef): LLVMMetadataRef {
+        let file = this.get_or_create_file(class_id.module_id)
+        let size = LLVMABISizeOfType(this.target_data, llvm_type) * 8
+        return LLVMDIBuilderCreateStructType(
+        Builder: this.builder, Scope: file, Name: name.get_bytes(),
+        NameLen: name.length, File: file, LineNumber: range.line,
+        SizeInBits: size, AlignInBits: 0, LLVMDIFlags.LLVMDIFlagZero,
+        DerivedFrom: null, Elements: elements,
+        NumElements: num_elements, RunTimeLang: 0, VTableHolder: null,
+        UniqueId: null, UniqueIdLen: 0)
+    }
+    private access_attr_to_diFlag(visibility: ACCESS_ATTR): LLVMDIFlags {
+        if visibility == ACCESS_ATTR.PRIVATE
+            return LLVMDIFlags.LLVMDIFlagPrivate
+        else if visibility == ACCESS_ATTR.PROTECTED
+            return LLVMDIFlags.LLVMDIFlagProtected 
+        return LLVMDIFlags.LLVMDIFlagPublic
+    }
+    public create_member_type(this, class_id: ClassId, name: String, range: TextRange, member_type: Type, visibility: ACCESS_ATTR, offset: u64*): LLVMMetadataRef {
+        let file = this.get_or_create_file(class_id.module_id)
+        let metadata_type = this.create_or_get_type(member_type)
+        let size = LLVMDITypeGetSizeInBits(metadata_type)
+        let align = LLVMDITypeGetAlignInBits(metadata_type)
+        let member_offset_in_bits = offset[0]
+        offset[0] += size
+
+        return LLVMDIBuilderCreateMemberType(
+            this.builder, Scope: file, name.get_bytes(),
+            name.length, file, range.line,
+            size, align, member_offset_in_bits,
+            Flags: DebugInfo.access_attr_to_diFlag(visibility),
+            metadata_type)
+    }
+    public create_static_member_type(this, class_id: ClassId, name: String, range: TextRange, member_type: Type, visibility: ACCESS_ATTR, initializer: LLVMValueRef): LLVMMetadataRef {
+        let file = this.get_or_create_file(class_id.module_id)
+        let metadata_type = this.create_or_get_type(member_type)
+        let align = LLVMDITypeGetAlignInBits(metadata_type)
+
+        return LLVMDIBuilderCreateStaticMemberType(
+            this.builder, Scope: file, name.get_bytes(),
+            name.length, file, range.line,
+            metadata_type, 
+            Flags: DebugInfo.access_attr_to_diFlag(visibility),
+            initializer, align)
+    }
     public emit_location(this, builder: LLVMBuilderRef, expression: Expression){
         if(builder == null) return
         let range = expression.range
@@ -286,7 +356,7 @@ class DebugInfo {
             this.builder, dbg_fnc,
             arg.name.get_bytes(), arg.name.length,
             arg_num, this.get_current_file(), arg.range.line, dbg_type,
-            true, LLVMDIFlags.LLVMDIFlagTypePassByValue
+            true, LLVMDIFlags.LLVMDIFlagZero
         )
     }
     public create_auto_variable(this, module_id: uint, var_name: String, var_type: Type, var_range: TextRange): LLVMMetadataRef {
@@ -1536,7 +1606,7 @@ class CodeGen {
             let param = LLVMGetParam(llvm_fnc, i)
             LLVMBuildStore(func_builder, param, alloc)
 
-            let var_dbg = this.debug_info.create_param_variable(llvm_fnc_dbg, i, arg)
+            let var_dbg = this.debug_info.create_param_variable(llvm_fnc_dbg, i + 1, arg)
             this.debug_info.insert_declare_before(alloc, var_dbg)
         }
         this.functions.push(llvm_fnc)
@@ -1575,7 +1645,7 @@ class CodeGen {
         LLVMSetInitializer(llvm_field_value, llvm_field_initializer)
         return new GeneratedField(llvm_field_value, null) 
     }
-    private declare_static_props(this, struct_class: GeneratedRecordType, checked_class: Class){
+    private declare_static_props(this, struct_class: GeneratedRecordType, checked_class: Class, members_metadata: LLVMMetadataRef[]){
         for entry in checked_class.static_prop_map {
             let prop_id = entry.value
             let static_prop_name = entry.key
@@ -1585,12 +1655,20 @@ class CodeGen {
                 static_prop_value = this.declare_class_method(checked_class, static_prop_name, prop_type)
             } else {
                 static_prop_value = this.declare_class_field(checked_class, static_prop_name, prop_type, checked_class.fields[prop_id.id].initializer)
+                members_metadata << this.debug_info.create_static_member_type(
+                    checked_class.id, static_prop_name,
+                    this.program.get_class_prop_definition_range(prop_id),
+                    prop_type,
+                    this.program.get_class_prop_visibility(prop_id),
+                    LLVMGetInitializer(static_prop_value.llvm_value)
+                )
             }
             struct_class.set_field(prop_id, static_prop_value)
         }
     }
-    private declare_class_props(this, struct_class: GeneratedRecordType, checked_class: Class, prop_types: LLVMTypeRef[]){
-        let field_types: LLVMTypeRef[] = []
+    private declare_class_props(this, struct_class: GeneratedRecordType, checked_class: Class, prop_types: LLVMTypeRef[], members_metadata: LLVMMetadataRef[]){
+        let organized_fields: ClassField[] = []
+        let member_offset_in_bits: u64 = 0
         for entry in checked_class.prop_map {
             let prop_id = entry.value
             let prop_name = entry.key
@@ -1598,29 +1676,43 @@ class CodeGen {
             let prop_type = this.program.get_class_prop_type(prop_id)
             if prop_id.kind == PropIdKind.FIELD {
                 let field_offset = this.program.get_field_offset(prop_id)
-                let field_type = this.codegen_type(prop_type)
                 let offset_cap = field_offset + 1
-                field_types.ensure_capacity(offset_cap)
-                field_types[field_offset] = field_type
-                if (offset_cap > field_types.length) {
-                    field_types.length = offset_cap
+                organized_fields.ensure_capacity(offset_cap)
+                organized_fields[field_offset] = this.program.get_class_from_prop_id(prop_id).fields[prop_id.id]
+                if (offset_cap > organized_fields.length) {
+                    organized_fields.length = offset_cap
                 }
             } else {
                 struct_class.set_field(prop_id, this.declare_class_method(checked_class, prop_name, prop_type))
             }
         }
-        prop_types += field_types
-        del field_types
+        for class_field in organized_fields {
+            prop_types << this.codegen_type(class_field.field_type)
+            members_metadata << this.debug_info.create_member_type(
+                    checked_class.id, 
+                    class_field.name,
+                    class_field.definition_range,
+                    class_field.field_type,
+                    class_field.visibility,
+                    &member_offset_in_bits
+                )
+        }
     }
     private declare_class(this, checked_class: Class){
         let struct_class = new GeneratedRecordType()
         struct_class.llvm_type = LLVMStructCreateNamed(LLVMGetModuleContext(this.module), checked_class.name.to_cstring())
         this.debug_info.type_scope.add_record(checked_class.id, struct_class)
         let prop_types: LLVMTypeRef[] = []
+        let members_metadata: LLVMMetadataRef[] = []
         // Taking care of static methods.
-        this.declare_static_props(struct_class, checked_class)
-        this.declare_class_props(struct_class, checked_class, prop_types)
+        this.declare_static_props(struct_class, checked_class, members_metadata)
+        this.declare_class_props(struct_class, checked_class, prop_types, members_metadata)
         LLVMStructSetBody(struct_class.llvm_type, prop_types.buffer, prop_types.length, true)
+        struct_class.llvm_metadata = this.debug_info.create_struct_type(
+            checked_class.id, checked_class.name, checked_class.definition_range,
+            members_metadata.buffer, members_metadata.length,
+            struct_class.llvm_type
+        )
         del prop_types
         // Now constructor
         if checked_class.constructor_id != null {

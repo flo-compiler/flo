@@ -126,7 +126,7 @@ fnc LLVM_InitializeAllDisassemblers()
 /*===-- Target ------------------------------------------------------------===*/
 
 fnc LLVMGetModuleDataLayout(M: LLVMModuleRef): LLVMTargetDataRef
-
-fnc LLVMStoreSizeOfType(TD: LLVMTargetDataRef, Ty: LLVMTypeRef): i64
-fnc LLVMABISizeOfType(TD: LLVMTargetDataRef, Ty: LLVMTypeRef): i64
-fnc LLVMABIAlignmentOfType(TD: LLVMTargetDataRef, Ty: LLVMTypeRef): int
+fnc LLVMCreateTargetData(StringRep: u8*): LLVMTargetDataRef
+fnc LLVMStoreSizeOfType(TD: LLVMTargetDataRef, Ty: LLVMTypeRef): u64
+fnc LLVMABISizeOfType(TD: LLVMTargetDataRef, Ty: LLVMTypeRef): u64
+fnc LLVMABIAlignmentOfType(TD: LLVMTargetDataRef, Ty: LLVMTypeRef): u32

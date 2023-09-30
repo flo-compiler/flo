@@ -757,6 +757,7 @@ class ClassField {
     name: String
     field_type: Type
     field_offset: uint
+    definition_range: TextRange
     initializer: Expression
     constructor(this){
         this.is_static = false
@@ -782,6 +783,7 @@ class Class {
     id: ClassId
     name: String
     parent: Type
+    definition_range: TextRange
     constructor_id: PropId
     fields: ClassField[]
     methods: ClassMethod[]
@@ -957,6 +959,13 @@ class Program {
         }
         return owner.fields[prop_id.id].visibility
     }
+    public get_class_prop_name(this, prop_id: PropId): String {
+        let owner = this.get_class_from_prop_id(prop_id)
+        if prop_id.kind == PropIdKind.METHOD {
+            return owner.methods[prop_id.id].name
+        }
+        return owner.fields[prop_id.id].name
+    }
     public is_class_prop_static(this, prop_id: PropId): bool {
         let owner = this.get_class_from_prop_id(prop_id)
         if prop_id.kind == PropIdKind.METHOD {
@@ -975,6 +984,13 @@ class Program {
             return 1
         }
         return owner.fields[prop_id.id].field_offset
+    }
+    public get_class_prop_definition_range(this, prop_id: PropId): TextRange {
+        let owner = this.get_class_from_prop_id(prop_id)
+        if prop_id.kind == PropIdKind.METHOD {
+            return owner.methods[prop_id.id].definition_range
+        }
+        return owner.fields[prop_id.id].definition_range
     }
 }
 fnc is_bin_op_comp_eq_op(op: BinaryOp): bool {
@@ -1652,6 +1668,7 @@ class TypeChecker {
             return
         }
         let declared_class = new Class()
+        declared_class.definition_range = class_decl_node.name.range
         let module_scope = this.get_current_module_global_scope()
         if class_decl_node.parent != null {
             declared_class.parent = this.check_type(class_decl_node.parent)
@@ -1738,6 +1755,7 @@ class TypeChecker {
             let field_node = class_node.fields[i]
             let field = new ClassField()
             field.name = field_node.name.value
+            field.definition_range = field_node.name.range
             if is_operator_overload_name(field.name) {
                 this.error(ErrorKind.NAME, field.name+" is reserved only for operator overloads and cannot be used as a field name", field_node.name.range)
             }
