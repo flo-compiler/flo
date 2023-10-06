@@ -120,6 +120,12 @@ fnc LLVMDIBuilderCreateTypedef(Builder: LLVMDIBuilderRef, Type: LLVMMetadataRef,
                             Name: u8*, NameLen: uint,
                             File: LLVMMetadataRef, LineNo: uint,
                             Scope: LLVMMetadataRef, AlignInBits: u32): LLVMMetadataRef
+fnc LLVMDIBuilderCreateReplaceableCompositeType(
+        Builder: LLVMDIBuilderRef, Tag: uint, Name: u8*,
+        NameLen: uint, Scope: LLVMMetadataRef, File: LLVMMetadataRef, Line: uint,
+        RuntimeLang: uint, SizeInBits: u64, AlignInBits: u32,
+        Flags: LLVMDIFlags, UniqueIdentifier: u8*,
+        UniqueIdentifierLen: uint): LLVMMetadataRef
 fnc LLVMDIBuilderCreateSubroutineType(Builder: LLVMDIBuilderRef,
                                   File: LLVMMetadataRef,
                                   ParameterTypes: LLVMMetadataRef*,
@@ -393,3 +399,5 @@ fnc LLVMDIBuilderCreateEnumerationType(
     NameLen: uint, File: LLVMMetadataRef, LineNumber: uint,
     SizeInBits: u64, AlignInBits: u32, Elements: LLVMMetadataRef*,
     NumElements: uint, ClassTy: LLVMMetadataRef): LLVMMetadataRef
+fnc LLVMMetadataReplaceAllUsesWith(TempTargetMetadata: LLVMMetadataRef,
+                                    Replacement: LLVMMetadataRef)

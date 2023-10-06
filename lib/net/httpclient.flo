@@ -6,9 +6,11 @@ class HTTPClient {
     private method: String
     private uri: URI
     private headers: [String: String]
+    private _body: String
     constructor(this){
         this.uri = null
         this.method = null
+        this._body = null
         this.headers = new [String: String]()
         this.header("Accept", "*/*")
         this.header("Connection", "keep-alive")
@@ -22,6 +24,10 @@ class HTTPClient {
     post(this, url: String): HTTPClient {
         this.method = "POST"
         this.set_uri(url)
+        return this
+    }
+    body(this, body: String): HTTPClient {
+        this._body = body
         return this
     }
     private set_uri(this, url: String){
@@ -38,6 +44,10 @@ class HTTPClient {
             request_string += header.key
             request_string.append_bytes_length(": ", 2)
             request_string += header.value
+            request_string.append_bytes_length("\r\n", 2)
+        }
+        if (this._body != null){
+            request_string += this._body
             request_string.append_bytes_length("\r\n", 2)
         }
         return request_string
