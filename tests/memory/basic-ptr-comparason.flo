@@ -1,9 +1,9 @@
 fnc main(): int {
     let a_ptr: u8*
     let b_ptr: u8*
-    if a_ptr != b_ptr {
-        return 0
-    } else {
+    if a_ptr == b_ptr {
         return 1
+    } else {
+        return 0
     }
 }

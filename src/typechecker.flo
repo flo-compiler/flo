@@ -6,6 +6,31 @@ import panic, TextRange in "utils"
 import FloError, ErrorKind in "error"
 import Lexer, IdentifierToken in "lexer"
 import "parser"
+enum TypeConstraints {
+    Constant
+    OpAnd
+    OpOr
+    OpNot
+    OpNeg
+    OpSum
+    OpSub
+    OpMul
+    OpDiv
+    OpEq
+    OpGT
+    OpGTE
+    OpLT
+    OpLTE
+    OpSumEq
+    OpSubEq
+    OpMulEq
+    OpDivEq
+    Indexable
+    IndexAssignable
+    ArrayAccess
+    Callable
+    Iterable
+}
 class Type {
     kind: TypeKind
     constructor(this, kind: TypeKind){
@@ -70,12 +95,12 @@ class PointerType (Type) {
 }
 class FunctionType (Type) {
     has_implicit_this: bool
-    arg_types: Type[]
+    param_types: Type[]
     return_type: Type
-    constructor(this, has_implicit_this: bool, arg_types: Type[], return_type: Type){
+    constructor(this, has_implicit_this: bool, param_types: Type[], return_type: Type){
         this.super(TypeKind.FNC)
         this.has_implicit_this = has_implicit_this
-        this.arg_types = arg_types
+        this.param_types = param_types
         this.return_type = return_type
     }
 }
@@ -84,6 +109,15 @@ class TupleType (Type) {
     constructor(this){
         this.super(TypeKind.TUPLE)
         this.element_types = []
+    }
+}
+class GenericVariableType (Type) {
+    name: String
+    definition_range: TextRange
+    constructor(this, name: String, definition_range: TextRange){
+        this.super(TypeKind.GENERIC_VARIABLE)
+        this.name = name
+        this.definition_range = definition_range
     }
 }
 class Statement {
@@ -717,7 +751,7 @@ class Scope {
         del this.type_aliases
     }
 }
-class FunctionArg(Expression) {
+class FunctionParam(Expression) {
     id: VarId
     name: String
     default: Expression
@@ -729,7 +763,7 @@ class FunctionArg(Expression) {
 class Function {
     id: VarId
     name: String
-    args: FunctionArg[]
+    params: FunctionParam[]
     block: Block
     fnc_type: FunctionType
     scope: ScopeId
@@ -771,7 +805,7 @@ class ClassMethod {
     name: String
     method_type: FunctionType
     block: Block
-    args: FunctionArg []
+    params: FunctionParam []
     is_abstract: bool
     scope: ScopeId
     constructor(this, definition_range: TextRange){
@@ -1187,10 +1221,10 @@ class TypeChecker {
         if is_function(t1) {
             let t1_fnc_type = t1 as FunctionType
             let t2_fnc_type = t2 as FunctionType
-            if t1_fnc_type.arg_types.length != t2_fnc_type.arg_types.length return false
+            if t1_fnc_type.param_types.length != t2_fnc_type.param_types.length return false
             if !this.types_are_eq(t2_fnc_type.return_type, t1_fnc_type.return_type) return false
-            for let i = 0; i < t1_fnc_type.arg_types.length; i++ {
-                if !this.types_are_eq(t1_fnc_type.arg_types[i], t2_fnc_type.arg_types[i]) return false
+            for let i = 0; i < t1_fnc_type.param_types.length; i++ {
+                if !this.types_are_eq(t1_fnc_type.param_types[i], t2_fnc_type.param_types[i]) return false
             }
         }
         if t1.kind == TypeKind.ARRAY {
@@ -1252,11 +1286,11 @@ class TypeChecker {
     private dump_type(this, ty: Type): String {
         if is_function(ty) {
             let fnc_ty = ty as FunctionType
-            let args_tys_str = ""
-            for arg_type in fnc_ty.arg_types {
-                args_tys_str += "$(this.dump_type(arg_type)), "
+            let param_types_str = ""
+            for param_type in fnc_ty.param_types {
+                param_types_str += "$(this.dump_type(param_type)), "
             }
-            return "($args_tys_str) => $(this.dump_type(fnc_ty.return_type))"
+            return "($param_types_str) => $(this.dump_type(fnc_ty.return_type))"
         }
         if ty.kind == TypeKind.PTR
             return "$(this.dump_type((ty as PointerType).pointee_type))*"
@@ -1285,6 +1319,10 @@ class TypeChecker {
                 s +=  this.dump_type(arg_type)
             }
             return s + ">"
+        }
+        if ty.kind == TypeKind.GENERIC_VARIABLE {
+            let gen_var_ty = ty as GenericVariableType
+            return gen_var_ty.name
         }
         if ty.kind == TypeKind.MODULE {
             return "Namespace"
@@ -1511,41 +1549,41 @@ class TypeChecker {
         scope.enums[enum_name] = enum_id
         scope.vars[enum_name] = new EnumVarId(enum_id)
     }
-    private init_function_signature(this, arg_nodes: ArgNode[], return_type_node: TypeNode, args: FunctionArg[], implicit_this_arg: Type): FunctionType {
-        let arg_types: Type[] = []
+    private init_function_signature(this, param_nodes: FunctionParamNode[], return_type_node: TypeNode, params: FunctionParam[], implicit_this_param: Type): FunctionType {
+        let param_types: Type[] = []
         let has_implicit_this = false
-        for arg in arg_nodes {
-            let fnc_arg_name = arg.name.value
-            let fnc_arg_range = arg.name.range
-            let fnc_arg_default: Expression = null
-            let fnc_arg_type = PrimitiveTypes.unknown
-            if arg.parsed_type != null {
-                if (arg.parsed_type.kind == TypeKind.UNKNOWN) {
+        for param in param_nodes {
+            let fnc_param_name = param.name.value
+            let fnc_param_range = param.name.range
+            let fnc_param_default: Expression = null
+            let fnc_param_type = PrimitiveTypes.unknown
+            if param.parsed_type != null {
+                if (param.parsed_type.kind == TypeKind.UNKNOWN) {
                     has_implicit_this = true
-                    fnc_arg_type = implicit_this_arg
+                    fnc_param_type = implicit_this_param
                 } else {
-                    fnc_arg_type = this.check_type(arg.parsed_type)
+                    fnc_param_type = this.check_type(param.parsed_type)
                     if this.has_errored() return null
                 }
             }
-            if arg.default != null {
-                fnc_arg_default = this.check_expression(fnc_arg_type, arg.default)
+            if param.default != null {
+                fnc_param_default = this.check_expression(fnc_param_type, param.default)
                 if this.has_errored() return null
-                if fnc_arg_type.kind == TypeKind.UNKNOWN
-                    fnc_arg_type = fnc_arg_default.value_type
-                else if !this.types_are_eq(fnc_arg_type, fnc_arg_default.value_type){
-                    this.error(ErrorKind.TYPE, "Expected type of '$(this.dump_type(fnc_arg_type))' but got type of '$(this.dump_type(fnc_arg_default.value_type))' on signature", fnc_arg_default.range)
+                if fnc_param_type.kind == TypeKind.UNKNOWN
+                    fnc_param_type = fnc_param_default.value_type
+                else if !this.types_are_eq(fnc_param_type, fnc_param_default.value_type){
+                    this.error(ErrorKind.TYPE, "Expected type of '$(this.dump_type(fnc_param_type))' but got type of '$(this.dump_type(fnc_param_default.value_type))' on signature", fnc_param_default.range)
                 }
             }
-            let fnc_arg = new FunctionArg(fnc_arg_name, fnc_arg_type, fnc_arg_range)
-            fnc_arg.default = fnc_arg_default
-            args << fnc_arg
-            let var = this.declare_var_within_current_scope(fnc_arg_name, fnc_arg, fnc_arg_type, false)
-            fnc_arg.id = var.var_id
-            arg_types << fnc_arg_type
+            let fnc_param = new FunctionParam(fnc_param_name, fnc_param_type, fnc_param_range)
+            fnc_param.default = fnc_param_default
+            params << fnc_param
+            let var = this.declare_var_within_current_scope(fnc_param_name, fnc_param, fnc_param_type, false)
+            fnc_param.id = var.var_id
+            param_types << fnc_param_type
         }
         let ret_type = return_type_node == null ? PrimitiveTypes.void : this.check_type(return_type_node)
-        return new FunctionType(has_implicit_this, arg_types, ret_type)
+        return new FunctionType(has_implicit_this, param_types, ret_type)
     }
     private import_all_from_module(this, module: Module){
         let global_module_scope = this.program.get_scope(module.scope)
@@ -1697,9 +1735,13 @@ class TypeChecker {
         }
         let parent_scope = this.current_scope
         let fnc_scope = this.create_child_scope_within_current_scope()
+        for generic_parameter in function_node.generic_parameters {
+            let id_tok = generic_parameter.name
+            fnc_scope.type_aliases[id_tok.value] = new GenericVariableType(id_tok.value, id_tok.range)
+        }
         this.current_scope = fnc_scope.id 
-        declared_function.args = []
-        declared_function.fnc_type = this.init_function_signature(function_node.args, function_node.return_type, declared_function.args, null)
+        declared_function.params = []
+        declared_function.fnc_type = this.init_function_signature(function_node.params, function_node.return_type, declared_function.params, null)
         if this.has_errored() return
         declared_function.id = new VarId(VarIdKind.FNC, this.current_scope.module_id, this.get_current_module().functions.length)
         this.current_scope = fnc_scope.parent
@@ -1813,7 +1855,7 @@ class TypeChecker {
         if (next_prop_id == null) return false
         let next_type = this.program.get_class_prop_type(next_prop_id) as FunctionType
         if (next_type.kind != TypeKind.FNC) return false
-        if (next_type.arg_types.length != 1) return false
+        if (next_type.param_types.length != 1) return false
         return true
     }
     private declare_class_methods(this, declared_class: Class, class_node: ClassDeclarationNode){
@@ -1826,22 +1868,22 @@ class TypeChecker {
             method.name = name
             let method_scope = this.create_child_scope_within_current_scope()
             this.current_scope = method_scope.id
-            method.args = []
+            method.params = []
             method.is_abstract = method_node.function.is_external
             method.visibility = method_node.access_modifier
-            method.method_type = this.init_function_signature(method_node.function.args, method_node.function.return_type, method.args, object_type)
+            method.method_type = this.init_function_signature(method_node.function.params, method_node.function.return_type, method.params, object_type)
             if this.has_errored() return
             method.is_static = !method.method_type.has_implicit_this
             let name_range = method_node.function.name.range
             if is_operator_overload_name(name) {
-                let args_num = 2
+                let param_num = 2
                 if name == "__iter__" or name == "__del__" {
-                    args_num = 1
+                    param_num = 1
                 } else if name =="__setitem__" {
-                    args_num = 3
+                    param_num = 3
                 }
-                if method_node.function.args.length != args_num {
-                    this.error(ErrorKind.GEN, "Expected $args_num parameters for binary operator overload $name but got $(method_node.function.args.length)", name_range)
+                if method_node.function.params.length != param_num {
+                    this.error(ErrorKind.GEN, "Expected $param_num parameters for binary operator overload $name but got $(method_node.function.params.length)", name_range)
                     return
                 }
                 if method.is_static {
@@ -2037,11 +2079,11 @@ class TypeChecker {
         return new ArrayType(element_type, length as uint)
     }
     private check_function_type(this, function_type_node: FunctionTypeNode): Type {
-        let arg_types: Type[] = []
-        for arg in function_type_node.args 
-            arg_types << this.check_type(arg)
+        let param_types: Type[] = []
+        for param_type_node in function_type_node.param_types 
+            param_types << this.check_type(param_type_node)
         let return_type = this.check_type(function_type_node.return_type)
-        return new FunctionType(false, arg_types, return_type)
+        return new FunctionType(false, param_types, return_type)
     }
     private check_tuple_type(this, tuple_type_node: TupleTypeNode): Type {
         let tuple_type = new TupleType()
@@ -2239,11 +2281,11 @@ class TypeChecker {
             return null
         }
         let method_type = this.program.get_class_prop_type(prop_id) as FunctionType
-        let arg_type = method_type.arg_types[1]
-        let right = this.check_expression(arg_type, binary_node.rhs)
+        let param_type = method_type.param_types[1]
+        let right = this.check_expression(param_type, binary_node.rhs)
         if this.has_errored() return null
-        if !this.types_are_eq(arg_type, right.value_type) {
-            this.error(ErrorKind.TYPE, "Expected type '$(this.dump_type(arg_type))' but got type '$(this.dump_type(right.value_type))'", binary_node.rhs.range)
+        if !this.types_are_eq(param_type, right.value_type) {
+            this.error(ErrorKind.TYPE, "Expected type '$(this.dump_type(param_type))' but got type '$(this.dump_type(right.value_type))'", binary_node.rhs.range)
             return null
         }
         let member_exp = new MemberExpression(left, prop_id, method_type, binary_node.range)
@@ -2267,20 +2309,20 @@ class TypeChecker {
             return null
         }
         let method_type = this.program.get_class_prop_type(prop_id) as FunctionType
-        let arg_type = method_type.arg_types[1]
+        let param_type = method_type.param_types[1]
         if right == null 
-            right = this.check_expression(arg_type, binary_node.rhs)
+            right = this.check_expression(param_type, binary_node.rhs)
         if this.has_errored() return null
         if is_null_expression(right) and (op == BinaryOp.EEQ or op == BinaryOp.NEQ) {
             return new BinaryExpression(left, op, right, PrimitiveTypes.bool, binary_node.range)
         }
         if op == BinaryOp.IN { //FIXME: Just For Ranges. Will not be required once we have ranges are generics. 
-            if is_int(right.value_type) and is_int(arg_type){
-                right = cast_exp_to_type(right, max_type(right.value_type, arg_type))
+            if is_int(right.value_type) and is_int(param_type){
+                right = cast_exp_to_type(right, max_type(right.value_type, param_type))
             }
         }
-        if !this.types_are_eq(arg_type, right.value_type) {
-            this.error(ErrorKind.TYPE, "Expected type '$(this.dump_type(arg_type))' but got type '$(this.dump_type(right.value_type))'", binary_node.rhs.range)
+        if !this.types_are_eq(param_type, right.value_type) {
+            this.error(ErrorKind.TYPE, "Expected type '$(this.dump_type(param_type))' but got type '$(this.dump_type(right.value_type))'", binary_node.rhs.range)
             return null
         }
         let member_exp = new MemberExpression(left, prop_id, method_type, binary_node.range)
@@ -2296,19 +2338,19 @@ class TypeChecker {
             return null
         }
         let method_type = this.program.get_class_prop_type(prop_id) as FunctionType
-        let arg1_type = method_type.arg_types[1]
-        let arg2_type = method_type.arg_types[2]
+        let param1_type = method_type.param_types[1]
+        let param2_type = method_type.param_types[2]
         if this.has_errored() return null
-        let index = this.check_expression(arg1_type, index_expr_node.index)
+        let index = this.check_expression(param1_type, index_expr_node.index)
         if this.has_errored() return null
-        if !this.types_are_eq(arg1_type, index.value_type) {
-            this.error(ErrorKind.TYPE, "Expected type '$(this.dump_type(arg1_type))' but got type '$(this.dump_type(index.value_type))'", index_expr_node.index.range)
+        if !this.types_are_eq(param1_type, index.value_type) {
+            this.error(ErrorKind.TYPE, "Expected type '$(this.dump_type(param1_type))' but got type '$(this.dump_type(index.value_type))'", index_expr_node.index.range)
             return null
         }
-        let value = this.check_expression(arg2_type, binary_node.rhs)
+        let value = this.check_expression(param2_type, binary_node.rhs)
         if this.has_errored() return null
-        if !this.types_are_eq(arg1_type, index.value_type) {
-            this.error(ErrorKind.TYPE, "Expected type '$(this.dump_type(arg2_type))' but got type '$(this.dump_type(value.value_type))'", binary_node.rhs.range)
+        if !this.types_are_eq(param1_type, index.value_type) {
+            this.error(ErrorKind.TYPE, "Expected type '$(this.dump_type(param2_type))' but got type '$(this.dump_type(value.value_type))'", binary_node.rhs.range)
             return null
         }
         let member_expr = new MemberExpression(object, prop_id, method_type, binary_node.range)
@@ -2481,14 +2523,14 @@ class TypeChecker {
         }
         let constructor = obj_class.methods[field_id.id] 
         let construct_type = constructor.method_type
-        let checked_args = this.fill_in_default_call_args(construct_type, constructor.args, args)
+        let checked_args = this.fill_in_default_call_args(construct_type, constructor.params, args)
         if this.has_errored() return null
         let index = this.check_function_call_args_match(construct_type, checked_args)
         if index >= -1 {
             if index == -1 {
-                return "Expected $(construct_type.arg_types.length) argument(s) on constructor call but got $(args.length)"
+                return "Expected $(construct_type.param_types.length) argument(s) on constructor call but got $(args.length)"
             } else {
-                return "Expected type '$(this.dump_type(construct_type.arg_types[index as uint]))' but got type '$(this.dump_type(checked_args[index as uint].value_type))' as constructor call argument ($index)"
+                return "Expected type '$(this.dump_type(construct_type.param_types[index as uint]))' but got type '$(this.dump_type(checked_args[index as uint].value_type))' as constructor call argument ($index)"
             }
         }
         argsp[0] = checked_args
@@ -2662,11 +2704,11 @@ class TypeChecker {
             return null
         }
         let method_type = this.program.get_class_prop_type(prop_id) as FunctionType
-        let arg_type = method_type.arg_types[1]
-        let index = this.check_expression(arg_type, index_expr_node.index)
+        let param_type = method_type.param_types[1]
+        let index = this.check_expression(param_type, index_expr_node.index)
         if this.has_errored() return null
-        if !this.types_are_eq(arg_type, index.value_type) {
-            this.error(ErrorKind.TYPE, "Expected type '$(this.dump_type(arg_type))' but got type '$(this.dump_type(index.value_type))'", index_expr_node.index.range)
+        if !this.types_are_eq(param_type, index.value_type) {
+            this.error(ErrorKind.TYPE, "Expected type '$(this.dump_type(param_type))' but got type '$(this.dump_type(index.value_type))'", index_expr_node.index.range)
             return null
         }
         let member_expr = new MemberExpression(object, prop_id, method_type, index_expr_node.range)
@@ -2721,24 +2763,24 @@ class TypeChecker {
         }
         return new IndexExpression(root_expression, index, value_type, index_expr_node.range)
     }
-    private get_func_args_from_expression(this, called: Expression): FunctionArg[]{
+    private get_func_params_from_expression(this, called: Expression): FunctionParam[]{
         if called.expr_kind == ExpressionKind.ACCESS {
             let var_id = (called as VarAccessExpression).value_id
             if var_id.kind == VarIdKind.FNC {
-                return this.program.get_func(var_id).args
+                return this.program.get_func(var_id).params
             }
         } else if called.expr_kind == ExpressionKind.MEMBER {
             let prop_id = (called as MemberExpression).member_id
-            return this.program.get_method(prop_id).args
+            return this.program.get_method(prop_id).params
         }
         return null
     }
-    private fill_in_default_call_args(this, fnc_ty: FunctionType, func_args: FunctionArg[], args: ExpressionNode[]): Expression[] {
+    private fill_in_default_call_args(this, fnc_ty: FunctionType, func_args: FunctionParam[], args: ExpressionNode[]): Expression[] {
         let called_args: Expression[] = []
         let offset = fnc_ty.has_implicit_this ? 1 : 0
         for let i = 0; i < args.length; i++ {
             let fnc_arg_idx = i + offset
-            let expected_type = fnc_ty.arg_types.length > fnc_arg_idx ? fnc_ty.arg_types[fnc_arg_idx] : PrimitiveTypes.unknown
+            let expected_type = fnc_ty.param_types.length > fnc_arg_idx ? fnc_ty.param_types[fnc_arg_idx] : PrimitiveTypes.unknown
             called_args << this.check_expression(expected_type, args[i])
         }
         if this.has_errored() or func_args == null return called_args
@@ -2750,28 +2792,28 @@ class TypeChecker {
         }
         return called_args
     }
-    private check_function_call_args_match(this, func_ty: FunctionType, args: Expression[]): int {
-        let fnc_arg_types_len = func_ty.arg_types.length
+    private check_function_call_args_match(this, fnc_ty: FunctionType, args: Expression[]): int {
+        let fnc_param_types_len = fnc_ty.param_types.length
         let check_start_offset = 0
-        if func_ty.has_implicit_this {
-            fnc_arg_types_len--
+        if fnc_ty.has_implicit_this {
+            fnc_param_types_len--
             check_start_offset = 1
         }
-        if fnc_arg_types_len != args.length {
+        if fnc_param_types_len != args.length {
             return -1
         }
         for let i = 0; i < args.length; i++ {
-            if !this.types_are_eq(func_ty.arg_types[i + check_start_offset], args[i].value_type) {
+            if !this.types_are_eq(fnc_ty.param_types[i + check_start_offset], args[i].value_type) {
                 return i as int
             }
         }
         return -2
     } 
-    private position_args_by_name(this, func_ty: FunctionType, func_args: FunctionArg[], args: CallExpressionArg[]): ExpressionNode[] {
+    private position_args_by_name(this, fnc_ty: FunctionType, fnc_params: FunctionParam[], args: CallExpressionArg[]): ExpressionNode[] {
         let call_args: ExpressionNode[] = []
         let non_labeled_args: ExpressionNode[] = []
-        let start = func_ty.has_implicit_this ? 1 : 0
-        for let i = start; i < func_args.length; i++ {
+        let start = fnc_ty.has_implicit_this ? 1 : 0
+        for let i = start; i < fnc_params.length; i++ {
             call_args << null
         }
         for arg in args {
@@ -2781,8 +2823,8 @@ class TypeChecker {
             }
 
             let arg_name_found = false
-            for let i = start; i < func_args.length; i++ {
-                if (func_args[i].name == arg.name.value) {
+            for let i = start; i < fnc_params.length; i++ {
+                if (fnc_params[i].name == arg.name.value) {
                     arg_name_found = true
                     if (call_args[i] == null){
                         call_args[i] = arg.value
@@ -2821,12 +2863,12 @@ class TypeChecker {
         }
         return call_args
     }
-    private check_and_fill_default_args(this, func_ty: FunctionType, func_args: FunctionArg[], call_args: ExpressionNode[]): Expression[] {
+    private check_and_fill_default_args(this, fnc_ty: FunctionType, func_args: FunctionParam[], call_args: ExpressionNode[]): Expression[] {
         let checked_call_args: Expression[] = []
-        let offset = func_ty.has_implicit_this ? 1 : 0
+        let offset = fnc_ty.has_implicit_this ? 1 : 0
         for let i = 0; i < call_args.length; i++ {
             let fnc_arg_idx = i + offset
-            let expected_type = func_ty.arg_types.length > fnc_arg_idx ? func_ty.arg_types[fnc_arg_idx] : PrimitiveTypes.unknown
+            let expected_type = fnc_ty.param_types.length > fnc_arg_idx ? fnc_ty.param_types[fnc_arg_idx] : PrimitiveTypes.unknown
             if (call_args[i] == null){
                 if (func_args != null) {
                     if (fnc_arg_idx < func_args.length) {
@@ -2855,17 +2897,17 @@ class TypeChecker {
         }
         //TODO: Check for generic functions.
         let func_ty = called.value_type as FunctionType
-        let func_args = this.get_func_args_from_expression(called)
-        let call_args = func_args == null ? this.get_call_expression_node_list(call_expr_node.args) : this.position_args_by_name(func_ty, func_args, call_expr_node.args)
+        let func_params = this.get_func_params_from_expression(called)
+        let call_args = func_params == null ? this.get_call_expression_node_list(call_expr_node.args) : this.position_args_by_name(func_ty, func_params, call_expr_node.args)
         if this.has_errored() return null
-        let adjusted_args = this.check_and_fill_default_args(func_ty, func_args, call_args)
+        let adjusted_args = this.check_and_fill_default_args(func_ty, func_params, call_args)
         if this.has_errored() return null
         let index = this.check_function_call_args_match(func_ty, adjusted_args)
         if index >= -1 {
             if index == -1 {
-                this.error(ErrorKind.GEN, "Expected $(func_ty.arg_types.length) argument(s) on function call but got $(adjusted_args.length)", call_expr_node.range)
+                this.error(ErrorKind.GEN, "Expected $(func_ty.param_types.length) argument(s) on function call but got $(adjusted_args.length)", call_expr_node.range)
             } else {
-                this.error(ErrorKind.TYPE, "Expected type '$(this.dump_type(func_ty.arg_types[index as uint]))' but got type '$(this.dump_type(adjusted_args[index as uint].value_type))' as function call argument", call_expr_node.args[index as uint].value.range)
+                this.error(ErrorKind.TYPE, "Expected type '$(this.dump_type(func_ty.param_types[index as uint]))' but got type '$(this.dump_type(adjusted_args[index as uint].value_type))' as function call argument", call_expr_node.args[index as uint].value.range)
             }
             return null
         }

@@ -257,11 +257,11 @@ class DebugInfo {
                            0)
     }
     public create_function_type(this, fnc_type: FunctionType, file: LLVMMetadataRef): LLVMMetadataRef {
-        let params: LLVMMetadataRef*(fnc_type.arg_types.length + 1)
+        let params: LLVMMetadataRef*(fnc_type.param_types.length + 1)
         params[0] = this.create_or_get_type(fnc_type.return_type)
-        this.get_type_list(fnc_type.arg_types, params)
+        this.get_type_list(fnc_type.param_types, params)
         return LLVMDIBuilderCreateSubroutineType(this.builder, file,
-                                  params, fnc_type.arg_types.length + 1,
+                                  params, fnc_type.param_types.length + 1,
                                   LLVMDIFlags.LLVMDIFlagZero
                                 )
     }
@@ -359,7 +359,7 @@ class DebugInfo {
     public create_lexical_block(this, block: Block): LLVMMetadataRef {
         return LLVMDIBuilderCreateLexicalBlock(this.builder, this.lexical_blocks.peek(), this.get_current_file(), block.range.line, block.range.col)
     }
-    public create_param_variable(this, dbg_fnc: LLVMMetadataRef, arg_num: uint, arg: FunctionArg): LLVMMetadataRef {
+    public create_param_variable(this, dbg_fnc: LLVMMetadataRef, arg_num: uint, arg: FunctionParam): LLVMMetadataRef {
         let dbg_type = this.create_or_get_type(arg.value_type)
         return LLVMDIBuilderCreateParameterVariable(
             this.builder, dbg_fnc,
@@ -525,12 +525,12 @@ class CodeGen {
         return LLVMStructType(element_types, idx, false)
     }
     private codegen_function_type(this, fnc_type: FunctionType): LLVMTypeRef {
-        let param_types: LLVMTypeRef*(fnc_type.arg_types.length)
+        let param_types: LLVMTypeRef*(fnc_type.param_types.length)
         let idx = 0
-        for arg_ty in fnc_type.arg_types {
-            param_types[idx++] = this.codegen_type(arg_ty)
+        for param_type in fnc_type.param_types {
+            param_types[idx++] = this.codegen_type(param_type)
         }
-        return LLVMFunctionType(this.codegen_type(fnc_type.return_type), param_types, fnc_type.arg_types.length, false)
+        return LLVMFunctionType(this.codegen_type(fnc_type.return_type), param_types, fnc_type.param_types.length, false)
     }
     private codegen_class_type(this, object_type: ObjectType): LLVMTypeRef {
         return this.get_or_codegen_class_from_typeid(object_type.class_id).llvm_type
@@ -713,23 +713,23 @@ class CodeGen {
         return str
     }
     private store_array_elements(this, builder: LLVMBuilderRef, ptr: LLVMValueRef, array_exp: ArrayExpression): LLVMValueRef {
-        let next_args: LLVMValueRef[1] = [this.create_llvm_int(1)]
+        let next_indices: LLVMValueRef[1] = [this.create_llvm_int(1)]
         let ptr_ty = LLVMTypeOf(ptr)
         let addr = ptr
         for value in array_exp.elements {
             LLVMBuildStore(builder, this.codegen_expression(builder, value), addr)
-            addr = LLVMBuildInBoundsGEP2(builder, ptr_ty, addr, &next_args[0], next_args.size, "")
+            addr = LLVMBuildInBoundsGEP2(builder, ptr_ty, addr, &next_indices[0], next_indices.size, "")
         }
         return addr
     }
     private store_tuple_elements(this, builder: LLVMBuilderRef, ptr: LLVMValueRef, tuple_exp: TupleExpression): LLVMValueRef {
         let int32ty = this.debug_info.type_scope.i32_type.llvm_type
-        let next_args: LLVMValueRef[2] = [LLVMConstInt(int32ty, 0, false), null]
+        let next_indices: LLVMValueRef[2] = [LLVMConstInt(int32ty, 0, false), null]
         let idx: u64 = 0
         let tuple_type = this.codegen_type(tuple_exp.value_type)
         for value in tuple_exp.elements {
-            next_args[1] = LLVMConstInt(int32ty, idx++, false)
-            let addr = LLVMBuildInBoundsGEP2(builder, tuple_type, ptr, &next_args[0], next_args.size, "")
+            next_indices[1] = LLVMConstInt(int32ty, idx++, false)
+            let addr = LLVMBuildInBoundsGEP2(builder, tuple_type, ptr, &next_indices[0], next_indices.size, "")
             LLVMBuildStore(builder, this.codegen_expression(builder, value), addr)
         }
         return ptr
@@ -899,9 +899,9 @@ class CodeGen {
             let value_ty = expr.value_type
             if value_ty.kind != TypeKind.RESOLVED_GENERIC {
                 let zero = this.create_llvm_int(0)
-                let args: LLVMValueRef[2] = [zero, zero]
+                let indices: LLVMValueRef[2] = [zero, zero]
                 let array_type = this.codegen_type(value_ty)
-                ptr = LLVMBuildInBoundsGEP2(builder, array_type, ptr, &args[0], args.size, "")
+                ptr = LLVMBuildInBoundsGEP2(builder, array_type, ptr, &indices[0], indices.size, "")
                 return this.store_array_elements(builder, ptr, arr_expr)
             }
             value = this.codegen_builtin_array(builder, value_ty as GenericType, arr_expr)
@@ -1595,13 +1595,13 @@ class CodeGen {
         }
         
     }
-    private codegen_function_body(this, llvm_fnc: LLVMValueRef, llvm_fnc_dbg: LLVMMetadataRef, args: FunctionArg[], fnc_block: Block, fnc_scope: ScopeId){
+    private codegen_function_body(this, llvm_fnc: LLVMValueRef, llvm_fnc_dbg: LLVMMetadataRef, params: FunctionParam[], fnc_block: Block, fnc_scope: ScopeId){
         LLVMSetSubprogram(llvm_fnc, llvm_fnc_dbg)
         let func_builder = LLVMCreateBuilder()
         LLVMPositionBuilderAtEnd(func_builder, LLVMAppendBasicBlock(llvm_fnc, ""))
         this.codegen_vars_alloc_function_scope(func_builder, fnc_scope)
-        for let i = 0; i < args.length; i++ {
-            let arg = args[i]
+        for let i = 0; i < params.length; i++ {
+            let arg = params[i]
             let alloc = this.get_var_from_varid(arg.id)
             let param = LLVMGetParam(llvm_fnc, i)
             LLVMBuildStore(func_builder, param, alloc)
@@ -1623,14 +1623,14 @@ class CodeGen {
             return
         }
         let fnc_dbg = this.debug_info.create_function(func)
-        this.codegen_function_body(llvm_fnc, fnc_dbg, func.args, func.block, func.scope)
+        this.codegen_function_body(llvm_fnc, fnc_dbg, func.params, func.block, func.scope)
     }
     private codegen_class(this, checked_class: Class){
         for method in checked_class.methods {
             if method.is_abstract continue
             let llvm_method = LLVMGetNamedFunction(this.module, "$(checked_class.name)_$(method.name)")
             let method_dbg = this.debug_info.create_method(method)
-            this.codegen_function_body(llvm_method, method_dbg, method.args, method.block, method.scope)
+            this.codegen_function_body(llvm_method, method_dbg, method.params, method.block, method.scope)
         }
     }
     private declare_class_method(this, checked_class: Class, method_name: String, method_type: FunctionType): GeneratedField {

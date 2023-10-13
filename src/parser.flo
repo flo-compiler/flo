@@ -25,11 +25,11 @@ class RecordTypeNode (TypeNode) {
     }
 }
 class FunctionTypeNode (TypeNode) {
-    args: TypeNode[]
+    param_types: TypeNode[]
     return_type: TypeNode
-    constructor(this, args: TypeNode[], range: TextRange){
+    constructor(this, param_types: TypeNode[], range: TextRange){
         this.super(TypeKind.FNC, range)
-        this.args = args
+        this.param_types = param_types
     }
 }
 class TupleTypeNode (TypeNode) {
@@ -299,7 +299,7 @@ class VarDeclarationStatement (StatementNode) {
         this.value = null
     }
 }
-class ArgNode {
+class FunctionParamNode {
     name: IdentifierToken
     parsed_type: TypeNode
     default: ExpressionNode
@@ -318,12 +318,12 @@ class GenericParameterNode {
 class FunctionDeclarationNode {
     name: IdentifierToken
     generic_parameters: GenericParameterNode[]
-    args: ArgNode[]
+    params: FunctionParamNode[]
     block: BlockNode
     return_type: TypeNode
     is_external: bool
     constructor(this){
-        this.args = []
+        this.params = []
         this.is_external = false
         this.generic_parameters = []
         this.block = null
@@ -1026,8 +1026,8 @@ class Parser {
         type_alias_node.parsed_type = this.parse_type()
         return type_alias_node
     }
-    private parse_arg(this): ArgNode {
-        let arg_node = new ArgNode(this.eat(TokType.IDENTIFER) as IdentifierToken)
+    private parse_arg(this): FunctionParamNode {
+        let arg_node = new FunctionParamNode(this.eat(TokType.IDENTIFER) as IdentifierToken)
         if !this.can_parse() return arg_node
         if arg_node.name.value == "this" {
             arg_node.parsed_type = new TypeNode(TypeKind.UNKNOWN, arg_node.name.range)
@@ -1048,7 +1048,7 @@ class Parser {
         }
         return arg_node
     }
-    private parse_args(this, args: ArgNode[]) {
+    private parse_args(this, args: FunctionParamNode[]) {
         this.new_lines()
         args << this.parse_arg()
         while this.current_token.ttype == TokType.COMMA and this.can_parse() {
@@ -1064,7 +1064,7 @@ class Parser {
             this.parse_generic_parameters(fnc_node.generic_parameters)
         this.eat(TokType.LPAR)
         if this.current_token.ttype != TokType.RPAR
-            this.parse_args(fnc_node.args)
+            this.parse_args(fnc_node.params)
         
         this.new_lines()
         this.eat(TokType.RPAR)
