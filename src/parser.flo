@@ -510,7 +510,7 @@ class Parser {
         }
         return object_type_node
     }
-    private parse_function_type(this): TypeNode {
+    private parse_tuple_or_function_type(this): TypeNode {
         let types: TypeNode[] = []
         let start_range = this.current_token.range
         this.advance()
@@ -533,16 +533,8 @@ class Parser {
         if this.current_token.ttype == TokType.IDENTIFER
             type_node = this.parse_object_type()
         else if this.current_token.ttype == TokType.LPAR
-            type_node = this.parse_function_type()
-        else if this.current_token.ttype == TokType.LBRACKET {
-            let rec_node = new RecordTypeNode(new IdentifierToken("Map", this.current_token.range) as IdentifierToken, this.current_token.range)
-            this.advance()
-            rec_node.generic_args << this.parse_type()
-            this.eat(TokType.COL)
-            rec_node.generic_args << this.parse_type()
-            this.eat(TokType.RBRACKET)
-            type_node = rec_node
-        } else {
+            type_node = this.parse_tuple_or_function_type()
+        else {
             this.error("Expected a type")
             return type_node
         }

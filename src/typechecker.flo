@@ -6,31 +6,6 @@ import panic, TextRange in "utils"
 import FloError, ErrorKind in "error"
 import Lexer, IdentifierToken in "lexer"
 import "parser"
-enum TypeConstraints {
-    Constant
-    OpAnd
-    OpOr
-    OpNot
-    OpNeg
-    OpSum
-    OpSub
-    OpMul
-    OpDiv
-    OpEq
-    OpGT
-    OpGTE
-    OpLT
-    OpLTE
-    OpSumEq
-    OpSubEq
-    OpMulEq
-    OpDivEq
-    Indexable
-    IndexAssignable
-    ArrayAccess
-    Callable
-    Iterable
-}
 class Type {
     kind: TypeKind
     constructor(this, kind: TypeKind){
@@ -111,14 +86,66 @@ class TupleType (Type) {
         this.element_types = []
     }
 }
-class GenericVariableType (Type) {
+enum TypeConstraints {
+    Constant
+    OpAnd
+    OpOr
+    OpNot
+    OpNeg
+    OpSum
+    OpSub
+    OpMul
+    OpDiv
+    OpEq
+    OpGT
+    OpGTE
+    OpLT
+    OpLTE
+    OpSumEq
+    OpSubEq
+    OpMulEq
+    OpDivEq
+    Indexable
+    IndexAssignable
+    ArrayAccess
+    Callable
+    Iterable
+}
+class GenericTypeVariable (Type) {
+    indices: uint = 0
+    id: uint
     name: String
     definition_range: TextRange
+    current_instance: Type
     constructor(this, name: String, definition_range: TextRange){
+        this.id = GenericTypeVariable.indices++
         this.super(TypeKind.GENERIC_VARIABLE)
         this.name = name
         this.definition_range = definition_range
     }
+    __eq__(this, other: Type): bool {
+        if (other.kind != TypeKind.GENERIC_VARIABLE) return false
+        return this.id == (other as GenericTypeVariable).id
+    }
+}
+class TypeEnv {
+    parameters: GenericTypeVariable[]
+    specializations: Type[][]
+    specialization_ids: VarId[]
+    constructor(this){
+        this.parameters = []
+        this.specializations = []
+        this.specialization_ids = []
+    }
+
+}
+fnc prune(type: Type): Type {
+    if (type.kind == TypeKind.GENERIC_VARIABLE) {
+        let generic_variable = type as GenericTypeVariable
+        if (generic_variable.current_instance != null)
+            return generic_variable.current_instance = prune(generic_variable.current_instance)
+    }
+    return type
 }
 class Statement {
     kind: StatementKind
@@ -497,18 +524,43 @@ class ReturnStatement (Statement) {
     }
 }
 fnc is_numeric(val_ty: Type): bool {
+    if (val_ty.kind == TypeKind.GENERIC_VARIABLE){
+        let generic_var_type = (val_ty as GenericTypeVariable)
+        if (generic_var_type.current_instance == null) return false
+        return is_numeric(generic_var_type.current_instance)
+    }
     return val_ty.kind >= TypeKind.I4 and val_ty.kind <= TypeKind.F64
 }
 fnc is_float(val_ty: Type): bool {
+    if (val_ty.kind == TypeKind.GENERIC_VARIABLE){
+        let generic_var_type = (val_ty as GenericTypeVariable)
+        if (generic_var_type.current_instance == null) return false
+        return is_float(generic_var_type.current_instance)
+    }
     return val_ty.kind >= TypeKind.F32 and val_ty.kind <= TypeKind.F64
 }
 fnc is_int(val_ty: Type): bool {
+    if (val_ty.kind == TypeKind.GENERIC_VARIABLE){
+        let generic_var_type = (val_ty as GenericTypeVariable)
+        if (generic_var_type.current_instance == null) return false
+        return is_int(generic_var_type.current_instance)
+    }
     return val_ty.kind >= TypeKind.I4 and val_ty.kind <= TypeKind.I128
 }
 fnc is_bool(val_ty: Type): bool {
+    if (val_ty.kind == TypeKind.GENERIC_VARIABLE){
+        let generic_var_type = (val_ty as GenericTypeVariable)
+        if (generic_var_type.current_instance == null) return false
+        return is_bool(generic_var_type.current_instance)
+    }
     return val_ty.kind == TypeKind.BOOL
 }
 fnc is_u8_ptr(val_ty: Type): bool {
+    if (val_ty.kind == TypeKind.GENERIC_VARIABLE){
+        let generic_var_type = (val_ty as GenericTypeVariable)
+        if (generic_var_type.current_instance == null) return false
+        return is_u8_ptr(generic_var_type.current_instance)
+    }
     if val_ty.kind == TypeKind.PTR {
         let pointee_type = (val_ty as PointerType).pointee_type
         if is_int(pointee_type) {
@@ -518,14 +570,29 @@ fnc is_u8_ptr(val_ty: Type): bool {
     return false
 }
 fnc is_object(val_ty: Type): bool {
+    if (val_ty.kind == TypeKind.GENERIC_VARIABLE){
+        let generic_var_type = (val_ty as GenericTypeVariable)
+        if (generic_var_type.current_instance == null) return false
+        return is_object(generic_var_type.current_instance)
+    }
     if (val_ty.kind == TypeKind.RESOLVED_GENERIC)
         return is_object((val_ty as GenericType).instantiated_type)
     return val_ty.kind == TypeKind.OBJECT
 }
 fnc is_function(val_ty: Type): bool {
+    if (val_ty.kind == TypeKind.GENERIC_VARIABLE){
+        let generic_var_type = (val_ty as GenericTypeVariable)
+        if (generic_var_type.current_instance == null) return false
+        return is_function(generic_var_type.current_instance)
+    }
     return val_ty.kind == TypeKind.FNC
 }
 fnc is_pointer(val_ty: Type): bool {
+    if (val_ty.kind == TypeKind.GENERIC_VARIABLE){
+        let generic_var_type = (val_ty as GenericTypeVariable)
+        if (generic_var_type.current_instance == null) return false
+        return is_pointer(generic_var_type.current_instance)
+    }
     return val_ty.kind == TypeKind.PTR
 }
 fnc is_null_expression(exp: Expression): bool {
@@ -725,20 +792,20 @@ class ModuleVarId(VarId){
 }
 class Scope {
     public id: ScopeId
-    public vars: [String: VarId]
-    public classes: [String: ClassId]
-    public functions: [String: VarId]
-    public enums: [String: EnumId]
+    public vars: StringMap<VarId>
+    public classes: StringMap<ClassId>
+    public functions: StringMap<VarId>
+    public enums: StringMap<EnumId>
     public parent: ScopeId
-    public type_aliases: [String: Type]
+    public type_aliases: StringMap<Type>
     public children: ScopeId[]
     constructor(this, module_id: uint, id: uint){
         this.id = new ScopeId(module_id, id)
-        this.vars = new [String: VarId]()
-        this.classes = new [String: ClassId]()
-        this.functions = new [String: VarId]()
-        this.enums = new [String: EnumId]()
-        this.type_aliases = new [String: Type]()
+        this.vars = new StringMap<VarId>()
+        this.classes = new StringMap<ClassId>()
+        this.functions = new StringMap<VarId>()
+        this.enums = new StringMap<EnumId>()
+        this.type_aliases = new StringMap<Type>()
         this.parent = null 
         this.children = []
     }
@@ -769,9 +836,13 @@ class Function {
     scope: ScopeId
     is_external: bool
     definition_range: TextRange
+    generics: TypeEnv
+    is_instantiated_generic: bool
     constructor(this, definition_range: TextRange){
         this.definition_range = definition_range
         this.is_external = false
+        this.is_instantiated_generic = false
+        this.generics = new TypeEnv()
     }
 }
 class Var {
@@ -821,8 +892,8 @@ class Class {
     constructor_id: PropId
     fields: ClassField[]
     methods: ClassMethod[]
-    prop_map: [String: PropId]
-    static_prop_map: [String: PropId]
+    prop_map: StringMap<PropId>
+    static_prop_map: StringMap<PropId>
     inherited_methods_num: uint
     inherited_fields_num: uint
     is_abstract: bool
@@ -832,8 +903,8 @@ class Class {
         this.inherited_methods_num = 0
         this.fields = []
         this.methods = []
-        this.prop_map = new [String: PropId]()
-        this.static_prop_map = new [String: PropId]()
+        this.prop_map = new StringMap<PropId>()
+        this.static_prop_map = new StringMap<PropId>()
         this.is_abstract = false
     }
     private __del__(this){
@@ -869,10 +940,10 @@ class Enum {
     fields: EnumField[]
     definition_range: TextRange
     variant_type: Type
-    field_map: [String: PropId]
+    field_map: StringMap<PropId>
     constructor(this){
         this.fields = []
-        this.field_map = new [String: PropId]()
+        this.field_map = new StringMap<PropId>()
     }
     private __del__(this){
         del this.id
@@ -954,6 +1025,11 @@ class Program {
         return this.modules[type_id.module_id].classes[type_id.id]   
     }
     public get_class_from_type(this, type_: Type): Class {
+        if (type_.kind == TypeKind.GENERIC_VARIABLE){
+            let generic_var_type = (type_ as GenericTypeVariable)
+            if (generic_var_type.current_instance == null) return null
+            return this.get_class_from_type(generic_var_type.current_instance)
+        }
         if type_.kind == TypeKind.RESOLVED_GENERIC
             return this.get_class_from_type((type_ as GenericType).instantiated_type)
         if type_.kind == TypeKind.OBJECT
@@ -964,6 +1040,11 @@ class Program {
         return this.modules[enum_id.module_id].enums[enum_id.id]
     }
     public get_enum_from_type(this, type_: Type): Enum {
+        if (type_.kind == TypeKind.GENERIC_VARIABLE){
+            let generic_var_type = (type_ as GenericTypeVariable)
+            if (generic_var_type.current_instance == null) return null
+            return this.get_enum_from_type(generic_var_type.current_instance)
+        }
         return this.get_enum((type_ as EnumType).enum_id)
     }
     public get_class_from_prop_id(this, prop_id: PropId): Class {
@@ -1171,12 +1252,12 @@ class TypeChecker {
     private compiler: Compiler
     private in_loop: bool
     private module_contains_generics: bool
-    private generic_templates: [String: Generic]
+    private generic_templates: StringMap<Generic>
     constructor(this, compiler: Compiler){
         this.compiler = compiler
         this.in_loop = false
         this.program = new Program()
-        this.generic_templates = new [String: Generic]()
+        this.generic_templates = new StringMap<Generic>()
         PrimitiveTypes.init()
     }
     public check(module_ast: ModuleAST, compiler: Compiler, filename: String): Program {
@@ -1217,6 +1298,16 @@ class TypeChecker {
         return this.get_module(var_id.module_id).enums[var_id.id]
     }
     private types_are_eq(this, t1: Type, t2: Type): bool {
+        if (t1.kind == TypeKind.GENERIC_VARIABLE) {
+            let generic_var_type = (t1 as GenericTypeVariable)
+            if (generic_var_type.current_instance != null)
+                return this.types_are_eq(generic_var_type.current_instance, t2)
+        }
+        if (t2.kind == TypeKind.GENERIC_VARIABLE){
+            let generic_var_type = (t2 as GenericTypeVariable)
+            if (generic_var_type.current_instance != null)
+                return this.types_are_eq(t1, generic_var_type.current_instance)
+        }
         if t1.kind != t2.kind return false
         if is_function(t1) {
             let t1_fnc_type = t1 as FunctionType
@@ -1321,7 +1412,10 @@ class TypeChecker {
             return s + ">"
         }
         if ty.kind == TypeKind.GENERIC_VARIABLE {
-            let gen_var_ty = ty as GenericVariableType
+            let gen_var_ty = ty as GenericTypeVariable
+            if (gen_var_ty.current_instance != null){
+                return gen_var_ty.name + " is " + this.dump_type(gen_var_ty.current_instance)
+            }
             return gen_var_ty.name
         }
         if ty.kind == TypeKind.MODULE {
@@ -1426,11 +1520,11 @@ class TypeChecker {
             if (this.has_errored()) return module
         }
         // We declare module structures
-        for enum_ in module_ast.enums {
-            this.declare_enum_within_module(enum_)
+        for parsed_enum in module_ast.enums {
+            this.declare_enum_within_module(parsed_enum)
         }
-        for class_ in module_ast.classes {
-            this.declare_class_within_module(class_)
+        for parsed_class in module_ast.classes {
+            this.declare_class_within_module(parsed_class)
         }
         if this.has_errored() return module
         for type_alias_node in module_ast.type_aliases {
@@ -1443,19 +1537,19 @@ class TypeChecker {
             }
             module_scope.type_aliases[alias_name] = ty
         }
-        for global_var in module_ast.vars {
-            this.declare_global_var(global_var)
+        for parsed_global_var in module_ast.vars {
+            this.declare_global_var(parsed_global_var)
         }
-        for function in module_ast.functions {
-            this.declare_function_within_module(function)
+        for parsed_function in module_ast.functions {
+            this.declare_function_within_module(parsed_function)
         }
         if this.has_errored() return module
         // We Now check bodies
         for let i = 0; i < module_ast.enums.length; i++ {
             this.check_enum_body(module.enums[i], module_ast.enums[i])
         }
-        for class_ in module_ast.classes {
-            this.check_class_body(class_)
+        for parsed_class in module_ast.classes {
+            this.check_class_body(parsed_class)
         }
         for let i = 0; i < module_ast.functions.length; i++ {
            this.check_function_body(module.functions[i], module_ast.functions[i])
@@ -1737,7 +1831,9 @@ class TypeChecker {
         let fnc_scope = this.create_child_scope_within_current_scope()
         for generic_parameter in function_node.generic_parameters {
             let id_tok = generic_parameter.name
-            fnc_scope.type_aliases[id_tok.value] = new GenericVariableType(id_tok.value, id_tok.range)
+            let generic_variable = new GenericTypeVariable(id_tok.value, id_tok.range)
+            fnc_scope.type_aliases[id_tok.value] = generic_variable
+            declared_function.generics.parameters << generic_variable
         }
         this.current_scope = fnc_scope.id 
         declared_function.params = []
@@ -2515,7 +2611,7 @@ class TypeChecker {
         }
         return new TypeCastExpression(exp, dest_ty, type_expr_node.range)
     }
-    private check_constructor_call(this, class_id: ClassId, args: ExpressionNode[], argsp: Expression[]*): String { 
+    private check_constructor_call(this, class_id: ClassId, args: ExpressionNode[], argsp: Expression[]*, range: TextRange*): String { 
         let obj_class = this.program.get_class(class_id)
         let field_id = obj_class.constructor_id
         if field_id == null {
@@ -2525,14 +2621,9 @@ class TypeChecker {
         let construct_type = constructor.method_type
         let checked_args = this.fill_in_default_call_args(construct_type, constructor.params, args)
         if this.has_errored() return null
-        let index = this.check_function_call_args_match(construct_type, checked_args)
-        if index >= -1 {
-            if index == -1 {
-                return "Expected $(construct_type.param_types.length) argument(s) on constructor call but got $(args.length)"
-            } else {
-                return "Expected type '$(this.dump_type(construct_type.param_types[index as uint]))' but got type '$(this.dump_type(checked_args[index as uint].value_type))' as constructor call argument ($index)"
-            }
-        }
+        let error: String = null
+        this.check_function_call_args_match(null, construct_type, checked_args, &error, range)
+        if error != null return error
         argsp[0] = checked_args
         return null
     }
@@ -2543,16 +2634,17 @@ class TypeChecker {
         if (memory_type.kind == TypeKind.RESOLVED_GENERIC) memory_type = (memory_type as GenericType).instantiated_type
         let args: Expression[] = []
         if is_object(memory_type) {
-            let msg = this.check_constructor_call(this.program.get_class_from_type(memory_type).id, new_expr_node.args, &args)
+            let range = new_expr_node.range
+            let msg = this.check_constructor_call(this.program.get_class_from_type(memory_type).id, new_expr_node.args, &args, &range)
             if msg != null {
-                this.error(ErrorKind.GEN, msg, new_expr_node.range)
+                this.error(ErrorKind.GEN, msg, range)
                 return null
             }
         } else if memory_type.kind == TypeKind.PTR {
             memory_type = (memory_type as PointerType).pointee_type
-            let argno = new_expr_node.args.length
-            if argno != 1 {
-                this.error(ErrorKind.GEN, "New operator expects 1 argument for pointers but got $argno argument(s)", new_expr_node.range)
+            let args_count = new_expr_node.args.length
+            if args_count != 1 {
+                this.error(ErrorKind.GEN, "New operator expects 1 argument for pointers but got $args_count argument(s)", new_expr_node.range)
                 return null
             }
             let int_ty = PrimitiveTypes.uint
@@ -2775,6 +2867,15 @@ class TypeChecker {
         }
         return null
     }
+    private get_func_generics_from_expression(this, called: Expression): TypeEnv {
+        if called.expr_kind == ExpressionKind.ACCESS {
+            let var_id = (called as VarAccessExpression).value_id
+            if var_id.kind == VarIdKind.FNC {
+                return this.program.get_func(var_id).generics
+            }
+        }
+        return null
+    }
     private fill_in_default_call_args(this, fnc_ty: FunctionType, func_args: FunctionParam[], args: ExpressionNode[]): Expression[] {
         let called_args: Expression[] = []
         let offset = fnc_ty.has_implicit_this ? 1 : 0
@@ -2792,22 +2893,111 @@ class TypeChecker {
         }
         return called_args
     }
-    private check_function_call_args_match(this, fnc_ty: FunctionType, args: Expression[]): int {
+    private check_and_specialize_function(this, fnc_ty: FunctionType, generics: TypeEnv): VarId {
+        if (generics == null) return null
+        let specializations: Type[] = []
+        for generic_parameter in generics.parameters {
+            if (generic_parameter.current_instance != null){
+                specializations << generic_parameter.current_instance
+            }
+        }
+        if (specializations.length != generics.parameters.length){
+            // TODO: Use funtion's definition range instead
+            this.error(ErrorKind.TYPE, "Generic expects $(generics.parameters.length) arguments but got $(specializations.length)", generics.parameters[0].definition_range)
+            return null
+        }
+        let arg_types: Type[] = []
+        for param_type in fnc_ty.param_types {
+            let new_param_type = param_type
+            while (new_param_type.kind == TypeKind.GENERIC_VARIABLE) new_param_type = (param_type as GenericTypeVariable).current_instance
+            arg_types << new_param_type
+        }
+        let return_type = fnc_ty.return_type
+        while return_type.kind == TypeKind.GENERIC_VARIABLE return_type = (return_type as GenericTypeVariable).current_instance
+        let new_function_type = new FunctionType(fnc_ty.has_implicit_this, arg_types, return_type)
+        for generic_parameter in generics.parameters {
+            generic_parameter.current_instance = null
+        }
+        if (specializations.length == 0) return null
+        generics.specializations << specializations
+        let current_module = this.get_current_module()
+        let fnc_id = new VarId(VarIdKind.FNC, this.current_scope.module_id, current_module.functions.length)
+        generics.specialization_ids << fnc_id
+        let new_fnc = new Function(null)
+        new_fnc.id = fnc_id
+        new_fnc.is_instantiated_generic = true
+        new_fnc.fnc_type = new_function_type
+        current_module.functions << new_fnc
+        return fnc_id
+    }
+    private check_types_are_compatible_and_set_compatibility(this, type_a: Type, type_b: Type): bool {
+        let type_a = prune(type_a)
+        let type_b = prune(type_b)
+        if (type_a.kind == TypeKind.GENERIC_VARIABLE){
+            let type_a_generic_variable = type_a as GenericTypeVariable
+            if (type_a_generic_variable == type_b) return true
+            (type_a as GenericTypeVariable).current_instance = type_b
+            return true
+        } else if (is_pointer(type_a) and is_pointer(type_b)){
+            let type_a_pointee_type = (type_a as PointerType).pointee_type
+            let type_b_pointee_type = (type_b as PointerType).pointee_type
+            return this.check_types_are_compatible_and_set_compatibility(type_a_pointee_type, type_b_pointee_type)
+        } else if (type_a.kind == TypeKind.ARRAY and type_b.kind == TypeKind.ARRAY){
+            let type_a_array_type = type_a as ArrayType
+            let type_b_array_type = type_b as ArrayType
+            if (type_a_array_type.length != type_b_array_type.length) return false
+            return this.check_types_are_compatible_and_set_compatibility(type_a_array_type.element_type,  type_b_array_type.element_type)
+        } else if (is_function(type_a) and is_function(type_b)){
+            let type_a_fnc_type = type_a as FunctionType
+            let type_b_fnc_type = type_b as FunctionType
+            if (type_a_fnc_type.param_types.length != type_b_fnc_type.param_types.length) return false
+            for let i = 0; i < type_a_fnc_type.param_types.length; i++ {
+                if (!this.check_types_are_compatible_and_set_compatibility(type_a_fnc_type.param_types[i], type_b_fnc_type.param_types[i])){
+                    return false
+                }
+            }
+            if (!this.check_types_are_compatible_and_set_compatibility(type_a_fnc_type.return_type, type_b_fnc_type.return_type)){
+                return false
+            }
+            return true
+        } else if ((type_a.kind == TypeKind.RESOLVED_GENERIC) and (type_b.kind == TypeKind.RESOLVED_GENERIC)) {
+            let type_a_resolved = type_a as GenericType
+            let type_b_resolved = type_b as GenericType
+            if (type_a_resolved.name != type_b_resolved.name) return false
+            if (type_a_resolved.arg_types.length != type_b_resolved.arg_types.length) return false
+            for let i = 0; i < type_a_resolved.arg_types.length; i++ {
+                if (!this.check_types_are_compatible_and_set_compatibility(type_a_resolved.arg_types[i], type_b_resolved.arg_types[i])){
+                    return false
+                }
+            }
+            return true
+        } else if (type_b.kind != TypeKind.GENERIC_VARIABLE and type_a.kind == TypeKind.GENERIC_VARIABLE){
+            return this.check_types_are_compatible_and_set_compatibility(type_b, type_a)
+        } else {
+            return this.types_are_eq(type_a, type_b)
+        }
+    }
+    private check_function_call_args_match(this, generics: TypeEnv, fnc_ty: FunctionType, args: Expression[], error: String*, range: TextRange*): VarId {
         let fnc_param_types_len = fnc_ty.param_types.length
         let check_start_offset = 0
+        error[0] = null
+        range[0] = null
         if fnc_ty.has_implicit_this {
             fnc_param_types_len--
             check_start_offset = 1
         }
         if fnc_param_types_len != args.length {
-            return -1
+            error[0] = "Expected $(fnc_ty.param_types.length) argument(s) on function call but got $(args.length)"
         }
         for let i = 0; i < args.length; i++ {
-            if !this.types_are_eq(fnc_ty.param_types[i + check_start_offset], args[i].value_type) {
-                return i as int
+            let param_type = fnc_ty.param_types[i + check_start_offset]
+            let arg_type = args[i].value_type
+            if !this.check_types_are_compatible_and_set_compatibility(param_type, arg_type) {
+                error[0] = "Expected type '$(this.dump_type(param_type))' but got type '$(this.dump_type(param_type))' as function call argument"
+                range[0] = args[i].range
             }
         }
-        return -2
+        return this.check_and_specialize_function(fnc_ty, generics)
     } 
     private position_args_by_name(this, fnc_ty: FunctionType, fnc_params: FunctionParam[], args: CallExpressionArg[]): ExpressionNode[] {
         let call_args: ExpressionNode[] = []
@@ -2898,18 +3088,21 @@ class TypeChecker {
         //TODO: Check for generic functions.
         let func_ty = called.value_type as FunctionType
         let func_params = this.get_func_params_from_expression(called)
+        let generics = this.get_func_generics_from_expression(called)
         let call_args = func_params == null ? this.get_call_expression_node_list(call_expr_node.args) : this.position_args_by_name(func_ty, func_params, call_expr_node.args)
         if this.has_errored() return null
         let adjusted_args = this.check_and_fill_default_args(func_ty, func_params, call_args)
         if this.has_errored() return null
-        let index = this.check_function_call_args_match(func_ty, adjusted_args)
-        if index >= -1 {
-            if index == -1 {
-                this.error(ErrorKind.GEN, "Expected $(func_ty.param_types.length) argument(s) on function call but got $(adjusted_args.length)", call_expr_node.range)
-            } else {
-                this.error(ErrorKind.TYPE, "Expected type '$(this.dump_type(func_ty.param_types[index as uint]))' but got type '$(this.dump_type(adjusted_args[index as uint].value_type))' as function call argument", call_expr_node.args[index as uint].value.range)
-            }
-            return null
+        let error: String = null
+        let range: TextRange = call_expr_node.range
+        let id = this.check_function_call_args_match(generics, func_ty, adjusted_args, &error, &range)
+        //TODO: Report arg number with the particular issue
+        if error != null {
+            this.error(ErrorKind.TYPE, error, range)
+        }
+        if (id != null) {
+            func_ty = this.program.get_func(id).fnc_type
+            called = new VarAccessExpression(id, func_ty, called.range)
         }
         return new CallExpression(called, adjusted_args, func_ty.return_type, call_expr_node.range)
     }
@@ -3169,7 +3362,7 @@ class TypeChecker {
             }
         }
         if current_scope.vars[name] != null {
-            let var_type  = var_decl_node.is_const ? "constant" : "variable"
+            let var_type = var_decl_node.is_const ? "constant" : "variable"
             this.error(ErrorKind.NAME, "Illegal re-declaration of already declared $var_type '$name'", var_decl_node.var_name.range)
             return null
         }

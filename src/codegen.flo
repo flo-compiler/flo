@@ -35,7 +35,7 @@ class CodegenTypeScope {
     f64_type: GeneratedType
     void_type: GeneratedType
     null_type: GeneratedType
-    record_types: [String: GeneratedRecordType]
+    record_types: StringMap<GeneratedRecordType>
     constructor(this, builder: LLVMDIBuilderRef){
         let int_llvm_type = LLVMIntType(ARCH_WORD_SIZE)
         let i4_llvm_type = LLVMIntType(4)
@@ -68,7 +68,7 @@ class CodegenTypeScope {
         this.void_type = new GeneratedType(LLVMVoidType(), LLVMDIBuilderCreateUnspecifiedType(builder, "void", 4))
         this.null_type = new GeneratedType(null, LLVMDIBuilderCreateNullPtrType(builder))
 
-        this.record_types = new [String: GeneratedRecordType]()
+        this.record_types = new StringMap<GeneratedRecordType>()
     }
     private create_type_id_key(type_id: TypeId): String {
         return "$(type_id.module_id);$(type_id.kind as int);$(type_id.id)"
@@ -89,9 +89,9 @@ class GeneratedField {
     }
 }
 class GeneratedRecordType(GeneratedType)  {
-    private field_map: [String: GeneratedField]
+    private field_map: StringMap<GeneratedField>
     constructor(this){
-        this.field_map = new [String: GeneratedField]()
+        this.field_map = new StringMap<GeneratedField>()
     }
     private create_prop_key(prop_id: PropId): String {
         return "$(prop_id.kind as int);$(prop_id.id)"
@@ -190,6 +190,8 @@ class DebugInfo {
             return this.get_enum_type(tt as EnumType)
         if is_object(tt)
             return this.get_object_type(tt as ObjectType)
+        if tt.kind == TypeKind.GENERIC_VARIABLE
+            return this.create_or_get_type((tt as GenericTypeVariable).current_instance)
         return this.type_scope.null_type.llvm_metadata
     }
     public get_int_type(this, int_type: IntType): LLVMMetadataRef {
@@ -212,6 +214,8 @@ class DebugInfo {
         return this.type_scope.get_record_from_typeid(enum_type.enum_id).llvm_metadata
     }
     public get_object_type(this, object_type: ObjectType): LLVMMetadataRef {
+        if object_type.kind == TypeKind.GENERIC_VARIABLE
+            return this.get_object_type((object_type as GenericTypeVariable).current_instance as ObjectType)
         while object_type.kind == TypeKind.RESOLVED_GENERIC
             object_type = (object_type as GenericType).instantiated_type as ObjectType
         let class_ty = this.type_scope.get_record_from_typeid(object_type.class_id)
@@ -401,6 +405,8 @@ fnc create_var_key(var_id: VarId): String {
 }
 
 fnc get_format_from_type(ty: Type): String {
+    if (ty.kind == TypeKind.GENERIC_VARIABLE)
+        return get_format_from_type((ty as GenericTypeVariable).current_instance)
     if is_int(ty){
         let is_signed_int = (ty as IntType).is_signed
         if ty.kind == TypeKind.I128 return is_signed_int ? "%lld" : "%llu"
@@ -421,37 +427,39 @@ class CodeGen {
     private break_bbs: Stack<LLVMBasicBlockRef>
     private continue_bbs: Stack<LLVMBasicBlockRef>
     private program: Program
-    private global_var_scope: [String: LLVMValueRef]
-    private global_string_scope: [String: LLVMValueRef]
+    private global_var_scope: StringMap<LLVMValueRef>
+    private global_string_scope: StringMap<LLVMValueRef>
     private debug_info: DebugInfo
+    private classes_to_codegen: Class[]
     constructor(this, program: Program, module_name: String){
         this.program = program
-        this.global_var_scope = new [String: LLVMValueRef]()
-        this.global_string_scope = new [String: LLVMValueRef]()
+        this.global_var_scope = new StringMap<LLVMValueRef>()
+        this.global_string_scope = new StringMap<LLVMValueRef>()
         this.continue_bbs = new Stack<LLVMBasicBlockRef>()
         this.break_bbs = new Stack<LLVMBasicBlockRef>()
         this.functions = new Stack<LLVMValueRef>()
         this.module = LLVMModuleCreateWithName(module_name.to_cstring())
         this.debug_info = new DebugInfo(this.program, this.module, module_name)
+        this.classes_to_codegen = []
         LLVMAddModuleFlag(this.module, LLVMModuleFlagBehavior.LLVMModuleFlagBehaviorWarning, "Debug Info Version", 18, LLVMValueAsMetadata(LLVMConstInt(this.debug_info.type_scope.i32_type.llvm_type, LLVMDebugMetadataVersion(), false)))
     }
     public codegen(program: Program): GeneratedModule{
         let module = program.modules[2]
         let codegen: CodeGen(program, module.name)
-        for enum_ in module.enums  {
-            codegen.declare_enum(enum_)
+        for checked_enum in module.enums  {
+            codegen.codegen_enum(checked_enum)
         }
-        for class_ in module.classes {
-            codegen.declare_class(class_)
+        for checked_class in module.classes {
+            codegen.declare_class(checked_class)
         }
-        for var_ in module.global_vars {
-            codegen.codegen_var_declaration(null, var_)
+        for checked_var in module.global_vars {
+            codegen.codegen_var_declaration(null, checked_var)
         }
-        for class_ in module.classes {
-            codegen.codegen_class(class_)
+        for checked_function in module.functions {
+            codegen.codegen_function(checked_function)
         }
-        for func_ in module.functions {
-            codegen.codegen_function(func_)
+        for let i = 0; i < codegen.classes_to_codegen.length; i++ {
+            codegen.codegen_class(codegen.classes_to_codegen[i])
         }
         del program
         return new GeneratedModule(codegen.module)
@@ -498,6 +506,8 @@ class CodeGen {
             return this.debug_info.type_scope.f64_type.llvm_type
         if tt.kind == TypeKind.PTR
             return LLVMPointerType(this.codegen_type((tt as PointerType).pointee_type))
+        if tt.kind == TypeKind.GENERIC_VARIABLE
+            return this.codegen_type((tt as GenericTypeVariable).current_instance)
         if tt.kind == TypeKind.ARRAY
             return this.codegen_array_type(tt as ArrayType)
         if tt.kind == TypeKind.TUPLE
@@ -790,16 +800,15 @@ class CodeGen {
     private get_or_codegen_class_from_typeid(this, ty_id: TypeId): GeneratedRecordType {
         let cg_class = this.debug_info.type_scope.get_record_from_typeid(ty_id)
         if cg_class != null return cg_class
-        let class_ = this.program.get_class(ty_id as ClassId)
-        this.declare_class(class_)
-        this.codegen_class(class_)
-        return this.debug_info.type_scope.get_record_from_typeid(class_.id)
+        let checked_class = this.program.get_class(ty_id as ClassId)
+        this.declare_class(checked_class)
+        return this.debug_info.type_scope.get_record_from_typeid(checked_class.id)
     }
     private get_or_codegen_enum_from_typeid(this, ty_id: TypeId): GeneratedRecordType {
         let cg_enum = this.debug_info.type_scope.get_record_from_typeid(ty_id)
         if cg_enum != null return cg_enum
         let enum_ = this.program.get_enum(ty_id as EnumId)
-        this.declare_enum(enum_)
+        this.codegen_enum(enum_)
         return this.debug_info.type_scope.get_record_from_typeid(enum_.id)
     }
     private get_var_expr_mem(this, builder: LLVMBuilderRef, var_exp: VarAccessExpression): LLVMValueRef {
@@ -1040,7 +1049,7 @@ class CodeGen {
                 return is_const_expr ? LLVMConstXor(lhs, rhs) : LLVMBuildXor(builder, lhs, rhs, "")
             }
         }
-        panic("Unknown bin expression case case!")
+        panic("Unknown bin expression case case! $op")
         return lhs
     }
     private codegen_typecast_exp(this, builder: LLVMBuilderRef, type_exp: TypeCastExpression): LLVMValueRef {
@@ -1615,15 +1624,28 @@ class CodeGen {
         LLVMDisposeBuilder(func_builder)
         this.functions.pop()
     }
-    private codegen_function(this, func: Function){
-        let llvm_fnc = LLVMAddFunction(this.module, func.name.to_cstring(), this.codegen_function_type(func.fnc_type))
-        this.add_var(func.id, llvm_fnc)
-        if func.is_external { 
+    private codegen_function(this, checked_function: Function, is_instantiation = false){
+        if (checked_function.is_instantiated_generic) return
+        if (checked_function.generics.parameters.length > 0 and !is_instantiation) {
+            for let j = 0; j < checked_function.generics.specializations.length; j++ {
+                let specializations = checked_function.generics.specializations[j]
+                for let i = 0; i < specializations.length; i++ {
+                    checked_function.generics.parameters[i].current_instance = specializations[i]
+                }
+                checked_function.id = checked_function.generics.specialization_ids[j]
+                
+                this.codegen_function(checked_function, true)
+            }
+            return
+        }
+        let llvm_fnc = LLVMAddFunction(this.module, checked_function.name.to_cstring(), this.codegen_function_type(checked_function.fnc_type))
+        this.add_var(checked_function.id, llvm_fnc)
+        if checked_function.is_external { 
             LLVMSetLinkage(llvm_fnc, LLVMLinkage.LLVMExternalLinkage)
             return
         }
-        let fnc_dbg = this.debug_info.create_function(func)
-        this.codegen_function_body(llvm_fnc, fnc_dbg, func.params, func.block, func.scope)
+        let fnc_dbg = this.debug_info.create_function(checked_function)
+        this.codegen_function_body(llvm_fnc, fnc_dbg, checked_function.params, checked_function.block, checked_function.scope)
     }
     private codegen_class(this, checked_class: Class){
         for method in checked_class.methods {
@@ -1724,8 +1746,9 @@ class CodeGen {
             let constructor_type = this.program.get_class_prop_type(checked_class.constructor_id)
             struct_class.set_field(checked_class.constructor_id, this.declare_class_method(checked_class, "constructor", constructor_type as FunctionType))
         }
+        this.classes_to_codegen << checked_class
     }
-    private declare_enum(this, checked_enum: Enum){
+    private codegen_enum(this, checked_enum: Enum){
         let enum_type = new GeneratedRecordType()
         enum_type.llvm_type = this.codegen_type(checked_enum.variant_type)
         let enum_fields_dbg: LLVMMetadataRef*(checked_enum.fields.length)

@@ -1,0 +1,9 @@
+fnc printAll<T>(value: T){
+    println(value as String)
+}
+fnc main(){
+    printAll(4)
+    printAll(4.0)
+    printAll(true)
+    printAll("OO")
+}

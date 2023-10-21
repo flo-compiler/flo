@@ -23,13 +23,13 @@ class Compiler {
     public builtin_path: String
     private files: FloFile []
     public errors: FloError []
-    private file_ids: [String: FileId]
+    private file_ids: StringMap<FileId>
     constructor(this){
         this.files = []
         this.current_file = null
         this.current_file_contents = null
         this.errors = []
-        this.file_ids = new [String: FileId]()
+        this.file_ids = new StringMap<FileId>()
     }
     public set_std_path(this, std_dir_path: String): bool {
         if (!File.exists(std_dir_path)) return false

@@ -80,11 +80,6 @@ class String {
         this.append_bytes_length(other.get_bytes(), other.length)
         return this
     }
-    private __getitem__(this, index: uint): String {
-        let new_buffer = new u8*(1)
-        new_buffer[0] = this.buffer[index]
-        return new String(new_buffer, 1)
-    }
     private __ne__(this, other: String): bool {
         return !(this.__eq__(other))
     }
@@ -222,22 +217,22 @@ class Array <T> {
         this.length += other.length
         return this as T[]
     }
-    private __neq__(this, other: T[]): bool {
-        return !this.__eq__(other)
-    }
-    private __eq__(this, other: T[]): bool {
-        if this.length != other.length {
-            return false
-        }
-        let i = this.length
-        while(i-- > 0) {
-            if this[i] != other[i] return false
-        }
-        return true
-    }
-    private __in__(this, element: T): bool {
-        return this.find(element) != -1
-    }    
+    // private __neq__(this, other: T[]): bool {
+    //     return !this.__eq__(other)
+    // }
+    // private __eq__(this, other: T[]): bool {
+    //     if this.length != other.length {
+    //         return false
+    //     }
+    //     let i = this.length
+    //     while(i-- > 0) {
+    //         if this[i] != other[i] return false
+    //     }
+    //     return true
+    // }
+    // private __in__(this, element: T): bool {
+    //     return this.find(element) != -1
+    // }    
     private __del__(this){
         del this.buffer
     }
@@ -250,13 +245,13 @@ class Array <T> {
             this.buffer = this.buffer.resize(this.capacity)
         }
     }
-    public find(this, search: T): int {
-        let i = this.length as int
-        while (i-- > 0) {
-            if this.buffer[i] == search return i
-        }
-        return -1
-    }
+    // public find(this, search: T): int {
+    //     let i = this.length as int
+    //     while (i-- > 0) {
+    //         if this.buffer[i] == search return i
+    //     }
+    //     return -1
+    // }
 }
 class ArrayIterator<T> {
     private done: bool
@@ -275,39 +270,37 @@ class ArrayIterator<T> {
         return next_elem
     }
 }
-// ----- Map -------
-class MapEntry<T, U> {
-    public key: T
+// ----- StringMap ----
+class StringMapEntry<U> {
+    public key: String
     public value: U
-    constructor(this, key: T, value: U){
+    constructor(this, key: String, value: U){
         this.key = key
         this.value = value
     }
 }
-class Map<T, U> {
-    private entries: MapEntry<T, U>*
+class StringMap<U> {
+    private entries: StringMapEntry<U>*
     private size: uint
     public length: uint
     constructor(this){
         let initial_capacity = 256
-        this.entries = new MapEntry<T, U>*(initial_capacity)
+        this.entries = new StringMapEntry<U>*(initial_capacity)
         for let i = 0; i < initial_capacity; i++ {
             this.entries[i] = null
         }
         this.size = initial_capacity
         this.length = 0
     }
-    private hash_fnc(this, key: T): uint {
-        let str = "$key"
+    private hash_fnc(this, key: String): uint {
         let hash = 0
-        for let i = 0; i < str.length; i++ {
-            hash = (hash << 1) + str.get_byte(i)
+        for let i = 0; i < key.length; i++ {
+            hash = (hash << 1) + key.get_byte(i)
         }
-        del str
         return hash
     }
     private resize(this){
-        let old_entries: MapEntry<T, U>*(this.size)
+        let old_entries: StringMapEntry<U>*(this.size)
         let old_size = this.size
         old_entries.copy_from(this.entries, this.size)
         this.size *= 2
@@ -321,7 +314,7 @@ class Map<T, U> {
             if (entry != null) this.__setitem__(entry.key, entry.value)
         }
     }
-    private __setitem__(this, key: T, value: U){
+    private __setitem__(this, key: String, value: U){
         let ratio = this.length / (this.size as f64)
         if (ratio > 0.75) this.resize()
         let hash = this.hash_fnc(key) % this.size
@@ -336,9 +329,9 @@ class Map<T, U> {
         if should_add {
             this.length++
         }
-        this.entries[hash] = new MapEntry<T, U>(key, value)
+        this.entries[hash] = new StringMapEntry<U>(key, value)
     }
-    private __getitem__(this, key: T): U {
+    private __getitem__(this, key: String): U {
         let hash = this.hash_fnc(key) % this.size
         while this.entries[hash] != null {
             if this.entries[hash].key == key
@@ -350,25 +343,25 @@ class Map<T, U> {
             return this.entries[hash].value
         return null
     }
-    private __iter__(this): MapIterator<T, U> {
-        return new MapIterator<T, U>(this.entries, this.size, this.length)
+    private __iter__(this): StringMapIterator<U> {
+        return new StringMapIterator<U>(this.entries, this.size, this.length)
     }
     private __del__(this){
         del this.entries
     }
 }
-class MapIterator<T, U> {
+class StringMapIterator<U> {
     private done: bool
-    private entries: MapEntry<T, U>*
+    private entries: StringMapEntry<U>*
     private remaining_size: uint
     private items_remaining: uint
-    constructor(this, entries: MapEntry<T, U>*, remaining_size: uint, items_remaining: uint){
+    constructor(this, entries: StringMapEntry<U>*, remaining_size: uint, items_remaining: uint){
         this.done = false
         this.entries = entries
         this.remaining_size = remaining_size
         this.items_remaining = items_remaining
     }
-    private next(this): MapEntry<T, U> {
+    private next(this): StringMapEntry<U> {
         while this.remaining_size-- > 0 {
             this.entries++
             if this.entries[-1] != null break
@@ -377,3 +370,105 @@ class MapIterator<T, U> {
         return this.entries[-1]
     }
 }
+// ----- Map -------
+// class MapEntry<T, U> {
+//     public key: T
+//     public value: U
+//     constructor(this, key: T, value: U){
+//         this.key = key
+//         this.value = value
+//     }
+// }
+// class Map<T, U> {
+//     private entries: MapEntry<T, U>*
+//     private size: uint
+//     public length: uint
+//     constructor(this){
+//         let initial_capacity = 256
+//         this.entries = new MapEntry<T, U>*(initial_capacity)
+//         for let i = 0; i < initial_capacity; i++ {
+//             this.entries[i] = null
+//         }
+//         this.size = initial_capacity
+//         this.length = 0
+//     }
+//     private hash_fnc(this, key: T): uint {
+//         let str = "$key"
+//         let hash = 0
+//         for let i = 0; i < str.length; i++ {
+//             hash = (hash << 1) + str.get_byte(i)
+//         }
+//         del str
+//         return hash
+//     }
+//     private resize(this){
+//         let old_entries: MapEntry<T, U>*(this.size)
+//         let old_size = this.size
+//         old_entries.copy_from(this.entries, this.size)
+//         this.size *= 2
+//         this.length = 0
+//         this.entries = this.entries.resize(this.size)
+//         for let i = 0; i < this.size; i++ {
+//             this.entries[i] = null
+//         }
+//         for let i = 0; i < old_size; i++ {
+//             let entry = old_entries[i]
+//             if (entry != null) this.__setitem__(entry.key, entry.value)
+//         }
+//     }
+//     private __setitem__(this, key: T, value: U){
+//         let ratio = this.length / (this.size as f64)
+//         if (ratio > 0.75) this.resize()
+//         let hash = this.hash_fnc(key) % this.size
+//         let should_add = true
+//         while this.entries[hash] != null {
+//             if this.entries[hash].key == key {
+//                 should_add = false
+//                 break
+//             }
+//             hash = (hash + 1) % this.size
+//         }
+//         if should_add {
+//             this.length++
+//         }
+//         this.entries[hash] = new MapEntry<T, U>(key, value)
+//     }
+//     private __getitem__(this, key: T): U {
+//         let hash = this.hash_fnc(key) % this.size
+//         while this.entries[hash] != null {
+//             if this.entries[hash].key == key
+//                 break
+//             else
+//                 hash = (hash + 1) % this.size
+//         }
+//         if this.entries[hash] != null
+//             return this.entries[hash].value
+//         return null
+//     }
+//     private __iter__(this): MapIterator<T, U> {
+//         return new MapIterator<T, U>(this.entries, this.size, this.length)
+//     }
+//     private __del__(this){
+//         del this.entries
+//     }
+// }
+// class MapIterator<T, U> {
+//     private done: bool
+//     private entries: MapEntry<T, U>*
+//     private remaining_size: uint
+//     private items_remaining: uint
+//     constructor(this, entries: MapEntry<T, U>*, remaining_size: uint, items_remaining: uint){
+//         this.done = false
+//         this.entries = entries
+//         this.remaining_size = remaining_size
+//         this.items_remaining = items_remaining
+//     }
+//     private next(this): MapEntry<T, U> {
+//         while this.remaining_size-- > 0 {
+//             this.entries++
+//             if this.entries[-1] != null break
+//         }
+//         this.done = this.items_remaining-- <= 0
+//         return this.entries[-1]
+//     }
+// }
