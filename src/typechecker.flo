@@ -128,17 +128,6 @@ class GenericTypeVariable (Type) {
         return this.id == (other as GenericTypeVariable).id
     }
 }
-class TypeEnv {
-    parameters: GenericTypeVariable[]
-    specializations: Type[][]
-    specialization_ids: VarId[]
-    constructor(this){
-        this.parameters = []
-        this.specializations = []
-        this.specialization_ids = []
-    }
-
-}
 class Statement {
     kind: StatementKind
     constructor(this, kind: StatementKind){
@@ -828,13 +817,9 @@ class Function {
     scope: ScopeId
     is_external: bool
     definition_range: TextRange
-    generics: TypeEnv
-    is_instantiated_generic: bool
     constructor(this, definition_range: TextRange){
         this.definition_range = definition_range
         this.is_external = false
-        this.is_instantiated_generic = false
-        this.generics = new TypeEnv()
     }
 }
 class Var {
@@ -1821,12 +1806,6 @@ class TypeChecker {
         }
         let parent_scope = this.current_scope
         let fnc_scope = this.create_child_scope_within_current_scope()
-        for generic_parameter in function_node.generic_parameters {
-            let id_tok = generic_parameter.name
-            let generic_variable = new GenericTypeVariable(id_tok.value, id_tok.range)
-            fnc_scope.type_aliases[id_tok.value] = generic_variable
-            declared_function.generics.parameters << generic_variable
-        }
         this.current_scope = fnc_scope.id 
         declared_function.params = []
         declared_function.fnc_type = this.init_function_signature(function_node.params, function_node.return_type, declared_function.params, null)
@@ -2614,7 +2593,7 @@ class TypeChecker {
         let checked_args = this.fill_in_default_call_args(construct_type, constructor.params, args)
         if this.has_errored() return null
         let error: String = null
-        this.check_function_call_args_match(null, construct_type, checked_args, &error, range)
+        this.check_function_call_args_match(construct_type, checked_args, &error, range)
         if error != null return error
         argsp[0] = checked_args
         return null
@@ -2859,15 +2838,6 @@ class TypeChecker {
         }
         return null
     }
-    private get_func_generics_from_expression(this, called: Expression): TypeEnv {
-        if called.expr_kind == ExpressionKind.ACCESS {
-            let var_id = (called as VarAccessExpression).value_id
-            if var_id.kind == VarIdKind.FNC {
-                return this.program.get_func(var_id).generics
-            }
-        }
-        return null
-    }
     private fill_in_default_call_args(this, fnc_ty: FunctionType, func_args: FunctionParam[], args: ExpressionNode[]): Expression[] {
         let called_args: Expression[] = []
         let offset = fnc_ty.has_implicit_this ? 1 : 0
@@ -2885,89 +2855,7 @@ class TypeChecker {
         }
         return called_args
     }
-    private check_and_specialize_function(this, fnc_ty: FunctionType, generics: TypeEnv): VarId {
-        if (generics == null) return null
-        let specializations: Type[] = []
-        for generic_parameter in generics.parameters {
-            if (generic_parameter.current_instance != null){
-                specializations << generic_parameter.current_instance
-            }
-        }
-        if (specializations.length != generics.parameters.length){
-            // TODO: Use funtion's definition range instead
-            this.error(ErrorKind.TYPE, "Generic expects $(generics.parameters.length) arguments but got $(specializations.length)", generics.parameters[0].definition_range)
-            return null
-        }
-        let arg_types: Type[] = []
-        for param_type in fnc_ty.param_types {
-            let new_param_type = param_type
-            while (new_param_type.kind == TypeKind.GENERIC_VARIABLE) new_param_type = (param_type as GenericTypeVariable).current_instance
-            arg_types << new_param_type
-        }
-        let return_type = fnc_ty.return_type
-        while return_type.kind == TypeKind.GENERIC_VARIABLE return_type = (return_type as GenericTypeVariable).current_instance
-        let new_function_type = new FunctionType(fnc_ty.has_implicit_this, arg_types, return_type)
-        for generic_parameter in generics.parameters {
-            generic_parameter.current_instance = null
-        }
-        if (specializations.length == 0) return null
-        generics.specializations << specializations
-        let current_module = this.get_current_module()
-        let fnc_id = new VarId(VarIdKind.FNC, this.current_scope.module_id, current_module.functions.length)
-        generics.specialization_ids << fnc_id
-        let new_fnc = new Function(null)
-        new_fnc.id = fnc_id
-        new_fnc.is_instantiated_generic = true
-        new_fnc.fnc_type = new_function_type
-        current_module.functions << new_fnc
-        return fnc_id
-    }
-    private check_types_are_compatible_and_set_compatibility(this, type_a: Type, type_b: Type): bool {
-        if (type_a.kind == TypeKind.GENERIC_VARIABLE){
-            let type_a_generic_variable = type_a as GenericTypeVariable
-            if (type_a_generic_variable == type_b) return true
-            (type_a as GenericTypeVariable).current_instance = type_b
-            return true
-        } else if (is_pointer(type_a) and is_pointer(type_b)){
-            let type_a_pointee_type = (type_a as PointerType).pointee_type
-            let type_b_pointee_type = (type_b as PointerType).pointee_type
-            return this.check_types_are_compatible_and_set_compatibility(type_a_pointee_type, type_b_pointee_type)
-        } else if (type_a.kind == TypeKind.ARRAY and type_b.kind == TypeKind.ARRAY){
-            let type_a_array_type = type_a as ArrayType
-            let type_b_array_type = type_b as ArrayType
-            if (type_a_array_type.length != type_b_array_type.length) return false
-            return this.check_types_are_compatible_and_set_compatibility(type_a_array_type.element_type,  type_b_array_type.element_type)
-        } else if (is_function(type_a) and is_function(type_b)){
-            let type_a_fnc_type = type_a as FunctionType
-            let type_b_fnc_type = type_b as FunctionType
-            if (type_a_fnc_type.param_types.length != type_b_fnc_type.param_types.length) return false
-            for let i = 0; i < type_a_fnc_type.param_types.length; i++ {
-                if (!this.check_types_are_compatible_and_set_compatibility(type_a_fnc_type.param_types[i], type_b_fnc_type.param_types[i])){
-                    return false
-                }
-            }
-            if (!this.check_types_are_compatible_and_set_compatibility(type_a_fnc_type.return_type, type_b_fnc_type.return_type)){
-                return false
-            }
-            return true
-        } else if ((type_a.kind == TypeKind.RESOLVED_GENERIC) and (type_b.kind == TypeKind.RESOLVED_GENERIC)) {
-            let type_a_resolved = type_a as GenericType
-            let type_b_resolved = type_b as GenericType
-            if (type_a_resolved.name != type_b_resolved.name) return false
-            if (type_a_resolved.arg_types.length != type_b_resolved.arg_types.length) return false
-            for let i = 0; i < type_a_resolved.arg_types.length; i++ {
-                if (!this.check_types_are_compatible_and_set_compatibility(type_a_resolved.arg_types[i], type_b_resolved.arg_types[i])){
-                    return false
-                }
-            }
-            return true
-        } else if (type_b.kind != TypeKind.GENERIC_VARIABLE and type_a.kind == TypeKind.GENERIC_VARIABLE){
-            return this.check_types_are_compatible_and_set_compatibility(type_b, type_a)
-        } else {
-            return this.types_are_eq(type_a, type_b)
-        }
-    }
-    private check_function_call_args_match(this, generics: TypeEnv, fnc_ty: FunctionType, args: Expression[], error: String*, range: TextRange*): VarId {
+    private check_function_call_args_match(this, fnc_ty: FunctionType, args: Expression[], error: String*, range: TextRange*) {
         let fnc_param_types_len = fnc_ty.param_types.length
         let check_start_offset = 0
         if fnc_ty.has_implicit_this {
@@ -2980,12 +2868,11 @@ class TypeChecker {
         for let i = 0; i < args.length; i++ {
             let param_type = fnc_ty.param_types[i + check_start_offset]
             let arg_type = args[i].value_type
-            if !this.check_types_are_compatible_and_set_compatibility(param_type, arg_type) {
+            if !this.types_are_eq(param_type, arg_type) {
                 error[0] = "Expected type '$(this.dump_type(param_type))' but got type '$(this.dump_type(param_type))' as function call argument"
                 range[0] = args[i].range
             }
         }
-        return this.check_and_specialize_function(fnc_ty, generics)
     } 
     private position_args_by_name(this, fnc_ty: FunctionType, fnc_params: FunctionParam[], args: CallExpressionArg[]): ExpressionNode[] {
         let call_args: ExpressionNode[] = []
@@ -3076,21 +2963,16 @@ class TypeChecker {
         //TODO: Check for generic functions.
         let func_ty = called.value_type as FunctionType
         let func_params = this.get_func_params_from_expression(called)
-        let generics = this.get_func_generics_from_expression(called)
         let call_args = func_params == null ? this.get_call_expression_node_list(call_expr_node.args) : this.position_args_by_name(func_ty, func_params, call_expr_node.args)
         if this.has_errored() return null
         let adjusted_args = this.check_and_fill_default_args(func_ty, func_params, call_args)
         if this.has_errored() return null
         let error: String = null
         let range: TextRange = call_expr_node.range
-        let id = this.check_function_call_args_match(generics, func_ty, adjusted_args, &error, &range)
+        this.check_function_call_args_match(func_ty, adjusted_args, &error, &range)
         //TODO: Report arg number with the particular issue
         if error != null {
             this.error(ErrorKind.TYPE, error, range)
-        }
-        if (id != null) {
-            func_ty = this.program.get_func(id).fnc_type
-            called = new VarAccessExpression(id, func_ty, called.range)
         }
         return new CallExpression(called, adjusted_args, func_ty.return_type, call_expr_node.range)
     }

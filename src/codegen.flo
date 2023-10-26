@@ -1624,20 +1624,7 @@ class CodeGen {
         LLVMDisposeBuilder(func_builder)
         this.functions.pop()
     }
-    private codegen_function(this, checked_function: Function, is_instantiation = false){
-        if (checked_function.is_instantiated_generic) return
-        if (checked_function.generics.parameters.length > 0 and !is_instantiation) {
-            for let j = 0; j < checked_function.generics.specializations.length; j++ {
-                let specializations = checked_function.generics.specializations[j]
-                for let i = 0; i < specializations.length; i++ {
-                    checked_function.generics.parameters[i].current_instance = specializations[i]
-                }
-                checked_function.id = checked_function.generics.specialization_ids[j]
-                
-                this.codegen_function(checked_function, true)
-            }
-            return
-        }
+    private codegen_function(this, checked_function: Function){
         let llvm_fnc = LLVMAddFunction(this.module, checked_function.name.to_cstring(), this.codegen_function_type(checked_function.fnc_type))
         this.add_var(checked_function.id, llvm_fnc)
         if checked_function.is_external { 
