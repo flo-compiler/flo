@@ -139,14 +139,6 @@ class TypeEnv {
     }
 
 }
-fnc prune(type: Type): Type {
-    if (type.kind == TypeKind.GENERIC_VARIABLE) {
-        let generic_variable = type as GenericTypeVariable
-        if (generic_variable.current_instance != null)
-            return generic_variable.current_instance = prune(generic_variable.current_instance)
-    }
-    return type
-}
 class Statement {
     kind: StatementKind
     constructor(this, kind: StatementKind){
@@ -2931,8 +2923,6 @@ class TypeChecker {
         return fnc_id
     }
     private check_types_are_compatible_and_set_compatibility(this, type_a: Type, type_b: Type): bool {
-        let type_a = prune(type_a)
-        let type_b = prune(type_b)
         if (type_a.kind == TypeKind.GENERIC_VARIABLE){
             let type_a_generic_variable = type_a as GenericTypeVariable
             if (type_a_generic_variable == type_b) return true
