@@ -2980,8 +2980,6 @@ class TypeChecker {
     private check_function_call_args_match(this, generics: TypeEnv, fnc_ty: FunctionType, args: Expression[], error: String*, range: TextRange*): VarId {
         let fnc_param_types_len = fnc_ty.param_types.length
         let check_start_offset = 0
-        error[0] = null
-        range[0] = null
         if fnc_ty.has_implicit_this {
             fnc_param_types_len--
             check_start_offset = 1
