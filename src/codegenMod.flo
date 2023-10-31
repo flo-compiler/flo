@@ -3,8 +3,6 @@ import panic in "utils"
 import LLVMVerifyModule in "llvm/analysis"
 import LLVMCreatePassManager, LLVMGetFirstFunction, LLVMGetNextFunction, LLVMPrintModuleToFile, LLVMShutdown, LLVMSetTarget, LLVMSetDataLayout, LLVMDisposeMessage, LLVMCreateFunctionPassManagerForModule, LLVMRunFunctionPassManager, LLVMRunPassManager, LLVMDisposePassManager, LLVMGetNamedFunction in "llvm/core"
 import LLVMRemoveModule, LLVMLinkInMCJIT, LLVMCreateExecutionEngineForModule, LLVMDisposeExecutionEngine, LLVMRunFunctionAsMain in "llvm/executionEngine"
-import LLVMPassManagerBuilderPopulateFunctionPassManager, LLVMPassManagerBuilderUseInlinerWithThreshold, LLVMPassManagerBuilderDispose, LLVMPassManagerBuilderCreate, LLVMPassManagerBuilderSetOptLevel, LLVMPassManagerBuilderPopulateModulePassManager in "llvm/passManagerBuilder"
-import LLVMAddInternalizePass, LLVMAddInstructionCombiningPass, LLVMAddGlobalDCEPass, LLVMAddGlobalOptimizerPass, LLVMAddScalarReplAggregatesPass, LLVMAddFunctionInliningPass in "llvm/transforms"
 import LLVM_InitializeAllTargetInfos, LLVM_InitializeAllTargetMCs, LLVM_InitializeAllTargets, LLVM_InitializeAllAsmParsers, LLVM_InitializeAllAsmPrinters in "llvm/target"
 import LLVMDisposeTargetMachine, LLVMGetDefaultTargetTriple, LLVMTargetMachineEmitToFile, LLVMGetTargetMachineTriple, LLVMCreateTargetDataLayout, LLVMCreateTargetMachine, LLVMGetTargetFromTriple, LLVMGetHostCPUFeatures in "llvm/targetMachine"
 import LLVMWriteBitcodeToFile in "llvm/bitwriter"
@@ -34,25 +32,13 @@ class GeneratedModule {
         if level == 0 return
         let pm = LLVMCreatePassManager()
         let fpm = LLVMCreateFunctionPassManagerForModule(this.llvm_mod)
-        let pmb = LLVMPassManagerBuilderCreate()
-        LLVMAddInternalizePass(pm, 1)
-        LLVMAddGlobalDCEPass(pm)
-        LLVMAddGlobalOptimizerPass(pm)
-        LLVMAddInstructionCombiningPass(pm)
-        LLVMAddScalarReplAggregatesPass(pm)
-        LLVMAddFunctionInliningPass(pm)
-        LLVMPassManagerBuilderSetOptLevel(pmb, level)
-        LLVMPassManagerBuilderUseInlinerWithThreshold(pmb, 255)
-        LLVMPassManagerBuilderPopulateFunctionPassManager(pmb, fpm)
         let func = LLVMGetFirstFunction(this.llvm_mod)
         while func != null {
             LLVMRunFunctionPassManager(fpm, func)
             func = LLVMGetNextFunction(func)
         }
-        LLVMPassManagerBuilderPopulateModulePassManager(pmb, pm)
         LLVMRunPassManager(pm, this.llvm_mod)
         LLVMDisposePassManager(fpm)
-        LLVMPassManagerBuilderDispose(pmb)
         LLVMDisposePassManager(pm)
     }
     public exec(this): int {

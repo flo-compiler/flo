@@ -59,7 +59,7 @@ fnc main(argc: int, argv: u8**): int {
     let program = TypeChecker.check(module_node, compiler, filename)
     if (compiler.print_errors()) return 1       
     /**** Codegen ****/
-    let flo_module = CodeGen.codegen(program)
+    let flo_module = CodeGen.codegen(program, compiler)
     /**** Misc ****/
     flo_module.run_passes(opt_level.value as int)
     flo_module.set_target_machine(target_triple.value)

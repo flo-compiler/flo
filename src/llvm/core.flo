@@ -215,8 +215,6 @@ fnc LLVMConstNUWSub(LHSConstant: LLVMValueRef, RHSConstant: LLVMValueRef): LLVMV
 fnc LLVMConstMul(LHSConstant: LLVMValueRef, RHSConstant: LLVMValueRef): LLVMValueRef 
 fnc LLVMConstNSWMul(LHSConstant: LLVMValueRef, RHSConstant: LLVMValueRef): LLVMValueRef 
 fnc LLVMConstNUWMul(LHSConstant: LLVMValueRef, RHSConstant: LLVMValueRef): LLVMValueRef 
-fnc LLVMConstAnd(LHSConstant: LLVMValueRef, RHSConstant: LLVMValueRef): LLVMValueRef 
-fnc LLVMConstOr(LHSConstant: LLVMValueRef, RHSConstant: LLVMValueRef): LLVMValueRef 
 fnc LLVMConstXor(LHSConstant: LLVMValueRef, RHSConstant: LLVMValueRef): LLVMValueRef 
 fnc LLVMConstICmp(Predicate: LLVMIntPredicate, LHSConstant: LLVMValueRef, RHSConstant: LLVMValueRef): LLVMValueRef
 fnc LLVMConstFCmp(Predicate: LLVMRealPredicate, LHSConstant: LLVMValueRef, RHSConstant: LLVMValueRef): LLVMValueRef

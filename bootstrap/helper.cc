@@ -1,9 +1,11 @@
 #include <iostream>
+#include <optional>
 #include <llvm/IR/Module.h>
 #include <llvm/IRReader/IRReader.h>
 #include <llvm/IR/LLVMContext.h>
 #include <llvm/IR/LegacyPassManager.h>
 #include <llvm/Support/SourceMgr.h>
+#include <llvm/Support/CodeGen.h>
 #include <llvm/Support/TargetSelect.h>
 #include <llvm/Support/Host.h>
 #include <llvm/Support/CodeGen.h>
@@ -11,7 +13,6 @@
 #include <llvm/Target/TargetOptions.h>
 #include <llvm/Target/TargetMachine.h>
 #include <llvm/MC/TargetRegistry.h>
-#include <llvm/ADT/Optional.h>
 int main(int argc, char** argv){
     llvm::SMDiagnostic Err;
     llvm::LLVMContext ctx;
@@ -32,7 +33,7 @@ int main(int argc, char** argv){
     auto CPU = "generic";
     auto Features = "";
     llvm::TargetOptions opt;
-    auto RM = llvm::Optional<llvm::Reloc::Model>();
+    auto RM = std::optional<llvm::Reloc::Model>();
     auto TargetMachine = Target->createTargetMachine(TargetTriple, CPU, Features, opt, RM);
 
     M->setDataLayout(TargetMachine->createDataLayout());
@@ -47,7 +48,7 @@ int main(int argc, char** argv){
     }
 
     llvm::legacy::PassManager pass;
-    auto FileType = llvm::CGFT_ObjectFile;
+    auto FileType = llvm::CodeGenFileType::ObjectFile;
 
     if (TargetMachine->addPassesToEmitFile(pass, dest, nullptr, FileType)) {
         std::cerr << "TargetMachine can't emit a file of this type";
