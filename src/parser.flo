@@ -1,4 +1,4 @@
-import TokType, ExpressionKind, StatementKind, TypeKind, BinaryOp, UnaryOp, ACCESS_ATTR in "types"
+import TokType, ExpressionKind, StatementKind, TypeKind, BinaryOp, UnaryOp, AccessVisibility in "types"
 import TextRange in "utils"
 import FloError, ErrorKind in "error"
 import Token, IntToken, FloatToken, StrToken, CharToken, IdentifierToken in "lexer"
@@ -109,7 +109,7 @@ class StringExpressionNode (ExpressionNode) {
 class VarAccessExpressionNode (ExpressionNode) {
     name: IdentifierToken
     constructor(this, name: IdentifierToken){
-        this.super(ExpressionKind.ACCESS, name.range)
+        this.super(ExpressionKind.VAR_ACCESS, name.range)
         this.name = name
     }
 }
@@ -329,11 +329,17 @@ class FunctionDeclarationNode {
         this.block = null
         this.return_type = null
     }
+    is_static(this): bool {
+        if  this.params.length > 0 {
+            return this.params[0].name.value != "this" 
+        }
+        return true
+    }
 }
 class MethodNode {
     function: FunctionDeclarationNode
-    access_modifier: ACCESS_ATTR
-    constructor(this, function: FunctionDeclarationNode, access_modifier: ACCESS_ATTR){
+    access_modifier: AccessVisibility
+    constructor(this, function: FunctionDeclarationNode, access_modifier: AccessVisibility){
         this.function = function
         this.access_modifier = access_modifier
     }
@@ -341,7 +347,7 @@ class MethodNode {
 
 class FieldNode {
     name: IdentifierToken
-    access_modifier: ACCESS_ATTR
+    access_modifier: AccessVisibility
     initializer: ExpressionNode
     parsed_type: TypeNode
     constructor(this, name: IdentifierToken){
@@ -636,7 +642,7 @@ class Parser {
             return this.parse_tuple_expression_or_expression_par()
         } else
             this.error("Expected an Expression value")
-        return new ExpressionNode(ExpressionKind.ACCESS, this.current_token.range)
+        return new ExpressionNode(ExpressionKind.INTRINSIC, this.current_token.range)
     }
     private parse_index_expression(this, expression: ExpressionNode): ExpressionIndexNode {
         this.eat(TokType.LBRACKET)
@@ -1071,22 +1077,22 @@ class Parser {
             fnc_node.is_external = true
         return fnc_node
     }
-    private parse_access_modifier(this): ACCESS_ATTR {
+    private parse_access_modifier(this): AccessVisibility {
         if this.current_token.ttype == TokType.PUBLIC_KW
-            return ACCESS_ATTR.PUBLIC
+            return AccessVisibility.PUBLIC
         if this.current_token.ttype == TokType.PRIVATE_KW
-            return ACCESS_ATTR.PRIVATE
+            return AccessVisibility.PRIVATE
         if this.current_token.ttype == TokType.PROTECTED_KW
-            return ACCESS_ATTR.PROTECTED
-        return ACCESS_ATTR.UNDEF
+            return AccessVisibility.PROTECTED
+        return AccessVisibility.UNDEF
     }
     private parse_class_block(this, class_node: ClassDeclarationNode) {
         this.eat(TokType.LBRACE)
         this.new_lines()
         while this.current_token.ttype != TokType.RBRACE and this.can_parse() {
             let access_modifier = this.parse_access_modifier()
-            if access_modifier == ACCESS_ATTR.UNDEF {
-                access_modifier = ACCESS_ATTR.PUBLIC
+            if access_modifier == AccessVisibility.UNDEF {
+                access_modifier = AccessVisibility.PUBLIC
             } else {
                 this.advance()
             }

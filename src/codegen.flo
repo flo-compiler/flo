@@ -320,14 +320,14 @@ class DebugInfo {
         Flags: LLVMDIFlags.LLVMDIFlagZero, UniqueIdentifier: null,
         UniqueIdentifierLen: 0)
     }
-    private access_attr_to_diFlag(visibility: ACCESS_ATTR): LLVMDIFlags {
-        if visibility == ACCESS_ATTR.PRIVATE
+    private access_attr_to_diFlag(visibility: AccessVisibility): LLVMDIFlags {
+        if visibility == AccessVisibility.PRIVATE
             return LLVMDIFlags.LLVMDIFlagPrivate
-        else if visibility == ACCESS_ATTR.PROTECTED
+        else if visibility == AccessVisibility.PROTECTED
             return LLVMDIFlags.LLVMDIFlagProtected 
         return LLVMDIFlags.LLVMDIFlagPublic
     }
-    public create_member_type(this, class_id: ClassId, name: String, range: TextRange, member_type: Type, visibility: ACCESS_ATTR, offset: u64*): LLVMMetadataRef {
+    public create_member_type(this, class_id: ClassId, name: String, range: TextRange, member_type: Type, visibility: AccessVisibility, offset: u64*): LLVMMetadataRef {
         let file = this.get_or_create_file(class_id.module_id)
         let metadata_type = this.create_or_get_type(member_type)
         let size = LLVMDITypeGetSizeInBits(metadata_type)
@@ -342,7 +342,7 @@ class DebugInfo {
             Flags: DebugInfo.access_attr_to_diFlag(visibility),
             metadata_type)
     }
-    public create_static_member_type(this, class_id: ClassId, name: String, range: TextRange, member_type: Type, visibility: ACCESS_ATTR, initializer: LLVMValueRef): LLVMMetadataRef {
+    public create_static_member_type(this, class_id: ClassId, name: String, range: TextRange, member_type: Type, visibility: AccessVisibility, initializer: LLVMValueRef): LLVMMetadataRef {
         let file = this.get_or_create_file(class_id.module_id)
         let metadata_type = this.create_or_get_type(member_type)
         let align = LLVMDITypeGetAlignInBits(metadata_type)

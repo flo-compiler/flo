@@ -95,7 +95,6 @@ enum TypeKind {
     TUPLE
     FNC
     RECORD
-    MODULE
     GENERIC_VARIABLE
     RESOLVED_GENERIC
     UNKNOWN
@@ -120,22 +119,24 @@ enum ExpressionKind {
     NULL
     ARRAY
     TUPLE
-    ACCESS
+    VAR_ACCESS
+    FNC_ACCESS
     BIN
     UNARY
     CAST
     NEW
     MEMBER
+    CLASS_FIELD_ACCESS
+    CLASS_METHOD_ACCESS
+    STATIC_METHOD_ACCESS
+    STATIC_FIELD_ACCESS
+    ENUM_FIELD_ACCESS 
     INDEX
     CALL
     TERNARY
     RANGE
     MATCH
     INTRINSIC
-}
-enum PropIdKind {
-    METHOD
-    FIELD
 }
 enum VarIdKind {
     FNC
@@ -193,7 +194,7 @@ enum UnaryOp {
     NOT
     ADDROF
 }
-enum ACCESS_ATTR {
+enum AccessVisibility {
     UNDEF
     PRIVATE
     PUBLIC

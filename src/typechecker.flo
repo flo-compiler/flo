@@ -134,26 +134,6 @@ class Statement {
         this.kind = kind
     }
 }
-class TypeId {
-    module_id: uint
-    kind: TypeIdKind
-    id: uint
-    constructor(this, module_id: uint, kind: TypeIdKind, id: uint){
-        this.module_id = module_id
-        this.kind = kind
-        this.id =  id
-    }
-}
-class ClassId(TypeId) {
-    constructor(this, module_id: uint, id: uint){
-        this.super(module_id, TypeIdKind.CLASS, id)
-    }
-}
-class EnumId(TypeId) {
-    constructor(this, module_id: uint, id: uint){
-        this.super(module_id, TypeIdKind.ENUM, id)
-    }
-}
 class Expression (Statement) {
     is_constant: bool
     expr_kind: ExpressionKind
@@ -346,57 +326,124 @@ class IntrinsicCall (Expression) {
         this.args = []
     }
 }
-class VarId {
-    kind: VarIdKind
-    module_id: uint
+class ScopeId {
     id: uint
-    constructor(this, kind: VarIdKind, module_id: uint, id: uint){
-        this.kind = kind
+    module_id: ModuleId
+    constructor(this, module_id: ModuleId, id: uint){
         this.module_id = module_id
         this.id = id
     }
 }
-class ClassVarId(VarId){
-    constructor(this, class_id: ClassId){
-        this.super(VarIdKind.CLASS, class_id.module_id, class_id.id)
-    }
-    public to_class_id(var_id: VarId): ClassId {
-        return new ClassId(var_id.module_id, var_id.id)
-    }
-}
-class EnumVarId(VarId){
-    constructor(this, enum_id: EnumId){
-        this.super(VarIdKind.ENUM, enum_id.module_id, enum_id.id)
-    }
-    public to_enum_id(var_id: VarId): EnumId {
-        return new EnumId(var_id.module_id, var_id.id)
-    }
-}
-class PropId {
-    kind: PropIdKind
-    type_id: TypeId
+// class TypeId {
+//     id: uint
+//     module_id: ModuleId
+//     constructor(this, module_id: ModuleId, id: uint){
+//         this.module_id = module_id
+//         this.id = id
+//     }
+// }
+class ModuleId {
     id: uint
-    constructor(this, kind: PropIdKind, type_id: TypeId, id: uint){
-        this.kind = kind
-        this.type_id = type_id
+    constructor(this, id: uint){
         this.id = id
     }
 }
-class MemberExpression (Expression) {
+class VarId {
+    id: uint
+    module_id: ModuleId
+    constructor(this, module_id: ModuleId, id: uint){
+        this.module_id = module_id
+        this.id = id
+    }
+}
+class FunctionId {
+    id: uint
+    module_id: ModuleId
+    constructor(this, module_id: ModuleId, id: uint){
+        this.module_id = module_id
+        this.id = id
+    }
+}
+class ClassId {
+    id: uint
+    module_id: ModuleId
+    constructor(this, module_id: ModuleId, id: uint){
+        this.module_id = module_id
+        this.id = id
+    }
+    __eq__(this, other: ClassId): bool {
+        return (this.module_id == other.module_id) and (this.id == other.id)
+    }
+}
+class EnumId {
+    id: uint
+    module_id: ModuleId
+    constructor(this, module_id: ModuleId, id: uint){
+        this.module_id = module_id
+        this.id = id
+    }
+    __eq__(this, other: EnumId): bool {
+        return (this.module_id == other.module_id) and (this.id == other.id)
+    }
+}
+class StaticFieldAccessExpression (Expression) {
+    class_id: ClassId
+    var_id: VarId
+    constructor(this, class_id: ClassId, var_id: VarId, value_type: Type, range: TextRange){
+        this.super(ExpressionKind.STATIC_FIELD_ACCESS, value_type, range)
+        this.class_id = class_id
+        this.var_id = var_id
+    }
+}
+class StaticMethodAccessExpression (Expression) {
+    class_id: ClassId
+    fnc_id: FunctionId
+    constructor(this, class_id: ClassId, fnc_id: FunctionId, value_type: Type, range: TextRange){
+        this.super(ExpressionKind.STATIC_METHOD_ACCESS, value_type, range)
+        this.class_id = class_id
+        this.fnc_id = fnc_id
+    }
+}
+class ClassFieldAccessExpression (Expression) {
     expression: Expression
-    member_id: PropId
-    constructor(this, expression: Expression, member_id: PropId, value_type: Type, range: TextRange){
-        this.super(ExpressionKind.MEMBER, value_type, range)
+    var_id: VarId
+    constructor(this, expression: Expression, var_id: VarId, value_type: Type, range: TextRange){
+        this.super(ExpressionKind.CLASS_FIELD_ACCESS, value_type, range)
         this.expression = expression
-        this.member_id = member_id
+        this.var_id = var_id
+    }
+}
+class ClassMethodAccessExpression (Expression) {
+    expression: Expression
+    fnc_id: FunctionId
+    constructor(this, expression: Expression, fnc_id: FunctionId, value_type: Type, range: TextRange){
+        this.super(ExpressionKind.CLASS_METHOD_ACCESS, value_type, range)
+        this.expression = expression
+        this.fnc_id = fnc_id
+    }
+}
+class EnumFieldAccessExpression (Expression) {
+    enum_id: EnumId
+    field_id: VarId
+    constructor(this, enum_id: EnumId, field_id: VarId, value_type: Type, range: TextRange){
+        this.super(ExpressionKind.ENUM_FIELD_ACCESS, value_type, range)
+        this.enum_id = enum_id
+        this.field_id = field_id
     }
 }
 class VarAccessExpression (Expression) {
     value_id: VarId
-    constructor(this, value_id: VarId, value_type: Type, range: TextRange){
-        this.super(ExpressionKind.ACCESS, value_type, range)
+    constructor(this, value_id: VarId, value_type: Type, is_constant: bool, range: TextRange){
+        this.super(ExpressionKind.VAR_ACCESS, value_type, range)
         this.value_id = value_id
-        this.is_constant = value_id.kind == VarIdKind.CONST
+    }
+}
+class FncAccessExpression (Expression) {
+    fnc_id: FunctionId
+    constructor(this, fnc_id: FunctionId, fnc_type: Type, range: TextRange){
+        this.super(ExpressionKind.FNC_ACCESS, fnc_type, range)
+        this.fnc_id = fnc_id
+        this.is_constant = true
     }
 }
 class Block {
@@ -453,15 +500,13 @@ class IfStatement (Statement) {
     }
 }
 class VarDeclaration (Statement) {
-    name: String
-    var_id: VarId
+    var: Var
     is_static: bool
     range: TextRange
-    constructor(this, range: TextRange, name: String, var_id: VarId){
+    constructor(this, var: Var, range: TextRange){
         this.super(StatementKind.VAR)
+        this.var = var
         this.range = range
-        this.var_id = var_id
-        this.name = name
         this.is_static = false
     }
 }
@@ -535,6 +580,14 @@ fnc is_bool(val_ty: Type): bool {
         return is_bool(generic_var_type.current_instance)
     }
     return val_ty.kind == TypeKind.BOOL
+}
+fnc is_void(val_ty: Type): bool {
+    if (val_ty.kind == TypeKind.GENERIC_VARIABLE){
+        let generic_var_type = (val_ty as GenericTypeVariable)
+        if (generic_var_type.current_instance == null) return false
+        return is_void(generic_var_type.current_instance)
+    }
+    return val_ty.kind == TypeKind.VOID
 }
 fnc is_u8_ptr(val_ty: Type): bool {
     if (val_ty.kind == TypeKind.GENERIC_VARIABLE){
@@ -624,7 +677,7 @@ fnc check_cast_lower_bits(p1: Expression*, p2: Expression*){
     }
 }
 fnc check_is_var(expr: Expression): bool{
-    if expr.expr_kind == ExpressionKind.ACCESS {
+    if expr.expr_kind == ExpressionKind.VAR_ACCESS {
         return (expr as VarAccessExpression).value_id.kind == VarIdKind.VAR
     }
     if expr.expr_kind == ExpressionKind.MEMBER {
@@ -725,10 +778,10 @@ fnc dump_unary_op(op: UnaryOp): String{
         return "!"
     return "&"
 }
-fnc dump_access(visibility: ACCESS_ATTR): String {
-    if visibility == ACCESS_ATTR.PRIVATE
+fnc dump_access(visibility: AccessVisibility): String {
+    if visibility == AccessVisibility.PRIVATE
         return "private"
-    if visibility == ACCESS_ATTR.PUBLIC
+    if visibility == AccessVisibility.PUBLIC
         return "public"
     return "protected"
 }
@@ -756,35 +809,22 @@ fnc lower_bin_assign_node(binary_node: BinaryExpressionNode): BinaryExpressionNo
         op = BinaryOp.SR
     return new BinaryExpressionNode(binary_node.lhs, op, binary_node.rhs)
 }
-class ScopeId {
-    module_id: uint
-    id: uint
-    constructor(this, module_id: uint, id: uint){
-        this.module_id = module_id
-        this.id = id
-    }
-}
-class ModuleVarId(VarId){
-    scope_id: ScopeId
-    constructor(this, scope_id: ScopeId){
-        this.super(VarIdKind.MODULE, scope_id.module_id, scope_id.id)
-        this.scope_id = scope_id
-    }
-}
 class Scope {
     public id: ScopeId
+    public modules: StringMap<ModuleId>
     public vars: StringMap<VarId>
     public classes: StringMap<ClassId>
-    public functions: StringMap<VarId>
+    public functions: StringMap<FunctionId>
     public enums: StringMap<EnumId>
     public parent: ScopeId
     public type_aliases: StringMap<Type>
     public children: ScopeId[]
-    constructor(this, module_id: uint, id: uint){
+    constructor(this, module_id: ModuleId, id: uint){
         this.id = new ScopeId(module_id, id)
+        this.modules = new StringMap<ModuleId>()
         this.vars = new StringMap<VarId>()
         this.classes = new StringMap<ClassId>()
-        this.functions = new StringMap<VarId>()
+        this.functions = new StringMap<FunctionId>()
         this.enums = new StringMap<EnumId>()
         this.type_aliases = new StringMap<Type>()
         this.parent = null 
@@ -799,17 +839,16 @@ class Scope {
         del this.type_aliases
     }
 }
-class FunctionParam(Expression) {
-    id: VarId
-    name: String
-    default: Expression
-    constructor(this, name: String, value_type: Type, range: TextRange){
-        this.super(ExpressionKind.ACCESS, value_type, range)
-        this.name = name
+class FunctionParam {
+    var: Var
+    range: TextRange
+    constructor(this, var: Var, range: TextRange){
+        this.var = var
+        this.range = range
     }
 }
 class Function {
-    id: VarId
+    id: FunctionId
     name: String
     params: FunctionParam[]
     block: Block
@@ -817,47 +856,37 @@ class Function {
     scope: ScopeId
     is_external: bool
     definition_range: TextRange
+    visibility: AccessVisibility
     constructor(this, definition_range: TextRange){
         this.definition_range = definition_range
         this.is_external = false
     }
 }
 class Var {
-    var_id: VarId
+    id: VarId
+    name: String
     value: Expression
     value_type: Type
-    constructor(this, value: Expression, value_type: Type){
+    is_constant: bool
+    constructor(this, name: String, value: Expression, is_constant: bool, value_type: Type){
+        this.name = name
         this.value = value
+        this.is_constant = is_constant
         this.value_type = value_type
     }
 }
 
 class ClassField {
-    id: PropId
-    is_static: bool
-    visibility: ACCESS_ATTR
+    id: VarId
     name: String
+    visibility: AccessVisibility
     field_type: Type
-    field_offset: uint
     definition_range: TextRange
-    initializer: Expression
-    constructor(this){
-        this.is_static = false
-    }
-}
-class ClassMethod {
-    id: PropId
-    is_static: bool
-    visibility: ACCESS_ATTR
-    definition_range: TextRange
-    name: String
-    method_type: FunctionType
-    block: Block
-    params: FunctionParam []
-    is_abstract: bool
-    scope: ScopeId
-    constructor(this, definition_range: TextRange){
-        this.is_abstract = false
+    constructor(this, id: VarId, name: String, visibility: AccessVisibility, field_type: Type, definition_range: TextRange){
+        this.id = id
+        this.name = name
+        this.visibility = visibility
+        this.field_type = field_type
         this.definition_range = definition_range
     }
 }
@@ -866,23 +895,13 @@ class Class {
     name: String
     parent: Type
     definition_range: TextRange
-    constructor_id: PropId
+    constructor_id: FunctionId
     fields: ClassField[]
-    methods: ClassMethod[]
-    prop_map: StringMap<PropId>
-    static_prop_map: StringMap<PropId>
-    inherited_methods_num: uint
-    inherited_fields_num: uint
-    is_abstract: bool
+    scope: ScopeId
+    static_scope: ScopeId
     constructor(this){
         this.constructor_id = null
-        this.inherited_fields_num = 0
-        this.inherited_methods_num = 0
         this.fields = []
-        this.methods = []
-        this.prop_map = new StringMap<PropId>()
-        this.static_prop_map = new StringMap<PropId>()
-        this.is_abstract = false
     }
     private __del__(this){
         del this.id
@@ -891,15 +910,15 @@ class Class {
         for field in this.fields {
             del field
         }
-        for method in this.methods {
-            del method
-        }
-        del this.prop_map
-        del this.static_prop_map
+        del this.scope
+        del this.static_scope
+    }
+    public get_field(this, field_id: VarId): ClassField {
+        return this.fields[field_id.id]
     }
 }
 class EnumField {
-    id: PropId
+    id: VarId
     name: String
     initializer: Expression
     constructor(this, name: String){
@@ -917,10 +936,9 @@ class Enum {
     fields: EnumField[]
     definition_range: TextRange
     variant_type: Type
-    field_map: StringMap<PropId>
+    scope: ScopeId
     constructor(this){
         this.fields = []
-        this.field_map = new StringMap<PropId>()
     }
     private __del__(this){
         del this.id
@@ -929,10 +947,14 @@ class Enum {
             del field
         }
         del this.fields
-        del this.field_map
+    }
+    public get_field(this, field_id: VarId): EnumField {
+        return this.fields[field_id.id]
     }
 }
+
 class Module {
+    id: ModuleId
     name: String
     vars: Var[]
     classes: Class[]
@@ -989,17 +1011,23 @@ class Program {
         }
         del this.modules
     }
-    public get_var(this, var_id: VarId): Var {
-        return this.modules[var_id.module_id].vars[var_id.id]
+    public get_module(this, module_id: ModuleId): Module {
+        return this.modules[module_id.id]
     }
-    public get_func(this, func_id: VarId): Function {
-        return this.modules[func_id.module_id].functions[func_id.id]
+    public get_var(this, var_id: VarId): Var {
+        return this.get_module(var_id.module_id).vars[var_id.id]
+    }
+    public get_func(this, func_id: FunctionId): Function {
+        return this.get_module(func_id.module_id).functions[func_id.id]
     }
     public get_scope(this, scope_id: ScopeId): Scope {
-        return this.modules[scope_id.module_id].scopes[scope_id.id]
+        return this.get_module(scope_id.module_id).scopes[scope_id.id]
     }
     public get_class(this, type_id: ClassId): Class {
-        return this.modules[type_id.module_id].classes[type_id.id]   
+        return this.get_module(type_id.module_id).classes[type_id.id]   
+    }
+    public get_enum(this, enum_id: EnumId): Enum {
+        return this.get_module(enum_id.module_id).enums[enum_id.id]
     }
     public get_class_from_type(this, type_: Type): Class {
         if (type_.kind == TypeKind.GENERIC_VARIABLE){
@@ -1013,9 +1041,6 @@ class Program {
             return this.get_class((type_ as ObjectType).class_id)
         return null
     }
-    public get_enum(this, enum_id: EnumId): Enum {
-        return this.modules[enum_id.module_id].enums[enum_id.id]
-    }
     public get_enum_from_type(this, type_: Type): Enum {
         if (type_.kind == TypeKind.GENERIC_VARIABLE){
             let generic_var_type = (type_ as GenericTypeVariable)
@@ -1024,65 +1049,10 @@ class Program {
         }
         return this.get_enum((type_ as EnumType).enum_id)
     }
-    public get_class_from_prop_id(this, prop_id: PropId): Class {
-        return this.get_class(prop_id.type_id as ClassId)
-    }
-    public get_method(this, prop_id: PropId): ClassMethod {
-        return this.get_class_from_prop_id(prop_id).methods[prop_id.id]
-    }
-    public get_class_prop_type(this, prop_id: PropId): Type {
-        let owner = this.get_class_from_prop_id(prop_id)
-        if prop_id.kind == PropIdKind.METHOD {
-            return owner.methods[prop_id.id].method_type
-        }
-        return owner.fields[prop_id.id].field_type
-    }
-    public get_class_prop_type_with_name(this, obj_ty: ObjectType, name: String): Type {
-        let obj_class = this.get_class_from_type(obj_ty)
-        if (obj_class == null) return null 
-        let prop_id = obj_class.prop_map[name]
-        if (prop_id == null) return null 
-        return this.get_class_prop_type(prop_id)
-    }
-    public get_class_prop_visibility(this, prop_id: PropId): ACCESS_ATTR {
-        let owner = this.get_class_from_prop_id(prop_id)
-        if prop_id.kind == PropIdKind.METHOD {
-            return owner.methods[prop_id.id].visibility
-        }
-        return owner.fields[prop_id.id].visibility
-    }
-    public get_class_prop_name(this, prop_id: PropId): String {
-        let owner = this.get_class_from_prop_id(prop_id)
-        if prop_id.kind == PropIdKind.METHOD {
-            return owner.methods[prop_id.id].name
-        }
-        return owner.fields[prop_id.id].name
-    }
-    public is_class_prop_static(this, prop_id: PropId): bool {
-        let owner = this.get_class_from_prop_id(prop_id)
-        if prop_id.kind == PropIdKind.METHOD {
-            return owner.methods[prop_id.id].is_static
-        }
-        return owner.fields[prop_id.id].is_static
-    }
     public is_buitin(this, ty: Type, name: String): bool {
         if !is_object(ty) return false
         let class_obj = this.get_class_from_type(ty)
         return class_obj.name == name and class_obj.id.module_id == this.builtin_scope.module_id
-    }
-    public get_field_offset(this, prop_id: PropId): uint {
-        let owner = this.get_class_from_prop_id(prop_id)
-        if prop_id.kind == PropIdKind.METHOD {
-            return 1
-        }
-        return owner.fields[prop_id.id].field_offset
-    }
-    public get_class_prop_definition_range(this, prop_id: PropId): TextRange {
-        let owner = this.get_class_from_prop_id(prop_id)
-        if prop_id.kind == PropIdKind.METHOD {
-            return owner.methods[prop_id.id].definition_range
-        }
-        return owner.fields[prop_id.id].definition_range
     }
 }
 fnc is_bin_op_comp_eq_op(op: BinaryOp): bool {
@@ -1168,6 +1138,11 @@ fnc bin_op_to_op_overload_name(op: BinaryOp): String {
     if op == BinaryOp.IN return "__in__"
     return null
 }
+fnc get_num_params_for_operator_overload(name: String): uint {
+    if name == "__iter__" or name == "__del__" return 1
+    if name =="__setitem__" return 3
+    return 2
+}
 fnc evaluate_const_int_expression(program: Program, exp: Expression): int {
     if exp.expr_kind == ExpressionKind.INT {
         return (exp as IntExpression).value as int
@@ -1211,20 +1186,19 @@ fnc evaluate_const_int_expression(program: Program, exp: Expression): int {
     return -99999999
 }
 class Generic {
-    module_id: uint
+    module_id: ModuleId
     template: ClassDeclarationNode
-    constructor(this, module_id: uint, template: ClassDeclarationNode){
+    constructor(this, module_id: ModuleId, template: ClassDeclarationNode){
         this.module_id = module_id
         this.template = template
     }
 }
-let GENERIC_MODULE_ID = 0
+let GENERIC_MODULE_ID: ModuleId = null
 // Hint: For Generics and typed constraints consider Hidley-Milner Algorithm.
 class TypeChecker {
     private program: Program
     private current_class: ClassId
-    private current_function: VarId
-    private current_method: PropId
+    private current_function: FunctionId
     private current_scope: ScopeId
     private compiler: Compiler
     private in_loop: bool
@@ -1243,36 +1217,19 @@ class TypeChecker {
         typechecker.load_builtins_module()
         if typechecker.has_errored() return typechecker.program
         typechecker.switch_to_generic_module()
-        typechecker.import_all_from_module(typechecker.get_module(typechecker.program.builtin_scope.module_id))
+        typechecker.import_all_from_module(typechecker.program.get_module(typechecker.program.builtin_scope.module_id))
         if typechecker.has_errored() return typechecker.program
         typechecker.check_module(module_ast, filename)
         return typechecker.program
     }
-    private get_module(this, id: uint): Module {
-        return this.program.modules[id]
-    }
     private get_current_module(this): Module {
-        return this.get_module(this.current_scope.module_id)
-    }
-    private get_current_scope(this): Scope {
-        return this.program.get_scope(this.current_scope)
+        return this.program.get_module(this.current_scope.module_id)
     }
     private get_current_module_global_scope(this): Scope {
         return this.program.get_scope(this.get_current_module().scope)
     }
-    private get_current_function(this): Function {
-        return this.get_current_module().functions[this.current_function.id]
-    }
     private get_current_function_type(this): FunctionType {
-        if this.current_method != null
-            return this.program.get_class_prop_type(this.current_method) as FunctionType
-        return this.get_current_function().fnc_type
-    }
-    private get_class_from_var_id(this, var_id: VarId): Class {
-        return this.get_module(var_id.module_id).classes[var_id.id]
-    }
-    private get_enum_from_var_id(this, var_id: VarId): Enum {
-        return this.get_module(var_id.module_id).enums[var_id.id]
+        return this.get_current_module().functions[this.current_function.id].fnc_type
     }
     private types_are_eq(this, t1: Type, t2: Type): bool {
         if (t1.kind == TypeKind.GENERIC_VARIABLE) {
@@ -1317,25 +1274,21 @@ class TypeChecker {
             return this.types_are_eq(t1_ptr_type.pointee_type, t2_ptr_type.pointee_type)
         }
         if t1.kind == TypeKind.OBJECT {
-            let t1_obj_type = t1 as ObjectType
-            let t2_obj_type = t2 as ObjectType
-            let t1_obj_typeid = t1_obj_type.class_id as TypeId
-            let t2_obj_typeid = t2_obj_type.class_id as TypeId
-            if t1_obj_typeid.kind == t2_obj_typeid.kind and t1_obj_typeid.module_id == t2_obj_typeid.module_id and t1_obj_typeid.id == t2_obj_typeid.id  {
+            let t1_obj_class_id = (t1 as ObjectType).class_id
+            let t2_obj_class_id = (t2 as ObjectType).class_id
+            if t1_obj_class_id == t2_obj_class_id  {
                 return true
             }
-            let t2_class = this.program.get_class(t2_obj_typeid as ClassId)
+            let t2_class = this.program.get_class(t2_obj_class_id as ClassId)
             if t2_class.parent != null {
-                return this.types_are_eq(t1_obj_type, t2_class.parent)
+                return this.types_are_eq(t1, t2_class.parent)
             }
             return false
         }
         if t1.kind == TypeKind.ENUM {
-            let t1_enum_type = t1 as EnumType
-            let t2_enum_type = t2 as EnumType
-            let t1_enum_typeid = t1_enum_type.enum_id as TypeId
-            let t2_enum_typeid = t2_enum_type.enum_id as TypeId
-            return t1_enum_typeid == t2_enum_typeid
+            let t1_enum_id = (t1 as EnumType).enum_id
+            let t2_enum_id = (t2 as EnumType).enum_id
+            return t1_enum_id == t2_enum_id
         }
         if t1.kind == TypeKind.RESOLVED_GENERIC {
             let t1_gen_type = t1 as GenericType
@@ -1395,66 +1348,71 @@ class TypeChecker {
             }
             return gen_var_ty.name
         }
-        if ty.kind == TypeKind.MODULE {
-            return "Namespace"
-        }
         if ty.kind == TypeKind.RECORD {
             return "Record"
         }
         return dump_type(ty, false)
     }
-    private create_scope(this, module_id: uint): Scope {
-        let module = this.get_module(module_id)
+    private create_scope(this, module_id: ModuleId): Scope {
+        let module = this.program.get_module(module_id)
         let scope = new Scope(module_id, module.scopes.length)
         module.scopes << scope
         return scope
     }
-    private create_child_scope_within_current_scope(this): Scope {
-        let new_scope = this.create_scope(this.current_scope.module_id)
-        new_scope.parent = this.current_scope
-        this.get_current_scope().children << new_scope.id
+    private create_child_scope_within_scope(this, scope_id: ScopeId): Scope {
+        let new_scope = this.create_scope(scope_id.module_id)
+        new_scope.parent = scope_id
+        let parent_scope = this.program.get_scope(scope_id)
+        parent_scope.children << new_scope.id
         return new_scope
-    } 
-    private is_constant_in_scope(this, name: String): bool {
-        let is_constant = false
-        let var_id = this.get_var_from_current_scope(name)
-        if var_id != null { 
-            is_constant = var_id.kind == VarIdKind.CONST
-        }
-        return is_constant
     }
-    private get_var_from_current_scope(this, name: String): VarId {
-        let current_scope = this.get_current_scope()
-        let value: VarId = null
-        while value == null {
-            value = current_scope.vars[name]
-            if value == null
-                value = current_scope.functions[name]
-            if current_scope.parent == null or value != null
+    private is_constant_in_scope(this, name: String): bool {
+        let var_id = this.get_var_from_scope(this.current_scope, name)
+        if var_id != null { 
+            return this.program.get_var(var_id).is_constant
+        } else {
+            let fnc_id = this.get_func_from_scope(this.current_scope, name)
+            if (fnc_id != null) return true
+        }
+        return false
+    }
+    private get_var_from_scope(this, scope_id: ScopeId, name: String): VarId {
+        let current_scope = this.program.get_scope(scope_id)
+        let var_id: VarId = null
+        while var_id == null {
+            var_id = current_scope.vars[name]
+            if current_scope.parent == null or var_id != null
                 break
             current_scope = this.program.get_scope(current_scope.parent)
         }
-        return value
+        return var_id
     }
-    private get_type_from_current_scope(this, name: String): Type {
-        let current_scope = this.get_current_scope()
+    private get_func_from_scope(this, scope_id: ScopeId, name: String): FunctionId {
+        let current_scope = this.program.get_scope(scope_id)
+        let fnc_id: FunctionId = null
+        while fnc_id == null {
+            fnc_id = current_scope.functions[name]
+            if current_scope.parent == null or fnc_id != null
+                break
+            current_scope = this.program.get_scope(current_scope.parent)
+        }
+        return fnc_id
+    }
+    private get_type_from_scope(this, scope_id: ScopeId, name: String): Type {
+        let current_scope = this.program.get_scope(scope_id)
         while true {
             let aliased_ty = current_scope.type_aliases[name]
             if aliased_ty != null {
                 return aliased_ty
             }
-            let class_id = current_scope.classes[name]
-            if class_id != null {
-                return new ObjectType(class_id)
-            }
-            let enum_id = current_scope.enums[name]
-            if enum_id != null {
-                return new EnumType(enum_id)
-            }
             if (current_scope.parent == null) break
             current_scope = this.program.get_scope(current_scope.parent)
         }
         return PrimitiveTypes.unknown
+    }
+    private get_module_from_scope(this, scope_id: ScopeId, name: String): ModuleId {
+        let scope = this.program.get_scope(scope_id)
+        return scope.modules[name]
     }
     private error(this, kind: ErrorKind, message: String, range: TextRange){
         this.compiler.errors << new FloError(kind, message, range)
@@ -1477,19 +1435,19 @@ class TypeChecker {
         GENERIC_MODULE_ID = module.scope.module_id
     }
     private switch_to_generic_module(this){
-        this.current_scope = this.get_module(GENERIC_MODULE_ID).scope
+        this.current_scope = this.program.get_module(GENERIC_MODULE_ID).scope
     }
     private check_module(this, module_ast: ModuleAST, filename: String): Module {
         this.module_contains_generics = false
         let prev_scope = this.current_scope
         let module = new Module(filename)
-        let current_module_id = this.program.modules.length
+        let current_module_id = new ModuleId(this.program.modules.length)
+        module.id = current_module_id
         this.program.modules << module
         let module_scope = this.create_scope(current_module_id)
         module_scope.parent = this.program.builtin_scope
         module.scope = module_scope.id
         this.current_scope = module_scope.id
-        this.current_method = null
         this.current_class = null
         this.current_function = null
         for module_import in module_ast.imports {
@@ -1508,7 +1466,7 @@ class TypeChecker {
             let ty = this.check_type(type_alias_node.parsed_type)
             let identifer_tok = type_alias_node.name
             let alias_name = identifer_tok.value
-            if this.get_type_from_current_scope(alias_name).kind != TypeKind.UNKNOWN {
+            if this.get_type_from_scope(this.current_scope, alias_name).kind != TypeKind.UNKNOWN {
                 this.error(ErrorKind.NAME, "Name '$alias_name' has already been used for another type. consider renaming", type_alias_node.name.range)
                 return module
             }
@@ -1518,7 +1476,7 @@ class TypeChecker {
             this.declare_global_var(parsed_global_var)
         }
         for parsed_function in module_ast.functions {
-            this.declare_function_within_module(parsed_function)
+            this.declare_function_within_scope(module_scope.id, parsed_function)
         }
         if this.has_errored() return module
         // We Now check bodies
@@ -1548,7 +1506,7 @@ class TypeChecker {
         }
         let scope_id = this.current_scope
         this.switch_to_generic_module()
-        let generic_scope = this.create_child_scope_within_current_scope()
+        let generic_scope = this.create_child_scope_within_scope(this.current_scope)
         let param_strings = ""
         for let i = 0; i < generic_params.length; i++ {
             let param_name = generic_params[i].name.value
@@ -1557,7 +1515,7 @@ class TypeChecker {
             generic_scope.type_aliases[param_name] = types[i]
         }
         let instantiated_generic_name = "$(name)_$param_strings"
-        let possible_type = this.get_type_from_current_scope(instantiated_generic_name)
+        let possible_type = this.get_type_from_scope(this.current_scope, instantiated_generic_name)
         if possible_type.kind == TypeKind.UNKNOWN {
             // TODO: Find a better way to create this initialization.
             let new_identok: IdentifierToken(instantiated_generic_name, generic.template.name.range)
@@ -1568,27 +1526,25 @@ class TypeChecker {
             this.current_scope = generic_scope.id
             this.declare_class_within_module(instantiated_generic_class)
             this.check_class_body(instantiated_generic_class)
-            possible_type = this.get_type_from_current_scope(instantiated_generic_name)
+            possible_type = this.get_type_from_scope(generic_scope.id, instantiated_generic_name)
         }
         this.current_scope = scope_id
-        del generic_scope
         return new GenericType(name, types, possible_type)
     }
-    private declare_var_within_current_scope(this, name: String, value: Expression, value_type: Type, is_const: bool): Var {
-        let var = new Var(value, value_type)
-        let current_module = this.get_current_module()
-        let current_scope = this.get_current_scope()
-        let var_kind = is_const ? VarIdKind.CONST : VarIdKind.VAR
-        let id = new VarId(var_kind, this.current_scope.module_id, current_module.vars.length)
-        var.var_id = id
-        current_module.vars << var
-        current_scope.vars[name] = id
+    private declare_var_within_scope(this, scope_id: ScopeId, name: String, value: Expression, value_type: Type, is_const: bool): Var {
+        let var = new Var(name, value, is_const, value_type)
+        let module = this.program.get_module(scope_id.module_id)
+        let scope = this.program.get_scope(scope_id)
+        let var_id = new VarId(scope_id.module_id, module.vars.length)
+        var.id = var_id
+        module.vars << var
+        scope.vars[name] = var_id
         return var
     }
     private declare_global_var(this, var_decl_node: VarDeclarationStatement){
         let var_stmt = this.check_var_declaration(var_decl_node)
         if this.has_errored() return
-        let value = this.program.get_var(var_stmt.var_id).value
+        let value = var_stmt.var.value
         if value != null {
             if !value.is_constant {
                 this.error(ErrorKind.GEN, "Initilializer for global variable has to be a constant", var_decl_node.value.range)
@@ -1598,32 +1554,161 @@ class TypeChecker {
         var_stmt.is_static = true
         this.get_current_module().global_vars << var_stmt
     }
-    private add_imported_typealias_to_module(this, alias_name: String, type_: Type){
+    private add_imported_type_to_module(this, alias_name: String, found_type: Type){
         let scope = this.get_current_module_global_scope()
-        scope.type_aliases[alias_name] = type_
+        scope.type_aliases[alias_name] = found_type
     }
     private add_imported_var_to_module(this, var_name: String, var_id: VarId){
         let scope = this.get_current_module_global_scope()
         scope.vars[var_name] = var_id
     }
-    private add_imported_fnc_to_module(this, fnc_name: String, fnc_id: VarId){
+    private add_imported_fnc_to_module(this, fnc_name: String, fnc_id: FunctionId){
         let scope = this.get_current_module_global_scope()
         scope.functions[fnc_name] = fnc_id
     }
-    private add_imported_class_to_module(this, class_name: String, class_id: ClassId){
-        let scope = this.get_current_module_global_scope()
-        scope.classes[class_name] = class_id
-        scope.vars[class_name] = new ClassVarId(class_id)
+    private import_all_from_module(this, module: Module){
+        let global_module_scope = this.program.get_scope(module.scope)
+        for var_stmt in module.global_vars {
+            this.add_imported_var_to_module(var_stmt.var.name, var_stmt.var.id)
+        }
+        for imported_func in module.functions {
+            this.add_imported_fnc_to_module(imported_func.name, imported_func.id)
+        }
+        for type_alias_entry in global_module_scope.type_aliases {
+            this.add_imported_type_to_module(type_alias_entry.key, type_alias_entry.value)
+        }
     }
-    private add_imported_enum_to_module(this, enum_name: String, enum_id: EnumId){
-        let scope = this.get_current_module_global_scope()
-        scope.enums[enum_name] = enum_id
-        scope.vars[enum_name] = new EnumVarId(enum_id)
+    private check_module_import(this, import_node: ImportNode){
+        if import_node.module_path.args.length > 0 {
+            this.error(ErrorKind.GEN, "Import statement path can't be a formatted string", import_node.module_path.range)
+            return
+        }
+        let path = import_node.module_path.value
+        let module = this.lex_and_parse_typecheck_file(path, import_node.module_path.range)
+        if this.has_errored() return
+        if import_node.import_list.length > 0 {
+            for import_clause in import_node.import_list {
+                let name_to_import = import_clause.original_identifer.value
+                let renamed_name = import_clause.renamed_identifer ? import_clause.renamed_identifer.value : name_to_import
+                if this.generic_templates[name_to_import] != null {
+                    continue
+                }
+                let var_id = this.get_var_from_scope(module.scope, name_to_import)
+                if var_id != null {
+                    this.add_imported_var_to_module(renamed_name, var_id)
+                    continue 
+                }
+                let func_id = this.get_func_from_scope(module.scope, name_to_import)
+                if func_id != null {
+                    this.add_imported_fnc_to_module(renamed_name, func_id)
+                    continue
+                }
+                let found_type = this.get_type_from_scope(module.scope, name_to_import)
+                if found_type != null {
+                    this.add_imported_type_to_module(renamed_name, found_type)
+                    continue
+                } else {
+                    this.error(ErrorKind.NAME, "'$name_to_import' not found in module '$path'", import_clause.original_identifer.range)
+                    return
+                }
+            }
+        } else if import_node.module_name != null {
+            let name = import_node.module_name.value
+            this.get_current_module_global_scope().modules[name] = module.id
+        } else {
+            this.import_all_from_module(module)
+        }
     }
-    private init_function_signature(this, param_nodes: FunctionParamNode[], return_type_node: TypeNode, params: FunctionParam[], implicit_this_param: Type): FunctionType {
+    private lex_and_parse_typecheck_file(this, filename: String, range: TextRange): Module {
+        // TODO: You need to properly handle the built-in case; don't use null as a reference point.
+        let filepath = filename
+        let prev_file_id = this.compiler.current_file
+        if range != null and !filename.starts_with("@") {
+            filepath = Path.join(Path.dirname(this.get_current_module().name), filename)
+        }
+        let file_id = this.compiler.register_file(filepath)
+        if file_id.id < this.program.modules.length {
+            let module_id: ModuleId(file_id.id)
+            return this.program.get_module(module_id)
+        }
+        if !this.compiler.set_current_file(file_id){ 
+            this.error(ErrorKind.IO, "No such file or directory: '$filename'", range)
+            return null
+        }
+        let tokens = Lexer.tokenize(this.compiler)
+        if this.has_errored() return null
+        let module_node = Parser.parse(tokens, this.compiler.errors)
+        if this.has_errored() return null
+        let module = this.check_module(module_node, filepath)
+        if this.has_errored() return null
+        this.compiler.set_current_file(prev_file_id)
+        return module
+    }
+    private declare_enum_within_module(this, enum_node: EnumNode){
+        let declared_enum = new Enum()
+        let enum_scope = this.create_child_scope_within_scope(this.current_scope)
+        declared_enum.scope = enum_scope.id
+        let enum_name = enum_node.name.value
+        declared_enum.definition_range = enum_node.name.range
+        let module_scope =  this.get_current_module_global_scope()
+        declared_enum.name = enum_name
+        if this.get_type_from_scope(this.current_scope, enum_name).kind != TypeKind.UNKNOWN {
+            this.error(ErrorKind.NAME, "Name '$enum_name' has already been used for another type. consider renaming", enum_node.name.range)
+            return
+        }
+        declared_enum.id = new EnumId(this.current_scope.module_id, this.get_current_module().enums.length)
+        this.get_current_module().enums << declared_enum
+        module_scope.enums[enum_name] = declared_enum.id
+        module_scope.type_aliases[enum_name] = new EnumType(declared_enum.id)
+    }
+    private declare_class_within_module(this, class_decl_node: ClassDeclarationNode) {
+        let name = class_decl_node.name.value
+        if (this.get_type_from_scope(this.current_scope, name).kind != TypeKind.UNKNOWN) or (this.generic_templates[name] != null) {
+            this.error(ErrorKind.NAME, "Name '$name' has already been used for another type. consider renaming", class_decl_node.name.range)
+            return
+        }
+        if class_decl_node.generic_parameters.length > 0 {
+            this.module_contains_generics = true
+            this.generic_templates[name] = new Generic(this.current_scope.module_id, class_decl_node)
+            return
+        }
+        let scope = this.create_child_scope_within_scope(this.current_scope)
+        let static_scope = this.create_child_scope_within_scope(this.current_scope)
+        let declared_class = new Class()
+        declared_class.scope = scope.id
+        declared_class.static_scope = static_scope.id
+        declared_class.definition_range = class_decl_node.name.range
+        let module_scope = this.get_current_module_global_scope()
+        if class_decl_node.parent != null {
+            declared_class.parent = this.check_type(class_decl_node.parent)
+            if this.has_errored() return
+        } else {
+            declared_class.parent = null
+        }
+        declared_class.name = name
+        declared_class.id = new ClassId(this.current_scope.module_id, this.get_current_module().classes.length)
+        this.get_current_module().classes << declared_class
+        module_scope.classes[name] = declared_class.id
+        module_scope.type_aliases[name] = new ObjectType(declared_class.id)
+    }
+    private declare_function_within_scope(this, scope_id: ScopeId, function_node: FunctionDeclarationNode, implicit_this_param = PrimitiveTypes.unknown): Function {
+        let declared_function = new Function(function_node.name.range)
+        declared_function.is_external = function_node.is_external
+        let name = function_node.name.value
+        declared_function.name = name
+        if this.is_constant_in_scope(name) {
+            this.error(ErrorKind.NAME, "Illegal re-declaration of const '$name'", function_node.name.range)
+            return null
+        }
+        if this.get_type_from_scope(this.current_scope, name).kind != TypeKind.UNKNOWN {
+            this.error(ErrorKind.NAME, "Illegal re-declaration of type '$name' as function", function_node.name.range)
+            return null
+        }
+        let fnc_scope = this.create_child_scope_within_scope(this.current_scope)
         let param_types: Type[] = []
+        let fnc_params: FunctionParam[] = []
         let has_implicit_this = false
-        for param in param_nodes {
+        for param in function_node.params {
             let fnc_param_name = param.name.value
             let fnc_param_range = param.name.range
             let fnc_param_default: Expression = null
@@ -1646,176 +1731,22 @@ class TypeChecker {
                     this.error(ErrorKind.TYPE, "Expected type of '$(this.dump_type(fnc_param_type))' but got type of '$(this.dump_type(fnc_param_default.value_type))' on signature", fnc_param_default.range)
                 }
             }
-            let fnc_param = new FunctionParam(fnc_param_name, fnc_param_type, fnc_param_range)
-            fnc_param.default = fnc_param_default
-            params << fnc_param
-            let var = this.declare_var_within_current_scope(fnc_param_name, fnc_param, fnc_param_type, false)
-            fnc_param.id = var.var_id
+            let var = this.declare_var_within_scope(fnc_scope.id, fnc_param_name, fnc_param_default, fnc_param_type, false)
+            let fnc_param = new FunctionParam(var, fnc_param_range)
+            fnc_params << fnc_param
             param_types << fnc_param_type
         }
-        let ret_type = return_type_node == null ? PrimitiveTypes.void : this.check_type(return_type_node)
-        return new FunctionType(has_implicit_this, param_types, ret_type)
-    }
-    private import_all_from_module(this, module: Module){
-        let global_module_scope = this.program.get_scope(module.scope)
-        for imported_var in module.global_vars {
-            this.add_imported_var_to_module(imported_var.name, imported_var.var_id)
-        }
-        for imported_func in module.functions {
-            this.add_imported_fnc_to_module(imported_func.name, imported_func.id)
-        }
-        for imported_class in module.classes {
-            this.add_imported_class_to_module(imported_class.name, imported_class.id)
-        }
-        for imported_enum in module.enums {
-            this.add_imported_enum_to_module(imported_enum.name, imported_enum.id)
-        }
-        for type_alias_entry in global_module_scope.type_aliases {
-            this.add_imported_typealias_to_module(type_alias_entry.key, type_alias_entry.value)
-        }
-    }
-    private check_module_import(this, import_node: ImportNode){
-        if import_node.module_path.args.length > 0 {
-            this.error(ErrorKind.GEN, "Import statement path can't be a formatted string", import_node.module_path.range)
-            return
-        }
-        let path = import_node.module_path.value
-        let module = this.lex_and_parse_typecheck_file(path, import_node.module_path.range)
-        if this.has_errored() return
-        let global_module_scope = this.program.get_scope(module.scope)
-        if import_node.import_list.length > 0 {
-            for import_clause in import_node.import_list {
-                let name_to_import = import_clause.original_identifer.value
-                let renamed_name = import_clause.renamed_identifer ? import_clause.renamed_identifer.value : name_to_import
-                if this.generic_templates[name_to_import] != null {
-                    continue
-                }
-                let class_id = global_module_scope.classes[name_to_import]
-                if class_id != null {
-                    this.add_imported_class_to_module(renamed_name, class_id)
-                    continue
-                }
-                let enum_id = global_module_scope.enums[name_to_import]
-                if enum_id != null {
-                    this.add_imported_enum_to_module(renamed_name, enum_id)
-                    continue
-                }
-                let var_id = global_module_scope.vars[name_to_import]
-                if var_id != null {
-                    this.add_imported_var_to_module(renamed_name, var_id)
-                    continue 
-                }
-                let func_id = global_module_scope.functions[name_to_import]
-                if func_id != null {
-                    this.add_imported_fnc_to_module(renamed_name, func_id)
-                    continue
-                }
-                let type_alias = global_module_scope.type_aliases[name_to_import]
-                if type_alias != null {
-                    this.add_imported_typealias_to_module(renamed_name, type_alias)
-                    continue
-                } else {
-                    this.error(ErrorKind.NAME, "'$name_to_import' not found in module '$path'", import_clause.original_identifer.range)
-                    return
-                }
-            }
-        } else if import_node.module_name {
-            let name = import_node.module_name.value
-            this.get_current_module_global_scope().vars[name] = new ModuleVarId(global_module_scope.id)
-        } else {
-            this.import_all_from_module(module)
-        }
-    }
-    private lex_and_parse_typecheck_file(this, filename: String, range: TextRange): Module {
-        // TODO: You need to properly handle the built-in case; don't use null as a reference point.
-        let filepath = filename
-        let prev_file_id = this.compiler.current_file
-        if range != null and !filename.starts_with("@") {
-            filepath = Path.join(Path.dirname(this.get_current_module().name), filename)
-        }
-        let file_id = this.compiler.register_file(filepath)
-        if file_id.id < this.program.modules.length {
-            return this.get_module(file_id.id)
-        }
-        if !this.compiler.set_current_file(file_id){ 
-            this.error(ErrorKind.IO, "No such file or directory: '$filename'", range)
-            return null
-        }
-        let tokens = Lexer.tokenize(this.compiler)
+        let ret_type = function_node.return_type == null ? PrimitiveTypes.void : this.check_type(function_node.return_type)
         if this.has_errored() return null
-        let module_node = Parser.parse(tokens, this.compiler.errors)
-        if this.has_errored() return null
-        let module = this.check_module(module_node, filepath)
-        if this.has_errored() return null
-        this.compiler.set_current_file(prev_file_id)
-        return module
-    }
-    private declare_enum_within_module(this, enum_node: EnumNode){
-        let declared_enum = new Enum()
-        let name = enum_node.name.value
-        declared_enum.definition_range = enum_node.name.range
-        let module_scope =  this.get_current_module_global_scope()
-        declared_enum.name = name
-        if this.get_type_from_current_scope(name).kind != TypeKind.UNKNOWN {
-            this.error(ErrorKind.NAME, "Name '$name' has already been used for another type. consider renaming", enum_node.name.range)
-            return
-        }
-        declared_enum.id = new EnumId(this.current_scope.module_id, this.get_current_module().enums.length)
-        this.get_current_module().enums << declared_enum
-        module_scope.enums[declared_enum.name] = declared_enum.id
-        module_scope.vars[declared_enum.name] = new EnumVarId(declared_enum.id)
-    }
-    private declare_class_within_module(this, class_decl_node: ClassDeclarationNode) {
-        let name = class_decl_node.name.value
-        if (this.get_type_from_current_scope(name).kind != TypeKind.UNKNOWN) or (this.generic_templates[name] != null) {
-            this.error(ErrorKind.NAME, "Name '$name' has already been used for another type. consider renaming", class_decl_node.name.range)
-            return
-        }
-        if class_decl_node.generic_parameters.length > 0 {
-            this.module_contains_generics = true
-            this.generic_templates[name] = new Generic(this.current_scope.module_id, class_decl_node)
-            return
-        }
-        let declared_class = new Class()
-        declared_class.definition_range = class_decl_node.name.range
-        let module_scope = this.get_current_module_global_scope()
-        if class_decl_node.parent != null {
-            declared_class.parent = this.check_type(class_decl_node.parent)
-            if this.has_errored() return
-        } else {
-            declared_class.parent = null
-        }
-        declared_class.name = name
-        declared_class.id = new ClassId(this.current_scope.module_id, this.get_current_module().classes.length)
-        this.get_current_module().classes << declared_class
-        module_scope.classes[name] = declared_class.id
-        module_scope.vars[name] = new ClassVarId(declared_class.id)
-    }
-    private declare_function_within_module(this, function_node: FunctionDeclarationNode) {
-        let declared_function = new Function(function_node.name.range)
-        declared_function.is_external = function_node.is_external
-        let name = function_node.name.value
-        declared_function.name = name
-        if this.is_constant_in_scope(name) {
-            this.error(ErrorKind.NAME, "Illegal re-declaration of const '$name'", function_node.name.range)
-            return
-        }
-        if this.get_type_from_current_scope(name).kind != TypeKind.UNKNOWN {
-            this.error(ErrorKind.NAME, "Illegal re-declaration of type '$name' as function", function_node.name.range)
-            return
-        }
-        let parent_scope = this.current_scope
-        let fnc_scope = this.create_child_scope_within_current_scope()
-        this.current_scope = fnc_scope.id 
-        declared_function.params = []
-        declared_function.fnc_type = this.init_function_signature(function_node.params, function_node.return_type, declared_function.params, null)
-        if this.has_errored() return
-        declared_function.id = new VarId(VarIdKind.FNC, this.current_scope.module_id, this.get_current_module().functions.length)
+        declared_function.fnc_type = new FunctionType(has_implicit_this, param_types, ret_type)
+        let module = this.program.get_module(scope_id.module_id)
+        declared_function.id = new FunctionId(this.current_scope.module_id, module.functions.length)
         this.current_scope = fnc_scope.parent
         declared_function.scope = fnc_scope.id
-        let module_scope =  this.get_current_module_global_scope()
-        this.get_current_module().functions << declared_function
-        module_scope.functions[declared_function.name] = declared_function.id
+        let scope = this.program.get_scope(scope_id)
+        module.functions << declared_function
+        scope.functions[declared_function.name] = declared_function.id
+        return declared_function
     }
     private check_enum_body(this, declared_enum: Enum, enum_node: EnumNode){
         let enum_variant: Type = null
@@ -1828,12 +1759,13 @@ class TypeChecker {
             }
         }
         let next_enum_value: u64 = 0 // What about negatives?
+        let enum_scope = this.program.get_scope(declared_enum.scope)
         for let i = 0; i < enum_node.fields.length; i++ {
             let enum_node_field = enum_node.fields[i]
             let enum_name = enum_node_field.name.value
             let enum_field = new EnumField(enum_name)
             let enum_field_range = enum_node_field.name.range
-            enum_field.id = new PropId(PropIdKind.FIELD, declared_enum.id, i)
+            enum_field.id = new VarId(declared_enum.id.module_id, i)
             if enum_node_field.initializer != null {
                 enum_field.initializer = this.check_expression(enum_variant, enum_node_field.initializer)
                 if (this.has_errored()) return
@@ -1853,167 +1785,111 @@ class TypeChecker {
                 enum_field.initializer.value_type = enum_variant
                 next_enum_value++
             }
-            declared_enum.field_map[enum_name] = enum_field.id
+            enum_scope.vars[enum_name] = enum_field.id
             declared_enum.fields << enum_field
         }
         declared_enum.variant_type = enum_variant
     }
     private declare_class_fields(this, declared_class: Class, class_node: ClassDeclarationNode){
-        let current_field_offset = declared_class.inherited_fields_num
         for let i = 0; i < class_node.fields.length; i++ {
             let field_node = class_node.fields[i]
-            let field = new ClassField()
-            field.name = field_node.name.value
-            field.definition_range = field_node.name.range
-            if is_operator_overload_name(field.name) {
-                this.error(ErrorKind.NAME, field.name+" is reserved only for operator overloads and cannot be used as a field name", field_node.name.range)
-            }
-            field.visibility = field_node.access_modifier
-            field.id = new PropId(PropIdKind.FIELD, declared_class.id, i)
-            field.field_type = this.check_type(field_node.parsed_type)
-            field.field_offset = current_field_offset
+            let field_name = field_node.name.value
+            let field_type = this.check_type(field_node.parsed_type)
             if this.has_errored() return
-            let possible_prop_id = declared_class.prop_map[field.name]
-            if possible_prop_id != null {
-                if possible_prop_id.type_id == declared_class.id {
-                    this.error(ErrorKind.NAME, "Field $(field.name) in class $(declared_class.name) already exists", field_node.name.range)
-                    return
-                }
-                let parent_prop_type = this.program.get_class_prop_type(possible_prop_id)
-                let parent_prop_visibility = this.program.get_class_prop_visibility(possible_prop_id)
-                if !this.types_are_eq(parent_prop_type, field.field_type) {
-                    this.error(ErrorKind.TYPE, "Signature of inherited field $(field.name) in class $(declared_class.name) does not match expected parent signature '$(this.dump_type(parent_prop_type))", field_node.name.range)
-                    return
-                }
-                if field.visibility != parent_prop_visibility {
-                    this.error(ErrorKind.GEN, "Expected inherited field $(field.name) in class $(declared_class.name) to be $(dump_access(parent_prop_visibility))", field_node.name.range)
-                    return
-                }
+            if is_operator_overload_name(field_name) {
+                this.error(ErrorKind.NAME, "$field_name is reserved only for operator overloads and cannot be used as a field name", field_node.name.range)
+                return
             }
             if field_node.initializer != null {
-                field.initializer = this.check_expression(field.field_type, field_node.initializer)
+                let initializer = this.check_expression(field_type, field_node.initializer)
                 if this.has_errored() return
-                if !this.types_are_eq(field.field_type, field.initializer.value_type) {
-                    this.error(ErrorKind.TYPE, "Expected type '$(this.dump_type(field.field_type))' but got type '$(this.dump_type(field.initializer.value_type))' on static field initialization", field_node.initializer.range)
+                if !this.types_are_eq(field_type, initializer.value_type) {
+                    this.error(ErrorKind.TYPE, "Expected type '$(this.dump_type(field_type))' but got type '$(this.dump_type(initializer.value_type))' on static field initialization", field_node.initializer.range)
+                    return
                 }
-                if !field.initializer.is_constant {
+                if !initializer.is_constant {
                     this.error(ErrorKind.GEN, "Static field initializer has to be a constant", field_node.initializer.range)
                     return
                 }
-                field.is_static = true
-                declared_class.static_prop_map[field.name] = field.id
-            } else {
-                field.is_static = false
-                declared_class.prop_map[field.name] = field.id
-                current_field_offset++
+                this.declare_var_within_scope(declared_class.static_scope, field_name, initializer, field_type, false)
             }
+
+            let possible_field_id = this.get_var_from_scope(declared_class.scope, field_name)
+            if possible_field_id != null {
+                this.error(ErrorKind.NAME, "Field $field_name in class $(declared_class.name) already exists", field_node.name.range)
+                return
+            }
+
+            let field_id = new VarId(declared_class.id.module_id, i)
+            let field = new ClassField(field_id, field_name, field_node.access_modifier, field_type, field_node.name.range)
+
             declared_class.fields << field
         }
     }
     private is_iteratable(this, suspect_type: Type): bool {
         //TODO: Need to think about generics
         if !is_object(suspect_type) return false
-        let class_ = this.program.get_class_from_type(suspect_type)
-        let done_prop_id = class_.prop_map["done"]
-        if (done_prop_id == null) return false
-        let done_type = this.program.get_class_prop_type(done_prop_id)
-        if (done_type.kind != TypeKind.BOOL) return false
-        let next_prop_id = class_.prop_map["next"]
-        if (next_prop_id == null) return false
-        let next_type = this.program.get_class_prop_type(next_prop_id) as FunctionType
-        if (next_type.kind != TypeKind.FNC) return false
-        if (next_type.param_types.length != 1) return false
-        return true
+        let checked_class = this.program.get_class_from_type(suspect_type)
+        let done_field_id = this.get_var_from_scope(checked_class.scope, "done")
+        if (done_field_id == null) return false
+        let done_type = checked_class.get_field(done_field_id).field_type
+        if (!is_bool(done_type)) return false
+        let next_method_id = this.get_func_from_scope(checked_class.scope, "next")
+        if (next_method_id == null) return false
+        let next_method_type = this.program.get_func(next_method_id).fnc_type
+        if (next_method_type.param_types.length != 1) return false
+        return !is_void(next_method_type.return_type)
     }
     private declare_class_methods(this, declared_class: Class, class_node: ClassDeclarationNode){
-        //TODO: Need to refactor
-        let object_type = new ObjectType(declared_class.id)
+        let object_type = this.get_type_from_scope(this.current_scope, declared_class.name)
         for let i = 0; i < class_node.methods.length; i++ {
             let method_node = class_node.methods[i]
-            let method = new ClassMethod(method_node.function.name.range)
-            let name = method_node.function.name.value
-            method.name = name
-            let method_scope = this.create_child_scope_within_current_scope()
-            this.current_scope = method_scope.id
-            method.params = []
-            method.is_abstract = method_node.function.is_external
-            method.visibility = method_node.access_modifier
-            method.method_type = this.init_function_signature(method_node.function.params, method_node.function.return_type, method.params, object_type)
-            if this.has_errored() return
-            method.is_static = !method.method_type.has_implicit_this
+            let method_name = method_node.function.name.value
             let name_range = method_node.function.name.range
-            if is_operator_overload_name(name) {
-                let param_num = 2
-                if name == "__iter__" or name == "__del__" {
-                    param_num = 1
-                } else if name =="__setitem__" {
-                    param_num = 3
-                }
-                if method_node.function.params.length != param_num {
-                    this.error(ErrorKind.GEN, "Expected $param_num parameters for binary operator overload $name but got $(method_node.function.params.length)", name_range)
+            let method_is_static = method_node.function.is_static()
+            let method_is_abstract = method_node.function.is_external
+            let method_params_num = method_node.function.params.length
+            if is_operator_overload_name(method_name) {
+                if method_is_static {
+                    this.error(ErrorKind.GEN, "Binary operator overload $method_name cannot be static", name_range)
                     return
                 }
-                if method.is_static {
-                    this.error(ErrorKind.GEN, "Binary operator overload $name cannot be static", name_range)
-                    return
-                }
-            }
-            if name == "__iter__" {
-                if !this.is_iteratable(method.method_type.return_type) {
-                    this.error(ErrorKind.TYPE, "__iter__ method must return an iteratable object {done: bool, next(): any}", name_range)
-                    return 
-                }
-            }
-            let possible_prop_id = declared_class.prop_map[name]
-            if possible_prop_id != null {
-                if possible_prop_id.type_id == declared_class.id {
-                    this.error(ErrorKind.NAME, "Method $name in class $(declared_class.name) already exists", name_range)
-                    return
-                }
-                let parent_prop_type = this.program.get_class_prop_type(possible_prop_id)
-                let parent_prop_visibility = this.program.get_class_prop_visibility(possible_prop_id)
-                if !this.types_are_eq(parent_prop_type, method.method_type) {
-                    this.error(ErrorKind.TYPE, "Signature of inherited method $name in class $(declared_class.name) does not match expected parent signature '$(this.dump_type(parent_prop_type))'", name_range)
-                    return
-                }
-                if method.visibility != parent_prop_visibility {
-                    this.error(ErrorKind.GEN, "Expected inherited method $name in class $(declared_class.name) to be $(dump_access(parent_prop_visibility))", name_range)
+
+                let required_params_num = get_num_params_for_operator_overload(method_name)
+                if method_params_num != required_params_num {
+                    this.error(ErrorKind.GEN, "Expected $required_params_num parameters for binary operator overload $method_name but got $(method_params_num)", name_range)
                     return
                 }
             }
-            method.id = new PropId(PropIdKind.METHOD, declared_class.id, i)
-            if method.is_static {
-                if method.is_abstract {
+
+            if method_is_abstract {
+                if method_is_static {        
                     this.error(ErrorKind.GEN, "Static method can't be abstract", name_range)
                     return
                 }
-                if method.name == "constructor" {
+            }
+
+            let declaration_scope = method_is_static ? declared_class.static_scope : declared_class.scope
+            let method = this.declare_function_within_scope(declaration_scope, method_node.function, object_type)
+
+            if this.has_errored() return
+            if method_name == "constructor" {
+                if method_is_abstract {
+                    this.error(ErrorKind.GEN, "Class constructor can't be abstract", name_range)
+                    return
+                }
+                if method_is_static {
                     this.error(ErrorKind.GEN, "Class constructor can't be static", name_range)
                     return
                 }
-                declared_class.static_prop_map[name] = method.id
-            } else {
-                if method.name == "constructor" {
-                    if method.is_abstract {
-                        this.error(ErrorKind.GEN, "Class constructor can't be abstract", name_range)
-                        return
-                    }
-                    declared_class.constructor_id = method.id
-                } else {
-                    if method.is_abstract {
-                        this.error(ErrorKind.GEN, "Can't have a abstract private method use protected instead", name_range)
-                        return
-                    }
-                    declared_class.prop_map[name] = method.id
-                }
-                if declared_class.parent != null {
-                    let constructor_method_id = this.program.get_class_from_type(declared_class.parent).constructor_id
-                    declared_class.prop_map["super"] = constructor_method_id
-                }
+                declared_class.constructor_id = method.id
             }
-            method.scope = method_scope.id
-            declared_class.methods << method
-            this.current_scope = method_scope.parent
+        
+            if method_name == "__iter__" and (!this.is_iteratable(method.fnc_type.return_type)) {
+                this.error(ErrorKind.TYPE, "__iter__ method must return an iteratable object {done: bool, next(): any}", name_range)
+                return 
+            }
+            method.visibility = method_node.access_modifier
         }
     }
     private add_inherited_props_to_class(this, declared_class: Class, class_node: ClassDeclarationNode){
@@ -2022,31 +1898,31 @@ class TypeChecker {
             this.error(ErrorKind.TYPE, "Can only inherit from class not type '$(this.dump_type(parent_type))'", class_node.parent.range)
         }
         let parent_class = this.program.get_class_from_type(parent_type)
-        for parent_entry_prop in parent_class.prop_map {
-            let parent_prop_name = parent_entry_prop.key
-            let parent_prop_id = parent_entry_prop.value  
-            let parent_prop_type = this.program.get_class_prop_type(parent_prop_id)
-            let child_prop_id = declared_class.prop_map[parent_prop_name]
-            let parent_prop_visibility = this.program.get_class_prop_visibility(parent_prop_id)
-            let parent_prop_is_static = this.program.is_class_prop_static(parent_prop_id)
-            if parent_prop_is_static
-                continue
-            if parent_prop_visibility == ACCESS_ATTR.PRIVATE and is_function(parent_prop_type)
-                continue
-            if child_prop_id == null {
-                if parent_prop_id.kind == PropIdKind.FIELD
-                    declared_class.inherited_fields_num++
-                if parent_prop_id.kind == PropIdKind.METHOD
-                    declared_class.inherited_methods_num++
-                declared_class.prop_map[parent_prop_name] = parent_prop_id
+        let parent_scope = this.program.get_scope(parent_class.scope)
+        let class_scope = this.program.get_scope(declared_class.scope)
+        for field_map_entry in parent_scope.vars {
+            let parent_field_id = field_map_entry.value
+            let parent_field = parent_class.get_field(parent_field_id)
+            class_scope.vars[parent_field.name] = parent_field.id
+            declared_class.fields.ensure_capacity(parent_field_id.id + 1)
+            declared_class.fields[parent_field_id.id] = parent_field
+        }
+        for method_map_entry in parent_scope.functions {
+            let parent_method_id = method_map_entry.value
+            let parent_method = this.program.get_func(parent_method_id)
+            if (parent_method.name == "constructor"){
+                class_scope.functions["super"] = parent_method_id
+            } else {
+                class_scope.functions[parent_method.name] = parent_method_id
             }
         }
     }
     private check_class_body(this, class_node: ClassDeclarationNode){
         let class_name = class_node.name.value
-        let resolved_type = this.get_type_from_current_scope(class_name)
+        let resolved_type = this.get_type_from_scope(this.current_scope, class_name)
         if resolved_type.kind == TypeKind.UNKNOWN return
         let declared_class = this.program.get_class_from_type(resolved_type)
+        let class_scope = this.program.get_scope(declared_class.scope)
         let outer_class = this.current_class
         this.current_class = declared_class.id
         if declared_class.parent != null {
@@ -2059,45 +1935,24 @@ class TypeChecker {
         this.declare_class_methods(declared_class, class_node)
         if this.has_errored() return
         // Checking if class is abstract.
-        for prop_entry in declared_class.prop_map {
-            let prop_id = prop_entry.value
-            let prop_name = prop_entry.key
-            if prop_id.kind == PropIdKind.METHOD {
-                let prop_method = this.program.get_method(prop_id)
-                if prop_method.is_abstract {
-                    if declared_class.constructor_id != null {
-                        this.error(ErrorKind.GEN, "Class with constructor must implement all it's methods missing $(prop_name) implementation", class_node.name.range)
-                        return
-                    }
-                    declared_class.is_abstract = true
-                    break
+        if declared_class.constructor_id != null {
+            for method_map_entry in class_scope.functions {
+                let method = this.program.get_func(method_map_entry.value)
+                let method_name = method.name
+                if (method.is_external){
+                    this.error(ErrorKind.GEN, "Class with constructor must implement all it's methods '$class_name' is missing $method_name's implementation", method.definition_range)
+                    return
                 }
             }
         }
         // Class Methods Body
-        for let i = 0; i < declared_class.methods.length; i++ {
-            let prev_method = this.current_method
-            let method = declared_class.methods[i]
-            this.current_method = method.id
-            let method_node = class_node.methods[i]
-            this.current_scope = method.scope
-            if method.is_abstract {
-                continue
-            }
-            method.block = this.check_block(method_node.function.block)
-            if this.has_errored() {
-                return
-            }
-            if !method.block.returns {
-                if method.method_type.return_type.kind == TypeKind.VOID {
-                    method.block.statements << (new ReturnStatement() as Statement)
-                } else {
-                    this.error(ErrorKind.GEN, "Method missing ending return statement", method_node.function.return_type.range)
-                    return
-                }
-            }
-            this.current_method = prev_method
-            this.current_scope = this.program.get_scope(method.scope).parent
+        for let i = 0; i < class_node.methods.length; i++ {
+            let method_node = class_node.methods[i].function
+            let method_name = method_node.name.value
+            let scope_context = method_node.is_static() ? declared_class.static_scope : declared_class.scope
+            let method_id = this.get_func_from_scope(declared_class.static_scope, method_name)
+            let method = this.program.get_func(method_id)
+            this.check_function_body(method, method_node)
         }
         this.current_class = outer_class
     }
@@ -2174,7 +2029,7 @@ class TypeChecker {
             }
         }
 
-        let found_type = this.get_type_from_current_scope(name)
+        let found_type = this.get_type_from_scope(this.current_scope, name)
         if found_type.kind == TypeKind.UNKNOWN {
             this.error(ErrorKind.TYPE, "Undefined type '$name'", record_identifier.range)
             return null
@@ -2301,20 +2156,15 @@ class TypeChecker {
             }
             return new NullExpression(expected_type, var_access_node.range)
         }
-        let current_scope = this.get_current_scope()
-        let resolved = this.get_var_from_current_scope(name)
-        let var_ty = PrimitiveTypes.unknown
-        if resolved != null {
-            let var_id = resolved
-            if var_id.kind == VarIdKind.FNC
-                var_ty = this.program.get_func(var_id).fnc_type
-            else if var_id.kind == VarIdKind.VAR or var_id.kind == VarIdKind.CONST
-                var_ty = this.program.get_var(var_id).value_type
-            else if var_id.kind == VarIdKind.CLASS or var_id.kind == VarIdKind.ENUM
-                var_ty = new Type(TypeKind.RECORD)
-            else if var_id.kind == VarIdKind.MODULE
-                var_ty = new Type(TypeKind.MODULE)
-            return new VarAccessExpression(var_id, var_ty, var_access_node.range)
+        let var_id = this.get_var_from_scope(this.current_scope, name)
+        if var_id != null {
+            let var = this.program.get_var(var_id)
+            return new VarAccessExpression(var_id, var.value_type, var.is_constant, var_access_node.range)
+        }
+        let func_id = this.get_func_from_scope(this.current_scope, name)
+        if func_id != null {
+            let fnc_type = this.program.get_func(func_id).fnc_type
+            return new FncAccessExpression(func_id, fnc_type, var_access_node.range)
         }
         this.error(ErrorKind.NAME, "Undefined variable '$name'", var_access_node.range)
         return null
@@ -2340,14 +2190,14 @@ class TypeChecker {
         return new BinaryExpression(left, BinaryOp.ASSIGN, right, right.value_type, binary_node.range)
     }
     private check_object_bin_assign(this, left: Expression, binary_node: BinaryExpressionNode): Expression {
-        let op = binary_node.op
-        let method_name = bin_op_to_op_overload_name(op)
-        let owner_class = this.program.get_class_from_type(left.value_type as ObjectType)
-        let prop_id = owner_class.prop_map[method_name]
-        if prop_id == null {
+        let method_name = bin_op_to_op_overload_name(binary_node.op)
+        let checked_class = this.program.get_class_from_type(left.value_type as ObjectType)
+        let method_id = this.get_func_from_scope(checked_class.scope, method_name)
+        if method_id == null {
             return null
         }
-        let method_type = this.program.get_class_prop_type(prop_id) as FunctionType
+        let method = this.program.get_func(method_id)
+        let method_type = method.fnc_type
         let param_type = method_type.param_types[1]
         let right = this.check_expression(param_type, binary_node.rhs)
         if this.has_errored() return null
@@ -2355,9 +2205,9 @@ class TypeChecker {
             this.error(ErrorKind.TYPE, "Expected type '$(this.dump_type(param_type))' but got type '$(this.dump_type(right.value_type))'", binary_node.rhs.range)
             return null
         }
-        let member_exp = new MemberExpression(left, prop_id, method_type, binary_node.range)
+        let method_access = new ClassMethodAccessExpression(left, method_id, method_type, binary_node.range)
         let args: Expression[] = [right]
-        return new CallExpression(member_exp, args, method_type.return_type, binary_node.range)
+        return new CallExpression(method_access, args, method_type.return_type, binary_node.range)
     }
     private check_object_binary_expr(this, left: Expression, binary_node: BinaryExpressionNode, right: Expression): Expression {
         let op = binary_node.op
@@ -2367,15 +2217,15 @@ class TypeChecker {
             return null
         }
         let owner_class = this.program.get_class_from_type(left.value_type)
-        let prop_id = owner_class.prop_map[method_name]
-        if prop_id == null {
+        let method_id = this.get_func_from_scope(owner_class.scope, method_name)
+        if method_id == null {
             if op == BinaryOp.EEQ or op == BinaryOp.NEQ {
                 return new BinaryExpression(left, op, this.check_expression(left.value_type, binary_node.rhs), PrimitiveTypes.bool, binary_node.range)
             }
             this.error(ErrorKind.NAME, "No binary operator overload for '$(dump_bin_op(op))' in object of class '$(owner_class.name)' please implement the method $method_name to support this", binary_node.range)
             return null
         }
-        let method_type = this.program.get_class_prop_type(prop_id) as FunctionType
+        let method_type = this.program.get_func(method_id).fnc_type
         let param_type = method_type.param_types[1]
         if right == null 
             right = this.check_expression(param_type, binary_node.rhs)
@@ -2392,19 +2242,19 @@ class TypeChecker {
             this.error(ErrorKind.TYPE, "Expected type '$(this.dump_type(param_type))' but got type '$(this.dump_type(right.value_type))'", binary_node.rhs.range)
             return null
         }
-        let member_exp = new MemberExpression(left, prop_id, method_type, binary_node.range)
+        let member_exp = new ClassMethodAccessExpression(left, method_id, method_type, binary_node.range)
         let args: Expression[] = [right]
         return new CallExpression(member_exp, args, method_type.return_type, binary_node.range)
     }
     private check_object_setitem_expr(this, object: Expression, binary_node: BinaryExpressionNode): Expression {
         let index_expr_node = binary_node.lhs as ExpressionIndexNode
         let owner_class = this.program.get_class_from_type(object.value_type)
-        let prop_id = owner_class.prop_map["__setitem__"]
-        if prop_id == null {
+        let method_id = this.get_func_from_scope(owner_class.scope, "__setitem__")
+        if method_id == null {
             this.error(ErrorKind.GEN, "No operator overload for index set operator on $(owner_class.name) object please implement method __setitem__ to use in this class", index_expr_node.range)
             return null
         }
-        let method_type = this.program.get_class_prop_type(prop_id) as FunctionType
+        let method_type = this.program.get_func(method_id).fnc_type
         let param1_type = method_type.param_types[1]
         let param2_type = method_type.param_types[2]
         if this.has_errored() return null
@@ -2420,11 +2270,11 @@ class TypeChecker {
             this.error(ErrorKind.TYPE, "Expected type '$(this.dump_type(param2_type))' but got type '$(this.dump_type(value.value_type))'", binary_node.rhs.range)
             return null
         }
-        let member_expr = new MemberExpression(object, prop_id, method_type, binary_node.range)
+        let member_expr = new ClassMethodAccessExpression(object, method_id, method_type, binary_node.range)
         let args: Expression[] = [index, value]
         return new CallExpression(member_expr, args, method_type.return_type, binary_node.range)
     }
-
+    //TODO: This needs a complete re-write this is messy
     private check_bin_expr(this, expected_type: Type, binary_node: BinaryExpressionNode): BinaryExpression {
         let op = binary_node.op
         let is_assign_op = op >= BinaryOp.ASSIGN and op <= BinaryOp.SR_ASSIGN
@@ -2584,12 +2434,12 @@ class TypeChecker {
     }
     private check_constructor_call(this, class_id: ClassId, args: ExpressionNode[], argsp: Expression[]*, range: TextRange*): String { 
         let obj_class = this.program.get_class(class_id)
-        let field_id = obj_class.constructor_id
-        if field_id == null {
+        let method_id = obj_class.constructor_id
+        if method_id == null {
             return "Cannot construct an object of abstract class"
         }
-        let constructor = obj_class.methods[field_id.id] 
-        let construct_type = constructor.method_type
+        let constructor = this.program.get_func(method_id)
+        let construct_type = constructor.fnc_type
         let checked_args = this.fill_in_default_call_args(construct_type, constructor.params, args)
         if this.has_errored() return null
         let error: String = null
@@ -2633,116 +2483,133 @@ class TypeChecker {
         }
         return new NewExpression(new_expr_node.onheap, memory_type, args, expression_type, new_expr_node.range)
     }   
-    private check_member_access(this, accessor: PropId): String {
-        let visibility = ACCESS_ATTR.PUBLIC
-        let accessee = this.program.get_class_from_prop_id(accessor)
-        let member_name = ""
-        if accessor.kind == PropIdKind.METHOD {
-            let method = accessee.methods[accessor.id]
-            visibility = method.visibility
-            member_name = method.name
-        } else {
-            let field = accessee.fields[accessor.id]
-            visibility = field.visibility
-            member_name = field.name
-        }
+    private check_member_access(this, accessee: ClassId, class_name: String, member_name: String, visibility: AccessVisibility): String {
+        let visibility = AccessVisibility.PUBLIC
         if this.current_class != null {
-            if this.current_class.module_id != accessee.id.module_id or accessee.id.id != this.current_class.id {
-                if visibility == ACCESS_ATTR.PRIVATE {
-                    return "Property '$member_name' is defined as private and only accessible within the class $(accessee.name)"
+            if this.current_class.module_id != accessee.module_id or accessee.id != this.current_class.id {
+                if visibility == AccessVisibility.PRIVATE {
+                    return "Property '$member_name' is defined as private and only accessible within the class $class_name"
                 }
             }
-        } else if visibility != ACCESS_ATTR.PUBLIC {
-            return "Property '$member_name' is defined as $(dump_access(visibility)) and only accessible within the class $(accessee.name)"
+        } else if visibility != AccessVisibility.PUBLIC {
+            return "Property '$member_name' is defined as $(dump_access(visibility)) and only accessible within the class $class_name"
         }
         return null
     }
+    private check_class_member_expr(this, member_owner: Expression, member_name: String, range: TextRange): Expression {
+        let member_owner_type = member_owner.value_type
+        while member_owner_type.kind == TypeKind.RESOLVED_GENERIC {
+            member_owner_type = (member_owner_type as GenericType).instantiated_type
+        }
+        let checked_class = this.program.get_class_from_type(member_owner_type)
+        let field_var_id = this.get_var_from_scope(checked_class.scope, member_name)
+        if field_var_id != null {
+            let class_field = checked_class.get_field(field_var_id)
+            let field_visibility = class_field.visibility
+            this.check_member_access(checked_class.id, checked_class.name, member_name, field_visibility)
+            return new ClassFieldAccessExpression(member_owner, field_var_id, class_field.field_type, range)
+        }
+        
+        let method_fnc_id = this.get_func_from_scope(checked_class.scope, member_name)
+        if method_fnc_id == null {
+            this.error(ErrorKind.NAME, "Field '$member_name' doesn't exist in object of class '$(checked_class.name)'", range)
+            return null
+        }
+        let class_method = this.program.get_func(method_fnc_id)
+        let method_visibility = class_method.visibility
+        this.check_member_access(checked_class.id, checked_class.name, member_name, method_visibility)
+        return new ClassMethodAccessExpression(member_owner, method_fnc_id, class_method.fnc_type, range)
+    }
+    private check_enum_member_expr(this, enum_id: EnumId, member_name: String, range: TextRange): EnumFieldAccessExpression {
+        let checked_enum = this.program.get_enum(enum_id)
+        let field_var_id = this.get_var_from_scope(checked_enum.scope, member_name)
+        if field_var_id == null {
+            this.error(ErrorKind.NAME, "Member '$member_name' doesn't exist in enum '$(checked_enum.name)'", range)
+            return null
+        }
+        return new EnumFieldAccessExpression(enum_id, field_var_id, checked_enum.variant_type, range)
+    }
+    private check_static_class_member_expr(this, class_id: ClassId, member_name: String, range: TextRange): Expression {
+        let checked_class = this.program.get_class(class_id)
+        let field_var_id = this.get_var_from_scope(checked_class.static_scope, member_name)
+        if field_var_id != null {
+            let class_field = checked_class.get_field(field_var_id)
+            let field_visibility = class_field.visibility
+            this.check_member_access(checked_class.id, checked_class.name, member_name, field_visibility)
+            return new StaticFieldAccessExpression(class_id, field_var_id, class_field.field_type, range)
+        }
+        
+        let method_fnc_id = this.get_func_from_scope(checked_class.static_scope, member_name)
+        if method_fnc_id == null {
+            this.error(ErrorKind.NAME, "Field '$member_name' doesn't exist in object of class '$(checked_class.name)'", range)
+            return null
+        }
+        let class_method = this.program.get_func(method_fnc_id)
+        let method_visibility = class_method.visibility
+        this.check_member_access(checked_class.id, checked_class.name, member_name, method_visibility)
+        return new StaticMethodAccessExpression(class_id, method_fnc_id, class_method.fnc_type, range)
+    }
+    private check_module_member_expr(this, module_id: ModuleId, member_name: String, range: TextRange): Expression {
+        let module = this.program.get_module(module_id)
+        let current_scope = this.current_scope
+        this.current_scope = module.scope
+        let identifer_token: IdentifierToken(member_name, range)
+        let var_access_node: VarAccessExpressionNode(identifer_token)
+        let value = this.check_var_access_expr(PrimitiveTypes.unknown, var_access_node)
+        this.current_scope = current_scope
+        return value
+    }
     private check_member_expr(this, expected_type: Type, member_expr_node: MemberExpressionNode): Expression {
-        let prop_owner = this.check_expression(PrimitiveTypes.unknown, member_expr_node.expression)
+        let member_name = member_expr_node.member.value
+        if (member_expr_node.expression.expr_kind == ExpressionKind.VAR_ACCESS){
+            let var_name = (member_expr_node.expression as VarAccessExpressionNode).name.value
+            let possible_type = this.get_type_from_scope(this.current_scope, var_name)
+            if (possible_type.kind == TypeKind.ENUM){
+                let enum_id = (possible_type as EnumType).enum_id
+                return this.check_enum_member_expr(enum_id, member_name, member_expr_node.range)
+            }
+            if (possible_type.kind == TypeKind.OBJECT){
+                let class_id = (possible_type as ObjectType).class_id
+                return this.check_static_class_member_expr(class_id, member_name, member_expr_node.range)
+            }
+            let possible_module_id = this.get_module_from_scope(this.current_scope, var_name)
+            if possible_module_id != null {
+                this.check_module_member_expr(possible_module_id, member_name, member_expr_node.range)
+            }
+        }
+        let prop_owner = this.check_expression(expected_type, member_expr_node.expression)
         if this.has_errored() return null
         let prop_owner_type = prop_owner.value_type
-        let prop_name = member_expr_node.member.value
-        let prop_ty = PrimitiveTypes.unknown
-        let parent_class: Class = null
-        let prop_id: PropId = null
-        let err_msg: String = null
+        let prop_type = PrimitiveTypes.unknown
         if is_object(prop_owner_type) {
-            while prop_owner_type.kind == TypeKind.RESOLVED_GENERIC {
-                prop_owner_type = (prop_owner_type as GenericType).instantiated_type
-            }
-            parent_class = this.program.get_class_from_type(prop_owner_type)
-            prop_id = parent_class.prop_map[prop_name]
-            if (prop_id == null){   
-                this.error(ErrorKind.NAME, "Property '$prop_name' doesn't exist in object of class '$(parent_class.name)'", member_expr_node.member.range)
-                return null
-            }
-            err_msg = this.check_member_access(prop_id)
-            if (err_msg != null){
-                this.error(ErrorKind.GEN, err_msg, member_expr_node.member.range)
-                return null
-            }
-            prop_ty = this.program.get_class_prop_type(prop_id)
-        } else if prop_owner_type.kind == TypeKind.RECORD {
-            let var_id = (prop_owner as VarAccessExpression).value_id
-            if var_id.kind == VarIdKind.CLASS {
-                parent_class = this.get_class_from_var_id(var_id)
-                prop_id = parent_class.static_prop_map[prop_name]
-                if (prop_id == null) {   
-                    this.error(ErrorKind.NAME, "Property '$prop_name' is not a static member in class '$(parent_class.name)'", member_expr_node.member.range)
-                    return null
-                }
-                err_msg = this.check_member_access(prop_id)
-                if (err_msg != null){
-                    this.error(ErrorKind.GEN, err_msg, member_expr_node.member.range)
-                    return null
-                }
-                prop_ty = this.program.get_class_prop_type(prop_id)
-            } else {
-                let parent_enum = this.get_enum_from_var_id(var_id)
-                prop_id = parent_enum.field_map[prop_name]
-                if (prop_id == null) {   
-                    this.error(ErrorKind.NAME, "'$prop_name' is not an element of enum the '$(parent_enum.name)'", member_expr_node.member.range)
-                    return null
-                }
-                prop_ty = new EnumType(parent_enum.id)
-            }
+           return this.check_class_member_expr(prop_owner, member_name, member_expr_node.range)
         } else if is_pointer(prop_owner_type){
             // FIXME: Better way to express this.
             let mem_intrinsic = Intrinsics.MEMCPY 
-            if prop_name == "copy_from" {
+            if member_name == "copy_from" {
                 mem_intrinsic = Intrinsics.MEMCPY 
-            } else if prop_name == "move_from" {
+            } else if member_name == "move_from" {
                mem_intrinsic = Intrinsics.MEMMOVE
-            } else if prop_name == "fill_with" {
+            } else if member_name == "fill_with" {
                 mem_intrinsic = Intrinsics.MEMSET
-            } else if prop_name == "resize" {
+            } else if member_name == "resize" {
                 mem_intrinsic = Intrinsics.MEMRESIZE
-            } else if prop_name == "compare" {
+            } else if member_name == "compare" {
                 mem_intrinsic = Intrinsics.MEMCMP
             } else {
-                this.error(ErrorKind.NAME, "intrinsic $prop_name is not defined", member_expr_node.member.range)
+                this.error(ErrorKind.NAME, "intrinsic $member_name is not defined", member_expr_node.member.range)
                 return null
             }
             let intrinsic_call = new IntrinsicCall(mem_intrinsic, PrimitiveTypes.unknown, member_expr_node.range) 
             intrinsic_call.args << prop_owner
             return intrinsic_call
-        } else if prop_owner_type.kind == TypeKind.ARRAY {
-            if prop_name == "size" {
-                return new IntExpression((prop_owner_type as ArrayType).length as u64, member_expr_node.range)
-            }
-        } else if prop_owner_type.kind == TypeKind.MODULE {
-            let scope_id = ((prop_owner as VarAccessExpression).value_id as ModuleVarId).scope_id
-            let current_scope = this.current_scope
-            this.current_scope = scope_id
-            let var_access_node: VarAccessExpressionNode(member_expr_node.member)
-            let value = this.check_var_access_expr(PrimitiveTypes.unknown, var_access_node)
-            this.current_scope = current_scope
-            return value
+        } else if prop_owner_type.kind == TypeKind.ARRAY and member_name == "size" {
+            return new IntExpression((prop_owner_type as ArrayType).length as u64, member_expr_node.range)
         } else {
-            this.error(ErrorKind.GEN, "Cannot get property '$prop_name' of type '$(this.dump_type(prop_owner.value_type))'", member_expr_node.expression.range)
+            this.error(ErrorKind.GEN, "Cannot get property '$member_name' of type '$(this.dump_type(prop_owner.value_type))'", member_expr_node.expression.range)
             return null
         }
-        return new MemberExpression(prop_owner, prop_id, prop_ty, member_expr_node.range)
+        return new MemberExpression(prop_owner, prop_id, prop_type, member_expr_node.range)
     }
     private check_ternary_expr(this, expected_type: Type, ternary_expr_node: TernaryExpressionNode): TernaryExpression {
         let cond = this.check_condition(ternary_expr_node.cond)
@@ -2761,12 +2628,12 @@ class TypeChecker {
     }
     private check_object_index_expr(this, object: Expression, index_expr_node: ExpressionIndexNode): Expression {
         let owner_class = this.program.get_class_from_type(object.value_type)
-        let prop_id = owner_class.prop_map["__getitem__"]
-        if prop_id == null {
+        let method_id = this.get_func_from_scope(owner_class.scope, "__getitem__")
+        if method_id == null {
             this.error(ErrorKind.GEN, "No operator overload for indexing operator on $(owner_class.name) object please implement method __getitem__ to use indexing in this class", index_expr_node.range)
             return null
         }
-        let method_type = this.program.get_class_prop_type(prop_id) as FunctionType
+        let method_type = this.program.get_func(method_id).fnc_type
         let param_type = method_type.param_types[1]
         let index = this.check_expression(param_type, index_expr_node.index)
         if this.has_errored() return null
@@ -2774,7 +2641,7 @@ class TypeChecker {
             this.error(ErrorKind.TYPE, "Expected type '$(this.dump_type(param_type))' but got type '$(this.dump_type(index.value_type))'", index_expr_node.index.range)
             return null
         }
-        let member_expr = new MemberExpression(object, prop_id, method_type, index_expr_node.range)
+        let member_expr = new ClassMethodAccessExpression(object, method_id, method_type, index_expr_node.range)
         return new CallExpression(member_expr, [index], method_type.return_type, index_expr_node.range)
     }
     private check_tuple_index_expr(this, root_expression: Expression, index_expr_node: ExpressionIndexNode): Expression {
@@ -2826,15 +2693,14 @@ class TypeChecker {
         }
         return new IndexExpression(root_expression, index, value_type, index_expr_node.range)
     }
-    private get_func_params_from_expression(this, called: Expression): FunctionParam[]{
-        if called.expr_kind == ExpressionKind.ACCESS {
-            let var_id = (called as VarAccessExpression).value_id
-            if var_id.kind == VarIdKind.FNC {
-                return this.program.get_func(var_id).params
-            }
-        } else if called.expr_kind == ExpressionKind.MEMBER {
-            let prop_id = (called as MemberExpression).member_id
-            return this.program.get_method(prop_id).params
+    private get_func_from_expression(this, called: Expression): FunctionId {
+        if called.expr_kind == ExpressionKind.FNC_ACCESS {
+            return (called as FncAccessExpression).fnc_id
+        } else if called.expr_kind == ExpressionKind.CLASS_METHOD_ACCESS {
+            return (called as ClassMethodAccessExpression).fnc_id
+            return this.program.get_func(method_id)
+        } else if called.expr_kind == ExpressionKind.STATIC_METHOD_ACCESS {
+            return (called as StaticMethodAccessExpression).fnc_id
         }
         return null
     }
@@ -2849,8 +2715,9 @@ class TypeChecker {
         if this.has_errored() or func_args == null return called_args
         if (func_args.length - offset) > args.length {
             for arg in func_args {
-                if arg.default != null
-                    called_args << arg.default
+                if arg.var.value != null {
+                    called_args << arg.var.value
+                }
             }
         }
         return called_args
@@ -2962,7 +2829,13 @@ class TypeChecker {
         }
         //TODO: Check for generic functions.
         let func_ty = called.value_type as FunctionType
-        let func_params = this.get_func_params_from_expression(called)
+        let func_params: FunctionParam[] = null
+        let generics: TypeEnv = null
+        let fnc_id = this.get_func_from_expression(called)
+        if (fnc_id != null){
+            let func = this.program.get_func(fnc_id)
+            func_params = func.params
+        }
         let call_args = func_params == null ? this.get_call_expression_node_list(call_expr_node.args) : this.position_args_by_name(func_ty, func_params, call_expr_node.args)
         if this.has_errored() return null
         let adjusted_args = this.check_and_fill_default_args(func_ty, func_params, call_args)
@@ -3077,7 +2950,7 @@ class TypeChecker {
             is_const = false
         }
         if !is_u8_ptr(expected_type) {
-            expected_type = this.get_type_from_current_scope("String")
+            expected_type = this.get_type_from_scope(this.current_scope, "String")
             is_const = false
         }
         let str_exp = new StringExpression(str_node.value.value, str_node.value.fmt_indices, template_args, expected_type, str_node.range)
@@ -3090,7 +2963,7 @@ class TypeChecker {
         let right = this.check_expression(unknown, range_node.right)
         if left.value_type.kind == TypeKind.INT and right.value_type.kind == TypeKind.INT {
             // TODO: Check Range is an object type
-            return new RangeExpression(left, right, this.get_type_from_current_scope("Range"))
+            return new RangeExpression(left, right, this.get_type_from_scope(this.current_scope, "Range"))
         }
         this.error(ErrorKind.TYPE, "Cannot create a range between types '$(this.dump_type(left.value_type))' and '$(this.dump_type(right.value_type))'", TextRange.merge(range_node.left.range, range_node.right.range))
         return left
@@ -3205,7 +3078,6 @@ class TypeChecker {
             this.error(ErrorKind.NAME, "Illegal re-declaration of const '$name'", var_decl_node.var_name.range)
             return null
         }
-        let current_scope = this.get_current_scope()
         let var_type = var_decl_node.var_type != null ? this.check_type(var_decl_node.var_type) : PrimitiveTypes.unknown
         if this.has_errored() return null
         if var_decl_node.value == null and var_type.kind == TypeKind.UNKNOWN {
@@ -3231,13 +3103,13 @@ class TypeChecker {
                 return null
             }
         }
-        if current_scope.vars[name] != null {
+        if this.get_var_from_current_scope(name) != null {
             let var_type = var_decl_node.is_const ? "constant" : "variable"
             this.error(ErrorKind.NAME, "Illegal re-declaration of already declared $var_type '$name'", var_decl_node.var_name.range)
             return null
         }
-        let var = this.declare_var_within_current_scope(name, value, var_type, var_decl_node.is_const)
-        return new VarDeclaration(var_decl_node.var_name.range, name, var.var_id)
+        let var = this.declare_var_within_scope(this.current_scope, name, value, var_type, var_decl_node.is_const)
+        return new VarDeclaration(var, var_decl_node.var_name.range)
     }
     private check_for_in_statement(this, for_in_stmt_node: ForInStatementNode): ForInStatement {
         let for_scope = this.create_child_scope_within_current_scope()
@@ -3262,9 +3134,9 @@ class TypeChecker {
         let next_it_prop_id = iteratable_class.prop_map["next"]
         let iter_item_type = (this.program.get_class_prop_type(next_it_prop_id) as FunctionType).return_type
         this.in_loop = true
-        let var = this.declare_var_within_current_scope(iter_item_name, null, iter_item_type, false)
+        let var = this.declare_var_within_scope(this.current_scope, iter_item_name, null, iter_item_type, false)
         let for_block = this.check_block(for_in_stmt_node.block, for_scope, false)
-        let for_in_stmt = new ForInStatement(new VarDeclaration(for_in_stmt_node.it_name.range, iter_item_name, var.var_id), iterator, for_block)
+        let for_in_stmt = new ForInStatement(new VarDeclaration(var, for_in_stmt_node.it_name.range), iterator, for_block)
         this.in_loop = prev_in_loop
         return for_in_stmt
     }
