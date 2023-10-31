@@ -421,19 +421,19 @@ fnc LLVMBuildArrayMalloc(B: LLVMBuilderRef, Ty: LLVMTypeRef, Val: LLVMValueRef, 
  *
  * @see llvm::IRRBuilder::CreateMemSet()
  */
-fnc LLVMBuildMemSet(B: LLVMBuilderRef, Ptr: LLVMValueRef, Val: LLVMValueRef, Len: LLVMValueRef, Align: int): LLVMValueRef
+fnc LLVMBuildMemSet(B: LLVMBuilderRef, Ptr: LLVMValueRef, Val: LLVMValueRef, Len: LLVMValueRef, Align: u32): LLVMValueRef
 /**
  * Creates and inserts a memcpy between the specified pointers.
  *
  * @see llvm::IRRBuilder::CreateMemCpy()
  */
-fnc LLVMBuildMemCpy(B: LLVMBuilderRef, Dst: LLVMValueRef, DstAlign: int, Src: LLVMValueRef, SrcAlign: int, Size: LLVMValueRef): LLVMValueRef
+fnc LLVMBuildMemCpy(B: LLVMBuilderRef, Dst: LLVMValueRef, DstAlign: u32, Src: LLVMValueRef, SrcAlign: u32, Size: LLVMValueRef): LLVMValueRef
 /**
  * Creates and inserts a memmove between the specified pointers.
  *
  * @see llvm::IRRBuilder::CreateMemMove()
  */
-fnc LLVMBuildMemMove(B: LLVMBuilderRef, Dst: LLVMValueRef, DstAlign: int, Src: LLVMValueRef, SrcAlign: int, Size: LLVMValueRef): LLVMValueRef
+fnc LLVMBuildMemMove(B: LLVMBuilderRef, Dst: LLVMValueRef, DstAlign: u32, Src: LLVMValueRef, SrcAlign: u32, Size: LLVMValueRef): LLVMValueRef
 
 fnc LLVMBuildAlloca(B: LLVMBuilderRef, Ty: LLVMTypeRef, Name: u8*): LLVMValueRef
 fnc LLVMBuildArrayAlloca(B: LLVMBuilderRef, Ty: LLVMTypeRef, Val: LLVMValueRef, Name: u8*): LLVMValueRef

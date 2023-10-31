@@ -1308,7 +1308,8 @@ class CodeGen {
         let args: LLVMValueRef*(intrinsic_call_exp.args.length)
         this.evaluate_expression_list(builder, args, 0, intrinsic_call_exp.args)
         let arg0_pointee_ty = (intrinsic_call_exp.args[0].value_type as PointerType).pointee_type
-        let arg0_pointee_size = LLVMSizeOf(this.codegen_type(arg0_pointee_ty))
+        let llvm_arg0_pointee_type = this.codegen_type(arg0_pointee_ty)
+        let arg0_pointee_size = LLVMSizeOf(llvm_arg0_pointee_type)
         if intrinsic_type == Intrinsics.MEMRESIZE {
             args[1] = LLVMBuildMul(builder, args[1], arg0_pointee_size, "")
             return this.codegen_realloc_call(builder, args)
@@ -1318,16 +1319,17 @@ class CodeGen {
             return this.codegen_memcmp_call(builder, args)
         }
 
-        let align = (this.debug_info.ptr_size / 4) as int
+        let arg1_align = LLVMABIAlignmentOfType(this.debug_info.target_data, llvm_arg0_pointee_type)
         if intrinsic_type == Intrinsics.MEMSET {
-            return LLVMBuildMemSet(builder, args[0], LLVMBuildIntCast2(builder, args[1], this.debug_info.type_scope.u8_type.llvm_type, false, ""), args[2], align)
+            return LLVMBuildMemSet(builder, args[0], LLVMBuildIntCast2(builder, args[1], this.debug_info.type_scope.u8_type.llvm_type, false, ""), args[2], arg1_align)
         }
-
+        let llvm_arg1_pointee_type = this.codegen_type((intrinsic_call_exp.args[1].value_type as PointerType).pointee_type)
+        let arg2_align = LLVMABIAlignmentOfType(this.debug_info.target_data, llvm_arg1_pointee_type)
         if intrinsic_type == Intrinsics.MEMCPY {
-            return LLVMBuildMemCpy(builder, args[0], align, args[1], align, args[2])
+            return LLVMBuildMemCpy(builder, args[0], arg1_align, args[1], arg2_align, args[2])
         }
         if intrinsic_type == Intrinsics.MEMMOVE {
-            return LLVMBuildMemMove(builder, args[0], align, args[1], align, args[2])
+            return LLVMBuildMemMove(builder, args[0], arg1_align, args[1], arg2_align, args[2])
         }
         panic("instrinsic not found!")
         return null
