@@ -973,7 +973,7 @@ class CodeGen {
         }
     }
     private codegen_bin_exp(this, builder: LLVMBuilderRef, bin_exp: BinaryExpression): LLVMValueRef {   
-        let op = bin_exp.op //TODO: Better solution for ConstVersion of operators that are not consts 
+        let op = bin_exp.op //TODO: Better solution for const version of operators that are not consts 
         
         let lty = bin_exp.lhs.value_type
         let rty = bin_exp.rhs.value_type
@@ -1217,7 +1217,6 @@ class CodeGen {
         }
         return null
     }
-    /* TODO: Needs refactoring to remove array expression */
     private codegen_call_exp(this, builder: LLVMBuilderRef, call_exp: CallExpression): LLVMValueRef {
         let args_buffer: LLVMValueRef*(call_exp.args.length + 1)
         let args_num = 0
@@ -1230,8 +1229,7 @@ class CodeGen {
         for call_arg in call_exp.args {
             args_buffer[args_num++] = this.codegen_expression(builder, call_arg)
         }
-        let fnc_type = this.codegen_function_type(callee.value_type as FunctionType) 
-        return LLVMBuildCall2(builder, fnc_type, func, args_buffer, args_num, "")
+        return LLVMBuildCall2(builder, LLVM_GetFunctionType(func), func, args_buffer, args_num, "")
     }
     private codegen_index_exp(this, builder: LLVMBuilderRef, index_exp: IndexExpression): LLVMValueRef {
         let ptr = this.get_index_expr_mem(builder, index_exp)
