@@ -653,7 +653,7 @@ class CodeGen {
             }
             //TODO: will need to check for nullable
             let checked_class = this.program.get_class_from_type(val_ty)
-            let class_scope = this.program.get_scope(checked_class.scope)
+            let class_scope = this.program.get_scope(checked_class.props_scope)
             let string_value = String.with_capacity(checked_class.name.length + 14)
             string_value += "$(checked_class.name) {\n"
             if depth == 3 {
@@ -879,7 +879,7 @@ class CodeGen {
     private codegen_get_field_mem_with_name(this, builder: LLVMBuilderRef, self: LLVMValueRef, obj_type: ObjectType, name: String): LLVMValueRef {
         let checked_class = this.program.get_class_from_type(obj_type)
         let cg_class = this.get_or_codegen_class_from_class_id(checked_class.id)
-        let class_scope = this.program.get_scope(checked_class.scope)
+        let class_scope = this.program.get_scope(checked_class.props_scope)
         let field_id = class_scope.vars[name]
         let cg_field = cg_class.get_field(field_id)
         let i32_llvm_type = this.debug_info.type_scope.i32_type.llvm_type
@@ -888,7 +888,7 @@ class CodeGen {
     }
     private codegen_call_method_with_name(this, builder: LLVMBuilderRef, obj_type: ObjectType, name: String, args: LLVMValueRef*, argc: uint): LLVMValueRef {
         let checked_class = this.program.get_class_from_type(obj_type)
-        let class_scope = this.program.get_scope(checked_class.scope)
+        let class_scope = this.program.get_scope(checked_class.props_scope)
         let method_id = class_scope.functions[name]
         if (method_id == null) return null
         let function = this.get_or_codegen_fnc(method_id)
@@ -896,7 +896,7 @@ class CodeGen {
     }
     private codegen_static_method_call_with_name(this, builder: LLVMBuilderRef, obj_type: ObjectType, name: String, args: LLVMValueRef*, argc: uint): LLVMValueRef {
         let checked_class = this.program.get_class_from_type(obj_type)
-        let class_scope = this.program.get_scope(checked_class.static_scope)
+        let class_scope = this.program.get_scope(checked_class.static_props_scope)
         let method_id = class_scope.functions[name]
         let function = this.get_or_codegen_fnc(method_id)
         return LLVMBuildCall2(builder, LLVM_GetFunctionType(function), function, args, argc, "")
