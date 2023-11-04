@@ -37,8 +37,8 @@ class CodegenTypeScope {
     f64_type: GeneratedType
     void_type: GeneratedType
     null_type: GeneratedType
-    enum_types: StringMap<GeneratedRecordType>
-    class_types: StringMap<GeneratedRecordType>
+    enum_types: GeneratedRecordType[]
+    class_types: GeneratedRecordType[]
     constructor(this, builder: LLVMDIBuilderRef){
         let int_llvm_type = LLVMIntType(ARCH_WORD_SIZE)
         let i4_llvm_type = LLVMIntType(4)
@@ -71,20 +71,20 @@ class CodegenTypeScope {
         this.void_type = new GeneratedType(LLVMVoidType(), LLVMDIBuilderCreateUnspecifiedType(builder, "void", 4))
         this.null_type = new GeneratedType(null, LLVMDIBuilderCreateNullPtrType(builder))
 
-        this.class_types = new StringMap<GeneratedRecordType>()
-        this.enum_types = new StringMap<GeneratedRecordType>()
+        this.class_types = []
+        this.enum_types = []
     }
     public get_record_from_enum_id(this, enum_id: EnumId): GeneratedRecordType {
-        return this.enum_types["$(enum_id.id)"]
+        return this.enum_types[enum_id.id]
     }
     public add_record_with_enum_id(this, enum_id: EnumId, record_type: GeneratedRecordType){
-        this.enum_types["$(enum_id.id)"] = record_type
+        this.enum_types[enum_id.id] = record_type
     }
     public get_record_from_class_id(this, class_id: ClassId): GeneratedRecordType {
-        return this.class_types["$(class_id.id)"]
+        return this.class_types[class_id.id]
     }
     public add_record_with_class_id(this, class_id: ClassId, record_type: GeneratedRecordType){
-        this.class_types["$(class_id.id)"] = record_type
+        this.class_types[class_id.id] = record_type
     }
 }
 class GeneratedField {
@@ -109,6 +109,12 @@ class GeneratedRecordType (GeneratedType)  {
         this.fields["$(var_id.id)"] = field
     }
 }
+fnc extend_array_to_length(array: u8*[], length: uint){
+    array.ensure_capacity(length)
+    for let i = 0; i < length; i++  {
+        array[i] = null
+    }
+}
 class DebugInfo {
     private program: Program
     private builder: LLVMDIBuilderRef
@@ -124,6 +130,8 @@ class DebugInfo {
         this.ctx = LLVMGetModuleContext(mod)
         this.builder = LLVMCreateDIBuilder(mod)
         this.type_scope = new CodegenTypeScope(this.builder)
+        extend_array_to_length(this.type_scope.enum_types as u8*[], program.enums.length)
+        extend_array_to_length(this.type_scope.class_types as u8*[], program.classes.length)
         let file = LLVMDIBuilderCreateFile(this.builder, fn.get_bytes(), fn.length as int, "./", 2)
         this.files = [file]
         this.target_data = LLVMCreateTargetData("")
@@ -420,15 +428,17 @@ class CodeGen {
     private break_bbs: Stack<LLVMBasicBlockRef>
     private continue_bbs: Stack<LLVMBasicBlockRef>
     private program: Program
-    private global_var_scope: StringMap<LLVMValueRef>
-    private global_fnc_scope: StringMap<LLVMValueRef>
+    private all_variables: LLVMValueRef[]
+    private all_functions: LLVMValueRef[]
     private global_string_scope: StringMap<LLVMValueRef>
     private debug_info: DebugInfo
     private compiler: Compiler
     constructor(this, program: Program, module_name: String){
         this.program = program
-        this.global_var_scope = new StringMap<LLVMValueRef>()
-        this.global_fnc_scope = new StringMap<LLVMValueRef>()
+        this.all_variables = []
+        this.all_functions = []
+        extend_array_to_length(this.all_variables as u8*[], program.vars.length)
+        extend_array_to_length(this.all_functions as u8*[], program.functions.length)
         this.global_string_scope = new StringMap<LLVMValueRef>()
         this.continue_bbs = new Stack<LLVMBasicBlockRef>()
         this.break_bbs = new Stack<LLVMBasicBlockRef>()
@@ -454,19 +464,21 @@ class CodeGen {
         for function_entry in module_scope.functions {
             codegen.codegen_function(program.get_func(function_entry.value))
         }
+        del codegen.all_variables
+        del codegen.all_functions
         return new GeneratedModule(codegen.module)
     }
     private get_var_from_varid(this, var_id: VarId): LLVMValueRef{
-        return this.global_var_scope["$(var_id.id)"]
+        return this.all_variables[var_id.id]
     }
     private get_fnc_from_fncid(this, fnc_id: FunctionId): LLVMValueRef {
-        return this.global_fnc_scope["$(fnc_id.id)"]
+        return this.all_functions[fnc_id.id]
     }
     private add_var(this, var_id: VarId, value: LLVMValueRef){
-        this.global_var_scope["$(var_id.id)"] = value
+        this.all_variables[var_id.id] = value
     }
     private add_fnc(this, fnc_id: FunctionId, value: LLVMValueRef){
-        this.global_fnc_scope["$(fnc_id.id)"] = value
+        this.all_functions[fnc_id.id] = value
     }
     private neg_int(builder: LLVMBuilderRef, val: LLVMValueRef): LLVMValueRef {
         return LLVMIsConstant(val) ? LLVMConstNeg(val) : LLVMBuildNeg(builder, val, "")

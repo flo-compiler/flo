@@ -7,7 +7,7 @@
 #include <llvm/Support/SourceMgr.h>
 #include <llvm/Support/CodeGen.h>
 #include <llvm/Support/TargetSelect.h>
-#include <llvm/Support/Host.h>
+#include <llvm/TargetParser/Host.h>
 #include <llvm/Support/CodeGen.h>
 #include <llvm/Support/FileSystem.h>
 #include <llvm/Target/TargetOptions.h>
