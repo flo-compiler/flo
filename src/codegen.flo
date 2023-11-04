@@ -74,27 +74,17 @@ class CodegenTypeScope {
         this.class_types = new StringMap<GeneratedRecordType>()
         this.enum_types = new StringMap<GeneratedRecordType>()
     }
-    public get_enum_id_key(enum_id: EnumId): String {
-        return "$(enum_id.id)"
-    }
-    public get_class_id_key(class_id: ClassId): String {
-        return "$(class_id.id)"
-    }
     public get_record_from_enum_id(this, enum_id: EnumId): GeneratedRecordType {
-        let key = CodegenTypeScope.get_enum_id_key(enum_id)
-        return this.enum_types[key]
+        return this.enum_types["$(enum_id.id)"]
     }
     public add_record_with_enum_id(this, enum_id: EnumId, record_type: GeneratedRecordType){
-        let key = CodegenTypeScope.get_enum_id_key(enum_id)
-        this.enum_types[key] = record_type
+        this.enum_types["$(enum_id.id)"] = record_type
     }
     public get_record_from_class_id(this, class_id: ClassId): GeneratedRecordType {
-        let key = CodegenTypeScope.get_class_id_key(class_id)
-        return this.class_types[key]
+        return this.class_types["$(class_id.id)"]
     }
     public add_record_with_class_id(this, class_id: ClassId, record_type: GeneratedRecordType){
-        let key = CodegenTypeScope.get_class_id_key(class_id)
-        this.class_types[key] = record_type
+        this.class_types["$(class_id.id)"] = record_type
     }
 }
 class GeneratedField {
