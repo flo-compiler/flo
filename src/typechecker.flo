@@ -913,23 +913,41 @@ class Enum {
 class Module {
     id: ModuleId
     name: String
-    vars: Var[]
-    classes: Class[]
-    functions: Function[]
     scope: ScopeId
-    enums: Enum[]
-    scopes: Scope[]
     global_vars: VarDeclaration[]
     constructor(this, name: String){
         this.name = name
+        this.global_vars = []
+    }
+    private __del__(this){
+        for global_var in this.global_vars {
+            del global_var
+        }
+        del this.name
+        del this.global_vars
+    }
+}
+class Program {
+    modules: Module[]
+    vars: Var[]
+    classes: Class[]
+    functions: Function[]
+    enums: Enum[]
+    scopes: Scope[]
+    builtin_scope: ScopeId
+    constructor(this){
+        this.modules = []
         this.functions = []
         this.vars = []
         this.classes = []
         this.enums = []
         this.scopes = []
-        this.global_vars = []
+        this.builtin_scope = null
     }
     private __del__(this){
+        for module in this.modules {
+            del module
+        }
         for func in this.functions {
             del func
         }
@@ -942,49 +960,30 @@ class Module {
         for mod_enum in this.enums {
             del mod_enum
         }
-        for global_var in this.global_vars {
-            del global_var
-        }
-        del this.scopes[this.scope.id]
-        del this.name
         del this.functions
         del this.vars
         del this.classes
         del this.enums
         del this.scopes
-        del this.global_vars
-    }
-}
-class Program {
-    modules: Module[]
-    builtin_scope: ScopeId
-    constructor(this){
-        this.modules = []
-        this.builtin_scope = null
-    }
-    private __del__(this){
-        for module in this.modules {
-            del module
-        }
         del this.modules
     }
     public get_module(this, module_id: ModuleId): Module {
         return this.modules[module_id.id]
     }
     public get_var(this, var_id: VarId): Var {
-        return this.get_module(var_id.module_id).vars[var_id.id]
+        return this.vars[var_id.id]
     }
     public get_func(this, func_id: FunctionId): Function {
-        return this.get_module(func_id.module_id).functions[func_id.id]
+        return this.functions[func_id.id]
     }
     public get_scope(this, scope_id: ScopeId): Scope {
-        return this.get_module(scope_id.module_id).scopes[scope_id.id]
+        return this.scopes[scope_id.id]
     }
     public get_class(this, type_id: ClassId): Class {
-        return this.get_module(type_id.module_id).classes[type_id.id]   
+        return this.classes[type_id.id]   
     }
     public get_enum(this, enum_id: EnumId): Enum {
-        return this.get_module(enum_id.module_id).enums[enum_id.id]
+        return this.enums[enum_id.id]
     }
     public get_class_id_from_type(this, type: Type): ClassId {
         if type.kind == TypeKind.RESOLVED_GENERIC
@@ -1307,8 +1306,8 @@ class TypeChecker {
     }
     private create_scope(this, module_id: ModuleId): Scope {
         let module = this.program.get_module(module_id)
-        let scope = new Scope(module_id, module.scopes.length)
-        module.scopes << scope
+        let scope = new Scope(module_id, this.program.scopes.length)
+        this.program.scopes << scope
         return scope
     }
     private create_child_scope_within_scope(this, scope_id: ScopeId): Scope {
@@ -1429,8 +1428,8 @@ class TypeChecker {
         }
         if this.has_errored() return module
         // We Now check bodies
-        for let i = 0; i < module_ast.enums.length; i++ {
-            this.check_enum_body(module.enums[i], module_ast.enums[i])
+        for parsed_enum in module_ast.enums {
+            this.check_enum_body(parsed_enum)
         }
         for parsed_class in module_ast.classes {
             this.check_class_body(parsed_class)
@@ -1492,9 +1491,9 @@ class TypeChecker {
         let var = new Var(name, value, is_const, visibility, value_type)
         let module = this.program.get_module(scope_id.module_id)
         let scope = this.program.get_scope(scope_id)
-        let var_id = new VarId(scope_id.module_id, module.vars.length)
+        let var_id = new VarId(scope_id.module_id, this.program.vars.length)
         var.id = var_id
-        module.vars << var
+        this.program.vars << var
         scope.vars[name] = var_id
         return var
     }
@@ -1614,8 +1613,8 @@ class TypeChecker {
             this.error(ErrorKind.NAME, "Name '$enum_name' has already been used for another type. consider renaming", enum_node.name.range)
             return
         }
-        declared_enum.id = new EnumId(this.current_scope.module_id, this.get_current_module().enums.length)
-        this.get_current_module().enums << declared_enum
+        declared_enum.id = new EnumId(this.current_scope.module_id, this.program.enums.length)
+        this.program.enums << declared_enum
         module_scope.enums[enum_name] = declared_enum.id
         module_scope.types[enum_name] = new EnumType(declared_enum.id)
     }
@@ -1644,8 +1643,8 @@ class TypeChecker {
             declared_class.parent = null
         }
         declared_class.name = name
-        declared_class.id = new ClassId(this.current_scope.module_id, this.get_current_module().classes.length)
-        this.get_current_module().classes << declared_class
+        declared_class.id = new ClassId(this.current_scope.module_id, this.program.classes.length)
+        this.program.classes << declared_class
         module_scope.classes[name] = declared_class.id
         module_scope.types[name] = new ObjectType(declared_class.id)
     }
@@ -1693,18 +1692,23 @@ class TypeChecker {
         if this.has_errored() return null
         declared_function.fnc_type = new FunctionType(!function_node.is_static(), param_types, ret_type)
         let module = this.program.get_module(scope_id.module_id)
-        declared_function.id = new FunctionId(this.current_scope.module_id, module.functions.length)
+        declared_function.id = new FunctionId(this.current_scope.module_id, this.program.functions.length)
         this.current_scope = fnc_scope.parent
         declared_function.scope = fnc_scope.id
         if (is_object(implicit_this_param)){
             declared_function.class_id = (implicit_this_param as ObjectType).class_id
         }
         let scope = this.program.get_scope(scope_id)
-        module.functions << declared_function
+        this.program.functions << declared_function
         scope.functions[declared_function.name] = declared_function.id
         return declared_function
     }
-    private check_enum_body(this, declared_enum: Enum, enum_node: EnumNode){
+    private check_enum_body(this, enum_node: EnumNode){
+        let enum_name = enum_node.name.value
+        let resolved_type = this.get_type_from_scope(this.current_scope, enum_name)
+        if resolved_type.kind == TypeKind.UNKNOWN return
+        let declared_enum = this.program.get_enum_from_type(resolved_type)
+
         let enum_variant: Type = null
         if enum_node.variant == null {
             enum_variant = PrimitiveTypes.int

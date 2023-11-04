@@ -453,19 +453,20 @@ class CodeGen {
     }
     public codegen(program: Program, compiler: Compiler): GeneratedModule{
         let module = program.modules[2]
+        let module_scope = program.get_scope(module.scope)
         let codegen: CodeGen(program, module.name)
         codegen.compiler = compiler
-        for checked_enum in module.enums  {
-            codegen.codegen_enum(checked_enum)
+        for enum_entry in module_scope.enums  {
+            codegen.codegen_enum(program.get_enum(enum_entry.value))
         }
-        for checked_class in module.classes {
-            codegen.codegen_class(checked_class)
+        for class_entry in module_scope.classes {
+            codegen.codegen_class(program.get_class(class_entry.value))
         }
         for checked_var in module.global_vars {
             codegen.codegen_var_declaration(null, checked_var)
         }
-        for checked_function in module.functions {
-            codegen.codegen_function(checked_function)
+        for function_entry in module_scope.functions {
+            codegen.codegen_function(program.get_func(function_entry.value))
         }
         return new GeneratedModule(codegen.module)
     }
