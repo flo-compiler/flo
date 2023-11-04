@@ -1230,7 +1230,8 @@ class CodeGen {
         for call_arg in call_exp.args {
             args_buffer[args_num++] = this.codegen_expression(builder, call_arg)
         }
-        return LLVMBuildCall2(builder, LLVM_GetFunctionType(func), func, args_buffer, args_num, "")
+        let function_type = this.codegen_function_type(callee.value_type as FunctionType)
+        return LLVMBuildCall2(builder, function_type, func, args_buffer, args_num, "")
     }
     private codegen_index_exp(this, builder: LLVMBuilderRef, index_exp: IndexExpression): LLVMValueRef {
         let ptr = this.get_index_expr_mem(builder, index_exp)
