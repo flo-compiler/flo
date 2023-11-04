@@ -37,8 +37,8 @@ class CodegenTypeScope {
     f64_type: GeneratedType
     void_type: GeneratedType
     null_type: GeneratedType
-    enum_types: GeneratedRecordType[]
-    class_types: GeneratedRecordType[]
+    enum_types: GeneratedType[]
+    class_types: GeneratedType[]
     constructor(this, builder: LLVMDIBuilderRef){
         let int_llvm_type = LLVMIntType(ARCH_WORD_SIZE)
         let i4_llvm_type = LLVMIntType(4)
@@ -74,39 +74,17 @@ class CodegenTypeScope {
         this.class_types = []
         this.enum_types = []
     }
-    public get_record_from_enum_id(this, enum_id: EnumId): GeneratedRecordType {
+    public get_record_from_enum_id(this, enum_id: EnumId): GeneratedType {
         return this.enum_types[enum_id.id]
     }
-    public add_record_with_enum_id(this, enum_id: EnumId, record_type: GeneratedRecordType){
+    public add_record_with_enum_id(this, enum_id: EnumId, record_type: GeneratedType){
         this.enum_types[enum_id.id] = record_type
     }
-    public get_record_from_class_id(this, class_id: ClassId): GeneratedRecordType {
+    public get_record_from_class_id(this, class_id: ClassId): GeneratedType {
         return this.class_types[class_id.id]
     }
-    public add_record_with_class_id(this, class_id: ClassId, record_type: GeneratedRecordType){
+    public add_record_with_class_id(this, class_id: ClassId, record_type: GeneratedType){
         this.class_types[class_id.id] = record_type
-    }
-}
-class GeneratedField {
-    llvm_value: LLVMValueRef
-    llvm_metadata: LLVMMetadataRef
-    offset: uint
-    constructor(this, llvm_value: LLVMValueRef, llvm_metadata: LLVMMetadataRef, offset: uint){
-        this.llvm_value = llvm_value
-        this.llvm_metadata = llvm_metadata
-        this.offset = offset
-    }
-}
-class GeneratedRecordType (GeneratedType)  {
-    private fields: StringMap<GeneratedField>
-    constructor(this){
-        this.fields = new StringMap<GeneratedField>()
-    }
-    public get_field(this, var_id: VarId): GeneratedField {
-        return this.fields["$(var_id.id)"]
-    }
-    public set_field(this, var_id: VarId, field: GeneratedField){
-        this.fields["$(var_id.id)"] = field
     }
 }
 fnc extend_array_to_length(array: u8*[], length: uint){
@@ -114,6 +92,12 @@ fnc extend_array_to_length(array: u8*[], length: uint){
     for let i = 0; i < length; i++  {
         array[i] = null
     }
+}
+fnc llvm_value_ref_as_field_offset(llvm_value_ref: LLVMValueRef): u64 {
+    return (&llvm_value_ref as u64*)[0]
+}
+fnc field_offset_as_llvm_value_ref(field_offset: u64): LLVMValueRef {
+    return (&field_offset as LLVMValueRef*)[0]
 }
 class DebugInfo {
     private program: Program
@@ -553,10 +537,10 @@ class CodeGen {
     }
     private codegen_class_type(this, type: Type): LLVMTypeRef {
         let class_id = this.program.get_class_id_from_type(type)
-        return this.get_or_codegen_class_from_class_id(class_id).llvm_type
+        return this.get_or_codegen_class_type_from_class_id(class_id)
     }
     private codegen_enum_type(this, enum_type: EnumType): LLVMTypeRef {
-        return this.get_or_codegen_enum_from_enum_id(enum_type.enum_id).llvm_type
+        return this.get_or_codegen_enum_type_from_enum_id(enum_type.enum_id)
     }
     private codegen_return_stmt(this, builder: LLVMBuilderRef, return_stmt: ReturnStatement){
         if return_stmt.return_value != null {
@@ -795,8 +779,7 @@ class CodeGen {
         for global_var in module.global_vars {
             let var_id = global_var.var.id
             if var_id.id == target_id.id {
-                this.codegen_var_declaration(null, global_var)
-                return this.get_var_from_varid(target_id)
+                return this.codegen_var_declaration(null, global_var)
             }
         }
         return null
@@ -805,22 +788,19 @@ class CodeGen {
         let cg_func = this.get_fnc_from_fncid(fnc_id)
         if cg_func != null return cg_func
         let checked_function = this.program.get_func(fnc_id)
-        this.codegen_function(checked_function)
-        return this.get_fnc_from_fncid(fnc_id)
+        return this.codegen_function(checked_function)
     }
-    private get_or_codegen_class_from_class_id(this, class_id: ClassId): GeneratedRecordType {
-        let checked_class = this.program.get_class(class_id)
+    private get_or_codegen_class_type_from_class_id(this, class_id: ClassId): LLVMTypeRef {
         let cg_class = this.debug_info.type_scope.get_record_from_class_id(class_id)
-        if cg_class != null return cg_class
-        this.codegen_class(checked_class)
-        return this.debug_info.type_scope.get_record_from_class_id(class_id)
+        if cg_class != null return cg_class.llvm_type
+        let checked_class = this.program.get_class(class_id)
+        return this.codegen_class(checked_class)
     }
-    private get_or_codegen_enum_from_enum_id(this, enum_id: EnumId): GeneratedRecordType {
+    private get_or_codegen_enum_type_from_enum_id(this, enum_id: EnumId): LLVMTypeRef {
         let cg_enum = this.debug_info.type_scope.get_record_from_enum_id(enum_id)
-        if cg_enum != null return cg_enum
+        if cg_enum != null return cg_enum.llvm_type
         let checked_enum = this.program.get_enum(enum_id)
-        this.codegen_enum(checked_enum)
-        return this.debug_info.type_scope.get_record_from_enum_id(enum_id)
+        return this.codegen_enum(checked_enum)
     }
     private get_var_access_expr_mem(this, builder: LLVMBuilderRef, var_access: VarAccessExpression): LLVMValueRef {
         let var_mem = this.get_or_codegen_var(var_access.var_id)
@@ -831,7 +811,7 @@ class CodeGen {
     }
     private get_static_field_access_expr_mem(this, builder: LLVMBuilderRef, static_field_access: StaticFieldAccessExpression): LLVMValueRef {
         // In the case of static member access we need to codegen class first
-        let cg_class = this.get_or_codegen_class_from_class_id(static_field_access.class_id)
+        let cg_class = this.get_or_codegen_class_type_from_class_id(static_field_access.class_id)
         return this.get_var_from_varid(static_field_access.var_id)
     }
     private get_index_expr_mem(this, builder: LLVMBuilderRef, index_exp: IndexExpression): LLVMValueRef {
@@ -856,12 +836,12 @@ class CodeGen {
     }
     private get_class_field_access_expr_mem(this, builder: LLVMBuilderRef, class_field_access: ClassFieldAccessExpression): LLVMValueRef {
         let class_id = this.program.get_class_id_from_type(class_field_access.expression.value_type)
-        let cg_class = this.get_or_codegen_class_from_class_id(class_id)
-        let cg_field = cg_class.get_field(class_field_access.var_id)
+        let class_llvm_type = this.get_or_codegen_class_type_from_class_id(class_id)
+        let field_offset = llvm_value_ref_as_field_offset(this.get_var_from_varid(class_field_access.var_id))
         let ptr = this.codegen_expression(builder, class_field_access.expression)
         let i32_llvm_type = this.debug_info.type_scope.i32_type.llvm_type
-        let indices_buffer: LLVMValueRef[2] = [LLVMConstInt(i32_llvm_type, 0, false), LLVMConstInt(i32_llvm_type, cg_field.offset as u64, false)]
-        return LLVMBuildInBoundsGEP2(builder, cg_class.llvm_type, ptr, &indices_buffer[0], indices_buffer.size, "memberidx")
+        let indices_buffer: LLVMValueRef[2] = [LLVMConstInt(i32_llvm_type, 0, false), LLVMConstInt(i32_llvm_type, field_offset, false)]
+        return LLVMBuildInBoundsGEP2(builder, class_llvm_type, ptr, &indices_buffer[0], indices_buffer.size, "memberidx")
     }
     private get_expr_mem(this, builder: LLVMBuilderRef, expression: Expression): LLVMValueRef {
         if expression.expr_kind == ExpressionKind.VAR_ACCESS
@@ -877,13 +857,13 @@ class CodeGen {
     // Only call for non-static members.
     private codegen_get_field_mem_with_name(this, builder: LLVMBuilderRef, self: LLVMValueRef, obj_type: ObjectType, name: String): LLVMValueRef {
         let checked_class = this.program.get_class_from_type(obj_type)
-        let cg_class = this.get_or_codegen_class_from_class_id(checked_class.id)
+        let class_llvm_type = this.get_or_codegen_class_type_from_class_id(checked_class.id)
         let class_scope = this.program.get_scope(checked_class.props_scope)
         let field_id = class_scope.vars[name]
-        let cg_field = cg_class.get_field(field_id)
+        let field_offset = llvm_value_ref_as_field_offset(this.get_var_from_varid(field_id))
         let i32_llvm_type = this.debug_info.type_scope.i32_type.llvm_type
-        let indices_buffer: LLVMValueRef[2] = [LLVMConstInt(i32_llvm_type, 0, false), LLVMConstInt(i32_llvm_type, cg_field.offset as u64, false)]
-        return LLVMBuildInBoundsGEP2(builder, cg_class.llvm_type, self, &indices_buffer[0], indices_buffer.size, "")
+        let indices_buffer: LLVMValueRef[2] = [LLVMConstInt(i32_llvm_type, 0, false), LLVMConstInt(i32_llvm_type, field_offset as u64, false)]
+        return LLVMBuildInBoundsGEP2(builder, class_llvm_type, self, &indices_buffer[0], indices_buffer.size, "")
     }
     private codegen_call_method_with_name(this, builder: LLVMBuilderRef, obj_type: ObjectType, name: String, args: LLVMValueRef*, argc: uint): LLVMValueRef {
         let checked_class = this.program.get_class_from_type(obj_type)
@@ -1250,8 +1230,8 @@ class CodeGen {
         return this.get_or_codegen_fnc(static_method_access.fnc_id)
     }
     private codegen_enum_field_access_exp(this, builder: LLVMBuilderRef, enum_field_access: EnumFieldAccessExpression): LLVMValueRef {
-        let enum_type = this.get_or_codegen_enum_from_enum_id(enum_field_access.enum_id)
-        return enum_type.get_field(enum_field_access.var_id).llvm_value
+        let cg_enum = this.get_or_codegen_enum_type_from_enum_id(enum_field_access.enum_id)
+        return this.get_var_from_varid(enum_field_access.var_id)
     }
     private codegen_new_exp(this, builder: LLVMBuilderRef, new_expr: NewExpression): LLVMValueRef {
         let ptr: LLVMValueRef = null
@@ -1431,14 +1411,13 @@ class CodeGen {
         let args: LLVMValueRef[1] = [iterator]
         let iterator_type = for_stmt.iterator.value_type as ObjectType
         let iteratable = this.codegen_call_method_with_name(builder, iterator_type, "__iter__", &args[0], args.size)
-        this.codegen_var_declaration(builder, for_stmt.it_var)
+        let next_var_mem = this.codegen_var_declaration(builder, for_stmt.it_var)
         let iterable_type = for_stmt.iterable_type
         args[0] = iteratable
         LLVMBuildBr(builder, for_in_next_block)
 
         LLVMPositionBuilderAtEnd(builder, for_in_next_block)
         let next_val = this.codegen_call_method_with_name(builder, iterable_type, "next", &args[0], args.size)
-        let next_var_mem = this.get_var_from_varid(for_stmt.it_var.var.id)
         let iter_done = this.codegen_get_field_mem_with_name(builder, iteratable, iterable_type, "done")
         let bool_type = this.debug_info.type_scope.bool_type.llvm_type
         iter_done = LLVMBuildLoad2(builder, bool_type, iter_done, "")
@@ -1517,31 +1496,33 @@ class CodeGen {
             evaluated_list[start++] = this.codegen_expression(builder, item)
         }
     }
-    private codegen_var_declaration(this, builder: LLVMBuilderRef, var_declaration: VarDeclaration){
+    private codegen_var_declaration(this, builder: LLVMBuilderRef, var_declaration: VarDeclaration): LLVMValueRef {
         let var = var_declaration.var
         let var_id = var.id
         let var_name = var.name
         let expression = var.value
         let var_type = var.value_type
+        let var_mem: LLVMValueRef = null
         if var_declaration.is_static {
             let type = this.codegen_type(var_type)
-            let ptr = LLVMAddGlobal(this.module, type, var.name.to_cstring())
+            var_mem = LLVMAddGlobal(this.module, type, var.name.to_cstring())
             if expression != null {
                 let value = this.codegen_expression(builder, expression)
-                LLVMSetInitializer(ptr, value)
+                LLVMSetInitializer(var_mem, value)
                 if (var.is_constant) {
-                    LLVMSetGlobalConstant(ptr, true)
+                    LLVMSetGlobalConstant(var_mem, true)
                 }
             }
-            this.add_var(var_id, ptr)
+            this.add_var(var_id, var_mem)
         } else {
-            let ptr = this.get_var_from_varid(var_id)
+            var_mem = this.get_var_from_varid(var_id)
             let dbg_var = this.debug_info.create_auto_variable(var_id.module_id, var_name, var_type, var_declaration.range)
-            this.debug_info.insert_declare_before(ptr, dbg_var)
+            this.debug_info.insert_declare_before(var_mem, dbg_var)
             if expression != null {
-                this.store_expr_to_mem(builder, ptr, expression)
+                this.store_expr_to_mem(builder, var_mem, expression)
             }
         }
+        return var_mem
     }
     private codegen_statement(this, builder: LLVMBuilderRef, statement: Statement){
         if statement.kind == StatementKind.IF
@@ -1589,13 +1570,13 @@ class CodeGen {
         }
         
     }
-    private codegen_function(this, checked_function: Function){
+    private codegen_function(this, checked_function: Function): LLVMValueRef {
         let checked_func_name = checked_function.class_id == null ? checked_function.name.to_cstring() : "$(this.program.get_class(checked_function.class_id).name)_$(checked_function.name)"
         let llvm_fnc = LLVMAddFunction(this.module, checked_func_name, this.codegen_function_type(checked_function.fnc_type))
         this.add_fnc(checked_function.id, llvm_fnc)
         if checked_function.is_external { 
             LLVMSetLinkage(llvm_fnc, LLVMLinkage.LLVMExternalLinkage)
-            return
+            return llvm_fnc
         }
         let llvm_fnc_dbg = this.debug_info.create_function(checked_function)
         LLVMSetSubprogram(llvm_fnc, llvm_fnc_dbg)
@@ -1616,14 +1597,19 @@ class CodeGen {
         this.debug_info.finalize_subprogram(llvm_fnc_dbg)
         LLVMDisposeBuilder(func_builder)
         this.functions.pop()
+        return llvm_fnc
     }
-    private codegen_class(this, checked_class: Class){
-        let struct_class = new GeneratedRecordType()
-        this.debug_info.type_scope.add_record_with_class_id(checked_class.id, struct_class)
+    private codegen_class(this, checked_class: Class): LLVMTypeRef{
         let class_module_id = checked_class.props_scope.module_id
-        struct_class.llvm_type = LLVMStructCreateNamed(LLVMGetModuleContext(this.module), checked_class.name.to_cstring())
-        struct_class.llvm_metadata = this.debug_info.create_temp_compound_type(class_module_id,
-            checked_class.name, checked_class.id.id, checked_class.definition_range)
+        let struct_class = new GeneratedType( 
+            LLVMStructCreateNamed(LLVMGetModuleContext(this.module), checked_class.name.to_cstring()),
+            this.debug_info.create_temp_compound_type(
+                class_module_id,
+                checked_class.name, checked_class.id.id, 
+                checked_class.definition_range
+            )
+        )
+        this.debug_info.type_scope.add_record_with_class_id(checked_class.id, struct_class)
 
         let field_types_buffer: LLVMTypeRef*(checked_class.fields.length)
         let members_metadata_buffer: LLVMMetadataRef*(checked_class.fields.length)
@@ -1637,12 +1623,12 @@ class CodeGen {
             let field_range = class_field.definition_range
             let field_visibility = field_var.visibility
             let llvm_field_type = this.codegen_type(field_type)
-            let metadata: LLVMMetadataRef = null
+            let llvm_field_metadata: LLVMMetadataRef = null
             if (class_field.var.value != null) {
                 let llvm_field_value = LLVMAddGlobal(this.module, llvm_field_type, "$(checked_class.name)_$field_name")
                 LLVMSetInitializer(llvm_field_value, this.codegen_expression(null, field_var.value))
                 this.add_var(field_var.id, llvm_field_value)
-                metadata = this.debug_info.create_static_member_type(
+                llvm_field_metadata = this.debug_info.create_static_member_type(
                     class_module_id, 
                     field_name,
                     field_range,
@@ -1652,7 +1638,8 @@ class CodeGen {
                 )
             } else {
                 field_types_buffer[field_types_num++] = llvm_field_type
-                metadata = this.debug_info.create_member_type(
+                this.add_var(field_var.id, field_offset_as_llvm_value_ref(class_field.offset as u64))
+                llvm_field_metadata = this.debug_info.create_member_type(
                         class_module_id, 
                         field_name,
                         field_range,
@@ -1660,9 +1647,8 @@ class CodeGen {
                         field_visibility,
                         &member_offset_in_bits
                     )
-                struct_class.set_field(field_var.id, new GeneratedField(null, metadata, class_field.offset))
             }
-            members_metadata_buffer[members_num++] = metadata
+            members_metadata_buffer[members_num++] = llvm_field_metadata
         }
         LLVMStructSetBody(struct_class.llvm_type, field_types_buffer, field_types_num, true)
         let llvm_metadata = this.debug_info.create_struct_type(
@@ -1670,23 +1656,23 @@ class CodeGen {
         )
         this.debug_info.replace_temp_node_with(struct_class.llvm_metadata, llvm_metadata)
         struct_class.llvm_metadata = llvm_metadata
+        return struct_class.llvm_type
     }
-    private codegen_enum(this, checked_enum: Enum){
-        let enum_type = new GeneratedRecordType()
-        enum_type.llvm_type = this.codegen_type(checked_enum.variant_type)
+    private codegen_enum(this, checked_enum: Enum): LLVMTypeRef {
+        let enum_type = new GeneratedType(this.codegen_type(checked_enum.variant_type), null)
         let enum_fields_dbg: LLVMMetadataRef*(checked_enum.fields.length)
         let idx = 0
         for enum_field in checked_enum.fields {
             let enum_field_var = enum_field.var
             let field_id = enum_field_var.id
-            let value = this.codegen_expression(null, enum_field_var.value)
-            let value_dbg = this.debug_info.create_enumerator(
+            let llvm_value = this.codegen_expression(null, enum_field_var.value)
+            let llvm_value_dbg = this.debug_info.create_enumerator(
                 enum_field_var.name, 
-                LLVMConstIntGetSExtValue(value), 
+                LLVMConstIntGetSExtValue(llvm_value), 
                 !(enum_field_var.value_type as IntType).is_signed
             )
-            enum_fields_dbg[idx++] = value_dbg
-            enum_type.set_field(field_id, new GeneratedField(value, value_dbg, enum_field.offset))
+            enum_fields_dbg[idx++] = llvm_value_dbg
+            this.add_var(field_id, llvm_value)
         }
         enum_type.llvm_metadata = this.debug_info.create_enum_type(
             checked_enum,
@@ -1694,5 +1680,6 @@ class CodeGen {
             idx
         )
         this.debug_info.type_scope.add_record_with_enum_id(checked_enum.id, enum_type)
+        return enum_type.llvm_type
     }
 }
