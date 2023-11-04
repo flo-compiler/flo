@@ -1,0 +1,13 @@
+fnc printName(person: Person){
+    println(person.name)
+}
+class Person {
+    name: String
+    constructor(this, name: String){
+        this.name = name
+    }
+}
+fnc main(){
+    let person: Person("Joe")
+    person.printName()
+}

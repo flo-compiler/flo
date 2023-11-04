@@ -149,7 +149,7 @@ class ArrayType (Type) {
         this.length = length
     }
 }
-class GenericType(Type) {
+class ResolvedGenericType(Type) {
     name: String
     arg_types: Type[]
     instantiated_type: Type
@@ -606,7 +606,7 @@ fnc is_object(val_ty: Type): bool {
         return is_object(generic_var_type.current_instance)
     }
     if (val_ty.kind == TypeKind.RESOLVED_GENERIC)
-        return is_object((val_ty as GenericType).instantiated_type)
+        return is_object((val_ty as ResolvedGenericType).instantiated_type)
     return val_ty.kind == TypeKind.OBJECT
 }
 fnc is_function(val_ty: Type): bool {
@@ -988,7 +988,7 @@ class Program {
     }
     public get_class_id_from_type(this, type: Type): ClassId {
         if type.kind == TypeKind.RESOLVED_GENERIC
-            return this.get_class_id_from_type((type as GenericType).instantiated_type)
+            return this.get_class_id_from_type((type as ResolvedGenericType).instantiated_type)
         if type.kind == TypeKind.OBJECT
             return (type as ObjectType).class_id
         return null
@@ -1243,8 +1243,8 @@ class TypeChecker {
             return t1_enum_id == t2_enum_id
         }
         if t1.kind == TypeKind.RESOLVED_GENERIC {
-            let t1_gen_type = t1 as GenericType
-            let t2_gen_type = t2 as GenericType
+            let t1_gen_type = t1 as ResolvedGenericType
+            let t2_gen_type = t2 as ResolvedGenericType
             if t1_gen_type.name != t2_gen_type.name return false
             if t1_gen_type.arg_types.length != t2_gen_type.arg_types.length return false
             for let i = 0; i < t1_gen_type.arg_types.length; i++ {
@@ -1286,7 +1286,7 @@ class TypeChecker {
             return "($tup_str)"
         }
         if ty.kind == TypeKind.RESOLVED_GENERIC {
-            let gen_ty = ty as GenericType
+            let gen_ty = ty as ResolvedGenericType
             let s = gen_ty.name + "<"
             for arg_type in gen_ty.arg_types {
                 s +=  this.dump_type(arg_type)
@@ -1445,7 +1445,7 @@ class TypeChecker {
         this.current_scope = prev_scope
         return module
     }
-    private create_generic_instance_in_module(this, name: String, types: Type[]): GenericType {
+    private create_generic_instance_in_module(this, name: String, types: Type[]): ResolvedGenericType {
         let generic = this.generic_templates[name]
         if generic == null return null
         let generic_params = generic.template.generic_parameters
@@ -1459,7 +1459,7 @@ class TypeChecker {
         let param_strings = ""
         for let i = 0; i < generic_params.length; i++ {
             let param_name = generic_params[i].name.value
-            let param_type: Type = types[i].kind == TypeKind.RESOLVED_GENERIC ? (types[i] as GenericType).instantiated_type : types[i]
+            let param_type: Type = types[i].kind == TypeKind.RESOLVED_GENERIC ? (types[i] as ResolvedGenericType).instantiated_type : types[i]
             param_strings += "$(this.dump_type(param_type))_"
             generic_scope.types[param_name] = types[i]
         }
@@ -1478,7 +1478,7 @@ class TypeChecker {
             possible_type = this.get_type_from_scope(generic_scope.id, instantiated_generic_name)
         }
         this.current_scope = scope_id
-        return new GenericType(name, types, possible_type)
+        return new ResolvedGenericType(name, types, possible_type)
     }
     private declare_var_within_scope(
             this,
@@ -2058,7 +2058,7 @@ class TypeChecker {
             element_type = (expected_type as ArrayType).element_type
         } else if expected_type.kind == TypeKind.RESOLVED_GENERIC {
             is_constant = false
-            let generic_ty =  expected_type as GenericType
+            let generic_ty =  expected_type as ResolvedGenericType
             if is_object(generic_ty) and generic_ty.name == "Array"
                 element_type = generic_ty.arg_types[0]
         }
@@ -2402,7 +2402,7 @@ class TypeChecker {
         let expression_type = this.check_type(new_expr_node.parsed_type)
         if this.has_errored() return null
         let memory_type = expression_type
-        if (memory_type.kind == TypeKind.RESOLVED_GENERIC) memory_type = (memory_type as GenericType).instantiated_type
+        if (memory_type.kind == TypeKind.RESOLVED_GENERIC) memory_type = (memory_type as ResolvedGenericType).instantiated_type
         let args: Expression[] = []
         if is_object(memory_type) {
             let range = new_expr_node.range
@@ -2445,7 +2445,7 @@ class TypeChecker {
     private check_class_member_expr(this, member_owner: Expression, member_name: String, range: TextRange): Expression {
         let member_owner_type = member_owner.value_type
         while member_owner_type.kind == TypeKind.RESOLVED_GENERIC {
-            member_owner_type = (member_owner_type as GenericType).instantiated_type
+            member_owner_type = (member_owner_type as ResolvedGenericType).instantiated_type
         }
         let checked_class = this.program.get_class_from_type(member_owner_type)
         let field_var_id = this.get_var_from_scope(checked_class.props_scope, member_name)

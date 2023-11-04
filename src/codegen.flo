@@ -492,7 +492,7 @@ class CodeGen {
     }
     private codegen_type(this, tt: Type): LLVMTypeRef {
         if (tt.kind == TypeKind.RESOLVED_GENERIC)
-            return this.codegen_type((tt as GenericType).instantiated_type)
+            return this.codegen_type((tt as ResolvedGenericType).instantiated_type)
         if tt.kind == TypeKind.VOID
             return this.debug_info.type_scope.void_type.llvm_type
         if tt.kind == TypeKind.BOOL
@@ -762,7 +762,7 @@ class CodeGen {
     }
     private codegen_array_exp(this, builder: LLVMBuilderRef, array_exp: ArrayExpression): LLVMValueRef {
         if array_exp.value_type.kind == TypeKind.RESOLVED_GENERIC {
-            return this.codegen_builtin_array(builder, array_exp.value_type as GenericType, array_exp)
+            return this.codegen_builtin_array(builder, array_exp.value_type as ResolvedGenericType, array_exp)
         } 
         //FIXME: What if array is not constant?
         if !array_exp.is_constant {
@@ -901,8 +901,8 @@ class CodeGen {
         let function = this.get_or_codegen_fnc(method_id)
         return LLVMBuildCall2(builder, LLVM_GetFunctionType(function), function, args, argc, "")
     }
-    private codegen_builtin_array(this, builder: LLVMBuilderRef, arrgen_ty: GenericType, arr_expr: ArrayExpression): LLVMValueRef {
-        let obj_type = (arrgen_ty as GenericType).instantiated_type as ObjectType
+    private codegen_builtin_array(this, builder: LLVMBuilderRef, arrgen_ty: ResolvedGenericType, arr_expr: ArrayExpression): LLVMValueRef {
+        let obj_type = (arrgen_ty as ResolvedGenericType).instantiated_type as ObjectType
         this.debug_info.emit_location(builder, arr_expr)
         let objllvm_ty = this.codegen_class_type(obj_type)
         let elmllvm_ty = this.codegen_type(arrgen_ty.arg_types[0])
@@ -931,7 +931,7 @@ class CodeGen {
                 ptr = LLVMBuildInBoundsGEP2(builder, array_type, ptr, &indices[0], indices.size, "")
                 return this.store_array_elements(builder, ptr, arr_expr)
             }
-            value = this.codegen_builtin_array(builder, value_ty as GenericType, arr_expr)
+            value = this.codegen_builtin_array(builder, value_ty as ResolvedGenericType, arr_expr)
         } else if expr.expr_kind == ExpressionKind.TUPLE and !expr.is_constant {
             return this.store_tuple_elements(builder, ptr, expr as TupleExpression)
         } else {
