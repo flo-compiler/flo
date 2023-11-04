@@ -351,32 +351,26 @@ class VarId {
 }
 class FunctionId {
     id: uint
-    module_id: ModuleId
-    constructor(this, module_id: ModuleId, id: uint){
-        this.module_id = module_id
+    constructor(this, id: uint){
         this.id = id
     }
 }
 class ClassId {
     id: uint
-    module_id: ModuleId
-    constructor(this, module_id: ModuleId, id: uint){
-        this.module_id = module_id
+    constructor(this, id: uint){
         this.id = id
     }
     __eq__(this, other: ClassId): bool {
-        return (this.module_id == other.module_id) and (this.id == other.id)
+        return (this.id == other.id)
     }
 }
 class EnumId {
     id: uint
-    module_id: ModuleId
-    constructor(this, module_id: ModuleId, id: uint){
-        this.module_id = module_id
+    constructor(this, id: uint){
         this.id = id
     }
     __eq__(this, other: EnumId): bool {
-        return (this.module_id == other.module_id) and (this.id == other.id)
+        return (this.id == other.id)
     }
 }
 class StaticFieldAccessExpression (Expression) {
@@ -1003,10 +997,13 @@ class Program {
             return this.get_enum((type as EnumType).enum_id)
         return null
     }
-    public is_buitin(this, ty: Type, name: String): bool {
-        if !is_object(ty) return false
-        let class_obj = this.get_class_from_type(ty)
-        return class_obj.name == name and class_obj.id.module_id == this.builtin_scope.module_id
+    public is_buitin_class(this, type: Type, name: String): bool {
+        if !is_object(type) return false
+        let class_id = this.get_class_id_from_type(type)
+        let scope = this.get_scope(this.builtin_scope)
+        let eq_class_id = scope.classes[name]
+        if (eq_class_id == null) return false
+        return class_id == eq_class_id 
     }
 }
 fnc is_bin_op_comp_eq_op(op: BinaryOp): bool {
@@ -1613,7 +1610,7 @@ class TypeChecker {
             this.error(ErrorKind.NAME, "Name '$enum_name' has already been used for another type. consider renaming", enum_node.name.range)
             return
         }
-        declared_enum.id = new EnumId(this.current_scope.module_id, this.program.enums.length)
+        declared_enum.id = new EnumId(this.program.enums.length)
         this.program.enums << declared_enum
         module_scope.enums[enum_name] = declared_enum.id
         module_scope.types[enum_name] = new EnumType(declared_enum.id)
@@ -1643,7 +1640,7 @@ class TypeChecker {
             declared_class.parent = null
         }
         declared_class.name = name
-        declared_class.id = new ClassId(this.current_scope.module_id, this.program.classes.length)
+        declared_class.id = new ClassId(this.program.classes.length)
         this.program.classes << declared_class
         module_scope.classes[name] = declared_class.id
         module_scope.types[name] = new ObjectType(declared_class.id)
@@ -1692,7 +1689,7 @@ class TypeChecker {
         if this.has_errored() return null
         declared_function.fnc_type = new FunctionType(!function_node.is_static(), param_types, ret_type)
         let module = this.program.get_module(scope_id.module_id)
-        declared_function.id = new FunctionId(this.current_scope.module_id, this.program.functions.length)
+        declared_function.id = new FunctionId(this.program.functions.length)
         this.current_scope = fnc_scope.parent
         declared_function.scope = fnc_scope.id
         if (is_object(implicit_this_param)){
@@ -2343,7 +2340,7 @@ class TypeChecker {
             int to pointer.
             boolean to int/float.
         */
-        if this.program.is_buitin(dest_ty, "String") {
+        if this.program.is_buitin_class(dest_ty, "String") {
             return new StringExpression("", [0], [exp], dest_ty, type_expr_node.range)
         }
         let is_valid_cast = false
@@ -2357,7 +2354,7 @@ class TypeChecker {
         if is_int(val_ty) and dest_ty.kind == TypeKind.ENUM {
             is_valid_cast = true
         }
-        if is_numeric(dest_ty) and this.program.is_buitin(val_ty, "String") {
+        if is_numeric(dest_ty) and this.program.is_buitin_class(val_ty, "String") {
             let call: IntrinsicCall = null
             if is_float(dest_ty) {
                 call = new IntrinsicCall(Intrinsics.STR_TO_F, PrimitiveTypes.unknown, type_expr_node.range)
@@ -2439,7 +2436,7 @@ class TypeChecker {
     }   
     private check_member_access(this, accessee: ClassId, class_name: String, member_name: String, visibility: AccessVisibility, range: TextRange) {
         if this.current_class != null {
-            if visibility == AccessVisibility.PRIVATE and (this.current_class.module_id != accessee.module_id or accessee.id != this.current_class.id) {
+            if visibility == AccessVisibility.PRIVATE and accessee != this.current_class {
                 this.error(ErrorKind.NAME, "Property '$member_name' is defined as private and only accessible within the class $class_name", range)
             }
         } else if (visibility != AccessVisibility.PUBLIC and visibility != AccessVisibility.UNDEF) {

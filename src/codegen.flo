@@ -75,10 +75,10 @@ class CodegenTypeScope {
         this.enum_types = new StringMap<GeneratedRecordType>()
     }
     public get_enum_id_key(enum_id: EnumId): String {
-        return "$(enum_id.module_id.id);$(enum_id.id)"
+        return "$(enum_id.id)"
     }
     public get_class_id_key(class_id: ClassId): String {
-        return "$(class_id.module_id.id);$(class_id.id)"
+        return "$(class_id.id)"
     }
     public get_record_from_enum_id(this, enum_id: EnumId): GeneratedRecordType {
         let key = CodegenTypeScope.get_enum_id_key(enum_id)
@@ -285,7 +285,7 @@ class DebugInfo {
         return LLVMDIBuilderCreateEnumerator(this.builder, name.get_bytes(), name.length, value, is_unsigned)
     }
     public create_function(this, func: Function): LLVMMetadataRef {
-        let file = this.get_or_create_file(func.id.module_id)
+        let file = this.get_or_create_file(func.scope.module_id)
         return LLVMDIBuilderCreateFunction(this.builder, file, func.name.get_bytes(),
                     func.name.length, "", 0,
                     file, func.definition_range.line, this.create_function_type(func.fnc_type, file),
@@ -295,21 +295,23 @@ class DebugInfo {
     public finalize_subprogram(this, program: LLVMMetadataRef){
         LLVMDIBuilderFinalizeSubprogram(this.builder, program)
     }
-    public create_enum_type(this, enum_id: EnumId, name: String, range: TextRange, elements: LLVMMetadataRef*, num_elements: uint, enum_field_type: Type): LLVMMetadataRef {
-        let file = this.get_or_create_file(enum_id.module_id)
-        let meta_field_type = this.create_or_get_type(enum_field_type)
+    public create_enum_type(this, checked_enum: Enum, elements: LLVMMetadataRef*, num_elements: uint): LLVMMetadataRef {
+        let file = this.get_or_create_file(checked_enum.scope.module_id)
+        let meta_field_type = this.create_or_get_type(checked_enum.variant_type)
+        let enum_name = checked_enum.name
         return LLVMDIBuilderCreateEnumerationType(
-            this.builder, file, name.get_bytes(),
-            name.length, file, range.line,
+            this.builder, file, enum_name.get_bytes(),
+            enum_name.length, file, checked_enum.definition_range.line,
             LLVMDITypeGetSizeInBits(meta_field_type), LLVMDITypeGetAlignInBits(meta_field_type), elements,
             num_elements, null)
     }
-    public create_struct_type(this, class_id: ClassId, name: String, range: TextRange, elements: LLVMMetadataRef*, num_elements: uint, llvm_type: LLVMTypeRef): LLVMMetadataRef {
-        let file = this.get_or_create_file(class_id.module_id)
+    public create_struct_type(this, checked_class: Class, elements: LLVMMetadataRef*, num_elements: uint, llvm_type: LLVMTypeRef): LLVMMetadataRef {
+        let file = this.get_or_create_file(checked_class.props_scope.module_id)
         let size = LLVMABISizeOfType(this.target_data, llvm_type) * 8
+        let class_name = checked_class.name
         return LLVMDIBuilderCreateStructType(
-        Builder: this.builder, Scope: file, Name: name.get_bytes(),
-        NameLen: name.length, File: file, LineNumber: range.line,
+        Builder: this.builder, Scope: file, Name: class_name.get_bytes(),
+        NameLen: class_name.length, File: file, LineNumber: checked_class.definition_range.line,
         SizeInBits: size, AlignInBits: 0, LLVMDIFlags.LLVMDIFlagZero,
         DerivedFrom: null, Elements: elements,
         NumElements: num_elements, RunTimeLang: 0, VTableHolder: null,
@@ -331,8 +333,8 @@ class DebugInfo {
             return LLVMDIFlags.LLVMDIFlagProtected 
         return LLVMDIFlags.LLVMDIFlagPublic
     }
-    public create_member_type(this, class_id: ClassId, name: String, range: TextRange, member_type: Type, visibility: AccessVisibility, offset: u64*): LLVMMetadataRef {
-        let file = this.get_or_create_file(class_id.module_id)
+    public create_member_type(this, module_id: ModuleId, name: String, range: TextRange, member_type: Type, visibility: AccessVisibility, offset: u64*): LLVMMetadataRef {
+        let file = this.get_or_create_file(module_id)
         let metadata_type = this.create_or_get_type(member_type)
         let size = LLVMDITypeGetSizeInBits(metadata_type)
         let align = LLVMDITypeGetAlignInBits(metadata_type)
@@ -346,8 +348,8 @@ class DebugInfo {
             Flags: DebugInfo.access_attr_to_diFlag(visibility),
             metadata_type)
     }
-    public create_static_member_type(this, class_id: ClassId, name: String, range: TextRange, member_type: Type, visibility: AccessVisibility, initializer: LLVMValueRef): LLVMMetadataRef {
-        let file = this.get_or_create_file(class_id.module_id)
+    public create_static_member_type(this, module_id: ModuleId, name: String, range: TextRange, member_type: Type, visibility: AccessVisibility, initializer: LLVMValueRef): LLVMMetadataRef {
+        let file = this.get_or_create_file(module_id)
         let metadata_type = this.create_or_get_type(member_type)
         let align = LLVMDITypeGetAlignInBits(metadata_type)
 
@@ -405,12 +407,6 @@ fnc get_intrinsic(mod: LLVMModuleRef, name: String, params_types: LLVMTypeRef*, 
     }
     let result = (fnc_type, llvm_fnc)
     return result
-}
-fnc create_var_key(var_id: VarId): String {
-    return "$(var_id.module_id.id);$(var_id.id)"
-}
-fnc create_fnc_key(fnc_id: FunctionId): String {
-    return "$(fnc_id.module_id.id);$(fnc_id.id)"
 }
 
 fnc get_format_from_type(ty: Type): String {
@@ -471,16 +467,16 @@ class CodeGen {
         return new GeneratedModule(codegen.module)
     }
     private get_var_from_varid(this, var_id: VarId): LLVMValueRef{
-        return this.global_var_scope[create_var_key(var_id)]
+        return this.global_var_scope["$(var_id.id)"]
     }
     private get_fnc_from_fncid(this, fnc_id: FunctionId): LLVMValueRef {
-        return this.global_fnc_scope[create_fnc_key(fnc_id)]
+        return this.global_fnc_scope["$(fnc_id.id)"]
     }
     private add_var(this, var_id: VarId, value: LLVMValueRef){
-        this.global_var_scope[create_var_key(var_id)] = value
+        this.global_var_scope["$(var_id.id)"] = value
     }
     private add_fnc(this, fnc_id: FunctionId, value: LLVMValueRef){
-        this.global_fnc_scope[create_fnc_key(fnc_id)] = value
+        this.global_fnc_scope["$(fnc_id.id)"] = value
     }
     private neg_int(builder: LLVMBuilderRef, val: LLVMValueRef): LLVMValueRef {
         return LLVMIsConstant(val) ? LLVMConstNeg(val) : LLVMBuildNeg(builder, val, "")
@@ -647,7 +643,7 @@ class CodeGen {
             return LLVMBuildSelect(builder, llvm_val, true_str, false_str, "")
         }
         if is_object(val_ty){
-            if this.program.is_buitin(val_ty, "String") {
+            if this.program.is_buitin_class(val_ty, "String") {
                 let result = this.codegen_string_to_cstring(builder, llvm_val, range)
                 malloc_list << result
                 return result
@@ -1622,8 +1618,9 @@ class CodeGen {
     private codegen_class(this, checked_class: Class){
         let struct_class = new GeneratedRecordType()
         this.debug_info.type_scope.add_record_with_class_id(checked_class.id, struct_class)
+        let class_module_id = checked_class.props_scope.module_id
         struct_class.llvm_type = LLVMStructCreateNamed(LLVMGetModuleContext(this.module), checked_class.name.to_cstring())
-        struct_class.llvm_metadata = this.debug_info.create_temp_compound_type(checked_class.id.module_id,
+        struct_class.llvm_metadata = this.debug_info.create_temp_compound_type(class_module_id,
             checked_class.name, checked_class.id.id, checked_class.definition_range)
 
         let field_types_buffer: LLVMTypeRef*(checked_class.fields.length)
@@ -1644,7 +1641,7 @@ class CodeGen {
                 LLVMSetInitializer(llvm_field_value, this.codegen_expression(null, field_var.value))
                 this.add_var(field_var.id, llvm_field_value)
                 metadata = this.debug_info.create_static_member_type(
-                    checked_class.id, 
+                    class_module_id, 
                     field_name,
                     field_range,
                     field_type,
@@ -1654,7 +1651,7 @@ class CodeGen {
             } else {
                 field_types_buffer[field_types_num++] = llvm_field_type
                 metadata = this.debug_info.create_member_type(
-                        checked_class.id, 
+                        class_module_id, 
                         field_name,
                         field_range,
                         field_type,
@@ -1667,9 +1664,7 @@ class CodeGen {
         }
         LLVMStructSetBody(struct_class.llvm_type, field_types_buffer, field_types_num, true)
         let llvm_metadata = this.debug_info.create_struct_type(
-            checked_class.id, checked_class.name, checked_class.definition_range,
-            members_metadata_buffer, members_num,
-            struct_class.llvm_type
+            checked_class, members_metadata_buffer, members_num, struct_class.llvm_type
         )
         this.debug_info.replace_temp_node_with(struct_class.llvm_metadata, llvm_metadata)
         struct_class.llvm_metadata = llvm_metadata
@@ -1691,12 +1686,10 @@ class CodeGen {
             enum_fields_dbg[idx++] = value_dbg
             enum_type.set_field(field_id, new GeneratedField(value, value_dbg, enum_field.offset))
         }
-        enum_type.llvm_metadata = this.debug_info.create_enum_type(checked_enum.id, 
-            checked_enum.name, 
-            checked_enum.definition_range, 
+        enum_type.llvm_metadata = this.debug_info.create_enum_type(
+            checked_enum,
             enum_fields_dbg, 
-            idx, 
-            checked_enum.variant_type
+            idx
         )
         this.debug_info.type_scope.add_record_with_enum_id(checked_enum.id, enum_type)
     }
