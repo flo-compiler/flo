@@ -137,18 +137,6 @@ enum ExpressionKind {
     MATCH
     INTRINSIC
 }
-enum VarIdKind {
-    FNC
-    VAR
-    CONST
-    CLASS
-    ENUM
-    MODULE
-}
-enum TypeIdKind {
-    CLASS
-    ENUM
-}
 enum BinaryOp {
     UNDEF
     ADD
