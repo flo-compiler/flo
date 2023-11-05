@@ -75,5 +75,7 @@ fnc main(argc: int, argv: u8**): int {
         code = flo_module.exec()
     }
     del module_node
+    del program
+    del flo_module
     return code
 }

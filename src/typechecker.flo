@@ -945,14 +945,17 @@ class Program {
         for func in this.functions {
             del func
         }
+        for scope in this.scopes {
+            del scope
+        }
         for var in this.vars {
             del var
         }
-        for mod_class in this.classes {
-            del mod_class
+        for checked_class in this.classes {
+            del checked_class
         }
-        for mod_enum in this.enums {
-            del mod_enum
+        for checked_enum in this.enums {
+            del checked_enum
         }
         del this.functions
         del this.vars
