@@ -1,5 +1,0 @@
-//@expect: return_code=1
-fnc main(): int {
-    let tuple: (string, bool, f64) = (1, false, 1.0)
-    return 0
-}

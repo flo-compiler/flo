@@ -1,4 +1,0 @@
-fnc main(): int {
-    let tuple: (String, String) = ("Programiz","Apple")
-    return tuple[1] == "Apple" and tuple[0] == "Programiz" ? 0 : 1
-}

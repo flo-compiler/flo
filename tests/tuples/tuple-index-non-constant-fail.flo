@@ -1,6 +1,0 @@
-//@expect: return_code=1
-fnc main(): int {
-    let tuple: (int, bool, f32) = (1, false, 1.0)
-    println(tuple[2 ** 2 as uint] as string)
-    return 0
-}

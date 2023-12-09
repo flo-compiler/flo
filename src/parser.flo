@@ -15,11 +15,11 @@ class TypeNode(Node) {
         this.kind = kind
     }
 }
-class RecordTypeNode (TypeNode) {
+class NamedRecordTypeNode (TypeNode) {
     name: IdentifierToken
     generic_args: TypeNode[]
     constructor(this, name: IdentifierToken, range: TextRange) {
-        this.super(TypeKind.RECORD, range)
+        this.super(TypeKind.NAMED_RECORD, range)
         this.name = name
         this.generic_args = []
     }
@@ -32,11 +32,19 @@ class FunctionTypeNode (TypeNode) {
         this.param_types = param_types
     }
 }
-class TupleTypeNode (TypeNode) {
-    element_types: TypeNode[]
-    constructor(this, element_types: TypeNode[], range: TextRange){
-        this.super(TypeKind.TUPLE, range)
-        this.element_types = element_types
+class RecordTypeFieldNode {
+    name: IdentifierToken
+    type: TypeNode
+    constructor(this, name: IdentifierToken, type: TypeNode){
+        this.name = name
+        this.type = type
+    }
+}
+class RecordTypeNode (TypeNode) {
+    fields: RecordTypeFieldNode[]
+    constructor(this, fields: RecordTypeFieldNode[], range: TextRange){
+        this.super(TypeKind.RECORD, range)
+        this.fields = fields
     }
 }
 class PointerTypeNode (TypeNode) {
@@ -120,13 +128,6 @@ class ArrayExpressionNode (ExpressionNode) {
         this.elements = []
     }
 }
-class TupleExpressionNode (ExpressionNode) {
-    elements: ExpressionNode[]
-    constructor(this, range: TextRange){
-        this.super(ExpressionKind.TUPLE, range)
-        this.elements = []
-    }
-}
 class NewExpressionNode (ExpressionNode) {
     parsed_type: TypeNode
     onheap: bool
@@ -151,21 +152,21 @@ class MemberExpressionNode (ExpressionNode) {
     expression: ExpressionNode
     member: IdentifierToken
     constructor(this, expression: ExpressionNode, member: IdentifierToken, range: TextRange){
-        this.super(ExpressionKind.MEMBER, range)
+        this.super(ExpressionKind.RECORD_FIELD_ACCESS, range)
         this.expression = expression
         this.member = member
     }
 }
-class CallExpressionArg {
-    name: IdentifierToken
+class KeyValueItem {
+    key: IdentifierToken
     value: ExpressionNode
     constructor(this){
-        this.name = null
+        this.key = null
     }
 }
 class CallExpressionNode (ExpressionNode) {
     callee: ExpressionNode
-    args: CallExpressionArg[]
+    args: KeyValueItem[]
     constructor(this, callee: ExpressionNode, range: TextRange) {
         this.super(ExpressionKind.CALL, range)
         this.callee = callee
@@ -344,7 +345,13 @@ class MethodNode {
         this.access_modifier = access_modifier
     }
 }
-
+class RecordExpressionNode (ExpressionNode) {
+    elements: KeyValueItem[]
+    constructor(this, range: TextRange){
+        this.super(ExpressionKind.RECORD, range)
+        this.elements = []
+    }
+}
 class FieldNode {
     name: IdentifierToken
     access_modifier: AccessVisibility
@@ -355,10 +362,11 @@ class FieldNode {
         this.initializer = null
     }
 }
+
 class ClassDeclarationNode {
     name: IdentifierToken
     generic_parameters: GenericParameterNode[]
-    parent: RecordTypeNode
+    parent: NamedRecordTypeNode
     fields: FieldNode[]
     methods: MethodNode[]
     constructor(this, name: IdentifierToken) {
@@ -500,9 +508,9 @@ class Parser {
             type_nodes << this.parse_type()
         }
     }
-    private parse_object_type(this): RecordTypeNode {
+    private parse_object_type(this): NamedRecordTypeNode {
         let identifier_tok = this.eat(TokType.IDENTIFER) as IdentifierToken
-        let object_type_node = new RecordTypeNode( identifier_tok, identifier_tok.range)
+        let object_type_node = new NamedRecordTypeNode( identifier_tok, identifier_tok.range)
         if this.current_token.ttype == TokType.LT {
             this.advance()
             this.parse_type_list(object_type_node.generic_args)
@@ -516,21 +524,33 @@ class Parser {
         }
         return object_type_node
     }
-    private parse_tuple_or_function_type(this): TypeNode {
+    private parse_function_type(this): FunctionTypeNode {
         let types: TypeNode[] = []
-        let start_range = this.current_token.range
-        this.advance()
+        let start_range = this.eat_current().range
         if this.current_token.ttype != TokType.RPAR
             this.parse_type_list(types)
-        let end_range = this.eat(TokType.RPAR).range
-        if this.current_token.ttype != TokType.ARROW {
-            return new TupleTypeNode(types, TextRange.merge(start_range, end_range))
-        }
+        this.eat(TokType.RPAR)
         this.eat(TokType.ARROW)
         let fnc_type_node = new FunctionTypeNode(types, start_range)
+        if (!this.can_parse()) return fnc_type_node
         fnc_type_node.return_type = this.parse_type()
         fnc_type_node.range = TextRange.merge(fnc_type_node.range, fnc_type_node.return_type.range)
         return fnc_type_node
+    }
+    private parse_record_type_field(this): RecordTypeFieldNode {
+        let identifer_tok = this.eat(TokType.IDENTIFER) as IdentifierToken
+        this.eat(TokType.COL)
+        let type_tok = this.parse_type()
+        return new RecordTypeFieldNode(identifer_tok, type_tok)
+    }
+    private parse_record_type(this): RecordTypeNode { // TODO: Add new line skips
+        let start_range = this.eat_current().range
+        let record_fields: RecordTypeFieldNode[] = [this.parse_record_type_field()]
+        while (this.current_token.ttype == TokType.COMMA and this.can_parse()){
+            this.eat(TokType.COMMA)
+            record_fields << this.parse_record_type_field()
+        }
+        return new RecordTypeNode(record_fields, TextRange.merge(start_range, this.eat(TokType.RBRACE).range))
     }
 
     private parse_type(this): TypeNode {
@@ -539,7 +559,9 @@ class Parser {
         if this.current_token.ttype == TokType.IDENTIFER
             type_node = this.parse_object_type()
         else if this.current_token.ttype == TokType.LPAR
-            type_node = this.parse_tuple_or_function_type()
+            type_node = this.parse_function_type()
+        else if this.current_token.ttype == TokType.LBRACE
+            type_node = this.parse_record_type()
         else {
             this.error("Expected a type")
             return type_node
@@ -548,7 +570,7 @@ class Parser {
             if this.current_token.ttype == TokType.LBRACKET {
                 this.advance()
                 if this.current_token.ttype == TokType.RBRACKET {
-                    let rec_node = new RecordTypeNode(new IdentifierToken("Array", this.current_token.range) as IdentifierToken, this.current_token.range)
+                    let rec_node = new NamedRecordTypeNode(new IdentifierToken("Array", this.current_token.range) as IdentifierToken, this.current_token.range)
                     rec_node.generic_args << type_node
                     type_node = rec_node
                 } else {
@@ -587,8 +609,7 @@ class Parser {
         return array_expression
     }
     private parse_new_expression(this): NewExpressionNode {
-        let start_range = this.current_token.range
-        this.advance()
+        let start_range = this.eat_current().range
         let new_node = new NewExpressionNode(this.parse_type(), start_range)
         this.eat(TokType.LPAR)
         this.parse_expression_list(new_node.args, TokType.RPAR)
@@ -608,20 +629,13 @@ class Parser {
         }
         return new StringExpressionNode(strtoken, template_args)
     }
-    private parse_tuple_expression_or_expression_par(this): ExpressionNode {
-        let start_range = this.current_token.range
-        this.advance()
-        let expression = this.parse_expression()
-        if this.current_token.ttype == TokType.COMMA {
-            this.advance()
-            let tuple_expression = new TupleExpressionNode(start_range)
-            tuple_expression.elements << expression
-            this.parse_expression_list(tuple_expression.elements, TokType.RPAR)
-            tuple_expression.range = TextRange.merge(start_range, this.current_token.range)
-            expression = tuple_expression
-        }
-        this.eat(TokType.RPAR)
-        return expression
+    private parse_record_expression(this): ExpressionNode {
+        let start_range = this.eat_current().range
+        let record_expression = new RecordExpressionNode(start_range)
+        if (this.current_token.ttype != TokType.LBRACE) 
+            this.parse_keyvalue_list(record_expression.elements)
+        record_expression.range = TextRange.merge(record_expression.range, this.eat(TokType.RBRACE).range)
+        return record_expression
     }
     private parse_atom(this): ExpressionNode {
         if this.current_token.ttype == TokType.STR
@@ -636,10 +650,15 @@ class Parser {
             return new VarAccessExpressionNode(this.eat(TokType.IDENTIFER) as IdentifierToken)
         else if this.current_token.ttype == TokType.LBRACKET 
             return this.parse_array_expression()
+        else if this.current_token.ttype == TokType.LBRACE 
+            return this.parse_record_expression()
         else if this.current_token.ttype == TokType.NEW_KW
             return this.parse_new_expression()
         else if this.current_token.ttype == TokType.LPAR {
-            return this.parse_tuple_expression_or_expression_par()
+            this.advance()
+            let expression = this.parse_expression()
+            this.eat(TokType.RPAR)
+            return expression
         } else
             this.error("Expected an Expression value")
         return new ExpressionNode(ExpressionKind.INTRINSIC, this.current_token.range)
@@ -650,23 +669,30 @@ class Parser {
         index_expression.range = TextRange.merge(expression.range, this.eat(TokType.RBRACKET).range)
         return index_expression
     }
+    private parse_keyvalue_item(this): KeyValueItem {
+        this.new_lines()
+        let item = new KeyValueItem()
+        if (this.current_token.ttype == TokType.IDENTIFER and this.peek().ttype == TokType.COL){
+            item.key = this.eat(TokType.IDENTIFER) as IdentifierToken
+            this.eat(TokType.COL)
+        }
+        item.value = this.parse_expression()
+        this.new_lines()
+        return item
+    }
+    private parse_keyvalue_list(this, list: KeyValueItem[]) {
+        list << this.parse_keyvalue_item()
+        while(this.current_token.ttype == TokType.COMMA and this.can_parse()){
+            this.eat(TokType.COMMA)
+            list << this.parse_keyvalue_item()
+        }
+    }
     private parse_call_expression(this, expression: ExpressionNode): CallExpressionNode {
         this.eat(TokType.LPAR)
         let call_expression = new CallExpressionNode(expression, this.current_token.range)
         this.new_lines()
-        while(this.current_token.ttype != TokType.RPAR and this.can_parse()){
-            this.new_lines()
-            let arg = new CallExpressionArg()
-            if (this.current_token.ttype == TokType.IDENTIFER and this.peek().ttype == TokType.COL){
-                arg.name = this.eat(TokType.IDENTIFER) as IdentifierToken
-                this.eat(TokType.COL)
-            }
-            arg.value = this.parse_expression()
-            this.new_lines()
-            call_expression.args << arg
-            if (this.current_token.ttype == TokType.RPAR) break
-            this.eat(TokType.COMMA)
-        }
+        if (this.current_token.ttype != TokType.RPAR)
+            this.parse_keyvalue_list(call_expression.args)
         call_expression.range = TextRange.merge(expression.range, this.eat(TokType.RPAR).range)
         return call_expression
     }

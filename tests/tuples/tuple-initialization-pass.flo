@@ -1,4 +1,0 @@
-fnc main(): int {
-    let tuple: (uint, bool, f64) = (1, false, 1.0)
-    return 0
-}

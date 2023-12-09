@@ -1,0 +1,7 @@
+//@expect: return_code=1
+type Position = { x: int, y: int }
+fnc main(): int {
+    let pos: Position
+    pos.x = true
+    return 0
+}

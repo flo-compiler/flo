@@ -3,46 +3,31 @@ enum FlagType {
     BOOL
     STR
 }
-fnc add_flag(flag: Flag){
+type Flag = { type: FlagType, name: String, description: String, value: u128 }
+fnc add_flag(ftype: FlagType, fname: String, fdescription: String): u128* {
     if (flags_length < MAX_FLAGS_SIZE){
-        flags_buffer[flags_length++] = flag
+        flags_buffer[flags_length++] = { type: ftype, name: fname, description: fdescription, value: 0 }
     }
+    return &flags_buffer[flags_length - 1].value
 }
-class Flag {
-    type: FlagType
-    name: String
-    description: String
-    constructor(this, type: FlagType, name: String, description: String){
-        this.type = type
-        this.name = name
-        this.description = description
-        add_flag(this)
-    }
-}
-const MAX_FLAGS_SIZE = 250
+const MAX_FLAGS_SIZE = 20
 let flags_buffer: Flag[MAX_FLAGS_SIZE] = null /* Note to self ban const changes globally */
 let flags_length = 0
 
-class FlagString(Flag) {
-    value: String
-    constructor(this, name: String, description: String, default: String = null){
-        this.super(FlagType.STR, name, description)
-        this.value = default
-    }
+fnc FlagString(name: String, description: String, default: String = null): String* {
+    let flag_value = add_flag(FlagType.STR, name, description) as String*
+    flag_value[0] = default
+    return flag_value
 }
-class FlagInt(Flag) {
-    value: int
-    constructor(this, name: String, description: String, default: int = 0){
-        this.super(FlagType.INT, name, description)
-        this.value = default
-    }
+fnc FlagInt(name: String, description: String, default: int = 0): int* {
+    let flag_value = add_flag(FlagType.INT, name, description) as int*
+    flag_value[0] = default
+    return flag_value
 }
-class FlagBool(Flag) {
-    value: bool
-    constructor(this, name: String, description: String, default = false){
-        this.super(FlagType.BOOL, name, description)
-        this.value = default
-    }
+fnc FlagBool (name: String, description: String, default = false): bool* {
+    let flag_value = add_flag(FlagType.BOOL, name, description) as bool*
+    flag_value[0] = default
+    return flag_value
 }
 fnc parse_flags(argc: int, argv: u8**): String {
     let arg: String = null
@@ -58,7 +43,8 @@ fnc parse_flags(argc: int, argv: u8**): String {
             let flag = flags_buffer[j]
             if (flag.name == argname) {
                 if (flag.type == FlagType.BOOL) {
-                    (flag as FlagBool).value = true
+                    let flag_value_ptr = &flags_buffer[j].value as bool*
+                    flag_value_ptr[0] = true
                     continue
                 }
                 if (i + 1 >= argc) {
@@ -67,11 +53,13 @@ fnc parse_flags(argc: int, argv: u8**): String {
                 }
                 let argvalue = String.from_cstring(argv[++i])
                 if (flag.type == FlagType.INT) {
-                    (flag as FlagInt).value = argvalue as int
+                    let flag_value_ptr = &flags_buffer[j].value as int*
+                    flag_value_ptr[0] = argvalue as int
                     del argvalue
                 }
                 if (flag.type == FlagType.STR) {
-                    (flag as FlagString).value = argvalue
+                    let flag_value_ptr = &flags_buffer[j].value as String*
+                    flag_value_ptr[0] = argvalue
                 }
                 break
             }

@@ -210,16 +210,22 @@ fnc main(){
 ```
 let result = sum(y: 6, x: 5)
 ```
-## Tuples
-- [x] Creating tuples
+## Records
+- [x] Creating records
 ```
-let items: (int, f32, bool) = (1, 1.0, true)
+let items: {i: int, f: f32, b: bool} = {i: 1, f: 1.0, b: true}
 // or 
-let items = (1, 1.0, true)
+let items = {i: 1, f: 1.0, b: true}
 ```
-- [x] Accessing tuples
+- [x] Accessing records
 ```
-items[0] // 1
+items.i // 1
+items.f // 1.0
+items.b // 1.0
+```
+- [x] Mutating records
+```
+items.i = 2
 ```
 Index **must** be a constant unsigned integer since resulting type is evaluated at compile time.
 

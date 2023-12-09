@@ -91,8 +91,8 @@ enum TypeKind {
     ENUM
     PTR
     ARRAY
-    TUPLE
     FNC
+    NAMED_RECORD
     RECORD
     GENERIC_VARIABLE
     RESOLVED_GENERIC
@@ -117,25 +117,25 @@ enum ExpressionKind {
     BOOL
     NULL
     ARRAY
-    TUPLE
     VAR_ACCESS
     FNC_ACCESS
     BIN
     UNARY
     CAST
     NEW
-    MEMBER
     CLASS_FIELD_ACCESS
     CLASS_METHOD_ACCESS
     STATIC_METHOD_ACCESS
     STATIC_FIELD_ACCESS
     ENUM_FIELD_ACCESS 
+    RECORD_FIELD_ACCESS
     INDEX
     CALL
     TERNARY
     RANGE
     MATCH
     INTRINSIC
+    RECORD
 }
 enum BinaryOp {
     UNDEF

@@ -14,21 +14,21 @@ fnc main(argc: int, argv: u8**): int {
     let code: int = 0
     let self_path: u8[1024]
     let self_path_len = get_self_path(&self_path[0], self_path.size)
-    let show_help: FlagBool("h", "Show this help message")
-    let emit_type: FlagString("-emit", "Emit output in a particular format. Options are:\n\t\t • llvm-ir - Generates a file containing LLVM IR.\n\t\t • llvm-bc - Generates a file containing LLVM bitcode.\n\t\t • obj - Generates an object file\n\t\t • asm - Generates Assembly code.", "exec")
-    let output_fn: FlagString("o", "Specify file to put the output into", "output")
-    let rt_path: FlagString("I", "Specify runtime directory",  Path.join(Path.dirname(String.from_bytes(&self_path[0], self_path_len)), "lib/"))
-    let target_triple: FlagString("-target", "Compile to specific target triple", GeneratedModule.get_default_triple())
-    let link_libs: FlagString("l", "Specify a library to link against (should be a comma seperated list)")
-    let opt_level: FlagInt("O", "Specify the compiler's optimization level", 1)
-    let show_version: FlagBool("v", "Show version")
+    let show_help = FlagBool("h", "Show this help message")
+    let emit_type = FlagString("-emit", "Emit output in a particular format. Options are:\n\t\t • llvm-ir - Generates a file containing LLVM IR.\n\t\t • llvm-bc - Generates a file containing LLVM bitcode.\n\t\t • obj - Generates an object file\n\t\t • asm - Generates Assembly code.", "exec")
+    let output_fn = FlagString("o", "Specify file to put the output into", "output")
+    let rt_path = FlagString("I", "Specify runtime directory",  Path.join(Path.dirname(String.from_bytes(&self_path[0], self_path_len)), "lib/"))
+    let target_triple = FlagString("-target", "Compile to specific target triple", GeneratedModule.get_default_triple())
+    let link_libs = FlagString("l", "Specify a library to link against (should be a comma seperated list)")
+    let opt_level = FlagInt("O", "Specify the compiler's optimization level", 1)
+    let show_version = FlagBool("v", "Show version")
 
     let filename = parse_flags(argc, argv)
-    if show_version.value {
+    if show_version[0] {
         flo_println(COMPILER_VERSION)
         return 0
     }
-    if show_help.value {
+    if show_help[0] {
         flo_print("Usage: ")
         flo_print(String.from_cstring(argv[0]))
         flo_println(" [OPTIONS]? <file>\n\nOPTIONS:\n")
@@ -40,8 +40,8 @@ fnc main(argc: int, argv: u8**): int {
         return 1
     }
     let compiler = new Compiler()
-    if (!compiler.set_std_path(rt_path.value)){
-        print_message_error(ErrorKind.IO, "Runtime directory not found '$(rt_path.value)'")
+    if (!compiler.set_std_path(rt_path[0])){
+        print_message_error(ErrorKind.IO, "Runtime directory not found '$(rt_path[0])'")
         return 1
     }
     let file_id = compiler.register_file(filename)
@@ -61,16 +61,16 @@ fnc main(argc: int, argv: u8**): int {
     /**** Codegen ****/
     let flo_module = CodeGen.codegen(program, compiler)
     /**** Misc ****/
-    flo_module.run_passes(opt_level.value as int)
-    flo_module.set_target_machine(target_triple.value)
-    if emit_type.value == "llvm-ir" {
-        flo_module.write_ir("$(output_fn.value)")
-    } else if emit_type.value == "llvm-bc" {
-        flo_module.write_bc("$(output_fn.value)")
-    } else if emit_type.value == "obj" {
-        flo_module.write_obj("$(output_fn.value)")
-    } else if emit_type.value == "asm" {
-        flo_module.write_asm("$(output_fn.value)")
+    flo_module.run_passes(opt_level[0] as int)
+    flo_module.set_target_machine(target_triple[0])
+    if emit_type[0] == "llvm-ir" {
+        flo_module.write_ir("$(output_fn[0])")
+    } else if emit_type[0] == "llvm-bc" {
+        flo_module.write_bc("$(output_fn[0])")
+    } else if emit_type[0] == "obj" {
+        flo_module.write_obj("$(output_fn[0])")
+    } else if emit_type[0] == "asm" {
+        flo_module.write_asm("$(output_fn[0])")
     } else {
         code = flo_module.exec()
     }

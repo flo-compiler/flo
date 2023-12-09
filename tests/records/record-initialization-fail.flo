@@ -1,0 +1,6 @@
+//@expect: return_code=1
+type MyRec = {s: String, b: bool, f: f32}
+fnc main(): int {
+    let rec: MyRec = { i: 1, b: false, f: 1.0 }
+    return 0
+}

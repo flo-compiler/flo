@@ -380,14 +380,22 @@ class DebugInfo {
         LLVMMetadataReplaceAllUsesWith(temp_node, replacement)
     }
 }
-fnc get_intrinsic(mod: LLVMModuleRef, name: String, params_types: LLVMTypeRef*, params_length: uint, return_type: LLVMTypeRef, var_args = false): (LLVMTypeRef, LLVMValueRef) {
+class IntrinsicResult {
+    type: LLVMTypeRef
+    value: LLVMValueRef
+    constructor(this, type: LLVMTypeRef, value: LLVMValueRef) {
+        this.type = type
+        this.value = value
+    }
+}
+fnc get_intrinsic(mod: LLVMModuleRef, name: String, params_types: LLVMTypeRef*, params_length: uint, return_type: LLVMTypeRef, var_args = false): IntrinsicResult {
     let fnc_type = LLVMFunctionType(return_type, params_types, params_length, var_args)
     let fn_name = name.to_cstring()
     let llvm_fnc = LLVMGetNamedFunction(mod, fn_name)
     if llvm_fnc == null {
         llvm_fnc = LLVMAddFunction(mod, fn_name, fnc_type)
     }
-    let result = (fnc_type, llvm_fnc)
+    let result = new IntrinsicResult(fnc_type, llvm_fnc)
     return result
 }
 
@@ -504,8 +512,8 @@ class CodeGen {
             return this.codegen_type((tt as GenericTypeVariable).current_instance)
         if tt.kind == TypeKind.ARRAY
             return this.codegen_array_type(tt as ArrayType)
-        if tt.kind == TypeKind.TUPLE
-            return this.codegen_tuple_type(tt as TupleType)
+        if tt.kind == TypeKind.RECORD
+            return this.codegen_record_type(tt as RecordType)
         if tt.kind == TypeKind.ENUM 
             return this.codegen_enum_type(tt as EnumType)
         if is_function(tt) 
@@ -519,10 +527,10 @@ class CodeGen {
         let element_type = this.codegen_type(array_type.element_type)
         return LLVMArrayType(element_type, array_type.length)
     }
-    private codegen_tuple_type(this, tuple_type: TupleType): LLVMTypeRef {
-        let element_types: LLVMTypeRef*(tuple_type.element_types.length)
+    private codegen_record_type(this, record_type: RecordType): LLVMTypeRef { //TODO: Change to stuct
+        let element_types: LLVMTypeRef*(record_type.element_types.length)
         let idx = 0
-        for element_type in tuple_type.element_types {
+        for element_type in record_type.element_types {
             element_types[idx++] = this.codegen_type(element_type)
         }
         return LLVMStructType(element_types, idx, false)
@@ -566,32 +574,32 @@ class CodeGen {
         let arg_types: LLVMTypeRef[1] = [LLVMPointerType(this.debug_info.type_scope.u8_type.llvm_type)]
         let args: LLVMValueRef[1] = [arg]
         let atof = get_intrinsic(this.module, "atof", &arg_types[0], arg_types.size, this.debug_info.type_scope.f64_type.llvm_type)
-        return LLVMBuildCall2(builder, atof[0], atof[1], &args[0], args.size, "")
+        return LLVMBuildCall2(builder, atof.type, atof.value, &args[0], args.size, "")
     }
     private codegen_atoi_call(this, builder: LLVMBuilderRef, arg: LLVMValueRef): LLVMValueRef {
         let arg_types: LLVMTypeRef[1] = [LLVMPointerType(this.debug_info.type_scope.u8_type.llvm_type)]
         let args: LLVMValueRef[1] = [arg]
         let atoi = get_intrinsic(this.module, "atoi", &arg_types[0], arg_types.size, this.debug_info.type_scope.i32_type.llvm_type)
-        return LLVMBuildCall2(builder, atoi[0], atoi[1], &args[0], args.size, "")
+        return LLVMBuildCall2(builder, atoi.type, atoi.value, &args[0], args.size, "")
     }
     private codegen_atol_call(this, builder: LLVMBuilderRef, arg: LLVMValueRef): LLVMValueRef {
         let arg_types: LLVMTypeRef[1] = [LLVMPointerType(this.debug_info.type_scope.u8_type.llvm_type)]
         let args: LLVMValueRef[1] = [arg]
         let atol = get_intrinsic(this.module, "atol", &arg_types[0], arg_types.size, this.debug_info.type_scope.i64_type.llvm_type)
-        return LLVMBuildCall2(builder, atol[0], atol[1], &args[0], args.size, "")
+        return LLVMBuildCall2(builder, atol.type, atol.value, &args[0], args.size, "")
     }
     private codegen_realloc_call(this, builder: LLVMBuilderRef, args: LLVMValueRef*): LLVMValueRef {
         let i8_ptr_ty = LLVMPointerType(this.debug_info.type_scope.u8_type.llvm_type)
         let arg_types: LLVMTypeRef[2] = [i8_ptr_ty, this.debug_info.type_scope.int_type.llvm_type]
         let realloc = get_intrinsic(this.module, "realloc", &arg_types[0], arg_types.size, i8_ptr_ty)
-        return LLVMBuildCall2(builder, realloc[0], realloc[1], args, arg_types.size, "")
+        return LLVMBuildCall2(builder, realloc.type, realloc.value, args, arg_types.size, "")
     }
     private codegen_memcmp_call(this, builder: LLVMBuilderRef, args: LLVMValueRef*): LLVMValueRef {
         let i8_ptr_ty = LLVMPointerType(this.debug_info.type_scope.u8_type.llvm_type)
         let int_ty = this.debug_info.type_scope.int_type.llvm_type
         let arg_types: LLVMTypeRef[3] = [i8_ptr_ty, i8_ptr_ty, int_ty]
         let memcmp = get_intrinsic(this.module, "memcmp", &arg_types[0], arg_types.size, int_ty)
-        return LLVMBuildCall2(builder, memcmp[0], memcmp[1], args, arg_types.size, "")
+        return LLVMBuildCall2(builder, memcmp.type, memcmp.value, args, arg_types.size, "")
     }
     private codegen_del_call(this, builder: LLVMBuilderRef, self: LLVMValueRef, obj_ty: ObjectType): LLVMValueRef {
         let args: LLVMValueRef[1] = [self]
@@ -616,7 +624,7 @@ class CodeGen {
         (call_args_buffer + 2).copy_from(args, args_length)
         let arg_types: LLVMTypeRef[2] = [i8_ptr_ty, i8_ptr_ty]
         let asprintf = get_intrinsic(this.module, "asprintf", &arg_types[0], arg_types.size, this.debug_info.type_scope.int_type.llvm_type, true)
-        let str_len = LLVMBuildCall2(builder, asprintf[0], asprintf[1], call_args_buffer, num_passed_args, "")
+        let str_len = LLVMBuildCall2(builder, asprintf.type, asprintf.value, call_args_buffer, num_passed_args, "")
         if len_ptr != null {
             len_ptr[0] = str_len
         }
@@ -731,12 +739,12 @@ class CodeGen {
         }
         return addr
     }
-    private store_tuple_elements(this, builder: LLVMBuilderRef, ptr: LLVMValueRef, tuple_exp: TupleExpression): LLVMValueRef {
+    private store_record_elements(this, builder: LLVMBuilderRef, ptr: LLVMValueRef, record_exp: RecordExpression): LLVMValueRef {
         let int32ty = this.debug_info.type_scope.i32_type.llvm_type
         let next_indices: LLVMValueRef[2] = [LLVMConstInt(int32ty, 0, false), null]
         let idx: u64 = 0
-        let tuple_type = this.codegen_type(tuple_exp.value_type)
-        for value in tuple_exp.elements {
+        let tuple_type = this.codegen_type(record_exp.value_type)
+        for value in record_exp.elements {
             next_indices[1] = LLVMConstInt(int32ty, idx++, false)
             let addr = LLVMBuildInBoundsGEP2(builder, tuple_type, ptr, &next_indices[0], next_indices.size, "")
             LLVMBuildStore(builder, this.codegen_expression(builder, value), addr)
@@ -759,14 +767,14 @@ class CodeGen {
         }
         return LLVMConstArray(elem_ty, elems_buffer, array_exp.elements.length)
     }
-    private codegen_tuple_exp(this, builder: LLVMBuilderRef, tuple_exp: TupleExpression): LLVMValueRef {
+    private codegen_record_exp(this, builder: LLVMBuilderRef, record_exp: RecordExpression): LLVMValueRef {
         //FIXME: What if tuple is not constant?
-        if !tuple_exp.is_constant {
-            panic("Array expression is not a constant (codegen_tuple_exp)")
+        if !record_exp.is_constant {
+            panic("Array expression is not a constant (codegen_record_exp)")
         }
-        let elems_buffer: LLVMValueRef*(tuple_exp.elements.length)
+        let elems_buffer: LLVMValueRef*(record_exp.elements.length)
         let idx = 0
-        for value in tuple_exp.elements {
+        for value in record_exp.elements {
             elems_buffer[idx++] = this.codegen_expression(builder, value)
         }
         return LLVMConstStruct(elems_buffer, idx, false)
@@ -824,15 +832,17 @@ class CodeGen {
             ind_ptr = this.get_expr_mem(builder, index_exp.expression)
             return LLVMBuildInBoundsGEP2(builder, ty, ind_ptr, &indices[0], indices.size, "")
         }
-        if expr_val_ty.kind == TypeKind.TUPLE {
-            let int32ty = this.debug_info.type_scope.i32_type.llvm_type
-            let indices: LLVMValueRef[2] = [LLVMConstInt(int32ty, 0, false), LLVMConstIntCast(index, int32ty, false)]
-            ind_ptr = this.get_expr_mem(builder, index_exp.expression)
-            return LLVMBuildInBoundsGEP2(builder, ty, ind_ptr, &indices[0], indices.size, "")
-        }
         let indices: LLVMValueRef[1] = [index]
         ind_ptr = this.codegen_expression(builder, index_exp.expression)
         return LLVMBuildInBoundsGEP2(builder, ty, ind_ptr, &indices[0], indices.size, "")
+    }
+    private get_record_field_access_expr_mem(this, builder: LLVMBuilderRef, record_field_access: RecordFieldAccessExpression): LLVMValueRef {
+        let record_llvm_type = this.codegen_type(record_field_access.expression.value_type)
+        let field_index = record_field_access.field_index as u64
+        let ptr = this.get_expr_mem(builder, record_field_access.expression)
+        let i32_llvm_type = this.debug_info.type_scope.i32_type.llvm_type
+        let indices_buffer: LLVMValueRef[2] = [LLVMConstInt(i32_llvm_type, 0, false), LLVMConstInt(i32_llvm_type, field_index, false)]
+        return LLVMBuildInBoundsGEP2(builder, record_llvm_type, ptr, &indices_buffer[0], indices_buffer.size, "recordidx")
     }
     private get_class_field_access_expr_mem(this, builder: LLVMBuilderRef, class_field_access: ClassFieldAccessExpression): LLVMValueRef {
         let class_id = this.program.get_class_id_from_type(class_field_access.expression.value_type)
@@ -848,6 +858,8 @@ class CodeGen {
             return this.get_var_access_expr_mem(builder, expression as VarAccessExpression)
         if expression.expr_kind == ExpressionKind.INDEX
             return this.get_index_expr_mem(builder, expression as IndexExpression)
+        if expression.expr_kind == ExpressionKind.RECORD_FIELD_ACCESS
+            return this.get_record_field_access_expr_mem(builder, expression as RecordFieldAccessExpression)
         if expression.expr_kind == ExpressionKind.CLASS_FIELD_ACCESS
             return this.get_class_field_access_expr_mem(builder, expression as ClassFieldAccessExpression)
         if expression.expr_kind == ExpressionKind.STATIC_FIELD_ACCESS
@@ -911,8 +923,8 @@ class CodeGen {
                 return this.store_array_elements(builder, ptr, arr_expr)
             }
             value = this.codegen_builtin_array(builder, value_ty as ResolvedGenericType, arr_expr)
-        } else if expr.expr_kind == ExpressionKind.TUPLE and !expr.is_constant {
-            return this.store_tuple_elements(builder, ptr, expr as TupleExpression)
+        } else if expr.expr_kind == ExpressionKind.RECORD and !expr.is_constant {
+            return this.store_record_elements(builder, ptr, expr as RecordExpression)
         } else {
             value = this.codegen_expression(builder, expr)
         }
@@ -929,7 +941,7 @@ class CodeGen {
         let llvmty = this.codegen_type(ty)
         let arg_types: LLVMTypeRef[2] = [llvmty, llvmty]
         let pow = get_intrinsic(this.module, name, &arg_types[0], arg_types.size, llvmty)
-        return LLVMBuildCall2(builder, pow[0], pow[1], &args[0], args.size, "")
+        return LLVMBuildCall2(builder, pow.type, pow.value, &args[0], args.size, "")
     }
     private codegen_int_comparason(this, builder: LLVMBuilderRef, op: BinaryOp, lhs: LLVMValueRef, rhs: LLVMValueRef, as_const: bool): LLVMValueRef {
         let ipred: LLVMIntPredicate = null
@@ -962,8 +974,8 @@ class CodeGen {
             else if op == BinaryOp.NEQ
                 return this.createLLVMBool(true)
         }
-        if (lty.kind == TypeKind.ARRAY or lty.kind == TypeKind.TUPLE) and (op == BinaryOp.EEQ or op == BinaryOp.NEQ) {
-            println("array or tuple comparison not yet supported.")
+        if (lty.kind == TypeKind.ARRAY or lty.kind == TypeKind.RECORD) and (op == BinaryOp.EEQ or op == BinaryOp.NEQ) {
+            println("array or record comparison not yet supported.")
             return this.createLLVMBool(false)
         }
 
@@ -1215,6 +1227,10 @@ class CodeGen {
         let ptr = this.get_index_expr_mem(builder, index_exp)
         return LLVMBuildLoad2(builder, this.codegen_type(index_exp.value_type), ptr, "")
     }
+    private codegen_record_field_access_exp(this, builder: LLVMBuilderRef, record_field_access: RecordFieldAccessExpression): LLVMValueRef {
+        let ptr = this.get_record_field_access_expr_mem(builder, record_field_access)
+        return LLVMBuildLoad2(builder, this.codegen_type(record_field_access.value_type), ptr, "")
+    }
     private codegen_class_field_access_exp(this, builder: LLVMBuilderRef, class_field_access: ClassFieldAccessExpression): LLVMValueRef {
         let ptr = this.get_class_field_access_expr_mem(builder, class_field_access)
         return LLVMBuildLoad2(builder, this.codegen_type(class_field_access.value_type), ptr, "")
@@ -1345,6 +1361,8 @@ class CodeGen {
             return this.codegen_call_exp(builder, expression as CallExpression)
         if expression.expr_kind == ExpressionKind.INDEX
             return this.codegen_index_exp(builder, expression as IndexExpression)
+        if expression.expr_kind == ExpressionKind.RECORD_FIELD_ACCESS
+            return this.codegen_record_field_access_exp(builder, expression as RecordFieldAccessExpression)
         if expression.expr_kind == ExpressionKind.CLASS_FIELD_ACCESS
             return this.codegen_class_field_access_exp(builder, expression as ClassFieldAccessExpression)
         if expression.expr_kind == ExpressionKind.CLASS_METHOD_ACCESS
@@ -1363,8 +1381,8 @@ class CodeGen {
             return this.codegen_typecast_exp(builder, expression as TypeCastExpression)
         if expression.expr_kind == ExpressionKind.ARRAY
             return this.codegen_array_exp(builder, expression as ArrayExpression)
-        if expression.expr_kind == ExpressionKind.TUPLE
-            return this.codegen_tuple_exp(builder, expression as TupleExpression)
+        if expression.expr_kind == ExpressionKind.RECORD
+            return this.codegen_record_exp(builder, expression as RecordExpression)
         if expression.expr_kind == ExpressionKind.MATCH
             return this.codegen_match_exp(builder, expression as MatchExpression)
         if expression.expr_kind == ExpressionKind.INTRINSIC

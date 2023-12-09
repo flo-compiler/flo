@@ -1,0 +1,5 @@
+//@expect: return_code=4
+fnc main(): int {
+    let rec = { i: 1, b: false, f: 3.0 }
+    return rec.i + rec.f as int
+}
