@@ -2130,6 +2130,10 @@ class TypeChecker {
                 this.error(ErrorKind.TYPE, "Const 'null' cannot be of type 'void'", var_access_node.name.range)
                 return null
             }
+            if (expected_type.kind == TypeKind.RECORD) {
+                this.error(ErrorKind.TYPE, "Const 'null' cannot be a 'record'", var_access_node.name.range)
+                return null
+            }
             return new NullExpression(expected_type, var_access_node.range)
         }
         let var_id = this.get_var_from_scope(this.current_scope, name)

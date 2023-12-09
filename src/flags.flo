@@ -35,10 +35,10 @@ fnc parse_flags(argc: int, argv: u8**): String {
         let raw_flag = argv[i]
         if (raw_flag[0] != '-'){
             if (arg == null)
-                arg = String.from_cstring(raw_flag)
+                arg = String.from_bytes(raw_flag, strlen(raw_flag))
             continue
         } 
-        let argname = String.from_cstring(raw_flag + 1)
+        let argname = String.from_bytes(raw_flag + 1, strlen(raw_flag + 1))
         for let j = 0; j < flags_length; j++ {
             let flag = flags_buffer[j]
             if (flag.name == argname) {
@@ -51,11 +51,10 @@ fnc parse_flags(argc: int, argv: u8**): String {
                     println("Missing value after -$argname argument.")
                     return arg
                 }
-                let argvalue = String.from_cstring(argv[++i])
+                let argvalue = String.from_bytes(argv[++i], strlen(argv[i]))
                 if (flag.type == FlagType.INT) {
                     let flag_value_ptr = &flags_buffer[j].value as int*
                     flag_value_ptr[0] = argvalue as int
-                    del argvalue
                 }
                 if (flag.type == FlagType.STR) {
                     let flag_value_ptr = &flags_buffer[j].value as String*
@@ -63,9 +62,7 @@ fnc parse_flags(argc: int, argv: u8**): String {
                 }
                 break
             }
-
         }
-        del argname
     }
     return arg
 }
