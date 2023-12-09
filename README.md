@@ -221,7 +221,7 @@ let items = {i: 1, f: 1.0, b: true}
 ```
 items.i // 1
 items.f // 1.0
-items.b // 1.0
+items.b // true
 ```
 - [x] Mutating records
 ```
