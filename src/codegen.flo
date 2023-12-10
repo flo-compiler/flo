@@ -755,9 +755,11 @@ class CodeGen {
         if array_exp.value_type.kind == TypeKind.RESOLVED_GENERIC {
             return this.codegen_builtin_array(builder, array_exp.value_type as ResolvedGenericType, array_exp)
         } 
-        //FIXME: What if array is not constant?
         if !array_exp.is_constant {
-            panic("Array expression is not a constant (codegen_array_exp)")
+            let array_type = this.codegen_array_type(array_exp.value_type as ArrayType)
+            let mem = LLVMBuildAlloca(builder, array_type, "array.tmp")
+            this.store_array_elements(builder, mem, array_exp)
+            return LLVMBuildLoad2(builder, array_type, mem, "")
         }
         let elem_ty = this.codegen_type((array_exp.value_type as ArrayType).element_type)
         let elems_buffer: LLVMValueRef*(array_exp.elements.length)
@@ -768,9 +770,11 @@ class CodeGen {
         return LLVMConstArray(elem_ty, elems_buffer, array_exp.elements.length)
     }
     private codegen_record_exp(this, builder: LLVMBuilderRef, record_exp: RecordExpression): LLVMValueRef {
-        //FIXME: What if tuple is not constant?
         if !record_exp.is_constant {
-            panic("Array expression is not a constant (codegen_record_exp)")
+            let record_type = this.codegen_record_type(record_exp.value_type as RecordType)
+            let mem = LLVMBuildAlloca(builder, record_type, "record.tmp")
+            this.store_record_elements(builder, mem, record_exp)
+            return LLVMBuildLoad2(builder, record_type, mem, "")
         }
         let elems_buffer: LLVMValueRef*(record_exp.elements.length)
         let idx = 0
@@ -1589,6 +1593,8 @@ class CodeGen {
         
     }
     private codegen_function(this, checked_function: Function): LLVMValueRef {
+        let possible_func = this.get_fnc_from_fncid(checked_function.id)
+        if (possible_func != null) return possible_func
         let checked_func_name = checked_function.class_id == null ? checked_function.name.to_cstring() : "$(this.program.get_class(checked_function.class_id).name)_$(checked_function.name)"
         let llvm_fnc = LLVMAddFunction(this.module, checked_func_name, this.codegen_function_type(checked_function.fnc_type))
         this.add_fnc(checked_function.id, llvm_fnc)
