@@ -1,0 +1,11 @@
+//@expect: return_code=3
+type MyRec = { x: int, y: int}
+fnc initMyRec(rec: MyRec*) {
+    rec.x = 1
+    rec.y = 2
+}
+fnc main(): int {
+    let rec: MyRec
+    initMyRec(&rec)
+    return rec.x + rec.y
+}

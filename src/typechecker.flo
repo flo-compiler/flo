@@ -2546,6 +2546,27 @@ class TypeChecker {
         this.error(ErrorKind.NAME, "Field '$member_name' doesn't exist on record '$(this.dump_type(record_type))'", range)
         return null
     }
+    private check_ptr_intrinsic(this, prop_owner: Expression, member_name: String, range: TextRange): Expression {
+        // FIXME: Better way to express this.
+        let mem_intrinsic = Intrinsics.MEMCPY 
+        if member_name == "copy_from" {
+            mem_intrinsic = Intrinsics.MEMCPY 
+        } else if member_name == "move_from" {
+            mem_intrinsic = Intrinsics.MEMMOVE
+        } else if member_name == "fill_with" {
+            mem_intrinsic = Intrinsics.MEMSET
+        } else if member_name == "resize" {
+            mem_intrinsic = Intrinsics.MEMRESIZE
+        } else if member_name == "compare" {
+            mem_intrinsic = Intrinsics.MEMCMP
+        } else {
+            this.error(ErrorKind.NAME, "intrinsic $member_name is not defined", range)
+            return null
+        }
+        let intrinsic_call = new IntrinsicCall(mem_intrinsic, PrimitiveTypes.unknown, range) 
+        intrinsic_call.args << prop_owner
+        return intrinsic_call
+    }
     private check_member_expr(this, expected_type: Type, member_expr_node: MemberExpressionNode): Expression {
         let member_name = member_expr_node.member.value
         if (member_expr_node.expression.expr_kind == ExpressionKind.VAR_ACCESS){
@@ -2565,39 +2586,24 @@ class TypeChecker {
         }
         let prop_owner = this.check_expression(expected_type, member_expr_node.expression)
         if this.has_errored() return null
+        if (is_pointer(prop_owner.value_type)) {
+            let pointee_type = (prop_owner.value_type as PointerType).pointee_type
+            if (pointee_type.kind != TypeKind.RECORD) { //FIXME: What if we want to do ptr intrinsic on record?
+                return this.check_ptr_intrinsic(prop_owner, member_name, member_expr_node.range)
+            }
+            let zero = new IntExpression(0, member_expr_node.member.range)
+            prop_owner = new IndexExpression(prop_owner, zero, pointee_type, member_expr_node.range)
+        } 
         let prop_owner_type = prop_owner.value_type
-        let prop_type = PrimitiveTypes.unknown
         if is_object(prop_owner_type) {
            return this.check_class_member_expr(prop_owner, member_name, member_expr_node.range)
         } else if(prop_owner_type.kind == TypeKind.RECORD) {
             return this.check_record_member_expr(prop_owner, member_name, member_expr_node.range)
-        } else if is_pointer(prop_owner_type){
-            // FIXME: Better way to express this.
-            let mem_intrinsic = Intrinsics.MEMCPY 
-            if member_name == "copy_from" {
-                mem_intrinsic = Intrinsics.MEMCPY 
-            } else if member_name == "move_from" {
-               mem_intrinsic = Intrinsics.MEMMOVE
-            } else if member_name == "fill_with" {
-                mem_intrinsic = Intrinsics.MEMSET
-            } else if member_name == "resize" {
-                mem_intrinsic = Intrinsics.MEMRESIZE
-            } else if member_name == "compare" {
-                mem_intrinsic = Intrinsics.MEMCMP
-            } else {
-                this.error(ErrorKind.NAME, "intrinsic $member_name is not defined", member_expr_node.member.range)
-                return null
-            }
-            let intrinsic_call = new IntrinsicCall(mem_intrinsic, PrimitiveTypes.unknown, member_expr_node.range) 
-            intrinsic_call.args << prop_owner
-            return intrinsic_call
         } else if prop_owner_type.kind == TypeKind.ARRAY and member_name == "size" {
             return new IntExpression((prop_owner_type as ArrayType).length as u64, member_expr_node.range)
-        } else {
-            this.error(ErrorKind.GEN, "Cannot get property '$member_name' of type '$(this.dump_type(prop_owner.value_type))'", member_expr_node.expression.range)
-            return null
         }
-        return new MemberExpression(prop_owner, prop_id, prop_type, member_expr_node.range)
+        this.error(ErrorKind.GEN, "Cannot get property '$member_name' of type '$(this.dump_type(prop_owner.value_type))'", member_expr_node.expression.range)
+        return null
     }
     private check_ternary_expr(this, expected_type: Type, ternary_expr_node: TernaryExpressionNode): TernaryExpression {
         let cond = this.check_condition(ternary_expr_node.cond)
