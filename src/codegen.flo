@@ -454,7 +454,7 @@ class CodeGen {
             codegen.codegen_var_declaration(null, checked_var)
         }
         for function_entry in module_scope.functions {
-            codegen.codegen_function(program.get_func(function_entry.value))
+            codegen.get_or_codegen_fnc(function_entry.value)
         }
         del codegen.all_variables
         del codegen.all_functions
@@ -1593,8 +1593,6 @@ class CodeGen {
         
     }
     private codegen_function(this, checked_function: Function): LLVMValueRef {
-        let possible_func = this.get_fnc_from_fncid(checked_function.id)
-        if (possible_func != null) return possible_func
         let checked_func_name = checked_function.class_id == null ? checked_function.name.to_cstring() : "$(this.program.get_class(checked_function.class_id).name)_$(checked_function.name)"
         let llvm_fnc = LLVMAddFunction(this.module, checked_func_name, this.codegen_function_type(checked_function.fnc_type))
         this.add_fnc(checked_function.id, llvm_fnc)
