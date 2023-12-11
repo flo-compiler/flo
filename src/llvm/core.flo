@@ -219,7 +219,6 @@ fnc LLVMConstXor(LHSConstant: LLVMValueRef, RHSConstant: LLVMValueRef): LLVMValu
 fnc LLVMConstICmp(Predicate: LLVMIntPredicate, LHSConstant: LLVMValueRef, RHSConstant: LLVMValueRef): LLVMValueRef
 fnc LLVMConstFCmp(Predicate: LLVMRealPredicate, LHSConstant: LLVMValueRef, RHSConstant: LLVMValueRef): LLVMValueRef
 fnc LLVMConstShl(LHSConstant: LLVMValueRef, RHSConstant: LLVMValueRef): LLVMValueRef 
-fnc LLVMConstLShr(LHSConstant: LLVMValueRef, RHSConstant: LLVMValueRef): LLVMValueRef 
 fnc LLVMConstAShr(LHSConstant: LLVMValueRef, RHSConstant: LLVMValueRef): LLVMValueRef 
 fnc LLVMConstGEP2(Ty: LLVMTypeRef, ConstantVal: LLVMValueRef, ConstantIndices: LLVMValueRef*, NumIndices: int): LLVMValueRef
 fnc LLVMConstInBoundsGEP2(Ty: LLVMTypeRef, ConstantVal: LLVMValueRef, ConstantIndices: LLVMValueRef*, NumIndices: int): LLVMValueRef
@@ -229,9 +228,7 @@ fnc LLVMConstZExt(ConstantVal: LLVMValueRef, ToType: LLVMTypeRef): LLVMValueRef
 fnc LLVMConstFPTrunc(ConstantVal: LLVMValueRef, ToType: LLVMTypeRef): LLVMValueRef 
 fnc LLVMConstFPExt(ConstantVal: LLVMValueRef, ToType: LLVMTypeRef): LLVMValueRef 
 fnc LLVMConstUIToFP(ConstantVal: LLVMValueRef, ToType: LLVMTypeRef): LLVMValueRef 
-fnc LLVMConstSIToFP(ConstantVal: LLVMValueRef, ToType: LLVMTypeRef): LLVMValueRef 
 fnc LLVMConstFPToUI(ConstantVal: LLVMValueRef, ToType: LLVMTypeRef): LLVMValueRef 
-fnc LLVMConstFPToSI(ConstantVal: LLVMValueRef, ToType: LLVMTypeRef): LLVMValueRef 
 fnc LLVMConstPtrToInt(ConstantVal: LLVMValueRef, ToType: LLVMTypeRef): LLVMValueRef 
 fnc LLVMConstIntToPtr(ConstantVal: LLVMValueRef, ToType: LLVMTypeRef): LLVMValueRef 
 fnc LLVMConstBitCast(ConstantVal: LLVMValueRef, ToType: LLVMTypeRef): LLVMValueRef 
@@ -239,9 +236,7 @@ fnc LLVMConstAddrSpaceCast(ConstantVal: LLVMValueRef, ToType: LLVMTypeRef): LLVM
 fnc LLVMConstZExtOrBitCast(ConstantVal: LLVMValueRef, ToType: LLVMTypeRef): LLVMValueRef 
 fnc LLVMConstSExtOrBitCast(ConstantVal: LLVMValueRef, ToType: LLVMTypeRef): LLVMValueRef 
 fnc LLVMConstTruncOrBitCast(ConstantVal: LLVMValueRef, ToType: LLVMTypeRef): LLVMValueRef 
-fnc LLVMConstPointerCast(ConstantVal: LLVMValueRef, ToType: LLVMTypeRef): LLVMValueRef 
-fnc LLVMConstIntCast(ConstantVal: LLVMValueRef, ToType: LLVMTypeRef, isSigned: LLVMBool): LLVMValueRef
-fnc LLVMConstFPCast(ConstantVal: LLVMValueRef, ToType: LLVMTypeRef): LLVMValueRef 
+fnc LLVMConstPointerCast(ConstantVal: LLVMValueRef, ToType: LLVMTypeRef): LLVMValueRef
 fnc LLVMConstSelect(ConstantCondition: LLVMValueRef, ConstantIfTrue: LLVMValueRef, ConstantIfFalse: LLVMValueRef): LLVMValueRef 
 fnc LLVMConstExtractElement(VectorConstant: LLVMValueRef, IndexConstant: LLVMValueRef): LLVMValueRef
 fnc LLVMConstInsertElement(VectorConstant: LLVMValueRef, ElementValueConstant: LLVMValueRef, IndexConstant: LLVMValueRef): LLVMValueRef 

@@ -1031,7 +1031,7 @@ class CodeGen {
             } else if op == BinaryOp.SL {
                 return is_const_expr ? LLVMConstShl(lhs, rhs) : LLVMBuildShl(builder, lhs, rhs, "")
             } else if op == BinaryOp.SR {
-                return is_const_expr ? LLVMConstLShr(lhs, rhs) : LLVMBuildLShr(builder, lhs, rhs, "")
+                return LLVMBuildLShr(builder, lhs, rhs, "")
             } else if op == BinaryOp.OR {
                 return LLVMBuildOr(builder, lhs, rhs, "")
             } else if op == BinaryOp.AND {
@@ -1075,14 +1075,14 @@ class CodeGen {
             return is_const ? this.createLLVMBool(!LLVMIsNull(val)) : LLVMBuildIsNotNull(builder, val, "")
         }
         if is_int(exp.value_type) and is_float(value_type) {
-            return is_const ? LLVMConstSIToFP(val, ty) : LLVMBuildSIToFP(builder, val, ty, "")
+            return LLVMBuildSIToFP(builder, val, ty, "")
         } else if is_float(exp.value_type) and is_int(value_type) {
-            return is_const ? LLVMConstFPToSI(val, ty) : LLVMBuildFPToSI(builder, val, ty, "")
+            return LLVMBuildFPToSI(builder, val, ty, "")
         } else if is_int(exp.value_type) and is_int(value_type){ // FIXME: Enums?
             let int_ty = value_type as IntType
-            return is_const ? LLVMConstIntCast(val, ty, int_ty.is_signed) : LLVMBuildIntCast2(builder, val, ty, int_ty.is_signed, "")
+            return LLVMBuildIntCast2(builder, val, ty, int_ty.is_signed, "")
         } else if is_float(exp.value_type) and is_float(value_type){
-            return is_const ? LLVMConstFPCast(val, ty) : LLVMBuildFPCast(builder, val, ty, "")
+            return LLVMBuildFPCast(builder, val, ty, "")
         }
         return is_const ? LLVMConstBitCast(val, ty) : LLVMBuildBitCast(builder, val, ty, "")
     }
