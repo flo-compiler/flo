@@ -13,11 +13,16 @@
 #include <llvm/Target/TargetOptions.h>
 #include <llvm/Target/TargetMachine.h>
 #include <llvm/MC/TargetRegistry.h>
+#include <llvm/Support/raw_ostream.h>
+
 int main(int argc, char** argv){
     llvm::SMDiagnostic Err;
     llvm::LLVMContext ctx;
     std::unique_ptr<llvm::Module> M = parseIRFile(argv[1], Err, ctx);
-
+    if (M == nullptr) {
+        Err.print(argv[1], llvm::errs(), true, true);
+        return 1;
+    }
     llvm::InitializeAllTargetMCs();
     llvm::InitializeAllTargets();
     llvm::InitializeAllTargetInfos();

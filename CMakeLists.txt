@@ -12,7 +12,7 @@ project(Flo
         DESCRIPTION "The Flo Programming Language"
         LANGUAGES C CXX
         )
-find_package(LLVM REQUIRED CONFIG PATHS /home/vanelk/llvm-project/build/debug NO_DEFAULT_PATH)
+find_package(LLVM REQUIRED CONFIG PATHS ${LLVM_INSTALL_DIR} NO_DEFAULT_PATH)
 message(STATUS "COMPILER VERSION: ${VERSION_STRING}")
 message(STATUS "Found LLVM ${LLVM_PACKAGE_VERSION}")
 message(STATUS "Using LLVMConfig.cmake in: ${LLVM_DIR}")
@@ -236,10 +236,10 @@ set_source_files_properties(
 target_link_libraries(stage0 PRIVATE ${LLVM_LIBS})
 
 
-IF(CMAKE_BUILD_TYPE MATCHES Debug)
-    SET(OPT_LEVEL 0)
-ELSE()
+IF(CMAKE_BUILD_TYPE MATCHES Release)
     SET(OPT_LEVEL 3)
+ELSE()
+    SET(OPT_LEVEL 0)
 ENDIF()
 
 function(compile_stage PREV_STAGE CURR_STAGE)

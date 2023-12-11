@@ -20,7 +20,7 @@ fnc main(argc: int, argv: u8**): int {
     let rt_path = FlagString("I", "Specify runtime directory",  Path.join(Path.dirname(String.from_bytes(&self_path[0], self_path_len)), "lib/"))
     let target_triple = FlagString("-target", "Compile to specific target triple", GeneratedModule.get_default_triple())
     let link_libs = FlagString("l", "Specify a library to link against (should be a comma seperated list)")
-    let opt_level = FlagInt("O", "Specify the compiler's optimization level", 1)
+    let opt_level = FlagInt("O", "Specify the compiler's optimization level", 0)
     let show_version = FlagBool("v", "Show version")
 
     let filename = parse_flags(argc, argv)
