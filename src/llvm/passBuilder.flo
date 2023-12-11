@@ -1,0 +1,48 @@
+import "types"
+import "Error"
+class LLVMPassBuilderOptionsRef {}
+fnc LLVMRunPasses(M: LLVMModuleRef, Passes: u8*,
+                 TM: LLVMTargetMachineRef,
+                 Options: LLVMPassBuilderOptionsRef): LLVMErrorRef
+
+fnc LLVMCreatePassBuilderOptions(): LLVMPassBuilderOptionsRef
+fnc LLVMPassBuilderOptionsSetVerifyEach(Options: LLVMPassBuilderOptionsRef,
+                                        VerifyEach: LLVMBool)
+
+fnc LLVMPassBuilderOptionsSetDebugLogging(Options: LLVMPassBuilderOptionsRef,
+                                           DebugLogging: LLVMBool)
+
+fnc LLVMPassBuilderOptionsSetLoopInterleaving(
+    Options: LLVMPassBuilderOptionsRef, LoopInterleaving: LLVMBool)
+
+fnc LLVMPassBuilderOptionsSetLoopVectorization(
+    Options: LLVMPassBuilderOptionsRef, LoopVectorization: LLVMBool)
+
+fnc LLVMPassBuilderOptionsSetSLPVectorization(
+    Options: LLVMPassBuilderOptionsRef, SLPVectorization: LLVMBool)
+
+fnc LLVMPassBuilderOptionsSetLoopUnrolling(Options: LLVMPassBuilderOptionsRef,
+                                            LoopUnrolling: LLVMBool)
+
+fnc LLVMPassBuilderOptionsSetForgetAllSCEVInLoopUnroll(
+    Options: LLVMPassBuilderOptionsRef, ForgetAllSCEVInLoopUnroll: LLVMBool)
+
+fnc LLVMPassBuilderOptionsSetLicmMssaOptCap(Options: LLVMPassBuilderOptionsRef,
+                                             LicmMssaOptCap: u32)
+
+fnc LLVMPassBuilderOptionsSetLicmMssaNoAccForPromotionCap(
+    Options: LLVMPassBuilderOptionsRef, LicmMssaNoAccForPromotionCap: u32)
+
+fnc LLVMPassBuilderOptionsSetCallGraphProfile(
+    Options: LLVMPassBuilderOptionsRef, CallGraphProfile: LLVMBool)
+
+fnc LLVMPassBuilderOptionsSetMergeFunctions(Options: LLVMPassBuilderOptionsRef,
+                                             MergeFunctions: LLVMBool)
+
+fnc LLVMPassBuilderOptionsSetInlinerThreshold(
+    Options: LLVMPassBuilderOptionsRef, Threshold: i32)
+
+/**
+ * Dispose of a heap-allocated PassBuilderOptions instance
+ */
+fnc LLVMDisposePassBuilderOptions(Options: LLVMPassBuilderOptionsRef)

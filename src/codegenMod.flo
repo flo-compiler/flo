@@ -1,11 +1,12 @@
 import "llvm/types"
 import panic in "utils"
 import LLVMVerifyModule in "llvm/analysis"
-import LLVMCreatePassManager, LLVMGetFirstFunction, LLVMGetNextFunction, LLVMPrintModuleToFile, LLVMShutdown, LLVMSetTarget, LLVMSetDataLayout, LLVMDisposeMessage, LLVMCreateFunctionPassManagerForModule, LLVMRunFunctionPassManager, LLVMRunPassManager, LLVMDisposePassManager, LLVMGetNamedFunction in "llvm/core"
+import LLVMPrintModuleToFile, LLVMShutdown, LLVMSetTarget, LLVMSetDataLayout, LLVMDisposeMessage, LLVMGetNamedFunction in "llvm/core"
 import LLVMRemoveModule, LLVMLinkInMCJIT, LLVMCreateExecutionEngineForModule, LLVMDisposeExecutionEngine, LLVMRunFunctionAsMain in "llvm/executionEngine"
 import LLVM_InitializeAllTargetInfos, LLVM_InitializeAllTargetMCs, LLVM_InitializeAllTargets, LLVM_InitializeAllAsmParsers, LLVM_InitializeAllAsmPrinters in "llvm/target"
 import LLVMDisposeTargetMachine, LLVMGetDefaultTargetTriple, LLVMTargetMachineEmitToFile, LLVMGetTargetMachineTriple, LLVMCreateTargetDataLayout, LLVMCreateTargetMachine, LLVMGetTargetFromTriple, LLVMGetHostCPUFeatures in "llvm/targetMachine"
 import LLVMWriteBitcodeToFile in "llvm/bitwriter"
+import LLVMCreatePassBuilderOptions, LLVMRunPasses, LLVMDisposePassBuilderOptions in "llvm/passBuilder"
 class GeneratedModule {
     private llvm_mod: LLVMModuleRef
     private errors: u8*
@@ -30,16 +31,10 @@ class GeneratedModule {
     }
     public run_passes(this, level: int){
         if level == 0 return
-        let pm = LLVMCreatePassManager()
-        let fpm = LLVMCreateFunctionPassManagerForModule(this.llvm_mod)
-        let func = LLVMGetFirstFunction(this.llvm_mod)
-        while func != null {
-            LLVMRunFunctionPassManager(fpm, func)
-            func = LLVMGetNextFunction(func)
-        }
-        LLVMRunPassManager(pm, this.llvm_mod)
-        LLVMDisposePassManager(fpm)
-        LLVMDisposePassManager(pm)
+        let passes: u8* = "default<O$level>"
+        let pass_builder_opts = LLVMCreatePassBuilderOptions()
+        LLVMRunPasses(this.llvm_mod, passes, null, pass_builder_opts)
+        LLVMDisposePassBuilderOptions(pass_builder_opts)
     }
     public exec(this): int {
         LLVMLinkInMCJIT()
