@@ -1672,7 +1672,7 @@ class CodeGen {
             }
             members_metadata_buffer[members_num++] = llvm_field_metadata
         }
-        LLVMStructSetBody(struct_class.llvm_type, field_types_buffer, field_types_num, true)
+        LLVMStructSetBody(struct_class.llvm_type, field_types_buffer, field_types_num, false)
         let llvm_metadata = this.debug_info.create_struct_type(
             checked_class, members_metadata_buffer, members_num, struct_class.llvm_type
         )
