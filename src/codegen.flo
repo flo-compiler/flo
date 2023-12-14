@@ -380,14 +380,7 @@ class DebugInfo {
         LLVMMetadataReplaceAllUsesWith(temp_node, replacement)
     }
 }
-class IntrinsicResult {
-    type: LLVMTypeRef
-    value: LLVMValueRef
-    constructor(this, type: LLVMTypeRef, value: LLVMValueRef) {
-        this.type = type
-        this.value = value
-    }
-}
+type IntrinsicResult = { type: LLVMTypeRef, value: LLVMValueRef }
 fnc get_intrinsic(mod: LLVMModuleRef, name: String, params_types: LLVMTypeRef*, params_length: uint, return_type: LLVMTypeRef, var_args = false): IntrinsicResult {
     let fnc_type = LLVMFunctionType(return_type, params_types, params_length, var_args)
     let fn_name = name.to_cstring()
@@ -395,8 +388,7 @@ fnc get_intrinsic(mod: LLVMModuleRef, name: String, params_types: LLVMTypeRef*, 
     if llvm_fnc == null {
         llvm_fnc = LLVMAddFunction(mod, fn_name, fnc_type)
     }
-    let result = new IntrinsicResult(fnc_type, llvm_fnc)
-    return result
+    return { type: fnc_type, value: llvm_fnc }
 }
 
 fnc get_format_from_type(ty: Type): String {

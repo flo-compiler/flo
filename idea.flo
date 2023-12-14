@@ -1,8 +1,0 @@
-fnc id<T>(value: T): T {
-    return value
-}
-fnc main() {
-    let my_int = id(5)
-    let my_bool = id(true)
-    let my_float = id(1.0)
-}
