@@ -538,9 +538,11 @@ class Parser {
         return fnc_type_node
     }
     private parse_record_type_field(this): RecordTypeFieldNode {
+        this.new_lines()
         let identifer_tok = this.eat(TokType.IDENTIFER) as IdentifierToken
         this.eat(TokType.COL)
         let type_tok = this.parse_type()
+        this.new_lines()
         return new RecordTypeFieldNode(identifer_tok, type_tok)
     }
     private parse_record_type(this): RecordTypeNode { // TODO: Add new line skips

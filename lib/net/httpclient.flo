@@ -5,13 +5,13 @@ class HTTPClient {
     private socket: Socket
     private method: String
     private uri: URI
-    private headers: [String: String]
+    private headers: StringMap<String>
     private _body: String
     constructor(this){
         this.uri = null
         this.method = null
         this._body = null
-        this.headers = new [String: String]()
+        this.headers = new StringMap<String>()
         this.header("Accept", "*/*")
         this.header("Connection", "keep-alive")
     }

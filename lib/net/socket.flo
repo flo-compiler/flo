@@ -1,19 +1,18 @@
 import socket, connect, setsockopt, accept, bind, listen, close in "@sys/lib"
-fnc gethostbyname(name: u8*): hostent
+fnc gethostbyname(name: u8*): hostent*
 fnc perror(s: u8*)
-class hostent {
-    h_name: u8*
-    h_aliases: u8** 
-    h_addrtype: i32
-    h_length: i32
+type hostent = {
+    h_name: u8*,
+    h_aliases: u8**, 
+    h_addrtype: i32,
+    h_length: i32,
     h_addr_list: u8**
 }
-class sockaddr_in {
-    sin_family: i16
-    sin_port: u16
-    sin_address: u32[1]
+type sockaddr_in = {
+    sin_family: i16,
+    sin_port: u16,
+    sin_address: u32[1],
     sin_zero: u8[8]
-    constructor(this){}
 }
 fnc htons(x: uint): u16 {
     let x1 = (x and 255) << 8
@@ -42,7 +41,7 @@ class Socket {
             perror("hostname")
             return
         }
-        let addr: sockaddr_in()
+        let addr: sockaddr_in
         (&addr.sin_address[0] as u8*).copy_from(host.h_addr_list[0], host.h_length as uint)
         addr.sin_port = htons(port)
         addr.sin_family = this.domain as i16
@@ -63,7 +62,7 @@ class Socket {
             perror("hostname")
             return
         }
-        let addr: sockaddr_in()
+        let addr: sockaddr_in
         (&addr.sin_address[0] as u8*).copy_from(host.h_addr_list[0], host.h_length as uint)
         addr.sin_port = htons(port) as u16
         addr.sin_family = this.domain as i16
