@@ -1,10 +1,10 @@
 type LLVMBool = bool
-class LLVMMemoryBufferRef {}
+type LLVMMemoryBufferRef = {}*
 
 /**
  * The top-level container for all LLVM global data. See the LLVMContext class.
  */
-class  LLVMContextRef {}
+type LLVMContextRef = {}*
 
 /**
  * The top-level container for all other LLVM Intermediate Representation (IR)
@@ -12,119 +12,119 @@ class  LLVMContextRef {}
  *
  * @see llvm::Module
  */
-class LLVMModuleRef {}
+type LLVMModuleRef = {}*
 
 /**
  * Each value in the LLVM IR has a type, an LLVMTypeRef.
  *
  * @see llvm::Type
  */
-class LLVMTypeRef {}
+type LLVMTypeRef = {}*
 
 /**
  * Represents an individual value in LLVM IR.
  *
  * This models llvm::Value.
  */
-class LLVMValueRef {}
+type LLVMValueRef = {}*
 
 /**
  * Represents a basic block of instructions in LLVM IR.
  *
  * This models llvm::BasicBlock.
  */
-class LLVMBasicBlockRef {}
+type LLVMBasicBlockRef = {}*
 
 /**
  * Represents an LLVM Metadata.
  *
  * This models llvm::Metadata.
  */
-class LLVMMetadataRef {}
+type LLVMMetadataRef = {}*
 
 /**
  * Represents an LLVM Named Metadata Node.
  *
  * This models llvm::NamedMDNode.
  */
-class LLVMNamedMDNodeRef {}
+type LLVMNamedMDNodeRef = {}*
 
 /**
  * Represents an entry in a Global Object's metadata attachments.
  *
  * This models std::pair<unsigned, MDNode *>
  */
-class LLVMValueMetadataEntry {}
+type LLVMValueMetadataEntry = {}*
 /**
  * Represents an LLVM basic block builder.
  *
  * This models llvm::IRBuilder.
  */
-class LLVMBuilderRef {}
+type LLVMBuilderRef = {}*
 
 /**
  * Represents an LLVM debug info builder.
  *
  * This models llvm::DIBuilder.
  */
-class LLVMDIBuilderRef {}
+type LLVMDIBuilderRef = {}*
 
 /**
  * Interface used to provide a module to JIT or interpreter.
  * This is now just a synonym for llvm::Module, but we have to keep using the
  * different type to keep binary compatibility.
  */
-class LLVMModuleProviderRef {}
+type LLVMModuleProviderRef = {}*
 
 /** @see llvm::PassManagerBase */
-class LLVMPassManagerRef {}
+type LLVMPassManagerRef = {}*
 
 /** @see llvm::PassRegistry */
-class LLVMPassRegistryRef {}
+type LLVMPassRegistryRef = {}*
 
 /**
  * Used to get the users and usees of a Value.
  *
  * @see llvm::Use */
-class LLVMUseRef {}
+type LLVMUseRef = {}*
 
 /**
  * Used to represent an attributes.
  *
  * @see llvm::Attribute
  */
-class LLVMAttributeRef {}
+type LLVMAttributeRef = {}*
 
 /**
  * @see llvm::DiagnosticInfo
  */
-class LLVMDiagnosticInfoRef {}
+type LLVMDiagnosticInfoRef = {}*
 
 /**
  * @see llvm::Comdat
  */ 
-class LLVMComdatRef {}
+type LLVMComdatRef = {}*
 
 /**
  * @see llvm::Module::ModuleFlagEntry
  */
-class LLVMModuleFlagEntry {}
+type LLVMModuleFlagEntry = {}*
 
 /**
  * @see llvm::JITEventListener
  */
-class LLVMJITEventListenerRef {}
+type LLVMJITEventListenerRef = {}*
 
 /**
  * @see llvm::object::Binary
  */
-class LLVMBinaryRef {}
-class LLVMTargetRef {}
-class LLVMTargetMachineRef {}
+type LLVMBinaryRef = {}*
+type LLVMTargetRef = {}*
+type LLVMTargetMachineRef = {}*
 
-class LLVMPassManagerBuilderRef{}
+type LLVMPassManagerBuilderRef = {}*
 
-class LLVMTargetDataRef{}
+type LLVMTargetDataRef = {}*
 
 enum LLVMModuleFlagBehavior {
   /**
@@ -436,9 +436,9 @@ enum LLVMAtomicRMWBinOp {
 }
 
 /* Execution engine */
-class LLVMExecutionEngineRef{}
-class LLVMGenericValueRef{}
-class LLVMMCJITMemoryManagerRef{}
+type LLVMExecutionEngineRef = {}*
+type LLVMGenericValueRef = {}*
+type LLVMMCJITMemoryManagerRef = {}*
 
 enum LLVMDIFlags {
   LLVMDIFlagZero = 0

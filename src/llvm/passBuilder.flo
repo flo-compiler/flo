@@ -1,6 +1,6 @@
 import "types"
 import "Error"
-class LLVMPassBuilderOptionsRef {}
+type LLVMPassBuilderOptionsRef = {}*
 fnc LLVMRunPasses(M: LLVMModuleRef, Passes: u8*,
                  TM: LLVMTargetMachineRef,
                  Options: LLVMPassBuilderOptionsRef): LLVMErrorRef

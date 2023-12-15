@@ -1,4 +1,4 @@
-class LLVMErrorRef{}
+type LLVMErrorRef = {}*
 
 /**
  * Error type identifier.

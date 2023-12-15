@@ -545,7 +545,9 @@ class Parser {
     }
     private parse_record_type(this): RecordTypeNode { // TODO: Add new line skips
         let start_range = this.eat_current().range
-        let record_fields: RecordTypeFieldNode[] = [this.parse_record_type_field()]
+        let record_fields: RecordTypeFieldNode[] = []
+        if (this.current_token.ttype != TokType.RBRACE)
+            record_fields << this.parse_record_type_field()
         while (this.current_token.ttype == TokType.COMMA and this.can_parse()){
             this.eat(TokType.COMMA)
             record_fields << this.parse_record_type_field()
