@@ -15,12 +15,12 @@ type sockaddr_in = {
     sin_zero: u8[8]
 }
 fnc htons(x: uint): u16 {
-    let x1 = (x and 255) << 8
-    let x2 = (x >> 8) and 255 
-    return (x1 or x2) as u16
+    let x1 = (x & 255) << 8
+    let x2 = (x >> 8) & 255 
+    return (x1 | x2) as u16
 }
 fnc calc_sin_addr(sin_family: int, sin_port: int): int {
-    return (sin_port << 16) or (sin_family and 0xFFFF)
+    return (sin_port << 16) | (sin_family & 0xFFFF)
 }
 class Socket {
     sockfd: int

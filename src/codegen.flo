@@ -652,7 +652,7 @@ class CodeGen {
                 let field_value = this.codegen_get_field_mem_with_name(builder, llvm_val, val_ty as ObjectType, field_entry.key)
                 field_value = LLVMBuildLoad2(builder, this.codegen_type(field_type), field_value, "")
                 let arg = this.get_string_val(builder, field_value, field_type, malloc_list, range, depth + 1)
-                if !is_object(field_type) and LLVMGetTypeKind(LLVMTypeOf(arg)) == LLVMTypeKind.LLVMPointerTypeKind and !LLVMIsConstant(arg) {
+                if !is_object(field_type) & LLVMGetTypeKind(LLVMTypeOf(arg)) == LLVMTypeKind.LLVMPointerTypeKind & !LLVMIsConstant(arg) {
                     malloc_list << arg
                 }
                 fmt_args[idx++] = arg
@@ -908,7 +908,7 @@ class CodeGen {
     }
     private store_expr_to_mem(this, builder: LLVMBuilderRef, ptr: LLVMValueRef, expr: Expression): LLVMValueRef {
         let value: LLVMValueRef = null
-        if expr.expr_kind == ExpressionKind.ARRAY and !expr.is_constant {
+        if expr.expr_kind == ExpressionKind.ARRAY & !expr.is_constant {
             let arr_expr = expr as ArrayExpression
             let value_ty = expr.value_type
             if value_ty.kind != TypeKind.RESOLVED_GENERIC {
@@ -919,7 +919,7 @@ class CodeGen {
                 return this.store_array_elements(builder, ptr, arr_expr)
             }
             value = this.codegen_builtin_array(builder, value_ty as ResolvedGenericType, arr_expr)
-        } else if expr.expr_kind == ExpressionKind.RECORD and !expr.is_constant {
+        } else if expr.expr_kind == ExpressionKind.RECORD & !expr.is_constant {
             return this.store_record_elements(builder, ptr, expr as RecordExpression)
         } else {
             value = this.codegen_expression(builder, expr)
@@ -970,7 +970,7 @@ class CodeGen {
             else if op == BinaryOp.NEQ
                 return this.createLLVMBool(true)
         }
-        if (lty.kind == TypeKind.ARRAY or lty.kind == TypeKind.RECORD) and (op == BinaryOp.EEQ or op == BinaryOp.NEQ) {
+        if (lty.kind == TypeKind.ARRAY | lty.kind == TypeKind.RECORD) & (op == BinaryOp.EEQ | op == BinaryOp.NEQ) {
             println("array or record comparison not yet supported.")
             return this.createLLVMBool(false)
         }
@@ -979,25 +979,25 @@ class CodeGen {
             return this.codegen_assignment(builder, bin_exp)
         let lhs = this.codegen_expression(builder, bin_exp.lhs)
         let rhs = this.codegen_expression(builder, bin_exp.rhs)
-        if is_null_expression(bin_exp.rhs) and (op == BinaryOp.EEQ or op == BinaryOp.NEQ) {
+        if is_null_expression(bin_exp.rhs) & (op == BinaryOp.EEQ | op == BinaryOp.NEQ) {
             if LLVMIsConstant(lhs)
                 return this.createLLVMBool(op == BinaryOp.EEQ ? LLVMIsNull(lhs) : LLVMIsNull(lhs))
             return op == BinaryOp.EEQ ? LLVMBuildIsNull(builder, lhs, "") : LLVMBuildIsNotNull(builder, lhs, "")
         }
-        if is_numeric(rty) and op == BinaryOp.POW
+        if is_numeric(rty) & op == BinaryOp.POW
             return this.codegen_pow_expr(builder, rty, lhs, rhs)
-        if is_pointer(lty) and (op == BinaryOp.ADD or op == BinaryOp.SUB) {
+        if is_pointer(lty) & (op == BinaryOp.ADD | op == BinaryOp.SUB) {
             let indices: LLVMValueRef[1] = [op == BinaryOp.ADD ? rhs: CodeGen.neg_int(builder, rhs)]
             let pointee_type = this.codegen_type((lty as PointerType).pointee_type)
             return LLVMBuildInBoundsGEP2(builder, pointee_type, lhs, &indices[0], indices.size, "")
         }
-        let is_const_expr = LLVMIsConstant(lhs) and LLVMIsConstant(rhs)
+        let is_const_expr = LLVMIsConstant(lhs) & LLVMIsConstant(rhs)
             
-        if ((is_object(lty) and is_object(rty)) or (is_pointer(lty) and is_pointer(rty))) and is_bin_op_comp_op(op) {
+        if ((is_object(lty) & is_object(rty)) | (is_pointer(lty) & is_pointer(rty))) & is_bin_op_comp_op(op) {
             let left_int = LLVMBuildPtrToInt(builder, lhs, this.debug_info.type_scope.int_type.llvm_type, "")
             let right_int = LLVMBuildPtrToInt(builder, rhs, this.debug_info.type_scope.int_type.llvm_type, "")
             return this.codegen_int_comparason(builder, op, left_int, right_int, false)
-        } else if is_int(rty) or (rty.kind == TypeKind.ENUM) {
+        } else if is_int(rty) | (rty.kind == TypeKind.ENUM) {
             if op == BinaryOp.ADD {
                 if ((bin_exp.value_type as IntType).is_signed)
                     return is_const_expr ? LLVMConstNSWAdd(lhs, rhs) : LLVMBuildNSWAdd(builder, lhs, rhs, "")
@@ -1046,7 +1046,7 @@ class CodeGen {
                 return this.codegen_float_comparason(builder, op, lhs, rhs, is_const_expr)
             }
         } else if is_bool(rty) {
-            if op == BinaryOp.AND or op == BinaryOp.EEQ {
+            if op == BinaryOp.AND | op == BinaryOp.EEQ {
                 return LLVMBuildAnd(builder, lhs, rhs, "")
             } else if op == BinaryOp.OR {
                 return LLVMBuildOr(builder, lhs, rhs, "")
@@ -1066,14 +1066,14 @@ class CodeGen {
         if is_bool(value_type) {
             return is_const ? this.createLLVMBool(!LLVMIsNull(val)) : LLVMBuildIsNotNull(builder, val, "")
         }
-        if is_int(exp.value_type) and is_float(value_type) {
+        if is_int(exp.value_type) & is_float(value_type) {
             return LLVMBuildSIToFP(builder, val, ty, "")
-        } else if is_float(exp.value_type) and is_int(value_type) {
+        } else if is_float(exp.value_type) & is_int(value_type) {
             return LLVMBuildFPToSI(builder, val, ty, "")
-        } else if is_int(exp.value_type) and is_int(value_type){ // FIXME: Enums?
+        } else if is_int(exp.value_type) & is_int(value_type){ // FIXME: Enums?
             let int_ty = value_type as IntType
             return LLVMBuildIntCast2(builder, val, ty, int_ty.is_signed, "")
-        } else if is_float(exp.value_type) and is_float(value_type){
+        } else if is_float(exp.value_type) & is_float(value_type){
             return LLVMBuildFPCast(builder, val, ty, "")
         }
         return is_const ? LLVMConstBitCast(val, ty) : LLVMBuildBitCast(builder, val, ty, "")
@@ -1101,13 +1101,13 @@ class CodeGen {
         if op == UnaryOp.NOT {
             return LLVMIsConstant(val) ? LLVMConstNot(val) : LLVMBuildNot(builder, val, "")
         }
-        if op >= UnaryOp.PREINCR and op <= UnaryOp.POSTDECR or op == UnaryOp.ADDROF {
+        if op >= UnaryOp.PREINCR & op <= UnaryOp.POSTDECR | op == UnaryOp.ADDROF {
             let ptr = this.get_expr_mem(builder, exp)
             if op == UnaryOp.ADDROF {
                 return ptr
             }
             let alloc_ty = this.codegen_type(exp.value_type)
-            let incr_value: i64 = op == UnaryOp.PREINCR or op == UnaryOp.POSTINCR ? 1 : -1
+            let incr_value: i64 = op == UnaryOp.PREINCR | op == UnaryOp.POSTINCR ? 1 : -1
             let new_value: LLVMValueRef = null
             if is_pointer(exp.value_type) {
                 alloc_ty = this.codegen_type((exp.value_type as PointerType).pointee_type)
@@ -1180,7 +1180,7 @@ class CodeGen {
                 LLVMPositionBuilderAtEnd(builder, curr_block)
             }
             let case_block = LLVMAppendBasicBlock(this.functions.peek(), "match.case")
-            if case.kind == MatchCaseKind.EEQ and (switch != null) {
+            if case.kind == MatchCaseKind.EEQ & (switch != null) {
                 this.codegen_match_case(builder, switch, case.condition, case_block)
             } else {
                 curr_block = (idx == match_exp.cases.length - 1) ? else_block : LLVMAppendBasicBlock(this.functions.peek(), "match.case.else")

@@ -18,7 +18,7 @@ class FloError {
     }
 }
 fnc get_next_line_index(text: String, start: uint): uint {
-    while text.get_byte(start) != '\n' and start < text.length 
+    while text.get_byte(start) != '\n' & start < text.length 
         start++
     return start
 }

@@ -3,6 +3,6 @@ fnc main(): int {
     let pos: Position = { x: 10, y: -10 }
     let expect = pos.x == 10
     pos.x = 20
-    expect and= pos.x == 20
+    expect &= pos.x == 20
     return expect ? 0 : 1
 }

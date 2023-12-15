@@ -472,7 +472,7 @@ enum LLVMDIFlags {
   LLVMDIFlagNonTrivial = 1 << 26
   LLVMDIFlagBigEndian = 1 << 27
   LLVMDIFlagLittleEndian = 1 << 28
-  LLVMDIFlagIndirectVirtualBase = (1 << 2) or (1 << 5)
-  LLVMDIFlagAccessibility = 0 or 2 or 3
-  LLVMDIFlagPtrToMemberRep = (1 << 16) or (2 << 16) or (3 << 16)
+  LLVMDIFlagIndirectVirtualBase = (1 << 2) | (1 << 5)
+  LLVMDIFlagAccessibility = 0 | 2 | 3
+  LLVMDIFlagPtrToMemberRep = (1 << 16) | (2 << 16) | (3 << 16)
 }

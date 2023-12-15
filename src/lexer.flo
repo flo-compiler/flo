@@ -3,10 +3,6 @@ import TextRange, FileId in "utils"
 import Compiler in "compiler"
 import FloError, ErrorKind in "error"
 fnc string_to_kw_token(word: String): TokType {
-    if word == "and"
-        return TokType.AND_KW
-    if word == "or"
-        return TokType.OR_KW
     if word == "const"
         return TokType.CONST_KW
     if word == "let"
@@ -52,20 +48,20 @@ fnc string_to_kw_token(word: String): TokType {
     return TokType.ILLEGAL
 }
 fnc is_identifier_char(char: u8): bool {
-    return (char >= 'A' and char <= 'Z') or (char >= 'a' and char <= 'z') or (char == '_')
+    return (char >= 'A' & char <= 'Z') | (char >= 'a' & char <= 'z') | (char == '_')
 }
 fnc is_number_char(char: u8): bool {
-    return (char >= '0' and char <= '9')
+    return (char >= '0' & char <= '9')
 }
 fnc capitalize(char: u8): u8 {
-    if char >= 'a' and char <= 'z'
+    if char >= 'a' & char <= 'z'
         return char - ' '
     return char 
 }
 fnc in_base_range(char: u8, base: int): bool {
     if base < 10 
-        return char >= '0' and char <= (base + 48)
-    return (char >= '0' and char <= (base + 48)) or (char >= 'A' and char <= (base + 65))
+        return char >= '0' & char <= (base + 48)
+    return (char >= '0' & char <= (base + 48)) | (char >= 'A' & char <= (base + 65))
 }
 fnc get_escape_char(char: u8): u8 {
     if (char == 'a') return '\a'
@@ -89,7 +85,7 @@ fnc unescape(str: String): String {
         if (char == '\\') {
             if i + 3 < str.length {
                 aval = str.get_bytes() + i + 1
-                if (aval.compare("033", 3) == 0) or (aval.compare("x1b", 3) == 0) {
+                if (aval.compare("033", 3) == 0) | (aval.compare("x1b", 3) == 0) {
                     result_string += "\033"
                     i += 3
                     continue
@@ -205,15 +201,15 @@ class Lexer {
         if this.peek() == '*' {
             this.advance()
             while !this.eof() {
-                if this.peek() == '*' and this.peek(2) == '/' break
+                if this.peek() == '*' & this.peek(2) == '/' break
                 this.advance()
             }
             this.advance()
             this.advance()
             return true
-        } else if this.peek() == '/' or (this.current_char == '#' and this.peek() == '!') {
+        } else if this.peek() == '/' | (this.current_char == '#' & this.peek() == '!') {
             this.advance()
-            while this.peek() != '\n' and !this.eof()
+            while this.peek() != '\n' & !this.eof()
                 this.advance()
             return true
         }
@@ -311,6 +307,20 @@ class Lexer {
         }
         return new Token(TokType.LT, this.get_range(1))
     }
+    private and_token(this): Token {
+        if this.peek() == '=' {
+            this.advance()
+            return new Token(TokType.AND_EQ, this.get_range(2))
+        }
+        return new Token(TokType.AND, this.get_range(1))
+    }
+    private or_token(this): Token {
+        if this.peek() == '=' {
+            this.advance()
+            return new Token(TokType.OR_EQ, this.get_range(2))
+        }
+        return new Token(TokType.OR, this.get_range(1))
+    }
     private dot_token(this): Token {
         let token = TokType.DOT
         let length = 1
@@ -326,7 +336,7 @@ class Lexer {
         let length = 3
         let value: u64 = 0
         let current_char = '\0'
-        while in_base_range(current_char = capitalize(this.peek()), base as int) and !this.eof() {
+        while in_base_range(current_char = capitalize(this.peek()), base as int) & !this.eof() {
             value *= base
             let add =  current_char - '0'
             if (current_char >= 'A') add = current_char - 'A' + 10
@@ -340,14 +350,14 @@ class Lexer {
         let length = 1
         let is_float = false
         let next_char = '\0'
-        if this.current_char == '0' and this.peek() == 'b'
+        if this.current_char == '0' & this.peek() == 'b'
             return this.base_int_token(2)
-        if this.current_char == '0' and this.peek() == 'o'
+        if this.current_char == '0' & this.peek() == 'o'
             return this.base_int_token(8)
-        if this.current_char == '0' and this.peek() == 'x'
+        if this.current_char == '0' & this.peek() == 'x'
             return this.base_int_token(16)
-        while (is_number_char(next_char = this.peek()) or next_char == '.') and !this.eof() {
-            if next_char == '.' and (is_float or !is_number_char(this.peek(2))) break
+        while (is_number_char(next_char = this.peek()) | next_char == '.') & !this.eof() {
+            if next_char == '.' & (is_float | !is_number_char(this.peek(2))) break
             if this.current_char == '.' is_float = true
             length++
             this.advance()
@@ -362,7 +372,7 @@ class Lexer {
         let length = 1
         let start = this.idx
         let next_char = this.peek()
-        while (is_identifier_char(next_char = this.peek()) or is_number_char(next_char)) and !this.eof() {
+        while (is_identifier_char(next_char = this.peek()) | is_number_char(next_char)) & !this.eof() {
             length++
             this.advance()
         }
@@ -370,16 +380,6 @@ class Lexer {
         let range = this.get_range(length)
         let keyword: TokType = TokType.ILLEGAL
         if (keyword = string_to_kw_token(value)) != TokType.ILLEGAL { 
-            if this.peek() == '=' {
-                if keyword == TokType.AND_KW {
-                    this.advance()
-                    keyword = TokType.AND_EQ
-                } 
-                if keyword == TokType.OR_KW {
-                    this.advance()
-                    keyword = TokType.OR_EQ
-                }
-            }
             return new Token(keyword, range)
         }
         return new IdentifierToken(value, range)
@@ -393,15 +393,15 @@ class Lexer {
         this.advance()
         let string_value = String.with_capacity(1)
         while !this.eof() {
-            if (this.current_char == '"' and !escape_next) break
-            if (this.current_char == '$' and !escape_next){
+            if (this.current_char == '"' & !escape_next) break
+            if (this.current_char == '$' & !escape_next){
                 fmt_indices << length - 2
                 this.advance()
                 let token_group: Token[] = []
                 let active_open_pars = 0
                 if this.current_char == '(' {
                     this.advance()
-                    while (this.current_char != ')' or active_open_pars != 0) and !this.eof(){
+                    while (this.current_char != ')' | active_open_pars != 0) & !this.eof(){
                         if this.current_char == '(' active_open_pars++
                         if this.current_char == ')' active_open_pars--
                         token_group << this.lex_token()
@@ -438,7 +438,7 @@ class Lexer {
     }
     private lex_token(this): Token {
         let char = this.current_char
-        if this.current_char == ' ' or this.current_char == '\t'  {
+        if this.current_char == ' ' | this.current_char == '\t'  {
             this.advance()
             return this.lex_token()
         }
@@ -464,13 +464,17 @@ class Lexer {
             return this.mod_token()
         if char == '^'
             return this.xor_token()
-        if char == '/' or char == '#' {
+        if char == '/' | char == '#' {
             if this.skip_comment() {
                 this.advance()
                 return this.lex_token()
             }
             return this.div_token()
-        } 
+        }
+        if char == '&'
+            return this.and_token()
+        if char == '|'
+            return this.or_token()
         if char == '('
             return new Token(TokType.LPAR, this.get_range(1))
         if char == ')'
@@ -483,14 +487,12 @@ class Lexer {
             return new Token(TokType.LBRACKET, this.get_range(1))
         if char == ']'
             return new Token(TokType.RBRACKET, this.get_range(1))
-        if char == '\n' or char == '\r'
+        if char == '\n' | char == '\r'
             return new Token(TokType.LN, this.get_range(1))
         if char == '\''
             return (this.char_token() as Token)
         if char == '?'
             return new Token(TokType.QUES, this.get_range(1))
-        if char == '&'
-            return new Token(TokType.AMP, this.get_range(1))
         if char == '='
             return this.eq_token()
         if char == '!'
@@ -512,7 +514,7 @@ class Lexer {
         let lexer: Lexer(compiler.current_file_contents, compiler.errors, compiler.current_file)
         lexer.advance()
         let tokens: Token[] = []
-        while !lexer.eof() and lexer.errors.length == 0 {
+        while !lexer.eof() & lexer.errors.length == 0 {
             tokens << lexer.lex_token()
             lexer.advance()
         }

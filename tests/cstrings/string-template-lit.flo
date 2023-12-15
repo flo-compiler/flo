@@ -2,7 +2,7 @@ fnc printf(fmt: u8*)
 fnc main(): int {
     let a = 10
     let b = 9.0
-    a or= 2
+    a |= 2
     printf("a = $a, b = $b\n")
     return 0
 }

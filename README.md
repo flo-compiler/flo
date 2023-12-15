@@ -351,16 +351,16 @@ class Int(ICMP) {
     - `__sub__` (-)
     - `__mul__` (*)
     - `__div__` (/)
-    - `__or__` (or)
+    - `__or__` (|)
     - `__xor__` (^)
-    - `__and__` (and)
+    - `__and__` (&)
     - `__adda__` (+=)
     - `__suba__` (-=)
     - `__mula__` (*=)
     - `__diva__` (/=)
-    - `__ora__` (or=)
+    - `__ora__` (|=)
     - `__xora__` (^=)
-    - `__anda__` (and=)
+    - `__anda__` (&=)
     - `__getitem__` (a[b])
     - `__setitem__` (a[b] = 2)
     - `__in__` (4 in int_array)
@@ -408,7 +408,7 @@ let x: int?
 ```
 - [ ] Type Union
 ```
-type Numeric = int or f32
+type Numeric = int | f32
 fnc main(){
     let n: Numeric = 5
     match n {

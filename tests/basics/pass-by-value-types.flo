@@ -13,6 +13,6 @@ fnc main(): int {
     let p = init_pos(1, 2)
     let arr = init_array(3, 5)
     p = change_pos({x: arr[0], y: p.y})
-    if (p.x == 4 and p.y == 2) return 0
+    if (p.x == 4 & p.y == 2) return 0
     return 1
 }

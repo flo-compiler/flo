@@ -461,7 +461,7 @@ class Block {
         this.yields = null
     }
     is_terminated(this): bool {
-        return this.returns or this.continues or this.breaks
+        return this.returns | this.continues | this.breaks
     }
 }
 class MatchExpressionCase {
@@ -556,7 +556,7 @@ fnc is_numeric(val_ty: Type): bool {
         if (generic_var_type.current_instance == null) return false
         return is_numeric(generic_var_type.current_instance)
     }
-    return val_ty.kind >= TypeKind.I4 and val_ty.kind <= TypeKind.F64
+    return val_ty.kind >= TypeKind.I4 & val_ty.kind <= TypeKind.F64
 }
 fnc is_float(val_ty: Type): bool {
     if (val_ty.kind == TypeKind.GENERIC_VARIABLE){
@@ -564,7 +564,7 @@ fnc is_float(val_ty: Type): bool {
         if (generic_var_type.current_instance == null) return false
         return is_float(generic_var_type.current_instance)
     }
-    return val_ty.kind >= TypeKind.F32 and val_ty.kind <= TypeKind.F64
+    return val_ty.kind >= TypeKind.F32 & val_ty.kind <= TypeKind.F64
 }
 fnc is_int(val_ty: Type): bool {
     if (val_ty.kind == TypeKind.GENERIC_VARIABLE){
@@ -572,7 +572,7 @@ fnc is_int(val_ty: Type): bool {
         if (generic_var_type.current_instance == null) return false
         return is_int(generic_var_type.current_instance)
     }
-    return val_ty.kind >= TypeKind.I4 and val_ty.kind <= TypeKind.I128
+    return val_ty.kind >= TypeKind.I4 & val_ty.kind <= TypeKind.I128
 }
 fnc is_bool(val_ty: Type): bool {
     if (val_ty.kind == TypeKind.GENERIC_VARIABLE){
@@ -599,7 +599,7 @@ fnc is_u8_ptr(val_ty: Type): bool {
     if val_ty.kind == TypeKind.PTR {
         let pointee_type = (val_ty as PointerType).pointee_type
         if is_int(pointee_type) {
-            return (pointee_type.kind == TypeKind.I8) and !((pointee_type as IntType).is_signed)
+            return (pointee_type.kind == TypeKind.I8) & !((pointee_type as IntType).is_signed)
         }
     }
     return false
@@ -661,13 +661,13 @@ fnc check_cast_lower_bits(p1: Expression*, p2: Expression*){
     let ty1 = p1[0].value_type
     let ty2 = p2[0].value_type
     if ty1.kind != ty2.kind {
-        if is_float(ty1) and is_int(ty2) {
+        if is_float(ty1) & is_int(ty2) {
             p2[0] = cast_exp_to_type(p2[0], ty1)
-        } else if is_int(ty1) and is_float(ty2){
+        } else if is_int(ty1) & is_float(ty2){
             p1[0] = cast_exp_to_type(p1[0], ty2)
         } else {
             ty1 = max_type(ty1, ty2)
-            if is_int(ty1) and is_int(ty2){
+            if is_int(ty1) & is_int(ty2){
                 if (ty1 as IntType).is_signed != (ty2 as IntType).is_signed {
                     ty1 = get_signed_int_variant(ty2)
                 }
@@ -1110,7 +1110,7 @@ fnc bin_op_to_op_overload_name(op: BinaryOp): String {
     return null
 }
 fnc get_num_params_for_operator_overload(name: String): uint {
-    if name == "__iter__" or name == "__del__" return 1
+    if name == "__iter__" | name == "__del__" return 1
     if name =="__setitem__" return 3
     return 2
 }
@@ -1137,9 +1137,9 @@ fnc evaluate_const_int_expression(program: Program, exp: Expression): int {
         if bin_exp.op == BinaryOp.SR
             return evaluate_const_int_expression(program, bin_exp.lhs) >> evaluate_const_int_expression(program, bin_exp.rhs)
         if bin_exp.op == BinaryOp.OR
-            return evaluate_const_int_expression(program, bin_exp.lhs) or evaluate_const_int_expression(program, bin_exp.rhs)
+            return evaluate_const_int_expression(program, bin_exp.lhs) | evaluate_const_int_expression(program, bin_exp.rhs)
         if bin_exp.op == BinaryOp.AND
-            return evaluate_const_int_expression(program, bin_exp.lhs) and evaluate_const_int_expression(program, bin_exp.rhs)
+            return evaluate_const_int_expression(program, bin_exp.lhs) & evaluate_const_int_expression(program, bin_exp.rhs)
         if bin_exp.op == BinaryOp.XOR
             return evaluate_const_int_expression(program, bin_exp.lhs) ^ evaluate_const_int_expression(program, bin_exp.rhs)
     }
@@ -1223,7 +1223,7 @@ class TypeChecker {
         if t1.kind == TypeKind.ARRAY {
             let t1_arr_type = t1 as ArrayType
             let t2_arr_type = t2 as ArrayType
-            return t1_arr_type.length == t2_arr_type.length and this.types_are_eq(t1_arr_type.element_type, t2_arr_type.element_type)
+            return t1_arr_type.length == t2_arr_type.length & this.types_are_eq(t1_arr_type.element_type, t2_arr_type.element_type)
         }
         if t1.kind == TypeKind.RECORD {
             let t1_rec_type = t1 as RecordType
@@ -1351,7 +1351,7 @@ class TypeChecker {
         let var_id: VarId = null
         while var_id == null {
             var_id = current_scope.vars[name]
-            if current_scope.parent == null or var_id != null
+            if current_scope.parent == null | var_id != null
                 break
             current_scope = this.program.get_scope(current_scope.parent)
         }
@@ -1362,7 +1362,7 @@ class TypeChecker {
         let fnc_id: FunctionId = null
         while fnc_id == null {
             fnc_id = current_scope.functions[name]
-            if current_scope.parent == null or fnc_id != null
+            if current_scope.parent == null | fnc_id != null
                 break
             current_scope = this.program.get_scope(current_scope.parent)
         }
@@ -1455,7 +1455,7 @@ class TypeChecker {
         for let i = 0; i < module_ast.functions.length; i++ {
            this.check_function_body(module.scope, module_ast.functions[i])
         }
-        if this.module_contains_generics and this.current_scope.module_id != 0 {
+        if this.module_contains_generics & this.current_scope.module_id != 0 {
             this.switch_to_generic_module()
             this.import_all_from_module(module)
         }
@@ -1598,7 +1598,7 @@ class TypeChecker {
         // TODO: You need to properly handle the built-in case; don't use null as a reference point.
         let filepath = filename
         let prev_file_id = this.compiler.current_file
-        if range != null and !filename.starts_with("@") {
+        if range != null & !filename.starts_with("@") {
             filepath = Path.join(Path.dirname(this.get_current_module().name), filename)
         }
         let file_id = this.compiler.register_file(filepath)
@@ -1638,7 +1638,7 @@ class TypeChecker {
     }
     private declare_class_within_module(this, class_decl_node: ClassDeclarationNode) {
         let name = class_decl_node.name.value
-        if (this.get_type_from_scope(this.current_scope, name).kind != TypeKind.UNKNOWN) or (this.generic_templates[name] != null) {
+        if (this.get_type_from_scope(this.current_scope, name).kind != TypeKind.UNKNOWN) | (this.generic_templates[name] != null) {
             this.error(ErrorKind.NAME, "Name '$name' has already been used for another type. consider renaming", class_decl_node.name.range)
             return
         }
@@ -1861,7 +1861,7 @@ class TypeChecker {
                 }
             }
         
-            if method_name == "__iter__" and (!this.is_iteratable(method.fnc_type.return_type)) {
+            if method_name == "__iter__" & (!this.is_iteratable(method.fnc_type.return_type)) {
                 this.error(ErrorKind.TYPE, "__iter__ method must return an iteratable object {done: bool, next(): any}", name_range)
                 return 
             }
@@ -1956,7 +1956,7 @@ class TypeChecker {
             return null
         }
         let size_ty = len_expr.value_type as IntType
-        if size_ty.is_signed or size_ty.kind != TypeKind.INT {
+        if size_ty.is_signed | size_ty.kind != TypeKind.INT {
             this.error(ErrorKind.GEN, "length has to be a uint", array_type_node.length.range)
             return null
         }
@@ -2065,7 +2065,7 @@ class TypeChecker {
             }
             let expression = this.check_expression(expected_element_type, record_element.value)
             if this.has_errored() return null
-            is_constant and= expression.is_constant
+            is_constant &= expression.is_constant
             actual_tuple_type.element_types << expression.value_type
             actual_tuple_type.element_names << record_element.key.value
             elements << expression
@@ -2085,7 +2085,7 @@ class TypeChecker {
         } else if expected_type.kind == TypeKind.RESOLVED_GENERIC {
             is_constant = false
             let generic_ty =  expected_type as ResolvedGenericType
-            if is_object(generic_ty) and generic_ty.name == "Array"
+            if is_object(generic_ty) & generic_ty.name == "Array"
                 element_type = generic_ty.arg_types[0]
         }
         if array_node.elements.length > 0 {
@@ -2093,10 +2093,10 @@ class TypeChecker {
             for array_node_elements in array_node.elements {
                 let element = this.check_expression(element_type, array_node_elements)
                 if this.has_errored() return null
-                if i == 0 and element_type.kind == TypeKind.UNKNOWN {
+                if i == 0 & element_type.kind == TypeKind.UNKNOWN {
                     element_type = element.value_type
                 }
-                is_constant and= element.is_constant
+                is_constant &= element.is_constant
                 if this.types_are_eq(element_type, element.value_type) {
                     elements << element
                 } else {
@@ -2154,7 +2154,7 @@ class TypeChecker {
         if op != BinaryOp.ASSIGN {
             if is_object(left.value_type){
                 let exp = this.check_object_bin_assign(left, binary_node)
-                if exp != null or this.has_errored() return exp
+                if exp != null | this.has_errored() return exp
             }
             right = this.check_bin_expr(left.value_type, lower_bin_assign_node(binary_node))
             if this.has_errored() return null
@@ -2199,7 +2199,7 @@ class TypeChecker {
         let owner_class = this.program.get_class_from_type(left.value_type)
         let method_id = this.get_func_from_scope(owner_class.props_scope, method_name)
         if method_id == null {
-            if op == BinaryOp.EEQ or op == BinaryOp.NEQ {
+            if op == BinaryOp.EEQ | op == BinaryOp.NEQ {
                 return new BinaryExpression(left, op, this.check_expression(left.value_type, binary_node.rhs), PrimitiveTypes.bool, binary_node.range)
             }
             this.error(ErrorKind.NAME, "No binary operator overload for '$(dump_bin_op(op))' in object of class '$(owner_class.name)' please implement the method $method_name to support this", binary_node.range)
@@ -2210,11 +2210,11 @@ class TypeChecker {
         if right == null 
             right = this.check_expression(param_type, binary_node.rhs)
         if this.has_errored() return null
-        if is_null_expression(right) and (op == BinaryOp.EEQ or op == BinaryOp.NEQ) {
+        if is_null_expression(right) & (op == BinaryOp.EEQ | op == BinaryOp.NEQ) {
             return new BinaryExpression(left, op, right, PrimitiveTypes.bool, binary_node.range)
         }
         if op == BinaryOp.IN { //FIXME: Just For Ranges. Will not be required once we have ranges are generics. 
-            if is_int(right.value_type) and is_int(param_type){
+            if is_int(right.value_type) & is_int(param_type){
                 right = cast_exp_to_type(right, max_type(right.value_type, param_type))
             }
         }
@@ -2257,8 +2257,8 @@ class TypeChecker {
     //TODO: This needs a complete re-write this is messy
     private check_bin_expr(this, expected_type: Type, binary_node: BinaryExpressionNode): BinaryExpression {
         let op = binary_node.op
-        let is_assign_op = op >= BinaryOp.ASSIGN and op <= BinaryOp.SR_ASSIGN
-        if op == BinaryOp.ASSIGN and binary_node.lhs.expr_kind == ExpressionKind.INDEX {
+        let is_assign_op = op >= BinaryOp.ASSIGN & op <= BinaryOp.SR_ASSIGN
+        if op == BinaryOp.ASSIGN & binary_node.lhs.expr_kind == ExpressionKind.INDEX {
             let possible_obj = this.check_expression(PrimitiveTypes.unknown, (binary_node.lhs as ExpressionIndexNode).expression)
             if this.has_errored() return null
             if is_object(possible_obj.value_type)
@@ -2266,21 +2266,21 @@ class TypeChecker {
         }
         let left = this.check_expression(expected_type, binary_node.lhs)
         if this.has_errored() return null
-        if is_object(left.value_type) and !is_assign_op and op != BinaryOp.IN
+        if is_object(left.value_type) & !is_assign_op & op != BinaryOp.IN
             return this.check_object_binary_expr(left, binary_node, null) as BinaryExpression
         let right = this.check_expression(left.value_type, binary_node.rhs)
         if this.has_errored() return null
-        if is_object(right.value_type) and op == BinaryOp.IN {
+        if is_object(right.value_type) & op == BinaryOp.IN {
             return this.check_object_binary_expr(right, binary_node, left) as BinaryExpression
         }
         if this.has_errored() return null
         if is_assign_op {
             return this.check_assignment(left, right, binary_node) as BinaryExpression
         }
-        let is_const = left.is_constant and right.is_constant
-        if left.value_type.kind == TypeKind.UNKNOWN and right.value_type.kind != TypeKind.UNKNOWN
+        let is_const = left.is_constant & right.is_constant
+        if left.value_type.kind == TypeKind.UNKNOWN & right.value_type.kind != TypeKind.UNKNOWN
             left.value_type = right.value_type
-        if is_numeric(left.value_type) and is_numeric(right.value_type){
+        if is_numeric(left.value_type) & is_numeric(right.value_type){
             if op == BinaryOp.POW {
                 if is_int(left.value_type)
                     left = cast_exp_to_type(left, PrimitiveTypes.f64) // Might need to cast it to the biggest available
@@ -2288,15 +2288,15 @@ class TypeChecker {
                     right = cast_exp_to_type(right, PrimitiveTypes.f64) // Might need to cast it to the biggest available
                 return new BinaryExpression(left, op, right, left.value_type, binary_node.range)
             }
-            if op >= BinaryOp.ADD and op <=  BinaryOp.LTE {
+            if op >= BinaryOp.ADD & op <=  BinaryOp.LTE {
                 check_cast_lower_bits(&left, &right)
                 let exp_type = left.value_type
-                if op >= BinaryOp.GT and op <= BinaryOp.LTE 
+                if op >= BinaryOp.GT & op <= BinaryOp.LTE 
                     exp_type = PrimitiveTypes.bool
                 
                 return new BinaryExpression(left, op, right, exp_type, binary_node.range, is_const)
             }
-            if op >= BinaryOp.SL and op <= BinaryOp.XOR {
+            if op >= BinaryOp.SL & op <= BinaryOp.XOR {
                 if is_float(left.value_type)
                     left = cast_exp_to_type(left, PrimitiveTypes.int) // Might need to cast it to the biggest available
                 if is_float(right.value_type){
@@ -2305,18 +2305,18 @@ class TypeChecker {
                 check_cast_lower_bits(&left, &right)
                 return new BinaryExpression(left, op, right, left.value_type, binary_node.range, is_const)
             }
-        } else if is_bool(left.value_type) and is_bool(right.value_type){
-            if op >= BinaryOp.OR and op <= BinaryOp.AND
+        } else if is_bool(left.value_type) & is_bool(right.value_type){
+            if op >= BinaryOp.OR & op <= BinaryOp.AND
                 return new BinaryExpression(left, op, right, left.value_type, binary_node.range, is_const)
         }
-        if op >= BinaryOp.GT and op <= BinaryOp.NEQ {
-            if is_numeric(left.value_type) and is_numeric(right.value_type){
+        if op >= BinaryOp.GT & op <= BinaryOp.NEQ {
+            if is_numeric(left.value_type) & is_numeric(right.value_type){
                 check_cast_lower_bits(&left, &right)
             }
             let boolean_type = PrimitiveTypes.bool
             return new BinaryExpression(left, op, right, boolean_type, binary_node.range, is_const)
         }
-        if op == BinaryOp.ADD or op == BinaryOp.SUB and is_pointer(left.value_type) and right.value_type.kind == TypeKind.INT {
+        if op == BinaryOp.ADD | op == BinaryOp.SUB & is_pointer(left.value_type) & right.value_type.kind == TypeKind.INT {
             return new BinaryExpression(left, op, right, left.value_type, binary_node.range, false)
         }
         this.error(ErrorKind.TYPE, "Illegal binary operation '$(dump_bin_op(op))' between types '$(this.dump_type(left.value_type))' and '$(this.dump_type(right.value_type))'", binary_node.range)
@@ -2337,11 +2337,11 @@ class TypeChecker {
             }
         }
         if op == UnaryOp.NOT {
-            if is_bool(ty) or is_numeric(ty)
+            if is_bool(ty) | is_numeric(ty)
                 return new UnaryExpression(op, expression, ty, unary_node.range, is_const)
         }
-        if op >= UnaryOp.PREINCR and op <= UnaryOp.POSTDECR {
-            if is_numeric(ty) or is_pointer(ty) {
+        if op >= UnaryOp.PREINCR & op <= UnaryOp.POSTDECR {
+            if is_numeric(ty) | is_pointer(ty) {
                 if !check_is_var(expression) {
                     this.error(ErrorKind.GEN, "Illegal unary operation $(dump_unary_op(op)) on constant", unary_node.expression.range)
                     return null
@@ -2354,7 +2354,7 @@ class TypeChecker {
                 return new UnaryExpression(op, expression, new PointerType(expression.value_type), unary_node.range)
         }
         if op == UnaryOp.DEL {
-            if is_object(ty) or is_pointer(ty)
+            if is_object(ty) | is_pointer(ty)
                 return new UnaryExpression(op, expression, PrimitiveTypes.void, unary_node.range)
         }
         this.error(ErrorKind.TYPE, "Illegal unary operation $(dump_unary_op(op)) on type '$(this.dump_type(ty))'", unary_node.range)
@@ -2373,21 +2373,21 @@ class TypeChecker {
             return new StringExpression("", [0], [exp], dest_ty, type_expr_node.range)
         }
         let is_valid_cast = false
-        if is_numeric(dest_ty) and is_numeric(val_ty) {
+        if is_numeric(dest_ty) & is_numeric(val_ty) {
             is_valid_cast = true    
         }
-        if is_int(dest_ty) and val_ty.kind == TypeKind.ENUM {
+        if is_int(dest_ty) & val_ty.kind == TypeKind.ENUM {
             is_valid_cast = true
         }
         // TODO: Re-think this, this is a temporary fix
-        if is_int(val_ty) and dest_ty.kind == TypeKind.ENUM {
+        if is_int(val_ty) & dest_ty.kind == TypeKind.ENUM {
             is_valid_cast = true
         }
-        if is_numeric(dest_ty) and this.program.is_buitin_class(val_ty, "String") {
+        if is_numeric(dest_ty) & this.program.is_buitin_class(val_ty, "String") {
             let call: IntrinsicCall = null
             if is_float(dest_ty) {
                 call = new IntrinsicCall(Intrinsics.STR_TO_F, PrimitiveTypes.unknown, type_expr_node.range)
-            } else if dest_ty.kind < TypeKind.I64 or (ARCH_WORD_SIZE < 64 and dest_ty.kind == TypeKind.INT) {
+            } else if dest_ty.kind < TypeKind.I64 | (ARCH_WORD_SIZE < 64 & dest_ty.kind == TypeKind.INT) {
                 call = new IntrinsicCall(Intrinsics.STR_TO_I, PrimitiveTypes.unknown, type_expr_node.range)
             } else {
                 //TODO: I need to implement string to i128
@@ -2397,10 +2397,10 @@ class TypeChecker {
             exp = call
             is_valid_cast = true
         }
-        if is_object(dest_ty) and is_object(val_ty) {
+        if is_object(dest_ty) & is_object(val_ty) {
             is_valid_cast = true
         }
-        if is_pointer(dest_ty) and is_pointer(val_ty) {
+        if is_pointer(dest_ty) & is_pointer(val_ty) {
             is_valid_cast = true
         }
         if is_bool(dest_ty) {
@@ -2465,10 +2465,10 @@ class TypeChecker {
     }   
     private check_member_access(this, accessee: ClassId, class_name: String, member_name: String, visibility: AccessVisibility, range: TextRange) {
         if this.current_class != null {
-            if visibility == AccessVisibility.PRIVATE and accessee != this.current_class {
+            if visibility == AccessVisibility.PRIVATE & accessee != this.current_class {
                 this.error(ErrorKind.NAME, "Property '$member_name' is defined as private and only accessible within the class $class_name", range)
             }
-        } else if (visibility != AccessVisibility.PUBLIC and visibility != AccessVisibility.UNDEF) {
+        } else if (visibility != AccessVisibility.PUBLIC & visibility != AccessVisibility.UNDEF) {
             this.error(ErrorKind.NAME, "Property '$member_name' is defined as $(dump_access(visibility)) and only accessible within the class $class_name", range)
         }
     }
@@ -2599,7 +2599,7 @@ class TypeChecker {
            return this.check_class_member_expr(prop_owner, member_name, member_expr_node.range)
         } else if(prop_owner_type.kind == TypeKind.RECORD) {
             return this.check_record_member_expr(prop_owner, member_name, member_expr_node.range)
-        } else if prop_owner_type.kind == TypeKind.ARRAY and member_name == "size" {
+        } else if prop_owner_type.kind == TypeKind.ARRAY & member_name == "size" {
             return new IntExpression((prop_owner_type as ArrayType).length as u64, member_expr_node.range)
         }
         this.error(ErrorKind.GEN, "Cannot get property '$member_name' of type '$(this.dump_type(prop_owner.value_type))'", member_expr_node.expression.range)
@@ -2680,7 +2680,7 @@ class TypeChecker {
             let expected_type = fnc_ty.param_types.length > fnc_arg_idx ? fnc_ty.param_types[fnc_arg_idx] : PrimitiveTypes.unknown
             called_args << this.check_expression(expected_type, args[i])
         }
-        if this.has_errored() or func_args == null return called_args
+        if this.has_errored() | func_args == null return called_args
         if (func_args.length - offset) > args.length {
             for arg in func_args {
                 if arg.var.value != null {
@@ -2769,7 +2769,7 @@ class TypeChecker {
         for let i = 0; i < call_args.length; i++ {
             let fnc_arg_idx = i + offset
             let expected_type = fnc_ty.param_types.length > fnc_arg_idx ? fnc_ty.param_types[fnc_arg_idx] : PrimitiveTypes.unknown
-            if (call_args[i] == null and func_args != null){
+            if (call_args[i] == null & func_args != null){
                 if (fnc_arg_idx < func_args.length) {
                     if (func_args[fnc_arg_idx].var.value != null) {
                         checked_call_args << func_args[fnc_arg_idx].var.value
@@ -2786,7 +2786,7 @@ class TypeChecker {
     private check_call_expr(this, expected_type: Type, call_expr_node: CallExpressionNode): CallExpression {
         let called = this.check_expression(PrimitiveTypes.unknown, call_expr_node.callee)
         if this.has_errored() return null
-        if called.expr_kind == ExpressionKind.INTRINSIC and called.value_type.kind == TypeKind.UNKNOWN {
+        if called.expr_kind == ExpressionKind.INTRINSIC & called.value_type.kind == TypeKind.UNKNOWN {
             return this.check_intrinsic_call(called as IntrinsicCall, call_expr_node) as CallExpression
         }
         if !is_function(called.value_type) {
@@ -2818,7 +2818,7 @@ class TypeChecker {
         let args = call_expr_node.args
         let intrinsic_func = intrinsic_call.intrinsic
         intrinsic_call.range = call_expr_node.range
-        let is_mem_grp1 = intrinsic_func == Intrinsics.MEMCPY or intrinsic_func == Intrinsics.MEMMOVE or intrinsic_func == Intrinsics.MEMCMP
+        let is_mem_grp1 = intrinsic_func == Intrinsics.MEMCPY | intrinsic_func == Intrinsics.MEMMOVE | intrinsic_func == Intrinsics.MEMCMP
         
         let uint_ty = PrimitiveTypes.uint
         let unknown_ty = PrimitiveTypes.unknown
@@ -2828,11 +2828,11 @@ class TypeChecker {
                 this.error(ErrorKind.NAME, "Intrinsic doesn't have a named parameter", args[i].key.range)
                 return intrinsic_call
             }
-            let expected_type = is_mem_grp1 and i == 1 ? unknown_ty : intrinsic_call.args[0].value_type
-            if (intrinsic_func == Intrinsics.MEMCPY or intrinsic_func == Intrinsics.MEMMOVE) and (i == 1) {
+            let expected_type = is_mem_grp1 & i == 1 ? unknown_ty : intrinsic_call.args[0].value_type
+            if (intrinsic_func == Intrinsics.MEMCPY | intrinsic_func == Intrinsics.MEMMOVE) & (i == 1) {
                 expected_type = uint_ty
             }
-            if (intrinsic_func == Intrinsics.MEMRESIZE) and (i == 0) {
+            if (intrinsic_func == Intrinsics.MEMRESIZE) & (i == 0) {
                 expected_type = uint_ty
             }
             if (intrinsic_func == Intrinsics.MEMSET){
@@ -2859,7 +2859,7 @@ class TypeChecker {
                 return null
             }
             intrinsic_call.value_type = intrinsic_call.args[0].value_type
-        } else if is_mem_grp1 or intrinsic_func == Intrinsics.MEMSET {
+        } else if is_mem_grp1 | intrinsic_func == Intrinsics.MEMSET {
             if intrinsic_call.args.length != 3 {
                 this.error(ErrorKind.GEN, "Expected 3 arguments on function call but got $(intrinsic_call.args.length)", call_expr_node.range)
                 return null
@@ -2878,15 +2878,15 @@ class TypeChecker {
         if is_int(expected_type){
             expr_value.value_type = expected_type
         }
-        if int_value < -8 or int_value > 7 and expr_value.value_type.kind == TypeKind.I4
+        if int_value < -8 | int_value > 7 & expr_value.value_type.kind == TypeKind.I4
             expr_value.value_type = PrimitiveTypes.i8
-        if int_value < -128 or int_value > 127 and expr_value.value_type.kind == TypeKind.I8
+        if int_value < -128 | int_value > 127 & expr_value.value_type.kind == TypeKind.I8
             expr_value.value_type = PrimitiveTypes.i16
-        if int_value < -32768 or int_value > 32767 and expr_value.value_type.kind == TypeKind.I16
+        if int_value < -32768 | int_value > 32767 & expr_value.value_type.kind == TypeKind.I16
             expr_value.value_type = PrimitiveTypes.i32
-        if int_value < -2147483648 or int_value > 2147483647 and (expr_value.value_type.kind == TypeKind.I32 or (expr_value.value_type.kind == TypeKind.INT and ARCH_WORD_SIZE == 32))
+        if int_value < -2147483648 | int_value > 2147483647 & (expr_value.value_type.kind == TypeKind.I32 | (expr_value.value_type.kind == TypeKind.INT & ARCH_WORD_SIZE == 32))
             expr_value.value_type = PrimitiveTypes.i64
-        if int_value < -9223372036854775808 or int_value > 9223372036854775807 and (expr_value.value_type.kind == TypeKind.I64 or (expr_value.value_type.kind == TypeKind.INT and ARCH_WORD_SIZE == 64))
+        if int_value < -9223372036854775808 | int_value > 9223372036854775807 & (expr_value.value_type.kind == TypeKind.I64 | (expr_value.value_type.kind == TypeKind.INT & ARCH_WORD_SIZE == 64))
             expr_value.value_type = PrimitiveTypes.i128
         return expr_value
     }
@@ -2896,7 +2896,7 @@ class TypeChecker {
         let max_f32 = "3.4E38" as f64
         if is_float(expected_type)
             expr_value.value_type = expected_type
-        if float_value < -max_f32 or float_value > max_f32 and expr_value.value_type.kind == TypeKind.F32
+        if float_value < -max_f32 | float_value > max_f32 & expr_value.value_type.kind == TypeKind.F32
             expr_value.value_type = PrimitiveTypes.f64
 
         return expr_value
@@ -2925,7 +2925,7 @@ class TypeChecker {
         let unknown = PrimitiveTypes.unknown
         let left = this.check_expression(unknown, range_node.left)
         let right = this.check_expression(unknown, range_node.right)
-        if left.value_type.kind == TypeKind.INT and right.value_type.kind == TypeKind.INT {
+        if left.value_type.kind == TypeKind.INT & right.value_type.kind == TypeKind.INT {
             // TODO: Check Range is an object type
             return new RangeExpression(left, right, this.get_type_from_scope(this.current_scope, "Range"))
         }
@@ -3044,18 +3044,18 @@ class TypeChecker {
         }
         let var_type = var_decl_node.var_type != null ? this.check_type(var_decl_node.var_type) : PrimitiveTypes.unknown
         if this.has_errored() return null
-        if var_decl_node.value == null and var_type.kind == TypeKind.UNKNOWN {
+        if var_decl_node.value == null & var_type.kind == TypeKind.UNKNOWN {
             this.error(ErrorKind.GEN, "Variable '$name' has no type", var_decl_node.var_name.range)
             return null
         }
         let value = var_decl_node.value != null ? this.check_expression(var_type, var_decl_node.value) : null
         if this.has_errored() return null
         if value != null {
-            if is_null_expression(value) and value.value_type.kind == TypeKind.UNKNOWN {
+            if is_null_expression(value) & value.value_type.kind == TypeKind.UNKNOWN {
                 this.error(ErrorKind.TYPE, "Cannot declare a value as null without any type hint for future usage", var_decl_node.range)
                 return null
             }
-            if var_type.kind != TypeKind.UNKNOWN and !this.types_are_eq(var_type, value.value_type) {
+            if var_type.kind != TypeKind.UNKNOWN & !this.types_are_eq(var_type, value.value_type) {
                 this.error(ErrorKind.TYPE, "Expected type '$(this.dump_type(var_type))' but got type '$(this.dump_type(value.value_type))' on variable declaration", var_decl_node.range)
                 return null
             }
@@ -3201,7 +3201,7 @@ class TypeChecker {
             if stmt.kind == StatementKind.IF {
                 let if_stmt = stmt as IfStatement
                 if if_stmt.else_block != null {
-                    if if_stmt.block.returns and if_stmt.else_block.returns {
+                    if if_stmt.block.returns & if_stmt.else_block.returns {
                         block.returns = true
                         break
                     }
@@ -3217,7 +3217,7 @@ class TypeChecker {
             }
         }
         if stmt != null {
-            if yields and (stmt.kind == StatementKind.EXPRESSION) {
+            if yields & (stmt.kind == StatementKind.EXPRESSION) {
                 block.yields = stmt as Expression
                 block.statements.pop()
             }

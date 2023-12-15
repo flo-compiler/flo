@@ -1,4 +1,4 @@
 fnc main(): int {
     let rec = {n: "Programiz", m: "Apple"}
-    return rec.m == "Apple" and rec.n == "Programiz" ? 0 : 1
+    return rec.m == "Apple" & rec.n == "Programiz" ? 0 : 1
 }

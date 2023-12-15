@@ -57,7 +57,7 @@ class Compiler {
         return file_id
     }
     public set_current_file(this, file_id: FileId): bool {
-        if (file_id.id < 0 or file_id.id > this.files.length) return false
+        if (file_id.id < 0 | file_id.id > this.files.length) return false
         let module = this.files[file_id.id]
         let file_contents = module.contents
         if (file_contents == null) {

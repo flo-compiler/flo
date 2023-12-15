@@ -3323,7 +3323,7 @@
 				},
 				{
 					"name": "keyword.operator.assignment.compound.flo",
-					"match": "\\*=|(?<!\\()/=|%=|\\+=|\\-=|and=|or="
+					"match": "\\*=|(?<!\\()/=|%=|\\+=|\\-=|&=|\\|="
 				},
 				{
 					"name": "keyword.operator.assignment.compound.bitwise.flo",
@@ -3357,11 +3357,11 @@
 				},
 				{
 					"name": "keyword.operator.logical.flo",
-					"match": "\\!|and|or|\\?\\?"
+					"match": "\\!|&|\\||\\?\\?"
 				},
 				{
 					"name": "keyword.operator.bitwise.flo",
-					"match": "\\and|~|\\^|\\|"
+					"match": "\\&|~|\\^|\\|"
 				},
 				{
 					"name": "keyword.operator.assignment.flo",

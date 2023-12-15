@@ -17,7 +17,7 @@ class File {
     }
     public open_for_writing(path: String): File {
         let filename = path.to_cstring()
-        let fd = open(filename, W_OK or O_CREAT, DEFFILEMODE)
+        let fd = open(filename, W_OK | O_CREAT, DEFFILEMODE)
         del filename
         if fd < 0 return null
         return new File(fd)
